@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as Rx from 'rxjs/Rx';
 import { path } from 'ramda';
 import { compose, bindActionCreators } from 'redux';
 import { connect, Dispatch } from 'react-redux';
@@ -21,9 +22,10 @@ import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Select from 'src/components/Select';
 import Notice from 'src/components/Notice';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { updateVolumes$ } from 'src/features/Volumes/Volumes';
 import { dcDisplayNames } from 'src/constants';
-import { resetEventsPolling } from 'src/events';
+import { events$, resetEventsPolling } from 'src/events';
 import { close } from 'src/store/reducers/volumeDrawer';
 import {
   create,
@@ -99,6 +101,9 @@ const titleMap = {
 };
 
 class VolumeDrawer extends React.Component<CombinedProps, State> {
+  mounted: boolean = false;
+  eventsSub: Rx.Subscription;
+
   state: State = {
     cloneLabel: this.props.cloneLabel,
     label: this.props.label,
@@ -107,15 +112,39 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     linodeId: this.props.linodeId,
   };
 
+  componentDidMount() {
+    this.mounted = true;
+
+    this.eventsSub = events$
+      .filter(event => (
+        !event._initial
+        && [
+          'volume_detach',
+        ].includes(event.action)
+      ))
+      .subscribe((event) => {
+        if (event.action === 'volume_detach'
+            && event.status === 'finished') {
+          sendToast(`Volume ${event.entity && event.entity.label} finsihed detaching`);
+        }
+      });
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
+  }
+
   componentWillReceiveProps(nextProps: CombinedProps) {
-    this.setState({
-      cloneLabel: nextProps.cloneLabel || '',
-      label: nextProps.label,
-      size: nextProps.size,
-      region: nextProps.region,
-      linodeId: nextProps.linodeId,
-      errors: undefined,
-    });
+    if (this.mounted) {
+      this.setState({
+        cloneLabel: nextProps.cloneLabel || '',
+        label: nextProps.label,
+        size: nextProps.size,
+        region: nextProps.region,
+        linodeId: nextProps.linodeId,
+        errors: undefined,
+      });
+    }
   }
 
   onClose = () => {
@@ -141,9 +170,11 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
             close();
           })
           .catch((errorResponse) => {
-            this.setState({
-              errors: path(['response', 'data', 'errors'], errorResponse),
-            });
+            if (this.mounted) {
+              this.setState({
+                errors: path(['response', 'data', 'errors'], errorResponse),
+              });
+            }
           });
         return;
       case modes.EDITING:
@@ -152,9 +183,11 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
         }
 
         if (!label) {
-          this.setState({
-            errors: [{ field: 'label', reason: 'Label cannot be blank.' }],
-          });
+          if (this.mounted) {
+            this.setState({
+              errors: [{ field: 'label', reason: 'Label cannot be blank.' }],
+            });
+          }
           return;
         }
 
@@ -164,9 +197,11 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
             close();
           })
           .catch((errorResponse) => {
-            this.setState({
-              errors: path(['response', 'data', 'errors'], errorResponse),
-            });
+            if (this.mounted) {
+              this.setState({
+                errors: path(['response', 'data', 'errors'], errorResponse),
+              });
+            }
           });
         return;
       case modes.RESIZING:
@@ -175,9 +210,11 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
         }
 
         if (!label) {
-          this.setState({
-            errors: [{ field: 'size', reason: 'Size cannot be blank.' }],
-          });
+          if (this.mounted) {
+            this.setState({
+              errors: [{ field: 'size', reason: 'Size cannot be blank.' }],
+            });
+          }
           return;
         }
 
@@ -187,9 +224,11 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
             close();
           })
           .catch((errorResponse) => {
-            this.setState({
-              errors: path(['response', 'data', 'errors'], errorResponse),
-            });
+            if (this.mounted) {
+              this.setState({
+                errors: path(['response', 'data', 'errors'], errorResponse),
+              });
+            }
           });
         return;
       case modes.CLONING:
@@ -198,9 +237,11 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
         }
 
         if (!cloneLabel) {
-          this.setState({
-            errors: [{ field: 'label', reason: 'Label cannot be blank.' }],
-          });
+          if (this.mounted) {
+            this.setState({
+              errors: [{ field: 'label', reason: 'Label cannot be blank.' }],
+            });
+          }
           return;
         }
 
@@ -210,9 +251,11 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
             close();
           })
           .catch((errorResponse) => {
-            this.setState({
-              errors: path(['response', 'data', 'errors'], errorResponse),
-            });
+            if (this.mounted) {
+              this.setState({
+                errors: path(['response', 'data', 'errors'], errorResponse),
+              });
+            }
           });
         return;
       default:
@@ -264,7 +307,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           <TextField
             label="Cloned Label"
             value={cloneLabel}
-            onChange={e => this.setState({ cloneLabel: (e.target.value) })}
+            onChange={e => this.mounted && this.setState({ cloneLabel: (e.target.value) })}
             error={Boolean(labelError)}
             errorText={labelError}
             data-qa-clone-from
@@ -275,7 +318,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           label="Label"
           required
           value={label}
-          onChange={e => this.setState({ label: (e.target.value) })}
+          onChange={e => this.mounted && this.setState({ label: (e.target.value) })}
           error={Boolean(labelError)}
           errorText={labelError}
           disabled={mode === modes.RESIZING || mode === modes.CLONING}
@@ -286,7 +329,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           label="Size"
           required
           value={size}
-          onChange={e => this.setState({ size: +(e.target.value) })}
+          onChange={e => this.mounted && this.setState({ size: +(e.target.value) })}
           error={Boolean(sizeError)}
           errorText={sizeError}
           disabled={mode === modes.CLONING || mode === modes.EDITING}
@@ -312,7 +355,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
               || mode === modes.EDITING
               || mode === modes.RESIZING
             }
-            onChange={e => this.setState({ region: (e.target.value) })}
+            onChange={e => this.mounted && this.setState({ region: (e.target.value) })}
             inputProps={{ name: 'region', id: 'region' }}
             error={Boolean(regionError)}
           >
@@ -346,7 +389,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
                 mode === modes.EDITING
                 || mode === modes.RESIZING
               }
-              onChange={e => this.setState({ linodeId: +(e.target.value) })}
+              onChange={e => this.mounted && this.setState({ linodeId: +(e.target.value) })}
               inputProps={{ name: 'linode', id: 'linode' }}
               error={Boolean(linodeError)}
             >
