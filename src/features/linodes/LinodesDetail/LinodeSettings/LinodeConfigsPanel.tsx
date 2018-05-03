@@ -1,6 +1,18 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { assoc, compose, filter, map, path, prop } from 'ramda';
+import {
+  append,
+  assoc,
+  compose,
+  filter,
+  findIndex,
+  lensPath,
+  map,
+  path,
+  prop,
+  propEq,
+  set,
+} from 'ramda';
 
 import {
   withStyles,
@@ -19,7 +31,12 @@ import TableCell from 'material-ui/Table/TableCell';
 
 import PlusSquare from 'src/assets/icons/plus-square.svg';
 import { events$ } from 'src/events';
-import { getLinodeDisks, createLinodeConfig, deleteLinodeConfig } from 'src/services/linodes';
+import {
+  createLinodeConfig,
+  deleteLinodeConfig,
+  getLinodeDisks,
+  updateLinodeConfig,
+} from 'src/services/linodes';
 import { getVolumes } from 'src/services/volumes';
 import { ExtendedDisk, ExtendedVolume }
   from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
@@ -29,6 +46,7 @@ import IconTextLink from 'src/components/IconTextLink';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import createDevicesFromStrings, { DevicesAsStrings } from
   'src/utilities/createDevicesFromStrings';
+import createStringsFromDevices from 'src/utilities/createStringsFromDevices';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 
 import LinodeConfigsEmptyState from './LinodeConfigsEmptyState';
@@ -47,15 +65,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 });
 
 interface ConfigDrawerState {
-  open: boolean;
-  errors?: Linode.ApiFieldError[];
-  mode: 'create' | 'edit';
-  label: string;
-  kernel?: string;
   comments?: string;
-  memory_limit?: number;
-  run_level?: 'default' | 'single' | 'binbash';
-  virt_mode?: 'fullvirt' | 'paravirt';
+  configId?: number;
+  devices: DevicesAsStrings;
+  devicesCounter: number;
+  errors?: Linode.ApiFieldError[];
   helpers: {
     updatedb_disabled: boolean;
     distro: boolean;
@@ -63,12 +77,17 @@ interface ConfigDrawerState {
     network: boolean;
     devtmpfs_automount: boolean;
   };
-  root_device: string;
-  devices: DevicesAsStrings;
-  submitting: boolean;
-  devicesCounter: number;
-  useCustomRoot: boolean;
+  kernel?: string;
+  label: string;
   maxMemory: number;
+  memory_limit?: number;
+  mode: 'create' | 'edit';
+  open: boolean;
+  root_device: string;
+  run_level?: 'default' | 'single' | 'binbash';
+  submitting: boolean;
+  useCustomRoot: boolean;
+  virt_mode?: 'fullvirt' | 'paravirt';
 }
 
 interface ConfirmDeleteState {
@@ -79,22 +98,23 @@ interface ConfirmDeleteState {
 }
 
 interface State {
-  success?: string;
-  submitting: boolean;
+  configDrawer: ConfigDrawerState;
+  confirmDelete: ConfirmDeleteState;
   devices: {
     disks: ExtendedDisk[];
     volumes: ExtendedVolume[];
   };
-  configDrawer: ConfigDrawerState;
-  confirmDelete: ConfirmDeleteState;
+  linodeConfigs: Linode.Config[];
+  submitting: boolean;
+  success?: string;
 }
 
 interface Props {
+  linodeConfigs: Linode.Config[];
   linodeId: number;
   linodeLabel: string;
-  linodeRegion: string;
-  linodeConfigs: Linode.Config[];
   linodeMemory: number;
+  linodeRegion: string;
 }
 
 interface PromiseLoaderProps {
@@ -112,8 +132,32 @@ type CombinedProps = Props
   & WithStyles<ClassNames>;
 
 class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
+  defaultConfigDrawerState: ConfigDrawerState = {
+    open: false,
+    submitting: false,
+    mode: 'create',
+    label: '',
+    virt_mode: 'paravirt',
+    run_level: 'default',
+    kernel: 'linode/latest-64bit',
+    memory_limit: this.props.linodeMemory,
+    maxMemory: this.props.linodeMemory,
+    devices: {},
+    devicesCounter: 99,
+    useCustomRoot: false,
+    root_device: '',
+    helpers: {
+      updatedb_disabled: false,
+      distro: false,
+      modules_dep: false,
+      network: false,
+      devtmpfs_automount: false,
+    },
+  };
+
   state: State = {
     submitting: false,
+    linodeConfigs: this.props.linodeConfigs,
     devices: {
       disks: this.props.disks.response || [],
       volumes: this.props.volumes.response || [],
@@ -122,155 +166,17 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
       open: false,
       submitting: false,
     },
-    configDrawer: {
-      open: false,
-      submitting: false,
-      mode: 'create',
-      label: '',
-      virt_mode: 'paravirt',
-      run_level: 'default',
-      kernel: 'linode/latest-64bit',
-      memory_limit: this.props.linodeMemory,
-      maxMemory: this.props.linodeMemory,
-      devices: {},
-      devicesCounter: 99,
-      useCustomRoot: false,
-      root_device: '',
-      helpers: {
-        updatedb_disabled: false,
-        distro: false,
-        modules_dep: false,
-        network: false,
-        devtmpfs_automount: false,
-      },
-    },
+    configDrawer: this.defaultConfigDrawerState,
   };
-
-  setConfigDrawer = (obj: Partial<ConfigDrawerState>, fn?: () => void) => this.setState({
-    configDrawer: {
-      ...this.state.configDrawer,
-      ...obj,
-    },
-  }, () => { if (fn) fn(); })
-
-  setConfirmDelete = (obj: Partial<ConfirmDeleteState>, fn?: () => void) => this.setState({
-    confirmDelete: {
-      ...this.state.confirmDelete,
-      ...obj,
-    },
-  }, () => { if (fn) fn(); })
-
-
-  confirmDelete = (id: number, label: string) => {
-    this.setConfirmDelete({ open: true, id, label });
-  }
-
-  deleteConfig = () => {
-    this.setConfirmDelete({ submitting: true });
-    const { linodeId, linodeLabel } = this.props;
-    const { confirmDelete: { id: configId } } = this.state;
-    if (!configId) { return; }
-
-    deleteLinodeConfig(linodeId, configId)
-      .then(() => {
-        events$.next(genEvent('linode_reboot', linodeId, linodeLabel));
-
-        this.setConfirmDelete({
-          submitting: false,
-        }, () => { this.setConfirmDelete({ submitting: false, open: false, id: undefined }); });
-      })
-      .catch((error) => {
-        events$.next(genEvent('linode_reboot', linodeId, linodeLabel));
-      });
-  }
 
   componentWillReceiveProps(nextProps: Props) {
     this.setState({
+      linodeConfigs: nextProps.linodeConfigs,
       configDrawer: {
         ...this.state.configDrawer,
         memory_limit: nextProps.linodeMemory,
       },
     });
-  }
-
-  LinodeConfigsTable = () => {
-    return (
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Label</TableCell>
-            <TableCell></TableCell>
-          </TableRow>
-        </TableHead>
-
-        <TableBody>
-          {
-            this.props.linodeConfigs.map(config => (
-              <TableRow key={config.id}>
-                <TableCell>{config.label}</TableCell>
-                <TableCell>
-                  <LinodeConfigActionMenu
-                    onEdit={() => null}
-                    onDelete={() => this.confirmDelete(config.id, config.label)}
-                  />
-                </TableCell>
-              </TableRow>
-            ))
-          }
-        </TableBody>
-      </Table>
-    );
-  }
-
-  createConfig = () => {
-    const { linodeId, linodeLabel } = this.props;
-    const {
-      label, devices, kernel, comments, memory_limit, run_level, virt_mode, helpers, root_device,
-    } = this.state.configDrawer;
-
-    this.setConfigDrawer({ submitting: true });
-
-    createLinodeConfig(linodeId, {
-      label,
-      devices: createDevicesFromStrings(devices),
-      kernel,
-      comments,
-      memory_limit,
-      run_level,
-      virt_mode,
-      helpers,
-      root_device,
-    })
-      .then((repsonse) => {
-        events$.next(genEvent('linode_reboot', linodeId, linodeLabel));
-
-        this.setConfigDrawer({ submitting: false }, () => {
-          this.setConfigDrawer({
-            open: false,
-            submitting: false,
-            mode: 'create',
-            label: '',
-            virt_mode: 'paravirt',
-            run_level: 'default',
-            kernel: 'linode/latest-64bit',
-            memory_limit: this.props.linodeMemory,
-            maxMemory: this.props.linodeMemory,
-            devices: {},
-            devicesCounter: 99,
-            useCustomRoot: false,
-            root_device: '',
-            helpers: {
-              updatedb_disabled: false,
-              distro: false,
-              modules_dep: false,
-              network: false,
-              devtmpfs_automount: false,
-            }});
-        });
-      })
-      .catch((error) => {
-        this.setConfigDrawer({ errors: error.response.data.errors });
-      });
   }
 
   render() {
@@ -330,8 +236,12 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
           availableDevices={this.state.devices}
           {...configDrawer}
           onChange={(key, value) => this.setConfigDrawer({ [key]: value })}
-          onClose={() => this.setConfigDrawer({ open: false })}
-          onSubmit={() => this.createConfig()}
+          onClose={() => this.setConfigDrawer(this.defaultConfigDrawerState)}
+          onSubmit={() =>
+            this.state.configDrawer.mode === 'create'
+              ? this.createConfig()
+              : this.updateConfig()
+          }
         />
         <ConfirmationDialog
           title="Confirm Delete"
@@ -354,6 +264,180 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
         </ConfirmationDialog>
       </React.Fragment>
     );
+  }
+
+  setConfigDrawer = (obj: Partial<ConfigDrawerState>, fn?: () => void) => this.setState({
+    configDrawer: {
+      ...this.state.configDrawer,
+      ...obj,
+    },
+  }, () => { if (fn) fn(); })
+
+  setConfirmDelete = (obj: Partial<ConfirmDeleteState>, fn?: () => void) => this.setState({
+    confirmDelete: {
+      ...this.state.confirmDelete,
+      ...obj,
+    },
+  }, () => { if (fn) fn(); })
+
+  setEdit = (config: Linode.Config) => {
+    this.setConfigDrawer({
+      comments: config.comments,
+      configId: config.id,
+      devices: createStringsFromDevices(config.devices),
+      devicesCounter: 99,
+      helpers: config.helpers,
+      kernel: config.kernel,
+      label: config.label,
+      maxMemory: this.props.linodeMemory,
+      memory_limit: config.memory_limit === 0 ? this.props.linodeMemory : config.memory_limit,
+      mode: 'edit',
+      open: true,
+      root_device: config.root_device,
+      run_level: config.run_level,
+      submitting: false,
+      useCustomRoot: ![
+        '/dev/sda', '/dev/sdb', '/dev/sdc', '/dev/sdd',
+        '/dev/sde', '/dev/sdf', '/dev/sdg', '/dev/sd',
+      ].includes(config.root_device),
+      virt_mode: config.virt_mode,
+    });
+  }
+
+  confirmDelete = (id: number, label: string) => {
+    this.setConfirmDelete({ open: true, id, label });
+  }
+
+  deleteConfig = () => {
+    this.setConfirmDelete({ submitting: true });
+    const { linodeId, linodeLabel } = this.props;
+    const { confirmDelete: { id: configId } } = this.state;
+    if (!configId) { return; }
+
+    deleteLinodeConfig(linodeId, configId)
+      .then(() => {
+        this.setState({
+          linodeConfigs: this.state.linodeConfigs.filter(config => config.id !== configId),
+        });
+
+        events$.next(genEvent('linode_reboot', linodeId, linodeLabel));
+
+        this.setConfirmDelete({
+          submitting: false,
+        }, () => { this.setConfirmDelete({ submitting: false, open: false, id: undefined }); });
+      })
+      .catch((error) => {
+        events$.next(genEvent('linode_reboot', linodeId, linodeLabel));
+      });
+  }
+
+  LinodeConfigsTable = () => {
+    return (
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Label</TableCell>
+            <TableCell></TableCell>
+          </TableRow>
+        </TableHead>
+
+        <TableBody>
+          {
+            this.state.linodeConfigs.map(config => (
+              <TableRow key={config.id}>
+                <TableCell>{config.label}</TableCell>
+                <TableCell>
+                  <LinodeConfigActionMenu
+                    onEdit={() => this.setEdit(config)}
+                    onDelete={() => this.confirmDelete(config.id, config.label)}
+                  />
+                </TableCell>
+              </TableRow>
+            ))
+          }
+        </TableBody>
+      </Table>
+    );
+  }
+
+  updateConfig = () => {
+    const { linodeId } = this.props;
+    const {
+      comments,
+      configId,
+      devices,
+      helpers,
+      kernel,
+      label,
+      memory_limit,
+      root_device,
+      run_level,
+      virt_mode,
+    } = this.state.configDrawer;
+
+    if (!linodeId || !configId) { return; }
+
+    this.setConfigDrawer({ submitting: true });
+
+    updateLinodeConfig(
+      linodeId,
+      configId,
+      {
+        comments,
+        devices: createDevicesFromStrings(devices),
+        helpers,
+        kernel,
+        label,
+        memory_limit,
+        root_device,
+        run_level,
+        virt_mode,
+      },
+    )
+      .then((response) => {
+        // find and replace inline
+        const idx = findIndex(propEq('id', configId), this.state.linodeConfigs);
+
+        this.setState({
+          linodeConfigs: set(lensPath([idx]), response.data, this.state.linodeConfigs),
+        });
+
+        this.setConfigDrawer(this.defaultConfigDrawerState);
+      })
+      .catch(error => console.error(error));
+  }
+
+  createConfig = () => {
+    const { linodeId, linodeLabel } = this.props;
+    const {
+      label, devices, kernel, comments, memory_limit, run_level, virt_mode, helpers, root_device,
+    } = this.state.configDrawer;
+
+    this.setConfigDrawer({ submitting: true });
+
+    createLinodeConfig(linodeId, {
+      label,
+      devices: createDevicesFromStrings(devices),
+      kernel,
+      comments,
+      memory_limit,
+      run_level,
+      virt_mode,
+      helpers,
+      root_device,
+    })
+      .then((response) => {
+        events$.next(genEvent('linode_reboot', linodeId, linodeLabel));
+
+        this.setState({ linodeConfigs: append(response.data, this.state.linodeConfigs) });
+
+        this.setConfigDrawer({ submitting: false }, () => {
+          this.setConfigDrawer(this.defaultConfigDrawerState);
+        });
+      })
+      .catch((error) => {
+        this.setConfigDrawer({ errors: error.response.data.errors });
+      });
   }
 }
 
