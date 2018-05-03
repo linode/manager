@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
+  allPass,
   append,
   assoc,
   compose,
@@ -463,7 +464,10 @@ const preloaded = PromiseLoader<Props>({
         ExtendedVolume[],
         ExtendedVolume[]
         >(
-          filter<ExtendedVolume>(volume => volume.region === linodeRegion),
+          filter<ExtendedVolume>(allPass([
+            volume => volume.region === linodeRegion,
+            volume => volume.linode_id === null || volume.linode_id === linodeId,
+          ])),
           map(volume => assoc('_id', `volume-${volume.id}`, volume)),
           prop('data'),
       ),
