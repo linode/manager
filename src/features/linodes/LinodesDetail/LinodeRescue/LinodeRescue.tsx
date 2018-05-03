@@ -88,13 +88,15 @@ type CombinedProps = Props & PromiseLoaderProps & WithStyles<ClassNames>;
 
 export class LinodeRescue extends React.Component<CombinedProps, State> {
   constructor(props: CombinedProps) {
-    // do filtering here, so that it can be picked up in testing
     super(props);
     const filteredVolumes = props.volumes.response.filter((volume) => {
-      const linodeIdIsNull = volume.linode_id === null ? true : false;
-      const volumeIsAttached = volume.linode_id === props.linodeId;
+      // whether volume is not attached to any Linode
+      const volumeIsUnattached = volume.linode_id === null ? true : false;
+      // whether volume is attached to the current Linode we're viewing
+      const volumeIsAttachedToCurrentLinode = volume.linode_id === props.linodeId;
+      // whether volume is in the same region as the current Linode we're viewing
       const volumeAndLinodeRegionMatch = props.linodeRegion === volume.region ? true : false;
-      return volumeIsAttached || linodeIdIsNull && volumeAndLinodeRegionMatch;
+      return volumeIsAttachedToCurrentLinode || volumeIsUnattached && volumeAndLinodeRegionMatch;
     });
     this.state = {
       devices: {

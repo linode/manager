@@ -9,9 +9,6 @@ describe('LinodeRescue', () => {
     const filesystem: 'ext4' = 'ext4';
     const status: 'ready' = 'ready';
     const volumeStatus: 'active' = 'active';
-    // look at APITokens.test.tsx. Must be wrapped in promise loader functions
-    // const disks: PromiseLoaderResponse<Linode.ResourcePage<ExtendedDisk[]>> = {
-    // createPromiseLoaderResponse(createResourcePage(
     const disks = createPromiseLoaderResponse([
       {
         id: 17435341,
@@ -34,7 +31,6 @@ describe('LinodeRescue', () => {
         _id: 'disk-17435342',
       },
     ]);
-    // const volumes: PromiseLoaderResponse<Linode.ResourcePage<ExtendedVolume[]>> = {
     const volumes = createPromiseLoaderResponse([
       {
         status: volumeStatus,
