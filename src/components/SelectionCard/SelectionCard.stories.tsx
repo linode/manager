@@ -10,7 +10,7 @@ import FR from 'flag-icon-css/flags/4x3/fr.svg';
 import ThemeDecorator from '../../utilities/storybookDecorators';
 
 import SelectionCard, { Props as CardProps } from './SelectionCard';
-import Grid from 'material-ui/Grid';
+import Grid from 'src/components/Grid';
 
 class InteractiveExample extends React.Component<{}, { cards: CardProps[] }> {
   state = {

@@ -12,12 +12,12 @@ import { connect, Dispatch } from 'react-redux';
 import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 import Paper from 'material-ui/Paper';
-import Table from 'material-ui/Table';
 import TableHead from 'material-ui/Table/TableHead';
 import TableBody from 'material-ui/Table/TableBody';
 import TableRow from 'material-ui/Table/TableRow';
 import TableCell from 'material-ui/Table/TableCell';
 
+import Table from 'src/components/Table';
 import { getLinodes } from 'src/services/linodes';
 import { dcDisplayNames } from 'src/constants';
 import { sendToast } from 'src/features/ToastNotifications/toasts';

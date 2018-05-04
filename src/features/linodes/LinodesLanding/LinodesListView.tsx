@@ -2,12 +2,12 @@ import * as React from 'react';
 
 import Grid from 'src/components/Grid';
 import Paper from 'material-ui/Paper';
-import Table from 'material-ui/Table';
 import TableBody from 'material-ui/Table/TableBody';
 import TableCell from 'material-ui/Table/TableCell';
 import TableHead from 'material-ui/Table/TableHead';
 import TableRow from 'material-ui/Table/TableRow';
 
+import Table from 'src/components/Table';
 import LinodeRow from './LinodeRow';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 

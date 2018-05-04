@@ -3,7 +3,7 @@ import { storiesOf } from '@storybook/react';
 
 import TabbedPanel from './TabbedPanel';
 import ThemeDecorator from '../../utilities/storybookDecorators';
-import Grid from 'material-ui/Grid';
+import Grid from 'src/components/Grid';
 
 storiesOf('TabbedPanel', module)
   .addDecorator(ThemeDecorator)

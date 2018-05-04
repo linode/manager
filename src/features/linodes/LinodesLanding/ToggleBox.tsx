@@ -22,12 +22,11 @@ type CSSClasses =
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   root: {
-    margin: `${theme.spacing.unit * 2}px 0`,
+    margin: `${theme.spacing.unit}px`,
     [theme.breakpoints.up('sm')]: {
       position: 'absolute',
       right: 0,
       top: 0,
-      margin: 0,
     },
   },
   button: {
