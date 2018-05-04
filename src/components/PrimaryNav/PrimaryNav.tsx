@@ -130,9 +130,23 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     // hidding for now - replace with flex
     display: 'none',
   },
-  invert: {
+  toggle: {
+    '& > span:last-child': {
+      backgroundColor: '#f4f4f4 !important',
+      opacity: '0.38 !important',
+    },
+    '&.darkTheme .square': {
+      fill: '#444 !important',
+    },
+  },
+  switchText: {
     color: '#777',
     fontSize: '.8rem',
+    transition: theme.transitions.create(['color']),
+    '&.active': {
+      transition: theme.transitions.create(['color']),
+      color: '#C9CACB',
+    },
   },
 });
 
@@ -147,7 +161,8 @@ type ClassNames =
   | 'sublink'
   | 'sublinkPanel'
   | 'switchWrapper'
-  | 'invert';
+  | 'toggle'
+  | 'switchText';
 
 interface Props extends WithStyles<ClassNames>, RouteComponentProps<{}> {
   toggleMenu: () => void;
@@ -201,6 +216,7 @@ class PrimaryNav extends React.Component<Props> {
 
   render() {
     const { classes, toggleTheme } = this.props;
+    const themeName = (this.props.theme as any).name;
 
     return (
       <React.Fragment>
@@ -261,9 +277,29 @@ class PrimaryNav extends React.Component<Props> {
         </ShowMoreExpansion>
         <Divider className={classes.lastItem} />
         <div className={classes.switchWrapper}>
-          <span className={classes.invert}>Light</span>
-          <Toggle onChange={() => toggleTheme()} value="checkedA" />
-          <span className={classes.invert}>Dark</span>
+          <span className={`
+            ${classes.switchText}
+            ${themeName === 'lightTheme' ? 'active' : ''}
+          `}>
+            Light
+          </span>
+          <Toggle
+            onChange={() => toggleTheme()}
+            checked={themeName !== 'lightTheme'}
+            className={`
+              ${classes.toggle}
+              ${themeName}
+            `}
+          />
+          <span
+            className={`
+              ${classes.switchText}
+              ${themeName === 'darkTheme' ? 'active' : ''}
+            `}
+            style={{ marginLeft: 4 }}
+          >
+            Dark
+          </span>
         </div>
       </React.Fragment>
     );
