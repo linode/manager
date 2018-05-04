@@ -333,7 +333,7 @@ const LinodeTheme: Linode.Theme = {
         },
       },
       disabled: {
-        opacity: 1,
+        opacity: .5,
       },
     },
     MuiListItemText: {
@@ -364,6 +364,7 @@ const LinodeTheme: Linode.Theme = {
         backgroundColor: 'white !important',
         color: '#3B85D9 !important',
         cursor: 'initial',
+        opacity: 1,
       },
     },
     MuiPopover: {
