@@ -630,6 +630,7 @@ const LinodeTheme: Linode.Theme = {
     grey2: '#E7E7E7',
     grey3: '#ccc',
     white: '#fff',
+    black: '#222',
     boxShadow: '#ddd',
   },
   bg: {
