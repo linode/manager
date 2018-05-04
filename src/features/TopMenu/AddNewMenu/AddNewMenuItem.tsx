@@ -62,7 +62,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   },
   titleLink: {
     textDecoration: 'none',
-    color: 'black',
+    color: theme.color.black,
     fontSize: '1.18rem',
   },
   body: {
