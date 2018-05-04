@@ -9,7 +9,7 @@ const selectedBrowser = () => {
         return browserConf[argv.b];
     }
     if (process.env.DOCKER || argv.debug) {
-     browserConf['chrome'];
+     return browserConf['chrome'];
     }
     return browserConf['headlessChrome'];
 }
