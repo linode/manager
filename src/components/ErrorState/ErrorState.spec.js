@@ -22,7 +22,7 @@ describe('Error State Component Suite', () => {
         browser.click(navChild);
 
         waitForFocus('[data-qa-error-icon]');
-
+        console.log('balasdfg');
         const errorIcon = $(icon);
         const errorText = $(errorMsg);
 
