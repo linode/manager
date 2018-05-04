@@ -34,7 +34,7 @@ import {
   clone,
   VolumeRequestPayload,
 } from 'src/services/volumes';
-import { getLinodes } from 'src/services/linodes';
+import { getLinodes, getLinodeConfigs } from 'src/services/linodes';
 import { getRegions } from 'src/services/misc';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
@@ -79,6 +79,8 @@ interface State {
   size: number;
   region: string;
   linodeId: number;
+  configs: string[][];
+  selectedConfig?: string;
   errors?: Linode.ApiFieldError[];
 }
 
@@ -110,6 +112,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     size: this.props.size,
     region: this.props.region,
     linodeId: this.props.linodeId,
+    configs: [],
   };
 
   componentDidMount() {
@@ -145,6 +148,26 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
         errors: undefined,
       });
     }
+  }
+
+  updateConfigs(linodeID: number) {
+    getLinodeConfigs(linodeID)
+      .then((response) => {
+        const configChoices = response.data.map((config) => {
+          return [`${config.id}`, config.label];
+        });
+        this.setState({ configs: configChoices });
+        configChoices.length > 1 && this.setState({
+          selectedConfig: configChoices[0][0],
+        });
+      })
+      .catch(() => {
+        /*
+         * @note: If we can't get configs for the Linode, then the user can
+         * still create the volume, so we probably shouldn't show any error
+         * state if this fails.
+         */
+      });
   }
 
   onClose = () => {
@@ -275,11 +298,14 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
       size,
       region,
       linodeId,
+      configs,
+      selectedConfig,
       errors,
     } = this.state;
 
     const hasErrorFor = getAPIErrorFor({
-      linode_id: 'Linode ID',
+      linode_id: 'Linode',
+      config_id: 'Config',
       region: 'Region',
       size: 'Size',
       label: 'Label',
@@ -288,6 +314,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     const sizeError = hasErrorFor('size');
     const regionError = hasErrorFor('region');
     const linodeError = hasErrorFor('linode_id');
+    const configError = hasErrorFor('config_id');
     const generalError = hasErrorFor('none');
 
     return (
@@ -355,7 +382,13 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
               || mode === modes.EDITING
               || mode === modes.RESIZING
             }
-            onChange={e => this.mounted && this.setState({ region: (e.target.value) })}
+            onChange={(e) => {
+              this.mounted && this.setState({
+                region: (e.target.value),
+                linodeId: 0,
+                configs: [],
+              });
+            }}
             inputProps={{ name: 'region', id: 'region' }}
             error={Boolean(regionError)}
           >
@@ -389,7 +422,12 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
                 mode === modes.EDITING
                 || mode === modes.RESIZING
               }
-              onChange={e => this.mounted && this.setState({ linodeId: +(e.target.value) })}
+              onChange={(e) => {
+                this.mounted && this.setState({ linodeId: +(e.target.value) });
+                if (e.target.value) {
+                  this.updateConfigs(+e.target.value);
+                }
+              }}
               inputProps={{ name: 'linode', id: 'linode' }}
               error={Boolean(linodeError)}
             >
@@ -403,6 +441,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
                 .filter((linode) => {
                   return (
                     (region && region !== 'none')
+                      /* if the user has selection a region above, limit linodes to that region */
                       ? linode.region === region
                       : true
                   );
@@ -426,6 +465,32 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
                 {linodeError}
               </FormHelperText>
             }
+          </FormControl>
+        }
+
+        {configs.length > 1 &&
+          <FormControl fullWidth>
+            <InputLabel
+              htmlFor="config"
+              disableAnimation
+              shrink={true}
+              error={Boolean(configError)}
+            >
+              Config
+            </InputLabel>
+            <Select
+              value={selectedConfig || ''}
+              onChange={(e) => { this.setState({ selectedConfig: e.target.value }); }}
+              inputProps={{ name: 'config', id: 'config' }}
+              error={Boolean(configError)}
+            >
+              {
+                configs && configs.map((el) => {
+                  return <MenuItem key={el[0]} value={el[0]}>{el[1]}</MenuItem>;
+                })
+              }
+            </Select>
+            { Boolean(configError) && <FormHelperText error>{ configError }</FormHelperText> }
           </FormControl>
         }
 
