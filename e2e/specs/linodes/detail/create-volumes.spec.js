@@ -1,6 +1,6 @@
 import ListLinodes from '../../../pageobjects/list-linodes';
 import LinodeDetail from '../../../pageobjects/linode-detail.page';
-import VolumeDetail from '../../../pageobjects/volume-detail.page';
+import VolumeDetail from '../../../pageobjects/linode-detail-volume.page';
 import LinodeSummary from '../../../pageobjects/linode-detail-summary.page';
 
 const { constants } = require('../../../constants');
