@@ -13,11 +13,11 @@ import {
   Theme,
 } from 'material-ui/styles';
 import CssBaseline from 'material-ui/CssBaseline';
-import Grid from 'material-ui/Grid';
 import 'typeface-lato';
 
 import { API_ROOT } from 'src/constants';
 import TopMenu from 'src/features/TopMenu';
+import Grid from 'src/components/Grid';
 import SideMenu from 'src/components/SideMenu';
 import DefaultLoader from 'src/components/DefaultLoader';
 import { request, response } from 'src/store/reducers/resources';
@@ -202,8 +202,8 @@ export class App extends React.Component<CombinedProps, State> {
                 <AccountLevelNotifications />
                 <TopMenu toggleSideMenu={this.toggleMenu} />
                 <div className={classes.wrapper}>
-                  <Grid container className={classes.grid}>
-                    <div className={classes.switchWrapper}>
+                  <Grid container spacing={0}  className={classes.grid}>
+                    <Grid item className={classes.switchWrapper}>
                       <Switch>
                         <Route exact path="/dashboard" render={() =>
                           <Placeholder title="Dashboard" />} />
@@ -234,7 +234,7 @@ export class App extends React.Component<CombinedProps, State> {
                         <Route path="/profile" component={Profile} />
                         <Redirect to="/linodes" />
                       </Switch>
-                    </div>
+                    </Grid>
                     <DocsSidebar docs={documentation} />
                   </Grid>
                 </div>
