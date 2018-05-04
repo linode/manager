@@ -5,7 +5,7 @@ import InputLabel from 'material-ui/Input/InputLabel';
 import MenuItem from 'material-ui/Menu/MenuItem';
 import FormControl from 'material-ui/Form/FormControl';
 import FormHelperText from 'material-ui/Form/FormHelperText';
-import Grid from 'material-ui/Grid';
+import Grid from 'src/components/Grid';
 
 import ThemeDecorator from '../../utilities/storybookDecorators';
 

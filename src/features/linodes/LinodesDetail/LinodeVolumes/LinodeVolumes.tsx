@@ -12,7 +12,6 @@ import Button from 'material-ui/Button';
 import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
-import Table from 'material-ui/Table';
 import TableHead from 'material-ui/Table/TableHead';
 import TableBody from 'material-ui/Table/TableBody';
 import TableRow from 'material-ui/Table/TableRow';
@@ -28,6 +27,7 @@ import {
   update as updateVolume,
   resize as resizeVolume,
 } from 'src/services/volumes';
+import Table from 'src/components/Table';
 import Placeholder, { PlaceholderProps } from 'src/components/Placeholder';
 import IconTextLink, { IconTextLinkProps } from 'src/components/IconTextLink';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
