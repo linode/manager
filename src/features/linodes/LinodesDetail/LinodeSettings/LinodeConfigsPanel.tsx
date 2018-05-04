@@ -36,6 +36,9 @@ import {
   deleteLinodeConfig,
   getLinodeDisks,
   updateLinodeConfig,
+  createLinodeDisk,
+  updateLinodeDisk,
+  deleteLinodeDisk,
 } from 'src/services/linodes';
 
 import Table from 'src/components/Table';
@@ -55,6 +58,8 @@ import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import LinodeConfigActionMenu from './LinodeConfigActionMenu';
 import LinodeConfigDrawer from './LinodeConfigDrawer';
 import { genEvent } from 'src/features/linodes/LinodesLanding/powerActions';
+import LinodeDiskActionMenu from './LinodeDiskActionMenu';
+import LinodeDiskDrawer from './LinodeDiskDrawer';
 
 type ClassNames = 'root' | 'headline';
 
@@ -65,6 +70,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     marginBottom: theme.spacing.unit * 2,
   },
 });
+
+interface FormDrawerState<T> {
+  open: boolean;
+  submitting: boolean;
+  mode: 'create' | 'edit';
+  errors?: Linode.ApiFieldError[];
+  fields: T;
+}
 
 interface ConfigDrawerState {
   comments?: string;
@@ -92,6 +105,24 @@ interface ConfigDrawerState {
   virt_mode?: 'fullvirt' | 'paravirt';
 }
 
+interface ConfirmDiskDelete {
+  open: boolean;
+  submitting: boolean;
+  errors?: Linode.ApiFieldError[];
+  id?: number;
+  label?: string;
+}
+
+interface DiskFormFields {
+  label: string;
+  filesystem: string;
+  size: number;
+}
+
+interface DiskDrawerState extends FormDrawerState<DiskFormFields> {
+  diskId?: number;
+}
+
 interface ConfirmDeleteState {
   open: boolean;
   submitting: boolean;
@@ -102,11 +133,14 @@ interface ConfirmDeleteState {
 interface State {
   configDrawer: ConfigDrawerState;
   confirmDelete: ConfirmDeleteState;
+  diskDrawer: DiskDrawerState;
+  confirmDiskDelete: ConfirmDiskDelete;
   devices: {
     disks: ExtendedDisk[];
     volumes: ExtendedVolume[];
   };
   linodeConfigs: Linode.Config[];
+  linodeStatus: string;
   submitting: boolean;
   success?: string;
 }
@@ -117,6 +151,7 @@ interface Props {
   linodeLabel: string;
   linodeMemory: number;
   linodeRegion: string;
+  linodeStatus: string;
 }
 
 interface PromiseLoaderProps {
@@ -134,6 +169,25 @@ type CombinedProps = Props
   & WithStyles<ClassNames>;
 
 class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
+  defaultConfirmDiskDeleteState: ConfirmDiskDelete = {
+    open: false,
+    id: undefined,
+    label: undefined,
+    submitting: false,
+  };
+
+  defaultDiskDrawerState: DiskDrawerState = {
+    open: false,
+    submitting: false,
+    mode: 'create',
+    errors: undefined,
+    fields: {
+      label: '',
+      filesystem: '_none_',
+      size: 0,
+    },
+  };
+
   defaultConfigDrawerState: ConfigDrawerState = {
     open: false,
     submitting: false,
@@ -161,6 +215,7 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
   state: State = {
     submitting: false,
     linodeConfigs: this.props.linodeConfigs,
+    linodeStatus: this.props.linodeStatus,
     devices: {
       disks: this.props.disks.response || [],
       volumes: this.props.volumes.response || [],
@@ -170,11 +225,14 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
       submitting: false,
     },
     configDrawer: this.defaultConfigDrawerState,
+    diskDrawer: this.defaultDiskDrawerState,
+    confirmDiskDelete: this.defaultConfirmDiskDeleteState,
   };
 
   componentWillReceiveProps(nextProps: Props) {
     this.setState({
       linodeConfigs: nextProps.linodeConfigs,
+      linodeStatus: nextProps.linodeStatus,
       configDrawer: {
         ...this.state.configDrawer,
         memory_limit: nextProps.linodeMemory,
@@ -213,6 +271,26 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
               </Grid>
             </Grid>
             <this.LinodeConfigsTable />
+            <Grid
+              container
+              justify="space-between"
+              alignItems="flex-end"
+            >
+              <Grid item>
+                <Typography variant="title" className={classes.headline}>
+                  Disks
+                </Typography>
+              </Grid>
+              <Grid item>
+                <IconTextLink
+                  SideIcon={PlusSquare}
+                  onClick={() => this.setDiskDrawer({ open: true })}
+                  text="Add a Disk"
+                  title="Add a Disk"
+                />
+              </Grid>
+            </Grid>
+            <this.LinodeDisksTable />
           </ExpansionPanel>
         }
         <LinodeConfigDrawer
@@ -228,10 +306,28 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
               : this.updateConfig()
           }
         />
+        <LinodeDiskDrawer
+          mode={this.state.diskDrawer.mode}
+          open={this.state.diskDrawer.open}
+          errors={this.state.diskDrawer.errors}
+          label={this.state.diskDrawer.fields.label}
+          filesystem={this.state.diskDrawer.fields.filesystem}
+          size={this.state.diskDrawer.fields.size}
+          onChange={(key, value) => this.setDiskDrawer({
+            fields: { ...this.state.diskDrawer.fields, [key]: value },
+          })}
+          onClose={() => this.setDiskDrawer(this.defaultDiskDrawerState)}
+          onSubmit={() =>
+              this.state.diskDrawer.mode === 'create'
+              ? this.createDisk()
+              : this.updateDisk()
+          }
+        />
         <ConfirmationDialog
           title="Confirm Delete"
           open={this.state.confirmDelete.open}
-          actions={() =>
+          onClose={() => this.setConfirmDelete({ open: false, id: undefined })}
+          actions={({ onClose }) =>
             <ActionsPanel style={{ padding: 0 }}>
               <Button
                 onClick={() => this.deleteConfig()}
@@ -242,7 +338,7 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
                 Delete
               </Button>
               <Button
-                onClick={() => this.setConfirmDelete({ open: false, id: undefined })}
+                onClick={onClose}
                 variant="raised"
                 color="secondary"
                 className="cancel"
@@ -254,6 +350,35 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
         >
           <Typography>
             Are you sure you want to delete "{this.state.confirmDelete.label}"
+          </Typography>
+        </ConfirmationDialog>
+        <ConfirmationDialog
+          onClose={() => this.setConfirmDiskDelete({ open: false, id: undefined })}
+          title="Confirm Delete"
+          open={this.state.confirmDiskDelete.open}
+          actions={({ onClose }) =>
+            <ActionsPanel style={{ padding: 0 }}>
+              <Button
+                onClick={() => this.deleteDisk()}
+                variant="raised"
+                color="secondary"
+                className="destructive"
+              >
+                Delete
+              </Button>
+              <Button
+                onClick={onClose}
+                variant="raised"
+                color="secondary"
+                className="cancel"
+              >
+                Cancel
+              </Button>
+            </ActionsPanel>
+          }
+        >
+          <Typography>
+            Are you sure you want to delete "{this.state.confirmDiskDelete.label}"
           </Typography>
         </ConfirmationDialog>
       </React.Fragment>
@@ -270,6 +395,20 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
   setConfirmDelete = (obj: Partial<ConfirmDeleteState>, fn?: () => void) => this.setState({
     confirmDelete: {
       ...this.state.confirmDelete,
+      ...obj,
+    },
+  }, () => { if (fn) fn(); })
+
+  setDiskDrawer = (obj: Partial<DiskDrawerState>, fn?: () => void) => this.setState({
+    diskDrawer: {
+      ...this.state.diskDrawer,
+      ...obj,
+    },
+  }, () => { if (fn) fn(); })
+
+  setConfirmDiskDelete = (obj: Partial<ConfirmDiskDelete>, fn?: () => void) => this.setState({
+    confirmDiskDelete: {
+      ...this.state.confirmDiskDelete,
       ...obj,
     },
   }, () => { if (fn) fn(); })
@@ -323,6 +462,51 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
       .catch((error) => {
         events$.next(genEvent('linode_reboot', linodeId, linodeLabel));
       });
+  }
+
+  LinodeDisksTable = () => {
+    return (
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Label</TableCell>
+            <TableCell>Size</TableCell>
+            <TableCell></TableCell>
+          </TableRow>
+        </TableHead>
+
+        <TableBody>
+          {
+            this.state.devices.disks.map(disk => (
+              <TableRow key={disk.id}>
+                <TableCell>{disk.label}</TableCell>
+                <TableCell>{disk.size} MB</TableCell>
+                <TableCell>
+                  <LinodeDiskActionMenu
+                    linodeStatus={this.state.linodeStatus}
+                    onEdit={() => this.setDiskDrawer({
+                      mode: 'edit',
+                      open: true,
+                      diskId: disk.id,
+                      fields: {
+                        label: disk.label,
+                        size: disk.size,
+                        filesystem: disk.filesystem,
+                      },
+                    })}
+                    onDelete={() => this.setConfirmDiskDelete({
+                      open: true,
+                      id: disk.id,
+                      label: disk.label,
+                    })}
+                  />
+                </TableCell>
+              </TableRow>
+            ))
+          }
+        </TableBody>
+      </Table>
+    );
   }
 
   LinodeConfigsTable = () => {
@@ -388,12 +572,11 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
         virt_mode,
       },
     )
-      .then((response) => {
+      .then(({ data }) => {
         // find and replace inline
-        const idx = findIndex(propEq('id', configId), this.state.linodeConfigs);
 
         this.setState({
-          linodeConfigs: set(lensPath([idx]), response.data, this.state.linodeConfigs),
+          linodeConfigs: replaceById(data, data.id, this.state.linodeConfigs),
         });
 
         this.setConfigDrawer(this.defaultConfigDrawerState);
@@ -435,6 +618,73 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
         this.setConfigDrawer({ errors: error.response.data.errors });
       });
   }
+
+  createDisk = () => {
+    const { linodeId } = this.props;
+    const { label, size, filesystem } = this.state.diskDrawer.fields;
+    if (!linodeId) { return; }
+
+    this.setDiskDrawer({ submitting: true, errors: undefined });
+
+    createLinodeDisk(linodeId, {
+      label,
+      size,
+      filesystem: filesystem === '_none_' ? undefined : filesystem,
+    })
+      .then(({ data }) => {
+        this.setState({
+          devices: {
+            ...this.state.devices,
+            disks: [...this.state.devices.disks, { ...data, _id: `disk-${data.id}` }],
+          },
+        });
+        this.setDiskDrawer(this.defaultDiskDrawerState);
+      })
+      .catch((error) => {
+        this.setDiskDrawer({ errors: error.response.data.errors });
+      });
+  }
+
+  updateDisk = () => {
+    const { linodeId } = this.props;
+    const { diskDrawer: { diskId, fields: { label } } } = this.state;
+    if (!linodeId || !diskId) { return; }
+
+    this.setDiskDrawer({ submitting: true });
+
+    updateLinodeDisk(linodeId, diskId, { label })
+      .then(({ data }) => {
+        this.setState({ devices: {
+          ...this.state.devices,
+          disks: replaceById(data, data.id, this.state.devices.disks),
+        }});
+        this.setDiskDrawer(this.defaultDiskDrawerState);
+      })
+      .catch((error) => {
+        this.setDiskDrawer({ errors: error.response.data.errors });
+      });
+  }
+
+  deleteDisk = () => {
+    this.setConfirmDiskDelete({ submitting: true });
+    const { linodeId } = this.props;
+    const { confirmDiskDelete: { id: diskId } } = this.state;
+    if (!linodeId || !diskId) { return; }
+
+    deleteLinodeDisk(linodeId, diskId)
+      .then(() => {
+        this.setState({
+          devices: {
+            ...this.state.devices,
+            disks: this.state.devices.disks.filter(d => d.id !== diskId),
+          },
+        });
+        this.setConfirmDiskDelete({ open: false, errors: undefined });
+      })
+      .catch((error) => {
+        this.setConfirmDiskDelete({ errors: error.response.data.error });
+      });
+  }
 }
 
 const mapStateToProps = (state: Linode.AppState) => ({
@@ -446,7 +696,6 @@ const connected = connect<ConnectedProps>(mapStateToProps);
 const styled = withStyles<ClassNames>(styles, { withTheme: true });
 
 const preloaded = PromiseLoader<Props>({
-  /** @todo filter for available */
   disks: ({ linodeId }): Promise<ExtendedDisk[]> => getLinodeDisks(linodeId)
     .then(
       compose(
@@ -455,7 +704,6 @@ const preloaded = PromiseLoader<Props>({
       ),
   ),
 
-  /** @todo filter for available */
   volumes: ({ linodeId, linodeRegion }): Promise<ExtendedVolume[]> => getVolumes()
     .then(
       compose<
@@ -482,3 +730,10 @@ export default compose<any, any, any, any, any>(
   connected,
   styled,
 )(LinodeConfigsPanel);
+
+function replaceById<T>(data: T, id: number | string, list: T[]): T[] {
+  const idx = findIndex(propEq('id', id), list);
+  if (!idx) { return list; }
+
+  return set(lensPath([idx]), data, list);
+}
