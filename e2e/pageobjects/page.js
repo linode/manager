@@ -27,4 +27,15 @@ export default class Page {
         expect(displayedMsg).toBe(expectedMessage);
         browser.click('[data-qa-toast] button');
     }
+
+    dismissToast() {
+        return browser.waitUntil(function() {
+            if (browser.isVisible('[data-qa-toast]')) {
+                browser.click('[data-qa-toast] button');
+                const dismissed = browser.isVisible('[data-qa-toast]') ? true : false;
+                return dismissed;
+            }
+            return true;
+        }, 10000);
+    }
 }
