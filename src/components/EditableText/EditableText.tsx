@@ -36,10 +36,10 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     },
   },
   root: {
-    padding: '12px 12px 14px 0',
+    padding: '12px 12px 10px 0',
     display: 'inline-block',
     borderBottom: '2px dotted transparent',
-    color: theme.palette.primary.main,
+    transition: theme.transitions.create(['opacity']),
   },
   container: {
     display: 'inline-flex',
@@ -48,7 +48,9 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   },
   initial: {
     '&:hover, &:focus': {
-      color: theme.palette.primary.light,
+      '& $root': {
+        opacity: .5,
+      },
       '& $icon': {
         color: theme.palette.primary.light,
       },
@@ -64,7 +66,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   },
   inputRoot: {
     border: 0,
-    borderBottom: '2px dotted #333',
+    borderBottom: `2px dotted ${theme.color.black}`,
     backgroundColor: 'transparent',
   },
   button: {
@@ -75,6 +77,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   icon: {
     margin: '0 10px',
     color: theme.palette.text.primary,
+    transition: theme.transitions.create(['color']),
     '&:hover, &:focus': {
       color: theme.palette.primary.light,
     },
@@ -86,7 +89,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     fontSize: 26,
   },
   input: {
-    padding: '12px 12px 12px 0',
+    padding: '12px 12px 10px 0',
   },
   headline: {
     ...theme.typography.headline,

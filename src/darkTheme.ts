@@ -20,6 +20,7 @@ const LinodeTheme: Linode.Theme = {
     grey2: '#E7E7E7',
     grey3: '#ccc',
     white: '#32363C',
+    black: '#FFF',
     boxShadow: '#222',
   },
   palette: {
@@ -275,7 +276,6 @@ const LinodeTheme: Linode.Theme = {
         },
         '& svg': {
           fontSize: 18,
-          marginLeft: 8,
           cursor: 'pointer',
           color: 'white',
           '&:hover': {
@@ -285,6 +285,10 @@ const LinodeTheme: Linode.Theme = {
         '&.affirmative': {
           borderColor: '#00B159',
         },
+      },
+      inputMultiline: {
+        minHeight: 125,
+        padding: '5px 12px',
       },
       focused: {
         borderColor: '#666',
@@ -313,7 +317,7 @@ const LinodeTheme: Linode.Theme = {
     },
     MuiFormControl: {
       root: {
-        minHeight: 60,
+        minHeight: 50,
         marginTop: 16,
         minWidth: 200,
       },
