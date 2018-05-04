@@ -46,6 +46,10 @@ export class ListLinodes extends Page {
         }
     }
 
+    navigateToDetail(linode) {
+        linode.$(this.linodeLabel.selector).click();
+    }
+
 
     gridElemsDisplay() {
         const header = this.subheader;
