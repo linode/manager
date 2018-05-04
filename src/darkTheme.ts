@@ -21,7 +21,7 @@ const LinodeTheme: Linode.Theme = {
     grey2: '#E7E7E7',
     grey3: '#ccc',
     white: '#32363C',
-    black: '#FFF',
+    black: '#fff',
     boxShadow: '#222',
   },
   palette: {
