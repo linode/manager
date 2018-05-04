@@ -66,6 +66,7 @@ class LinodeDetail extends Page {
         expect(this.launchConsole.isVisible()).toBe(true);
         expect(this.powerControl.isVisible()).toBe(true);
         expect(this.linodeLabel.isVisible()).toBe(true);
+
         return this;
     }
 }

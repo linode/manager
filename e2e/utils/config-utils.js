@@ -11,6 +11,7 @@ const { constants } = require('../constants');
 */
 exports.login = (username, password) => {
     browser.url(constants.routes.dashboard);
+    browser.waitForVisible('#username');
     browser.setValue('#username', username);
     browser.setValue('#password', password);
     browser.click('.btn-primary');
