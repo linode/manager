@@ -4,6 +4,7 @@ import Button from 'material-ui/Button';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { Typography } from 'material-ui';
 
 interface Props {
   id: string;
@@ -127,7 +128,9 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
           actions={this.resetDialogActions}
           onClose={() => this.toggleConfirmReset(false)}
         >
-        Are you sure you want to permanently reset the secret of this OAuth client?
+        <Typography>
+          Are you sure you want to permanently reset the secret of this OAuth client?
+        </Typography>
         </ConfirmationDialog>
       </React.Fragment>
     );

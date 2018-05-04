@@ -6,6 +6,7 @@ import {
   WithStyles,
 } from 'material-ui';
 
+import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 import ActionsPanel from 'src/components/ActionsPanel';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
@@ -43,7 +44,7 @@ const DestructiveVolumeDialog: React.StatelessComponent<CombinedProps> = (props)
       title={`${title}`}
       onClose={props.onClose}
       actions={() =>
-        <ActionsPanel>
+        <ActionsPanel style={{ padding: 0 }}>
           <Button
             variant="raised"
             color="secondary"
@@ -65,7 +66,7 @@ const DestructiveVolumeDialog: React.StatelessComponent<CombinedProps> = (props)
         </ActionsPanel>
       }
     >
-      Are you sure you want to {props.mode} this volume?
+      <Typography>Are you sure you want to {props.mode} this volume?</Typography>
     </ConfirmationDialog>
   );
 };
