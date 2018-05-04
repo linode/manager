@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { storiesOf } from '@storybook/react';
 
-import Grid from 'material-ui/Grid';
+import Grid from 'src/components/Grid';
 
 import ThemeDecorator from '../../utilities/storybookDecorators';
 

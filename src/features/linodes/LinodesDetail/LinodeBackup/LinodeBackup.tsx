@@ -15,7 +15,6 @@ import { FormControl, FormHelperText } from 'material-ui/Form';
 import { InputLabel } from 'material-ui/Input';
 import { MenuItem } from 'material-ui/Menu';
 import Paper from 'material-ui/Paper';
-import Table from 'material-ui/Table';
 import TableHead from 'material-ui/Table/TableHead';
 import TableBody from 'material-ui/Table/TableBody';
 import TableRow from 'material-ui/Table/TableRow';
@@ -29,6 +28,7 @@ import {
   updateBackupsWindow,
   cancelBackups,
 } from 'src/services/linodes';
+import Table from 'src/components/Table';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
