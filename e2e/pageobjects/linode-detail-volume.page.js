@@ -126,8 +126,10 @@ class VolumeDetail {
         // Confirm remove
         dialogConfirm.click();
 
+        const volumeSelector = volumeElement.selector;
+        
         browser.waitUntil(function() {
-            return browser.waitForVisible('[data-qa-placeholder-title]', 20000) || !volumeElement.isExisting();
+            return !browser.isExisting(volumeSelector);
         }, 30000);
     }
 
