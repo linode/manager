@@ -25,6 +25,17 @@ a {
   text-decoration: none;
   color: #3B85D9;
 }
+/* Scrollbars (webkit only) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #ccc;
+}
+::-webkit-scrollbar-thumb {
+  background: #3B85D9;
+}
 
 /* Reusable Classes */
 .mlMain {
