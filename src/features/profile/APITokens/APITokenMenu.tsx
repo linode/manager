@@ -48,6 +48,13 @@ class APITokenMenu extends React.Component<CombinedProps> {
               closeMenu();
             },
           },
+          {
+            title: 'Revoke',
+            onClick: (e: React.MouseEvent<HTMLElement>) => {
+              openRevokeDialog();
+              closeMenu();
+            },
+          },
         ];
       return actions;
     };

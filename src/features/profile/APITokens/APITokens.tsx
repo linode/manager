@@ -113,6 +113,7 @@ export class APITokens extends React.Component<CombinedProps, State> {
       open: false,
       id: undefined,
       label: undefined,
+      type: '',
     },
     token: {
       open: false,
@@ -197,7 +198,9 @@ export class APITokens extends React.Component<CombinedProps, State> {
                       isAppTokenMenu={(title === 'Apps') ? true : false}
                       openViewDrawer={() => { this.openViewDrawer(token); }}
                       openEditDrawer={() => { this.openEditDrawer(token); }}
-                      openRevokeDialog={() => { this.openRevokeDialog(token.label, token.id); }}
+                      openRevokeDialog={() => {
+                        this.openRevokeDialog(token.label, token.id, type);
+                      }}
                     />
                   </TableCell>
                 </TableRow>,
@@ -287,8 +290,8 @@ export class APITokens extends React.Component<CombinedProps, State> {
     });
   }
 
-  openRevokeDialog = (label: string, id: number) => {
-    this.setState({ dialog: { open: true, label, id } });
+  openRevokeDialog = (label: string, id: number, type: string) => {
+    this.setState({ dialog: { open: true, label, id, type } });
   }
 
   closeRevokeDialog = () => {
@@ -303,9 +306,16 @@ export class APITokens extends React.Component<CombinedProps, State> {
     this.setState({ token: { open: false, value: undefined } });
   }
 
-  revokeToken = () => {
+  revokePersonalAccessToken = () => {
     const { dialog } = this.state;
     Axios.delete(`${API_ROOT}/profile/tokens/${dialog.id}`)
+      .then(() => { this.closeRevokeDialog(); })
+      .then(() => this.requestTokens());
+  }
+
+  revokeAppToken = () => {
+    const { dialog } = this.state;
+    Axios.delete(`${API_ROOT}/profile/apps/${dialog.id}`)
       .then(() => { this.closeRevokeDialog(); })
       .then(() => this.requestTokens());
   }
@@ -464,7 +474,9 @@ export class APITokens extends React.Component<CombinedProps, State> {
                   className="destructive"
                   onClick={() => {
                     this.closeRevokeDialog();
-                    this.revokeToken();
+                    (dialog.type === 'OAuth Client Token')
+                      ? this.revokeAppToken()
+                      : this.revokePersonalAccessToken();
                   }}
                   data-qa-button-confirm>
                   Yes
