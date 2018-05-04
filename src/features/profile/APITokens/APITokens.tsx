@@ -194,6 +194,7 @@ export class APITokens extends React.Component<CombinedProps, State> {
                   </TableCell>
                   <TableCell>
                     <APITokenMenu
+                      isAppTokenMenu={(title === 'Apps') ? true : false}
                       openViewDrawer={() => { this.openViewDrawer(token); }}
                       openEditDrawer={() => { this.openEditDrawer(token); }}
                       openRevokeDialog={() => { this.openRevokeDialog(token.label, token.id); }}
@@ -481,7 +482,7 @@ export class APITokens extends React.Component<CombinedProps, State> {
           }}
           onClose={() => this.closeRevokeDialog()}
         >
-         <Typography>Are you sure you want to revoke this API Token?</Typography>
+          <Typography>Are you sure you want to revoke this API Token?</Typography>
         </ConfirmationDialog>
 
         <ConfirmationDialog
