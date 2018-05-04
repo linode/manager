@@ -99,6 +99,7 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
         && (this.props.linodeRegion !== nextProps.linodeRegion)) {
       this.updateLinodes(nextProps.linodeRegion);
     }
+    this.setState({ configs: [] });
   }
 
   attachToLinode() {
@@ -152,12 +153,11 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
           >
             Linode
           </InputLabel>
-
           <Select
             value={selectedLinode || ''}
             onChange={(e) => {
               this.setState({ selectedLinode: e.target.value });
-              if (selectedLinode) {
+              if (e.target.value) {
                 this.updateConfigs(+e.target.value);
               }
             }}
@@ -186,18 +186,19 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
             >
               Config
             </InputLabel>
-              <Select
-                value={selectedConfig || ''}
-                onChange={(e) => { this.setState({ selectedConfig: e.target.value }); }}
-                inputProps={{ name: 'config', id: 'config' }}
-                error={Boolean(configError)}
-              >
-                {
-                  configs && configs.map((el) => {
-                    return <MenuItem key={el[0]} value={el[0]}>{el[1]}</MenuItem>;
-                  })
-                }
-              </Select>
+            <Select
+              value={selectedConfig || ''}
+              onChange={(e) => { this.setState({ selectedConfig: e.target.value }); }}
+              inputProps={{ name: 'config', id: 'config' }}
+              error={Boolean(configError)}
+            >
+              {
+                configs && configs.map((el) => {
+                  return <MenuItem key={el[0]} value={el[0]}>{el[1]}</MenuItem>;
+                })
+              }
+            </Select>
+            { Boolean(configError) && <FormHelperText error>{ configError }</FormHelperText> }
           </FormControl>
         }
 
