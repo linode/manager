@@ -14,7 +14,7 @@ import FormControl from 'material-ui/Form/FormControl';
 import FormHelperText from 'material-ui/Form/FormHelperText';
 
 import { resetEventsPolling } from 'src/events';
-import { getLinodes } from 'src/services/linodes';
+import { getLinodes, getLinodeConfigs } from 'src/services/linodes';
 import { attach } from 'src/services/volumes';
 import Select from 'src/components/Select';
 import Drawer from 'src/components/Drawer';
@@ -37,7 +37,9 @@ interface Props {
 
 interface State {
   linodes: string[][];
+  configs: string[][];
   selectedLinode?: string;
+  selectedConfig?: string;
   errors?: Linode.ApiFieldError[];
 }
 
@@ -46,7 +48,9 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
   defaultState = {
     linodes: [],
+    configs: [],
     selectedLinode: 'none',
+    selectedConfig: 'none',
     errors: [],
   };
 
@@ -67,6 +71,26 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
           return [`${linode.id}`, linode.label];
         });
         this.setState({ linodes: linodeChoices });
+      });
+  }
+
+  updateConfigs(linodeID: number) {
+    getLinodeConfigs(linodeID)
+      .then((response) => {
+        const configChoices = response.data.map((config) => {
+          return [`${config.id}`, config.label];
+        });
+        this.setState({ configs: configChoices });
+        configChoices.length > 1 && this.setState({
+          selectedConfig: configChoices[0][0],
+        });
+      })
+      .catch(() => {
+        /*
+         * @note: If we can't get configs for the Linode, then the user can
+         * still create the volume, so we probably shouldn't show any error
+         * state if this fails.
+         */
       });
   }
 
@@ -105,10 +129,11 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
 
   render() {
     const { open, onClose, volumeLabel } = this.props;
-    const { linodes, selectedLinode, errors } = this.state;
+    const { linodes, configs, selectedLinode, selectedConfig, errors } = this.state;
 
     const hasErrorFor = getAPIErrorsFor(this.errorResources, errors);
     const linodeError = hasErrorFor('linode_id');
+    const configError = hasErrorFor('config_id');
     const generalError = hasErrorFor('none');
 
     return (
@@ -117,6 +142,7 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
         onClose={() => { this.reset(); onClose(); }}
         title={`Attach Volume ${volumeLabel}`}
       >
+        {/* Linode Selection */}
         <FormControl fullWidth>
           <InputLabel
             htmlFor="linode"
@@ -126,9 +152,15 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
           >
             Linode
           </InputLabel>
+
           <Select
             value={selectedLinode || ''}
-            onChange={e => this.setState({ selectedLinode: e.target.value })}
+            onChange={(e) => {
+              this.setState({ selectedLinode: e.target.value });
+              if (selectedLinode) {
+                this.updateConfigs(+e.target.value);
+              }
+            }}
             inputProps={{ name: 'linode', id: 'linode' }}
             error={Boolean(linodeError)}
           >
@@ -142,6 +174,33 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
           { Boolean(linodeError) && <FormHelperText error>{ linodeError }</FormHelperText> }
           { Boolean(generalError) && <FormHelperText error>{ generalError }</FormHelperText> }
         </FormControl>
+
+        {/* Config Selection */}
+        {configs.length > 1 &&
+          <FormControl fullWidth>
+            <InputLabel
+              htmlFor="config"
+              disableAnimation
+              shrink={true}
+              error={Boolean(configError)}
+            >
+              Config
+            </InputLabel>
+              <Select
+                value={selectedConfig || ''}
+                onChange={(e) => { this.setState({ selectedConfig: e.target.value }); }}
+                inputProps={{ name: 'config', id: 'config' }}
+                error={Boolean(configError)}
+              >
+                {
+                  configs && configs.map((el) => {
+                    return <MenuItem key={el[0]} value={el[0]}>{el[1]}</MenuItem>;
+                  })
+                }
+              </Select>
+          </FormControl>
+        }
+
         <ActionsPanel>
           <Button
             variant="raised"
@@ -150,7 +209,9 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
           >
             Save
           </Button>
-          <Button onClick={() => { this.reset(); onClose(); }}>Cancel</Button>
+          <Button onClick={() => { this.reset(); onClose(); }}>
+            Cancel
+          </Button>
         </ActionsPanel>
       </Drawer>
     );
