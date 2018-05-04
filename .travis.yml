@@ -15,7 +15,7 @@ script:
       - yarn run lint
       - yarn test --coverage --maxWorkers=2
       - yarn storybook
-      - ./scripts/wait-for-it.sh -t 250 -s localhost:3000
+      - ./scripts/wait-for-it.sh -t 250 -s localhost:6006
       - yarn storybook:e2e
       - pkill -f selenium-standalone
       - pkill -f storybook
