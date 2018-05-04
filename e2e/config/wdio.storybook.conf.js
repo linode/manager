@@ -20,7 +20,7 @@ exports.config = merge(wdioMaster.config, {
     specs: specsToRun,
     baseUrl: process.env.DOCKER ? 'http://manager-storybook:6006' : 'http://localhost:6006',
     capabilities: [selectedBrowser()],
-    maxInstances: process.env.DOCKER ? 1 : 4,
+    maxInstances: process.env.DOCKER || argv.debug ?  1 : 4,
     reporterOptions: {
         junit: {
             outputDir: './storybook-test-results'
