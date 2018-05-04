@@ -5,7 +5,7 @@ language: node_js
 node_js:
   - "8.4.0"
 
-before_install: sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++
+before_install: sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++ google-chrome
 
 install:
     - yarn
@@ -14,8 +14,8 @@ script:
       - yarn build
       - yarn run lint
       - yarn test --coverage --maxWorkers=2
-      - yarn storybook &
-      - ./scripts/wait-for-it.sh -t 250 -s localhost:6006
+      - yarn storybook
+      - while ! curl -s localhost:6006 > /dev/null; do sleep 1 done
       - yarn storybook:e2e
       - pkill -f selenium-standalone
       - pkill -f storybook
