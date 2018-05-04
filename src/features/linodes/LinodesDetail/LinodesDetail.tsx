@@ -183,7 +183,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       nextState,
       ['linode', 'type', 'image', 'volumes', 'configs', 'configDrawer'],
     )
-    || haveAnyBeenModified<Location>(location, nextLocation, ['pathname', 'search']);
+      || haveAnyBeenModified<Location>(location, nextLocation, ['pathname', 'search']);
   }
 
   componentWillUnmount() {
@@ -284,6 +284,11 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       });
   }
 
+  // @param updatedStatus - either 'running' or 'offline'
+  updatePowerStatus = (updatedStatus: Linode.LinodeStatus) => {
+    this.setState({ linode: { ...this.state.linode, status: updatedStatus } });
+  }
+
   render() {
     const { match: { url }, classes } = this.props;
     const {
@@ -369,6 +374,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
           )} />
           <Route exact path={`${url}/resize`} render={() => (
             <LinodeResize
+              updatePowerStatus={this.updatePowerStatus}
               linodeId={linode.id}
               type={type}
             />

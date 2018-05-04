@@ -59,6 +59,7 @@ interface Props {
   linodeId: number;
   type: Linode.LinodeType;
   types: { response: ExtendedType[] };
+  updatePowerStatus: (updatedPowerStatus: Linode.LinodeStatus) => void;
 }
 
 interface State {
@@ -74,10 +75,11 @@ class LinodeResize extends React.Component<CombinedProps, State> {
   };
 
   onSubmit = () => {
-    const { linodeId } = this.props;
+    const { linodeId, updatePowerStatus } = this.props;
     const { selectedId } = this.state;
     resizeLinode(linodeId, selectedId)
       .then((response) => {
+        updatePowerStatus('offline');
         sendToast('Linode resize started.');
         resetEventsPolling();
       })
