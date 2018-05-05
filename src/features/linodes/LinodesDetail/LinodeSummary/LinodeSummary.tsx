@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as moment from 'moment';
 import * as Raven from 'raven-js';
 import { Line } from 'react-chartjs-2';
-import { pathOr } from 'ramda';
+import { pathOr, clone } from 'ramda';
 
 import { withStyles, StyleRulesCallback, WithStyles, Typography } from 'material-ui';
 import { InputLabel } from 'material-ui/Input';
@@ -78,6 +78,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
       },
     },
     graphTitle: {
+      position: 'relative',
+      top: 6,
       marginRight: theme.spacing.unit * 2,
     },
     graphControls: {
@@ -123,7 +125,7 @@ interface State {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const chartOptions = {
+const chartOptions: any = {
   maintainAspectRatio: false,
   animation: {
     duration: 0,
@@ -176,7 +178,6 @@ const chartOptions = {
     borderColor: '#999',
     caretPadding: 10,
     position: 'nearest',
-    afterBody: 'poo s',
   },
 };
 
@@ -316,9 +317,10 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
     };
   }
 
-  getChartOptions() {
-    const finalChartOptions = chartOptions;
+  getChartOptions(stat: string) {
+    const finalChartOptions = clone(chartOptions);
     const { rangeSelection } = this.state;
+
     if (rangeSelection === '24') {
       finalChartOptions.scales.xAxes[0].time.displayFormats = {
         hour: 'HH:00',
@@ -330,6 +332,11 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
         minute: 'MMM DD',
       };
     }
+
+    if (stat === 'cpu') {
+      finalChartOptions.scales.yAxes[0].ticks.suggestedMax = 100;
+    }
+
     return finalChartOptions;
   }
 
@@ -381,7 +388,7 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
                   </div>
                   <Line
                     height={chartHeight}
-                    options={this.getChartOptions()}
+                    options={this.getChartOptions('cpu')}
                     data={{
                       datasets: [
                         this.getChartJSDataFor('cpu', stats.data.cpu) as any,
@@ -408,7 +415,7 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
                   </div>
                   <Line
                     height={chartHeight}
-                    options={this.getChartOptions()}
+                    options={this.getChartOptions('ipv4')}
                     data={{
                       datasets: [
                         this.getChartJSDataFor('in', stats.data.netv4.in) as any,
@@ -447,7 +454,7 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
                   </div>
                   <Line
                     height={chartHeight}
-                    options={this.getChartOptions()}
+                    options={this.getChartOptions('ipv6')}
                     data={{
                       datasets: [
                         this.getChartJSDataFor('in', stats.data.netv6.in) as any,
@@ -486,7 +493,7 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
                     </div>
                   <Line
                     height={chartHeight}
-                    options={this.getChartOptions()}
+                    options={this.getChartOptions('disk')}
                     data={{
                       datasets: [
                         this.getChartJSDataFor('io', stats.data.io.io) as any,
