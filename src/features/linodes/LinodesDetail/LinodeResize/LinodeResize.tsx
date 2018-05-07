@@ -70,7 +70,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 class LinodeResize extends React.Component<CombinedProps, State> {
   state: State = {
-    selectedId: this.props.type.id,
+    selectedId: '',
   };
 
   onSubmit = () => {
