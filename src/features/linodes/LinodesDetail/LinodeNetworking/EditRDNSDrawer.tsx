@@ -87,6 +87,7 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
             value={rdns || ''}
             errorText={hasErrorFor('rdns')}
             onChange={e => this.setState({ rdns: e.target.value })}
+            data-qa-domain-name
           />
           { hasErrorFor('none') && <FormHelperText error>{ hasErrorFor('none') }</FormHelperText> }
 
@@ -99,6 +100,7 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
               variant="raised"
               color="primary"
               onClick={() => this.save()}
+              data-qa-submit
             >
               Save
             </Button>
@@ -107,6 +109,7 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
               color="secondary"
               className="cancel"
               onClick={onClose}
+              data-qa-cancel
             >
               Close
             </Button>
