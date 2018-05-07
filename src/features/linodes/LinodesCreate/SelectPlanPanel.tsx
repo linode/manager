@@ -39,13 +39,13 @@ const getHighMem = (types: ExtendedType[]) =>
   types.filter(t => /highmem/.test(t.class));
 
 const renderCard = (selectedID: string|null, handleSelection: Function) =>
-  (region: ExtendedType, idx: number) => (
+  (type: ExtendedType, idx: number) => (
       <SelectionCard
         key={idx}
-        checked={region.id === String(selectedID)}
-        onClick={e => handleSelection(region.id)}
-        heading={region.heading}
-        subheadings={region.subHeadings}
+        checked={type.id === String(selectedID)}
+        onClick={e => handleSelection(type.id)}
+        heading={type.heading}
+        subheadings={type.subHeadings}
       />
     );
 
