@@ -204,6 +204,49 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
         );
       },
     },
+    {
+      title: 'Create from Backup',
+      render: () => {
+        return (
+          <React.Fragment>
+            {/*
+              <SelectLinodePanel
+                selectedLinodeID={this.state.selectedLinodeID}
+                handleSelection={this.updateStateFor}
+              />
+            */}
+            <SelectRegionPanel
+              error={getErrorFor('region', this.state.errors)}
+              regions={this.props.regions.response}
+              handleSelection={this.updateStateFor}
+              selectedID={this.state.selectedRegionID}
+            />
+            <SelectPlanPanel
+              error={getErrorFor('type', this.state.errors)}
+              types={this.props.types.response}
+              onSelect={(id: string) => this.setState({ selectedTypeID: id })}
+              selectedID={this.state.selectedTypeID}
+            />
+            <LabelAndTagsPanel
+              error={getErrorFor('label', this.state.errors)}
+              label={this.state.label}
+              handleChange={this.updateStateFor}
+            />
+            <PasswordPanel
+              error={getErrorFor('root_pass', this.state.errors)}
+              password={this.state.password}
+              handleChange={v => this.setState({ password: v })}
+            />
+            <AddonsPanel
+              backups={this.state.backups}
+              backupsMonthly={this.getBackupsMonthlyPrice()}
+              privateIP={this.state.privateIP}
+              handleChange={this.updateStateFor}
+            />
+          </React.Fragment>
+        );
+      },
+    },
   ];
 
   componentDidMount() {
