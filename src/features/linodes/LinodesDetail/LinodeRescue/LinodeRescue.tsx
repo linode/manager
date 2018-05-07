@@ -91,12 +91,12 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
     super(props);
     const filteredVolumes = props.volumes.response.filter((volume) => {
       // whether volume is not attached to any Linode
-      const volumeIsUnattached = volume.linode_id === null ? true : false;
+      const volumeIsUnattached = volume.linode_id === null;
       // whether volume is attached to the current Linode we're viewing
       const volumeIsAttachedToCurrentLinode = volume.linode_id === props.linodeId;
       // whether volume is in the same region as the current Linode we're viewing
-      const volumeAndLinodeRegionMatch = props.linodeRegion === volume.region ? true : false;
-      return volumeIsAttachedToCurrentLinode || volumeIsUnattached && volumeAndLinodeRegionMatch;
+      const volumeAndLinodeRegionMatch = props.linodeRegion === volume.region;
+      return (volumeIsAttachedToCurrentLinode || volumeIsUnattached) && volumeAndLinodeRegionMatch;
     });
     this.state = {
       devices: {
