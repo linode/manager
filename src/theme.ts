@@ -294,7 +294,9 @@ const LinodeTheme: Linode.Theme = {
         borderColor: '#CA0813',
       },
       disabled: {
-        borderColor: '#f4f4f4',
+        borderColor: '#ccc',
+        color: '#666',
+        opacity: .5,
       },
       input: {
         padding: '12px 12px 13px',
@@ -328,7 +330,6 @@ const LinodeTheme: Linode.Theme = {
       root: {
         '&.selectHeader': {
           opacity: 1,
-          paddingBottom: 4,
           fontWeight: 700,
           fontSize: '1rem',
         },
