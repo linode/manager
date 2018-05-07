@@ -28,7 +28,7 @@ export const setMethod = (method: 'GET'|'POST'|'PUT'|'DELETE') => set(L.method, 
 export const setParams = (params: any) => set(L.params, params);
 
 /** Data */
-export const setData = <T>(data: T) => set(L.data, data);
+export const setData = (data: any) => set(L.data, data);
 
 /** Generator */
 export default (...fns: Function[]) => {

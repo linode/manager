@@ -395,6 +395,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               linodeConfigs={configs || []}
               linodeMemory={type.memory}
               linodeRegion={linode.region}
+              linodeStatus={linode.status}
             />
           )} />
           {/* 404 */}

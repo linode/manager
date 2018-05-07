@@ -154,7 +154,7 @@ export interface LinodeConfigCreationData {
 export const createLinodeConfig = (linodeId: number, data: LinodeConfigCreationData) => Request(
   setURL(`${API_ROOT}/linode/instances/${linodeId}/configs`),
   setMethod('POST'),
-  setData<LinodeConfigCreationData>(data),
+  setData(data),
 );
 
 export const deleteLinodeConfig = (linodeId: number, configId: number) => Request(
@@ -169,5 +169,54 @@ export const updateLinodeConfig = (
 ) => Request(
   setURL(`${API_ROOT}/linode/instances/${linodeId}/configs/${configId}`),
   setMethod('PUT'),
-  setData<LinodeConfigCreationData>(data),
-);
+  setData(data),
+  );
+
+export interface LinodeDiskCreationData {
+  label: string;
+  size: number;
+  filesystem?: string;
+}
+
+export const listLinodeDisks = (
+  linodeId: number,
+) => Request(
+  setURL(`${API_ROOT}/linode/instances/${linodeId}/disks`),
+  setMethod('GET'),
+  );
+
+export const createLinodeDisk = (
+  linodeId: number,
+  data: LinodeDiskCreationData,
+) => Request(
+  setURL(`${API_ROOT}/linode/instances/${linodeId}/disks`),
+  setMethod('POST'),
+  setData(data),
+  );
+
+export const getLinodeDisk = (
+  linodeId: number,
+  diskId: number,
+) => Request(
+  setURL(`${API_ROOT}/linode/instances/${linodeId}/disks/${diskId}`),
+  setMethod('GET'),
+  );
+
+export const updateLinodeDisk = (
+  linodeId: number,
+  diskId: number,
+  data: Pick<LinodeDiskCreationData, 'label'>,
+) => Request(
+  setURL(`${API_ROOT}/linode/instances/${linodeId}/disks/${diskId}`),
+  setMethod('PUT'),
+  setData(data),
+  );
+
+export const deleteLinodeDisk = (
+  linodeId: number,
+  diskId: number,
+) => Request(
+  setURL(`${API_ROOT}/linode/instances/${linodeId}/disks/${diskId}`),
+  setMethod('DELETE'),
+  );
+
