@@ -154,6 +154,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
     this.eventsSub = events$
       .filter(newLinodeEvents(mountTime))
+      .filter(e => !e._initial)
       .subscribe((linodeEvent) => {
         Axios.get(`${API_ROOT}/linode/instances/${(linodeEvent.entity as Linode.Entity).id}`)
           .then(response => response.data)
