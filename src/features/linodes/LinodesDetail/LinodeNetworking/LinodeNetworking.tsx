@@ -5,7 +5,6 @@ import {
   Theme,
   WithStyles,
 } from 'material-ui';
-import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 import Paper from 'material-ui/Paper';
 import TableHead from 'material-ui/Table/TableHead';
@@ -13,6 +12,7 @@ import TableBody from 'material-ui/Table/TableBody';
 import TableRow from 'material-ui/Table/TableRow';
 import TableCell from 'material-ui/Table/TableCell';
 
+import Grid from 'src/components/Grid';
 import PlusSquare from 'src/assets/icons/plus-square.svg';
 import Table from 'src/components/Table';
 import IconTextLink from 'src/components/IconTextLink';
@@ -39,7 +39,8 @@ type ClassNames =
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
   title: {
-    margin: `${theme.spacing.unit * 2}px 0`,
+    marginTop: `${theme.spacing.unit}px`,
+    marginBottom: `${theme.spacing.unit * 2}px`,
   },
   address: {
     width: '35%',

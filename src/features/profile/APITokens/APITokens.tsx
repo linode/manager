@@ -5,7 +5,6 @@ import { compose, filter, path, pathOr, sort } from 'ramda';
 
 import { withStyles, Theme, WithStyles, StyleRulesCallback } from 'material-ui/styles';
 import Button from 'material-ui/Button';
-import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 import TableBody from 'material-ui/Table/TableBody';
@@ -17,6 +16,7 @@ import { API_ROOT } from 'src/constants';
 import isPast from 'src/utilities/isPast';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import Table from 'src/components/Table';
+import Grid from 'src/components/Grid';
 import IconTextLink from 'src/components/IconTextLink';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Notice from 'src/components/Notice';

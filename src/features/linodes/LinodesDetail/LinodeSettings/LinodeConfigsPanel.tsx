@@ -23,7 +23,6 @@ import {
 } from 'material-ui';
 import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
-import Grid from 'material-ui/Grid';
 import TableBody from 'material-ui/Table/TableBody';
 import TableRow from 'material-ui/Table/TableRow';
 import TableHead from 'material-ui/Table/TableHead';
@@ -41,6 +40,7 @@ import {
   deleteLinodeDisk,
 } from 'src/services/linodes';
 
+import Grid from 'src/components/Grid';
 import Table from 'src/components/Table';
 import { getVolumes } from 'src/services/volumes';
 import { ExtendedDisk, ExtendedVolume }

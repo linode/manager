@@ -9,7 +9,6 @@ import {
   WithStyles,
 } from 'material-ui';
 import Button from 'material-ui/Button';
-import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 import TableHead from 'material-ui/Table/TableHead';
@@ -28,6 +27,7 @@ import {
   resize as resizeVolume,
 } from 'src/services/volumes';
 import Table from 'src/components/Table';
+import Grid from 'src/components/Grid';
 import Placeholder, { PlaceholderProps } from 'src/components/Placeholder';
 import IconTextLink, { IconTextLinkProps } from 'src/components/IconTextLink';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
@@ -742,7 +742,7 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }} >
+        <Grid container justify="space-between" alignItems="flex-end">
           <Grid item>
             <Typography
               variant="headline"
