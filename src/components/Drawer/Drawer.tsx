@@ -13,7 +13,8 @@ interface Props extends DrawerProps {
 type ClassNames = 'drawer'
 | 'button'
 | 'drawerHeader'
-| 'drawerContent';
+| 'drawerContent'
+| 'backDrop';
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
   paper: {
@@ -50,6 +51,9 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
       backgroundColor: theme.palette.primary.main,
     },
   },
+  backDrop: {
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+  },
 });
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -63,7 +67,7 @@ const DDrawer: React.StatelessComponent<CombinedProps> = (props) => {
       {...rest}
       classes={{ paper: classes.paper }}
       ModalProps={{
-        BackdropProps: { invisible: true },
+        BackdropProps: { className: classes.backDrop },
         disableBackdropClick: true,
       }}
       >
