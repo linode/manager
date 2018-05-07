@@ -115,7 +115,7 @@ class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
               type="number"
               required
               value={size}
-              onChange={e => onChange('size', +e.target.value)}
+              onChange={e => onChange('size', e.target.value === '' ? '' : +e.target.value)}
               errorText={sizeError}
             />}
           </Grid>
