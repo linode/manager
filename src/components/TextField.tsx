@@ -40,6 +40,13 @@ const LinodeTextField: React.StatelessComponent<Props> = (props) => {
         disableUnderline: true,
       }}
       fullWidth
+      SelectProps={{ MenuProps: {
+        getContentAnchorEl: undefined,
+        anchorOrigin: { vertical: 'bottom', horizontal: 'left' },
+        transformOrigin: { vertical: 'top', horizontal: 'left' },
+        MenuListProps: { className: 'selectMenuList' },
+        PaperProps: { className: 'selectMenuDropdown' },
+      }}}
     >
       {props.children}
     </TextField>
