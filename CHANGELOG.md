@@ -4,6 +4,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.24.1] - 2018-05-07
+### Added:
+- Change the label of a Linode via settings
+- Reset a Linode's root password
+- Alert Thresholds: set and modify
+- Linode Configurations: add, edit and delete
+- Linode Disks: add, edit and delete
+- Delete a Linode via settings
+- Product level notifications
+- Account-level notifications
+- IPv4 and IPv6 addresses: display and edit
+- Backup actions, restore and deploy
+- Global volume creation drawer
+- Volumes section: show commands for configuration
+- CopyTooltip component
+- Volumes section: edit, resize, attach, detach, delete, clone
+### Changed:
+- Toast timeout set to 6 seconds
+### Fixed:
+- Prevent showing null image name on CheckoutBar
+- Show relative date for date created on backups page
+- Don't show expired /app tokens
+- Show app tokens and PATs in chronological order
+
 ## [0.23.1] - 2018-04-19
 ### Fixed:
 - Fixed an issue where unexpected requests were sent when opening the notification menu.
