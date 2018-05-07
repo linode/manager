@@ -417,6 +417,9 @@ const LinodeTheme: Linode.Theme = {
         '&:focus': {
           backgroundColor: '#fff',
         },
+        '& em': {
+          fontStyle: 'normal',
+        },
       },
       select: {
         '&[aria-pressed="true"]': {

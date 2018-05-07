@@ -443,6 +443,9 @@ const LinodeTheme: Linode.Theme = {
         color: '#C9CACB',
         lineHeight: 2.2,
         minHeight: 46,
+        '& em': {
+          fontStyle: 'normal',
+        },
       },
       select: {
         '&[aria-pressed="true"]': {
