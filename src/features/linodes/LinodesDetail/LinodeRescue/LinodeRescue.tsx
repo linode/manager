@@ -3,7 +3,6 @@ import {
   assoc,
   clamp,
   compose,
-  filter,
   map,
   path,
   pathOr,
