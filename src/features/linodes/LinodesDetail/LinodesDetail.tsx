@@ -19,7 +19,6 @@ import { Location } from 'history';
 import { Subscription, Observable } from 'rxjs/Rx';
 import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
-import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
 
 import notifications$ from 'src/notifications';
@@ -29,6 +28,7 @@ import {
 } from 'src/services/linodes';
 import { events$ } from 'src/events';
 
+import Grid from 'src/components/Grid';
 import { newLinodeEvents } from 'src/features/linodes/events';
 import { weblishLaunch } from 'src/features/Weblish';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
@@ -88,9 +88,10 @@ type ClassNames = 'cta'
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   cta: {
+    marginTop: theme.spacing.unit,
     [theme.breakpoints.down('sm')]: {
+      margin: 0,
       display: 'flex',
-      margin: `${theme.spacing.unit * 2}px 0`,
       flexBasis: '100%',
     },
   },

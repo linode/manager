@@ -3,7 +3,6 @@ import Axios from 'axios';
 import { compose, path } from 'ramda';
 
 import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
-import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 import TableBody from 'material-ui/Table/TableBody';
@@ -18,6 +17,7 @@ import IconTextLink from 'src/components/IconTextLink';
 import PlusSquare from 'src/assets/icons/plus-square.svg';
 import { API_ROOT } from 'src/constants';
 import Table from 'src/components/Table';
+import Grid from 'src/components/Grid';
 import ActionMenu from './OAuthClientActionMenu';
 import OAuthFormDrawer from './OAuthFormDrawer';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
