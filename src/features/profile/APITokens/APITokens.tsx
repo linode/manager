@@ -426,14 +426,14 @@ export class APITokens extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         {this.renderTokenTable(
-          'Apps',
-          'OAuth Client Token',
-          appTokens,
-        )}
-        {this.renderTokenTable(
           'Personal Access Tokens',
           'Personal Access Token',
           pats,
+        )}
+        {this.renderTokenTable(
+          'Apps',
+          'OAuth Client Token',
+          appTokens,
         )}
         <APITokenDrawer
           open={form.open}
@@ -481,7 +481,7 @@ export class APITokens extends React.Component<CombinedProps, State> {
           }}
           onClose={() => this.closeRevokeDialog()}
         >
-         <Typography>Are you sure you want to revoke this API Token?</Typography>
+          <Typography>Are you sure you want to revoke this API Token?</Typography>
         </ConfirmationDialog>
 
         <ConfirmationDialog
