@@ -1,6 +1,8 @@
 import * as React from 'react';
 import * as moment from 'moment';
 import Axios from 'axios';
+import { getPersonalAccessTokens, getAppTokens, removePersonalAccessToken, removeAppToken }
+  from 'src/services/profile';
 import { compose, filter, path, pathOr, sort } from 'ramda';
 
 import { withStyles, Theme, WithStyles, StyleRulesCallback } from 'material-ui/styles';
@@ -53,9 +55,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
 };
 
 const preloaded = PromiseLoader<Props>({
-  pats: () => Axios.get(`${API_ROOT}/profile/tokens`)
+  pats: () => getPersonalAccessTokens()
     .then(response => response.data),
-  appTokens: () => Axios.get(`${API_ROOT}/profile/apps`)
+  appTokens: () => getAppTokens()
     .then(response => response.data),
 });
 
@@ -195,7 +197,7 @@ export class APITokens extends React.Component<CombinedProps, State> {
                   </TableCell>
                   <TableCell>
                     <APITokenMenu
-                      isAppTokenMenu={(title === 'Apps') ? true : false}
+                      isAppTokenMenu={(title === 'Apps')}
                       openViewDrawer={() => { this.openViewDrawer(token); }}
                       openEditDrawer={() => { this.openEditDrawer(token); }}
                       openRevokeDialog={() => {
@@ -227,7 +229,7 @@ export class APITokens extends React.Component<CombinedProps, State> {
   }
 
   requestTokens = () => {
-    Axios.get(`${API_ROOT}/profile/tokens`)
+    getPersonalAccessTokens()
       .then(response => response.data.data)
       .then((data) => {
         if (!this.mounted) { return; }
@@ -308,14 +310,14 @@ export class APITokens extends React.Component<CombinedProps, State> {
 
   revokePersonalAccessToken = () => {
     const { dialog } = this.state;
-    Axios.delete(`${API_ROOT}/profile/tokens/${dialog.id}`)
+    removePersonalAccessToken(dialog.id)
       .then(() => { this.closeRevokeDialog(); })
       .then(() => this.requestTokens());
   }
 
   revokeAppToken = () => {
     const { dialog } = this.state;
-    Axios.delete(`${API_ROOT}/profile/apps/${dialog.id}`)
+    removeAppToken(dialog.id)
       .then(() => { this.closeRevokeDialog(); })
       .then(() => this.requestTokens());
   }
