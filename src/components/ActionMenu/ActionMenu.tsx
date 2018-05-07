@@ -4,11 +4,13 @@ import {
   withStyles, WithStyles, StyleRulesCallback, Theme,
 } from 'material-ui';
 import IconButton from 'material-ui/IconButton';
-import Menu, { MenuItem } from 'material-ui/Menu';
+import Menu from 'material-ui/Menu';
+import MenuItem from 'material-ui/Menu/MenuItem';
 import MoreHoriz from 'material-ui-icons/MoreHoriz';
 
 export interface Action {
   title: string;
+  disabled?: boolean;
   onClick: (e: React.MouseEvent<HTMLAnchorElement>) => void;
 }
 
@@ -98,7 +100,7 @@ class ActionMenu extends React.Component<CombinedProps, State> {
 
     return actions.length === 1
       ? (actions as Action[]).map((a, idx) =>
-          <a href="#" key={idx} onClick={e => a.onClick(e)}>{a.title}</a>)
+        <a href="#" key={idx} onClick={e => a.onClick(e)}>{a.title}</a>)
       : (<div className={classes.root}>
         <IconButton
           aria-owns={anchorEl ? 'action-menu' : undefined}
@@ -125,6 +127,7 @@ class ActionMenu extends React.Component<CombinedProps, State> {
               onClick={a.onClick}
               className={classes.item}
               data-qa-action-menu-item={a.title}
+              disabled={a.disabled}
             >{a.title}</MenuItem>,
           )}
         </Menu>
