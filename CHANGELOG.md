@@ -44,8 +44,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Personal Access Token still displays after revoke.
 - Under rare circumstances the Linode detail page may be blank due to an unexpected user configuration.
 
-### Known Issues
-
 ## [0.22.6] - 2018-04-10
 ### Fixed:
 - Issues related to uncommon regions, plan types, and images
