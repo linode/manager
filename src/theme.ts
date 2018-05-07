@@ -361,7 +361,7 @@ const LinodeTheme: Linode.Theme = {
           boxSizing: 'content-box',
           '& li': {
             color: '#666',
-            '&:hover': {
+            '&:hover, &:focus': {
               color: 'white',
             },
           },
