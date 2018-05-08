@@ -258,6 +258,14 @@ const LinodeTheme: Linode.Theme = {
         color: '#CA0813',
       },
     },
+    MuiIconButton: {
+      root: {
+        color: '#3B85D9',
+        '&:hover, &:focus': {
+          color: '#5F99EA',
+        },
+      },
+    },
     MuiInput: {
       root: {
         maxWidth: 415,

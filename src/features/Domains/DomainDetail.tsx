@@ -12,7 +12,8 @@ import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
 import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
 import Typography from 'material-ui/Typography';
-import Button from 'material-ui/Button';
+import IconButton from 'material-ui/IconButton';
+import KeyboardArrowLeft from 'material-ui-icons/KeyboardArrowLeft';
 
 import { getDomain } from 'src/services/domains';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
@@ -31,10 +32,23 @@ interface PreloadedProps {
   domain: PromiseLoaderResponse<Linode.Domain>;
 }
 
-type ClassNames = 'root';
+type ClassNames = 'root'
+  | 'titleWrapper'
+  | 'backButton';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {},
+  titleWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  backButton: {
+    margin: '2px 0 0 -16px',
+    '& svg': {
+      width: 34,
+      height: 34,
+    },
+  },
 });
 
 type CombinedProps = RouteProps & PreloadedProps & WithStyles<ClassNames>;
@@ -71,7 +85,7 @@ class DomainDetail extends React.Component<CombinedProps, State> {
 
   render() {
     const matches = (p: string) => Boolean(matchPath(p, { path: this.props.location.pathname }));
-    const { match: { url }, history } = this.props;
+    const { match: { url }, history, classes } = this.props;
     const { error, domain } = this.state;
 
     /** Empty State */
@@ -89,8 +103,13 @@ class DomainDetail extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <Grid container justify="space-between">
-          <Grid item style={{ flex: 1 }}>
-            <Button onClick={ () => history.push('/domains') }>&lt;</Button>
+          <Grid item className={classes.titleWrapper}>
+            <IconButton
+              onClick={ () => history.push('/domains') }
+              className={classes.backButton}
+            >
+              <KeyboardArrowLeft />
+            </IconButton>
             <Typography variant="headline">{domain.domain}</Typography>
           </Grid>
         </Grid>
