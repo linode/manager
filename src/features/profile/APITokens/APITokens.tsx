@@ -439,14 +439,14 @@ export class APITokens extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         {this.renderTokenTable(
-          'Apps',
-          'OAuth Client Token',
-          appTokens,
-        )}
-        {this.renderTokenTable(
           'Personal Access Tokens',
           'Personal Access Token',
           pats,
+        )}
+        {this.renderTokenTable(
+          'Apps',
+          'OAuth Client Token',
+          appTokens,
         )}
         <APITokenDrawer
           open={form.open}
