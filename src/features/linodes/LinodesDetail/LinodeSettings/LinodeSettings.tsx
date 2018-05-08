@@ -66,7 +66,7 @@ const LinodeSettings: React.StatelessComponent<CombinedProps> = (props) => {
         linodeId={linodeId}
       />
       <LinodeSettingsPasswordPanel
-        linodeDisks={linodeDisks}
+        linodeDisks={linodeDisks.response}
         linodeLabel={linodeLabel}
         linodeId={linodeId}
       />
@@ -76,7 +76,7 @@ const LinodeSettings: React.StatelessComponent<CombinedProps> = (props) => {
         linodeAlerts={linodeAlerts}
       />
       <LinodeConfigsPanel
-        linodeDisks={linodeDisks}
+        linodeDisks={linodeDisks.response}
         linodeId={linodeId}
         linodeLabel={linodeLabel}
         linodeRegion={linodeRegion}

@@ -21,8 +21,6 @@ import FormHelperText from 'material-ui/Form/FormHelperText';
 import { changeLinodeDiskPassword } from 'src/services/linodes';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
-import { PromiseLoaderResponse } from 'src/components/PromiseLoader';
-
 import PasswordInput from 'src/components/PasswordInput';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -38,7 +36,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 interface Props {
   linodeId: number;
   linodeLabel: string;
-  linodeDisks: PromiseLoaderResponse<Linode.Disk[]>;
+  linodeDisks: Linode.Disk[];
 }
 
 interface State {
@@ -54,7 +52,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> {
   state: State = {
-    linodeDisks: this.props.linodeDisks.response
+    linodeDisks: this.props.linodeDisks
       .filter((disk: Linode.Disk) => disk.filesystem !== 'swap'),
     value: '',
     diskId: pathOr('', ['disks', 'response', 0, 'id'], this.props),

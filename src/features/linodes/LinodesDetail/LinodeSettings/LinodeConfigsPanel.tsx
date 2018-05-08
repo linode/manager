@@ -144,7 +144,7 @@ interface State {
 }
 
 interface Props {
-  linodeDisks: PromiseLoaderResponse<Linode.Disk[]>;
+  linodeDisks: Linode.Disk[];
   linodeConfigs: Linode.Config[];
   linodeId: number;
   linodeLabel: string;
@@ -216,7 +216,7 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
     const updatedDisks = compose(
       // add the _id property to each disk
       map((disk: Linode.Disk) => assoc('_id', `disk-${disk.id}`, disk)),
-    )(this.props.linodeDisks.response);
+    )(this.props.linodeDisks);
 
     this.state = {
       submitting: false,
