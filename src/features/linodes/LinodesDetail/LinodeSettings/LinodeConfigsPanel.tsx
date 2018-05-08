@@ -5,6 +5,7 @@ import {
   append,
   assoc,
   compose,
+  defaultTo,
   filter,
   findIndex,
   lensPath,
@@ -210,31 +211,25 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
     errors: undefined,
   };
 
-  constructor(props: CombinedProps) {
-    super(props);
-
-    const updatedDisks = compose(
-      // add the _id property to each disk
-      map((disk: Linode.Disk) => assoc('_id', `disk-${disk.id}`, disk)),
-    )(this.props.linodeDisks);
-
-    this.state = {
+  state: State = {
+    submitting: false,
+    linodeConfigs: this.props.linodeConfigs,
+    linodeStatus: this.props.linodeStatus,
+    devices: {
+      disks: compose(
+        map<Linode.Disk, ExtendedDisk>(disk => assoc('_id', `disk-${disk.id}`, disk)),
+        defaultTo([]),
+      )(this.props.linodeDisks),
+      volumes: this.props.volumes.response || [],
+    },
+    confirmDelete: {
+      open: false,
       submitting: false,
-      linodeConfigs: this.props.linodeConfigs,
-      linodeStatus: this.props.linodeStatus,
-      devices: {
-        disks: updatedDisks || [],
-        volumes: this.props.volumes.response || [],
-      },
-      confirmDelete: {
-        open: false,
-        submitting: false,
-      },
-      configDrawer: this.defaultConfigDrawerState,
-      diskDrawer: this.defaultDiskDrawerState,
-      confirmDiskDelete: this.defaultConfirmDiskDeleteState,
-    };
-  }
+    },
+    configDrawer: this.defaultConfigDrawerState,
+    diskDrawer: this.defaultDiskDrawerState,
+    confirmDiskDelete: this.defaultConfirmDiskDeleteState,
+  };
 
   componentWillReceiveProps(nextProps: Props) {
     this.setState({
