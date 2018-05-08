@@ -15,7 +15,7 @@ type ClassNames = 'root'
  | 'suggestionTitle'
  | 'suggestionDescription';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
     cursor: 'pointer',
     display: 'flex',
@@ -39,10 +39,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
   suggestionTitle: {
     fontSize: '1rem',
+    color: theme.palette.text.primary,
   },
   suggestionDescription: {
+    color: theme.color.headline,
     fontSize: '.8rem',
-    fontWeight: 700,
+    fontWeight: 600,
+    marginTop: 2,
   },
 });
 
