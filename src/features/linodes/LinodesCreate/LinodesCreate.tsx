@@ -26,6 +26,7 @@ import PromiseLoader from 'src/components/PromiseLoader';
 
 import SelectLinodePanel, { ExtendedLinode } from './SelectLinodePanel';
 import SelectImagePanel from './SelectImagePanel';
+import SelectBackupPanel from './SelectBackupPanel';
 import SelectRegionPanel, { ExtendedRegion } from './SelectRegionPanel';
 import SelectPlanPanel, { ExtendedType } from './SelectPlanPanel';
 import LabelAndTagsPanel from './LabelAndTagsPanel';
@@ -75,6 +76,7 @@ type CombinedProps = Props & WithStyles<Styles> & PreloadedProps & RouteComponen
 interface State {
   selectedTab: number;
   selectedLinodeID?: number;
+  selectedBackupID?: number;
   selectedImageID: string | null;
   selectedRegionID: string | null;
   selectedTypeID: string | null;
@@ -255,6 +257,12 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
               error={getErrorFor('linode_id', this.state.errors)}
               linodes={this.extendLinodes(this.props.linodes.response)}
               selectedLinodeID={this.state.selectedLinodeID}
+              handleSelection={this.updateStateFor}
+            />
+            <SelectBackupPanel
+              error={getErrorFor('backup_id', this.state.errors)}
+              selectedLinodeID={this.state.selectedLinodeID}
+              selectedBackupID={this.state.selectedBackupID}
               handleSelection={this.updateStateFor}
             />
             <SelectRegionPanel
