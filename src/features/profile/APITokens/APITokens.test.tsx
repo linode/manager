@@ -118,12 +118,13 @@ describe('APITokens', () => {
 
   it('should expect tokens to show in ascending order by created date', () => {
     const find = component.find('tr[data-qa-table-row]');
-    expect(find.at(0).prop('data-qa-table-row')).toEqual('');
-    expect(find.at(1).prop('data-qa-table-row')).toEqual('test-app-3');
-    expect(find.at(2).prop('data-qa-table-row')).toEqual('test-app-2');
-    expect(find.at(3).prop('data-qa-table-row')).toEqual('test-app-4');
-    expect(find.at(4).prop('data-qa-table-row')).toEqual('test-3');
-    expect(find.at(5).prop('data-qa-table-row')).toEqual('test-2');
+    expect(find.at(0).prop('data-qa-table-row')).toEqual('test-3');
+    expect(find.at(1).prop('data-qa-table-row')).toEqual('test-2');
+    expect(find.at(2).prop('data-qa-table-row')).toEqual('test-4');
+    expect(find.at(3).prop('data-qa-table-row')).toEqual('');
+    expect(find.at(4).prop('data-qa-table-row')).toEqual('test-app-3');
+    expect(find.at(5).prop('data-qa-table-row')).toEqual('test-app-2');
+
   });
 });
 
