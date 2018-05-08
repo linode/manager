@@ -23,6 +23,7 @@ import { createLinode, getLinodeTypes, allocatePrivateIP, getLinodes } from 'src
 import { getImages } from 'src/services/images';
 import { getRegions } from 'src/services/misc';
 import PromiseLoader from 'src/components/PromiseLoader';
+import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
 import SelectLinodePanel, { ExtendedLinode } from './SelectLinodePanel';
 import SelectImagePanel from './SelectImagePanel';
@@ -77,6 +78,7 @@ interface State {
   selectedTab: number;
   selectedLinodeID?: number;
   selectedBackupID?: number;
+  requiredDiskSpace?: number;
   selectedImageID: string | null;
   selectedRegionID: string | null;
   selectedTypeID: string | null;
@@ -137,14 +139,6 @@ const errorResources = {
   region: 'A region selection',
   label: 'A label',
   root_pass: 'A root password',
-};
-
-const getErrorFor = (field: string, arr: Linode.ApiFieldError[] = []): undefined | string => {
-  const err = arr.find(e => e.field === field);
-  if (!err) {
-    return;
-  }
-  return err.reason.replace(err.field, errorResources[err.field]);
 };
 
 const formatLinodeSubheading = (typeInfo: string, imageInfo: string) => {
@@ -217,6 +211,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     {
       title: 'Create from Image',
       render: () => {
+        const hasErrorFor = getAPIErrorsFor(errorResources, this.state.errors);
         return (
           <React.Fragment>
             <SelectImagePanel
@@ -225,24 +220,24 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
               selectedImageID={this.state.selectedImageID}
             />
             <SelectRegionPanel
-              error={getErrorFor('region', this.state.errors)}
+              error={hasErrorFor('region')}
               regions={this.props.regions.response}
               handleSelection={this.updateStateFor}
               selectedID={this.state.selectedRegionID}
             />
             <SelectPlanPanel
-              error={getErrorFor('type', this.state.errors)}
+              error={hasErrorFor('type')}
               types={this.props.types.response}
               onSelect={(id: string) => this.setState({ selectedTypeID: id })}
               selectedID={this.state.selectedTypeID}
             />
             <LabelAndTagsPanel
-              error={getErrorFor('label', this.state.errors)}
+              error={hasErrorFor('label')}
               label={this.state.label}
               handleChange={this.updateStateFor}
             />
             <PasswordPanel
-              error={getErrorFor('root_pass', this.state.errors)}
+              error={hasErrorFor('root_pass')}
               password={this.state.password}
               handleChange={v => this.setState({ password: v })}
             />
@@ -259,10 +254,11 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     {
       title: 'Create from Backup',
       render: () => {
+        const hasErrorFor = getAPIErrorsFor(errorResources, this.state.errors);
         return (
           <React.Fragment>
             <SelectLinodePanel
-              error={getErrorFor('linode_id', this.state.errors)}
+              error={hasErrorFor('linode_id')}
               linodes={compose(
                 (linodes: Linode.Linode[]) => this.extendLinodes(linodes),
                 linodesWithBackups,
@@ -271,30 +267,31 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
               handleSelection={this.updateStateFor}
             />
             <SelectBackupPanel
-              error={getErrorFor('backup_id', this.state.errors)}
+              error={hasErrorFor('backup_id')}
               selectedLinodeID={this.state.selectedLinodeID}
               selectedBackupID={this.state.selectedBackupID}
               handleSelection={this.updateStateFor}
             />
             <SelectRegionPanel
-              error={getErrorFor('region', this.state.errors)}
+              error={hasErrorFor('region')}
               regions={this.props.regions.response}
               handleSelection={this.updateStateFor}
               selectedID={this.state.selectedRegionID}
             />
             <SelectPlanPanel
-              error={getErrorFor('type', this.state.errors)}
+              error={hasErrorFor('type')}
               types={this.props.types.response}
               onSelect={(id: string) => this.setState({ selectedTypeID: id })}
               selectedID={this.state.selectedTypeID}
+              requiredDiskSpace={Number(this.state.requiredDiskSpace) || 0}
             />
             <LabelAndTagsPanel
-              error={getErrorFor('label', this.state.errors)}
+              error={hasErrorFor('label')}
               label={this.state.label}
               handleChange={this.updateStateFor}
             />
             <PasswordPanel
-              error={getErrorFor('root_pass', this.state.errors)}
+              error={hasErrorFor('root_pass')}
               password={this.state.password}
               handleChange={v => this.setState({ password: v })}
             />
@@ -413,6 +410,9 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
 
     const tabRender = this.tabs[selectedTab].render;
 
+    const hasErrorFor = getAPIErrorsFor(errorResources, this.state.errors);
+    const generalError = hasErrorFor('none');
+
     return (
       <StickyContainer>
         <Grid container>
@@ -440,6 +440,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
                 (props: StickyProps) => {
                   const combinedProps = {
                     ...props,
+                    error: generalError,
                     label,
                     imageInfo,
                     typeInfo,
