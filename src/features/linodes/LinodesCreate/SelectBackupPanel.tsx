@@ -12,6 +12,7 @@ import Typography from 'material-ui/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import SelectionCard from 'src/components/SelectionCard';
+import CircleProgress from 'src/components/CircleProgress';
 
 import { getLinodeBackups } from 'src/services/linodes';
 import {
@@ -29,6 +30,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     flexGrow: 1,
     width: '100%',
     backgroundColor: theme.color.white,
+    marginTop: theme.spacing.unit * 3,
   },
   inner: {
     padding: theme.spacing.unit * 3,
@@ -47,6 +49,7 @@ interface Props {
 }
 
 interface State {
+  loading: Boolean;
   backups?: Linode.LinodeBackup[];
 }
 
@@ -55,14 +58,22 @@ type StyledProps = Props & WithStyles<ClassNames>;
 type CombinedProps = StyledProps;
 
 class SelectBackupPanel extends React.Component<CombinedProps, State> {
-  state: State = {};
+  state: State = {
+    loading: false,
+  };
 
   handleSelection = this.props.handleSelection('selectedBackupID');
 
   fetchBackups(linodeID?: number) {
     if (linodeID) {
+      this.setState({ loading: true });
       getLinodeBackups(linodeID)
-        .then(backups => this.setState({ backups: aggregateBackups(backups) }));
+        .then((backups) => {
+          this.setState({
+            backups: aggregateBackups(backups),
+            loading: false,
+          });
+        });
     }
   }
 
@@ -70,8 +81,10 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
     this.fetchBackups(this.props.selectedLinodeID);
   }
 
-  componentDidUpdate() {
-    this.fetchBackups(this.props.selectedLinodeID);
+  componentDidUpdate(prevProps: CombinedProps) {
+    if (prevProps.selectedLinodeID !== this.props.selectedLinodeID) {
+      this.fetchBackups(this.props.selectedLinodeID);
+    }
   }
 
   renderCard(backup: Linode.LinodeBackup) {
@@ -81,7 +94,7 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
         key={backup.id}
         checked={backup.id === Number(selectedBackupID)}
         onClick={e => this.handleSelection(e, `${backup.id}`)}
-        heading={backup.type}
+        heading={backup.label ? backup.label : backup.type === 'auto' ? 'Automatic' : 'Snapshot'}
         subheadings={[formatBackupDate(backup.created)]}
       />
     );
@@ -89,24 +102,34 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
 
   render() {
     const { error, classes } = this.props;
-    const { backups } = this.state;
+    const { backups, loading } = this.state;
 
     return (
       <Paper className={`${classes.root}`}>
         <div className={classes.inner}>
-          { error && <Notice text={error} error /> }
+          {error && <Notice text={error} error />}
           <Typography variant="title">
             Select Backup
           </Typography>
-          <Typography component="div" className={classes.panelBody}>
-            <Grid container>
-              {backups && backups.map((backup) => {
-                return (
-                  this.renderCard(backup)
-                );
-              })}
-            </Grid>
-          </Typography>
+          {(!loading)
+            ? <React.Fragment>
+                {backups
+                  ? <Typography component="div" className={classes.panelBody}>
+                      <Grid container>
+                        {backups.map((backup) => {
+                          return (
+                            this.renderCard(backup)
+                          );
+                        })}
+                      </Grid>
+                    </Typography>
+                  : <Typography variant="body1">
+                      First, select a Linode
+                    </Typography>
+                }
+              </React.Fragment>
+            : <CircleProgress />
+          }
         </div>
       </Paper>
     );
