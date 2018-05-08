@@ -6,6 +6,8 @@ import JP from 'flag-icon-css/flags/4x3/jp.svg';
 import UK from 'flag-icon-css/flags/4x3/gb.svg';
 import DE from 'flag-icon-css/flags/4x3/de.svg';
 
+import { withStyles, StyleRulesCallback, WithStyles, Theme } from 'material-ui';
+
 const flags = {
   us: () => <US width="32" height="24" viewBox="0 0 720 480"/>,
   sg: () => <SG width="32" height="24" viewBox="0 0 640 480"/>,
@@ -23,6 +25,14 @@ import SelectionCard from '../../../components/SelectionCard';
 export interface ExtendedRegion extends Linode.Region {
   display: string;
 }
+
+type ClassNames = 'root';
+
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+  root: {
+    marginTop: theme.spacing.unit * 3,
+  },
+});
 
 interface Props {
   regions: ExtendedRegion[];
@@ -53,7 +63,7 @@ const renderCard = (selectedID: string|null, handleSelection: Function) =>
       />
     );
 
-class SelectRegionPanel extends React.Component<Props> {
+class SelectRegionPanel extends React.Component<Props & WithStyles<ClassNames>> {
 
   createTabs = () => {
     const { regions } = this.props;
@@ -108,6 +118,7 @@ class SelectRegionPanel extends React.Component<Props> {
   render() {
     return (
       <TabbedPanel
+        rootClass={this.props.classes.root}
         error={this.props.error}
         header="Region"
         copy="Determine the best location for your Linode."
@@ -117,4 +128,6 @@ class SelectRegionPanel extends React.Component<Props> {
   }
 }
 
-export default SelectRegionPanel;
+const styled = withStyles(styles, { withTheme: true });
+
+export default styled(SelectRegionPanel);
