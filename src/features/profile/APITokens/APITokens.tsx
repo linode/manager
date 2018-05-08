@@ -1,6 +1,8 @@
 import * as React from 'react';
 import * as moment from 'moment';
 import Axios from 'axios';
+import { getPersonalAccessTokens, getAppTokens, removePersonalAccessToken, removeAppToken }
+  from 'src/services/profile';
 import { compose, filter, path, pathOr, sort } from 'ramda';
 
 import { withStyles, Theme, WithStyles, StyleRulesCallback } from 'material-ui/styles';
@@ -53,9 +55,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
 };
 
 const preloaded = PromiseLoader<Props>({
-  pats: () => Axios.get(`${API_ROOT}/profile/tokens`)
+  pats: () => getPersonalAccessTokens()
     .then(response => response.data),
-  appTokens: () => Axios.get(`${API_ROOT}/profile/apps`)
+  appTokens: () => getAppTokens()
     .then(response => response.data),
 });
 
@@ -111,8 +113,9 @@ export class APITokens extends React.Component<CombinedProps, State> {
     },
     dialog: {
       open: false,
-      id: undefined,
+      id: 0,
       label: undefined,
+      type: '',
     },
     token: {
       open: false,
@@ -194,9 +197,12 @@ export class APITokens extends React.Component<CombinedProps, State> {
                   </TableCell>
                   <TableCell>
                     <APITokenMenu
+                      isAppTokenMenu={(title === 'Apps')}
                       openViewDrawer={() => { this.openViewDrawer(token); }}
                       openEditDrawer={() => { this.openEditDrawer(token); }}
-                      openRevokeDialog={() => { this.openRevokeDialog(token.label, token.id); }}
+                      openRevokeDialog={() => {
+                        this.openRevokeDialog(token.label, token.id, type);
+                      }}
                     />
                   </TableCell>
                 </TableRow>,
@@ -223,7 +229,7 @@ export class APITokens extends React.Component<CombinedProps, State> {
   }
 
   requestTokens = () => {
-    Axios.get(`${API_ROOT}/profile/tokens`)
+    getPersonalAccessTokens()
       .then(response => response.data.data)
       .then((data) => {
         if (!this.mounted) { return; }
@@ -286,8 +292,8 @@ export class APITokens extends React.Component<CombinedProps, State> {
     });
   }
 
-  openRevokeDialog = (label: string, id: number) => {
-    this.setState({ dialog: { open: true, label, id } });
+  openRevokeDialog = (label: string, id: number, type: string) => {
+    this.setState({ dialog: { open: true, label, id, type } });
   }
 
   closeRevokeDialog = () => {
@@ -302,9 +308,16 @@ export class APITokens extends React.Component<CombinedProps, State> {
     this.setState({ token: { open: false, value: undefined } });
   }
 
-  revokeToken = () => {
+  revokePersonalAccessToken = () => {
     const { dialog } = this.state;
-    Axios.delete(`${API_ROOT}/profile/tokens/${dialog.id}`)
+    removePersonalAccessToken(dialog.id)
+      .then(() => { this.closeRevokeDialog(); })
+      .then(() => this.requestTokens());
+  }
+
+  revokeAppToken = () => {
+    const { dialog } = this.state;
+    removeAppToken(dialog.id)
       .then(() => { this.closeRevokeDialog(); })
       .then(() => this.requestTokens());
   }
@@ -463,7 +476,9 @@ export class APITokens extends React.Component<CombinedProps, State> {
                   className="destructive"
                   onClick={() => {
                     this.closeRevokeDialog();
-                    this.revokeToken();
+                    (dialog.type === 'OAuth Client Token')
+                      ? this.revokeAppToken()
+                      : this.revokePersonalAccessToken();
                   }}
                   data-qa-button-confirm>
                   Yes
@@ -481,7 +496,7 @@ export class APITokens extends React.Component<CombinedProps, State> {
           }}
           onClose={() => this.closeRevokeDialog()}
         >
-         <Typography>Are you sure you want to revoke this API Token?</Typography>
+          <Typography>Are you sure you want to revoke this API Token?</Typography>
         </ConfirmationDialog>
 
         <ConfirmationDialog
