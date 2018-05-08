@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.24.2] - 2018-05-07
+### Fixed:
+- Logout
+
 ## [0.24.1] - 2018-05-07
 ### Added:
 - Change the label of a Linode via settings
