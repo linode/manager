@@ -318,7 +318,7 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
           })}
           onClose={() => this.setDiskDrawer(this.defaultDiskDrawerState)}
           onSubmit={() =>
-              this.state.diskDrawer.mode === 'create'
+            this.state.diskDrawer.mode === 'create'
               ? this.createDisk()
               : this.updateDisk()
           }
@@ -654,10 +654,12 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
 
     updateLinodeDisk(linodeId, diskId, { label })
       .then(({ data }) => {
-        this.setState({ devices: {
-          ...this.state.devices,
-          disks: replaceById(data, data.id, this.state.devices.disks),
-        }});
+        this.setState({
+          devices: {
+            ...this.state.devices,
+            disks: replaceById(data, data.id, this.state.devices.disks),
+          },
+        });
         this.setDiskDrawer(this.defaultDiskDrawerState);
       })
       .catch((error) => {
