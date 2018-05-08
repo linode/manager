@@ -1,11 +1,24 @@
+import { AxiosResponse } from 'axios';
 import * as Rx from 'rxjs/Rx';
 import * as moment from 'moment';
-import { assoc, compose, when } from 'ramda';
+import {
+  assoc,
+  compose,
+  ifElse,
+  isEmpty,
+  isNil,
+  lensPath,
+  map,
+  not,
+  over,
+  path,
+  view,
+  when,
+} from 'ramda';
 
+import isPast from 'src/utilities/isPast';
 import { dateFormat } from 'src/time';
 import { getEvents } from 'src/services/account';
-
-let initialRequest: boolean = true;
 
 function createInitialDatestamp() {
   return moment('1970-01-01 00:00:00.000Z').utc().format(dateFormat);
@@ -25,7 +38,6 @@ export function resetEventsPolling() {
   currentPollIntervalMultiplier = 1;
 }
 export const init = () => {
-  initialRequest = true;
   filterDatestamp = createInitialDatestamp();
   resetEventsPolling();
 };
@@ -49,25 +61,49 @@ export function generatePollingFilter(datestamp: string, pollIDs: string[]) {
     };
 }
 
+const theBeginningOfTime = moment.utc('1970-01-01 00:00:00.000Z').format();
+const isPasttheBeginningOfTime = isPast(theBeginningOfTime);
+
+/**
+ * If the X-Filter is set we parse it and check for and compare the created.+gt value to
+ * "the beginning of time". If the value is greater, do nothing, otherwise update the events to have
+ * an _initial prop of true.
+ */
+
+type EventsResponse = AxiosResponse<Linode.ResourcePage<Linode.Event>>;
+export const setInitialEvents = when<EventsResponse, EventsResponse>(
+  compose(not, isNil, view(lensPath(['config', 'headers', 'X-Filter']))),
+
+  (response) => {
+    try {
+      return when(
+        compose(
+          ifElse(
+            isNil,
+            () => false,
+            compose(not, isPasttheBeginningOfTime),
+          ),
+          path(['created', '+gt']),
+          when(compose(not, isEmpty), v => JSON.parse(v)),
+          path(['config', 'headers', 'X-Filter']),
+        ),
+        over(lensPath(['data', 'data']), map(assoc('_initial', true))),
+      )(response);
+
+    } catch (error) { }
+
+    return response;
+  },
+);
+
 export function requestEvents() {
   getEvents({
     'X-Filter': JSON.stringify(
       generatePollingFilter(filterDatestamp, Object.keys(pollIDs)),
     ),
   })
-    .then(response => response.data)
-    .then(events => events.map(
-      /** @note This is my first succesfully typed compose... */
-      compose<Linode.Event, Linode.Event & { _initial: boolean }>(
-        when(() => initialRequest, assoc('_initial', true)),
-      ),
-    ))
-    .then((events) => {
-      if (initialRequest) {
-        initialRequest = false;
-      }
-      return events;
-    })
+    .then(setInitialEvents)
+    .then(response => response.data.data)
     .then((data) => {
       /*
         * Events come back in reverse chronological order, so we update our
