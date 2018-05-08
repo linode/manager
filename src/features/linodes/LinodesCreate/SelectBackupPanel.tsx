@@ -13,6 +13,12 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import SelectionCard from 'src/components/SelectionCard';
 
+import { getLinodeBackups } from 'src/services/linodes';
+import {
+  aggregateBackups,
+  formatBackupDate,
+} from 'src/features/linodes/LinodesDetail/LinodeBackup';
+
 type ClassNames =
 'root'
 | 'inner'
@@ -49,7 +55,24 @@ type StyledProps = Props & WithStyles<ClassNames>;
 type CombinedProps = StyledProps;
 
 class SelectBackupPanel extends React.Component<CombinedProps, State> {
+  state: State = {};
+
   handleSelection = this.props.handleSelection('selectedBackupID');
+
+  fetchBackups(linodeID?: number) {
+    if (linodeID) {
+      getLinodeBackups(linodeID)
+        .then(backups => this.setState({ backups: aggregateBackups(backups) }));
+    }
+  }
+
+  componentDidMount() {
+    this.fetchBackups(this.props.selectedLinodeID);
+  }
+
+  componentDidUpdate() {
+    this.fetchBackups(this.props.selectedLinodeID);
+  }
 
   renderCard(backup: Linode.LinodeBackup) {
     const { selectedBackupID } = this.props;
@@ -58,27 +81,28 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
         key={backup.id}
         checked={backup.id === Number(selectedBackupID)}
         onClick={e => this.handleSelection(e, `${backup.id}`)}
-        heading={backup.heading}
-        subheadings={backup.subHeadings}
+        heading={backup.type}
+        subheadings={[formatBackupDate(backup.created)]}
       />
     );
   }
 
   render() {
-    const { error, classes, linodes } = this.props;
+    const { error, classes } = this.props;
+    const { backups } = this.state;
 
     return (
       <Paper className={`${classes.root}`}>
         <div className={classes.inner}>
           { error && <Notice text={error} error /> }
           <Typography variant="title">
-            Select Linode
+            Select Backup
           </Typography>
           <Typography component="div" className={classes.panelBody}>
             <Grid container>
-              {linodes.map((linode) => {
+              {backups && backups.map((backup) => {
                 return (
-                  this.renderCard(linode)
+                  this.renderCard(backup)
                 );
               })}
             </Grid>
