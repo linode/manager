@@ -44,7 +44,7 @@ interface Props {
   selectedLinodeID?: number;
   selectedBackupID?: number;
   handleSelection: (key: string) =>
-    (event: React.SyntheticEvent<HTMLElement>, value: string) => void;
+    (event: React.SyntheticEvent<HTMLElement>, value: any) => void;
   error?: string;
 }
 
@@ -64,6 +64,7 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
 
   handleBackupSelection = this.props.handleSelection('selectedBackupID');
   handleSizeSelection = this.props.handleSelection('requiredDiskSpace');
+  handleBackupInfoSelection = this.props.handleSelection('selectedBackupInfo');
 
   fetchBackups(linodeID?: number) {
     if (linodeID) {
@@ -90,6 +91,11 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
 
   renderCard(backup: Linode.LinodeBackup) {
     const { selectedBackupID } = this.props;
+    const heading = backup.label ? backup.label : backup.type === 'auto' ? 'Automatic' : 'Snapshot';
+    const subheading = formatBackupDate(backup.created);
+    const infoName = heading === 'Automatic'
+      ? 'From automatic backup'
+      : `From backup ${heading}`;
     return (
       <SelectionCard
         key={backup.id}
@@ -98,11 +104,16 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
           const totalBackupSize = backup.disks.reduce((acc, disk) => (
             acc + disk.size
           ), 0);
+          const backupInfo = {
+            name: infoName,
+            details: subheading,
+          };
           this.handleBackupSelection(e, `${backup.id}`);
           this.handleSizeSelection(e, `${totalBackupSize}`);
+          this.handleBackupInfoSelection(e, backupInfo);
         }}
-        heading={backup.label ? backup.label : backup.type === 'auto' ? 'Automatic' : 'Snapshot'}
-        subheadings={[formatBackupDate(backup.created)]}
+        heading={heading}
+        subheadings={[subheading]}
       />
     );
   }
