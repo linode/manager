@@ -88,6 +88,9 @@ interface State {
   [index: string]: any;
 }
 
+const linodesWithBackups = (linodes: Linode.Linode[]) =>
+  linodes.filter(linode => linode.backups.enabled);
+
 const preloaded = PromiseLoader<Props>({
   linodes: () => getLinodes()
     /*
@@ -163,6 +166,11 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     privateIP: false,
     errors: undefined,
   };
+
+  constructor(props: CombinedProps) {
+    super(props);
+    this.extendLinodes.bind(this);
+  }
 
   mounted: boolean = false;
 
@@ -255,7 +263,10 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
           <React.Fragment>
             <SelectLinodePanel
               error={getErrorFor('linode_id', this.state.errors)}
-              linodes={this.extendLinodes(this.props.linodes.response)}
+              linodes={compose(
+                (linodes: Linode.Linode[]) => this.extendLinodes(linodes),
+                linodesWithBackups,
+              )(this.props.linodes.response)}
               selectedLinodeID={this.state.selectedLinodeID}
               handleSelection={this.updateStateFor}
             />
@@ -312,6 +323,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     const {
       selectedTab,
       selectedLinodeID,
+      selectedBackupID,
       selectedImageID,
       selectedRegionID,
       selectedTypeID,
@@ -330,13 +342,14 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
             { field: 'linode_id', reason: 'You must select a Linode' },
           ],
         });
+        return;
       }
-      return;
     }
 
     createLinode({
       region: selectedRegionID,
       type: selectedTypeID,
+      backup_id: Number(selectedBackupID) || undefined,
       label, /* optional */
       root_pass: password, /* required if image ID is provided */
       image: selectedImageID, /* optional */
