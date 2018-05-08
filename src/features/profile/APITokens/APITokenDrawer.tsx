@@ -42,11 +42,27 @@ export const genExpiryTups = (): Expiry[] => {
   ];
 };
 
-type ClassNames = 'permsTable';
+type ClassNames = 'permsTable'
+  | 'accessCell'
+  | 'noneCell'
+  | 'readOnlyCell'
+  | 'readWritecell';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   permsTable: {
     margin: `${theme.spacing.unit * 3}px 0`,
+  },
+  accessCell: {
+    width: '31%',
+  },
+  noneCell: {
+    width: '23%',
+  },
+  readOnlyCell: {
+    width: '23%',
+  },
+  readWritecell: {
+    width: '23%',
   },
 });
 
@@ -139,10 +155,10 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
             (scopeTup) => {
               return (
                 <TableRow key={scopeTup[0]} data-qa-row={this.permNameMap[scopeTup[0]]}>
-                  <TableCell padding="checkbox">
+                  <TableCell padding="checkbox" className={classes.accessCell}>
                     {this.permNameMap[scopeTup[0]]}
                   </TableCell>
-                  <TableCell padding="checkbox">
+                  <TableCell padding="checkbox" className={classes.noneCell}>
                     <Radio
                       name={scopeTup[0]}
                       disabled={mode !== 'create' && scopeTup[1] !== 0}
@@ -152,7 +168,7 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
                       data-qa-perm-none-radio
                     />
                   </TableCell>
-                  <TableCell padding="checkbox">
+                  <TableCell padding="checkbox" className={classes.readOnlyCell}>
                     <Radio
                       name={scopeTup[0]}
                       disabled={mode !== 'create' && scopeTup[1] !== 1}
@@ -162,7 +178,7 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
                       data-qa-perm-read-radio
                     />
                   </TableCell>
-                  <TableCell padding="checkbox">
+                  <TableCell padding="checkbox" className={classes.readWritecell}>
                     <Radio
                       name={scopeTup[0]}
                       disabled={mode !== 'create' && scopeTup[1] !== 2}
