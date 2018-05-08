@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { compose, set, propEq, prop, find, lensPath } from 'ramda';
 
 import {
   withRouter,
@@ -18,10 +19,12 @@ import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
 
 import { dcDisplayNames } from 'src/constants';
-import { createLinode, getLinodeTypes, allocatePrivateIP } from 'src/services/linodes';
+import { createLinode, getLinodeTypes, allocatePrivateIP, getLinodes } from 'src/services/linodes';
 import { getImages } from 'src/services/images';
 import { getRegions } from 'src/services/misc';
 import PromiseLoader from 'src/components/PromiseLoader';
+
+import SelectLinodePanel, { ExtendedLinode } from './SelectLinodePanel';
 import SelectImagePanel from './SelectImagePanel';
 import SelectRegionPanel, { ExtendedRegion } from './SelectRegionPanel';
 import SelectPlanPanel, { ExtendedType } from './SelectPlanPanel';
@@ -64,12 +67,14 @@ interface PreloadedProps {
   images: { response: Linode.Image[] };
   regions: { response: ExtendedRegion[] };
   types: { response: ExtendedType[] };
+  linodes: { response: Linode.Linode[] };
 }
 
 type CombinedProps = Props & WithStyles<Styles> & PreloadedProps & RouteComponentProps<{}>;
 
 interface State {
   selectedTab: number;
+  selectedLinodeID?: number;
   selectedImageID: string | null;
   selectedRegionID: string | null;
   selectedTypeID: string | null;
@@ -82,8 +87,15 @@ interface State {
 }
 
 const preloaded = PromiseLoader<Props>({
+  linodes: () => getLinodes()
+    /*
+     * @todo: We're only allowing the user to select from their first 100
+     * Linodes
+     */
+    .then(response => response.data || []),
+
   images: () => getImages()
-    .then(response => response.data.map(image => image) || []),
+    .then(response => response.data || []),
 
   types: () => getLinodeTypes()
     .then((response) => {
@@ -130,8 +142,15 @@ const getErrorFor = (field: string, arr: Linode.ApiFieldError[] = []): undefined
   return err.reason.replace(err.field, errorResources[err.field]);
 };
 
+const formatLinodeSubheading = (typeInfo: string, imageInfo: string) => {
+  const subheading = imageInfo
+    ? `${typeInfo}, ${imageInfo}`
+    : `${typeInfo}`;
+  return [subheading];
+};
+
 class LinodeCreate extends React.Component<CombinedProps, State> {
-  state = {
+  state: State = {
     selectedTab: 0,
     selectedImageID: null,
     selectedRegionID: null,
@@ -161,6 +180,29 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     return type.addons.backups.price.monthly;
   }
 
+  extendLinodes(linodes: Linode.Linode[]): ExtendedLinode[] {
+    const images = this.props.images.response || [];
+    const types = this.props.types.response || [];
+    return linodes.map(linode =>
+      compose<Linode.Linode, Partial<ExtendedLinode>, Partial<ExtendedLinode>>(
+        set(lensPath(['heading']), linode.label),
+        set(lensPath(['subHeadings']),
+          (formatLinodeSubheading)(
+            compose<Linode.LinodeType[], Linode.LinodeType, number, string>(
+              (mem: number) => typeLabel(mem) || '',
+              prop('memory'),
+              find(propEq('id', linode.type)),
+            )(types),
+            compose<Linode.Image[], Linode.Image, string>(
+              prop('label'),
+              find(propEq('id', linode.image)),
+            )(images),
+          ),
+        ),
+      )(linode) as ExtendedLinode,
+    );
+  }
+
   tabs = [
     {
       title: 'Create from Image',
@@ -171,6 +213,49 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
               images={this.props.images.response}
               handleSelection={this.updateStateFor}
               selectedImageID={this.state.selectedImageID}
+            />
+            <SelectRegionPanel
+              error={getErrorFor('region', this.state.errors)}
+              regions={this.props.regions.response}
+              handleSelection={this.updateStateFor}
+              selectedID={this.state.selectedRegionID}
+            />
+            <SelectPlanPanel
+              error={getErrorFor('type', this.state.errors)}
+              types={this.props.types.response}
+              onSelect={(id: string) => this.setState({ selectedTypeID: id })}
+              selectedID={this.state.selectedTypeID}
+            />
+            <LabelAndTagsPanel
+              error={getErrorFor('label', this.state.errors)}
+              label={this.state.label}
+              handleChange={this.updateStateFor}
+            />
+            <PasswordPanel
+              error={getErrorFor('root_pass', this.state.errors)}
+              password={this.state.password}
+              handleChange={v => this.setState({ password: v })}
+            />
+            <AddonsPanel
+              backups={this.state.backups}
+              backupsMonthly={this.getBackupsMonthlyPrice()}
+              privateIP={this.state.privateIP}
+              handleChange={this.updateStateFor}
+            />
+          </React.Fragment>
+        );
+      },
+    },
+    {
+      title: 'Create from Backup',
+      render: () => {
+        return (
+          <React.Fragment>
+            <SelectLinodePanel
+              error={getErrorFor('linode_id', this.state.errors)}
+              linodes={this.extendLinodes(this.props.linodes.response)}
+              selectedLinodeID={this.state.selectedLinodeID}
+              handleSelection={this.updateStateFor}
             />
             <SelectRegionPanel
               error={getErrorFor('region', this.state.errors)}
@@ -217,14 +302,29 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
   onDeploy = () => {
     const { history } = this.props;
     const {
+      selectedTab,
+      selectedLinodeID,
       selectedImageID,
       selectedRegionID,
       selectedTypeID,
       label,
       password,
       backups,
-      // privateIP, /* This requires a separate API call! */
+      privateIP,
     } = this.state;
+
+    if (selectedTab === 1) {
+      /* we are creating from backup */
+      if (!selectedLinodeID) {
+        /* so a Linode selection is required */
+        this.setState({
+          errors: [
+            { field: 'linode_id', reason: 'You must select a Linode' },
+          ],
+        });
+      }
+      return;
+    }
 
     createLinode({
       region: selectedRegionID,
@@ -236,7 +336,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       booted: true,
     })
       .then((linode) => {
-        if (this.state.privateIP) allocatePrivateIP(linode.id);
+        if (privateIP) allocatePrivateIP(linode.id);
         resetEventsPolling();
         history.push('/linodes');
       })

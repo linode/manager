@@ -8,7 +8,7 @@ import Typography from 'material-ui/Typography';
 import TextField from '../../../components/TextField';
 import Notice from '../../../components/Notice';
 
-type ClassNames = 'root' | 'inner' | 'panelBody';
+type ClassNames = 'root' | 'inner' ;
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -19,9 +19,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   inner: {
     padding: theme.spacing.unit * 3,
-  },
-  panelBody: {
-    padding: `${theme.spacing.unit * 3}px 0 ${theme.spacing.unit}px`,
   },
 });
 
