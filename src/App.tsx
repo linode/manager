@@ -40,6 +40,10 @@ const Volumes = DefaultLoader({
   loader: () => import('src/features/Volumes'),
 });
 
+const Domains = DefaultLoader({
+  loader: () => import('src/features/Domains'),
+});
+
 const Profile = DefaultLoader({
   loader: () => import('src/features/profile'),
 });
@@ -215,8 +219,7 @@ export class App extends React.Component<CombinedProps, State> {
                             icon={NodeBalancerIcon}
                           />}
                         />
-                        <Route exact path="/domains" render={() =>
-                          <Placeholder title="Domains" />} />
+                        <Route exact path="/domains" component={Domains}/>
                         <Route exact path="/managed" render={() =>
                           <Placeholder title="Managed" />} />
                         <Route exact path="/longview" render={() =>
