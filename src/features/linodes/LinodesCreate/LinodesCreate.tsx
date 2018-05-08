@@ -13,7 +13,6 @@ import {
   Theme,
   StyleRules,
 } from 'material-ui/styles';
-import Grid from 'src/components/Grid';
 import Typography from 'material-ui/Typography';
 import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
@@ -23,6 +22,9 @@ import { dcDisplayNames } from 'src/constants';
 import { createLinode, getLinodeTypes, allocatePrivateIP, getLinodes } from 'src/services/linodes';
 import { getImages } from 'src/services/images';
 import { getRegions } from 'src/services/misc';
+
+import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 import PromiseLoader from 'src/components/PromiseLoader';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
@@ -327,6 +329,46 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
               error={hasErrorFor('root_pass')}
               password={this.state.password}
               handleChange={v => this.setState({ password: v })}
+            />
+            <AddonsPanel
+              backups={this.state.backups}
+              backupsMonthly={this.getBackupsMonthlyPrice()}
+              privateIP={this.state.privateIP}
+              handleChange={this.updateStateFor}
+            />
+          </React.Fragment>
+        );
+      },
+    },
+    {
+      title: 'Clone From Existing',
+      render: () => {
+        return (
+          <React.Fragment>
+            <Notice text={`This newly created Linode wil be created with
+            the same root password as the original Linode`} warning={true} />
+            <SelectLinodePanel
+              error={getErrorFor('linode_id', this.state.errors)}
+              linodes={this.extendLinodes(this.props.linodes.response)}
+              selectedLinodeID={this.state.selectedLinodeID}
+              handleSelection={this.updateStateFor}
+            />
+            <SelectRegionPanel
+              error={getErrorFor('region', this.state.errors)}
+              regions={this.props.regions.response}
+              handleSelection={this.updateStateFor}
+              selectedID={this.state.selectedRegionID}
+            />
+            <SelectPlanPanel
+              error={getErrorFor('type', this.state.errors)}
+              types={this.props.types.response}
+              onSelect={(id: string) => this.setState({ selectedTypeID: id })}
+              selectedID={this.state.selectedTypeID}
+            />
+            <LabelAndTagsPanel
+              error={getErrorFor('label', this.state.errors)}
+              label={this.state.label}
+              handleChange={this.updateStateFor}
             />
             <AddonsPanel
               backups={this.state.backups}
