@@ -18,7 +18,8 @@ exports.login = (username, password) => {
     if (browser.isExisting('.Modal')) {
         browser.click('.btn-primary');
     }
-    browser.waitForVisible('.App-wrapper-3');
+    browser.waitForVisible('[data-qa-add-new-menu-button]', 20000);
+    browser.waitForVisible('[data-qa-circle-progress]', 20000, true);
 }
 
 /*
@@ -41,7 +42,6 @@ exports.getTokenIfNeeded = (user, pass) => {
 
     if (getNewToken) {
         exports.login(user, pass);
-        browser.waitForVisible('.App-wrapper-3');
         const localStorageObj = browser.execute(function() {
             return JSON.stringify(localStorage);
         });
