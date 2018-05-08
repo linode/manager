@@ -9,16 +9,17 @@ namespace Linode {
     updated: string;
   }
 
-  type DiskStatus = 'offline'
+  export type DiskStatus = 'offline'
     | 'booting'
     | 'running'
     | 'shutting_down'
     | 'rebooting'
     | 'provisioning'
     | 'deleting'
-    | 'migrating';
+    | 'migrating'
+    | 'ready';
 
-  type DiskFilesystem = 'raw'
+  export type DiskFilesystem = 'raw'
     | 'swap'
     | 'ext3'
     | 'ext4'

@@ -102,7 +102,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
         }
         this.setState({ linodeStatuses });
       })
-      .catch((err) => { /** @todo how do we want to display this error */});
+      .catch((err) => { /** @todo how do we want to display this error */ });
   }
 
   componentDidMount() {
@@ -184,8 +184,8 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
             <TableBody>
               {volumes.map((volume) => {
                 const label = pathOr('', ['label'], volume);
-                const linodeLabel = linodeLabels[volume.linode_id];
-                const linodeStatus = linodeStatuses[volume.linode_id];
+                const linodeLabel = volume.linode_id ? linodeLabels[volume.linode_id] : '';
+                const linodeStatus = volume.linode_id ? linodeStatuses[volume.linode_id] : '';
                 const size = pathOr('', ['size'], volume);
                 const filesystem_path = pathOr(
                   /** @todo Remove path default when API releases filesystem_path. */
