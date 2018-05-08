@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { compose, pathOr } from 'ramda';
+import { Link } from 'react-router-dom';
 
 import {
   withStyles,
@@ -88,7 +89,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
               domains.map((domain) => {
                 return (
                   <TableRow key={domain.id}>
-                    <TableCell>{domain.domain}</TableCell>
+                    <TableCell><Link to={`/domains/${domain.id}`}>{domain.domain}</Link></TableCell>
                     <TableCell>{domain.type}</TableCell>
                     <TableCell>{domain.status}</TableCell>
                     <TableCell><ActionMenu /></TableCell>
