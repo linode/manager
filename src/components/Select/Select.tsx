@@ -37,6 +37,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     [theme.breakpoints.down('xs')]: {
       minWidth: 200,
     },
+    '&::-webkit-scrollbar-track': {
+      background: theme.palette.divider,
+    },
   },
   dropDown: {
     boxShadow: 'none',
