@@ -39,7 +39,7 @@ describe('Icon Text Link Suite', () => {
     it('should display IconTextLink with link text', () => {
         const iconTextLinks = $$(iconTextLinkTitle);
 
-        iconTextLinks.forEach(e => expect(e.getTagName()).toBe('a'));
+        iconTextLinks.forEach(e => expect(e.getTagName()).toBe('button'));
         iconTextLinks.forEach(e => expect(e.getText()).toMatch(/([A-Z])/ig));
     });
 
