@@ -3,7 +3,6 @@ import {
   assoc,
   clamp,
   compose,
-  filter,
   map,
   path,
   pathOr,
@@ -63,6 +62,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 interface Props {
   linodeId: number;
+  linodeRegion?: string;
 }
 
 interface PromiseLoaderProps {
@@ -85,13 +85,22 @@ type CombinedProps = Props & PromiseLoaderProps & WithStyles<ClassNames>;
 
 
 
-class LinodeRescue extends React.Component<CombinedProps, State> {
+export class LinodeRescue extends React.Component<CombinedProps, State> {
   constructor(props: CombinedProps) {
     super(props);
+    const filteredVolumes = props.volumes.response.filter((volume) => {
+      // whether volume is not attached to any Linode
+      const volumeIsUnattached = volume.linode_id === null;
+      // whether volume is attached to the current Linode we're viewing
+      const volumeIsAttachedToCurrentLinode = volume.linode_id === props.linodeId;
+      // whether volume is in the same region as the current Linode we're viewing
+      const volumeAndLinodeRegionMatch = props.linodeRegion === volume.region;
+      return (volumeIsAttachedToCurrentLinode || volumeIsUnattached) && volumeAndLinodeRegionMatch;
+    });
     this.state = {
       devices: {
         disks: props.disks.response || [],
-        volumes: props.volumes.response || [],
+        volumes: filteredVolumes || [],
       },
       counter: 1,
       rescueDevices: {
@@ -203,7 +212,7 @@ class LinodeRescue extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const preloaded = PromiseLoader({
+export const preloaded = PromiseLoader({
   /** @todo filter for available */
   disks: ({ linodeId }): Promise<ExtendedDisk[]> => getLinodeDisks(linodeId)
     .then(
@@ -219,10 +228,8 @@ const preloaded = PromiseLoader({
       compose<
         Linode.ResourcePage<Linode.Volume>,
         Linode.Volume[],
-        ExtendedVolume[],
         ExtendedVolume[]
         >(
-          filter<ExtendedVolume>(volume => volume.region === linodeRegion),
           map(volume => assoc('_id', `volume-${volume.id}`, volume)),
           prop('data'),
       ),

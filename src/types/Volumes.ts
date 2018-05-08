@@ -5,13 +5,13 @@ namespace Linode {
     status: VolumeStatus;
     size: number;
     region: string;
-    linode_id: number;
+    linode_id: null | number;
     created: string;
     updated: string;
     filesystem_path: string;
   }
 
-  type VolumeStatus =
+  export type VolumeStatus =
     'creating'
     | 'active'
     | 'resizing'
