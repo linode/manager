@@ -31,10 +31,10 @@ interface Props {
   linodeRegion: string;
   linodeMemory: number;
   linodeStatus: string;
+  linodeDisks: Linode.Disk[];
 }
 
-type CombinedProps = Props
-  & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 const LinodeSettings: React.StatelessComponent<CombinedProps> = (props) => {
   const {
@@ -46,6 +46,7 @@ const LinodeSettings: React.StatelessComponent<CombinedProps> = (props) => {
     linodeMemory,
     linodeRegion,
     linodeStatus,
+    linodeDisks,
   } = props;
 
   return (
@@ -56,6 +57,7 @@ const LinodeSettings: React.StatelessComponent<CombinedProps> = (props) => {
         linodeId={linodeId}
       />
       <LinodeSettingsPasswordPanel
+        linodeDisks={linodeDisks}
         linodeLabel={linodeLabel}
         linodeId={linodeId}
       />
@@ -65,6 +67,7 @@ const LinodeSettings: React.StatelessComponent<CombinedProps> = (props) => {
         linodeAlerts={linodeAlerts}
       />
       <LinodeConfigsPanel
+        linodeDisks={linodeDisks}
         linodeId={linodeId}
         linodeLabel={linodeLabel}
         linodeRegion={linodeRegion}
@@ -82,3 +85,5 @@ const LinodeSettings: React.StatelessComponent<CombinedProps> = (props) => {
 const styled = withStyles(styles, { withTheme: true });
 
 export default styled(LinodeSettings);
+
+

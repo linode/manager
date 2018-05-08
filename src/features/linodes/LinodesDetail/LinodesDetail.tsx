@@ -24,7 +24,7 @@ import Button from 'material-ui/Button';
 import notifications$ from 'src/notifications';
 import { getImage } from 'src/services/images';
 import {
-  getLinode, getType, getLinodeVolumes, renameLinode, getLinodeConfigs,
+  getLinode, getType, getLinodeVolumes, getLinodeDisks, renameLinode, getLinodeConfigs,
 } from 'src/services/linodes';
 import { events$ } from 'src/events';
 
@@ -55,6 +55,7 @@ interface Data {
   image?: Linode.Image;
   volumes: Linode.Volume[];
   configs: Linode.Config[];
+  disks: Linode.Disk[];
 }
 
 interface ConfigDrawerState {
@@ -73,6 +74,7 @@ interface State {
   image?: Linode.Image;
   volumes?: Linode.Volume[];
   configs?: Linode.Config[];
+  disks?: Linode.Disk[];
 }
 
 type MatchProps = { linodeId?: number };
@@ -134,7 +136,11 @@ const requestAllTheThings = (linodeId: number) =>
         .then(response => response.data)
         .catch(err => []);
 
-      return Promise.all([typeReq, imageReq, volumesReq, configsRequest])
+      const disksRequest = getLinodeDisks(linode.id)
+        .then(response => response.data)
+        .catch(err => []);
+
+      return Promise.all([typeReq, imageReq, volumesReq, configsRequest, disksRequest])
         .then((responses) => {
           return {
             linode,
@@ -142,6 +148,7 @@ const requestAllTheThings = (linodeId: number) =>
             image: responses[1],
             volumes: responses[2],
             configs: responses[3],
+            disks: responses[4],
           };
         });
     });
@@ -166,6 +173,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     image: this.props.data.response.image,
     volumes: this.props.data.response.volumes,
     configs: this.props.data.response.configs,
+    disks: this.props.data.response.disks,
     configDrawer: {
       open: false,
       configs: [],
@@ -182,9 +190,9 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     return haveAnyBeenModified<State>(
       this.state,
       nextState,
-      ['linode', 'type', 'image', 'volumes', 'configs', 'configDrawer'],
+      ['linode', 'type', 'image', 'volumes', 'configs', 'disks', 'configDrawer'],
     )
-    || haveAnyBeenModified<Location>(location, nextLocation, ['pathname', 'search']);
+      || haveAnyBeenModified<Location>(location, nextLocation, ['pathname', 'search']);
   }
 
   componentWillUnmount() {
@@ -203,8 +211,8 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       .subscribe((linodeEvent) => {
         const { match: { params: { linodeId } } } = this.props;
         requestAllTheThings(linodeId!)
-          .then(({ linode, type, image, volumes, configs }) => {
-            this.setState({ linode, type, image, volumes, configs });
+          .then(({ linode, type, image, volumes, configs, disks }) => {
+            this.setState({ linode, type, image, volumes, configs, disks });
           });
       });
 
@@ -294,6 +302,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       linode,
       configs,
       configDrawer,
+      disks,
     } = this.state;
     const matches = (p: string) => Boolean(matchPath(p, { path: this.props.location.pathname }));
     if (!type) { return null; }
@@ -397,6 +406,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               linodeMemory={type.memory}
               linodeRegion={linode.region}
               linodeStatus={linode.status}
+              linodeDisks={disks || []}
             />
           )} />
           {/* 404 */}

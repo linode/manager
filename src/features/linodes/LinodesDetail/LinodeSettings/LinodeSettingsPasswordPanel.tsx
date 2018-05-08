@@ -18,8 +18,7 @@ import MenuItem from 'material-ui/Menu/MenuItem';
 import FormControl from 'material-ui/Form/FormControl';
 import FormHelperText from 'material-ui/Form/FormHelperText';
 
-import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
-import { changeLinodeDiskPassword, getLinodeDisks } from 'src/services/linodes';
+import { changeLinodeDiskPassword } from 'src/services/linodes';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 import PasswordInput from 'src/components/PasswordInput';
@@ -37,14 +36,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 interface Props {
   linodeId: number;
   linodeLabel: string;
-}
-
-interface PromiseLoaderProps {
-  disks: PromiseLoaderResponse<Linode.Disk[]>;
+  linodeDisks: Linode.Disk[];
 }
 
 interface State {
-  disks: Linode.Disk[];
+  linodeDisks: Linode.Disk[];
   value: string;
   diskId: string | number;
   submitting: boolean;
@@ -52,11 +48,12 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = Props & PromiseLoaderProps & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> {
   state: State = {
-    disks: this.props.disks.response,
+    linodeDisks: this.props.linodeDisks
+      .filter((disk: Linode.Disk) => disk.filesystem !== 'swap'),
     value: '',
     diskId: pathOr('', ['disks', 'response', 0, 'id'], this.props),
     submitting: false,
@@ -101,25 +98,25 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
           <ActionsPanel>
             {
               (submitting && !passwordError)
-              ? (
-                <Button
-                  variant="raised"
-                  color="secondary"
-                  disabled
-                  className="loading"
-                >
-                  <Reload />
+                ? (
+                  <Button
+                    variant="raised"
+                    color="secondary"
+                    disabled
+                    className="loading"
+                  >
+                    <Reload />
+                  </Button>
+                )
+                : (
+                  <Button
+                    variant="raised"
+                    color="primary"
+                    onClick={this.changeDiskPassword}
+                  >
+                    Save
                 </Button>
-              )
-              : (
-                <Button
-                  variant="raised"
-                  color="primary"
-                  onClick={this.changeDiskPassword}
-                >
-                Save
-                </Button>
-              )
+                )
             }
           </ActionsPanel>
         }
@@ -141,7 +138,7 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
             error={Boolean(diskIdError)}
           >
             {
-              this.state.disks.map(disk =>
+              this.state.linodeDisks.map(disk =>
                 <MenuItem key={disk.id} value={disk.id}>{disk.label}</MenuItem>)
             }
           </Select>
@@ -162,11 +159,6 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
     );
   }
 }
-const loaded = PromiseLoader<Props>({
-  disks: ({ linodeId }) => getLinodeDisks(linodeId)
-    .then(response => response.data)
-    .then(disks => disks.filter(disk => disk.filesystem !== 'swap')),
-});
 
 const styled = withStyles(styles, { withTheme: true });
 
@@ -174,6 +166,5 @@ const errorBoundary = PanelErrorBoundary({ heading: 'Reset Root Password' });
 
 export default compose(
   errorBoundary,
-  loaded,
   styled,
 )(LinodeSettingsPasswordPanel) as React.ComponentType<Props>;

@@ -5,11 +5,11 @@ import {
   append,
   assoc,
   compose,
+  defaultTo,
   filter,
   findIndex,
   lensPath,
   map,
-  path,
   prop,
   propEq,
   set,
@@ -33,7 +33,6 @@ import { events$ } from 'src/events';
 import {
   createLinodeConfig,
   deleteLinodeConfig,
-  getLinodeDisks,
   updateLinodeConfig,
   createLinodeDisk,
   updateLinodeDisk,
@@ -146,6 +145,7 @@ interface State {
 }
 
 interface Props {
+  linodeDisks: Linode.Disk[];
   linodeConfigs: Linode.Config[];
   linodeId: number;
   linodeLabel: string;
@@ -155,7 +155,6 @@ interface Props {
 }
 
 interface PromiseLoaderProps {
-  disks: PromiseLoaderResponse<ExtendedDisk[]>;
   volumes: PromiseLoaderResponse<ExtendedVolume[]>;
 }
 
@@ -217,7 +216,10 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
     linodeConfigs: this.props.linodeConfigs,
     linodeStatus: this.props.linodeStatus,
     devices: {
-      disks: this.props.disks.response || [],
+      disks: compose(
+        map<Linode.Disk, ExtendedDisk>(disk => assoc('_id', `disk-${disk.id}`, disk)),
+        defaultTo([]),
+      )(this.props.linodeDisks),
       volumes: this.props.volumes.response || [],
     },
     confirmDelete: {
@@ -698,14 +700,6 @@ const connected = connect<ConnectedProps>(mapStateToProps);
 const styled = withStyles<ClassNames>(styles, { withTheme: true });
 
 const preloaded = PromiseLoader<Props>({
-  disks: ({ linodeId }): Promise<ExtendedDisk[]> => getLinodeDisks(linodeId)
-    .then(
-      compose(
-        map((disk: Linode.Disk) => assoc('_id', `disk-${disk.id}`, disk)),
-        path(['data']),
-      ),
-  ),
-
   volumes: ({ linodeId, linodeRegion }): Promise<ExtendedVolume[]> => getVolumes()
     .then(
       compose<
