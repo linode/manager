@@ -83,6 +83,7 @@ interface State {
   selectedBackupID?: number;
   selectedBackupInfo?: Info;
   smallestType?: string;
+  selectedTargetLinodeID?: number | null;
   selectedImageID: string | null;
   selectedRegionID: string | null;
   selectedTypeID: string | null;
@@ -343,30 +344,40 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     {
       title: 'Clone From Existing',
       render: () => {
+        const hasErrorFor = getAPIErrorsFor(errorResources, this.state.errors);
         return (
           <React.Fragment>
             <Notice text={`This newly created Linode wil be created with
             the same root password as the original Linode`} warning={true} />
             <SelectLinodePanel
-              error={getErrorFor('linode_id', this.state.errors)}
+              error={hasErrorFor('linode_id')}
               linodes={this.extendLinodes(this.props.linodes.response)}
               selectedLinodeID={this.state.selectedLinodeID}
               handleSelection={this.updateStateFor}
+              header={'Select Linode to Clone From'}
+            />
+            <SelectLinodePanel
+              error={hasErrorFor('linode_id')}
+              linodes={this.extendLinodes(this.props.linodes.response)}
+              selectedTargetLinodeID={this.state.selectedTargetLinodeID}
+              handleSelection={this.updateStateFor}
+              header={'Select Target Linode'}
+              isTarget={true}
             />
             <SelectRegionPanel
-              error={getErrorFor('region', this.state.errors)}
+              error={hasErrorFor('region')}
               regions={this.props.regions.response}
               handleSelection={this.updateStateFor}
               selectedID={this.state.selectedRegionID}
             />
             <SelectPlanPanel
-              error={getErrorFor('type', this.state.errors)}
+              error={hasErrorFor('type')}
               types={this.props.types.response}
               onSelect={(id: string) => this.setState({ selectedTypeID: id })}
               selectedID={this.state.selectedTypeID}
             />
             <LabelAndTagsPanel
-              error={getErrorFor('label', this.state.errors)}
+              error={hasErrorFor('label')}
               label={this.state.label}
               handleChange={this.updateStateFor}
             />
@@ -487,7 +498,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     let imageInfo: Info;
     if (selectedTab === this.imageTabIndex) {
       imageInfo = this.getImageInfo(this.props.images.response.find(
-          image => image.id === selectedImageID));
+        image => image.id === selectedImageID));
     } else if (selectedTab === this.backupTabIndex) {
       imageInfo = selectedBackupInfo;
     }
