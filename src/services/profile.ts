@@ -11,12 +11,12 @@ export const getAppTokens = () => Request(
   setMethod('GET'),
 );
 
-export const removePersonalAccessToken = (tokenId: number | undefined) => Request(
+export const removePersonalAccessToken = (tokenId: number) => Request(
   setURL(`${API_ROOT}/profile/tokens/${tokenId}`),
   setMethod('DELETE'),
 );
 
-export const removeAppToken = (tokenId: number | undefined) => Request(
+export const removeAppToken = (tokenId: number) => Request(
   setURL(`${API_ROOT}/profile/apps/${tokenId}`),
   setMethod('DELETE'),
 );

@@ -113,7 +113,7 @@ export class APITokens extends React.Component<CombinedProps, State> {
     },
     dialog: {
       open: false,
-      id: undefined,
+      id: 0,
       label: undefined,
       type: '',
     },
