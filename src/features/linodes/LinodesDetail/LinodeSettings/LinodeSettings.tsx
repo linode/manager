@@ -8,12 +8,6 @@ import {
   Typography,
 } from 'material-ui';
 
-import { compose } from 'ramda';
-
-import { getLinodeDisks } from 'src/services/linodes';
-
-import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
-
 import LinodeSettingsLabelPanel from './LinodeSettingsLabelPanel';
 import LinodeSettingsPasswordPanel from './LinodeSettingsPasswordPanel';
 import LinodeSettingsAlertsPanel from './LinodeSettingsAlertsPanel';
@@ -37,13 +31,10 @@ interface Props {
   linodeRegion: string;
   linodeMemory: number;
   linodeStatus: string;
+  linodeDisks: Linode.Disk[];
 }
 
-interface PromiseLoaderProps {
-  linodeDisks: PromiseLoaderResponse<Linode.Disk[]>;
-}
-
-type CombinedProps = Props & PromiseLoaderProps & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 const LinodeSettings: React.StatelessComponent<CombinedProps> = (props) => {
   const {
@@ -66,7 +57,7 @@ const LinodeSettings: React.StatelessComponent<CombinedProps> = (props) => {
         linodeId={linodeId}
       />
       <LinodeSettingsPasswordPanel
-        linodeDisks={linodeDisks.response}
+        linodeDisks={linodeDisks}
         linodeLabel={linodeLabel}
         linodeId={linodeId}
       />
@@ -76,7 +67,7 @@ const LinodeSettings: React.StatelessComponent<CombinedProps> = (props) => {
         linodeAlerts={linodeAlerts}
       />
       <LinodeConfigsPanel
-        linodeDisks={linodeDisks.response}
+        linodeDisks={linodeDisks}
         linodeId={linodeId}
         linodeLabel={linodeLabel}
         linodeRegion={linodeRegion}
@@ -93,11 +84,6 @@ const LinodeSettings: React.StatelessComponent<CombinedProps> = (props) => {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const loaded = PromiseLoader<Props>({
-  linodeDisks: ({ linodeId }): Promise<Linode.Disk[]> => getLinodeDisks(linodeId)
-    .then(response => response.data),
-});
-
-export default compose(styled, loaded)(LinodeSettings) as React.ComponentType<Props>;
+export default styled(LinodeSettings);
 
 
