@@ -363,10 +363,9 @@ const LinodeTheme: Linode.Theme = {
       root: {
         '&.selectHeader': {
           opacity: 1,
-          paddingBottom: 4,
           fontWeight: 700,
           fontSize: '1rem',
-          color: '#ddd',
+          color: '#fff',
         },
       },
       disabled: {
