@@ -184,7 +184,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       nextState,
       ['linode', 'type', 'image', 'volumes', 'configs', 'configDrawer'],
     )
-    || haveAnyBeenModified<Location>(location, nextLocation, ['pathname', 'search']);
+      || haveAnyBeenModified<Location>(location, nextLocation, ['pathname', 'search']);
   }
 
   componentWillUnmount() {
