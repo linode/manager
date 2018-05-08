@@ -8,6 +8,8 @@ import {
   Typography,
 } from 'material-ui';
 
+import { getLinodeDisks } from 'src/services/linodes';
+
 import LinodeSettingsLabelPanel from './LinodeSettingsLabelPanel';
 import LinodeSettingsPasswordPanel from './LinodeSettingsPasswordPanel';
 import LinodeSettingsAlertsPanel from './LinodeSettingsAlertsPanel';
@@ -33,52 +35,69 @@ interface Props {
   linodeStatus: string;
 }
 
+interface State {
+  linodeDisks: Linode.Disk[];
+}
+
 type CombinedProps = Props
   & WithStyles<ClassNames>;
 
-const LinodeSettings: React.StatelessComponent<CombinedProps> = (props) => {
-  const {
-    classes,
-    linodeAlerts,
-    linodeConfigs,
-    linodeId,
-    linodeLabel,
-    linodeMemory,
-    linodeRegion,
-    linodeStatus,
-  } = props;
+class LinodeSettings extends React.Component<CombinedProps, State> {
+  state: State = {
+    linodeDisks: [],
+  };
 
-  return (
-    <React.Fragment>
-      <Typography variant="headline" className={classes.title}>Settings</Typography>
-      <LinodeSettingsLabelPanel
-        linodeLabel={linodeLabel}
-        linodeId={linodeId}
-      />
-      <LinodeSettingsPasswordPanel
-        linodeLabel={linodeLabel}
-        linodeId={linodeId}
-      />
-      <LinodeSettingsAlertsPanel
-        linodeId={linodeId}
-        linodeLabel={linodeLabel}
-        linodeAlerts={linodeAlerts}
-      />
-      <LinodeConfigsPanel
-        linodeId={linodeId}
-        linodeLabel={linodeLabel}
-        linodeRegion={linodeRegion}
-        linodeConfigs={linodeConfigs}
-        linodeMemory={linodeMemory}
-        linodeStatus={linodeStatus}
-      />
-      <LinodeSettingsDeletePanel
-        linodeId={linodeId}
-      />
-    </React.Fragment >
-  );
-};
+  componentDidMount() {
+    // do call for linode disks here
+    const { linodeId } = this.props;
+    getLinodeDisks(linodeId).then(disk => console.log(disk.data));
+  }
+
+  render() {
+    const {
+      classes,
+      linodeAlerts,
+      linodeConfigs,
+      linodeId,
+      linodeLabel,
+      linodeMemory,
+      linodeRegion,
+      linodeStatus,
+    } = this.props;
+
+    return (
+      <React.Fragment>
+        <Typography variant="headline" className={classes.title}>Settings</Typography>
+        <LinodeSettingsLabelPanel
+          linodeLabel={linodeLabel}
+          linodeId={linodeId}
+        />
+        <LinodeSettingsPasswordPanel
+          linodeLabel={linodeLabel}
+          linodeId={linodeId}
+        />
+        <LinodeSettingsAlertsPanel
+          linodeId={linodeId}
+          linodeLabel={linodeLabel}
+          linodeAlerts={linodeAlerts}
+        />
+        <LinodeConfigsPanel
+          linodeId={linodeId}
+          linodeLabel={linodeLabel}
+          linodeRegion={linodeRegion}
+          linodeConfigs={linodeConfigs}
+          linodeMemory={linodeMemory}
+          linodeStatus={linodeStatus}
+        />
+        <LinodeSettingsDeletePanel
+          linodeId={linodeId}
+        />
+      </React.Fragment >
+    );
+  }
+}
 
 const styled = withStyles(styles, { withTheme: true });
 
 export default styled(LinodeSettings);
+
