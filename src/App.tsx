@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import { connect, Dispatch } from 'react-redux';
 import { compose, bindActionCreators } from 'redux';
 import Axios from 'axios';
@@ -192,7 +192,7 @@ export class App extends React.Component<CombinedProps, State> {
     const { classes, longLivedLoaded, documentation, toggleTheme } = this.props;
 
     return (
-      <Router>
+      <React.Fragment>
         {longLivedLoaded &&
           <React.Fragment>
             <CssBaseline />
@@ -249,7 +249,7 @@ export class App extends React.Component<CombinedProps, State> {
             <VolumeDrawer />
           </React.Fragment>
         }
-      </Router>
+      </React.Fragment>
     );
   }
 }
