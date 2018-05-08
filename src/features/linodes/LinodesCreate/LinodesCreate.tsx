@@ -142,8 +142,12 @@ const getErrorFor = (field: string, arr: Linode.ApiFieldError[] = []): undefined
   return err.reason.replace(err.field, errorResources[err.field]);
 };
 
-const formatLinodeSubheading = (typeInfo: string, imageInfo: string) =>
-  [`${typeInfo}, ${imageInfo}`];
+const formatLinodeSubheading = (typeInfo: string, imageInfo: string) => {
+  const subheading = imageInfo
+    ? `${typeInfo}, ${imageInfo}`
+    : `${typeInfo}`;
+  return [subheading];
+};
 
 class LinodeCreate extends React.Component<CombinedProps, State> {
   state: State = {
