@@ -321,7 +321,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
   }
 
   Table = ({ backups }: { backups: Linode.LinodeBackup[]}): JSX.Element | null => {
-    const { classes, history } = this.props;
+    const { classes, history, linodeID } = this.props;
 
     return (
       <React.Fragment>
@@ -371,7 +371,8 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
                           formatBackupDate(backup.created),
                         )}
                         onDeploy={() => {
-                          history.push(`/linodes/create?type=fromBackup&backupID=${backup.id}`);
+                          history.push('/linodes/create'
+                            + `?type=fromBackup&backupID=${backup.id}&linodeID=${linodeID}`);
                         }}
                       />
                     </TableCell>

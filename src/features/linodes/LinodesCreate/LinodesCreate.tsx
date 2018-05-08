@@ -18,6 +18,7 @@ import Typography from 'material-ui/Typography';
 import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
 
+import { parseQueryParams } from 'src/layouts/OAuth';
 import { dcDisplayNames } from 'src/constants';
 import { createLinode, getLinodeTypes, allocatePrivateIP, getLinodes } from 'src/services/linodes';
 import { getImages } from 'src/services/images';
@@ -89,6 +90,12 @@ interface State {
   privateIP: boolean;
   errors?: Linode.ApiFieldError[];
   [index: string]: any;
+}
+
+interface QueryStringOptions {
+  type: string;
+  backupID: string;
+  linodeID: string;
 }
 
 const linodesWithBackups = (linodes: Linode.Linode[]) =>
@@ -168,6 +175,36 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
   }
 
   mounted: boolean = false;
+
+  componentDidMount() {
+    this.mounted = true;
+    this.updateStateFromQuerystring();
+  }
+
+  componentDidUpdate(prevProps: CombinedProps) {
+    const prevSearch = prevProps.location.search;
+    const { location: { search: nextSearch } } = this.props;
+    if (prevSearch !== nextSearch) {
+      this.updateStateFromQuerystring();
+    }
+  }
+
+  updateStateFromQuerystring() {
+    const { location: { search } } = this.props;
+    const options: QueryStringOptions =
+      parseQueryParams(search.replace('?', '')) as QueryStringOptions;
+    if (options.type === 'fromBackup') {
+      this.setState({ selectedTab: 1 });
+    }
+
+    if (options.linodeID) {
+      this.setState({ selectedLinodeID: Number(options.linodeID) || undefined });
+    }
+
+    if (options.backupID) {
+      this.setState({ selectedBackupID: Number(options.backupID) || undefined });
+    }
+  }
 
   handleTabChange = (event: React.ChangeEvent<HTMLDivElement>, value: number) => {
     this.setState({ selectedTab: value });
@@ -307,10 +344,6 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       },
     },
   ];
-
-  componentDidMount() {
-    this.mounted = true;
-  }
 
   componentWillUnmount() {
     this.mounted = false;
