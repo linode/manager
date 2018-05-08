@@ -344,6 +344,33 @@ const LinodeTheme: Linode.Theme = {
         lineHeight: '1.2em',
       },
     },
+    MuiMenu: {
+      paper: {
+        '&.selectMenuDropdown': {
+          boxShadow: 'none',
+          position: 'absolute',
+          boxSizing: 'content-box',
+          border: '1px solid #666',
+          margin: '0 0 0 -1px',
+          outline: 0,
+        },
+        '& .selectMenuList': {
+          maxHeight: 250,
+          overflowY: 'auto',
+          overflowX: 'hidden',
+          boxSizing: 'content-box',
+          '& li': {
+            color: '#666',
+            '&:hover, &:focus': {
+              color: 'white',
+            },
+          },
+          [breakpoints.down('xs')]: {
+            minWidth: 200,
+          },
+        },
+      },
+    },
     MuiMenuItem: {
       root: {
         height: 'auto',
@@ -389,6 +416,9 @@ const LinodeTheme: Linode.Theme = {
         minHeight: 40,
         '&:focus': {
           backgroundColor: '#fff',
+        },
+        '& em': {
+          fontStyle: 'normal',
         },
       },
       select: {
