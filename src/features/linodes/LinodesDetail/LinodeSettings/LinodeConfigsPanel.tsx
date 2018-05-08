@@ -9,7 +9,6 @@ import {
   findIndex,
   lensPath,
   map,
-  path,
   prop,
   propEq,
   set,
@@ -33,7 +32,6 @@ import { events$ } from 'src/events';
 import {
   createLinodeConfig,
   deleteLinodeConfig,
-  getLinodeDisks,
   updateLinodeConfig,
   createLinodeDisk,
   updateLinodeDisk,
@@ -146,6 +144,7 @@ interface State {
 }
 
 interface Props {
+  linodeDisks: PromiseLoaderResponse<Linode.Disk[]>;
   linodeConfigs: Linode.Config[];
   linodeId: number;
   linodeLabel: string;
@@ -155,7 +154,6 @@ interface Props {
 }
 
 interface PromiseLoaderProps {
-  disks: PromiseLoaderResponse<ExtendedDisk[]>;
   volumes: PromiseLoaderResponse<ExtendedVolume[]>;
 }
 
@@ -212,22 +210,31 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
     errors: undefined,
   };
 
-  state: State = {
-    submitting: false,
-    linodeConfigs: this.props.linodeConfigs,
-    linodeStatus: this.props.linodeStatus,
-    devices: {
-      disks: this.props.disks.response || [],
-      volumes: this.props.volumes.response || [],
-    },
-    confirmDelete: {
-      open: false,
+  constructor(props: CombinedProps) {
+    super(props);
+
+    const updatedDisks = compose(
+      // add the _id property to each disk
+      map((disk: Linode.Disk) => assoc('_id', `disk-${disk.id}`, disk)),
+    )(this.props.linodeDisks.response);
+
+    this.state = {
       submitting: false,
-    },
-    configDrawer: this.defaultConfigDrawerState,
-    diskDrawer: this.defaultDiskDrawerState,
-    confirmDiskDelete: this.defaultConfirmDiskDeleteState,
-  };
+      linodeConfigs: this.props.linodeConfigs,
+      linodeStatus: this.props.linodeStatus,
+      devices: {
+        disks: updatedDisks || [],
+        volumes: this.props.volumes.response || [],
+      },
+      confirmDelete: {
+        open: false,
+        submitting: false,
+      },
+      configDrawer: this.defaultConfigDrawerState,
+      diskDrawer: this.defaultDiskDrawerState,
+      confirmDiskDelete: this.defaultConfirmDiskDeleteState,
+    };
+  }
 
   componentWillReceiveProps(nextProps: Props) {
     this.setState({
@@ -318,7 +325,7 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
           })}
           onClose={() => this.setDiskDrawer(this.defaultDiskDrawerState)}
           onSubmit={() =>
-              this.state.diskDrawer.mode === 'create'
+            this.state.diskDrawer.mode === 'create'
               ? this.createDisk()
               : this.updateDisk()
           }
@@ -654,10 +661,12 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
 
     updateLinodeDisk(linodeId, diskId, { label })
       .then(({ data }) => {
-        this.setState({ devices: {
-          ...this.state.devices,
-          disks: replaceById(data, data.id, this.state.devices.disks),
-        }});
+        this.setState({
+          devices: {
+            ...this.state.devices,
+            disks: replaceById(data, data.id, this.state.devices.disks),
+          },
+        });
         this.setDiskDrawer(this.defaultDiskDrawerState);
       })
       .catch((error) => {
@@ -696,14 +705,6 @@ const connected = connect<ConnectedProps>(mapStateToProps);
 const styled = withStyles<ClassNames>(styles, { withTheme: true });
 
 const preloaded = PromiseLoader<Props>({
-  disks: ({ linodeId }): Promise<ExtendedDisk[]> => getLinodeDisks(linodeId)
-    .then(
-      compose(
-        map((disk: Linode.Disk) => assoc('_id', `disk-${disk.id}`, disk)),
-        path(['data']),
-      ),
-  ),
-
   volumes: ({ linodeId, linodeRegion }): Promise<ExtendedVolume[]> => getVolumes()
     .then(
       compose<

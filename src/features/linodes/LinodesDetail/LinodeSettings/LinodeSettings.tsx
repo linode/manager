@@ -8,7 +8,11 @@ import {
   Typography,
 } from 'material-ui';
 
+import { compose } from 'ramda';
+
 import { getLinodeDisks } from 'src/services/linodes';
+
+import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 
 import LinodeSettingsLabelPanel from './LinodeSettingsLabelPanel';
 import LinodeSettingsPasswordPanel from './LinodeSettingsPasswordPanel';
@@ -35,69 +39,65 @@ interface Props {
   linodeStatus: string;
 }
 
-interface State {
-  linodeDisks: Linode.Disk[];
+interface PromiseLoaderProps {
+  linodeDisks: PromiseLoaderResponse<Linode.Disk[]>;
 }
 
-type CombinedProps = Props
-  & WithStyles<ClassNames>;
+type CombinedProps = Props & PromiseLoaderProps & WithStyles<ClassNames>;
 
-class LinodeSettings extends React.Component<CombinedProps, State> {
-  state: State = {
-    linodeDisks: [],
-  };
+const LinodeSettings: React.StatelessComponent<CombinedProps> = (props) => {
+  const {
+    classes,
+    linodeAlerts,
+    linodeConfigs,
+    linodeId,
+    linodeLabel,
+    linodeMemory,
+    linodeRegion,
+    linodeStatus,
+    linodeDisks,
+  } = props;
 
-  componentDidMount() {
-    // do call for linode disks here
-    const { linodeId } = this.props;
-    getLinodeDisks(linodeId).then(disk => console.log(disk.data));
-  }
-
-  render() {
-    const {
-      classes,
-      linodeAlerts,
-      linodeConfigs,
-      linodeId,
-      linodeLabel,
-      linodeMemory,
-      linodeRegion,
-      linodeStatus,
-    } = this.props;
-
-    return (
-      <React.Fragment>
-        <Typography variant="headline" className={classes.title}>Settings</Typography>
-        <LinodeSettingsLabelPanel
-          linodeLabel={linodeLabel}
-          linodeId={linodeId}
-        />
-        <LinodeSettingsPasswordPanel
-          linodeLabel={linodeLabel}
-          linodeId={linodeId}
-        />
-        <LinodeSettingsAlertsPanel
-          linodeId={linodeId}
-          linodeLabel={linodeLabel}
-          linodeAlerts={linodeAlerts}
-        />
-        <LinodeConfigsPanel
-          linodeId={linodeId}
-          linodeLabel={linodeLabel}
-          linodeRegion={linodeRegion}
-          linodeConfigs={linodeConfigs}
-          linodeMemory={linodeMemory}
-          linodeStatus={linodeStatus}
-        />
-        <LinodeSettingsDeletePanel
-          linodeId={linodeId}
-        />
-      </React.Fragment >
-    );
-  }
-}
+  return (
+    <React.Fragment>
+      <Typography variant="headline" className={classes.title}>Settings</Typography>
+      <LinodeSettingsLabelPanel
+        linodeLabel={linodeLabel}
+        linodeId={linodeId}
+      />
+      <LinodeSettingsPasswordPanel
+        linodeDisks={linodeDisks}
+        linodeLabel={linodeLabel}
+        linodeId={linodeId}
+      />
+      <LinodeSettingsAlertsPanel
+        linodeId={linodeId}
+        linodeLabel={linodeLabel}
+        linodeAlerts={linodeAlerts}
+      />
+      <LinodeConfigsPanel
+        linodeDisks={linodeDisks}
+        linodeId={linodeId}
+        linodeLabel={linodeLabel}
+        linodeRegion={linodeRegion}
+        linodeConfigs={linodeConfigs}
+        linodeMemory={linodeMemory}
+        linodeStatus={linodeStatus}
+      />
+      <LinodeSettingsDeletePanel
+        linodeId={linodeId}
+      />
+    </React.Fragment >
+  );
+};
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(LinodeSettings);
+const loaded = PromiseLoader<Props>({
+  linodeDisks: ({ linodeId }): Promise<Linode.Disk[]> => getLinodeDisks(linodeId)
+    .then(response => response.data),
+});
+
+export default compose(styled, loaded)(LinodeSettings) as React.ComponentType<Props>;
+
 
