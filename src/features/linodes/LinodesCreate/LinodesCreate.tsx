@@ -78,6 +78,7 @@ interface State {
   selectedTab: number;
   selectedLinodeID?: number;
   selectedBackupID?: number;
+  selectedBackupInfo?: Info;
   requiredDiskSpace?: number;
   selectedImageID: string | null;
   selectedRegionID: string | null;
@@ -172,7 +173,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     this.setState({ selectedTab: value });
   }
 
-  updateStateFor = (key: string) => (event: ChangeEvents, value: string) => {
+  updateStateFor = (key: string) => (event: ChangeEvents, value: any) => {
     this.setState(() => ({ [key]: value }));
   }
 
@@ -341,6 +342,16 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
         });
         return;
       }
+
+      if (!selectedBackupID) {
+        /* a backup selection is also required */
+        this.setState({
+          errors: [
+            { field: 'backup_id', reason: 'You must select a Backup' },
+          ],
+        });
+        return;
+      }
     }
 
     createLinode({
@@ -395,12 +406,16 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       selectedImageID,
       selectedTypeID,
       selectedRegionID,
+      selectedBackupInfo,
     } = this.state;
 
     const { classes } = this.props;
 
-    const imageInfo = this.getImageInfo(this.props.images.response.find(
-      image => image.id === selectedImageID));
+    const imageInfo = [
+      this.getImageInfo(this.props.images.response.find(
+          image => image.id === selectedImageID)),
+      selectedBackupInfo,
+    ][selectedTab];
 
     const typeInfo = this.getTypeInfo(this.props.types.response.find(
       type => type.id === selectedTypeID));
