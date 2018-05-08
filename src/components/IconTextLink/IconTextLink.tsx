@@ -7,6 +7,7 @@ import {
   WithStyles,
   Theme,
 } from 'material-ui';
+import Button from 'material-ui/Button';
 import SvgIcon from 'material-ui/SvgIcon';
 
 type CSSClasses = 'root' | 'active' | 'disabled' | 'icon';
@@ -16,17 +17,20 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     display: 'flex',
     alignItems: 'flex-start',
     cursor: 'pointer',
+    padding: 12,
     color: theme.palette.primary.main,
     transition: theme.transitions.create(['color']),
-    margin: `${theme.spacing.unit}px 0 ${theme.spacing.unit * 2}px`,
+    margin: '0 -12px 6px 0',
+    minHeight: 'auto',
     '&:hover, &:focus': {
       color: theme.palette.primary.light,
+      backgroundColor: 'transparent',
       '& $icon': {
-        fill: theme.palette.primary.main,
+        fill: theme.palette.primary.light,
         color: 'white',
       },
       '& .border': {
-        color: theme.palette.primary.main,
+        color: theme.palette.primary.light,
       },
     },
   },
@@ -75,7 +79,7 @@ const IconTextLink: React.StatelessComponent<FinalProps> = (props) => {
   } = props;
 
   return (
-    <a
+    <Button
       className={
         classNames({
           [classes.root]: true,
@@ -92,7 +96,7 @@ const IconTextLink: React.StatelessComponent<FinalProps> = (props) => {
       <span>
         {text}
       </span>
-    </a>
+    </Button>
   );
 };
 
