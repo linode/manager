@@ -4,7 +4,6 @@ import Networking from '../../../pageobjects/linode-detail-networking.page';
 import ListLinodes from '../../../pageobjects/list-linodes';
 import LinodeDetail from '../../../pageobjects/linode-detail.page';
 
-
 describe('Linode Detail - Networking Suite', () => {
     beforeAll(() => {
         browser.url(constants.routes.linodes);
@@ -93,42 +92,60 @@ describe('Linode Detail - Networking Suite', () => {
     });
 
     describe('Edit RDNS Suite', () => {
+        let ip, defaultRdns;
+
+        beforeAll(() => {
+            const v4ips = Networking.getIpsByType('ipv4');
+            ip = v4ips[0].getAttribute('data-qa-ip');
+            defaultRdns = $(`[data-qa-ip="${ip}"]`).$(Networking.rdns.selector).getText();
+        });
+
         it('should display edit IPv4 RDNS drawer', () => {
-            
+            Networking.editRdns(ip);
+            Networking.editRdnsElemsDisplay();
         });
 
         it('should prepopulate with reverse dns from networking table', () => {
-            
+            expect(Networking.domainName.$('input').getValue()).toBe(defaultRdns);
         });
 
-        it('should error on an entry without a forward entry', () => {
-            
+        it('should error on an invalid domain entry', () => {
+            Networking.domainName.$('input').setValue('b');
+            Networking.submit.click();
+            Networking.lookupError.waitForVisible();
         });
 
         it('should reset rdns on empty entry', () => {
-            // enter blank text for entry
-            // submit
-            // drawer dismisses, nothing else happens
+            Networking.domainName.$('input').setValue([' ','\uE003']);
+            Networking.submit.click();
+            Networking.drawerTitle.waitForVisible(10000, true);
         });
 
-        it('should only display the view link on ipv6 link local ip', () => {
-            
-        });
+        it('should display edit rdns ipv6 drawer', () => {
+            const v6ips = Networking.getIpsByType('ipv6');
+            const slaac =
+                v6ips
+                    .filter(ip => ip.$(Networking.type.selector).getText() === 'SLAAC')
+                    .map(ip => ip.getAttribute('data-qa-ip'));
 
-        it('should display edit Ipv6 drawer', () => {
-            
+            Networking.editRdns(slaac[0]);
+            Networking.editRdnsElemsDisplay();
         });
 
         it('should prepopulate rdns with empty text field', () => {
-                    
+            expect(Networking.domainName.$('input').getValue()).toBe('');
         });        
     });
 
     describe('Remove IP Suite', () => {
-
+        // yet to be implemented
     });
 
-    it('should display ipv6 ranges', () => {
-        
+    it('should display slaac and link local ipv6 ips', () => {
+        const v6ips = 
+            Networking.getIpsByType('ipv6')
+                .filter(ip => ip.$(Networking.type.selector).getText() === 'SLAAC' || 'Link Local');
+
+        expect(v6ips.length).toBeGreaterThanOrEqual(2);
     });
 });

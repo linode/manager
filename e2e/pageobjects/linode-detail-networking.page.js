@@ -7,7 +7,7 @@ class Networking extends Page {
     get drawerTitle() { return $('[data-qa-drawer-title]'); }
     get ips() { return $$('[data-qa-ip]'); }
     get ip() {return $('[data-qa-ip]'); }
-    get rdns() { return $('[data-qa-rnds]'); }
+    get rdns() { return $('[data-qa-rdns]'); }
     get type() { return $('[data-qa-type]'); }
     get actionMenu() { return $('[data-qa-action-menu]'); }
     get addIcons() { return $$('[data-qa-icon-text-link]'); }
@@ -17,6 +17,7 @@ class Networking extends Page {
     // drawer elements
     get serviceNotice() { return $('[data-qa-service-notice]'); }
     get allocate() { return $('[data-qa-submit]'); }
+    get submit() { return $('[data-qa-submit]'); }
     get cancel() { return $('[data-qa-cancel]'); }
 
     // view ip elements
@@ -36,6 +37,7 @@ class Networking extends Page {
     get configRegion() { return $('[data-qa-region-heading] [data-qa-region]'); }
 
     get domainName() { return $('[data-qa-domain-name]'); }
+    get lookupError() { return $('[data-qa-error]'); }
 
     landingElemsDisplay() {
         expect(this.heading.getText()).toBe('Networking');
@@ -53,7 +55,7 @@ class Networking extends Page {
             ipv4: /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/g,
             ipv6: /(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))/,
         }
-        return ips.filter(ip => !!ip.getAttribute('data-qa-ip').match(regex[ipType]));
+        return this.ips.filter(ip => !!ip.getAttribute('data-qa-ip').match(regex[ipType]));
     }
 
     viewConfiguration(ip, type) {
@@ -134,7 +136,7 @@ class Networking extends Page {
         browser.waitForVisible(menuItem, 10000, true);
     }
 
-    editRDNS(ip) {
+    editRdns(ip) {
         this.selectActionMenuItem(ip, 'Edit RDNS');
         this.drawerTitle.waitForVisible();
     }
@@ -143,7 +145,8 @@ class Networking extends Page {
         expect(this.drawerTitle.getText()).toBe('Edit Reverse DNS');
         expect(this.domainName.isVisible()).toBe(true)
         expect(this.domainName.$('input').getAttribute('placeholder')).toBe('Enter a domain name');
-        expect(this.domainName.$('span').getText()).toBe('Leave this field blank to reset RDNS');
+        expect(this.submit.isVisible()).toBe(true);
+        expect(this.cancel.isVisible()).toBe(true);
     }
 
     delete(ip) {
