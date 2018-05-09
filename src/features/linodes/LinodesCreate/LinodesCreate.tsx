@@ -451,6 +451,8 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     }
     // we are cloning to another Linode
     if (selectedTab === 2) {
+      // if selectedTargetLinode is 'undefined,' no target Linode has been selected
+      // if selectedTargetLinode is null, that means we're cloning to a new Linode
       if (!selectedLinodeID || typeof selectedTargetLinodeID === 'undefined') {
         window.scroll({
           top: 0,
@@ -467,13 +469,6 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       this.cloneLinode();
     }
   }
-
-  // checkFieldIsEmpty = (fieldValue: any) => {
-  //   if (!fieldValue) {
-  //     return true;
-  //   }
-  //   return false;
-  // }
 
   createNewLinode = () => {
     const { history } = this.props;
@@ -586,9 +581,10 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       selectedTypeID,
       selectedRegionID,
       selectedBackupInfo,
+      selectedTargetLinodeID,
     } = this.state;
 
-    const { classes } = this.props;
+    const { classes, linodes } = this.props;
 
     let imageInfo: Info;
     if (selectedTab === this.imageTabIndex) {
@@ -598,8 +594,21 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       imageInfo = selectedBackupInfo;
     }
 
-    const typeInfo = this.getTypeInfo(this.props.types.response.find(
-      type => type.id === selectedTypeID));
+    // we have to add a conditional check here to see if we're cloning to
+    // an existing Linode. If so, we need to get the type from that Linode and
+    // so that we can display the accurate price
+    const cloningToExistingLinode = !!selectedTargetLinodeID;
+    const selectedTargetLinode = linodes.response.find((linode) => {
+      return Number(selectedTargetLinodeID) === linode.id;
+    });
+
+    const typeInfo = (!cloningToExistingLinode)
+      ? this.getTypeInfo(this.props.types.response.find(
+        type => type.id === selectedTypeID))
+      : this.getTypeInfo(this.props.types.response.find(
+        type => type.id === selectedTargetLinode!.type));
+
+    console.log(typeInfo);
 
     const regionName = this.getRegionName(this.props.regions.response.find(
       region => region.id === selectedRegionID));
