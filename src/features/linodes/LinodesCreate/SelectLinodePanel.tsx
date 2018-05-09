@@ -69,7 +69,10 @@ class SelectLinodePanel extends React.Component<CombinedProps> {
           this.handleTypeSelect(e, undefined);
           this.handleSmallestType(e, `${linode.type}`);
         }}
-        checked={(isTarget)
+        disabled={(!!isTarget)
+          ? linode.id === Number(selectedLinodeID)
+          : linode.id === Number(selectedTargetLinodeID)}
+        checked={(!!isTarget)
           ? linode.id === Number(selectedTargetLinodeID)
           : linode.id === Number(selectedLinodeID)}
         heading={linode.heading}

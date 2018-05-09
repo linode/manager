@@ -243,6 +243,10 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     );
   }
 
+  // disableLinodeCard() { // disable a certain card inside a Linodes list
+  //   // do stuff
+  // }
+
   tabs = [
     {
       title: 'Create from Image',
@@ -353,12 +357,14 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
               error={hasErrorFor('linode_id')}
               linodes={this.extendLinodes(this.props.linodes.response)}
               selectedLinodeID={this.state.selectedLinodeID}
+              selectedTargetLinodeID={this.state.selectedTargetLinodeID}
               handleSelection={this.updateStateFor}
               header={'Select Linode to Clone From'}
             />
             <SelectLinodePanel
               error={hasErrorFor('linode_id')}
               linodes={this.extendLinodes(this.props.linodes.response)}
+              selectedLinodeID={this.state.selectedLinodeID}
               selectedTargetLinodeID={this.state.selectedTargetLinodeID}
               handleSelection={this.updateStateFor}
               header={'Select Target Linode'}
