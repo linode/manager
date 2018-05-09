@@ -19,7 +19,9 @@ import Tabs, { Tab } from 'material-ui/Tabs';
 
 import { parseQueryParams } from 'src/utilities/queryParams';
 import { dcDisplayNames } from 'src/constants';
-import { createLinode, getLinodeTypes, allocatePrivateIP, getLinodes } from 'src/services/linodes';
+import {
+  createLinode, getLinodeTypes, allocatePrivateIP, getLinodes, cloneLinode,
+} from 'src/services/linodes';
 import { getImages } from 'src/services/images';
 import { getRegions } from 'src/services/misc';
 
@@ -243,10 +245,6 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     );
   }
 
-  // disableLinodeCard() { // disable a certain card inside a Linodes list
-  //   // do stuff
-  // }
-
   tabs = [
     {
       title: 'Create from Image',
@@ -407,24 +405,16 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
   }
 
   onDeploy = () => {
-    const { history } = this.props;
     const {
       selectedTab,
       selectedLinodeID,
       selectedBackupID,
-      selectedImageID,
-      selectedRegionID,
-      selectedTypeID,
-      label,
-      password,
-      backups,
-      privateIP,
+      selectedTargetLinodeID,
     } = this.state;
 
     if (selectedTab === this.backupTabIndex) {
       /* we are creating from backup */
       if (!selectedLinodeID) {
-        /* so a Linode selection is required */
         this.setState({
           errors: [
             { field: 'linode_id', reason: 'You must select a Linode' },
@@ -442,7 +432,42 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
         });
         return;
       }
+      this.createNewLinode();
     }
+    // we are cloning to another Linode
+    if (selectedTab === 2) {
+      if (!selectedLinodeID || !selectedTargetLinodeID) {
+        console.log('bad');
+        this.setState({
+          errors: [
+            { field: 'linode_id', reason: 'You must select both a source and target Linode' },
+          ],
+        });
+        return;
+      }
+      this.cloneLinode();
+    }
+  }
+
+  // checkFieldIsEmpty = (fieldValue: any) => {
+  //   if (!fieldValue) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
+
+  createNewLinode = () => {
+    const { history } = this.props;
+    const {
+      selectedImageID,
+      selectedRegionID,
+      selectedTypeID,
+      label,
+      password,
+      backups,
+      privateIP,
+      selectedBackupID,
+    } = this.state;
 
     createLinode({
       region: selectedRegionID,
@@ -466,6 +491,43 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
           errors: error.response && error.response.data && error.response.data.errors,
         }));
       });
+  }
+
+  cloneLinode = () => {
+    console.log('cloning!!');
+    // const { history } = this.props;
+    const {
+      selectedRegionID,
+      selectedTypeID,
+      selectedLinodeID,
+      selectedTargetLinodeID,
+      label, // optional
+      backups, // optional
+      // privateIP,
+    } = this.state;
+
+    // let region = selectedRegionID;
+    // let type = selectedTypeID;
+
+    // let regionIsNull = selectedRegionID === null;
+    // let typeIsNull = selectedTypeID === null;
+
+    // if(regionIsNull || typeIsNull){
+    //   getLinode(selectedLinodeID)
+    // }
+
+    cloneLinode(selectedLinodeID!, {
+      region: selectedRegionID,
+      type: selectedTypeID,
+      linode_id: +selectedTargetLinodeID!,
+      label,
+      backups_enabled: backups,
+    }).then((linode) => {
+      console.log(linode);
+    });
+
+
+    // do stuff here
   }
 
   getImageInfo = (image: Linode.Image | undefined): Info => {

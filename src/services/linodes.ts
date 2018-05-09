@@ -220,3 +220,19 @@ export const deleteLinodeDisk = (
   setMethod('DELETE'),
   );
 
+export interface LinodeCloneData {
+  region: string | null;
+  type: string | null;
+  linode_id?: number | null;
+  label?: string | null;
+  backups_enabled?: boolean | null;
+}
+
+export const cloneLinode = (source_linode_id: number, data: LinodeCloneData) => {
+  return Request(
+    setURL(`${API_ROOT}/linode/instances/${source_linode_id}/clone`),
+    setMethod('POST'),
+    setData(data),
+  );
+};
+
