@@ -22,9 +22,7 @@ type ClassNames = 'root'
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
-  section: {
-    marginTop: theme.spacing.unit * 2,
-  },
+  section: {},
   divider: {
     margin: `${theme.spacing.unit * 2}px ${theme.spacing.unit}px 0 `,
     width: `calc(100% - ${theme.spacing.unit * 2}px)`,
@@ -122,7 +120,14 @@ class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
           <Grid item className={classes.section}>
             <ActionsPanel>
               <Button onClick={onSubmit} variant="raised" color="primary">Submit</Button>
-              <Button onClick={onClose}>Cancel</Button>
+              <Button
+                onClick={onClose}
+                variant="raised"
+                color="secondary"
+                className="cancel"
+              >
+                  Cancel
+              </Button>
             </ActionsPanel>
           </Grid>
         </Grid>
