@@ -23,7 +23,8 @@ import {
 type ClassNames =
 'root'
 | 'inner'
-| 'panelBody';
+| 'panelBody'
+| 'wrapper';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -36,7 +37,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     padding: theme.spacing.unit * 3,
   },
   panelBody: {
+    width: '100%',
     padding: `${theme.spacing.unit * 2}px 0 0`,
+  },
+  wrapper: {
+    padding: theme.spacing.unit,
+    minHeight: 120,
   },
 });
 
@@ -158,23 +164,31 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
             Select Backup
           </Typography>
           {(!loading)
-            ? <React.Fragment>
+            ? <Grid container alignItems="center" className={classes.wrapper}>
                 {backups
-                  ? <Typography component="div" className={classes.panelBody}>
-                      <Grid container>
-                        {backups.map((backup) => {
-                          return (
-                            this.renderCard(backup)
-                          );
-                        })}
-                      </Grid>
-                    </Typography>
+                  ? <React.Fragment>
+                      {backups.length !== 0
+                        ? <Typography component="div" className={classes.panelBody}>
+                            <Grid container>
+                            {}
+                              {backups.map((backup) => {
+                                return (
+                                  this.renderCard(backup)
+                                );
+                              })}
+                            </Grid>
+                          </Typography>
+                        : <Typography variant="body1">
+                            No backup available
+                          </Typography>
+                      }
+                    </React.Fragment>
                   : <Typography variant="body1">
                       First, select a Linode
                     </Typography>
                 }
-              </React.Fragment>
-            : <Grid container justify="center" alignItems="center">
+              </Grid>
+            : <Grid container justify="center" alignItems="center" className={classes.wrapper}>
                 <Grid item>
                   <CircularProgress
                     size={75}

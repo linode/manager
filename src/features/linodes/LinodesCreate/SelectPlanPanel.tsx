@@ -67,7 +67,7 @@ class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNames>> {
         render: () => {
 
           return (
-            <Grid container spacing={8}>
+            <Grid container spacing={16}>
             { nanodes.map(this.renderCard(this.props.selectedID, this.props.onSelect))}
             </Grid>
           );
@@ -80,7 +80,7 @@ class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNames>> {
         title: 'Standard',
         render: () => {
           return (
-            <Grid container spacing={8}>
+            <Grid container spacing={16}>
               { standards.map(this.renderCard(this.props.selectedID, this.props.onSelect))}
             </Grid>
           );
@@ -93,7 +93,7 @@ class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNames>> {
         title: 'High Memory',
         render: () => {
           return (
-            <Grid container spacing={8}>
+            <Grid container spacing={16}>
               { highmem.map(this.renderCard(this.props.selectedID, this.props.onSelect))}
             </Grid>
           );
