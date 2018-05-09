@@ -78,7 +78,7 @@ class SelectRegionPanel extends React.Component<Props & WithStyles<ClassNames>> 
         render: () => {
 
           return (
-            <Grid container spacing={8}>
+            <Grid container spacing={16}>
             { na.map(renderCard(this.props.selectedID, this.props.handleSelection))}
             </Grid>
           );
@@ -91,7 +91,7 @@ class SelectRegionPanel extends React.Component<Props & WithStyles<ClassNames>> 
         title: 'Europe',
         render: () => {
           return (
-            <Grid container spacing={8}>
+            <Grid container spacing={16}>
               { eu.map(renderCard(this.props.selectedID, this.props.handleSelection))}
             </Grid>
           );
