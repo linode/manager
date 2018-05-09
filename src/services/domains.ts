@@ -34,8 +34,21 @@ export interface CreateDomainRecordDataType {
   type?: Linode.RecordType;
   weight?: number;
 }
+
 export const createDomainRecord = (domainId: number, data: CreateDomainRecordDataType) => Request(
   setURL(`${API_ROOT}/domains/${domainId}/records`),
   setMethod('POST'),
   setData(data),
+);
+
+export interface DomainData {
+  domain: string;
+  type: 'master' | 'slave';
+  soa_email: string;
+}
+
+export const createDomain = (data: DomainData) => Request(
+  setData(data),
+  setURL(`${API_ROOT}/domains`),
+  setMethod('POST'),
 );
