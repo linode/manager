@@ -12,7 +12,7 @@ import Typography from 'material-ui/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import SelectionCard from 'src/components/SelectionCard';
-import CircleProgress from 'src/components/CircleProgress';
+import CircularProgress from 'material-ui/Progress/CircularProgress';
 
 import { getLinodeBackups } from 'src/services/linodes';
 import {
@@ -174,7 +174,15 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
                     </Typography>
                 }
               </React.Fragment>
-            : <CircleProgress />
+            : <Grid container justify="center" alignItems="center">
+                <Grid item>
+                  <CircularProgress
+                    size={75}
+                    variant="indeterminate"
+                    thickness={2}
+                  />
+                </Grid>
+              </Grid>
           }
         </div>
       </Paper>
