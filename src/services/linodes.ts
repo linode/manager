@@ -221,8 +221,8 @@ export const deleteLinodeDisk = (
   );
 
 export interface LinodeCloneData {
-  region: string | null;
-  type: string | null;
+  region?: string | null;
+  type?: string | null;
   linode_id?: number | null;
   label?: string | null;
   backups_enabled?: boolean | null;

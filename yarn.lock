@@ -806,6 +806,10 @@
   version "9.4.6"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-9.4.6.tgz#d8176d864ee48753d053783e4e463aec86b8d82e"
 
+"@types/promise.prototype.finally@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@types/promise.prototype.finally/-/promise.prototype.finally-2.0.2.tgz#68fefb8f0e23f21893a33740c931c79f44be3499"
+
 "@types/ramda@^0.25.18":
   version "0.25.18"
   resolved "https://registry.yarnpkg.com/@types/ramda/-/ramda-0.25.18.tgz#a026777d780226a08a50a50a353ce901490f0b92"

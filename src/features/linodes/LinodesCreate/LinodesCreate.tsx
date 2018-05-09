@@ -41,6 +41,8 @@ import AddonsPanel from './AddonsPanel';
 import { typeLabelDetails, typeLabel } from '../presentation';
 import CheckoutBar from './CheckoutBar';
 import { resetEventsPolling } from 'src/events';
+import { shim } from 'promise.prototype.finally';
+shim();
 
 type ChangeEvents = React.MouseEvent<HTMLElement> | React.ChangeEvent<HTMLInputElement>;
 
@@ -94,6 +96,8 @@ interface State {
   backups: boolean;
   privateIP: boolean;
   errors?: Linode.ApiFieldError[];
+  responseError: string;
+  isMakingRequest: boolean;
   [index: string]: any;
 }
 
@@ -172,6 +176,8 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     backups: false,
     privateIP: false,
     errors: undefined,
+    responseError: '',
+    isMakingRequest: false,
   };
 
   mounted: boolean = false;
@@ -349,6 +355,9 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
         const hasErrorFor = getAPIErrorsFor(errorResources, this.state.errors);
         return (
           <React.Fragment>
+            {!!this.state.responseError &&
+              <Notice text={this.state.responseError} error={true} />
+            }
             <Notice text={`This newly created Linode wil be created with
             the same root password as the original Linode`} warning={true} />
             <SelectLinodePanel
@@ -405,6 +414,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
   }
 
   onDeploy = () => {
+    this.setState({ errors: [], responseError: '' });
     const {
       selectedTab,
       selectedLinodeID,
@@ -415,6 +425,11 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     if (selectedTab === this.backupTabIndex) {
       /* we are creating from backup */
       if (!selectedLinodeID) {
+        window.scroll({
+          top: 0,
+          left: 0,
+          behavior: 'smooth',
+        });
         this.setState({
           errors: [
             { field: 'linode_id', reason: 'You must select a Linode' },
@@ -436,8 +451,12 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     }
     // we are cloning to another Linode
     if (selectedTab === 2) {
-      if (!selectedLinodeID || !selectedTargetLinodeID) {
-        console.log('bad');
+      if (!selectedLinodeID || typeof selectedTargetLinodeID === 'undefined') {
+        window.scroll({
+          top: 0,
+          left: 0,
+          behavior: 'smooth',
+        });
         this.setState({
           errors: [
             { field: 'linode_id', reason: 'You must select both a source and target Linode' },
@@ -494,8 +513,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
   }
 
   cloneLinode = () => {
-    console.log('cloning!!');
-    // const { history } = this.props;
+    const { history } = this.props;
     const {
       selectedRegionID,
       selectedTypeID,
@@ -503,31 +521,40 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       selectedTargetLinodeID,
       label, // optional
       backups, // optional
-      // privateIP,
+      privateIP,
     } = this.state;
 
-    // let region = selectedRegionID;
-    // let type = selectedTypeID;
-
-    // let regionIsNull = selectedRegionID === null;
-    // let typeIsNull = selectedTypeID === null;
-
-    // if(regionIsNull || typeIsNull){
-    //   getLinode(selectedLinodeID)
-    // }
+    this.setState({ isMakingRequest: true });
 
     cloneLinode(selectedLinodeID!, {
       region: selectedRegionID,
       type: selectedTypeID,
-      linode_id: +selectedTargetLinodeID!,
+      linode_id: (!!selectedTargetLinodeID) ? +selectedTargetLinodeID : null,
       label,
       backups_enabled: backups,
-    }).then((linode) => {
-      console.log(linode);
-    });
+    })
+      .then((linode) => {
+        if (privateIP) allocatePrivateIP(linode.data.id);
+        resetEventsPolling();
+        history.push('/linodes');
+      })
+      .catch((error) => {
+        if (!this.mounted) { return; }
 
+        window.scroll({
+          top: 0,
+          left: 0,
+          behavior: 'smooth',
+        });
 
-    // do stuff here
+        this.setState(() => ({
+          responseError: error.response.data.errors[0].reason,
+        }));
+      })
+      .finally(() => {
+        // regardless of whether request failed or not, change state and enable the submit btn
+        this.setState({ isMakingRequest: false });
+      });
   }
 
   getImageInfo = (image: Linode.Image | undefined): Info => {
@@ -615,6 +642,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
                     typeInfo,
                     regionName,
                     backups,
+                    disabled: this.state.isMakingRequest,
                     onDeploy: this.onDeploy,
                   };
                   return (

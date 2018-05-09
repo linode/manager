@@ -14,12 +14,12 @@ import Notice from 'src/components/Notice';
 import { TypeInfo } from 'src/features/linodes/LinodesCreate/LinodesCreate';
 
 type ClassNames = 'root'
-| 'checkoutSection'
-| 'noBorder'
-| 'sidebarTitle'
-| 'detail'
-| 'price'
-| 'per';
+  | 'checkoutSection'
+  | 'noBorder'
+  | 'sidebarTitle'
+  | 'detail'
+  | 'price'
+  | 'per';
 
 const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   '@keyframes fadeIn': {
@@ -78,6 +78,7 @@ interface Props {
   regionName: string | undefined;
   backups: boolean;
   isSticky?: boolean;
+  disabled?: boolean;
 }
 
 type CombinedProps = Props & StickyProps & WithStyles<ClassNames>;
@@ -116,6 +117,7 @@ class CheckoutBar extends React.Component<CombinedProps> {
       imageInfo,
       typeInfo,
       regionName,
+      disabled,
     } = this.props;
 
     let finalStyle;
@@ -198,6 +200,7 @@ class CheckoutBar extends React.Component<CombinedProps> {
           <Button
             variant="raised"
             color="primary"
+            disabled={disabled}
             fullWidth
             onClick={onDeploy}
             data-qa-deploy-linode
