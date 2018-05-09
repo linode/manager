@@ -194,7 +194,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     const options: QueryStringOptions =
       parseQueryParams(search.replace('?', '')) as QueryStringOptions;
     if (options.type === 'fromBackup') {
-      this.setState({ selectedTab: 1 });
+      this.setState({ selectedTab: this.backupTabIndex });
     }
 
     if (options.linodeID) {
@@ -345,6 +345,9 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     },
   ];
 
+  imageTabIndex = this.tabs.findIndex(tab => tab.title.toLowerCase().includes('image'));
+  backupTabIndex = this.tabs.findIndex(tab => tab.title.toLowerCase().includes('backup'));
+
   componentWillUnmount() {
     this.mounted = false;
   }
@@ -364,7 +367,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       privateIP,
     } = this.state;
 
-    if (selectedTab === 1) {
+    if (selectedTab === this.backupTabIndex) {
       /* we are creating from backup */
       if (!selectedLinodeID) {
         /* so a Linode selection is required */
@@ -444,11 +447,13 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
 
     const { classes } = this.props;
 
-    const imageInfo = [
-      this.getImageInfo(this.props.images.response.find(
-          image => image.id === selectedImageID)),
-      selectedBackupInfo,
-    ][selectedTab];
+    let imageInfo: Info;
+    if (selectedTab === this.imageTabIndex) {
+      imageInfo = this.getImageInfo(this.props.images.response.find(
+          image => image.id === selectedImageID));
+    } else if (selectedTab === this.backupTabIndex) {
+      imageInfo = selectedBackupInfo;
+    }
 
     const typeInfo = this.getTypeInfo(this.props.types.response.find(
       type => type.id === selectedTypeID));
