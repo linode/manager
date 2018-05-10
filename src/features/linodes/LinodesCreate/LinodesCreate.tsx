@@ -86,6 +86,7 @@ interface State {
   selectedBackupInfo?: Info;
   smallestType?: string;
   selectedTargetLinodeID?: number | null;
+  selectedCloneTargetLinodeID?: number | null;
   selectedImageID: string | null;
   selectedRegionID: string | null;
   selectedTypeID: string | null;
@@ -362,7 +363,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
               error={hasErrorFor('linode_id')}
               linodes={this.extendLinodes(this.props.linodes.response)}
               selectedLinodeID={this.state.selectedLinodeID}
-              selectedTargetLinodeID={this.state.selectedTargetLinodeID}
+              selectedCloneTargetLinodeID={this.state.selectedCloneTargetLinodeID}
               handleSelection={this.updateStateFor}
               header={'Select Linode to Clone From'}
             />
@@ -370,28 +371,31 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
               error={hasErrorFor('linode_id')}
               linodes={this.extendLinodes(this.props.linodes.response)}
               selectedLinodeID={this.state.selectedLinodeID}
-              selectedTargetLinodeID={this.state.selectedTargetLinodeID}
+              selectedCloneTargetLinodeID={this.state.selectedCloneTargetLinodeID}
               handleSelection={this.updateStateFor}
               header={'Select Target Linode'}
-              isTarget={true}
+              isCloneTarget={true}
             />
-            <SelectRegionPanel
-              error={hasErrorFor('region')}
-              regions={this.props.regions.response}
-              handleSelection={this.updateStateFor}
-              selectedID={this.state.selectedRegionID}
-            />
-            <SelectPlanPanel
-              error={hasErrorFor('type')}
-              types={this.props.types.response}
-              onSelect={(id: string) => this.setState({ selectedTypeID: id })}
-              selectedID={this.state.selectedTypeID}
-            />
-            <LabelAndTagsPanel
-              error={hasErrorFor('label')}
-              label={this.state.label}
-              handleChange={this.updateStateFor}
-            />
+            {this.state.selectedCloneTargetLinodeID === null &&
+              <React.Fragment>
+                <SelectRegionPanel
+                  error={hasErrorFor('region')}
+                  regions={this.props.regions.response}
+                  handleSelection={this.updateStateFor}
+                  selectedID={this.state.selectedRegionID}
+                />
+                <SelectPlanPanel
+                  error={hasErrorFor('type')}
+                  types={this.props.types.response}
+                  onSelect={(id: string) => this.setState({ selectedTypeID: id })}
+                  selectedID={this.state.selectedTypeID}
+                />
+                <LabelAndTagsPanel
+                  error={hasErrorFor('label')}
+                  label={this.state.label}
+                  handleChange={this.updateStateFor}
+                />
+              </React.Fragment>}
             <AddonsPanel
               backups={this.state.backups}
               backupsMonthly={this.getBackupsMonthlyPrice()}
@@ -417,7 +421,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       selectedTab,
       selectedLinodeID,
       selectedBackupID,
-      selectedTargetLinodeID,
+      selectedCloneTargetLinodeID,
     } = this.state;
 
     if (selectedTab === this.backupTabIndex) {
@@ -449,9 +453,9 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     }
     // we are cloning to another Linode
     if (selectedTab === 2) {
-      // if selectedTargetLinode is 'undefined,' no target Linode has been selected
-      // if selectedTargetLinode is null, that means we're cloning to a new Linode
-      if (!selectedLinodeID || typeof selectedTargetLinodeID === 'undefined') {
+      // if selectedCloneTargetLinode is 'undefined,' no target Linode has been selected
+      // if selectedCloneTargetLinode is null, that means we're cloning to a new Linode
+      if (!selectedLinodeID || typeof selectedCloneTargetLinodeID === 'undefined') {
         window.scroll({
           top: 0,
           left: 0,
@@ -511,7 +515,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       selectedRegionID,
       selectedTypeID,
       selectedLinodeID,
-      selectedTargetLinodeID,
+      selectedCloneTargetLinodeID,
       label, // optional
       backups, // optional
       privateIP,
@@ -522,7 +526,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     cloneLinode(selectedLinodeID!, {
       region: selectedRegionID,
       type: selectedTypeID,
-      linode_id: (!!selectedTargetLinodeID) ? +selectedTargetLinodeID : null,
+      linode_id: (!!selectedCloneTargetLinodeID) ? +selectedCloneTargetLinodeID : null,
       label,
       backups_enabled: backups,
     })
@@ -558,23 +562,23 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
   }
 
   getTypeInfo = (): TypeInfo => {
-    const { selectedTargetLinodeID, selectedTypeID } = this.state;
+    const { selectedCloneTargetLinodeID, selectedTypeID } = this.state;
 
     const { linodes } = this.props;
 
     // we have to add a conditional check here to see if we're cloning to
     // an existing Linode. If so, we need to get the type from that Linode and
     // so that we can display the accurate price
-    const cloningToExistingLinode = !!selectedTargetLinodeID;
-    const selectedTargetLinode = linodes.response.find((linode) => {
-      return Number(selectedTargetLinodeID) === linode.id;
+    const cloningToExistingLinode = !!selectedCloneTargetLinodeID;
+    const selectedCloneTargetLinode = linodes.response.find((linode) => {
+      return Number(selectedCloneTargetLinodeID) === linode.id;
     });
 
     const typeInfo = (!cloningToExistingLinode)
       ? this.reshapeTypeInfo(this.props.types.response.find(
         type => type.id === selectedTypeID))
       : this.reshapeTypeInfo(this.props.types.response.find(
-        type => type.id === selectedTargetLinode!.type));
+        type => type.id === selectedCloneTargetLinode!.type));
 
     return typeInfo;
   }

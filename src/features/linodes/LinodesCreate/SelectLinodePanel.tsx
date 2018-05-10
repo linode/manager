@@ -40,12 +40,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 interface Props {
   linodes: ExtendedLinode[];
   selectedLinodeID?: number;
-  selectedTargetLinodeID?: number | null;
+  selectedCloneTargetLinodeID?: number | null;
   handleSelection: (key: string) =>
     (event: React.SyntheticEvent<HTMLElement>, value: any) => void;
   error?: string;
   header?: string;
-  isTarget?: boolean;
+  isCloneTarget?: boolean;
 }
 
 type StyledProps = Props & WithStyles<ClassNames>;
@@ -55,12 +55,12 @@ type CombinedProps = StyledProps;
 class SelectLinodePanel extends React.Component<CombinedProps> {
   handleTypeSelect = this.props.handleSelection('selectedTypeID');
   handleSmallestType = this.props.handleSelection('smallestType');
-  handleSelection = (!this.props.isTarget)
+  handleSelection = (!this.props.isCloneTarget)
     ? this.props.handleSelection('selectedLinodeID')
-    : this.props.handleSelection('selectedTargetLinodeID');
+    : this.props.handleSelection('selectedCloneTargetLinodeID');
 
   renderCard(linode: ExtendedLinode) {
-    const { selectedLinodeID, selectedTargetLinodeID, isTarget } = this.props;
+    const { selectedLinodeID, selectedCloneTargetLinodeID, isCloneTarget } = this.props;
     return (
       <SelectionCard
         key={linode.id}
@@ -69,11 +69,11 @@ class SelectLinodePanel extends React.Component<CombinedProps> {
           this.handleTypeSelect(e, undefined);
           this.handleSmallestType(e, `${linode.type}`);
         }}
-        disabled={(!!isTarget)
+        disabled={(!!isCloneTarget)
           ? linode.id === Number(selectedLinodeID)
-          : linode.id === Number(selectedTargetLinodeID)}
-        checked={(!!isTarget)
-          ? linode.id === Number(selectedTargetLinodeID)
+          : linode.id === Number(selectedCloneTargetLinodeID)}
+        checked={(!!isCloneTarget)
+          ? linode.id === Number(selectedCloneTargetLinodeID)
           : linode.id === Number(selectedLinodeID)}
         heading={linode.heading}
         subheadings={linode.subHeadings}
@@ -82,7 +82,8 @@ class SelectLinodePanel extends React.Component<CombinedProps> {
   }
 
   render() {
-    const { error, classes, linodes, header, isTarget, selectedTargetLinodeID } = this.props;
+    const { error, classes, linodes, header,
+      isCloneTarget, selectedCloneTargetLinodeID } = this.props;
 
     return (
       <Paper className={`${classes.root}`}>
@@ -93,9 +94,9 @@ class SelectLinodePanel extends React.Component<CombinedProps> {
           </Typography>
           <Typography component="div" className={classes.panelBody}>
             <Grid container>
-              {isTarget &&
+              {isCloneTarget &&
                 <SelectionCard
-                  checked={selectedTargetLinodeID === null}
+                  checked={selectedCloneTargetLinodeID === null}
                   onClick={e => this.handleSelection(e, null)}
                   heading={'New Linode'}
                   subheadings={[]}

@@ -85,22 +85,22 @@ describe('SelectLinodePanel', () => {
     },
   ];
 
-  const dummyPropsNotTarget = {
+  const dummyPropsNotCloneTarget = {
     linodes: testLinodes,
-    isTarget: false,
+    isCloneTarget: false,
     handleSelection: jest.fn(),
   };
 
-  const dummyPropsIsTarget = {
+  const dummyPropsIsCloneTarget = {
     linodes: testLinodes,
-    isTarget: true,
+    isCloneTarget: true,
     handleSelection: jest.fn(),
   };
 
   it('select Linode Panel must show all Linodes if isTarget prop is false', () => {
     const component = mount(
       <LinodeThemeWrapper>
-        <SelectLinodePanel {...dummyPropsNotTarget} />
+        <SelectLinodePanel {...dummyPropsNotCloneTarget} />
       </LinodeThemeWrapper>,
     );
 
@@ -111,7 +111,7 @@ describe('SelectLinodePanel', () => {
   it('select Linode Panel must show all Linodes and new option if isTarget prop is true', () => {
     const component = mount(
       <LinodeThemeWrapper>
-        <SelectLinodePanel {...dummyPropsIsTarget} />
+        <SelectLinodePanel {...dummyPropsIsCloneTarget} />
       </LinodeThemeWrapper>,
     );
 
