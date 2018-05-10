@@ -368,7 +368,6 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
               header={'Select Linode to Clone From'}
             />
             <SelectLinodePanel
-              error={hasErrorFor('linode_id')}
               linodes={this.extendLinodes(this.props.linodes.response)}
               selectedLinodeID={this.state.selectedLinodeID}
               selectedCloneTargetLinodeID={this.state.selectedCloneTargetLinodeID}
