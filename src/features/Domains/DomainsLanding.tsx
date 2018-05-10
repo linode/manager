@@ -96,8 +96,12 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
   closeCreateDrawer(domain?: Partial<Linode.Domain>) {
     this.setState({
       createDrawer: { open: false },
-      domains: [...this.state.domains, domain as Linode.Domain],
     });
+    if (domain) {
+      this.setState({
+        domains: [...this.state.domains, domain as Linode.Domain],
+      });
+    }
   }
 
   removeDomain = () => {
