@@ -18,7 +18,7 @@ import Typography from 'material-ui/Typography';
 import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
 
-import { parseQueryParams } from 'src/layouts/OAuth';
+import { parseQueryParams } from 'src/utilities/queryParams';
 import { dcDisplayNames } from 'src/constants';
 import { createLinode, getLinodeTypes, allocatePrivateIP, getLinodes } from 'src/services/linodes';
 import { getImages } from 'src/services/images';
@@ -80,7 +80,7 @@ interface State {
   selectedLinodeID?: number;
   selectedBackupID?: number;
   selectedBackupInfo?: Info;
-  requiredDiskSpace?: number;
+  smallestType?: string;
   selectedImageID: string | null;
   selectedRegionID: string | null;
   selectedTypeID: string | null;
@@ -169,11 +169,6 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     errors: undefined,
   };
 
-  constructor(props: CombinedProps) {
-    super(props);
-    this.extendLinodes.bind(this);
-  }
-
   mounted: boolean = false;
 
   componentDidMount() {
@@ -222,7 +217,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     return type.addons.backups.price.monthly;
   }
 
-  extendLinodes(linodes: Linode.Linode[]): ExtendedLinode[] {
+  extendLinodes = (linodes: Linode.Linode[]): ExtendedLinode[] => {
     const images = this.props.images.response || [];
     const types = this.props.types.response || [];
     return linodes.map(linode =>
@@ -321,7 +316,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
               types={this.props.types.response}
               onSelect={(id: string) => this.setState({ selectedTypeID: id })}
               selectedID={this.state.selectedTypeID}
-              requiredDiskSpace={Number(this.state.requiredDiskSpace) || 0}
+              smallestType={this.state.smallestType}
             />
             <LabelAndTagsPanel
               error={hasErrorFor('label')}
