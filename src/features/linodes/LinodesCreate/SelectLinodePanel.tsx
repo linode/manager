@@ -41,7 +41,7 @@ interface Props {
   linodes: ExtendedLinode[];
   selectedLinodeID?: number;
   handleSelection: (key: string) =>
-    (event: React.SyntheticEvent<HTMLElement>, value: string) => void;
+    (event: React.SyntheticEvent<HTMLElement>, value?: string) => void;
   error?: string;
 }
 
@@ -51,6 +51,8 @@ type CombinedProps = StyledProps;
 
 class SelectLinodePanel extends React.Component<CombinedProps> {
   handleSelection = this.props.handleSelection('selectedLinodeID');
+  handleTypeSelect = this.props.handleSelection('selectedTypeID');
+  handleSmallestType = this.props.handleSelection('smallestType');
 
   renderCard(linode: ExtendedLinode) {
     const { selectedLinodeID } = this.props;
@@ -58,7 +60,11 @@ class SelectLinodePanel extends React.Component<CombinedProps> {
       <SelectionCard
         key={linode.id}
         checked={linode.id === Number(selectedLinodeID)}
-        onClick={e => this.handleSelection(e, `${linode.id}`)}
+        onClick={(e) => {
+          this.handleSelection(e, `${linode.id}`);
+          this.handleTypeSelect(e, undefined);
+          this.handleSmallestType(e, `${linode.type}`);
+        }}
         heading={linode.heading}
         subheadings={linode.subHeadings}
       />
