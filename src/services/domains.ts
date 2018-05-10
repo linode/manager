@@ -51,3 +51,8 @@ export const deleteDomain = (domainID: number) => Request(
   setURL(`${API_ROOT}/domains/${domainID}`),
   setMethod('DELETE'),
 );
+
+export const deleteDomainRecord = (domainID: number, recordId: number) => Request(
+  setURL(`${API_ROOT}/domains/${domainID}/records/${recordId}`),
+  setMethod('DELETE'),
+);

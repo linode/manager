@@ -1,14 +1,22 @@
 import * as React from 'react';
 import {
+  allPass,
   compose,
+  equals,
   filter,
   flatten,
   isEmpty,
+  lensPath,
+  over,
+  path,
+  pathEq,
   pathOr,
+  pathSatisfies,
   prepend,
   propEq,
-  over, lensPath,
+  test,
 } from 'ramda';
+import { Subscription } from 'rxjs/Subscription';
 
 import {
   withStyles,
@@ -16,6 +24,7 @@ import {
   Theme,
   WithStyles,
 } from 'material-ui';
+import Button from 'material-ui/Button';
 import Paper from 'material-ui/Paper';
 import Grid from 'material-ui/Grid';
 import Table from 'material-ui/Table';
@@ -24,11 +33,15 @@ import TableCell from 'material-ui/Table/TableCell';
 import TableHead from 'material-ui/Table/TableHead';
 import TableRow from 'material-ui/Table/TableRow';
 
+import { events$, resetEventsPolling } from 'src/events';
+import { deleteDomainRecord } from 'src/services/domains';
 import PlusSquare from 'src/assets/icons/plus-square.svg';
 import IconTextLink from 'src/components/IconTextLink';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import ActionMenu from './DomainRecordActionMenu';
 import Drawer from './DomainRecordDrawer';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import ActionsPanel from 'src/components/ActionsPanel';
 
 type ClassNames = 'root';
 
@@ -39,6 +52,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 interface Props {
   domain: Linode.Domain;
   domainRecords: Linode.Record[];
+  updateRecords: () => void;
+}
+
+interface ConfirmationState {
+  open: boolean;
+  submitting: boolean;
+  errors?: Linode.ApiFieldError[];
+  recordId?: number;
 }
 
 interface DrawerState {
@@ -48,7 +69,9 @@ interface DrawerState {
 }
 
 interface State {
+  types: IType[];
   drawer: DrawerState;
+  confirmDialog: ConfirmationState;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -70,18 +93,19 @@ const createLink = (title: string, handler: () => void) => <IconTextLink
 />;
 
 class DomainRecords extends React.Component<CombinedProps, State> {
+  eventsSubscription$: Subscription;
+
   static defaultDrawerState: DrawerState = {
     open: false,
     mode: 'create',
     type: 'NS',
   };
 
-  state: State = {
-    drawer: DomainRecords.defaultDrawerState,
-  };
-
   updateDrawer = (fn: (d: DrawerState) => DrawerState) =>
     this.setState(over(lensPath(['drawer']), fn))
+
+  updateConfirmDialog = (fn: (d: ConfirmationState) => ConfirmationState) =>
+    this.setState(over(lensPath(['confirmDialog']), fn))
 
   resetDrawer = () => this.updateDrawer(() => DomainRecords.defaultDrawerState);
 
@@ -120,8 +144,44 @@ class DomainRecords extends React.Component<CombinedProps, State> {
   openForCreateCAARecord = () => this.openForCreation('CAA');
   openForEditCAARecord = () => this.openForEditing('CAA');
 
-  /** This is the configuration which is ultimately iterated over and rendered. */
-  types: IType[] = [
+  confirmDeletion = (recordId: number) => this.updateConfirmDialog(confirmDialog => ({
+    ...confirmDialog,
+    open: true,
+    recordId,
+  }))
+
+  deleteDomainRecord = () => {
+    const { domain: { id: domainId } } = this.props;
+    const { confirmDialog: { recordId } } = this.state;
+    if (!domainId || !recordId) { return; }
+
+    this.updateConfirmDialog(c => ({ ...c, submitting: true, errors: undefined }));
+
+    deleteDomainRecord(domainId, recordId)
+      .then((response) => {
+        resetEventsPolling();
+
+        this.updateConfirmDialog(c => ({
+          open: false,
+          submitting: false,
+          errors: undefined,
+          recordId: undefined,
+        }));
+      })
+      .catch((errorResponse) => {
+        const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'], errorResponse);
+        if (errors) {
+          this.updateConfirmDialog(c => ({
+            ...c,
+            submitting: false,
+            errors,
+          }));
+        }
+      });
+    this.updateConfirmDialog(c => ({ ...c, submitting: true }));
+  }
+
+  generateTypes = () => [
     /** SOA Record */
     {
       title: 'SOA Record',
@@ -151,7 +211,10 @@ class DomainRecords extends React.Component<CombinedProps, State> {
           title: 'Expire Time',
           render: compose(msToReadable, pathOr(0, ['expire_sec'])),
         },
-        { title: '', render: () => <ActionMenu onEdit={() => null} /> },
+        {
+          title: '',
+          render: () => <ActionMenu onEdit={() => null} onDelete={() => null} />,
+        },
       ],
     },
 
@@ -184,9 +247,12 @@ class DomainRecords extends React.Component<CombinedProps, State> {
            * If the NS is one of Linode's, don't display the Action menu since the user
            * cannot make changes to Linode's nameservers.
            */
-          render: (r: Linode.Record) => /linode.com/.test(r.target)
+          render: ({ target, id }: Linode.Record) => /linode.com/.test(target)
             ? null
-            : <ActionMenu onEdit={this.openForEditNSRecord} />,
+            : <ActionMenu
+              onEdit={this.openForEditCAARecord}
+              onDelete={() => this.confirmDeletion(id)}
+            />,
         },
       ],
       link: () => createLink('Add a NS Record', this.openForCreateNSRecord),
@@ -213,7 +279,14 @@ class DomainRecords extends React.Component<CombinedProps, State> {
           title: 'TTL',
           render: getTTL,
         },
-        { title: '', render: () => <ActionMenu onEdit={this.openForEditMXRecord} /> },
+        {
+          title: '',
+          render: ({ id }: Linode.Record) =>
+            <ActionMenu
+              onEdit={this.openForEditCAARecord}
+              onDelete={() => this.confirmDeletion(id)}
+            />,
+        },
       ],
       link: () => createLink('Add a MX Record', this.openForCreateMXRecord),
     },
@@ -226,7 +299,14 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         { title: 'Hostname', render: (r: Linode.Record) => r.name },
         { title: 'IP Address', render: (r: Linode.Record) => r.target },
         { title: 'TTL', render: getTTL },
-        { title: '', render: () => <ActionMenu onEdit={this.openForEditARecord} /> },
+        {
+          title: '',
+          render: ({ id }: Linode.Record) =>
+            <ActionMenu
+              onEdit={this.openForEditCAARecord}
+              onDelete={() => this.confirmDeletion(id)}
+            />,
+        },
       ],
       link: () => createLink('Add an A/AAAA Record', this.openForCreateARecord),
     },
@@ -239,7 +319,14 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         { title: 'Hostname', render: (r: Linode.Record) => r.name },
         { title: 'Aliases to', render: (r: Linode.Record) => r.target },
         { title: 'TTL', render: getTTL },
-        { title: '', render: () => <ActionMenu onEdit={this.openForEditCNAMERecord} /> },
+        {
+          title: '',
+          render: ({ id }: Linode.Record) =>
+            <ActionMenu
+              onEdit={this.openForEditCAARecord}
+              onDelete={() => this.confirmDeletion(id)}
+            />,
+        },
       ],
       link: () => createLink('Add a CNAME Record', this.openForCreateCNAMERecord),
     },
@@ -252,7 +339,14 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         { title: 'Hostname', render: (r: Linode.Record) => r.name },
         { title: 'Value', render: (r: Linode.Record) => r.target },
         { title: 'TTL', render: getTTL },
-        { title: '', render: () => <ActionMenu onEdit={this.openForEditTXTRecord} /> },
+        {
+          title: '',
+          render: ({ id }: Linode.Record) =>
+            <ActionMenu
+              onEdit={this.openForEditCAARecord}
+              onDelete={() => this.confirmDeletion(id)}
+            />,
+        },
       ],
       link: () => createLink('Add a TXT Record', this.openForCreateTXTRecord),
     },
@@ -268,7 +362,14 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         { title: 'Port', render: (r: Linode.Record) => String(r.port) },
         { title: 'Target', render: (r: Linode.Record) => r.target },
         { title: 'TTL', render: getTTL },
-        { title: '', render: () => <ActionMenu onEdit={this.openForEditSRVRecord} /> },
+        {
+          title: '',
+          render: ({ id }: Linode.Record) =>
+            <ActionMenu
+              onEdit={this.openForEditCAARecord}
+              onDelete={() => this.confirmDeletion(id)}
+            />,
+        },
       ],
       link: () => createLink('Add a SRV Record', this.openForCreateSRVRecord),
     },
@@ -282,19 +383,60 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         { title: 'Tag', render: (r: Linode.Record) => r.tag },
         { title: 'Value', render: (r: Linode.Record) => r.target },
         { title: 'TTL', render: getTTL },
-        { title: '', render: () => <ActionMenu onEdit={this.openForEditCAARecord} /> },
+        {
+          title: '',
+          render: ({ id }: Linode.Record) =>
+            <ActionMenu
+              onEdit={this.openForEditCAARecord}
+              onDelete={() => this.confirmDeletion(id)}
+            />,
+        },
       ],
       link: () => createLink('Add a CAA Record', this.openForCreateCAARecord),
     },
-  ];
+  ]
+
+  constructor(props: CombinedProps) {
+    super(props);
+    this.state = {
+      drawer: DomainRecords.defaultDrawerState,
+      confirmDialog: {
+        open: false,
+        submitting: false,
+      },
+      types: this.generateTypes(),
+    };
+
+  }
+
+  componentDidUpdate(prevProps: CombinedProps) {
+    if (!equals(prevProps.domainRecords, this.props.domainRecords)) {
+      this.setState({ types: this.generateTypes() });
+    }
+  }
+
+  componentDidMount() {
+    this.eventsSubscription$ = events$
+      .filter(allPass([
+        e => !e._initial,
+        pathSatisfies(test(/domain_record_/), ['action']),
+        pathEq(['entity', 'type'], 'domain'),
+        pathEq(['entity', 'id'], this.props.domain.id),
+      ]))
+      .subscribe(e => this.props.updateRecords());
+  }
+
+  componentWillUnmount() {
+    this.eventsSubscription$.unsubscribe();
+  }
 
   render() {
-    const { drawer } = this.state;
+    const { drawer, confirmDialog } = this.state;
 
     return (
       <React.Fragment>
         {
-          this.types.map((type, idx) => {
+          this.state.types.map((type, idx) => {
             return (
               <ExpansionPanel
                 key={idx}
@@ -340,6 +482,30 @@ class DomainRecords extends React.Component<CombinedProps, State> {
               </ExpansionPanel>);
           })
         }
+        <ConfirmationDialog
+          open={confirmDialog.open}
+          onClose={() => this.updateConfirmDialog(() => ({
+            open: false,
+            submitting: false,
+            recordId: undefined,
+          }))}
+          title="Confirm Deletion"
+          actions={({ onClose }) =>
+            <ActionsPanel>
+              <Button onClick={onClose}>Cancel</Button>
+              <Button
+                variant="raised"
+                color="secondary"
+                className="destructive"
+                onClick={() => this.deleteDomainRecord()}
+              >
+                Delete
+              </Button>
+            </ActionsPanel>
+          }
+        >
+          Are you sure you want to delete this record?
+        </ConfirmationDialog>
         <Drawer
           open={drawer.open}
           domainId={this.props.domain.id}

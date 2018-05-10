@@ -23,6 +23,7 @@ import ErrorState from 'src/components/ErrorState';
 
 import DomainRecords from './DomainRecords';
 
+
 interface State {
   error?: Error;
   domain: Linode.Domain;
@@ -95,6 +96,18 @@ class DomainDetail extends React.Component<CombinedProps, State> {
     { routeName: `${this.props.match.url}/zone-file`, title: 'Zone File', disabled: true },
   ];
 
+  updateRecords = () => {
+    const { match: { params: { domainId } } } = this.props;
+    if (!domainId) { return; }
+
+    getDomainRecords(domainId)
+      .then(({ data: { data } }) => {
+        this.setState({ records: data });
+
+      })
+      .catch(console.error);
+  }
+
   render() {
     const matches = (p: string) => Boolean(matchPath(p, { path: this.props.location.pathname }));
     const { match: { path, url }, history, classes } = this.props;
@@ -146,7 +159,11 @@ class DomainDetail extends React.Component<CombinedProps, State> {
             exact
             path={`${path}/records`}
             render={() =>
-              <DomainRecords domain={domain} domainRecords={records} />
+              <DomainRecords
+                domain={domain}
+                domainRecords={records}
+                updateRecords={this.updateRecords}
+              />
             }
           />
           <Route exact path={`${path}/check-zone`} render={() => <h1>Check Zone</h1>} />
