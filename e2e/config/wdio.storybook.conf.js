@@ -27,8 +27,8 @@ exports.config = merge(wdioMaster.config, {
         }
     },
     services: servicesToStart,
-    seleniumInstallArgs: { config: './selenium-config.js' },
-    seleniumArgs: { config: './selenium-config.js' },
+    seleniumInstallArgs: { basePath: './e2e/drivers', version: '3.4.0', drivers: { chrome: { version: '2.38' }}},
+    seleniumArgs: { basePath: './e2e/drivers', version: '3.4.0', drivers: { chrome: { version: '2.38' }}},
     before: function (capabilities, specs) {
         browserCommands();
         browser.url(constants.routes.storybook);
