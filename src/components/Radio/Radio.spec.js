@@ -6,11 +6,6 @@ describe('Radio Suite', () => {
     const radio = '[data-qa-radio]';
     let radios;
 
-    beforeAll(() => {
-        // Untoggle Checkbox Story
-        browser.click('[data-name="CheckBox"]');
-    });
-
     it('should display radio component in navigation', () => {
         const radioStory = $(menuItem);
         expect(radioStory.isVisible()).toBe(true);

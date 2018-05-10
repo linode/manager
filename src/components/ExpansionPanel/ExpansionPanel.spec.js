@@ -1,17 +1,19 @@
-const { previewFocus, executeInAllStories } = require('../../../e2e/utils/storybook');
+const { waitForFocus, previewFocus } = require('../../../e2e/utils/storybook');
 
 describe('Expansion Panel Suite', () => {
     const navItem = '[data-name="ExpansionPanel"]';
     const childStories = [
-        '[data-name="Interactive"]', '[data-name="Success!"]',
-        '[data-name="Warning!"]','[data-name="Error!"]'
-    ]
-    const defaultNavItem = '[data-name="CheckBox"]';
+        '[data-name="Interactive"]',
+        '[data-name="Success!"]',
+        '[data-name="Warning!"]',
+        '[data-name="Error!"]',
+    ];
 
     const panel = '[data-qa-panel]';
     const panelSubheading = '[data-qa-panel-subheading]';
     const gridItem = '[data-qa-grid-item]';
     const notice = '[data-qa-notice]';
+    let childElements;
 
     function assertNotice() {
         const noticeMsg = $(notice);
@@ -20,7 +22,7 @@ describe('Expansion Panel Suite', () => {
     }
 
     function expandAssertGridItem(opposite=false) {
-        browser.click('[data-qa-panel-summary] svg');
+        browser.click('[data-qa-panel-summary]');
         browser.waitForVisible(gridItem, 5000, opposite)
     }
 
@@ -30,16 +32,16 @@ describe('Expansion Panel Suite', () => {
     });
 
     it('should display child stories', () => {
-        $(defaultNavItem).click();
-        
         $(navItem).click();
-        childStories.forEach(c => expect($(c).waitForVisible()).toBe(true));
+        childElements = childStories.map((c) => $(c));
+        childElements.forEach(c => c.click());
     });
 
     it('should display expansion panels', () => {
-        childStories.forEach(c => {
-            $(c).click();
-            previewFocus();
+        childElements.forEach(c => {
+            c.click();
+            waitForFocus(panel);
+
             const expansionPanel = $(panel);
             const expansionPanelText = $(panelSubheading);
             expect(expansionPanel.isVisible()).toBe(true);
@@ -51,7 +53,7 @@ describe('Expansion Panel Suite', () => {
     describe('Interactive Suite', () => {
         beforeAll(() => {
             browser.frame();
-            browser.click(childStories[0]);
+            childElements[0].click();
             previewFocus();
         });
 
@@ -67,7 +69,7 @@ describe('Expansion Panel Suite', () => {
     describe('Success Suite', () => {
         beforeAll(() => {
             browser.frame();
-            browser.click(childStories[1]);
+            childElements[1].click();
             previewFocus();
         });
 
@@ -93,7 +95,7 @@ describe('Expansion Panel Suite', () => {
     describe('Warning Suite', () => {
         beforeAll(() => {
             browser.frame();
-            browser.click(childStories[2]);
+            childElements[2].click();
             previewFocus();
         });
 
@@ -119,7 +121,7 @@ describe('Expansion Panel Suite', () => {
     describe('Error Suite', () => {
         beforeAll(() => {
             browser.frame();
-            browser.click(childStories[3]);
+            childElements[3].click();
             previewFocus();
         });
 
@@ -137,7 +139,7 @@ describe('Expansion Panel Suite', () => {
             expect(visibleButtons.length).toBe(2);
         });
 
-        it('should collapse on click', function() {
+        it('should collapse on click', () => {
             expandAssertGridItem(true);
         });
     });

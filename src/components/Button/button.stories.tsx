@@ -6,7 +6,7 @@ import Button from 'material-ui/Button';
 import KeyboardArrowDown from 'material-ui-icons/KeyboardArrowDown';
 import KeyboardArrowUp from 'material-ui-icons/KeyboardArrowUp';
 
-import ThemeDecorator from '../utilities/storybookDecorators';
+import ThemeDecorator from '../../utilities/storybookDecorators';
 import Reload from 'src/assets/icons/reload.svg';
 
 storiesOf('Button', module)
