@@ -1,15 +1,6 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
-
-import {
-  cond,
-  equals,
-  path,
-  set,
-  lensPath,
-  defaultTo,
-  pick,
-} from 'ramda';
+import { cond, defaultTo, equals, lensPath, path, pathOr, pick, set } from 'ramda';
 
 import {
   withStyles,
@@ -20,7 +11,11 @@ import {
 } from 'material-ui';
 import Button, { ButtonProps } from 'material-ui/Button';
 
-import { createDomainRecord } from 'src/services/domains';
+import {
+  createDomainRecord,
+  CreateDomainRecordDataType,
+  updateDomainRecord,
+} from 'src/services/domains';
 import Drawer from 'src/components/Drawer';
 import TextField from 'src/components/TextField';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -38,10 +33,22 @@ interface Props {
   domainId: number;
   mode: 'create' | 'edit';
   type: Linode.RecordType;
+  updateRecords: () => void;
+
+  // Used to populate fields on edits.
+  id?: number;
+  name?: string;
+  port?: number;
+  priority?: number;
+  protocol?: null | string;
+  service?: null | string;
+  tag?: null | string;
+  target?: string;
+  ttl_sec?: number;
+  weight?: number;
 }
 
-interface FieldsState {
-  // id?: number;
+interface CreateFieldState {
   name?: string;
   port?: number;
   priority?: number;
@@ -53,10 +60,14 @@ interface FieldsState {
   weight?: number;
 }
 
+interface UpdateFieldState extends CreateFieldState {
+  id: number;
+}
+
 interface State {
   submitting: boolean;
   errors?: Linode.ApiFieldError[];
-  fields: FieldsState;
+  fields: CreateFieldState | UpdateFieldState;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -64,7 +75,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 interface TextFieldProps {
   label: string;
-  field: keyof FieldsState;
+  field: keyof CreateFieldState;
 }
 
 interface NumberFieldProps extends TextFieldProps {
@@ -72,24 +83,26 @@ interface NumberFieldProps extends TextFieldProps {
 }
 
 class DomainRecordDrawer extends React.Component<CombinedProps, State> {
-  static defaultFieldsState = {
-    name: undefined,
-    port: 80,
-    priority: 10,
-    protocol: undefined,
-    service: undefined,
-    tag: 'issue',
-    target: undefined,
-    ttl_sec: undefined,
-    weight: 5,
-  };
+
+  static defaultFieldsState = (props: Partial<CombinedProps>) => ({
+    id: pathOr(undefined, ['id'], props),
+    name: pathOr(undefined, ['name'], props),
+    port: pathOr(80, ['port'], props),
+    priority: pathOr(10, ['priority'], props),
+    protocol: pathOr(undefined, ['protocol'], props),
+    service: pathOr(undefined, ['service'], props),
+    tag: pathOr('issue', ['tag'], props),
+    target: pathOr(undefined, ['target'], props),
+    ttl_sec: pathOr(undefined, ['ttl_sec'], props),
+    weight: pathOr(5, ['weight'], props),
+  })
 
   state: State = {
     submitting: false,
-    fields: DomainRecordDrawer.defaultFieldsState,
+    fields: DomainRecordDrawer.defaultFieldsState(this.props),
   };
 
-  updateField = (key: keyof FieldsState) => (value: any) => this.setState(
+  updateField = (key: keyof CreateFieldState) => (value: any) => this.setState(
     set(lensPath(['fields', key]), value),
   )
 
@@ -200,11 +213,14 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
 
   onCreate = () => {
     this.setState({ submitting: true, errors: undefined });
-    createDomainRecord(
-      this.props.domainId,
-      { type: this.props.type, ...this.filterDataByType(this.state.fields, this.props.type) },
-    )
+    const data: CreateDomainRecordDataType = {
+      type: this.props.type,
+      ...this.filterDataByType(this.state.fields, this.props.type),
+    };
+
+    createDomainRecord(this.props.domainId, data)
       .then(() => {
+        this.props.updateRecords();
         this.onClose();
       })
       .catch((errorResponse) => {
@@ -216,49 +232,66 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       });
   }
 
-  filterDataByType = (fields: FieldsState, t: Linode.RecordType): Partial<FieldsState> => cond([
-    [
-      () => equals('A', t),
-      () => pick(['name', 'target', 'ttl_sec'], fields),
-    ],
-    [
-      () => equals('AAAA', t),
-      () => pick(['name', 'target', 'ttl_sec'], fields),
-    ],
-    [
-      () => equals('CAA', t),
-      () => pick(['name', 'tag', 'target', 'ttl_sec'], fields),
-    ],
-    [
-      () => equals('CNAME', t),
-      () => pick(['name', 'target', 'ttl_sec'], fields),
-    ],
-    [
-      () => equals('MX', t),
-      () => pick(['target', 'priority', 'name'], fields),
-    ],
-    [
-      () => equals('NS', t),
-      () => pick(['target', 'name', 'ttl_sec'], fields),
-    ],
-    [
-      () => equals('SRV', t),
-      () => pick([
-        'service', 'protocol', 'priority', 'port', 'weight', 'target', 'ttl_sec',
-      ], fields),
-    ],
-    [
-      () => equals('TXT', t),
-      () => pick(['name', 'target', 'ttl_sec'], fields),
-    ],
-  ])()
-
   onEdit = () => {
-    this.setState({ submitting: true });
-    setTimeout(() => {
-      this.setState({ submitting: false });
-    }, 2500);
+    this.setState({ submitting: true, errors: undefined });
+    const fields = this.state.fields as UpdateFieldState;
+
+    const data: CreateDomainRecordDataType = {
+      type: this.props.type,
+      ...this.filterDataByType(fields, this.props.type),
+    };
+
+    updateDomainRecord(this.props.domainId, fields.id, data)
+      .then(() => {
+        this.props.updateRecords();
+        this.onClose();
+      })
+      .catch((errorResponse) => {
+        const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'])(errorResponse);
+        if (errors) {
+          this.setState({ errors });
+        }
+        this.setState({ submitting: false });
+      });
   }
+
+  filterDataByType =
+    (fields: CreateFieldState, t: Linode.RecordType): Partial<CreateFieldState> => cond([
+      [
+        () => equals('A', t),
+        () => pick(['name', 'target', 'ttl_sec'], fields),
+      ],
+      [
+        () => equals('AAAA', t),
+        () => pick(['name', 'target', 'ttl_sec'], fields),
+      ],
+      [
+        () => equals('CAA', t),
+        () => pick(['name', 'tag', 'target', 'ttl_sec'], fields),
+      ],
+      [
+        () => equals('CNAME', t),
+        () => pick(['name', 'target', 'ttl_sec'], fields),
+      ],
+      [
+        () => equals('MX', t),
+        () => pick(['target', 'priority', 'name'], fields),
+      ],
+      [
+        () => equals('NS', t),
+        () => pick(['target', 'name', 'ttl_sec'], fields),
+      ],
+      [
+        () => equals('SRV', t),
+        () => pick([
+          'service', 'protocol', 'priority', 'port', 'weight', 'target', 'ttl_sec',
+        ], fields),
+      ],
+      [
+        () => equals('TXT', t),
+        () => pick(['name', 'target', 'ttl_sec'], fields),
+      ],
+    ])()
 
   types = {
     AAAA: {
@@ -321,9 +354,13 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     this.setState({
       submitting: false,
       errors: undefined,
-      fields: DomainRecordDrawer.defaultFieldsState,
+      fields: DomainRecordDrawer.defaultFieldsState({}),
     });
     this.props.onClose();
+  }
+
+  componentWillReceiveProps(nextProps: CombinedProps) {
+    this.setState({ fields: DomainRecordDrawer.defaultFieldsState(nextProps) });
   }
 
   render() {

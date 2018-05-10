@@ -66,6 +66,7 @@ interface DrawerState {
   open: boolean;
   mode: 'create' | 'edit';
   type: Linode.RecordType;
+  fields?: Partial<Linode.Record>;
 }
 
 interface State {
@@ -93,6 +94,30 @@ const createLink = (title: string, handler: () => void) => <IconTextLink
 />;
 
 class DomainRecords extends React.Component<CombinedProps, State> {
+  /** We're using a fake event to trigger the API event loop. */
+  updateRecords = () => {
+    const e: Linode.Event = {
+      id: 9999,
+      action: 'domain_record_create',
+      created: '',
+      entity: {
+        id: this.props.domain.id,
+        type: 'domain',
+        label: '',
+        url: '',
+      },
+      percent_complete: null,
+      rate: null,
+      read: true,
+      seen: true,
+      status: 'notification',
+      time_remaining: null,
+      username: 'manager',
+    };
+
+    events$.next(e);
+  }
+
   eventsSubscription$: Subscription;
 
   static defaultDrawerState: DrawerState = {
@@ -116,33 +141,48 @@ class DomainRecords extends React.Component<CombinedProps, State> {
     type,
   }))
 
-  openForEditing = (type: Linode.RecordType) => this.updateDrawer(() => ({
-    open: true,
-    submitting: false,
-    mode: 'edit',
-    type,
-  }))
+  openForEditing = (type: Linode.RecordType, fields: Partial<Linode.Record>) =>
+    this.updateDrawer(() => ({
+      open: true,
+      submitting: false,
+      mode: 'edit',
+      type,
+      fields,
+    }))
 
   openForCreateNSRecord = () => this.openForCreation('NS');
-  openForEditNSRecord = () => this.openForEditing('NS');
+  openForEditNSRecord = (f: Pick<Linode.Record, 'id' | 'target' | 'name' | 'ttl_sec'>) =>
+    this.openForEditing('NS', f)
 
   openForCreateMXRecord = () => this.openForCreation('MX');
-  openForEditMXRecord = () => this.openForEditing('MX');
+  openForEditMXRecord = (
+    f: Pick<Linode.Record, 'id' | 'target' | 'priority' | 'name' | 'ttl_sec'>,
+  ) =>
+    this.openForEditing('MX', f)
 
-  openForEditARecord = () => this.openForEditing('AAAA');
   openForCreateARecord = () => this.openForCreation('AAAA');
+  openForEditARecord = (f: Pick<Linode.Record, 'id' | 'name' | 'target' | 'ttl_sec'>) =>
+    this.openForEditing('AAAA', f)
 
   openForCreateCNAMERecord = () => this.openForCreation('CNAME');
-  openForEditCNAMERecord = () => this.openForEditing('CNAME');
+  openForEditCNAMERecord = (f: Pick<Linode.Record, 'id' | 'name' | 'target' | 'ttl_sec'>) =>
+    this.openForEditing('CNAME', f)
 
   openForCreateTXTRecord = () => this.openForCreation('TXT');
-  openForEditTXTRecord = () => this.openForEditing('TXT');
+  openForEditTXTRecord = (f: Pick<Linode.Record, 'id' | 'name' | 'target' | 'ttl_sec'>) =>
+    this.openForEditing('TXT', f)
 
   openForCreateSRVRecord = () => this.openForCreation('SRV');
-  openForEditSRVRecord = () => this.openForEditing('SRV');
+  openForEditSRVRecord = (
+    f: Pick<Linode.Record, 'id' | 'name' | 'priority' | 'weight' | 'port' | 'target'>,
+  ) =>
+    this.openForEditing('SRV', f)
 
   openForCreateCAARecord = () => this.openForCreation('CAA');
-  openForEditCAARecord = () => this.openForEditing('CAA');
+  openForEditCAARecord = (
+    f: Pick<Linode.Record, 'id' | 'name' | 'tag' | 'target' | 'ttl_sec'>,
+  ) =>
+    this.openForEditing('CAA', f)
 
   confirmDeletion = (recordId: number) => this.updateConfirmDialog(confirmDialog => ({
     ...confirmDialog,
@@ -247,10 +287,10 @@ class DomainRecords extends React.Component<CombinedProps, State> {
            * If the NS is one of Linode's, don't display the Action menu since the user
            * cannot make changes to Linode's nameservers.
            */
-          render: ({ target, id }: Linode.Record) => /linode.com/.test(target)
+          render: ({ id, name, target, ttl_sec }: Linode.Record) => /linode.com/.test(target)
             ? null
             : <ActionMenu
-              onEdit={this.openForEditCAARecord}
+              onEdit={() => this.openForEditNSRecord({ id, name, target, ttl_sec })}
               onDelete={() => this.confirmDeletion(id)}
             />,
         },
@@ -281,9 +321,9 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         },
         {
           title: '',
-          render: ({ id }: Linode.Record) =>
+          render: ({ id, name, priority, target, ttl_sec }: Linode.Record) =>
             <ActionMenu
-              onEdit={this.openForEditCAARecord}
+              onEdit={() => this.openForEditMXRecord({ id, name, priority, target, ttl_sec })}
               onDelete={() => this.confirmDeletion(id)}
             />,
         },
@@ -301,9 +341,9 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         { title: 'TTL', render: getTTL },
         {
           title: '',
-          render: ({ id }: Linode.Record) =>
+          render: ({ id, name, target, ttl_sec }: Linode.Record) =>
             <ActionMenu
-              onEdit={this.openForEditCAARecord}
+              onEdit={() => this.openForEditARecord({ id, name, target, ttl_sec })}
               onDelete={() => this.confirmDeletion(id)}
             />,
         },
@@ -321,9 +361,9 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         { title: 'TTL', render: getTTL },
         {
           title: '',
-          render: ({ id }: Linode.Record) =>
+          render: ({ id, name, target, ttl_sec }: Linode.Record) =>
             <ActionMenu
-              onEdit={this.openForEditCAARecord}
+              onEdit={() => this.openForEditCNAMERecord({ id, name, target, ttl_sec })}
               onDelete={() => this.confirmDeletion(id)}
             />,
         },
@@ -341,9 +381,9 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         { title: 'TTL', render: getTTL },
         {
           title: '',
-          render: ({ id }: Linode.Record) =>
+          render: ({ id, target, name, ttl_sec }: Linode.Record) =>
             <ActionMenu
-              onEdit={this.openForEditCAARecord}
+              onEdit={() => this.openForEditTXTRecord({ id, target, name, ttl_sec })}
               onDelete={() => this.confirmDeletion(id)}
             />,
         },
@@ -364,9 +404,9 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         { title: 'TTL', render: getTTL },
         {
           title: '',
-          render: ({ id }: Linode.Record) =>
+          render: ({ id, name, port, priority, target, weight }: Linode.Record) =>
             <ActionMenu
-              onEdit={this.openForEditCAARecord}
+              onEdit={() => this.openForEditSRVRecord({ id, name, port, priority, target, weight })}
               onDelete={() => this.confirmDeletion(id)}
             />,
         },
@@ -385,9 +425,9 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         { title: 'TTL', render: getTTL },
         {
           title: '',
-          render: ({ id }: Linode.Record) =>
+          render: ({ id, name, tag, target, ttl_sec }: Linode.Record) =>
             <ActionMenu
-              onEdit={this.openForEditCAARecord}
+              onEdit={() => this.openForEditCAARecord({ id, name, tag, target, ttl_sec })}
               onDelete={() => this.confirmDeletion(id)}
             />,
         },
@@ -512,6 +552,8 @@ class DomainRecords extends React.Component<CombinedProps, State> {
           onClose={this.resetDrawer}
           mode={drawer.mode}
           type={drawer.type}
+          updateRecords={this.updateRecords}
+          {...drawer.fields}
         />
       </React.Fragment>
     );

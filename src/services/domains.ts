@@ -3,10 +3,10 @@ import Request, { setURL, setMethod, setParams, setData } from './index';
 
 type GetDomainsPage = Promise<Linode.ResourcePage<Linode.Domain>>;
 export const getDomainsPage = (page: number): GetDomainsPage => Request(
-    setURL(`${API_ROOT}/domains/?page=${page}`),
-    setMethod('GET'),
-    setParams({ page }),
-  )
+  setURL(`${API_ROOT}/domains/?page=${page}`),
+  setMethod('GET'),
+  setParams({ page }),
+)
   .then(response => response.data);
 
 export const getDomains = (): Promise<Linode.ResourcePage<Linode.Domain>> =>
@@ -34,12 +34,21 @@ export interface CreateDomainRecordDataType {
   type?: Linode.RecordType;
   weight?: number;
 }
-
 export const createDomainRecord = (domainId: number, data: CreateDomainRecordDataType) => Request(
   setURL(`${API_ROOT}/domains/${domainId}/records`),
   setMethod('POST'),
   setData(data),
 );
+
+export const updateDomainRecord = (
+  domainId: number,
+  recordId: number,
+  data: CreateDomainRecordDataType,
+) => Request(
+  setURL(`${API_ROOT}/domains/${domainId}/records/${recordId}`),
+  setMethod('PUT'),
+  setData(data),
+  );
 
 export const createDomain = (data: Partial<Linode.Domain>) => Request(
   setData(data),
