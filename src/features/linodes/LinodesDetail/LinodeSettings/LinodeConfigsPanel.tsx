@@ -277,6 +277,7 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
               container
               justify="space-between"
               alignItems="flex-end"
+              style={{ marginTop: 16 }}
             >
               <Grid item>
                 <Typography variant="title" className={classes.headline}>
