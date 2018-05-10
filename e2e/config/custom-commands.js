@@ -1,3 +1,6 @@
+const { deletePreviousRun } = require('../utils/config-utils');
+const { deleteAll } = require('../setup/setup');
+
 exports.browserCommands = () => {
     /* Overwrite the native getText function
     * Get text from specified selector and ensure padding whitespace is removed
@@ -65,5 +68,13 @@ exports.browserCommands = () => {
             browser.setValue(selector, value);
             return browser.getValue(selector) === value;
         }, timeout);
+    });
+
+    browser.addCommand('deleteAll', function async(token) {
+        return deleteAll(token).then(() => {});
+    });
+
+    browser.addCommand('setup', function(token) {
+        deletePreviousRun(token);
     });
 }

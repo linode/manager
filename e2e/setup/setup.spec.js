@@ -1,4 +1,5 @@
 const { constants } = require('../constants');
+const { readToken, deletePreviousRun } = require('../utils/config-utils');
 
 import { createGenericLinode, deleteLinode } from '../utils/common';
 import ListLinodes from '../pageobjects/list-linodes';
@@ -6,56 +7,31 @@ import Settings from '../pageobjects/linode-detail-settings.page';
 import Volumes from '../pageobjects/volumes.page';
 
 describe('Setup Tests Suite', () => {
+    beforeAll(() => {
+        browser.url(constants.routes.linodes);
+        browser.waitForVisible('[data-qa-circle-progress]', 15000, true);
+    });
+
+    it('should remove all account data', () => {
+        const token = readToken();
+        browser.deleteAll(token);
+    });
 
     it('should create a generic linode account', () => {
         const testLabel = `${new Date().getTime()}-Test`;
         
-        if (ListLinodes.linode.length > 1) {
-            const labels = ListLinodes.linode.map(l => l.$(ListLinodes.linodeLabel.selector).getText());
-            labels.forEach(l => deleteLinode(l));
-            createGenericLinode(testLabel);
-        }
-
-        if (ListLinodes.placeholderText.isVisible()) {
-            createGenericLinode(testLabel);
-        }
-    });
-
-    it('should remove any volumes', () => {
-        browser.url(constants.routes.volumes);
-        browser.waitForVisible('[data-qa-circle-progress]', 10000, true);
-
-        try {
-            Volumes.volumeCellElem.waitForVisible(5000);
-        } catch (err) {
-            if (!Volumes.placeholderText.isVisible()) {
-                throw err;
+        browser.waitUntil(function() {
+            browser.refresh();
+            browser.waitForVisible('[data-qa-add-new-menu-button]');
+            browser.waitForVisible('[data-qa-circle-progress]', 15000, true);
+            
+            if (browser.isVisible('[data-qa-placeholder-title]')) {
+                return true;
             }
-            pending('No Volumes, skipping');
-        }
 
-        const attachedVolumes = Volumes.volumeCell.map(v => Volumes.isAttached(v));
+            return false;
+        }, 25000);
 
-        if (attachedVolumes.includes(true)) {
-            browser.url(constants.routes.linodes);
-            ListLinodes.linodesDisplay();
-
-            if (ListLinodes.getStatus(ListLinodes.linode[0]) !== 'offline') {
-                ListLinodes.powerOff(ListLinodes.linode[0]);
-            }
-            browser.url(constants.routes.volumes);
-            Volumes.volumeCellElem.waitForVisible();
-        }
-
-        Volumes.volumeCell.forEach(v => Volumes.removeVolume(v));
-    });
-
-    afterAll(() => {
-        browser.url(constants.routes.linodes);
-        ListLinodes.linodesDisplay();
-        
-        if (ListLinodes.getStatus(ListLinodes.linode[0] !== 'running')) {
-            ListLinodes.powerOn(ListLinodes.linode[0]);
-        }
+        createGenericLinode(testLabel);
     });
 });

@@ -1,7 +1,11 @@
 require('dotenv').config();
 
 const { argv } = require('yargs');
-const { getTokenIfNeeded, loadToken, login } = require('../utils/config-utils');
+const {
+    login,
+    readToken,
+} = require('../utils/config-utils');
+const { deleteAll } = require('../setup/setup');
 const { browserCommands } = require('./custom-commands');
 const { browserConf } = require('./browser-config');
 const selectedBrowser = argv.b ? browserConf[argv.b] : browserConf['chrome'];
@@ -13,8 +17,8 @@ const specsToRun = () => {
     if (argv.file) {
         return [argv.file];
     }
-    if (argv.dir) {
-        return [`./e2e/specs/${argv.dir}/**/*.spec.js`]
+    if (argv.dir || argv.d) {
+        return ['./e2e/setup/setup.spec.js', `./e2e/specs/${argv.dir || argv.d}/**/*.spec.js`]
     }
     return ['./e2e/setup/setup.spec.js', './e2e/specs/**/*.js'];
 }
@@ -198,15 +202,10 @@ exports.config = {
     before: function (capabilities, specs) {
         // Load up our custom commands
         require('babel-register');
+
         browserCommands();
         browser.timeouts('page load', 20000);
         login(username, password);
-        // getTokenIfNeeded(username, password);
-        // loadToken();
-
-        // Click beta notice button
-        browser.waitForVisible('[data-qa-beta-notice]');
-        browser.click('[data-qa-beta-notice] button');
     },
     /**
      * Runs before a WebdriverIO command gets executed.
@@ -221,6 +220,9 @@ exports.config = {
      * @param {Object} suite suite details
      */
     beforeSuite: function (suite) {
+        // Click beta notice button
+        browser.waitForVisible('[data-qa-beta-notice]');
+        browser.click('[data-qa-beta-notice] button');
     },
     /**
      * Function to be executed before a test (in Mocha/Jasmine) or a step (in Cucumber) starts.
@@ -285,6 +287,10 @@ exports.config = {
      * @param {Object} config wdio configuration object
      * @param {Array.<Object>} capabilities list of capabilities details
      */
-    // onComplete: function(exitCode, config, capabilities) {
-    // }
+    onComplete: function(exitCode, config, capabilities) {
+        const token = readToken();
+        return deleteAll(token, true)
+            .then(() => {})
+            .catch(err => console.log(err));
+    }
 }
