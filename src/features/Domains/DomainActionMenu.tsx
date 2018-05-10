@@ -5,6 +5,7 @@ import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 interface Props {
   onEditRecords: () => void;
   onRemove: () => void;
+  onClone: () => void;
 }
 
 type CombinedProps = Props;
@@ -32,6 +33,14 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
         title: 'Zone File',
         disabled: true,
         onClick: (e: React.MouseEvent<HTMLElement>) => {
+          closeMenu();
+          e.preventDefault();
+        },
+      },
+      {
+        title: 'Clone',
+        onClick: (e: React.MouseEvent<HTMLElement>) => {
+          this.props.onClone();
           closeMenu();
           e.preventDefault();
         },

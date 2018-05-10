@@ -23,12 +23,14 @@ import Typography from 'material-ui/Typography';
 import Placeholder from 'src/components/Placeholder';
 
 import ActionsPanel from 'src/components/ActionsPanel';
+import IconTextLink from 'src/components/IconTextLink';
 import { getDomains, deleteDomain } from 'src/services/domains';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import Grid from 'src/components/Grid';
 import ErrorState from 'src/components/ErrorState';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import PlusSquare from 'src/assets/icons/plus-square.svg';
 
 import ActionMenu from './DomainActionMenu';
 import DomainCreateDrawer from './DomainCreateDrawer';
@@ -53,6 +55,9 @@ interface State {
   error?: Error;
   createDrawer: {
     open: boolean,
+    mode: 'clone' | 'create',
+    domain?: string,
+    cloneID?: number,
   };
   removeDialog: {
     open: boolean,
@@ -69,6 +74,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
     error: pathOr(undefined, ['error'], this.props.domains),
     createDrawer: {
       open: false,
+      mode: 'create',
     },
     removeDialog: {
       open: false,
@@ -88,14 +94,19 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
 
   openCreateDrawer() {
     this.setState({
-      createDrawer: { open: true },
+      createDrawer: { open: true, mode: 'create' },
     });
-    this.refreshDomains();
+  }
+
+  openCloneDrawer(domain: string, id: number) {
+    this.setState({
+      createDrawer: { open: true, mode: 'clone', domain, cloneID: id },
+    });
   }
 
   closeCreateDrawer(domain?: Partial<Linode.Domain>) {
     this.setState({
-      createDrawer: { open: false },
+      createDrawer: { open: false, mode: 'create' },
     });
     if (domain) {
       this.setState({
@@ -168,20 +179,14 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
           <Grid item>
             <Grid container alignItems="flex-end">
               <Grid item>
-                <Button
+                <IconTextLink
+                  SideIcon={PlusSquare}
                   onClick={() => this.openCreateDrawer()}
                   title="Add a Domain"
+                  text="Add a Domain"
                 >
                   Add new Domain
-                </Button>
-              </Grid>
-              <Grid item>
-                <Button
-                  onClick={() => this.openCreateDrawer()}
-                  title="Clone an Existing Zone"
-                >
-                  Clone an Existing Zone
-                </Button>
+                </IconTextLink>
               </Grid>
             </Grid>
           </Grid>
@@ -210,6 +215,9 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
                       onRemove={() => {
                         this.openRemoveDialog(domain.domain, domain.id);
                       }}
+                      onClone={() => {
+                        this.openCloneDrawer(domain.domain, domain.id);
+                      }}
                     />
                   </TableCell>
                 </TableRow>,
@@ -220,6 +228,9 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
         <DomainCreateDrawer
           open={this.state.createDrawer.open}
           onClose={(domain: Partial<Linode.Domain>) => this.closeCreateDrawer(domain)}
+          mode={this.state.createDrawer.mode}
+          domain={this.state.createDrawer.domain}
+          cloneID={this.state.createDrawer.cloneID}
         />
         <ConfirmationDialog
           open={this.state.removeDialog.open}

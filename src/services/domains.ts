@@ -50,6 +50,11 @@ export const updateDomainRecord = (
   setData(data),
   );
 
+export const deleteDomainRecord = (domainID: number, recordId: number) => Request(
+  setURL(`${API_ROOT}/domains/${domainID}/records/${recordId}`),
+  setMethod('DELETE'),
+);
+
 export const createDomain = (data: Partial<Linode.Domain>) => Request(
   setData(data),
   setURL(`${API_ROOT}/domains`),
@@ -61,7 +66,8 @@ export const deleteDomain = (domainID: number) => Request(
   setMethod('DELETE'),
 );
 
-export const deleteDomainRecord = (domainID: number, recordId: number) => Request(
-  setURL(`${API_ROOT}/domains/${domainID}/records/${recordId}`),
-  setMethod('DELETE'),
+export const cloneDomain = (domainID: number, cloneName: string) => Request(
+  setData({ domain: cloneName }),
+  setURL(`${API_ROOT}/domains/${domainID}/clone`),
+  setMethod('POST'),
 );
