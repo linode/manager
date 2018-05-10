@@ -13,6 +13,8 @@ const selectedBrowser = () => {
     }
     return browserConf['headlessChrome'];
 }
+
+const seleniumSettings = require('./selenium-config');
 const specsToRun = argv.file ? [ argv.file ] : ['./src/components/**/*.spec.js'];
 const servicesToStart = process.env.DOCKER || argv.debug ? [] : ['selenium-standalone'];
 
@@ -27,8 +29,8 @@ exports.config = merge(wdioMaster.config, {
         }
     },
     services: servicesToStart,
-    seleniumInstallArgs: { basePath: './e2e/drivers', version: '3.4.0', drivers: { chrome: { version: '2.38' }}},
-    seleniumArgs: { basePath: './e2e/drivers', version: '3.4.0', drivers: { chrome: { version: '2.38' }}},
+    seleniumInstallArgs: seleniumSettings,
+    seleniumArgs: seleniumSettings,
     before: function (capabilities, specs) {
         browserCommands();
         browser.url(constants.routes.storybook);
