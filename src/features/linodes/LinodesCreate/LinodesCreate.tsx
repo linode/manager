@@ -221,9 +221,9 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
   getBackupsMonthlyPrice(): number | null {
     const { selectedTypeID } = this.state;
     if (!selectedTypeID || !this.props.types.response) { return null; }
-    const type = this.props.types.response.find(type => type.id === selectedTypeID);
+    const type = this.getTypeInfo();
     if (!type) { return null; }
-    return type.addons.backups.price.monthly;
+    return type.backupsMonthly;
   }
 
   extendLinodes = (linodes: Linode.Linode[]): ExtendedLinode[] => {
@@ -557,12 +557,34 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     };
   }
 
-  getTypeInfo = (type: ExtendedType | undefined): TypeInfo => {
+  getTypeInfo = (): TypeInfo => {
+    const { selectedTargetLinodeID, selectedTypeID } = this.state;
+
+    const { linodes } = this.props;
+
+    // we have to add a conditional check here to see if we're cloning to
+    // an existing Linode. If so, we need to get the type from that Linode and
+    // so that we can display the accurate price
+    const cloningToExistingLinode = !!selectedTargetLinodeID;
+    const selectedTargetLinode = linodes.response.find((linode) => {
+      return Number(selectedTargetLinodeID) === linode.id;
+    });
+
+    const typeInfo = (!cloningToExistingLinode)
+      ? this.reshapeTypeInfo(this.props.types.response.find(
+        type => type.id === selectedTypeID))
+      : this.reshapeTypeInfo(this.props.types.response.find(
+        type => type.id === selectedTargetLinode!.type));
+
+    return typeInfo;
+  }
+
+  reshapeTypeInfo = (type: ExtendedType | undefined): TypeInfo => {
     return type && {
       name: `${typeLabel(type.memory)}`,
       details: `${typeLabelDetails(type.memory, type.disk, type.vcpus)}`,
       monthly: type.price.monthly,
-      backupsMonthly: this.getBackupsMonthlyPrice(),
+      backupsMonthly: type.addons.backups.price.monthly,
     };
   }
 
@@ -576,13 +598,11 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       label,
       backups,
       selectedImageID,
-      selectedTypeID,
       selectedRegionID,
       selectedBackupInfo,
-      selectedTargetLinodeID,
     } = this.state;
 
-    const { classes, linodes } = this.props;
+    const { classes } = this.props;
 
     let imageInfo: Info;
     if (selectedTab === this.imageTabIndex) {
@@ -592,24 +612,10 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       imageInfo = selectedBackupInfo;
     }
 
-    // we have to add a conditional check here to see if we're cloning to
-    // an existing Linode. If so, we need to get the type from that Linode and
-    // so that we can display the accurate price
-    const cloningToExistingLinode = !!selectedTargetLinodeID;
-    const selectedTargetLinode = linodes.response.find((linode) => {
-      return Number(selectedTargetLinodeID) === linode.id;
-    });
-
-    const typeInfo = (!cloningToExistingLinode)
-      ? this.getTypeInfo(this.props.types.response.find(
-        type => type.id === selectedTypeID))
-      : this.getTypeInfo(this.props.types.response.find(
-        type => type.id === selectedTargetLinode!.type));
-
-    console.log(typeInfo);
-
     const regionName = this.getRegionName(this.props.regions.response.find(
       region => region.id === selectedRegionID));
+
+    const typeInfo = this.getTypeInfo();
 
     const tabRender = this.tabs[selectedTab].render;
 
