@@ -1,10 +1,12 @@
-const { waitForFocus, executeInAllStories } = require('../../e2e/utils/storybook');
+const { waitForFocus, executeInAllStories } = require('../../../e2e/utils/storybook');
 
 describe('Button Suite', () => {
     const menuItem = '[data-name="Button"]';
     const childStories = [
-        '[data-name="Primary"]', '[data-name="Secondary"]',
-        '[data-name="Primary Dropdown"]', '[data-name="Secondary Dropdown"]',
+        '[data-name="Primary"]',
+        '[data-name="Secondary"]',
+        '[data-name="Primary Dropdown"]',
+        '[data-name="Secondary Dropdown"]',
         '[data-name="Destructive"]'
     ]
     const button = {

@@ -32,6 +32,11 @@ exports.config = merge(wdioMaster.config, {
     before: function (capabilities, specs) {
         browserCommands();
         browser.url(constants.routes.storybook);
+
+        // Collapse first story
+        const defaultChildStories = $$('[data-name]')[0].$('[data-name]');
+        $$('[data-name]')[0].click();
+        defaultChildStories.waitForVisible(3000, true);
     },
     beforeSuite: function(suite) {
         // Do nothing before suites
