@@ -410,6 +410,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
 
   imageTabIndex = this.tabs.findIndex(tab => tab.title.toLowerCase().includes('image'));
   backupTabIndex = this.tabs.findIndex(tab => tab.title.toLowerCase().includes('backup'));
+  cloneTabIndex = this.tabs.findIndex(tab => tab.title.toLowerCase().includes('clone'));
 
   componentWillUnmount() {
     this.mounted = false;
@@ -442,6 +443,11 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
 
       if (!selectedBackupID) {
         /* a backup selection is also required */
+        window.scroll({
+          top: 0,
+          left: 0,
+          behavior: 'smooth',
+        });
         this.setState({
           errors: [
             { field: 'backup_id', reason: 'You must select a Backup' },
@@ -452,7 +458,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       this.createNewLinode();
     }
     // we are cloning to another Linode
-    if (selectedTab === 2) {
+    if (selectedTab === this.cloneTabIndex) {
       // if selectedCloneTargetLinode is 'undefined,' no target Linode has been selected
       // if selectedCloneTargetLinode is null, that means we're cloning to a new Linode
       if (!selectedLinodeID || typeof selectedCloneTargetLinodeID === 'undefined') {
