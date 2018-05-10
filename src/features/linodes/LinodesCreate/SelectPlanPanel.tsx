@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { isEmpty } from 'ramda';
+import { isEmpty, pathOr } from 'ramda';
 
 import { withStyles, StyleRulesCallback, WithStyles, Theme } from 'material-ui';
 
@@ -27,7 +27,7 @@ interface Props {
   error?: string;
   onSelect: (key: string) => void;
   selectedID: string | null;
-  requiredDiskSpace?: number;
+  smallestType?: string;
 }
 
 const getNanodes = (types: ExtendedType[]) =>
@@ -41,18 +41,20 @@ const getHighMem = (types: ExtendedType[]) =>
 
 
 class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNames>> {
-  renderCard = (selectedID: string|null, handleSelection: Function) =>
-    (type: ExtendedType, idx: number) => {
-      const requiredDiskSpace = this.props.requiredDiskSpace || 0;
-      return <SelectionCard
-        key={idx}
-        checked={type.id === String(selectedID)}
-        onClick={e => handleSelection(type.id)}
-        heading={type.heading}
-        subheadings={type.subHeadings}
-        disabled={requiredDiskSpace > type.disk}
-      />;
-    }
+  renderCard = (type: ExtendedType) => {
+    const { selectedID, onSelect } = this.props;
+    const requiredDiskSpace = pathOr(0, ['disk'], this.props.types.find(
+      type => type.id === this.props.smallestType,
+    ));
+    return <SelectionCard
+      key={type.id}
+      checked={type.id === String(selectedID)}
+      onClick={e => onSelect(type.id)}
+      heading={type.heading}
+      subheadings={type.subHeadings}
+      disabled={requiredDiskSpace > type.disk}
+    />;
+  }
 
   createTabs = () => {
     const { types } = this.props;
@@ -68,7 +70,7 @@ class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNames>> {
 
           return (
             <Grid container spacing={16}>
-            { nanodes.map(this.renderCard(this.props.selectedID, this.props.onSelect))}
+              {nanodes.map(this.renderCard)}
             </Grid>
           );
         },
@@ -81,7 +83,7 @@ class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNames>> {
         render: () => {
           return (
             <Grid container spacing={16}>
-              { standards.map(this.renderCard(this.props.selectedID, this.props.onSelect))}
+              {standards.map(this.renderCard)}
             </Grid>
           );
         },
@@ -94,7 +96,7 @@ class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNames>> {
         render: () => {
           return (
             <Grid container spacing={16}>
-              { highmem.map(this.renderCard(this.props.selectedID, this.props.onSelect))}
+              {highmem.map(this.renderCard)}
             </Grid>
           );
         },
