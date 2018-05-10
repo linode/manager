@@ -256,6 +256,7 @@ class PrimaryNav extends React.Component<Props> {
           <a
             className={classes.sublink}
             href="https://www.linode.com/docs"
+            target="_blank"
             role="menuitem"
           >
             Documentation
@@ -263,6 +264,7 @@ class PrimaryNav extends React.Component<Props> {
           <a
             className={classes.sublink}
             href="//www.linode.com/community/questions"
+            target="_blank"
             role="menuitem"
           >
             Community Forum

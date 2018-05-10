@@ -63,8 +63,19 @@ const Footer: React.StatelessComponent<CombinedProps> = ({ classes }) => {
   return (
     <Grid container className={classes.container}>
       <Grid item xs={12} className={classes.navWrapper}>
-        <a className={classes.link} href="https://developers.linode.com">API Reference</a>
-        <a className={classes.link} href="mailto:feedback@linode.com">Customer Feedback</a>
+        <a
+          className={classes.link}
+          href="https://developers.linode.com"
+          target="_blank"
+        >
+          API Reference
+        </a>
+        <a
+          className={classes.link}
+          href="mailto:feedback@linode.com"
+        >
+          Customer Feedback
+        </a>
       </Grid>
       <Grid item xs={12} className={classes.logoWrapper}>
         <FooterLogo width="40" height="40" className={classes.logo} />
