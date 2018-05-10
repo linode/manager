@@ -41,8 +41,6 @@ import AddonsPanel from './AddonsPanel';
 import { typeLabelDetails, typeLabel } from '../presentation';
 import CheckoutBar from './CheckoutBar';
 import { resetEventsPolling } from 'src/events';
-import { shim } from 'promise.prototype.finally';
-shim();
 
 type ChangeEvents = React.MouseEvent<HTMLElement> | React.ChangeEvent<HTMLInputElement>;
 
