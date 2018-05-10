@@ -9,6 +9,7 @@ import {
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 
+import Notice from 'src/components/Notice';
 
 import { TypeInfo } from 'src/features/linodes/LinodesCreate/LinodesCreate';
 
@@ -70,6 +71,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
 
 interface Props {
   onDeploy: () => void;
+  error?: string;
   label: string | null;
   imageInfo: { name: string, details: string } | undefined;
   typeInfo: TypeInfo | undefined;
@@ -109,6 +111,7 @@ class CheckoutBar extends React.Component<CombinedProps> {
       classes,
       onDeploy,
       label,
+      error,
       backups,
       imageInfo,
       typeInfo,
@@ -184,6 +187,12 @@ class CheckoutBar extends React.Component<CombinedProps> {
             &nbsp;/mo
           </Typography>
         </div>
+
+        {error &&
+          <Notice error>
+            {error}
+          </Notice>
+        }
 
         <div className={`${classes.checkoutSection} ${classes.noBorder}`}>
           <Button
