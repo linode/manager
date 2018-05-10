@@ -135,6 +135,17 @@ const evenize = (n: number): number => {
   return (n % 2 === 0) ? n : n - 1;
 };
 
+export const aggregateBackups = (backups: Linode.LinodeBackupsResponse): Linode.LinodeBackup[] => {
+  const manualSnapshot = path(['status'], backups.snapshot.in_progress) === 'needsPostProcessing'
+    ? backups.snapshot.in_progress
+    : backups.snapshot.current;
+  return backups && [...backups.automatic, manualSnapshot].filter(b => Boolean(b));
+};
+
+export function formatBackupDate(backupDate: string) {
+  return moment.utc(backupDate).local().fromNow();
+}
+
 class LinodeBackup extends React.Component<CombinedProps, State> {
   state: State = {
     backups: this.props.backups.response,
@@ -221,9 +232,6 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     ];
   }
 
-  formatBackupDate(backupDate: string) {
-    return moment.utc(backupDate).local().fromNow();
-  }
 
   enableBackups() {
     const { linodeID } = this.props;
@@ -251,13 +259,6 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
       });
   }
 
-  aggregateBackups = (): Linode.LinodeBackup[] => {
-    const { backups } = this.state;
-    const manualSnapshot = path(['status'], backups.snapshot.in_progress) === 'needsPostProcessing'
-      ? backups.snapshot.in_progress
-      : backups.snapshot.current;
-    return backups && [...backups.automatic, manualSnapshot].filter(b => Boolean(b));
-  }
 
   takeSnapshot = () => {
     const { linodeID } = this.props;
@@ -320,7 +321,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
   }
 
   Table = ({ backups }: { backups: Linode.LinodeBackup[]}): JSX.Element | null => {
-    const { classes, history } = this.props;
+    const { classes, history, linodeID } = this.props;
 
     return (
       <React.Fragment>
@@ -341,7 +342,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
                 return (
                   <TableRow key={backup.id} data-qa-backup>
                     <TableCell>
-                      {this.formatBackupDate(backup.created)}
+                      {formatBackupDate(backup.created)}
                     </TableCell>
                     <TableCell data-qa-backup-name>
                       {backup.label || typeMap[backup.type]}
@@ -367,10 +368,11 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
                       <LinodeBackupActionMenu
                         onRestore={() => this.openRestoreDrawer(
                           backup.id,
-                          this.formatBackupDate(backup.created),
+                          formatBackupDate(backup.created),
                         )}
                         onDeploy={() => {
-                          history.push(`/linodes/create?type=fromBackup&backupID=${backup.id}`);
+                          history.push('/linodes/create'
+                            + `?type=fromBackup&backupID=${backup.id}&linodeID=${linodeID}`);
                         }}
                       />
                     </TableCell>
@@ -510,7 +512,8 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
 
   Management = (): JSX.Element | null => {
     const { classes, linodeID, linodeRegion } = this.props;
-    const backups = this.aggregateBackups();
+    const { backups: backupsResponse } = this.state;
+    const backups = aggregateBackups(backupsResponse);
 
     return (
       <React.Fragment>
