@@ -9,17 +9,16 @@ import {
   Typography,
   Divider,
 } from 'material-ui';
-import Button from 'material-ui/Button';
 import FormControlLabel from 'material-ui/Form/FormControlLabel';
 
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import { updateLinode } from 'src/services/linodes';
+import Button from 'src/components/Button';
 import Grid from 'src/components/Grid';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
-import Reload from 'src/assets/icons/reload.svg';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 type ClassNames = 'root'
   | 'switch'
@@ -325,6 +324,9 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
       },
     ];
 
+    const noError = (submitting && !alertSections
+      .reduce((result, s) => result || Boolean(s.error), false));
+
     return (
       <ExpansionPanel
         defaultExpanded
@@ -332,29 +334,15 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
         success={this.state.success}
         actions={() =>
           <ActionsPanel>
-            {
-              (submitting && !alertSections
-                  .reduce((result, s) => result || Boolean(s.error), false))
-              ? (
-                <Button
-                    variant="raised"
-                    color="secondary"
-                    disabled
-                    className="loading"
-                  >
-                  <Reload />
-                </Button>
-              )
-              : (
-                <Button
-                  variant="raised"
-                  color="primary"
-                  onClick={this.setLinodeAlertThresholds}
-                >
-                  Save
-                </Button>
-              )
-            }
+            <Button
+              variant="raised"
+              color="primary"
+              onClick={this.setLinodeAlertThresholds}
+              disabled={noError}
+              loading={noError}
+            >
+              Save
+            </Button>
           </ActionsPanel>
         }
       >
