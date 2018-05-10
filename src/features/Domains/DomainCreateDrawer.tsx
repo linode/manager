@@ -25,7 +25,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 interface Props {
   open: boolean;
-  onClose: () => void;
+  onClose: (domain?: Partial<Linode.Domain>) => void;
 }
 
 interface State {
@@ -44,6 +44,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
     type: 'master',
     soaEmail: '',
     submitting: false,
+    errors: [],
   };
 
   state: State = {
@@ -69,9 +70,9 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
       type,
       soa_email: soaEmail,
     })
-      .then(() => {
+      .then((res) => {
         this.reset();
-        onClose();
+        onClose(res.data);
       })
       .catch((err) => {
         this.setState({
@@ -93,7 +94,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
       <Drawer
         title="Add a new Domain"
         open={open}
-        onClose={onClose}
+        onClose={() => onClose()}
       >
         <TextField
           errorText={errorFor('domain')}

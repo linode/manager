@@ -4,6 +4,7 @@ import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   onEditRecords: () => void;
+  onRemove: () => void;
 }
 
 type CombinedProps = Props;
@@ -37,8 +38,8 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
       },
       {
         title: 'Remove',
-        disabled: true,
         onClick: (e: React.MouseEvent<HTMLElement>) => {
+          this.props.onRemove();
           closeMenu();
           e.preventDefault();
         },

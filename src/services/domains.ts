@@ -41,14 +41,13 @@ export const createDomainRecord = (domainId: number, data: CreateDomainRecordDat
   setData(data),
 );
 
-export interface DomainData {
-  domain: string;
-  type: 'master' | 'slave';
-  soa_email: string;
-}
-
-export const createDomain = (data: DomainData) => Request(
+export const createDomain = (data: Partial<Linode.Domain>) => Request(
   setData(data),
   setURL(`${API_ROOT}/domains`),
   setMethod('POST'),
+);
+
+export const deleteDomain = (domainID: number) => Request(
+  setURL(`${API_ROOT}/domains/${domainID}`),
+  setMethod('DELETE'),
 );

@@ -22,10 +22,13 @@ import TableRow from 'material-ui/Table/TableRow';
 import Typography from 'material-ui/Typography';
 import Placeholder from 'src/components/Placeholder';
 
-import { getDomains } from 'src/services/domains';
+import ActionsPanel from 'src/components/ActionsPanel';
+import { getDomains, deleteDomain } from 'src/services/domains';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import Grid from 'src/components/Grid';
 import ErrorState from 'src/components/ErrorState';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
 
 import ActionMenu from './DomainActionMenu';
 import DomainCreateDrawer from './DomainCreateDrawer';
@@ -51,6 +54,11 @@ interface State {
   createDrawer: {
     open: boolean,
   };
+  removeDialog: {
+    open: boolean,
+    domain?: string,
+    domainID?: number,
+  };
 }
 
 type CombinedProps = Props & PromiseLoaderProps & WithStyles<ClassNames> & RouteComponentProps<{}>;
@@ -62,7 +70,17 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
     createDrawer: {
       open: false,
     },
+    removeDialog: {
+      open: false,
+    },
   };
+
+  refreshDomains() {
+    getDomains()
+      .then((response) => {
+        this.setState({ domains: response.data });
+      });
+  }
 
   componentDidCatch(error: Error) {
     this.setState({ error });
@@ -72,16 +90,44 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
     this.setState({
       createDrawer: { open: true },
     });
+    this.refreshDomains();
   }
 
-  closeCreateDrawer() {
+  closeCreateDrawer(domain?: Partial<Linode.Domain>) {
     this.setState({
       createDrawer: { open: false },
+      domains: [...this.state.domains, domain as Linode.Domain],
     });
-    getDomains()
-      .then((response) => {
-        this.setState({ domains: response.data });
-      });
+  }
+
+  removeDomain = () => {
+    const { removeDialog: { domainID } } = this.state;
+    if (domainID) {
+      deleteDomain(domainID)
+        .then(() => {
+          this.closeRemoveDialog();
+          this.refreshDomains();
+        })
+        .catch(() => {
+          this.closeRemoveDialog();
+          sendToast('Error when removing domain', 'error');
+        });
+    } else {
+      this.closeRemoveDialog();
+      sendToast('Error when removing domain', 'error');
+    }
+  }
+
+  openRemoveDialog(domain: string, domainID: number) {
+    this.setState({
+      removeDialog: { open: true, domain, domainID },
+    });
+  }
+
+  closeRemoveDialog() {
+    this.setState({
+      removeDialog: { open: false, domain: undefined, domainID: undefined },
+    });
   }
 
   render() {
@@ -157,6 +203,9 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
                       onEditRecords={() => {
                         history.push(`/domains/${domain.id}`);
                       }}
+                      onRemove={() => {
+                        this.openRemoveDialog(domain.domain, domain.id);
+                      }}
                     />
                   </TableCell>
                 </TableRow>,
@@ -166,8 +215,35 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
         </Paper>
         <DomainCreateDrawer
           open={this.state.createDrawer.open}
-          onClose={() => this.closeCreateDrawer()}
+          onClose={(domain: Partial<Linode.Domain>) => this.closeCreateDrawer(domain)}
         />
+        <ConfirmationDialog
+          open={this.state.removeDialog.open}
+          title={`Remove ${this.state.removeDialog.domain}`}
+          onClose={this.closeRemoveDialog}
+          actions={() =>
+            <ActionsPanel>
+              <Button
+                variant="raised"
+                color="secondary"
+                className="destructive"
+                onClick={this.removeDomain}
+              >
+                Confirm
+              </Button>
+              <Button
+                onClick={this.closeRemoveDialog}
+                variant="raised"
+                color="secondary"
+                className="cancel"
+              >
+                Cancel
+              </Button>
+            </ActionsPanel>
+          }
+        >
+          <Typography>Are you sure you want to remove this domain?</Typography>
+        </ConfirmationDialog>
       </React.Fragment>
     );
   }
