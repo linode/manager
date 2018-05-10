@@ -104,7 +104,7 @@ describe('LinodeRescue', () => {
       </LinodeThemeWrapper>,
     );
     const rescueComponent: any = component.find('LinodeRescue').dive();
-    const rescueComponentProps = component.props().children.props;
+    const rescueComponentProps = component.props().children.props.children.props;
     it(
       `volumes in the rescue dropdowns should only display volumes
       that are in the same region as the Linode`,

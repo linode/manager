@@ -1,5 +1,5 @@
 import * as React from 'react';
-import createMuiTheme, { ThemeOptions } from 'material-ui/styles/createMuiTheme';
+import createMuiTheme from 'material-ui/styles/createMuiTheme';
 import { MuiThemeProvider } from 'material-ui/styles';
 
 import LinodeLightTheme from 'src/theme';
@@ -11,7 +11,7 @@ interface Props {
 }
 
 interface State {
-  themeChoice: ThemeOptions;
+  themeChoice: 'light' | 'dark';
   render: boolean;
 }
 
@@ -22,9 +22,14 @@ const darkTheme = {
 };
 
 class LinodeThemeWrapper extends React.Component<Props, State> {
-  state = {
-    themeChoice: lightTheme,
+  state: State = {
+    themeChoice: 'light',
     render: true,
+  };
+
+  themes = {
+    light: createMuiTheme(lightTheme),
+    dark: createMuiTheme(darkTheme),
   };
 
   componentDidMount() {
@@ -33,13 +38,16 @@ class LinodeThemeWrapper extends React.Component<Props, State> {
         this.toggleTheme();
       }
     });
+
+    this.themes.light.shadows.fill('none');
+    this.themes.dark.shadows.fill('none');
   }
 
   toggleTheme = () => {
-    if (this.state.themeChoice === lightTheme) {
-      this.setState({ themeChoice: darkTheme });
+    if (this.state.themeChoice === 'light') {
+      this.setState({ themeChoice: 'dark' });
     } else {
-      this.setState({ themeChoice: lightTheme });
+      this.setState({ themeChoice: 'light' });
     }
 
     /**
@@ -57,19 +65,20 @@ class LinodeThemeWrapper extends React.Component<Props, State> {
 
   render() {
     const { themeChoice, render } = this.state;
-    const theme = createMuiTheme(themeChoice as Linode.TodoAny);
-    theme.shadows = theme.shadows.fill('none');
+    const theme = this.themes[themeChoice];
     return (
-      <MuiThemeProvider theme={theme}>
+      <React.Fragment>
         {render &&
-          React.cloneElement(
-            this.props.children as Linode.TodoAny,
-            {
-              toggleTheme: () => this.toggleTheme(),
-            },
-          )
+          <MuiThemeProvider theme={theme}>
+            {React.cloneElement(
+              this.props.children as Linode.TodoAny,
+              {
+                toggleTheme: () => this.toggleTheme(),
+              },
+            )}
+          </MuiThemeProvider>
         }
-      </MuiThemeProvider>
+      </React.Fragment>
     );
   }
 }
