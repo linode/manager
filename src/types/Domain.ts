@@ -28,8 +28,33 @@ namespace Linode {
   type ZoneFile = {
     rendered: string,
     status:
-      'current'
-      | 'setting_up'
-      | 'updating',
+    'current'
+    | 'setting_up'
+    | 'updating',
   };
+
+  export type RecordType =
+    'A' |
+    'AAAA'|
+    'CAA' |
+    'CNAME' |
+    'MX' |
+    'NS' |
+    'PTR' |
+    'SRV' |
+    'TXT';
+
+  export interface Record {
+    id: number;
+    name: string;
+    port: number;
+    priority: number;
+    protocol: null | string;
+    service: null | string;
+    tag: null | string;
+    target: string;
+    ttl_sec: number;
+    type: RecordType;
+    weight: number;
+  }
 }
