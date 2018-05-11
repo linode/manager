@@ -94,30 +94,6 @@ const createLink = (title: string, handler: () => void) => <IconTextLink
 />;
 
 class DomainRecords extends React.Component<CombinedProps, State> {
-  /** We're using a fake event to trigger the API event loop. */
-  updateRecords = () => {
-    const e: Linode.Event = {
-      id: 9999,
-      action: 'domain_record_create',
-      created: '',
-      entity: {
-        id: this.props.domain.id,
-        type: 'domain',
-        label: '',
-        url: '',
-      },
-      percent_complete: null,
-      rate: null,
-      read: true,
-      seen: true,
-      status: 'notification',
-      time_remaining: null,
-      username: 'manager',
-    };
-
-    events$.next(e);
-  }
-
   eventsSubscription$: Subscription;
 
   static defaultDrawerState: DrawerState = {
@@ -552,7 +528,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
           onClose={this.resetDrawer}
           mode={drawer.mode}
           type={drawer.type}
-          updateRecords={this.updateRecords}
+          updateRecords={this.props.updateRecords}
           {...drawer.fields}
         />
       </React.Fragment>
