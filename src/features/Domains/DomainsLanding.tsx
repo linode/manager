@@ -1,30 +1,38 @@
 import * as React from 'react';
 import { compose, pathOr } from 'ramda';
+import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
+import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
+import Button from 'material-ui/Button';
 import Paper from 'material-ui/Paper';
-import Table from 'material-ui/Table';
 import TableBody from 'material-ui/Table/TableBody';
 import TableCell from 'material-ui/Table/TableCell';
 import TableHead from 'material-ui/Table/TableHead';
 import TableRow from 'material-ui/Table/TableRow';
-import Placeholder from 'src/components/Placeholder';
+import Typography from 'material-ui/Typography';
 
-import { getDomains } from 'src/services/domains';
-import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
+import { getDomains, deleteDomain } from 'src/services/domains';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
+import PlusSquare from 'src/assets/icons/plus-square.svg';
+import Placeholder from 'src/components/Placeholder';
+import Table from 'src/components/Table';
+import Grid from 'src/components/Grid';
 import ErrorState from 'src/components/ErrorState';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import ActionsPanel from 'src/components/ActionsPanel';
+import IconTextLink from 'src/components/IconTextLink';
+import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 
 import ActionMenu from './DomainActionMenu';
+import DomainCreateDrawer from './DomainCreateDrawer';
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'title';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
+  title: {
+    marginBottom: theme.spacing.unit * 2,
+  },
 });
 
 interface Props { }
@@ -36,21 +44,100 @@ interface PromiseLoaderProps {
 interface State {
   domains: Linode.Domain[];
   error?: Error;
+  createDrawer: {
+    open: boolean,
+    mode: 'clone' | 'create',
+    domain?: string,
+    cloneID?: number,
+  };
+  removeDialog: {
+    open: boolean,
+    domain?: string,
+    domainID?: number,
+  };
 }
 
-type CombinedProps = Props & PromiseLoaderProps & WithStyles<ClassNames>;
+type CombinedProps = Props & PromiseLoaderProps & WithStyles<ClassNames> & RouteComponentProps<{}>;
 
 class DomainsLanding extends React.Component<CombinedProps, State> {
   state: State = {
     domains: pathOr([], ['response', 'data'], this.props.domains),
     error: pathOr(undefined, ['error'], this.props.domains),
+    createDrawer: {
+      open: false,
+      mode: 'create',
+    },
+    removeDialog: {
+      open: false,
+    },
   };
+
+  refreshDomains() {
+    getDomains()
+      .then((response) => {
+        this.setState({ domains: response.data });
+      });
+  }
 
   componentDidCatch(error: Error) {
     this.setState({ error });
   }
 
+  openCreateDrawer() {
+    this.setState({
+      createDrawer: { open: true, mode: 'create' },
+    });
+  }
+
+  openCloneDrawer(domain: string, id: number) {
+    this.setState({
+      createDrawer: { open: true, mode: 'clone', domain, cloneID: id },
+    });
+  }
+
+  closeCreateDrawer(domain?: Partial<Linode.Domain>) {
+    this.setState({
+      createDrawer: { open: false, mode: 'create' },
+    });
+    if (domain) {
+      this.setState({
+        domains: [...this.state.domains, domain as Linode.Domain],
+      });
+    }
+  }
+
+  removeDomain = () => {
+    const { removeDialog: { domainID } } = this.state;
+    if (domainID) {
+      deleteDomain(domainID)
+        .then(() => {
+          this.closeRemoveDialog();
+          this.refreshDomains();
+        })
+        .catch(() => {
+          this.closeRemoveDialog();
+          sendToast('Error when removing domain', 'error');
+        });
+    } else {
+      this.closeRemoveDialog();
+      sendToast('Error when removing domain', 'error');
+    }
+  }
+
+  openRemoveDialog(domain: string, domainID: number) {
+    this.setState({
+      removeDialog: { open: true, domain, domainID },
+    });
+  }
+
+  closeRemoveDialog() {
+    this.setState({
+      removeDialog: { open: false, domain: undefined, domainID: undefined },
+    });
+  }
+
   render() {
+    const { classes, history } = this.props;
     const { error, domains } = this.state;
 
     /** Error State */
@@ -73,32 +160,97 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
     }
 
     return (
-      <Paper>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Domain</TableCell>
-              <TableCell>Type</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {
-              domains.map((domain) => {
-                return (
-                  <TableRow key={domain.id}>
-                    <TableCell>{domain.domain}</TableCell>
-                    <TableCell>{domain.type}</TableCell>
-                    <TableCell>{domain.status}</TableCell>
-                    <TableCell><ActionMenu /></TableCell>
-                  </TableRow>
-                );
-              })
-            }
-          </TableBody>
-        </Table>
-      </Paper>
+      <React.Fragment>
+        <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }} >
+          <Grid item>
+            <Typography variant="headline" data-qa-title className={classes.title}>
+              Domains
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Grid container alignItems="flex-end">
+              <Grid item>
+                <IconTextLink
+                  SideIcon={PlusSquare}
+                  onClick={() => this.openCreateDrawer()}
+                  title="Add a Domain"
+                  text="Add a Domain"
+                >
+                  Add new Domain
+                </IconTextLink>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Paper>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Domain</TableCell>
+                <TableCell>Type</TableCell>
+                <TableCell>Status</TableCell>
+                <TableCell></TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {domains.map(domain =>
+                <TableRow key={domain.id}>
+                  <TableCell><Link to={`/domains/${domain.id}`}>{domain.domain}</Link></TableCell>
+                  <TableCell>{domain.type}</TableCell>
+                  <TableCell>{domain.status}</TableCell>
+                  <TableCell>
+                    <ActionMenu
+                      onEditRecords={() => {
+                        history.push(`/domains/${domain.id}`);
+                      }}
+                      onRemove={() => {
+                        this.openRemoveDialog(domain.domain, domain.id);
+                      }}
+                      onClone={() => {
+                        this.openCloneDrawer(domain.domain, domain.id);
+                      }}
+                    />
+                  </TableCell>
+                </TableRow>,
+              )}
+            </TableBody>
+          </Table>
+        </Paper>
+        <DomainCreateDrawer
+          open={this.state.createDrawer.open}
+          onClose={(domain: Partial<Linode.Domain>) => this.closeCreateDrawer(domain)}
+          mode={this.state.createDrawer.mode}
+          domain={this.state.createDrawer.domain}
+          cloneID={this.state.createDrawer.cloneID}
+        />
+        <ConfirmationDialog
+          open={this.state.removeDialog.open}
+          title={`Remove ${this.state.removeDialog.domain}`}
+          onClose={this.closeRemoveDialog}
+          actions={() =>
+            <ActionsPanel>
+              <Button
+                variant="raised"
+                color="secondary"
+                className="destructive"
+                onClick={this.removeDomain}
+              >
+                Confirm
+              </Button>
+              <Button
+                onClick={this.closeRemoveDialog}
+                variant="raised"
+                color="secondary"
+                className="cancel"
+              >
+                Cancel
+              </Button>
+            </ActionsPanel>
+          }
+        >
+          <Typography>Are you sure you want to remove this domain?</Typography>
+        </ConfirmationDialog>
+      </React.Fragment>
     );
   }
 }
@@ -110,6 +262,7 @@ const loaded = PromiseLoader<Props>({
 });
 
 export default compose(
+  withRouter,
   loaded,
   styled,
 )(DomainsLanding);

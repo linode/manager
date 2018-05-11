@@ -219,7 +219,7 @@ export class App extends React.Component<CombinedProps, State> {
                             icon={NodeBalancerIcon}
                           />}
                         />
-                        <Route exact path="/domains" component={Domains}/>
+                        <Route path="/domains" component={Domains}/>
                         <Route exact path="/managed" render={() =>
                           <Placeholder title="Managed" />} />
                         <Route exact path="/longview" render={() =>
