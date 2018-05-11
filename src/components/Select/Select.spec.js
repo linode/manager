@@ -1,4 +1,4 @@
-const { waitForFocus } = require('../../../e2e/utils/storybook');
+const { previewFocus } = require('../../../e2e/utils/storybook');
 
 describe('Select Suite', () => {
     const menuItem = '[data-name="Select"]';
@@ -13,15 +13,17 @@ describe('Select Suite', () => {
         browser.click(menuItem);
         browser.waitForVisible(childStory);
         browser.click(childStory);
-        waitForFocus('[data-qa-select]');
+        previewFocus('[data-qa-select]');
     });
 
     it('should display two select boxes with labels, action text and chevron', () => {
         selectBoxes = $$(select);
-        selectBoxes.forEach(s => expect(s.isVisible()).toBe(true));
-        selectBoxes.forEach(s => expect(s.$('..').$('label').isVisible()).toBe(true));
-        selectBoxes.forEach(s => expect(s.$('..').$('p').isVisible()).toBe(true));
-        selectBoxes.forEach(s => expect(s.$('svg').isVisible()).toBe(true));
+        selectBoxes.forEach(s => {
+            expect(s.isVisible()).toBe(true);
+            expect(s.$('..').$('label').isVisible()).toBe(true);
+            expect(s.$('..').$('p').isVisible()).toBe(true);
+            expect(s.$('svg').isVisible()).toBe(true);
+        });
     });
     
     it('should display one enabled select', () => {
