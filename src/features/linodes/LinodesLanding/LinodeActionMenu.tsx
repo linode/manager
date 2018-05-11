@@ -51,7 +51,7 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
         {
           title: 'View Backups',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            push(`/linodes/${linodeId}/backups`);
+            push(`/linodes/${linodeId}/backup`);
             e.preventDefault();
           },
         },
