@@ -69,7 +69,6 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
   };
 
   handleBackupSelection = this.props.handleSelection('selectedBackupID');
-  handleSizeSelection = this.props.handleSelection('requiredDiskSpace');
   handleBackupInfoSelection = this.props.handleSelection('selectedBackupInfo');
 
   fetchBackups(linodeID?: number) {
@@ -135,15 +134,11 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
         key={backup.id}
         checked={backup.id === Number(selectedBackupID)}
         onClick={(e) => {
-          const totalBackupSize = backup.disks.reduce((acc, disk) => (
-            acc + disk.size
-          ), 0);
           const backupInfo = {
             name: backupInfo_.infoName,
             details: backupInfo_.subheading,
           };
           this.handleBackupSelection(e, `${backup.id}`);
-          this.handleSizeSelection(e, `${totalBackupSize}`);
           this.handleBackupInfoSelection(e, backupInfo);
         }}
         heading={backupInfo_.heading}

@@ -344,9 +344,6 @@ const LinodeTheme: Linode.Theme = {
       },
     },
     MuiFormHelperText: {
-      root: {
-        flexBasis: '100%',
-      },
       error: {
         color: '#CA0813',
       },
