@@ -18,7 +18,7 @@ class Example extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Button onClick={this.toggleDrawer(true)}>Click</Button>
+        <Button onClick={this.toggleDrawer(true)} data-qa-toggle-drawer>Click</Button>
         <Drawer title="My Drawer" open={this.state.open} onClose={this.toggleDrawer(false)} >
           This is some test copy which acts as content for this Drawer component.
           It's very interesting and you should read all of it. This text has to be sufficiently
@@ -26,11 +26,13 @@ class Example extends React.Component {
           <TextField
             label="Input Some Text"
             placeholder="This is a placeholder"
+            data-qa-text-field
           />
           <ActionsPanel>
             <Button
               variant="raised"
               color="primary"
+              data-qa-save
             >
               Save
             </Button>
@@ -38,6 +40,7 @@ class Example extends React.Component {
               variant="raised"
               color="secondary"
               className="cancel"
+              data-qa-cancel
             >
               Cancel
             </Button>
@@ -50,6 +53,6 @@ class Example extends React.Component {
 
 storiesOf('Drawer', module)
   .addDecorator(ThemeDecorator)
-  .add('Example.', () => (
+  .add('Example', () => (
     <Example />
   ));
