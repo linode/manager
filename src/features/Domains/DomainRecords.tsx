@@ -43,6 +43,7 @@ interface Props {
   domain: Linode.Domain;
   domainRecords: Linode.Record[];
   updateRecords: () => void;
+  updateDomain: () => void;
 }
 
 interface ConfirmationState {
@@ -55,8 +56,8 @@ interface ConfirmationState {
 interface DrawerState {
   open: boolean;
   mode: 'create' | 'edit';
-  type: Linode.RecordType;
-  fields?: Partial<Linode.Record>;
+  type: Linode.RecordType | Linode.DomainType;
+  fields?: Partial<Linode.Record> | Partial<Linode.Domain>;
 }
 
 interface State {
@@ -108,7 +109,10 @@ class DomainRecords extends React.Component<CombinedProps, State> {
     type,
   }))
 
-  openForEditing = (type: Linode.RecordType, fields: Partial<Linode.Record>) =>
+  openForEditing = (
+    type: Linode.RecordType | Linode.DomainType,
+    fields: Partial<Linode.Record> | Partial<Linode.Domain>,
+  ) =>
     this.updateDrawer(() => ({
       open: true,
       submitting: false,
@@ -116,6 +120,12 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       type,
       fields,
     }))
+
+  openForEditMasterDomain = (f: Partial<Linode.Domain>) =>
+    this.openForEditing('master', f)
+
+  openForEditSlaveDomain = (f: Partial<Linode.Domain>) =>
+    this.openForEditing('slave', f)
 
   openForCreateNSRecord = () => this.openForCreation('NS');
   openForEditNSRecord = (f: Pick<Linode.Record, 'id' | 'target' | 'name' | 'ttl_sec'>) =>
@@ -220,7 +230,14 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         },
         {
           title: '',
-          render: () => <ActionMenu onEdit={() => null} onDelete={() => null} />,
+          render: (d: Linode.Domain) =>
+            <ActionMenu
+              onEdit={() => {
+                d.type === 'master'
+                  ? this.openForEditMasterDomain(d)
+                  : this.openForEditSlaveDomain(d);
+              }}
+            />,
         },
       ],
     },
@@ -417,7 +434,8 @@ class DomainRecords extends React.Component<CombinedProps, State> {
   }
 
   componentDidUpdate(prevProps: CombinedProps) {
-    if (!equals(prevProps.domainRecords, this.props.domainRecords)) {
+    if (!equals(prevProps.domainRecords, this.props.domainRecords)
+      || !equals(prevProps.domain, this.props.domain)) {
       this.setState({ types: this.generateTypes() });
     }
   }
@@ -505,6 +523,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
           mode={drawer.mode}
           type={drawer.type}
           updateRecords={this.props.updateRecords}
+          updateDomain={this.props.updateDomain}
           {...drawer.fields}
         />
       </React.Fragment>
@@ -523,8 +542,8 @@ const msToReadable = (v: number): null | string => pathOr(null, [v], {
   86400: '1 day',
   172800: '2 days',
   345600: '4 days',
-  604600: '1 week',
-  120960: '2 weeks',
+  604800: '1 week',
+  1209600: '2 weeks',
   2419200: '4 weeks',
 });
 

@@ -108,6 +108,17 @@ class DomainDetail extends React.Component<CombinedProps, State> {
       .catch(console.error);
   }
 
+  updateDomain = () => {
+    const { match: { params: { domainId } } } = this.props;
+    if (!domainId) { return; }
+
+    getDomain(domainId)
+      .then(({ data }) => {
+        this.setState({ domain: data });
+      })
+      .catch(console.error);
+  }
+
   render() {
     const matches = (p: string) => Boolean(matchPath(p, { path: this.props.location.pathname }));
     const { match: { path, url }, history, classes } = this.props;
@@ -163,6 +174,7 @@ class DomainDetail extends React.Component<CombinedProps, State> {
                 domain={domain}
                 domainRecords={records}
                 updateRecords={this.updateRecords}
+                updateDomain={this.updateDomain}
               />
             }
           />
