@@ -11,11 +11,8 @@ import {
 } from 'material-ui';
 import Button, { ButtonProps } from 'material-ui/Button';
 
-import {
-  createDomainRecord,
-  CreateDomainRecordDataType,
-  updateDomainRecord,
-} from 'src/services/domains';
+import { createDomainRecord, updateDomainRecord } from 'src/services/domains';
+import defaultNumeric from 'src/utilities/defaultNumeric';
 import Drawer from 'src/components/Drawer';
 import TextField from 'src/components/TextField';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -147,7 +144,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       )
     }
     value={defaultTo(defaultValue, this.state.fields[field])}
-    onChange={e => this.updateField(field)(+e.target.value)}
+    onChange={e => this.updateField(field)(defaultNumeric(defaultValue)(e.target.value))}
   />
 
   NameField = ({ label }: { label: string }) => <this.TextField field="name" label={label} />;
@@ -157,7 +154,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
   ServiceField = () => <this.TextField field="service" label="Service" />;
 
   PriorityField = ({ label }: { label: string }) =>
-    <this.NumberField field="priority" label={label} />
+    <this.NumberField field="priority" label={label} defaultValue={5} />
 
   PortField = () =>
     <this.NumberField field="port" label="Port" />
@@ -228,7 +225,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
 
   onCreate = () => {
     this.setState({ submitting: true, errors: undefined });
-    const data: CreateDomainRecordDataType = {
+    const data = {
       type: this.props.type,
       ...this.filterDataByType(this.state.fields, this.props.type),
     };
@@ -245,8 +242,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     this.setState({ submitting: true, errors: undefined });
     const fields = this.state.fields as UpdateFieldState;
 
-    const data: CreateDomainRecordDataType = {
-      type: this.props.type,
+    const data = {
       ...this.filterDataByType(fields, this.props.type),
     };
 
@@ -400,6 +396,8 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     );
   }
 }
+
+
 
 const styled = withStyles(styles, { withTheme: true });
 

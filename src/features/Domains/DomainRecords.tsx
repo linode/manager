@@ -86,6 +86,7 @@ interface IType {
   }[];
   link?: () => null | JSX.Element;
 }
+
 const createLink = (title: string, handler: () => void) => <IconTextLink
   SideIcon={PlusSquare}
   onClick={handler}
