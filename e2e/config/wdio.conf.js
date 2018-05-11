@@ -15,7 +15,7 @@ const password = process.env.MANAGER_PASS;
 
 const specsToRun = () => {
     if (argv.file) {
-        return [argv.file];
+        return ['./e2e/setup/setup.spec.js', argv.file];
     }
     if (argv.dir || argv.d) {
         return ['./e2e/setup/setup.spec.js', `./e2e/specs/${argv.dir || argv.d}/**/*.spec.js`]
@@ -295,7 +295,6 @@ exports.config = {
             })
             .catch(err => {
                 console.log(err);
-                reject(err);
             });
     }
 }
