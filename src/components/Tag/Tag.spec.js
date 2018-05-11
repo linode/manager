@@ -17,7 +17,7 @@ describe('Tags Suite', () => {
 
     it('should display child stories in navigation', () => {
         browser.click(menuItem);
-        childStories.forEach(story => expect($(story).isVisible()).toBe(true));
+        browser.waitForVisible(childStories[0]);
     });
 
     it('should display tag in each story', () => {

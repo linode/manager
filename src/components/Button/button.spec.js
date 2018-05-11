@@ -1,10 +1,10 @@
-const { waitForFocus, executeInAllStories } = require('../../../e2e/utils/storybook');
+const { waitForFocus, previewFocus, executeInAllStories } = require('../../../e2e/utils/storybook');
 
 describe('Button Suite', () => {
     const menuItem = '[data-name="Button"]';
     const childStories = [
-        '[data-name="Primary"]',
-        '[data-name="Secondary"]',
+        '[data-name="Types"]',
+        '[data-name="Disabled"]',
         '[data-name="Primary Dropdown"]',
         '[data-name="Secondary Dropdown"]',
         '[data-name="Destructive"]'
@@ -13,9 +13,9 @@ describe('Button Suite', () => {
         generic: '[data-qa-button]',
         primary: '[data-qa-button="primary"]',
         secondary: '[data-qa-button="secondary"]',
-        primaryDropdown:  '[data-qa-button="dropdown"]',
-        secondaryDropdown: '[data-qa-button="dropdown-secondary"]',
-        destructive: '[data-qa-button="destructive"]',
+        primaryDropdown:  '[data-qa-button="Primary Dropdown"]',
+        secondaryDropdown: '[data-qa-button="Secondary Dropdown"]',
+        destructive: '[data-qa-button="Destructive"]',
     }
 
     it('should display button component in navigation', () => {
@@ -38,21 +38,18 @@ describe('Button Suite', () => {
         });
     });
 
-    describe('Primary Button Suite', () => {
-        let primaryButtons;
+    describe('Types Button Suite', () => {
+        let primaryButtons, secondaryButtons;
 
         beforeAll(() => {
             browser.click(childStories[0]);
         })
 
-        it('should display primary buttons with one enabled and one disabled', () => {
+        it('should display primary button', () => {
             waitForFocus(button.primary);
 
             primaryButtons = $$(button.primary);
-            const disabledButtons = primaryButtons.filter(b => b.getAttribute('disabled') !== null);
-            
-            expect(primaryButtons.length).toBe(2);
-            expect(disabledButtons.length).toBe(1);
+            expect(primaryButtons.length).toBe(1);
         });
 
         it('should display primary buttons with white text', () => {
@@ -65,25 +62,15 @@ describe('Button Suite', () => {
              primaryButtons.forEach(button => {
                 expect(button.getAttribute('class').includes('Primary')).toBe(true);
             });
-         }); 
-    });
+         });
 
-    describe('Secondary Button Suite', () => {
-       let secondaryButtons;
-
-       beforeAll(() => {
-            browser.frame();
-            browser.click(childStories[1]);
-            waitForFocus(button.generic);
-       });
-
-       it('should display secondary buttons with one enabled and one disabled', () => {
+        it('should display secondary button', () => {
+            const secondaryButton = $(button.secondary);
             secondaryButtons = $$(button.secondary);
-            const disabledButtons = secondaryButtons.filter(b => b.getAttribute('disabled') !== null);
-            
-            expect(secondaryButtons.length).toBe(2);
-            expect(disabledButtons.length).toBe(1);
-        }); 
+
+            expect(secondaryButton.isVisible()).toBe(true);
+            expect(secondaryButtons.length).toBe(1);
+        });
 
        it('should display buttons with transparent backgrounds', () => {
            secondaryButtons.forEach(button => {
@@ -104,7 +91,7 @@ describe('Button Suite', () => {
         beforeAll(() => {
             browser.frame();
             browser.click(childStories[2]);
-            waitForFocus(button.primaryDropdown);
+            previewFocus();
         });
 
         it('should display dropdown buttons with carat', () => {
@@ -112,11 +99,6 @@ describe('Button Suite', () => {
             primaryDropdowns.forEach(d => {
                 expect(d.$('svg').isVisible()).toBe(true);
             });
-        });
-
-        it('should display one disabled dropdown', () => {
-            const disabledDropdowns = primaryDropdowns.filter(d => d.getAttribute('disabled') !== null);
-            expect(disabledDropdowns.length).toBe(1);
         });
 
         it('should have primary included in class of each dropdown', () => {
@@ -127,12 +109,12 @@ describe('Button Suite', () => {
     });
 
     describe('Secondary Dropdown', () => {
-        let secondaryDropdowns, disabledDropdowns;
+        let secondaryDropdowns;
 
         beforeAll(() => {
             browser.frame();
             browser.click(childStories[3]);
-            waitForFocus(button.secondaryDropdown);
+            previewFocus();
         })
 
         it('should display dropdown buttons with carat', () => {
@@ -142,19 +124,14 @@ describe('Button Suite', () => {
             });
         });
 
-        it('should display one disabled button', () => {
-            disabledDropdowns = secondaryDropdowns.filter(s => s.getAttribute('disabled') !== null);
-            expect(disabledDropdowns.length).toBe(1);
-        });
-
         it('should have secondary included in class of each dropdown', () => {
-            disabledDropdowns.forEach(d => {
+            secondaryDropdowns.forEach(d => {
                 expect(d.getAttribute('class').includes('Secondary')).toBe(true);
             });
         });
     });
 
-    describe('Destructive Button', () => {
+    xdescribe('Destructive Button', () => {
 
         beforeAll(() => {
             browser.frame();
@@ -173,5 +150,15 @@ describe('Button Suite', () => {
             });
             expect(disabledButtons.length).toBe(1);
         });
+    });
+
+    xdescribe('Disabled Button', () => {
+        let secondaryDropdowns;
+
+        it('should display one disabled button', () => {
+            disabledDropdowns = secondaryDropdowns.filter(s => s.getAttribute('disabled') !== null);
+            expect(disabledDropdowns.length).toBe(1);
+        });
+
     });
 });
