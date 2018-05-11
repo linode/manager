@@ -356,7 +356,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           label="Size"
           required
           value={size}
-          onChange={e => this.mounted && this.setState({ size: +(e.target.value) })}
+          onChange={e => this.mounted && this.setState({ size: +(e.target.value) || 0 })}
           error={Boolean(sizeError)}
           errorText={sizeError}
           disabled={mode === modes.CLONING || mode === modes.EDITING}
