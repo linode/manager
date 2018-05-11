@@ -205,7 +205,7 @@ class CheckoutBar extends React.Component<CombinedProps> {
             onClick={onDeploy}
             data-qa-deploy-linode
           >
-            Deploy Linode
+            {!disabled ? 'Deploy Linode' : 'Deploying...'}
           </Button>
         </div>
 

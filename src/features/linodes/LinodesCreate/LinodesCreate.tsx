@@ -85,7 +85,6 @@ interface State {
   selectedBackupID?: number;
   selectedBackupInfo?: Info;
   smallestType?: string;
-  selectedTargetLinodeID?: number | null;
   selectedCloneTargetLinodeID?: number | null;
   selectedImageID: string | null;
   selectedRegionID: string | null;
