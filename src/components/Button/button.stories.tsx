@@ -49,8 +49,6 @@ storiesOf('Button', module)
       <Divider />
       <Button destructive type="secondary" data-qa-button="secondary">Secondary</Button>
       <Divider />
-      <Button destructive type="cancel" data-qa-button="cancel">Cancel</Button>
-      <Divider />
     </React.Fragment>
   ))
   .add('Loading Destructive', () => (
@@ -58,8 +56,6 @@ storiesOf('Button', module)
       <Button loading destructive type="primary" data-qa-button="primary">Primary</Button>
       <Divider />
       <Button loading destructive type="secondary" data-qa-button="secondary">Secondary</Button>
-      <Divider />
-      <Button loading destructive type="cancel" data-qa-button="cancel">Cancel</Button>
       <Divider />
     </React.Fragment>
   ))

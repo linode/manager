@@ -49,6 +49,11 @@ const LinodeTheme: Linode.Theme = {
         '&$disabled': {
           color: 'white',
         },
+        '&.cancel': {
+          '&:hover, &:focus': {
+            borderColor: '#222',
+          },
+        },
       },
       raisedSecondary: {
         backgroundColor: 'transparent',
@@ -70,25 +75,6 @@ const LinodeTheme: Linode.Theme = {
           borderColor: '#C9CACB',
           backgroundColor: 'transparent',
           color: '#C9CACB',
-        },
-        '&.cancel': {
-          borderColor: 'transparent',
-          marginLeft: 0,
-          '&:hover, &:focus': {
-            borderColor: '#5F99EA',
-          },
-        },
-        '&.destructive': {
-          borderColor: '#C44742',
-          color: '#C44742',
-          '&:hover, &:focus': {
-            color: '#DF6560',
-            borderColor: '#DF6560',
-          },
-          '&:active': {
-            color: '#963530',
-            borderColor: '#963530',
-          },
         },
       },
     },
