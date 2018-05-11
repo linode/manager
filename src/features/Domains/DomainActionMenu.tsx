@@ -2,7 +2,11 @@ import * as React from 'react';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
-interface Props { }
+interface Props {
+  onEditRecords: () => void;
+  onRemove: () => void;
+  onClone: () => void;
+}
 
 type CombinedProps = Props;
 
@@ -11,8 +15,8 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
     return [
       {
         title: 'Edit DNS Records',
-        disabled: true,
         onClick: (e: React.MouseEvent<HTMLElement>) => {
+          this.props.onEditRecords();
           closeMenu();
           e.preventDefault();
         },
@@ -34,9 +38,17 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
         },
       },
       {
-        title: 'Remove',
-        disabled: true,
+        title: 'Clone',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
+          this.props.onClone();
+          closeMenu();
+          e.preventDefault();
+        },
+      },
+      {
+        title: 'Remove',
+        onClick: (e: React.MouseEvent<HTMLElement>) => {
+          this.props.onRemove();
           closeMenu();
           e.preventDefault();
         },

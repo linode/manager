@@ -52,6 +52,7 @@ const styles: StyleRulesCallback = (theme: Linode.Theme) => {
 
 interface Props extends GridProps {
   text?: string;
+  html?: string;
   error?: boolean;
   warning?: boolean;
   success?: boolean;
@@ -73,7 +74,19 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
     typeProps,
     children,
     flag,
+    html,
   } = props;
+
+  const c = html
+    ? (
+      <Typography {...typeProps} dangerouslySetInnerHTML={{ __html: html }} />
+    )
+    : (
+      <Typography {...typeProps}>
+        {text && text}
+        {children && children}
+      </Typography>
+    );
 
   return (
     <Grid
@@ -94,10 +107,7 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
         </Grid>
       }
       <div className={classes.inner}>
-        <Typography {...typeProps}>
-          {text && text}
-          {children && children}
-        </Typography>
+        {c}
       </div>
     </Grid>
   );
