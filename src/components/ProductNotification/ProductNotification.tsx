@@ -26,7 +26,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 const ProductNotifications: React.StatelessComponent<CombinedProps> = (props) => {
   const { text, severity } = props;
   const level = pathOr('warning', [severity], severityLevelMap);
-  return React.createElement(Notice, { text, [level]: true });
+  return React.createElement(Notice, { flag: true, text, [level]: true });
 };
 
 const styled = withStyles(styles, { withTheme: true });
