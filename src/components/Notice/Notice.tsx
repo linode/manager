@@ -3,20 +3,34 @@ import * as classNames from 'classnames';
 
 import { withStyles, StyleRulesCallback, WithStyles } from 'material-ui';
 import Typography, { TypographyProps } from 'material-ui/Typography';
+import { GridProps } from 'material-ui/Grid';
+
+import Grid from 'src/components/Grid';
+import Flag from 'src/assets/icons/flag.svg';
 
 type ClassNames = 'root'
+  | 'inner'
   | 'error'
   | 'warning'
-  | 'success';
+  | 'success'
+  | 'flag';
 
 const styles: StyleRulesCallback = (theme: Linode.Theme) => {
-  const { spacing, palette: { status } } = theme;
+  const { palette: { status } } = theme;
 
   return {
     root: {
-      padding: `${spacing.unit * 2}px ${spacing.unit * 3}px`,
-      margin: `${spacing.unit}px 0`,
-      wordBreak: 'break-word',
+      marginBottom: theme.spacing.unit,
+      padding: theme.spacing.unit * 2,
+      maxWidth: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      '& p': {
+        wordWrap: 'break-word',
+      },
+    },
+    inner: {
+      width: '100%',
     },
     error: {
       backgroundColor: status.error,
@@ -30,10 +44,13 @@ const styles: StyleRulesCallback = (theme: Linode.Theme) => {
       backgroundColor: status.success,
       border: `1px solid ${status.successDark}`,
     },
+    flag: {
+      marginRight: theme.spacing.unit * 2,
+    },
   };
 };
 
-interface Props extends React.DetailsHTMLAttributes<HTMLDivElement> {
+interface Props extends GridProps {
   text?: string;
   html?: string;
   error?: boolean;
@@ -41,6 +58,7 @@ interface Props extends React.DetailsHTMLAttributes<HTMLDivElement> {
   success?: boolean;
   typeProps?: TypographyProps;
   className?: string;
+  flag?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -55,8 +73,8 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
     success,
     typeProps,
     children,
+    flag,
     html,
-    ...restProps,
   } = props;
 
   const c = html
@@ -71,18 +89,27 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
     );
 
   return (
-    <div
-      className={`${classNames({
+    <Grid
+      item
+      className={classNames({
         [classes.error]: error,
         [classes.warning]: warning,
         [classes.success]: success,
         [classes.root]: true,
         notice: true,
-      })} ${className}`}
-      {...restProps}
+        ...(className && { [className]: true }),
+      })}
     >
-      {c}
-    </div>
+      {
+        flag &&
+        <Grid item>
+          <Flag className={classes.flag} />
+        </Grid>
+      }
+      <div className={classes.inner}>
+        {c}
+      </div>
+    </Grid>
   );
 };
 
