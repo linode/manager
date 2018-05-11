@@ -35,6 +35,7 @@ const styles: StyleRulesCallback = (theme: Linode.Theme) => {
 
 interface Props extends React.DetailsHTMLAttributes<HTMLDivElement> {
   text?: string;
+  html?: string;
   error?: boolean;
   warning?: boolean;
   success?: boolean;
@@ -54,8 +55,20 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
     success,
     typeProps,
     children,
+    html,
     ...restProps,
   } = props;
+
+  const c = html
+    ? (
+      <Typography {...typeProps} dangerouslySetInnerHTML={{ __html: html }} />
+    )
+    : (
+      <Typography {...typeProps}>
+        {text && text}
+        {children && children}
+      </Typography>
+    );
 
   return (
     <div
@@ -68,10 +81,7 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
       })} ${className}`}
       {...restProps}
     >
-      <Typography {...typeProps}>
-        {text && text}
-        {children && children}
-      </Typography>
+      {c}
     </div>
   );
 };
