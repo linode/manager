@@ -1,168 +1,127 @@
 import * as React from 'react';
 import { storiesOf } from '@storybook/react';
 
-import Button from 'material-ui/Button';
+import Button from 'src/components/Button';
 
+import { default as MDivider } from 'material-ui/Divider';
 import KeyboardArrowDown from 'material-ui-icons/KeyboardArrowDown';
 import KeyboardArrowUp from 'material-ui-icons/KeyboardArrowUp';
 
 import ThemeDecorator from '../../utilities/storybookDecorators';
-import Reload from 'src/assets/icons/reload.svg';
+
+const Divider = () => <MDivider style={{ marginBottom: '8px', marginTop: '8px' }} />;
 
 storiesOf('Button', module)
-.addDecorator(ThemeDecorator)
-.add('Primary', () => (
-  <React.Fragment>
-    <Button
-      variant="raised"
-      color="primary"
-      data-qa-button="primary"
-    >
-      Primary
-    </Button>
-    <br /><br />
-    <Button
-      variant="raised"
-      color="primary"
-      data-qa-button="primary"
-      disabled
-    >
-      Disabled
-    </Button>
-  </React.Fragment>
-))
-.add('Secondary', () => (
-  <React.Fragment>
-    <Button
-      variant="raised"
-      color="secondary"
-      data-qa-button="secondary"
-    >
-      Secondary
-    </Button>
-    <br /><br />
-    <Button
-      variant="raised"
-      color="secondary"
-      data-qa-button="secondary"
-      disabled
-    >
-      Disabled
-    </Button>
-  </React.Fragment>
-))
-.add('Primary Dropdown', () => (
-  <React.Fragment>
-    <Button
-      variant="raised"
-      color="primary"
-      className="button-dropdown"
-      data-qa-button="dropdown"
-    >
-      Primary Dropdown
+  .addDecorator(ThemeDecorator)
+  .add('Types', () => (
+    <React.Fragment>
+      <Button type="primary" data-qa-button="primary">Primary</Button>
+      <Divider />
+      <Button type="secondary" data-qa-button="secondary">Secondary</Button>
+      <Divider />
+      <Button type="cancel" data-qa-button="cancel">Cancel</Button>
+      <Divider />
+    </React.Fragment>
+  ))
+  .add('Disabled', () => (
+    <React.Fragment>
+      <Button disabled type="primary" data-qa-button="primary">Primary</Button>
+      <Divider />
+      <Button disabled type="secondary" data-qa-button="secondary">Secondary</Button>
+      <Divider />
+      <Button disabled type="cancel" data-qa-button="cancel">Cancel</Button>
+      <Divider />
+    </React.Fragment>
+  ))
+  .add('Loading', () => (
+    <React.Fragment>
+      <Button loading type="primary" data-qa-button="primary">Primary</Button>
+      <Divider />
+      <Button loading type="secondary" data-qa-button="secondary">Secondary</Button>
+      <Divider />
+      <Button loading type="cancel" data-qa-button="cancel">Cancel</Button>
+      <Divider />
+    </React.Fragment>
+  ))
+  .add('Destructive', () => (
+    <React.Fragment>
+      <Button destructive type="primary" data-qa-button="primary">Primary</Button>
+      <Divider />
+      <Button destructive type="secondary" data-qa-button="secondary">Secondary</Button>
+      <Divider />
+      <Button destructive type="cancel" data-qa-button="cancel">Cancel</Button>
+      <Divider />
+    </React.Fragment>
+  ))
+  .add('Loading Destructive', () => (
+    <React.Fragment>
+      <Button loading destructive type="primary" data-qa-button="primary">Primary</Button>
+      <Divider />
+      <Button loading destructive type="secondary" data-qa-button="secondary">Secondary</Button>
+      <Divider />
+      <Button loading destructive type="cancel" data-qa-button="cancel">Cancel</Button>
+      <Divider />
+    </React.Fragment>
+  ))
+  .add('Primary Dropdown', () => (
+    <React.Fragment>
+      <Button
+        type="primary"
+        className="button-dropdown"
+        data-qa-button="dropdown"
+      >
+        Primary Dropdown
       <KeyboardArrowDown className="caret"></KeyboardArrowDown>
-    </Button>
-    <br /><br />
-    <Button
-      variant="raised"
-      color="primary"
-      className="button-dropdown"
-      data-qa-button="dropdown"
-    >
-      Primary Dropdown Active
+      </Button>
+      <Divider />
+      <Button
+        type="primary"
+        className="button-dropdown"
+        data-qa-button="dropdown"
+      >
+        Primary Dropdown Active
       <KeyboardArrowUp className="caret"></KeyboardArrowUp>
-    </Button>
-    <br /><br />
-    <Button
-      variant="raised"
-      color="primary"
-      disabled
-      className="button-dropdown"
-      data-qa-button="dropdown"
-    >
-      Primary Dropdown
+      </Button>
+      <Divider />
+      <Button
+        type="primary"
+        disabled
+        className="button-dropdown"
+        data-qa-button="dropdown"
+      >
+        Primary Dropdown
       <KeyboardArrowDown className="caret"></KeyboardArrowDown>
-    </Button>
-  </React.Fragment>
-))
-.add('Secondary Dropdown', () => (
-  <React.Fragment>
-    <Button
-      variant="raised"
-      color="secondary"
-      className="button-dropdown"
-      data-qa-button="dropdown-secondary"
-    >
-      Secondary Dropdown
-      <KeyboardArrowDown className="caret"></KeyboardArrowDown>
-    </Button>
-    <br /><br />
-    <Button
-      variant="raised"
-      color="secondary"
-      className="button-dropdown"
-      data-qa-button="dropdown-secondary"
-    >
-      Secondary Dropdown Active
-      <KeyboardArrowUp className="caret"></KeyboardArrowUp>
-    </Button>
-    <br /><br />
-    <Button
-      variant="raised"
-      color="secondary"
-      disabled
-      className="button-dropdown"
-      data-qa-button="dropdown-secondary"
-    >
-      Secondary Dropdown
-      <KeyboardArrowDown className="caret"></KeyboardArrowDown>
-    </Button>
-  </React.Fragment>
-))
-.add('Destructive', () => (
-  <React.Fragment>
-    <Button
-      variant="raised"
-      color="secondary"
-      className="destructive"
-      data-qa-button="destructive"
-    >
-      Destructive
-    </Button>
-    <br /><br />
-    <Button
-      variant="raised"
-      color="secondary"
-      disabled
-      data-qa-button="destructive"
-    >
-      Disabled
-    </Button>
-  </React.Fragment>
-))
-.add('Cancel', () => (
-  <React.Fragment>
-    <Button
-      variant="raised"
-      color="secondary"
-      className="cancel"
-      data-qa-button="cancel"
-    >
-      Cancel
-    </Button>
-  </React.Fragment>
-))
-.add('Loading', () => (
-  <React.Fragment>
-    <Button
-      variant="raised"
-      color="secondary"
-      className="loading"
-      data-qa-button="loading"
-      disabled
-    >
-      <Reload />
-    </Button>
-  </React.Fragment>
-))
-;
+      </Button>
+    </React.Fragment>
+  ))
+  .add('Secondary Dropdown', () => (
+    <React.Fragment>
+      <Button
+        type="secondary"
+        className="button-dropdown"
+        data-qa-button="dropdown-secondary"
+      >
+        Secondary Dropdown
+    <KeyboardArrowDown className="caret"></KeyboardArrowDown>
+      </Button>
+      <Divider />
+      <Button
+        type="secondary"
+        className="button-dropdown"
+        data-qa-button="dropdown-secondary"
+      >
+        Secondary Dropdown Active
+    <KeyboardArrowUp className="caret"></KeyboardArrowUp>
+      </Button>
+      <Divider />
+      <Button
+        type="secondary"
+        disabled
+        className="button-dropdown"
+        data-qa-button="dropdown-secondary"
+      >
+        Secondary Dropdown
+    <KeyboardArrowDown className="caret"></KeyboardArrowDown>
+      </Button>
+    </React.Fragment>
+  ));
