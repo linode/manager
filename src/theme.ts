@@ -167,6 +167,7 @@ const LinodeTheme: Linode.Theme = {
       paper: {
         boxShadow: '0 0 5px #bbb',
         overflowY: 'overlay',
+        display: 'block',
         fallbacks: {
           overflowY: 'auto',
         },

@@ -48,8 +48,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   },
   actionSingleLink: {
     marginRight: theme.spacing.unit,
-    display: 'block',
-    textAlign: 'right',
+    float: 'right',
     fontWeight: 700,
   },
   hidden: {

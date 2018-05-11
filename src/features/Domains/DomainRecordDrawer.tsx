@@ -547,7 +547,12 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         {fields.map((field: any, idx: number) => field(idx))}
         <ActionsPanel>
           <Button {...buttonProps} />
-          <Button onClick={this.onClose}>
+          <Button
+            variant="raised"
+            color="secondary"
+            className="cancel"
+            onClick={this.onClose}
+          >
             Cancel
           </Button>
         </ActionsPanel>
