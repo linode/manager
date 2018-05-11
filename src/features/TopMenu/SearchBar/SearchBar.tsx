@@ -123,18 +123,21 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     right: 0,
     top: 60,
     padding: 0,
-    boxShadow: '0 0 5px #ddd',
+    boxShadow: `0 0 5px ${theme.color.boxShadow}`,
     maxHeight: 325,
     overflowY: 'auto',
   },
   item: {
     borderBottom: `1px solid ${theme.palette.divider}`,
+    '&:hover, &:focus': {
+      backgroundColor: `${theme.bg.offWhite} !important`,
+    },
     '&:last-item': {
       border: 0,
     },
   },
   selectedMenuItem: {
-    backgroundColor: '#fafafa !important',
+    backgroundColor: `${theme.bg.offWhite} !important`,
     '& .circle': {
       transition: theme.transitions.create(['fill']),
       fill: theme.palette.primary.main,
