@@ -3,19 +3,22 @@ import * as classNames from 'classnames';
 
 import { withStyles, StyleRulesCallback, WithStyles } from 'material-ui';
 import Typography, { TypographyProps } from 'material-ui/Typography';
+import { GridProps } from 'material-ui/Grid';
+
+import Grid from 'src/components/Grid';
+import Flag from 'src/assets/icons/flag.svg';
 
 type ClassNames = 'root'
   | 'error'
   | 'warning'
-  | 'success';
+  | 'success'
+  | 'flag';
 
 const styles: StyleRulesCallback = (theme: Linode.Theme) => {
-  const { spacing, palette: { status } } = theme;
+  const { palette: { status } } = theme;
 
   return {
     root: {
-      padding: `${spacing.unit * 2}px ${spacing.unit * 3}px`,
-      margin: `${spacing.unit}px 0`,
       wordBreak: 'break-word',
     },
     error: {
@@ -30,16 +33,24 @@ const styles: StyleRulesCallback = (theme: Linode.Theme) => {
       backgroundColor: status.success,
       border: `1px solid ${status.successDark}`,
     },
+    flag: {
+      transition: theme.transitions.create(['opacity']),
+      opaity: 1,
+      '&:hover': {
+        opacity: .75,
+      },
+    },
   };
 };
 
-interface Props extends React.DetailsHTMLAttributes<HTMLDivElement> {
+interface Props extends GridProps {
   text?: string;
   error?: boolean;
   warning?: boolean;
   success?: boolean;
   typeProps?: TypographyProps;
   className?: string;
+  flag?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -54,25 +65,33 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
     success,
     typeProps,
     children,
-    ...restProps,
+    flag,
   } = props;
 
   return (
-    <div
-      className={`${classNames({
+    <Grid
+      container
+      className={classNames({
         [classes.error]: error,
         [classes.warning]: warning,
         [classes.success]: success,
         [classes.root]: true,
         notice: true,
-      })} ${className}`}
-      {...restProps}
+        ...(className && { [className]: true }),
+      })}
     >
-      <Typography {...typeProps}>
-        {text && text}
-        {children && children}
-      </Typography>
-    </div>
+      {
+        flag &&
+        <Grid item>
+          <Flag className={classes.flag} />
+        </Grid>
+      }
+      <Grid item>
+        <Typography {...typeProps}>
+          {text && text}
+          {children && children}
+        </Typography></Grid>
+    </Grid>
   );
 };
 
