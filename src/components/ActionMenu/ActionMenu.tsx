@@ -17,6 +17,7 @@ export interface Action {
 type CSSClasses = 'root'
   | 'item'
   | 'button'
+  | 'actionSingleLink'
   | 'hidden';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
@@ -44,6 +45,12 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     '& svg': {
       fontSize: '28px',
     },
+  },
+  actionSingleLink: {
+    marginRight: theme.spacing.unit,
+    display: 'block',
+    textAlign: 'right',
+    fontWeight: 700,
   },
   hidden: {
     height: 0,
@@ -100,7 +107,13 @@ class ActionMenu extends React.Component<CombinedProps, State> {
 
     return actions.length === 1
       ? (actions as Action[]).map((a, idx) =>
-        <a href="#" key={idx} onClick={e => a.onClick(e)}>{a.title}</a>)
+        <a
+          href="#"
+          key={idx}
+          onClick={e => a.onClick(e)}
+          className={classes.actionSingleLink}>
+            {a.title}
+        </a>)
       : (<div className={classes.root}>
         <IconButton
           aria-owns={anchorEl ? 'action-menu' : undefined}
