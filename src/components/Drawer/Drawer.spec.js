@@ -4,6 +4,7 @@ describe('Drawer Suite', () => {
     const menuItem = '[data-name="Drawer"]';
     const childStory = '[data-name="Example"]';
     const drawerElem = '[data-qa-drawer]';
+    const toggleDrawer = '[data-qa-toggle-drawer]';
 
     beforeAll(() => {
         browser.click(menuItem);
@@ -13,7 +14,7 @@ describe('Drawer Suite', () => {
     });
 
     it('should display the drawer on click', () => {
-        browser.click('[data-qa-toggle-drawer]');
+        browser.click(toggleDrawer);
         browser.waitForVisible(drawerElem);
     });
 
@@ -46,6 +47,14 @@ describe('Drawer Suite', () => {
         expect(close.isVisible()).toBe(true);
         
         close.click();
+        browser.waitForVisible(drawerElem, 10000, true);
+    });
+
+    it('should dismiss on esc', () => {
+        browser.click(toggleDrawer);
+        browser.waitForVisible(drawerElem);
+        browser.click('[data-qa-text-field]');
+        browser.setValue('[data-qa-text-field] input', '\uE00C');
         browser.waitForVisible(drawerElem, 10000, true);
     });
 });
