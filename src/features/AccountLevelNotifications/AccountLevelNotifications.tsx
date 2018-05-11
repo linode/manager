@@ -2,19 +2,15 @@ import * as React from 'react';
 import { Subscription } from 'rxjs/Rx';
 import {
   compose,
-  prop,
   contains,
   filter,
+  pathOr,
+  prop,
   propSatisfies,
   uniqBy,
-  pathOr,
 } from 'ramda';
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
+
+import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
 
 import notifications$ from 'src/notifications';
 import Notice from 'src/components/Notice';
@@ -32,7 +28,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props {}
+interface Props { }
 
 interface State {
   notifications?: Linode.Notification[];
@@ -82,9 +78,10 @@ class AccountLevelNotifications extends React.Component<CombinedProps, State> {
 
       return React.createElement(Notice, {
         key: n.type,
-        text: n.message,
+        html: n.message,
         className: classes.root,
         [level]: true,
+        children: undefined,
       });
     });
   }
