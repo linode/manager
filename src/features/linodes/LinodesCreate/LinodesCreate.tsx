@@ -453,8 +453,8 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
         });
         return;
       }
-      this.createNewLinode();
     }
+    this.createNewLinode();
     // we are cloning to another Linode
     if (selectedTab === this.cloneTabIndex) {
       // if selectedCloneTargetLinode is 'undefined,' no target Linode has been selected
