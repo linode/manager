@@ -29,7 +29,12 @@ Prior to running the tests, you must set `MANAGER_USER=` and `MANAGER_PASS` env 
 
 ##### Dependencies
 
-* Java JDK 8 (`brew cask install java8`)
+* Java JDK 8
+```bash
+brew cask uninstall java
+brew tap caskroom/versions
+brew cask install java8
+```
 * Node.js 8 LTS (`brew install node@8`)
 * Google Chrome v60+ (`brew cask install google-chrome`)
 * Yarn  (`brew install yarn`)

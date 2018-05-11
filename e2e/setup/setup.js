@@ -1,11 +1,5 @@
 const axios = require('axios');
-const localStorage = require('../../localStorage');
-
-// Substitute manually if you do not have this file
-const token = localStorage['authentication/oauth-token'];
-
-// TODO: Use process.env.REACT_APP_API_ROOT instead of hardcoding api environment
-const API_ROOT = 'https://api.linode.com/v4';
+const API_ROOT = process.env.REACT_APP_API_ROOT;
 
 exports.deleteAll = (token) => {
     return new Promise((resolve, reject) => {
@@ -85,4 +79,26 @@ exports.deleteAll = (token) => {
                 reject('Error', err);
             });
     });
+}
+
+
+exports.removeAllLinodes = (token) => {
+    const linodesEndpoint = '/linode/instances';
+
+    const instance = axios.create({
+            baseURL: API_ROOT,
+            timeout: 1000,
+            headers: { 'Authorization': `Bearer ${token}`},
+    });
+
+    return new Promise((resolve, reject) => {
+        instance.get(`${API_ROOT}${linodesEndpoint}`)
+            .then(res => {
+                resolve(res.data.data.forEach(linode => {
+                    instance.delete(`${API_ROOT}${linodesEndpoint}/${linode.id}`)
+                    .then(() => {});
+                }));
+            })
+            .catch(err => reject(err));
+    })
 }

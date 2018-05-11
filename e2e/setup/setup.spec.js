@@ -1,10 +1,7 @@
 const { constants } = require('../constants');
-const { readToken, deletePreviousRun } = require('../utils/config-utils');
+const { readToken } = require('../utils/config-utils');
 
-import { createGenericLinode, deleteLinode } from '../utils/common';
-import ListLinodes from '../pageobjects/list-linodes';
-import Settings from '../pageobjects/linode-detail-settings.page';
-import Volumes from '../pageobjects/volumes.page';
+import { createGenericLinode } from '../utils/common';
 
 describe('Setup Tests Suite', () => {
     beforeAll(() => {

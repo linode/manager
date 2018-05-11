@@ -5,7 +5,7 @@ const {
     login,
     readToken,
 } = require('../utils/config-utils');
-const { deleteAll } = require('../setup/setup');
+const { removeAllLinodes } = require('../setup/setup');
 const { browserCommands } = require('./custom-commands');
 const { browserConf } = require('./browser-config');
 const selectedBrowser = argv.b ? browserConf[argv.b] : browserConf['chrome'];
@@ -289,7 +289,7 @@ exports.config = {
      */
     onComplete: function(exitCode, config, capabilities) {
         const token = readToken();
-        return deleteAll(token, true)
+        return removeAllLinodes(token)
             .then(() => {})
             .catch(err => console.log(err));
     }
