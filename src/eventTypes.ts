@@ -185,7 +185,7 @@ const EventTypeMap = {
   },
   backups_cancel: {
     presentTenseAction: 'Cancelling backups service',
-    pastTenseAction: 'Cancled backup services for',
+    pastTenseAction: 'Cancelled backup services for',
     redirectUrl: getLinodeBackupRedirectUrl,
   },
   backups_restore: {

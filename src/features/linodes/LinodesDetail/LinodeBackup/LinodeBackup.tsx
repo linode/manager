@@ -249,8 +249,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
       });
   }
 
-  cancelBackups() {
-    const { linodeID } = this.props;
+  cancelBackups(linodeID: number) {
     cancelBackups(linodeID)
       .then(() => {
         sendToast('Backups are being cancelled for this Linode');
@@ -260,6 +259,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         pathOr([], ['response', 'data', 'errors'], errorResponse)
           .forEach((err: Linode.ApiFieldError) => sendToast(err.reason, 'error'));
       });
+    this.setState({ cancelBackupsAlertOpen: false });
   }
 
 
@@ -581,7 +581,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
                 variant="raised"
                 color="secondary"
                 className="destructive"
-                onClick={this.cancelBackups}
+                onClick={() => this.cancelBackups(linodeID)}
                 data-qa-confirm-cancel
               >
                 Cancel Backups
