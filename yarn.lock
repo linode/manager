@@ -10430,9 +10430,9 @@ wdio-selenium-standalone-service@^0.0.10:
     fs-extra "^0.30.0"
     selenium-standalone "^6.13.0"
 
-wdio-sync@0.7.0:
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/wdio-sync/-/wdio-sync-0.7.0.tgz#2fb07d250121dc81f5635316542c3c49a1220168"
+wdio-sync@0.7.1:
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/wdio-sync/-/wdio-sync-0.7.1.tgz#00847fbbce16826c3225618f4259d28b60a42483"
   dependencies:
     babel-runtime "6.26.0"
     fibers "~2.0.0"
