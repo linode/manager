@@ -1,4 +1,3 @@
-const { deletePreviousRun } = require('../utils/config-utils');
 const { deleteAll } = require('../setup/setup');
 
 exports.browserCommands = () => {
@@ -72,9 +71,5 @@ exports.browserCommands = () => {
 
     browser.addCommand('deleteAll', function async(token) {
         return deleteAll(token).then(() => {});
-    });
-
-    browser.addCommand('setup', function(token) {
-        deletePreviousRun(token);
     });
 }
