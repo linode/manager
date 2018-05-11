@@ -18,16 +18,10 @@ import {
 } from 'ramda';
 import { Subscription } from 'rxjs/Subscription';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
+import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
 import Button from 'material-ui/Button';
 import Paper from 'material-ui/Paper';
 import Grid from 'material-ui/Grid';
-import Table from 'material-ui/Table';
 import TableBody from 'material-ui/Table/TableBody';
 import TableCell from 'material-ui/Table/TableCell';
 import TableHead from 'material-ui/Table/TableHead';
@@ -37,11 +31,12 @@ import { events$, resetEventsPolling } from 'src/events';
 import { deleteDomainRecord } from 'src/services/domains';
 import PlusSquare from 'src/assets/icons/plus-square.svg';
 import IconTextLink from 'src/components/IconTextLink';
+import Table from 'src/components/Table';
 import ExpansionPanel from 'src/components/ExpansionPanel';
-import ActionMenu from './DomainRecordActionMenu';
-import Drawer from './DomainRecordDrawer';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import ActionsPanel from 'src/components/ActionsPanel';
+import ActionMenu from './DomainRecordActionMenu';
+import Drawer from './DomainRecordDrawer';
 
 type ClassNames = 'root';
 

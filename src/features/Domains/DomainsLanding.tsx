@@ -1,36 +1,27 @@
 import * as React from 'react';
 import { compose, pathOr } from 'ramda';
-import {
-  Link,
-  withRouter,
-  RouteComponentProps,
-} from 'react-router-dom';
+import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
+import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
 import Button from 'material-ui/Button';
 import Paper from 'material-ui/Paper';
-import Table from 'material-ui/Table';
 import TableBody from 'material-ui/Table/TableBody';
 import TableCell from 'material-ui/Table/TableCell';
 import TableHead from 'material-ui/Table/TableHead';
 import TableRow from 'material-ui/Table/TableRow';
 import Typography from 'material-ui/Typography';
-import Placeholder from 'src/components/Placeholder';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import IconTextLink from 'src/components/IconTextLink';
 import { getDomains, deleteDomain } from 'src/services/domains';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
-import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
+import PlusSquare from 'src/assets/icons/plus-square.svg';
+import Placeholder from 'src/components/Placeholder';
+import Table from 'src/components/Table';
 import Grid from 'src/components/Grid';
 import ErrorState from 'src/components/ErrorState';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import PlusSquare from 'src/assets/icons/plus-square.svg';
+import ActionsPanel from 'src/components/ActionsPanel';
+import IconTextLink from 'src/components/IconTextLink';
+import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 
 import ActionMenu from './DomainActionMenu';
 import DomainCreateDrawer from './DomainCreateDrawer';
