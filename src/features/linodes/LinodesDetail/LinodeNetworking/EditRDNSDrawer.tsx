@@ -89,13 +89,15 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
             onChange={e => this.setState({ rdns: e.target.value })}
             data-qa-domain-name
           />
-          { hasErrorFor('none') &&
-            <FormHelperText error data-qa-error>{ hasErrorFor('none') }</FormHelperText>
-          }
-
           <Typography variant="caption">
             Leave this field blank to reset RDNS
           </Typography>
+
+          { hasErrorFor('none') &&
+            <FormHelperText error style={{ marginTop: 16 }} data-qa-error>
+              { hasErrorFor('none') }
+            </FormHelperText>
+          }
 
           <ActionsPanel style={{ marginTop: 16 }}>
             <Button

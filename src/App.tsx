@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import { connect, Dispatch } from 'react-redux';
 import { compose, bindActionCreators } from 'redux';
 import Axios from 'axios';
@@ -38,6 +38,10 @@ const LinodesRoutes = DefaultLoader({
 
 const Volumes = DefaultLoader({
   loader: () => import('src/features/Volumes'),
+});
+
+const Domains = DefaultLoader({
+  loader: () => import('src/features/Domains'),
 });
 
 const Profile = DefaultLoader({
@@ -192,7 +196,7 @@ export class App extends React.Component<CombinedProps, State> {
     const { classes, longLivedLoaded, documentation, toggleTheme } = this.props;
 
     return (
-      <Router>
+      <React.Fragment>
         {longLivedLoaded &&
           <React.Fragment>
             <CssBaseline />
@@ -215,8 +219,7 @@ export class App extends React.Component<CombinedProps, State> {
                             icon={NodeBalancerIcon}
                           />}
                         />
-                        <Route exact path="/domains" render={() =>
-                          <Placeholder title="Domains" />} />
+                        <Route exact path="/domains" component={Domains}/>
                         <Route exact path="/managed" render={() =>
                           <Placeholder title="Managed" />} />
                         <Route exact path="/longview" render={() =>
@@ -249,7 +252,7 @@ export class App extends React.Component<CombinedProps, State> {
             <VolumeDrawer />
           </React.Fragment>
         }
-      </Router>
+      </React.Fragment>
     );
   }
 }

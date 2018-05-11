@@ -333,7 +333,14 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
           <Grid item className={classes.section}>
             <ActionsPanel>
               <Button onClick={onSubmit} variant="raised" color="primary">Submit</Button>
-              <Button onClick={onClose}>Cancel</Button>
+              <Button
+                variant="raised"
+                color="secondary"
+                className="cancel"
+                onClick={onClose}
+              >
+                Cancel
+              </Button>
             </ActionsPanel>
           </Grid>
         </Grid>

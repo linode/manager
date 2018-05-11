@@ -10435,6 +10435,13 @@ wdio-junit-reporter@^0.4.2:
     junit-report-builder "~1.3.0"
     mkdirp "~0.5.1"
 
+wdio-selenium-standalone-service@^0.0.10:
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/wdio-selenium-standalone-service/-/wdio-selenium-standalone-service-0.0.10.tgz#cdb64d9a53fa3ea0ed3cf0ebf4fd3bdca93dcf05"
+  dependencies:
+    fs-extra "^0.30.0"
+    selenium-standalone "^6.13.0"
+
 wdio-sync@0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/wdio-sync/-/wdio-sync-0.7.0.tgz#2fb07d250121dc81f5635316542c3c49a1220168"
