@@ -28,6 +28,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     flexGrow: 1,
     width: '100%',
     backgroundColor: theme.color.white,
+    marginBottom: theme.spacing.unit * 3,
   },
   inner: {
     padding: theme.spacing.unit * 3,
