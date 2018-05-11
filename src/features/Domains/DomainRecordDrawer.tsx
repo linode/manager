@@ -20,6 +20,8 @@ import Drawer from 'src/components/Drawer';
 import TextField from 'src/components/TextField';
 import ActionsPanel from 'src/components/ActionsPanel';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import Notice from 'src/components/Notice';
+import { AxiosError } from 'axios';
 
 type ClassNames = 'root';
 
@@ -211,6 +213,19 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       <MenuItem value="iodef">iodef</MenuItem>
     </TextField>
 
+  handleSubmissionErrors = (errorResponse: AxiosError) => {
+    const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'])(errorResponse);
+    if (errors) {
+      this.setState({ errors, submitting: false });
+      return;
+    }
+
+    this.setState({
+      submitting: false,
+      errors: [{ reason: 'An unknown error has occured.', field: '_unknown' }],
+    });
+  }
+
   onCreate = () => {
     this.setState({ submitting: true, errors: undefined });
     const data: CreateDomainRecordDataType = {
@@ -223,13 +238,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         this.props.updateRecords();
         this.onClose();
       })
-      .catch((errorResponse) => {
-        const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'])(errorResponse);
-        if (errors) {
-          this.setState({ errors });
-        }
-        this.setState({ submitting: false });
-      });
+      .catch(this.handleSubmissionErrors);
   }
 
   onEdit = () => {
@@ -246,13 +255,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         this.props.updateRecords();
         this.onClose();
       })
-      .catch((errorResponse) => {
-        const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'])(errorResponse);
-        if (errors) {
-          this.setState({ errors });
-        }
-        this.setState({ submitting: false });
-      });
+      .catch(this.handleSubmissionErrors);
   }
 
   filterDataByType =
@@ -378,8 +381,14 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       children: creating ? 'Add' : 'Edit',
     };
 
+    const otherErrors = [
+      getAPIErrorsFor({}, this.state.errors)('_unknown'),
+      getAPIErrorsFor({}, this.state.errors)('none'),
+    ].filter(Boolean);
+
     return (
       <Drawer title={`${mode} ${type} Record`} open={open} onClose={this.onClose}>
+        {otherErrors.length > 0 && otherErrors.map(err => <Notice error text={err} />)}
         {fields.map((field: any, idx: number) => field(idx))}
         <ActionsPanel>
           <Button {...buttonProps} />
