@@ -23,8 +23,14 @@ type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
-    margin: 0,
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    justifyContent: 'center',
+    padding: theme.spacing.unit,
     textAlign: 'center',
+    '&:first-child': {
+      marginTop: theme.spacing.unit,
+    },
     '& p': {
       fontSize: '1.1rem',
       color: '#333',

@@ -9,6 +9,7 @@ import Grid from 'src/components/Grid';
 import Flag from 'src/assets/icons/flag.svg';
 
 type ClassNames = 'root'
+  | 'inner'
   | 'error'
   | 'warning'
   | 'success'
@@ -19,7 +20,17 @@ const styles: StyleRulesCallback = (theme: Linode.Theme) => {
 
   return {
     root: {
-      wordBreak: 'break-word',
+      marginBottom: theme.spacing.unit,
+      padding: theme.spacing.unit * 2,
+      maxWidth: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      '& p': {
+        wordWrap: 'break-word',
+      },
+    },
+    inner: {
+      width: '100%',
     },
     error: {
       backgroundColor: status.error,
@@ -34,11 +45,7 @@ const styles: StyleRulesCallback = (theme: Linode.Theme) => {
       border: `1px solid ${status.successDark}`,
     },
     flag: {
-      transition: theme.transitions.create(['opacity']),
-      opaity: 1,
-      '&:hover': {
-        opacity: .75,
-      },
+      marginRight: theme.spacing.unit * 2,
     },
   };
 };
@@ -70,7 +77,7 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
 
   return (
     <Grid
-      container
+      item
       className={classNames({
         [classes.error]: error,
         [classes.warning]: warning,
@@ -86,11 +93,12 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
           <Flag className={classes.flag} />
         </Grid>
       }
-      <Grid item>
+      <div className={classes.inner}>
         <Typography {...typeProps}>
           {text && text}
           {children && children}
-        </Typography></Grid>
+        </Typography>
+      </div>
     </Grid>
   );
 };
