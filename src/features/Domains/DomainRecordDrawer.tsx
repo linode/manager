@@ -18,7 +18,7 @@ import TextField from 'src/components/TextField';
 import ActionsPanel from 'src/components/ActionsPanel';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import Notice from 'src/components/Notice';
-import { AxiosError } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 
 type ClassNames = 'root';
 
@@ -223,6 +223,11 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     });
   }
 
+  handleSubmissionSuccess = (response: AxiosResponse) => {
+    this.props.updateRecords();
+    this.onClose();
+  }
+
   onCreate = () => {
     this.setState({ submitting: true, errors: undefined });
     const data = {
@@ -231,10 +236,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     };
 
     createDomainRecord(this.props.domainId, data)
-      .then(() => {
-        this.props.updateRecords();
-        this.onClose();
-      })
+      .then(this.handleSubmissionSuccess)
       .catch(this.handleSubmissionErrors);
   }
 
@@ -247,10 +249,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     };
 
     updateDomainRecord(this.props.domainId, fields.id, data)
-      .then(() => {
-        this.props.updateRecords();
-        this.onClose();
-      })
+      .then(this.handleSubmissionSuccess)
       .catch(this.handleSubmissionErrors);
   }
 

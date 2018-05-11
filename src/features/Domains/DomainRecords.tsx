@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  allPass,
   compose,
   equals,
   filter,
@@ -9,12 +8,9 @@ import {
   lensPath,
   over,
   path,
-  pathEq,
   pathOr,
-  pathSatisfies,
   prepend,
   propEq,
-  test,
 } from 'ramda';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -27,7 +23,6 @@ import TableCell from 'material-ui/Table/TableCell';
 import TableHead from 'material-ui/Table/TableHead';
 import TableRow from 'material-ui/Table/TableRow';
 
-import { events$, resetEventsPolling } from 'src/events';
 import { deleteDomainRecord } from 'src/services/domains';
 import PlusSquare from 'src/assets/icons/plus-square.svg';
 import IconTextLink from 'src/components/IconTextLink';
@@ -171,7 +166,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
 
     deleteDomainRecord(domainId, recordId)
       .then((response) => {
-        resetEventsPolling();
+        this.props.updateRecords();
 
         this.updateConfirmDialog(c => ({
           open: false,
@@ -425,21 +420,6 @@ class DomainRecords extends React.Component<CombinedProps, State> {
     if (!equals(prevProps.domainRecords, this.props.domainRecords)) {
       this.setState({ types: this.generateTypes() });
     }
-  }
-
-  componentDidMount() {
-    this.eventsSubscription$ = events$
-      .filter(allPass([
-        e => !e._initial,
-        pathSatisfies(test(/domain_record_/), ['action']),
-        pathEq(['entity', 'type'], 'domain'),
-        pathEq(['entity', 'id'], this.props.domain.id),
-      ]))
-      .subscribe(e => this.props.updateRecords());
-  }
-
-  componentWillUnmount() {
-    this.eventsSubscription$.unsubscribe();
   }
 
   render() {
