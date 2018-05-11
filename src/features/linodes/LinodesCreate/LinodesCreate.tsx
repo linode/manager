@@ -438,7 +438,6 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
         });
         return;
       }
-
       if (!selectedBackupID) {
         /* a backup selection is also required */
         window.scroll({
@@ -453,10 +452,9 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
         });
         return;
       }
-    }
-    this.createNewLinode();
-    // we are cloning to another Linode
-    if (selectedTab === this.cloneTabIndex) {
+      this.createNewLinode();
+    } else if (selectedTab === this.cloneTabIndex) {
+      // creating a clone
       // if selectedCloneTargetLinode is 'undefined,' no target Linode has been selected
       // if selectedCloneTargetLinode is null, that means we're cloning to a new Linode
       if (!selectedLinodeID || typeof selectedCloneTargetLinodeID === 'undefined') {
@@ -473,6 +471,9 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
         return;
       }
       this.cloneLinode();
+    } else {
+      // creating from image
+      this.createNewLinode();
     }
   }
 
