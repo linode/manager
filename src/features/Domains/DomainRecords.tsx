@@ -309,7 +309,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
 
     /** A/AAAA Record */
     {
-      title: 'A/AAA Record',
+      title: 'A/AAAA Record',
       data: this.props.domainRecords.filter(r => typeEq('AAAA', r) || typeEq('A', r)),
       columns: [
         { title: 'Hostname', render: (r: Linode.Record) => r.name },
