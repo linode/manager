@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as moment from 'moment';
 
 import {
   withStyles,
@@ -8,7 +7,7 @@ import {
   WithStyles,
 } from 'material-ui';
 
-import eventTypes from 'src/eventTypes';
+import eventMessageGenerator from 'src/eventMessageGenerator';
 import UserNotificationListItem, {
   UserNotificationListItemProps,
 } from './UserNotificationListItem';
@@ -34,22 +33,27 @@ const UserNotificationsList: React.StatelessComponent<CombinedProps> = (props) =
 
   return (
     <React.Fragment>
-    {
-      (notifications as Linode.Notification[]).map((notification, key) =>
-        <UserNotificationListItem
-          key={key}
-          {...createNotificationProps(notification)}
-        />,
-      )
-    }
-    {
-      (events as Linode.Event[]).map((event, key) =>
-        <UserNotificationListItem
-          key={key}
-          {...createEventProps(event)}
-        />,
-      )
-    }
+      {
+        (notifications as Linode.Notification[]).map((notification, key) =>
+          <UserNotificationListItem
+            key={key}
+            {...createNotificationProps(notification)}
+          />,
+        )
+      }
+      {
+        (events as Linode.Event[])
+          .reduce((result, event): UserNotificationListItemProps[] => {
+            const title = eventMessageGenerator(event);
+            const success = event.status !== 'failed' && !event.seen;
+            const error = event.status === 'failed';
+
+            return title ? [...result, { title, success, error }] : result;
+          }, [])
+          .map((props: UserNotificationListItemProps, key: number) =>
+            <UserNotificationListItem key={key} {...props} />,
+        )
+      }
     </React.Fragment>
   );
 };
@@ -83,65 +87,6 @@ const createNotificationProps = (
   return linodeNotificationsTypeMap.hasOwnProperty(notification.type)
     ? linodeNotificationsTypeMap[notification.type]
     : linodeNotificationsTypeMap.default;
-};
-
-const createEventProps = (event: Linode.Event): UserNotificationListItemProps => {
-  const success = !event.seen;
-  const content = `${moment(`${event.created}Z`).fromNow()} by ${event.username}`;
-  const remaining = event.percent_complete;
-  const entity = (event.entity as Linode.Entity);
-  const options = eventTypes[event.action] || {
-    pastTenseAction: event.action,
-    presentTenseAction: event.action,
-  };
-  const verb = remaining && remaining < 100
-    ? options.presentTenseAction
-    : options.pastTenseAction;
-
-  const title = `${verb} ${entity.label}`;
-
-  const linodeEventActionMap = {
-    // linode_boot: {},
-    // linode_create: {},
-    // linode_delete: {},
-    // linode_shutdown: {},
-    // linode_reboot: {},
-    // linode_snapshot: {},
-    // linode_addip: {},
-    // linode_migrate: {},
-    // linode_rebuild: {},
-    // linode_clone: {},
-    // disk_create: {},
-    // disk_delete: {},
-    // disk_duplicate: {},
-    // disk_resize: {},
-    // backups_enable: {},
-    // backups_cancel: {},
-    // backups_restore: {},
-    // password_reset: {},
-    // domain_create: {},
-    // domain_delete: {},
-    // domain_record_create: {},
-    // domain_record_delete: {},
-    // stackscript_create: {},
-    // stackscript_publicize: {},
-    // stackscript_revise: {},
-    // stackscript_delete: {},
-    community_question_reply: {
-      title: entity.label,
-      success,
-      content: `${event.username} has replied to your question.`,
-    },
-    default: {
-      title,
-      success,
-      content,
-    },
-  };
-
-  return linodeEventActionMap.hasOwnProperty(event.action)
-    ? linodeEventActionMap[event.action]
-    : linodeEventActionMap.default;
 };
 
 export default styled<Props>(UserNotificationsList);
