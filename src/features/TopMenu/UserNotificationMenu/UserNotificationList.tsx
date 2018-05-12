@@ -1,11 +1,7 @@
 import * as React from 'react';
+import * as moment from 'moment';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
+import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
 
 import eventMessageGenerator from 'src/eventMessageGenerator';
 import UserNotificationListItem, {
@@ -45,10 +41,11 @@ const UserNotificationsList: React.StatelessComponent<CombinedProps> = (props) =
         (events as Linode.Event[])
           .reduce((result, event): UserNotificationListItemProps[] => {
             const title = eventMessageGenerator(event);
+            const content = `${moment(`${event.created}Z`).fromNow()} by ${event.username}`;
             const success = event.status !== 'failed' && !event.seen;
             const error = event.status === 'failed';
 
-            return title ? [...result, { title, success, error }] : result;
+            return title ? [...result, { title, content, success, error }] : result;
           }, [])
           .map((props: UserNotificationListItemProps, key: number) =>
             <UserNotificationListItem key={key} {...props} />,
