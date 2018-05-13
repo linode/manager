@@ -14,20 +14,12 @@ interface CreatorsForStatus {
 
 /** @see https://leo.stcloudstate.edu/grammar/tenses.html */
 export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
-  // backups_cancel: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
-  // backups_enable: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
+  backups_cancel: {
+    notification: e => `Backups have been cancelled for ${e.entity!.label}.`,
+  },
+  backups_enable: {
+    notification: e => `Backups have been enabled for ${e.entity!.label}.`,
+  },
   // backups_restore: {
   //   scheduled: e => ``,
   //   started: e => ``,
@@ -112,34 +104,18 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   //   finished: e => ``,
   //   notification: e => ``,
   // },
-  // domain_create: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
-  // domain_delete: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
-  // domain_record_create: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
-  // domain_record_delete: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
+  domain_create: {
+    notification: e => `Domain ${e.entity!.label} has been created.`,
+  },
+  domain_delete: {
+    notification: e => `Domain ${e.entity!.label} has been deleted.`,
+  },
+  domain_record_create: {
+    notification: e => `A domain record has been created for ${e.entity!.label}`,
+  },
+  domain_record_delete: {
+    notification: e => `A domain record has been deleted from ${e.entity!.label}`,
+  },
   // image_delete: {
   //   scheduled: e => ``,
   //   started: e => ``,
@@ -290,13 +266,12 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   //   finished: e => ``,
   //   notification: e => ``,
   // },
-  // password_reset: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
+  password_reset: {
+    scheduled: e => `A password reset for ${e.entity!.label} has been scheduled.`,
+    started: e => `The password for ${e.entity!.label} is being reset.`,
+    failed: e => `A password reset has failed for Linode ${e.entity!.label}.`,
+    finished: e => `Linode ${e.entity!.label} has had it's password reset.`,
+  },
   // payment_submitted: {
   //   scheduled: e => ``,
   //   started: e => ``,
@@ -332,20 +307,12 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   //   finished: e => ``,
   //   notification: e => ``,
   // },
-  // tfa_disabled: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
-  // tfa_enabled: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
+  tfa_disabled: {
+    notification: e => `Two-factor authentication has been disabled.`,
+  },
+  tfa_enabled: {
+    notification: e => `Two-factor authentication has been enabled.`,
+  },
   // ticket_attachment_upload: {
   //   scheduled: e => ``,
   //   started: e => ``,
@@ -411,11 +378,15 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   // },
 };
 
-export default (e: Linode.Event) => {
+export default (
+  e: Linode.Event,
+  onUnfound?: (e: Linode.Event) => void,
+  onError?: (e: Linode.Event, err: Error) => void,
+) => {
   const fn = path<EventMessageCreator>([e.action, e.status], eventMessageCreators);
 
   if (!fn) {
-    /** @todo Use Sentry to track? */
+    if (onUnfound) onUnfound(e);
     return;
   }
 
@@ -423,7 +394,7 @@ export default (e: Linode.Event) => {
   try {
     message = fn(e);
   } catch (error) {
-    /** @todo Use Sentry to track? */
+    if (onError) onError(e, error);
     return;
   }
 

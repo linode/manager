@@ -1,12 +1,18 @@
 import * as React from 'react';
 import * as moment from 'moment';
+import * as Raven from 'raven-js';
 
 import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
-
 import eventMessageGenerator from 'src/eventMessageGenerator';
 import UserNotificationListItem, {
   UserNotificationListItemProps,
 } from './UserNotificationListItem';
+
+const reportUnfoundEvent = (event: Linode.Event) =>
+  Raven.captureException('Unknown API event received.', { extra: { event } });
+
+const reportEventError = (e: Linode.Event, err: Error) =>
+  Raven.captureException(err);
 
 type ClassNames = 'root';
 
@@ -40,7 +46,7 @@ const UserNotificationsList: React.StatelessComponent<CombinedProps> = (props) =
       {
         (events as Linode.Event[])
           .reduce((result, event): UserNotificationListItemProps[] => {
-            const title = eventMessageGenerator(event);
+            const title = eventMessageGenerator(event, reportUnfoundEvent, reportEventError);
             const content = `${moment(`${event.created}Z`).fromNow()} by ${event.username}`;
             const success = event.status !== 'failed' && !event.seen;
             const error = event.status === 'failed';
