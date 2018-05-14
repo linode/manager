@@ -16,16 +16,16 @@ namespace Linode {
     zonefile: ZoneFile;
   }
 
-  type DomainStatus =
+  export type DomainStatus =
     'active'
     | 'disabled'
     | 'edit_mode';
 
-  type DomainType =
+  export type DomainType =
     'master'
     | 'slave';
 
-  type ZoneFile = {
+  export type ZoneFile = {
     rendered: string,
     status:
     'current'

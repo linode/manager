@@ -25,7 +25,8 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     '& .actionPanel': {
       paddingLeft: 0,
       paddingRight: 0,
-      marginLeft: -8,
+      marginLeft: -theme.spacing.unit,
+      marginTop: theme.spacing.unit * 2,
     },
     '& .selectionCard': {
       maxWidth: '100%',

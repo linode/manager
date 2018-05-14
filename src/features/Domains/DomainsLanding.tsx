@@ -22,6 +22,7 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import ActionsPanel from 'src/components/ActionsPanel';
 import IconTextLink from 'src/components/IconTextLink';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
+import setDocs from 'src/components/DocsSidebar/setDocs';
 
 import ActionMenu from './DomainActionMenu';
 import DomainCreateDrawer from './DomainCreateDrawer';
@@ -71,6 +72,19 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
       open: false,
     },
   };
+
+  static docs: Linode.Doc[] = [
+    {
+      title: 'Getting Started',
+      src: 'https://www.linode.com/docs/networking/dns/dns-manager-overview/#getting-started',
+      body: `The Domain Name System (DNS) attaches human-readable domain names to machine-usable IP
+      addresses. In many ways, it is the phone book of the Internet. Just like a phone book can
+      help you find the phone number of a business, DNS can take a domain name like google.com and
+      translate it into an IP address like 74.125.19.147, the IP address for Google’s homepage.
+      This global system allows users to remember the names of websites instead of their numeric
+      IP addresses.`,
+    },
+  ];
 
   refreshDomains() {
     getDomains()
@@ -262,6 +276,7 @@ const loaded = PromiseLoader<Props>({
 });
 
 export default compose(
+  setDocs(DomainsLanding.docs),
   withRouter,
   loaded,
   styled,
