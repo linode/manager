@@ -35,6 +35,7 @@ import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import Placeholder from 'src/components/Placeholder';
 import TextField from 'src/components/TextField';
 import Select from 'src/components/Select';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import { events$, resetEventsPolling } from 'src/events';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -121,6 +122,7 @@ interface State {
     backupCreated: string;
     backupID?: number;
   };
+  cancelBackupsAlertOpen: boolean;
 }
 
 type CombinedProps = Props & PreloadedProps & WithStyles<ClassNames> & RouteComponentProps<{}>;
@@ -160,6 +162,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
       open: false,
       backupCreated: '',
     },
+    cancelBackupsAlertOpen: false,
   };
 
   windows: string[][] = [];
@@ -222,12 +225,12 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
 
     this.days = [
       ['Choose a day', 'Scheduling'],
-      ['Sunday',  'Sunday'],
-      ['Monday',  'Monday'],
+      ['Sunday', 'Sunday'],
+      ['Monday', 'Monday'],
       ['Tuesday', 'Tuesday'],
       ['Wednesday', 'Wednesday'],
       ['Thursday', 'Thursday'],
-      ['Friday',  'Friday'],
+      ['Friday', 'Friday'],
       ['Saturday', 'Saturday'],
     ];
   }
@@ -246,8 +249,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
       });
   }
 
-  cancelBackups() {
-    const { linodeID } = this.props;
+  cancelBackups(linodeID: number) {
     cancelBackups(linodeID)
       .then(() => {
         sendToast('Backups are being cancelled for this Linode');
@@ -257,6 +259,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         pathOr([], ['response', 'data', 'errors'], errorResponse)
           .forEach((err: Linode.ApiFieldError) => sendToast(err.reason, 'error'));
       });
+    this.setState({ cancelBackupsAlertOpen: false });
   }
 
 
@@ -266,7 +269,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     takeSnapshot(linodeID, snapshotForm.label)
       .then(() => {
         sendToast('A snapshot is being taken');
-        this.setState({ snapshotForm : { label: '', errors: undefined } });
+        this.setState({ snapshotForm: { label: '', errors: undefined } });
         resetEventsPolling();
       })
       .catch((errorResponse) => {
@@ -283,16 +286,19 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         sendToast('Backup settings saved');
       })
       .catch((err) => {
-        this.setState({ settingsForm: {
-          ...settingsForm,
-          errors: path(['response', 'data', 'errors'], err),
-        }});
+        this.setState({
+          settingsForm: {
+            ...settingsForm,
+            errors: path(['response', 'data', 'errors'], err),
+          },
+        });
       });
   }
 
   openRestoreDrawer = (backupID: number, backupCreated: string) => {
-    this.setState({ restoreDrawer:
-      { open: true, backupID, backupCreated },
+    this.setState({
+      restoreDrawer:
+        { open: true, backupID, backupCreated },
     });
   }
 
@@ -320,7 +326,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     );
   }
 
-  Table = ({ backups }: { backups: Linode.LinodeBackup[]}): JSX.Element | null => {
+  Table = ({ backups }: { backups: Linode.LinodeBackup[] }): JSX.Element | null => {
     const { classes, history, linodeID } = this.props;
 
     return (
@@ -461,8 +467,10 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
             </InputLabel>
             <Select
               value={settingsForm.window}
-              onChange={e => this.setState({ settingsForm:
-                { ...settingsForm, window: e.target.value } })}
+              onChange={e => this.setState({
+                settingsForm:
+                  { ...settingsForm, window: e.target.value },
+              })}
               inputProps={{ name: 'window', id: 'window' }}
               data-qa-time-select
             >
@@ -480,8 +488,10 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
             </InputLabel>
             <Select
               value={settingsForm.day}
-              onChange={e => this.setState({ settingsForm:
-                { ...settingsForm, day: e.target.value } })}
+              onChange={e => this.setState({
+                settingsForm:
+                  { ...settingsForm, day: e.target.value },
+              })}
               inputProps={{ name: 'day', id: 'day' }}
               data-qa-weekday-select
             >
@@ -527,7 +537,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         {backups.length
           ? <this.Table backups={backups} />
           : <Paper className={classes.paper} data-qa-backup-description>
-              Automatic and manual backups will be listed here
+            Automatic and manual backups will be listed here
             </Paper>
         }
         <this.SnapshotForm />
@@ -539,7 +549,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
             ${classes.cancelButton}
             destructive
           `}
-          onClick={() => this.cancelBackups()}
+          onClick={() => this.setState({ cancelBackupsAlertOpen: true })}
           data-qa-cancel
         >
           Cancel Backups
@@ -563,6 +573,35 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
             sendToast('Backup restore started');
           }}
         />
+        <ConfirmationDialog
+          title="Confirm Cancellation"
+          actions={() =>
+            <ActionsPanel style={{ padding: 0 }}>
+              <Button
+                variant="raised"
+                color="secondary"
+                className="destructive"
+                onClick={() => this.cancelBackups(linodeID)}
+                data-qa-confirm-cancel
+              >
+                Cancel Backups
+              </Button>
+              <Button
+                onClick={() => this.setState({ cancelBackupsAlertOpen: false })}
+                variant="raised"
+                color="secondary"
+                className="cancel"
+                data-qa-cancel-cancel
+              >
+                Close
+            </Button>
+            </ActionsPanel>
+          }
+          open={this.state.cancelBackupsAlertOpen}
+        >
+          Cancelling backups associated with this Linode will
+           delete all existing backups. Are you sure?
+        </ConfirmationDialog>
       </React.Fragment>
     );
   }
