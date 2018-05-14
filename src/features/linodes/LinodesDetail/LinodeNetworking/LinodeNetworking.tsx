@@ -166,17 +166,17 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     const { classes } = this.props;
 
     return (
-      <TableRow key={ip.address}>
-        <TableCell>
+      <TableRow key={ip.address} data-qa-ip={ip.address}>
+        <TableCell data-qa-ip-address>
           {ip.address}
         </TableCell>
-        <TableCell>
+        <TableCell data-qa-rdns>
           {ip.rdns}
         </TableCell>
-        <TableCell>
+        <TableCell data-qa-type>
           {type}
         </TableCell>
-        <TableCell className={classes.action}>
+        <TableCell className={classes.action} data-qa-action>
           <LinodeNetworkingActionMenu
             onView={() => {
               this.setState({
@@ -228,7 +228,11 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <Typography variant="headline" className={classes.title}>
+        <Typography
+          variant="headline"
+          className={classes.title}
+          data-qa-title
+          >
           Networking
         </Typography>
         <Grid container justify="space-between" alignItems="flex-end">
@@ -236,7 +240,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
             <Typography
               variant="title"
               className={classes.ipv4Title}
-              data-qa-title
+              data-qa-ipv4-subheading
             >
               IPv4
             </Typography>
@@ -281,7 +285,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
             <Typography
               variant="title"
               className={classes.ipv6Title}
-              data-qa-title
+              data-qa-ipv6-subheading
             >
               IPv6
             </Typography>

@@ -33,7 +33,7 @@ const CreateIPv6Drawer: React.StatelessComponent<CombinedProps> = (props) => {
       title="Allocate IPv6 Ranges"
     >
       <React.Fragment>
-        <Typography variant="body1">
+        <Typography variant="body1" data-qa-service-notice>
           IPv6 addresses are allocated as ranges, which you can choose to
           distribute and further route yourself. These ranges can only be
           allocated by our support team. Please open a <Link
@@ -46,6 +46,7 @@ const CreateIPv6Drawer: React.StatelessComponent<CombinedProps> = (props) => {
             color="primary"
             className="cancel"
             onClick={props.onClose}
+            data-qa-cancel
           >
             Close
           </Button>

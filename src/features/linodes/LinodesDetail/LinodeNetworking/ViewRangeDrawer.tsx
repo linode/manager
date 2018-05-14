@@ -61,6 +61,7 @@ const ViewRangeDrawer: React.StatelessComponent<CombinedProps> = (props) => {
               variant="raised"
               color="secondary"
               onClick={props.onClose}
+              data-qa-cancel
             >
               Close
             </Button>
