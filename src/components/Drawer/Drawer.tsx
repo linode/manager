@@ -67,6 +67,7 @@ const DDrawer: React.StatelessComponent<CombinedProps> = (props) => {
         BackdropProps: { invisible: true },
         disableBackdropClick: true,
       }}
+      data-qa-drawer
       >
       <Grid
         container
@@ -84,6 +85,7 @@ const DDrawer: React.StatelessComponent<CombinedProps> = (props) => {
             color="secondary"
             onClick={props.onClose}
             className={classes.button}
+            data-qa-close-drawer
           >
           <Close />
           </Button>
