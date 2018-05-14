@@ -20,7 +20,7 @@ import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableW
 import Grid from 'src/components/Grid';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import ErrorState from 'src/components/ErrorState';
-
+import setDocs from 'src/components/DocsSidebar/setDocs';
 import DomainRecords from './DomainRecords';
 
 
@@ -90,6 +90,17 @@ class DomainDetail extends React.Component<CombinedProps, State> {
     history.push(`${routeName}`);
   }
 
+  static docs: Linode.Doc[] = [
+    {
+      title: 'DNS Manager Overview',
+      src: 'https://www.linode.com/docs/networking/dns/dns-manager-overview/',
+      body: `The DNS Manager is a comprehensive DNS management interface available within the
+      Linode Manager that allows you to add DNS records for all of your domain names. This guide
+      covers the use of Linode’s DNS Manager and basic domain zone setup. For an introduction to
+      DNS in general, please see our Introduction to DNS Records guide.`,
+    },
+  ];
+
   tabs = [
     { routeName: `${this.props.match.url}/records`, title: 'DNS Records' },
     { routeName: `${this.props.match.url}/check-zone`, title: 'Check Zone', disabled: true },
@@ -104,6 +115,17 @@ class DomainDetail extends React.Component<CombinedProps, State> {
       .then(({ data: { data } }) => {
         this.setState({ records: data });
 
+      })
+      .catch(console.error);
+  }
+
+  updateDomain = () => {
+    const { match: { params: { domainId } } } = this.props;
+    if (!domainId) { return; }
+
+    getDomain(domainId)
+      .then(({ data }) => {
+        this.setState({ domain: data });
       })
       .catch(console.error);
   }
@@ -163,6 +185,7 @@ class DomainDetail extends React.Component<CombinedProps, State> {
                 domain={domain}
                 domainRecords={records}
                 updateRecords={this.updateRecords}
+                updateDomain={this.updateDomain}
               />
             }
           />
@@ -184,6 +207,7 @@ const reloaded = reloadableWithRouter<PreloadedProps, { domainId?: number }>(
 );
 
 export default compose(
+  setDocs(DomainDetail.docs),
   reloaded,
   styled,
   preloaded,

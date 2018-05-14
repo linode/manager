@@ -22,19 +22,7 @@ export const getDomainRecords = (domainId: number) => Request(
   setMethod('GET'),
 );
 
-export interface CreateDomainRecordDataType {
-  name?: string;
-  port?: number;
-  priority?: number;
-  protocol?: string;
-  service?: string;
-  tag?: string;
-  target?: string;
-  ttl_sec?: number;
-  type?: Linode.RecordType;
-  weight?: number;
-}
-export const createDomainRecord = (domainId: number, data: CreateDomainRecordDataType) => Request(
+export const createDomainRecord = (domainId: number, data: Partial<Linode.Record>) => Request(
   setURL(`${API_ROOT}/domains/${domainId}/records`),
   setMethod('POST'),
   setData(data),
@@ -43,7 +31,7 @@ export const createDomainRecord = (domainId: number, data: CreateDomainRecordDat
 export const updateDomainRecord = (
   domainId: number,
   recordId: number,
-  data: CreateDomainRecordDataType,
+  data: Partial<Linode.Record>,
 ) => Request(
   setURL(`${API_ROOT}/domains/${domainId}/records/${recordId}`),
   setMethod('PUT'),
@@ -59,6 +47,15 @@ export const createDomain = (data: Partial<Linode.Domain>) => Request(
   setData(data),
   setURL(`${API_ROOT}/domains`),
   setMethod('POST'),
+);
+
+export const updateDomain = (
+  domainId: number,
+  data: Partial<Linode.Domain>,
+) => Request(
+  setURL(`${API_ROOT}/domains/${domainId}`),
+  setMethod('PUT'),
+  setData(data),
 );
 
 export const deleteDomain = (domainID: number) => Request(
