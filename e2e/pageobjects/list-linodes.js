@@ -47,9 +47,12 @@ export class ListLinodes extends Page {
     }
 
     navigateToDetail(linode) {
+        if(!linode) {
+            this.linode[0].$(this.linodeLabel.selector).click();
+            return;
+        }
         linode.$(this.linodeLabel.selector).click();
     }
-
 
     gridElemsDisplay() {
         const header = this.subheader;

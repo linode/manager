@@ -70,7 +70,7 @@ class CreateIPv4Drawer extends React.Component<CombinedProps, State> {
         title="Allocate Public IPv4 Address"
       >
         <React.Fragment>
-          <Typography variant="body1">
+          <Typography variant="body1" data-qa-service-notice>
             Public IP addresses, over and above the one included with each
             Linode, incur an additional monthly charge. If you need an
             additional Public IP Address you must request one. Please open a
@@ -80,6 +80,7 @@ class CreateIPv4Drawer extends React.Component<CombinedProps, State> {
             <Notice
               style={{ marginTop: 36 }}
               error
+              data-qa-notice
             >
               {substituteLink(hasErrorFor('none') || '', 'support ticket', '/support')}
             </Notice>
@@ -89,6 +90,7 @@ class CreateIPv4Drawer extends React.Component<CombinedProps, State> {
               variant="raised"
               color="primary"
               onClick={() => this.create()}
+              data-qa-submit
             >
               Allocate
             </Button>
@@ -97,6 +99,7 @@ class CreateIPv4Drawer extends React.Component<CombinedProps, State> {
               color="secondary"
               className="cancel"
               onClick={onClose}
+              data-qa-cancel
             >
               Close
             </Button>
