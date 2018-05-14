@@ -1,5 +1,9 @@
-import Axios from 'axios';
 import { API_ROOT } from 'src/constants';
+import Request, { setURL, setMethod } from './index';
 
-export const getRegions = () => Axios.get(`${API_ROOT}/regions`)
+type GetRegionsPage = Promise<Linode.ResourcePage<Linode.Region>>;
+export const getRegions = (): GetRegionsPage => Request(
+  setURL(`${API_ROOT}/regions`),
+  setMethod('GET'),
+)
   .then(response => response.data);
