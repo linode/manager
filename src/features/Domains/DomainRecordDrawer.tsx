@@ -542,7 +542,11 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     ].filter(Boolean);
 
     return (
-      <Drawer title={`${mode} ${type} Record`} open={open} onClose={this.onClose}>
+      <Drawer
+        title={`${path([mode], modeMap)} ${path([type], typeMap)} Record`}
+        open={open}
+        onClose={this.onClose}
+      >
         {otherErrors.length > 0 && otherErrors.map(err => <Notice error text={err} />)}
         {fields.map((field: any, idx: number) => field(idx))}
         <ActionsPanel>
@@ -561,7 +565,24 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
   }
 }
 
+const modeMap = {
+  create: 'Create',
+  edit: 'Edit',
+};
 
+const typeMap = {
+  master: 'Master',
+  slave: 'Slave',
+  A: 'A',
+  AAAA: 'AAAA',
+  CAA: 'CAA',
+  CNAME: 'CNAME',
+  MX: 'MX',
+  NS: 'NS',
+  PTR: 'PTR',
+  SRV: 'SRV',
+  TXT: 'TXT',
+};
 
 const styled = withStyles(styles, { withTheme: true });
 
