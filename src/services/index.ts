@@ -16,19 +16,22 @@ const L = {
   method: lensPath(['method']),
   params: lensPath(['params']),
   data: lensPath(['data']),
+  headers: lensPath(['headers']),
 };
 
 /** URL */
 export const setURL = (url: string) => set(L.url, url);
 
 /** METHOD */
-export const setMethod = (method: 'GET'|'POST'|'PUT'|'DELETE') => set(L.method, method);
+export const setMethod = (method: 'GET' | 'POST' | 'PUT' | 'DELETE') => set(L.method, method);
 
 /** Param */
 export const setParams = (params: any) => set(L.params, params);
 
 /** Data */
 export const setData = (data: any) => set(L.data, data);
+
+export const setHeaders = (headers: any) => set(L.headers, headers);
 
 /** Generator */
 export default (...fns: Function[]) => {
