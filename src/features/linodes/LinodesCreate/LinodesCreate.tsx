@@ -247,6 +247,14 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     );
   }
 
+  scrollToTop = () => {
+    window.scroll({
+      top: 0,
+      left: 0,
+      behavior: 'smooth',
+    });
+  }
+
   tabs = [
     {
       title: 'Create from Image',
@@ -255,7 +263,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
         const generalError = hasErrorFor('none');
         return (
           <React.Fragment>
-            {!!generalError &&
+            {generalError &&
               <Notice text={generalError} error={true} />
             }
             <SelectImagePanel
@@ -302,7 +310,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
         const generalError = hasErrorFor('none');
         return (
           <React.Fragment>
-            {!!generalError &&
+            {generalError &&
               <Notice text={generalError} error={true} />
             }
             <SelectLinodePanel
@@ -360,7 +368,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
         const generalError = hasErrorFor('none');
         return (
           <React.Fragment>
-            {!!generalError &&
+            {generalError &&
               <Notice text={generalError} error={true} />
             }
             <Notice text={`This newly created Linode wil be created with
@@ -433,11 +441,6 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     if (selectedTab === this.backupTabIndex) {
       /* we are creating from backup */
       if (!selectedLinodeID) {
-        window.scroll({
-          top: 0,
-          left: 0,
-          behavior: 'smooth',
-        });
         this.setState({
           errors: [
             { field: 'linode_id', reason: 'You must select a Linode' },
@@ -447,11 +450,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       }
       if (!selectedBackupID) {
         /* a backup selection is also required */
-        window.scroll({
-          top: 0,
-          left: 0,
-          behavior: 'smooth',
-        });
+        this.scrollToTop();
         this.setState({
           errors: [
             { field: 'backup_id', reason: 'You must select a Backup' },
@@ -465,11 +464,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       // if selectedCloneTargetLinode is 'undefined,' no target Linode has been selected
       // if selectedCloneTargetLinode is null, that means we're cloning to a new Linode
       if (!selectedLinodeID || typeof selectedCloneTargetLinodeID === 'undefined') {
-        window.scroll({
-          top: 0,
-          left: 0,
-          behavior: 'smooth',
-        });
+        this.scrollToTop();
         this.setState({
           errors: [
             { field: 'linode_id', reason: 'You must select both a source and target Linode' },
@@ -550,11 +545,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       .catch((error) => {
         if (!this.mounted) { return; }
 
-        window.scroll({
-          top: 0,
-          left: 0,
-          behavior: 'smooth',
-        });
+        this.scrollToTop();
 
         this.setState(() => ({
           errors: error.response && error.response.data && error.response.data.errors,

@@ -43,7 +43,7 @@ interface Props {
   selectedLinodeID?: number;
   selectedCloneTargetLinodeID?: number | null;
   handleSelection: (key: string) =>
-    (event: React.SyntheticEvent<HTMLElement>, value: any) => void;
+    (event: React.SyntheticEvent<HTMLElement>, value?: string | null) => void;
   error?: string;
   header?: string;
   isCloneTarget?: boolean;
