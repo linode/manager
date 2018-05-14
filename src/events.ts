@@ -97,11 +97,9 @@ export const setInitialEvents = when<EventsResponse, EventsResponse>(
 );
 
 export function requestEvents() {
-  getEvents({
-    'X-Filter': JSON.stringify(
-      generatePollingFilter(filterDatestamp, Object.keys(pollIDs)),
-    ),
-  })
+  getEvents(
+    generatePollingFilter(filterDatestamp, Object.keys(pollIDs)),
+  )
     .then(setInitialEvents)
     .then(response => response.data.data)
     .then((data) => {

@@ -16,7 +16,7 @@ const L = {
   method: lensPath(['method']),
   params: lensPath(['params']),
   data: lensPath(['data']),
-  headers: lensPath(['headers']),
+  xFilter: lensPath(['headers', 'x-filter']),
 };
 
 /** URL */
@@ -31,7 +31,8 @@ export const setParams = (params: any) => set(L.params, params);
 /** Data */
 export const setData = (data: any) => set(L.data, data);
 
-export const setHeaders = (headers: any) => set(L.headers, headers);
+/** X-Filter */
+export const setXFilter = (xFilter: any) => set(L.xFilter, () => JSON.stringify(xFilter));
 
 /** Generator */
 export default (...fns: Function[]) => {

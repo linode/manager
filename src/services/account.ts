@@ -1,13 +1,13 @@
 import { AxiosPromise } from 'axios';
 import { API_ROOT } from 'src/constants';
-import Request, { setMethod, setURL, setHeaders } from 'src/services';
+import Request, { setMethod, setURL, setXFilter } from 'src/services';
 
 export type EventsPromise = AxiosPromise<Linode.ResourcePage<Linode.Event>>;
-export const getEvents = (headers: any): EventsPromise => {
+export const getEvents = (xFilter: any): EventsPromise => {
   return Request(
     setURL(`${API_ROOT}/account/events`),
     setMethod('GET'),
-    setHeaders(headers),
+    setXFilter(xFilter),
   ).then((response) => {
     return response;
   });

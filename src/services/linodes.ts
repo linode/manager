@@ -1,78 +1,121 @@
 import Axios, { AxiosPromise } from 'axios';
 import { omit } from 'ramda';
 import { API_ROOT } from 'src/constants';
-import Request, { genAxiosConfig, setData, setURL, setMethod } from '.';
+import Request, { genAxiosConfig, setData, setURL, setMethod, setXFilter } from '.';
 
 /* tslint:disable-next-line */
 export type RescueRequestObject = Pick<Linode.Devices, 'sda' | 'sdb' | 'sdc' | 'sdd' | 'sde' | 'sdf' | 'sdg'>
-
 export const rescueLinode = (linodeId: number, devices: RescueRequestObject): Promise<{}> =>
-  Axios.post(
-    `${API_ROOT}/linode/instances/${linodeId}/rescue`,
-    { devices: omit(['sdh'], devices) },
+  Request(
+    setURL(`${API_ROOT}/linode/instances/${linodeId}/rescue`),
+    setMethod('POST'),
+    setData({ devices: omit(['sdh'], devices) }),
   );
 
 type GetLinodeType = Promise<Linode.ResourcePage<Linode.Config>>;
-export const getLinodeConfigs = (id: number): GetLinodeType =>
-  Axios.get(`${API_ROOT}/linode/instances/${id}/configs`)
-    .then(response => response.data);
+
+export const getLinodeConfigs = (id: number): GetLinodeType => Request(
+  setURL(`${API_ROOT}/linode/instances/${id}/configs`),
+  setMethod('GET'),
+)
+  .then(response => response.data);
 
 type GetLinode = Promise<Linode.SingleResourceState<Linode.Linode>>;
-export const getLinode = (id: number): GetLinode =>
-  Axios.get(`${API_ROOT}/linode/instances/${id}`);
+export const getLinode = (id: number): GetLinode => Request(
+  setURL(`${API_ROOT}/linode/instances/${id}`),
+  setMethod('GET'),
+);
 
 type GetLinodeVolumesType = Promise<Linode.ResourcePage<Linode.Volume>>;
-export const getLinodeVolumes = (id: number): GetLinodeVolumesType =>
-  Axios.get(`${API_ROOT}/linode/instances/${id}/volumes`)
-    .then(response => response.data);
+export const getLinodeVolumes = (id: number): GetLinodeVolumesType => Request(
+  setURL(`${API_ROOT}/linode/instances/${id}/volumes`),
+  setMethod('GET'),
+)
+  .then(response => response.data);
 
 type GetLinodeDisksType = Promise<Linode.ResourcePage<Linode.Disk>>;
-export const getLinodeDisks = (id: number): GetLinodeDisksType =>
-  Axios.get(`${API_ROOT}/linode/instances/${id}/disks`)
-    .then(response => response.data);
+export const getLinodeDisks = (id: number): GetLinodeDisksType => Request(
+  setURL(`${API_ROOT}/linode/instances/${id}/disks`),
+  setMethod('GET'),
+)
+  .then(response => response.data);
 
 type GetLinodeBackupsType = Promise<Linode.LinodeBackupsResponse>;
-export const getLinodeBackups = (id: number): GetLinodeBackupsType =>
-  Axios.get(`${API_ROOT}/linode/instances/${id}/backups`)
-    .then(response => response.data);
+export const getLinodeBackups = (id: number): GetLinodeBackupsType => Request(
+  setURL(`${API_ROOT}/linode/instances/${id}/backups`),
+  setMethod('GET'),
+)
+  .then(response => response.data);
 
-export const enableBackups = (id: number): AxiosPromise =>
-  Axios.post(`${API_ROOT}/linode/instances/${id}/backups/enable`);
+export const enableBackups = (id: number): AxiosPromise => Request(
+  setURL(`${API_ROOT}/linode/instances/${id}/backups/enable`),
+  setMethod('POST'),
+);
 
-export const cancelBackups = (id: number): AxiosPromise =>
-  Axios.post(`${API_ROOT}/linode/instances/${id}/backups/cancel`);
+export const cancelBackups = (id: number): AxiosPromise => Request(
+  setURL(`${API_ROOT}/linode/instances/${id}/backups/cancel`),
+  setMethod('POST'),
+);
 
-export const takeSnapshot = (id: number, label: string): AxiosPromise =>
-  Axios.post(`${API_ROOT}/linode/instances/${id}/backups`, { label });
+export const takeSnapshot = (id: number, label: string): AxiosPromise => Request(
+  setURL(`${API_ROOT}/linode/instances/${id}/backups`),
+  setMethod('POST'),
+  setData({ label }),
+);
+
+// export const updateBackupsWindow = (id: number, day: string, window: string): AxiosPromise =>
+//   Axios.put(`${API_ROOT}/linode/instances/${id}`,
+//     { backups: { schedule: { day, window } } });
 
 export const updateBackupsWindow = (id: number, day: string, window: string): AxiosPromise =>
-  Axios.put(`${API_ROOT}/linode/instances/${id}`,
-    { backups: { schedule: { day, window } } });
+  Request(
+    setURL(`${API_ROOT}/linode/instances/${id}`),
+    setMethod('PUT'),
+    setData({ backups: { schedule: { day, window } } }),
+  );
 
-export const getLinodeIPs = (id: number): Promise<Linode.LinodeIPsResponse> =>
-  Axios.get(`${API_ROOT}/linode/instances/${id}/ips`)
-    .then(response => response.data);
+export const getLinodeIPs = (id: number): Promise<Linode.LinodeIPsResponse> => Request(
+  setURL(`${API_ROOT}/linode/instances/${id}/ips`),
+  setMethod('GET'),
+)
+  .then(response => response.data);
 
-export const allocatePrivateIP = (linodeID: number) =>
-  Axios.post(`${API_ROOT}/linode/instances/${linodeID}/ips`, { type: 'ipv4', public: false })
-    .then(response => response.data);
+export const allocatePrivateIP = (linodeID: number) => Request(
+  setURL(`${API_ROOT}/linode/instances/${linodeID}/ips`),
+  setMethod('POST'),
+  setData({ type: 'ipv4', public: false }),
+).then(response => response.data);
 
-export const allocatePublicIP = (linodeID: number) =>
-  Axios.post(`${API_ROOT}/linode/instances/${linodeID}/ips`, { type: 'ipv4', public: true })
-    .then(response => response.data);
+export const allocatePublicIP = (linodeID: number) => Request(
+  setURL(`${API_ROOT}/linode/instances/${linodeID}/ips`),
+  setMethod('POST'),
+  setData({ type: 'ipv4', public: false }),
+).then(response => response.data);
 
 type RebuildLinodeType = Promise<{}>;
 export const rebuildLinode = (id: number, image: string, password: string): RebuildLinodeType =>
-  Axios.post(`${API_ROOT}/linode/instances/${id}/rebuild`, { image, root_pass: password })
-    .then(response => response.data);
+  Request(
+    setURL(`${API_ROOT}/linode/instances/${id}/rebuild`),
+    setMethod('POST'),
+    setData({ image, root_pass: password }),
+  ).then(response => response.data);
 
-export const resizeLinode = (id: number, type: string): Promise<{}> => Axios
-  .post(`${API_ROOT}/linode/instances/${id}/resize`, { type });
+export const resizeLinode = (id: number, type: string): Promise<{}> => Request(
+  setURL(`${API_ROOT}/linode/instances/${id}/resize`),
+  setMethod('POST'),
+  setData({ type }),
+);
 
 type GetLinodes = Promise<Linode.ResourcePage<Linode.Linode>>;
-export const getLinodes = (params?: any, filter?: any): GetLinodes =>
-  Axios.get(`${API_ROOT}/linode/instances/`, genAxiosConfig(params, filter))
-    .then(response => response.data);
+export const getLinodes = (params?: any, filter?: any): GetLinodes => Request(
+  setURL(`${API_ROOT}/linode/instances/`),
+  setMethod('GET'),
+
+  () => (filter) && setXFilter(filter),
+)
+  .then(response => response.data);
+// Axios.get(`${API_ROOT}/linode/instances/`, genAxiosConfig(params, filter))
+//   .then(response => response.data);
 
 type GetLinodesPage = Promise<Linode.ResourcePage<Linode.Linode>>;
 export const getLinodesPage = (page: number): GetLinodesPage =>
