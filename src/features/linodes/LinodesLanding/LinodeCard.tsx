@@ -20,11 +20,13 @@ import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSe
 import { weblishLaunch } from 'src/features/Weblish';
 import Grid from 'src/components/Grid';
 import CircleProgress from 'src/components/CircleProgress';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import ActionsPanel from 'src/components/ActionsPanel';
 
 import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';
 import LinodeActionMenu from './LinodeActionMenu';
-import { rebootLinode } from './powerActions';
+import { rebootLinode, powerOffLinode } from './powerActions';
 import { typeLabelLong } from '../presentation';
 import transitionStatus from '../linodeTransitionStatus';
 import LinodeStatusIndicator from './LinodeStatusIndicator';
@@ -127,6 +129,13 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   },
 });
 
+type BootAction = 'reboot' | 'power_down' | null;
+
+interface State {
+  powerAlertOpen: boolean;
+  bootOption: BootAction;
+}
+
 interface Props {
   linodeId: number;
   linodeStatus: Linode.LinodeStatus;
@@ -141,7 +150,14 @@ interface Props {
   openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
 }
 
-class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
+type CombinedProps = Props & WithStyles<CSSClasses>;
+
+class LinodeCard extends React.Component<CombinedProps, State> {
+  state: State = {
+    powerAlertOpen: false,
+    bootOption: null,
+  };
+
   renderTitle() {
     const { classes, linodeStatus, linodeId, linodeLabel, linodeNotification } = this.props;
 
@@ -187,31 +203,43 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
     );
   }
 
+  toggleDialog = () => {
+    this.setState({ powerAlertOpen: !this.state.powerAlertOpen });
+  }
+
+  rebootOrPowerLinode = (bootAction: BootAction) => {
+    const { openConfigDrawer, linodeId, linodeLabel } = this.props;
+    if (bootAction === 'reboot') {
+      rebootLinode(openConfigDrawer, linodeId, linodeLabel);
+    }
+    powerOffLinode(linodeId, linodeLabel);
+  }
+
   loadedState = () => {
     const { classes, image, type, linodeIpv4, linodeIpv6, linodeRegion } = this.props;
 
     return (
       <CardContent className={`${classes.cardContent} ${classes.customeMQ}`}>
-      <div>
-        {image && type &&
-        <div className={classes.cardSection} data-qa-linode-summary>
-          {typeLabelLong(type.memory, type.disk, type.vcpus)}
+        <div>
+          {image && type &&
+            <div className={classes.cardSection} data-qa-linode-summary>
+              {typeLabelLong(type.memory, type.disk, type.vcpus)}
+            </div>
+          }
+          <div className={classes.cardSection} data-qa-region>
+            <RegionIndicator region={linodeRegion} />
+          </div>
+          <div className={classes.cardSection} data-qa-ips>
+            <IPAddress ips={linodeIpv4} copyRight />
+            <IPAddress ips={[linodeIpv6]} copyRight />
+          </div>
+          {image && type &&
+            <div className={classes.cardSection} data-qa-image>
+              {image.label}
+            </div>
+          }
         </div>
-        }
-        <div className={classes.cardSection} data-qa-region>
-          <RegionIndicator region={linodeRegion} />
-        </div>
-        <div className={classes.cardSection} data-qa-ips>
-          <IPAddress ips={linodeIpv4} copyRight />
-          <IPAddress ips={[linodeIpv6]} copyRight />
-        </div>
-        {image && type &&
-        <div className={classes.cardSection} data-qa-image>
-          {image.label}
-        </div>
-        }
-      </div>
-    </CardContent>
+      </CardContent>
     );
   }
 
@@ -234,6 +262,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
   render() {
     const { classes, openConfigDrawer, linodeId, linodeLabel, linodeStatus } = this.props;
     const loading = transitionStatus.includes(linodeStatus);
+    const { bootOption, powerAlertOpen } = this.state;
 
     return (
       <Grid item xs={12} sm={6} lg={4} xl={3} data-qa-linode={linodeLabel}>
@@ -243,35 +272,68 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
             action={
               <div style={{ position: 'relative', top: 6 }}>
                 <LinodeActionMenu
-                 linodeId={linodeId}
-                 linodeLabel={linodeLabel}
-                 linodeStatus={linodeStatus}
-                 openConfigDrawer={openConfigDrawer}
+                  linodeId={linodeId}
+                  linodeLabel={linodeLabel}
+                  linodeStatus={linodeStatus}
+                  openConfigDrawer={openConfigDrawer}
                 />
               </div>
             }
             className={classes.customeMQ}
           />
           {<Divider />}
-          { loading ? this.loadingState() : this.loadedState() }
+          {loading ? this.loadingState() : this.loadedState()}
           <CardActions className={classes.cardActions}>
             <Button
               className={`${classes.button} ${classes.consoleButton}`}
               onClick={() => weblishLaunch(`${linodeId}`)}
               data-qa-console
             >
-             Launch Console
+              Launch Console
             </Button>
             <Button
               className={`${classes.button}
               ${classes.rebootButton}`}
-              onClick={() => rebootLinode(openConfigDrawer, linodeId, linodeLabel)}
+              onClick={() => {
+                console.log(this.state);
+                this.setState({ powerAlertOpen: true, bootOption: 'reboot' });
+              }}
               data-qa-reboot
             >
               Reboot
             </Button>
           </CardActions>
         </Card>
+        <ConfirmationDialog
+          title={(bootOption === 'reboot') ? 'Confirm Reboot' : 'Powering Down'}
+          actions={() =>
+            <ActionsPanel style={{ padding: 0 }}>
+              <Button
+                variant="raised"
+                color="secondary"
+                className="destructive"
+                onClick={() => this.rebootOrPowerLinode(bootOption)}
+                data-qa-confirm-cancel
+              >
+                Cancel Backups
+              </Button>
+              <Button
+                onClick={() => this.setState({ powerAlertOpen: false })}
+                variant="raised"
+                color="secondary"
+                className="cancel"
+                data-qa-cancel-cancel
+              >
+                Cancel
+            </Button>
+            </ActionsPanel>
+          }
+          open={powerAlertOpen}
+        >
+          {bootOption === 'reboot'
+            ? 'Are you sure you want to reboot your Linode'
+            : 'Are you sure you want to power down your Linode'}
+        </ConfirmationDialog>
       </Grid>
     );
   }
