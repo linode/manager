@@ -83,22 +83,30 @@ exports.deleteAll = (token) => {
 
 
 exports.removeAllLinodes = (token) => {
-    const linodesEndpoint = '/linode/instances';
-
-    const instance = axios.create({
-            baseURL: API_ROOT,
-            timeout: 1000,
-            headers: { 'Authorization': `Bearer ${token}`},
-    });
-
     return new Promise((resolve, reject) => {
-        instance.get(`${API_ROOT}${linodesEndpoint}`)
+        const linodesEndpoint = '/linode/instances';
+
+        const instance = axios.create({
+                baseURL: API_ROOT,
+                timeout: 1000,
+                headers: { 'Authorization': `Bearer ${token}`},
+        });
+
+        const removeInstance = (res, endpoint) => {
+            return instance.delete(`${endpoint}/${res.id}`)
+                .then(res => res)
+                .catch((err) => {
+                    console.log('Error', err);
+                    return err
+                });
+        }
+
+        return instance.get(linodesEndpoint)
             .then(res => {
-                resolve(res.data.data.forEach(linode => {
-                    instance.delete(`${API_ROOT}${linodesEndpoint}/${linode.id}`)
-                    .then(() => {});
-                }));
+                res.data.data.forEach(linode => {
+                    removeInstance(linode, linodesEndpoint)
+                });
             })
             .catch(err => reject(err));
-    })
+    });
 }

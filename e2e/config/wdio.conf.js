@@ -290,7 +290,12 @@ exports.config = {
     onComplete: function(exitCode, config, capabilities) {
         const token = readToken();
         return removeAllLinodes(token)
-            .then(() => {})
-            .catch(err => console.log(err));
+            .then(() => {
+                resolve();
+            })
+            .catch(err => {
+                console.log(err);
+                reject(err);
+            });
     }
 }
