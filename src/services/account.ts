@@ -8,7 +8,8 @@ export const getEvents = (xFilter: any): EventsPromise => {
     setURL(`${API_ROOT}/account/events`),
     setMethod('GET'),
     setXFilter(xFilter),
-  ).then((response) => {
-    return response;
-  });
+  )
+    .then((response) => {
+      return response;
+    });
 };
