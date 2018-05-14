@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { storiesOf } from '@storybook/react';
 
-import Button from 'material-ui/Button';
-
 import ActionsPanel from '../ActionsPanel';
 import ThemeDecorator from '../../utilities/storybookDecorators';
 import Drawer from './Drawer';
 import TextField from '../TextField';
+
+import Button from 'src/components/Button';
 
 class Example extends React.Component {
   state = { open: false };
@@ -23,11 +23,6 @@ class Example extends React.Component {
           This is some test copy which acts as content for this Drawer component.
           It's very interesting and you should read all of it. This text has to be sufficiently
           long to test that it doesn't expand the drawer to an unreasonable width.
-          <TextField
-            label="Input Some Text"
-            placeholder="This is a placeholder"
-            data-qa-text-field
-          />
           <ActionsPanel>
             <Button
               variant="raised"
@@ -40,6 +35,7 @@ class Example extends React.Component {
               variant="raised"
               color="secondary"
               className="cancel"
+              onClick={this.toggleDrawer(false)}
               data-qa-cancel
             >
               Cancel
