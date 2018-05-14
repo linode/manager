@@ -34,13 +34,9 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   //   finished: e => ``,
   //   notification: e => ``,
   // },
-  // credit_card_updated: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
+  credit_card_updated: {
+    notification: e => `Credit card information has been updated.`,
+  },
   // disk_create: {
   //   scheduled: e => ``,
   //   started: e => ``,
@@ -76,34 +72,18 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   //   finished: e => ``,
   //   notification: e => ``,
   // },
-  // dns_record_create: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
-  // dns_record_delete: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
-  // dns_zone_create: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
-  // dns_zone_delete: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
+  dns_record_create: {
+    notification: e => `DNS record added to ${e.entity!.label}`,
+  },
+  dns_record_delete: {
+    notification: e => `DNS record removed from ${e.entity!.label}`,
+  },
+  dns_zone_create: {
+    notification: e => `DNS zone add to ${e.entity!.label}`,
+  },
+  dns_zone_delete: {
+    notification: e => `DNS zone removed from ${e.entity!.label}`,
+  },
   domain_create: {
     notification: e => `Domain ${e.entity!.label} has been created.`,
   },
