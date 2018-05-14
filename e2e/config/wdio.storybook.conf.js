@@ -13,6 +13,8 @@ const selectedBrowser = () => {
     }
     return browserConf['headlessChrome'];
 }
+
+const seleniumSettings = require('./selenium-config');
 const specsToRun = argv.file ? [ argv.file ] : ['./src/components/**/*.spec.js'];
 const servicesToStart = process.env.DOCKER || argv.debug ? [] : ['selenium-standalone'];
 
@@ -27,11 +29,16 @@ exports.config = merge(wdioMaster.config, {
         }
     },
     services: servicesToStart,
-    seleniumInstallArgs: { config: './selenium-config.js' },
-    seleniumArgs: { config: './selenium-config.js' },
+    seleniumInstallArgs: seleniumSettings,
+    seleniumArgs: seleniumSettings,
     before: function (capabilities, specs) {
         browserCommands();
         browser.url(constants.routes.storybook);
+
+        // Collapse first story
+        const defaultChildStories = $$('[data-name]')[0].$('[data-name]');
+        $$('[data-name]')[0].click();
+        defaultChildStories.waitForVisible(3000, true);
     },
     beforeSuite: function(suite) {
         // Do nothing before suites

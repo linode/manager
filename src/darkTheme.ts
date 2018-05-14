@@ -151,13 +151,6 @@ const LinodeTheme: Linode.Theme = {
             borderColor: '#963530',
           },
         },
-        '&.loading': {
-          '& svg': {
-            width: 22,
-            height: 22,
-            animation: 'rotate 2s linear infinite',
-          },
-        },
       },
     },
     MuiButtonBase: {

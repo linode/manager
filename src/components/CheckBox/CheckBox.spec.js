@@ -18,6 +18,7 @@ describe('Checkbox Component Suite', () => {
     });
 
     it('should display checkboxes on interactive story', () => {
+        browser.click('[data-name="Interactive"]');
         waitForFocus('[data-qa-checked]');
         const checkboxes = $$('[data-qa-checked]'); 
         checkboxes.forEach(e => expect(e.isVisible()).toBe(true));

@@ -18,6 +18,6 @@ script:
       - yarn run lint
       - yarn test --coverage --maxWorkers=2
       - yarn storybook:e2e
-      - pkill -f selenium-standalone
+      - "pkill -f selenium-standalone || :"
       - pkill -f storybook
       - cat ./coverage/lcov.info | ./node_modules/.bin/coveralls

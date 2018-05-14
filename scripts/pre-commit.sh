@@ -28,7 +28,7 @@ if [[ $changes =~ .*src\/components.* ]]; then
     echo $? >| .tmp.storybook.status
 
     # Ensure we cleanup any leftover processes
-    $( pkill -f selenium-standalone )
+    $( pkill -f selenium-standalone || : )
     
     if [[ $storybookRunning -eq "1" ]]; then
         $( pkill -f storybook )

@@ -3,11 +3,9 @@ const { waitForFocus, executeInAllStories } = require('../../../e2e/utils/storyb
 describe('Tags Suite', () => {
     const menuItem = '[data-name="Tags"]';
     const childStories = [
-        '[data-name="primary"]', '[data-name="white"]',
-        '[data-name="gray"]', '[data-name="lightGray"]',
-        '[data-name="blue"]', '[data-name="lightBlue"]',
-        '[data-name="green"]', '[data-name="lightGreen"]',
-        '[data-name="yellow"]', '[data-name="lightYellow"]',
+        '[data-name="primary"]',
+        '[data-name="white"]',
+        '[data-name="gray"]',
         '[data-name="editable"]',
     ];
     const tag = '[data-qa-tag]';
@@ -19,7 +17,7 @@ describe('Tags Suite', () => {
 
     it('should display child stories in navigation', () => {
         browser.click(menuItem);
-        childStories.forEach(story => expect($(story).isVisible()).toBe(true));
+        browser.waitForVisible(childStories[0]);
     });
 
     it('should display tag in each story', () => {
