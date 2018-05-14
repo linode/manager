@@ -2,7 +2,6 @@ const { constants } = require('../../../e2e/constants');
 const { waitForFocus } = require('../../../e2e/utils/storybook');
 
 describe('Icon Text Link Suite', () => {
-    const checkboxParent = '[data-name="CheckBox"]';
     const parentMenuItem = '[data-name="IconTextLink"]';
     const childMenuItem = '[data-name="Interactive"]';
     const iconTextLinkTitle = '[data-qa-icon-text-link="Link title"]';
@@ -20,9 +19,6 @@ describe('Icon Text Link Suite', () => {
     });
 
     it('should display IconLinkText Components', () => {
-        // First Hide expanded checkbox story
-        browser.click(checkboxParent);
-
         // Wait until only one child menu displays before proceeding
         browser.waitUntil(function() {
             return $$(childMenuItem).length === 1;

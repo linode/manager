@@ -49,6 +49,11 @@ const LinodeTheme: Linode.Theme = {
         '&$disabled': {
           color: 'white',
         },
+        '&.cancel': {
+          '&:hover, &:focus': {
+            borderColor: '#222',
+          },
+        },
       },
       raisedSecondary: {
         backgroundColor: 'transparent',

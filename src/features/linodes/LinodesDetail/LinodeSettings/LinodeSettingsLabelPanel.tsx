@@ -7,17 +7,16 @@ import {
   Theme,
   WithStyles,
 } from 'material-ui';
-import Button from 'material-ui/Button';
 
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import { events$ } from 'src/events';
 import { genEvent } from 'src/features/linodes/LinodesLanding/powerActions';
 import { updateLinode } from 'src/services/linodes';
 
+import Button from 'src/components/Button';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import TextField from 'src/components/TextField';
-import Reload from 'src/assets/icons/reload.svg';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 
 type ClassNames = 'root';
@@ -79,28 +78,15 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
         success={this.state.success}
         actions={() =>
           <ActionsPanel>
-            {
-              (submitting && !labelError)
-              ? (
-                <Button
-                  variant="raised"
-                  color="secondary"
-                  disabled
-                  className="loading"
-                >
-                  <Reload />
-                </Button>
-              )
-              : (
-                <Button
-                  variant="raised"
-                  color="primary"
-                  onClick={this.changeLabel}
-                  >
-                  Save
-                </Button>
-              )
-            }
+            <Button
+              onClick={this.changeLabel}
+              variant="raised"
+              color="primary"
+              disabled={submitting && !labelError}
+              loading={submitting && !labelError}
+            >
+              Save
+            </Button>
           </ActionsPanel>
         }
       >
