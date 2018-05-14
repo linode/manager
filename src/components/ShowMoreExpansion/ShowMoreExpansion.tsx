@@ -13,7 +13,7 @@ import KeyboardArrowRight from 'material-ui-icons/KeyboardArrowRight';
 
 
 
-type CSSClasses = 'root' | 'header' | 'caret' ;
+type CSSClasses = 'root' | 'header' | 'caret';
 
 const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -79,17 +79,20 @@ class ShowMoreExpansion extends React.Component<CombinedProps, State> {
       <ListItem
         className={classes.root}
         button
-        onClick={this.handleNameClick}
         disableRipple
         aria-haspopup="true"
         aria-expanded={open ? 'true' : 'false'}
         role="menu"
         data-qa-show-more-expanded={open ? 'true' : 'false'}
+      >
+        <div
+          onClick={this.handleNameClick}
+          className={`${classes.header} ${open ? 'hOpen' : ''}`}
+          data-qa-show-more-toggle
         >
-        <div className={`${classes.header} ${open ? 'hOpen' : '' }`} data-qa-show-more-toggle>
           {open
             ? <KeyboardArrowRight className={classes.caret + ' rotate'} />
-            : <KeyboardArrowRight className={classes.caret}  />
+            : <KeyboardArrowRight className={classes.caret} />
           }
           <span>{name}</span>
         </div>
