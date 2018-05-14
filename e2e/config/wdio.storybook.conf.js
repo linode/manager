@@ -36,6 +36,9 @@ exports.config = merge(wdioMaster.config, {
         browser.url(constants.routes.storybook);
 
         // Collapse first story
+        browser.waitUntil(function() {
+            return $$('[data-name]').length > 0;
+        }, 5000, 'Stories not displaying. Is storybook running?');
         const defaultChildStories = $$('[data-name]')[0].$('[data-name]');
         $$('[data-name]')[0].click();
         defaultChildStories.waitForVisible(3000, true);
