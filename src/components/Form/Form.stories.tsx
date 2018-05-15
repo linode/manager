@@ -17,6 +17,10 @@ import {
   RadioGroup,
 } from 'material-ui';
 import FormDivider from './FormDivider';
+import TableBody from 'material-ui/Table/TableBody';
+import TableCell from 'material-ui/Table/TableCell';
+import TableHead from 'material-ui/Table/TableHead';
+import TableRow from 'material-ui/Table/TableRow';
 
 import Button from 'src/components/Button';
 import CheckBox from 'src/components/CheckBox';
@@ -24,7 +28,12 @@ import Radio from 'src/components//Radio';
 import Grid from 'src/components/Grid';
 import PasswordInput from 'src/components/PasswordInput';
 import Select from 'src/components/Select';
+import SelectionCard from 'src/components/SelectionCard';
+import Table from 'src/components/Table';
 import Toggle from 'src/components/Toggle';
+
+import InsertPhoto from 'material-ui-icons/InsertPhoto';
+import Alarm from 'material-ui-icons/Alarm';
 
 const HelperItemStyles = {
   with: '100%',
@@ -47,6 +56,44 @@ class Form extends React.Component<State> {
     checkedF: false,
     selected: this.props.selected || 'none',
     RadioValue: undefined,
+    TableRadioValue: '0',
+    TableRadioValue2: '0',
+    cards: [
+      {
+        renderIcon: () => {
+          return <InsertPhoto />;
+        },
+        heading: 'Photos',
+        subheadings: [
+          'Use a photo',
+          'Select up to 3',
+        ],
+        checked: true,
+      },
+      {
+        renderIcon: () => {
+          return <InsertPhoto />;
+        },
+        heading: 'Photos',
+        subheadings: [
+          'Use a photo',
+          'Select up to 3',
+        ],
+        disabled: true,
+        tooltip: 'Something... something... whatever...',
+      },
+      {
+        renderIcon: () => {
+          return <InsertPhoto />;
+        },
+        heading: 'Photos 2',
+        subheadings: [
+          'Use a photo',
+          'Select up to 3',
+        ],
+        tooltip: 'Here is another tooltip!',
+      },
+    ],
   };
 
   checkBoxClick = (type: string) => {
@@ -62,6 +109,14 @@ class Form extends React.Component<State> {
 
   radioChange = (e: React.ChangeEvent<HTMLFormElement>, RadioValue: string) => {
     this.setState(() => ({ RadioValue }));
+  }
+
+  TableRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ TableRadioValue: e.target.value });
+  }
+
+  TableRadioChange2 = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ TableRadioValue2: e.target.value });
   }
 
   render() {
@@ -114,10 +169,8 @@ class Form extends React.Component<State> {
             <TextField
               label="Comments"
               value=""
-              // onChange={e => onChange('comments', e.target.value)}
               multiline={true}
               rows={3}
-              // errorText={errorFor('comments')}
             />
 
             <FormDivider spacing={3} />
@@ -148,9 +201,6 @@ class Form extends React.Component<State> {
             <FormDivider spacing={3} />
 
             <FormGroup>
-              <Typography variant="subheading">
-                A form section title
-              </Typography>
               <FormLabel>
                 Checkboxes with FormGroup
               </FormLabel>
@@ -257,6 +307,107 @@ class Form extends React.Component<State> {
               <Toggle label="First Label" />
               <Toggle label="Second Label" />
               <Toggle label="Label Label" />
+            </FormGroup>
+
+            <FormDivider spacing={3} />
+
+            <FormGroup>
+              <FormLabel>
+                A group of cards
+              </FormLabel>
+              <Grid container wrap="wrap" style={{ marginTop: 16 }}>
+                <SelectionCard
+                  renderIcon={() => {
+                    return <InsertPhoto />;
+                  }}
+                  heading="Photos"
+                  subheadings={[
+                    'Use a photo',
+                    'Select up to 3',
+                  ]}
+                />
+                <SelectionCard
+                  renderIcon={() => {
+                    return <Alarm />;
+                  }}
+                  heading="Alarm"
+                  subheadings={[
+                    'Set an alarm',
+                    'Choose the time and alarm sound',
+                  ]}
+                />
+              </Grid>
+            </FormGroup>
+
+            <FormDivider spacing={3} />
+            <FormLabel>
+              A Table of radio buttons
+            </FormLabel>
+            <FormGroup>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell padding="checkbox" data-qa-perm-access>Legend</TableCell>
+                    <TableCell padding="checkbox" data-qa-perm-none>Col 1</TableCell>
+                    <TableCell padding="checkbox" data-qa-perm-read>Col 2</TableCell>
+                    <TableCell padding="checkbox" data-qa-perm-rw>Col 3</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <TableRow>
+                    <TableCell padding="checkbox">
+                      Row 1
+                    </TableCell>
+                    <TableCell padding="checkbox">
+                      <Radio
+                        value="0"
+                        checked={this.state.TableRadioValue === '0'}
+                        onChange={this.TableRadioChange}
+                      />
+                    </TableCell>
+                    <TableCell padding="checkbox">
+                      <Radio
+                        value="1"
+                        checked={this.state.TableRadioValue === '1'}
+                        onChange={this.TableRadioChange}
+                      />
+                    </TableCell>
+                    <TableCell padding="checkbox">
+                      <Radio
+                        value="2"
+                        checked={this.state.TableRadioValue === '2'}
+                        onChange={this.TableRadioChange}
+                      />
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell padding="checkbox">
+                      Row 2
+                    </TableCell>
+                    <TableCell padding="checkbox">
+                      <Radio
+                        value="0"
+                        checked={this.state.TableRadioValue2 === '0'}
+                        onChange={this.TableRadioChange2}
+                      />
+                    </TableCell>
+                    <TableCell padding="checkbox">
+                      <Radio
+                        value="1"
+                        checked={this.state.TableRadioValue2 === '1'}
+                        onChange={this.TableRadioChange2}
+                      />
+                    </TableCell>
+                    <TableCell padding="checkbox">
+                      <Radio
+                        value="2"
+                        checked={this.state.TableRadioValue2 === '2'}
+                        onChange={this.TableRadioChange2}
+                      />
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
             </FormGroup>
 
             <ActionsPanel>

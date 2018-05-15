@@ -15,7 +15,7 @@ class Example extends React.Component<{}, { value?: string }> {
     return (
       <React.Fragment>
         <Toggle label="This is a top label" labelTop />
-        <Toggle label="This is a left label" />
+        <Toggle label="This is an inline label" />
       </React.Fragment>
     );
   }
