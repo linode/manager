@@ -1,11 +1,11 @@
 version: '3.1'
 services: 
   selenium-hub:
-    image: selenium/hub:3.11.0-bismuth
+    image: selenium/hub:3.4.0-francium
     ports:
       - "4444:4444"
   chrome:
-    image: selenium/node-chrome:3.11.0-bismuth
+    image: selenium/node-chrome:3.4.0-francium
     depends_on:
       - selenium-hub
     volumes:

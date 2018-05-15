@@ -42,16 +42,14 @@ describe('Linode Detail - Backups Suite', () => {
 
         const toastMsg = 'Snapshot label must be a string of 1 to 255 characters';
         Backups.toastDisplays(toastMsg);
+        browser.waitForExist('[data-qa-toast]', 5000, true);
     });
 
     it('should cancel backups', () => {
-        Backups.cancelButton.click();
-
-        const toastMsg = 'Backups are being cancelled for this Linode';
-        Backups.toastDisplays(toastMsg);
+        Backups.cancelBackups();
     });
 
-    it('should remove the backup test linode', () => {
+    afterAll(() => {
         deleteLinode(linodeLabel);
     });
 });

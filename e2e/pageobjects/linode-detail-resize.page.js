@@ -20,7 +20,7 @@ class Resize extends Page {
         expect(this.currentSelection.isVisible()).toBe(true);
         expect(this.submit.isVisible()).toBe(true);
         expect(this.planCards.length).toBeGreaterThan(0);
-        expect(checkedCards.length).toBe(1);
+        expect(checkedCards.length).toBe(0);
         expect(selectedPlanTab[0].getAttribute('data-qa-tab')).toBe('Standard');
     }
 }
