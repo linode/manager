@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { pathOr, equals } from 'ramda';
+import { compose, pathOr, equals } from 'ramda';
 import {
   withStyles,
   StyleRulesCallback,
@@ -16,6 +16,7 @@ import TableBody from 'material-ui/Table/TableBody';
 import TableRow from 'material-ui/Table/TableRow';
 import TableCell from 'material-ui/Table/TableCell';
 
+import setDocs from 'src/components/DocsSidebar/setDocs';
 import Table from 'src/components/Table';
 import Grid from 'src/components/Grid';
 import { getLinodes } from 'src/services/linodes';
@@ -84,6 +85,27 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       mode: 'detach',
     },
   };
+
+  static docs: Linode.Doc[] = [
+    {
+      title: 'How to Use Block Storage with Your Linode',
+      /* tslint:disable-next-line */
+      src: `https://www.linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode`,
+      body: `Linode’s Block Storage service allows you to attach additional storage volumes to your
+      Linode. A single volume can range from 10 GiB to 10,000 GiB in size and costs $0.10/GiB per
+      month. They can be partitioned however you like and can accommodate any filesystem type you
+      choose. Up to eight volumes can be attached to a single Linode, be it new or already
+      existing, so you do not need to recreate your server to add a Block Storage Volume.`,
+    },
+    {
+      title: 'Boot a Linode from a Block Storage Volume',
+      src: `https://www.linode.com/docs/platform/block-storage/boot-from-block-storage-volume/`,
+      body: `Linode’s Block Storage service allows you to attach additional storage volumes to your
+      Linode. In addition to storing files and media, you can also use a Block Storage Volume as a
+      boot disk. This can provide a low-cost way to maintain an image that can be quickly attached
+      to a new Linode and booted up when needed.`,
+    },
+  ];
 
   getLinodeLabels() {
     const linodeIDs = this.props.volumes.map(volume => volume.linode_id).filter(Boolean);
@@ -305,4 +327,10 @@ const connected = connect(undefined, mapDispatchToProps);
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default connected(styled(VolumesLanding));
+const documented = setDocs(VolumesLanding.docs);
+
+export default compose<Linode.TodoAny, Linode.TodoAny, Linode.TodoAny, Linode.TodoAny>(
+  documented,
+  connected,
+  styled,
+)(VolumesLanding);
