@@ -37,13 +37,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     minHeight: 132,
     position: 'relative',
-    padding: `${theme.spacing.unit * 3}px 0`,
+    padding: `${theme.spacing.unit * 3}px ${theme.spacing.unit}px`,
     '&:last-of-type + hr': {
       display: 'none',
     },
     '& label > span:last-child': {
       position: 'absolute',
-      left: 80,
+      left: 90,
       top: 40,
       ...theme.typography.subheading,
     },
