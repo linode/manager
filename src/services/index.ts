@@ -35,7 +35,7 @@ export const setData = (data: any) => set(L.data, data);
 export const setXFilter = (xFilter: any) => set(L.xFilter, JSON.stringify(xFilter));
 
 /** Generator */
-export default (...fns: Function[]) => {
+export default <T>(...fns: Function[]): Axios.AxiosPromise<T> => {
   const config = fns.reverse().reduce((result, currentFn) => currentFn(result), {});
   return Axios.default(config);
 };

@@ -1,10 +1,11 @@
-import { AxiosPromise } from 'axios';
 import { API_ROOT } from 'src/constants';
 import Request, { setMethod, setURL, setXFilter } from 'src/services';
 
-export type EventsPromise = AxiosPromise<Linode.ResourcePage<Linode.Event>>;
-export const getEvents = (xFilter: any): EventsPromise => {
-  return Request(
+type Page<T> = Linode.ResourcePage<T>;
+type Event = Linode.Event;
+
+export const getEvents = (xFilter: any) =>
+  Request<Page<Event>>(
     setURL(`${API_ROOT}/account/events`),
     setMethod('GET'),
     setXFilter(xFilter),
@@ -12,4 +13,3 @@ export const getEvents = (xFilter: any): EventsPromise => {
     .then((response) => {
       return response;
     });
-};

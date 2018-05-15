@@ -660,7 +660,7 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
         this.setState({
           devices: {
             ...this.state.devices,
-            disks: replaceById(data, data.id, this.state.devices.disks),
+            disks: replaceById(data as ExtendedDisk, data.id, this.state.devices.disks),
           },
         });
         this.setDiskDrawer(this.defaultDiskDrawerState);

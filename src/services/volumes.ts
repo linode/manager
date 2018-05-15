@@ -1,9 +1,12 @@
+/** Alises for short lines. */
+type Page<T> = Linode.ResourcePage<T>;
+type Volume = Linode.Volume;
+
 import { API_ROOT } from 'src/constants';
 import Request, { setURL, setMethod, setData } from './index';
 
-type GetVolumesPage = Promise<Linode.ResourcePage<Linode.Volume>>;
-export const getVolumesPage = (page: number): GetVolumesPage =>
-  Request(
+export const getVolumesPage = (page: number) =>
+  Request<Page<Volume>>(
     setURL(`${API_ROOT}/volumes/?page=${page}`),
     setMethod('GET'),
   )
@@ -15,36 +18,36 @@ export const getVolumes = (): Promise<Linode.ResourcePage<Linode.Volume>> =>
 export const attach = (volumeId: number, payload: {
   linode_id: number,
   config_id?: number,
-}): Promise<{}> => Request(
+}) => Request<{}>(
   setURL(`${API_ROOT}/volumes/${volumeId}/attach`),
   setMethod('POST'),
   setData(payload),
   );
 
-export const detach = (volumeId: number): Promise<{}> => Request(
+export const detach = (volumeId: number) => Request<{}>(
   setURL(`${API_ROOT}/volumes/${volumeId}/detach`),
   setMethod('POST'),
 );
 
 // delete is a reserve word
-export const _delete = (volumeId: number): Promise<{}> => Request(
+export const _delete = (volumeId: number) => Request<{}>(
   setURL(`${API_ROOT}/volumes/${volumeId}`),
   setMethod('DELETE'),
 );
 
-export const clone = (volumeId: number, label: string): Promise<{}> => Request(
+export const clone = (volumeId: number, label: string) => Request<{}>(
   setURL(`${API_ROOT}/volumes/${volumeId}/clone`),
   setMethod('POST'),
   setData({ label }),
 );
 
-export const resize = (volumeId: number, size: number): Promise<{}> => Request(
+export const resize = (volumeId: number, size: number) => Request<{}>(
   setURL(`${API_ROOT}/volumes/${volumeId}/resize`),
   setMethod('POST'),
   setData({ size }),
 );
 
-export const update = (volumeId: number, label: string): Promise<{}> => Request(
+export const update = (volumeId: number, label: string) => Request<{}>(
   setURL(`${API_ROOT}/volumes/${volumeId}`),
   setMethod('PUT'),
   setData({ label }),
@@ -57,7 +60,7 @@ export type VolumeRequestPayload = {
   linode_id?: number,
 };
 
-export const create = (payload: VolumeRequestPayload): Promise<{}> => Request(
+export const create = (payload: VolumeRequestPayload) => Request<{}>(
   setURL(`${API_ROOT}/volumes`),
   setMethod('POST'),
   setData(payload),
