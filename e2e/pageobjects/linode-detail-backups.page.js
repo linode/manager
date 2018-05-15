@@ -16,6 +16,10 @@ class Backups extends Page {
     get saveScheduleButton() { return $('[data-qa-schedule]'); }
     get cancelDescription() { return $('[data-qa-cancel-desc]'); }
     get cancelButton() { return $('[data-qa-cancel]'); }
+    get cancelDialogTitle() { return $('[data-qa-dialog-title]'); }
+    get cancelConfirm() { return $('[data-qa-confirm-cancel]'); }
+    get cancelDialogClose() { return $('[data-qa-cancel-cancel]'); }
+
 
     get backupInstances() { return $$('[data-qa-backup]'); }
     get label() { return $('[data-qa-backup-name]'); }
@@ -95,17 +99,13 @@ class Backups extends Page {
     }
 
     cancelBackups() {
-        const toastMsg = 'Backups are being cancelled for this Linode';
-
         this.cancelButton.click();
-        
-        browser.waitForVisible('[data-qa-toast]');
-        browser.waitUntil(function() {
-            return browser
-                .getText('[data-qa-toast-message]') === toastMsg;
-        }, 10000);
+        this.cancelDialogTitle.waitForVisible();
+        this.cancelConfirm.waitForVisible();
+        this.cancelConfirm.click();
 
-        this.placeholderText.waitForVisible();
+        const toastMsg = 'Backups are being cancelled for this Linode';
+        this.toastDisplays(toastMsg);
     }
 }
 

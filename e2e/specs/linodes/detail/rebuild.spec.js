@@ -33,7 +33,8 @@ describe('Linode Detail - Rebuild Suite', () => {
 
     it('should display image options in the select', () => {
         Rebuild.imagesSelect.click();
-        Rebuild.imageSelectHeader.forEach(header => expect(header.isVisible()).toBe(true));
+
+        expect(Rebuild.imageSelectHeader.isVisible()).toBe(true);
         Rebuild.imageOptions.forEach(option => expect(option.isVisible()).toBe(true));
     });
 

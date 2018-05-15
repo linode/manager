@@ -11,7 +11,7 @@ describe('Linode Detail - Resize Suite', () => {
         browser.url(constants.routes.linodes);
         browser.waitForVisible('[data-qa-add-new-menu-button]');
         createGenericLinode(linodeName);
-        browser.click(`[data-qa-linode=${linodeName}] [data-qa-label]`);
+        browser.click(`[data-qa-linode="${linodeName}"] [data-qa-label]`);
         LinodeDetail
             .landingElemsDisplay()
             .changeTab('Resize');
@@ -28,15 +28,16 @@ describe('Linode Detail - Resize Suite', () => {
 
     it('should fail to resize on the same plan selection', () => {
         const toastMsg = 'Linode is already running this service plan.';
+        
+        Resize.planCards[0].click();
         Resize.submit.click();
         Resize.toastDisplays(toastMsg);
     });
 
     it('should display toast message on resize', () => {
-        const uncheckedPlans = Resize.planCards.filter(p => !p.getAttribute('class').includes('checked'));
         const toastMsg = 'Linode resize started.';
 
-        uncheckedPlans[0].click();
+        Resize.planCards[1].click();
         Resize.submit.click();
         Resize.toastDisplays(toastMsg);
     });

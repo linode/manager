@@ -26,6 +26,7 @@ export default class Page {
         const displayedMsg = browser.getText('[data-qa-toast-message]');
         expect(displayedMsg).toBe(expectedMessage);
         browser.click('[data-qa-toast] button');
+        browser.waitForExist('[data-qa-toast]', 5000, true);
     }
 
     dismissToast() {
