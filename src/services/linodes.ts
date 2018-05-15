@@ -342,10 +342,11 @@ export interface LinodeCloneData {
 }
 
 export const cloneLinode = (source_linode_id: number, data: LinodeCloneData) => {
-  return Request(
+  return Request<Linode>(
     setURL(`${API_ROOT}/linode/instances/${source_linode_id}/clone`),
     setMethod('POST'),
     setData(data),
-  );
+  )
+    .then(response => response.data);
 };
 
