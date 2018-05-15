@@ -32,11 +32,12 @@ describe('Select Suite', () => {
     });
 
     it('should display one disabled select', () => {
-        disabledSelects = selectBoxes.filter(s => s.getAttribute('class').includes('disabled'));
+        const disabledSelects = selectBoxes.filter(s => s.getAttribute('class').includes('disabled'));
         expect(disabledSelects.length).toEqual(1);
     });
 
     it('should display placeholder text in disabled select', () => {
+        const disabledSelects = selectBoxes.filter(s => s.getAttribute('class').includes('disabled'));
         expect(disabledSelects[0].getText()).toMatch(/\w/ig);
     });
 
@@ -53,17 +54,5 @@ describe('Select Suite', () => {
         selectOptions[1].click();
         const selectValue = enabledSelects[0].getText();
         expect(selectValue).toBe(optionName);
-    });
-
-    it('should not display options on click of disabled select', () => {
-        try {
-            // This should fail, since it is disabled
-            disabledSelects[0].click();
-            expect(true).toBe(false);
-
-        } catch(err) {
-            // Should error, test passes if it does
-            expect(err.message).toContain('Other element would receive the click');
-        }
     });
 });
