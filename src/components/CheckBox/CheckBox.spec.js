@@ -1,25 +1,16 @@
 const { constants } = require('../../../e2e/constants');
-const { waitForFocus } = require('../../../e2e/utils/storybook');
+const { navigateToStory } = require('../../../e2e/utils/storybook');
+
+const component = 'CheckBox';
+const stories = ['Interactive'];
+
 
 describe('Checkbox Component Suite', () => {
     beforeAll(() => {
-        browser.waitForVisible('html body div#root div div div.SplitPane.vertical div.Pane.vertical.Pane1 div div div div a h3');
-    });
-
-    it('should display checkbox component in navigation', () => {
-        const checkboxNavItem = $('[data-name="CheckBox"]');
-        expect(checkboxNavItem.getText()).toBe('CheckBox');
-    });
-
-    it('should have an interactive story', () => {
-        $('[data-name="CheckBox"]').click();
-        const interactive = $('[data-name="Interactive"]');
-        expect(interactive.getText()).toBe('Interactive');
+        navigateToStory(component, stories[0]);
     });
 
     it('should display checkboxes on interactive story', () => {
-        browser.click('[data-name="Interactive"]');
-        waitForFocus('[data-qa-checked]');
         const checkboxes = $$('[data-qa-checked]'); 
         checkboxes.forEach(e => expect(e.isVisible()).toBe(true));
     });
@@ -28,8 +19,6 @@ describe('Checkbox Component Suite', () => {
         const initialChecked = $$('[data-qa-checked="true"]');
         const enabledCheckboxes = $$('[data-qa-checked]').filter(e => !e.getAttribute('class').includes('disabled'));
         enabledCheckboxes.forEach(e => e.click());
-
-        waitForFocus('[data-qa-checked]');
 
         const updatedCheckboxValues = $$('[data-qa-checked="true"]');
         
@@ -40,8 +29,7 @@ describe('Checkbox Component Suite', () => {
         const enabledAndChecked = $$('[data-qa-checked="true"]').filter(e => !e.getAttribute('class').includes('disabled'));
 
         enabledAndChecked.forEach(e => e.click());
-
-        waitForFocus('[data-qa-checked]');
+        
         const updatedCheckboxValues = $$('[data-qa-checked="true"]').filter(e => !e.getAttribute('class').includes('disabled'));
 
         expect(updatedCheckboxValues).toEqual([]);
@@ -49,7 +37,6 @@ describe('Checkbox Component Suite', () => {
 
     it('should display different variants of checkboxes', () => {
         const checkboxes = $$('[data-qa-checked]');
-        waitForFocus('[data-qa-checked]');
 
         const variants = checkboxes.map(e => e.getAttribute('variant'));
         
@@ -62,10 +49,8 @@ describe('Checkbox Component Suite', () => {
 
         // Click on all checked disabled boxes
         // Use jsClickAll to avoid other element would receive click error
-        waitForFocus('[data-qa-checked]');
+        
         browser.jsClickAll('[data-qa-checked="true"]:disabled');
-
-        waitForFocus('[data-qa-checked]');
 
         const afterClick = $$('[data-qa-checked="true"]').filter(e => e.getAttribute('class').includes('disabled'));
         expect(afterClick.length).toBe(checkedDisabledBoxes.length);
@@ -77,8 +62,6 @@ describe('Checkbox Component Suite', () => {
         // Click on all unchecked disabled boxes
         // Use jsClickAll to avoid other element would receive click error
         browser.jsClickAll('[data-qa-checked="false"]:disabled');
-
-        waitForFocus('[data-qa-checked]');
 
         const afterClick = $$('[data-qa-checked="false"]').filter(e => e.getAttribute('class').includes('disabled'));
 

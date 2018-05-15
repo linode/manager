@@ -1,26 +1,19 @@
-const { constants } = require('../../../e2e/constants');
-const { waitForFocus } = require('../../../e2e/utils/storybook');
+const { navigateToStory } = require('../../../e2e/utils/storybook');
 
 describe('Show More Expansion Suite', () => {
-    const menuItem = '[data-name="ShowMoreExpansion"]';
-    const childItem = '[data-name="default"';
+    const component = 'ShowMoreExpansion';
+    const childStories = [
+        'default',
+    ]
     const showMoreExpanded = '[data-qa-show-more-expanded]';
     const showMoreToggle = '[data-qa-show-more-toggle]';
 
-    it('should display show more expansion in the navigation', () => {
-        const showMoreExpandedMenu = $(menuItem);
-        expect(showMoreExpandedMenu.isVisible()).toBe(true);
-    });
-
-    it('should display the default show more story', () => {
-        browser.click(menuItem);
-        const defaultStory = $(childItem);
-        expect(defaultStory.isVisible()).toBe(true);
+    beforeAll(() => {
+        navigateToStory(component, childStories[0]);
     });
 
     it('should display show more expansion', () => {
-        browser.click(childItem);
-        waitForFocus(showMoreExpanded);
+        browser.waitForVisible(showMoreExpanded);
 
         const showMoreExpandedElem = $(showMoreExpanded);
 
