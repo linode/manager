@@ -45,13 +45,10 @@ describe('Linode Detail - Backups Suite', () => {
     });
 
     it('should cancel backups', () => {
-        Backups.cancelButton.click();
-
-        const toastMsg = 'Backups are being cancelled for this Linode';
-        Backups.toastDisplays(toastMsg);
+        Backups.cancelBackups();
     });
 
-    it('should remove the backup test linode', () => {
+    afterAll(() => {
         deleteLinode(linodeLabel);
     });
 });
