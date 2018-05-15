@@ -748,7 +748,7 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
               variant="headline"
               className={classes.title}
               data-qa-title>
-              Volumes
+              Attached Volumes
             </Typography>
           </Grid>
           <Grid item>
