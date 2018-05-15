@@ -22,6 +22,7 @@ describe('Linode Detail - Backups Suite', () => {
 
     it('should dislay placeholder text', () => {
         Backups.baseElemsDisplay(true);
+        Backups.dismissToast();
     });
 
     it('should enable backups', () => {
