@@ -9,7 +9,7 @@ import { APITokens } from './APITokens';
 
 describe('APITokens', () => {
   const pats: PromiseLoaderResponse<Linode.ResourcePage<Linode.Token>> =
-    createPromiseLoaderResponse(createResourcePage([
+    createPromiseLoaderResponse([
       {
         created: '2018-04-09T20:00:00',
         expiry: moment.utc().subtract(1, 'day').format(),
@@ -42,10 +42,10 @@ describe('APITokens', () => {
         scopes: 'account:read_write',
         label: 'test-4',
       },
-    ]));
+    ]);
 
   const appTokens: PromiseLoaderResponse<Linode.ResourcePage<Linode.Token>> =
-    createPromiseLoaderResponse(createResourcePage([
+    createPromiseLoaderResponse([
       {
         created: '2018-04-26T20:00:00',
         expiry: moment.utc().subtract(1, 'day').format(),
@@ -91,7 +91,7 @@ describe('APITokens', () => {
         website: 'http://localhost:3000',
         label: '',
       },
-    ]));
+    ]);
 
   const component = mount(
     <APITokens

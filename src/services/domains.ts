@@ -33,7 +33,7 @@ export const createDomainRecord = (domainId: number, data: Partial<Linode.Record
     setURL(`${API_ROOT}/domains/${domainId}/records`),
     setMethod('POST'),
     setData(data),
-  );
+  ).then(response => response.data);
 
 export const updateDomainRecord = (
   domainId: number,

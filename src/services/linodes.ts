@@ -30,6 +30,31 @@ export const getLinode = (id: number) =>
     setMethod('GET'),
   );
 
+export const linodeBoot = (id: number | string) =>
+  Request<{}>(
+    setURL(`${API_ROOT}/linode/instances/${id}/boot`),
+    setMethod('POST'),
+  );
+
+export const linodeReboot = (id: number | string, data: any) =>
+  Request<{}>(
+    setURL(`${API_ROOT}/linode/instances/${id}/reboot`),
+    setMethod('POST'),
+    setData(data),
+  );
+
+export const linodeShutdown = (id: number | string) =>
+  Request<{}>(
+    setURL(`${API_ROOT}/linode/instances/${id}/shutdown`),
+    setMethod('POST'),
+  );
+
+export const getLinodeLishToken = (id: number) =>
+  Request<{ lish_token: string }>(
+    setURL(`${API_ROOT}/linode/instances/${id}/lish_token`),
+    setMethod('POST'),
+  );
+
 export const getLinodeVolumes = (id: number) =>
   Request<Page<Linode.Volume>>(
     setURL(`${API_ROOT}/linode/instances/${id}/volumes`),
@@ -137,6 +162,14 @@ export const createLinode = (data: any) =>
     setURL(`${API_ROOT}/linode/instances`),
     setMethod('POST'),
     setData(data),
+  )
+    .then(response => response.data);
+
+export const getLinodeKernels = (page: number = 0) =>
+  Request<Page<Linode.Kernel>>(
+    setURL(`${API_ROOT}/linode/kernels`),
+    setMethod('GET'),
+    setParams({ page }),
   )
     .then(response => response.data);
 

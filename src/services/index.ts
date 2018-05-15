@@ -1,15 +1,5 @@
 import * as Axios from 'axios';
-import {
-  lensPath,
-  set,
-} from 'ramda';
-
-export function genAxiosConfig(params: any, filter?: any) {
-  const config: Axios.AxiosRequestConfig = {};
-  config.params = params && params;
-  config.headers = filter && { 'X-Filter': JSON.stringify(filter) };
-  return config;
-}
+import { lensPath, set } from 'ramda';
 
 const L = {
   url: lensPath(['url']),

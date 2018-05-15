@@ -13,7 +13,6 @@ import { default as _TextField, Props as TextFieldProps } from 'src/components/T
 import ActionsPanel from 'src/components/ActionsPanel';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import Notice from 'src/components/Notice';
-import { AxiosError, AxiosResponse } from 'axios';
 
 const TextField = (props: TextFieldProps) =>
   <_TextField {...props} />;
@@ -213,7 +212,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     >
       <MenuItem value="active">Active</MenuItem>
       <MenuItem value="disabled">Disabled</MenuItem>
-      <MenuItem value="edit_mode">Edit MOde</MenuItem>
+      <MenuItem value="edit_mode">Edit Mode</MenuItem>
     </TextField>
 
   ExpireField = () =>
@@ -301,7 +300,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       onChange={e => this.updateField('axfr_ips')(e.target.value)}
     />
 
-  handleSubmissionErrors = (errorResponse: AxiosError) => {
+  handleSubmissionErrors = (errorResponse: any) => {
     const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'])(errorResponse);
     if (errors) {
       this.setState({ errors, submitting: false });
@@ -314,7 +313,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     });
   }
 
-  handleRecordSubmissionSuccess = (response: AxiosResponse) => {
+  handleRecordSubmissionSuccess = () => {
     this.props.updateRecords();
     this.onClose();
   }
