@@ -354,7 +354,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
             variant="headline"
             className={this.props.classes.title}
             data-qa-title
-            >
+          >
             Linodes
           </Typography>
           <Hidden smDown>

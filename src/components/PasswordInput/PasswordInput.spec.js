@@ -1,9 +1,10 @@
-const { constants } = require('../../../e2e/constants');
-const { waitForFocus } = require('../../../e2e/utils/storybook');
+const { navigateToStory } = require('../../../e2e/utils/storybook');
 
 describe('Password Input Suite', () => {
-    const menuItem = '[data-name="Password Input"]';
-    const childMenuItem = '[data-name="Example"]';
+    const component = 'Password Input';
+    const childStories = [
+        'Example',
+    ]
     const strengthIndicator = '[data-qa-strength]';
     const passwordInput = '[data-qa-hide] input';
 
@@ -21,21 +22,12 @@ describe('Password Input Suite', () => {
         }
     }
 
-    it('should display password input in navigation', () => {
-        const navItem = $(menuItem);
-        expect(navItem.isVisible()).toBe(true);
-    });
-
-    it('should display Example story', () => {
-        browser.click(menuItem);
-        
-        const exampleStory = $(childMenuItem);
-        expect(exampleStory.isVisible()).toBe(true);
+    beforeAll(() => {
+        navigateToStory(component, childStories[0]);
     });
 
     it('should display password input with strength indicator', () => {
-        browser.click(childMenuItem);
-        waitForFocus(passwordInput);
+        browser.waitForVisible(passwordInput);
 
         const input = $(passwordInput);
 

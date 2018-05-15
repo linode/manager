@@ -5,6 +5,8 @@ import { compose, bindActionCreators } from 'redux';
 import Axios from 'axios';
 import { append, pathOr, range, flatten } from 'ramda';
 import * as Promise from 'bluebird';
+import { shim } from 'promise.prototype.finally';
+shim(); // allows for .finally() usage
 
 import {
   withStyles,

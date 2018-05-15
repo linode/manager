@@ -1,24 +1,22 @@
-const { constants } = require('../../../e2e/constants');
-const { waitForFocus, executeInAllStories } = require('../../../e2e/utils/storybook');
+const { navigateToStory , executeInAllStories } = require('../../../e2e/utils/storybook');
 
 describe('Selection Card Suite', () => {
-    const menuItem = '[data-name="SelectionCard"]';
-    const childStories = {
-        "Interactive example" : '[data-name="Interactive example"]',
-        "Default with SvgIcon" : '[data-name="Default with SvgIcon"]',
-        "Default with plain SVG" : '[data-name="Default with plain SVG"]',
-        "Default with font Icon" : '[data-name="Default with font Icon"]',
-        "Default with no Icon" : '[data-name="Default with no Icon"]',
-        "Checked with SvgIcon" : '[data-name="Checked with SvgIcon"]',
-        "Checked with plain SVG" : '[data-name="Checked with plain SVG"]',
-        "Checked with font icon" : '[data-name="Checked with font Icon"]',
-        "Checked with no Icon" : '[data-name="Checked with no Icon"]',
-    }
+    const component = 'SelectionCard';
+    const childStories = [
+        'Interactive example',
+        'Default with SvgIcon',
+        'Default with plain SVG',
+        'Default with font Icon',
+        'Default with no Icon',
+        'Checked with SvgIcon',
+        'Checked with plain SVG',
+        'Checked with font Icon',
+        'Checked with no Icon',
+    ]
 
     const selectionCard = '[data-qa-selection-card]';
     const heading = '[data-qa-select-card-heading]';
     const subheading = '[data-qa-select-card-subheading]';
-    const childStoryArray = Object.values(childStories);
 
     const assertCardsChecked = () => {
         const selectionCardElems = $$(selectionCard);
@@ -56,28 +54,8 @@ describe('Selection Card Suite', () => {
         fontIcons.forEach(icon => expect(icon).toBe(false));
     }
 
-    const navigateToStory = (story) => {
-        browser.frame();
-        browser.click(story);
-        waitForFocus(selectionCard);
-    }
-
-    it('should display selection card in navigation', () => {
-        const selectionCardElemstory = $(menuItem);
-        expect(selectionCardElemstory.isVisible()).toBe(true);
-    });
-
-    it('should display selection card child stories', () => {
-        browser.click(menuItem);
-
-        browser.waitForVisible(childStoryArray[0]);
-        childStoryArray.forEach(story => {
-            expect(browser.isVisible(story)).toBe(true);
-        });
-    });
-
     it('should display selection cards', () => {
-        executeInAllStories(childStoryArray, () => {
+        executeInAllStories(component, childStories, () => {
             browser.jsClick(selectionCard);
 
             const selectionCardElems = $$(selectionCard);
@@ -88,7 +66,7 @@ describe('Selection Card Suite', () => {
     });
 
     it('should display headings on all selection cards', () => {
-        executeInAllStories(childStoryArray, () => {
+        executeInAllStories(component, childStories, () => {
             const headingElems = $$(heading);
             headingElems.forEach(e => expect(e.isVisible()).toBe(true));
         });
@@ -96,7 +74,7 @@ describe('Selection Card Suite', () => {
 
     describe('Interactive Example Suite', () => {
         beforeAll(() => {
-            navigateToStory(childStories["Interactive example"]);
+            navigateToStory(component, childStories[0]);
         });
 
         it('should display three selection card with one disabled', () => {
@@ -127,7 +105,7 @@ describe('Selection Card Suite', () => {
 
     describe('Default with SVGicon Suite', () => {
         beforeAll(() => {
-            navigateToStory(childStories["Default with SvgIcon"]);
+            navigateToStory(component, childStories[1]);
         });
 
         it('should display svg icons for all selection cards', () => {
@@ -137,7 +115,7 @@ describe('Selection Card Suite', () => {
 
     describe('Default with plain SVG', () => {
         beforeAll(() => {
-            navigateToStory(childStories["Default with plain SVG"]);
+            navigateToStory(component, childStories[2]);
         });
 
         it('should display plain svgs for all selection cards', () => {
@@ -147,7 +125,7 @@ describe('Selection Card Suite', () => {
 
     describe('Default with font Icon', () => {
         beforeAll(() => {
-            navigateToStory(childStories["Default with font Icon"]);
+            navigateToStory(component, childStories[3]);
         });
 
         it('should display a font icon on each selection card', () => {
@@ -157,7 +135,7 @@ describe('Selection Card Suite', () => {
 
     describe('Default with no icon', () => {
         beforeAll(() => {
-            navigateToStory(childStories["Default with no Icon"]);
+            navigateToStory(component, childStories[4]);
         });
 
         it('should not display svgs or font icons', () => {
@@ -167,7 +145,7 @@ describe('Selection Card Suite', () => {
 
     describe('Checked with SvgIcon Suite', () => {
         beforeAll(() => {
-            navigateToStory(childStories["Checked with SvgIcon"]);
+            navigateToStory(component, childStories[5]);
         });
 
         it('should display all selection cards as checked', () => {
@@ -182,7 +160,7 @@ describe('Selection Card Suite', () => {
 
     describe('Checked with plain SVG', () => {
         beforeAll(() => {
-            navigateToStory(childStories["Checked with plain SVG"]);
+            navigateToStory(component, childStories[6]);
         });
 
         it('should display plain svg', () => {
@@ -196,7 +174,7 @@ describe('Selection Card Suite', () => {
 
     describe('Checked with font icon', () => {
         beforeAll(() => {
-            navigateToStory(childStories["Checked with font icon"]);
+            navigateToStory(component, childStories[7]);
         });
 
         it('should display font icon', () => {
@@ -210,7 +188,7 @@ describe('Selection Card Suite', () => {
 
     describe('Checked with no Icon', () => {
         beforeAll(() => {
-            navigateToStory(childStories["Checked with no Icon"]);
+            navigateToStory(component, childStories[8]);
         });
 
         it('should be checked', () => {

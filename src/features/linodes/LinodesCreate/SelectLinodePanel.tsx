@@ -19,15 +19,16 @@ export interface ExtendedLinode extends Linode.Linode {
 }
 
 type ClassNames =
-'root'
-| 'inner'
-| 'panelBody';
+  'root'
+  | 'inner'
+  | 'panelBody';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
     flexGrow: 1,
     width: '100%',
     backgroundColor: theme.color.white,
+    marginBottom: theme.spacing.unit * 3,
   },
   inner: {
     padding: theme.spacing.unit * 3,
@@ -40,9 +41,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 interface Props {
   linodes: ExtendedLinode[];
   selectedLinodeID?: number;
+  selectedCloneTargetLinodeID?: number | null;
   handleSelection: (key: string) =>
-    (event: React.SyntheticEvent<HTMLElement>, value?: string) => void;
+    (event: React.SyntheticEvent<HTMLElement>, value?: string | null) => void;
   error?: string;
+  header?: string;
+  isCloneTarget?: boolean;
 }
 
 type StyledProps = Props & WithStyles<ClassNames>;
@@ -50,21 +54,28 @@ type StyledProps = Props & WithStyles<ClassNames>;
 type CombinedProps = StyledProps;
 
 class SelectLinodePanel extends React.Component<CombinedProps> {
-  handleSelection = this.props.handleSelection('selectedLinodeID');
   handleTypeSelect = this.props.handleSelection('selectedTypeID');
   handleSmallestType = this.props.handleSelection('smallestType');
+  handleSelection = (!this.props.isCloneTarget)
+    ? this.props.handleSelection('selectedLinodeID')
+    : this.props.handleSelection('selectedCloneTargetLinodeID');
 
   renderCard(linode: ExtendedLinode) {
-    const { selectedLinodeID } = this.props;
+    const { selectedLinodeID, selectedCloneTargetLinodeID, isCloneTarget } = this.props;
     return (
       <SelectionCard
         key={linode.id}
-        checked={linode.id === Number(selectedLinodeID)}
         onClick={(e) => {
           this.handleSelection(e, `${linode.id}`);
           this.handleTypeSelect(e, undefined);
           this.handleSmallestType(e, `${linode.type}`);
         }}
+        disabled={(!!isCloneTarget)
+          ? linode.id === Number(selectedLinodeID)
+          : linode.id === Number(selectedCloneTargetLinodeID)}
+        checked={(!!isCloneTarget)
+          ? linode.id === Number(selectedCloneTargetLinodeID)
+          : linode.id === Number(selectedLinodeID)}
         heading={linode.heading}
         subheadings={linode.subHeadings}
       />
@@ -72,17 +83,26 @@ class SelectLinodePanel extends React.Component<CombinedProps> {
   }
 
   render() {
-    const { error, classes, linodes } = this.props;
+    const { error, classes, linodes, header,
+      isCloneTarget, selectedCloneTargetLinodeID } = this.props;
 
     return (
       <Paper className={`${classes.root}`}>
         <div className={classes.inner}>
-          { error && <Notice text={error} error /> }
+          {error && <Notice text={error} error />}
           <Typography variant="title">
-            Select Linode
+            {(!!header) ? header : 'Select Linode'}
           </Typography>
           <Typography component="div" className={classes.panelBody}>
             <Grid container>
+              {isCloneTarget &&
+                <SelectionCard
+                  checked={selectedCloneTargetLinodeID === null}
+                  onClick={e => this.handleSelection(e, null)}
+                  heading={'New Linode'}
+                  subheadings={[]}
+                />
+              }
               {linodes.map((linode) => {
                 return (
                   this.renderCard(linode)
