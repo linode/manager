@@ -14,11 +14,13 @@ import {
   FormControlLabel,
   MenuItem,
   FormHelperText,
+  RadioGroup,
 } from 'material-ui';
 import FormDivider from './FormDivider';
 
 import Button from 'src/components/Button';
 import CheckBox from 'src/components/CheckBox';
+import Radio from 'src/components//Radio';
 import Grid from 'src/components/Grid';
 import PasswordInput from 'src/components/PasswordInput';
 import Select from 'src/components/Select';
@@ -42,18 +44,23 @@ class Form extends React.Component<State> {
     checkedD: true,
     checkedE: false,
     checkedF: false,
-    selected: this.props.selected || '',
+    selected: this.props.selected || 'none',
+    RadioValue: undefined,
   };
 
   checkBoxClick = (type: string) => {
     this.setState({ [type]: !this.state[type] });
   }
 
-  handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  selectChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
     this.setState({
       selected: value,
     });
+  }
+
+  radioChange = (e: React.ChangeEvent<HTMLFormElement>, RadioValue: string) => {
+    this.setState(() => ({ RadioValue }));
   }
 
   render() {
@@ -104,31 +111,32 @@ class Form extends React.Component<State> {
             />
             <PasswordInput />
 
-            <FormDivider spacing={24} />
+            <FormDivider spacing={3} />
 
             <FormControl fullWidth>
               <InputLabel
                 htmlFor="select"
                 disableAnimation
-                shrink={true}>
-                Select
+                shrink={true}
+              >
+                Select Example
               </InputLabel>
               <Select
                 value={selected}
-                onChange={this.handleChange}
+                onChange={this.selectChange}
                 inputProps={{ name: 'select', id: 'select' }}
                 {...this.props}
               >
-                <MenuItem value="">None</MenuItem>
-                <MenuItem value={1000}>Meh</MenuItem>
-                <MenuItem value={2500}>Mediocre</MenuItem>
-                <MenuItem value={9000}>9000</MenuItem>
-                <MenuItem value={9001}>It's over 9000!</MenuItem>
+                <MenuItem value="none" disabled>Select an option</MenuItem>
+                <MenuItem value={1}>First Option</MenuItem>
+                <MenuItem value={2}>Second Option</MenuItem>
+                <MenuItem value={3}>Third Option</MenuItem>
+                <MenuItem value={4}>Last Option</MenuItem>
               </Select>
               <FormHelperText>Here's some helper text</FormHelperText>
           </FormControl>
 
-            <FormDivider spacing={24} />
+            <FormDivider spacing={3} />
 
             <FormGroup>
               <FormLabel>
@@ -163,7 +171,7 @@ class Form extends React.Component<State> {
               />
             </FormGroup>
 
-            <FormDivider spacing={24} />
+            <FormDivider spacing={3} />
 
             <FormGroup row>
               <FormLabel>
@@ -198,7 +206,37 @@ class Form extends React.Component<State> {
               />
             </FormGroup>
 
-            <FormDivider spacing={24} />
+            <FormDivider spacing={3} />
+
+            <RadioGroup
+              aria-label="gender"
+              name="gender"
+              value={this.state.RadioValue}
+              onChange={this.radioChange}
+            >
+              <FormControlLabel
+                value="1"
+                label="First Option"
+                control={<Radio />}
+              />
+              <FormControlLabel
+                value="2"
+                label="Second Option"
+                control={<Radio />}
+              />
+              <FormControlLabel
+                value="3"
+                label="Second Option"
+                control={<Radio />}
+              />
+              <FormControlLabel
+                value="4"
+                label="Last Option"
+                control={<Radio />}
+              />
+            </RadioGroup>
+
+            <FormDivider spacing={3} />
 
             <ActionsPanel>
               <Button type="primary">

@@ -26,8 +26,8 @@ const FormDivider: React.StatelessComponent<CombinedProps> = (props) => {
     <Divider
       className={classes.root}
       style={{
-        marginTop: spacing,
-        marginBottom: spacing,
+        marginTop: spacing && spacing * 8,
+        marginBottom: spacing && spacing * 8,
         backgroundColor: line === false && 'transparent',
       }}
       {...rest}
