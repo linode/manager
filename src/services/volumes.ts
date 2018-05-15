@@ -3,12 +3,13 @@ type Page<T> = Linode.ResourcePage<T>;
 type Volume = Linode.Volume;
 
 import { API_ROOT } from 'src/constants';
-import Request, { setURL, setMethod, setData } from './index';
+import Request, { setURL, setMethod, setData, setParams } from './index';
 
-export const getVolumesPage = (page: number) =>
+export const getVolumesPage = (page: number = 0) =>
   Request<Page<Volume>>(
-    setURL(`${API_ROOT}/volumes/?page=${page}`),
+    setURL(`${API_ROOT}/volumes`),
     setMethod('GET'),
+    setParams({ page }),
   )
     .then(response => response.data);
 

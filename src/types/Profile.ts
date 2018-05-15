@@ -29,6 +29,7 @@ namespace Linode {
     created: string,
     token?: string,
     expiry: string,
+    website?: string,
     thumbnail_url?: null | string;
   };
 
