@@ -314,48 +314,39 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   //   finished: e => ``,
   //   notification: e => ``,
   // },
-  // volume_attach: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
-  // volume_clone: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
-  // volume_create: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
-  // volume_delete: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
-  // volume_detach: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
-  // volume_resize: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
+  volume_attach: {
+    scheduled: e => `Volume ${e.entity!.label} is scheduled for attachment to a Linode.`,
+    started: e => `Volume ${e.entity!.label} is being attached to a Linode.`,
+    failed: e => `Volume ${e.entity!.label} failed to attach to a Linode.`,
+    finished: e => `Volume ${e.entity!.label} has been attached to a Linode.`,
+  },
+  volume_clone: {
+    notification: e => `Volume ${e.entity!.label} has been cloned.`,
+  },
+  volume_create: {
+    scheduled: e => `Volume ${e.entity!.label} has been scheduled for creation.`,
+    started: e => `Volume ${e.entity!.label} is being created.`,
+    failed: e => `Creation of volume ${e.entity!.label} has failed.`,
+    finished: e => `Volume ${e.entity!.label} has been created.`,
+    notification: e => `Volume ${e.entity!.label} has been created.`,
+  },
+  volume_delete: {
+    scheduled: e => ``,
+    started: e => ``,
+    failed: e => ``,
+    finished: e => ``,
+    notification: e => `Volume ${e.entity!.label} has been deleted.`,
+  },
+  volume_detach: {
+    scheduled: e => `Volume ${e.entity!.label} is scheduled for detachment.`,
+    started: e => `Volume ${e.entity!.label} is being detached from a Linode.`,
+    failed: e => `Volume ${e.entity!.label} has failed to detach from a Linode.`,
+    finished: e => `Volume ${e.entity!.label} has been detached..`,
+    notification: e => `Volume ${e.entity!.label} has been detached.`,
+  },
+  volume_resize: {
+    notification: e => `Volume ${e.entity!.label} has been resized.`,
+  },
 };
 
 export default (
