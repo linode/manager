@@ -110,7 +110,15 @@ class Form extends React.Component<State> {
               label="Input Some Text"
               placeholder="This is a placeholder"
             />
-            <PasswordInput />
+            <PasswordInput label="Password" />
+            <TextField
+              label="Comments"
+              value=""
+              // onChange={e => onChange('comments', e.target.value)}
+              multiline={true}
+              rows={3}
+              // errorText={errorFor('comments')}
+            />
 
             <FormDivider spacing={3} />
 
@@ -135,11 +143,14 @@ class Form extends React.Component<State> {
                 <MenuItem value={4}>Last Option</MenuItem>
               </Select>
               <FormHelperText>Here's some helper text</FormHelperText>
-          </FormControl>
+            </FormControl>
 
             <FormDivider spacing={3} />
 
             <FormGroup>
+              <Typography variant="subheading">
+                A form section title
+              </Typography>
               <FormLabel>
                 Checkboxes with FormGroup
               </FormLabel>
@@ -243,13 +254,9 @@ class Form extends React.Component<State> {
               <FormLabel>
                 Toggle Switches
               </FormLabel>
-
-              <Toggle label="Example Label" />
-
-              <Toggle label="Example Label" />
-
-              <Toggle label="Example Label" />
-
+              <Toggle label="First Label" />
+              <Toggle label="Second Label" />
+              <Toggle label="Label Label" />
             </FormGroup>
 
             <ActionsPanel>
