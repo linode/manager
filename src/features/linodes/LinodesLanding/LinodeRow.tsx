@@ -91,6 +91,8 @@ interface Props {
   linodeRecentEvent?: Linode.Event;
   type?: Linode.LinodeType;
   openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
+  toggleConfirmation: (bootOption: Linode.BootAction,
+    linodeId: number, linodeLabel: string) => void;
 }
 
 type PropsWithStyles = Props & WithStyles<ClassNames>;
@@ -162,6 +164,7 @@ class LinodeRow extends React.Component<PropsWithStyles> {
       linodeLabel,
       classes,
       openConfigDrawer,
+      toggleConfirmation,
     } = this.props;
 
     return (
@@ -184,6 +187,7 @@ class LinodeRow extends React.Component<PropsWithStyles> {
               linodeLabel={linodeLabel}
               linodeStatus={linodeStatus}
               openConfigDrawer={openConfigDrawer}
+              toggleConfirmation={toggleConfirmation}
             />
           </div>
         </TableCell>

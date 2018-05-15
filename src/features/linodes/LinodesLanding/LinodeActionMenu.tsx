@@ -2,20 +2,23 @@ import * as React from 'react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
-import { rebootLinode, powerOffLinode, powerOnLinode } from './powerActions';
+import { powerOnLinode } from './powerActions';
 
 interface Props {
   linodeId: number;
   linodeLabel: string;
   linodeStatus: string;
   openConfigDrawer: (configs: Linode.Config[], fn: (id: number) => void) => void;
+  toggleConfirmation: (bootOption: Linode.BootAction,
+    linodeId: number, linodeLabel: string) => void;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
 class LinodeActionMenu extends React.Component<CombinedProps> {
   createLinodeActions = () => {
-    const { linodeId, linodeLabel, linodeStatus, openConfigDrawer, history: { push } } = this.props;
+    const { linodeId, linodeLabel, linodeStatus,
+       openConfigDrawer, toggleConfirmation, history: { push } } = this.props;
 
     return function (closeMenu: Function): Action[] {
       const actions = [
@@ -30,7 +33,7 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
           title: 'Reboot',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             e.preventDefault();
-            rebootLinode(openConfigDrawer, linodeId, linodeLabel);
+            toggleConfirmation('reboot', linodeId, linodeLabel);
             closeMenu();
           },
         },
@@ -78,7 +81,7 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
         actions.unshift({
           title: 'Power Off',
           onClick: (e) => {
-            powerOffLinode(linodeId, linodeLabel);
+            toggleConfirmation('power_down', linodeId, linodeLabel);
             closeMenu();
           },
         });
