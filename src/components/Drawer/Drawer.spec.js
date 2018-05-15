@@ -43,9 +43,22 @@ describe('Drawer Suite', () => {
         browser.waitForVisible(drawerElem, 10000, true);
     });
 
-    xit('should dismiss on esc', () => {
+    it('should dismiss on esc', () => {
         browser.click(toggleDrawer);
         browser.waitForVisible(drawerElem);
+
+        // Uncomment this out when Chromedriver implements actions API
+        // browser.actions(
+        //     {
+        //         "type": "key",
+        //         "id": "keyboard",
+        //         "actions": [
+        //             {"type": "keyDown", "value": "\uE00C"},
+        //         ]
+        //     }
+        // );
+        // browser.actions();
+        browser.keys('\uE00C');
         browser.waitForVisible(drawerElem, 10000, true);
     });
 });
