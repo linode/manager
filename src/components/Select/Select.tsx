@@ -83,6 +83,7 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
         MenuProps={menuProps}
         input={<Input {...inputProps} />}
         {...props}
+        data-qa-select
       >
         {children}
       </Select>

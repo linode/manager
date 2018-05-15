@@ -40,7 +40,7 @@ class Example extends React.Component<any, State> {
       <div style={{ marginLeft: '300px', marginTop: '200px' }}>
         <FormControl fullWidth>
           <InputLabel htmlFor="awesomeness" disableAnimation shrink={true} error={this.state.error}>
-            Awesomness
+            Awesomeness
           </InputLabel>
           <Select
             value={selected}
