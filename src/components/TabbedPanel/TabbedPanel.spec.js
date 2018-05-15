@@ -1,30 +1,22 @@
-const { constants } = require('../../../e2e/constants');
-const { waitForFocus } = require('../../../e2e/utils/storybook');
+const { navigateToStory } = require('../../../e2e/utils/storybook');
 
 describe('Tabbed Panel Suite', () => {
-    const menuItem = '[data-name="TabbedPanel"]';
-    const childStory = '[data-name="default"]';
+    const component = 'TabbedPanel';
+    const childStories = [
+        'default',
+    ]
     const tabbedPanel = '[data-qa-tp]';
     const header = '[data-qa-tp-title]';
     const copy = '[data-qa-tp-copy]';
     const tab = '[data-qa-tab]';
     const tabBody = '[data-qa-tab-body]';
 
-    it('should display tabbed panel in navigation', () => {
-        const tabbedPanelMenu = $(menuItem);
-        expect(tabbedPanelMenu.isVisible()).toBe(true);
-    });
-
-    it('should display default panel story', () => {
-        browser.click('[data-name="TabbedPanel"]');
-        const story = $(childStory);
-
-        expect(story.isVisible()).toBe(true);
+    beforeAll(() => {
+        navigateToStory(component, childStories[0]);
     });
 
     it('should display tabbed panel', () => {
-      browser.click(childStory);
-      waitForFocus(tabbedPanel);
+      browser.waitForVisible(tabbedPanel);
 
       const tabbedPanelElem = $(tabbedPanel);
       expect(tabbedPanelElem.isVisible()).toBe(true);

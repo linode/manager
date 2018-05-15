@@ -1,12 +1,12 @@
-const { waitForFocus, previewFocus } = require('../../../e2e/utils/storybook');
+const { navigateToStory, executeInAllStories } = require('../../../e2e/utils/storybook');
 
 describe('Expansion Panel Suite', () => {
-    const navItem = '[data-name="ExpansionPanel"]';
+    const component = 'ExpansionPanel';
     const childStories = [
-        '[data-name="Interactive"]',
-        '[data-name="Success!"]',
-        '[data-name="Warning!"]',
-        '[data-name="Error!"]',
+        'Interactive',
+        'Success!',
+        'Warning!',
+        'Error!',
     ];
 
     const panel = '[data-qa-panel]';
@@ -26,35 +26,21 @@ describe('Expansion Panel Suite', () => {
         browser.waitForVisible(gridItem, 5000, opposite)
     }
 
-    it('should display expansion panel story in navigation', () => {
-        const nav = $(navItem);
-        expect(nav.isVisible()).toBe(true);
-    });
-
-    it('should display child stories', () => {
-        $(navItem).click();
-        childElements = childStories.map((c) => $(c));
-        childElements.forEach(c => c.click());
-    });
-
     it('should display expansion panels', () => {
-        childElements.forEach(c => {
-            c.click();
-            waitForFocus(panel);
+        executeInAllStories(component, childStories, () => {
+            browser.waitForVisible(panel);
 
             const expansionPanel = $(panel);
             const expansionPanelText = $(panelSubheading);
             expect(expansionPanel.isVisible()).toBe(true);
             expect(expansionPanelText.getText()).toMatch(/([a-z])/ig);
-            browser.frame();
         });
     });
 
     describe('Interactive Suite', () => {
         beforeAll(() => {
-            browser.frame();
-            childElements[0].click();
-            previewFocus();
+            navigateToStory(component, childStories[0]);
+            browser.waitForVisible(panel);
         });
 
         it('should expand and display message text', () => {
@@ -68,9 +54,8 @@ describe('Expansion Panel Suite', () => {
 
     describe('Success Suite', () => {
         beforeAll(() => {
-            browser.frame();
-            childElements[1].click();
-            previewFocus();
+            navigateToStory(component, childStories[1]);
+            browser.waitForVisible(panel);
         });
 
         it('should expand on click and display message text', () => {
@@ -94,9 +79,8 @@ describe('Expansion Panel Suite', () => {
 
     describe('Warning Suite', () => {
         beforeAll(() => {
-            browser.frame();
-            childElements[2].click();
-            previewFocus();
+            navigateToStory(component, childStories[1]);
+            browser.waitForVisible(panel);
         });
 
         it('should expand on click and display message text', () => {
@@ -120,9 +104,8 @@ describe('Expansion Panel Suite', () => {
 
     describe('Error Suite', () => {
         beforeAll(() => {
-            browser.frame();
-            childElements[3].click();
-            previewFocus();
+            navigateToStory(component, childStories[2]);
+            browser.waitForVisible(panel);
         });
 
         it('should expand on click and display message text', () => {

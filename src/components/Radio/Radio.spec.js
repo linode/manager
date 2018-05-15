@@ -1,31 +1,19 @@
-const { waitForFocus, executeInAllStories } = require('../../../e2e/utils/storybook');
+const { navigateToStory } = require('../../../e2e/utils/storybook');
 
 describe('Radio Suite', () => {
-    const menuItem = '[data-name="Radio"]';
-    const childStory = '[data-name="Interactive"]';
+    const component = 'Radio';
+    const childStories = [
+        'Interactive',
+    ]
     const radio = '[data-qa-radio]';
     let radios;
 
-    it('should display radio component in navigation', () => {
-        const radioStory = $(menuItem);
-        expect(radioStory.isVisible()).toBe(true);
-    });
-
-    it('should display interactive child story', () => {
-        browser.click(menuItem);
-        expect($(childStory).waitForVisible()).toBe(true);
+    beforeAll(() => {
+        navigateToStory(component, childStories[0]);
     });
 
     it('should display radio buttons', () => {
-        browser.waitUntil(function() {
-            try {
-                browser.click(childStory);
-                return true;
-            } catch (err) {
-                return false;
-            }
-        }, 5000);
-        waitForFocus(radio);
+        browser.waitForVisible(radio);
         radios = $$(radio);
 
         radios.forEach(r => expect(r.isVisible()).toBe(true));

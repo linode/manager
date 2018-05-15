@@ -1,32 +1,19 @@
 const { constants } = require('../../../e2e/constants');
-const { waitForFocus } = require('../../../e2e/utils/storybook');
+const { navigateToStory } = require('../../../e2e/utils/storybook');
 
 describe('Icon Text Link Suite', () => {
-    const parentMenuItem = '[data-name="IconTextLink"]';
-    const childMenuItem = '[data-name="Interactive"]';
+    const component = 'IconTextLink';
+    const childStories = [
+        'Interactive',
+    ]
     const iconTextLinkTitle = '[data-qa-icon-text-link="Link title"]';
 
-    it('should display icon text link in navigation', () => {
-        const iconTextLink = $(parentMenuItem);
-        expect(iconTextLink.isVisible()).toBe(true);
-    });
-
-    it('should display interactive in navigation', () => {
-        browser.click(parentMenuItem);
-
-        const interactive = $(childMenuItem);
-        expect(interactive.isVisible()).toBe(true);
+    beforeAll(() => {
+        navigateToStory(component, childStories[0]);
     });
 
     it('should display IconLinkText Components', () => {
-        // Wait until only one child menu displays before proceeding
-        browser.waitUntil(function() {
-            return $$(childMenuItem).length === 1;
-        }, 5000);
-
-        browser.click(childMenuItem);
-
-        waitForFocus(iconTextLinkTitle);
+        browser.waitForVisible(iconTextLinkTitle);
 
         const iconTextLinks = $$(iconTextLinkTitle);
         iconTextLinks.forEach(e => expect(e.isVisible()).toBe(true));
@@ -66,7 +53,7 @@ describe('Icon Text Link Suite', () => {
     });
 
     it('should show a disabled IconTextLink', () => {
-        waitForFocus(iconTextLinkTitle);
+        browser.waitForVisible(iconTextLinkTitle);
 
         const iconTextLinks = $$(iconTextLinkTitle);
         const disabledLinks = iconTextLinks.map(e => e.getAttribute('class').includes('disabled'));

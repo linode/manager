@@ -1,19 +1,19 @@
-const { previewFocus } = require('../../../e2e/utils/storybook');
+const { navigateToStory } = require('../../../e2e/utils/storybook');
 
 describe('Drawer Suite', () => {
-    const menuItem = '[data-name="Drawer"]';
-    const childStory = '[data-name="Example"]';
+    const component = 'Drawer';
+    const childStories = [
+        'Example',
+    ];
     const drawerElem = '[data-qa-drawer]';
     const toggleDrawer = '[data-qa-toggle-drawer]';
 
     beforeAll(() => {
-        browser.click(menuItem);
-        browser.waitForVisible(childStory);
-        browser.click(childStory);
-        previewFocus();
+        navigateToStory(component, childStories[0]);
     });
 
     it('should display the drawer on click', () => {
+        browser.waitForVisible(toggleDrawer);
         browser.click(toggleDrawer);
         browser.waitForVisible(drawerElem);
     });

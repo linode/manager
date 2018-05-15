@@ -1,27 +1,17 @@
-const { waitForFocus, executeInAllStories } = require('../../../e2e/utils/storybook');
+const { navigateToStory, executeInAllStories } = require('../../../e2e/utils/storybook');
 
 describe('Tags Suite', () => {
-    const menuItem = '[data-name="Tags"]';
+    const component = 'Tags';
     const childStories = [
-        '[data-name="primary"]',
-        '[data-name="white"]',
-        '[data-name="gray"]',
-        '[data-name="editable"]',
+        'primary',
+        'white',
+        'gray',
+        'editable',
     ];
     const tag = '[data-qa-tag]';
 
-    it('should display tag component in navigation', () => {
-        const tagNavItem = $(menuItem);
-        expect(tagNavItem.isVisible()).toBe(true);
-    });
-
-    it('should display child stories in navigation', () => {
-        browser.click(menuItem);
-        browser.waitForVisible(childStories[0]);
-    });
-
     it('should display tag in each story', () => {
-        executeInAllStories(childStories, () => {
+        executeInAllStories(component, childStories, () => {
             const tagElem = $(tag);
             expect(tagElem.isVisible()).toBe(true);
         });
@@ -29,8 +19,7 @@ describe('Tags Suite', () => {
 
     describe('Editable Tag Suite', () => {
         beforeAll(() => {
-           browser.click('[data-name="editable"]');
-           waitForFocus(tag);
+           navigateToStory(component, childStories[3]);
            browser.waitForVisible(tag);
         });
 

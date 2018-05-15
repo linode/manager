@@ -1,13 +1,13 @@
-const { waitForFocus, previewFocus, executeInAllStories } = require('../../../e2e/utils/storybook');
+const { navigateToStory, executeInAllStories } = require('../../../e2e/utils/storybook');
 
 describe('Button Suite', () => {
-    const menuItem = '[data-name="Button"]';
+    const component = 'Button';
     const childStories = [
-        '[data-name="Types"]',
-        '[data-name="Disabled"]',
-        '[data-name="Primary Dropdown"]',
-        '[data-name="Secondary Dropdown"]',
-        '[data-name="Destructive"]'
+        'Types',
+        'Disabled',
+        'Primary Dropdown',
+        'Secondary Dropdown',
+        'Destructive',
     ]
     const button = {
         generic: '[data-qa-button]',
@@ -18,21 +18,9 @@ describe('Button Suite', () => {
         destructive: '[data-qa-button="Destructive"]',
     }
 
-    it('should display button component in navigation', () => {
-        const buttonNavItem = $(menuItem);
-        expect(buttonNavItem.isVisible()).toBe(true);
-    });
-
-    it('should display child stories in navigation', () => {
-        browser.click(menuItem);
-
-        childStories.forEach(story => {
-            expect($(story).waitForVisible()).toBe(true)
-        });
-    });
-
     it('should display buttons in each story', () => {
-        executeInAllStories(childStories, () => {
+        executeInAllStories(component, childStories, () => {
+            browser.waitForVisible('[data-qa-button]');
             const buttons = $$(button.generic);
             buttons.forEach(b => expect(b.isVisible()).toBe(true));
         });
@@ -42,11 +30,11 @@ describe('Button Suite', () => {
         let primaryButtons, secondaryButtons;
 
         beforeAll(() => {
-            browser.click(childStories[0]);
-        })
+            navigateToStory(component, childStories[1]);
+        });
 
         it('should display primary button', () => {
-            waitForFocus(button.primary);
+            browser.waitForVisible(button.primary);
 
             primaryButtons = $$(button.primary);
             expect(primaryButtons.length).toBe(1);
@@ -89,9 +77,8 @@ describe('Button Suite', () => {
         let primaryDowndowns;
 
         beforeAll(() => {
-            browser.frame();
-            browser.click(childStories[2]);
-            previewFocus();
+            navigateToStory(component, childStories[2]);
+            browser.waitForVisible(button.generic);
         });
 
         it('should display dropdown buttons with carat', () => {
@@ -112,9 +99,8 @@ describe('Button Suite', () => {
         let secondaryDropdowns;
 
         beforeAll(() => {
-            browser.frame();
-            browser.click(childStories[3]);
-            previewFocus();
+            navigateToStory(component, childStories[3]);
+            browser.waitForVisible(button.generic);
         })
 
         it('should display dropdown buttons with carat', () => {
@@ -134,9 +120,7 @@ describe('Button Suite', () => {
     xdescribe('Destructive Button', () => {
 
         beforeAll(() => {
-            browser.frame();
-            browser.click(childStories[4]);
-            waitForFocus(button.destructive);
+            navigateToStory(component, childStories[4]);
         });
         
         let destructiveButtons;
