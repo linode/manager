@@ -4,7 +4,6 @@ import { storiesOf } from '@storybook/react';
 import ActionsPanel from '../ActionsPanel';
 import ThemeDecorator from '../../utilities/storybookDecorators';
 import Drawer from './Drawer';
-import TextField from '../TextField';
 
 import Button from 'src/components/Button';
 

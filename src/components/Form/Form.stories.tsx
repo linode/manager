@@ -24,6 +24,7 @@ import Radio from 'src/components//Radio';
 import Grid from 'src/components/Grid';
 import PasswordInput from 'src/components/PasswordInput';
 import Select from 'src/components/Select';
+import Toggle from 'src/components/Toggle';
 
 const HelperItemStyles = {
   with: '100%',
@@ -33,7 +34,7 @@ const HelperItemStyles = {
 };
 
 interface State {
-  selected: number;
+  selected?: number;
 }
 
 class Form extends React.Component<State> {
@@ -237,6 +238,37 @@ class Form extends React.Component<State> {
             </RadioGroup>
 
             <FormDivider spacing={3} />
+
+            <FormGroup>
+              <FormLabel>
+                Checkboxes with FormGroup row
+              </FormLabel>
+
+              <FormControlLabel
+                className="toggleLabel"
+                control={
+                  <Toggle />
+                }
+                label="Example Label"
+              />
+
+              <FormControlLabel
+                className="toggleLabel"
+                control={
+                  <Toggle />
+                }
+                label="Example Label"
+              />
+
+              <FormControlLabel
+                className="toggleLabel"
+                control={
+                  <Toggle />
+                }
+                label="Example Label"
+              />
+
+            </FormGroup>
 
             <ActionsPanel>
               <Button type="primary">
