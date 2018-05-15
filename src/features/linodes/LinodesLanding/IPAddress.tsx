@@ -100,7 +100,7 @@ class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
     const { classes, copyRight } = this.props;
 
     return (
-      <div className={classes.ipLink}>
+      <div className={classes.ipLink} data-qa-copy-ip>
         <CopyTooltip
           text={ip}
           className={`${classes.icon} ${copyRight ? classes.right : classes.left}`}

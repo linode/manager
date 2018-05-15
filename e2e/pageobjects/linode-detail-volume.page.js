@@ -6,11 +6,12 @@ class VolumeDetail {
     get label() { return $('[data-qa-volume-label]'); }
     get size() { return $('[data-qa-size]'); }
     get region() { return $('[data-qa-region]'); }
-    get attachedTo() { return $('[data-qa-attach-to]'); } 
+    get attachedTo() { return $('[data-qa-attach-to]'); }
     get submit() { return $('[data-qa-submit]'); }
     get cancel() { return $('[data-qa-cancel]'); }
     get volumeCell() { return $$('[data-qa-volume-cell]'); }
     get volumeCellElem() { return $('[data-qa-volume-cell]'); }
+    get volumeAttachment() { return $('[data-qa-volume-cell-attachment]'); }
     get volumeCellLabel() { return $('[data-qa-volume-cell-label]') }
     get volumeCellSize() { return $('[data-qa-volume-size]') }
     get volumeFsPath() { return $('[data-qa-fs-path]'); }
@@ -107,7 +108,10 @@ class VolumeDetail {
     }
 
     removeVolume(volumeElement) {
+        const numberOfVolumes = this.volumeCell.length;
         volumeElement.$('[data-qa-action-menu]').click();
+
+        browser.waitForVisible('[data-qa-action-menu-item="Delete"]');
         browser.jsClick('[data-qa-action-menu-item="Delete"]');
 
         browser.waitForVisible('[data-qa-dialog-title]');
@@ -126,10 +130,8 @@ class VolumeDetail {
         // Confirm remove
         dialogConfirm.click();
 
-        const volumeSelector = volumeElement.selector;
-        
-        browser.waitUntil(function() {
-            return !browser.isExisting(volumeSelector);
+        browser.waitUntil(function(volumeElement) {
+            return $$('[data-qa-volume-cell]').length === (numberOfVolumes-1)
         }, 30000);
     }
 
