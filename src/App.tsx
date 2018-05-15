@@ -4,6 +4,8 @@ import { connect, Dispatch } from 'react-redux';
 import { compose, bindActionCreators } from 'redux';
 import { append, pathOr, range, flatten } from 'ramda';
 import * as Promise from 'bluebird';
+import { shim } from 'promise.prototype.finally';
+shim(); // allows for .finally() usage
 
 import { withStyles, WithStyles, StyleRulesCallback, Theme } from 'material-ui/styles';
 import CssBaseline from 'material-ui/CssBaseline';

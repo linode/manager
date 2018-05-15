@@ -13,16 +13,20 @@ import {
   Theme,
   StyleRules,
 } from 'material-ui/styles';
-import Grid from 'src/components/Grid';
 import Typography from 'material-ui/Typography';
 import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
 
 import { parseQueryParams } from 'src/utilities/queryParams';
 import { dcDisplayNames } from 'src/constants';
-import { createLinode, getLinodeTypes, allocatePrivateIP, getLinodes } from 'src/services/linodes';
+import {
+  createLinode, getLinodeTypes, allocatePrivateIP, getLinodes, cloneLinode,
+} from 'src/services/linodes';
 import { getImages } from 'src/services/images';
 import { getRegions } from 'src/services/misc';
+
+import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 import PromiseLoader from 'src/components/PromiseLoader';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
@@ -81,6 +85,7 @@ interface State {
   selectedBackupID?: number;
   selectedBackupInfo?: Info;
   smallestType?: string;
+  selectedCloneTargetLinodeID?: number | null;
   selectedImageID: string | null;
   selectedRegionID: string | null;
   selectedTypeID: string | null;
@@ -89,6 +94,7 @@ interface State {
   backups: boolean;
   privateIP: boolean;
   errors?: Linode.ApiFieldError[];
+  isMakingRequest: boolean;
   [index: string]: any;
 }
 
@@ -167,6 +173,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     backups: false,
     privateIP: false,
     errors: undefined,
+    isMakingRequest: false,
   };
 
   mounted: boolean = false;
@@ -212,9 +219,9 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
   getBackupsMonthlyPrice(): number | null {
     const { selectedTypeID } = this.state;
     if (!selectedTypeID || !this.props.types.response) { return null; }
-    const type = this.props.types.response.find(type => type.id === selectedTypeID);
+    const type = this.getTypeInfo();
     if (!type) { return null; }
-    return type.addons.backups.price.monthly;
+    return type.backupsMonthly;
   }
 
   extendLinodes = (linodes: Linode.Linode[]): ExtendedLinode[] => {
@@ -240,13 +247,25 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     );
   }
 
+  scrollToTop = () => {
+    window.scroll({
+      top: 0,
+      left: 0,
+      behavior: 'smooth',
+    });
+  }
+
   tabs = [
     {
       title: 'Create from Image',
       render: () => {
         const hasErrorFor = getAPIErrorsFor(errorResources, this.state.errors);
+        const generalError = hasErrorFor('none');
         return (
           <React.Fragment>
+            {generalError &&
+              <Notice text={generalError} error={true} />
+            }
             <SelectImagePanel
               images={this.props.images.response}
               handleSelection={this.updateStateFor}
@@ -288,8 +307,12 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       title: 'Create from Backup',
       render: () => {
         const hasErrorFor = getAPIErrorsFor(errorResources, this.state.errors);
+        const generalError = hasErrorFor('none');
         return (
           <React.Fragment>
+            {generalError &&
+              <Notice text={generalError} error={true} />
+            }
             <SelectLinodePanel
               error={hasErrorFor('linode_id')}
               linodes={compose(
@@ -338,34 +361,86 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
         );
       },
     },
+    {
+      title: 'Clone From Existing',
+      render: () => {
+        const hasErrorFor = getAPIErrorsFor(errorResources, this.state.errors);
+        const generalError = hasErrorFor('none');
+        return (
+          <React.Fragment>
+            {generalError &&
+              <Notice text={generalError} error={true} />
+            }
+            <Notice text={`This newly created Linode wil be created with
+            the same root password as the original Linode`} warning={true} />
+            <SelectLinodePanel
+              error={hasErrorFor('linode_id')}
+              linodes={this.extendLinodes(this.props.linodes.response)}
+              selectedLinodeID={this.state.selectedLinodeID}
+              selectedCloneTargetLinodeID={this.state.selectedCloneTargetLinodeID}
+              handleSelection={this.updateStateFor}
+              header={'Select Linode to Clone From'}
+            />
+            <SelectLinodePanel
+              linodes={this.extendLinodes(this.props.linodes.response)}
+              selectedLinodeID={this.state.selectedLinodeID}
+              selectedCloneTargetLinodeID={this.state.selectedCloneTargetLinodeID}
+              handleSelection={this.updateStateFor}
+              header={'Select Target Linode'}
+              isCloneTarget={true}
+            />
+            {this.state.selectedCloneTargetLinodeID === null &&
+              <React.Fragment>
+                <SelectRegionPanel
+                  error={hasErrorFor('region')}
+                  regions={this.props.regions.response}
+                  handleSelection={this.updateStateFor}
+                  selectedID={this.state.selectedRegionID}
+                />
+                <SelectPlanPanel
+                  error={hasErrorFor('type')}
+                  types={this.props.types.response}
+                  onSelect={(id: string) => this.setState({ selectedTypeID: id })}
+                  selectedID={this.state.selectedTypeID}
+                />
+                <LabelAndTagsPanel
+                  error={hasErrorFor('label')}
+                  label={this.state.label}
+                  handleChange={this.updateStateFor}
+                />
+              </React.Fragment>}
+            <AddonsPanel
+              backups={this.state.backups}
+              backupsMonthly={this.getBackupsMonthlyPrice()}
+              privateIP={this.state.privateIP}
+              handleChange={this.updateStateFor}
+            />
+          </React.Fragment>
+        );
+      },
+    },
   ];
 
   imageTabIndex = this.tabs.findIndex(tab => tab.title.toLowerCase().includes('image'));
   backupTabIndex = this.tabs.findIndex(tab => tab.title.toLowerCase().includes('backup'));
+  cloneTabIndex = this.tabs.findIndex(tab => tab.title.toLowerCase().includes('clone'));
 
   componentWillUnmount() {
     this.mounted = false;
   }
 
   onDeploy = () => {
-    const { history } = this.props;
+    this.setState({ errors: [] });
     const {
       selectedTab,
       selectedLinodeID,
       selectedBackupID,
-      selectedImageID,
-      selectedRegionID,
-      selectedTypeID,
-      label,
-      password,
-      backups,
-      privateIP,
+      selectedCloneTargetLinodeID,
     } = this.state;
 
     if (selectedTab === this.backupTabIndex) {
       /* we are creating from backup */
       if (!selectedLinodeID) {
-        /* so a Linode selection is required */
         this.setState({
           errors: [
             { field: 'linode_id', reason: 'You must select a Linode' },
@@ -373,9 +448,9 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
         });
         return;
       }
-
       if (!selectedBackupID) {
         /* a backup selection is also required */
+        this.scrollToTop();
         this.setState({
           errors: [
             { field: 'backup_id', reason: 'You must select a Backup' },
@@ -383,7 +458,39 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
         });
         return;
       }
+      this.createNewLinode();
+    } else if (selectedTab === this.cloneTabIndex) {
+      // creating a clone
+      // if selectedCloneTargetLinode is 'undefined,' no target Linode has been selected
+      // if selectedCloneTargetLinode is null, that means we're cloning to a new Linode
+      if (!selectedLinodeID || typeof selectedCloneTargetLinodeID === 'undefined') {
+        this.scrollToTop();
+        this.setState({
+          errors: [
+            { field: 'linode_id', reason: 'You must select both a source and target Linode' },
+          ],
+        });
+        return;
+      }
+      this.cloneLinode();
+    } else {
+      // creating from image
+      this.createNewLinode();
     }
+  }
+
+  createNewLinode = () => {
+    const { history } = this.props;
+    const {
+      selectedImageID,
+      selectedRegionID,
+      selectedTypeID,
+      label,
+      password,
+      backups,
+      privateIP,
+      selectedBackupID,
+    } = this.state;
 
     createLinode({
       region: selectedRegionID,
@@ -409,6 +516,47 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       });
   }
 
+  cloneLinode = () => {
+    const { history } = this.props;
+    const {
+      selectedRegionID,
+      selectedTypeID,
+      selectedLinodeID,
+      selectedCloneTargetLinodeID,
+      label, // optional
+      backups, // optional
+      privateIP,
+    } = this.state;
+
+    this.setState({ isMakingRequest: true });
+
+    cloneLinode(selectedLinodeID!, {
+      region: selectedRegionID,
+      type: selectedTypeID,
+      linode_id: (!!selectedCloneTargetLinodeID) ? +selectedCloneTargetLinodeID : null,
+      label,
+      backups_enabled: backups,
+    })
+      .then((linode) => {
+        if (privateIP) allocatePrivateIP(linode.data.id);
+        resetEventsPolling();
+        history.push('/linodes');
+      })
+      .catch((error) => {
+        if (!this.mounted) { return; }
+
+        this.scrollToTop();
+
+        this.setState(() => ({
+          errors: error.response && error.response.data && error.response.data.errors,
+        }));
+      })
+      .finally(() => {
+        // regardless of whether request failed or not, change state and enable the submit btn
+        this.setState({ isMakingRequest: false });
+      });
+  }
+
   getImageInfo = (image: Linode.Image | undefined): Info => {
     return image && {
       name: `${image.vendor || image.label}`,
@@ -416,12 +564,34 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     };
   }
 
-  getTypeInfo = (type: ExtendedType | undefined): TypeInfo => {
+  getTypeInfo = (): TypeInfo => {
+    const { selectedCloneTargetLinodeID, selectedTypeID } = this.state;
+
+    const { linodes } = this.props;
+
+    // we have to add a conditional check here to see if we're cloning to
+    // an existing Linode. If so, we need to get the type from that Linode and
+    // so that we can display the accurate price
+    const cloningToExistingLinode = !!selectedCloneTargetLinodeID;
+    const selectedCloneTargetLinode = linodes.response.find((linode) => {
+      return Number(selectedCloneTargetLinodeID) === linode.id;
+    });
+
+    const typeInfo = (!cloningToExistingLinode)
+      ? this.reshapeTypeInfo(this.props.types.response.find(
+        type => type.id === selectedTypeID))
+      : this.reshapeTypeInfo(this.props.types.response.find(
+        type => type.id === selectedCloneTargetLinode!.type));
+
+    return typeInfo;
+  }
+
+  reshapeTypeInfo = (type: ExtendedType | undefined): TypeInfo => {
     return type && {
       name: `${typeLabel(type.memory)}`,
       details: `${typeLabelDetails(type.memory, type.disk, type.vcpus)}`,
       monthly: type.price.monthly,
-      backupsMonthly: this.getBackupsMonthlyPrice(),
+      backupsMonthly: type.addons.backups.price.monthly,
     };
   }
 
@@ -435,7 +605,6 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       label,
       backups,
       selectedImageID,
-      selectedTypeID,
       selectedRegionID,
       selectedBackupInfo,
     } = this.state;
@@ -445,21 +614,17 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     let imageInfo: Info;
     if (selectedTab === this.imageTabIndex) {
       imageInfo = this.getImageInfo(this.props.images.response.find(
-          image => image.id === selectedImageID));
+        image => image.id === selectedImageID));
     } else if (selectedTab === this.backupTabIndex) {
       imageInfo = selectedBackupInfo;
     }
 
-    const typeInfo = this.getTypeInfo(this.props.types.response.find(
-      type => type.id === selectedTypeID));
-
     const regionName = this.getRegionName(this.props.regions.response.find(
       region => region.id === selectedRegionID));
 
-    const tabRender = this.tabs[selectedTab].render;
+    const typeInfo = this.getTypeInfo();
 
-    const hasErrorFor = getAPIErrorsFor(errorResources, this.state.errors);
-    const generalError = hasErrorFor('none');
+    const tabRender = this.tabs[selectedTab].render;
 
     return (
       <StickyContainer>
@@ -488,12 +653,12 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
                 (props: StickyProps) => {
                   const combinedProps = {
                     ...props,
-                    error: generalError,
                     label,
                     imageInfo,
                     typeInfo,
                     regionName,
                     backups,
+                    disabled: this.state.isMakingRequest,
                     onDeploy: this.onDeploy,
                   };
                   return (

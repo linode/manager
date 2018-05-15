@@ -9,17 +9,15 @@ import {
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 
-import Notice from 'src/components/Notice';
-
 import { TypeInfo } from 'src/features/linodes/LinodesCreate/LinodesCreate';
 
 type ClassNames = 'root'
-| 'checkoutSection'
-| 'noBorder'
-| 'sidebarTitle'
-| 'detail'
-| 'price'
-| 'per';
+  | 'checkoutSection'
+  | 'noBorder'
+  | 'sidebarTitle'
+  | 'detail'
+  | 'price'
+  | 'per';
 
 const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   '@keyframes fadeIn': {
@@ -71,13 +69,13 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
 
 interface Props {
   onDeploy: () => void;
-  error?: string;
   label: string | null;
   imageInfo: { name: string, details: string } | undefined;
   typeInfo: TypeInfo | undefined;
   regionName: string | undefined;
   backups: boolean;
   isSticky?: boolean;
+  disabled?: boolean;
 }
 
 type CombinedProps = Props & StickyProps & WithStyles<ClassNames>;
@@ -111,11 +109,11 @@ class CheckoutBar extends React.Component<CombinedProps> {
       classes,
       onDeploy,
       label,
-      error,
       backups,
       imageInfo,
       typeInfo,
       regionName,
+      disabled,
     } = this.props;
 
     let finalStyle;
@@ -188,21 +186,16 @@ class CheckoutBar extends React.Component<CombinedProps> {
           </Typography>
         </div>
 
-        {error &&
-          <Notice error>
-            {error}
-          </Notice>
-        }
-
         <div className={`${classes.checkoutSection} ${classes.noBorder}`}>
           <Button
             variant="raised"
             color="primary"
+            disabled={disabled}
             fullWidth
             onClick={onDeploy}
             data-qa-deploy-linode
           >
-            Deploy Linode
+            {!disabled ? 'Deploy Linode' : 'Deploying...'}
           </Button>
         </div>
 
