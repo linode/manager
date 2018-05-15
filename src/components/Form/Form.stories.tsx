@@ -46,7 +46,11 @@ interface State {
   selected?: number;
 }
 
-class Form extends React.Component<State> {
+interface Props {
+  nomargins?: boolean;
+}
+
+class Form extends React.Component<State & Props> {
   state = {
     checkedA: true,
     checkedB: false,
@@ -58,42 +62,6 @@ class Form extends React.Component<State> {
     RadioValue: undefined,
     TableRadioValue: '0',
     TableRadioValue2: '0',
-    cards: [
-      {
-        renderIcon: () => {
-          return <InsertPhoto />;
-        },
-        heading: 'Photos',
-        subheadings: [
-          'Use a photo',
-          'Select up to 3',
-        ],
-        checked: true,
-      },
-      {
-        renderIcon: () => {
-          return <InsertPhoto />;
-        },
-        heading: 'Photos',
-        subheadings: [
-          'Use a photo',
-          'Select up to 3',
-        ],
-        disabled: true,
-        tooltip: 'Something... something... whatever...',
-      },
-      {
-        renderIcon: () => {
-          return <InsertPhoto />;
-        },
-        heading: 'Photos 2',
-        subheadings: [
-          'Use a photo',
-          'Select up to 3',
-        ],
-        tooltip: 'Here is another tooltip!',
-      },
-    ],
   };
 
   checkBoxClick = (type: string) => {
@@ -121,10 +89,11 @@ class Form extends React.Component<State> {
 
   render() {
     const { selected } = this.state;
+    const { nomargins } = this.props;
 
     return (
       <React.Fragment>
-        <div style={{ padding: 24 }}>
+        <div style={{ padding: !nomargins && 20 }}>
           <form>
             <FormLabel>
               A form with multiple input types
@@ -421,6 +390,8 @@ class Form extends React.Component<State> {
     );
   }
 }
+
+export default Form;
 
 storiesOf('Form', module)
   .addDecorator(ThemeDecorator)
