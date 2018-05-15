@@ -16,6 +16,7 @@
     "url": "https://github.com/Linode/manager.git"
   },
   "dependencies": {
+    "@types/promise.prototype.finally": "^2.0.2",
     "autoprefixer": "7.1.6",
     "axios": "^0.18.0",
     "bluebird": "^3.5.1",
@@ -48,6 +49,7 @@
     "postcss-loader": "2.0.8",
     "pre-commit": "^1.2.2",
     "promise": "8.0.1",
+    "promise.prototype.finally": "^3.1.0",
     "raf": "3.4.0",
     "ramda": "^0.25.0",
     "raven-js": "^3.22.3",

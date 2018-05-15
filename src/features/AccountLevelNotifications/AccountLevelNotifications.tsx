@@ -21,6 +21,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
+    marginBottom: theme.spacing.unit,
     justifyContent: 'center',
     padding: theme.spacing.unit,
     textAlign: 'center',
