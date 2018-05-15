@@ -293,6 +293,7 @@ class PrimaryNav extends React.Component<Props> {
               ${classes.toggle}
               ${themeName}
             `}
+            label=""
           />
           <span
             className={`

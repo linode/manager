@@ -3,7 +3,6 @@ import { storiesOf } from '@storybook/react';
 
 import ThemeDecorator from '../../utilities/storybookDecorators';
 import Toggle from './Toggle';
-import FormControlLabel from 'material-ui/Form/FormControlLabel';
 
 class Example extends React.Component<{}, { value?: string }> {
   state = { value: undefined };
@@ -14,13 +13,10 @@ class Example extends React.Component<{}, { value?: string }> {
 
   render() {
     return (
-      <FormControlLabel
-        className="toggleLabel"
-        control={
-          <Toggle />
-        }
-        label="Example Label"
-      />
+      <React.Fragment>
+        <Toggle label="This is a top label" labelTop />
+        <Toggle label="This is a left label" />
+      </React.Fragment>
     );
   }
 }

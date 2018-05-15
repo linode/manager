@@ -9,7 +9,6 @@ import {
   Typography,
   Divider,
 } from 'material-ui';
-import FormControlLabel from 'material-ui/Form/FormControlLabel';
 
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import { updateLinode } from 'src/services/linodes';
@@ -36,15 +35,15 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     },
   },
   root: {
-    minHeight: 130,
+    minHeight: 132,
     position: 'relative',
     padding: `${theme.spacing.unit * 3}px 0`,
     '&:last-of-type + hr': {
       display: 'none',
     },
-    '& .toggleLabel > span:last-child': {
+    '& label > span:last-child': {
       position: 'absolute',
-      left: 90,
+      left: 80,
       top: 40,
       ...theme.typography.subheading,
     },
@@ -179,9 +178,9 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
           data-qa-alerts-panel
         >
           <Grid item className={classes.switch}>
-            <FormControlLabel
-              className="toggleLabel"
-              control={<Toggle checked={props.state} onChange={props.onStateChange} />}
+            <Toggle
+              checked={props.state}
+              onChange={props.onStateChange}
               label={props.title}
               data-qa-alert={props.title}
             />

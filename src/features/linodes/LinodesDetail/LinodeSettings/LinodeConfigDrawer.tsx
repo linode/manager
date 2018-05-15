@@ -234,14 +234,10 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             />
 
             <FormControl fullWidth>
-              <FormControlLabel
+              <Toggle
+                checked={useCustomRoot}
+                onChange={(e, v) => onChange('useCustomRoot', v)}
                 label="Use Custom Root"
-                control={
-                  <Toggle
-                    checked={useCustomRoot}
-                    onChange={(e, v) => onChange('useCustomRoot', v)}
-                  />
-                }
               />
 
               <TextField
@@ -277,56 +273,37 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             <Typography variant="subheading">Filesystem/Boot Helpers</Typography>
             <FormControl fullWidth component="fieldset">
               <FormGroup>
-                <FormControlLabel
+                <Toggle
+                  checked={helpers.distro}
+                  onChange={(e, v) => onChange('helpers', { ...helpers, distro: v })}
                   label="Distro Helper"
-                  control={
-                    <Toggle
-                      checked={helpers.distro}
-                      onChange={(e, v) => onChange('helpers', { ...helpers, distro: v })}
-                    />
-                  }
                 />
 
-                <FormControlLabel
+                <Toggle
+                  checked={helpers.updatedb_disabled}
+                  onChange={(e, v) => onChange('helpers', { ...helpers, updatedb_disabled: v })}
                   label="Disable updatedb"
-                  control={
-                    <Toggle
-                      checked={helpers.updatedb_disabled}
-                      onChange={(e, v) => onChange('helpers', { ...helpers, updatedb_disabled: v })}
-                    />
-                  }
                 />
 
-                <FormControlLabel
+                <Toggle
+                  checked={helpers.modules_dep}
+                  onChange={(e, v) => onChange('helpers', { ...helpers, modules_dep: v })}
                   label="modules.dep Helper"
-                  control={
-                    <Toggle
-                      checked={helpers.modules_dep}
-                      onChange={(e, v) => onChange('helpers', { ...helpers, modules_dep: v })}
-                    />
-                  }
                 />
 
-                <FormControlLabel
-                  label="automount devtpmfs"
-                  control={
-                    <Toggle
-                      checked={helpers.devtmpfs_automount}
-                      onChange={(e, v) =>
-                        onChange('helpers', { ...helpers, devtmpfs_automount: v })}
-                    />
-                  }
+                <Toggle
+                  checked={helpers.devtmpfs_automount}
+                  onChange={(e, v) =>
+                    onChange('helpers', { ...helpers, devtmpfs_automount: v })}
+                    label="automount devtpmfs"
                 />
 
-                <FormControlLabel
+                <Toggle
+                  checked={helpers.network}
+                  onChange={(e, v) => onChange('helpers', { ...helpers, network: v })}
                   label="auto-configure networking"
-                  control={
-                    <Toggle
-                      checked={helpers.network}
-                      onChange={(e, v) => onChange('helpers', { ...helpers, network: v })}
-                    />
-                  }
                 />
+
               </FormGroup>
             </FormControl>
           </Grid>

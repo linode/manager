@@ -241,32 +241,14 @@ class Form extends React.Component<State> {
 
             <FormGroup>
               <FormLabel>
-                Checkboxes with FormGroup row
+                Toggle Switches
               </FormLabel>
 
-              <FormControlLabel
-                className="toggleLabel"
-                control={
-                  <Toggle />
-                }
-                label="Example Label"
-              />
+              <Toggle label="Example Label" />
 
-              <FormControlLabel
-                className="toggleLabel"
-                control={
-                  <Toggle />
-                }
-                label="Example Label"
-              />
+              <Toggle label="Example Label" />
 
-              <FormControlLabel
-                className="toggleLabel"
-                control={
-                  <Toggle />
-                }
-                label="Example Label"
-              />
+              <Toggle label="Example Label" />
 
             </FormGroup>
 
