@@ -23,7 +23,7 @@ class DomainsRoutes extends React.Component<Props> {
 
     return (
       <Switch>
-        <Route component={DomainDetails} path={`${path}/:domainId`}/>
+        <Route component={DomainDetails} path={`${path}/:domainId`} />
         <Route component={DomainsLanding} path={path} exact />
       </Switch>
     );

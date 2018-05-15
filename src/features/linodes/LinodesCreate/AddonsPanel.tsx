@@ -11,15 +11,15 @@ import CheckBox from 'src/components/CheckBox';
 import { FormControlLabel } from 'material-ui/Form';
 
 type ClassNames = 'root'
-| 'flex'
-| 'title'
-| 'divider'
-| 'lastItem'
-| 'inner'
-| 'panelBody'
-| 'label'
-| 'subLabel'
-| 'caption';
+  | 'flex'
+  | 'title'
+  | 'divider'
+  | 'lastItem'
+  | 'inner'
+  | 'panelBody'
+  | 'label'
+  | 'subLabel'
+  | 'caption';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -104,7 +104,7 @@ class AddonsPanel extends React.Component<CombinedProps> {
     return (
       <Paper className={classes.root} data-qa-add-ons>
         <div className={classes.inner}>
-          <Typography variant="title"className={classes.title} >Optional Add-ons</Typography>
+          <Typography variant="title" className={classes.title} >Optional Add-ons</Typography>
           <Grid container>
             <Grid item xs={12}>
               <FormControlLabel
@@ -145,7 +145,7 @@ class AddonsPanel extends React.Component<CombinedProps> {
             </Grid>
           </Grid>
         </div>
-    </Paper>
+      </Paper>
     );
   }
 }

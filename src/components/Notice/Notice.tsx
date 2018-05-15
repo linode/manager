@@ -20,7 +20,7 @@ const styles: StyleRulesCallback = (theme: Linode.Theme) => {
 
   return {
     root: {
-      marginBottom: theme.spacing.unit,
+      marginBottom: theme.spacing.unit * 2,
       padding: theme.spacing.unit * 2,
       maxWidth: '100%',
       display: 'flex',
