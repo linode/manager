@@ -1,8 +1,10 @@
-const { previewFocus } = require('../../../e2e/utils/storybook');
+const { navigateToStory } = require('../../../e2e/utils/storybook');
 
 describe('Select Suite', () => {
-    const menuItem = '[data-name="Select"]';
-    const childStory = '[data-name="Example"]';
+    const component = 'Select';
+    const childStories = [
+        'Example',
+    ]
     const select = '[data-qa-select]';
     let selectBoxes,
         enabledSelects,
@@ -10,10 +12,8 @@ describe('Select Suite', () => {
         selectOptions;
 
     beforeAll(() => {
-        browser.click(menuItem);
-        browser.waitForVisible(childStory);
-        browser.click(childStory);
-        previewFocus('[data-qa-select]');
+        navigateToStory(component, childStories[0]);
+        browser.waitForVisible('[data-qa-select]');
     });
 
     it('should display two select boxes with labels, action text and chevron', () => {
