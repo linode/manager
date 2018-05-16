@@ -31,6 +31,17 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.stories\.tsx?$/,
+        use: [
+          {
+            loader: require.resolve('@storybook/addon-storysource/loader'),
+            options: { 
+              parser: 'typescript',
+            },
+          },
+        ],
+      },
+      {
         test: /\.css$/,
         include: includePath,
         use: [
