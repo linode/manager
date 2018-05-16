@@ -81,6 +81,7 @@ const LinodeTheme: Linode.Theme = {
           marginLeft: 0,
           '&:hover, &:focus': {
             borderColor: '#5F99EA',
+            backgroundColor: 'transparent',
           },
         },
         '&.destructive': {
