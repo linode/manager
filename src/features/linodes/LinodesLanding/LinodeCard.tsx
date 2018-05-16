@@ -224,6 +224,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
         'linodeStatus',
         'linodeRegion',
         'linodeNotification',
+        'linodeRecentEvent',
         'linodeLabel',
         'linodeIpv6',
         'linodeIpv4',
