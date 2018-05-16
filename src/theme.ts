@@ -200,10 +200,13 @@ const LinodeTheme: Linode.Theme = {
       root: {
         padding: '0 16px',
         backgroundColor: '#fbfbfb',
-        '&:hover, &:focus': {
+        '&:hover': {
           '& h3': {
             color: '#5F99EA',
           },
+        },
+        '&:focus': {
+          outline: '1px dotted #999',
         },
       },
       expanded: {
@@ -225,6 +228,9 @@ const LinodeTheme: Linode.Theme = {
       },
       expandIconExpanded: {
         transform: 'none',
+      },
+      focused: {
+        backgroundColor: '#fbfbfb',
       },
     },
     MuiFormControl: {
