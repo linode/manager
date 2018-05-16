@@ -89,7 +89,10 @@ interface Props {
   linodeNotification?: string;
   linodeLabel: string;
   linodeRecentEvent?: Linode.Event;
-  type?: Linode.LinodeType;
+  linodeSpecDisk: number;
+  linodeSpecMemory: number;
+  linodeSpecVcpus: number;
+  linodeSpecTransfer: number;
   openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
 }
 
@@ -101,7 +104,6 @@ class LinodeRow extends React.Component<PropsWithStyles> {
       nextProps,
       this.props,
       [
-        'type',
         'linodeStatus',
         'linodeRegion',
         'linodeNotification',
@@ -113,8 +115,8 @@ class LinodeRow extends React.Component<PropsWithStyles> {
   }
 
   headCell = () => {
-    const { type, linodeId, linodeStatus, linodeLabel, classes } = this.props;
-    const specsLabel = type && displayLabel(type.memory);
+    const { linodeId, linodeStatus, linodeLabel, classes, linodeSpecMemory } = this.props;
+    const specsLabel = displayLabel(linodeSpecMemory);
 
     return (
       <TableCell className={classes.linodeCell}>

@@ -8,12 +8,11 @@ import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSe
 interface Props {
   linodes: Linode.EnhancedLinode[];
   images: Linode.Image[];
-  types: Linode.LinodeType[];
   openConfigDrawer: (c: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
 }
 
 const LinodesGridView: React.StatelessComponent<Props> = (props) => {
-  const { linodes, types, images, openConfigDrawer } = props;
+  const { linodes, images, openConfigDrawer } = props;
 
   return (
     <Grid container>
@@ -29,8 +28,11 @@ const LinodesGridView: React.StatelessComponent<Props> = (props) => {
           linodeLabel={linode.label}
           linodeRecentEvent={linode.recentEvent}
           image={images.find(image => linode.image === image.id)}
-          type={types.find(type => linode.type === type.id)}
           openConfigDrawer={openConfigDrawer}
+          linodeSpecDisk={linode.specs.disk}
+          linodeSpecMemory={linode.specs.memory}
+          linodeSpecVcpus={linode.specs.vcpus}
+          linodeSpecTransfer={linode.specs.transfer}
         />,
       )}
     </Grid>

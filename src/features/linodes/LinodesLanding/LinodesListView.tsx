@@ -14,12 +14,11 @@ import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSe
 interface Props {
   linodes: Linode.EnhancedLinode[];
   images: Linode.Image[];
-  types: Linode.LinodeType[];
   openConfigDrawer: (c: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
 }
 
 const LinodesListView: React.StatelessComponent<Props> = (props) => {
-  const { linodes, types, openConfigDrawer } = props;
+  const { linodes, openConfigDrawer } = props;
 
   return (
     <Paper>
@@ -46,7 +45,10 @@ const LinodesListView: React.StatelessComponent<Props> = (props) => {
                   linodeNotification={linode.notification}
                   linodeLabel={linode.label}
                   linodeRecentEvent={linode.recentEvent}
-                  type={types.find(type => linode.type === type.id)}
+                  linodeSpecDisk={linode.specs.disk}
+                  linodeSpecMemory={linode.specs.memory}
+                  linodeSpecVcpus={linode.specs.vcpus}
+                  linodeSpecTransfer={linode.specs.transfer}
                   openConfigDrawer={openConfigDrawer}
                 />,
               )}

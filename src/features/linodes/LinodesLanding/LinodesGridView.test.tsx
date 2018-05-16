@@ -4,7 +4,7 @@ import { StaticRouter } from 'react-router-dom';
 
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 
-import { linodes, images, types } from 'src/__data__';
+import { linodes, images } from 'src/__data__';
 
 import LinodesGridView from './LinodesGridView';
 
@@ -16,7 +16,6 @@ describe('LinodesGridView', () => {
           <LinodesGridView
             linodes={linodes as Linode.Linode[]}
             images={images as Linode.Image[]}
-            types={types as Linode.LinodeType[]}
             openConfigDrawer={e => null}
           />
         </StaticRouter>

@@ -112,7 +112,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
 
 interface Props {
   linode: Linode.Linode & { recentEvent?: Linode.Event };
-  type?: Linode.LinodeType;
   image?: Linode.Image;
   volumes: Linode.Volume[];
 }
@@ -348,14 +347,14 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { linode, type, image, volumes, classes } = this.props;
+    const { linode, image, volumes, classes } = this.props;
     const { stats, rangeSelection } = this.state;
     return (
       <React.Fragment>
         {transitionStatus.includes(linode.status) &&
           <LinodeBusyStatus linode={linode} />
         }
-        <SummaryPanel linode={linode} type={type} image={image} volumes={volumes} />
+        <SummaryPanel linode={linode} image={image} volumes={volumes} />
 
         {stats &&
           <React.Fragment>

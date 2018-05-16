@@ -23,7 +23,6 @@ it('renders without crashing', () => {
             }}
             request={jest.fn()}
             response={jest.fn()}
-            longLivedLoaded
             documentation={[]}
             toggleTheme={() => { return; }}
           />

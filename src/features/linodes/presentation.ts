@@ -10,23 +10,21 @@ export function formatRegion(region: string) {
   return `${countryCode.toUpperCase()} ${titlecase(area)}`;
 }
 
-export function labelFromType(type: Linode.LinodeType) {
-  return typeLabelLong(type.memory, type.disk, type.vcpus);
+export function labelFromType(memory: number, disk: number, vcpus: number) {
+  return typeLabelLong(memory, disk, vcpus);
 }
 
-export function typeLabelLong(memory?: number, disk?: number, cpus?: number) {
+export function typeLabelLong(memory: number, disk: number, cpus: number) {
   return `${typeLabel(memory)} ${typeLabelDetails(memory, disk, cpus)}`;
 }
 
-export function typeLabelDetails(memory?: number, disk?: number, cpus?: number) {
-  if (!memory || !disk || !cpus) { return; }
+export function typeLabelDetails(memory: number, disk: number, cpus: number) {
   const memG = memory / 1024;
   const diskG = disk / 1024;
   return `${cpus} CPU, ${diskG}G Storage, ${memG}G RAM`;
 }
 
-export function typeLabel(memory?: number) {
-  if (!memory) { return; }
+export function typeLabel(memory: number) {
   return `Linode ${memory / 1024}G`;
 }
 

@@ -15,10 +15,10 @@ import { typeLabelLong, formatRegion } from 'src/features/linodes/presentation';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 
 type ClassNames = 'root'
-| 'title'
-| 'section'
-| 'region'
-| 'volumeLink';
+  | 'title'
+  | 'section'
+  | 'region'
+  | 'volumeLink';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
@@ -54,14 +54,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 interface Props {
   linode: Linode.Linode;
   image?: Linode.Image;
-  type?: Linode.LinodeType;
   volumes: Linode.Volume[];
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const SummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, linode, image, type, volumes } = props;
+  const { classes, linode, image, volumes } = props;
   return (
     <Paper className={classes.root}>
       <Grid container>
@@ -84,10 +83,9 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
             }
           </Typography>
           <Typography className={classes.section} variant="caption">
-            {type
-              ? <span>{typeLabelLong(type.memory, type.disk, type.vcpus)}</span>
-              : <span>Unknown Plan</span>
-            }
+            <span>
+              { typeLabelLong(linode.specs.memory, linode.specs.disk, linode.specs.vcpus) }
+            </span>
           </Typography>
         </Grid>
         <Grid item xs={12} sm={6} lg={4}>
