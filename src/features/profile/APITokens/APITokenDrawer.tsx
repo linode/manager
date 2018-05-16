@@ -96,7 +96,7 @@ interface State {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class APITokenDrawer extends React.Component<CombinedProps, State> {
+export class APITokenDrawer extends React.Component<CombinedProps, State> {
   state = {
     scopes: scopeStringToPermTuples(this.props.scopes || ''),
     expiryTups: genExpiryTups(),
