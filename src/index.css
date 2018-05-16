@@ -1,12 +1,26 @@
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+html {
+  height: 100%;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 body {
   height: 100%;
   margin: 0;
   padding: 0;
   font-family: "Lato", sans-serif;
+  /* background-color: #F4F4F4; */
 }
 
-html {
-  height: 100%;
+@media print {
+  body {
+    background-color: #fff;
+  }
 }
 
 #root {
