@@ -261,8 +261,8 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
                 data-qa-confirm-cancel
               >
                 {(bootOption === 'reboot')
-                  ? 'Reboot Linode'
-                  : 'Power Down Linode'}
+                  ? 'Reboot'
+                  : 'Power Down'}
               </Button>
               <Button
                 onClick={() => this.setState({ powerAlertOpen: false })}
