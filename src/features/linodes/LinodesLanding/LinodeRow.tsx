@@ -105,6 +105,7 @@ class LinodeRow extends React.Component<PropsWithStyles> {
         'linodeStatus',
         'linodeRegion',
         'linodeNotification',
+        'linodeRecentEvent',
         'linodeLabel',
         'linodeIpv6',
         'linodeIpv4',
