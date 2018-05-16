@@ -492,6 +492,8 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       selectedBackupID,
     } = this.state;
 
+    this.setState({ isMakingRequest: true });
+
     createLinode({
       region: selectedRegionID,
       type: selectedTypeID,
@@ -510,9 +512,15 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       .catch((error) => {
         if (!this.mounted) { return; }
 
+        this.scrollToTop();
+
         this.setState(() => ({
           errors: error.response && error.response.data && error.response.data.errors,
         }));
+      })
+      .finally(() => {
+        // regardless of whether request failed or not, change state and enable the submit btn
+        this.setState({ isMakingRequest: false });
       });
   }
 
