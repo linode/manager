@@ -1,8 +1,5 @@
 import * as React from 'react';
 import * as moment from 'moment';
-import Axios from 'axios';
-import { getPersonalAccessTokens, getAppTokens, removePersonalAccessToken, removeAppToken }
-  from 'src/services/profile';
 import { compose, filter, path, pathOr, sort } from 'ramda';
 
 import { withStyles, Theme, WithStyles, StyleRulesCallback } from 'material-ui/styles';
@@ -14,7 +11,15 @@ import TableCell from 'material-ui/Table/TableCell';
 import TableHead from 'material-ui/Table/TableHead';
 import TableRow from 'material-ui/Table/TableRow';
 
-import { API_ROOT } from 'src/constants';
+import {
+  createPersonalAccessToken,
+  getAppTokens,
+  deletePersonalAccessToken,
+  getPersonalAccessTokens,
+  deleteAppToken,
+  updatePersonalAccessToken,
+}
+  from 'src/services/profile';
 import isPast from 'src/utilities/isPast';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import Table from 'src/components/Table';
@@ -56,14 +61,16 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
 
 const preloaded = PromiseLoader<Props>({
   pats: () => getPersonalAccessTokens()
-    .then(response => response.data),
+    .then((response) => {
+      return response.data;
+    }),
   appTokens: () => getAppTokens()
     .then(response => response.data),
 });
 
 interface Props {
-  pats: PromiseLoaderResponse<Linode.ResourcePage<Linode.Token>>;
-  appTokens: PromiseLoaderResponse<Linode.ResourcePage<Linode.Token>>;
+  pats: PromiseLoaderResponse<Linode.Token[]>;
+  appTokens: PromiseLoaderResponse<Linode.Token[]>;
 }
 
 interface FormState {
@@ -126,7 +133,7 @@ export class APITokens extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
 
   state = {
-    pats: pathOr([], ['response', 'data'], this.props.pats),
+    pats: pathOr([], ['response'], this.props.pats),
     ...APITokens.defaultState,
   };
 
@@ -230,7 +237,7 @@ export class APITokens extends React.Component<CombinedProps, State> {
 
   requestTokens = () => {
     getPersonalAccessTokens()
-      .then(response => response.data.data)
+      .then(response => response.data)
       .then((data) => {
         if (!this.mounted) { return; }
 
@@ -310,14 +317,14 @@ export class APITokens extends React.Component<CombinedProps, State> {
 
   revokePersonalAccessToken = () => {
     const { dialog } = this.state;
-    removePersonalAccessToken(dialog.id)
+    deletePersonalAccessToken(dialog.id)
       .then(() => { this.closeRevokeDialog(); })
       .then(() => this.requestTokens());
   }
 
   revokeAppToken = () => {
     const { dialog } = this.state;
-    removeAppToken(dialog.id)
+    deleteAppToken(dialog.id)
       .then(() => { this.closeRevokeDialog(); })
       .then(() => this.requestTokens());
   }
@@ -348,10 +355,18 @@ export class APITokens extends React.Component<CombinedProps, State> {
 
     const { form } = this.state;
     this.setState({ form: { ...form, values: { ...form.values, scopes } } }, () => {
-      Axios.post(`${API_ROOT}/profile/tokens`, this.state.form.values)
-        .then((response) => {
+      createPersonalAccessToken(this.state.form.values)
+        .then(({ token }) => {
+          if (!token) {
+            return this.setState({
+              form: {
+                ...form,
+                errors: [{ field: 'none', reason: 'API did not return a token.' }],
+              },
+            });
+          }
           this.closeDrawer();
-          this.openTokenDialog(response.data.token);
+          this.openTokenDialog(token);
         })
         .then(() => this.requestTokens())
         .catch((errResponse) => {
@@ -369,8 +384,10 @@ export class APITokens extends React.Component<CombinedProps, State> {
   }
 
   editToken = () => {
-    const { form } = this.state;
-    if (!form.values.label) {
+    const { form: { id, values: { label } } } = this.state;
+    if (!id) { return; }
+
+    if (!label) {
       this.setState({
         form: {
           ...this.state.form,
@@ -381,7 +398,8 @@ export class APITokens extends React.Component<CombinedProps, State> {
       });
       return;
     }
-    Axios.put(`${API_ROOT}/profile/tokens/${form.id}`, { label: form.values.label })
+
+    updatePersonalAccessToken(id, { label })
       .then(() => { this.closeDrawer(); })
       .then(() => this.requestTokens())
       .catch((errResponse) => {
@@ -389,7 +407,7 @@ export class APITokens extends React.Component<CombinedProps, State> {
 
         this.setState({
           form: {
-            ...form,
+            ...this.state.form,
             errors: path(['response', 'data', 'errors'], errResponse),
           },
         });
@@ -420,7 +438,7 @@ export class APITokens extends React.Component<CombinedProps, State> {
         this.formatDates,
         sortCreatedDateAscending,
         filter<Linode.Token>(t => isPastNow(t.expiry)),
-        pathOr([], ['appTokens', 'response', 'data']),
+        pathOr([], ['appTokens', 'response']),
     )(this.props);
 
     const pats = compose<

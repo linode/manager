@@ -1,13 +1,16 @@
-import Axios from 'axios';
 import * as moment from 'moment';
 import { pathOr } from 'ramda';
 
-import { API_ROOT } from 'src/constants';
 import { events$, resetEventsPolling } from 'src/events';
 
 import { dateFormat } from 'src/time';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
-import { getLinodeConfigs } from 'src/services/linodes';
+import {
+  getLinodeConfigs,
+  linodeBoot,
+  linodeShutdown,
+  linodeReboot,
+} from 'src/services/linodes';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 
 export const genEvent = (
@@ -40,7 +43,7 @@ export interface LinodePowerAction {
 }
 
 const _rebootLinode: LinodePowerAction = (id, label, config_id) => {
-  Axios.post(`${API_ROOT}/linode/instances/${id}/reboot`, { config_id })
+  linodeReboot(id, { config_id })
   .then((response) => {
     events$.next(genEvent('linode_reboot', id, label));
     resetEventsPolling();
@@ -52,7 +55,7 @@ const _rebootLinode: LinodePowerAction = (id, label, config_id) => {
 };
 
 const _powerOnLinode: LinodePowerAction = (id, label) => {
-  Axios.post(`${API_ROOT}/linode/instances/${id}/boot`)
+  linodeBoot(id)
   .then((response) => {
     events$.next(genEvent('linode_boot', id, label));
     resetEventsPolling();
@@ -84,7 +87,7 @@ const withAction = (
 };
 
 export const powerOffLinode: LinodePowerAction = (id, label) => {
-  Axios.post(`${API_ROOT}/linode/instances/${id}/shutdown`)
+  linodeShutdown(id)
   .then((response) => {
     events$.next(genEvent('linode_shutdown', id, label));
     resetEventsPolling();

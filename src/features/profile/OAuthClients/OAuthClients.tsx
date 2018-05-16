@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Axios from 'axios';
 import { compose, path } from 'ramda';
 
 import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
@@ -11,28 +10,23 @@ import TableRow from 'material-ui/Table/TableRow';
 import TableCell from 'material-ui/Table/TableCell';
 import Button from 'material-ui/Button';
 
-import Preload, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import IconTextLink from 'src/components/IconTextLink';
-
 import PlusSquare from 'src/assets/icons/plus-square.svg';
-import { API_ROOT } from 'src/constants';
+import {
+  createOAuthClient,
+  getOAuthClients,
+  updateOAuthClient,
+  deleteOAuthClient,
+  resetOAuthClientSecret,
+} from 'src/services/account';
+import Preload, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import Table from 'src/components/Table';
 import Grid from 'src/components/Grid';
-import ActionMenu from './OAuthClientActionMenu';
-import OAuthFormDrawer from './OAuthFormDrawer';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Notice from 'src/components/Notice';
 
-const apiPath = `${API_ROOT}/account/oauth-clients`;
-
-interface OAuthClient {
-  id: string;
-  label: string;
-  redirect_uri: string;
-  thumbnail_url: string;
-  public: boolean;
-  status: 'disabled' | 'active' | 'suspended';
-}
+import ActionMenu from './OAuthClientActionMenu';
+import OAuthFormDrawer from './OAuthFormDrawer';
 
 type ClassNames = 'root' | 'title';
 
@@ -44,7 +38,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 });
 
 interface Props {
-  data: PromiseLoaderResponse<OAuthClient[]>;
+  data: PromiseLoaderResponse<Linode.OAuthClient[]>;
 }
 
 interface FormState {
@@ -65,7 +59,7 @@ interface SecretState {
 }
 
 interface State {
-  data: OAuthClient[];
+  data: Linode.OAuthClient[];
   secret?: SecretState;
   form: FormState;
 }
@@ -111,8 +105,8 @@ class OAuthClients extends React.Component<CombinedProps, State> {
   }
 
   requestClients = () => {
-    Axios.get(apiPath)
-      .then(response => response.data.data)
+    getOAuthClients()
+      .then(response => response.data)
       .then((data) => {
         if (!this.mounted) { return; }
 
@@ -121,13 +115,13 @@ class OAuthClients extends React.Component<CombinedProps, State> {
   }
 
   deleteClient = (id: string) => {
-    Axios.delete(`${apiPath}/${id}`)
+    deleteOAuthClient(id)
       .then(() => this.requestClients());
   }
 
   resetSecret = (id: string) => {
-    Axios.post(`${apiPath}/${id}/reset-secret`)
-      .then(({ data: { secret } }) => {
+    resetOAuthClientSecret(id)
+      .then(({ secret }) => {
         if (!this.mounted) { return; }
 
         return this.setState({ secret: { open: true, value: secret } });
@@ -147,12 +141,12 @@ class OAuthClients extends React.Component<CombinedProps, State> {
 
   createClient = () => {
     const { form: { values } } = this.state;
-    Axios.post(apiPath, values)
-      .then((response) => {
+    createOAuthClient(values)
+      .then((data) => {
         if (!this.mounted) { return; }
 
         return this.setState({
-          secret: { value: response.data.secret, open: true },
+          secret: { value: data.secret, open: true },
           form: {
             open: false,
             edit: false,
@@ -164,7 +158,7 @@ class OAuthClients extends React.Component<CombinedProps, State> {
           },
         });
       })
-      .then((response) => {
+      .then((data) => {
         if (!this.mounted) { return; }
 
         this.requestClients();
@@ -181,8 +175,9 @@ class OAuthClients extends React.Component<CombinedProps, State> {
 
   editClient = () => {
     const { form: { id, values } } = this.state;
+    if (!id) { return; }
 
-    Axios.put(`${apiPath}/${id}`, values)
+    updateOAuthClient(id, values)
       .then((response) => {
         this.reset();
       })
@@ -276,13 +271,13 @@ class OAuthClients extends React.Component<CombinedProps, State> {
             <Button
               variant="raised"
               color="primary"
-              onClick={() => this.reset() }
+              onClick={() => this.reset()}
               data-qa-close-dialog
             >
               OK
             </Button>}
           open={this.state.secret.open}
-          onClose={() => this.reset() }
+          onClose={() => this.reset()}
         >
           <Typography variant="body1">
             {`Here is your client secret! Store it securely, as it won't be shown again.`}
@@ -310,8 +305,8 @@ class OAuthClients extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles, { withTheme: true });
 
 const preloaded = Preload({
-  data: () => Axios.get(apiPath)
-    .then(response => response.data.data),
+  data: () => getOAuthClients()
+    .then(response => response.data),
 });
 
 const enhanced = compose<any, any, any>(styled, preloaded);

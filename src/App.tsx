@@ -2,22 +2,17 @@ import * as React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { connect, Dispatch } from 'react-redux';
 import { compose, bindActionCreators } from 'redux';
-import Axios from 'axios';
 import { append, pathOr, range, flatten } from 'ramda';
 import * as Promise from 'bluebird';
 import { shim } from 'promise.prototype.finally';
 shim(); // allows for .finally() usage
 
-import {
-  withStyles,
-  WithStyles,
-  StyleRulesCallback,
-  Theme,
-} from 'material-ui/styles';
+import { withStyles, WithStyles, StyleRulesCallback, Theme } from 'material-ui/styles';
 import CssBaseline from 'material-ui/CssBaseline';
 import 'typeface-lato';
 
-import { API_ROOT } from 'src/constants';
+import { getLinodeTypes, getLinodeKernels } from 'src/services/linodes';
+import { getProfile } from 'src/services/profile';
 import TopMenu from 'src/features/TopMenu';
 import Grid from 'src/components/Grid';
 import SideMenu from 'src/components/SideMenu';
@@ -133,15 +128,13 @@ export class App extends React.Component<CombinedProps, State> {
     const promises = [
       new Promise(() => {
         request(['types']);
-        return Axios.get(`${API_ROOT}/linode/types`)
-          .then(({ data }) => {
-            response(['types'], data);
-          })
+        return getLinodeTypes()
+          .then(({ data }) => response(['types', 'data'], data))
           .catch(error => response(['types'], error));
       }),
       new Promise(() => {
         request(['profile']);
-        return Axios.get(`${API_ROOT}/profile`)
+        return getProfile()
           .then(({ data }) => {
             response(['profile'], data);
           })
@@ -150,8 +143,8 @@ export class App extends React.Component<CombinedProps, State> {
       new Promise(() => {
         request(['kernels']);
         // Get first page of kernels.
-        return Axios.get(`${API_ROOT}/linode/kernels`)
-          .then(({ data: { data: firstPageData, page, pages } }) => {
+        return getLinodeKernels()
+          .then(({ data: firstPageData, page, pages }) => {
             // If we only have one page, return it.
             if (page === pages) { return firstPageData; }
 
@@ -159,10 +152,9 @@ export class App extends React.Component<CombinedProps, State> {
             const remainingPages = range(page + 1, pages + 1);
 
             return Promise.map(remainingPages, currentPage =>
-              Axios
-                .get(`${API_ROOT}/linode/kernels`, { params: { page: currentPage } })
-                .then(response => response.data.data),
-              )
+              getLinodeKernels(currentPage)
+                .then(response => response.data),
+            )
               .then(compose(flatten, append(firstPageData)));
           })
           .then(data => response(['kernels'], data))
@@ -208,7 +200,7 @@ export class App extends React.Component<CombinedProps, State> {
                 <AccountLevelNotifications />
                 <TopMenu toggleSideMenu={this.toggleMenu} />
                 <div className={classes.wrapper}>
-                  <Grid container spacing={0}  className={classes.grid}>
+                  <Grid container spacing={0} className={classes.grid}>
                     <Grid item className={classes.switchWrapper}>
                       <Switch>
                         <Route exact path="/dashboard" render={() =>
@@ -221,7 +213,7 @@ export class App extends React.Component<CombinedProps, State> {
                             icon={NodeBalancerIcon}
                           />}
                         />
-                        <Route path="/domains" component={Domains}/>
+                        <Route path="/domains" component={Domains} />
                         <Route exact path="/managed" render={() =>
                           <Placeholder title="Managed" />} />
                         <Route exact path="/longview" render={() =>
