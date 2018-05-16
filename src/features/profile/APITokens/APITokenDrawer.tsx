@@ -127,10 +127,12 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
 
   handleSelectAllScopes = (e: React.SyntheticEvent<RadioButton>): void => {
     const { scopes } = this.state;
-    const scopeTups: Permission[] = scopes.map((scope: Permission): [string, number] => {
-      return [scope[0], +e.currentTarget.value];
+    const value = +e.currentTarget.value;
+
+    this.setState({
+      scopes: scopes.map((scope): Permission => ([scope[0], value])),
+      selectAllSelectedScope: value,
     });
-    this.setState({ scopes: scopeTups, selectAllSelectedScope: +e.currentTarget.value });
   }
 
   // return whether all scopes selected in the create token flow are the same
