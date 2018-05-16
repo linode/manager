@@ -9,7 +9,6 @@ import { ListLinodes } from './LinodesLanding';
 import {
   linodes as mockLinodes,
   images as mockImages,
-  types as mockTypes,
 } from 'src/__data__';
 import { setDocs, clearDocs } from 'src/store/reducers/documentation';
 
@@ -47,7 +46,6 @@ describe('ListLinodes', () => {
           <RoutedListLinodes
             linodes={linodes}
             images={images}
-            types={mockTypes}
             classes={{ root: '', title: '' }}
             setDocs={setDocs}
             clearDocs={clearDocs}
@@ -65,7 +63,6 @@ describe('ListLinodes', () => {
           <RoutedListLinodes
             linodes={linodes}
             images={images}
-            types={mockTypes}
             classes={{ root: '', title: '' }}
             setDocs={setDocs}
             clearDocs={clearDocs}
@@ -86,7 +83,6 @@ describe('ListLinodes', () => {
           <RoutedListLinodes
             linodes={linodes}
             images={images}
-            types={mockTypes}
             classes={{ root: '', title: '' }}
             setDocs={setDocs}
             clearDocs={clearDocs}

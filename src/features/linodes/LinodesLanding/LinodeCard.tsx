@@ -136,8 +136,11 @@ interface Props {
   linodeNotification?: string;
   linodeLabel: string;
   linodeRecentEvent?: Linode.Event;
+  linodeSpecDisk: number;
+  linodeSpecMemory: number;
+  linodeSpecVcpus: number;
+  linodeSpecTransfer: number;
   image?: Linode.Image;
-  type?: Linode.LinodeType;
   openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
 }
 
@@ -188,14 +191,23 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
   }
 
   loadedState = () => {
-    const { classes, image, type, linodeIpv4, linodeIpv6, linodeRegion } = this.props;
+    const {
+      classes,
+      image,
+      linodeIpv4,
+      linodeIpv6,
+      linodeRegion,
+      linodeSpecMemory,
+      linodeSpecDisk,
+      linodeSpecVcpus,
+    } = this.props;
 
     return (
       <CardContent className={`${classes.cardContent} ${classes.customeMQ}`}>
       <div>
-        {image && type &&
+        {image &&
         <div className={classes.cardSection} data-qa-linode-summary>
-          {typeLabelLong(type.memory, type.disk, type.vcpus)}
+          {typeLabelLong(linodeSpecMemory, linodeSpecDisk, linodeSpecVcpus)}
         </div>
         }
         <div className={classes.cardSection} data-qa-region>
@@ -205,7 +217,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
           <IPAddress ips={linodeIpv4} copyRight />
           <IPAddress ips={[linodeIpv6]} copyRight />
         </div>
-        {image && type &&
+        {image &&
         <div className={classes.cardSection} data-qa-image>
           {image.label}
         </div>
@@ -220,7 +232,6 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
       nextProps,
       this.props,
       [
-        'type',
         'linodeStatus',
         'linodeRegion',
         'linodeNotification',

@@ -95,7 +95,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
 
 interface Props {
   toggleTheme: () => void;
-  longLivedLoaded: boolean;
+  loading?: boolean;
 }
 
 interface ConnectedProps {
@@ -129,15 +129,13 @@ export class App extends React.Component<CombinedProps, State> {
       new Promise(() => {
         request(['types']);
         return getLinodeTypes()
-          .then(({ data }) => response(['types', 'data'], data))
+          .then(({ data }) => response(['types'], data))
           .catch(error => response(['types'], error));
       }),
       new Promise(() => {
         request(['profile']);
         return getProfile()
-          .then(({ data }) => {
-            response(['profile'], data);
-          })
+          .then(({ data }) => response(['profile'], data))
           .catch(error => response(['profile'], error));
       }),
       new Promise(() => {
@@ -187,65 +185,64 @@ export class App extends React.Component<CombinedProps, State> {
 
   render() {
     const { menuOpen } = this.state;
-    const { classes, longLivedLoaded, documentation, toggleTheme } = this.props;
+    const { classes, loading, documentation, toggleTheme } = this.props;
+    if (loading) {
+      return null;
+    }
 
     return (
       <React.Fragment>
-        {longLivedLoaded &&
-          <React.Fragment>
-            <CssBaseline />
-            <div className={classes.appFrame}>
-              <SideMenu open={menuOpen} toggle={this.toggleMenu} toggleTheme={toggleTheme} />
-              <main className={classes.content}>
-                <AccountLevelNotifications />
-                <TopMenu toggleSideMenu={this.toggleMenu} />
-                <div className={classes.wrapper}>
-                  <Grid container spacing={0} className={classes.grid}>
-                    <Grid item className={classes.switchWrapper}>
-                      <Switch>
-                        <Route exact path="/dashboard" render={() =>
-                          <Placeholder title="Dashboard" />} />
-                        <Route path="/linodes" component={LinodesRoutes} />
-                        <Route path="/volumes" component={Volumes} />
-                        <Route exact path="/nodebalancers" render={() =>
-                          <Placeholder
-                            title="NodeBalancers"
-                            icon={NodeBalancerIcon}
-                          />}
-                        />
-                        <Route path="/domains" component={Domains} />
-                        <Route exact path="/managed" render={() =>
-                          <Placeholder title="Managed" />} />
-                        <Route exact path="/longview" render={() =>
-                          <Placeholder title="Longview" />} />
-                        <Route exact path="/stackscripts" render={() =>
-                          <Placeholder title="StackScripts" />} />
-                        <Route exact path="/images" render={() =>
-                          <Placeholder title="Images" />} />
-                        <Route exact path="/billing" render={() =>
-                          <Placeholder title="Billing" />} />
-                        <Route exact path="/users" render={() =>
-                          <Placeholder title="Users" />} />
-                        <Route exact path="/support" render={() =>
-                          <Placeholder title="Support" />} />
-                        <Route path="/profile" component={Profile} />
-                        <Redirect to="/linodes" />
-                      </Switch>
-                    </Grid>
-                    <DocsSidebar docs={documentation} />
-                  </Grid>
-                </div>
-                <Footer />
-              </main>
+        <CssBaseline />
+        <div className={classes.appFrame}>
+          <SideMenu open={menuOpen} toggle={this.toggleMenu} toggleTheme={toggleTheme} />
+          <main className={classes.content}>
+            <AccountLevelNotifications />
+            <TopMenu toggleSideMenu={this.toggleMenu} />
+            <div className={classes.wrapper}>
+              <Grid container spacing={0} className={classes.grid}>
+                <Grid item className={classes.switchWrapper}>
+                  <Switch>
+                    <Route exact path="/dashboard" render={() =>
+                      <Placeholder title="Dashboard" />} />
+                    <Route path="/linodes" component={LinodesRoutes} />
+                    <Route path="/volumes" component={Volumes} />
+                    <Route exact path="/nodebalancers" render={() =>
+                      <Placeholder
+                        title="NodeBalancers"
+                        icon={NodeBalancerIcon}
+                      />}
+                    />
+                    <Route path="/domains" component={Domains} />
+                    <Route exact path="/managed" render={() =>
+                      <Placeholder title="Managed" />} />
+                    <Route exact path="/longview" render={() =>
+                      <Placeholder title="Longview" />} />
+                    <Route exact path="/stackscripts" render={() =>
+                      <Placeholder title="StackScripts" />} />
+                    <Route exact path="/images" render={() =>
+                      <Placeholder title="Images" />} />
+                    <Route exact path="/billing" render={() =>
+                      <Placeholder title="Billing" />} />
+                    <Route exact path="/users" render={() =>
+                      <Placeholder title="Users" />} />
+                    <Route exact path="/support" render={() =>
+                      <Placeholder title="Support" />} />
+                    <Route path="/profile" component={Profile} />
+                    <Redirect to="/linodes" />
+                  </Switch>
+                </Grid>
+                <DocsSidebar docs={documentation} />
+              </Grid>
             </div>
-            <BetaNotification
-              open={this.state.betaNotification}
-              onClose={this.closeBetaNotice}
-              data-qa-beta-notice />
-            <ToastNotifications />
-            <VolumeDrawer />
-          </React.Fragment>
-        }
+            <Footer />
+          </main>
+        </div>
+        <BetaNotification
+          open={this.state.betaNotification}
+          onClose={this.closeBetaNotice}
+          data-qa-beta-notice />
+        <ToastNotifications />
+        <VolumeDrawer />
       </React.Fragment>
     );
   }
@@ -257,10 +254,10 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
 );
 
 const mapStateToProps = (state: Linode.AppState) => ({
-  longLivedLoaded:
-    Boolean(pathOr(false, ['resources', 'types', 'data', 'data'], state))
-    && Boolean(pathOr(false, ['resources', 'kernels', 'data'], state))
-    && Boolean(pathOr(false, ['resources', 'profile', 'data'], state)),
+  loading:
+    pathOr(true, ['resources', 'types', 'loading'], state)
+    || pathOr(true, ['resources', 'kernels', 'loading'], state)
+    || pathOr(true, ['resources', 'profile', 'loading'], state),
   documentation: state.documentation,
 });
 

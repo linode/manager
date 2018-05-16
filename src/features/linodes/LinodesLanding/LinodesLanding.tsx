@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import * as moment from 'moment';
 import {
@@ -22,11 +21,7 @@ import {
 
 import { Observable, Subscription } from 'rxjs/Rx';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-} from 'material-ui/styles';
+import { withStyles, StyleRulesCallback, Theme } from 'material-ui/styles';
 import Hidden from 'material-ui/Hidden';
 
 import { getImages } from 'src/services/images';
@@ -49,7 +44,6 @@ import LinodesGridView from './LinodesGridView';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
 import ToggleBox from './ToggleBox';
 
-import './linodes.css';
 import { Typography, WithStyles } from 'material-ui';
 
 type ClassNames = 'root' | 'title';
@@ -62,10 +56,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 });
 
 interface Props { }
-
-interface ConnectedProps {
-  types: Linode.LinodeType[];
-}
 
 interface PreloadedProps {
   linodes: PromiseLoaderResponse<Linode.ResourcePage<Linode.EnhancedLinode>>;
@@ -90,10 +80,6 @@ interface State {
   configDrawer: ConfigDrawerState;
 }
 
-const mapStateToProps = (state: Linode.AppState) => ({
-  types: pathOr({}, ['resources', 'types', 'data', 'data'], state),
-});
-
 const preloaded = PromiseLoader<Props>({
   linodes: () => getLinodes({ page_size: 25 }),
 
@@ -101,7 +87,6 @@ const preloaded = PromiseLoader<Props>({
 });
 
 type CombinedProps = Props
-  & ConnectedProps
   & PreloadedProps
   & RouteComponentProps<{}>
   & WithStyles<ClassNames>
@@ -248,13 +233,11 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   renderListView = (
     linodes: Linode.Linode[],
     images: Linode.Image[],
-    types: Linode.LinodeType[],
   ) => {
     return (
       <LinodesListView
         linodes={linodes}
         images={images}
-        types={types}
         openConfigDrawer={this.openConfigDrawer}
       />
     );
@@ -263,13 +246,11 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   renderGridView = (
     linodes: Linode.Linode[],
     images: Linode.Image[],
-    types: Linode.LinodeType[],
   ) => {
     return (
       <LinodesGridView
         linodes={linodes}
         images={images}
-        types={types}
         openConfigDrawer={this.openConfigDrawer}
       />
     );
@@ -322,7 +303,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { types, location: { hash } } = this.props;
+    const { location: { hash } } = this.props;
     const { linodes, configDrawer } = this.state;
     const images = pathOr([], ['response', 'data'], this.props.images);
 
@@ -368,12 +349,12 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
               <ProductNotification key={n.type} severity={n.severity} text={n.message} />)
           }
           <Hidden mdUp>
-            {this.renderGridView(linodes, images, types)}
+            {this.renderGridView(linodes, images)}
           </Hidden>
           <Hidden smDown>
             {displayGrid === 'grid'
-              ? this.renderGridView(linodes, images, types)
-              : this.renderListView(linodes, images, types)
+              ? this.renderGridView(linodes, images)
+              : this.renderListView(linodes, images)
             }
           </Hidden>
         </Grid>
@@ -421,14 +402,11 @@ const getDisplayFormat = ifElse(
 
 export const styled = withStyles(styles, { withTheme: true });
 
-export const connected = connect<Props>(mapStateToProps);
-
 export const enhanced = compose(
   withRouter,
   styled,
   preloaded,
   setDocs(ListLinodes.docs),
-  connected,
 );
 
 export default enhanced(ListLinodes) as typeof ListLinodes;
