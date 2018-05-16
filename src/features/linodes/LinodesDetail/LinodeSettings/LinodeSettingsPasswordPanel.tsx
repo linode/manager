@@ -68,7 +68,6 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
       Number(this.state.diskId),
       this.state.value,
     )
-      .then(response => response.data)
       .then((linode) => {
         this.setState(compose(
           set(lensPath(['success']), `Linode password changed successfully.`),

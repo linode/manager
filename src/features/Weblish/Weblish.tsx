@@ -1,11 +1,10 @@
 import * as React from 'react';
-import Axios from 'axios';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { Terminal } from 'xterm';
-
-import { ZONES, LISH_ROOT, API_ROOT } from 'src/constants';
-
 import 'typeface-ubuntu-mono';
+
+import { LISH_ROOT, ZONES } from 'src/constants';
+import { getLinode, getLinodeLishToken } from 'src/services/linodes';
 
 export function weblishLaunch(linodeId: string) {
   window.open(
@@ -36,7 +35,9 @@ export class Weblish extends React.Component<CombinedProps, State> {
 
   getLinode() {
     const { match: { params: { linodeId } } } = this.props;
-    Axios.get(`${API_ROOT}/linode/instances/${linodeId}`)
+    if (!linodeId) { return; }
+
+    getLinode(linodeId)
       .then((response) => {
         if (!this.mounted) { return; }
 
@@ -78,7 +79,7 @@ export class Weblish extends React.Component<CombinedProps, State> {
 
     const { id, region } = linode;
 
-    Axios.post(`${API_ROOT}/linode/instances/${id}/lish_token`)
+    getLinodeLishToken(id)
       .then((response) => {
         const { data: { lish_token: token } } = response;
         this.setState({ token });

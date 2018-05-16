@@ -1,10 +1,16 @@
-import Axios from 'axios';
-import { API_ROOT } from 'src/constants';
+/** Alises for short lines. */
+type Page<T> = Linode.ResourcePage<T>;
+type Volume = Linode.Volume;
 
-type GetVolumesPage = Promise<Linode.ResourcePage<Linode.Volume>>;
-export const getVolumesPage = (page: number): GetVolumesPage =>
-  Axios
-    .get(`${API_ROOT}/volumes/?page=${page}`)
+import { API_ROOT } from 'src/constants';
+import Request, { setURL, setMethod, setData, setParams } from './index';
+
+export const getVolumesPage = (page: number = 0) =>
+  Request<Page<Volume>>(
+    setURL(`${API_ROOT}/volumes`),
+    setMethod('GET'),
+    setParams({ page }),
+  )
     .then(response => response.data);
 
 export const getVolumes = (): Promise<Linode.ResourcePage<Linode.Volume>> =>
@@ -13,30 +19,40 @@ export const getVolumes = (): Promise<Linode.ResourcePage<Linode.Volume>> =>
 export const attach = (volumeId: number, payload: {
   linode_id: number,
   config_id?: number,
-}): Promise<{}> =>
-  Axios
-    .post(`${API_ROOT}/volumes/${volumeId}/attach`, payload);
+}) => Request<{}>(
+  setURL(`${API_ROOT}/volumes/${volumeId}/attach`),
+  setMethod('POST'),
+  setData(payload),
+  );
 
-export const detach = (volumeId: number): Promise<{}> =>
-  Axios
-    .post(`${API_ROOT}/volumes/${volumeId}/detach`);
+export const detach = (volumeId: number) => Request<{}>(
+  setURL(`${API_ROOT}/volumes/${volumeId}/detach`),
+  setMethod('POST'),
+);
 
-/* delete is a reserved word */
-export const _delete = (volumeId: number): Promise<{}> =>
-  Axios
-    .delete(`${API_ROOT}/volumes/${volumeId}`);
+// delete is a reserve word
+export const _delete = (volumeId: number) => Request<{}>(
+  setURL(`${API_ROOT}/volumes/${volumeId}`),
+  setMethod('DELETE'),
+);
 
-export const clone = (volumeId: number, label: string): Promise<{}> =>
-  Axios
-    .post(`${API_ROOT}/volumes/${volumeId}/clone`, { label });
+export const clone = (volumeId: number, label: string) => Request<{}>(
+  setURL(`${API_ROOT}/volumes/${volumeId}/clone`),
+  setMethod('POST'),
+  setData({ label }),
+);
 
-export const resize = (volumeId: number, size: number): Promise<{}> =>
-  Axios
-    .post(`${API_ROOT}/volumes/${volumeId}/resize`, { size });
+export const resize = (volumeId: number, size: number) => Request<{}>(
+  setURL(`${API_ROOT}/volumes/${volumeId}/resize`),
+  setMethod('POST'),
+  setData({ size }),
+);
 
-export const update = (volumeId: number, label: string): Promise<{}> =>
-  Axios
-    .put(`${API_ROOT}/volumes/${volumeId}`, { label });
+export const update = (volumeId: number, label: string) => Request<{}>(
+  setURL(`${API_ROOT}/volumes/${volumeId}`),
+  setMethod('PUT'),
+  setData({ label }),
+);
 
 export type VolumeRequestPayload = {
   label: string,
@@ -45,6 +61,8 @@ export type VolumeRequestPayload = {
   linode_id?: number,
 };
 
-export const create = (payload: VolumeRequestPayload): Promise<{}> =>
-  Axios
-    .post(`${API_ROOT}/volumes`, payload);
+export const create = (payload: VolumeRequestPayload) => Request<{}>(
+  setURL(`${API_ROOT}/volumes`),
+  setMethod('POST'),
+  setData(payload),
+);

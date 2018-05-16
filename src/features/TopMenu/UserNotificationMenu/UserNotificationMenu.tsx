@@ -3,13 +3,12 @@ import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
 import { Subscription, Observable } from 'rxjs/Rx';
 import { assoc, compose, sort, take, values } from 'ramda';
 import * as moment from 'moment';
-import Axios from 'axios';
 
 import Menu from 'material-ui/Menu';
 
-import { API_ROOT } from 'src/constants';
 import { events$, init } from 'src/events';
 import notifications$ from 'src/notifications';
+import { markEventsSeen } from 'src/services/account';
 import UserNotificationButton from './UserNotificationButton';
 import UserNotificationList from './UserNotificationList';
 
@@ -78,7 +77,7 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
 
           /** Create a map of the Events using Event.ID as the key. */
           .scan((events: EventsMap, event: Linode.Event) =>
-            assoc(String(event.id), event, events),{}),
+            assoc(String(event.id), event, events), {}),
     )
       /** Wait for the events to settle before calling setState. */
       .debounce(() => Observable.interval(250))
@@ -111,9 +110,9 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
           .map(e => e.id),
     )
       .subscribe(([e, id]) => {
-        Axios
-          .post(`${API_ROOT}/account/events/${id}/seen`)
-          .then(() => init());
+        markEventsSeen(id)
+          .then(() => init())
+          .catch(console.error);
       });
   }
 
@@ -139,7 +138,7 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
           getRef={this.setRef}
           hasNew={hasNew}
           disabled={notifications.length + events.length === 0}
-          className={ anchorEl ? 'active' : '' }
+          className={anchorEl ? 'active' : ''}
         />
         <Menu
           anchorEl={anchorEl}
@@ -151,7 +150,7 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
           className={classes.root}
           PaperProps={{ className: classes.dropDown }}
         >
-        <UserNotificationList notifications={notifications} events={events}/>
+          <UserNotificationList notifications={notifications} events={events} />
         </Menu>
       </React.Fragment>
     );

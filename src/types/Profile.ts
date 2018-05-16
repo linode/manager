@@ -29,6 +29,16 @@ namespace Linode {
     created: string,
     token?: string,
     expiry: string,
+    website?: string,
     thumbnail_url?: null | string;
   };
+
+  export interface OAuthClient {
+    id: string;
+    label: string;
+    redirect_uri: string;
+    thumbnail_url: string;
+    public: boolean;
+    status: 'disabled' | 'active' | 'suspended';
+  }
 }

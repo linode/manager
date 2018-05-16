@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import Axios, { AxiosResponse } from 'axios';
 import * as moment from 'moment';
 import {
   allPass,
@@ -14,6 +13,7 @@ import {
   ifElse,
   isEmpty,
   pathEq,
+  path,
   pathOr,
   prop,
   propEq,
@@ -29,14 +29,14 @@ import {
 } from 'material-ui/styles';
 import Hidden from 'material-ui/Hidden';
 
-import Grid from 'src/components/Grid';
+import { getImages } from 'src/services/images';
+import { getLinodes, getLinode } from 'src/services/linodes';
 import { events$ } from 'src/events';
 import notifications$ from 'src/notifications';
-import { API_ROOT } from 'src/constants';
-
 import { newLinodeEvents } from 'src/features/linodes/events';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import ErrorState from 'src/components/ErrorState';
+import Grid from 'src/components/Grid';
 import PaginationFooter from 'src/components/PaginationFooter';
 import LinodeConfigSelectionDrawer, {
   LinodeConfigSelectionDrawerCallback,
@@ -95,11 +95,9 @@ const mapStateToProps = (state: Linode.AppState) => ({
 });
 
 const preloaded = PromiseLoader<Props>({
-  linodes: () => Axios.get(`${API_ROOT}/linode/instances`, { params: { page_size: 25 } })
-    .then(response => response.data),
+  linodes: () => getLinodes({ page_size: 25 }),
 
-  images: () => Axios.get(`${API_ROOT}/images`)
-    .then(response => response.data),
+  images: () => getImages(),
 });
 
 type CombinedProps = Props
@@ -156,7 +154,10 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       .filter(newLinodeEvents(mountTime))
       .filter(e => !e._initial)
       .subscribe((linodeEvent) => {
-        Axios.get(`${API_ROOT}/linode/instances/${(linodeEvent.entity as Linode.Entity).id}`)
+        const linodeId = path<number>(['entity', 'id'], linodeEvent);
+        if (!linodeId) { return; }
+
+        getLinode(linodeId)
           .then(response => response.data)
           .then((linode) => {
             if (!this.mounted) { return; }
@@ -276,14 +277,11 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
   getLinodes = (page = 1, pageSize = 25) => {
     const lastPage = Math.ceil(this.state.results / pageSize);
-
-    Axios.get(`${API_ROOT}/linode/instances`, {
-      params: {
-        page: Math.min(lastPage, page),
-        page_size: pageSize,
-      },
+    getLinodes({
+      page: Math.min(lastPage, page),
+      page_size: pageSize,
     })
-      .then((response: AxiosResponse<Linode.ResourcePage<Linode.Linode>>) => response.data)
+      .then(response => response.data)
       .then((response) => {
         if (!this.mounted) { return; }
 

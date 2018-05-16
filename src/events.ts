@@ -1,4 +1,3 @@
-import { AxiosResponse } from 'axios';
 import * as Rx from 'rxjs/Rx';
 import * as moment from 'moment';
 import {
@@ -70,8 +69,7 @@ const isPasttheBeginningOfTime = isPast(theBeginningOfTime);
  * an _initial prop of true.
  */
 
-type EventsResponse = AxiosResponse<Linode.ResourcePage<Linode.Event>>;
-export const setInitialEvents = when<EventsResponse, EventsResponse>(
+export const setInitialEvents = when(
   compose(not, isNil, view(lensPath(['config', 'headers', 'X-Filter']))),
 
   (response) => {
@@ -97,11 +95,9 @@ export const setInitialEvents = when<EventsResponse, EventsResponse>(
 );
 
 export function requestEvents() {
-  getEvents({
-    'X-Filter': JSON.stringify(
-      generatePollingFilter(filterDatestamp, Object.keys(pollIDs)),
-    ),
-  })
+  getEvents(
+    generatePollingFilter(filterDatestamp, Object.keys(pollIDs)),
+  )
     .then(setInitialEvents)
     .then(response => response.data.data)
     .then((data) => {
@@ -120,7 +116,7 @@ export function requestEvents() {
         }
       }
 
-      data.reverse().map((linodeEvent, idx, events) => {
+      data.reverse().map((linodeEvent: Linode.Event, idx: number, events: Linode.Event[]) => {
         // if an Event completes it is removed from pollIDs
         if (linodeEvent.percent_complete === 100
           && pollIDs[linodeEvent.id]) {

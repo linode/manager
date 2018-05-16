@@ -1,6 +1,10 @@
-import Axios from 'axios';
 import { API_ROOT } from 'src/constants';
+import Request, { setURL, setMethod, setData } from './index';
 
-export const updateIP = (address: string, payload: any): Promise<Linode.IPAddress> =>
-  Axios.put(`${API_ROOT}/networking/ips/${address}`, payload)
+export const updateIP = (address: string, payload: any) =>
+  Request<Linode.IPAddress>(
+    setURL(`${API_ROOT}/networking/ips/${address}`),
+    setData(payload),
+    setMethod('PUT'),
+  )
     .then(response => response.data);
