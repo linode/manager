@@ -3,6 +3,9 @@ import Page from './page';
 export class ListLinodes extends Page {
     // Grid/List Linode Card/Rows
     get subheader() { return $('[data-qa-title]'); }
+    get confirmDialogTitle() { return $('[data-qa-dialog-title]'); }
+    get confirmDialogSubmit() { return $('[data-qa-confirm-cancel]'); }
+    get confirmDialogCancel() { return $('[data-qa-cancel-cancel]'); }
     get placeholderText() { return $('[data-qa-placeholder-title]'); }
     get activeView() { return $('[data-qa-active-view]'); }
     get linodeElem() { return $('[data-qa-linode]'); }
@@ -102,11 +105,13 @@ export class ListLinodes extends Page {
             // Select from action menu
             linode.$(this.linodeActionMenu.selector).click();
             browser.click('[data-qa-action-menu-item="Reboot"]');
+            this.acceptDialog('Confirm Reboot');
             browser.waitForVisible('[data-qa-loading]');
         }
 
         if (activeView === 'grid') {
             linode.$(this.rebootButton).click();
+            this.acceptDialog('Confirm Reboot');
             browser.waitForVisible('[data-qa-circular-progress]');
         }
         
@@ -122,6 +127,7 @@ export class ListLinodes extends Page {
     powerOff(linode) {
         linode.$(this.linodeActionMenu.selector).click();
         this.powerOffMenu.click();
+        this.acceptDialog('Powering Down');
         
         browser.waitUntil(function() {
             return browser.isVisible('[data-qa-status="offline"]');
@@ -162,6 +168,15 @@ export class ListLinodes extends Page {
         browser.waitForVisible('[data-qa-circle-progress]', 15000, true);
         browser.waitForVisible('[data-qa-loading="true"]', 30000, true);
         browser.waitForExist(`[data-qa-linode="${label}"] [data-qa-status="running"]`, 45000);
+    }
+
+    acceptDialog(dialogTitle) {
+        this.confirmDialogTitle.waitForVisible();
+        this.confirmDialogCancel.waitForVisible();
+        this.confirmDialogSubmit.waitForVisible();
+        expect(this.confirmDialogTitle.getText()).toBe(dialogTitle);
+        this.confirmDialogSubmit.click();
+        this.confirmDialogTitle.waitForVisible(10000, true);
     }
 
     assertDocsDrawer() {
