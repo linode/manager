@@ -91,6 +91,7 @@ interface Props {
 interface State {
   scopes: Permission[];
   expiryTups: Expiry[];
+  selectAllSelectedScope: number | null;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -99,6 +100,7 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
   state = {
     scopes: scopeStringToPermTuples(this.props.scopes || ''),
     expiryTups: genExpiryTups(),
+    selectAllSelectedScope: null,
   };
 
   /* NB: Upon updating React, port this to getDerivedStateFromProps */
@@ -123,9 +125,19 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
     this.setState({ scopes: scopeTups });
   }
 
-  changeAllScopes = () => {
-    // change all scopes
-    return;
+  handleSelectAllScopes = (e: React.SyntheticEvent<RadioButton>): void => {
+    const { scopes } = this.state;
+    const scopeTups: Permission[] = scopes.map((scope: Permission): [string, number] => {
+      return [scope[0], +e.currentTarget.value];
+    });
+    this.setState({ scopes: scopeTups, selectAllSelectedScope: +e.currentTarget.value });
+  }
+
+  // return whether all scopes selected in the create token flow are the same
+  allScopesIdentical = () => {
+    const { scopes, selectAllSelectedScope } = this.state;
+    const allScopesIdentical = scopes.every(scope => scope[1] === selectAllSelectedScope);
+    return allScopesIdentical;
   }
 
   permNameMap = {
@@ -143,7 +155,7 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
 
   renderPermsTable() {
     const { classes, mode } = this.props;
-    const { scopes } = this.state;
+    const { scopes, selectAllSelectedScope } = this.state;
 
     return (
       <Table className={classes.permsTable}>
@@ -156,44 +168,42 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
           </TableRow>
         </TableHead>
         <TableBody>
-          <TableRow data-qa-row="Select All">
-            <TableCell padding="checkbox" className={classes.accessCell}>
-              Select All
+          {mode === 'create' &&
+            <TableRow data-qa-row="Select All">
+              <TableCell padding="checkbox" className={classes.accessCell}>
+                Select All
             </TableCell>
-            <TableCell padding="checkbox" className={classes.noneCell}>
-              <Radio
-                name="Select All"
-                // disabled={mode !== 'create' && scopeTup[1] !== 0}
-                checked={false}
-                value="0"
-                onChange={this.handleScopeChange}
-                data-qa-perm-none-radio
-              />
-            </TableCell>
-            <TableCell padding="checkbox" className={classes.readOnlyCell}>
-              <Radio
-                name="Select All"
-                // disabled={mode !== 'create' && scopeTup[1] !== 1}
-                checked={false}
-                value="1"
-                onChange={this.handleScopeChange}
-                data-qa-perm-read-radio
-              />
-            </TableCell>
-            <TableCell padding="checkbox" className={classes.readWritecell}>
-              <Radio
-                name="Select All"
-                // disabled={mode !== 'create' && scopeTup[1] !== 2}
-                checked={false}
-                value="2"
-                onChange={this.handleScopeChange}
-                data-qa-perm-rw-radio
-              />
-            </TableCell>
-          </TableRow>
+              <TableCell padding="checkbox" className={classes.noneCell}>
+                <Radio
+                  name="Select All"
+                  checked={selectAllSelectedScope === 0 && this.allScopesIdentical()}
+                  value="0"
+                  onChange={this.handleSelectAllScopes}
+                  data-qa-perm-none-radio
+                />
+              </TableCell>
+              <TableCell padding="checkbox" className={classes.readOnlyCell}>
+                <Radio
+                  name="Select All"
+                  checked={selectAllSelectedScope === 1 && this.allScopesIdentical()}
+                  value="1"
+                  onChange={this.handleSelectAllScopes}
+                  data-qa-perm-read-radio
+                />
+              </TableCell>
+              <TableCell padding="checkbox" className={classes.readWritecell}>
+                <Radio
+                  name="Select All"
+                  checked={selectAllSelectedScope === 2 && this.allScopesIdentical()}
+                  value="2"
+                  onChange={this.handleSelectAllScopes}
+                  data-qa-perm-rw-radio
+                />
+              </TableCell>
+            </TableRow>
+          }
           {scopes.map(
             (scopeTup) => {
-              console.log(scopeTup);
               return (
                 <TableRow key={scopeTup[0]} data-qa-row={this.permNameMap[scopeTup[0]]}>
                   <TableCell padding="checkbox" className={classes.accessCell}>
