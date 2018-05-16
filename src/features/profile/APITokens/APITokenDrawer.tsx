@@ -123,6 +123,11 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
     this.setState({ scopes: scopeTups });
   }
 
+  changeAllScopes = () => {
+    // change all scopes
+    return;
+  }
+
   permNameMap = {
     account: 'Account',
     domains: 'Domains',
@@ -151,8 +156,44 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
           </TableRow>
         </TableHead>
         <TableBody>
+          <TableRow data-qa-row="Select All">
+            <TableCell padding="checkbox" className={classes.accessCell}>
+              Select All
+            </TableCell>
+            <TableCell padding="checkbox" className={classes.noneCell}>
+              <Radio
+                name="Select All"
+                // disabled={mode !== 'create' && scopeTup[1] !== 0}
+                checked={false}
+                value="0"
+                onChange={this.handleScopeChange}
+                data-qa-perm-none-radio
+              />
+            </TableCell>
+            <TableCell padding="checkbox" className={classes.readOnlyCell}>
+              <Radio
+                name="Select All"
+                // disabled={mode !== 'create' && scopeTup[1] !== 1}
+                checked={false}
+                value="1"
+                onChange={this.handleScopeChange}
+                data-qa-perm-read-radio
+              />
+            </TableCell>
+            <TableCell padding="checkbox" className={classes.readWritecell}>
+              <Radio
+                name="Select All"
+                // disabled={mode !== 'create' && scopeTup[1] !== 2}
+                checked={false}
+                value="2"
+                onChange={this.handleScopeChange}
+                data-qa-perm-rw-radio
+              />
+            </TableCell>
+          </TableRow>
           {scopes.map(
             (scopeTup) => {
+              console.log(scopeTup);
               return (
                 <TableRow key={scopeTup[0]} data-qa-row={this.permNameMap[scopeTup[0]]}>
                   <TableCell padding="checkbox" className={classes.accessCell}>
