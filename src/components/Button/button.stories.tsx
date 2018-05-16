@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { storiesOf } from '@storybook/react';
+import { checkA11y } from '@storybook/addon-a11y';
 
 import Button from 'src/components/Button';
 
@@ -13,6 +14,7 @@ const Divider = () => <MDivider style={{ marginBottom: '8px', marginTop: '8px' }
 
 storiesOf('Button', module)
   .addDecorator(ThemeDecorator)
+  .addDecorator(checkA11y)
   .add('Types', () => (
     <React.Fragment>
       <Button type="primary" data-qa-button="primary">Primary</Button>

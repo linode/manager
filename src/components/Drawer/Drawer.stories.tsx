@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { storiesOf } from '@storybook/react';
+import { checkA11y } from '@storybook/addon-a11y';
 
 import Button from 'material-ui/Button';
 
@@ -53,6 +54,7 @@ class Example extends React.Component {
 
 storiesOf('Drawer', module)
   .addDecorator(ThemeDecorator)
+  .addDecorator(checkA11y)
   .add('Example', () => (
     <Example />
   ));

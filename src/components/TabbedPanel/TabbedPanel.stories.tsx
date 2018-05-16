@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { storiesOf } from '@storybook/react';
+import { checkA11y } from '@storybook/addon-a11y';
 
 import TabbedPanel from './TabbedPanel';
 import ThemeDecorator from '../../utilities/storybookDecorators';
@@ -7,6 +8,7 @@ import Grid from 'src/components/Grid';
 
 storiesOf('TabbedPanel', module)
   .addDecorator(ThemeDecorator)
+  .addDecorator(checkA11y)
   .add('default', () => {
 
     return (

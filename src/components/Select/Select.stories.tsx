@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { storiesOf } from '@storybook/react';
+import { checkA11y } from '@storybook/addon-a11y';
 
 import InputLabel from 'material-ui/Input/InputLabel';
 import MenuItem from 'material-ui/Menu/MenuItem';
@@ -65,6 +66,7 @@ class Example extends React.Component<any, State> {
 
 storiesOf('Select', module)
   .addDecorator(ThemeDecorator)
+  .addDecorator(checkA11y)
   .add('Example', () => (
     <Grid container style={{ padding: 16 }}>
       <Grid item xs={12}>
