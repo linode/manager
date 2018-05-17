@@ -33,6 +33,8 @@ import { getImages } from 'src/services/images';
 import { getLinodes, getLinode } from 'src/services/linodes';
 import { events$ } from 'src/events';
 import notifications$ from 'src/notifications';
+import { rebootLinode, powerOffLinode } from './powerActions';
+
 import { newLinodeEvents } from 'src/features/linodes/events';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import ErrorState from 'src/components/ErrorState';
@@ -43,6 +45,9 @@ import LinodeConfigSelectionDrawer, {
 } from 'src/features/LinodeConfigSelectionDrawer';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import ProductNotification from 'src/components/ProductNotification';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'material-ui/Button';
 
 import LinodesListView from './LinodesListView';
 import LinodesGridView from './LinodesGridView';
@@ -88,6 +93,10 @@ interface State {
   results: number;
   pageSize: number;
   configDrawer: ConfigDrawerState;
+  powerAlertOpen: boolean;
+  bootOption: Linode.BootAction;
+  selectedLinodeId: number | null;
+  selectedLinodeLabel: string;
 }
 
 const mapStateToProps = (state: Linode.AppState) => ({
@@ -126,6 +135,10 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       action: (id: number) => null,
     },
     pageSize: 25,
+    powerAlertOpen: false,
+    bootOption: null,
+    selectedLinodeId: null,
+    selectedLinodeLabel: '',
   };
 
   static docs = [
@@ -256,6 +269,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
         images={images}
         types={types}
         openConfigDrawer={this.openConfigDrawer}
+        toggleConfirmation={this.toggleDialog}
       />
     );
   }
@@ -271,6 +285,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
         images={images}
         types={types}
         openConfigDrawer={this.openConfigDrawer}
+        toggleConfirmation={this.toggleDialog}
       />
     );
   }
@@ -321,9 +336,29 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     }
   }
 
+  toggleDialog = (bootOption: Linode.BootAction,
+     selectedLinodeId: number, selectedLinodeLabel: string) => {
+    this.setState({
+      powerAlertOpen: !this.state.powerAlertOpen,
+      selectedLinodeId,
+      selectedLinodeLabel,
+      bootOption,
+    });
+  }
+
+  rebootOrPowerLinode = () => {
+    const { bootOption, selectedLinodeId, selectedLinodeLabel } = this.state;
+    if (bootOption === 'reboot') {
+      rebootLinode(this.openConfigDrawer, selectedLinodeId!, selectedLinodeLabel);
+    } else {
+      powerOffLinode(selectedLinodeId!, selectedLinodeLabel);
+    }
+    this.setState({ powerAlertOpen: false });
+  }
+
   render() {
     const { types, location: { hash } } = this.props;
-    const { linodes, configDrawer } = this.state;
+    const { linodes, configDrawer, bootOption, powerAlertOpen } = this.state;
     const images = pathOr([], ['response', 'data'], this.props.images);
 
     if (linodes.length === 0) {
@@ -398,6 +433,38 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
             error={configDrawer.error}
           />
         </Grid>
+        <ConfirmationDialog
+          title={(bootOption === 'reboot') ? 'Confirm Reboot' : 'Powering Down'}
+          actions={() =>
+            <ActionsPanel style={{ padding: 0 }}>
+              <Button
+                variant="raised"
+                color="secondary"
+                className="destructive"
+                onClick={this.rebootOrPowerLinode}
+                data-qa-confirm-cancel
+              >
+                {(bootOption === 'reboot')
+                  ? 'Reboot'
+                  : 'Power Down'}
+              </Button>
+              <Button
+                onClick={() => this.setState({ powerAlertOpen: false })}
+                variant="raised"
+                color="secondary"
+                className="cancel"
+                data-qa-cancel-cancel
+              >
+                Cancel
+            </Button>
+            </ActionsPanel>
+          }
+          open={powerAlertOpen}
+        >
+          {bootOption === 'reboot'
+            ? 'Are you sure you want to reboot your Linode'
+            : 'Are you sure you want to power down your Linode'}
+        </ConfirmationDialog>
       </Grid>
     );
   }

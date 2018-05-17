@@ -3,6 +3,8 @@ import { flatten } from 'ramda';
 import ListLinodes from '../../pageobjects/list-linodes';
 
 describe('List Linodes - Actions - Reboot Suite', () => {
+    const rebootTimeout = 120000;
+
     beforeAll(() => {
         browser.url(constants.routes.linodes);
         browser.waitForVisible('[data-qa-linode]');
@@ -14,18 +16,20 @@ describe('List Linodes - Actions - Reboot Suite', () => {
         it('should reboot linode on click', () => {
             linodes = ListLinodes.linode;
             linodes[0].$(ListLinodes.rebootButton.selector).click();
-            browser.waitForVisible('[data-qa-circle-progress]');
+            ListLinodes.acceptDialog('Confirm Reboot');
         });
 
-        it('should update status on reboot to booting', () => {
-            const currentStatus = linodes[0].$(ListLinodes.status.selector).getAttribute('data-qa-status');
-            expect(currentStatus).toBe('rebooting');
+        it('should update status on reboot to rebooting', () => {
+            browser.waitUntil(function() {
+                const currentStatus = linodes[0].$(ListLinodes.status.selector).getAttribute('data-qa-status');
+                return currentStatus === 'rebooting';
+            }, 10000);
         });
 
         it('should display running status after booted', () => {
             browser.waitUntil(function() {
                 return linodes[0].$(ListLinodes.status.selector).getAttribute('data-qa-status') === 'running';
-            }, 35000);
+            }, rebootTimeout);
         });
 
         it('should display all grid view elements after reboot', () => {
@@ -46,10 +50,11 @@ describe('List Linodes - Actions - Reboot Suite', () => {
 
         it('should reboot linode on click', () => {
             ListLinodes.selectMenuItem(linodes[0], 'Reboot');
+            ListLinodes.acceptDialog('Confirm Reboot');
             browser.waitForVisible('[data-qa-loading]');
         });
 
-        it('should update status on reboot to booting', () => {
+        it('should update status on reboot to rebooting', () => {
             const currentStatus = linodes[0].$(ListLinodes.status.selector).getAttribute('data-qa-status');
             expect(currentStatus).toBe('rebooting');
         });
@@ -65,7 +70,7 @@ describe('List Linodes - Actions - Reboot Suite', () => {
         it('should display running status after booted', () => {
             browser.waitUntil(function() {
                 return linodes[0].$(ListLinodes.status.selector).getAttribute('data-qa-status') === 'running';
-            }, 35000);
+            }, rebootTimeout);
         });
 
         it('should display all list view elements after reboot', () => {
