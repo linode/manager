@@ -8,7 +8,6 @@ import { shim } from 'promise.prototype.finally';
 shim(); // allows for .finally() usage
 
 import { withStyles, WithStyles, StyleRulesCallback, Theme } from 'material-ui/styles';
-import CssBaseline from 'material-ui/CssBaseline';
 import 'typeface-lato';
 
 import { getLinodeTypes, getLinodeKernels } from 'src/services/linodes';
@@ -55,13 +54,12 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   appFrame: {
     position: 'relative',
     display: 'flex',
-    height: '100%',
+    minHeight: '100vh',
+    flexDirection: 'column',
+    backgroundColor: theme.bg.main,
   },
   content: {
-    width: '100%',
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
+    flex: 1,
     [theme.breakpoints.up('md')]: {
       marginLeft: 215,
     },
@@ -70,11 +68,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     },
   },
   wrapper: {
-    backgroundColor: theme.bg.main,
-    flex: 1,
     padding: theme.spacing.unit * 3,
-    marginBottom: -100 + theme.spacing.unit * 3,
-    paddingBottom: 100 + theme.spacing.unit * 3,
     [theme.breakpoints.down('sm')]: {
       paddingTop: theme.spacing.unit * 2,
       paddingLeft: theme.spacing.unit * 2,
@@ -193,7 +187,6 @@ export class App extends React.Component<CombinedProps, State> {
       <React.Fragment>
         {longLivedLoaded &&
           <React.Fragment>
-            <CssBaseline />
             <div className={classes.appFrame}>
               <SideMenu open={menuOpen} toggle={this.toggleMenu} toggleTheme={toggleTheme} />
               <main className={classes.content}>
@@ -235,8 +228,8 @@ export class App extends React.Component<CombinedProps, State> {
                     <DocsSidebar docs={documentation} />
                   </Grid>
                 </div>
-                <Footer />
               </main>
+              <Footer />
             </div>
             <BetaNotification
               open={this.state.betaNotification}
