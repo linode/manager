@@ -130,7 +130,7 @@ const preloaded = PromiseLoader<Props>({
 
         return ({
           ...type,
-          heading: typeLabel(memory),
+          heading: type.label,
           subHeadings: [
             `$${monthly}/mo ($${hourly}/hr)`,
             typeLabelDetails(memory, disk, vcpus),
