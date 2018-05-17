@@ -22,7 +22,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     transition: theme.transitions.create(['color']),
     margin: '0 -12px 6px 0',
     minHeight: 'auto',
-    '&:hover, &:focus': {
+    '&:hover': {
       color: theme.palette.primary.light,
       backgroundColor: 'transparent',
       '& $icon': {
