@@ -23,7 +23,12 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     width: '100%',
     backgroundColor: theme.bg.main,
     margin: 0,
-    height: 100,
+    [theme.breakpoints.up('md')]: {
+      paddingLeft: 215,
+    },
+    [theme.breakpoints.up('xl')]: {
+      paddingLeft: 275,
+    },
   },
   navWrapper: {
     display: 'flex',
