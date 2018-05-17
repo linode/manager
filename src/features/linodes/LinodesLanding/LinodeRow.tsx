@@ -30,7 +30,8 @@ type ClassNames = 'bodyRow'
   | 'actionCell'
   | 'actionInner'
   | 'flag'
-  | 'status';
+  | 'status'
+  | 'link';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
   return ({
@@ -73,6 +74,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
       marginBottom: theme.spacing.unit,
       color: '#555',
       fontSize: '.92rem',
+    },
+    link: {
+      display: 'block',
     },
   });
 };
@@ -125,7 +129,7 @@ class LinodeRow extends React.Component<PropsWithStyles> {
             <LinodeStatusIndicator status={linodeStatus} />
           </Grid>
           <Grid item className="py0">
-            <Link to={`/linodes/${linodeId}`}>
+            <Link to={`/linodes/${linodeId}`} className={classes.link}>
               <Typography variant="subheading" data-qa-label>
                 {linodeLabel}
               </Typography>
