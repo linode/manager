@@ -327,6 +327,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           <Notice
             error
             text={generalError}
+            data-qa-notice
           />
         }
 
@@ -391,6 +392,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
             }}
             inputProps={{ name: 'region', id: 'region' }}
             error={Boolean(regionError)}
+            data-qa-select-region
           >
             <MenuItem key="none" value="none">Select a Region</MenuItem>,
             {regions && regions.map(region =>
@@ -430,6 +432,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
               }}
               inputProps={{ name: 'linode', id: 'linode' }}
               error={Boolean(linodeError)}
+              data-qa-select-linode
             >
               <MenuItem key="none" value="0">
                 {mode !== modes.CLONING

@@ -3,6 +3,11 @@ export default class Page {
     get docs() { return $$('[data-qa-doc]'); }
     get toast() { return $('[data-qa-toast]'); }
     get toastMsg() { return $('[data-qa-toast-message]'); }
+    get globalCreate() { return $('[data-qa-add-new-menu-button]'); }
+    get addVolumeMenu() { return $('[data-qa-add-new-menu="Volume"]'); }
+    get addLinodeMenu() { return $('[data-qa-add-new-menu="Linode"]'); }
+    get addNodeBalancerMenu() { return $('[data-qa-add-new-menu="NodeBalancer"]'); }
+    get notice() { return $('[data-qa-notice]'); }
 
     constructor() {
         this.pageTitle = 'Base page';

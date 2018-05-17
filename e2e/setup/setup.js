@@ -17,7 +17,7 @@ exports.deleteAll = (token) => {
                 rejectUnauthorized: false
             }),
             baseURL: API_ROOT,
-            timeout: 1000,
+            timeout: 5000,
             headers: { 'Authorization': `Bearer ${token}`},
         });
 
@@ -95,7 +95,7 @@ exports.removeAllLinodes = (token) => {
                 rejectUnauthorized: false
             }),
             baseURL: API_ROOT,
-            timeout: 1000,
+            timeout: 5000,
             headers: { 'Authorization': `Bearer ${token}`},
         });
 
