@@ -23,6 +23,7 @@ const LinodeTheme: Linode.Theme = {
     white: '#32363C',
     black: '#fff',
     boxShadow: '#222',
+    focusBorder: '#999',
   },
   palette: {
     divider: '#222',
