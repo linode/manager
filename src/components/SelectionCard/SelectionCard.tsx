@@ -48,8 +48,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
       },
     },
     '&:focus $innerGrid': {
-      borderColor: theme.palette.primary.main,
-      backgroundColor: theme.bg.main,
+      outline: `1px dotted ${theme.color.focusBorder}`,
     },
     '& .w100': {
       width: '100%',
