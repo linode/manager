@@ -207,6 +207,7 @@ const LinodeTheme: Linode.Theme = {
         },
         '&:focus': {
           outline: '1px dotted #999',
+          zIndex: 2,
         },
       },
       expanded: {
@@ -305,7 +306,7 @@ const LinodeTheme: Linode.Theme = {
         padding: '5px 12px',
       },
       focused: {
-        borderColor: '#666',
+        borderColor: '#999',
       },
       error: {
         borderColor: '#CA0813',
@@ -367,7 +368,7 @@ const LinodeTheme: Linode.Theme = {
           boxShadow: 'none',
           position: 'absolute',
           boxSizing: 'content-box',
-          border: '1px solid #666',
+          border: '1px solid #999',
           margin: '0 0 0 -1px',
           outline: 0,
         },
@@ -430,7 +431,7 @@ const LinodeTheme: Linode.Theme = {
         color: '#666',
         backgroundColor: '#fff',
         lineHeight: 2.2,
-        minHeight: 40,
+        minHeight: 44,
         '&:focus': {
           backgroundColor: '#fff',
         },
@@ -441,7 +442,6 @@ const LinodeTheme: Linode.Theme = {
       select: {
         '&[aria-pressed="true"]': {
           '&+ input + $icon': {
-            transform: 'scale(1.25)',
             stroke: '#666',
           },
         },
@@ -453,7 +453,7 @@ const LinodeTheme: Linode.Theme = {
         fill: 'none',
         stroke: '#999',
         clipPath: 'inset(45% 0 0 0)',
-        transition: 'transform 225ms ease-in-out, color 225ms ease-in-out',
+        transition: 'color 225ms ease-in-out',
       },
       disabled: {
         '&+ input + $icon': {
@@ -682,6 +682,7 @@ const LinodeTheme: Linode.Theme = {
     white: '#fff',
     black: '#222',
     boxShadow: '#ddd',
+    focusBorder: '#999',
   },
   bg: {
     main: '#f4f4f4',
