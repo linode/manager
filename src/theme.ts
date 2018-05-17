@@ -90,6 +90,7 @@ const LinodeTheme: Linode.Theme = {
           '&:hover, &:focus': {
             color: '#DF6560',
             borderColor: '#DF6560',
+            backgroundColor: 'transparent',
           },
           '&:active': {
             color: '#963530',
