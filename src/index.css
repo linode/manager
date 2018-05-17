@@ -26,7 +26,7 @@ a {
   color: #3B85D9;
 }
 /* Scrollbars (webkit only) */
-::-webkit-scrollbar {
+/* ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
@@ -35,7 +35,7 @@ a {
 }
 ::-webkit-scrollbar-thumb {
   background: #3B85D9;
-}
+} */
 
 /* Reusable Classes */
 .mlMain {
