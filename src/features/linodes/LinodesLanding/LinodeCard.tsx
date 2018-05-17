@@ -41,7 +41,8 @@ type CSSClasses =
   | 'consoleButton'
   | 'rebootButton'
   | 'loadingStatusText'
-  | 'flag';
+  | 'flag'
+  | 'link';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   customeMQ: {
@@ -124,6 +125,9 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
       opacity: .75,
     },
   },
+  link: {
+    display: 'block',
+  },
 });
 
 interface Props {
@@ -154,7 +158,7 @@ class LinodeCard extends React.Component<CombinedProps> {
           <LinodeStatusIndicator status={linodeStatus} />
         </Grid>
         <Grid item className={classes.cardHeader + ' py0'}>
-          <Link to={`/linodes/${linodeId}`}>
+          <Link to={`/linodes/${linodeId}`} className={classes.link}>
             <Typography variant="subheading" data-qa-label>
               {linodeLabel}
             </Typography>
