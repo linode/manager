@@ -150,6 +150,16 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
     });
   }
 
+  DomainCreateDrawer = () => (
+    <DomainCreateDrawer
+      open={this.state.createDrawer.open}
+      onClose={(domain: Partial<Linode.Domain>) => this.closeCreateDrawer(domain)}
+      mode={this.state.createDrawer.mode}
+      domain={this.state.createDrawer.domain}
+      cloneID={this.state.createDrawer.cloneID}
+    />
+  )
+
   render() {
     const { classes, history } = this.props;
     const { error, domains } = this.state;
@@ -163,14 +173,19 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
 
     /** Empty State */
     if (domains.length === 0) {
-      return <Placeholder
-        title="Add a Domain"
-        copy="Adding a new domain is easy. Click below to add a domain."
-        buttonProps={{
-          onClick: () => null,
-          children: 'Add a Domain',
-        }}
-      />;
+      return (
+        <React.Fragment>
+          <Placeholder
+            title="Add a Domain"
+            copy="Adding a new domain is easy. Click below to add a domain."
+            buttonProps={{
+              onClick: () => this.openCreateDrawer(),
+              children: 'Add a Domain',
+            }}
+          />
+          <this.DomainCreateDrawer />
+        </React.Fragment>
+      );
     }
 
     return (
@@ -230,13 +245,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
             </TableBody>
           </Table>
         </Paper>
-        <DomainCreateDrawer
-          open={this.state.createDrawer.open}
-          onClose={(domain: Partial<Linode.Domain>) => this.closeCreateDrawer(domain)}
-          mode={this.state.createDrawer.mode}
-          domain={this.state.createDrawer.domain}
-          cloneID={this.state.createDrawer.cloneID}
-        />
+        <this.DomainCreateDrawer />
         <ConfirmationDialog
           open={this.state.removeDialog.open}
           title={`Remove ${this.state.removeDialog.domain}`}
