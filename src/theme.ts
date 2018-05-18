@@ -203,6 +203,9 @@ const LinodeTheme: Linode.Theme = {
         padding: '0 16px',
         backgroundColor: '#fbfbfb',
         justifyContent: 'flex-start',
+        '& h3': {
+          transition: 'color 100ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+        },
         '&:hover': {
           '& h3': {
             color: '#5F99EA',
@@ -238,10 +241,9 @@ const LinodeTheme: Linode.Theme = {
         color: '#3B85D9',
         position: 'relative',
         marginLeft: -16,
-        transition: 'color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+        transition: `${'color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'}`,
         '& svg': {
-          transition: `${'color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, '}
-          ${'stroke 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, '}
+          transition: `${'stroke 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, '}
           ${'fill 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'}`,
           width: 22,
           height: 22,
