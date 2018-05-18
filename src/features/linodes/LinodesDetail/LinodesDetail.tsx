@@ -362,7 +362,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
             />
           )} />
           <Route exact path={`${url}/resize`} render={() => (
-            <LinodeResize linodeId={linode.id} />
+            <LinodeResize linodeId={linode.id} linodeType={linode.type} />
           )} />
           <Route exact path={`${url}/rebuild`} render={() => (
             <LinodeRebuild linodeId={linode.id} />
