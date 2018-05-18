@@ -1,12 +1,17 @@
-class VolumeDetail {
+import Page from './page';
+
+export class VolumeDetail extends Page {
     get drawerTitle() { return $('[data-qa-drawer-title]'); }
+    get drawerClose() { return $('[data-qa-close-drawer]'); }
     get placeholderText() { return $('[data-qa-placeholder-title]'); }
     get createButton() { return $('[data-qa-placeholder-button]'); }
     get createIconLink() { return $('[data-qa-icon-text-link="Create a Volume"]'); }
     get label() { return $('[data-qa-volume-label]'); }
     get size() { return $('[data-qa-size]'); }
-    get region() { return $('[data-qa-region]'); }
+    get region() { return $('[data-qa-select-region]'); }
+    get attachToLinode() { return $('[data-qa-select-linode]'); }
     get attachedTo() { return $('[data-qa-attach-to]'); }
+    get attachRegions() { return $$('[data-qa-attach-to-region]'); }
     get submit() { return $('[data-qa-submit]'); }
     get cancel() { return $('[data-qa-cancel]'); }
     get volumeCell() { return $$('[data-qa-volume-cell]'); }
@@ -22,6 +27,35 @@ class VolumeDetail {
     get cancelButton() { return $('[data-qa-cancel]'); }
     get cloneLabel() { return $('[data-qa-clone-from] input'); }
 
+    removeAllVolumes() {
+        const pageObject = this;
+
+        this.volumeCell.forEach(function(v) {
+            pageObject.removeVolume(v);
+        });
+    }
+
+    closeVolumeDrawer() {
+        this.drawerClose.click();
+        this.drawerTitle.waitForVisible(5000, true);
+        browser.waitForExist('[data-qa-drawer]', 10000, true);
+        this.globalCreate.waitForVisible();
+    }
+
+    defaultDrawerElemsDisplay() {
+        const volumeDrawerTitle = 'Create a Volume';
+
+        this.drawerTitle.waitForVisible();
+
+        expect(this.drawerTitle.getText()).toBe(volumeDrawerTitle);
+        expect(this.size.$('input').getValue()).toContain(20);
+        expect(this.label.$('input').getText()).toBe('');
+        expect(this.region.getText()).toBe('Select a Region');
+        expect(this.submit.isVisible()).toBe(true);
+        expect(this.cancel.isVisible()).toBe(true);
+        expect(this.attachToLinode.getText()).toBe('Select a Linode');
+    }
+
     getVolumeId(label) {
         const volumesWithLabel = this.volumeCell.filter(v => v.$(this.volumeCellLabel.selector).getText() === label);
 
@@ -32,18 +66,44 @@ class VolumeDetail {
         return volumesWithLabel.map(v => v.getAttribute('data-qa-volume-cell'));
     }
 
-    createVolume(volume) {
-        if (this.placeholderText.isVisible()) {
+    createVolume(volume, menuCreate) {
+        if (menuCreate) {
+            this.globalCreate.click();
+            this.addVolumeMenu.waitForVisible();
+            this.addVolumeMenu.click();
+        } else if (this.placeholderText.isVisible()) {
             this.createButton.click();
         } else {
             this.createIconLink.click();
         }
         this.drawerTitle.waitForVisible();
 
-        this.label.$('input').setValue(volume.label);
+        browser.trySetValue('[data-qa-volume-label] input', volume.label);
         this.size.$('input').setValue(volume.size);
-        // this.region.setValue(volume.region);
+
+        if (volume.hasOwnProperty('regionIndex')) {
+            this.region.waitForVisible();
+            this.region.click();
+            browser.waitForVisible('[data-qa-attach-to-region]');
+            const selectedRegion = this.attachRegions[volume.regionIndex].getText();
+            this.attachRegions[volume.regionIndex].click();
+            
+            browser.waitForVisible('[data-qa-attach-to-region]', 5000, true);
+            
+            browser.waitUntil(function() {
+                return $('[data-qa-select-region]').getText() === selectedRegion;
+            }, 5000);
+        }
+
+        if (volume.hasOwnProperty('attachedLinode')) {
+
+        }
+        // this.region.setValue(volume.region); 
         this.submit.click();
+
+        if (volume.hasOwnProperty('regionIndex')) {
+            browser.waitForExist('[data-qa-drawer]', 10000, true);
+        }
     }
 
     editVolume(volume, newLabel) {

@@ -84,6 +84,7 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
               color="primary"
               disabled={submitting && !labelError}
               loading={submitting && !labelError}
+              data-qa-label-save
             >
               Save
             </Button>
@@ -97,6 +98,7 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
             this.setState(set(lensPath(['updatedValue']), e.target.value))}
           errorText={labelError}
           error={Boolean(labelError)}
+          data-qa-label
         />
       </ExpansionPanel>
     );

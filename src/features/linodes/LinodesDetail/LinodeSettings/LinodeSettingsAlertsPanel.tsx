@@ -176,12 +176,14 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
           container
           alignItems="flex-start"
           className={classes.root}
+          data-qa-alerts-panel
         >
           <Grid item className={classes.switch}>
             <FormControlLabel
               className="toggleLabel"
               control={<Toggle checked={props.state} onChange={props.onStateChange} />}
               label={props.title}
+              data-qa-alert={props.title}
             />
           </Grid>
           <Grid item className={classes.copy}>
@@ -340,6 +342,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
               onClick={this.setLinodeAlertThresholds}
               disabled={noError}
               loading={noError}
+              data-qa-alerts-save
             >
               Save
             </Button>

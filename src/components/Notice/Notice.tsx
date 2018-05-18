@@ -99,6 +99,7 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
         notice: true,
         ...(className && { [className]: true }),
       })}
+      data-qa-notice
     >
       {
         flag &&
