@@ -139,12 +139,12 @@ export const resizeLinode = (id: number, type: string) =>
     setData({ type }),
   );
 
-export const getLinodes = (params?: any, filter?: any) =>
+export const getLinodes = (params: any = {}, filter: any = {}) =>
   Request<Page<Linode>>(
     setURL(`${API_ROOT}/linode/instances/`),
     setMethod('GET'),
-    () => filter && setXFilter(filter),
-    () => params && setParams(params),
+    setXFilter(filter),
+    setParams(params),
   )
     .then(response => response.data);
 
