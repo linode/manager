@@ -100,6 +100,7 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
               onClick={this.changeDiskPassword}
               loading={submitting && !passwordError}
               disabled={submitting && !passwordError}
+              data-qa-password-save
             >
               Save
             </Button>
@@ -121,10 +122,17 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
               this.setState(set(lensPath(['diskId']), Number(e.target.value)))}
             inputProps={{ name: 'disk', id: 'disk' }}
             error={Boolean(diskIdError)}
+            data-qa-select-disk
           >
             {
               this.state.linodeDisks.map(disk =>
-                <MenuItem key={disk.id} value={disk.id}>{disk.label}</MenuItem>)
+                <MenuItem
+                  key={disk.id}
+                  value={disk.id}
+                  data-qa-disk={disk.label}
+                >
+                  {disk.label}
+                </MenuItem>)
             }
           </Select>
           {

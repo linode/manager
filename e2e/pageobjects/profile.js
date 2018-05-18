@@ -94,7 +94,7 @@ export class TokenCreateDrawer {
     setPermission(row, permission) {
         const elem = row.$(permission.selector);
         elem.click();
-        expect(elem.getAttribute('class').includes('checked')).toBe(true);
+        expect(elem.getAttribute('data-qa-radio')).toBe('true');
     }
 
 }
