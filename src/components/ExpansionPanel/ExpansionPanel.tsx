@@ -19,7 +19,6 @@ import Minus from '../../assets/icons/minus-square.svg';
 import Notice from '../Notice';
 
 type ClassNames = 'root'
-  | 'heading'
   | 'success'
   | 'warning'
   | 'error';
@@ -31,9 +30,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
       '& .notice': {
         margin: 0,
       },
-    },
-    heading: {
-      transition: theme.transitions.create(['color']),
     },
     success: {
       backgroundColor: status.success,
@@ -121,7 +117,7 @@ class EExpansionPanel extends React.Component<CombinedProps> {
           data-qa-panel-summary
         >
           <Typography
-            className={classes.heading} {...headingProps}
+            {...headingProps}
             variant="subheading"
             data-qa-panel-subheading
           >

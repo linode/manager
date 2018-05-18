@@ -202,15 +202,26 @@ const LinodeTheme: Linode.Theme = {
       root: {
         padding: '0 16px',
         backgroundColor: '#fbfbfb',
+        justifyContent: 'flex-start',
         '&:hover': {
           '& h3': {
             color: '#5F99EA',
+          },
+          '& $expandIcon': {
+            '& svg': {
+              fill: '#5F99EA',
+              stroke: 'white',
+            },
           },
         },
         '&:focus': {
           outline: '1px dotted #999',
           zIndex: 2,
         },
+      },
+      content: {
+        flexGrow: 0,
+        order: 2,
       },
       expanded: {
         minHeight: 48,
@@ -219,14 +230,24 @@ const LinodeTheme: Linode.Theme = {
         margin: '12px 0',
       },
       expandIcon: {
-        transition: 'color 225ms ease-in-out',
+        display: 'flex',
+        order: 1,
         top: 0,
         right: 0,
         transform: 'none',
         color: '#3B85D9',
+        position: 'relative',
+        marginLeft: -16,
+        transition: 'color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
         '& svg': {
+          transition: `${'color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, '}
+          ${'stroke 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, '}
+          ${'fill 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'}`,
           width: 22,
           height: 22,
+        },
+        '& .border': {
+          stroke: '#5F99EA !important',
         },
       },
       expandIconExpanded: {
