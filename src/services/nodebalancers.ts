@@ -12,9 +12,10 @@ export const getNodeBalancersPage = (page: number) =>
   )
     .then(response => response.data);
 
-export const getNodeBalancers = () =>
-  getNodeBalancersPage(1)
+export const getNodeBalancers = () => {
+  return getNodeBalancersPage(1)
     .then(response => response.data);
+};
 
 export const getNodeBalancerConfigs = (id: number) => Request(
   setURL(`${API_ROOT}/nodebalancers/${id}/configs`),
