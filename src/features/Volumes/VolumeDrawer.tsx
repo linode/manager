@@ -396,7 +396,13 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           >
             <MenuItem key="none" value="none">Select a Region</MenuItem>,
             {regions && regions.map(region =>
-              <MenuItem key={region.id} value={region.id}>{dcDisplayNames[region.id]}</MenuItem>,
+              <MenuItem
+                key={region.id}
+                value={region.id}
+                data-qa-attach-to-region={region.id}
+              >
+                {dcDisplayNames[region.id]}
+              </MenuItem>,
             )}
           </Select>
           {regionError &&
