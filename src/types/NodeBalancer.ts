@@ -37,4 +37,10 @@ namespace Linode {
     ssl_fingerprint: string;
     cipher_suite: string;
   }
+
+  export interface ExtendedNodeBalancer extends NodeBalancer{
+    up: number;
+    down: number;
+    ports: number[];
+  }
 }
