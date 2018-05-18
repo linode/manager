@@ -102,6 +102,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
 interface Props {
   onEdit: (text: string) => void;
   text: string;
+  editing: Boolean;
 }
 
 interface State {
@@ -116,7 +117,7 @@ type FinalProps =  PassThroughProps & WithStyles<ClassNames>;
 
 class EditableText extends React.Component<FinalProps, State> {
   state = {
-    editing: false,
+    editing: this.props.editing,
     savedText: this.props.text,
     text: this.props.text,
   };
@@ -125,6 +126,7 @@ class EditableText extends React.Component<FinalProps, State> {
     if (nextProps.text !== this.state.text) {
       this.setState({ text: nextProps.text });
     }
+    this.setState({ editing: nextProps.editing });
   }
 
   onChange = (e: React.ChangeEvent<HTMLInputElement>) => {

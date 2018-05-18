@@ -31,7 +31,6 @@ import { events$ } from 'src/events';
 import Grid from 'src/components/Grid';
 import { newLinodeEvents } from 'src/features/linodes/events';
 import { weblishLaunch } from 'src/features/Weblish';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
 import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawer';
 import EditableText from 'src/components/EditableText';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
@@ -70,6 +69,8 @@ interface State {
   configDrawer: ConfigDrawerState;
   notifications?: Linode.Notification[];
   linode: Linode.Linode & { recentEvent?: Linode.Event };
+  labelInput: string;
+  labelErrors: string[];
   type?: Linode.LinodeType;
   image?: Linode.Image;
   volumes?: Linode.Volume[];
@@ -173,6 +174,8 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     volumes: this.props.data.response.volumes,
     configs: this.props.data.response.configs,
     disks: this.props.data.response.disks,
+    labelInput: this.props.data.response.linode.label,
+    labelErrors: [],
     configDrawer: {
       open: false,
       configs: [],
@@ -189,7 +192,8 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     return haveAnyBeenModified<State>(
       this.state,
       nextState,
-      ['linode', 'type', 'image', 'volumes', 'configs', 'disks', 'configDrawer'],
+      ['linode', 'type', 'image', 'volumes', 'configs',
+        'disks', 'configDrawer', 'labelInput', 'labelErrors'],
     )
       || haveAnyBeenModified<Location>(location, nextLocation, ['pathname', 'search']);
   }
@@ -284,11 +288,19 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
   updateLabel = (label: string) => {
     const { linode } = this.state;
+    let { labelInput, labelErrors } = this.state;
     renameLinode(linode.id, label)
+      .then(() => {
+        labelInput = label;
+        labelErrors = [];
+        this.setState({ labelInput, labelErrors });
+      })
       .catch((err) => {
         const errors: Linode.ApiFieldError[] = pathOr([], ['response', 'data', 'errors'], err);
-        errors.forEach(e => sendToast(e.reason, 'error'));
-        this.setState({ linode });
+        const errorStrings: string[] = errors.map(e => e.reason);
+        labelErrors = errorStrings;
+        labelInput  = label;
+        this.setState({ linode, labelInput, labelErrors });
       });
   }
 
@@ -299,6 +311,8 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       image,
       volumes,
       linode,
+      labelInput,
+      labelErrors,
       configs,
       configDrawer,
       disks,
@@ -315,10 +329,12 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
           <Grid item style={{ flex: 1 }}>
             <EditableText
               variant="headline"
-              text={linode.label}
+              text={labelInput}
+              editing={labelErrors.length > 0}
               onEdit={this.updateLabel}
               data-qa-label
             />
+            <div>{ labelErrors }</div>
           </Grid>
           <Grid item className={classes.cta}>
             <Button
