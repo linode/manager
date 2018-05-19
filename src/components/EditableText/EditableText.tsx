@@ -103,6 +103,7 @@ interface Props {
   onEdit: (text: string) => void;
   text: string;
   editing: Boolean;
+  errorText?: string;
 }
 
 interface State {
@@ -142,7 +143,6 @@ class EditableText extends React.Component<FinalProps, State> {
 
   finishEditing = (text: string) => {
     this.props.onEdit(text);
-    this.setState({ editing: false });
   }
 
   cancelEditing = () => {

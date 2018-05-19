@@ -70,7 +70,7 @@ interface State {
   notifications?: Linode.Notification[];
   linode: Linode.Linode & { recentEvent?: Linode.Event };
   labelInput: string;
-  labelErrors: string[];
+  labelErrors?: string;
   type?: Linode.LinodeType;
   image?: Linode.Image;
   volumes?: Linode.Volume[];
@@ -175,7 +175,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     configs: this.props.data.response.configs,
     disks: this.props.data.response.disks,
     labelInput: this.props.data.response.linode.label,
-    labelErrors: [],
     configDrawer: {
       open: false,
       configs: [],
@@ -292,13 +291,13 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     renameLinode(linode.id, label)
       .then(() => {
         labelInput = label;
-        labelErrors = [];
+        labelErrors = undefined;
         this.setState({ labelInput, labelErrors });
       })
       .catch((err) => {
         const errors: Linode.ApiFieldError[] = pathOr([], ['response', 'data', 'errors'], err);
         const errorStrings: string[] = errors.map(e => e.reason);
-        labelErrors = errorStrings;
+        labelErrors = errorStrings.join(', ');
         labelInput  = label;
         this.setState({ linode, labelInput, labelErrors });
       });
@@ -330,11 +329,11 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
             <EditableText
               variant="headline"
               text={labelInput}
-              editing={labelErrors.length > 0}
+              editing={Boolean(labelErrors)}
+              errorText={labelErrors}
               onEdit={this.updateLabel}
               data-qa-label
             />
-            <div>{ labelErrors }</div>
           </Grid>
           <Grid item className={classes.cta}>
             <Button
