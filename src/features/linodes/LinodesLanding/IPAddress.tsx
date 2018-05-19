@@ -6,7 +6,7 @@ import {
   StyleRulesCallback,
 } from 'material-ui/styles';
 import * as copy from 'copy-to-clipboard';
-import { tail } from 'ramda';
+import { tail, test } from 'ramda';
 
 import ShowMore from 'src/components/ShowMore';
 import CopyTooltip from 'src/components/CopyTooltip';
@@ -121,7 +121,9 @@ class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
 
   render() {
     const { classes, ips, copyRight } = this.props;
-    const formattedIPS = ips.map(ip => ip.replace('/64', ''));
+    const formattedIPS = ips
+      .map(ip => ip.replace('/64', ''))
+      .sort(ip => test(/^192\.168\./, ip) ? 1 : 0);
 
     return (
       <div className={`dif ${classes.root}`}>
