@@ -4,6 +4,8 @@ const { constants } = require('../../constants');
 const page = new Page();
 
 describe('Log out Suite', () => {
+    let token;
+
     beforeAll(() => {
         browser.url(constants.routes.linodes);
     });
@@ -17,5 +19,15 @@ describe('Log out Suite', () => {
         browser.waitUntil(function() {
             return browser.getUrl().includes('returnTo%253D%252Fvolumes');
         }, 10000);
+    });
+
+    it('should not contain a token in local storage', () => {
+        const tokenExists = browser.execute(function() {
+            if (!!localStorage['authentication/oauth-token']) {
+                return true;
+            }
+            return false;
+        });
+        expect(tokenExists.value).toBe(false);
     });
 });
