@@ -13,14 +13,14 @@ storiesOf('Editable Text', module)
     <EditableText
         variant="headline"
         text="Edit me!"
-        editing={false}
+        isEditing={false}
         onEdit={action('edit-text')}
     />
     <br /><br />
     <EditableText
         variant="title"
         text="Edit me!"
-        editing={false}
+        isEditing={false}
         onEdit={action('edit-text')}
     />
   </div>

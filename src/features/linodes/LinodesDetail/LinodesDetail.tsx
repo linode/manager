@@ -332,7 +332,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
             <EditableText
               variant="headline"
               text={labelInput.newLabel}
-              editing={Boolean(labelInput.inputErrors)}
+              isEditing={Boolean(labelInput.inputErrors)}
               errorText={labelInput.inputErrors}
               onEdit={this.updateLabel}
               data-qa-label

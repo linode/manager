@@ -102,7 +102,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
 interface Props {
   onEdit: (text: string) => void;
   text: string;
-  editing: Boolean;
+  isEditing: Boolean;
   errorText?: string;
 }
 
@@ -118,7 +118,7 @@ type FinalProps =  PassThroughProps & WithStyles<ClassNames>;
 
 class EditableText extends React.Component<FinalProps, State> {
   state = {
-    editing: this.props.editing,
+    editing: this.props.isEditing,
     savedText: this.props.text,
     text: this.props.text,
   };
@@ -127,7 +127,7 @@ class EditableText extends React.Component<FinalProps, State> {
     if (nextProps.text !== this.state.text) {
       this.setState({ text: nextProps.text });
     }
-    this.setState({ editing: nextProps.editing });
+    this.setState({ editing: nextProps.isEditing });
   }
 
   onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -142,7 +142,11 @@ class EditableText extends React.Component<FinalProps, State> {
   }
 
   finishEditing = (text: string) => {
-    this.props.onEdit(text);
+    if (text === this.props.text) {
+      this.setState({ editing: false });
+    } else {
+      this.props.onEdit(text);
+    }
   }
 
   cancelEditing = () => {
@@ -151,7 +155,7 @@ class EditableText extends React.Component<FinalProps, State> {
   }
 
   render() {
-    const { classes, onEdit, ...rest } = this.props;
+    const { classes, onEdit, isEditing, errorText, ...rest } = this.props;
     const { editing, text } = this.state;
 
     return (
@@ -190,6 +194,7 @@ class EditableText extends React.Component<FinalProps, State> {
                     if (e.key === 'Escape' || e.key === 'Esc') { this.cancelEditing(); }
                   }}
                   value={text}
+                  errorText={errorText}
                   {...rest}
                   InputProps={{ className: classes.inputRoot }}
                   inputProps={{
