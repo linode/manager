@@ -85,13 +85,15 @@ export interface Props extends ExpansionPanelProps {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class EExpansionPanel extends React.Component<CombinedProps> {
-  state = { open: false };
+  state = { open: !this.props.defaultExpanded ? null : true };
 
   handleClick = (e: React.MouseEvent<any>) => {
     this.setState({ open: !this.state.open });
   }
 
   render() {
+
+    console.log(this.state.open);
     const {
       classes,
       summaryProps,
@@ -112,7 +114,7 @@ class EExpansionPanel extends React.Component<CombinedProps> {
       >
         <ExpansionPanelSummary
           onClick={this.handleClick}
-          expandIcon={this.state.open ? <Plus /> : <Minus />}
+          expandIcon={this.state.open ? <Minus /> : <Plus />}
           {...summaryProps}
           data-qa-panel-summary
         >
