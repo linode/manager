@@ -3,6 +3,7 @@ import Request, { setURL, setMethod, setParams } from './index';
 
 type Page<T> = Linode.ResourcePage<T>;
 type NodeBalancer = Linode.NodeBalancer;
+type Config = Linode.NodeBalancerConfig;
 
 export const getNodeBalancersPage = (page: number) =>
   Request<Page<NodeBalancer>>(
@@ -17,7 +18,8 @@ export const getNodeBalancers = () => {
     .then(response => response.data);
 };
 
-export const getNodeBalancerConfigs = (id: number) => Request(
+export const getNodeBalancerConfigs = (id: number) =>
+Request<Page<Config>>(
   setURL(`${API_ROOT}/nodebalancers/${id}/configs`),
   setMethod('GET'),
 ).then(response => response.data);

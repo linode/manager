@@ -12,12 +12,16 @@ import TableCell from 'material-ui/Table/TableCell';
 import TableHead from 'material-ui/Table/TableHead';
 import TableRow from 'material-ui/Table/TableRow';
 
-import { compose, pathOr } from 'ramda';
+import { compose } from 'ramda';
+
+import * as Promise from 'bluebird';
 
 import Grid from 'src/components/Grid';
 import Table from 'src/components/Table';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
+import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
+import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 
 import { getNodeBalancers, getNodeBalancerConfigs } from 'src/services/nodebalancers';
 
@@ -29,37 +33,37 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 const preloaded = PromiseLoader<Props>({
   nodeBalancers: () => getNodeBalancersWithConfigs(),
-  // make a promise request ourside of preloaded
-  // then combine the nodebalancer data and the
-  // config information into one
-  // look at linodesdetail
 });
 
+// this is pretty tricky. we need to make a call to get the configs for each nodebalancer
+// because the up and downt time data lives in the configs
+//
+// after we get thata data, we have to add each config's up time together
+// and each down time together
+// so we need to end with a data set that looks like the following
+// [{balancer_id: 1234, up: 2, down: 5}, {balancer_id: 421, up: 5, down: 5}]
 const getNodeBalancersWithConfigs = () => {
   return getNodeBalancers().then((response) => {
-    return response.map((nodeBalancer) => {
-      getNodeBalancerConfigs(nodeBalancer.id)
-        .then((config: Linode.ResourcePage<Linode.NodeBalancerConfig>) => {
-          console.log(nodeBalancer);
+    return Promise.map(response, (nodeBalancer) => {
+      return getNodeBalancerConfigs(nodeBalancer.id)
+        .then(({ data: configs }) => {
           return {
-            nodeBalancer,
-            down: config
-              .data
-              .reduce((acc: number, config: Linode.NodeBalancerConfig) => {
+            ...nodeBalancer,
+            down: configs
+              .reduce((acc: number, config) => {
                 return acc + config.nodes_status.down;
               }, 0), // add the downtime for each config together
-            up: config
-              .data
-              .reduce((acc: number, config: Linode.NodeBalancerConfig) => {
+            up: configs
+              .reduce((acc: number, config) => {
                 return acc + config.nodes_status.up;
               }, 0), // add the uptime for each config together
-            ports: config
-              .data
-              .reduce((acc: [number], config: Linode.NodeBalancerConfig) => {
+            ports: configs
+              .reduce((acc: [number], config) => {
                 return [...acc, config.port];
               }, []),
           };
-        });
+        })
+        .catch(e => []);
     });
   });
 };
@@ -67,15 +71,11 @@ const getNodeBalancersWithConfigs = () => {
 interface Props { }
 
 interface PreloadedProps {
-  nodeBalancers: PromiseLoaderResponse<Linode.NodeBalancer[]>;
+  nodeBalancers: PromiseLoaderResponse<Linode.ExtendedNodeBalancer[]>;
 }
 
 interface State {
   deleteConfirmAlertOpen: boolean;
-  nodeBalancers: Linode.NodeBalancer[];
-  error?: Error;
-  nodeBalancerConfigs: Linode.NodeBalancerConfig[] | null;
-  nodeBalancersStatuses: {} | null;
 }
 
 type CombinedProps = Props
@@ -88,11 +88,6 @@ class NodeBalancersLanding extends React.Component<CombinedProps, State> {
 
   state: State = {
     deleteConfirmAlertOpen: false,
-    nodeBalancers: pathOr([], ['response'], this.props.nodeBalancers),
-    error: pathOr(undefined, ['error'], this.props.nodeBalancers),
-    nodeBalancerConfigs: null,
-    nodeBalancersStatuses: null,
-    // will end up looking like [{balancer_id: xxx, up: xxx, down: xxx}, etc]
   };
 
   static docs = [
@@ -117,13 +112,7 @@ class NodeBalancersLanding extends React.Component<CombinedProps, State> {
 
   //   const { nodeBalancers } = this.state;
 
-  //   // this is pretty tricky. we need to make a call to get the configs for each nodebalancer
-  //   // because the up and downt time data lives in the configs
-  //   //
-  //   // after we get thata data, we have to add each config's up time together
-  //   // and each down time together
-  //   // so we need to end with a data set that looks like the following
-  //   // [{balancer_id: 1234, up: 2, down: 5}, {balancer_id: 421, up: 5, down: 5}]
+
   //   const nodeBalancersConfigStatuses: {} = {};
   //   nodeBalancers.map((nodeBalancer) => { // first map over all the nodebalancers we have
   //     getNodeBalancerConfigs(nodeBalancer.id) // get the configs for each balancer
@@ -157,9 +146,8 @@ class NodeBalancersLanding extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    // const { nodeBalancers } = this.props;
-    // const { nodeBalancersStatuses } = this.state;
-    console.log(this.props.nodeBalancers);
+    const { nodeBalancers } = this.props;
+    console.log(nodeBalancers);
     return (
       <React.Fragment>
         <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
@@ -185,14 +173,29 @@ class NodeBalancersLanding extends React.Component<CombinedProps, State> {
               </TableRow>
             </TableHead>
             <TableBody>
-              <TableRow>
-                <TableCell>fdsafdasf</TableCell>
-                <TableCell></TableCell>
-                <TableCell>fdasfs</TableCell>
-                <TableCell>Yay</TableCell>
-                <TableCell>Yay</TableCell>
-                <TableCell>Yay</TableCell>
-              </TableRow>
+              {nodeBalancers.response.map((nodeBalancer) => {
+                return (
+                  <TableRow key={nodeBalancer.id}>
+                    <TableCell>{nodeBalancer.label}</TableCell>
+                    <TableCell>{`${nodeBalancer.up} up, ${nodeBalancer.down} down`}</TableCell>
+                    <TableCell>{nodeBalancer.transfer.total}</TableCell>
+                    <TableCell>{nodeBalancer.ports.map((port, index, ports) => {
+                      // we want a comma after the port number as long as the ports array
+                      // has multiple values and the current index isn't the last
+                      // element in the array
+                      return (ports.length > 1 && index + 1 !== ports.length) ? `${port}, ` : port;
+                    })}
+                    </TableCell>
+                    <TableCell>
+                      <IPAddress ips={[nodeBalancer.ipv4]} copyRight />
+                      <IPAddress ips={[nodeBalancer.ipv6]} copyRight />
+                    </TableCell>
+                    <TableCell>
+                      <RegionIndicator region={nodeBalancer.region} />
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </Paper>

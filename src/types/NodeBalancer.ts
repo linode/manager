@@ -9,11 +9,18 @@ namespace Linode {
     ipv6: string;
     created: string;
     updated: string;
+    transfer: BalancerTransfer;
   }
 
   export interface NodesStatus{
     up: number;
     down: number;
+  }
+
+  export interface BalancerTransfer{
+    in: number;
+    out: number;
+    total: number;
   }
 
   export interface NodeBalancerConfig{
