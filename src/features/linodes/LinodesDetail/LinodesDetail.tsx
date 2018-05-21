@@ -183,12 +183,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     return haveAnyBeenModified<State>(
       this.state,
       nextState,
-<<<<<<< HEAD
-      ['linode', 'type', 'image', 'volumes', 'configs',
-        'disks', 'configDrawer', 'labelInput'],
-=======
-      ['linode', 'image', 'volumes', 'configs', 'disks', 'configDrawer'],
->>>>>>> upstream/develop
+      ['linode', 'image', 'volumes', 'configs', 'disks', 'configDrawer', 'labelInput'],
     )
       || haveAnyBeenModified<Location>(location, nextLocation, ['pathname', 'search']);
   }
