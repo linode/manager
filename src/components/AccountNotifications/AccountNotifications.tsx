@@ -41,8 +41,6 @@ interface Props {
 interface State {
   anchorEl?: HTMLElement;
   events: Linode.Event[];
-  hasNew?: boolean;
-  notifications: Linode.Notification[];
 }
 
 type CombinedProps = {} & WithStyles<ClassNames>;
@@ -50,16 +48,10 @@ type CombinedProps = {} & WithStyles<ClassNames>;
 class AccountNotificationMenu extends React.Component<CombinedProps, State> {
   state = {
     events: [],
-    notifications: [],
     anchorEl: undefined,
-    hasNew: false,
   };
 
   mounted: boolean = false;
-
-  static defaultProps = {
-    hasNew: false,
-  };
 
   componentDidMount() {
     this.mounted = true;
@@ -78,6 +70,7 @@ class AccountNotificationMenu extends React.Component<CombinedProps, State> {
         <UserNotificationButton
           onClick={e => this.setState({ anchorEl: e.currentTarget })}
           className={anchorEl ? 'active' : ''}
+          // isImportant
         />
         <Menu
           anchorEl={anchorEl}
