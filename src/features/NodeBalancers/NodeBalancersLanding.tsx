@@ -22,6 +22,7 @@ import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
+import NodeBalancerActionMenu from './NodeBalancerActionMenu';
 
 import { getNodeBalancers, getNodeBalancerConfigs } from 'src/services/nodebalancers';
 
@@ -36,12 +37,10 @@ const preloaded = PromiseLoader<Props>({
 });
 
 // this is pretty tricky. we need to make a call to get the configs for each nodebalancer
-// because the up and downt time data lives in the configs
+// because the up and down time data lives in the configs along with the ports
 //
-// after we get thata data, we have to add each config's up time together
+// after we get that data, we have to add each config's up time together
 // and each down time together
-// so we need to end with a data set that looks like the following
-// [{balancer_id: 1234, up: 2, down: 5}, {balancer_id: 421, up: 5, down: 5}]
 const getNodeBalancersWithConfigs = () => {
   return getNodeBalancers().then((response) => {
     return Promise.map(response, (nodeBalancer) => {
@@ -92,62 +91,42 @@ class NodeBalancersLanding extends React.Component<CombinedProps, State> {
 
   static docs = [
     {
-      title: 'Hello World',
-      src: 'https://linode.com/docs/getting-started/',
-      body: `This is a sentence. This is a sentence. This is a sentence. This is a sentence.
-      This is a sentence. This is a sentence. This is a sentence. This is a sentence.
-      This is a sentence. This is a sentence.`,
+      title: 'How to use NodeBalancers',
+      src: 'https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers/',
+      body: `Nearly all applications that are built using Linodes can benefit from load balancing,
+       and load balancing itself is the key to expanding an application to larger numbers of users.
+        Linode now provides NodeBalancers, which can ease the deployment
+         and administration of a load balancer.`,
     },
     {
-      title: 'Hello World',
-      src: 'https://linode.com/docs/getting-started/',
-      body: `This is a sentence. This is a sentence. This is a sentence. This is a sentence.
-      This is a sentence. This is a sentence. This is a sentence. This is a sentence.
-      This is a sentence. This is a sentence.`,
+      title: 'NodeBalancer Reference Guide',
+      src: 'https://www.linode.com/docs/platform/nodebalancer/nodebalancer-reference-guide/',
+      body: `Check out the NodeBalacner reference guide for tips on how to successfully configure
+      a NodeBalancer and get the most out of the service.`,
     },
   ];
 
-  // componentDidMount() {
-  //   this.mounted = true;
-
-  //   const { nodeBalancers } = this.state;
-
-
-  //   const nodeBalancersConfigStatuses: {} = {};
-  //   nodeBalancers.map((nodeBalancer) => { // first map over all the nodebalancers we have
-  //     getNodeBalancerConfigs(nodeBalancer.id) // get the configs for each balancer
-  //       .then((response: Linode.ResourcePage<Linode.NodeBalancerConfig>) => {
-  //         const uptime = response.data.reduce((acc: number, config
-  // : Linode.NodeBalancerConfig) => {
-  //           return acc + config.nodes_status.up;
-  //         }, 0); // add the uptime for each config together
-  //         const downtime = response
-  //           .data
-  //           .reduce((acc: number, config: Linode.NodeBalancerConfig) => {
-  //             return acc + config.nodes_status.down;
-  //           }, 0); // add the downtime for each config together
-  //         const ports = response
-  //           .data
-  //           .reduce((acc: [number], config: Linode.NodeBalancerConfig) => {
-  //             return [...acc, config.port];
-  //           }, []);
-  //         nodeBalancersConfigStatuses[nodeBalancer.id] = {
-  //           up: uptime,
-  //           down: downtime,
-  //           ports,
-  //         };
-  //       });
-  //   });
-  //   this.setState({ nodeBalancersStatuses: nodeBalancersConfigStatuses });
-  // }
-
-  componentWillUnmount() {
-    this.mounted = false;
+  formatTransferData = (transferTotal: number) => {
+    // API v4 always returns nodebalancer transfer in MB, so we want to clean it up if it's too
+    // big or too small
+    const gb = 1073741824;
+    const mb = 1048576;
+    const kb = 1024;
+    const totalToBytes = transferTotal * 1024 * 1024; // convert the MB to Bytes
+    if (totalToBytes >= gb) { // convert bytes to GB
+      return `${Math.max(Math.ceil(totalToBytes / gb)).toFixed(2)} GB`;
+    }
+    if (totalToBytes >= mb) { // convert bytes to MB
+      return `${Math.max(Math.ceil(totalToBytes / mb * 100) / 100).toFixed(2)} MB`;
+    }
+    if (totalToBytes >= kb) { // convert bytes to KB
+      return `${Math.max(Math.ceil(totalToBytes / kb * 100) / 100).toFixed(2)} KB`;
+    }
+    return `${totalToBytes} bytes`;
   }
 
   render() {
     const { nodeBalancers } = this.props;
-    console.log(nodeBalancers);
     return (
       <React.Fragment>
         <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
@@ -170,6 +149,7 @@ class NodeBalancersLanding extends React.Component<CombinedProps, State> {
                 <TableCell>Ports</TableCell>
                 <TableCell>IP Addresses</TableCell>
                 <TableCell>Region</TableCell>
+                <TableCell></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -178,7 +158,9 @@ class NodeBalancersLanding extends React.Component<CombinedProps, State> {
                   <TableRow key={nodeBalancer.id}>
                     <TableCell>{nodeBalancer.label}</TableCell>
                     <TableCell>{`${nodeBalancer.up} up, ${nodeBalancer.down} down`}</TableCell>
-                    <TableCell>{nodeBalancer.transfer.total}</TableCell>
+                    <TableCell>
+                     {this.formatTransferData(nodeBalancer.transfer.total)}
+                    </TableCell>
                     <TableCell>{nodeBalancer.ports.map((port, index, ports) => {
                       // we want a comma after the port number as long as the ports array
                       // has multiple values and the current index isn't the last
@@ -192,6 +174,11 @@ class NodeBalancersLanding extends React.Component<CombinedProps, State> {
                     </TableCell>
                     <TableCell>
                       <RegionIndicator region={nodeBalancer.region} />
+                    </TableCell>
+                    <TableCell>
+                      <NodeBalancerActionMenu
+                        nodeBalancerId={nodeBalancer.id}
+                      />
                     </TableCell>
                   </TableRow>
                 );
