@@ -667,7 +667,7 @@ const connected = connect((state: Linode.AppState) => ({
         ],
       };
     }),
-    pathOr([], ['resources', 'types', 'data']),
+    pathOr([], ['resources', 'types', 'data', 'data']),
   )(state),
 }));
 
