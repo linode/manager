@@ -87,10 +87,10 @@ class SelectLinodePanel extends React.Component<CombinedProps> {
       isCloneTarget, selectedCloneTargetLinodeID } = this.props;
 
     return (
-      <Paper className={`${classes.root}`}>
+      <Paper className={`${classes.root}`} data-qa-select-linode-panel>
         <div className={classes.inner}>
           {error && <Notice text={error} error />}
-          <Typography variant="title">
+          <Typography variant="title" data-qa-select-linode-header>
             {(!!header) ? header : 'Select Linode'}
           </Typography>
           <Typography component="div" className={classes.panelBody}>

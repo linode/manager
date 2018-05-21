@@ -621,7 +621,14 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
                 indicatorColor="primary"
                 textColor="primary"
               >
-                {this.tabs.map((tab, idx) => <Tab key={idx} label={tab.title} />)}
+                {
+                  this.tabs.map((tab, idx) =>
+                  <Tab
+                    key={idx}
+                    label={tab.title}
+                    data-qa-create-from={tab.title}
+                  />)
+                }
               </Tabs>
             </AppBar>
             {tabRender()}
