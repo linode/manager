@@ -85,7 +85,6 @@ interface State {
   selectedBackupID?: number;
   selectedBackupInfo?: Info;
   smallestType?: string;
-  selectedCloneTargetLinodeID?: number | null;
   selectedImageID: string | null;
   selectedRegionID: string | null;
   selectedTypeID: string | null;
@@ -377,38 +376,29 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
               error={hasErrorFor('linode_id')}
               linodes={this.extendLinodes(this.props.linodes.response)}
               selectedLinodeID={this.state.selectedLinodeID}
-              selectedCloneTargetLinodeID={this.state.selectedCloneTargetLinodeID}
               handleSelection={this.updateStateFor}
               header={'Select Linode to Clone From'}
             />
-            <SelectLinodePanel
-              linodes={this.extendLinodes(this.props.linodes.response)}
-              selectedLinodeID={this.state.selectedLinodeID}
-              selectedCloneTargetLinodeID={this.state.selectedCloneTargetLinodeID}
-              handleSelection={this.updateStateFor}
-              header={'Select Target Linode'}
-              isCloneTarget={true}
-            />
-            {this.state.selectedCloneTargetLinodeID === null &&
-              <React.Fragment>
-                <SelectRegionPanel
-                  error={hasErrorFor('region')}
-                  regions={this.props.regions.response}
-                  handleSelection={this.updateStateFor}
-                  selectedID={this.state.selectedRegionID}
-                />
-                <SelectPlanPanel
-                  error={hasErrorFor('type')}
-                  types={this.props.types.response}
-                  onSelect={(id: string) => this.setState({ selectedTypeID: id })}
-                  selectedID={this.state.selectedTypeID}
-                />
-                <LabelAndTagsPanel
-                  error={hasErrorFor('label')}
-                  label={this.state.label}
-                  handleChange={this.updateStateFor}
-                />
-              </React.Fragment>}
+            <React.Fragment>
+              <SelectRegionPanel
+                error={hasErrorFor('region')}
+                regions={this.props.regions.response}
+                handleSelection={this.updateStateFor}
+                selectedID={this.state.selectedRegionID}
+              />
+              <SelectPlanPanel
+                error={hasErrorFor('type')}
+                types={this.props.types.response}
+                onSelect={(id: string) => this.setState({ selectedTypeID: id })}
+                selectedID={this.state.selectedTypeID}
+                smallestType={this.state.smallestType}
+              />
+              <LabelAndTagsPanel
+                error={hasErrorFor('label')}
+                label={this.state.label}
+                handleChange={this.updateStateFor}
+              />
+            </React.Fragment>
             <AddonsPanel
               backups={this.state.backups}
               backupsMonthly={this.getBackupsMonthlyPrice()}
@@ -435,7 +425,6 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       selectedTab,
       selectedLinodeID,
       selectedBackupID,
-      selectedCloneTargetLinodeID,
     } = this.state;
 
     if (selectedTab === this.backupTabIndex) {
@@ -461,13 +450,11 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       this.createNewLinode();
     } else if (selectedTab === this.cloneTabIndex) {
       // creating a clone
-      // if selectedCloneTargetLinode is 'undefined,' no target Linode has been selected
-      // if selectedCloneTargetLinode is null, that means we're cloning to a new Linode
-      if (!selectedLinodeID || typeof selectedCloneTargetLinodeID === 'undefined') {
+      if (!selectedLinodeID) {
         this.scrollToTop();
         this.setState({
           errors: [
-            { field: 'linode_id', reason: 'You must select both a source and target Linode' },
+            { field: 'linode_id', reason: 'You must select both a Linode' },
           ],
         });
         return;
@@ -530,7 +517,6 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       selectedRegionID,
       selectedTypeID,
       selectedLinodeID,
-      selectedCloneTargetLinodeID,
       label, // optional
       backups, // optional
       privateIP,
@@ -541,7 +527,6 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     cloneLinode(selectedLinodeID!, {
       region: selectedRegionID,
       type: selectedTypeID,
-      linode_id: (!!selectedCloneTargetLinodeID) ? +selectedCloneTargetLinodeID : null,
       label,
       backups_enabled: backups,
     })
@@ -573,23 +558,10 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
   }
 
   getTypeInfo = (): TypeInfo => {
-    const { selectedCloneTargetLinodeID, selectedTypeID } = this.state;
+    const { selectedTypeID } = this.state;
 
-    const { linodes } = this.props;
-
-    // we have to add a conditional check here to see if we're cloning to
-    // an existing Linode. If so, we need to get the type from that Linode and
-    // so that we can display the accurate price
-    const cloningToExistingLinode = !!selectedCloneTargetLinodeID;
-    const selectedCloneTargetLinode = linodes.response.find((linode) => {
-      return Number(selectedCloneTargetLinodeID) === linode.id;
-    });
-
-    const typeInfo = (!cloningToExistingLinode)
-      ? this.reshapeTypeInfo(this.props.types.response.find(
-        type => type.id === selectedTypeID))
-      : this.reshapeTypeInfo(this.props.types.response.find(
-        type => type.id === selectedCloneTargetLinode!.type));
+    const typeInfo = this.reshapeTypeInfo(this.props.types.response.find(
+      type => type.id === selectedTypeID));
 
     return typeInfo;
   }
