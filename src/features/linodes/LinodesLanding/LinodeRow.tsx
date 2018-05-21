@@ -1,18 +1,16 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
+import { compose, pathOr } from 'ramda';
 import { Link } from 'react-router-dom';
 
-import {
-  withStyles,
-  Theme,
-  WithStyles,
-  StyleRulesCallback,
-} from 'material-ui/styles';
+import { withStyles, Theme, WithStyles, StyleRulesCallback } from 'material-ui/styles';
 import Grid from 'src/components/Grid';
 import Typography from 'material-ui/Typography';
 import TableRow from 'material-ui/Table/TableRow';
 import TableCell from 'material-ui/Table/TableCell';
 import Tooltip from 'material-ui/Tooltip';
 
+import { displayType } from 'src/features/linodes/presentation';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import Flag from 'src/assets/icons/flag.svg';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
@@ -21,7 +19,6 @@ import LinearProgress from 'src/components/LinearProgress';
 import LinodeStatusIndicator from './LinodeStatusIndicator';
 import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';
-import { displayLabel } from '../presentation';
 import LinodeActionMenu from './LinodeActionMenu';
 import transitionStatus from '../linodeTransitionStatus';
 
@@ -86,16 +83,20 @@ interface Props {
   linodeIpv4: string[];
   linodeIpv6: string;
   linodeRegion: string;
+  linodeType: null | string;
   linodeNotification?: string;
   linodeLabel: string;
   linodeRecentEvent?: Linode.Event;
-  type?: Linode.LinodeType;
   openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
   toggleConfirmation: (bootOption: Linode.BootAction,
     linodeId: number, linodeLabel: string) => void;
 }
 
-type PropsWithStyles = Props & WithStyles<ClassNames>;
+interface ConnectedProps {
+  typeLabel: string;
+}
+
+type PropsWithStyles = Props & ConnectedProps & WithStyles<ClassNames>;
 
 class LinodeRow extends React.Component<PropsWithStyles> {
   shouldComponentUpdate(nextProps: PropsWithStyles) {
@@ -103,7 +104,6 @@ class LinodeRow extends React.Component<PropsWithStyles> {
       nextProps,
       this.props,
       [
-        'type',
         'linodeStatus',
         'linodeRegion',
         'linodeNotification',
@@ -116,8 +116,7 @@ class LinodeRow extends React.Component<PropsWithStyles> {
   }
 
   headCell = () => {
-    const { type, linodeId, linodeStatus, linodeLabel, classes } = this.props;
-    const specsLabel = type && displayLabel(type.memory);
+    const { linodeId, linodeStatus, linodeLabel, classes, typeLabel } = this.props;
 
     return (
       <TableCell className={classes.linodeCell}>
@@ -131,7 +130,7 @@ class LinodeRow extends React.Component<PropsWithStyles> {
                 {linodeLabel}
               </Typography>
             </Link>
-            {specsLabel && <div>{specsLabel}</div>}
+            {typeLabel}
           </Grid>
         </Grid>
       </TableCell>
@@ -204,5 +203,14 @@ class LinodeRow extends React.Component<PropsWithStyles> {
       : this.loadedState();
   }
 }
+const connected = connect((state: Linode.AppState, ownProps: Props) => ({
+  typeLabel: displayType(
+    ownProps.linodeType,
+    pathOr([], ['resources', 'types', 'data', 'data'], state),
+  ),
+}));
 
-export default withStyles(styles, { withTheme: true })(LinodeRow);
+export default compose(
+  withStyles(styles, { withTheme: true }),
+  connected,
+)(LinodeRow) as React.ComponentType<Props>;

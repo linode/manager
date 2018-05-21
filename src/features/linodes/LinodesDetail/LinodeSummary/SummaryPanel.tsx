@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { compose, pathOr } from 'ramda';
 
 import {
   withStyles,
@@ -11,14 +13,14 @@ import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 
 import Grid from 'src/components/Grid';
-import { typeLabelLong, formatRegion } from 'src/features/linodes/presentation';
+import { typeLabelLong, formatRegion, displayType } from 'src/features/linodes/presentation';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 
 type ClassNames = 'root'
-| 'title'
-| 'section'
-| 'region'
-| 'volumeLink';
+  | 'title'
+  | 'section'
+  | 'region'
+  | 'volumeLink';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
@@ -54,14 +56,17 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 interface Props {
   linode: Linode.Linode;
   image?: Linode.Image;
-  type?: Linode.LinodeType;
   volumes: Linode.Volume[];
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+interface ConnectedProps {
+  typeLabel: string;
+}
+
+type CombinedProps = Props & ConnectedProps & WithStyles<ClassNames>;
 
 const SummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, linode, image, type, volumes } = props;
+  const { classes, linode, image, volumes, typeLabel } = props;
   return (
     <Paper className={classes.root}>
       <Grid container>
@@ -84,10 +89,14 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
             }
           </Typography>
           <Typography className={classes.section} variant="caption">
-            {type
-              ? <span>{typeLabelLong(type.memory, type.disk, type.vcpus)}</span>
-              : <span>Unknown Plan</span>
-            }
+            <span>
+              {typeLabelLong(
+                typeLabel,
+                linode.specs.memory,
+                linode.specs.disk,
+                linode.specs.vcpus,
+              )}
+            </span>
           </Typography>
         </Grid>
         <Grid item xs={12} sm={6} lg={4}>
@@ -119,4 +128,11 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(SummaryPanel);
+const connected = connect((state: Linode.AppState, ownProps: Props) => ({
+  typeLabel: displayType(
+    ownProps.linode.type,
+    pathOr([], ['resources', 'types', 'data', 'data'], state),
+  ),
+}));
+
+export default compose(styled, connected)(SummaryPanel) as React.ComponentType<Props>;
