@@ -56,7 +56,8 @@ describe('Create - Volume Suite', () => {
     it('should create attached to a linode', () => {
         testVolume['label'] = `ASD${new Date().getTime()}`,
         testVolume['attachedLinode'] = linodeLabel;
-        // create menu
+
+        VolumeDetail.createVolume(testVolume, true);
         // select linode
         // create volume
         // navigate to /volumes
@@ -64,7 +65,7 @@ describe('Create - Volume Suite', () => {
         // assert volume attached
     });
 
-    afterAll(() => {
+    it('should remove all volumes', () => {
         browser.url(constants.routes.volumes);
         VolumeDetail.volumeCellElem.waitForVisible();
         VolumeDetail.removeAllVolumes();
