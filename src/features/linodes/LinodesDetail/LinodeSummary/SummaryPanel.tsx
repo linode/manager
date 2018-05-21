@@ -90,12 +90,12 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
           </Typography>
           <Typography className={classes.section} variant="caption">
             <span>
-              { typeLabelLong(
+              {typeLabelLong(
                 typeLabel,
                 linode.specs.memory,
                 linode.specs.disk,
                 linode.specs.vcpus,
-                ) }
+              )}
             </span>
           </Typography>
         </Grid>
@@ -129,7 +129,10 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
 const styled = withStyles(styles, { withTheme: true });
 
 const connected = connect((state: Linode.AppState, ownProps: Props) => ({
-  typeLabel: displayType(ownProps.linode.type, pathOr([], ['resources', 'types', 'data'], state)),
+  typeLabel: displayType(
+    ownProps.linode.type,
+    pathOr([], ['resources', 'types', 'data', 'data'], state),
+  ),
 }));
 
 export default compose(styled, connected)(SummaryPanel) as React.ComponentType<Props>;

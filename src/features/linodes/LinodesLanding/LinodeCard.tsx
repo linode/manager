@@ -21,7 +21,6 @@ import CircleProgress from 'src/components/CircleProgress';
 import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';
 import LinodeActionMenu from './LinodeActionMenu';
-import { rebootLinode } from './powerActions';
 import { typeLabelDetails, displayType } from '../presentation';
 import transitionStatus from '../linodeTransitionStatus';
 import LinodeStatusIndicator from './LinodeStatusIndicator';
@@ -140,6 +139,8 @@ interface Props {
   linodeSpecTransfer: number;
   image?: Linode.Image;
   openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
+  toggleConfirmation: (bootOption: Linode.BootAction,
+    linodeId: number, linodeLabel: string) => void;
 }
 
 interface ConnectedProps {
@@ -239,6 +240,7 @@ class LinodeCard extends React.Component<CombinedProps> {
         'linodeStatus',
         'linodeRegion',
         'linodeNotification',
+        'linodeRecentEvent',
         'linodeLabel',
         'linodeIpv6',
         'linodeIpv4',
@@ -247,7 +249,8 @@ class LinodeCard extends React.Component<CombinedProps> {
   }
 
   render() {
-    const { classes, openConfigDrawer, linodeId, linodeLabel, linodeStatus } = this.props;
+    const { classes, openConfigDrawer, linodeId, linodeLabel,
+       linodeStatus, toggleConfirmation } = this.props;
     const loading = transitionStatus.includes(linodeStatus);
 
     return (
@@ -262,6 +265,7 @@ class LinodeCard extends React.Component<CombinedProps> {
                   linodeLabel={linodeLabel}
                   linodeStatus={linodeStatus}
                   openConfigDrawer={openConfigDrawer}
+                  toggleConfirmation={toggleConfirmation}
                 />
               </div>
             }
@@ -280,7 +284,7 @@ class LinodeCard extends React.Component<CombinedProps> {
             <Button
               className={`${classes.button}
               ${classes.rebootButton}`}
-              onClick={() => rebootLinode(openConfigDrawer, linodeId, linodeLabel)}
+              onClick={() => toggleConfirmation('reboot', linodeId, linodeLabel)}
               data-qa-reboot
             >
               Reboot
@@ -293,7 +297,11 @@ class LinodeCard extends React.Component<CombinedProps> {
 }
 
 const connected = connect((state: Linode.AppState, ownProps: Props) => ({
-  typeLabel: displayType(ownProps.linodeType, pathOr([], ['resources', 'types', 'data'], state)),
+  typeLabel: displayType(
+    ownProps.linodeType,
+    pathOr([], ['resources', 'types', 'data', 'data'],
+    state),
+  ),
 }));
 
 export default compose(

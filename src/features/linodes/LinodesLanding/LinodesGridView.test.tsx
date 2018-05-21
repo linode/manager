@@ -17,6 +17,7 @@ describe('LinodesGridView', () => {
             linodes={linodes as Linode.Linode[]}
             images={images as Linode.Image[]}
             openConfigDrawer={e => null}
+            toggleConfirmation={e => null}
           />
         </StaticRouter>
       </LinodeThemeWrapper>,

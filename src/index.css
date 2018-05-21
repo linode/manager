@@ -1,3 +1,14 @@
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+html {
+  height: 100%;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 body {
   height: 100%;
   margin: 0;
@@ -5,8 +16,10 @@ body {
   font-family: "Lato", sans-serif;
 }
 
-html {
-  height: 100%;
+@media print {
+  body {
+    background-color: #fff;
+  }
 }
 
 #root {
@@ -26,7 +39,7 @@ a {
   color: #3B85D9;
 }
 /* Scrollbars (webkit only) */
-::-webkit-scrollbar {
+/* ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
@@ -35,7 +48,7 @@ a {
 }
 ::-webkit-scrollbar-thumb {
   background: #3B85D9;
-}
+} */
 
 /* Reusable Classes */
 .mlMain {

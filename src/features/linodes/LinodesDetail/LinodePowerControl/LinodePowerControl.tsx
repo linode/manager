@@ -13,6 +13,8 @@ import {
   rebootLinode,
 } from 'src/features/linodes/LinodesLanding/powerActions';
 
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import ActionsPanel from 'src/components/ActionsPanel';
 
 import PowerOn from '../../../../assets/icons/powerOn.svg';
 import Reload from '../../../../assets/icons/reload.svg';
@@ -116,15 +118,19 @@ interface State {
   menu: {
     anchorEl?: HTMLElement;
   };
+  bootOption: Linode.BootAction;
+  powerAlertOpen: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class LinodePowerButton extends React.Component<CombinedProps, State> {
+export class LinodePowerButton extends React.Component<CombinedProps, State> {
   state = {
     menu: {
       anchorEl: undefined,
     },
+    bootOption: null,
+    powerAlertOpen: false,
   };
 
   _toggleMenu = (value?: HTMLElement) => this.setState({ menu: { anchorEl: value } });
@@ -143,21 +149,28 @@ class LinodePowerButton extends React.Component<CombinedProps, State> {
     this.closeMenu();
   }
 
-  powerOff = () => {
-    const { id, label } = this.props;
-    powerOffLinode(id, label);
+  toggleDialog = (bootOption: Linode.BootAction) => {
+    this.setState({
+      powerAlertOpen: !this.state.powerAlertOpen,
+      bootOption,
+    });
     this.closeMenu();
   }
 
-  reboot = () => {
+  rebootOrPowerLinode = () => {
+    const { bootOption } = this.state;
     const { id, label, openConfigDrawer } = this.props;
-    rebootLinode(openConfigDrawer, id, label);
-    this.closeMenu();
+    if (bootOption === 'reboot') {
+      rebootLinode(openConfigDrawer, id, label);
+    } else {
+      powerOffLinode(id, label);
+    }
+    this.setState({ powerAlertOpen: false });
   }
 
   render() {
     const { status, classes } = this.props;
-    const { menu: { anchorEl } } = this.state;
+    const { menu: { anchorEl }, bootOption, powerAlertOpen } = this.state;
 
     const isRunning = status === 'running';
     const isOffline = status === 'offline';
@@ -208,7 +221,7 @@ class LinodePowerButton extends React.Component<CombinedProps, State> {
         >
           <MenuItem key="placeholder" className={classes.hidden} />
           <MenuItem
-            onClick={this.reboot}
+            onClick={() => this.toggleDialog('reboot')}
             className={classes.menuItem}
             data-qa-set-power="reboot"
           >
@@ -217,7 +230,7 @@ class LinodePowerButton extends React.Component<CombinedProps, State> {
           </MenuItem>
           { isRunning &&
             <MenuItem
-              onClick={this.powerOff}
+              onClick={() => this.toggleDialog('power_down')}
               className={classes.menuItem}
               data-qa-set-power="powerOff"
             >
@@ -236,6 +249,38 @@ class LinodePowerButton extends React.Component<CombinedProps, State> {
             </MenuItem>
           }
         </Menu>
+        <ConfirmationDialog
+          title={(bootOption === 'reboot') ? 'Confirm Reboot' : 'Powering Down'}
+          actions={() =>
+            <ActionsPanel style={{ padding: 0 }}>
+              <Button
+                variant="raised"
+                color="secondary"
+                className="destructive"
+                onClick={this.rebootOrPowerLinode}
+                data-qa-confirm-cancel
+              >
+                {(bootOption === 'reboot')
+                  ? 'Reboot'
+                  : 'Power Down'}
+              </Button>
+              <Button
+                onClick={() => this.setState({ powerAlertOpen: false })}
+                variant="raised"
+                color="secondary"
+                className="cancel"
+                data-qa-cancel-cancel
+              >
+                Cancel
+            </Button>
+            </ActionsPanel>
+          }
+          open={powerAlertOpen}
+        >
+          {bootOption === 'reboot'
+            ? 'Are you sure you want to reboot your Linode'
+            : 'Are you sure you want to power down your Linode'}
+        </ConfirmationDialog>
       </React.Fragment>
     );
   }
