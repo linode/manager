@@ -82,7 +82,7 @@ interface State {
   selectedLinodeID?: number;
   selectedBackupID?: number;
   selectedBackupInfo?: Info;
-  smallestType?: string;
+  selectedDiskSize?: number;
   selectedImageID: string | null;
   selectedRegionID: string | null;
   selectedTypeID: string | null;
@@ -311,7 +311,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
               types={this.props.types}
               onSelect={(id: string) => this.setState({ selectedTypeID: id })}
               selectedID={this.state.selectedTypeID}
-              smallestType={this.state.smallestType}
+              selectedDiskSize={this.state.selectedDiskSize}
             />
             <LabelAndTagsPanel
               error={hasErrorFor('label')}
@@ -364,7 +364,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
                 types={this.props.types}
                 onSelect={(id: string) => this.setState({ selectedTypeID: id })}
                 selectedID={this.state.selectedTypeID}
-                smallestType={this.state.smallestType}
+                selectedDiskSize={this.state.selectedDiskSize}
               />
               <LabelAndTagsPanel
                 error={hasErrorFor('label')}

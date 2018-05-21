@@ -53,7 +53,7 @@ type CombinedProps = StyledProps;
 
 class SelectLinodePanel extends React.Component<CombinedProps> {
   handleTypeSelect = this.props.handleSelection('selectedTypeID');
-  handleSmallestType = this.props.handleSelection('smallestType');
+  handleSelectedDiskSize = this.props.handleSelection('selectedDiskSize');
   handleSelection = this.props.handleSelection('selectedLinodeID');
 
   renderCard(linode: ExtendedLinode) {
@@ -64,7 +64,7 @@ class SelectLinodePanel extends React.Component<CombinedProps> {
         onClick={(e) => {
           this.handleSelection(e, `${linode.id}`);
           this.handleTypeSelect(e, undefined);
-          this.handleSmallestType(e, `${linode.type}`);
+          this.handleSelectedDiskSize(e, `${linode.specs.disk}`);
         }}
         checked={linode.id === Number(selectedLinodeID)}
         heading={linode.heading}
