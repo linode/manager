@@ -34,9 +34,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-interface Props {
-  [index: string]: any;
-}
+interface Props {}
 
 interface State {
   anchorEl?: HTMLElement;
