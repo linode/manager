@@ -1,27 +1,17 @@
 import * as React from 'react';
-import { compose, set, propEq, prop, find, lensPath } from 'ramda';
-
-import {
-  withRouter,
-  RouteComponentProps,
-} from 'react-router-dom';
+import { compose, find, lensPath, map, pathOr, prop, propEq, set } from 'ramda';
+import { connect } from 'react-redux';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { StickyContainer, Sticky, StickyProps } from 'react-sticky';
 
-import {
-  withStyles,
-  WithStyles,
-  Theme,
-  StyleRules,
-} from 'material-ui/styles';
+import { withStyles, WithStyles, Theme, StyleRules } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
 import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
 
 import { parseQueryParams } from 'src/utilities/queryParams';
 import { dcDisplayNames } from 'src/constants';
-import {
-  createLinode, getLinodeTypes, allocatePrivateIP, getLinodes, cloneLinode,
-} from 'src/services/linodes';
+import { createLinode, allocatePrivateIP, getLinodes, cloneLinode } from 'src/services/linodes';
 import { getImages } from 'src/services/images';
 import { getRegions } from 'src/services/misc';
 
@@ -29,6 +19,7 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import PromiseLoader from 'src/components/PromiseLoader';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+
 
 import SelectLinodePanel, { ExtendedLinode } from './SelectLinodePanel';
 import SelectImagePanel from './SelectImagePanel';
@@ -38,7 +29,7 @@ import SelectPlanPanel, { ExtendedType } from './SelectPlanPanel';
 import LabelAndTagsPanel from './LabelAndTagsPanel';
 import PasswordPanel from './PasswordPanel';
 import AddonsPanel from './AddonsPanel';
-import { typeLabelDetails, typeLabel } from '../presentation';
+import { typeLabelDetails, displayType } from '../presentation';
 import CheckoutBar from './CheckoutBar';
 import { resetEventsPolling } from 'src/events';
 
@@ -70,14 +61,21 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
 interface Props {
 }
 
+interface ConnectedProps {
+  types: ExtendedType[];
+}
+
 interface PreloadedProps {
   images: { response: Linode.Image[] };
   regions: { response: ExtendedRegion[] };
-  types: { response: ExtendedType[] };
   linodes: { response: Linode.Linode[] };
 }
 
-type CombinedProps = Props & WithStyles<Styles> & PreloadedProps & RouteComponentProps<{}>;
+type CombinedProps = Props
+  & ConnectedProps
+  & WithStyles<Styles>
+  & PreloadedProps
+  & RouteComponentProps<{}>;
 
 interface State {
   selectedTab: number;
@@ -116,27 +114,6 @@ const preloaded = PromiseLoader<Props>({
 
   images: () => getImages()
     .then(response => response.data || []),
-
-  types: () => getLinodeTypes()
-    .then((response) => {
-      return response.data.map((type) => {
-        const {
-          memory,
-          vcpus,
-          disk,
-          price: { monthly, hourly },
-        } = type;
-
-        return ({
-          ...type,
-          heading: type.label,
-          subHeadings: [
-            `$${monthly}/mo ($${hourly}/hr)`,
-            typeLabelDetails(memory, disk, vcpus),
-          ],
-        });
-      }) || [];
-    }),
 
   regions: () => getRegions()
     .then((response) => {
@@ -217,7 +194,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
 
   getBackupsMonthlyPrice(): number | null {
     const { selectedTypeID } = this.state;
-    if (!selectedTypeID || !this.props.types.response) { return null; }
+    if (!selectedTypeID || !this.props.types) { return null; }
     const type = this.getTypeInfo();
     if (!type) { return null; }
     return type.backupsMonthly;
@@ -225,17 +202,13 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
 
   extendLinodes = (linodes: Linode.Linode[]): ExtendedLinode[] => {
     const images = this.props.images.response || [];
-    const types = this.props.types.response || [];
+    const types = this.props.types || [];
     return linodes.map(linode =>
       compose<Linode.Linode, Partial<ExtendedLinode>, Partial<ExtendedLinode>>(
         set(lensPath(['heading']), linode.label),
         set(lensPath(['subHeadings']),
           (formatLinodeSubheading)(
-            compose<Linode.LinodeType[], Linode.LinodeType, number, string>(
-              (mem: number) => typeLabel(mem) || '',
-              prop('memory'),
-              find(propEq('id', linode.type)),
-            )(types),
+            displayType(linode.type, types),
             compose<Linode.Image[], Linode.Image, string>(
               prop('label'),
               find(propEq('id', linode.image)),
@@ -278,7 +251,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
             />
             <SelectPlanPanel
               error={hasErrorFor('type')}
-              types={this.props.types.response}
+              types={this.props.types}
               onSelect={(id: string) => this.setState({ selectedTypeID: id })}
               selectedID={this.state.selectedTypeID}
             />
@@ -335,7 +308,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
             />
             <SelectPlanPanel
               error={hasErrorFor('type')}
-              types={this.props.types.response}
+              types={this.props.types}
               onSelect={(id: string) => this.setState({ selectedTypeID: id })}
               selectedID={this.state.selectedTypeID}
               smallestType={this.state.smallestType}
@@ -388,7 +361,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
               />
               <SelectPlanPanel
                 error={hasErrorFor('type')}
-                types={this.props.types.response}
+                types={this.props.types}
                 onSelect={(id: string) => this.setState({ selectedTypeID: id })}
                 selectedID={this.state.selectedTypeID}
                 smallestType={this.state.smallestType}
@@ -560,7 +533,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
   getTypeInfo = (): TypeInfo => {
     const { selectedTypeID } = this.state;
 
-    const typeInfo = this.reshapeTypeInfo(this.props.types.response.find(
+    const typeInfo = this.reshapeTypeInfo(this.props.types.find(
       type => type.id === selectedTypeID));
 
     return typeInfo;
@@ -568,7 +541,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
 
   reshapeTypeInfo = (type: ExtendedType | undefined): TypeInfo => {
     return type && {
-      name: `${typeLabel(type.memory)}`,
+      name: type.label,
       details: `${typeLabelDetails(type.memory, type.disk, type.vcpus)}`,
       monthly: type.price.monthly,
       backupsMonthly: type.addons.backups.price.monthly,
@@ -653,7 +626,28 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     );
   }
 }
+const connected = connect((state: Linode.AppState) => ({
+  types: compose(
+    map<Linode.LinodeType, ExtendedType>((type) => {
+      const { label, memory, vcpus, disk, price: { monthly, hourly } } = type;
+      return {
+        ...type,
+        heading: label,
+        subHeadings: [
+          `$${monthly}/mo ($${hourly}/hr)`,
+          typeLabelDetails(memory, disk, vcpus),
+        ],
+      };
+    }),
+    pathOr([], ['resources', 'types', 'data', 'data']),
+  )(state),
+}));
 
-const styled = withStyles(styles, { withTheme: true })<Props>(LinodeCreate);
+const styled = withStyles(styles, { withTheme: true });
 
-export default preloaded(withRouter(styled as Linode.TodoAny));
+export default compose(
+  connected,
+  preloaded,
+  styled,
+  withRouter,
+)(LinodeCreate);

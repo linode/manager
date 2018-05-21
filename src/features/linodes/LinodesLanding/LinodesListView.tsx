@@ -14,14 +14,13 @@ import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSe
 interface Props {
   linodes: Linode.EnhancedLinode[];
   images: Linode.Image[];
-  types: Linode.LinodeType[];
   openConfigDrawer: (c: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
   toggleConfirmation: (bootOption: Linode.BootAction,
      linodeId: number, linodeLabel: string) => void;
 }
 
 const LinodesListView: React.StatelessComponent<Props> = (props) => {
-  const { linodes, types, openConfigDrawer, toggleConfirmation } = props;
+  const { linodes, openConfigDrawer, toggleConfirmation } = props;
 
   return (
     <Paper>
@@ -41,6 +40,7 @@ const LinodesListView: React.StatelessComponent<Props> = (props) => {
                 <LinodeRow
                   key={linode.id}
                   linodeId={linode.id}
+                  linodeType={linode.type}
                   linodeStatus={linode.status}
                   linodeIpv4={linode.ipv4}
                   linodeIpv6={linode.ipv6}
@@ -48,7 +48,6 @@ const LinodesListView: React.StatelessComponent<Props> = (props) => {
                   linodeNotification={linode.notification}
                   linodeLabel={linode.label}
                   linodeRecentEvent={linode.recentEvent}
-                  type={types.find(type => linode.type === type.id)}
                   openConfigDrawer={openConfigDrawer}
                   toggleConfirmation={toggleConfirmation}
                 />,
