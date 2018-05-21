@@ -82,7 +82,7 @@ type CombinedProps = Props
   & SetDocsProps
   & PreloadedProps;
 
-class NodeBalancersLanding extends React.Component<CombinedProps, State> {
+export class NodeBalancersLanding extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
 
   state: State = {
