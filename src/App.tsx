@@ -21,8 +21,6 @@ import Footer from 'src/features/Footer';
 import Placeholder from 'src/components/Placeholder';
 
 import ToastNotifications from 'src/features/ToastNotifications';
-import AccountLevelNotifications from 'src/features/AccountLevelNotifications';
-
 import BetaNotification from './BetaNotification';
 import DocsSidebar from 'src/components/DocsSidebar';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
@@ -193,7 +191,6 @@ export class App extends React.Component<CombinedProps, State> {
             <div className={classes.appFrame}>
               <SideMenu open={menuOpen} toggle={this.toggleMenu} toggleTheme={toggleTheme} />
               <main className={classes.content}>
-                <AccountLevelNotifications />
                 <TopMenu toggleSideMenu={this.toggleMenu} />
                 <div className={classes.wrapper}>
                   <Grid container spacing={0} className={classes.grid}>

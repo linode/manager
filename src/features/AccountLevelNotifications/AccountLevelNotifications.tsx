@@ -24,14 +24,15 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     marginBottom: theme.spacing.unit,
     justifyContent: 'center',
     padding: theme.spacing.unit,
-    textAlign: 'center',
     '&:first-child': {
       marginTop: theme.spacing.unit,
     },
     '& p': {
-      fontSize: '1.1rem',
       color: '#333',
     },
+  },
+  list: {
+
   },
 });
 
@@ -86,9 +87,10 @@ class AccountLevelNotifications extends React.Component<CombinedProps, State> {
       return React.createElement(Notice, {
         key: n.type,
         html: n.message,
-        className: classes.root,
+        className: `${classes.root} ${'notification'}`,
         [level]: true,
         children: undefined,
+        notificationList: true,
       });
     });
   }

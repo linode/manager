@@ -686,6 +686,14 @@ const LinodeTheme: Linode.Theme = {
     lightBlue: '#D7E3EF',
     white: '#fff',
   },
+  notificationList: {
+    padding: '16px 32px 16px 23px',
+    borderBottom: '1px solid #fbfbfb',
+    transition: 'background-color 225ms ease-in-out',
+    '&:hover': {
+      backgroundColor: '#f4f4f4',
+    },
+  },
 };
 
 export default LinodeTheme;
