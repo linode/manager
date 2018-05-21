@@ -285,6 +285,8 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
             {generalError &&
               <Notice text={generalError} error={true} />
             }
+            <Notice text={`This newly created Linode wil be created with
+            the same root password as the original Linode`} warning={true} />
             <SelectLinodePanel
               error={hasErrorFor('linode_id')}
               linodes={compose(
@@ -317,11 +319,6 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
               error={hasErrorFor('label')}
               label={this.state.label}
               handleChange={this.updateStateFor}
-            />
-            <PasswordPanel
-              error={hasErrorFor('root_pass')}
-              password={this.state.password}
-              handleChange={v => this.setState({ password: v })}
             />
             <AddonsPanel
               backups={this.state.backups}
