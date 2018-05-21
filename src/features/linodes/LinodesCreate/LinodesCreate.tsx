@@ -427,7 +427,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
         this.scrollToTop();
         this.setState({
           errors: [
-            { field: 'linode_id', reason: 'You must select both a Linode' },
+            { field: 'linode_id', reason: 'You must select a Linode' },
           ],
         });
         return;
