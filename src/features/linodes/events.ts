@@ -11,6 +11,7 @@ export const newLinodeEvents = (mountTime: moment.Moment) =>
     'backups_restore',
     'linode_snapshot',
     'linode_rebuild',
+    'linode_resize',
   ];
 
   const statusWhitelist = [

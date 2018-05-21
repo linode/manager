@@ -15,10 +15,12 @@ interface Props {
   linodes: Linode.EnhancedLinode[];
   images: Linode.Image[];
   openConfigDrawer: (c: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
+  toggleConfirmation: (bootOption: Linode.BootAction,
+     linodeId: number, linodeLabel: string) => void;
 }
 
 const LinodesListView: React.StatelessComponent<Props> = (props) => {
-  const { linodes, openConfigDrawer } = props;
+  const { linodes, openConfigDrawer, toggleConfirmation } = props;
 
   return (
     <Paper>
@@ -47,6 +49,7 @@ const LinodesListView: React.StatelessComponent<Props> = (props) => {
                   linodeLabel={linode.label}
                   linodeRecentEvent={linode.recentEvent}
                   openConfigDrawer={openConfigDrawer}
+                  toggleConfirmation={toggleConfirmation}
                 />,
               )}
             </TableBody>

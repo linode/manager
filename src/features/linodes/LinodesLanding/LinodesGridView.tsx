@@ -9,10 +9,12 @@ interface Props {
   linodes: Linode.EnhancedLinode[];
   images: Linode.Image[];
   openConfigDrawer: (c: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
+  toggleConfirmation: (bootOption: Linode.BootAction,
+     linodeId: number, linodeLabel: string) => void;
 }
 
 const LinodesGridView: React.StatelessComponent<Props> = (props) => {
-  const { linodes, images, openConfigDrawer } = props;
+  const { linodes, images, openConfigDrawer, toggleConfirmation } = props;
 
   return (
     <Grid container>
@@ -34,6 +36,7 @@ const LinodesGridView: React.StatelessComponent<Props> = (props) => {
           linodeSpecMemory={linode.specs.memory}
           linodeSpecVcpus={linode.specs.vcpus}
           linodeSpecTransfer={linode.specs.transfer}
+          toggleConfirmation={toggleConfirmation}
         />,
       )}
     </Grid>

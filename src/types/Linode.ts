@@ -161,4 +161,6 @@ namespace Linode {
     pvops: boolean;
   }
 
+  export type BootAction = 'reboot' | 'power_down' | null;
+
 }
