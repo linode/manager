@@ -10,7 +10,7 @@ namespace Linode {
     ipv4: string[];
     ipv6: string;
     label: string;
-    type: string;
+    type: null | string;
     status: LinodeStatus;
     updated: string;
     hypervisor: Hypervisor;

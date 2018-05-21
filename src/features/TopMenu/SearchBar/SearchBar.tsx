@@ -1,9 +1,9 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import * as moment from 'moment';
 import Downshift, { DownshiftState, StateChangeOptions } from 'downshift';
-import { connect } from 'react-redux';
-import { pathOr } from 'ramda';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { compose, pathOr } from 'ramda';
 
 import {
   withStyles,
@@ -17,6 +17,7 @@ import IconButton from 'material-ui/IconButton';
 import Close from 'material-ui-icons/Close';
 import Search from 'material-ui-icons/Search';
 
+import { typeLabelLong, displayType } from 'src/features/linodes/presentation';
 import { getLinodesPage } from 'src/services/linodes';
 import { getVolumesPage } from 'src/services/volumes';
 import { getNodeBalancersPage } from 'src/services/nodebalancers';
@@ -27,7 +28,6 @@ import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 
 import TextField from 'src/components/TextField';
-import { labelFromType } from 'src/features/linodes/presentation';
 
 import SearchSuggestion, { SearchSuggestionT } from './SearchSuggestion';
 
@@ -154,6 +154,9 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
 });
 
 interface Props {
+}
+
+interface ConnectedProps {
   types: Linode.LinodeType[];
 }
 
@@ -168,7 +171,10 @@ interface State {
   [resource: string]: any;
 }
 
-type FinalProps = Props & WithStyles<Styles> & RouteComponentProps<{}>;
+type FinalProps = Props
+  & ConnectedProps
+  & WithStyles<Styles>
+  & RouteComponentProps<{}>;
 
 class SearchBar extends React.Component<FinalProps, State> {
   state: State = {
@@ -187,13 +193,18 @@ class SearchBar extends React.Component<FinalProps, State> {
     );
   }
 
-  linodeDescription(typeId: string, imageId: string) {
-    const { types } = this.props;
+  linodeDescription(
+    typeLabel: string,
+    memory: number,
+    disk: number,
+    vcpus: number,
+    imageId: string,
+  ) {
     const { images } = this.state;
     const image = (images && images.find(image => image.id === imageId))
       || { label: 'Unknown Image' };
     const imageDesc = image.label;
-    const typeDesc = labelFromType(types.find(type => type.id === typeId) as Linode.LinodeType);
+    const typeDesc = typeLabelLong(typeLabel, memory, disk, vcpus);
     return `${imageDesc}, ${typeDesc}`;
   }
 
@@ -203,7 +214,7 @@ class SearchBar extends React.Component<FinalProps, State> {
     page: number,
     pageCount: number,
   ) {
-    if (!page || !pageCount) { return ;}
+    if (!page || !pageCount) { return; }
     if (page > pageCount) { return; }
     fetchFn(page)
       .then((response) => {
@@ -244,7 +255,13 @@ class SearchBar extends React.Component<FinalProps, State> {
       );
       searchResults.push(...(linodesByLabel.map(linode => ({
         title: linode.label,
-        description: this.linodeDescription(linode.type, linode.image),
+        description: this.linodeDescription(
+          displayType(linode.type, this.props.types),
+          linode.specs.memory,
+          linode.specs.disk,
+          linode.specs.vcpus,
+          linode.image,
+        ),
         Icon: LinodeIcon,
         path: `/linodes/${linode.id}`,
       }))));
@@ -404,39 +421,39 @@ class SearchBar extends React.Component<FinalProps, State> {
               highlightedIndex,
               clearSelection,
             }) => (
-              <div className={classes.textfieldContainer}>
-                <TextField
-                  fullWidth
-                  className={classes.textfield}
-                  autoFocus={searchActive}
-                  InputProps={{
-                    classes: {
-                      root: classes.input,
-                    },
-                    ...getInputProps({
-                      placeholder: 'Go to Linodes, Volumes, NodeBalancers, Domains...',
-                      id: 'searchbar-simple',
-                      onChange: this.handleSearchChange,
-                    }),
-                  }}
-                  data-qa-search
-                />
-                {isOpen &&
-                  <Paper
-                    className={classes.searchSuggestions}
-                  >
-                    {this.getSearchSuggestions(inputValue).map((suggestion, index) => {
-                      return this.renderSuggestion(
-                        suggestion,
-                        index,
-                        highlightedIndex,
-                        getItemProps({ item: suggestion }),
-                      );
-                    })}
-                  </Paper>
-                }
-              </div>
-            )}
+                <div className={classes.textfieldContainer}>
+                  <TextField
+                    fullWidth
+                    className={classes.textfield}
+                    autoFocus={searchActive}
+                    InputProps={{
+                      classes: {
+                        root: classes.input,
+                      },
+                      ...getInputProps({
+                        placeholder: 'Go to Linodes, Volumes, NodeBalancers, Domains...',
+                        id: 'searchbar-simple',
+                        onChange: this.handleSearchChange,
+                      }),
+                    }}
+                    data-qa-search
+                  />
+                  {isOpen &&
+                    <Paper
+                      className={classes.searchSuggestions}
+                    >
+                      {this.getSearchSuggestions(inputValue).map((suggestion, index) => {
+                        return this.renderSuggestion(
+                          suggestion,
+                          index,
+                          highlightedIndex,
+                          getItemProps({ item: suggestion }),
+                        );
+                      })}
+                    </Paper>
+                  }
+                </div>
+              )}
           />
           <IconButton
             color="inherit"
@@ -452,12 +469,14 @@ class SearchBar extends React.Component<FinalProps, State> {
   }
 }
 
-const RoutedSearchBar = withRouter(SearchBar);
+const styled = withStyles(styles, { withTheme: true });
 
-const StyledSearchBar = withStyles(styles, { withTheme: true })<Props>(RoutedSearchBar);
+const connected = connect((state: Linode.AppState) => ({
+  types: pathOr([], ['resources', 'types', 'data'], state),
+}));
 
-const mapStateToProps = (state: Linode.AppState) => ({
-  types: pathOr({}, ['resources', 'types', 'data', 'data'], state),
-});
-
-export default connect<Props>(mapStateToProps)(StyledSearchBar);
+export default compose(
+  connected,
+  styled,
+  withRouter,
+)(SearchBar);
