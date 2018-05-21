@@ -1,7 +1,9 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import * as moment from 'moment';
 import Downshift, { DownshiftState, StateChangeOptions } from 'downshift';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { compose, pathOr } from 'ramda';
 
 import {
   withStyles,
@@ -15,6 +17,7 @@ import IconButton from 'material-ui/IconButton';
 import Close from 'material-ui-icons/Close';
 import Search from 'material-ui-icons/Search';
 
+import { typeLabelLong, displayType } from 'src/features/linodes/presentation';
 import { getLinodesPage } from 'src/services/linodes';
 import { getVolumesPage } from 'src/services/volumes';
 import { getNodeBalancersPage } from 'src/services/nodebalancers';
@@ -25,7 +28,6 @@ import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 
 import TextField from 'src/components/TextField';
-import { labelFromType } from 'src/features/linodes/presentation';
 
 import SearchSuggestion, { SearchSuggestionT } from './SearchSuggestion';
 
@@ -154,6 +156,10 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
 interface Props {
 }
 
+interface ConnectedProps {
+  types: Linode.LinodeType[];
+}
+
 interface State {
   searchText: string;
   searchActive: boolean;
@@ -165,7 +171,10 @@ interface State {
   [resource: string]: any;
 }
 
-type FinalProps = Props & WithStyles<Styles> & RouteComponentProps<{}>;
+type FinalProps = Props
+  & ConnectedProps
+  & WithStyles<Styles>
+  & RouteComponentProps<{}>;
 
 class SearchBar extends React.Component<FinalProps, State> {
   state: State = {
@@ -184,12 +193,18 @@ class SearchBar extends React.Component<FinalProps, State> {
     );
   }
 
-  linodeDescription(memory: number, disk: number, vcpus: number, imageId: string) {
+  linodeDescription(
+    typeLabel: string,
+    memory: number,
+    disk: number,
+    vcpus: number,
+    imageId: string,
+  ) {
     const { images } = this.state;
     const image = (images && images.find(image => image.id === imageId))
       || { label: 'Unknown Image' };
     const imageDesc = image.label;
-    const typeDesc = labelFromType(memory, disk, vcpus);
+    const typeDesc = typeLabelLong(typeLabel, memory, disk, vcpus);
     return `${imageDesc}, ${typeDesc}`;
   }
 
@@ -241,6 +256,7 @@ class SearchBar extends React.Component<FinalProps, State> {
       searchResults.push(...(linodesByLabel.map(linode => ({
         title: linode.label,
         description: this.linodeDescription(
+          displayType(linode.type, this.props.types),
           linode.specs.memory,
           linode.specs.disk,
           linode.specs.vcpus,
@@ -453,8 +469,14 @@ class SearchBar extends React.Component<FinalProps, State> {
   }
 }
 
-const RoutedSearchBar = withRouter(SearchBar);
+const styled = withStyles(styles, { withTheme: true });
 
-const StyledSearchBar = withStyles(styles, { withTheme: true })<Props>(RoutedSearchBar);
+const connected = connect((state: Linode.AppState) => ({
+  types: pathOr([], ['resources', 'types', 'data'], state),
+}));
 
-export default StyledSearchBar;
+export default compose(
+  connected,
+  styled,
+  withRouter,
+)(SearchBar);

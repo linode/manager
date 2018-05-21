@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { compose, pathOr } from 'ramda';
 
 import {
   withStyles,
@@ -11,7 +13,7 @@ import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 
 import Grid from 'src/components/Grid';
-import { typeLabelLong, formatRegion } from 'src/features/linodes/presentation';
+import { typeLabelLong, formatRegion, displayType } from 'src/features/linodes/presentation';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 
 type ClassNames = 'root'
@@ -57,10 +59,14 @@ interface Props {
   volumes: Linode.Volume[];
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+interface ConnectedProps {
+  typeLabel: string;
+}
+
+type CombinedProps = Props & ConnectedProps & WithStyles<ClassNames>;
 
 const SummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, linode, image, volumes } = props;
+  const { classes, linode, image, volumes, typeLabel } = props;
   return (
     <Paper className={classes.root}>
       <Grid container>
@@ -84,7 +90,12 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
           </Typography>
           <Typography className={classes.section} variant="caption">
             <span>
-              { typeLabelLong(linode.specs.memory, linode.specs.disk, linode.specs.vcpus) }
+              { typeLabelLong(
+                typeLabel,
+                linode.specs.memory,
+                linode.specs.disk,
+                linode.specs.vcpus,
+                ) }
             </span>
           </Typography>
         </Grid>
@@ -117,4 +128,8 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(SummaryPanel);
+const connected = connect((state: Linode.AppState, ownProps: Props) => ({
+  typeLabel: displayType(ownProps.linode.type, pathOr([], ['resources', 'types', 'data'], state)),
+}));
+
+export default compose(styled, connected)(SummaryPanel) as React.ComponentType<Props>;

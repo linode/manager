@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { mount } from 'enzyme';
+import { shallow } from 'enzyme';
 import { StaticRouter } from 'react-router-dom';
 
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
@@ -10,7 +10,7 @@ import LinodesGridView from './LinodesGridView';
 
 describe('LinodesGridView', () => {
   it('renders without error', () => {
-    mount(
+    shallow(
       <LinodeThemeWrapper>
         <StaticRouter location="/" context={{}}>
           <LinodesGridView
