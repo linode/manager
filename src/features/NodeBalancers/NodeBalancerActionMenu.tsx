@@ -9,7 +9,7 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
-class LinodeActionMenu extends React.Component<CombinedProps> {
+class NodeBalancerActionMenu extends React.Component<CombinedProps> {
   createLinodeActions = () => {
     // const { nodeBalancerId } = this.props;
 
@@ -41,4 +41,4 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
   }
 }
 
-export default withRouter(LinodeActionMenu);
+export default withRouter(NodeBalancerActionMenu);
