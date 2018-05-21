@@ -24,6 +24,7 @@ const LinodesGridView: React.StatelessComponent<Props> = (props) => {
           linodeIpv4={linode.ipv4}
           linodeIpv6={linode.ipv6}
           linodeRegion={linode.region}
+          linodeType={linode.type}
           linodeNotification={linode.notification}
           linodeLabel={linode.label}
           linodeRecentEvent={linode.recentEvent}

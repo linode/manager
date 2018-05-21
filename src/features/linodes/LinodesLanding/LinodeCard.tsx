@@ -1,12 +1,9 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { compose, pathOr } from 'ramda';
 
-import {
-  withStyles,
-  Theme,
-  WithStyles,
-  StyleRulesCallback,
-} from 'material-ui/styles';
+import { withStyles, Theme, WithStyles, StyleRulesCallback } from 'material-ui/styles';
 import Button from 'material-ui/Button';
 import Card, { CardHeader, CardContent, CardActions } from 'material-ui/Card';
 import Divider from 'material-ui/Divider';
@@ -25,7 +22,7 @@ import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';
 import LinodeActionMenu from './LinodeActionMenu';
 import { rebootLinode } from './powerActions';
-import { typeLabelLong } from '../presentation';
+import { typeLabelDetails, displayType } from '../presentation';
 import transitionStatus from '../linodeTransitionStatus';
 import LinodeStatusIndicator from './LinodeStatusIndicator';
 
@@ -133,6 +130,7 @@ interface Props {
   linodeIpv4: string[];
   linodeIpv6: string;
   linodeRegion: string;
+  linodeType: null | string;
   linodeNotification?: string;
   linodeLabel: string;
   linodeRecentEvent?: Linode.Event;
@@ -144,7 +142,13 @@ interface Props {
   openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
 }
 
-class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
+interface ConnectedProps {
+  typeLabel: string;
+}
+
+type CombinedProps = Props & ConnectedProps & WithStyles<CSSClasses>;
+
+class LinodeCard extends React.Component<CombinedProps> {
   renderTitle() {
     const { classes, linodeStatus, linodeId, linodeLabel, linodeNotification } = this.props;
 
@@ -200,30 +204,30 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
       linodeSpecMemory,
       linodeSpecDisk,
       linodeSpecVcpus,
+      typeLabel,
     } = this.props;
 
     return (
       <CardContent className={`${classes.cardContent} ${classes.customeMQ}`}>
-      <div>
-        {image &&
-        <div className={classes.cardSection} data-qa-linode-summary>
-          {typeLabelLong(linodeSpecMemory, linodeSpecDisk, linodeSpecVcpus)}
+        <div>
+          <div className={classes.cardSection} data-qa-linode-summary>
+            {`${typeLabel}: `}
+            {typeLabelDetails(linodeSpecMemory, linodeSpecDisk, linodeSpecVcpus)}
+          </div>
+          <div className={classes.cardSection} data-qa-region>
+            <RegionIndicator region={linodeRegion} />
+          </div>
+          <div className={classes.cardSection} data-qa-ips>
+            <IPAddress ips={linodeIpv4} copyRight />
+            <IPAddress ips={[linodeIpv6]} copyRight />
+          </div>
+          {image &&
+            <div className={classes.cardSection} data-qa-image>
+              {image.label}
+            </div>
+          }
         </div>
-        }
-        <div className={classes.cardSection} data-qa-region>
-          <RegionIndicator region={linodeRegion} />
-        </div>
-        <div className={classes.cardSection} data-qa-ips>
-          <IPAddress ips={linodeIpv4} copyRight />
-          <IPAddress ips={[linodeIpv6]} copyRight />
-        </div>
-        {image &&
-        <div className={classes.cardSection} data-qa-image>
-          {image.label}
-        </div>
-        }
-      </div>
-    </CardContent>
+      </CardContent>
     );
   }
 
@@ -254,24 +258,24 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
             action={
               <div style={{ position: 'relative', top: 6 }}>
                 <LinodeActionMenu
-                 linodeId={linodeId}
-                 linodeLabel={linodeLabel}
-                 linodeStatus={linodeStatus}
-                 openConfigDrawer={openConfigDrawer}
+                  linodeId={linodeId}
+                  linodeLabel={linodeLabel}
+                  linodeStatus={linodeStatus}
+                  openConfigDrawer={openConfigDrawer}
                 />
               </div>
             }
             className={classes.customeMQ}
           />
           {<Divider />}
-          { loading ? this.loadingState() : this.loadedState() }
+          {loading ? this.loadingState() : this.loadedState()}
           <CardActions className={classes.cardActions}>
             <Button
               className={`${classes.button} ${classes.consoleButton}`}
               onClick={() => weblishLaunch(`${linodeId}`)}
               data-qa-console
             >
-             Launch Console
+              Launch Console
             </Button>
             <Button
               className={`${classes.button}
@@ -288,4 +292,11 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(LinodeCard);
+const connected = connect((state: Linode.AppState, ownProps: Props) => ({
+  typeLabel: displayType(ownProps.linodeType, pathOr([], ['resources', 'types', 'data'], state)),
+}));
+
+export default compose(
+  withStyles(styles, { withTheme: true }),
+  connected,
+)(LinodeCard) as React.ComponentType<Props>;

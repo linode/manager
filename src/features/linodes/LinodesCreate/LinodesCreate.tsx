@@ -20,6 +20,7 @@ import Notice from 'src/components/Notice';
 import PromiseLoader from 'src/components/PromiseLoader';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
+
 import SelectLinodePanel, { ExtendedLinode } from './SelectLinodePanel';
 import SelectImagePanel from './SelectImagePanel';
 import SelectBackupPanel from './SelectBackupPanel';
@@ -28,7 +29,7 @@ import SelectPlanPanel, { ExtendedType } from './SelectPlanPanel';
 import LabelAndTagsPanel from './LabelAndTagsPanel';
 import PasswordPanel from './PasswordPanel';
 import AddonsPanel from './AddonsPanel';
-import { typeLabelDetails, typeLabel } from '../presentation';
+import { typeLabelDetails, displayType } from '../presentation';
 import CheckoutBar from './CheckoutBar';
 import { resetEventsPolling } from 'src/events';
 
@@ -208,11 +209,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
         set(lensPath(['heading']), linode.label),
         set(lensPath(['subHeadings']),
           (formatLinodeSubheading)(
-            compose<Linode.LinodeType[], Linode.LinodeType, number, string>(
-              (mem: number) => typeLabel(mem) || '',
-              prop('memory'),
-              find(propEq('id', linode.type)),
-            )(types),
+            displayType(linode.type, types),
             compose<Linode.Image[], Linode.Image, string>(
               prop('label'),
               find(propEq('id', linode.image)),
@@ -572,7 +569,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
 
   reshapeTypeInfo = (type: ExtendedType | undefined): TypeInfo => {
     return type && {
-      name: `${typeLabel(type.memory)}`,
+      name: type.label,
       details: `${typeLabelDetails(type.memory, type.disk, type.vcpus)}`,
       monthly: type.price.monthly,
       backupsMonthly: type.addons.backups.price.monthly,
@@ -660,10 +657,10 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
 const connected = connect((state: Linode.AppState) => ({
   types: compose(
     map<Linode.LinodeType, ExtendedType>((type) => {
-      const { memory, vcpus, disk, price: { monthly, hourly } } = type;
+      const { label, memory, vcpus, disk, price: { monthly, hourly } } = type;
       return {
         ...type,
-        heading: typeLabel(memory),
+        heading: label,
         subHeadings: [
           `$${monthly}/mo ($${hourly}/hr)`,
           typeLabelDetails(memory, disk, vcpus),

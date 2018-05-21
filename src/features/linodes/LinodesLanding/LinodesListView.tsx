@@ -38,6 +38,7 @@ const LinodesListView: React.StatelessComponent<Props> = (props) => {
                 <LinodeRow
                   key={linode.id}
                   linodeId={linode.id}
+                  linodeType={linode.type}
                   linodeStatus={linode.status}
                   linodeIpv4={linode.ipv4}
                   linodeIpv6={linode.ipv6}
@@ -45,10 +46,6 @@ const LinodesListView: React.StatelessComponent<Props> = (props) => {
                   linodeNotification={linode.notification}
                   linodeLabel={linode.label}
                   linodeRecentEvent={linode.recentEvent}
-                  linodeSpecDisk={linode.specs.disk}
-                  linodeSpecMemory={linode.specs.memory}
-                  linodeSpecVcpus={linode.specs.vcpus}
-                  linodeSpecTransfer={linode.specs.transfer}
                   openConfigDrawer={openConfigDrawer}
                 />,
               )}
