@@ -92,8 +92,6 @@ class EExpansionPanel extends React.Component<CombinedProps> {
   }
 
   render() {
-
-    console.log(this.state.open);
     const {
       classes,
       summaryProps,
