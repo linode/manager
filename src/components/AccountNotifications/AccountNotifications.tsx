@@ -2,14 +2,14 @@ import * as React from 'react';
 import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
 import Menu from 'material-ui/Menu';
 
-// import AccountLevelNotifications from 'src/features/AccountLevelNotifications';
+import AccountLevelNotifications from 'src/features/AccountLevelNotifications';
 import UserNotificationButton from './AccountNotificationsButton';
 
 type ClassNames = 'root' | 'dropDown';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
-    transform: `translate(-${theme.spacing.unit * 2}px, ${theme.spacing.unit}px)`,
+    transform: `translate(-${theme.spacing.unit}px, ${theme.spacing.unit}px)`,
   },
   dropDown: {
     position: 'absolute',
@@ -22,6 +22,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     maxHeight: 300,
     [theme.breakpoints.up('sm')]: {
       width: 380,
+    },
+    '& .notification': {
+      margin: 0,
+      ...theme.notificationList,
+      ...theme.typography.subheading,
+      '& p': {
+        ...theme.typography.subheading,
+      },
     },
   },
 });
@@ -81,7 +89,7 @@ class AccountNotificationMenu extends React.Component<CombinedProps, State> {
           className={classes.root}
           PaperProps={{ className: classes.dropDown }}
         >
-
+          <AccountLevelNotifications />
         </Menu>
       </React.Fragment>
     );

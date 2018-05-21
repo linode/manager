@@ -7,7 +7,7 @@ import {
   WithStyles,
 } from 'material-ui';
 import IconButton from 'material-ui/IconButton';
-import Alert from 'src/assets/icons/alert.svg';
+import Alert from 'material-ui-icons/Error';
 
 type ClassNames = 'root'
 | 'icon'
@@ -38,13 +38,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
         fill: theme.color.red,
       },
     },
-    '&[disabled]': {
-      opacity: .3,
-    },
   },
   icon: {
+    width: 32,
+    height: 32,
     transition: theme.transitions.create['fill'],
-    fill: '#999',
+    fill: '#aaa',
   },
   isImportant: {
     fill: theme.color.red,
@@ -63,12 +62,13 @@ const UserNotificationButton: React.StatelessComponent<CombinedProps> = ({
   classes,
   isImportant,
   onClick,
+  className,
 }) => {
 
   return (
     <IconButton
       onClick={onClick}
-      className={classes.root}
+      className={`${classes.root} ${className}`}
     >
       <Alert className={`
         ${classes.icon}
