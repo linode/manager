@@ -4,8 +4,6 @@ const { constants } = require('../../constants');
 const page = new Page();
 
 describe('Log out Suite', () => {
-    let token;
-
     beforeAll(() => {
         browser.url(constants.routes.linodes);
     });
