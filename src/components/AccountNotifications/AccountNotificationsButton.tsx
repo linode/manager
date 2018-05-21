@@ -25,28 +25,27 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   root: {
     marginRight: - theme.spacing.unit,
     position: 'relative',
-    opacity: 1,
-    transition: theme.transitions.create(['opacity']),
     [theme.breakpoints.up('md')]: {
       marginLeft: theme.spacing.unit * 2,
     },
     '&:hover, &.active': {
       '& $icon': {
-        fill: theme.palette.primary.main,
+        fill: theme.palette.primary.light,
       },
       '& $isImportant': {
-        fill: theme.color.red,
+        fill: theme.palette.status.errorDark,
+        opacity: .7,
       },
     },
   },
   icon: {
     width: 32,
     height: 32,
-    transition: theme.transitions.create['fill'],
-    fill: '#aaa',
+    transition: theme.transitions.create(['fill', 'opacity']),
+    fill: theme.palette.primary.main,
   },
   isImportant: {
-    fill: theme.color.red,
+    fill: theme.palette.status.errorDark,
   },
 });
 

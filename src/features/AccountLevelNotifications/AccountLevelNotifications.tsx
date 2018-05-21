@@ -36,7 +36,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props { }
+interface Props {}
 
 interface State {
   notifications?: Linode.Notification[];
@@ -53,8 +53,7 @@ const filterNotifications: (v: Linode.Notification[]) => Linode.Notification[] =
   );
 
 class AccountLevelNotifications extends React.Component<CombinedProps, State> {
-  state: State = {
-  };
+  state: State = {};
 
   subscription: Subscription;
 
