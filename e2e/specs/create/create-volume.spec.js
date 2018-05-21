@@ -58,11 +58,6 @@ describe('Create - Volume Suite', () => {
         testVolume['attachedLinode'] = linodeLabel;
 
         VolumeDetail.createVolume(testVolume, true);
-        // select linode
-        // create volume
-        // navigate to /volumes
-        // assert volume in table
-        // assert volume attached
     });
 
     it('should remove all volumes', () => {
