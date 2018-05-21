@@ -1,5 +1,5 @@
 import * as Axios from 'axios';
-import { lensPath, set } from 'ramda';
+import { compose, isEmpty, lensPath, not, set, when } from 'ramda';
 
 const L = {
   url: lensPath(['url']),
@@ -9,6 +9,8 @@ const L = {
   xFilter: lensPath(['headers', 'X-Filter']),
 };
 
+const isNotEmpty = compose(not, isEmpty);
+
 /** URL */
 export const setURL = (url: string) => set(L.url, url);
 
@@ -16,13 +18,19 @@ export const setURL = (url: string) => set(L.url, url);
 export const setMethod = (method: 'GET' | 'POST' | 'PUT' | 'DELETE') => set(L.method, method);
 
 /** Param */
-export const setParams = (params: any) => set(L.params, params);
+export const setParams = (params: any = {}) => when(
+  () => isNotEmpty(params),
+  set(L.params, params),
+);
 
 /** Data */
 export const setData = (data: any) => set(L.data, data);
 
 /** X-Filter */
-export const setXFilter = (xFilter: any) => set(L.xFilter, JSON.stringify(xFilter));
+export const setXFilter = (xFilter: any) => when(
+  () => isNotEmpty(xFilter),
+  set(L.xFilter, JSON.stringify(xFilter)),
+);
 
 /** Generator */
 export default <T>(...fns: Function[]): Axios.AxiosPromise<T> => {
