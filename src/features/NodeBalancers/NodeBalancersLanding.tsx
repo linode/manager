@@ -26,10 +26,13 @@ import NodeBalancerActionMenu from './NodeBalancerActionMenu';
 
 import { getNodeBalancers, getNodeBalancerConfigs } from 'src/services/nodebalancers';
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'title';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
+  title: {
+    marginBottom: theme.spacing.unit * 2,
+  },
 });
 
 const preloaded = PromiseLoader<Props>({
@@ -126,13 +129,14 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
   }
 
   render() {
-    const { nodeBalancers } = this.props;
+    const { nodeBalancers, classes } = this.props;
     return (
       <React.Fragment>
         <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
           <Grid item xs={12}>
             <Typography
               variant="headline"
+              className={classes.title}
               data-qa-title
             >
               NodeBalancers

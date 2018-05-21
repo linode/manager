@@ -50,7 +50,7 @@ describe('NodeBalancers', () => {
 
   const component = shallow(
     <NodeBalancersLanding
-      classes={{ root: '' }}
+      classes={{ root: '', title: '' }}
       setDocs={setDocs}
       clearDocs={clearDocs}
       nodeBalancers={dummyNodeBalancers}
