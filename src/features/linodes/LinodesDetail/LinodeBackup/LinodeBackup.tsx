@@ -27,7 +27,9 @@ import {
   takeSnapshot,
   updateBackupsWindow,
   cancelBackups,
+  getType,
 } from 'src/services/linodes';
+
 import Table from 'src/components/Table';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
@@ -97,13 +99,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 interface Props {
   linodeID: number;
   linodeRegion: string;
+  linodeType: null | string;
   backupsEnabled: boolean;
   backupsSchedule: Linode.LinodeBackupSchedule;
-  backupsMonthlyPrice: number;
 }
 
 interface PreloadedProps {
   backups: PromiseLoaderResponse<Linode.LinodeBackupsResponse>;
+  type: PromiseLoaderResponse<Linode.LinodeType>;
 }
 
 interface State {
@@ -307,10 +310,15 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
   }
 
   Placeholder = (): JSX.Element | null => {
-    const { backupsMonthlyPrice } = this.props;
+    const backupsMonthlyPrice = path<number>(
+      ['type', 'response', 'addons', 'backups', 'price'],
+      this.props,
+    );
 
     const enableText = backupsMonthlyPrice
-      ? `Enable Backups $${backupsMonthlyPrice.toFixed(2)}/mo`
+      ? backupsMonthlyPrice
+        ? `Enable Backups $${backupsMonthlyPrice.toFixed(2)}/mo`
+        : `Enable Backups`
       : `Enable Backups`;
 
     return (
@@ -622,6 +630,13 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
 
 const preloaded = PromiseLoader<Props>({
   backups: (props: Props) => getLinodeBackups(props.linodeID),
+  types: ({ linodeType }: Props) => {
+    if (!linodeType) {
+      return Promise.resolve(undefined);
+    }
+
+    return getType(linodeType);
+  },
 });
 
 const styled = withStyles(styles, { withTheme: true });

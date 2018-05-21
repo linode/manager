@@ -2,19 +2,8 @@ import * as React from 'react';
 import { pathEq, pathOr, filter, has, allPass } from 'ramda';
 import * as moment from 'moment';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
-import {
-  matchPath,
-  Route,
-  Switch,
-  RouteComponentProps,
-  Redirect,
-} from 'react-router-dom';
+import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
+import { matchPath, Route, Switch, RouteComponentProps, Redirect } from 'react-router-dom';
 import { Location } from 'history';
 import { Subscription, Observable } from 'rxjs/Rx';
 import AppBar from 'material-ui/AppBar';
@@ -24,7 +13,11 @@ import Button from 'material-ui/Button';
 import notifications$ from 'src/notifications';
 import { getImage } from 'src/services/images';
 import {
-  getLinode, getType, getLinodeVolumes, getLinodeDisks, renameLinode, getLinodeConfigs,
+  getLinode,
+  getLinodeVolumes,
+  getLinodeDisks,
+  renameLinode,
+  getLinodeConfigs,
 } from 'src/services/linodes';
 import { events$ } from 'src/events';
 
@@ -124,9 +117,6 @@ const requestAllTheThings = (linodeId: number) =>
     .then((response) => {
       const { data: linode } = response;
 
-      const typeReq = getType(linode.type)
-        .catch(err => undefined);
-
       const imageReq = getImage(linode.image)
         .catch(err => undefined);
 
@@ -142,15 +132,14 @@ const requestAllTheThings = (linodeId: number) =>
         .then(response => response.data)
         .catch(err => []);
 
-      return Promise.all([typeReq, imageReq, volumesReq, configsRequest, disksRequest])
+      return Promise.all([imageReq, volumesReq, configsRequest, disksRequest])
         .then((responses) => {
           return {
             linode,
-            type: responses[0],
-            image: responses[1],
-            volumes: responses[2],
-            configs: responses[3],
-            disks: responses[4],
+            image: responses[0],
+            volumes: responses[1],
+            configs: responses[2],
+            disks: responses[3],
           };
         });
     });
@@ -171,7 +160,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
   state: State = {
     linode: this.props.data.response.linode,
-    type: this.props.data.response.type,
     image: this.props.data.response.image,
     volumes: this.props.data.response.volumes,
     configs: this.props.data.response.configs,
@@ -195,8 +183,12 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     return haveAnyBeenModified<State>(
       this.state,
       nextState,
+<<<<<<< HEAD
       ['linode', 'type', 'image', 'volumes', 'configs',
         'disks', 'configDrawer', 'labelInput'],
+=======
+      ['linode', 'image', 'volumes', 'configs', 'disks', 'configDrawer'],
+>>>>>>> upstream/develop
     )
       || haveAnyBeenModified<Location>(location, nextLocation, ['pathname', 'search']);
   }
@@ -217,8 +209,8 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       .subscribe((linodeEvent) => {
         const { match: { params: { linodeId } } } = this.props;
         requestAllTheThings(linodeId!)
-          .then(({ linode, type, image, volumes, configs, disks }) => {
-            this.setState({ linode, type, image, volumes, configs, disks });
+          .then(({ linode, image, volumes, configs, disks }) => {
+            this.setState({ linode, image, volumes, configs, disks });
           });
       });
 
@@ -310,7 +302,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
   render() {
     const { match: { url }, classes } = this.props;
     const {
-      type,
       image,
       volumes,
       linode,
@@ -320,7 +311,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       disks,
     } = this.state;
     const matches = (p: string) => Boolean(matchPath(p, { path: this.props.location.pathname }));
-    if (!type) { return null; }
 
     return (
       <React.Fragment>
@@ -373,7 +363,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
         }
         <Switch>
           <Route exact path={`${url}/summary`} render={() => (
-            <LinodeSummary linode={linode} type={type} image={image} volumes={(volumes || [])} />
+            <LinodeSummary linode={linode} image={image} volumes={(volumes || [])} />
           )} />
           <Route exact path={`${url}/volumes`} render={() => (
             <LinodeVolumes
@@ -395,10 +385,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
             />
           )} />
           <Route exact path={`${url}/resize`} render={() => (
-            <LinodeResize
-              linodeId={linode.id}
-              type={type}
-            />
+            <LinodeResize linodeId={linode.id} linodeType={linode.type} />
           )} />
           <Route exact path={`${url}/rebuild`} render={() => (
             <LinodeRebuild linodeId={linode.id} />
@@ -407,11 +394,9 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
             <LinodeBackup
               linodeID={linode.id}
               linodeRegion={linode.region}
+              linodeType={linode.type}
               backupsEnabled={linode.backups.enabled}
               backupsSchedule={linode.backups.schedule}
-              backupsMonthlyPrice={
-                pathOr(undefined, ['addons', 'backups', 'price', 'monthly'], type)
-              }
             />
           )} />
           <Route exact path={`${url}/settings`} render={() => (
@@ -420,7 +405,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               linodeLabel={linode.label}
               linodeAlerts={linode.alerts}
               linodeConfigs={configs || []}
-              linodeMemory={type.memory}
+              linodeMemory={linode.specs.memory}
               linodeRegion={linode.region}
               linodeStatus={linode.status}
               linodeDisks={disks || []}
