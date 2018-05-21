@@ -11,7 +11,7 @@ storiesOf('ExpansionPanel', module)
 .addDecorator(ThemeDecorator)
 .add('Interactive', () => (
   <div style={{ padding: 20, backgroundColor: '#f4f4f4' }}>
-    <ExpansionPanel heading="Why is Linode the best?" defaultExpanded>
+    <ExpansionPanel heading="Why is Linode the best?">
       <p>Customer service!</p>
     </ExpansionPanel>
     <ExpansionPanel heading="Why is Linode the best?">
