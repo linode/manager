@@ -286,7 +286,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
               <Notice text={generalError} error={true} />
             }
             <Notice text={`This newly created Linode wil be created with
-            the same root password as the original Linode`} warning={true} />
+            the same password as the original Linode`} warning={true} />
             <SelectLinodePanel
               error={hasErrorFor('linode_id')}
               linodes={compose(
@@ -341,7 +341,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
               <Notice text={generalError} error={true} />
             }
             <Notice text={`This newly created Linode wil be created with
-            the same root password as the original Linode`} warning={true} />
+            the same password as the original Linode`} warning={true} />
             <SelectLinodePanel
               error={hasErrorFor('linode_id')}
               linodes={this.extendLinodes(this.props.linodes.response)}
