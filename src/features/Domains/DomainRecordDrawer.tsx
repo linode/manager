@@ -532,7 +532,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         : isCreating
           ? this.onRecordCreate
           : this.onRecordEdit,
-      children: isCreating ? 'Add' : 'Edit',
+      children: 'Save',
     };
 
     const otherErrors = [
