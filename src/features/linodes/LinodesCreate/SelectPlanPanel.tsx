@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { isEmpty, pathOr } from 'ramda';
+import { isEmpty } from 'ramda';
 
 import { withStyles, StyleRulesCallback, WithStyles, Theme } from 'material-ui';
 
@@ -27,7 +27,7 @@ interface Props {
   error?: string;
   onSelect: (key: string) => void;
   selectedID: string | null;
-  smallestType?: string;
+  selectedDiskSize?: number;
 }
 
 const getNanodes = (types: ExtendedType[]) =>
@@ -43,16 +43,14 @@ const getHighMem = (types: ExtendedType[]) =>
 class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNames>> {
   renderCard = (type: ExtendedType) => {
     const { selectedID, onSelect } = this.props;
-    const requiredDiskSpace = pathOr(0, ['disk'], this.props.types.find(
-      type => type.id === this.props.smallestType,
-    ));
+    const selectedDiskSize = (this.props.selectedDiskSize) ? this.props.selectedDiskSize : 0;
     return <SelectionCard
       key={type.id}
       checked={type.id === String(selectedID)}
       onClick={e => onSelect(type.id)}
       heading={type.heading}
       subheadings={type.subHeadings}
-      disabled={requiredDiskSpace > type.disk}
+      disabled={selectedDiskSize > type.disk}
     />;
   }
 
