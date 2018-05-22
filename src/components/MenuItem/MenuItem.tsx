@@ -28,6 +28,8 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     flexWrap: 'wrap',
     '&.hasTooltip': {
       opacity: 1,
+      paddingTop: 6,
+      paddingBottom: 8,
       '&:hover, &:focus': {
         background: 'transparent',
         color: theme.palette.primary.main,
