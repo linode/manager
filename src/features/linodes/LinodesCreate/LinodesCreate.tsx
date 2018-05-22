@@ -467,6 +467,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     if (selectedTab === this.backupTabIndex) {
       /* we are creating from backup */
       if (!selectedLinodeID) {
+        this.scrollToTop();
         this.setState({
           errors: [
             { field: 'linode_id', reason: 'You must select a Linode' },
