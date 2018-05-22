@@ -32,6 +32,7 @@ export default class Page {
         browser.waitUntil(function() {
             return browser.getUrl().includes('/login');
         }, 10000, 'Failed to redirect to login page on log out');
+    }
 
     waitForNotice(noticeMsg) {
         return browser.waitUntil(function() {
