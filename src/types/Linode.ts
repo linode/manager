@@ -50,6 +50,10 @@ namespace Linode {
     };
   }
 
+  export interface LinodeWithBackups extends Linode {
+    currentBackups: LinodeBackupsResponse;
+  }
+
   export interface LinodeBackup {
     id: number;
     label: string;
