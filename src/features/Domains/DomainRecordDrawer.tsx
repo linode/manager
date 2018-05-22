@@ -570,8 +570,8 @@ const modeMap = {
 };
 
 const typeMap = {
-  master: 'Master',
-  slave: 'Slave',
+  master: 'SOA',
+  slave: 'SOA',
   A: 'A',
   AAAA: 'AAAA',
   CAA: 'CAA',
