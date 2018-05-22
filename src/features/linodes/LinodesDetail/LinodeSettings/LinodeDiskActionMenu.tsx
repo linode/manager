@@ -30,6 +30,7 @@ class DiskActionMenu extends React.Component<CombinedProps> {
           closeMenu();
         },
         disabled: linodeStatus !== 'offline',
+        tooltip: 'You can\'t delete this disk because we don\'t want you to.',
       },
     ];
 
