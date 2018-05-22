@@ -24,6 +24,8 @@ import Table from 'src/components/Table';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import NodeBalancerActionMenu from './NodeBalancerActionMenu';
+import ErrorState from 'src/components/ErrorState';
+import Placeholder from 'src/components/Placeholder';
 
 
 type ClassNames = 'root' | 'title';
@@ -128,19 +130,45 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
     return `${totalToBytes} bytes`;
   }
 
+  renderEmptyState = () => {
+    return <Placeholder />;
+  }
+
   render() {
-    const { nodeBalancers, classes } = this.props;
+    const {
+      classes,
+      nodeBalancers: {
+        error: nodeBalancerError,
+        response: nodeBalancers,
+      },
+    } = this.props;
+
+    /** Error State */
+    if (nodeBalancerError) {
+      return <ErrorState
+        errorText="There was an error loading your NodeBalancers. Please try again later."
+      />;
+    }
+
+    /** Empty State */
+    if (nodeBalancers.length === 0) {
+      return <Placeholder
+        title="Add a NodeBalancer"
+        copy="Adding a NodeBalancer is easy. Click below to add a NodeBalancer."
+        buttonProps={{
+          onClick: () => null,
+          children: 'Add a NodeBalancer',
+        }}
+      />;
+    }
+
     return (
       <React.Fragment>
         <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
           <Grid item xs={12}>
-            <Typography
-              variant="headline"
-              className={classes.title}
-              data-qa-title
-            >
+            <Typography variant="headline" className={classes.title} data-qa-title >
               NodeBalancers
-        </Typography>
+            </Typography>
           </Grid>
         </Grid>
         <Paper>
@@ -157,13 +185,13 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
               </TableRow>
             </TableHead>
             <TableBody>
-              {nodeBalancers.response.map((nodeBalancer) => {
+              {nodeBalancers.map((nodeBalancer) => {
                 return (
                   <TableRow key={nodeBalancer.id}>
                     <TableCell>{nodeBalancer.label}</TableCell>
                     <TableCell>{`${nodeBalancer.up} up, ${nodeBalancer.down} down`}</TableCell>
                     <TableCell>
-                     {this.formatTransferData(nodeBalancer.transfer.total)}
+                      {this.formatTransferData(nodeBalancer.transfer.total)}
                     </TableCell>
                     <TableCell>{nodeBalancer.ports.map((port, index, ports) => {
                       // we want a comma after the port number as long as the ports array
