@@ -145,7 +145,9 @@ export class UserMenu extends React.Component<PropsWithStylesAndRoutes, State> {
       <MenuItem
         key={menuLink.display}
         className={classes.menuItem}
-        onClick={() => this.navigate(menuLink.href)}>
+        onClick={() => this.navigate(menuLink.href)}
+        data-qa-menu-link={menuLink.display}
+      >
         {menuLink.display}
       </MenuItem>
     );
@@ -208,6 +210,7 @@ export class UserMenu extends React.Component<PropsWithStylesAndRoutes, State> {
         <ButtonBase
           onClick={this.handleMenu}
           className={` ${classes.button} ${anchorEl && 'active'}`}
+          data-qa-user-menu
         >
           {profile.username &&
             <React.Fragment>
@@ -233,7 +236,7 @@ export class UserMenu extends React.Component<PropsWithStylesAndRoutes, State> {
           onClose={this.handleClose}
           className={classes.menu}
         >
-          <MenuItem key="placeholder" className={classes.hidden} />
+        <MenuItem key="placeholder" className={classes.hidden} />
           {menuLinks.map(menuLink => this.renderMenuLink(menuLink))}
         </Menu>
       </React.Fragment>
