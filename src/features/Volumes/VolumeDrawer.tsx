@@ -128,7 +128,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
       .subscribe((event) => {
         if (event.action === 'volume_detach'
             && event.status === 'finished') {
-          sendToast(`Volume ${event.entity && event.entity.label} finsihed detaching`);
+          sendToast(`Volume ${event.entity && event.entity.label} finished detaching`);
         }
       });
   }
@@ -456,7 +456,13 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
                   );
                 })
                 .map(linode =>
-                  <MenuItem key={linode.id} value={`${linode.id}`}>{linode.label}</MenuItem>,
+                  <MenuItem
+                    key={linode.id}
+                    value={`${linode.id}`}
+                    data-qa-attached-linode={linode.label}
+                  >
+                    {linode.label}
+                  </MenuItem>,
               )}
               {(mode === modes.EDITING
                 || mode === modes.RESIZING) &&
