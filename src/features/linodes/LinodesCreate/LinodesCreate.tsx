@@ -86,7 +86,6 @@ type CombinedProps = Props
 interface State {
   selectedTab: number;
   selectedLinodeID?: number;
-  selectedLinodeRegion?: string;
   selectedBackupID?: number;
   selectedBackupInfo?: Info;
   selectedDiskSize?: number;
@@ -362,6 +361,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
                       selectedTypeID: null,
                       selectedDiskSize: linode.specs.disk,
                       selectedBackupID: undefined,
+                      selectedRegionID: linode.region,
                     })}
                   />
                   <SelectBackupPanel
@@ -373,12 +373,6 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
                     selectedLinodeID={this.state.selectedLinodeID}
                     selectedBackupID={this.state.selectedBackupID}
                     handleSelection={this.updateStateFor}
-                  />
-                  <SelectRegionPanel
-                    error={hasErrorFor('region')}
-                    regions={this.props.regions.response}
-                    handleSelection={this.updateStateFor}
-                    selectedID={this.state.selectedRegionID}
                   />
                   <SelectPlanPanel
                     error={hasErrorFor('type')}
