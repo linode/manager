@@ -208,6 +208,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       selectedTypeID: null,
       privateIP: false,
       errors: undefined,
+      backups: false,
     });
     if (value === this.backupTabIndex) {
       this.getLinodesWithBackups(this.props.linodes.response);
