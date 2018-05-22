@@ -17,6 +17,7 @@ export class VolumeDetail extends Page {
     get volumeCell() { return $$('[data-qa-volume-cell]'); }
     get volumeCellElem() { return $('[data-qa-volume-cell]'); }
     get volumeAttachment() { return $('[data-qa-volume-cell-attachment]'); }
+    get volumeAttachedLinodes() { return $$('[data-qa-attached-linode]'); }
     get volumeCellLabel() { return $('[data-qa-volume-cell-label]') }
     get volumeCellSize() { return $('[data-qa-volume-size]') }
     get volumeFsPath() { return $('[data-qa-fs-path]'); }
@@ -26,6 +27,15 @@ export class VolumeDetail extends Page {
     get attachButton() { return $('[data-qa-confirm-attach]'); }
     get cancelButton() { return $('[data-qa-cancel]'); }
     get cloneLabel() { return $('[data-qa-clone-from] input'); }
+
+    volAttachedToLinode(linodeLabel) {
+        browser.waitUntil(function() {
+            const attachedToLinode = $$('[data-qa-volume-cell]')
+                .filter(e => e.$('[data-qa-volume-cell-attachment]')
+                    .getText().includes(linodeLabel));
+            return attachedToLinode.length > 0;
+        }, 10000);
+    }
 
     removeAllVolumes() {
         const pageObject = this;
@@ -96,10 +106,22 @@ export class VolumeDetail extends Page {
         }
 
         if (volume.hasOwnProperty('attachedLinode')) {
-
+            this.attachToLinode.click();
+            browser.waitForVisible('[data-qa-attached-linode]');
+            const linodeToAttach = this.volumeAttachedLinodes.filter(v => v.getText() === volume.attachedLinode);
+            linodeToAttach[0].click();
+            browser.waitForVisible('[data-qa-attached-linode]', 5000, true);
         }
         // this.region.setValue(volume.region); 
         this.submit.click();
+
+        if (volume.hasOwnProperty('attachedLinode')) {
+            browser.waitUntil(function() {
+                const volsAttachedToLinode = $$('[data-qa-volume-cell-attachment]')
+                    .filter(v => v.getText() === volume.attachedLinode);
+                return volsAttachedToLinode.length > 0;
+            }, 15000, 'Volume failed to attach');
+        }
 
         if (volume.hasOwnProperty('regionIndex')) {
             browser.waitForExist('[data-qa-drawer]', 10000, true);
@@ -168,6 +190,17 @@ export class VolumeDetail extends Page {
     }
 
     removeVolume(volumeElement) {
+        if (volumeElement.$('[data-qa-volume-cell-attachment]').getText() !== '') {
+            volumeElement.$('[data-qa-action-menu]').click();
+            browser.waitForVisible('[data-qa-action-menu-item="Detach"]');
+            browser.jsClick('[data-qa-action-menu-item="Detach"]');
+            browser.waitForVisible('[data-qa-dialog-title]');
+            browser.click('[data-qa-confirm]');
+            browser.waitForVisible('[data-qa-dialog-title]');
+            browser.waitUntil(function() {
+                return volumeElement.$('[data-qa-volume-cell-attachment]').getText() === '';
+            }, 45000, 'Volume failed to detach');
+        }
         const numberOfVolumes = this.volumeCell.length;
         volumeElement.$('[data-qa-action-menu]').click();
 
@@ -189,10 +222,11 @@ export class VolumeDetail extends Page {
 
         // Confirm remove
         dialogConfirm.click();
+        dialogConfirm.waitForVisible(10000, true);
 
         browser.waitUntil(function(volumeElement) {
             return $$('[data-qa-volume-cell]').length === (numberOfVolumes-1)
-        }, 30000);
+        }, 30000, 'Volume failed to be removed');
     }
 
     selectActionMenuItem(volume, item) {
