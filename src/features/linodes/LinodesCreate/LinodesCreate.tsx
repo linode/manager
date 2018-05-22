@@ -361,6 +361,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
                       selectedLinodeID: linode.id,
                       selectedTypeID: null,
                       selectedDiskSize: linode.specs.disk,
+                      selectedBackupID: undefined,
                     })}
                   />
                   <SelectBackupPanel
