@@ -1,9 +1,12 @@
 import * as React from 'react';
+import { Subscription } from 'rxjs/Subscription';
+
 import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
 import Menu from 'material-ui/Menu';
 
 import AccountLevelNotifications from 'src/features/AccountLevelNotifications';
 import UserNotificationButton from './AccountNotificationsButton';
+import notifications$ from 'src/notifications';
 
 type ClassNames = 'root' | 'dropDown';
 
@@ -34,41 +37,56 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-interface Props {}
+interface Props { }
 
 interface State {
   anchorEl?: HTMLElement;
-  events: Linode.Event[];
+  notifications: Linode.Notification[];
 }
 
 type CombinedProps = {} & WithStyles<ClassNames>;
 
+const IMPORTANT: Linode.NotificationType[] = [
+  'outage',
+  'payment_due',
+  'ticket_important',
+  'ticket_abuse',
+  'notice',
+];
+
 class AccountNotificationMenu extends React.Component<CombinedProps, State> {
-  state = {
-    events: [],
+  subscription: Subscription;
+
+  state: State = {
+    notifications: [],
     anchorEl: undefined,
   };
 
-  mounted: boolean = false;
-
   componentDidMount() {
-    this.mounted = true;
+    this.subscription =
+      notifications$
+        .subscribe(notifications => this.setState({ notifications }));
   }
 
   componentWillUnmount() {
-    this.mounted = false;
+    this.subscription.unsubscribe();
   }
 
   render() {
-    const { anchorEl } = this.state;
+    const { anchorEl, notifications } = this.state;
     const { classes } = this.props;
+
+    if (notifications.length === 0) {
+      return null;
+    }
 
     return (
       <React.Fragment>
         <UserNotificationButton
           onClick={e => this.setState({ anchorEl: e.currentTarget })}
           className={anchorEl ? 'active' : ''}
-          // isImportant
+          isImportant={notifications.reduce((prev, current) =>
+            prev || IMPORTANT.includes(current.type), false)}
         />
         <Menu
           anchorEl={anchorEl}
