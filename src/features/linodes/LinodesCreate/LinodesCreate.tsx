@@ -10,6 +10,7 @@ import { withStyles, WithStyles, Theme, StyleRules } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
 import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
+import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 
 import { parseQueryParams } from 'src/utilities/queryParams';
 import { dcDisplayNames } from 'src/constants';
@@ -339,6 +340,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
               ? <CircleProgress />
               : (!this.userHasBackups())
                 ? <Placeholder
+                icon={VolumeIcon}
                 copy="You either do not have backups enabled for any Linode
                 or your Linodes have not been backed up. Please visit the 'Backups'
                 panel in the Linode Settings view"
