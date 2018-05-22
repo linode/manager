@@ -13,6 +13,7 @@ import MenuIcon from 'material-ui-icons/Menu';
 import AddNewMenu from './AddNewMenu';
 import SearchBar from './SearchBar';
 import UserMenu from './UserMenu';
+import AccountNotification from 'src/components/AccountNotifications';
 import UserNotificationMenu from './UserNotificationMenu';
 
 type ClassNames = 'appBar'
@@ -82,6 +83,7 @@ class TopMenu extends React.Component<PropsWithStyles> {
           <AddNewMenu />
           <SearchBar />
           <UserMenu />
+          <AccountNotification />
           <UserNotificationMenu />
         </Toolbar>
       </AppBar>

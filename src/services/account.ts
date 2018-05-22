@@ -1,16 +1,17 @@
 import { API_ROOT } from 'src/constants';
-import Request, { setMethod, setURL, setXFilter, setData } from 'src/services';
+import Request, { setMethod, setURL, setXFilter, setData, setParams } from 'src/services';
 
 type Page<T> = Linode.ResourcePage<T>;
 type Event = Linode.Event;
 type OAuthClient = Linode.OAuthClient;
 type Notification = Linode.Notification;
 
-export const getEvents = (xFilter: any) =>
+export const getEvents = (params: any = {}, xFilter: any = {}) =>
   Request<Page<Event>>(
     setURL(`${API_ROOT}/account/events`),
     setMethod('GET'),
     setXFilter(xFilter),
+    setParams(params),
   );
 
 export const markEventsSeen = (id: number) =>

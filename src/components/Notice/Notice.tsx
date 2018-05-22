@@ -11,8 +11,11 @@ import Flag from 'src/assets/icons/flag.svg';
 type ClassNames = 'root'
   | 'inner'
   | 'error'
+  | 'errorList'
   | 'warning'
+  | 'warningList'
   | 'success'
+  | 'successList'
   | 'flag';
 
 const styles: StyleRulesCallback = (theme: Linode.Theme) => {
@@ -36,13 +39,22 @@ const styles: StyleRulesCallback = (theme: Linode.Theme) => {
       backgroundColor: status.error,
       border: `1px solid ${status.errorDark}`,
     },
+    errorList: {
+      borderLeft: `5px solid ${status.errorDark}`,
+    },
     warning: {
       backgroundColor: status.warning,
       border: `1px solid ${status.warningDark}`,
     },
+    warningList: {
+      borderLeft: `5px solid ${status.warningDark}`,
+    },
     success: {
       backgroundColor: status.success,
       border: `1px solid ${status.successDark}`,
+    },
+    successList: {
+      borderLeft: `5px solid ${status.successDark}`,
     },
     flag: {
       marginRight: theme.spacing.unit * 2,
@@ -59,6 +71,7 @@ interface Props extends GridProps {
   typeProps?: TypographyProps;
   className?: string;
   flag?: boolean;
+  notificationList?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -75,6 +88,7 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
     children,
     flag,
     html,
+    notificationList,
   } = props;
 
   const c = html
@@ -92,9 +106,12 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
     <Grid
       item
       className={classNames({
-        [classes.error]: error,
-        [classes.warning]: warning,
-        [classes.success]: success,
+        [classes.error]: error && !notificationList,
+        [classes.warning]: warning && !notificationList,
+        [classes.success]: success && !notificationList,
+        [classes.errorList]: error && notificationList,
+        [classes.warningList]: warning && notificationList,
+        [classes.successList]: success && notificationList,
         [classes.root]: true,
         notice: true,
         ...(className && { [className]: true }),

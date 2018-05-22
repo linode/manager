@@ -21,13 +21,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
 
   return {
     root: {
-      padding: `${theme.spacing.unit * 2}px
-      ${theme.spacing.unit * 4}px
-      ${theme.spacing.unit * 2}px
-      ${theme.spacing.unit * 3 - 1}px`,
-      borderBottom: `1px solid ${theme.palette.divider}`,
+      ...theme.notificationList,
       borderLeft: '5px solid transparent',
-      transition: theme.transitions.create(['border-color']),
     },
     title: {
       ...theme.typography.subheading,
