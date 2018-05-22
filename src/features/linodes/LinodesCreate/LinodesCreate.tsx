@@ -220,7 +220,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
 
   getLinodesWithBackups = (linodes: Linode.Linode[]) => {
     this.setState({ isGettingBackups: true });
-    return Promise.map(linodes, (linode: Linode.Linode) => {
+    return Promise.map(linodes.filter(l => l.backups.enabled), (linode: Linode.Linode) => {
       return getLinodeBackups(linode.id)
         .then((backups) => {
           return {
