@@ -195,7 +195,19 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
   }
 
   handleTabChange = (event: React.ChangeEvent<HTMLDivElement>, value: number) => {
-    this.setState({ selectedTab: value });
+    this.setState({
+      selectedTab: value,
+      // reset state upon tab change
+      selectedLinodeID: undefined,
+      selectedBackupID: undefined,
+      selectedBackupInfo: undefined,
+      selectedDiskSize: undefined,
+      selectedImageID: null,
+      selectedRegionID: null,
+      selectedTypeID: null,
+      privateIP: false,
+      errors: undefined,
+    });
     if (value === this.backupTabIndex) {
       this.getLinodesWithBackups(this.props.linodes.response);
     }
