@@ -11,6 +11,7 @@ export default class Page {
     get addLinodeMenu() { return $('[data-qa-add-new-menu="Linode"]'); }
     get addNodeBalancerMenu() { return $('[data-qa-add-new-menu="NodeBalancer"]'); }
     get notice() { return $('[data-qa-notice]'); }
+    get notices() { return $$('[data-qa-notice]'); }
 
     constructor() {
         this.pageTitle = 'Base page';
@@ -31,6 +32,16 @@ export default class Page {
         browser.waitUntil(function() {
             return browser.getUrl().includes('/login');
         }, 10000, 'Failed to redirect to login page on log out');
+
+    waitForNotice(noticeMsg) {
+        return browser.waitUntil(function() {
+            const noticeRegex = new RegExp(noticeMsg, 'ig');
+            console.log(noticeRegex);
+            const noticeMsgDisplays = $$('[data-qa-notice]')
+                .filter(n => !!n.getText().match(noticeRegex));
+            console.log(noticeMsgDisplays);
+            return noticeMsgDisplays.length > 0;
+        }, 10000);
     }
 
     assertDocsDisplay() {

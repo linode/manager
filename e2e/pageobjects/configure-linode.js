@@ -35,7 +35,7 @@ class ConfigureLinode extends Page {
     get total() { return $('[data-qa-total-price]'); }
     get deploy() { return $('[data-qa-deploy-linode]'); }
 
-    cloneElemsDisplay() {
+    cloneBaseElemsDisplay() {
         this.notice.waitForVisible();
         const notices = $$(this.notice.selector);
 
@@ -100,15 +100,17 @@ class ConfigureLinode extends Page {
         requestedImage.click();
     }
 
-    selectPlanTab(planType) {\
+    selectPlanTab(planType) {
         const initialPlans = this.plans.length;
-        this.planHeader.$(`[data-qa-tab="${planType}"]`);
+
+        this.planHeader.$(`[data-qa-tab="${planType}"]`).click();
+
         browser.waitUntil(function() {
             return $$('[data-qa-tp="Linode Plan"] [data-qa-selection-card]').length !== initialPlans;
-        }, 5000)
+        }, 5000);
     }
 
-    selectPlan(planIndex) {
+    selectPlan(planIndex=0) {
         const planElement = this.plans[planIndex];
         planElement.click();
         browser.waitUntil(function() {
@@ -116,6 +118,46 @@ class ConfigureLinode extends Page {
         }, 5000);
     }
 
+    cloneSelectSource(linodeLabel) {
+        const sourceSection = $$('[data-qa-select-linode-panel]')
+            .filter(s => s.$('[data-qa-select-linode-header]').getText() === 'Select Linode to Clone From');
+        const targetSection = $$('[data-qa-select-linode-panel]')
+            .filter(s => s.$('[data-qa-select-linode-header]').getText() === 'Select Target Linode');
 
+        let linodes = sourceSection[0].$$('[data-qa-selection-card]');
+        let sourceLinode = linodes[0];
+        let sourceLabel = sourceLinode.$('[data-qa-select-card-heading]').getText();
+        sourceLinode.click();
+
+        let targetLinodeCard = targetSection[0].$$('[data-qa-selection-card]')
+            .filter(c => c.$('[data-qa-select-card-heading]').getText() === sourceLabel);
+        expect(targetLinodeCard[0].getAttribute('class')).toContain('disabled');
+
+        if (linodeLabel) {
+            linodes = sourceSection[0].$$('[data-qa-selection-card]')
+                .filter(l.$('[data-qa-select-card-heading]').getText() === linodeLabel);
+            sourceLinode = linodes[0];
+            sourceLabel = sourceLinode.$('[data-qa-select-card-heading]').getText();
+
+            sourceLinode.click();
+            
+            targetLinodeCard = targetSection[0].$$('[data-qa-selection-card]')
+                .filter(c => c.$('[data-qa-select-card-heading]').getText() === sourceLabel);
+
+            expect(targetLinodeCard[0].getAttribute('class')).toContain('disabled');
+        }
+    }
+
+    cloneSelectTarget(linode) {
+        const targetSection = $$('[data-qa-select-linode-panel]').filter(s => s.$('[data-qa-select-linode-header]').getText() === 'Select Target Linode');
+
+        if (!linode) {
+            const cloneToNewCard = $('[data-qa-select-card-heading="New Linode"]');
+            cloneToNewCard.click();
+            browser.waitForVisible('[data-qa-tp="Region"]');
+            browser.waitForVisible('[data-qa-tp="Linode Plan"]');
+            browser.waitForVisible('[data-qa-label-header]');
+        }
+    }
 }
 export default new ConfigureLinode();
