@@ -220,7 +220,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
 
   getLinodesWithBackups = (linodes: Linode.Linode[]) => {
     this.setState({ isGettingBackups: true });
-    return Promise.map(linodes, (linode: Linode.Linode) => {
+    return Promise.map(linodes.filter(l => l.backups.enabled), (linode: Linode.Linode) => {
       return getLinodeBackups(linode.id)
         .then((backups) => {
           return {
@@ -356,7 +356,13 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
                       linodesWithBackups,
                     )(this.props.linodes.response)}
                     selectedLinodeID={this.state.selectedLinodeID}
-                    handleSelection={this.updateStateFor}
+                    handleSelection={linode => this.setState({
+                      selectedLinodeID: linode.id,
+                      selectedTypeID: null,
+                      selectedDiskSize: linode.specs.disk,
+                      selectedBackupID: undefined,
+                      selectedRegionID: linode.region,
+                    })}
                   />
                   <SelectBackupPanel
                     error={hasErrorFor('backup_id')}
@@ -367,12 +373,6 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
                     selectedLinodeID={this.state.selectedLinodeID}
                     selectedBackupID={this.state.selectedBackupID}
                     handleSelection={this.updateStateFor}
-                  />
-                  <SelectRegionPanel
-                    error={hasErrorFor('region')}
-                    regions={this.props.regions.response}
-                    handleSelection={this.updateStateFor}
-                    selectedID={this.state.selectedRegionID}
                   />
                   <SelectPlanPanel
                     error={hasErrorFor('type')}
@@ -413,8 +413,12 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
               error={hasErrorFor('linode_id')}
               linodes={this.extendLinodes(this.props.linodes.response)}
               selectedLinodeID={this.state.selectedLinodeID}
-              handleSelection={this.updateStateFor}
               header={'Select Linode to Clone From'}
+              handleSelection={linode => this.setState({
+                selectedLinodeID: linode.id,
+                selectedTypeID: null,
+                selectedDiskSize: linode.specs.disk,
+              })}
             />
             <React.Fragment>
               <SelectRegionPanel
