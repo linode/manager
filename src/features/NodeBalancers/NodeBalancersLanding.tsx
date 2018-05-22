@@ -1,4 +1,7 @@
 import * as React from 'react';
+import { compose } from 'ramda';
+import * as Promise from 'bluebird';
+
 import {
   withStyles,
   StyleRulesCallback,
@@ -12,19 +15,16 @@ import TableCell from 'material-ui/Table/TableCell';
 import TableHead from 'material-ui/Table/TableHead';
 import TableRow from 'material-ui/Table/TableRow';
 
-import { compose } from 'ramda';
-
-import * as Promise from 'bluebird';
-
+import { getNodeBalancers, getNodeBalancerConfigs } from 'src/services/nodebalancers';
+import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
+import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
+import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import Grid from 'src/components/Grid';
 import Table from 'src/components/Table';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
-import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
-import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 import NodeBalancerActionMenu from './NodeBalancerActionMenu';
 
-import { getNodeBalancers, getNodeBalancerConfigs } from 'src/services/nodebalancers';
 
 type ClassNames = 'root' | 'title';
 
@@ -174,7 +174,7 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
                     </TableCell>
                     <TableCell>
                       <IPAddress ips={[nodeBalancer.ipv4]} copyRight />
-                      <IPAddress ips={[nodeBalancer.ipv6]} copyRight />
+                      {nodeBalancer.ipv6 && <IPAddress ips={[nodeBalancer.ipv6]} copyRight />}
                     </TableCell>
                     <TableCell>
                       <RegionIndicator region={nodeBalancer.region} />
@@ -200,6 +200,7 @@ const styled = withStyles(styles, { withTheme: true });
 export const enhanced = compose(
   styled,
   preloaded,
+  SectionErrorBoundary,
   setDocs(NodeBalancersLanding.docs),
 );
 
