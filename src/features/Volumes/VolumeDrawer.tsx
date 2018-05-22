@@ -128,7 +128,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
       .subscribe((event) => {
         if (event.action === 'volume_detach'
             && event.status === 'finished') {
-          sendToast(`Volume ${event.entity && event.entity.label} finsihed detaching`);
+          sendToast(`Volume ${event.entity && event.entity.label} finished detaching`);
         }
       });
   }
