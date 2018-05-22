@@ -99,6 +99,7 @@ interface State {
   isMakingRequest: boolean;
   [index: string]: any;
   isGettingBackups: boolean;
+  linodesWithBackups: Linode.LinodeWithBackups[] | null;
 }
 
 interface QueryStringOptions {
@@ -157,6 +158,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     errors: undefined,
     isMakingRequest: false,
     isGettingBackups: false,
+    linodesWithBackups: null,
   };
 
   mounted: boolean = false;
@@ -256,7 +258,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
 
   userHasBackups = () => {
     const { linodesWithBackups } = this.state;
-    return linodesWithBackups.some((linode: Linode.LinodeWithBackups) => {
+    return linodesWithBackups!.some((linode: Linode.LinodeWithBackups) => {
       // automatic backups is an array, but snapshots are either null or an object
       // user can have up to 3 automatic backups, but one one snapshot
       return !!linode.currentBackups.automatic.length || !!linode.currentBackups.snapshot.current;
@@ -344,6 +346,10 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
                   />
                   <SelectBackupPanel
                     error={hasErrorFor('backup_id')}
+                    backups={this.state.linodesWithBackups!
+                      .filter((linode: Linode.LinodeWithBackups) => {
+                        return linode.id === +this.state.selectedLinodeID!;
+                      })}
                     selectedLinodeID={this.state.selectedLinodeID}
                     selectedBackupID={this.state.selectedBackupID}
                     handleSelection={this.updateStateFor}
