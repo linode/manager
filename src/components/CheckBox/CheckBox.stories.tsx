@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { storiesOf } from '@storybook/react';
+import { checkA11y } from '@storybook/addon-a11y';
 
 import ThemeDecorator from '../../utilities/storybookDecorators';
 import CheckBox from './CheckBox';
@@ -81,6 +82,7 @@ class InteractiveCheckboxes extends React.Component {
 
 storiesOf('CheckBox', module)
 .addDecorator(ThemeDecorator)
+.addDecorator(checkA11y)
 .add('Interactive', () => (
   <InteractiveCheckboxes />
 ))

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { storiesOf } from '@storybook/react';
+import { checkA11y } from '@storybook/addon-a11y';
 
 import List from 'material-ui/List';
 import EventListItem from './EventListItem';
@@ -12,6 +13,7 @@ const testContent = 'We hope you\'re doing well! We\'re sending you this update 
 
 storiesOf('EventListItem', module)
 .addDecorator(ThemeDecorator)
+.addDecorator(checkA11y)
 .add('All EventListItems', () => (
   <React.Fragment>
     <List disablePadding>

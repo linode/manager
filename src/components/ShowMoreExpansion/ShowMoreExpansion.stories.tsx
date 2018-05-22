@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { storiesOf } from '@storybook/react';
+import { checkA11y } from '@storybook/addon-a11y';
 
 import Typography from 'material-ui/Typography';
 
@@ -8,6 +9,7 @@ import ShowMoreExpansion from './ShowMoreExpansion';
 
 storiesOf('ShowMoreExpansion', module)
 .addDecorator(ThemeDecorator)
+.addDecorator(checkA11y)
 .add('default', () => (
   <ShowMoreExpansion name="Show Older Images">
     <Typography>

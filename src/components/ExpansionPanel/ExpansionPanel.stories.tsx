@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { storiesOf } from '@storybook/react';
+import { checkA11y } from '@storybook/addon-a11y';
 
 import Button from 'material-ui/Button';
 
@@ -9,6 +10,7 @@ import ActionsPanel from '../ActionsPanel';
 
 storiesOf('ExpansionPanel', module)
 .addDecorator(ThemeDecorator)
+.addDecorator(checkA11y)
 .add('Interactive', () => (
   <div style={{ padding: 20, backgroundColor: '#f4f4f4' }}>
     <ExpansionPanel heading="Why is Linode the best?">

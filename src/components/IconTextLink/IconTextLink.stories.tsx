@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { storiesOf } from '@storybook/react';
+import { checkA11y } from '@storybook/addon-a11y';
 
 import PlusSquare from '../../../src/assets/icons/plus-square.svg';
 
@@ -41,6 +42,7 @@ class InteractiveIconTextLink extends React.Component {
 
 storiesOf('IconTextLink', module)
 .addDecorator(ThemeDecorator)
+.addDecorator(checkA11y)
 .add('Interactive', () => (
   <InteractiveIconTextLink />
 ))
