@@ -12,9 +12,7 @@ import Typography from 'material-ui/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import SelectionCard from 'src/components/SelectionCard';
-import CircularProgress from 'material-ui/Progress/CircularProgress';
 
-import { getLinodeBackups } from 'src/services/linodes';
 import {
   aggregateBackups,
   formatBackupDate,
@@ -52,10 +50,10 @@ interface Props {
   handleSelection: (key: string) =>
     (event: React.SyntheticEvent<HTMLElement>, value: any) => void;
   error?: string;
+  backups: Linode.LinodeWithBackups[];
 }
 
 interface State {
-  loading: Boolean;
   backups?: Linode.LinodeBackup[];
 }
 
@@ -64,37 +62,33 @@ type StyledProps = Props & WithStyles<ClassNames>;
 type CombinedProps = StyledProps;
 
 class SelectBackupPanel extends React.Component<CombinedProps, State> {
+
   state: State = {
-    loading: false,
+    backups: [],
   };
 
   handleBackupSelection = this.props.handleSelection('selectedBackupID');
   handleBackupInfoSelection = this.props.handleSelection('selectedBackupInfo');
 
-  fetchBackups(linodeID?: number) {
-    if (linodeID) {
-      this.setState({ loading: true });
-      getLinodeBackups(linodeID)
-        .then((backups) => {
-          this.setState({
-            backups: aggregateBackups(backups),
-            loading: false,
-          });
-        });
-    }
-  }
-
   componentDidMount() {
-    this.fetchBackups(this.props.selectedLinodeID);
+    const { backups } = this.props;
+    if (this.props.selectedLinodeID) {
+      // the backups prop will always be an array of one beacuse a filter is happening
+      // a component higher to only pass the backups for the selected Linode
+      this.setState({ backups: aggregateBackups(backups[0].currentBackups) });
+    }
     this.updateBackupInfo();
   }
 
   componentDidUpdate(prevProps: CombinedProps, prevState: State) {
+    const { backups } = this.props;
     if (prevProps.selectedLinodeID !== this.props.selectedLinodeID) {
-      this.fetchBackups(this.props.selectedLinodeID);
+      // the backups prop will always be an array of one beacuse a filter is happening
+      // a component higher to only pass the backups for the selected Linode
+      this.setState({ backups: aggregateBackups(backups[0].currentBackups) });
     }
     if (prevProps.selectedBackupID !== this.props.selectedBackupID
-        || prevState.backups !== this.state.backups) {
+      || prevState.backups !== this.state.backups) {
       this.updateBackupInfo();
     }
   }
@@ -148,8 +142,8 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { error, classes } = this.props;
-    const { backups, loading } = this.state;
+    const { error, classes, selectedLinodeID } = this.props;
+    const { backups } = this.state;
 
     return (
       <Paper className={`${classes.root}`}>
@@ -158,41 +152,29 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
           <Typography variant="title">
             Select Backup
           </Typography>
-          {(!loading)
-            ? <Grid container alignItems="center" className={classes.wrapper}>
-                {backups
-                  ? <React.Fragment>
-                      {backups.length !== 0
-                        ? <Typography component="div" className={classes.panelBody}>
-                            <Grid container>
-                            {}
-                              {backups.map((backup) => {
-                                return (
-                                  this.renderCard(backup)
-                                );
-                              })}
-                            </Grid>
-                          </Typography>
-                        : <Typography variant="body1">
-                            No backup available
-                          </Typography>
-                      }
-                    </React.Fragment>
+          <Grid container alignItems="center" className={classes.wrapper}>
+            {selectedLinodeID
+              ? <React.Fragment>
+                {backups!.length !== 0
+                  ? <Typography component="div" className={classes.panelBody}>
+                    <Grid container>
+                      {backups!.map((backup) => {
+                        return (
+                          this.renderCard(backup)
+                        );
+                      })}
+                    </Grid>
+                  </Typography>
                   : <Typography variant="body1">
-                      First, select a Linode
-                    </Typography>
+                    No backup available
+                          </Typography>
                 }
-              </Grid>
-            : <Grid container justify="center" alignItems="center" className={classes.wrapper}>
-                <Grid item>
-                  <CircularProgress
-                    size={75}
-                    variant="indeterminate"
-                    thickness={2}
-                  />
-                </Grid>
-              </Grid>
-          }
+              </React.Fragment>
+              : <Typography variant="body1">
+                First, select a Linode
+                    </Typography>
+            }
+          </Grid>
         </div>
       </Paper>
     );
