@@ -6,7 +6,7 @@ namespace Linode {
     client_conn_throttle: number;
     region: string;
     ipv4: string;
-    ipv6: string;
+    ipv6: null | string;
     created: string;
     updated: string;
     transfer: BalancerTransfer;
