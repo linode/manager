@@ -5,9 +5,7 @@ import {
   contains,
   filter,
   pathOr,
-  prop,
   propSatisfies,
-  uniqBy,
 } from 'ramda';
 
 import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
@@ -45,8 +43,7 @@ interface State {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const filterNotifications: (v: Linode.Notification[]) => Linode.Notification[] =
-  compose<Linode.Notification[], Linode.Notification[], Linode.Notification[]>(
-    uniqBy(prop('type')),
+  compose<Linode.Notification[], Linode.Notification[]>(
     filter<Linode.Notification>(
       propSatisfies(v => contains(v, AccountLevelNotifications.displayedEvents), 'type'),
     ),
