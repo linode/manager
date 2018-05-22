@@ -41,8 +41,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 interface Props {
   linodes: ExtendedLinode[];
   selectedLinodeID?: number;
-  handleSelection: (key: string) =>
-    (event: React.SyntheticEvent<HTMLElement>, value?: string | null) => void;
+  handleSelection: (linode: Linode.Linode) => void;
   error?: string;
   header?: string;
 }
@@ -52,20 +51,14 @@ type StyledProps = Props & WithStyles<ClassNames>;
 type CombinedProps = StyledProps;
 
 class SelectLinodePanel extends React.Component<CombinedProps> {
-  handleTypeSelect = this.props.handleSelection('selectedTypeID');
-  handleSelectedDiskSize = this.props.handleSelection('selectedDiskSize');
-  handleSelection = this.props.handleSelection('selectedLinodeID');
+
 
   renderCard(linode: ExtendedLinode) {
-    const { selectedLinodeID } = this.props;
+    const { selectedLinodeID, handleSelection } = this.props;
     return (
       <SelectionCard
         key={linode.id}
-        onClick={(e) => {
-          this.handleSelection(e, `${linode.id}`);
-          this.handleTypeSelect(e, undefined);
-          this.handleSelectedDiskSize(e, `${linode.specs.disk}`);
-        }}
+        onClick={(e) => { handleSelection(linode); }}
         checked={linode.id === Number(selectedLinodeID)}
         heading={linode.heading}
         subheadings={linode.subHeadings}
