@@ -135,7 +135,7 @@ class ConfigureLinode extends Page {
 
         if (linodeLabel) {
             linodes = sourceSection[0].$$('[data-qa-selection-card]')
-                .filter(l.$('[data-qa-select-card-heading]').getText() === linodeLabel);
+                .filter(l => l.$('[data-qa-select-card-heading]').getText() === linodeLabel);
             sourceLinode = linodes[0];
             sourceLabel = sourceLinode.$('[data-qa-select-card-heading]').getText();
 
@@ -148,10 +148,13 @@ class ConfigureLinode extends Page {
         }
     }
 
-    cloneSelectTarget(linode) {
-        const targetSection = $$('[data-qa-select-linode-panel]').filter(s => s.$('[data-qa-select-linode-header]').getText() === 'Select Target Linode');
-
-        if (!linode) {
+    cloneSelectTarget(linodeLabel) {
+        if (linodeLabel) {
+            const targetSection = $$('[data-qa-select-linode-panel]').filter(s => s.$('[data-qa-select-linode-header]').getText() === 'Select Target Linode');
+            const linodes = targetSection[0].$$('[data-qa-selection-card]')
+                .filter(l => l.$('[data-qa-select-card-heading]').getText() === linodeLabel);
+            linodes[0].click();
+        } else {
             const cloneToNewCard = $('[data-qa-select-card-heading="New Linode"]');
             cloneToNewCard.click();
             browser.waitForVisible('[data-qa-tp="Region"]');
