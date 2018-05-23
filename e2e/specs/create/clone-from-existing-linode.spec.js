@@ -28,8 +28,9 @@ describe('Create Linode - Clone from Existing Suite', () => {
         
     });
 
-    xit('should fail to clone to a smaller linode plan', () => {
+    it('should fail to clone to a smaller linode plan', () => {
         const noticeMsg = 'The source Linode has allocated more disk than the new type allows. Delete/resize disks smaller or choose a larger type.';
+
         ConfigureLinode.selectPlanTab('Nanode');
         ConfigureLinode.selectPlan(0);
         ConfigureLinode.label.setValue(new Date().getTime());

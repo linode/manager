@@ -37,10 +37,8 @@ export default class Page {
     waitForNotice(noticeMsg) {
         return browser.waitUntil(function() {
             const noticeRegex = new RegExp(noticeMsg, 'ig');
-            console.log(noticeRegex);
             const noticeMsgDisplays = $$('[data-qa-notice]')
                 .filter(n => !!n.getText().match(noticeRegex));
-            console.log(noticeMsgDisplays);
             return noticeMsgDisplays.length > 0;
         }, 10000);
     }
