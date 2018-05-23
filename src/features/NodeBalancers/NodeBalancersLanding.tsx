@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { compose } from 'ramda';
 import * as Promise from 'bluebird';
+import { Link } from 'react-router-dom';
 
 import {
   withStyles,
@@ -188,7 +189,11 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
               {nodeBalancers.map((nodeBalancer) => {
                 return (
                   <TableRow key={nodeBalancer.id}>
-                    <TableCell>{nodeBalancer.label}</TableCell>
+                    <TableCell>
+                      <Link to={`/nodebalancers/${nodeBalancer.id}`}>
+                        {nodeBalancer.label}
+                      </Link>
+                    </TableCell>
                     <TableCell>{`${nodeBalancer.up} up, ${nodeBalancer.down} down`}</TableCell>
                     <TableCell>
                       {this.formatTransferData(nodeBalancer.transfer.total)}

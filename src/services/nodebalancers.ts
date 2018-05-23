@@ -23,3 +23,8 @@ Request<Page<Config>>(
   setURL(`${API_ROOT}/nodebalancers/${id}/configs`),
   setMethod('GET'),
 ).then(response => response.data);
+
+export const getNodeBalancer = (id: number) => Request<NodeBalancer>(
+  setURL(`${API_ROOT}/nodebalancers/${id}`),
+  setMethod('GET'),
+).then(response => response.data);
