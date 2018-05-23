@@ -472,7 +472,7 @@ class SearchBar extends React.Component<FinalProps, State> {
 const styled = withStyles(styles, { withTheme: true });
 
 const connected = connect((state: Linode.AppState) => ({
-  types: pathOr([], ['resources', 'types', 'data'], state),
+  types: pathOr([], ['resources', 'types', 'data', 'data'], state),
 }));
 
 export default compose(
