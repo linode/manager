@@ -11,6 +11,10 @@ const NodeBalancersLanding = DefaultLoader({
   loader: () => import('./NodeBalancersLanding'),
 });
 
+const NodeBalancerDetail = DefaultLoader({
+  loader: () => import('./NodeBalancerDetail'),
+});
+
 type Props = RouteComponentProps<{}>;
 
 class NodeBalancers extends React.Component<Props> {
@@ -19,6 +23,7 @@ class NodeBalancers extends React.Component<Props> {
 
     return (
       <Switch>
+        <Route component={NodeBalancerDetail} path={`${path}/:nodeBalancerId`} />
         <Route component={NodeBalancersLanding} path={path} exact />
       </Switch>
     );
