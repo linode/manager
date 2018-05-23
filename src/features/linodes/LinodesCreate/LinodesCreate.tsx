@@ -32,7 +32,7 @@ import SelectImagePanel from './SelectImagePanel';
 import SelectBackupPanel from './SelectBackupPanel';
 import SelectRegionPanel, { ExtendedRegion } from './SelectRegionPanel';
 import SelectPlanPanel, { ExtendedType } from './SelectPlanPanel';
-import LabelAndTagsPanel from './LabelAndTagsPanel';
+import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import PasswordPanel from './PasswordPanel';
 import AddonsPanel from './AddonsPanel';
 import { typeLabelDetails, displayType } from '../presentation';
@@ -208,6 +208,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       selectedTypeID: null,
       privateIP: false,
       errors: undefined,
+      label: '',
     });
     if (value === this.backupTabIndex) {
       this.getLinodesWithBackups(this.props.linodes.response);
@@ -307,9 +308,12 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
               selectedID={this.state.selectedTypeID}
             />
             <LabelAndTagsPanel
-              error={hasErrorFor('label')}
-              label={this.state.label}
-              handleChange={this.updateStateFor}
+              labelFieldProps={{
+                label: 'Linode Label',
+                value: this.state.label || '',
+                onChange: e => this.setState({ label: e.target.value }),
+                errorText: hasErrorFor('label'),
+              }}
             />
             <PasswordPanel
               error={hasErrorFor('root_pass')}
@@ -382,9 +386,12 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
                     selectedDiskSize={this.state.selectedDiskSize}
                   />
                   <LabelAndTagsPanel
-                    error={hasErrorFor('label')}
-                    label={this.state.label}
-                    handleChange={this.updateStateFor}
+                    labelFieldProps={{
+                      label: 'Linode Label',
+                      value: this.state.label || '',
+                      onChange: e => this.setState({ label: e.target.value }),
+                      errorText: hasErrorFor('label'),
+                    }}
                   />
                   <AddonsPanel
                     backups={this.state.backups}
@@ -435,9 +442,12 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
                 selectedDiskSize={this.state.selectedDiskSize}
               />
               <LabelAndTagsPanel
-                error={hasErrorFor('label')}
-                label={this.state.label}
-                handleChange={this.updateStateFor}
+                labelFieldProps={{
+                  label: 'Linode Label',
+                  value: this.state.label || '',
+                  onChange: e => this.setState({ label: e.target.value }),
+                  errorText: hasErrorFor('label'),
+                }}
               />
             </React.Fragment>
             <AddonsPanel
