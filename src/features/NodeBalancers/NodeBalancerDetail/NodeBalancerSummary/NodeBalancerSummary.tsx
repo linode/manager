@@ -7,6 +7,7 @@ import {
 } from 'material-ui';
 
 import SummaryPanel from './SummaryPanel';
+import TablesPanel from './TablesPanel';
 
 
 type ClassNames = 'root';
@@ -31,6 +32,7 @@ class NodeBalancerSummary extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <SummaryPanel nodeBalancer={nodeBalancer} />
+        <TablesPanel nodeBalancer={nodeBalancer} />
       </React.Fragment>
     );
   }
