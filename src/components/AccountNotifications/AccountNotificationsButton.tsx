@@ -7,21 +7,14 @@ import {
   WithStyles,
 } from 'material-ui';
 import IconButton from 'material-ui/IconButton';
-import Alert from 'material-ui-icons/Error';
+import Alert from 'src/assets/icons/alerts.svg';
 
 type ClassNames = 'root'
 | 'icon'
-| 'isImportant';
+| 'isImportant'
+| 'allRead';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
-  '@keyframes fadeIn': {
-    from: {
-      opacity: 0,
-    },
-    to: {
-      opacity: 1,
-    },
-  },
   root: {
     marginRight: - theme.spacing.unit,
     position: 'relative',
@@ -39,13 +32,35 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     },
   },
   icon: {
-    width: 32,
-    height: 32,
-    transition: theme.transitions.create(['fill', 'opacity']),
-    fill: theme.palette.primary.main,
+    position: 'relative',
+    top: 1,
+    width: 28,
+    height: 28,
+    transition: theme.transitions.create(['color', 'opacity']),
+    color: theme.palette.primary.main,
+    '& .circle': {
+      fill: 'currentColor',
+    },
+    '& .line': {
+    },
+    '& .line, & .dot': {
+      fill: '#fff',
+      stroke: '#fff',
+      strokeWidth: 2,
+    },
   },
   isImportant: {
-    fill: theme.palette.status.errorDark,
+    color: theme.palette.status.errorDark,
+  },
+  allRead: {
+    '& .circle': {
+      fill: 'none',
+      stroke: theme.color.grey3,
+    },
+    '& .dot, & .line': {
+      fill: theme.color.grey3,
+      stroke: theme.color.grey3,
+    },
   },
 });
 
@@ -53,6 +68,7 @@ interface Props {
   onClick: (e: React.MouseEvent<HTMLElement>) => void;
   className?: string;
   isImportant?: boolean;
+  allRead?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -60,6 +76,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 const UserNotificationButton: React.StatelessComponent<CombinedProps> = ({
   classes,
   isImportant,
+  allRead,
   onClick,
   className,
 }) => {
@@ -68,10 +85,12 @@ const UserNotificationButton: React.StatelessComponent<CombinedProps> = ({
     <IconButton
       onClick={onClick}
       className={`${classes.root} ${className}`}
+      disabled={allRead}
     >
       <Alert className={`
         ${classes.icon}
         ${isImportant ? classes.isImportant : ''}
+        ${allRead ? classes.allRead : ''}
       `} />
     </IconButton>
   );

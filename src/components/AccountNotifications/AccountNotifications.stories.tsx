@@ -22,7 +22,7 @@ class AccountNotificationsStory extends React.Component {
   }
 }
 
-storiesOf('Account Modification', module)
+storiesOf('Account Nodifications', module)
 .addDecorator(ThemeDecorator)
 .add('Account Notifications', () => (
   <AccountNotificationsStory />
