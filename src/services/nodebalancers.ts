@@ -1,5 +1,5 @@
 import { API_ROOT } from 'src/constants';
-import Request, { setURL, setMethod, setParams } from './index';
+import Request, { setURL, setMethod, setParams, setData } from './index';
 
 type Page<T> = Linode.ResourcePage<T>;
 type NodeBalancer = Linode.NodeBalancer;
@@ -23,3 +23,14 @@ Request<Page<Config>>(
   setURL(`${API_ROOT}/nodebalancers/${id}/configs`),
   setMethod('GET'),
 ).then(response => response.data);
+
+export const getNodeBalancer = (id: number) => Request<NodeBalancer>(
+  setURL(`${API_ROOT}/nodebalancers/${id}`),
+  setMethod('GET'),
+).then(response => response.data);
+
+export const updateNodeBalancer = (id: number, label: string) => Request<NodeBalancer>(
+    setURL(`${API_ROOT}/nodebalancers/${id}`),
+    setMethod('PUT'),
+    setData({ label }),
+  ).then(response => response.data);
