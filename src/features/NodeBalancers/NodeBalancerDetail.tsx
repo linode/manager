@@ -7,10 +7,8 @@ import {
 } from 'material-ui';
 import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
-import Typography from 'material-ui/Typography';
 import IconButton from 'material-ui/IconButton';
 import KeyboardArrowLeft from 'material-ui-icons/KeyboardArrowLeft';
-
 import { compose, pathOr } from 'ramda';
 import {
   matchPath,
@@ -20,13 +18,15 @@ import {
   Switch,
 } from 'react-router-dom';
 
-import { getNodeBalancer } from 'src/services/nodebalancers';
+import { getNodeBalancer, updateNodeBalancer } from 'src/services/nodebalancers';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
+// import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
 import Grid from 'src/components/Grid';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import ErrorState from 'src/components/ErrorState';
 import setDocs from 'src/components/DocsSidebar/setDocs';
+import EditableText from 'src/components/EditableText';
 
 
 type ClassNames = 'root'
@@ -59,6 +59,7 @@ interface Props { }
 interface State {
   nodeBalancer: Linode.NodeBalancer;
   error?: Error;
+  ApiError: Linode.ApiFieldError | undefined;
 }
 
 type CombinedProps = Props &
@@ -80,12 +81,24 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
   state: State = {
     nodeBalancer: pathOr(undefined, ['response'], this.props.nodeBalancer),
     error: pathOr(undefined, ['error'], this.props.nodeBalancer),
+    ApiError: undefined,
   };
 
   handleTabChange = (event: React.ChangeEvent<HTMLDivElement>, value: number) => {
     const { history } = this.props;
     const routeName = this.tabs[value].routeName;
     history.push(`${routeName}`);
+  }
+
+  updateLabel = (label: string) => {
+    const { nodeBalancer } = this.state;
+    updateNodeBalancer(nodeBalancer.id, label)
+      .catch((error) => {
+        this.setState(() => ({
+          ApiError: error.response && error.response.data && error.response.data.errors,
+          nodeBalancer,
+        }));
+      });
   }
 
   static docs: Linode.Doc[] = [
@@ -119,10 +132,12 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
     if (error) {
       return (
         <ErrorState
-          errorText="There was an error retrieving your domain. Please reload and try again."
+          errorText="There was an error retrieving your NodeBalancer. Please reload and try again."
         />
       );
     }
+
+    // const hasErrorFor = getAPIErrorsFor({label: 'label'}, this.state.ApiError);
 
     return (
       <React.Fragment>
@@ -134,7 +149,12 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
             >
               <KeyboardArrowLeft />
             </IconButton>
-            <Typography variant="headline">{nodeBalancer.label}</Typography>
+            <EditableText
+              variant="headline"
+              text={nodeBalancer.label}
+              onEdit={this.updateLabel}
+              data-qa-label
+            />
           </Grid>
         </Grid>
         <AppBar position="static" color="default">
