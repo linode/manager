@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.25.3] - 2018-05-23
+### Fixed:
+- Fixed an issue causing the search bar to crash.
+### Changed:
+- Disabled toast notifications for failed stat requests.
+- No longer display the Region panel when creating a new Linode from a backup.
+
 ## [0.25.2] - 2018-05-22
 ### Added:
 - Create, update, and delete Domains.
