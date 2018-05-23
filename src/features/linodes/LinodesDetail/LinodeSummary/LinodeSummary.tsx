@@ -1,15 +1,15 @@
 import * as React from 'react';
 import * as moment from 'moment';
-import * as Raven from 'raven-js';
+// import * as Raven from 'raven-js';
 import { Line } from 'react-chartjs-2';
-import { pathOr, clone } from 'ramda';
+import { clone } from 'ramda';
 
 import { withStyles, StyleRulesCallback, WithStyles, Typography } from 'material-ui';
 import { InputLabel } from 'material-ui/Input';
 import { FormControl } from 'material-ui/Form';
 import { MenuItem } from 'material-ui/Menu';
 
-import { sendToast } from 'src/features/ToastNotifications/toasts';
+// import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { setUpCharts } from 'src/utilities/charts';
 import transitionStatus from 'src/features/linodes/linodeTransitionStatus';
 import ExpansionPanel from 'src/components/ExpansionPanel';
@@ -275,19 +275,19 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
       })
       .catch((errorResponse) => {
         if (!this.mounted) { return; }
+        /** disabling toast messages because they're annoying. */
+        // if (pathOr(undefined, ['response', 'status'], errorResponse) === 429) {
+        //   sendToast('Rate limit exceeded when fetching performance statistics', 'error');
+        //   this.setState({ statsLoadError: 'rateLimited' });
+        // } else {
+        //   pathOr(
+        //     [{ reason: 'Network Error when fetching performance statistics' }],
+        //     ['response', 'data', 'errors'], errorResponse)
+        //     .forEach((err: Linode.ApiFieldError) => sendToast(err.reason, 'error'));
+        //   this.setState({ statsLoadError: 'error' });
+        // }
 
-        if (pathOr(undefined, ['response', 'status'], errorResponse) === 429) {
-          sendToast('Rate limit exceeded when fetching performance statistics', 'error');
-          this.setState({ statsLoadError: 'rateLimited' });
-        } else {
-          pathOr(
-            [{ reason: 'Network Error when fetching performance statistics' }],
-            ['response', 'data', 'errors'], errorResponse)
-            .forEach((err: Linode.ApiFieldError) => sendToast(err.reason, 'error'));
-          this.setState({ statsLoadError: 'error' });
-        }
-
-        Raven.captureException(errorResponse);
+        // Raven.captureException(errorResponse);
       });
   }
 
