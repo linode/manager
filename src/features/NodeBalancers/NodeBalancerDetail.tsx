@@ -21,6 +21,7 @@ import {
 import { getNodeBalancer, updateNodeBalancer } from 'src/services/nodebalancers';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 // import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
 
 import Grid from 'src/components/Grid';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
@@ -59,7 +60,7 @@ interface Props { }
 interface State {
   nodeBalancer: Linode.NodeBalancer;
   error?: Error;
-  ApiError: Linode.ApiFieldError | undefined;
+  ApiError: Linode.ApiFieldError[] | undefined;
 }
 
 type CombinedProps = Props &
@@ -94,6 +95,8 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
     const { nodeBalancer } = this.state;
     updateNodeBalancer(nodeBalancer.id, label)
       .catch((error) => {
+        error.response.data.errors.map((error: Linode.ApiFieldError) =>
+          sendToast(error.reason, 'error'));
         this.setState(() => ({
           ApiError: error.response && error.response.data && error.response.data.errors,
           nodeBalancer,
@@ -137,7 +140,8 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
       );
     }
 
-    // const hasErrorFor = getAPIErrorsFor({label: 'label'}, this.state.ApiError);
+    // @TODO refactor error messages for invalid label changes pending PR M3-422
+    // const hasErrorFor = getAPIErrorsFor({ label: 'label' }, this.state.ApiError);
 
     return (
       <React.Fragment>

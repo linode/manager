@@ -102,7 +102,6 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
 interface Props {
   onEdit: (text: string) => void;
   text: string;
-  errorText?: string;
 }
 
 interface State {
@@ -150,7 +149,7 @@ class EditableText extends React.Component<FinalProps, State> {
   }
 
   render() {
-    const { classes, onEdit, errorText, ...rest } = this.props;
+    const { classes, onEdit, ...rest } = this.props;
     const { editing, text } = this.state;
 
     return (
@@ -189,7 +188,6 @@ class EditableText extends React.Component<FinalProps, State> {
                     if (e.key === 'Escape' || e.key === 'Esc') { this.cancelEditing(); }
                   }}
                   value={text}
-                  errorText={errorText}
                   {...rest}
                   InputProps={{ className: classes.inputRoot }}
                   inputProps={{
