@@ -36,15 +36,15 @@ import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import PasswordPanel from './PasswordPanel';
 import AddonsPanel from './AddonsPanel';
 import { typeLabelDetails, displayType } from '../presentation';
-import CheckoutBar from './CheckoutBar';
+import CheckoutBar from 'src/components/CheckoutBar';
 import { resetEventsPolling } from 'src/events';
 
 type ChangeEvents = React.MouseEvent<HTMLElement> | React.ChangeEvent<HTMLInputElement>;
 
-type Info = { name: string, details: string } | undefined;
+type Info = { title: string, details?: string } | undefined;
 
 export type TypeInfo = {
-  name: string,
+  title: string,
   details: string,
   monthly: number,
   backupsMonthly: number | null,
@@ -603,7 +603,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
 
   getImageInfo = (image: Linode.Image | undefined): Info => {
     return image && {
-      name: `${image.vendor || image.label}`,
+      title: `${image.vendor || image.label}`,
       details: `${image.vendor ? image.label : ''}`,
     };
   }
@@ -619,7 +619,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
 
   reshapeTypeInfo = (type: ExtendedType | undefined): TypeInfo => {
     return type && {
-      name: type.label,
+      title: type.label,
       details: `${typeLabelDetails(type.memory, type.disk, type.vcpus)}`,
       monthly: type.price.monthly,
       backupsMonthly: type.addons.backups.price.monthly,
@@ -687,18 +687,41 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
                   disableCompensation>
                   {
                     (props: StickyProps) => {
-                      const combinedProps = {
-                        ...props,
-                        label,
-                        imageInfo,
-                        typeInfo,
-                        regionName,
-                        backups,
-                        disabled: this.state.isMakingRequest,
-                        onDeploy: this.onDeploy,
-                      };
+                      const displaySections = [];
+                      if (imageInfo) {
+                        displaySections.push(imageInfo);
+                      }
+
+                      if (regionName) {
+                        displaySections.push({ title: regionName });
+                      }
+
+                      if (typeInfo) {
+                        displaySections.push(typeInfo);
+                      }
+
+                      if (backups && typeInfo && typeInfo.backupsMonthly) {
+                        displaySections.push({
+                          title: 'Backups Enabled',
+                          ...(typeInfo.backupsMonthly &&
+                            { details: `$${typeInfo.backupsMonthly.toFixed(2)} / monthly` }),
+                        });
+                      }
+
+                      let calculatedPrice = pathOr(0, ['monthly'], typeInfo);
+                      if (backups && typeInfo && typeInfo.backupsMonthly) {
+                        calculatedPrice += typeInfo.backupsMonthly;
+                      }
+
                       return (
-                        <CheckoutBar {...combinedProps} />
+                        <CheckoutBar
+                          heading={`${ label || 'Linode' } Summary`}
+                          calculatedPrice={calculatedPrice}
+                          disabled={this.state.isMakingRequest}
+                          onDeploy={this.onDeploy}
+                          displaySections={displaySections}
+                          {...props}
+                        />
                       );
                     }
                   }
