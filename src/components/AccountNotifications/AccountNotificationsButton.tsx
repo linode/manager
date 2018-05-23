@@ -55,11 +55,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   allRead: {
     '& .circle': {
       fill: 'none',
-      stroke: theme.color.grey3,
+      stroke: theme.palette.text.primary,
     },
     '& .dot, & .line': {
-      fill: theme.color.grey3,
-      stroke: theme.color.grey3,
+      fill: theme.palette.text.primary,
+      stroke: theme.palette.text.primary,
     },
   },
 });

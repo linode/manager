@@ -76,6 +76,10 @@ class AccountNotificationMenu extends React.Component<CombinedProps, State> {
     const { anchorEl, notifications } = this.state;
     const { classes } = this.props;
 
+    if (notifications.length === 0) {
+      return null;
+    }
+
     return (
       <React.Fragment>
         <UserNotificationButton
@@ -83,7 +87,7 @@ class AccountNotificationMenu extends React.Component<CombinedProps, State> {
           className={anchorEl ? 'active' : ''}
           isImportant={notifications.reduce((prev, current) =>
             prev || IMPORTANT.includes(current.type), false)}
-          allRead={notifications.length === 0}
+          // allRead
         />
         <Menu
           anchorEl={anchorEl}
