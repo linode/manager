@@ -14,10 +14,14 @@ import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 
 import { parseQueryParams } from 'src/utilities/queryParams';
 import { dcDisplayNames } from 'src/constants';
-import { createLinode, allocatePrivateIP, getLinodes,
-   cloneLinode, getLinodeBackups } from 'src/services/linodes';
+import {
+  createLinode,
+  allocatePrivateIP,
+  getLinodes,
+  cloneLinode,
+  getLinodeBackups,
+} from 'src/services/linodes';
 import { getImages } from 'src/services/images';
-import { getRegions } from 'src/services/misc';
 
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -30,7 +34,7 @@ import Placeholder from 'src/components/Placeholder';
 import SelectLinodePanel, { ExtendedLinode } from './SelectLinodePanel';
 import SelectImagePanel from './SelectImagePanel';
 import SelectBackupPanel from './SelectBackupPanel';
-import SelectRegionPanel, { ExtendedRegion } from './SelectRegionPanel';
+import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
 import SelectPlanPanel, { ExtendedType } from './SelectPlanPanel';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import PasswordPanel from './PasswordPanel';
@@ -69,11 +73,11 @@ interface Props {
 
 interface ConnectedProps {
   types: ExtendedType[];
+  regions: ExtendedRegion[];
 }
 
 interface PreloadedProps {
   images: { response: Linode.Image[] };
-  regions: { response: ExtendedRegion[] };
   linodes: { response: Linode.LinodeWithBackups[] };
 }
 
@@ -122,14 +126,6 @@ const preloaded = PromiseLoader<Props>({
 
   images: () => getImages()
     .then(response => response.data || []),
-
-  regions: () => getRegions()
-    .then((response) => {
-      return response.data.map((region: Linode.Region) => ({
-        ...region,
-        display: dcDisplayNames[region.id],
-      })) || [];
-    }),
 });
 
 const errorResources = {
@@ -297,9 +293,10 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
             />
             <SelectRegionPanel
               error={hasErrorFor('region')}
-              regions={this.props.regions.response}
-              handleSelection={this.updateStateFor}
+              regions={this.props.regions}
+              handleSelection={id => this.setState({ selectedRegionID: id })}
               selectedID={this.state.selectedRegionID}
+              copy="Determine the best location for your Linode."
             />
             <SelectPlanPanel
               error={hasErrorFor('type')}
@@ -430,9 +427,10 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
             <React.Fragment>
               <SelectRegionPanel
                 error={hasErrorFor('region')}
-                regions={this.props.regions.response}
-                handleSelection={this.updateStateFor}
+                regions={this.props.regions}
+                handleSelection={id => this.setState({ selectedRegionID: id })}
                 selectedID={this.state.selectedRegionID}
+                copy="Determine the best location for your Linode."
               />
               <SelectPlanPanel
                 error={hasErrorFor('type')}
@@ -651,7 +649,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       imageInfo = selectedBackupInfo;
     }
 
-    const regionName = this.getRegionName(this.props.regions.response.find(
+    const regionName = this.getRegionName(this.props.regions.find(
       region => region.id === selectedRegionID));
 
     const typeInfo = this.getTypeInfo();
@@ -747,6 +745,13 @@ const connected = connect((state: Linode.AppState) => ({
       };
     }),
     pathOr([], ['resources', 'types', 'data', 'data']),
+  )(state),
+  regions: compose(
+    map((region: Linode.Region) => ({
+      ...region,
+      display: dcDisplayNames[region.id],
+    })),
+    pathOr([], ['resources', 'regions', 'data', 'data']),
   )(state),
 }));
 
