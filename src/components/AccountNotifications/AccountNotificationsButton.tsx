@@ -41,12 +41,15 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     '& .circle': {
       fill: 'currentColor',
     },
-    '& .line': {
-    },
     '& .line, & .dot': {
       fill: '#fff',
       stroke: '#fff',
-      strokeWidth: 2,
+    },
+    '& .line': {
+      strokeWidth: 4,
+    },
+    '& .dot': {
+      strokeWidth: 3,
     },
   },
   isImportant: {

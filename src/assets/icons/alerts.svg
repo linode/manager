@@ -5,6 +5,6 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
 >
   <circle class="circle" cx="24" cy="24" r="23"/>
-  <line class="line" x1="24" x2="24" y1="12" y2="30"/>
+  <line class="line" x1="24" x2="24" y1="10" y2="28"/>
   <circle class="dot" cx="24" cy="35" r="1"/>
 </svg>
