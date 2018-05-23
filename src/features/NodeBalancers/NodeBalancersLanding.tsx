@@ -97,18 +97,14 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
 
   static docs = [
     {
-      title: 'How to use NodeBalancers',
+      title: 'Getting Started with NodeBalancers',
       src: 'https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers/',
-      body: `Nearly all applications that are built using Linodes can benefit from load balancing,
-       and load balancing itself is the key to expanding an application to larger numbers of users.
-        Linode now provides NodeBalancers, which can ease the deployment
-         and administration of a load balancer.`,
+      body: `Using a NodeBalancer to begin managing a simple web application`,
     },
     {
       title: 'NodeBalancer Reference Guide',
       src: 'https://www.linode.com/docs/platform/nodebalancer/nodebalancer-reference-guide/',
-      body: `Check out the NodeBalacner reference guide for tips on how to successfully configure
-      a NodeBalancer and get the most out of the service.`,
+      body: `NodeBalancer Reference Guide`,
     },
   ];
 

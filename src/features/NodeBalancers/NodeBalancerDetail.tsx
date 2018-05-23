@@ -90,12 +90,14 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
 
   static docs: Linode.Doc[] = [
     {
-      title: 'DNS Manager Overview',
-      src: 'https://www.linode.com/docs/networking/dns/dns-manager-overview/',
-      body: `The DNS Manager is a comprehensive DNS management interface available within the
-      Linode Manager that allows you to add DNS records for all of your domain names. This guide
-      covers the use of Linode’s DNS Manager and basic domain zone setup. For an introduction to
-      DNS in general, please see our Introduction to DNS Records guide.`,
+      title: 'Getting Started with NodeBalancers',
+      src: 'https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers/',
+      body: `Using a NodeBalancer to begin managing a simple web application`,
+    },
+    {
+      title: 'NodeBalancer Reference Guide',
+      src: 'https://www.linode.com/docs/platform/nodebalancer/nodebalancer-reference-guide/',
+      body: `NodeBalancer Reference Guide`,
     },
   ];
 
