@@ -1,5 +1,15 @@
 import * as React from 'react';
-import { compose, clamp, defaultTo, map, path, pathOr } from 'ramda';
+import {
+  clamp,
+  compose,
+  defaultTo,
+  lensPath,
+  map,
+  path,
+  pathOr,
+  set,
+  view,
+} from 'ramda';
 import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { StickyContainer, Sticky, StickyProps } from 'react-sticky';
@@ -7,6 +17,7 @@ import { StickyContainer, Sticky, StickyProps } from 'react-sticky';
 import { withStyles, WithStyles, Theme, StyleRules } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
 
+import Button from 'src/components/Button';
 import { createNodeBalancer } from 'src/services/nodebalancers';
 import { dcDisplayNames } from 'src/constants';
 import Grid from 'src/components/Grid';
@@ -17,6 +28,7 @@ import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPa
 import ClientConnectionThrottlePanel from './ClientConnectionThrottlePanel';
 import defaultNumeric from 'src/utilities/defaultNumeric';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import NodeBalancerConfigPanel from './NodeBalancerConfigPanel';
 
 type Styles =
   'root'
@@ -47,15 +59,33 @@ type CombinedProps = Props
   & WithStyles<Styles>
   & PreloadedProps;
 
-interface FieldsState {
+interface NodeBalancerFieldsState {
   label?: string;
   region?: string;
   clientConnThrottle?: number;
 }
 
+interface NodeBalancerConfigFields {
+  algorithm?: 'roundrobin' | 'leastconn' | 'source';
+  check_attempts?: number; /** 1..30 */
+  check_body?: string;
+  check_interval?: number;
+  check_passive?: boolean;
+  check_path?: string;
+  check_timout?: number; /** 1..30 */
+  check?: 'none' | 'connection' | 'http' | 'http_body';
+  cipher_suite?: 'recommended' | 'legacy';
+  port?: number; /** 1..65535 */
+  protocol?: 'http' | 'https' | 'tcp';
+  ssl_cert?: string;
+  ssl_key?: string;
+  stickiness?: 'none' | 'table' | 'http_cookie';
+}
+
 interface State {
   submitting: boolean;
-  fields: FieldsState;
+  nodeBalancerFields: NodeBalancerFieldsState;
+  nodeBalancerConfigs: NodeBalancerConfigFields[];
   errors?: Linode.ApiFieldError[];
 }
 
@@ -69,23 +99,49 @@ const errorResources = {
 
 class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   static defaultFieldsStates = {};
+  static createNewNodeBalancerConfig = (): NodeBalancerConfigFields => ({
+    algorithm: 'roundrobin',
+    check_attempts: 2,
+    check_body: '',
+    check_interval: 5,
+    check_passive: true,
+    check_path: '',
+    check_timout: 3,
+    check: 'connection',
+    cipher_suite: 'recommended',
+    port: 80,
+    protocol: 'tcp',
+    ssl_cert: '',
+    ssl_key: '',
+    stickiness: 'table',
+  })
 
   state: State = {
     submitting: false,
-    fields: NodeBalancerCreate.defaultFieldsStates,
+    nodeBalancerFields: NodeBalancerCreate.defaultFieldsStates,
+    nodeBalancerConfigs: [
+      NodeBalancerCreate.createNewNodeBalancerConfig(),
+    ],
   };
 
   mounted: boolean = false;
 
+  addNodeBalancerConfig = () => this.setState({
+    nodeBalancerConfigs: [
+      ...this.state.nodeBalancerConfigs,
+      NodeBalancerCreate.createNewNodeBalancerConfig(),
+    ],
+  })
+
   createNodeBalancer = () => {
-    const { fields } = this.state;
+    const { nodeBalancerFields } = this.state;
     const { history } = this.props;
 
     /** Clear Errors */
     this.setState({ errors: undefined });
 
     /** Validation */
-    if (!fields.region) {
+    if (!nodeBalancerFields.region) {
       return this.setState({ errors: [{ field: 'region', reason: 'A region is required.' }] });
     }
 
@@ -94,8 +150,8 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
     /** Send request. */
     createNodeBalancer({
-      ...fields,
-      client_conn_throttle: fields.clientConnThrottle,
+      ...nodeBalancerFields,
+      client_conn_throttle: nodeBalancerFields.clientConnThrottle,
     })
       .then((response) => {
         history.push('/nodebalancers');
@@ -116,7 +172,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes, regions } = this.props;
-    const { fields } = this.state;
+    const { nodeBalancerFields } = this.state;
     const hasErrorFor = getAPIErrorFor(errorResources, this.state.errors);
 
     return (
@@ -129,11 +185,11 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
             <LabelAndTagsPanel
               labelFieldProps={{
                 label: 'NodeBalancer Label',
-                value: fields.label || '',
+                value: nodeBalancerFields.label || '',
                 errorText: hasErrorFor('label'),
                 onChange: e => this.setState({
-                  fields: {
-                    ...fields,
+                  nodeBalancerFields: {
+                    ...nodeBalancerFields,
                     label: e.target.value,
                   },
                 }),
@@ -142,10 +198,10 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
             <SelectRegionPanel
               regions={regions}
               error={hasErrorFor('region')}
-              selectedID={fields.region || null}
+              selectedID={nodeBalancerFields.region || null}
               handleSelection={region => this.setState({
-                fields: {
-                  ...fields,
+                nodeBalancerFields: {
+                  ...nodeBalancerFields,
                   region,
                 },
               })}
@@ -153,21 +209,45 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
             <ClientConnectionThrottlePanel
               textFieldProps={{
                 errorText: hasErrorFor('client_conn_throttle'),
-                value: defaultTo(0, fields.clientConnThrottle),
+                value: defaultTo(0, nodeBalancerFields.clientConnThrottle),
                 onChange: e => this.setState({
-                  fields: {
-                    ...fields,
+                  nodeBalancerFields: {
+                    ...nodeBalancerFields,
                     clientConnThrottle: controlClientConnectionThrottle(e.target.value),
                   },
                 }),
               }}
             />
+            <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }} >
+              <Grid item>
+                <Typography variant="title">NodeBalancer Settings</Typography>
+              </Grid>
+              {
+                this.state.nodeBalancerConfigs.map((nodeBalancerConfig, idx) => {
+                  const portLens = lensPath(['nodeBalancerConfigs', idx, 'port']);
+
+                  return <NodeBalancerConfigPanel
+                    port={defaultTo(80, view(portLens, this.state))}
+                    onPortChange={(port: number) =>
+                        this.setState(state => set(portLens, port, state))}
+                  />;
+                })
+              }
+              <Grid item>
+                <Button
+                  type="secondary"
+                  onClick={() => this.addNodeBalancerConfig()}
+                >
+                  Add another Configuration
+                </Button>
+              </Grid>
+            </Grid>
           </Grid>
           <Grid item className={`${classes.sidebar} mlSidebar`}>
             <Sticky topOffset={-24} disableCompensation>
               {
                 (props: StickyProps) => {
-                  const { region } = this.state.fields;
+                  const { region } = this.state.nodeBalancerFields;
                   const { regions } = this.props;
                   let displaySections;
                   if (region) {
@@ -180,7 +260,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                   }
                   return (
                     <CheckoutBar
-                      heading={`${this.state.fields.label || 'NodeBalancer'} Summary`}
+                      heading={`${this.state.nodeBalancerFields.label || 'NodeBalancer'} Summary`}
                       onDeploy={() => this.createNodeBalancer()}
                       calculatedPrice={20}
                       displaySections={displaySections && [displaySections]}
@@ -218,3 +298,5 @@ export default compose(
   styled,
   withRouter,
 )(NodeBalancerCreate);
+
+// const state => idx => prop =>
