@@ -1,4 +1,5 @@
 const { constants} = require('../../constants');
+
 import { Profile, TokenCreateDrawer, dialogMap } from '../../pageobjects/profile';
 
 const profile = new Profile();
@@ -83,7 +84,7 @@ describe('View - Personal Access Tokens', () => {
             expect(eventsPermission.getAttribute('class').includes('checked')).toBe(true);
             expect(imagesPermission.getAttribute('class').includes('checked')).toBe(true);
             browser.click('[data-qa-close-drawer]');
-            browser.waitForVisible('[data-qa-close-drawer]', 5000, true);
+            browser.waitForVisible('[data-qa-close-drawer]', constants.wait.short, true);
         });
 
         describe('Edit - Personal Access Tokens', () => {
@@ -108,7 +109,7 @@ describe('View - Personal Access Tokens', () => {
                     } catch (err) {
                         return false;
                     }
-                }, 15000);
+                }, constants.wait.normal);
                 tokenCreateDrawer.submit.click();
 
                 browser.waitForVisible(updatedSelector);
@@ -119,7 +120,7 @@ describe('View - Personal Access Tokens', () => {
             it('should close on close icon click', () => {
                 profile.create('token');
                 tokenCreateDrawer.cancel.click();
-                browser.waitForVisible('[data-qa-drawer-title]', 10000, true);
+                browser.waitForVisible('[data-qa-drawer-title]', constants.wait.normal, true);
             });
         });
 
@@ -141,7 +142,7 @@ describe('View - Personal Access Tokens', () => {
 
             it('should revoke on remove', () => {
                 browser.click(dialogConfirm);
-                browser.waitForVisible(updatedSelector, 10000, true);
+                browser.waitForVisible(updatedSelector, constants.wait.normal, true);
             });
         });
     });

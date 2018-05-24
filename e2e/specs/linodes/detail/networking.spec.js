@@ -32,7 +32,7 @@ describe('Linode Detail - Networking Suite', () => {
 
         it('should dismiss drawer on close', () => {
             Networking.cancel.click();
-            Networking.drawerTitle.waitForVisible(10000, true);
+            Networking.drawerTitle.waitForVisible(constants.wait.normal, true);
         });
 
         it('should display ipv6 drawer', () => {
@@ -46,7 +46,7 @@ describe('Linode Detail - Networking Suite', () => {
 
         afterAll(() => {
             Networking.cancel.click();
-            Networking.drawerTitle.waitForVisible(10000, true);
+            Networking.drawerTitle.waitForVisible(constants.wait.normal, true);
         });
     });
 
@@ -87,7 +87,7 @@ describe('Linode Detail - Networking Suite', () => {
 
         afterEach(() => {
             Networking.cancel.click();
-            Networking.drawerTitle.waitForVisible(10000, true);
+            Networking.drawerTitle.waitForVisible(constants.wait.normal, true);
         });
     });
 
@@ -118,7 +118,7 @@ describe('Linode Detail - Networking Suite', () => {
         it('should reset rdns on empty entry', () => {
             Networking.domainName.$('input').setValue([' ','\uE003']);
             Networking.submit.click();
-            Networking.drawerTitle.waitForVisible(10000, true);
+            Networking.drawerTitle.waitForVisible(constants.wait.normal, true);
         });
 
         it('should display edit rdns ipv6 drawer', () => {
