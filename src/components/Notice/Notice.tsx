@@ -37,21 +37,24 @@ const styles: StyleRulesCallback = (theme: Linode.Theme) => {
     },
     error: {
       backgroundColor: status.error,
-      border: `1px solid ${status.errorDark}`,
+      borderLeft: `5px solid ${status.errorDark}`,
+      '& p': {
+        color: status.errorDark,
+      },
     },
     errorList: {
       borderLeft: `5px solid ${status.errorDark}`,
     },
     warning: {
       backgroundColor: status.warning,
-      border: `1px solid ${status.warningDark}`,
+      borderLeft: `5px solid ${status.warningDark}`,
     },
     warningList: {
       borderLeft: `5px solid ${status.warningDark}`,
     },
     success: {
       backgroundColor: status.success,
-      border: `1px solid ${status.successDark}`,
+      border: `5px solid ${status.successDark}`,
     },
     successList: {
       borderLeft: `5px solid ${status.successDark}`,
