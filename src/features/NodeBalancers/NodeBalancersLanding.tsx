@@ -1,15 +1,9 @@
 import * as React from 'react';
 import { compose } from 'ramda';
 import * as Promise from 'bluebird';
-import { Link } from 'react-router-dom';
+import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-  Typography,
-} from 'material-ui';
+import { withStyles, StyleRulesCallback, Theme, WithStyles, Typography } from 'material-ui';
 import Paper from 'material-ui/Paper';
 import TableBody from 'material-ui/Table/TableBody';
 import TableCell from 'material-ui/Table/TableCell';
@@ -85,6 +79,7 @@ interface State {
 
 type CombinedProps = Props
   & WithStyles<ClassNames>
+  & RouteComponentProps<{}>
   & SetDocsProps
   & PreloadedProps;
 
@@ -134,6 +129,7 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
   render() {
     const {
       classes,
+      history,
       nodeBalancers: {
         error: nodeBalancerError,
         response: nodeBalancers,
@@ -153,7 +149,7 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
         title="Add a NodeBalancer"
         copy="Adding a NodeBalancer is easy. Click below to add a NodeBalancer."
         buttonProps={{
-          onClick: () => null,
+          onClick: () => history.push('/nodebalancers/create'),
           children: 'Add a NodeBalancer',
         }}
       />;
@@ -229,6 +225,7 @@ const styled = withStyles(styles, { withTheme: true });
 export const enhanced = compose(
   styled,
   preloaded,
+  withRouter,
   SectionErrorBoundary,
   setDocs(NodeBalancersLanding.docs),
 );
