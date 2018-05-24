@@ -2,12 +2,12 @@ import * as React from 'react';
 import { withRouter, Route, Switch, RouteComponentProps } from 'react-router-dom';
 import DefaultLoader from 'src/components/DefaultLoader';
 
-const NodeBalancersLanding = DefaultLoader({
-  loader: () => import('./NodeBalancersLanding'),
-});
-
 const NodeBalancerDetail = DefaultLoader({
   loader: () => import('./NodeBalancerDetail'),
+});
+
+const NodeBalancersLanding = DefaultLoader({
+  loader: () => import('./NodeBalancersLanding'),
 });
 
 const NodeBalancerCreate = DefaultLoader({
@@ -22,9 +22,9 @@ class NodeBalancers extends React.Component<Props> {
 
     return (
       <Switch>
-        <Route component={NodeBalancerDetail} path={`${path}/:nodeBalancerId`} />
         <Route component={NodeBalancersLanding} path={path} exact />
         <Route component={NodeBalancerCreate} path={`${path}/create`} exact />
+        <Route component={NodeBalancerDetail} path={`${path}/:nodeBalancerId`} />
       </Switch>
     );
   }
