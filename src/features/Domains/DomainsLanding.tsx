@@ -215,17 +215,21 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Domain</TableCell>
-                <TableCell>Type</TableCell>
+                <TableCell data-qa-domain-name-header>Domain</TableCell>
+                <TableCell data-qa-domain-type-header>Type</TableCell>
                 <TableCell>Status</TableCell>
                 <TableCell></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {domains.map(domain =>
-                <TableRow key={domain.id}>
-                  <TableCell><Link to={`/domains/${domain.id}`}>{domain.domain}</Link></TableCell>
-                  <TableCell>{domain.type}</TableCell>
+                <TableRow key={domain.id} data-qa-domain-cell={domain.id}>
+                  <TableCell data-qa-domain-label>
+                    <Link to={`/domains/${domain.id}`}>
+                      {domain.domain}
+                    </Link>
+                  </TableCell>
+                  <TableCell data-qa-domain-type>{domain.type}</TableCell>
                   <TableCell>{domain.status}</TableCell>
                   <TableCell>
                     <ActionMenu
@@ -257,6 +261,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
                 color="secondary"
                 className="destructive"
                 onClick={this.removeDomain}
+                data-qa-submit
               >
                 Confirm
               </Button>
@@ -265,6 +270,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
                 variant="raised"
                 color="secondary"
                 className="cancel"
+                data-qa-cancel
               >
                 Cancel
               </Button>

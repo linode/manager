@@ -1,8 +1,8 @@
 const { constants } = require('../../../constants');
 
 import { createGenericLinode, deleteLinode } from '../../../utils/common';
-import LinodeDetail from '../../../pageobjects/linode-detail.page';
-import Resize from '../../../pageobjects/linode-detail-resize.page';
+import LinodeDetail from '../../../pageobjects/linode-detail/linode-detail.page';
+import Resize from '../../../pageobjects/linode-detail/linode-detail-resize.page';
 
 describe('Linode Detail - Resize Suite', () => {
     const linodeName = `Test-${new Date().getTime()}`;

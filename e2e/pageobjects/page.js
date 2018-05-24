@@ -1,5 +1,8 @@
 export default class Page {
+    get dialogTitle() { return $('[data-qa-dialog-title]'); }
     get sidebarTitle() { return $('[data-qa-sidebar-title]'); }
+    get drawerTitle() { return $('[data-qa-drawer-title]'); }
+    get drawerClose() { return $('[data-qa-close-drawer]'); }
     get docs() { return $$('[data-qa-doc]'); }
     get toast() { return $('[data-qa-toast]'); }
     get toastMsg() { return $('[data-qa-toast-message]'); }
@@ -12,6 +15,9 @@ export default class Page {
     get addNodeBalancerMenu() { return $('[data-qa-add-new-menu="NodeBalancer"]'); }
     get notice() { return $('[data-qa-notice]'); }
     get notices() { return $$('[data-qa-notice]'); }
+    get progressBar() { return $('[data-qa-circle-progress]'); }
+    get actionMenu() { return $('[data-qa-action-menu]'); }
+    get actionMenuItem() { return $('[data-qa-action-menu-item]'); }
 
     constructor() {
         this.pageTitle = 'Base page';
@@ -69,5 +75,15 @@ export default class Page {
             }
             return true;
         }, 10000);
+    }
+
+    selectActionMenuItem(tableCell, item) {
+        tableCell.$(this.actionMenu.selector).click();
+        browser.jsClick(`[data-qa-action-menu-item="${item}"]`);
+    }
+
+    closeDrawer() {
+        this.drawerClose.click();
+        this.drawerTitle.waitForVisible(10000, true);
     }
 }
