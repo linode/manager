@@ -155,6 +155,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
             </IconButton>
             <EditableText
               variant="headline"
+              isEditing={false}
               text={nodeBalancer.label}
               onEdit={this.updateLabel}
               data-qa-label

@@ -142,7 +142,7 @@ class EditableText extends React.Component<FinalProps, State> {
   }
 
   finishEditing = (text: string) => {
-    if (text === this.props.text) {
+    if (text === this.props.text && !this.props.errorText) {
       this.setState({ editing: false });
     } else {
       this.props.onEdit(text);

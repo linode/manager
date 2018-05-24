@@ -276,6 +276,10 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     }
   }
 
+// @TODO add support for multiple error messages
+// (Currently, including multiple error strings
+// breaks the layout)
+
   updateLabel = (label: string) => {
     const { linode } = this.state;
     const { ...labelInput } = this.state.labelInput;
@@ -288,7 +292,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       .catch((err) => {
         const errors: Linode.ApiFieldError[] = pathOr([], ['response', 'data', 'errors'], err);
         const errorStrings: string[] = errors.map(e => e.reason);
-        labelInput.inputErrors = errorStrings.join(', ');
+        labelInput.inputErrors = errorStrings[0];
         labelInput.newLabel  = label;
         this.setState({ linode, labelInput });
       });
