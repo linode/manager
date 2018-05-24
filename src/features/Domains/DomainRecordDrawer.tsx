@@ -532,7 +532,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         : isCreating
           ? this.onRecordCreate
           : this.onRecordEdit,
-      children: isCreating ? 'Add' : 'Edit',
+      children: 'Save',
     };
 
     const otherErrors = [
@@ -570,8 +570,8 @@ const modeMap = {
 };
 
 const typeMap = {
-  master: 'Master',
-  slave: 'Slave',
+  master: 'SOA',
+  slave: 'SOA',
   A: 'A',
   AAAA: 'AAAA',
   CAA: 'CAA',
