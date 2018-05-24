@@ -144,7 +144,6 @@ class TablesPanel extends React.Component<CombinedProps, State> {
   render() {
     const { classes } = this.props;
     const { stats } = this.state;
-    console.log(stats);
     return (
       <React.Fragment>
         <Typography variant="title">Graphs</Typography>
