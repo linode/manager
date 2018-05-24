@@ -1,9 +1,7 @@
 import * as React from 'react';
-// import * as moment from 'moment';
 import {
   withStyles,
   StyleRulesCallback,
-  // Theme,
   WithStyles,
 } from 'material-ui';
 import Typography from 'material-ui/Typography';
@@ -112,8 +110,6 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 const statsFetchInterval = 30000;
 
-// looking at LinodeSummary as a point of reference
-
 class TablesPanel extends React.Component<CombinedProps, State> {
   statsInterval?: number = undefined;
   mounted: boolean = false;
@@ -148,43 +144,64 @@ class TablesPanel extends React.Component<CombinedProps, State> {
   render() {
     const { classes } = this.props;
     const { stats } = this.state;
-    stats && console.log(stats);
+    console.log(stats);
     return (
       <React.Fragment>
         <Typography variant="title">Graphs</Typography>
         {stats &&
-          <ExpansionPanel defaultExpanded heading="Traffic">
-            <React.Fragment>
-              <div className={classes.chart}>
-                <div className={classes.leftLegend}>
-                  bits/sec
+          <React.Fragment>
+            <ExpansionPanel defaultExpanded heading="Connections (5 min avg.)">
+              <React.Fragment>
+                <div className={classes.chart}>
+                  <div className={classes.leftLegend}>
+                    connections/sec
+                          </div>
+                  <LineGraph
+                    showToday={true}
+                    data={[
+                      {
+                        label: 'Connections',
+                        borderColor: '#3683dc',
+                        data: stats.data.connections,
+                      },
+                    ]}
+                  />
+                </div>
+              </React.Fragment>
+            </ExpansionPanel>
+            <ExpansionPanel defaultExpanded heading="Traffic (5 min avg.)">
+              <React.Fragment>
+                <div className={classes.chart}>
+                  <div className={classes.leftLegend}>
+                    bits/sec
                   </div>
-                <LineGraph
-                  showToday={false}
-                  data={[
-                    {
-                      label: 'Traffic In',
-                      borderColor: '#3683dc',
-                      data: stats.data.traffic.in,
-                    },
-                    {
-                      label: 'Traffic Out',
-                      borderColor: '#01b159',
-                      data: stats.data.traffic.out,
-                    },
-                  ]}
-                />
-              </div>
-              <div className={classes.bottomLegend}>
-                <div className={classes.blue}>
-                  Inbound
+                  <LineGraph
+                    showToday={true}
+                    data={[
+                      {
+                        label: 'Traffic In',
+                        borderColor: '#3683dc',
+                        data: stats.data.traffic.in,
+                      },
+                      {
+                        label: 'Traffic Out',
+                        borderColor: '#01b159',
+                        data: stats.data.traffic.out,
+                      },
+                    ]}
+                  />
+                </div>
+                <div className={classes.bottomLegend}>
+                  <div className={classes.blue}>
+                    Inbound
                   </div>
-                <div className={classes.green}>
-                  Outbound
+                  <div className={classes.green}>
+                    Outbound
                   </div>
-              </div>
-            </React.Fragment>
-          </ExpansionPanel>
+                </div>
+              </React.Fragment>
+            </ExpansionPanel>
+          </React.Fragment>
         }
       </React.Fragment>
     );

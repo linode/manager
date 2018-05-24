@@ -23,6 +23,7 @@ interface DataSet {
   // this data property type might not be the perfect fit, but it works for
   // the data returned from /linodes/:linodeID/stats and
   // /nodebalancers/:nodebalancer/stats
+  // the first number will be a UTC data and the second will be the amount per second
   data: [number, number][];
 }
 
