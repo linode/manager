@@ -77,7 +77,7 @@ describe('List Domains Suite', () => {
     });
 
     it('should remove domain', () => {
-        ListDomains.drawerTitle.waitForExist(10000, true);
+        ListDomains.drawerTitle.waitForExist(constants.wait.normal, true);
         ListDomains.selectActionMenuItem($(domainElement), 'Remove');
         ListDomains.remove($(domainElement), initialDomain);
     });
