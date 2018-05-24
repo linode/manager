@@ -15,10 +15,18 @@ import { formatRegion } from 'src/features/linodes/presentation';
 
 import { convertMegabytesTo } from 'src/utilities/convertMegabytesTo';
 
-type ClassNames = 'root';
+type ClassNames = 'root'
+| 'title';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {},
+  root: {
+    padding: theme.spacing.unit * 3,
+    paddingBottom: 20,
+    marginTop: theme.spacing.unit * 2,
+  },
+  title: {
+    marginBottom: theme.spacing.unit * 2,
+  },
 });
 
 interface Props {
@@ -28,26 +36,36 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const SummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
-  const { nodeBalancer } = props;
+  const { nodeBalancer, classes } = props;
   return (
-    <Paper>
+    <Paper className={classes.root}>
       <Grid container>
         <Grid item xs={12}>
-          <Typography variant="headline">Summary</Typography>
+          <Typography
+            variant="headline"
+            className={classes.title}
+            data-qa-title
+          >
+            Summary
+          </Typography>
         </Grid>
         <Grid item xs={6}>
-          <Typography variant="caption">
+          <Typography
+            variant="caption"
+          >
             <strong>Host Name:</strong> {nodeBalancer.hostname}
           </Typography>
         </Grid>
         <Grid item xs={6}>
           <Typography variant="caption">
-            <strong>Ports:</strong> {nodeBalancer.ports.map((port, index, ports) => {
-              // we want a comma after the port number as long as the ports array
-              // has multiple values and the current index isn't the last
-              // element in the array
-              return (ports.length > 1 && index + 1 !== ports.length) ? `${port}, ` : port;
-            })}
+            <strong>
+              Ports: </strong> {nodeBalancer.ports.length === 0 && 'None'}
+              {nodeBalancer.ports.map((port, index, ports) => {
+                // we want a comma after the port number as long as the ports array
+                // has multiple values and the current index isn't the last
+                // element in the array
+                return (ports.length > 1 && index + 1 !== ports.length) ? `${port}, ` : port;
+              })}
           </Typography>
         </Grid>
         <Grid item xs={3}>
