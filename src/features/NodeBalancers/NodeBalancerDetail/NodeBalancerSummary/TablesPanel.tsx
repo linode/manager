@@ -1,21 +1,104 @@
 import * as React from 'react';
+// import * as moment from 'moment';
 import {
   withStyles,
   StyleRulesCallback,
-  Theme,
+  // Theme,
   WithStyles,
 } from 'material-ui';
 import Typography from 'material-ui/Typography';
 
+import LineGraph from 'src/components/LineGraph';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import { getNodeBalancerStats } from 'src/services/nodebalancers';
 
+type ClassNames = 'chart'
+  | 'leftLegend'
+  | 'bottomLegend'
+  | 'graphTitle'
+  | 'graphControls'
+  | 'blue'
+  | 'green'
+  | 'red'
+  | 'yellow';
 
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {},
-});
+const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
+  return {
+    chart: {
+      position: 'relative',
+      width: 'calc(100vw - 80px)',
+      paddingLeft: theme.spacing.unit * 4,
+      [theme.breakpoints.up('md')]: {
+        width: 'calc(100vw - 310px)',
+      },
+      [theme.breakpoints.up('xl')]: {
+        width: 'calc(100vw - 370px)',
+      },
+    },
+    leftLegend: {
+      position: 'absolute',
+      left: -8,
+      bottom: 36,
+      transform: 'rotate(-90deg)',
+      color: '#777',
+      fontSize: 14,
+    },
+    bottomLegend: {
+      margin: `${theme.spacing.unit * 2}px ${theme.spacing.unit}px ${theme.spacing.unit}px`,
+      display: 'flex',
+      flexWrap: 'wrap',
+      color: '#777',
+      fontSize: 14,
+      [theme.breakpoints.down('md')]: {
+        flexDirection: 'column',
+        '& > div': {
+          marginBottom: theme.spacing.unit * 2,
+        },
+      },
+      '& > div': {
+        display: 'flex',
+        marginRight: theme.spacing.unit * 5,
+        '&:before': {
+          content: '""',
+          display: 'block',
+          width: 20,
+          height: 20,
+          marginRight: theme.spacing.unit,
+        },
+      },
+    },
+    graphTitle: {
+      position: 'relative',
+      top: 6,
+      marginRight: theme.spacing.unit * 2,
+    },
+    graphControls: {
+      marginTop: theme.spacing.unit * 2,
+      display: 'flex',
+      alignItems: 'center',
+    },
+    blue: {
+      '&:before': {
+        backgroundColor: theme.palette.primary.main,
+      },
+    },
+    green: {
+      '&:before': {
+        backgroundColor: theme.color.green,
+      },
+    },
+    red: {
+      '&:before': {
+        backgroundColor: theme.color.red,
+      },
+    },
+    yellow: {
+      '&:before': {
+        backgroundColor: theme.color.yellow,
+      },
+    },
+  };
+};
 
 interface Props {
   nodeBalancer: Linode.ExtendedNodeBalancer;
@@ -27,67 +110,7 @@ interface State {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-// const chartOptions: any = {
-//   maintainAspectRatio: false,
-//   animation: {
-//     duration: 0,
-//   },
-//   legend: {
-//     display: false,
-//   },
-//   scales: {
-//     yAxes: [{
-//       gridLines: {
-//         borderDash: [3, 6],
-//         zeroLineWidth: 1,
-//         zeroLineBorderDashOffset: 2,
-//       },
-//       ticks: {
-//         beginAtZero: true,
-//         callback(value: number, index: number) {
-//           if (value >= 1000000) {
-//             return (value / 1000000) + 'M';
-//           }
-//           if (value >= 1000) {
-//             return (value / 1000) + 'K';
-//           }
-//           return value;
-//         },
-//       },
-//     }],
-//     xAxes: [{
-//       type: 'time',
-//       gridLines: {
-//         display: false,
-//       },
-//       time: {
-//         displayFormats: {
-//           hour: 'HH:00',
-//           minute: 'HH:00',
-//         },
-//       },
-//     }],
-//   },
-//   tooltips: {
-//     cornerRadius: 0,
-//     backgroundColor: '#fbfbfb',
-//     bodyFontColor: '#333',
-//     displayColors: false,
-//     titleFontColor: '#666',
-//     xPadding: 16,
-//     yPadding: 10,
-//     borderWidth: .5,
-//     borderColor: '#999',
-//     caretPadding: 10,
-//     position: 'nearest',
-//   },
-// };
-
-// const statToColor = {
-//   connections: '#428ade',
-//   in: '#3683dc',
-//   out: '#01b159',
-// };
+const statsFetchInterval = 30000;
 
 // looking at LinodeSummary as a point of reference
 
@@ -104,7 +127,6 @@ class TablesPanel extends React.Component<CombinedProps, State> {
     getNodeBalancerStats(nodeBalancer.id)
       .then((response: Linode.NodeBalancerStats) => {
         if (!this.mounted) { return; }
-        console.log(response);
         this.setState({ stats: response });
       })
       .catch((errorResponse) => {
@@ -115,23 +137,55 @@ class TablesPanel extends React.Component<CombinedProps, State> {
   componentDidMount() {
     this.mounted = true;
     this.getStats();
-    // this.statsInterval = window.setInterval(() => this.getStats(), statsFetchInterval);
+    this.statsInterval = window.setInterval(() => this.getStats(), statsFetchInterval);
   }
 
   componentWillUnmount() {
     this.mounted = false;
-    // window.clearInterval(this.statsInterval as number);
+    window.clearInterval(this.statsInterval as number);
   }
 
   render() {
-    console.log(this.state.stats);
+    const { classes } = this.props;
+    const { stats } = this.state;
+    stats && console.log(stats);
     return (
       <React.Fragment>
         <Typography variant="title">Graphs</Typography>
-        <ExpansionPanel heading="Connections">
-        </ExpansionPanel>
-        <ExpansionPanel heading="Traffic">
-        </ExpansionPanel>
+        {stats &&
+          <ExpansionPanel defaultExpanded heading="Traffic">
+            <React.Fragment>
+              <div className={classes.chart}>
+                <div className={classes.leftLegend}>
+                  bits/sec
+                  </div>
+                <LineGraph
+                  showToday={false}
+                  data={[
+                    {
+                      label: 'Traffic In',
+                      borderColor: '#3683dc',
+                      data: stats.data.traffic.in,
+                    },
+                    {
+                      label: 'Traffic Out',
+                      borderColor: '#01b159',
+                      data: stats.data.traffic.out,
+                    },
+                  ]}
+                />
+              </div>
+              <div className={classes.bottomLegend}>
+                <div className={classes.blue}>
+                  Inbound
+                  </div>
+                <div className={classes.green}>
+                  Outbound
+                  </div>
+              </div>
+            </React.Fragment>
+          </ExpansionPanel>
+        }
       </React.Fragment>
     );
   }

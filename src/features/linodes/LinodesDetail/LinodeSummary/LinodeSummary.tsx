@@ -308,6 +308,8 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
       return acc;
     }, []);
 
+    console.log(timeData);
+
     return {
       label: statToLabel[stat],
       borderColor: statToColor[stat],
