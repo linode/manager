@@ -7,7 +7,6 @@ import * as moment from 'moment';
 import Menu from 'material-ui/Menu';
 
 import { events$, init } from 'src/events';
-import notifications$ from 'src/notifications';
 import { markEventsSeen } from 'src/services/account';
 import UserNotificationButton from './UserNotificationButton';
 import UserNotificationList from './UserNotificationList';
@@ -41,7 +40,6 @@ interface State {
   anchorEl?: HTMLElement;
   events: Linode.Event[];
   hasNew?: boolean;
-  notifications: Linode.Notification[];
 }
 
 type CombinedProps = {} & WithStyles<ClassNames>;
@@ -68,35 +66,25 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     this.mounted = true;
-    this.subscription = Observable
-      .combineLatest(
-        notifications$,
-        events$
-          /** Filter the fuax event used to kick off the progress bars. */
-          .filter((event: Linode.Event) => event.id !== 1)
+    this.subscription = events$
+      /** Filter the fuax event used to kick off the progress bars. */
+      .filter((event: Linode.Event) => event.id !== 1)
 
-          /** Create a map of the Events using Event.ID as the key. */
-          .scan((events: EventsMap, event: Linode.Event) =>
-            assoc(String(event.id), event, events), {}),
-    )
+      /** Create a map of the Events using Event.ID as the key. */
+      .scan((events: EventsMap, event: Linode.Event) =>
+        assoc(String(event.id), event, events), {})
+
       /** Wait for the events to settle before calling setState. */
       .debounce(() => Observable.interval(250))
 
       /** Notifications are fine, but the events need to be extracts and sorted. */
-      .map(([notifications, events]) => {
-        return [
-          notifications,
-          extractAndSortByCreated(events),
-        ];
-      })
+      .map(extractAndSortByCreated)
       .subscribe(
-        ([notifications, events]: [Linode.Notification[], Linode.Event[]]) => {
+        (events: Linode.Event[]) => {
           if (!this.mounted) { return; }
-
           this.setState({
-            hasNew: hasUnseenEvent(events),
             events,
-            notifications,
+            hasNew: hasUnseenEvent(events),
           });
         },
         () => null,

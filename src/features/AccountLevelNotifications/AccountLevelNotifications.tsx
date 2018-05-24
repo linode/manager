@@ -5,9 +5,7 @@ import {
   contains,
   filter,
   pathOr,
-  prop,
   propSatisfies,
-  uniqBy,
 } from 'ramda';
 
 import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
@@ -24,18 +22,19 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     marginBottom: theme.spacing.unit,
     justifyContent: 'center',
     padding: theme.spacing.unit,
-    textAlign: 'center',
     '&:first-child': {
       marginTop: theme.spacing.unit,
     },
     '& p': {
-      fontSize: '1.1rem',
       color: '#333',
     },
   },
+  list: {
+
+  },
 });
 
-interface Props { }
+interface Props {}
 
 interface State {
   notifications?: Linode.Notification[];
@@ -44,16 +43,14 @@ interface State {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const filterNotifications: (v: Linode.Notification[]) => Linode.Notification[] =
-  compose<Linode.Notification[], Linode.Notification[], Linode.Notification[]>(
-    uniqBy(prop('type')),
+  compose<Linode.Notification[], Linode.Notification[]>(
     filter<Linode.Notification>(
       propSatisfies(v => contains(v, AccountLevelNotifications.displayedEvents), 'type'),
     ),
   );
 
 class AccountLevelNotifications extends React.Component<CombinedProps, State> {
-  state: State = {
-  };
+  state: State = {};
 
   subscription: Subscription;
 
@@ -86,9 +83,10 @@ class AccountLevelNotifications extends React.Component<CombinedProps, State> {
       return React.createElement(Notice, {
         key: n.type,
         html: n.message,
-        className: classes.root,
+        className: `${classes.root} ${'notification'}`,
         [level]: true,
         children: undefined,
+        notificationList: true,
       });
     });
   }
