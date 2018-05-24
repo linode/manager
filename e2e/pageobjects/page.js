@@ -98,4 +98,14 @@ export default class Page {
         this.drawerClose.click();
         this.drawerTitle.waitForVisible(10000, true);
     }
+
+    selectActionMenuItem(tableCell, item) {
+        tableCell.$(this.actionMenu.selector).click();
+        browser.jsClick(`[data-qa-action-menu-item="${item}"]`);
+    }
+
+    closeDrawer() {
+        this.drawerClose.click();
+        this.drawerTitle.waitForVisible(10000, true);
+    }
 }
