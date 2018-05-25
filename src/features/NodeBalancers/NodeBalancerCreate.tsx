@@ -18,6 +18,7 @@ import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPa
 import ClientConnectionThrottlePanel from './ClientConnectionThrottlePanel';
 import defaultNumeric from 'src/utilities/defaultNumeric';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import Notice from 'src/components/Notice';
 
 type Styles =
   'root'
@@ -105,10 +106,11 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
         const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'], errorResponse);
 
         if (errors) {
-          return this.setState({ errors });
+          return this.setState({ errors, submitting: false });
         }
 
         return this.setState({
+          submitting: false,
           errors: [
             { field: 'none', reason: `An unexpected error has occured..` }],
         });
@@ -119,6 +121,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     const { classes, regions } = this.props;
     const { fields } = this.state;
     const hasErrorFor = getAPIErrorFor(errorResources, this.state.errors);
+    const generalError = hasErrorFor('none');
 
     return (
       <StickyContainer>
@@ -127,6 +130,9 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
             <Typography variant="headline">
               Create a NodeBalancer
             </Typography>
+
+            { generalError && <Notice error>{generalError}</Notice> }
+
             <LabelAndTagsPanel
               labelFieldProps={{
                 label: 'NodeBalancer Label',
