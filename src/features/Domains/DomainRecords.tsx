@@ -230,14 +230,17 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         },
         {
           title: '',
-          render: (d: Linode.Domain) =>
-            <ActionMenu
-              onEdit={() => {
-                d.type === 'master'
-                  ? this.openForEditMasterDomain(d)
-                  : this.openForEditSlaveDomain(d);
-              }}
-            />,
+          render: (d: Linode.Domain) => {
+            return d.type === 'master'
+              ? <ActionMenu
+                onEdit={() => {
+                  d.type === 'master'
+                    ? this.openForEditMasterDomain(d)
+                    : this.openForEditSlaveDomain(d);
+                }}
+              />
+              : <React.Fragment />;
+          },
         },
       ],
     },

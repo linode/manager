@@ -18,6 +18,7 @@ import { withStyles, WithStyles, Theme, StyleRules } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
 
 import Button from 'src/components/Button';
+import InputAdornment from 'material-ui/Input/InputAdornment';
 import { createNodeBalancer } from 'src/services/nodebalancers';
 import { dcDisplayNames } from 'src/constants';
 import Grid from 'src/components/Grid';
@@ -29,6 +30,7 @@ import ClientConnectionThrottlePanel from './ClientConnectionThrottlePanel';
 import defaultNumeric from 'src/utilities/defaultNumeric';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import NodeBalancerConfigPanel from './NodeBalancerConfigPanel';
+import Notice from 'src/components/Notice';
 
 type Styles =
   'root'
@@ -99,6 +101,7 @@ const errorResources = {
 
 class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   static defaultFieldsStates = {};
+
   static createNewNodeBalancerConfig = (): NodeBalancerConfigFields => ({
     algorithm: 'roundrobin',
     check_attempts: 2,
@@ -124,7 +127,6 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     ],
   };
 
-  mounted: boolean = false;
 
   addNodeBalancerConfig = () => this.setState({
     nodeBalancerConfigs: [
@@ -160,7 +162,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
         const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'], errorResponse);
 
         if (errors) {
-          return this.setState({ errors });
+          return this.setState({ errors, submitting: false });
         }
 
         return this.setState({
@@ -174,6 +176,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     const { classes, regions } = this.props;
     const { nodeBalancerFields } = this.state;
     const hasErrorFor = getAPIErrorFor(errorResources, this.state.errors);
+    const generalError = hasErrorFor('none');
 
     return (
       <StickyContainer>
@@ -182,6 +185,9 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
             <Typography variant="headline">
               Create a NodeBalancer
             </Typography>
+
+            { generalError && <Notice error>{generalError}</Notice> }
+
             <LabelAndTagsPanel
               labelFieldProps={{
                 label: 'NodeBalancer Label',
@@ -210,6 +216,9 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               textFieldProps={{
                 errorText: hasErrorFor('client_conn_throttle'),
                 value: defaultTo(0, nodeBalancerFields.clientConnThrottle),
+                InputProps: {
+                  endAdornment: <InputAdornment position="end">/ second</InputAdornment>,
+                },
                 onChange: e => this.setState({
                   nodeBalancerFields: {
                     ...nodeBalancerFields,
@@ -264,6 +273,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                       onDeploy={() => this.createNodeBalancer()}
                       calculatedPrice={20}
                       displaySections={displaySections && [displaySections]}
+                      disabled={this.state.submitting}
                     />
                   );
                 }
@@ -298,5 +308,3 @@ export default compose(
   styled,
   withRouter,
 )(NodeBalancerCreate);
-
-// const state => idx => prop =>
