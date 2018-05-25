@@ -6,6 +6,7 @@ import { StickyContainer, Sticky, StickyProps } from 'react-sticky';
 
 import { withStyles, WithStyles, Theme, StyleRules } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
+import InputAdornment from 'material-ui/Input/InputAdornment';
 
 import { createNodeBalancer } from 'src/services/nodebalancers';
 import { dcDisplayNames } from 'src/constants';
@@ -152,6 +153,9 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
             />
             <ClientConnectionThrottlePanel
               textFieldProps={{
+                InputProps: {
+                  endAdornment: <InputAdornment position="end">/ second</InputAdornment>,
+                },
                 errorText: hasErrorFor('client_conn_throttle'),
                 value: defaultTo(0, fields.clientConnThrottle),
                 onChange: e => this.setState({
