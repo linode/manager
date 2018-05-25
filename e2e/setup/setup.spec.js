@@ -19,7 +19,7 @@ describe('Setup Tests Suite', () => {
         
         browser.waitUntil(function() {
             browser.refresh();
-            browser.waitForVisible('[data-qa-add-new-menu-button]');
+            browser.waitForVisible('[data-qa-add-new-menu-button]', 15000);
             browser.waitForVisible('[data-qa-circle-progress]', 15000, true);
             
             if (browser.isVisible('[data-qa-placeholder-title]')) {
