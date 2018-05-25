@@ -88,6 +88,11 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     flex: 1,
     maxWidth: '100%',
     position: 'relative',
+    '&.mlMain': {
+      [theme.breakpoints.up('lg')]: {
+        maxWidth: '78.8%',
+      },
+    },
   },
 });
 
@@ -192,6 +197,7 @@ export class App extends React.Component<CombinedProps, State> {
   render() {
     const { menuOpen } = this.state;
     const { classes, longLivedLoaded, documentation, toggleTheme } = this.props;
+    const hasDoc = documentation.length > 0;
 
     return (
       <React.Fragment>
@@ -204,7 +210,7 @@ export class App extends React.Component<CombinedProps, State> {
                 <TopMenu toggleSideMenu={this.toggleMenu} />
                 <div className={classes.wrapper}>
                   <Grid container spacing={0} className={classes.grid}>
-                    <Grid item className={classes.switchWrapper}>
+                    <Grid item className={`${classes.switchWrapper} ${hasDoc ? 'mlMain' : ''}`}>
                       <Switch>
                         <Route exact path="/dashboard" render={() =>
                           <Placeholder title="Dashboard" />} />

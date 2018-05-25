@@ -24,14 +24,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
   return {
     chart: {
       position: 'relative',
-      width: 'calc(100vw - 80px)',
+      width: '100%',
       paddingLeft: theme.spacing.unit * 4,
-      [theme.breakpoints.up('md')]: {
-        width: 'calc(100vw - 310px)',
-      },
-      [theme.breakpoints.up('xl')]: {
-        width: 'calc(100vw - 370px)',
-      },
     },
     leftLegend: {
       position: 'absolute',
