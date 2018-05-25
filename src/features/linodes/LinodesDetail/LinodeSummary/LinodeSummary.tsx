@@ -83,7 +83,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
       marginRight: theme.spacing.unit * 2,
     },
     graphControls: {
-      marginTop: theme.spacing.unit * 2,
+      margin: `${theme.spacing.unit * 2}px 0`,
       display: 'flex',
       alignItems: 'center',
     },

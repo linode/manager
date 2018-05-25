@@ -71,7 +71,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
       marginRight: theme.spacing.unit * 2,
     },
     graphControls: {
-      marginTop: theme.spacing.unit * 2,
+      margin: `${theme.spacing.unit * 2}px 0`,
       display: 'flex',
       alignItems: 'center',
     },
@@ -146,15 +146,20 @@ class TablesPanel extends React.Component<CombinedProps, State> {
     const { stats } = this.state;
     return (
       <React.Fragment>
-        <Typography variant="title">Graphs</Typography>
+        <div className={classes.graphControls}>
+          <Typography variant="title" className={classes.graphTitle}>Graphs</Typography>
+        </div>
         {stats &&
           <React.Fragment>
-            <ExpansionPanel defaultExpanded heading="Connections (5 min avg.)">
+            <ExpansionPanel
+              defaultExpanded
+              heading="Connections (5 min avg.)"
+            >
               <React.Fragment>
                 <div className={classes.chart}>
-                  <div className={classes.leftLegend}>
+                  <div className={classes.leftLegend} style={{ left: -34, bottom: 60 }}>
                     connections/sec
-                          </div>
+                  </div>
                   <LineGraph
                     showToday={true}
                     data={[
@@ -168,7 +173,11 @@ class TablesPanel extends React.Component<CombinedProps, State> {
                 </div>
               </React.Fragment>
             </ExpansionPanel>
-            <ExpansionPanel defaultExpanded heading="Traffic (5 min avg.)">
+
+            <ExpansionPanel
+              defaultExpanded
+              heading="Traffic (5 min avg.)"
+            >
               <React.Fragment>
                 <div className={classes.chart}>
                   <div className={classes.leftLegend}>
