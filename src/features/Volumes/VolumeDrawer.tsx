@@ -35,7 +35,6 @@ import {
   VolumeRequestPayload,
 } from 'src/services/volumes';
 import { getLinodes, getLinodeConfigs } from 'src/services/linodes';
-import { getRegions } from 'src/services/misc';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 type ClassNames = 'root'
@@ -54,7 +53,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 });
 
 export interface Props {
-  regions: PromiseLoaderResponse<Linode.ResourcePage<Linode.Volume>>;
+  regions: Linode.Volume[];
   linodes: PromiseLoaderResponse<Linode.ResourcePage<Linode.Linode>>;
   cloneLabel?: string;
 }
@@ -288,7 +287,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
 
   render() {
     const { mode, classes } = this.props;
-    const regions = path(['response', 'data'], this.props.regions) as Linode.Region[];
+    const regions = this.props.regions;
     const linodes = path(['response', 'data'], this.props.linodes) as Linode.Linode[];
     const linodeLabel = this.props.linodeLabel || '';
 
@@ -546,10 +545,10 @@ const mapStateToProps = (state: Linode.AppState) => ({
   region: path(['volumeDrawer', 'region'], state),
   linodeLabel: path(['volumeDrawer', 'linodeLabel'], state),
   linodeId: path(['volumeDrawer', 'linodeId'], state),
+  regions: path(['resources', 'regions', 'data', 'data'], state),
 });
 
 const preloaded = PromiseLoader<CombinedProps>({
-  regions: () => getRegions(),
   linodes: () => getLinodes(),
 });
 

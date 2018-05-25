@@ -14,10 +14,14 @@ import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 
 import { parseQueryParams } from 'src/utilities/queryParams';
 import { dcDisplayNames } from 'src/constants';
-import { createLinode, allocatePrivateIP, getLinodes,
-   cloneLinode, getLinodeBackups } from 'src/services/linodes';
+import {
+  createLinode,
+  allocatePrivateIP,
+  getLinodes,
+  cloneLinode,
+  getLinodeBackups,
+} from 'src/services/linodes';
 import { getImages } from 'src/services/images';
-import { getRegions } from 'src/services/misc';
 
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -30,21 +34,21 @@ import Placeholder from 'src/components/Placeholder';
 import SelectLinodePanel, { ExtendedLinode } from './SelectLinodePanel';
 import SelectImagePanel from './SelectImagePanel';
 import SelectBackupPanel from './SelectBackupPanel';
-import SelectRegionPanel, { ExtendedRegion } from './SelectRegionPanel';
+import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
 import SelectPlanPanel, { ExtendedType } from './SelectPlanPanel';
-import LabelAndTagsPanel from './LabelAndTagsPanel';
+import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import PasswordPanel from './PasswordPanel';
 import AddonsPanel from './AddonsPanel';
 import { typeLabelDetails, displayType } from '../presentation';
-import CheckoutBar from './CheckoutBar';
+import CheckoutBar from 'src/components/CheckoutBar';
 import { resetEventsPolling } from 'src/events';
 
 type ChangeEvents = React.MouseEvent<HTMLElement> | React.ChangeEvent<HTMLInputElement>;
 
-type Info = { name: string, details: string } | undefined;
+type Info = { title: string, details?: string } | undefined;
 
 export type TypeInfo = {
-  name: string,
+  title: string,
   details: string,
   monthly: number,
   backupsMonthly: number | null,
@@ -69,11 +73,11 @@ interface Props {
 
 interface ConnectedProps {
   types: ExtendedType[];
+  regions: ExtendedRegion[];
 }
 
 interface PreloadedProps {
   images: { response: Linode.Image[] };
-  regions: { response: ExtendedRegion[] };
   linodes: { response: Linode.LinodeWithBackups[] };
 }
 
@@ -122,14 +126,6 @@ const preloaded = PromiseLoader<Props>({
 
   images: () => getImages()
     .then(response => response.data || []),
-
-  regions: () => getRegions()
-    .then((response) => {
-      return response.data.map((region: Linode.Region) => ({
-        ...region,
-        display: dcDisplayNames[region.id],
-      })) || [];
-    }),
 });
 
 const errorResources = {
@@ -208,6 +204,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       selectedTypeID: null,
       privateIP: false,
       errors: undefined,
+      label: '',
     });
     if (value === this.backupTabIndex) {
       this.getLinodesWithBackups(this.props.linodes.response);
@@ -296,9 +293,10 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
             />
             <SelectRegionPanel
               error={hasErrorFor('region')}
-              regions={this.props.regions.response}
-              handleSelection={this.updateStateFor}
+              regions={this.props.regions}
+              handleSelection={id => this.setState({ selectedRegionID: id })}
               selectedID={this.state.selectedRegionID}
+              copy="Determine the best location for your Linode."
             />
             <SelectPlanPanel
               error={hasErrorFor('type')}
@@ -307,9 +305,12 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
               selectedID={this.state.selectedTypeID}
             />
             <LabelAndTagsPanel
-              error={hasErrorFor('label')}
-              label={this.state.label}
-              handleChange={this.updateStateFor}
+              labelFieldProps={{
+                label: 'Linode Label',
+                value: this.state.label || '',
+                onChange: e => this.setState({ label: e.target.value }),
+                errorText: hasErrorFor('label'),
+              }}
             />
             <PasswordPanel
               error={hasErrorFor('root_pass')}
@@ -382,9 +383,12 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
                     selectedDiskSize={this.state.selectedDiskSize}
                   />
                   <LabelAndTagsPanel
-                    error={hasErrorFor('label')}
-                    label={this.state.label}
-                    handleChange={this.updateStateFor}
+                    labelFieldProps={{
+                      label: 'Linode Label',
+                      value: this.state.label || '',
+                      onChange: e => this.setState({ label: e.target.value }),
+                      errorText: hasErrorFor('label'),
+                    }}
                   />
                   <AddonsPanel
                     backups={this.state.backups}
@@ -423,9 +427,10 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
             <React.Fragment>
               <SelectRegionPanel
                 error={hasErrorFor('region')}
-                regions={this.props.regions.response}
-                handleSelection={this.updateStateFor}
+                regions={this.props.regions}
+                handleSelection={id => this.setState({ selectedRegionID: id })}
                 selectedID={this.state.selectedRegionID}
+                copy="Determine the best location for your Linode."
               />
               <SelectPlanPanel
                 error={hasErrorFor('type')}
@@ -435,9 +440,12 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
                 selectedDiskSize={this.state.selectedDiskSize}
               />
               <LabelAndTagsPanel
-                error={hasErrorFor('label')}
-                label={this.state.label}
-                handleChange={this.updateStateFor}
+                labelFieldProps={{
+                  label: 'Linode Label',
+                  value: this.state.label || '',
+                  onChange: e => this.setState({ label: e.target.value }),
+                  errorText: hasErrorFor('label'),
+                }}
               />
             </React.Fragment>
             <AddonsPanel
@@ -593,7 +601,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
 
   getImageInfo = (image: Linode.Image | undefined): Info => {
     return image && {
-      name: `${image.vendor || image.label}`,
+      title: `${image.vendor || image.label}`,
       details: `${image.vendor ? image.label : ''}`,
     };
   }
@@ -609,7 +617,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
 
   reshapeTypeInfo = (type: ExtendedType | undefined): TypeInfo => {
     return type && {
-      name: type.label,
+      title: type.label,
       details: `${typeLabelDetails(type.memory, type.disk, type.vcpus)}`,
       monthly: type.price.monthly,
       backupsMonthly: type.addons.backups.price.monthly,
@@ -641,7 +649,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       imageInfo = selectedBackupInfo;
     }
 
-    const regionName = this.getRegionName(this.props.regions.response.find(
+    const regionName = this.getRegionName(this.props.regions.find(
       region => region.id === selectedRegionID));
 
     const typeInfo = this.getTypeInfo();
@@ -677,18 +685,41 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
                   disableCompensation>
                   {
                     (props: StickyProps) => {
-                      const combinedProps = {
-                        ...props,
-                        label,
-                        imageInfo,
-                        typeInfo,
-                        regionName,
-                        backups,
-                        disabled: this.state.isMakingRequest,
-                        onDeploy: this.onDeploy,
-                      };
+                      const displaySections = [];
+                      if (imageInfo) {
+                        displaySections.push(imageInfo);
+                      }
+
+                      if (regionName) {
+                        displaySections.push({ title: regionName });
+                      }
+
+                      if (typeInfo) {
+                        displaySections.push(typeInfo);
+                      }
+
+                      if (backups && typeInfo && typeInfo.backupsMonthly) {
+                        displaySections.push({
+                          title: 'Backups Enabled',
+                          ...(typeInfo.backupsMonthly &&
+                            { details: `$${typeInfo.backupsMonthly.toFixed(2)} / monthly` }),
+                        });
+                      }
+
+                      let calculatedPrice = pathOr(0, ['monthly'], typeInfo);
+                      if (backups && typeInfo && typeInfo.backupsMonthly) {
+                        calculatedPrice += typeInfo.backupsMonthly;
+                      }
+
                       return (
-                        <CheckoutBar {...combinedProps} />
+                        <CheckoutBar
+                          heading={`${ label || 'Linode' } Summary`}
+                          calculatedPrice={calculatedPrice}
+                          disabled={this.state.isMakingRequest}
+                          onDeploy={this.onDeploy}
+                          displaySections={displaySections}
+                          {...props}
+                        />
                       );
                     }
                   }
@@ -714,6 +745,13 @@ const connected = connect((state: Linode.AppState) => ({
       };
     }),
     pathOr([], ['resources', 'types', 'data', 'data']),
+  )(state),
+  regions: compose(
+    map((region: Linode.Region) => ({
+      ...region,
+      display: dcDisplayNames[region.id],
+    })),
+    pathOr([], ['resources', 'regions', 'data', 'data']),
   )(state),
 }));
 

@@ -1,13 +1,16 @@
 import * as React from 'react';
-import { shallow } from 'enzyme';
+import { withRouter, StaticRouter } from 'react-router-dom';
+import { mount } from 'enzyme';
 
-import { createPromiseLoaderResponse } from 'src/utilities/testHelpers';
-
-import { NodeBalancersLanding } from './NodeBalancersLanding';
 import { setDocs, clearDocs } from 'src/store/reducers/documentation';
+import { createPromiseLoaderResponse } from 'src/utilities/testHelpers';
+import { NodeBalancersLanding as _NodeBalancersLanding } from './NodeBalancersLanding';
+import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 
 describe('NodeBalancers', () => {
-  const dummyNodeBalancers = createPromiseLoaderResponse<Linode.ExtendedNodeBalancer[]>([
+  const NodeBalancersLanding = withRouter(_NodeBalancersLanding);
+
+  const mockNodeBalancers = createPromiseLoaderResponse<Linode.ExtendedNodeBalancer[]>([
     {
       transfer: {
         total: 9.492830276489258,
@@ -48,13 +51,17 @@ describe('NodeBalancers', () => {
     },
   ]);
 
-  const component = shallow(
-    <NodeBalancersLanding
-      classes={{ root: '', title: '' }}
-      setDocs={setDocs}
-      clearDocs={clearDocs}
-      nodeBalancers={dummyNodeBalancers}
-    />,
+  const component = mount(
+    <StaticRouter context={{}}>
+      <LinodeThemeWrapper>
+        <NodeBalancersLanding
+          classes={{ root: '', title: '' }}
+          setDocs={setDocs}
+          clearDocs={clearDocs}
+          nodeBalancers={mockNodeBalancers}
+        />
+      </LinodeThemeWrapper>
+    </StaticRouter>,
   );
 
   it('should render 7 columns', () => {

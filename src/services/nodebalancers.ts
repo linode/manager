@@ -13,16 +13,15 @@ export const getNodeBalancersPage = (page: number) =>
   )
     .then(response => response.data);
 
-export const getNodeBalancers = () => {
-  return getNodeBalancersPage(1)
+export const getNodeBalancers = () =>
+  getNodeBalancersPage(1)
     .then(response => response.data);
-};
 
 export const getNodeBalancerConfigs = (id: number) =>
-Request<Page<Config>>(
-  setURL(`${API_ROOT}/nodebalancers/${id}/configs`),
-  setMethod('GET'),
-).then(response => response.data);
+  Request<Page<Config>>(
+    setURL(`${API_ROOT}/nodebalancers/${id}/configs`),
+    setMethod('GET'),
+  ).then(response => response.data);
 
 export const getNodeBalancer = (id: number) => Request<NodeBalancer>(
   setURL(`${API_ROOT}/nodebalancers/${id}`),
@@ -30,7 +29,14 @@ export const getNodeBalancer = (id: number) => Request<NodeBalancer>(
 ).then(response => response.data);
 
 export const updateNodeBalancer = (id: number, label: string) => Request<NodeBalancer>(
-    setURL(`${API_ROOT}/nodebalancers/${id}`),
-    setMethod('PUT'),
-    setData({ label }),
-  ).then(response => response.data);
+  setURL(`${API_ROOT}/nodebalancers/${id}`),
+  setMethod('PUT'),
+  setData({ label }),
+).then(response => response.data);
+
+export const createNodeBalancer = (data: any) =>
+  Request(
+    setMethod('POST'),
+    setURL(`${API_ROOT}/nodebalancers`),
+    setData(data),
+  );

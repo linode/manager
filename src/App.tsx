@@ -26,6 +26,7 @@ import AccountLevelNotifications from 'src/features/AccountLevelNotifications';
 import BetaNotification from './BetaNotification';
 import DocsSidebar from 'src/components/DocsSidebar';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
+import { getRegions } from 'src/services/misc';
 
 const LinodesRoutes = DefaultLoader({
   loader: () => import('src/features/linodes'),
@@ -123,6 +124,12 @@ export class App extends React.Component<CombinedProps, State> {
     }
 
     const promises = [
+      new Promise(() => {
+        request(['regions']);
+        return getRegions()
+          .then(({ data }) => response(['regions', 'data'], data))
+          .catch(error => response(['regions'], error));
+      }),
       new Promise(() => {
         request(['types']);
         return getLinodeTypes()
@@ -251,7 +258,8 @@ const mapStateToProps = (state: Linode.AppState) => ({
   longLivedLoaded:
     Boolean(pathOr(false, ['resources', 'types', 'data', 'data'], state))
     && Boolean(pathOr(false, ['resources', 'kernels', 'data'], state))
-    && Boolean(pathOr(false, ['resources', 'profile', 'data'], state)),
+    && Boolean(pathOr(false, ['resources', 'profile', 'data'], state))
+    && Boolean(pathOr(false, ['resources', 'regions', 'data'], state)),
   documentation: state.documentation,
 });
 
