@@ -412,6 +412,9 @@ const LinodeTheme: Linode.Theme = {
         color: '#3B85D9 !important',
         cursor: 'initial',
         opacity: 1,
+        '&:hover, &:focus': {
+          background: '#f4f4f4 !important',
+        },
       },
     },
     MuiPopover: {
