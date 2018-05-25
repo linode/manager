@@ -9,18 +9,18 @@ import DE from 'flag-icon-css/flags/4x3/de.svg';
 import { withStyles, StyleRulesCallback, WithStyles, Theme } from 'material-ui';
 
 const flags = {
-  us: () => <US width="32" height="24" viewBox="0 0 720 480"/>,
-  sg: () => <SG width="32" height="24" viewBox="0 0 640 480"/>,
+  us: () => <US width="32" height="24" viewBox="0 0 720 480" />,
+  sg: () => <SG width="32" height="24" viewBox="0 0 640 480" />,
   jp: () => <JP width="32" height="24" viewBox="0 0 640 480" style={{ backgroundColor: '#fff' }} />,
-  uk: () => <UK width="32" height="24" viewBox="0 0 640 480"/>,
-  de: () => <DE width="32" height="24" viewBox="0 0 720 480"/>,
+  uk: () => <UK width="32" height="24" viewBox="0 0 640 480" />,
+  de: () => <DE width="32" height="24" viewBox="0 0 720 480" />,
 };
 
 import Grid from 'src/components/Grid';
 
-import TabbedPanel from '../../../components/TabbedPanel';
-import { Tab } from '../../../components/TabbedPanel/TabbedPanel';
-import SelectionCard from '../../../components/SelectionCard';
+import TabbedPanel from 'src/components/TabbedPanel';
+import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
+import SelectionCard from 'src/components/SelectionCard';
 
 export interface ExtendedRegion extends Linode.Region {
   display: string;
@@ -36,9 +36,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 
 interface Props {
   regions: ExtendedRegion[];
+  copy?: string;
   error?: string;
-  handleSelection: (key: string) =>
-    (event: React.SyntheticEvent<HTMLElement>, value: string) => void;
+  handleSelection: (id: string) => void;
   selectedID: string | null;
 }
 
@@ -51,17 +51,17 @@ const getEURegions = (regions: ExtendedRegion[]) =>
 const getASRegions = (regions: ExtendedRegion[]) =>
   regions.filter(r => /(jp|sg)/.test(r.country));
 
-const renderCard = (selectedID: string|null, handleSelection: Function) =>
+const renderCard = (selectedID: string | null, handleSelection: Function) =>
   (region: ExtendedRegion, idx: number) => (
-      <SelectionCard
-        key={idx}
-        checked={region.id === String(selectedID)}
-        onClick={e => handleSelection('selectedRegionID')(e, region.id)}
-        renderIcon={() => flags[region.country]()}
-        heading={(region.country.toUpperCase())}
-        subheadings={[region.display]}
-      />
-    );
+    <SelectionCard
+      key={idx}
+      checked={region.id === String(selectedID)}
+      onClick={e => handleSelection(region.id)}
+      renderIcon={() => flags[region.country]()}
+      heading={(region.country.toUpperCase())}
+      subheadings={[region.display]}
+    />
+  );
 
 class SelectRegionPanel extends React.Component<Props & WithStyles<ClassNames>> {
 
@@ -79,7 +79,7 @@ class SelectRegionPanel extends React.Component<Props & WithStyles<ClassNames>> 
 
           return (
             <Grid container spacing={16}>
-            { na.map(renderCard(this.props.selectedID, this.props.handleSelection))}
+              {na.map(renderCard(this.props.selectedID, this.props.handleSelection))}
             </Grid>
           );
         },
@@ -92,7 +92,7 @@ class SelectRegionPanel extends React.Component<Props & WithStyles<ClassNames>> 
         render: () => {
           return (
             <Grid container spacing={16}>
-              { eu.map(renderCard(this.props.selectedID, this.props.handleSelection))}
+              {eu.map(renderCard(this.props.selectedID, this.props.handleSelection))}
             </Grid>
           );
         },
@@ -105,7 +105,7 @@ class SelectRegionPanel extends React.Component<Props & WithStyles<ClassNames>> 
         render: () => {
           return (
             <Grid container>
-              { as.map(renderCard(this.props.selectedID, this.props.handleSelection))}
+              {as.map(renderCard(this.props.selectedID, this.props.handleSelection))}
             </Grid>
           );
         },
@@ -116,12 +116,13 @@ class SelectRegionPanel extends React.Component<Props & WithStyles<ClassNames>> 
   }
 
   render() {
+    if (this.props.regions.length === 0) { return null; }
     return (
       <TabbedPanel
         rootClass={this.props.classes.root}
         error={this.props.error}
         header="Region"
-        copy="Determine the best location for your Linode."
+        copy={this.props.copy}
         tabs={this.createTabs()}
       />
     );

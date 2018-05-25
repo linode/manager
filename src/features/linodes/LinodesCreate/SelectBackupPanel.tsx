@@ -100,7 +100,7 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
     if (selectedBackup) {
       const backupInfo_ = this.getBackupInfo(selectedBackup);
       const backupInfo = {
-        name: backupInfo_.infoName,
+        title: backupInfo_.infoName,
         details: backupInfo_.subheading,
       };
       this.handleBackupInfoSelection(undefined as any, backupInfo);
@@ -129,7 +129,7 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
         checked={backup.id === Number(selectedBackupID)}
         onClick={(e) => {
           const backupInfo = {
-            name: backupInfo_.infoName,
+            title: backupInfo_.infoName,
             details: backupInfo_.subheading,
           };
           this.handleBackupSelection(e, `${backup.id}`);

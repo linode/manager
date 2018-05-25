@@ -88,6 +88,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
     {
       title: 'NodeBalancer',
       onClick: (e) => {
+        this.props.history.push('/nodebalancers/create');
         this.handleClose();
         e.preventDefault();
       },

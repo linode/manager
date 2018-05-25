@@ -5,10 +5,10 @@ import { withStyles, StyleRulesCallback, WithStyles, Theme } from 'material-ui';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 
-import TextField from '../../../components/TextField';
-import Notice from '../../../components/Notice';
+import TextField, { Props as TextFieldProps } from 'src/components/TextField';
+import Notice from 'src/components/Notice';
 
-type ClassNames = 'root' | 'inner' ;
+type ClassNames = 'root' | 'inner';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -26,30 +26,31 @@ const styled = withStyles(styles, { withTheme: true });
 
 interface Props {
   error?: string;
-  label: string | null;
-  handleChange: (key: string) =>
-    (e: React.ChangeEvent<HTMLInputElement>, label: string) => void;
+  labelFieldProps?: TextFieldProps;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class InfoPanel extends React.Component<CombinedProps> {
+
+  static defaultProps: Partial<Props> = {
+    labelFieldProps: {
+      label: 'Label',
+      placeholder: 'Enter a Label',
+    },
+  };
+
   render() {
-    const { classes, error, handleChange } = this.props;
-    const setLabel = handleChange('label');
+    const { classes, error, labelFieldProps } = this.props;
 
     return (
       <Paper className={classes.root} data-qa-label-header>
-      <div className={classes.inner}>
-        { error && <Notice text={error} error /> }
-        <Typography variant="title">Label</Typography>
-        <TextField
-          label="Linode Label"
-          placeholder="Enter a Label"
-          onChange={e => setLabel(e, e.target.value)}
-        />
-      </div>
-    </Paper>
+        <div className={classes.inner}>
+          {error && <Notice text={error} error />}
+          <Typography variant="title">Label</Typography>
+          <TextField {...labelFieldProps} />
+        </div>
+      </Paper>
     );
   }
 }
