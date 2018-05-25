@@ -1,5 +1,10 @@
 import * as Axios from 'axios';
-import { compose, isEmpty, lensPath, not, set, when } from 'ramda';
+import { compose, isEmpty, lensPath, not, omit, set, when } from 'ramda';
+import { validate, Schema } from 'joi';
+
+interface RequestConfig extends Axios.AxiosRequestConfig {
+  validationErrors?: { field?: string, response: string }[];
+}
 
 const L = {
   url: lensPath(['url']),
@@ -7,6 +12,7 @@ const L = {
   params: lensPath(['params']),
   data: lensPath(['data']),
   xFilter: lensPath(['headers', 'X-Filter']),
+  validationErrors: lensPath(['validationErrors']),
 };
 
 const isNotEmpty = compose(not, isEmpty);
@@ -32,8 +38,24 @@ export const setXFilter = (xFilter: any) => when(
   set(L.xFilter, JSON.stringify(xFilter)),
 );
 
+export const validateRequestData = (data: any, schema: Schema) =>
+  (config: RequestConfig) => {
+    const { error } = validate(data, schema);
+
+    return error
+      ? set(L.validationErrors, error.details.map(d => d.message), config)
+      : config;
+  };
+
 /** Generator */
 export default <T>(...fns: Function[]): Axios.AxiosPromise<T> => {
   const config = fns.reverse().reduce((result, currentFn) => currentFn(result), {});
+  if (config.validationErrors) {
+    return Promise.reject({
+      config: omit(['validationErrors'], config),
+      response: { data: { errors: config.validationErrors } },
+    });
+  }
+
   return Axios.default(config);
 };
