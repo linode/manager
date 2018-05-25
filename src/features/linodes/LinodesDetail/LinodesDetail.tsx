@@ -64,7 +64,7 @@ interface State {
   linode: Linode.Linode & { recentEvent?: Linode.Event };
   labelInput: {
     newLabel: string;
-    inputErrors?: string;
+    inputErrors: string;
   };
   type?: Linode.LinodeType;
   image?: Linode.Image;
@@ -166,6 +166,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     disks: this.props.data.response.disks,
     labelInput: {
       newLabel: this.props.data.response.linode.label,
+      inputErrors: '',
     },
     configDrawer: {
       open: false,
@@ -286,7 +287,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     renameLinode(linode.id, label)
       .then(() => {
         labelInput.newLabel = label;
-        labelInput.inputErrors = undefined;
+        labelInput.inputErrors = '';
         this.setState({ labelInput });
       })
       .catch((err) => {

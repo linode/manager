@@ -110,6 +110,7 @@ interface State {
   text: string;
   savedText: string;
   editing: Boolean;
+  errors: string;
 }
 
 type PassThroughProps = Props & TextFieldProps & TypographyProps;
@@ -121,11 +122,15 @@ class EditableText extends React.Component<FinalProps, State> {
     editing: this.props.isEditing,
     savedText: this.props.text,
     text: this.props.text,
+    errors: this.props.errorText ? this.props.errorText : '',
   };
 
   componentWillReceiveProps(nextProps: Props) {
     if (nextProps.text !== this.state.text) {
       this.setState({ text: nextProps.text });
+    }
+    if (nextProps.errorText) {
+      this.setState({ errors: nextProps.errorText });
     }
     this.setState({ editing: nextProps.isEditing });
   }
@@ -150,7 +155,7 @@ class EditableText extends React.Component<FinalProps, State> {
   }
 
   cancelEditing = () => {
-    this.setState({ text: this.state.savedText });
+    this.setState({ text: this.state.savedText, errors: '' });
     this.setState({ editing: false });
   }
 
@@ -194,7 +199,7 @@ class EditableText extends React.Component<FinalProps, State> {
                     if (e.key === 'Escape' || e.key === 'Esc') { this.cancelEditing(); }
                   }}
                   value={text}
-                  errorText={errorText}
+                  errorText={this.state.errors}
                   {...rest}
                   InputProps={{ className: classes.inputRoot }}
                   inputProps={{
