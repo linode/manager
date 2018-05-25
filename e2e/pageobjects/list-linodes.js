@@ -164,7 +164,7 @@ export class ListLinodes extends Page {
     waitUntilBooted(label) {
         browser.waitForVisible('[data-qa-circle-progress]', 15000, true);
         browser.waitForVisible('[data-qa-loading="true"]', 30000, true);
-        browser.waitForExist(`[data-qa-linode="${label}"] [data-qa-status="running"]`, 45000);
+        browser.waitForExist(`[data-qa-linode="${label}"] [data-qa-status="running"]`, 60000);
     }
 
     acceptDialog(dialogTitle) {
