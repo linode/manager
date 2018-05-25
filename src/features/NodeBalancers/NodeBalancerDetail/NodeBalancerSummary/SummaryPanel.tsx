@@ -49,14 +49,14 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
             Summary
           </Typography>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
           <Typography
             variant="caption"
           >
             <strong>Host Name:</strong> {nodeBalancer.hostname}
           </Typography>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
           <Typography variant="caption">
             <strong>
               Ports: </strong> {nodeBalancer.ports.length === 0 && 'None'}
@@ -68,21 +68,21 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
               })}
           </Typography>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={12} sm={6} lg={3}>
           <Typography variant="caption">
             <strong>Node Status:</strong> {`${nodeBalancer.up} up, ${nodeBalancer.down} down`}
           </Typography>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={12} sm={6} lg={3}>
           <Typography variant="caption">
             <strong>Transferred:</strong> {convertMegabytesTo(nodeBalancer.transfer.total)}
           </Typography>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
           <IPAddress ips={[nodeBalancer.ipv4]} copyRight />
           {nodeBalancer.ipv6 && <IPAddress ips={[nodeBalancer.ipv6]} copyRight />}
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
           <Typography variant="caption">
             {formatRegion(nodeBalancer.region)}
           </Typography>
