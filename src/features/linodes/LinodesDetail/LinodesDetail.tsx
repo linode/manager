@@ -63,8 +63,8 @@ interface State {
   notifications?: Linode.Notification[];
   linode: Linode.Linode & { recentEvent?: Linode.Event };
   labelInput: {
-    newLabel: string;
-    inputErrors: string;
+    label: string;
+    errorText: string;
   };
   type?: Linode.LinodeType;
   image?: Linode.Image;
@@ -165,8 +165,8 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     configs: this.props.data.response.configs,
     disks: this.props.data.response.disks,
     labelInput: {
-      newLabel: this.props.data.response.linode.label,
-      inputErrors: '',
+      label: this.props.data.response.linode.label,
+      errorText: '',
     },
     configDrawer: {
       open: false,
@@ -284,19 +284,27 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
   updateLabel = (label: string) => {
     const { linode } = this.state;
     const { ...labelInput } = this.state.labelInput;
+    labelInput.label = label;
     renameLinode(linode.id, label)
       .then(() => {
-        labelInput.newLabel = label;
-        labelInput.inputErrors = '';
-        this.setState({ labelInput });
+        labelInput.errorText = '';
+        linode.label = label;
+        this.setState({ labelInput, linode });
       })
       .catch((err) => {
         const errors: Linode.ApiFieldError[] = pathOr([], ['response', 'data', 'errors'], err);
         const errorStrings: string[] = errors.map(e => e.reason);
-        labelInput.inputErrors = errorStrings[0];
-        labelInput.newLabel  = label;
+        labelInput.errorText = errorStrings[0];
         this.setState({ linode, labelInput });
       });
+  }
+
+  cancelUpdate = () => {
+    const { labelInput } = this.state;
+    labelInput.errorText = '';
+    labelInput.label = this.state.linode.label;
+    this.setState({ labelInput });
+    this.forceUpdate();
   }
 
   render() {
@@ -321,10 +329,10 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
           <Grid item style={{ flex: 1 }}>
             <EditableText
               variant="headline"
-              text={labelInput.newLabel}
-              isEditing={Boolean(labelInput.inputErrors)}
-              errorText={labelInput.inputErrors}
+              text={labelInput.label}
+              errorText={labelInput.errorText}
               onEdit={this.updateLabel}
+              onCancel={this.cancelUpdate}
               data-qa-label
             />
           </Grid>
