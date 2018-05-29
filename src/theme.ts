@@ -200,7 +200,7 @@ const LinodeTheme: Linode.Theme = {
     },
     MuiExpansionPanelSummary: {
       root: {
-        padding: '0 16px',
+        padding: '0 18px',
         backgroundColor: '#fbfbfb',
         justifyContent: 'flex-start',
         '& h3': {
