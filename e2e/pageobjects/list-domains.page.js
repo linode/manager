@@ -85,7 +85,10 @@ class ListDomains extends Page {
 
     editDnsRecord(domain) {
         this.selectActionMenuItem(domain, 'Edit DNS Records');
-        // wait until DNS Records tabbed panel displays
+        browser.waitUntil(function() {
+            return browser.getUrl().includes('/records');
+        }, constants.wait.normal);
+        browser.waitForVisible('[data-qa-domain-title]');
     }
 
     cloneDrawerElemsDisplay() {
