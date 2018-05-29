@@ -1,5 +1,5 @@
 import * as Axios from 'axios';
-import { validate, Schema } from 'joi';
+import * as validate from 'validate.js';
 import {
   compose,
   isEmpty,
@@ -76,17 +76,35 @@ export const setXFilter = (xFilter: any) => when(
   set(L.xFilter, JSON.stringify(xFilter)),
 );
 
-export const validateRequestData = (data: any, schema: Schema) =>
+/**
+ * Add string validator to validate.js
+ * @TODO: update validate.js when this is incorporated into the next release
+ * https://github.com/ansman/validate.js/issues/80#issuecomment-346240247
+ */
+validate.validators.string = (value: any, options: any, key: string) => {
+  if (options) {
+    if (validate.isString(value)) {
+      return null;
+    }
+    return `${key} is not a String`;
+  }
+  return null;
+};
+
+export const validateRequestData = (data: any, schema: any) =>
   (config: RequestConfig) => {
-    const { error } = validate(data, schema);
+    console.log(validate);
+    console.log(data, schema);
+    const error = validate(data, schema, { format: 'detailed' });
+
+    console.log(error);
 
     return error
-      ? set(L.validationErrors, error.details.map((detail) => {
-        const path = detail.path.join('_');
-        const type = detail.type.replace('.', '_');
+      ? set(L.validationErrors, error.map((detail: any) => {
+        console.log(detail);
         return {
-          field: path,
-          reason: getErrorReason(`${path}_${type}`),
+          field: detail.attribute,
+          reason: detail.error,
         };
       }), config)
       : config;

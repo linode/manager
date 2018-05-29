@@ -31,9 +31,11 @@ describe('services', () => {
        */
       it('should return specific error message', () => {
         const data = { label: 1234 };
-        const schema = Joi.object().keys({
-          region: Joi.string().required(),
-        });
+        const schema = {
+          region: {
+            presence: { message: 'A region is required' },
+          },
+        };
 
         return Request(
           validateRequestData(data, schema),
