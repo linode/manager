@@ -14,12 +14,16 @@ import Drawer from 'src/components/Drawer';
 import CopyableTextField from './CopyableTextField';
 
 type ClassNames = 'root'
-|  'copyField';
+| 'copySection'
+| 'copyField';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
+  copySection: {
+    marginTop: theme.spacing.unit * 2,
+  },
   copyField: {
-    margin: `${theme.spacing.unit}px 0 ${theme.spacing.unit * 2}px`,
+    marginTop: theme.spacing.unit,
   },
 });
 
@@ -42,39 +46,47 @@ const VolumeConfigDrawer: React.StatelessComponent<CombinedProps> = (props) => {
     >
       {(props.volumePath && props.volumeLabel) &&
         <React.Fragment>
-          <Typography variant="body1">
-            To get started with a new volume, you'll want to create a filesystem on it:
-          </Typography>
-          <CopyableTextField
-            className={classes.copyField}
-            value={`mkfs.ext4 "${props.volumePath}"`}
-          />
+          <div className={classes.copySection}>
+            <Typography variant="body1">
+              To get started with a new volume, you'll want to create a filesystem on it:
+            </Typography>
+            <CopyableTextField
+              className={classes.copyField}
+              value={`mkfs.ext4 "${props.volumePath}"`}
+            />
+          </div>
 
-          <Typography variant="body1">
-            Once the volume has a filesystem, you can create a mountpoint for it:
-          </Typography>
-          <CopyableTextField
-            className={classes.copyField}
-            value={`mkdir "/mnt/${props.volumeLabel}"`}
-          />
+          <div className={classes.copySection}>
+            <Typography variant="body1">
+              Once the volume has a filesystem, you can create a mountpoint for it:
+            </Typography>
+            <CopyableTextField
+              className={classes.copyField}
+              value={`mkdir "/mnt/${props.volumeLabel}"`}
+            />
+          </div>
 
-          <Typography variant="body1">
-            Then you can mount the new volume:
-          </Typography>
-          <CopyableTextField
-            className={classes.copyField}
-            value={`mount "${props.volumePath}" "/mnt/${props.volumeLabel}"`}
-          />
+          <div className={classes.copySection}>
+            <Typography variant="body1">
+              Then you can mount the new volume:
+            </Typography>
+            <CopyableTextField
+              className={classes.copyField}
+              value={`mount "${props.volumePath}" "/mnt/${props.volumeLabel}"`}
+            />
+          </div>
 
-          <Typography variant="body1">
-            If you want the volume to automatically mount every time your
-            Linode boots, you'll want to add a line like the following to
-            your /etc/fstab file:
-          </Typography>
-          <CopyableTextField
-            className={classes.copyField}
-            value={`${props.volumePath} /mnt/${props.volumeLabel}`}
-          />
+          <div className={classes.copySection}>
+            <Typography variant="body1">
+              If you want the volume to automatically mount every time your
+              Linode boots, you'll want to add a line like the following to
+              your /etc/fstab file:
+            </Typography>
+            <CopyableTextField
+              className={classes.copyField}
+              value={`${props.volumePath} /mnt/${props.volumeLabel}`}
+            />
+          </div>
 
           <ActionsPanel>
             <Button
