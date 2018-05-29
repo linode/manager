@@ -1,5 +1,3 @@
-import * as Joi from 'joi';
-
 import Request, { validateRequestData } from './index';
 
 describe('services', () => {
@@ -11,9 +9,12 @@ describe('services', () => {
        */
       it('should return generic message', () => {
         const data = { label: 1234 };
-        const schema = Joi.object().keys({
-          label: Joi.string().required(),
-        });
+        const schema = {
+          label: {
+            string: true,
+            presence: true,
+          },
+        };
 
         return Request(
           validateRequestData(data, schema),
@@ -21,7 +22,7 @@ describe('services', () => {
           .catch((response) => {
             expect(response.response.data.errors).toEqual([{
               field: 'label',
-              reason: `Please check your data and try again.`,
+              reason: 'Label is not a string',
             }]);
           });
       });
@@ -33,7 +34,7 @@ describe('services', () => {
         const data = { label: 1234 };
         const schema = {
           region: {
-            presence: { message: 'A region is required' },
+            presence: { message: 'is required' },
           },
         };
 
@@ -43,7 +44,7 @@ describe('services', () => {
           .catch((response) => {
             expect(response.response.data.errors).toEqual([{
               field: 'region',
-              reason: `A region is required.`,
+              reason: `Region is required`,
             }]);
           });
       });

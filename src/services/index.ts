@@ -4,41 +4,11 @@ import {
   compose,
   isEmpty,
   lensPath,
-  lensProp,
   not,
   omit,
-  path,
-  pathOr,
   set,
-  tap,
   when,
 } from 'ramda';
-import * as Raven from 'raven-js';
-
-const errorsMap: { [index: string]: string } = {
-  region_any_required: 'A region is required.',
-};
-
-const getErrorReason = compose(
-
-  pathOr('Please check your data and try again.', ['result']),
-
-  tap(({ key, result }) => {
-    if (result) {
-      return;
-    }
-
-    if (process.env.NODE_ENV !== 'production') {
-      return console.warn(`Unhandled validation error for ${key}.`);
-    }
-
-    Raven.captureException('Unhandled validation error', { extra: { key } });
-  }),
-
-  (obj: { key: string }) => set(lensProp('result'), path([obj.key], errorsMap), obj),
-
-  (key: string) => ({ key }),
-);
 
 interface RequestConfig extends Axios.AxiosRequestConfig {
   validationErrors?: { field?: string, response: string }[];
@@ -78,7 +48,7 @@ export const setXFilter = (xFilter: any) => when(
 
 /**
  * Add string validator to validate.js
- * @TODO: update validate.js when this is incorporated into the next release
+ * @TODO: Update validate.js when this is incorporated into the next release
  * https://github.com/ansman/validate.js/issues/80#issuecomment-346240247
  */
 validate.validators.string = (value: any, options: any, key: string) => {
@@ -86,22 +56,17 @@ validate.validators.string = (value: any, options: any, key: string) => {
     if (validate.isString(value)) {
       return null;
     }
-    return `${key} is not a String`;
+    return options.message || 'is not a string';
   }
   return null;
 };
 
 export const validateRequestData = (data: any, schema: any) =>
   (config: RequestConfig) => {
-    console.log(validate);
-    console.log(data, schema);
     const error = validate(data, schema, { format: 'detailed' });
-
-    console.log(error);
 
     return error
       ? set(L.validationErrors, error.map((detail: any) => {
-        console.log(detail);
         return {
           field: detail.attribute,
           reason: detail.error,
