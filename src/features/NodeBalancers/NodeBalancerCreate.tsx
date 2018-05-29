@@ -223,7 +223,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
         const { id } = nodeBalancer;
 
         return history.push(
-          `/nodebalancers/${id}`,
+          `/nodebalancers/${id}/summary`,
           {
             errors: nodeBalancer.configs.filter(c => c.hasOwnProperty('errors')),
           },
