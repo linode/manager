@@ -128,7 +128,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
       .subscribe((event) => {
         if (event.action === 'volume_detach'
             && event.status === 'finished') {
-          sendToast(`Volume ${event.entity && event.entity.label} finsihed detaching`);
+          sendToast(`Volume ${event.entity && event.entity.label} finished detaching`);
         }
       });
   }
@@ -327,6 +327,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           <Notice
             error
             text={generalError}
+            data-qa-notice
           />
         }
 
@@ -391,10 +392,17 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
             }}
             inputProps={{ name: 'region', id: 'region' }}
             error={Boolean(regionError)}
+            data-qa-select-region
           >
             <MenuItem key="none" value="none">Select a Region</MenuItem>,
             {regions && regions.map(region =>
-              <MenuItem key={region.id} value={region.id}>{dcDisplayNames[region.id]}</MenuItem>,
+              <MenuItem
+                key={region.id}
+                value={region.id}
+                data-qa-attach-to-region={region.id}
+              >
+                {dcDisplayNames[region.id]}
+              </MenuItem>,
             )}
           </Select>
           {regionError &&
@@ -430,6 +438,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
               }}
               inputProps={{ name: 'linode', id: 'linode' }}
               error={Boolean(linodeError)}
+              data-qa-select-linode
             >
               <MenuItem key="none" value="0">
                 {mode !== modes.CLONING
@@ -447,7 +456,13 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
                   );
                 })
                 .map(linode =>
-                  <MenuItem key={linode.id} value={`${linode.id}`}>{linode.label}</MenuItem>,
+                  <MenuItem
+                    key={linode.id}
+                    value={`${linode.id}`}
+                    data-qa-attached-linode={linode.label}
+                  >
+                    {linode.label}
+                  </MenuItem>,
               )}
               {(mode === modes.EDITING
                 || mode === modes.RESIZING) &&

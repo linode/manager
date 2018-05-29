@@ -20,7 +20,6 @@ import { request, response } from 'src/store/reducers/resources';
 import Footer from 'src/features/Footer';
 import Placeholder from 'src/components/Placeholder';
 
-import NodeBalancerIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 import ToastNotifications from 'src/features/ToastNotifications';
 import AccountLevelNotifications from 'src/features/AccountLevelNotifications';
 
@@ -42,6 +41,10 @@ const Domains = DefaultLoader({
 
 const Profile = DefaultLoader({
   loader: () => import('src/features/profile'),
+});
+
+const NodeBalancers = DefaultLoader({
+  loader: () => import('src/features/NodeBalancers'),
 });
 
 type ClassNames = 'appFrame'
@@ -200,12 +203,7 @@ export class App extends React.Component<CombinedProps, State> {
                           <Placeholder title="Dashboard" />} />
                         <Route path="/linodes" component={LinodesRoutes} />
                         <Route path="/volumes" component={Volumes} />
-                        <Route exact path="/nodebalancers" render={() =>
-                          <Placeholder
-                            title="NodeBalancers"
-                            icon={NodeBalancerIcon}
-                          />}
-                        />
+                        <Route path="/nodebalancers" component={NodeBalancers} />
                         <Route path="/domains" component={Domains} />
                         <Route exact path="/managed" render={() =>
                           <Placeholder title="Managed" />} />

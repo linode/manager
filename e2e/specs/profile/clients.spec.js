@@ -81,7 +81,7 @@ describe('Profile - OAuth Clients Suite', () => {
         });
 
         it('should display public checkbox as disabled', () => {
-            expect(createDrawer.public.getAttribute('class').includes('disabled')).toBe(true);
+            expect(!!createDrawer.public.$('input').getAttribute('disabled')).toBe(true);
         });
 
         it('should update table on edit submit', () => {

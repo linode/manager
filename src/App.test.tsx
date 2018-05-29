@@ -21,9 +21,9 @@ it('renders without crashing', () => {
               grid: '',
               switchWrapper: '',
             }}
+            longLivedLoaded
             request={jest.fn()}
             response={jest.fn()}
-            longLivedLoaded
             documentation={[]}
             toggleTheme={() => { return; }}
           />

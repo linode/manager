@@ -218,7 +218,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
                 const regionID = pathOr('', ['region'], volume);
                 const region = dcDisplayNames[regionID];
                 return (
-                  <TableRow key={volume.id} data-qa-volume-cell>
+                  <TableRow key={volume.id} data-qa-volume-cell={volume.id}>
                     <TableCell data-qa-volume-cell-label>{label}</TableCell>
                     <TableCell data-qa-volume-cell-attachment>{linodeLabel}</TableCell>
                     <TableCell data-qa-volume-size>{size} GB</TableCell>

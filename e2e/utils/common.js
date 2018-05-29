@@ -22,3 +22,10 @@ export const deleteLinode = (label) => {
     LinodeDetail.changeTab('Settings');
     Settings.remove();
 }
+
+
+export const createLinodeIfNone = () => {
+    if (!ListLinodes.linodesDisplay()) {
+        createGenericLinode(new Date().getTime());
+    }
+}
