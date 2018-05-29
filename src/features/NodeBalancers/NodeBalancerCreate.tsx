@@ -10,6 +10,7 @@ import {
   set,
   view,
 } from 'ramda';
+import * as Promise from 'bluebird';
 import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { StickyContainer, Sticky, StickyProps } from 'react-sticky';
@@ -18,8 +19,7 @@ import { withStyles, WithStyles, Theme, StyleRules } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
 
 import Button from 'src/components/Button';
-import InputAdornment from 'material-ui/Input/InputAdornment';
-import { createNodeBalancer } from 'src/services/nodebalancers';
+import { createNodeBalancer, createNodeBalancerConfig } from 'src/services/nodebalancers';
 import { dcDisplayNames } from 'src/constants';
 import Grid from 'src/components/Grid';
 import PromiseLoader from 'src/components/PromiseLoader';
@@ -103,20 +103,20 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   static defaultFieldsStates = {};
 
   static createNewNodeBalancerConfig = (): NodeBalancerConfigFields => ({
-    algorithm: 'roundrobin',
-    check_attempts: 2,
-    check_body: '',
-    check_interval: 5,
-    check_passive: true,
-    check_path: '',
-    check_timout: 3,
-    check: 'connection',
-    cipher_suite: 'recommended',
-    port: 80,
-    protocol: 'tcp',
-    ssl_cert: '',
-    ssl_key: '',
-    stickiness: 'table',
+    algorithm: undefined,
+    check_attempts: undefined,
+    check_body: undefined,
+    check_interval: undefined,
+    check_passive: undefined,
+    check_path: undefined,
+    check_timout: undefined,
+    check: undefined,
+    cipher_suite: undefined,
+    port: undefined,
+    protocol: undefined,
+    ssl_cert: undefined,
+    ssl_key: undefined,
+    stickiness: undefined,
   })
 
   state: State = {
@@ -127,7 +127,6 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     ],
   };
 
-
   addNodeBalancerConfig = () => this.setState({
     nodeBalancerConfigs: [
       ...this.state.nodeBalancerConfigs,
@@ -137,7 +136,6 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
   createNodeBalancer = () => {
     const { nodeBalancerFields } = this.state;
-    const { history } = this.props;
 
     /** Clear Errors */
     this.setState({ errors: undefined });
@@ -146,17 +144,35 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     if (!nodeBalancerFields.region) {
       return this.setState({ errors: [{ field: 'region', reason: 'A region is required.' }] });
     }
-
-    /** Set requesting state. */
-    this.setState({ submitting: true });
-
-    /** Send request. */
     createNodeBalancer({
       ...nodeBalancerFields,
       client_conn_throttle: nodeBalancerFields.clientConnThrottle,
     })
-      .then((response) => {
-        history.push('/nodebalancers');
+      .then((nodeBalancer) => {
+        /**
+         * @note Beyond this point the NodeBalancer has been created and any
+         * error reporting will have to be done on the NodeBalancer summary page.
+         * ie "Unable to create configuration for port 123 because... you can do it here!"
+         * ie "Unable to add node XYZ because... you can do it here!"
+         */
+
+        const { id: nodeBalancerId } = nodeBalancer;
+        const { nodeBalancerConfigs } = this.state;
+
+        return Promise.map(
+          nodeBalancerConfigs,
+          nodeBalancerConfig => createNodeBalancerConfig(nodeBalancerId, nodeBalancerConfig),
+        )
+          .then(nodeBalancerConfigs => ({
+            ...nodeBalancer,
+            configs: nodeBalancerConfigs,
+          }));
+      })
+      .then((nodeBalancer) => {
+        const { history } = this.props;
+        const { id } = nodeBalancer;
+
+        history.push(`/nodebalancers/${id}`);
       })
       .catch((errorResponse) => {
         const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'], errorResponse);
@@ -184,9 +200,9 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
           <Grid item className={`${classes.main} mlMain`}>
             <Typography variant="headline">
               Create a NodeBalancer
-            </Typography>
+          </Typography>
 
-            { generalError && <Notice error>{generalError}</Notice> }
+            {generalError && <Notice error>{generalError}</Notice>}
 
             <LabelAndTagsPanel
               labelFieldProps={{
@@ -216,9 +232,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               textFieldProps={{
                 errorText: hasErrorFor('client_conn_throttle'),
                 value: defaultTo(0, nodeBalancerFields.clientConnThrottle),
-                InputProps: {
-                  endAdornment: <InputAdornment position="end">/ second</InputAdornment>,
-                },
+                helperText: 'Connections per second',
                 onChange: e => this.setState({
                   nodeBalancerFields: {
                     ...nodeBalancerFields,
@@ -233,12 +247,90 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               </Grid>
               {
                 this.state.nodeBalancerConfigs.map((nodeBalancerConfig, idx) => {
-                  const portLens = lensPath(['nodeBalancerConfigs', idx, 'port']);
+                  const lensTo = lensFrom(['nodeBalancerConfigs', idx]);
+
+                  const algorithmLens = lensTo(['algorithm']);
+                  const checkPassiveLens = lensTo(['check_passive']);
+                  const checkBodyLens = lensTo(['check_body']);
+                  const checkPathLens = lensTo(['check_path']);
+                  const portLens = lensTo(['port']);
+                  const protocolLens = lensTo(['protocol']);
+                  const healthCheckTypeLens = lensTo(['check']);
+                  const healthCheckAttemptsLens = lensTo(['healthCheckAttempts']);
+                  const healthCheckIntervalLens = lensTo(['healthCheckInterval']);
+                  const healthCheckTimeoutLens = lensTo(['healthCheckTimeout']);
+                  const sessionStickinessLens = lensTo(['stickiness']);
+                  const sslCertificateLens = lensTo(['ssl_cert']);
+                  const privateKeyLens = lensTo(['ssl_key']);
 
                   return <NodeBalancerConfigPanel
+                    key={idx}
+
+                    algorithm={defaultTo('roundrobin', view(algorithmLens, this.state))}
+                    onAlgorithmChange={(algorithm: string) =>
+                      this.setState(state =>
+                        set(algorithmLens, algorithm, state))}
+
+                    checkPassive={defaultTo(true, view(checkPassiveLens, this.state))}
+                    onCheckPassiveChange={(checkPassive: boolean) =>
+                      this.setState(state =>
+                        set(checkPassiveLens, checkPassive, state))}
+
+                    checkBody={defaultTo('', view(checkBodyLens, this.state))}
+                    onCheckBodyChange={(checkBody: string) =>
+                      this.setState(state =>
+                        set(checkBodyLens, checkBody, state))}
+
+                    checkPath={defaultTo('', view(checkPathLens, this.state))}
+                    onCheckPathChange={(checkPath: string) =>
+                      this.setState(state =>
+                        set(checkPathLens, checkPath, state))}
+
                     port={defaultTo(80, view(portLens, this.state))}
-                    onPortChange={(port: number) =>
-                        this.setState(state => set(portLens, port, state))}
+                    onPortChange={(port: string | number) =>
+                      this.setState(state =>
+                        set(portLens, port, state))}
+
+                    protocol={defaultTo('http', view(protocolLens, this.state))}
+                    onProtocolChange={(protocol: string) =>
+                      this.setState(state =>
+                        set(protocolLens, protocol, state))}
+
+                    healthCheckType={defaultTo('connection', view(healthCheckTypeLens, this.state))}
+                    onHealthCheckTypeChange={(healthCheckType: string) =>
+                      this.setState(state =>
+                        set(healthCheckTypeLens, healthCheckType, state))}
+
+                    healthCheckAttempts={defaultTo(2, view(healthCheckAttemptsLens, this.state))}
+                    onHealthCheckAttemptsChange={(healthCheckAttempts: string) =>
+                      this.setState(state =>
+                        set(healthCheckAttemptsLens, healthCheckAttempts, state))}
+
+                    healthCheckInterval={defaultTo(5, view(healthCheckIntervalLens, this.state))}
+                    onHealthCheckIntervalChange={(healthCheckInterval: number | string) =>
+                      this.setState(state =>
+                        set(healthCheckIntervalLens, healthCheckInterval, state))}
+
+                    healthCheckTimeout={defaultTo(3, view(healthCheckTimeoutLens, this.state))}
+                    onHealthCheckTimeoutChange={(healthCheckTimeout: number | string) =>
+                      this.setState(state =>
+                        set(healthCheckTimeoutLens, healthCheckTimeout, state))}
+
+                    sessionStickiness={defaultTo('table', view(sessionStickinessLens, this.state))}
+                    onSessionStickinessChange={(sessionStickiness: number | string) =>
+                      this.setState(state =>
+                        set(sessionStickinessLens, sessionStickiness, state))}
+
+                    sslCertificate={defaultTo('', view(sslCertificateLens, this.state))}
+                    onSslCertificateChange={(sslCertificate: string) =>
+                      this.setState(state =>
+                        set(sslCertificateLens, sslCertificate, state))}
+
+                    privateKey={defaultTo('', view(privateKeyLens, this.state))}
+                    onPrivateKeyChange={(privateKey: string) =>
+                      this.setState(state =>
+                        set(privateKeyLens, privateKey, state))}
+
                   />;
                 })
               }
@@ -248,7 +340,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                   onClick={() => this.addNodeBalancerConfig()}
                 >
                   Add another Configuration
-                </Button>
+              </Button>
               </Grid>
             </Grid>
           </Grid>
@@ -301,6 +393,9 @@ const connected = connect((state: Linode.AppState) => ({
 }));
 
 const styled = withStyles(styles, { withTheme: true });
+
+const lensFrom = (p1: (string | number)[]) => (p2: (string | number)[]) =>
+  lensPath([...p1, ...p2]);
 
 export default compose(
   connected,

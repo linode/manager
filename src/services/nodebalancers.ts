@@ -1,5 +1,6 @@
+import * as Joi from 'joi';
 import { API_ROOT } from 'src/constants';
-import Request, { setURL, setMethod, setParams, setData } from './index';
+import Request, { setURL, setMethod, setParams, setData, validateRequestData } from './index';
 
 type Page<T> = Linode.ResourcePage<T>;
 type NodeBalancer = Linode.NodeBalancer;
@@ -34,9 +35,23 @@ export const updateNodeBalancer = (id: number, label: string) => Request<NodeBal
   setData({ label }),
 ).then(response => response.data);
 
+const createNodeBalancerSchema = Joi.object({
+  region: Joi.string().required(),
+});
+
 export const createNodeBalancer = (data: any) =>
-  Request(
+  Request<Linode.NodeBalancer>(
     setMethod('POST'),
     setURL(`${API_ROOT}/nodebalancers`),
     setData(data),
-  );
+    validateRequestData(data, createNodeBalancerSchema),
+  )
+    .then(response => response.data);
+
+export const createNodeBalancerConfig = (nodeBalancerId: number, data: any) =>
+  Request<Linode.NodeBalancerConfig>(
+    setMethod('POST'),
+    setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs`),
+    setData(data),
+  )
+    .then(response => response.data);
