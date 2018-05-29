@@ -35,8 +35,41 @@ export const updateNodeBalancer = (id: number, label: string) => Request<NodeBal
   setData({ label }),
 ).then(response => response.data);
 
-const createNodeBalancerSchema = Joi.object({
+export const createNodeBalancerConfigSchema = Joi.object({
+  algorithm: Joi.string(),
+  check_attempts: Joi.number(),
+  check_body: Joi.string()
+    .when('check', { is: 'http_body', then: Joi.required() }),
+  check_interval: Joi.number(),
+  check_passive: Joi.bool(),
+  check_path: Joi.string()
+    .when('check', { is: 'http', then: Joi.required() })
+    .when('check', { is: 'http_body', then: Joi.required() }),
+  check_timout: Joi.number(),
+  check: Joi.string(),
+  cipher_suite: Joi.string(),
+  port: Joi.number(),
+  protocol: Joi.valid('http', 'https'),
+  ssl_key: Joi.string().when('protocol', { is: 'https', then: Joi.required() }),
+  ssl_cert: Joi.string().when('protocol', { is: 'https', then: Joi.required() }),
+  stickiness: Joi.string(),
+});
+
+export const createNodeBalancerConfig = (nodeBalancerId: number, data: any) =>
+  Request<Linode.NodeBalancerConfig>(
+    setMethod('POST'),
+    setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs`),
+    setData(data),
+  )
+    .then(response => response.data);
+
+export const createNodeBalancerSchema = Joi.object({
+  label: Joi.string().regex(/^[a-zA-Z0-9-_]+$/).min(3).max(32),
+  client_conn_throttle: Joi.number(),
   region: Joi.string().required(),
+  configs: Joi.array()
+    .items(createNodeBalancerConfigSchema)
+    .unique((a, b) => a.port === b.port),
 });
 
 export const createNodeBalancer = (data: any) =>
@@ -45,13 +78,5 @@ export const createNodeBalancer = (data: any) =>
     setURL(`${API_ROOT}/nodebalancers`),
     setData(data),
     validateRequestData(data, createNodeBalancerSchema),
-  )
-    .then(response => response.data);
-
-export const createNodeBalancerConfig = (nodeBalancerId: number, data: any) =>
-  Request<Linode.NodeBalancerConfig>(
-    setMethod('POST'),
-    setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs`),
-    setData(data),
   )
     .then(response => response.data);

@@ -1,14 +1,18 @@
 import * as React from 'react';
+import * as Joi from 'joi';
 import {
   clamp,
   compose,
   defaultTo,
   lensPath,
   map,
+  // over,
   path,
   pathOr,
+  reduce,
   set,
   view,
+  // when,
 } from 'ramda';
 import * as Promise from 'bluebird';
 import { connect } from 'react-redux';
@@ -19,7 +23,11 @@ import { withStyles, WithStyles, Theme, StyleRules } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
 
 import Button from 'src/components/Button';
-import { createNodeBalancer, createNodeBalancerConfig } from 'src/services/nodebalancers';
+import {
+  createNodeBalancer,
+  createNodeBalancerSchema,
+  createNodeBalancerConfig,
+} from 'src/services/nodebalancers';
 import { dcDisplayNames } from 'src/constants';
 import Grid from 'src/components/Grid';
 import PromiseLoader from 'src/components/PromiseLoader';
@@ -31,6 +39,7 @@ import defaultNumeric from 'src/utilities/defaultNumeric';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import NodeBalancerConfigPanel from './NodeBalancerConfigPanel';
 import Notice from 'src/components/Notice';
+
 
 type Styles =
   'root'
@@ -64,7 +73,8 @@ type CombinedProps = Props
 interface NodeBalancerFieldsState {
   label?: string;
   region?: string;
-  clientConnThrottle?: number;
+  client_conn_throttle?: number;
+  configs: NodeBalancerConfigFields[];
 }
 
 interface NodeBalancerConfigFields {
@@ -87,7 +97,6 @@ interface NodeBalancerConfigFields {
 interface State {
   submitting: boolean;
   nodeBalancerFields: NodeBalancerFieldsState;
-  nodeBalancerConfigs: NodeBalancerConfigFields[];
   errors?: Linode.ApiFieldError[];
 }
 
@@ -100,38 +109,40 @@ const errorResources = {
 };
 
 class NodeBalancerCreate extends React.Component<CombinedProps, State> {
-  static defaultFieldsStates = {};
-
   static createNewNodeBalancerConfig = (): NodeBalancerConfigFields => ({
-    algorithm: undefined,
-    check_attempts: undefined,
+    algorithm: 'roundrobin',
+    check_attempts: 2,
     check_body: undefined,
-    check_interval: undefined,
-    check_passive: undefined,
+    check_interval: 5,
+    check_passive: true,
     check_path: undefined,
-    check_timout: undefined,
-    check: undefined,
+    check_timout: 3,
+    check: 'connection',
     cipher_suite: undefined,
-    port: undefined,
-    protocol: undefined,
+    port: 80,
+    protocol: 'http',
     ssl_cert: undefined,
     ssl_key: undefined,
-    stickiness: undefined,
+    stickiness: 'table',
   })
+
+  static defaultFieldsStates = {
+    configs: [NodeBalancerCreate.createNewNodeBalancerConfig()],
+  };
 
   state: State = {
     submitting: false,
     nodeBalancerFields: NodeBalancerCreate.defaultFieldsStates,
-    nodeBalancerConfigs: [
-      NodeBalancerCreate.createNewNodeBalancerConfig(),
-    ],
   };
 
   addNodeBalancerConfig = () => this.setState({
-    nodeBalancerConfigs: [
-      ...this.state.nodeBalancerConfigs,
-      NodeBalancerCreate.createNewNodeBalancerConfig(),
-    ],
+    nodeBalancerFields: {
+      ...this.state.nodeBalancerFields,
+      configs: [
+        ...this.state.nodeBalancerFields.configs,
+        NodeBalancerCreate.createNewNodeBalancerConfig(),
+      ],
+    },
   })
 
   createNodeBalancer = () => {
@@ -140,14 +151,46 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     /** Clear Errors */
     this.setState({ errors: undefined });
 
-    /** Validation */
-    if (!nodeBalancerFields.region) {
-      return this.setState({ errors: [{ field: 'region', reason: 'A region is required.' }] });
+    const { error } = Joi.validate(
+      nodeBalancerFields,
+      createNodeBalancerSchema,
+      { abortEarly: false },
+    );
+
+    if (error) {
+      this.setState({
+        errors: error
+          .details
+          .map(detail => ({
+            key: detail.context && detail.context.key,
+            path: detail.path.join('_'),
+            message: detail.message,
+            type: detail.type.split('.').shift(),
+            constraint: detail.type.split('.').pop(),
+          }))
+          /** If the error is the uniqueness constraint for Config, we're going */
+          .map((detail) => {
+            const path = detail.path.split('_');
+
+            return path.includes('configs') && detail.constraint === 'unique'
+              ? {
+                ...detail,
+                message: 'Port must be unique',
+                path: [...path, 'port'].join('_'),
+              }
+              : detail;
+          })
+          .map((detail) => {
+            return {
+              field: detail.path,
+              reason: detail.message,
+            };
+          }),
+      });
+      return;
     }
-    createNodeBalancer({
-      ...nodeBalancerFields,
-      client_conn_throttle: nodeBalancerFields.clientConnThrottle,
-    })
+
+    createNodeBalancer(nodeBalancerFields)
       .then((nodeBalancer) => {
         /**
          * @note Beyond this point the NodeBalancer has been created and any
@@ -157,11 +200,18 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
          */
 
         const { id: nodeBalancerId } = nodeBalancer;
-        const { nodeBalancerConfigs } = this.state;
+        const { configs } = this.state.nodeBalancerFields;
 
         return Promise.map(
-          nodeBalancerConfigs,
-          nodeBalancerConfig => createNodeBalancerConfig(nodeBalancerId, nodeBalancerConfig),
+          configs,
+          (nodeBalancerConfig, idx) => new Promise((resolve) => {
+            createNodeBalancerConfig(nodeBalancerId, nodeBalancerConfig)
+              .then(resolve)
+              .catch(error => resolve({
+                errors: error.response.data.errors,
+                config: nodeBalancerConfig,
+              }));
+          }),
         )
           .then(nodeBalancerConfigs => ({
             ...nodeBalancer,
@@ -172,7 +222,12 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
         const { history } = this.props;
         const { id } = nodeBalancer;
 
-        history.push(`/nodebalancers/${id}`);
+        return history.push(
+          `/nodebalancers/${id}`,
+          {
+            errors: nodeBalancer.configs.filter(c => c.hasOwnProperty('errors')),
+          },
+        );
       })
       .catch((errorResponse) => {
         const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'], errorResponse);
@@ -231,12 +286,12 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
             <ClientConnectionThrottlePanel
               textFieldProps={{
                 errorText: hasErrorFor('client_conn_throttle'),
-                value: defaultTo(0, nodeBalancerFields.clientConnThrottle),
+                value: defaultTo(0, nodeBalancerFields.client_conn_throttle),
                 helperText: 'Connections per second',
                 onChange: e => this.setState({
                   nodeBalancerFields: {
                     ...nodeBalancerFields,
-                    clientConnThrottle: controlClientConnectionThrottle(e.target.value),
+                    client_conn_throttle: controlClientConnectionThrottle(e.target.value),
                   },
                 }),
               }}
@@ -246,8 +301,8 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                 <Typography variant="title">NodeBalancer Settings</Typography>
               </Grid>
               {
-                this.state.nodeBalancerConfigs.map((nodeBalancerConfig, idx) => {
-                  const lensTo = lensFrom(['nodeBalancerConfigs', idx]);
+                this.state.nodeBalancerFields.configs.map((nodeBalancerConfig, idx) => {
+                  const lensTo = lensFrom(['nodeBalancerFields', 'configs', idx]);
 
                   const algorithmLens = lensTo(['algorithm']);
                   const checkPassiveLens = lensTo(['check_passive']);
@@ -263,8 +318,21 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                   const sslCertificateLens = lensTo(['ssl_cert']);
                   const privateKeyLens = lensTo(['ssl_key']);
 
+                  const errors = reduce((
+                    prev: Linode.ApiFieldError[],
+                    next: Linode.ApiFieldError): Linode.ApiFieldError[] => {
+                    const t = new RegExp(`configs_${idx}_`);
+
+                    return t.test(next.field)
+                      ? [...prev, { ...next, field: next.field.replace(t, '') }]
+                      : prev;
+
+                  }, [])(this.state.errors || []);
+
                   return <NodeBalancerConfigPanel
                     key={idx}
+
+                    errors={errors}
 
                     algorithm={defaultTo('roundrobin', view(algorithmLens, this.state))}
                     onAlgorithmChange={(algorithm: string) =>

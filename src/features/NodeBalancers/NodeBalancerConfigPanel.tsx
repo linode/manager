@@ -12,6 +12,7 @@ import Typography from 'material-ui/Typography';
 import Grid from 'src/components/Grid';
 import TextField from 'src/components/TextField';
 import CheckBox from 'src/components/CheckBox';
+import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 const parseFormNumber: (s: string) => (string | number) =
   when(compose(not, isEmpty), (v: string) => +v);
@@ -37,6 +38,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 const styled = withStyles(styles, { withTheme: true });
 
 interface Props {
+  errors?: Linode.ApiFieldError[];
+
   algorithm: 'roundrobin' | 'leastconn' | 'source';
   onAlgorithmChange: (v: string) => void;
 
@@ -71,9 +74,11 @@ interface Props {
   onSessionStickinessChange: (v: string) => void;
 
   sslCertificate: string;
+  sslCertificateError?: string;
   onSslCertificateChange: (v: string) => void;
 
   privateKey: string;
+  privateKeyError?: string;
   onPrivateKeyChange: (v: string) => void;
 }
 
@@ -87,6 +92,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
   render() {
     const {
       classes,
+
+      errors,
 
       algorithm,
       onAlgorithmChange,
@@ -128,6 +135,23 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       onSslCertificateChange,
     } = this.props;
 
+    const hasErrorFor = getAPIErrorFor({
+      algorithm: 'Algorithm',
+      check_attempts: 'Check attempts',
+      check_body: 'Check body',
+      check_interval: 'Check interval',
+      check_passive: 'Passive check',
+      check_path: 'Check path',
+      check_timout: 'Check timeout',
+      check: 'Check type',
+      cipher_suite: 'Cipher suite',
+      port: 'Port',
+      protocol: 'Protocol',
+      ssl_cert: 'SSL certificate',
+      ssl_key: 'SSL private key',
+      stickiness: 'Session stickiness',
+    }, errors);
+
     return (
       <Paper className={classes.root} data-qa-label-header>
         <div className={classes.inner}>
@@ -142,6 +166,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 label="Port"
                 value={port}
                 onChange={e => onPortChange(parseFormNumber(e.target.value))}
+                errorText={hasErrorFor('port')}
               />
             </Grid>
             <Grid item xs={12} md={6}>
@@ -150,6 +175,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 value={protocol}
                 select
                 onChange={e => onProtocolChange(e.target.value)}
+                errorText={hasErrorFor('protocol')}
               >
                 <MenuItem value="http">HTTP</MenuItem>
                 <MenuItem value="https">HTTPS</MenuItem>
@@ -173,6 +199,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   label="SSL Certificate"
                   value={sslCertificate}
                   onChange={e => onSslCertificateChange(e.target.value)}
+                  required={protocol === 'https'}
+                  errorText={hasErrorFor('ssl_cert')}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
@@ -182,6 +210,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   label="Private Key"
                   value={privateKey}
                   onChange={e => onPrivateKeyChange(e.target.value)}
+                  required={protocol === 'https'}
+                  errorText={hasErrorFor('ssl_key')}
                 />
               </Grid>
               <Grid item>
@@ -200,6 +230,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 value={algorithm}
                 select
                 onChange={e => onAlgorithmChange(e.target.value)}
+                errorText={hasErrorFor('algorithm')}
               >
                 <MenuItem value="roundrobin">Round Robin</MenuItem>
                 <MenuItem value="leastconn">Least Connections</MenuItem>
@@ -221,6 +252,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 value={sessionStickiness}
                 select
                 onChange={e => onSessionStickinessChange(e.target.value)}
+                errorText={hasErrorFor('stickiness')}
               >
                 <MenuItem value="none">None</MenuItem>
                 <MenuItem value="table">Table</MenuItem>
@@ -243,6 +275,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   value={healthCheckType}
                   select
                   onChange={e => onHealthCheckTypeChange(e.target.value)}
+                  errorText={hasErrorFor('check')}
                 >
                   <MenuItem value="none">None</MenuItem>
                   <MenuItem value="connection">TCP Connection</MenuItem>
@@ -260,6 +293,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     label="Health Check Interval"
                     value={healthCheckInterval}
                     onChange={e => onHealthCheckIntervalChange(parseFormNumber(e.target.value))}
+                    errorText={hasErrorFor('check_interval')}
                   />
                 </Grid>
                 <Grid item xs={12} md={4}>
@@ -268,6 +302,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     label="Health Check Timeout"
                     value={healthCheckTimeout}
                     onChange={e => onHealthCheckTimeoutChange(parseFormNumber(e.target.value))}
+                    errorText={hasErrorFor('check_timeout')}
                   />
                 </Grid>
                 <Grid item xs={12} md={4}>
@@ -276,6 +311,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     label="Health Check Attempts"
                     value={healthCheckAttempts}
                     onChange={e => onHealthCheckAttemptsChange(parseFormNumber(e.target.value))}
+                    errorText={hasErrorFor('check_attempts')}
                   />
                 </Grid>
                 {
@@ -286,6 +322,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                         label="Check HTTP Path"
                         value={checkPath}
                         onChange={e => onCheckPathChange(e.target.value)}
+                        required={['http', 'http_body'].includes(healthCheckType)}
+                        errorText={hasErrorFor('check_path')}
                       />
                     </Grid>
                   </React.Fragment>
@@ -298,6 +336,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                         label="Expected HTTP Body"
                         value={checkBody}
                         onChange={e => onCheckBodyChange(e.target.value)}
+                        required={healthCheckType === 'http_body'}
+                        errorText={hasErrorFor('check_body')}
                       />
                     </Grid>
                   </React.Fragment>
