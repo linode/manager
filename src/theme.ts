@@ -410,10 +410,9 @@ const LinodeTheme: Linode.Theme = {
       selected: {
         backgroundColor: 'white !important',
         color: '#3B85D9 !important',
-        cursor: 'initial',
         opacity: 1,
-        '&:hover, &:focus': {
-          background: '#f4f4f4 !important',
+        '&:focus': {
+          backgroundColor: '#f4f4f4 !important',
         },
       },
     },
