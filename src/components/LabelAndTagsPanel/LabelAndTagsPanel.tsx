@@ -7,6 +7,9 @@ import Typography from 'material-ui/Typography';
 
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 import Notice from 'src/components/Notice';
+import ExpansionPanel from 'src/components/ExpansionPanel';
+import Button from 'src/components/Button';
+import ActionsPanel from 'src/components/ActionsPanel';
 
 type ClassNames = 'root' | 'inner';
 
@@ -27,6 +30,9 @@ const styled = withStyles(styles, { withTheme: true });
 interface Props {
   error?: string;
   labelFieldProps?: TextFieldProps;
+  isExpansion?: boolean;
+  expansionHeader?: string;
+  actions?: () => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -41,16 +47,40 @@ class InfoPanel extends React.Component<CombinedProps> {
   };
 
   render() {
-    const { classes, error, labelFieldProps } = this.props;
+    const { actions, isExpansion, expansionHeader, classes, error, labelFieldProps } = this.props;
 
     return (
-      <Paper className={classes.root} data-qa-label-header>
-        <div className={classes.inner}>
-          {error && <Notice text={error} error />}
-          <Typography variant="title">Label</Typography>
-          <TextField {...labelFieldProps} />
-        </div>
-      </Paper>
+      <React.Fragment>
+        {isExpansion // will either be an expandable panel that will save the settings or a card
+          ? <ExpansionPanel
+            defaultExpanded={true}
+            heading={expansionHeader || 'Label'}
+          >
+            <div className={classes.inner}>
+              {error && <Notice text={error} error />}
+              <TextField {...labelFieldProps} />
+            </div>
+            {!actions &&
+              <ActionsPanel>
+                <Button
+                  variant="raised"
+                  color="primary"
+                  data-qa-label-save
+                >
+                  Save
+              </Button>
+              </ActionsPanel>
+            }
+          </ExpansionPanel>
+          : <Paper className={classes.root} data-qa-label-header>
+            <div className={classes.inner}>
+              {error && <Notice text={error} error />}
+              <Typography variant="title">Label</Typography>
+              <TextField {...labelFieldProps} />
+            </div>
+          </Paper>
+        }
+      </React.Fragment>
     );
   }
 }

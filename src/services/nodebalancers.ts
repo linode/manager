@@ -28,10 +28,15 @@ export const getNodeBalancer = (id: number) => Request<NodeBalancer>(
   setMethod('GET'),
 ).then(response => response.data);
 
-export const updateNodeBalancer = (id: number, label: string) => Request<NodeBalancer>(
+interface NodeBalancerUpdate {
+  label?: string;
+  client_conn_throttle?: number;
+}
+
+export const updateNodeBalancer = (id: number, data: NodeBalancerUpdate) => Request<NodeBalancer>(
   setURL(`${API_ROOT}/nodebalancers/${id}`),
   setMethod('PUT'),
-  setData({ label }),
+  setData(data),
 ).then(response => response.data);
 
 export const createNodeBalancer = (data: any) =>

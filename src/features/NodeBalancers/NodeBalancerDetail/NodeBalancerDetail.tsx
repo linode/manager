@@ -94,7 +94,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
 
   updateLabel = (label: string) => {
     const { nodeBalancer } = this.state;
-    updateNodeBalancer(nodeBalancer.id, label)
+    updateNodeBalancer(nodeBalancer.id, { label })
       .catch((error) => {
         error.response.data.errors.map((error: Linode.ApiFieldError) =>
           sendToast(error.reason, 'error'));
