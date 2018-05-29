@@ -11,7 +11,9 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 import Button from 'src/components/Button';
 import ActionsPanel from 'src/components/ActionsPanel';
 
-type ClassNames = 'root' | 'inner';
+type ClassNames = 'root'
+| 'inner'
+| 'expPanelButton';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -22,6 +24,15 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   inner: {
     padding: theme.spacing.unit * 3,
+  },
+  expPanelButton: {
+    padding: 0,
+    margin: `
+      ${theme.spacing.unit * 4}px
+      ${theme.spacing.unit}px
+      ${0}
+      -${theme.spacing.unit}px
+    `,
   },
 });
 
@@ -62,12 +73,12 @@ class InfoPanel extends React.Component<CombinedProps> {
             success={success}
             heading={expansionHeader || 'Label'}
           >
-            <div className={classes.inner}>
+            <div className={!isExpansion ? classes.inner : ''}>
               {error && <Notice text={error} error />}
               <TextField {...labelFieldProps} />
             </div>
             {actions &&
-              <ActionsPanel>
+              <ActionsPanel className={isExpansion ? classes.expPanelButton : ''}>
                 <Button
                   variant="raised"
                   onClick={() => actions('label')}

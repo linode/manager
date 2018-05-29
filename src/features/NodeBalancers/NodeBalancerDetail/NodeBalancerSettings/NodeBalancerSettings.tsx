@@ -18,12 +18,23 @@ import defaultNumeric from 'src/utilities/defaultNumeric';
 
 import { updateNodeBalancer } from 'src/services/nodebalancers';
 
-type ClassNames = 'root' | 'inner';
+type ClassNames = 'root'
+| 'title'
+| 'inner'
+| 'adornment';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
+  title: {
+    marginTop: theme.spacing.unit,
+    marginBottom: theme.spacing.unit * 2,
+  },
   inner: {
-    padding: theme.spacing.unit,
+    padding: 0,
+  },
+  adornment: {
+    fontSize: '.9rem',
+    marginRight: 10,
   },
 });
 
@@ -100,53 +111,58 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
 
   render() {
     const { fields, isSubmitting, success } = this.state;
+    const { classes } = this.props;
     const hasErrorFor = getAPIErrorFor(errorResources, this.state.errors);
     const generalError = hasErrorFor('none');
     return (
       <React.Fragment>
-        <Typography variant="headline">
-          Settings
-        </Typography>
+          <Typography variant="headline" className={classes.title}>
+            Settings
+          </Typography>
 
-        {generalError && <Notice error>{generalError}</Notice>}
-        <LabelAndTagsPanel
-          isExpansion={true}
-          success={success!.label}
-          isSubmitting={isSubmitting}
-          actions={this.updateNodeBalancer}
-          labelFieldProps={{
-            onChange: e => this.setState({
-              fields: {
-                ...fields,
-                label: e.target.value,
+          {generalError && <Notice error>{generalError}</Notice>}
+          <LabelAndTagsPanel
+            isExpansion={true}
+            success={success!.label}
+            isSubmitting={isSubmitting}
+            actions={this.updateNodeBalancer}
+            labelFieldProps={{
+              onChange: e => this.setState({
+                fields: {
+                  ...fields,
+                  label: e.target.value,
+                },
+              }),
+              label: 'NodeBalancer Label',
+              placeholder: 'Enter a label between 3 and 32 characters',
+              errorText: hasErrorFor('label'),
+            }}
+          />
+
+          <ClientConnectionThrottlePanel
+            isExpansion={true}
+            isSubmitting={isSubmitting}
+            success={success!.client_conn_throttle}
+            actions={this.updateNodeBalancer}
+            textFieldProps={{
+              label: 'Client Connection Throttle',
+              placeholder: '0',
+              InputProps: {
+                endAdornment:
+                  <InputAdornment position="end" className={classes.adornment}>
+                    / second
+                  </InputAdornment>,
               },
-            }),
-            label: 'NodeBalancer Label',
-            placeholder: 'Enter a label between 3 and 32 characters',
-            errorText: hasErrorFor('label'),
-          }}
-        />
-        <ClientConnectionThrottlePanel
-          isExpansion={true}
-          isSubmitting={isSubmitting}
-          success={success!.client_conn_throttle}
-          actions={this.updateNodeBalancer}
-          textFieldProps={{
-            label: 'Client Connection Throttle',
-            placeholder: '0',
-            InputProps: {
-              endAdornment: <InputAdornment position="end">/ second</InputAdornment>,
-            },
-            errorText: hasErrorFor('client_conn_throttle'),
-            value: defaultTo(0, fields.client_conn_throttle),
-            onChange: e => this.setState({
-              fields: {
-                ...fields,
-                client_conn_throttle: controlClientConnectionThrottle(e.target.value),
-              },
-            }),
-          }}
-        />
+              errorText: hasErrorFor('client_conn_throttle'),
+              value: defaultTo(0, fields.client_conn_throttle),
+              onChange: e => this.setState({
+                fields: {
+                  ...fields,
+                  client_conn_throttle: controlClientConnectionThrottle(e.target.value),
+                },
+              }),
+            }}
+          />
       </React.Fragment>
     );
   }

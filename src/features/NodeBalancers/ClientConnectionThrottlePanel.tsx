@@ -10,7 +10,9 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Notice from 'src/components/Notice';
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 
-type ClassNames = 'root' | 'inner';
+type ClassNames = 'root'
+| 'inner'
+| 'expPanelButton';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -21,6 +23,15 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   inner: {
     padding: theme.spacing.unit * 3,
+  },
+  expPanelButton: {
+    padding: 0,
+    margin: `
+      ${theme.spacing.unit * 4}px
+      ${theme.spacing.unit}px
+      ${0}
+      -${theme.spacing.unit}px
+    `,
   },
 });
 
@@ -60,12 +71,12 @@ class ClientConnectionThrottlePanel extends React.Component<CombinedProps> {
             success={success}
             heading={expansionHeader || 'Client Connection Throttle'}
           >
-            <div className={classes.inner}>
+            <div className={!isExpansion ? classes.inner : ''}>
               {error && <Notice text={error} error />}
               <TextField {...textFieldProps} />
             </div>
             {actions &&
-              <ActionsPanel>
+              <ActionsPanel className={isExpansion ? classes.expPanelButton : ''}>
                 <Button
                   onClick={() => actions('client_conn_throttle')}
                   variant="raised"
