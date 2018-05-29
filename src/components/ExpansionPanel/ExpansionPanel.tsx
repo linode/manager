@@ -85,7 +85,7 @@ export interface Props extends ExpansionPanelProps {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class EExpansionPanel extends React.Component<CombinedProps> {
-  state = { open: !this.props.defaultExpanded ? null : true };
+  state = { open: this.props.defaultExpanded };
 
   handleClick = (e: React.MouseEvent<any>) => {
     this.setState({ open: !this.state.open });
