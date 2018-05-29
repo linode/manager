@@ -80,3 +80,8 @@ export const createNodeBalancer = (data: any) =>
     validateRequestData(data, createNodeBalancerSchema),
   )
     .then(response => response.data);
+
+export const deleteNodeBalancer = (id: number) => Request<NodeBalancer>(
+  setMethod('DELETE'),
+  setURL(`${API_ROOT}/nodebalancers/${id}`),
+).then(response => response.data);

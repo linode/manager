@@ -9,8 +9,12 @@ import TableBody from 'material-ui/Table/TableBody';
 import TableCell from 'material-ui/Table/TableCell';
 import TableHead from 'material-ui/Table/TableHead';
 import TableRow from 'material-ui/Table/TableRow';
+import Button from 'material-ui/Button';
 
-import { getNodeBalancers, getNodeBalancerConfigs } from 'src/services/nodebalancers';
+import {
+  getNodeBalancers, getNodeBalancerConfigs,
+  deleteNodeBalancer,
+} from 'src/services/nodebalancers';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
@@ -21,6 +25,9 @@ import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoad
 import NodeBalancerActionMenu from './NodeBalancerActionMenu';
 import ErrorState from 'src/components/ErrorState';
 import Placeholder from 'src/components/Placeholder';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import ActionsPanel from 'src/components/ActionsPanel';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
 
 
 type ClassNames = 'root' | 'title';
@@ -75,6 +82,9 @@ interface PreloadedProps {
 
 interface State {
   deleteConfirmAlertOpen: boolean;
+  selectedNodeBalancerId?: number;
+  nodeBalancers: Linode.ExtendedNodeBalancer[];
+  errors?: Error;
 }
 
 type CombinedProps = Props
@@ -88,6 +98,8 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
 
   state: State = {
     deleteConfirmAlertOpen: false,
+    nodeBalancers: this.props.nodeBalancers.response || [],
+    errors: this.props.nodeBalancers.error || undefined,
   };
 
   static docs = [
@@ -126,18 +138,36 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
     return <Placeholder />;
   }
 
+  toggleDialog = (nodeBalancerId: number) => {
+    this.setState({
+      selectedNodeBalancerId: nodeBalancerId,
+      deleteConfirmAlertOpen: !this.state.deleteConfirmAlertOpen,
+    });
+  }
+
+  deleteNodeBalancer = () => {
+    const { selectedNodeBalancerId } = this.state;
+    deleteNodeBalancer(selectedNodeBalancerId!)
+      .then((response) => {
+        getNodeBalancersWithConfigs()
+          .then((response: Linode.ExtendedNodeBalancer[]) => {
+            this.setState({ nodeBalancers: response, deleteConfirmAlertOpen: false });
+          });
+        sendToast('NodeBalancer deleted');
+      })
+      .catch(err => sendToast('Error while deleting NodeBalancer', 'error'));
+  }
+
   render() {
     const {
       classes,
       history,
-      nodeBalancers: {
-        error: nodeBalancerError,
-        response: nodeBalancers,
-      },
     } = this.props;
 
+    const { nodeBalancers, errors, deleteConfirmAlertOpen } = this.state;
+
     /** Error State */
-    if (nodeBalancerError) {
+    if (errors) {
       return <ErrorState
         errorText="There was an error loading your NodeBalancers. Please try again later."
       />;
@@ -207,6 +237,7 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
                     <TableCell>
                       <NodeBalancerActionMenu
                         nodeBalancerId={nodeBalancer.id}
+                        toggleDialog={this.toggleDialog}
                       />
                     </TableCell>
                   </TableRow>
@@ -215,6 +246,34 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
             </TableBody>
           </Table>
         </Paper>
+        <ConfirmationDialog
+          title="Confirm Deletion"
+          actions={() =>
+            <ActionsPanel style={{ padding: 0 }}>
+              <Button
+                variant="raised"
+                color="secondary"
+                className="destructive"
+                data-qa-confirm-cancel
+                onClick={this.deleteNodeBalancer}
+              >
+                Delete
+              </Button>
+              <Button
+                onClick={() => this.setState({ deleteConfirmAlertOpen: false })}
+                variant="raised"
+                color="secondary"
+                className="cancel"
+                data-qa-cancel-cancel
+              >
+                Cancel
+            </Button>
+            </ActionsPanel>
+          }
+          open={deleteConfirmAlertOpen}
+        >
+          Are you sure you want to delete your NodeBalancer
+        </ConfirmationDialog>
       </React.Fragment>
     );
   }
