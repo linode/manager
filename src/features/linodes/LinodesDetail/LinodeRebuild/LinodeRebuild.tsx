@@ -31,12 +31,12 @@ type ClassNames = 'root'
  | 'title'
  | 'intro'
  | 'imageControl'
- | 'actionPanel';
+ | 'image';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     padding: theme.spacing.unit * 3,
-    paddingBottom: theme.spacing.unit * 1,
+    paddingBottom: theme.spacing.unit * 3,
   },
   title: {
     marginBottom: theme.spacing.unit * 2,
@@ -47,9 +47,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   imageControl: {
     display: 'flex',
   },
-  actionPanel: {
-    padding: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit * 3,
+  image: {
+    display: 'flex',
+    flexWrap: 'wrap',
   },
 });
 
@@ -184,7 +184,7 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
             value={this.state.password || ''}
           />
         </Paper>
-        <ActionsPanel className={classes.actionPanel}>
+        <ActionsPanel>
           <Button
             variant="raised"
             color="secondary"
