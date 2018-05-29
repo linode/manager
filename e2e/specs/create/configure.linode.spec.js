@@ -26,7 +26,7 @@ describe('Create Linode - Configure Linode Suite', () => {
     it('should configure a generic linode and update cost summary', () => {
         const genericPrice = /\$.*\/mo/ig;
         const genericImage = ConfigureLinode.images[0].getText();
-        const genericType = 'Linode 2G\n1 CPU, 30G Storage, 2G RAM';
+        const genericType = 'Linode 2G\n1 CPU, 50G Storage, 2G RAM';
 
         ConfigureLinode.generic();
 

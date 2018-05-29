@@ -1,12 +1,9 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { compose, pathOr } from 'ramda';
 
-import {
-  withStyles,
-  Theme,
-  WithStyles,
-  StyleRulesCallback,
-} from 'material-ui/styles';
+import { withStyles, Theme, WithStyles, StyleRulesCallback } from 'material-ui/styles';
 import Button from 'material-ui/Button';
 import Card, { CardHeader, CardContent, CardActions } from 'material-ui/Card';
 import Divider from 'material-ui/Divider';
@@ -24,7 +21,7 @@ import CircleProgress from 'src/components/CircleProgress';
 import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';
 import LinodeActionMenu from './LinodeActionMenu';
-import { typeLabelLong } from '../presentation';
+import { typeLabelDetails, displayType } from '../presentation';
 import transitionStatus from '../linodeTransitionStatus';
 import LinodeStatusIndicator from './LinodeStatusIndicator';
 
@@ -136,17 +133,25 @@ interface Props {
   linodeIpv4: string[];
   linodeIpv6: string;
   linodeRegion: string;
+  linodeType: null | string;
   linodeNotification?: string;
   linodeLabel: string;
   linodeRecentEvent?: Linode.Event;
+  linodeSpecDisk: number;
+  linodeSpecMemory: number;
+  linodeSpecVcpus: number;
+  linodeSpecTransfer: number;
   image?: Linode.Image;
-  type?: Linode.LinodeType;
   openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
   toggleConfirmation: (bootOption: Linode.BootAction,
     linodeId: number, linodeLabel: string) => void;
 }
 
-type CombinedProps = Props & WithStyles<CSSClasses>;
+interface ConnectedProps {
+  typeLabel: string;
+}
+
+type CombinedProps = Props & ConnectedProps & WithStyles<CSSClasses>;
 
 class LinodeCard extends React.Component<CombinedProps> {
   renderTitle() {
@@ -195,16 +200,25 @@ class LinodeCard extends React.Component<CombinedProps> {
   }
 
   loadedState = () => {
-    const { classes, image, type, linodeIpv4, linodeIpv6, linodeRegion } = this.props;
+    const {
+      classes,
+      image,
+      linodeIpv4,
+      linodeIpv6,
+      linodeRegion,
+      linodeSpecMemory,
+      linodeSpecDisk,
+      linodeSpecVcpus,
+      typeLabel,
+    } = this.props;
 
     return (
       <CardContent className={`${classes.cardContent} ${classes.customeMQ}`}>
         <div>
-          {image && type &&
-            <div className={classes.cardSection} data-qa-linode-summary>
-              {typeLabelLong(type.memory, type.disk, type.vcpus)}
-            </div>
-          }
+          <div className={classes.cardSection} data-qa-linode-summary>
+            {`${typeLabel}: `}
+            {typeLabelDetails(linodeSpecMemory, linodeSpecDisk, linodeSpecVcpus)}
+          </div>
           <div className={classes.cardSection} data-qa-region>
             <RegionIndicator region={linodeRegion} />
           </div>
@@ -212,7 +226,7 @@ class LinodeCard extends React.Component<CombinedProps> {
             <IPAddress ips={linodeIpv4} copyRight />
             <IPAddress ips={[linodeIpv6]} copyRight />
           </div>
-          {image && type &&
+          {image &&
             <div className={classes.cardSection} data-qa-image>
               {image.label}
             </div>
@@ -227,7 +241,6 @@ class LinodeCard extends React.Component<CombinedProps> {
       nextProps,
       this.props,
       [
-        'type',
         'linodeStatus',
         'linodeRegion',
         'linodeNotification',
@@ -287,4 +300,15 @@ class LinodeCard extends React.Component<CombinedProps> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(LinodeCard);
+const connected = connect((state: Linode.AppState, ownProps: Props) => ({
+  typeLabel: displayType(
+    ownProps.linodeType,
+    pathOr([], ['resources', 'types', 'data', 'data'],
+    state),
+  ),
+}));
+
+export default compose(
+  withStyles(styles, { withTheme: true }),
+  connected,
+)(LinodeCard) as React.ComponentType<Props>;

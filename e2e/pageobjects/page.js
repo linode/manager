@@ -3,6 +3,14 @@ export default class Page {
     get docs() { return $$('[data-qa-doc]'); }
     get toast() { return $('[data-qa-toast]'); }
     get toastMsg() { return $('[data-qa-toast-message]'); }
+    get userMenu() { return $('[data-qa-user-menu]'); }
+    get logoutButton() { return $('[data-qa-menu-link="Log Out"]'); }
+    get profileButton() { return $('[data-qa-menu-link="My Profile"]'); }
+    get globalCreate() { return $('[data-qa-add-new-menu-button]'); }
+    get addVolumeMenu() { return $('[data-qa-add-new-menu="Volume"]'); }
+    get addLinodeMenu() { return $('[data-qa-add-new-menu="Linode"]'); }
+    get addNodeBalancerMenu() { return $('[data-qa-add-new-menu="NodeBalancer"]'); }
+    get notice() { return $('[data-qa-notice]'); }
 
     constructor() {
         this.pageTitle = 'Base page';
@@ -10,6 +18,19 @@ export default class Page {
 
     open(path) {
 
+    }
+
+    logout() {
+        this.userMenu.waitForVisible();
+        this.userMenu.click();
+        this.logoutButton.waitForVisible();
+        this.logoutButton.click();
+        this.logoutButton.waitForVisible(5000, true);
+        this.globalCreate.waitForVisible(5000, true);
+
+        browser.waitUntil(function() {
+            return browser.getUrl().includes('/login');
+        }, 10000, 'Failed to redirect to login page on log out');
     }
 
     assertDocsDisplay() {

@@ -8,14 +8,13 @@ import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSe
 interface Props {
   linodes: Linode.EnhancedLinode[];
   images: Linode.Image[];
-  types: Linode.LinodeType[];
   openConfigDrawer: (c: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
   toggleConfirmation: (bootOption: Linode.BootAction,
      linodeId: number, linodeLabel: string) => void;
 }
 
 const LinodesGridView: React.StatelessComponent<Props> = (props) => {
-  const { linodes, types, images, openConfigDrawer, toggleConfirmation } = props;
+  const { linodes, images, openConfigDrawer, toggleConfirmation } = props;
 
   return (
     <Grid container>
@@ -27,12 +26,16 @@ const LinodesGridView: React.StatelessComponent<Props> = (props) => {
           linodeIpv4={linode.ipv4}
           linodeIpv6={linode.ipv6}
           linodeRegion={linode.region}
+          linodeType={linode.type}
           linodeNotification={linode.notification}
           linodeLabel={linode.label}
           linodeRecentEvent={linode.recentEvent}
           image={images.find(image => linode.image === image.id)}
-          type={types.find(type => linode.type === type.id)}
           openConfigDrawer={openConfigDrawer}
+          linodeSpecDisk={linode.specs.disk}
+          linodeSpecMemory={linode.specs.memory}
+          linodeSpecVcpus={linode.specs.vcpus}
+          linodeSpecTransfer={linode.specs.transfer}
           toggleConfirmation={toggleConfirmation}
         />,
       )}

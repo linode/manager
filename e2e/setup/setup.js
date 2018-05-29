@@ -1,3 +1,4 @@
+const https = require('https');
 const axios = require('axios');
 const API_ROOT = process.env.REACT_APP_API_ROOT;
 
@@ -12,8 +13,11 @@ exports.deleteAll = (token) => {
         ];
 
         const instance = axios.create({
+            httpsAgent: new https.Agent({
+                rejectUnauthorized: false
+            }),
             baseURL: API_ROOT,
-            timeout: 1000,
+            timeout: 5000,
             headers: { 'Authorization': `Bearer ${token}`},
         });
 
@@ -87,9 +91,12 @@ exports.removeAllLinodes = (token) => {
         const linodesEndpoint = '/linode/instances';
 
         const instance = axios.create({
-                baseURL: API_ROOT,
-                timeout: 1000,
-                headers: { 'Authorization': `Bearer ${token}`},
+            httpsAgent: new https.Agent({
+                rejectUnauthorized: false
+            }),
+            baseURL: API_ROOT,
+            timeout: 5000,
+            headers: { 'Authorization': `Bearer ${token}`},
         });
 
         const removeInstance = (res, endpoint) => {

@@ -59,25 +59,22 @@ export class ListLinodes extends Page {
 
     gridElemsDisplay() {
         const header = this.subheader;
-        const linodeDisplays = this.linode.map(l => l.isVisible());
-        const labelDisplays = this.linode.map(l => l.$(this.linodeLabel.selector).isVisible());
-        const hardwareSummaryDisplays = this.linode.map(l => l.$(this.hardwareSummary.selector).isVisible());
-        const regionDisplays = this.linode.map(l => l.$(this.region.selector).isVisible());
-        const imageDisplays = this.linode.map(l => l.$(this.image.selector).isVisible());
-        const ipDisplays = this.linode.map(l => l.$(this.ip.selector).isVisible());
-        const rebootButtonDisplays = this.linode.map(l => l.$(this.rebootButton.selector).isVisible());
-        const launchConsoleDisplays = this.linode.map(l => l.$(this.linodeActionMenu.selector).isVisible());
+        this.linode.forEach(l => {
+            expect(l.isVisible()).toBe(true);
+            expect(l.$(this.linodeLabel.selector).isVisible()).toBe(true);
+            expect(l.$(this.hardwareSummary.selector).isVisible()).toBe(true);
+            expect(l.$(this.region.selector).isVisible()).toBe(true);
+            expect(l.$(this.image.selector).isVisible()).toBe(true);
+            expect(l.$(this.ip.selector).isVisible()).toBe(true);
+            expect(l.$(this.rebootButton.selector).isVisible()).toBe(true);
+            expect(l.$(this.linodeActionMenu.selector).isVisible()).toBe(true);
+            expect(l.$(this.image.selector).isVisible()).toBe(true);
+            expect(l.$(this.rebootButton.selector).isVisible()).toBe(true);
+            expect(l.$(this.linodeActionMenu.selector).isVisible()).toBe(true);
+        });
 
         expect(header.isVisible()).toBe(true);
         expect(header.getText()).not.toBe(null);
-        linodeDisplays.forEach(l => expect(l).toBe(true));
-        labelDisplays.forEach(l => expect(l).toBe(true));
-        hardwareSummaryDisplays.forEach(l => expect(l).toBe(true));
-        regionDisplays.forEach(l => expect(l).toBe(true));
-        imageDisplays.forEach(l => expect(l).toBe(true));
-        ipDisplays.forEach(l => expect(l).toBe(true));
-        rebootButtonDisplays.forEach(l => expect(l).toBe(true));
-        launchConsoleDisplays.forEach(l => expect(l).toBe(true));
     }
 
     listElemsDisplay() {

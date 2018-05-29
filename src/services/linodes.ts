@@ -139,12 +139,12 @@ export const resizeLinode = (id: number, type: string) =>
     setData({ type }),
   );
 
-export const getLinodes = (params?: any, filter?: any) =>
+export const getLinodes = (params: any = {}, filter: any = {}) =>
   Request<Page<Linode>>(
     setURL(`${API_ROOT}/linode/instances/`),
     setMethod('GET'),
-    () => filter && setXFilter(filter),
-    () => params && setParams(params),
+    setXFilter(filter),
+    setParams(params),
   )
     .then(response => response.data);
 
@@ -334,9 +334,10 @@ export const deleteLinodeDisk = (
   );
 
 export interface LinodeCloneData {
+  // linode_id is missing here beacuse we removed the ability
+  // to clone to an existing linode
   region?: string | null;
   type?: string | null;
-  linode_id?: number | null;
   label?: string | null;
   backups_enabled?: boolean | null;
 }

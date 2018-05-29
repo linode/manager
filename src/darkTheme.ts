@@ -138,6 +138,7 @@ const LinodeTheme: Linode.Theme = {
           marginLeft: 0,
           '&:hover, &:focus': {
             borderColor: '#5F99EA',
+            backgroundColor: 'transparent',
           },
         },
         '&.destructive': {
@@ -146,6 +147,7 @@ const LinodeTheme: Linode.Theme = {
           '&:hover, &:focus': {
             color: '#DF6560',
             borderColor: '#DF6560',
+            backgroundColor: 'transparent',
           },
           '&:active': {
             color: '#963530',

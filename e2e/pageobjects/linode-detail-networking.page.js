@@ -12,7 +12,6 @@ class Networking extends Page {
     get actionMenu() { return $('[data-qa-action-menu]'); }
     get addIcons() { return $$('[data-qa-icon-text-link]'); }
     get viewButton() { return $('[data-qa-action]'); }
-    get notice() { return $('[data-qa-notice]'); }
 
     // drawer elements
     get serviceNotice() { return $('[data-qa-service-notice]'); }

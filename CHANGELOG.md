@@ -4,6 +4,41 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.25.3] - 2018-05-23
+### Fixed:
+- Fixed an issue causing the search bar to crash.
+### Changed:
+- Disabled toast notifications for failed stat requests.
+- No longer display the Region panel when creating a new Linode from a backup.
+
+## [0.25.2] - 2018-05-22
+### Added:
+- Create, update, and delete Domains.
+- Create, update, and delete SOA, NS, MX, A/AAAA, CNAME, TXT, SRV, and CAA records.
+- Create Linode from an existing Linode's backup.
+- Create Linode from cloning an existing Linode.
+- A flag icon to product level notification to better direct users.
+- Added documentation to volumes and Linode detail sections.
+- Confirmation dialogs when attempting to shutdown a Linode, reboot a Linode, and cancel backups on a Linode.
+- "Select All" options for permissions when creating a Personal Access Token.
+
+### Fixed:
+- Several typographical anomalies.
+- Prevent multiple submit clicks upon creating Linode.
+- Close expansion panel only if the header is clicked.
+- Resizing linodes will not have a pre-selected option.
+- Allow deletion of default value in several form inputs.
+- "Show Older Images" panel when creating a new Linode would close when selecting an image.
+- Filtered ineligible volumes/disks from rescue selects.
+- Remove edit option from client generated (apps) tokens.
+- Resolved an issue where resizing was not being tracked/displayed.
+- Reduced the overall number of API requests for certain features.
+- Fixed an issue where Gravatar requests were duplicated.
+- A CSS rendering which cause the footer to unexpected jump up the page.
+
+## Changed:
+- Display client generated (Apps) tokesn below user generated (Personal Access Tokesn).
+
 ## [0.24.2] - 2018-05-07
 ### Fixed:
 - Logout

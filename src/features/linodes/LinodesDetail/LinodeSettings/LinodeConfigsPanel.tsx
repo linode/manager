@@ -337,6 +337,7 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
                 variant="raised"
                 color="secondary"
                 className="destructive"
+                data-qa-confirm-delete
               >
                 Delete
               </Button>
@@ -345,6 +346,7 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
                 variant="raised"
                 color="secondary"
                 className="cancel"
+                data-qa-cancel-delete
               >
                 Cancel
               </Button>
@@ -366,6 +368,7 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
                 variant="raised"
                 color="secondary"
                 className="destructive"
+                data-qa-confirm-delete
               >
                 Delete
               </Button>
@@ -374,6 +377,7 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
                 variant="raised"
                 color="secondary"
                 className="cancel"
+                data-qa-cancel-delete
               >
                 Cancel
               </Button>
@@ -525,7 +529,7 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
         <TableBody>
           {
             this.state.linodeConfigs.map(config => (
-              <TableRow key={config.id}>
+              <TableRow key={config.id} data-qa-config={config.label}>
                 <TableCell>{config.label}</TableCell>
                 <TableCell>
                   <LinodeConfigActionMenu
