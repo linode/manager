@@ -27,12 +27,16 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 
 const styled = withStyles(styles, { withTheme: true });
 
+type updateNodeBalancerData = 'label' | 'client_conn_throttle';
+
 interface Props {
   error?: string;
   labelFieldProps?: TextFieldProps;
   isExpansion?: boolean;
   expansionHeader?: string;
-  actions?: () => void;
+  actions?: (whichField: updateNodeBalancerData) => void;
+  isSubmitting?: boolean;
+  success?: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -47,24 +51,28 @@ class InfoPanel extends React.Component<CombinedProps> {
   };
 
   render() {
-    const { actions, isExpansion, expansionHeader, classes, error, labelFieldProps } = this.props;
+    const { actions, isExpansion, isSubmitting, expansionHeader,
+       classes, error, success, labelFieldProps } = this.props;
 
     return (
       <React.Fragment>
         {isExpansion // will either be an expandable panel that will save the settings or a card
           ? <ExpansionPanel
             defaultExpanded={true}
+            success={success}
             heading={expansionHeader || 'Label'}
           >
             <div className={classes.inner}>
               {error && <Notice text={error} error />}
               <TextField {...labelFieldProps} />
             </div>
-            {!actions &&
+            {actions &&
               <ActionsPanel>
                 <Button
                   variant="raised"
+                  onClick={() => actions('label')}
                   color="primary"
+                  disabled={isSubmitting}
                   data-qa-label-save
                 >
                   Save
