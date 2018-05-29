@@ -1,6 +1,44 @@
 import * as Axios from 'axios';
-import { compose, isEmpty, lensPath, not, omit, set, when } from 'ramda';
 import { validate, Schema } from 'joi';
+import {
+  compose,
+  isEmpty,
+  lensPath,
+  lensProp,
+  not,
+  omit,
+  path,
+  pathOr,
+  set,
+  tap,
+  when,
+} from 'ramda';
+import * as Raven from 'raven-js';
+
+const errorsMap: { [index: string]: string } = {
+  region_any_required: 'A region is required.',
+};
+
+const getErrorReason = compose(
+
+  pathOr('Please check your data and try again.', ['result']),
+
+  tap(({ key, result }) => {
+    if (result) {
+      return;
+    }
+
+    if (process.env.NODE_ENV !== 'production') {
+      return console.warn(`Unhandled validation error for ${key}.`);
+    }
+
+    Raven.captureException('Unhandled validation error', { extra: { key } });
+  }),
+
+  (obj: { key: string }) => set(lensProp('result'), path([obj.key], errorsMap), obj),
+
+  (key: string) => ({ key }),
+);
 
 interface RequestConfig extends Axios.AxiosRequestConfig {
   validationErrors?: { field?: string, response: string }[];
@@ -43,7 +81,14 @@ export const validateRequestData = (data: any, schema: Schema) =>
     const { error } = validate(data, schema);
 
     return error
-      ? set(L.validationErrors, error.details.map(d => d.message), config)
+      ? set(L.validationErrors, error.details.map((detail) => {
+        const path = detail.path.join('_');
+        const type = detail.type.replace('.', '_');
+        return {
+          field: path,
+          reason: getErrorReason(`${path}_${type}`),
+        };
+      }), config)
       : config;
   };
 
