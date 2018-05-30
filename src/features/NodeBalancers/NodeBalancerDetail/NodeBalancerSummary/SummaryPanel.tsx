@@ -60,12 +60,7 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
           <Typography variant="caption">
             <strong>
               Ports: </strong> {nodeBalancer.ports.length === 0 && 'None'}
-              {nodeBalancer.ports.map((port, index, ports) => {
-                // we want a comma after the port number as long as the ports array
-                // has multiple values and the current index isn't the last
-                // element in the array
-                return (ports.length > 1 && index + 1 !== ports.length) ? `${port}, ` : port;
-              })}
+              {nodeBalancer.ports.join(', ')}
           </Typography>
         </Grid>
         <Grid item xs={12} sm={6} lg={3}>
