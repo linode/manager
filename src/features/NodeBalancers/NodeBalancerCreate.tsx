@@ -45,7 +45,8 @@ import Notice from 'src/components/Notice';
 type Styles =
   'root'
   | 'main'
-  | 'sidebar';
+  | 'sidebar'
+  | 'title';
 
 const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   root: {
@@ -53,6 +54,9 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   main: {
   },
   sidebar: {
+  },
+  title: {
+    marginTop: theme.spacing.unit,
   },
 });
 
@@ -376,8 +380,10 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               }}
             />
             <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }} >
-              <Grid item>
-                <Typography variant="title">NodeBalancer Settings</Typography>
+              <Grid item xs={12}>
+                <Typography variant="title" className={classes.title}>
+                  NodeBalancer Settings
+                </Typography>
               </Grid>
               {
                 this.state.nodeBalancerFields.configs.map((nodeBalancerConfig, idx) => {
