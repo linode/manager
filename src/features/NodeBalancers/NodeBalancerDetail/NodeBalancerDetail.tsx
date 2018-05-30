@@ -25,6 +25,7 @@ import {
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 // import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
+import NodeBalancerSettings from './NodeBalancerSettings';
 
 import Grid from 'src/components/Grid';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
@@ -118,7 +119,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
 
   updateLabel = (label: string) => {
     const { nodeBalancer } = this.state;
-    updateNodeBalancer(nodeBalancer.id, label)
+    updateNodeBalancer(nodeBalancer.id, { label })
       .catch((error) => {
         error.response.data.errors.map((error: Linode.ApiFieldError) =>
           sendToast(error.reason, 'error'));
@@ -211,7 +212,12 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
             }
           />
           <Route exact path={`${path}/configurations`} render={() => <div>Hello World</div>} />
-          <Route exact path={`${path}/settings`} render={() => <div>Hello World</div>} />
+          <Route exact path={`${path}/settings`} render={() =>
+          <NodeBalancerSettings
+            nodeBalancerId={nodeBalancer.id}
+            nodeBalancerLabel={nodeBalancer.label}
+            nodeBalancerClientConnThrottle={nodeBalancer.client_conn_throttle}
+            />} />
           {/* 404 */}
           < Redirect to={`${url}/summary`} />
         </Switch>

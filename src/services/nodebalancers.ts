@@ -29,11 +29,12 @@ export const getNodeBalancer = (id: number) => Request<NodeBalancer>(
   setMethod('GET'),
 ).then(response => response.data);
 
-export const updateNodeBalancer = (id: number, label: string) => Request<NodeBalancer>(
-  setURL(`${API_ROOT}/nodebalancers/${id}`),
-  setMethod('PUT'),
-  setData({ label }),
-).then(response => response.data);
+export const updateNodeBalancer = (id: number, data: Partial<NodeBalancer>) =>
+  Request<NodeBalancer>(
+    setURL(`${API_ROOT}/nodebalancers/${id}`),
+    setMethod('PUT'),
+    setData(data),
+  ).then(response => response.data);
 
 export const createNodeBalancerConfigNodeSchema = Joi.object({
   label: Joi.string().min(3).max(32).required(),
