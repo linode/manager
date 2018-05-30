@@ -5,12 +5,14 @@ import {
 } from 'material-ui';
 import IconButton from 'material-ui/IconButton';
 import Menu from 'material-ui/Menu';
-import MenuItem from 'material-ui/Menu/MenuItem';
 import MoreHoriz from 'material-ui-icons/MoreHoriz';
+
+import MenuItem from 'src/components/MenuItem';
 
 export interface Action {
   title: string;
   disabled?: boolean;
+  tooltip?: string;
   onClick: (e: React.MouseEvent<HTMLAnchorElement>) => void;
 }
 
@@ -140,7 +142,10 @@ class ActionMenu extends React.Component<CombinedProps, State> {
               className={classes.item}
               data-qa-action-menu-item={a.title}
               disabled={a.disabled}
-            >{a.title}</MenuItem>,
+              tooltip={a.tooltip}
+            >
+              {a.title}
+            </MenuItem>,
           )}
         </Menu>
       </div >);
