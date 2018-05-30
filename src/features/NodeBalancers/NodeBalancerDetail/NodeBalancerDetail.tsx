@@ -187,8 +187,12 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
             }
           />
           <Route exact path={`${path}/configurations`} render={() => <div>Hello World</div>} />
-          <Route exact path={`${path}/settings`} render={() => <NodeBalancerSettings
-            nodeBalancer={nodeBalancer} />} />
+          <Route exact path={`${path}/settings`} render={() =>
+          <NodeBalancerSettings
+            nodeBalancerId={nodeBalancer.id}
+            nodeBalancerLabel={nodeBalancer.label}
+            nodeBalancerClientConnThrottle={nodeBalancer.client_conn_throttle}
+            />} />
           {/* 404 */}
           < Redirect to={`${url}/summary`} />
         </Switch>

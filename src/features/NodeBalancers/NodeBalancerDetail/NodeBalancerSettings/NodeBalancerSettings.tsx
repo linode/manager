@@ -39,7 +39,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 });
 
 interface Props {
-  nodeBalancer: Linode.NodeBalancer;
+  nodeBalancerId: number;
+  nodeBalancerLabel: string;
+  nodeBalancerClientConnThrottle: number;
 }
 
 interface State {
@@ -69,7 +71,10 @@ const errorResources = {
 };
 
 class NodeBalancerSettings extends React.Component<CombinedProps, State> {
-  static defaultFieldsStates = {};
+  static defaultFieldsStates = (props: CombinedProps) => ({
+    label: props.nodeBalancerLabel,
+    client_conn_throttle: props.nodeBalancerClientConnThrottle,
+  })
 
   static defaultSuccessMessages = {
     label: undefined,
@@ -79,7 +84,7 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
   state: State = {
     isSubmitting: false,
     errors: undefined,
-    fields: NodeBalancerSettings.defaultFieldsStates,
+    fields: NodeBalancerSettings.defaultFieldsStates(this.props),
     success: NodeBalancerSettings.defaultSuccessMessages,
   };
 
@@ -91,7 +96,7 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
       success: NodeBalancerSettings.defaultSuccessMessages,
     });
     const data = (whichField === 'label') ? { label } : { client_conn_throttle };
-    updateNodeBalancer(this.props.nodeBalancer.id, data).then((data) => {
+    updateNodeBalancer(this.props.nodeBalancerId, data).then((data) => {
       this.setState({
         isSubmitting: false,
         success: (whichField === 'label')
@@ -114,6 +119,7 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
     const { classes } = this.props;
     const hasErrorFor = getAPIErrorFor(errorResources, this.state.errors);
     const generalError = hasErrorFor('none');
+
     return (
       <React.Fragment>
         <Typography variant="headline" className={classes.title}>
