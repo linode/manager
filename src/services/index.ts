@@ -29,6 +29,7 @@ const getErrorReason = compose(
     }
 
     if (process.env.NODE_ENV !== 'production') {
+      /* tslint:disable-next-line */
       return console.warn(`Unhandled validation error for ${key}.`);
     }
 
