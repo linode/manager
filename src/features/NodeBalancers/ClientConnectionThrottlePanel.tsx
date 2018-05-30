@@ -78,7 +78,7 @@ class ClientConnectionThrottlePanel extends React.Component<CombinedProps> {
             {expansion.action &&
               <ActionsPanel className={expansion ? classes.expPanelButton : ''}>
                 <Button
-                  onClick={() => expansion.action!}
+                  onClick={expansion.action}
                   variant="raised"
                   disabled={expansion.isSubmitting}
                   color="primary"
