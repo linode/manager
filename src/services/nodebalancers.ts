@@ -39,7 +39,7 @@ export const createNodeBalancerConfigNodeSchema = Joi.object({
   label: Joi.string().min(3).max(32).required(),
   address: Joi.string().regex(/^192\.168\.\d{1,3}\.\d{1,3}:[0-9]+$/).required(),
   weight: Joi.number().min(1).max(255),
-  mode: Joi.valid('accept', 'deny', 'drain'),
+  mode: Joi.valid('accept', 'reject', 'drain'),
 });
 
 export const createNodeBalancerConfigNode = (

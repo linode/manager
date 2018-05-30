@@ -23,7 +23,7 @@ namespace Linode {
     total: number;
   }
 
-  export type NodeBalancerConfigNodeMode = 'accept' | 'deny' | 'drain';
+  export type NodeBalancerConfigNodeMode = 'accept' | 'reject' | 'drain';
 
   export interface NodeBalancerConfigNode {
     label: string;
