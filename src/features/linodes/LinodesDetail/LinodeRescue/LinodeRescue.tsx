@@ -36,13 +36,12 @@ import createDevicesFromStrings, { DevicesAsStrings } from 'src/utilities/create
 
 type ClassNames = 'root'
   | 'title'
-  | 'intro'
-  | 'actionPanel';
+  | 'intro';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     padding: theme.spacing.unit * 3,
-    paddingBottom: theme.spacing.unit * 1,
+    paddingBottom: theme.spacing.unit * 3,
     '& .iconTextLink': {
       display: 'inline-flex',
       margin: `${theme.spacing.unit * 3}px 0 0 0`,
@@ -53,10 +52,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
   intro: {
     marginBottom: theme.spacing.unit * 2,
-  },
-  actionPanel: {
-    padding: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit * 3,
   },
 });
 
@@ -203,7 +198,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
             left
           />
         </Paper>
-        <ActionsPanel className={classes.actionPanel}>
+        <ActionsPanel>
           <Button onClick={this.onSubmit} variant="raised" color="primary">Submit</Button>
         </ActionsPanel>
       </React.Fragment>
