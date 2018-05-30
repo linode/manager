@@ -31,7 +31,6 @@ type ClassNames = 'root'
  | 'title'
  | 'intro'
  | 'imageControl'
- | 'image'
  | 'actionPanel';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
@@ -47,10 +46,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
   imageControl: {
     display: 'flex',
-  },
-  image: {
-    display: 'flex',
-    flexWrap: 'wrap',
   },
   actionPanel: {
     padding: theme.spacing.unit * 2,
@@ -153,7 +148,7 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
             <InputLabel htmlFor="image-select" disableAnimation shrink={true}>
               Image
             </InputLabel>
-            <div className={classes.image}>
+            <div>
               <Select
                 helpText="Choosing a 64-bit distro is recommended."
                 error={Boolean(imageError)}

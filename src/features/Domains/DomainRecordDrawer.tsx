@@ -63,7 +63,6 @@ interface EditableDomainFields extends EditableSharedFields {
   refresh_sec?: number;
   retry_sec?: number;
   soa_email?: string;
-  status?: Linode.DomainStatus;
   ttl_sec?: number;
   zonefile?: Linode.ZoneFile;
 }
@@ -104,7 +103,6 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     weight: pathOr(5, ['weight'], props),
     domain: pathOr(undefined, ['domain'], props),
     soa_email: pathOr(undefined, ['soa_email'], props),
-    status: pathOr('active', ['status'], props),
     axfr_ips: pathOr(0, ['axfr_ips'], props),
     refresh_sec: pathOr(0, ['refresh_sec'], props),
     retry_sec: pathOr(0, ['retry_sec'], props),
@@ -127,7 +125,6 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
   setRefreshSec = this.updateField('refresh_sec');
   setRetrySec = this.updateField('retry_sec');
   setExpireSec = this.updateField('expire_sec');
-  setStatus = this.updateField('status');
 
   static errorFields = {
     name: 'name',
@@ -142,7 +139,6 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     weight: 'weight',
     domain: 'domain',
     soa_email: 'SOA email address',
-    status: 'status',
     axfr_ips: 'domain transfers',
     refresh_sec: 'refresh rate',
     retry_sec: 'retry rate',
@@ -202,18 +198,6 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
 
   RetryRateField = () =>
     <this.MSSelect label="Retry Rate" field="retry_sec" fn={this.setRetrySec} />
-
-  DomainStatusField = () =>
-    <TextField
-      label="DomainStatus"
-      select
-      value={defaultTo('active', (this.state.fields as EditableDomainFields).status)}
-      onChange={e => this.setStatus(e.target.value)}
-    >
-      <MenuItem value="active">Active</MenuItem>
-      <MenuItem value="disabled">Disabled</MenuItem>
-      <MenuItem value="edit_mode">Edit Mode</MenuItem>
-    </TextField>
 
   ExpireField = () =>
     <TextField
@@ -382,7 +366,6 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         'retry_sec',
         'expire_sec',
         'ttl_sec',
-        'status',
         'axfr_ips',
       ], fields),
     ],
@@ -431,7 +414,6 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       fields: [
         (idx: number) => <this.TextField field="domain" label="Domain" key={idx} />,
         (idx: number) => <this.TextField field="soa_email" label="SOA Email" key={idx} />,
-        (idx: number) => <this.DomainStatusField key={idx} />,
         (idx: number) => <this.DomainTrainsferField key={idx} />,
         (idx: number) => <this.DefaultTTLField key={idx} />,
         (idx: number) => <this.RefreshRateField key={idx} />,

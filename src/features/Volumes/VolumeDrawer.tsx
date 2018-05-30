@@ -77,6 +77,7 @@ interface State {
   label: string;
   size: number;
   region: string;
+  linodes: Linode.Linode[];
   linodeId: number;
   configs: string[][];
   selectedConfig?: string;
@@ -110,6 +111,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     label: this.props.label,
     size: this.props.size,
     region: this.props.region,
+    linodes: path(['response', 'data'], this.props.linodes) || [],
     linodeId: this.props.linodeId,
     configs: [],
   };
@@ -146,6 +148,18 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
         linodeId: nextProps.linodeId,
         errors: undefined,
       });
+    }
+
+    /* If the drawer is opening */
+    if ((this.props.mode === modes.CLOSED) && !(nextProps.mode === modes.CLOSED)) {
+      /* re-request the list of Linodes */
+      getLinodes()
+        .then((response) => {
+          this.setState({ linodes: response.data });
+        })
+        .catch(() => {
+          /* keep the existing list of Linodes in the case that this call fails */
+        });
     }
   }
 
@@ -287,8 +301,8 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
 
   render() {
     const { mode, classes } = this.props;
+    const { linodes } = this.state;
     const regions = this.props.regions;
-    const linodes = path(['response', 'data'], this.props.linodes) as Linode.Linode[];
     const linodeLabel = this.props.linodeLabel || '';
 
     const {
