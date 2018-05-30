@@ -1,9 +1,12 @@
 import * as React from 'react';
-import { compose, isEmpty, not, when } from 'ramda';
+import { reduce, compose, isEmpty, not, when } from 'ramda';
 import { withStyles, StyleRulesCallback, WithStyles, Theme, Divider, MenuItem } from 'material-ui';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 
+import PlusSquare from 'src/assets/icons/plus-square.svg';
+import IconTextLink from 'src/components/IconTextLink';
+import Button from 'src/components/Button';
 import Grid from 'src/components/Grid';
 import TextField from 'src/components/TextField';
 import CheckBox from 'src/components/CheckBox';
@@ -31,6 +34,17 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 });
 
 const styled = withStyles(styles, { withTheme: true });
+
+const filterErrors = (idx: number) => reduce((
+  prev: Linode.ApiFieldError[],
+  next: Linode.ApiFieldError): Linode.ApiFieldError[] => {
+  const t = new RegExp(`nodes_${idx}_`);
+
+  return t.test(next.field)
+    ? [...prev, { ...next, field: next.field.replace(t, '') }]
+    : prev;
+
+}, []);
 
 interface Props {
   errors?: Linode.ApiFieldError[];
@@ -73,6 +87,14 @@ interface Props {
 
   privateKey: string;
   onPrivateKeyChange: (v: string) => void;
+
+  nodes: Linode.NodeBalancerConfigNode[];
+  addNode: () => void;
+  removeNode: (configId: number) => void;
+  onNodeLabelChange: (idx: number, value: string) => void;
+  onNodeAddressChange: (idx: number, value: string) => void;
+  onNodeWeightChange: (idx: number, value: number) => void;
+  onNodeModeChange: (idx: number, value: string) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -126,6 +148,14 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
 
       sslCertificate,
       onSslCertificateChange,
+
+      nodes,
+      addNode,
+      removeNode,
+      onNodeLabelChange,
+      onNodeAddressChange,
+      onNodeWeightChange,
+      onNodeModeChange,
     } = this.props;
 
     const hasErrorFor = getAPIErrorFor({
@@ -354,6 +384,80 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
             </Grid>
             <Grid item xs={12}>
               <Divider className={classes.divider} />
+            </Grid>
+          </Grid>
+
+          <Grid container>
+            <Grid item xs={12}>
+              <Typography variant="title">Choose Backend IPs</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              {
+                nodes.map((node, idx) => {
+                  const hasErrorFor = getAPIErrorFor({
+                    label: 'label',
+                    address: 'address',
+                    weight: 'weight',
+                    mode: 'mode',
+                  }, filterErrors(idx)(errors || []));
+
+                  return (
+                    <Grid key={idx} container>
+                      <Grid item xs={12} md={3}>
+                        <TextField
+                          label="Label"
+                          value={node.label}
+                          onChange={e => onNodeLabelChange(idx, e.target.value)}
+                          errorText={hasErrorFor('label')}
+                        />
+                      </Grid>
+                      <Grid item xs={12} md={3}>
+                        <TextField
+                          label="Address"
+                          value={node.address}
+                          onChange={e => onNodeAddressChange(idx, e.target.value)}
+                          errorText={hasErrorFor('address')}
+                        />
+                      </Grid>
+                      <Grid item xs={12} md={3}>
+                        <TextField
+                          label="Weight"
+                          type="number"
+                          value={node.weight}
+                          onChange={e => onNodeWeightChange(idx, e.target.valueAsNumber)}
+                          errorText={hasErrorFor('weight')}
+                        />
+                      </Grid>
+                      <Grid item xs={12} md={3}>
+                        <TextField
+                          label="Mode"
+                          value={node.mode}
+                          select
+                          onChange={e => onNodeModeChange(idx, e.target.value)}
+                          errorText={hasErrorFor('mode')}
+                        >
+                        <MenuItem value="accept">Accept</MenuItem>
+                        <MenuItem value="reject">Reject</MenuItem>
+                        <MenuItem value="drain">Drain</MenuItem>
+                        </TextField>
+                      </Grid>
+                      <Grid item xs={12} md={3}>
+                        {idx !== 0 && <Button onClick={() => removeNode(idx)}>Delete</Button>}
+                      </Grid>
+                    </Grid>
+                  );
+                })
+              }
+            </Grid>
+            <Grid item xs={12}>
+              <IconTextLink
+                SideIcon={PlusSquare}
+                onClick={addNode}
+                title="Add a Node"
+                text="Add a Node"
+              >
+                Add a Node
+            </IconTextLink>
             </Grid>
           </Grid>
         </div>

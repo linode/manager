@@ -35,6 +35,26 @@ export const updateNodeBalancer = (id: number, label: string) => Request<NodeBal
   setData({ label }),
 ).then(response => response.data);
 
+export const createNodeBalancerConfigNodeSchema = Joi.object({
+  label: Joi.string().min(3).max(32).required(),
+  address: Joi.string().regex(/^192\.168\.\d{1,3}\.\d{1,3}:[0-9]+$/).required(),
+  weight: Joi.number().min(1).max(255),
+  mode: Joi.valid('accept', 'deny', 'drain'),
+});
+
+export const createNodeBalancerConfigNode = (
+  nodeBalancerId: number,
+  configId: number,
+  data: any,
+) =>
+  Request<Linode.NodeBalancerConfigNode>(
+    setMethod('POST'),
+    setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes`),
+    setData(data),
+  )
+    .then(response => response.data);
+
+
 export const createNodeBalancerConfigSchema = Joi.object({
   algorithm: Joi.string(),
   check_attempts: Joi.number(),
@@ -53,6 +73,8 @@ export const createNodeBalancerConfigSchema = Joi.object({
   ssl_key: Joi.string().when('protocol', { is: 'https', then: Joi.required() }),
   ssl_cert: Joi.string().when('protocol', { is: 'https', then: Joi.required() }),
   stickiness: Joi.string(),
+  nodes: Joi.array()
+    .items(createNodeBalancerConfigNodeSchema),
 });
 
 export const createNodeBalancerConfig = (nodeBalancerId: number, data: any) =>
