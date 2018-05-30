@@ -1,5 +1,10 @@
 const { constants } = require('../../../constants');
 
+import {
+    apiCreateLinode,
+    apiDeleteAllLinodes,
+    apiDeleteAllVolumes,
+} from '../../../utils/common';
 import VolumeDetail from '../../../pageobjects/linode-detail/linode-detail-volume.page';
 import ListLinodes from '../../../pageobjects/list-linodes';
 import LinodeDetail from '../../../pageobjects/linode-detail/linode-detail.page';
@@ -14,6 +19,8 @@ describe('Edit - Clone - Resize Volumes Suite', () => {
 
     beforeAll(() => {
         browser.url(constants.routes.linodes);
+        apiCreateLinode();
+
         ListLinodes.linodeElem.waitForVisible();
         
         if (ListLinodes.getStatus(ListLinodes.linode[0]) !== 'offline') {
@@ -46,9 +53,8 @@ describe('Edit - Clone - Resize Volumes Suite', () => {
         browser.waitForVisible('[data-qa-volume-cell]');
         VolumeDetail.removeAllVolumes();
 
-        browser.url(constants.routes.linodes);
-        ListLinodes.linodeElem.waitForVisible();
-        ListLinodes.powerOn(ListLinodes.linode[0]);
+        apiDeleteAllLinodes();
+        apiDeleteAllVolumes();
     });
 
     it('should edit the volume label', () => {

@@ -48,7 +48,7 @@ export default class Page {
             const noticeMsgDisplays = $$('[data-qa-notice]')
                 .filter(n => !!n.getText().match(noticeRegex));
             return noticeMsgDisplays.length > 0;
-        }, 10000);
+        }, 10000, `${noticeMsg} failed to display`);
     }
 
     assertDocsDisplay() {

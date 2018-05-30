@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+const crypto = require('crypto');
 const { argv } = require('yargs');
 const {
     login,
@@ -8,6 +9,7 @@ const {
 const { removeAllLinodes } = require('../setup/setup');
 const { browserCommands } = require('./custom-commands');
 const { browserConf } = require('./browser-config');
+const { constants } = require('../constants');
 const selectedBrowser = argv.b ? browserConf[argv.b] : browserConf['chrome'];
 const username = process.env.MANAGER_USER;
 const password = process.env.MANAGER_PASS;
@@ -271,30 +273,22 @@ exports.config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      * @param {Array.<String>} specs List of spec file paths that ran
      */
-    // after: function (result, capabilities, specs) {
-    // },
+    after: function (result, capabilities, specs) {
+    },
     /**
      * Gets executed right after terminating the webdriver session.
      * @param {Object} config wdio configuration object
      * @param {Array.<Object>} capabilities list of capabilities details
      * @param {Array.<String>} specs List of spec file paths that ran
      */
-    // afterSession: function (config, capabilities, specs) {
-    // },
+    afterSession: function (config, capabilities, specs) {
+    },
     /**
      * Gets executed after all workers got shut down and the process is about to exit.
      * @param {Object} exitCode 0 - success, 1 - fail
      * @param {Object} config wdio configuration object
      * @param {Array.<Object>} capabilities list of capabilities details
      */
-    onComplete: function(exitCode, config, capabilities) {
-        const token = readToken();
-        return removeAllLinodes(token)
-            .then(() => {
-                resolve();
-            })
-            .catch(err => {
-                console.log(err);
-            });
-    }
+    // onComplete: function(exitCode, config, capabilities) {
+    // }
 }

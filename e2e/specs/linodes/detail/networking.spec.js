@@ -1,5 +1,9 @@
 const { constants } = require('../../../constants');
 
+import {
+    apiCreateLinode,
+    apiDeleteAllLinodes
+} from '../../../utils/common';
 import Networking from '../../../pageobjects/linode-detail/linode-detail-networking.page';
 import ListLinodes from '../../../pageobjects/list-linodes';
 import LinodeDetail from '../../../pageobjects/linode-detail/linode-detail.page';
@@ -7,10 +11,16 @@ import LinodeDetail from '../../../pageobjects/linode-detail/linode-detail.page'
 describe('Linode Detail - Networking Suite', () => {
     beforeAll(() => {
         browser.url(constants.routes.linodes);
+        apiCreateLinode();
+
         ListLinodes.linodesDisplay();
         ListLinodes.navigateToDetail();
         LinodeDetail.landingElemsDisplay();
         LinodeDetail.changeTab('Networking');
+    });
+
+    afterAll(() => {
+        apiDeleteAllLinodes();
     });
 
     it('should display networking base elements', () => {

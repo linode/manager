@@ -11,6 +11,7 @@ export class VolumeDetail extends Page {
     get label() { return $('[data-qa-volume-label]'); }
     get size() { return $('[data-qa-size]'); }
     get region() { return $('[data-qa-select-region]'); }
+    get regionField() { return $('[data-qa-region]'); }
     get attachToLinode() { return $('[data-qa-select-linode]'); }
     get attachedTo() { return $('[data-qa-attach-to]'); }
     get attachRegions() { return $$('[data-qa-attach-to-region]'); }

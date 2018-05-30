@@ -363,6 +363,7 @@ class SearchBar extends React.Component<FinalProps, State> {
         className={classes.item}
         classes={{ selected: classes.selectedMenuItem }}
         data-qa-suggestion={suggestion.title}
+        data-qa-selected={isHighlighted}
       >
         <SearchSuggestion
           Icon={suggestion.Icon}

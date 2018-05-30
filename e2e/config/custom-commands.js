@@ -1,4 +1,14 @@
-const { deleteAll } = require('../setup/setup');
+const {
+    deleteAll,
+    removeAllLinodes,
+    createLinode,
+    removeAllVolumes,
+} = require('../setup/setup');
+
+const https = require('https');
+const axios = require('axios');
+const { readToken } = require('../utils/config-utils');
+const API_ROOT = process.env.REACT_APP_API_ROOT;
 
 exports.browserCommands = () => {
     /* Overwrite the native getText function
@@ -18,6 +28,27 @@ exports.browserCommands = () => {
             return text;
         }
     }
+
+    browser.addCommand('readToken', function() {
+        const token = readToken();
+        return token;
+    });
+
+    browser.addCommand('createLinode', function async(token, password, linodeLabel=false) {
+        return createLinode(token, password, linodeLabel)
+            .then(res => res)
+            .catch(err => err);
+    });
+
+    browser.addCommand('removeAllLinodes', function async(token) {
+        return removeAllLinodes(token)
+            .then((res) => res.length > 0);
+    });
+
+    browser.addCommand('removeAllVolumes', function async(token) {
+        return removeAllVolumes(token)
+            then(res => res);
+    });
 
     /*
     * Executes a Javascript Click event via the browser console. 
