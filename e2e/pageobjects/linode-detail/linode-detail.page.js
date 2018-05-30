@@ -1,4 +1,4 @@
-import Page from './page';
+import Page from '../page';
 
 class LinodeDetail extends Page {
     get title() { return $('[data-qa-title]'); }
@@ -22,9 +22,8 @@ class LinodeDetail extends Page {
         browser.jsClick(`[data-qa-tab="${tab}"]`);
         browser.waitUntil(function() {
             return browser
-                .getAttribute(`[data-qa-tab="${tab}"]`, 'class')
-                .includes('Selected');
-        }, 5000);
+                .getAttribute(`[data-qa-tab="${tab}"]`, 'aria-selected').includes('true');
+        }, 5000, 'Failed to change tab');
         browser.waitForVisible('[data-qa-circle-progress]', 10000, true);
         return this;
     }

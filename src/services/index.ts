@@ -1,5 +1,49 @@
 import * as Axios from 'axios';
-import { compose, isEmpty, lensPath, not, set, when } from 'ramda';
+import { validate, Schema } from 'joi';
+import {
+  compose,
+  isEmpty,
+  lensPath,
+  lensProp,
+  not,
+  omit,
+  path,
+  pathOr,
+  set,
+  tap,
+  when,
+} from 'ramda';
+import * as Raven from 'raven-js';
+
+const errorsMap: { [index: string]: string } = {
+  region_any_required: 'A region is required.',
+};
+
+const getErrorReason = compose(
+
+  pathOr('Please check your data and try again.', ['result']),
+
+  tap(({ key, result }) => {
+    if (result) {
+      return;
+    }
+
+    if (process.env.NODE_ENV !== 'production') {
+      /* tslint:disable-next-line */
+      return console.warn(`Unhandled validation error for ${key}.`);
+    }
+
+    Raven.captureException('Unhandled validation error', { extra: { key } });
+  }),
+
+  (obj: { key: string }) => set(lensProp('result'), path([obj.key], errorsMap), obj),
+
+  (key: string) => ({ key }),
+);
+
+interface RequestConfig extends Axios.AxiosRequestConfig {
+  validationErrors?: { field?: string, response: string }[];
+}
 
 const L = {
   url: lensPath(['url']),
@@ -7,6 +51,7 @@ const L = {
   params: lensPath(['params']),
   data: lensPath(['data']),
   xFilter: lensPath(['headers', 'X-Filter']),
+  validationErrors: lensPath(['validationErrors']),
 };
 
 const isNotEmpty = compose(not, isEmpty);
@@ -32,8 +77,31 @@ export const setXFilter = (xFilter: any) => when(
   set(L.xFilter, JSON.stringify(xFilter)),
 );
 
+export const validateRequestData = (data: any, schema: Schema) =>
+  (config: RequestConfig) => {
+    const { error } = validate(data, schema);
+
+    return error
+      ? set(L.validationErrors, error.details.map((detail) => {
+        const path = detail.path.join('_');
+        const type = detail.type.replace('.', '_');
+        return {
+          field: path,
+          reason: getErrorReason(`${path}_${type}`),
+        };
+      }), config)
+      : config;
+  };
+
 /** Generator */
 export default <T>(...fns: Function[]): Axios.AxiosPromise<T> => {
   const config = fns.reverse().reduce((result, currentFn) => currentFn(result), {});
+  if (config.validationErrors) {
+    return Promise.reject({
+      config: omit(['validationErrors'], config),
+      response: { data: { errors: config.validationErrors } },
+    });
+  }
+
   return Axios.default(config);
 };

@@ -17,16 +17,18 @@ describe('Setup Tests Suite', () => {
     it('should create a generic linode account', () => {
         const testLabel = `${new Date().getTime()}-Test`;
         
+        // Wait for all linodes to be removed
         browser.waitUntil(function() {
             browser.refresh();
-            browser.waitForVisible('[data-qa-add-new-menu-button]');
+            browser.waitForVisible('[data-qa-add-new-menu-button]', 15000);
             browser.waitForVisible('[data-qa-circle-progress]', 15000, true);
             
-            if (browser.isVisible('[data-qa-placeholder-title]')) {
+            try {
+                browser.waitForVisible('[data-qa-placeholder-title]', 5000);
                 return true;
+            } catch (err) {
+                return false;
             }
-
-            return false;
         }, 25000);
 
         createGenericLinode(testLabel);

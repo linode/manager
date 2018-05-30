@@ -151,6 +151,7 @@ const preloaded = PromiseLoader<CombinedProps>({
 
 class LinodeDetail extends React.Component<CombinedProps, State> {
   eventsSubscription: Subscription;
+  volumeEventsSubscription: Subscription;
   notificationsSubscription: Subscription;
   mounted: boolean = false;
 
@@ -185,6 +186,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     this.mounted = false;
     this.eventsSubscription.unsubscribe();
     this.notificationsSubscription.unsubscribe();
+    this.volumeEventsSubscription.unsubscribe();
   }
 
   componentDidMount() {
@@ -199,6 +201,24 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
         requestAllTheThings(linodeId!)
           .then(({ linode, image, volumes, configs, disks }) => {
             this.setState({ linode, image, volumes, configs, disks });
+          });
+      });
+
+    this.volumeEventsSubscription = events$
+      .filter(e => [
+        'volume_attach',
+        'volume_clone',
+        'volume_create',
+        'volume_delete',
+        'volume_detach',
+        'volume_resize',
+      ].includes(e.action))
+      .filter(e => !e._initial)
+      .subscribe((v) => {
+        const { match: { params: { linodeId } } } = this.props;
+        getLinodeVolumes(linodeId!)
+          .then((response) => {
+            this.setState({ volumes: response.data });
           });
       });
 

@@ -128,7 +128,7 @@ export class ListLinodes extends Page {
         
         browser.waitUntil(function() {
             return browser.isVisible('[data-qa-status="offline"]');
-        }, 60000);
+        }, 60000 * 3, 'Failed to power down linode');
     }
 
     powerOn(linode) {
@@ -137,7 +137,7 @@ export class ListLinodes extends Page {
 
         browser.waitUntil(function() {
             return browser.isVisible('[data-qa-status="running"]');
-        }, 60000);
+        }, 60000 * 2);
     }
 
     shutdownIfRunning(linode) {
@@ -164,7 +164,7 @@ export class ListLinodes extends Page {
     waitUntilBooted(label) {
         browser.waitForVisible('[data-qa-circle-progress]', 15000, true);
         browser.waitForVisible('[data-qa-loading="true"]', 30000, true);
-        browser.waitForExist(`[data-qa-linode="${label}"] [data-qa-status="running"]`, 45000);
+        browser.waitForExist(`[data-qa-linode="${label}"] [data-qa-status="running"]`, 60000 * 2);
     }
 
     acceptDialog(dialogTitle) {
