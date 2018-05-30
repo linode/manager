@@ -251,7 +251,7 @@ const LinodeTheme: Linode.Theme = {
     MuiFormControl: {
       root: {
         marginTop: 16,
-        minWidth: 200,
+        minWidth: 120,
         '&.copy > div': {
           backgroundColor: '#f4f4f4',
         },
