@@ -2,8 +2,8 @@ const { constants } = require('../../constants');
 
 import SearchBar from '../../pageobjects/search.page';
 import ListLinodes from '../../pageobjects/list-linodes';
-import LinodeDetail from '../../pageobjects/linode-detail.page';
-import VolumeDetail from '../../pageobjects/linode-detail-volume.page';
+import LinodeDetail from '../../pageobjects/linode-detail/linode-detail.page';
+import VolumeDetail from '../../pageobjects/linode-detail/linode-detail-volume.page';
 
 describe('Header - Search - Volumes Suite', () => {
     const testVolume = {
@@ -31,7 +31,7 @@ describe('Header - Search - Volumes Suite', () => {
         }
     }
 
-    beforeAll(() => {
+    it('should setup the spec', () => {
         browser.url(constants.routes.linodes);
         
         ListLinodes.linodesDisplay();
@@ -40,14 +40,14 @@ describe('Header - Search - Volumes Suite', () => {
         ListLinodes.shutdownIfRunning(ListLinodes.linode[0]);
         
         navigateToVolumes(linodeName);
-        const volumeCount = !VolumeDetail.placeholderText.isVisible() ? VolumeDetail.volumeCell.length : 0;
+        const volumeCount = VolumeDetail.volumeCellElem.isVisible() ? VolumeDetail.volumeCell.length : 0;
         
         VolumeDetail.createVolume(testVolume);
 
         // Wait until the volume is created before searching for it
         browser.waitUntil(function() {
             return VolumeDetail.volumeCell.length === volumeCount + 1;
-        }, 25000);
+        }, 25000, 'Volume failed to be created');
 
         testVolume['id'] = VolumeDetail.getVolumeId(testVolume.label);
     });

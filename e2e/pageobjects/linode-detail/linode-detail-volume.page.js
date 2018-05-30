@@ -1,4 +1,4 @@
-import Page from './page';
+import Page from '../page';
 
 export class VolumeDetail extends Page {
     get drawerTitle() { return $('[data-qa-drawer-title]'); }
@@ -227,11 +227,6 @@ export class VolumeDetail extends Page {
         browser.waitUntil(function(volumeElement) {
             return $$('[data-qa-volume-cell]').length === (numberOfVolumes-1)
         }, 30000, 'Volume failed to be removed');
-    }
-
-    selectActionMenuItem(volume, item) {
-        volume.$(this.volumeActionMenu.selector).click();
-        browser.jsClick(`[data-qa-action-menu-item="${item}"]`);
     }
 
     assertVolumeInTable(volume) {
