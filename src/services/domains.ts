@@ -56,7 +56,7 @@ export const createDomain = (data: Partial<Linode.Domain>) =>
   setData(data),
   setURL(`${API_ROOT}/domains`),
   setMethod('POST'),
-);
+  );
 
 export const updateDomain = (
   domainId: number,
@@ -64,7 +64,7 @@ export const updateDomain = (
 ) => Request<Domain>(
   setURL(`${API_ROOT}/domains/${domainId}`),
   setMethod('PUT'),
-  setData(data),
+  setData({ status: 'active', ...data }), // remove ability for user to change status
   );
 
 export const deleteDomain = (domainID: number) =>
