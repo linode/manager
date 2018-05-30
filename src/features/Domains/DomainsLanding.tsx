@@ -138,13 +138,13 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
     }
   }
 
-  openRemoveDialog(domain: string, domainID: number) {
+  openRemoveDialog = (domain: string, domainID: number) => {
     this.setState({
       removeDialog: { open: true, domain, domainID },
     });
   }
 
-  closeRemoveDialog() {
+  closeRemoveDialog = () => {
     this.setState({
       removeDialog: { open: false, domain: undefined, domainID: undefined },
     });
