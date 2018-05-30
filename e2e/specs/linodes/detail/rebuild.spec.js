@@ -1,8 +1,8 @@
 const { constants } = require('../../../constants');
 
-import Rebuild from '../../../pageobjects/linode-detail-rebuild.page';
+import Rebuild from '../../../pageobjects/linode-detail/linode-detail-rebuild.page';
 import ListLinodes from '../../../pageobjects/list-linodes';
-import LinodeDetail from '../../../pageobjects/linode-detail.page';
+import LinodeDetail from '../../../pageobjects/linode-detail/linode-detail.page';
 
 describe('Linode Detail - Rebuild Suite', () => {
     beforeAll(() => {

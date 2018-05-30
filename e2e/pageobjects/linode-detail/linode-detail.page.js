@@ -1,4 +1,4 @@
-import Page from './page';
+import Page from '../page';
 
 class LinodeDetail extends Page {
     get title() { return $('[data-qa-title]'); }

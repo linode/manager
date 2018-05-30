@@ -3,8 +3,8 @@ const { constants } = require('../constants');
 import ConfigureLinode from '../pageobjects/configure-linode';
 import ListLinodes from '../pageobjects/list-linodes';
 import Create from '../pageobjects/create';
-import Settings from '../pageobjects/linode-detail-settings.page';
-import LinodeDetail from '../pageobjects/linode-detail.page';
+import Settings from '../pageobjects/linode-detail/linode-detail-settings.page';
+import LinodeDetail from '../pageobjects/linode-detail/linode-detail.page';
 
 export const createGenericLinode = (label) => {
     Create.menuButton.click();

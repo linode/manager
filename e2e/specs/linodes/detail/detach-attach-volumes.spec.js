@@ -1,8 +1,8 @@
 const { constants } = require('../../../constants');
 
-import VolumeDetail from '../../../pageobjects/linode-detail-volume.page';
+import VolumeDetail from '../../../pageobjects/linode-detail/linode-detail-volume.page';
 import ListLinodes from '../../../pageobjects/list-linodes';
-import LinodeDetail from '../../../pageobjects/linode-detail.page';
+import LinodeDetail from '../../../pageobjects/linode-detail/linode-detail.page';
 
 describe('Linode - Volumes - Attach, Detach, Delete Suite', () => {
     let linodeName;

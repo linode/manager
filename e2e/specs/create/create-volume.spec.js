@@ -1,7 +1,7 @@
 const { constants } = require('../../constants');
 
 import ListLinodes from '../../pageobjects/list-linodes';
-import VolumeDetail from '../../pageobjects/linode-detail-volume.page';
+import VolumeDetail from '../../pageobjects/linode-detail/linode-detail-volume.page';
 
 describe('Create - Volume Suite', () => {
     let linodeLabel;
@@ -51,6 +51,9 @@ describe('Create - Volume Suite', () => {
         browser.waitUntil(function() {
             return VolumeDetail.getVolumeId(testVolume.label).length > 0;
         }, 10000);
+
+        VolumeDetail.volumeCellElem.waitForVisible();
+        VolumeDetail.removeAllVolumes();
     });
 
     it('should create attached to a linode', () => {
@@ -58,10 +61,7 @@ describe('Create - Volume Suite', () => {
         testVolume['attachedLinode'] = linodeLabel;
 
         VolumeDetail.createVolume(testVolume, true);
-    });
 
-    it('should remove all volumes', () => {
-        browser.url(constants.routes.volumes);
         VolumeDetail.volumeCellElem.waitForVisible();
         VolumeDetail.removeAllVolumes();
     });

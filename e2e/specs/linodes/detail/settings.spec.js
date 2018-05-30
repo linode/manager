@@ -3,8 +3,8 @@ const { constants } = require('../../../constants');
 const { createGenericLinode, createLinodeIfNone } = require('../../../utils/common');
 
 import ListLinodes from '../../../pageobjects/list-linodes';
-import LinodeDetail from '../../../pageobjects/linode-detail.page';
-import Settings from '../../../pageobjects/linode-detail-settings.page';
+import LinodeDetail from '../../../pageobjects/linode-detail/linode-detail.page';
+import Settings from '../../../pageobjects/linode-detail/linode-detail-settings.page';
 
 describe('Linode Detail - Settings Suite', () =>{
     beforeAll(() => {

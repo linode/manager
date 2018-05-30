@@ -1,8 +1,8 @@
 const { constants } = require('../../../constants');
 
-import Networking from '../../../pageobjects/linode-detail-networking.page';
+import Networking from '../../../pageobjects/linode-detail/linode-detail-networking.page';
 import ListLinodes from '../../../pageobjects/list-linodes';
-import LinodeDetail from '../../../pageobjects/linode-detail.page';
+import LinodeDetail from '../../../pageobjects/linode-detail/linode-detail.page';
 
 describe('Linode Detail - Networking Suite', () => {
     beforeAll(() => {

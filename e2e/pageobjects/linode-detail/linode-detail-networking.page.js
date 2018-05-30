@@ -1,4 +1,4 @@
-import Page from './page';
+import Page from '../page';
 
 class Networking extends Page {
     get heading() { return $('[data-qa-title]'); }
