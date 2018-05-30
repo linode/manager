@@ -1,19 +1,6 @@
 import * as React from 'react';
 import * as Joi from 'joi';
-import {
-  clamp,
-  compose,
-  defaultTo,
-  lensPath,
-  map,
-  // over,
-  path,
-  pathOr,
-  reduce,
-  set,
-  view,
-  // when,
-} from 'ramda';
+import { clamp, compose, defaultTo, lensPath, map, path, pathOr, reduce, set, view } from 'ramda';
 import * as Promise from 'bluebird';
 import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';

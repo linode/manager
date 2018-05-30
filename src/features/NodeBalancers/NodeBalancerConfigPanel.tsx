@@ -1,10 +1,5 @@
 import * as React from 'react';
-import {
-  compose,
-  isEmpty,
-  not,
-  when,
-} from 'ramda';
+import { compose, isEmpty, not, when } from 'ramda';
 import { withStyles, StyleRulesCallback, WithStyles, Theme, Divider, MenuItem } from 'material-ui';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
@@ -74,11 +69,9 @@ interface Props {
   onSessionStickinessChange: (v: string) => void;
 
   sslCertificate: string;
-  sslCertificateError?: string;
   onSslCertificateChange: (v: string) => void;
 
   privateKey: string;
-  privateKeyError?: string;
   onPrivateKeyChange: (v: string) => void;
 }
 
