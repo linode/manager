@@ -451,7 +451,7 @@ const LinodeTheme: Linode.Theme = {
         padding: '5px 32px 5px 16px',
         color: '#666',
         backgroundColor: '#fff',
-        lineHeight: 2.2,
+        lineHeight: 2.3,
         minHeight: 44,
         '&:focus': {
           backgroundColor: '#fff',

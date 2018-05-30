@@ -70,9 +70,6 @@ class FormDrawer extends React.Component {
           Open Drawer
         </Button>
         <Drawer title="Form Drawer" open={this.state.open} onClose={this.toggleDrawer(false)} >
-          This is some test copy which acts as content for this Drawer component.
-          It's very interesting and you should read all of it. This text has to be sufficiently
-          long to test that it doesn't expand the drawer to an unreasonable width.
           <Form nomargins />
         </Drawer>
       </React.Fragment>
