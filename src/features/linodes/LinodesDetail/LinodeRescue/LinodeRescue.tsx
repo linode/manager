@@ -200,6 +200,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
             title="Add Disk"
             data-qa-oauth-create
             disabled={this.state.counter >= 6}
+            left
           />
         </Paper>
         <ActionsPanel className={classes.actionPanel}>
