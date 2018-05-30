@@ -125,7 +125,7 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
             isExpansion={true}
             success={success!.label}
             isSubmitting={isSubmitting}
-            actions={this.updateNodeBalancer}
+            action={this.updateNodeBalancer}
             labelFieldProps={{
               onChange: e => this.setState({
                 fields: {
@@ -143,7 +143,7 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
             isExpansion={true}
             isSubmitting={isSubmitting}
             success={success!.client_conn_throttle}
-            actions={this.updateNodeBalancer}
+            action={this.updateNodeBalancer}
             textFieldProps={{
               label: 'Client Connection Throttle',
               placeholder: '0',

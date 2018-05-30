@@ -38,14 +38,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 
 const styled = withStyles(styles, { withTheme: true });
 
-type updateNodeBalancerData = 'label' | 'client_conn_throttle';
+type updateNodeBalancerData = 'label';
 
 interface Props {
   error?: string;
   labelFieldProps?: TextFieldProps;
   isExpansion?: boolean;
   expansionHeader?: string;
-  actions?: (whichField: updateNodeBalancerData) => void;
+  action?: (whichField: updateNodeBalancerData) => void;
   isSubmitting?: boolean;
   success?: string;
 }
@@ -62,7 +62,7 @@ class InfoPanel extends React.Component<CombinedProps> {
   };
 
   render() {
-    const { actions, isExpansion, isSubmitting, expansionHeader,
+    const { action, isExpansion, isSubmitting, expansionHeader,
        classes, error, success, labelFieldProps } = this.props;
 
     return (
@@ -77,11 +77,11 @@ class InfoPanel extends React.Component<CombinedProps> {
               {error && <Notice text={error} error />}
               <TextField {...labelFieldProps} />
             </div>
-            {actions &&
+            {action &&
               <ActionsPanel className={isExpansion ? classes.expPanelButton : ''}>
                 <Button
                   variant="raised"
-                  onClick={() => actions('label')}
+                  onClick={() => action('label')}
                   color="primary"
                   disabled={isSubmitting}
                   data-qa-label-save

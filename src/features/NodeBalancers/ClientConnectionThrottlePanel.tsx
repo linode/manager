@@ -37,14 +37,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 
 const styled = withStyles(styles, { withTheme: true });
 
-type updateNodeBalancerData = 'label' | 'client_conn_throttle';
+type updateNodeBalancerData = 'client_conn_throttle';
 
 interface Props {
   error?: string;
   textFieldProps?: TextFieldProps;
   isExpansion?: boolean;
   expansionHeader?: string;
-  actions?: (whichField: updateNodeBalancerData) => void;
+  action?: (whichField: updateNodeBalancerData) => void;
   isSubmitting?: boolean;
   success?: string;
 }
@@ -60,7 +60,7 @@ class ClientConnectionThrottlePanel extends React.Component<CombinedProps> {
   };
 
   render() {
-    const { actions, isExpansion, isSubmitting, expansionHeader,
+    const { action, isExpansion, isSubmitting, expansionHeader,
       error, classes, success, textFieldProps } = this.props;
 
     return (
@@ -75,10 +75,10 @@ class ClientConnectionThrottlePanel extends React.Component<CombinedProps> {
               {error && <Notice text={error} error />}
               <TextField {...textFieldProps} />
             </div>
-            {actions &&
+            {action &&
               <ActionsPanel className={isExpansion ? classes.expPanelButton : ''}>
                 <Button
-                  onClick={() => actions('client_conn_throttle')}
+                  onClick={() => action('client_conn_throttle')}
                   variant="raised"
                   disabled={isSubmitting}
                   color="primary"
