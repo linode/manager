@@ -250,7 +250,6 @@ const LinodeTheme: Linode.Theme = {
     },
     MuiFormControl: {
       root: {
-        // minHeight: 50,
         marginTop: 16,
         minWidth: 200,
         '&.copy > div': {
