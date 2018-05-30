@@ -22,6 +22,14 @@ interface Props extends ButtonProps {
 }
 
 const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
+  '@keyframes rotate': {
+    from: {
+      transform: 'rotate(0deg)',
+    },
+    to: {
+      transform: 'rotate(360deg)',
+    },
+  },
   root: {
     '&.cancel': {
       border: `1px solid transparent`,
