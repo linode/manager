@@ -263,7 +263,7 @@ const LinodeTheme: Linode.Theme = {
       root: {
         minHeight: 50,
         marginTop: 16,
-        minWidth: 200,
+        minWidth: 120,
         '&.copy > div': {
           backgroundColor: '#f4f4f4',
         },
