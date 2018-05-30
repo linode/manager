@@ -40,7 +40,7 @@ const styled = withStyles(styles, { withTheme: true });
 
 interface ExpansionPanelProps {
   expansionHeader?: string;
-  action?: (whichField: 'label') => void;
+  action?: () => void;
   isSubmitting: boolean;
   success: string | undefined;
 }
@@ -81,7 +81,7 @@ class InfoPanel extends React.Component<CombinedProps> {
               <ActionsPanel className={expansion ? classes.expPanelButton : ''}>
                 <Button
                   variant="raised"
-                  onClick={() => expansion.action!('label')}
+                  onClick={() => expansion.action!}
                   color="primary"
                   disabled={expansion.isSubmitting}
                   data-qa-label-save

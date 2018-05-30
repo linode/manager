@@ -39,7 +39,7 @@ const styled = withStyles(styles, { withTheme: true });
 
 interface ExpansionPanelProps {
   expansionHeader?: string;
-  action?: (whichField: 'client_conn_throttle') => void;
+  action?: () => void;
   isSubmitting: boolean;
   success: string | undefined;
 }
@@ -78,7 +78,7 @@ class ClientConnectionThrottlePanel extends React.Component<CombinedProps> {
             {expansion.action &&
               <ActionsPanel className={expansion ? classes.expPanelButton : ''}>
                 <Button
-                  onClick={() => expansion.action!('client_conn_throttle')}
+                  onClick={() => expansion.action!}
                   variant="raised"
                   disabled={expansion.isSubmitting}
                   color="primary"
