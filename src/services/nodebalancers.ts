@@ -104,6 +104,11 @@ export const createNodeBalancer = (data: any) =>
   )
     .then(response => response.data);
 
+export const deleteNodeBalancer = (id: number) => Request<NodeBalancer>(
+  setMethod('DELETE'),
+  setURL(`${API_ROOT}/nodebalancers/${id}`),
+).then(response => response.data);
+
 export const getNodeBalancerStats = (nodeBalancerId: number, month?: string, year?: string) => {
   const endpoint = (year && month)
     ? `${API_ROOT}/nodebalancers/${nodeBalancerId}/stats/${year}/${month}`
