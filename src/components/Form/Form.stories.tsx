@@ -21,6 +21,8 @@ import TableBody from 'material-ui/Table/TableBody';
 import TableCell from 'material-ui/Table/TableCell';
 import TableHead from 'material-ui/Table/TableHead';
 import TableRow from 'material-ui/Table/TableRow';
+import InsertPhoto from 'material-ui-icons/InsertPhoto';
+import Alarm from 'material-ui-icons/Alarm';
 
 import Button from 'src/components/Button';
 import CheckBox from 'src/components/CheckBox';
@@ -32,8 +34,7 @@ import SelectionCard from 'src/components/SelectionCard';
 import Table from 'src/components/Table';
 import Toggle from 'src/components/Toggle';
 
-import InsertPhoto from 'material-ui-icons/InsertPhoto';
-import Alarm from 'material-ui-icons/Alarm';
+import scrollToError from 'src/utilities/scrollToError';
 
 const HelperItemStyles = {
   with: '100%',
@@ -62,6 +63,7 @@ class Form extends React.Component<State & Props> {
     RadioValue: undefined,
     TableRadioValue: '0',
     TableRadioValue2: '0',
+    password: '',
   };
 
   checkBoxClick = (type: string) => {
@@ -87,8 +89,13 @@ class Form extends React.Component<State & Props> {
     this.setState({ TableRadioValue2: e.target.value });
   }
 
+  onSubmit = () => {
+    this.setState({ password: 'This password will never be right' });
+    scrollToError('password');
+  }
+
   render() {
-    const { selected } = this.state;
+    const { selected, password } = this.state;
     const { nomargins } = this.props;
 
     return (
@@ -134,7 +141,7 @@ class Form extends React.Component<State & Props> {
               label="Input Some Text"
               placeholder="This is a placeholder"
             />
-            <PasswordInput label="Password" />
+            <PasswordInput label="Password" errorText={password} name="password" />
             <TextField
               label="Comments"
               value=""
@@ -380,7 +387,9 @@ class Form extends React.Component<State & Props> {
             </FormGroup>
 
             <ActionsPanel>
-              <Button type="primary">
+              <Button
+                type="primary"
+                onClick={this.onSubmit}>
                 Save
               </Button>
             </ActionsPanel>

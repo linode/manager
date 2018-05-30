@@ -22,7 +22,7 @@ type CSSClasses =
 
 interface Props extends SwitchProps {
   labelTop?: boolean;
-  label: string;
+  label?: string;
 }
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
