@@ -182,7 +182,10 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
             exact
             path={`${path}/summary`}
             render={() =>
-              <div>Hello World</div>
+              <div>
+                Hello World
+                {JSON.stringify(this.props.location)}
+              </div>
             }
           />
           <Route exact path={`${path}/configurations`} render={() => <div>Hello World</div>} />
