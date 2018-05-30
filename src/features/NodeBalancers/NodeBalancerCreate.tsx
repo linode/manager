@@ -159,27 +159,21 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     over(
       lensPath(['nodeBalancerFields', 'configs', configIdx, 'nodes']),
       append(NodeBalancerCreate.createNewNodeBalancerConfigNode()),
-    ),
-    () => console.log(this.state),
-  )
+    ))
 
   removeNodeBalancerConfigNode = (configIdx: number) => (nodeIdx: number) =>
     this.setState(
       over(
         lensPath(['nodeBalancerFields', 'configs', configIdx, 'nodes']),
         nodes => nodes.filter((n: any, idx: number) => idx !== nodeIdx),
-      ),
-      () => console.log(this.state),
-    )
+      ))
 
   setNodeValue = (cidx: number, nodeidx: number, key: string, value: any) =>
     this.setState(
       set(
         lensPath(['nodeBalancerFields', 'configs', cidx, 'nodes', nodeidx, key]),
         value,
-      ),
-      () => console.log(this.state),
-    )
+      ))
 
   onNodeLabelChange = (configIdx: number, nodeIdx: number, value: string) =>
     this.setNodeValue(configIdx, nodeIdx, 'label', value)
