@@ -301,7 +301,7 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
               <Button
                 data-qa-confirm-cancel
                 onClick={this.deleteNodeBalancer}
-                type="primary"
+                type="secondary"
                 destructive
                 loading={this.state.deleteConfirmDialog.submitting}
               >
@@ -319,7 +319,7 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
           }
           open={deleteConfirmAlertOpen}
         >
-          Are you sure you want to delete your NodeBalancer
+          <Typography>Are you sure you want to delete your NodeBalancer</Typography>
         </ConfirmationDialog>
       </React.Fragment>
     );

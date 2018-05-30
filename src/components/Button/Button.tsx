@@ -99,6 +99,7 @@ const WrappedButton: React.StatelessComponent<CombinedProps> = (props) => {
   return React.createElement(
     Button,
     {
+      ...rest,
       variant: getVariant(props),
       disabled: props.disabled || loading,
       color: getColor(props),
@@ -109,7 +110,6 @@ const WrappedButton: React.StatelessComponent<CombinedProps> = (props) => {
           [classes.loading]: loading,
           [classes.destructive]: destructive,
         }),
-      ...rest,
     },
     loading ? <Reload /> : props.children);
 };
