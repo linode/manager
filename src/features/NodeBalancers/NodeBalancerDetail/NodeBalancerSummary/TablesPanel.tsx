@@ -140,11 +140,11 @@ class TablesPanel extends React.Component<CombinedProps, State> {
     const { stats } = this.state;
     return (
       <React.Fragment>
-        <div className={classes.graphControls}>
-          <Typography variant="title" className={classes.graphTitle}>Graphs</Typography>
-        </div>
         {stats &&
           <React.Fragment>
+            <div className={classes.graphControls}>
+              <Typography variant="title" className={classes.graphTitle}>Graphs</Typography>
+            </div>
             <ExpansionPanel
               defaultExpanded
               heading="Connections (5 min avg.)"
