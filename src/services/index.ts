@@ -1,6 +1,14 @@
 import * as Axios from 'axios';
-import { compose, isEmpty, lensPath, not, omit, set, when } from 'ramda';
-import { validate, Schema } from 'joi';
+import * as validate from 'validate.js';
+import {
+  compose,
+  isEmpty,
+  lensPath,
+  not,
+  omit,
+  set,
+  when,
+} from 'ramda';
 
 interface RequestConfig extends Axios.AxiosRequestConfig {
   validationErrors?: { field?: string, response: string }[];
@@ -38,12 +46,32 @@ export const setXFilter = (xFilter: any) => when(
   set(L.xFilter, JSON.stringify(xFilter)),
 );
 
-export const validateRequestData = (data: any, schema: Schema) =>
+/**
+ * Add string validator to validate.js
+ * @TODO: Update validate.js when this is incorporated into the next release
+ * https://github.com/ansman/validate.js/issues/80#issuecomment-346240247
+ */
+validate.validators.string = (value: any, options: any, key: string) => {
+  if (options) {
+    if (validate.isString(value)) {
+      return null;
+    }
+    return options.message || 'is not a string';
+  }
+  return null;
+};
+
+export const validateRequestData = (data: any, schema: any) =>
   (config: RequestConfig) => {
-    const { error } = validate(data, schema);
+    const error = validate(data, schema, { format: 'detailed' });
 
     return error
-      ? set(L.validationErrors, error.details.map(d => d.message), config)
+      ? set(L.validationErrors, error.map((detail: any) => {
+        return {
+          field: detail.attribute,
+          reason: detail.error,
+        };
+      }), config)
       : config;
   };
 

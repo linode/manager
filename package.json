@@ -77,6 +77,7 @@
     "typeface-lato": "^0.0.54",
     "typeface-ubuntu-mono": "^0.0.54",
     "url-loader": "0.6.2",
+    "validate.js": "^0.12.0",
     "wdio-selenium-standalone-service": "^0.0.10",
     "webpack": "3.8.1",
     "webpack-dev-server": "2.9.4",
