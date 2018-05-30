@@ -52,12 +52,13 @@ class PasswordInput extends React.Component<CombinedProps, State> {
 
   render() {
     const { strength } = this.state;
-    const { classes, ...rest } = this.props;
+    const { classes, value, ...rest } = this.props;
 
     return (
       <Grid container className={classes.container}>
         <Grid item xs={12}>
           <HideShowText
+            value={value}
             {...rest}
             onChange={this.onChange}
             fullWidth
@@ -65,7 +66,8 @@ class PasswordInput extends React.Component<CombinedProps, State> {
         </Grid>
         {
           <Grid item xs={12} className={`${classes.strengthIndicator} py0`}>
-            <StrengthIndicator strength={strength} />
+            <StrengthIndicator strength={(value !== undefined &&
+              value.toString().length === 0) ? 0 : strength} />
           </Grid>
         }
       </Grid>
