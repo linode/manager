@@ -18,8 +18,7 @@ import { sendToast } from 'src/features/ToastNotifications/toasts';
 type ClassNames = 'root'
   | 'title'
   | 'subTitle'
-  | 'currentPlanContainer'
-  | 'actionPanel';
+  | 'currentPlanContainer';
 
 interface Props {
   linodeId: number;
@@ -129,7 +128,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
           onSelect={(id: string) => this.setState({ selectedId: id })}
           selectedID={this.state.selectedId}
         />
-        <ActionsPanel className={classes.actionPanel}>
+        <ActionsPanel>
           <Button
             variant="raised"
             color="primary"
@@ -164,10 +163,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
         borderColor: theme.color.border2,
       },
     },
-  },
-  actionPanel: {
-    padding: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit * 3,
   },
 });
 

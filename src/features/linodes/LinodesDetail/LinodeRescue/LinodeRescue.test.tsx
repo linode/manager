@@ -94,7 +94,6 @@ describe('LinodeRescue', () => {
             root: '',
             title: '',
             intro: '',
-            actionPanel: '',
           }}
           disks={disks}
           linodeId={7843027}

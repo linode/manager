@@ -50,7 +50,7 @@ type ClassNames = 'permsTable'
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   permsTable: {
-    margin: `${theme.spacing.unit * 3}px 0`,
+    marginTop: theme.spacing.unit * 3,
   },
   accessCell: {
     width: '31%',
