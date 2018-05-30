@@ -78,7 +78,6 @@ const LinodeTheme: Linode.Theme = {
         },
         '&.cancel': {
           borderColor: 'transparent',
-          marginLeft: 0,
           '&:hover, &:focus': {
             borderColor: '#5F99EA',
             backgroundColor: 'transparent',
@@ -150,14 +149,8 @@ const LinodeTheme: Linode.Theme = {
         margin: 0,
         padding: '0 24px 24px 24px',
         justifyContent: 'flex-start',
-        '& button': {
-          marginRight: 8,
-          '&:first-child': {
-            marginLeft: 0,
-          },
-          '&:last-child': {
-            marginRight: 0,
-          },
+        '& .actionPanel': {
+          padding: 0,
         },
       },
       action: {
@@ -180,15 +173,11 @@ const LinodeTheme: Linode.Theme = {
         },
       },
     },
-    MuiExpansionPanel: {},
-    MuiExpansionPanelActions: {
+    MuiExpansionPanel: {
       root: {
-        display: 'block',
-        backgroundColor: 'white',
-      },
-      action: {
-        '&:first-child': {
-          marginRight: 8,
+        '& .actionPanel': {
+          paddingLeft: 16,
+          paddingRight: 16,
         },
       },
     },
@@ -261,7 +250,6 @@ const LinodeTheme: Linode.Theme = {
     },
     MuiFormControl: {
       root: {
-        minHeight: 50,
         marginTop: 16,
         minWidth: 120,
         '&.copy > div': {
