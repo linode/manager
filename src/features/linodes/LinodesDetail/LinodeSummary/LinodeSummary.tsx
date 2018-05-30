@@ -1,8 +1,6 @@
 import * as React from 'react';
 import * as moment from 'moment';
 // import * as Raven from 'raven-js';
-import { Line } from 'react-chartjs-2';
-import { clone } from 'ramda';
 
 import { withStyles, StyleRulesCallback, WithStyles, Typography } from 'material-ui';
 import { InputLabel } from 'material-ui/Input';
@@ -12,9 +10,10 @@ import { MenuItem } from 'material-ui/Menu';
 // import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { setUpCharts } from 'src/utilities/charts';
 import transitionStatus from 'src/features/linodes/linodeTransitionStatus';
-import ExpansionPanel from 'src/components/ExpansionPanel';
 
+import ExpansionPanel from 'src/components/ExpansionPanel';
 import Select from 'src/components/Select';
+import LineGraph from 'src/components/LineGraph';
 
 import LinodeBusyStatus from './LinodeBusyStatus';
 import SummaryPanel from './SummaryPanel';
@@ -124,96 +123,9 @@ interface State {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const chartOptions: any = {
-  maintainAspectRatio: false,
-  animation: {
-    duration: 0,
-  },
-  legend: {
-    display: false,
-  },
-  scales: {
-    yAxes: [{
-      gridLines: {
-        borderDash: [3, 6],
-        zeroLineWidth: 1,
-        zeroLineBorderDashOffset: 2,
-      },
-      ticks: {
-        beginAtZero: true,
-        callback(value: number, index: number) {
-          if (value >= 1000000) {
-            return (value / 1000000) + 'M';
-          }
-          if (value >= 1000) {
-            return (value / 1000) + 'K';
-          }
-          return value;
-        },
-      },
-    }],
-    xAxes: [{
-      type: 'time',
-      gridLines: {
-        display: false,
-      },
-      time: {
-        displayFormats: {
-          hour: 'HH:00',
-          minute: 'HH:00',
-        },
-      },
-    }],
-  },
-  tooltips: {
-    cornerRadius: 0,
-    backgroundColor: '#fbfbfb',
-    bodyFontColor: '#333',
-    displayColors: false,
-    titleFontColor: '#666',
-    xPadding: 16,
-    yPadding: 10,
-    borderWidth: .5,
-    borderColor: '#999',
-    caretPadding: 10,
-    position: 'nearest',
-  },
-};
-
 const chartHeight = 300;
 
 const statsFetchInterval = 30000;
-
-const lineOptions = {
-  backgroundColor: 'rgba(0, 0, 0, 0)',
-  borderWidth: 1,
-  borderJoinStyle: 'miter',
-  lineTension: 0,
-  pointRadius: 0,
-  pointHitRadius: 10,
-};
-
-const statToLabel = {
-  cpu: 'CPU %',
-  netv4: 'IPv4 Traffic',
-  netv6: 'IPv6 Traffic',
-  in: 'Public Traffic In',
-  out: 'Public Traffic Out',
-  private_in: 'Private Traffic In',
-  private_out: 'Private Traffic Out',
-  io: 'Disk I/O',
-  swap: 'Swap I/O',
-};
-
-const statToColor = {
-  cpu: '#428ade',
-  in: '#3683dc',
-  out: '#01b159',
-  private_in: '#d01e1e',
-  private_out: '#ffd100',
-  io: '#ffd100',
-  swap: '#d01e1e',
-};
 
 class LinodeSummary extends React.Component<CombinedProps, State> {
   statsInterval?: number = undefined;
@@ -302,43 +214,6 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
     window.clearInterval(this.statsInterval as number);
   }
 
-  getChartJSDataFor(stat: string, data: [number, number][]) {
-    const timeData = data.reduce((acc: any, point: any) => {
-      acc.push({ t: point[0], y: point[1] });
-      return acc;
-    }, []);
-
-    return {
-      label: statToLabel[stat],
-      borderColor: statToColor[stat],
-      data: timeData,
-      ...lineOptions,
-    };
-  }
-
-  getChartOptions(stat: string) {
-    const finalChartOptions = clone(chartOptions);
-    const { rangeSelection } = this.state;
-
-    if (rangeSelection === '24') {
-      finalChartOptions.scales.xAxes[0].time.displayFormats = {
-        hour: 'HH:00',
-        minute: 'HH:00',
-      };
-    } else {
-      finalChartOptions.scales.xAxes[0].time.displayFormats = {
-        hour: 'MMM DD',
-        minute: 'MMM DD',
-      };
-    }
-
-    if (stat === 'cpu') {
-      finalChartOptions.scales.yAxes[0].ticks.suggestedMax = 100;
-    }
-
-    return finalChartOptions;
-  }
-
   handleChartRangeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     this.setState({ rangeSelection: value }, () => {
@@ -377,7 +252,7 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
             </div>
 
             <ExpansionPanel
-              heading={statToLabel.cpu}
+              heading="CPU %"
               defaultExpanded
             >
               <React.Fragment>
@@ -385,14 +260,17 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
                   <div className={classes.leftLegend}>
                     CPU %
                   </div>
-                  <Line
-                    height={chartHeight}
-                    options={this.getChartOptions('cpu')}
-                    data={{
-                      datasets: [
-                        this.getChartJSDataFor('cpu', stats.data.cpu) as any,
-                      ],
-                    }}
+                  <LineGraph
+                    chartHeight={chartHeight}
+                    showToday={rangeSelection === '24'}
+                    suggestedMax={100}
+                    data={[
+                      {
+                        label: 'CPU %',
+                        borderColor: '#428ade',
+                        data: stats.data.cpu,
+                      },
+                    ]}
                   />
                 </div>
                 <div className={classes.bottomLegend}>
@@ -412,17 +290,31 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
                   <div className={classes.leftLegend}>
                     bits/sec
                   </div>
-                  <Line
-                    height={chartHeight}
-                    options={this.getChartOptions('ipv4')}
-                    data={{
-                      datasets: [
-                        this.getChartJSDataFor('in', stats.data.netv4.in) as any,
-                        this.getChartJSDataFor('out', stats.data.netv4.out) as any,
-                        this.getChartJSDataFor('private_in', stats.data.netv4.private_in) as any,
-                        this.getChartJSDataFor('private_out', stats.data.netv4.private_out) as any,
-                      ],
-                    }}
+                  <LineGraph
+                    chartHeight={chartHeight}
+                    showToday={rangeSelection === '24'}
+                    data={[
+                      {
+                        label: 'Public Traffic In',
+                        borderColor: '#3683dc',
+                        data: stats.data.netv4.in,
+                      },
+                      {
+                        label: 'Public Traffic Out',
+                        borderColor: '#01b159',
+                        data: stats.data.netv4.out,
+                      },
+                      {
+                        label: 'Private Traffic In',
+                        borderColor: '#d01e1e',
+                        data: stats.data.netv4.private_in,
+                      },
+                      {
+                        label: 'Private Traffic Out',
+                        borderColor: '#ffd100',
+                        data: stats.data.netv4.private_out,
+                      },
+                    ]}
                   />
                 </div>
                 <div className={classes.bottomLegend}>
@@ -451,17 +343,31 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
                   <div className={classes.leftLegend}>
                     bits/sec
                   </div>
-                  <Line
-                    height={chartHeight}
-                    options={this.getChartOptions('ipv6')}
-                    data={{
-                      datasets: [
-                        this.getChartJSDataFor('in', stats.data.netv6.in) as any,
-                        this.getChartJSDataFor('out', stats.data.netv6.out) as any,
-                        this.getChartJSDataFor('private_in', stats.data.netv6.private_in) as any,
-                        this.getChartJSDataFor('private_out', stats.data.netv6.private_out) as any,
-                      ],
-                    }}
+                  <LineGraph
+                    chartHeight={chartHeight}
+                    showToday={rangeSelection === '24'}
+                    data={[
+                      {
+                        label: 'Public Traffic In',
+                        borderColor: '#3683dc',
+                        data: stats.data.netv6.in,
+                      },
+                      {
+                        label: 'Public Traffic Out',
+                        borderColor: '#01b159',
+                        data: stats.data.netv6.out,
+                      },
+                      {
+                        label: 'Private Traffic In',
+                        borderColor: '#d01e1e',
+                        data: stats.data.netv6.private_in,
+                      },
+                      {
+                        label: 'Private Traffic Out',
+                        borderColor: '#ffd100',
+                        data: stats.data.netv6.private_out,
+                      },
+                    ]}
                   />
                 </div>
                 <div className={classes.bottomLegend}>
@@ -490,15 +396,21 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
                   <div className={classes.leftLegend}>
                     blocks/sec
                     </div>
-                  <Line
-                    height={chartHeight}
-                    options={this.getChartOptions('disk')}
-                    data={{
-                      datasets: [
-                        this.getChartJSDataFor('io', stats.data.io.io) as any,
-                        this.getChartJSDataFor('swap', stats.data.io.swap) as any,
-                      ],
-                    }}
+                  <LineGraph
+                    chartHeight={chartHeight}
+                    showToday={rangeSelection === '24'}
+                    data={[
+                      {
+                        label: 'Disk I/O',
+                        borderColor: '#d01e1e',
+                        data: stats.data.io.io,
+                      },
+                      {
+                        label: 'Swap I/O',
+                        borderColor: '#ffd100',
+                        data: stats.data.io.swap,
+                      },
+                    ]}
                   />
                 </div>
                 <div className={classes.bottomLegend}>
