@@ -85,7 +85,7 @@ interface NodeBalancerConfigFields {
   check_interval?: number;
   check_passive?: boolean;
   check_path?: string;
-  check_timout?: number; /** 1..30 */
+  check_timeout?: number; /** 1..30 */
   check?: 'none' | 'connection' | 'http' | 'http_body';
   cipher_suite?: 'recommended' | 'legacy';
   port?: number; /** 1..65535 */
@@ -125,7 +125,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     check_interval: 5,
     check_passive: true,
     check_path: undefined,
-    check_timout: 3,
+    check_timeout: 3,
     check: 'connection',
     cipher_suite: undefined,
     port: 80,
@@ -216,7 +216,10 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
             type: detail.type.split('.').shift(),
             constraint: detail.type.split('.').pop(),
           }))
-          /** If the error is the uniqueness constraint for Config, we're going */
+
+          /**
+           * This is a one-off solution for dealing with port uniqueness constraint on the configs.
+           * */
           .map((detail) => {
             const path = detail.path.split('_');
 
@@ -361,7 +364,15 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               textFieldProps={{
                 errorText: hasErrorFor('client_conn_throttle'),
                 value: defaultTo(0, nodeBalancerFields.client_conn_throttle),
-                helperText: 'Connections per second',
+                InputProps: {
+                  endAdornment: <Typography
+                    variant="caption"
+                    component="span"
+                    style={{ marginRight: '8px' }}
+                  >
+                    / second
+                  </Typography>,
+                },
                 onChange: e => this.setState({
                   nodeBalancerFields: {
                     ...nodeBalancerFields,
@@ -385,9 +396,9 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                   const portLens = lensTo(['port']);
                   const protocolLens = lensTo(['protocol']);
                   const healthCheckTypeLens = lensTo(['check']);
-                  const healthCheckAttemptsLens = lensTo(['healthCheckAttempts']);
-                  const healthCheckIntervalLens = lensTo(['healthCheckInterval']);
-                  const healthCheckTimeoutLens = lensTo(['healthCheckTimeout']);
+                  const healthCheckAttemptsLens = lensTo(['check_attempts']);
+                  const healthCheckIntervalLens = lensTo(['check_interval']);
+                  const healthCheckTimeoutLens = lensTo(['check_timeout']);
                   const sessionStickinessLens = lensTo(['stickiness']);
                   const sslCertificateLens = lensTo(['ssl_cert']);
                   const privateKeyLens = lensTo(['ssl_key']);

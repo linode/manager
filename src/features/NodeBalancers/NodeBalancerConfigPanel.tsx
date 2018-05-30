@@ -15,7 +15,7 @@ import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 const parseFormNumber: (s: string) => (string | number) =
   when(compose(not, isEmpty), (v: string) => +v);
 
-type ClassNames = 'root' | 'inner' | 'divider';
+type ClassNames = 'root' | 'inner' | 'divider' | 'suffix';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -30,6 +30,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   divider: {
     marginTop: theme.spacing.unit * 3,
     marginBottom: theme.spacing.unit * 3,
+  },
+  suffix: {
+    marginRight: theme.spacing.unit * 2,
   },
 });
 
@@ -165,7 +168,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       check_interval: 'Check interval',
       check_passive: 'Passive check',
       check_path: 'Check path',
-      check_timout: 'Check timeout',
+      check_timeout: 'Check timeout',
       check: 'Check type',
       cipher_suite: 'Cipher suite',
       port: 'Port',
@@ -314,6 +317,14 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   <TextField
                     type="number"
                     label="Health Check Interval"
+                    InputProps={{
+                      endAdornment: <Typography
+                        variant="caption"
+                        component="span"
+                        className={classes.suffix}>
+                        / second
+                      </Typography>,
+                    }}
                     value={healthCheckInterval}
                     onChange={e => onHealthCheckIntervalChange(parseFormNumber(e.target.value))}
                     errorText={hasErrorFor('check_interval')}
@@ -323,6 +334,14 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   <TextField
                     type="number"
                     label="Health Check Timeout"
+                    InputProps={{
+                      endAdornment: <Typography
+                        variant="caption"
+                        component="span"
+                        className={classes.suffix}>
+                        / second
+                      </Typography>,
+                    }}
                     value={healthCheckTimeout}
                     onChange={e => onHealthCheckTimeoutChange(parseFormNumber(e.target.value))}
                     errorText={hasErrorFor('check_timeout')}
@@ -436,9 +455,9 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                           onChange={e => onNodeModeChange(idx, e.target.value)}
                           errorText={hasErrorFor('mode')}
                         >
-                        <MenuItem value="accept">Accept</MenuItem>
-                        <MenuItem value="reject">Reject</MenuItem>
-                        <MenuItem value="drain">Drain</MenuItem>
+                          <MenuItem value="accept">Accept</MenuItem>
+                          <MenuItem value="reject">Reject</MenuItem>
+                          <MenuItem value="drain">Drain</MenuItem>
                         </TextField>
                       </Grid>
                       <Grid item xs={12} md={3}>
