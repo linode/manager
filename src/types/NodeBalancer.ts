@@ -59,4 +59,15 @@ namespace Linode {
     down: number;
     ports: number[];
   }
+
+  export interface NodeBalancerStats{
+    title: string;
+    data: {
+      connections: [number, number][];
+      traffic: {
+        out: [number, number][];
+        in: [number, number][];
+      }
+    };
+  }
 }
