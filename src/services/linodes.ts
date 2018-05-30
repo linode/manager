@@ -122,7 +122,7 @@ export const allocatePublicIP = (linodeID: number) =>
   Request(
     setURL(`${API_ROOT}/linode/instances/${linodeID}/ips`),
     setMethod('POST'),
-    setData({ type: 'ipv4', public: false }),
+    setData({ type: 'ipv4', public: true }),
   ).then(response => response.data);
 
 export const rebuildLinode = (id: number, image: string, password: string) =>

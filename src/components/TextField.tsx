@@ -12,6 +12,7 @@ const LinodeTextField: React.StatelessComponent<Props> = (props) => {
   const {
     errorText,
     affirmative,
+    fullWidth,
     ...textFieldProps,
   } = props;
 
@@ -28,6 +29,10 @@ const LinodeTextField: React.StatelessComponent<Props> = (props) => {
     };
   }
 
+  finalProps.fullWidth = fullWidth === false
+    ? false
+    : true;
+
   return (
     <TextField
       {...finalProps}
@@ -39,7 +44,6 @@ const LinodeTextField: React.StatelessComponent<Props> = (props) => {
         ...finalProps.InputProps,
         disableUnderline: true,
       }}
-      fullWidth
       SelectProps={{ MenuProps: {
         getContentAnchorEl: undefined,
         anchorOrigin: { vertical: 'bottom', horizontal: 'left' },
