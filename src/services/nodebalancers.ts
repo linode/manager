@@ -102,3 +102,13 @@ export const createNodeBalancer = (data: any) =>
     validateRequestData(data, createNodeBalancerSchema),
   )
     .then(response => response.data);
+
+export const getNodeBalancerStats = (nodeBalancerId: number, month?: string, year?: string) => {
+  const endpoint = (year && month)
+    ? `${API_ROOT}/nodebalancers/${nodeBalancerId}/stats/${year}/${month}`
+    : `${API_ROOT}/nodebalancers/${nodeBalancerId}/stats`;
+  return Request(
+    setURL(endpoint),
+    setMethod('GET'),
+  ).then(response => response.data);
+};

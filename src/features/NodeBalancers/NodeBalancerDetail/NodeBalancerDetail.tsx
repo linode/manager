@@ -18,7 +18,10 @@ import {
   Switch,
 } from 'react-router-dom';
 
-import { getNodeBalancer, updateNodeBalancer } from 'src/services/nodebalancers';
+import {
+  getNodeBalancer, updateNodeBalancer,
+  getNodeBalancerConfigs,
+} from 'src/services/nodebalancers';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 // import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
@@ -28,6 +31,8 @@ import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoad
 import ErrorState from 'src/components/ErrorState';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import EditableText from 'src/components/EditableText';
+
+import NodeBalancerSummary from './NodeBalancerSummary';
 
 
 type ClassNames = 'root'
@@ -52,13 +57,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 type RouteProps = RouteComponentProps<{ nodeBalancerId?: number }>;
 
 interface PreloadedProps {
-  nodeBalancer: PromiseLoaderResponse<Linode.NodeBalancer>;
+  nodeBalancer: PromiseLoaderResponse<Linode.ExtendedNodeBalancer>;
 }
 
 interface Props { }
 
 interface State {
-  nodeBalancer: Linode.NodeBalancer;
+  nodeBalancer: Linode.ExtendedNodeBalancer;
   error?: Error;
   ApiError: Linode.ApiFieldError[] | undefined;
 }
@@ -74,7 +79,27 @@ const preloaded = PromiseLoader<CombinedProps>({
       return Promise.reject(new Error('nodeBalancerId param not set.'));
     }
 
-    return getNodeBalancer(nodeBalancerId);
+    return getNodeBalancer(nodeBalancerId).then((nodeBalancer) => {
+      return getNodeBalancerConfigs(nodeBalancer.id)
+        .then(({ data: configs }) => {
+          return {
+            ...nodeBalancer,
+            down: configs
+              .reduce((acc: number, config) => {
+                return acc + config.nodes_status.down;
+              }, 0), // add the downtime for each config together
+            up: configs
+              .reduce((acc: number, config) => {
+                return acc + config.nodes_status.up;
+              }, 0), // add the uptime for each config together
+            ports: configs
+              .reduce((acc: [number], config) => {
+                return [...acc, config.port];
+              }, []),
+          };
+        })
+        .catch(e => []);
+    });
   },
 });
 
@@ -182,10 +207,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
             exact
             path={`${path}/summary`}
             render={() =>
-              <div>
-                Hello World
-                {JSON.stringify(this.props.location)}
-              </div>
+              <NodeBalancerSummary nodeBalancer={nodeBalancer} />
             }
           />
           <Route exact path={`${path}/configurations`} render={() => <div>Hello World</div>} />
