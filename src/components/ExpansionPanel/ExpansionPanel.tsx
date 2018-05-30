@@ -19,7 +19,6 @@ import Minus from '../../assets/icons/minus-square.svg';
 import Notice from '../Notice';
 
 type ClassNames = 'root'
-  | 'heading'
   | 'success'
   | 'warning'
   | 'error';
@@ -31,9 +30,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
       '& .notice': {
         margin: 0,
       },
-    },
-    heading: {
-      transition: theme.transitions.create(['color']),
     },
     success: {
       backgroundColor: status.success,
@@ -89,7 +85,7 @@ export interface Props extends ExpansionPanelProps {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class EExpansionPanel extends React.Component<CombinedProps> {
-  state = { open: false };
+  state = { open: this.props.defaultExpanded };
 
   handleClick = (e: React.MouseEvent<any>) => {
     this.setState({ open: !this.state.open });
@@ -116,12 +112,12 @@ class EExpansionPanel extends React.Component<CombinedProps> {
       >
         <ExpansionPanelSummary
           onClick={this.handleClick}
-          expandIcon={this.state.open ? <Plus /> : <Minus />}
+          expandIcon={this.state.open ? <Minus /> : <Plus />}
           {...summaryProps}
           data-qa-panel-summary
         >
           <Typography
-            className={classes.heading} {...headingProps}
+            {...headingProps}
             variant="subheading"
             data-qa-panel-subheading
           >
