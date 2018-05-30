@@ -116,53 +116,55 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
     const generalError = hasErrorFor('none');
     return (
       <React.Fragment>
-          <Typography variant="headline" className={classes.title}>
-            Settings
+        <Typography variant="headline" className={classes.title}>
+          Settings
           </Typography>
 
-          {generalError && <Notice error>{generalError}</Notice>}
-          <LabelAndTagsPanel
-            isExpansion={true}
-            success={success!.label}
-            isSubmitting={isSubmitting}
-            action={this.updateNodeBalancer}
-            labelFieldProps={{
-              onChange: e => this.setState({
-                fields: {
-                  ...fields,
-                  label: e.target.value,
-                },
-              }),
-              label: 'NodeBalancer Label',
-              placeholder: 'Enter a label between 3 and 32 characters',
-              errorText: hasErrorFor('label'),
-            }}
-          />
-
-          <ClientConnectionThrottlePanel
-            isExpansion={true}
-            isSubmitting={isSubmitting}
-            success={success!.client_conn_throttle}
-            action={this.updateNodeBalancer}
-            textFieldProps={{
-              label: 'Client Connection Throttle',
-              placeholder: '0',
-              InputProps: {
-                endAdornment:
-                  <InputAdornment position="end" className={classes.adornment}>
-                    / second
-                  </InputAdornment>,
+        {generalError && <Notice error>{generalError}</Notice>}
+        <LabelAndTagsPanel
+          expansion={{
+            action: this.updateNodeBalancer,
+            isSubmitting,
+            success: success!.label,
+          }}
+          labelFieldProps={{
+            onChange: e => this.setState({
+              fields: {
+                ...fields,
+                label: e.target.value,
               },
-              errorText: hasErrorFor('client_conn_throttle'),
-              value: defaultTo(0, fields.client_conn_throttle),
-              onChange: e => this.setState({
-                fields: {
-                  ...fields,
-                  client_conn_throttle: controlClientConnectionThrottle(e.target.value),
-                },
-              }),
-            }}
-          />
+            }),
+            label: 'NodeBalancer Label',
+            placeholder: 'Enter a label between 3 and 32 characters',
+            errorText: hasErrorFor('label'),
+          }}
+        />
+
+        <ClientConnectionThrottlePanel
+          expansion={{
+            action: this.updateNodeBalancer,
+            isSubmitting,
+            success: success!.client_conn_throttle,
+          }}
+          textFieldProps={{
+            label: 'Client Connection Throttle',
+            placeholder: '0',
+            InputProps: {
+              endAdornment:
+                <InputAdornment position="end" className={classes.adornment}>
+                  / second
+                  </InputAdornment>,
+            },
+            errorText: hasErrorFor('client_conn_throttle'),
+            value: defaultTo(0, fields.client_conn_throttle),
+            onChange: e => this.setState({
+              fields: {
+                ...fields,
+                client_conn_throttle: controlClientConnectionThrottle(e.target.value),
+              },
+            }),
+          }}
+        />
       </React.Fragment>
     );
   }

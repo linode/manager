@@ -12,8 +12,8 @@ import Button from 'src/components/Button';
 import ActionsPanel from 'src/components/ActionsPanel';
 
 type ClassNames = 'root'
-| 'inner'
-| 'expPanelButton';
+  | 'inner'
+  | 'expPanelButton';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -38,16 +38,17 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 
 const styled = withStyles(styles, { withTheme: true });
 
-type updateNodeBalancerData = 'label';
+interface ExpansionPanelProps {
+  expansionHeader?: string;
+  action?: (whichField: 'label') => void;
+  isSubmitting: boolean;
+  success: string | undefined;
+}
 
 interface Props {
   error?: string;
   labelFieldProps?: TextFieldProps;
-  isExpansion?: boolean;
-  expansionHeader?: string;
-  action?: (whichField: updateNodeBalancerData) => void;
-  isSubmitting?: boolean;
-  success?: string;
+  expansion?: ExpansionPanelProps;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -62,28 +63,27 @@ class InfoPanel extends React.Component<CombinedProps> {
   };
 
   render() {
-    const { action, isExpansion, isSubmitting, expansionHeader,
-       classes, error, success, labelFieldProps } = this.props;
+    const { classes, error, labelFieldProps, expansion } = this.props;
 
     return (
       <React.Fragment>
-        {isExpansion // will either be an expandable panel that will save the settings or a card
+        {!!expansion // will either be an expandable panel that will save the settings or a card
           ? <ExpansionPanel
             defaultExpanded={true}
-            success={success}
-            heading={expansionHeader || 'Label'}
+            success={expansion.success}
+            heading={expansion.expansionHeader || 'Label'}
           >
-            <div className={!isExpansion ? classes.inner : ''}>
+            <div className={!expansion ? classes.inner : ''}>
               {error && <Notice text={error} error />}
               <TextField {...labelFieldProps} />
             </div>
-            {action &&
-              <ActionsPanel className={isExpansion ? classes.expPanelButton : ''}>
+            {!!expansion.action &&
+              <ActionsPanel className={expansion ? classes.expPanelButton : ''}>
                 <Button
                   variant="raised"
-                  onClick={() => action('label')}
+                  onClick={() => expansion.action!('label')}
                   color="primary"
-                  disabled={isSubmitting}
+                  disabled={expansion.isSubmitting}
                   data-qa-label-save
                 >
                   Save

@@ -37,16 +37,17 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 
 const styled = withStyles(styles, { withTheme: true });
 
-type updateNodeBalancerData = 'client_conn_throttle';
+interface ExpansionPanelProps {
+  expansionHeader?: string;
+  action?: (whichField: 'client_conn_throttle') => void;
+  isSubmitting: boolean;
+  success: string | undefined;
+}
 
 interface Props {
   error?: string;
   textFieldProps?: TextFieldProps;
-  isExpansion?: boolean;
-  expansionHeader?: string;
-  action?: (whichField: updateNodeBalancerData) => void;
-  isSubmitting?: boolean;
-  success?: string;
+  expansion?: ExpansionPanelProps;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -60,27 +61,26 @@ class ClientConnectionThrottlePanel extends React.Component<CombinedProps> {
   };
 
   render() {
-    const { action, isExpansion, isSubmitting, expansionHeader,
-      error, classes, success, textFieldProps } = this.props;
+    const { expansion, error, classes, textFieldProps } = this.props;
 
     return (
       <React.Fragment>
-        {isExpansion // will either be an expandable panel that will save the settings or a card
+        {!!expansion // will either be an expandable panel that will save the settings or a card
           ? <ExpansionPanel
             defaultExpanded={true}
-            success={success}
-            heading={expansionHeader || 'Client Connection Throttle'}
+            success={expansion.success}
+            heading={expansion.expansionHeader || 'Client Connection Throttle'}
           >
-            <div className={!isExpansion ? classes.inner : ''}>
+            <div className={!expansion ? classes.inner : ''}>
               {error && <Notice text={error} error />}
               <TextField {...textFieldProps} />
             </div>
-            {action &&
-              <ActionsPanel className={isExpansion ? classes.expPanelButton : ''}>
+            {expansion.action &&
+              <ActionsPanel className={expansion ? classes.expPanelButton : ''}>
                 <Button
-                  onClick={() => action('client_conn_throttle')}
+                  onClick={() => expansion.action!('client_conn_throttle')}
                   variant="raised"
-                  disabled={isSubmitting}
+                  disabled={expansion.isSubmitting}
                   color="primary"
                   data-qa-label-save
                 >
