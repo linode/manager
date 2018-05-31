@@ -5,13 +5,14 @@ import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   nodeBalancerId: number;
+  toggleDialog: (nodeBalancerId: number) => void;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
 class NodeBalancerActionMenu extends React.Component<CombinedProps> {
   createLinodeActions = () => {
-    const { nodeBalancerId, history } = this.props;
+    const { nodeBalancerId, history, toggleDialog } = this.props;
 
     return function (closeMenu: Function): Action[] {
       const actions = [
@@ -27,6 +28,7 @@ class NodeBalancerActionMenu extends React.Component<CombinedProps> {
           title: 'Delete',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             e.preventDefault();
+            toggleDialog(nodeBalancerId);
             closeMenu();
           },
         },

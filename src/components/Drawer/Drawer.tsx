@@ -24,9 +24,6 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
       width: 480,
     },
     '& .actionPanel': {
-      paddingLeft: 0,
-      paddingRight: 0,
-      marginLeft: -theme.spacing.unit,
       marginTop: theme.spacing.unit * 2,
     },
     '& .selectionCard': {

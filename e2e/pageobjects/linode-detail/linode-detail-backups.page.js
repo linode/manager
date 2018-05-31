@@ -1,4 +1,4 @@
-import Page from './page';
+import Page from '../page';
 
 class Backups extends Page {
     get placeholderText() { return $('[data-qa-placeholder-title]'); }

@@ -148,6 +148,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
           disabled={mode === 'clone'}
           label="Domain"
           onChange={e => this.setState({ domain: e.target.value })}
+          data-qa-domain-name
         />
         {mode === 'clone' &&
           <TextField
@@ -155,6 +156,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
             value={cloneName}
             label="New Domain"
             onChange={e => this.setState({ cloneName: e.target.value })}
+            data-qa-clone-name
           />
         }
         {mode === 'create' &&
@@ -163,6 +165,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
             value={soaEmail}
             label="SOA Email Address"
             onChange={e => this.setState({ soaEmail: e.target.value })}
+            data-qa-soa-email
           />
         }
         {generalError &&
@@ -176,6 +179,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
                 variant="raised"
                 color="primary"
                 onClick={() => this.submit()}
+                data-qa-submit
               >
                 Create
               </Button>
@@ -188,9 +192,12 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
                 <Reload />
               </Button>
           }
-          <Button onClick={() => {
-            onClose();
-          }}>
+          <Button
+            onClick={() => {
+              onClose();
+            }}
+            data-qa-cancel
+          >
             Cancel
           </Button>
         </ActionsPanel>

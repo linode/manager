@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { compose } from 'ramda';
+import { compose, path } from 'ramda';
 import * as Promise from 'bluebird';
 import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
 
@@ -10,9 +10,15 @@ import TableCell from 'material-ui/Table/TableCell';
 import TableHead from 'material-ui/Table/TableHead';
 import TableRow from 'material-ui/Table/TableRow';
 
-import { getNodeBalancers, getNodeBalancerConfigs } from 'src/services/nodebalancers';
+import {
+  getNodeBalancers, getNodeBalancerConfigs,
+  deleteNodeBalancer,
+} from 'src/services/nodebalancers';
+import Button from 'src/components/Button';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
+import { convertMegabytesTo } from 'src/utilities/convertMegabytesTo';
+
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import Grid from 'src/components/Grid';
 import Table from 'src/components/Table';
@@ -21,6 +27,8 @@ import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoad
 import NodeBalancerActionMenu from './NodeBalancerActionMenu';
 import ErrorState from 'src/components/ErrorState';
 import Placeholder from 'src/components/Placeholder';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import ActionsPanel from 'src/components/ActionsPanel';
 
 
 type ClassNames = 'root' | 'title';
@@ -73,8 +81,17 @@ interface PreloadedProps {
   nodeBalancers: PromiseLoaderResponse<Linode.ExtendedNodeBalancer[]>;
 }
 
+interface DeleteConfirmDialogState {
+  open: boolean;
+  submitting: boolean;
+  errors?: Linode.ApiFieldError[];
+}
+
 interface State {
-  deleteConfirmAlertOpen: boolean;
+  deleteConfirmDialog: DeleteConfirmDialogState;
+  selectedNodeBalancerId?: number;
+  nodeBalancers: Linode.ExtendedNodeBalancer[];
+  errors?: Error;
 }
 
 type CombinedProps = Props
@@ -86,8 +103,16 @@ type CombinedProps = Props
 export class NodeBalancersLanding extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
 
+  static defaultDeleteConfirmDialogState = {
+    submitting: false,
+    open: false,
+    errors: undefined,
+  };
+
   state: State = {
-    deleteConfirmAlertOpen: false,
+    deleteConfirmDialog: NodeBalancersLanding.defaultDeleteConfirmDialogState,
+    nodeBalancers: this.props.nodeBalancers.response || [],
+    errors: this.props.nodeBalancers.error || undefined,
   };
 
   static docs = [
@@ -103,41 +128,73 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
     },
   ];
 
-  formatTransferData = (transferTotal: number) => {
-    // API v4 always returns nodebalancer transfer in MB, so we want to clean it up if it's too
-    // big or too small
-    const gb = 1073741824;
-    const mb = 1048576;
-    const kb = 1024;
-    const totalToBytes = transferTotal * 1024 * 1024; // convert the MB to Bytes
-    if (totalToBytes >= gb) { // convert bytes to GB
-      return `${Math.max(Math.ceil(totalToBytes / gb)).toFixed(2)} GB`;
-    }
-    if (totalToBytes >= mb) { // convert bytes to MB
-      return `${Math.max(Math.ceil(totalToBytes / mb * 100) / 100).toFixed(2)} MB`;
-    }
-    if (totalToBytes >= kb) { // convert bytes to KB
-      return `${Math.max(Math.ceil(totalToBytes / kb * 100) / 100).toFixed(2)} KB`;
-    }
-    return `${totalToBytes} bytes`;
-  }
-
   renderEmptyState = () => {
     return <Placeholder />;
+  }
+
+  toggleDialog = (nodeBalancerId: number) => {
+    this.setState({
+      selectedNodeBalancerId: nodeBalancerId,
+      deleteConfirmDialog: {
+        ...this.state.deleteConfirmDialog,
+        open: !this.state.deleteConfirmDialog.open,
+      },
+    });
+  }
+
+  deleteNodeBalancer = () => {
+    const { selectedNodeBalancerId } = this.state;
+    this.setState({
+      deleteConfirmDialog: {
+        ...this.state.deleteConfirmDialog,
+        errors: undefined,
+        submitting: true,
+      },
+    });
+
+    deleteNodeBalancer(selectedNodeBalancerId!)
+      .then((response) => {
+        getNodeBalancersWithConfigs()
+          .then((response: Linode.ExtendedNodeBalancer[]) => {
+            this.setState({
+              nodeBalancers: response,
+              deleteConfirmDialog: {
+                open: false,
+                submitting: false,
+              },
+            });
+          });
+      })
+      .catch((err) => {
+        const apiError = path<Linode.ApiFieldError[]>(['response', 'data', 'error'], err);
+
+        return this.setState({
+          deleteConfirmDialog: {
+            ...this.state.deleteConfirmDialog,
+            errors: apiError
+              ? apiError
+              : [{ field: 'none', reason: 'Unable to complete your request at this time.' }],
+          },
+        });
+      });
   }
 
   render() {
     const {
       classes,
       history,
-      nodeBalancers: {
-        error: nodeBalancerError,
-        response: nodeBalancers,
-      },
     } = this.props;
 
+    const {
+      nodeBalancers,
+      errors,
+      deleteConfirmDialog: {
+        open: deleteConfirmAlertOpen,
+      },
+    } = this.state;
+
     /** Error State */
-    if (nodeBalancerError) {
+    if (errors) {
       return <ErrorState
         errorText="There was an error loading your NodeBalancers. Please try again later."
       />;
@@ -188,14 +245,11 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
                     </TableCell>
                     <TableCell>{`${nodeBalancer.up} up, ${nodeBalancer.down} down`}</TableCell>
                     <TableCell>
-                      {this.formatTransferData(nodeBalancer.transfer.total)}
+                      {convertMegabytesTo(nodeBalancer.transfer.total)}
                     </TableCell>
-                    <TableCell>{nodeBalancer.ports.map((port, index, ports) => {
-                      // we want a comma after the port number as long as the ports array
-                      // has multiple values and the current index isn't the last
-                      // element in the array
-                      return (ports.length > 1 && index + 1 !== ports.length) ? `${port}, ` : port;
-                    })}
+                    <TableCell>
+                      {nodeBalancer.ports.length === 0 && 'None'}
+                      {nodeBalancer.ports.join(', ')}
                     </TableCell>
                     <TableCell>
                       <IPAddress ips={[nodeBalancer.ipv4]} copyRight />
@@ -207,6 +261,7 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
                     <TableCell>
                       <NodeBalancerActionMenu
                         nodeBalancerId={nodeBalancer.id}
+                        toggleDialog={this.toggleDialog}
                       />
                     </TableCell>
                   </TableRow>
@@ -215,6 +270,37 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
             </TableBody>
           </Table>
         </Paper>
+        <ConfirmationDialog
+          onClose={() => this.setState({
+            deleteConfirmDialog: NodeBalancersLanding.defaultDeleteConfirmDialogState,
+          })}
+          title="Confirm Deletion"
+          error={(this.state.deleteConfirmDialog.errors || []).map(e => e.reason).join(',')}
+          actions={({ onClose }) =>
+            <ActionsPanel style={{ padding: 0 }}>
+              <Button
+                data-qa-confirm-cancel
+                onClick={this.deleteNodeBalancer}
+                type="secondary"
+                destructive
+                loading={this.state.deleteConfirmDialog.submitting}
+              >
+                Delete
+              </Button>
+              <Button
+                onClick={() => onClose()}
+                type="secondary"
+                className="cancel"
+                data-qa-cancel-cancel
+              >
+                Cancel
+            </Button>
+            </ActionsPanel>
+          }
+          open={deleteConfirmAlertOpen}
+        >
+          <Typography>Are you sure you want to delete your NodeBalancer</Typography>
+        </ConfirmationDialog>
       </React.Fragment>
     );
   }

@@ -147,19 +147,18 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
       ].includes(e.action))
       .filter(e => !e._initial)
       .subscribe((v) => {
-        getLinodeVolumes(this.props.linodeID)
-          .then(response => response.data)
-          .then((attachedVolumes) => {
-            this.getAllVolumes();
-          })
-          .catch(() => {
-            /** @todo Error handling. */
-          });
+        this.getAllVolumes();
       });
   }
 
   componentWillUnmount() {
     this.eventSubscription.unsubscribe();
+  }
+
+  componentDidUpdate(prevProps: CombinedProps) {
+    if (this.props.linodeVolumes !== prevProps.linodeVolumes) {
+      this.setState({ attachedVolumes: this.props.linodeVolumes });
+    }
   }
 
   getAllVolumes = () => {

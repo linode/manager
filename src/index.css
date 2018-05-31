@@ -38,6 +38,11 @@ a {
   text-decoration: none;
   color: #3B85D9;
 }
+
+:focus {
+  outline: 1px dotted #999;
+}
+
 /* Scrollbars (webkit only) */
 /* ::-webkit-scrollbar {
   width: 6px;

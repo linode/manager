@@ -1,4 +1,4 @@
-import Page from './page';
+import Page from '../page';
 
 class Settings extends Page {
     get actionPanels() { return $$('[data-qa-panel-summary]'); }

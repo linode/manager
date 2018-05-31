@@ -21,7 +21,6 @@ describe('LinodeResize', () => {
             title: '',
             subTitle: '',
             currentPlanContainer: '',
-            actionPanel: '',
           }}
           linodeId={12}
           linodeType={null}
@@ -48,7 +47,6 @@ describe('LinodeResize', () => {
                 title: '',
                 subTitle: '',
                 currentPlanContainer: '',
-                actionPanel: '',
               }}
               linodeId={12}
               linodeType={null}
@@ -77,7 +75,6 @@ describe('LinodeResize', () => {
                 title: '',
                 subTitle: '',
                 currentPlanContainer: '',
-                actionPanel: '',
               }}
               linodeId={12}
               linodeType={'_something_unexpected_'}
