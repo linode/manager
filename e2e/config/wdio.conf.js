@@ -2,10 +2,7 @@ require('dotenv').config();
 
 const crypto = require('crypto');
 const { argv } = require('yargs');
-const {
-    login,
-    readToken,
-} = require('../utils/config-utils');
+const { login } = require('../utils/config-utils');
 const { removeAllLinodes } = require('../setup/setup');
 const { browserCommands } = require('./custom-commands');
 const { browserConf } = require('./browser-config');

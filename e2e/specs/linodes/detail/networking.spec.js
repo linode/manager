@@ -2,7 +2,7 @@ const { constants } = require('../../../constants');
 
 import {
     apiCreateLinode,
-    apiDeleteAllLinodes
+    apiDeleteAllLinodes,
 } from '../../../utils/common';
 import Networking from '../../../pageobjects/linode-detail/linode-detail-networking.page';
 import ListLinodes from '../../../pageobjects/list-linodes';

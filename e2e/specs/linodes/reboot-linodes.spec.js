@@ -1,7 +1,10 @@
 const { constants } = require('../../constants');
 
+import {
+    apiCreateLinode,
+    apiDeleteAllLinodes,
+} from '../../utils/common';
 import { flatten } from 'ramda';
-import { apiCreateLinode, apiDeleteAllLinodes } from '../../utils/common';
 import ListLinodes from '../../pageobjects/list-linodes';
 
 describe('List Linodes - Actions - Reboot Suite', () => {
