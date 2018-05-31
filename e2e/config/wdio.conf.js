@@ -14,6 +14,21 @@ const selectedBrowser = argv.b ? browserConf[argv.b] : browserConf['chrome'];
 const username = process.env.MANAGER_USER;
 const password = process.env.MANAGER_PASS;
 
+const setBaseUrl = () => {
+    if (process.env.DOCKER) {
+        return 'https://manager-local:3000';
+    }
+    if (argv.dev) {
+        return 'https://manager.dev.linode.com';
+    }
+    if (argv.test) {
+        return 'https://manager.testing.linode.com';
+    }
+    if (argv.staging) {
+        return 'https://cloud-staging.linode.com';
+    }
+    return 'http://localhost:3000';
+}
 
 const specsToRun = () => {
     if (argv.file) {
@@ -24,6 +39,7 @@ const specsToRun = () => {
     }
     return ['./e2e/setup/setup.spec.js', './e2e/specs/**/*.js'];
 }
+
 const selectedReporters = ['dot'];
 
 if (argv.log) {
@@ -103,10 +119,10 @@ exports.config = {
     // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
     // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
     // gets prepended directly.
-    baseUrl: process.env.DOCKER ? 'https://manager-local:3000' : 'http://localhost:3000',
+    baseUrl: setBaseUrl(),
     //
     // Default timeout for all waitFor* commands.
-    waitforTimeout: 10000,
+    waitforTimeout: process.env.DOCKER ? 20000 : 10000,
     //
     // Default timeout in milliseconds for request
     // if Selenium Grid doesn't send response
