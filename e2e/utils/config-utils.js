@@ -1,5 +1,9 @@
 const moment = require('moment');
-const { existsSync, statSync, writeFileSync } = require('fs');
+const {
+    existsSync,
+    statSync,
+    writeFileSync,
+} = require('fs');
 const { constants } = require('../constants');
 
 /*

@@ -1,6 +1,9 @@
 const { constants } = require('../../constants');
 
-import { apiCreateLinode, apiDeleteAllLinodes } from '../../utils/common';
+import {
+    apiCreateLinode,
+    apiDeleteAllLinodes,
+} from '../../utils/common';
 import ConfigureLinode from '../../pageobjects/configure-linode';
 import Create from '../../pageobjects/create';
 

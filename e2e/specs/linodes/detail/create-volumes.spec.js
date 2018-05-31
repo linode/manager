@@ -1,10 +1,13 @@
+const { constants } = require('../../../constants');
+
+import {
+    apiCreateLinode,
+    apiDeleteAllLinodes,
+} from '../../../utils/common';
 import ListLinodes from '../../../pageobjects/list-linodes';
 import LinodeDetail from '../../../pageobjects/linode-detail/linode-detail.page';
 import VolumeDetail from '../../../pageobjects/linode-detail/linode-detail-volume.page';
 import LinodeSummary from '../../../pageobjects/linode-detail/linode-detail-summary.page';
-import { apiCreateLinode, apiDeleteAllLinodes } from '../../../utils/common';
-
-const { constants } = require('../../../constants');
 
 describe('Linode Detail - Volumes Suite', () => {
     let drawerElems;
