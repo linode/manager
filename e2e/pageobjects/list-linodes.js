@@ -1,3 +1,5 @@
+const { constants } = require('../constants');
+
 import Page from './page';
 
 export class ListLinodes extends Page {
@@ -39,7 +41,7 @@ export class ListLinodes extends Page {
         try {
             browser.waitUntil(function() {
                 return browser.waitForVisible('[data-qa-linode]') && $$('[data-qa-linode]').length > 0;
-            }, 10000);
+            }, constants.wait.normal);
             return true;
         } catch (err) {
             if ($(this.placeholderText).isVisible()) {
@@ -114,11 +116,11 @@ export class ListLinodes extends Page {
         
         browser.waitUntil(function() {
             return linode.$(this.status.selector).getAttribute('data-qa-status') === 'rebooting';
-        }, 30000);
+        }, constants.wait.long);
         
         browser.waitUntil(function() {
             return linode.$(this.status).getAttribute('data-qa-status') === 'running';
-        }, 30000);
+        }, constants.wait.long);
     }
 
     powerOff(linode) {
@@ -128,7 +130,7 @@ export class ListLinodes extends Page {
         
         browser.waitUntil(function() {
             return browser.isVisible('[data-qa-status="offline"]');
-        }, 60000 * 3, 'Failed to power down linode');
+        }, constants.wait.minute * 3, 'Failed to power down linode');
     }
 
     powerOn(linode) {
@@ -137,7 +139,7 @@ export class ListLinodes extends Page {
 
         browser.waitUntil(function() {
             return browser.isVisible('[data-qa-status="running"]');
-        }, 60000 * 2);
+        }, constants.wait.minute * 2);
     }
 
     shutdownIfRunning(linode) {
@@ -158,13 +160,13 @@ export class ListLinodes extends Page {
         browser.click(`[data-qa-view="${view}"]`);
         browser.waitUntil(function() {
             return browser.isVisible(`[data-qa-active-view="${view}"]`);
-        }, 5000);
+        }, constants.wait.short);
     }
 
     waitUntilBooted(label) {
-        browser.waitForVisible('[data-qa-circle-progress]', 15000, true);
-        browser.waitForVisible('[data-qa-loading="true"]', 30000, true);
-        browser.waitForExist(`[data-qa-linode="${label}"] [data-qa-status="running"]`, 60000 * 2);
+        browser.waitForVisible('[data-qa-circle-progress]', constants.wait.normal, true);
+        browser.waitForVisible('[data-qa-loading="true"]', constants.wait.long, true);
+        browser.waitForExist(`[data-qa-linode="${label}"] [data-qa-status="running"]`, constants.wait.minute * 2);
     }
 
     acceptDialog(dialogTitle) {
@@ -173,7 +175,7 @@ export class ListLinodes extends Page {
         this.confirmDialogSubmit.waitForVisible();
         expect(this.confirmDialogTitle.getText()).toBe(dialogTitle);
         this.confirmDialogSubmit.click();
-        this.confirmDialogTitle.waitForVisible(10000, true);
+        this.confirmDialogTitle.waitForVisible(constants.wait.normal, true);
     }
 
     assertDocsDrawer() {
