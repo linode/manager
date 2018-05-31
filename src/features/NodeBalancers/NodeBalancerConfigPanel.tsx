@@ -508,8 +508,14 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
             }
 
             {forEdit &&
-              <Grid container justify="space-between" alignItems="center">
-                <Grid item>
+              <Grid
+                container
+                justify="space-between"
+                alignItems="center"
+              >
+                <Grid item
+                  style={{ marginLeft: -16 }}
+                >
                   <ActionsPanel>
                     <Button
                       variant="raised"
