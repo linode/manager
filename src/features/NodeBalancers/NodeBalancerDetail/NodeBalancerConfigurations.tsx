@@ -14,7 +14,7 @@ import {
 //  lensPath,
 //  map,
 //  over,
-//  path,
+  path,
   pathOr,
 //  reduce,
   set,
@@ -58,6 +58,7 @@ interface PreloadedProps {
 interface State {
   configs: Linode.NodeBalancerConfig[];
   unmodifiedConfigs: Linode.NodeBalancerConfig[];
+  configErrors: Linode.ApiFieldError[][];
   panelMessages: string[];
 }
 
@@ -71,6 +72,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   state: State = {
     configs: pathOr([], ['response', 'data'], this.props.configs),
     unmodifiedConfigs: pathOr([], ['response', 'data'], this.props.configs),
+    configErrors: [],
     panelMessages: [],
   };
 
@@ -84,17 +86,30 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     };
     updateNodeBalancerConfig(nodeBalancerId!, config.id, configPayload)
       .then((nodeBalancerConfig) => {
+        // update config data
         const newConfigs = clone(this.state.configs);
         newConfigs[idx] = nodeBalancerConfig;
+        // update config data for reverting edits
+        const newUnmodifiedConfigs = clone(this.state.unmodifiedConfigs);
+        newUnmodifiedConfigs[idx] = nodeBalancerConfig;
+        // replace success message with a new one
         const newMessages = [];
         newMessages[idx] = 'NodeBalancer config updated successfully';
+        // update errors
+        const newErrors = clone(this.state.configErrors);
+        newErrors[idx] = [];
         this.setState({
           configs: newConfigs,
-          unmodifiedConfigs: newConfigs,
+          unmodifiedConfigs: newUnmodifiedConfigs,
           panelMessages: newMessages,
+          configErrors: newErrors,
         });
       })
-      .catch((error) => {
+      .catch((errorResponse) => {
+        const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'], errorResponse);
+        const newErrors = clone(this.state.configErrors);
+        newErrors[idx] = errors || [];
+        this.setState({ configErrors: newErrors });
       });
   }
 
@@ -159,7 +174,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
               onCancel={() => this.cancelEditing()}
               onDelete={() => console.log('deleting')}
 
-              errors={[]}
+              errors={this.state.configErrors[idx]}
 
               algorithm={defaultTo('roundrobin', view(algorithmLens, this.state))}
               onAlgorithmChange={(algorithm: string) =>
