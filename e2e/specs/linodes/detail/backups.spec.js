@@ -42,7 +42,7 @@ describe('Linode Detail - Backups Suite', () => {
 
         const toastMsg = 'Snapshot label must be a string of 1 to 255 characters';
         Backups.toastDisplays(toastMsg);
-        browser.waitForExist('[data-qa-toast]', 5000, true);
+        browser.waitForExist('[data-qa-toast]', constants.wait.short, true);
     });
 
     it('should cancel backups', () => {

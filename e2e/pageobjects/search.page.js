@@ -1,3 +1,5 @@
+const { constants } = require('../constants');
+
 import Page from './page';
 
 class SearchBar extends Page {
@@ -40,7 +42,7 @@ class SearchBar extends Page {
         browser.waitForVisible('[data-qa-suggestion]');
 
         suggestion.click();
-        browser.waitForVisible('[data-qa-circle-progress]', 15000, true);
+        browser.waitForVisible('[data-qa-circle-progress]', constants.wait.normal, true);
     }
 
     selectByKeyDown() {

@@ -1,3 +1,5 @@
+const { constants } = require('../../constants');
+
 import Page from '../page';
 
 class Backups extends Page {
@@ -65,7 +67,7 @@ class Backups extends Page {
                 browser.click('[data-qa-toast] button');
                 return true;
             }
-        }, 10000);
+        }, constants.wait.normal);
     }
 
     takeSnapshot(label) {
@@ -78,12 +80,12 @@ class Backups extends Page {
         browser.waitUntil(function() {
             return browser
                 .getText('[data-qa-toast-message]') === toastMsg;
-        }, 10000);
+        }, constants.wait.normal);
         return this;
     }
 
     assertSnapshot(label) {
-        browser.waitForVisible('[data-qa-backup]', 45000);
+        browser.waitForVisible('[data-qa-backup]', constants.wait.veryLong);
 
         const backupInstance = this.backupInstances.map(i => {
             return i.$(this.label.selector).getText();

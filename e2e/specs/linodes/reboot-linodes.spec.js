@@ -1,9 +1,10 @@
 const { constants } = require('../../constants');
+
 import { flatten } from 'ramda';
 import ListLinodes from '../../pageobjects/list-linodes';
 
 describe('List Linodes - Actions - Reboot Suite', () => {
-    const rebootTimeout = 120000;
+    const rebootTimeout = constants.wait.minute * 3;
 
     beforeAll(() => {
         browser.url(constants.routes.linodes);
