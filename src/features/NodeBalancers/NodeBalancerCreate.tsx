@@ -564,7 +564,8 @@ const connected = connect((state: Linode.AppState) => ({
 
 const styled = withStyles(styles, { withTheme: true });
 
-const lensFrom = (p1: (string | number)[]) => (p2: (string | number)[]) =>
+/* @todo: move to own file */
+export const lensFrom = (p1: (string | number)[]) => (p2: (string | number)[]) =>
   lensPath([...p1, ...p2]);
 
 export default compose(

@@ -86,6 +86,14 @@ export const createNodeBalancerConfig = (nodeBalancerId: number, data: any) =>
   )
     .then(response => response.data);
 
+export const updateNodeBalancerConfig = (nodeBalancerId: number, configId: number, data: any) =>
+  Request<Linode.NodeBalancerConfig>(
+    setMethod('PUT'),
+    setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}`),
+    setData(data),
+  )
+    .then(response => response.data);
+
 export const createNodeBalancerSchema = Joi.object({
   label: Joi.string().regex(/^[a-zA-Z0-9-_]+$/).min(3).max(32),
   client_conn_throttle: Joi.number(),

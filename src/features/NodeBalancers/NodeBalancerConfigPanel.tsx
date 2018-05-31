@@ -7,12 +7,14 @@ import IconButton from 'material-ui/IconButton';
 import Delete from 'material-ui-icons/Delete';
 import FormControlLabel from 'material-ui/Form/FormControlLabel';
 
+import Button from 'src/components/Button';
 import PlusSquare from 'src/assets/icons/plus-square.svg';
 import IconTextLink from 'src/components/IconTextLink';
 import Grid from 'src/components/Grid';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import ActionsPanel from 'src/components/ActionsPanel';
 
 const parseFormNumber: (s: string) => (string | number) =
   when(compose(not, isEmpty), (v: string) => +v);
@@ -49,6 +51,12 @@ const filterErrors = (idx: number) => reduce((
 
 interface Props {
   errors?: Linode.ApiFieldError[];
+
+  forEdit?: boolean;
+  submitting?: boolean;
+  onSave?: () => void;
+  onCancel?: () => void;
+  onDelete?: () => void;
 
   algorithm: 'roundrobin' | 'leastconn' | 'source';
   onAlgorithmChange: (v: string) => void;
@@ -110,6 +118,12 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       classes,
 
       errors,
+
+      forEdit,
+      submitting,
+      onSave,
+      onCancel,
+      onDelete,
 
       algorithm,
       onAlgorithmChange,
@@ -487,8 +501,38 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   text="Add a Node"
                 >
                   Add a Node
-              </IconTextLink>
+                </IconTextLink>
               </Grid>
+              {forEdit &&
+                <Grid container justify="space-between" alignItems="center">
+                  <Grid item>
+                    <ActionsPanel>
+                      <Button
+                        variant="raised"
+                        type="primary"
+                        onClick={() => onSave!()}
+                        loading={submitting}
+                      >
+                        Save
+                      </Button>
+                      <Button
+                        onClick={() => onCancel!()}
+                      >
+                        Cancel
+                      </Button>
+                    </ActionsPanel>
+                  </Grid>
+                  <Grid item>
+                    <Button
+                      onClick={() => onDelete!()}
+                      type="secondary"
+                      destructive
+                    >
+                      Delete
+                    </Button>
+                  </Grid>
+                </Grid>
+              }
             </Grid>
           </div>
         </Paper>
