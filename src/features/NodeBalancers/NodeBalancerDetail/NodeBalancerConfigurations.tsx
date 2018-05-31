@@ -95,10 +95,11 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         });
       })
       .catch((error) => {
-        this.setState({
-          configs: this.state.unmodifiedConfigs,
-        });
       });
+  }
+
+  cancelEditing = () => {
+    this.setState({ configs: this.state.unmodifiedConfigs });
   }
 
   render() {
@@ -155,7 +156,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
               forEdit
               onSave={() => this.updateConfig(idx)}
-              onCancel={() => console.log('cancelling')}
+              onCancel={() => this.cancelEditing()}
               onDelete={() => console.log('deleting')}
 
               errors={[]}
