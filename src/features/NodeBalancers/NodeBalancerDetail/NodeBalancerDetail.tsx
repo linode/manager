@@ -23,7 +23,6 @@ import {
   getNodeBalancerConfigs,
 } from 'src/services/nodebalancers';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
-// import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import NodeBalancerSettings from './NodeBalancerSettings';
 
@@ -208,7 +207,10 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
             exact
             path={`${path}/summary`}
             render={() =>
-              <NodeBalancerSummary nodeBalancer={nodeBalancer} />
+              <NodeBalancerSummary
+                nodeBalancer={nodeBalancer}
+                errorResponses={this.props.location.state.errors}
+              />
             }
           />
           <Route exact path={`${path}/configurations`} render={() => <div>Hello World</div>} />

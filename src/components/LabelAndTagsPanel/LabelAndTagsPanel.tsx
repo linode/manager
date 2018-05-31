@@ -80,9 +80,8 @@ class InfoPanel extends React.Component<CombinedProps> {
             {!!expansion.action &&
               <ActionsPanel className={expansion ? classes.expPanelButton : ''}>
                 <Button
-                  variant="raised"
                   onClick={expansion.action}
-                  color="primary"
+                  type="primary"
                   disabled={expansion.isSubmitting}
                   data-qa-label-save
                 >
