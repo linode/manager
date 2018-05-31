@@ -12,8 +12,8 @@ html {
 @media screen and (min-width: 960px) {
   html {
     /* fix for scrollbar compoensation */
-    width:100vw;
-    overflow-x:hidden;
+    width: 100vw;
+    overflow-x: hidden;
   }
 }
 
