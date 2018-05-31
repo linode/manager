@@ -123,7 +123,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       submitting,
       onSave,
       onCancel,
-      // onDelete,
+      onDelete,
 
       algorithm,
       onAlgorithmChange,
@@ -532,17 +532,15 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     </Button>
                   </ActionsPanel>
                 </Grid>
-                {/* @todo implement delete
-                  <Grid item>
-                    <Button
-                      onClick={() => onDelete!()}
-                      type="secondary"
-                      destructive
-                    >
-                      Delete
-                    </Button>
-                  </Grid>
-                */}
+                <Grid item>
+                  <Button
+                    onClick={() => onDelete!()}
+                    type="secondary"
+                    destructive
+                  >
+                    Delete
+                  </Button>
+                </Grid>
               </Grid>
             }
           </div>

@@ -94,6 +94,13 @@ export const updateNodeBalancerConfig = (nodeBalancerId: number, configId: numbe
   )
     .then(response => response.data);
 
+export const deleteNodeBalancerConfig = (nodeBalancerId: number, configId: number) =>
+  Request<{}>(
+    setMethod('DELETE'),
+    setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}`),
+  )
+    .then(response => response.data);
+
 export const createNodeBalancerSchema = Joi.object({
   label: Joi.string().regex(/^[a-zA-Z0-9-_]+$/).min(3).max(32),
   client_conn_throttle: Joi.number(),
