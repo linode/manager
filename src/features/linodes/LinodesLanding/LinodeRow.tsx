@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose, pathOr } from 'ramda';
-import { Link } from 'react-router-dom';
 
 import { withStyles, Theme, WithStyles, StyleRulesCallback } from 'material-ui/styles';
+import Button from 'material-ui/Button';
+
 import Grid from 'src/components/Grid';
 import Typography from 'material-ui/Typography';
 import TableRow from 'material-ui/Table/TableRow';
@@ -40,6 +41,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
     },
     linodeCell: {
       width: '30%',
+      '& h3': {
+        transition: theme.transitions.create(['color']),
+      },
     },
     tagsCell: {
       width: '15%',
@@ -77,6 +81,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
     },
     link: {
       display: 'block',
+      padding: 0,
+      '&:hover': {
+        backgroundColor: 'transparent',
+        '& h3': {
+          color: theme.palette.primary.main,
+        },
+      },
     },
   });
 };
@@ -124,19 +135,21 @@ class LinodeRow extends React.Component<PropsWithStyles> {
 
     return (
       <TableCell className={classes.linodeCell}>
-        <Grid container alignItems="center">
-          <Grid item className="py0">
-            <LinodeStatusIndicator status={linodeStatus} />
-          </Grid>
-          <Grid item className="py0">
-            <Link to={`/linodes/${linodeId}`} className={classes.link}>
+        <Button href={`/linodes/${linodeId}`} className={classes.link}>
+          <Grid container alignItems="center">
+            <Grid item className="py0">
+              <LinodeStatusIndicator status={linodeStatus} />
+            </Grid>
+            <Grid item className="py0">
               <Typography variant="subheading" data-qa-label>
                 {linodeLabel}
               </Typography>
-            </Link>
-            {typeLabel}
+              <Typography>
+                {typeLabel}
+              </Typography>
+            </Grid>
           </Grid>
-        </Grid>
+        </Button>
       </TableCell>
     );
   }
