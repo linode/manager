@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as Joi from 'joi';
 import {
   withStyles,
   StyleRulesCallback,
@@ -17,6 +18,7 @@ import {
   path,
   pathOr,
 //  reduce,
+  filter,
   set,
   view,
 } from 'ramda';
@@ -24,14 +26,18 @@ import { withRouter, RouteComponentProps } from 'react-router-dom';
 
 import Typography from 'material-ui/Typography';
 
-import { getNodeBalancerConfigs, updateNodeBalancerConfig } from 'src/services/nodebalancers';
+import {
+  getNodeBalancerConfigs,
+  updateNodeBalancerConfig,
+  createNodeBalancerConfigSchema,
+} from 'src/services/nodebalancers';
 import Grid from 'src/components/Grid';
 import IconTextLink from 'src/components/IconTextLink';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import PlusSquare from 'src/assets/icons/plus-square.svg';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 
-import { lensFrom } from '../NodeBalancerCreate';
+import { lensFrom, validationErrorsToFieldErrors } from '../NodeBalancerCreate';
 import NodeBalancerConfigPanel from '../NodeBalancerConfigPanel';
 
 type ClassNames =
@@ -79,11 +85,41 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   updateConfig = (idx: number) => {
     const { match: { params: { nodeBalancerId } } } = this.props;
     const config = this.state.configs[idx];
-    const configPayload: Partial<Linode.NodeBalancerConfig> = {
-      ...config,
-      ssl_cert: config.ssl_cert === '<REDACTED>' ? undefined : config.ssl_cert,
-      ssl_key: config.ssl_key === '<REDACTED>' ? undefined : config.ssl_key,
-    };
+
+    const configPayload: Partial<Linode.NodeBalancerConfig> = filter(
+      el => el !== undefined,
+      {
+        ...config,
+        check_body: config.check_body || undefined,
+        check_path: config.check_path || undefined,
+        ssl_cert: config.ssl_cert === '<REDACTED>'
+          ? undefined
+          : config.ssl_cert || undefined,
+        ssl_key: config.ssl_key === '<REDACTED>'
+          ? undefined
+          : config.ssl_key || undefined,
+        ssl_commonname: config.ssl_commonname || undefined,
+        ssl_fingerprint: config.ssl_fingerprint || undefined,
+        nodes_status: undefined,
+        id: undefined,
+        nodebalancer_id: undefined,
+      },
+    );
+
+    // first, validate client-side
+    const { error: validationErrors } = Joi.validate(
+      configPayload,
+      createNodeBalancerConfigSchema,
+      { abortEarly: false },
+    );
+
+    if (validationErrors) {
+      const newErrors = clone(this.state.configErrors);
+      newErrors[idx] = validationErrorsToFieldErrors(validationErrors);
+      this.setState({ configErrors: newErrors });
+      return;
+    }
+
     updateNodeBalancerConfig(nodeBalancerId!, config.id, configPayload)
       .then((nodeBalancerConfig) => {
         // update config data
@@ -168,7 +204,6 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
             success={panelMessages[idx]}
           >
             <NodeBalancerConfigPanel
-
               forEdit
               onSave={() => this.updateConfig(idx)}
               onCancel={() => this.cancelEditing()}

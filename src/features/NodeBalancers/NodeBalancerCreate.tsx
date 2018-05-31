@@ -205,36 +205,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
     if (error) {
       this.setState({
-        errors: error
-          .details
-          .map(detail => ({
-            key: detail.context && detail.context.key,
-            path: detail.path.join('_'),
-            message: detail.message,
-            type: detail.type.split('.').shift(),
-            constraint: detail.type.split('.').pop(),
-          }))
-
-          /**
-           * This is a one-off solution for dealing with port uniqueness constraint on the configs.
-           * */
-          .map((detail) => {
-            const path = detail.path.split('_');
-
-            return path.includes('configs') && detail.constraint === 'unique'
-              ? {
-                ...detail,
-                message: 'Port must be unique',
-                path: [...path, 'port'].join('_'),
-              }
-              : detail;
-          })
-          .map((detail) => {
-            return {
-              field: detail.path,
-              reason: detail.message,
-            };
-          }),
+        errors: validationErrorsToFieldErrors(error),
       });
       return;
     }
@@ -567,6 +538,40 @@ const styled = withStyles(styles, { withTheme: true });
 /* @todo: move to own file */
 export const lensFrom = (p1: (string | number)[]) => (p2: (string | number)[]) =>
   lensPath([...p1, ...p2]);
+
+/* @todo: move to own file */
+export const validationErrorsToFieldErrors = (error: Joi.ValidationError) => {
+  return error
+    .details
+    .map(detail => ({
+      key: detail.context && detail.context.key,
+      path: detail.path.join('_'),
+      message: detail.message,
+      type: detail.type.split('.').shift(),
+      constraint: detail.type.split('.').pop(),
+    }))
+
+    /**
+     * This is a one-off solution for dealing with port uniqueness constraint on the configs.
+     * */
+    .map((detail) => {
+      const path = detail.path.split('_');
+
+      return path.includes('configs') && detail.constraint === 'unique'
+        ? {
+          ...detail,
+          message: 'Port must be unique',
+          path: [...path, 'port'].join('_'),
+        }
+        : detail;
+    })
+    .map((detail) => {
+      return {
+        field: detail.path,
+        reason: detail.message,
+      };
+    });
+};
 
 export default compose(
   connected,
