@@ -54,6 +54,7 @@ export const apiDeleteAllLinodes = () => {
     browser.removeAllLinodes(token);
 }
 
+
 export const apiDeleteAllVolumes = () => {
     const token = readToken();
     browser.removeAllVolumes(token);

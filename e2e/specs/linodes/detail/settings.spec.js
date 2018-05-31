@@ -1,10 +1,7 @@
 const crypto = require('crypto');
 const { constants } = require('../../../constants');
+import { apiCreateLinode, apiDeleteAllLinodes } from '../../../utils/common';
 
-import {
-    apiCreateLinode,
-    apiDeleteAllLinodes,
-} from '../../../utils/common';
 import ListLinodes from '../../../pageobjects/list-linodes';
 import LinodeDetail from '../../../pageobjects/linode-detail/linode-detail.page';
 import Settings from '../../../pageobjects/linode-detail/linode-detail-settings.page';

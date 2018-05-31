@@ -1,10 +1,6 @@
 const { constants} = require('../../constants');
 
-import {
-    Profile,
-    TokenCreateDrawer,
-    dialogMap,
-} from '../../pageobjects/profile';
+import { Profile, TokenCreateDrawer, dialogMap } from '../../pageobjects/profile';
 
 const profile = new Profile();
 const tokenCreateDrawer = new TokenCreateDrawer();

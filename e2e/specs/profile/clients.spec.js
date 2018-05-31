@@ -1,10 +1,5 @@
 const { constants} = require('../../constants');
-
-import {
-    Profile,
-    OauthCreateDrawer,
-    dialogMap,
-} from '../../pageobjects/profile';
+import { Profile, OauthCreateDrawer, dialogMap} from '../../pageobjects/profile';
 
 const profile = new Profile();
 const createDrawer = new OauthCreateDrawer();
