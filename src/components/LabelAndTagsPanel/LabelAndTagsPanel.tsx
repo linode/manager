@@ -7,8 +7,13 @@ import Typography from 'material-ui/Typography';
 
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 import Notice from 'src/components/Notice';
+import ExpansionPanel from 'src/components/ExpansionPanel';
+import Button from 'src/components/Button';
+import ActionsPanel from 'src/components/ActionsPanel';
 
-type ClassNames = 'root' | 'inner';
+type ClassNames = 'root'
+  | 'inner'
+  | 'expPanelButton';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -20,13 +25,30 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   inner: {
     padding: theme.spacing.unit * 3,
   },
+  expPanelButton: {
+    padding: 0,
+    margin: `
+      ${theme.spacing.unit * 4}px
+      ${theme.spacing.unit}px
+      ${0}
+      -${theme.spacing.unit}px
+    `,
+  },
 });
 
 const styled = withStyles(styles, { withTheme: true });
 
+interface ExpansionPanelProps {
+  expansionHeader?: string;
+  action?: () => void;
+  isSubmitting: boolean;
+  success: string | undefined;
+}
+
 interface Props {
   error?: string;
   labelFieldProps?: TextFieldProps;
+  expansion?: ExpansionPanelProps;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -41,16 +63,43 @@ class InfoPanel extends React.Component<CombinedProps> {
   };
 
   render() {
-    const { classes, error, labelFieldProps } = this.props;
+    const { classes, error, labelFieldProps, expansion } = this.props;
 
     return (
-      <Paper className={classes.root} data-qa-label-header>
-        <div className={classes.inner}>
-          {error && <Notice text={error} error />}
-          <Typography variant="title">Label</Typography>
-          <TextField {...labelFieldProps} />
-        </div>
-      </Paper>
+      <React.Fragment>
+        {!!expansion // will either be an expandable panel that will save the settings or a card
+          ? <ExpansionPanel
+            defaultExpanded={true}
+            success={expansion.success}
+            heading={expansion.expansionHeader || 'Label'}
+          >
+            <div className={!expansion ? classes.inner : ''}>
+              {error && <Notice text={error} error />}
+              <TextField {...labelFieldProps} />
+            </div>
+            {!!expansion.action &&
+              <ActionsPanel className={expansion ? classes.expPanelButton : ''}>
+                <Button
+                  variant="raised"
+                  onClick={expansion.action}
+                  color="primary"
+                  disabled={expansion.isSubmitting}
+                  data-qa-label-save
+                >
+                  Save
+              </Button>
+              </ActionsPanel>
+            }
+          </ExpansionPanel>
+          : <Paper className={classes.root} data-qa-label-header>
+            <div className={classes.inner}>
+              {error && <Notice text={error} error />}
+              <Typography variant="title">Label</Typography>
+              <TextField {...labelFieldProps} />
+            </div>
+          </Paper>
+        }
+      </React.Fragment>
     );
   }
 }

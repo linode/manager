@@ -1,6 +1,19 @@
 import * as React from 'react';
 import * as Joi from 'joi';
-import { clamp, compose, defaultTo, lensPath, map, path, pathOr, reduce, set, view } from 'ramda';
+import {
+  append,
+  clamp,
+  compose,
+  defaultTo,
+  lensPath,
+  map,
+  over,
+  path,
+  pathOr,
+  reduce,
+  set,
+  view,
+} from 'ramda';
 import * as Promise from 'bluebird';
 import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
@@ -14,6 +27,7 @@ import {
   createNodeBalancer,
   createNodeBalancerSchema,
   createNodeBalancerConfig,
+  createNodeBalancerConfigNode,
 } from 'src/services/nodebalancers';
 import { dcDisplayNames } from 'src/constants';
 import Grid from 'src/components/Grid';
@@ -31,7 +45,8 @@ import Notice from 'src/components/Notice';
 type Styles =
   'root'
   | 'main'
-  | 'sidebar';
+  | 'sidebar'
+  | 'title';
 
 const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   root: {
@@ -39,6 +54,9 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   main: {
   },
   sidebar: {
+  },
+  title: {
+    marginTop: theme.spacing.unit,
   },
 });
 
@@ -71,7 +89,7 @@ interface NodeBalancerConfigFields {
   check_interval?: number;
   check_passive?: boolean;
   check_path?: string;
-  check_timout?: number; /** 1..30 */
+  check_timeout?: number; /** 1..30 */
   check?: 'none' | 'connection' | 'http' | 'http_body';
   cipher_suite?: 'recommended' | 'legacy';
   port?: number; /** 1..65535 */
@@ -79,6 +97,7 @@ interface NodeBalancerConfigFields {
   ssl_cert?: string;
   ssl_key?: string;
   stickiness?: 'none' | 'table' | 'http_cookie';
+  nodes: Linode.NodeBalancerConfigNode[];
 }
 
 interface State {
@@ -96,6 +115,13 @@ const errorResources = {
 };
 
 class NodeBalancerCreate extends React.Component<CombinedProps, State> {
+  static createNewNodeBalancerConfigNode = (): Linode.NodeBalancerConfigNode => ({
+    label: '',
+    address: '',
+    weight: 100,
+    mode: 'accept',
+  })
+
   static createNewNodeBalancerConfig = (): NodeBalancerConfigFields => ({
     algorithm: 'roundrobin',
     check_attempts: 2,
@@ -103,7 +129,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     check_interval: 5,
     check_passive: true,
     check_path: undefined,
-    check_timout: 3,
+    check_timeout: 3,
     check: 'connection',
     cipher_suite: undefined,
     port: 80,
@@ -111,6 +137,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     ssl_cert: undefined,
     ssl_key: undefined,
     stickiness: 'table',
+    nodes: [NodeBalancerCreate.createNewNodeBalancerConfigNode()],
   })
 
   static defaultFieldsStates = {
@@ -131,6 +158,38 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       ],
     },
   })
+
+  addNodeBalancerConfigNode = (configIdx: number) => this.setState(
+    over(
+      lensPath(['nodeBalancerFields', 'configs', configIdx, 'nodes']),
+      append(NodeBalancerCreate.createNewNodeBalancerConfigNode()),
+    ))
+
+  removeNodeBalancerConfigNode = (configIdx: number) => (nodeIdx: number) =>
+    this.setState(
+      over(
+        lensPath(['nodeBalancerFields', 'configs', configIdx, 'nodes']),
+        nodes => nodes.filter((n: any, idx: number) => idx !== nodeIdx),
+      ))
+
+  setNodeValue = (cidx: number, nodeidx: number, key: string, value: any) =>
+    this.setState(
+      set(
+        lensPath(['nodeBalancerFields', 'configs', cidx, 'nodes', nodeidx, key]),
+        value,
+      ))
+
+  onNodeLabelChange = (configIdx: number, nodeIdx: number, value: string) =>
+    this.setNodeValue(configIdx, nodeIdx, 'label', value)
+
+  onNodeAddressChange = (configIdx: number, nodeIdx: number, value: string) =>
+    this.setNodeValue(configIdx, nodeIdx, 'address', value)
+
+  onNodeWeightChange = (configIdx: number, nodeIdx: number, value: number) =>
+    this.setNodeValue(configIdx, nodeIdx, 'weight', value)
+
+  onNodeModeChange = (configIdx: number, nodeIdx: number, value: string) =>
+    this.setNodeValue(configIdx, nodeIdx, 'mode', value)
 
   createNodeBalancer = () => {
     const { nodeBalancerFields } = this.state;
@@ -155,7 +214,10 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
             type: detail.type.split('.').shift(),
             constraint: detail.type.split('.').pop(),
           }))
-          /** If the error is the uniqueness constraint for Config, we're going */
+
+          /**
+           * This is a one-off solution for dealing with port uniqueness constraint on the configs.
+           * */
           .map((detail) => {
             const path = detail.path.split('_');
 
@@ -191,10 +253,32 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
         return Promise.map(
           configs,
-          (nodeBalancerConfig, idx) => new Promise((resolve) => {
+          nodeBalancerConfig => new Promise((resolveConfig) => {
             createNodeBalancerConfig(nodeBalancerId, nodeBalancerConfig)
-              .then(resolve)
-              .catch(error => resolve({
+              .then((response) => {
+                const { id: nodeBalancerConfigId } = response;
+                return Promise.map(
+                  nodeBalancerConfig.nodes,
+                  nodeBalancerConfigNode => new Promise((resolveNode) => {
+                    createNodeBalancerConfigNode(
+                      nodeBalancerId,
+                      nodeBalancerConfigId,
+                      nodeBalancerConfigNode,
+                    )
+                      .then(response => resolveNode(response))
+                      .catch(error => resolveNode({
+                        errors: error.response.data.errors,
+                        config: nodeBalancerConfigNode,
+                      }));
+                  }),
+                )
+                  .then(nodeBalancerConfigNodes => ({
+                    ...nodeBalancerConfig,
+                    nodes: nodeBalancerConfigNodes,
+                  }));
+              })
+              .then(response => resolveConfig(response))
+              .catch(error => resolveConfig({
                 errors: error.response.data.errors,
                 config: nodeBalancerConfig,
               }));
@@ -209,12 +293,16 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
         const { history } = this.props;
         const { id } = nodeBalancer;
 
-        return history.push(
-          `/nodebalancers/${id}/summary`,
-          {
-            errors: nodeBalancer.configs.filter(c => c.hasOwnProperty('errors')),
-          },
-        );
+
+        const errors: Linode.ApiFieldError[] = [
+          ...nodeBalancer.configs.filter(c => c.hasOwnProperty('errors')),
+          ...nodeBalancer.configs
+            .map((c: any) => c.nodes)
+            .reduce((prev, current) => [...prev, ...current], [])
+            .filter((c: any) => c.hasOwnProperty('errors')),
+        ];
+
+        return history.push(`/nodebalancers/${id}/summary`, { errors });
       })
       .catch((errorResponse) => {
         const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'], errorResponse);
@@ -274,7 +362,15 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               textFieldProps={{
                 errorText: hasErrorFor('client_conn_throttle'),
                 value: defaultTo(0, nodeBalancerFields.client_conn_throttle),
-                helperText: 'Connections per second',
+                InputProps: {
+                  endAdornment: <Typography
+                    variant="caption"
+                    component="span"
+                    style={{ marginRight: '8px' }}
+                  >
+                    / second
+                  </Typography>,
+                },
                 onChange: e => this.setState({
                   nodeBalancerFields: {
                     ...nodeBalancerFields,
@@ -284,8 +380,10 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               }}
             />
             <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }} >
-              <Grid item>
-                <Typography variant="title">NodeBalancer Settings</Typography>
+              <Grid item xs={12}>
+                <Typography variant="title" className={classes.title}>
+                  NodeBalancer Settings
+                </Typography>
               </Grid>
               {
                 this.state.nodeBalancerFields.configs.map((nodeBalancerConfig, idx) => {
@@ -298,9 +396,9 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                   const portLens = lensTo(['port']);
                   const protocolLens = lensTo(['protocol']);
                   const healthCheckTypeLens = lensTo(['check']);
-                  const healthCheckAttemptsLens = lensTo(['healthCheckAttempts']);
-                  const healthCheckIntervalLens = lensTo(['healthCheckInterval']);
-                  const healthCheckTimeoutLens = lensTo(['healthCheckTimeout']);
+                  const healthCheckAttemptsLens = lensTo(['check_attempts']);
+                  const healthCheckIntervalLens = lensTo(['check_interval']);
+                  const healthCheckTimeoutLens = lensTo(['check_timeout']);
                   const sessionStickinessLens = lensTo(['stickiness']);
                   const sslCertificateLens = lensTo(['ssl_cert']);
                   const privateKeyLens = lensTo(['ssl_key']);
@@ -386,6 +484,23 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                       this.setState(state =>
                         set(privateKeyLens, privateKey, state))}
 
+                    nodes={this.state.nodeBalancerFields.configs[idx].nodes}
+
+                    addNode={() => this.addNodeBalancerConfigNode(idx)}
+
+                    removeNode={this.removeNodeBalancerConfigNode(idx)}
+
+                    onNodeLabelChange={(nodeIndex, value) =>
+                      this.onNodeLabelChange(idx, nodeIndex, value)}
+
+                    onNodeAddressChange={(nodeIndex, value) =>
+                      this.onNodeAddressChange(idx, nodeIndex, value)}
+
+                    onNodeWeightChange={(nodeIndex, value) =>
+                      this.onNodeWeightChange(idx, nodeIndex, value)}
+
+                    onNodeModeChange={(nodeIndex, value) =>
+                      this.onNodeModeChange(idx, nodeIndex, value)}
                   />;
                 })
               }
