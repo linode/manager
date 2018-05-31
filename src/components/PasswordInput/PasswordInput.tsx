@@ -15,6 +15,7 @@ import { Props as TextFieldProps } from 'src/components/TextField';
 import HideShowText from './HideShowText';
 
 interface Props extends TextFieldProps {
+  value?: string;
 }
 
 interface State {
@@ -39,15 +40,20 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class PasswordInput extends React.Component<CombinedProps, State> {
-  state = { strength: null };
+  state: State = {
+    strength: maybeStrength(this.props.value),
+  };
+
+  componentWillReceiveProps(nextProps: CombinedProps) {
+    const { value } = nextProps;
+    this.setState({ strength: maybeStrength(value) });
+  }
 
   onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.props.onChange && this.props.onChange(e);
+    const value: string = e.currentTarget.value;
 
-    const value = e.currentTarget.value;
-    this.setState({
-      strength: isEmpty(value) ? null : zxcvbn(value).score,
-    });
+    this.props.onChange && this.props.onChange(e);
+    this.setState({ strength: maybeStrength(value) });
   }
 
   render() {
@@ -66,14 +72,18 @@ class PasswordInput extends React.Component<CombinedProps, State> {
         </Grid>
         {
           <Grid item xs={12} className={`${classes.strengthIndicator} py0`}>
-            <StrengthIndicator strength={(value !== undefined &&
-              value.toString().length === 0) ? 0 : strength} />
+            <StrengthIndicator strength={strength} />
           </Grid>
         }
       </Grid>
     );
   }
 }
+
+const maybeStrength = (value?: string) =>
+  !value || isEmpty(value)
+    ? null
+    : zxcvbn(value).score;
 
 export default withStyles(styles, { withTheme: true })<Props>(PasswordInput);
 
