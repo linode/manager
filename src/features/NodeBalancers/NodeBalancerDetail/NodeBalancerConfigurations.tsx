@@ -57,6 +57,8 @@ interface PreloadedProps {
 
 interface State {
   configs: Linode.NodeBalancerConfig[];
+  unmodifiedConfigs: Linode.NodeBalancerConfig[];
+  panelMessages: string[];
 }
 
 type CombinedProps =
@@ -68,6 +70,8 @@ type CombinedProps =
 class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   state: State = {
     configs: pathOr([], ['response', 'data'], this.props.configs),
+    unmodifiedConfigs: pathOr([], ['response', 'data'], this.props.configs),
+    panelMessages: [],
   };
 
   updateConfig = (idx: number) => {
@@ -82,13 +86,24 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       .then((nodeBalancerConfig) => {
         const newConfigs = clone(this.state.configs);
         newConfigs[idx] = nodeBalancerConfig;
-        this.setState({ configs: newConfigs });
+        const newMessages = [];
+        newMessages[idx] = 'NodeBalancer config updated successfully';
+        this.setState({
+          configs: newConfigs,
+          unmodifiedConfigs: newConfigs,
+          panelMessages: newMessages,
+        });
+      })
+      .catch((error) => {
+        this.setState({
+          configs: this.state.unmodifiedConfigs,
+        });
       });
   }
 
   render() {
     const { classes } = this.props;
-    const { configs } = this.state;
+    const { configs, panelMessages } = this.state;
 
     return (
       <React.Fragment>
@@ -134,6 +149,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
             key={idx}
             defaultExpanded={true}
             heading={`Port ${config.port}`}
+            success={panelMessages[idx]}
           >
             <NodeBalancerConfigPanel
 
