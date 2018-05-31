@@ -7,17 +7,10 @@ import {
   WithStyles,
 } from 'material-ui';
 import {
-//  append,
-//  clamp,
-//  compose,
   clone,
   defaultTo,
-//  lensPath,
-//  map,
-//  over,
   path,
   pathOr,
-//  reduce,
   filter,
   set,
   view,
@@ -31,10 +24,10 @@ import {
   updateNodeBalancerConfig,
   createNodeBalancerConfigSchema,
 } from 'src/services/nodebalancers';
+// import IconTextLink from 'src/components/IconTextLink';
+// import PlusSquare from 'src/assets/icons/plus-square.svg';
 import Grid from 'src/components/Grid';
-import IconTextLink from 'src/components/IconTextLink';
 import ExpansionPanel from 'src/components/ExpansionPanel';
-import PlusSquare from 'src/assets/icons/plus-square.svg';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 
 import { lensFrom, validationErrorsToFieldErrors } from '../NodeBalancerCreate';
@@ -65,6 +58,7 @@ interface State {
   configs: Linode.NodeBalancerConfig[];
   unmodifiedConfigs: Linode.NodeBalancerConfig[];
   configErrors: Linode.ApiFieldError[][];
+  configSubmitting: boolean[];
   panelMessages: string[];
 }
 
@@ -79,6 +73,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     configs: pathOr([], ['response', 'data'], this.props.configs),
     unmodifiedConfigs: pathOr([], ['response', 'data'], this.props.configs),
     configErrors: [],
+    configSubmitting: [],
     panelMessages: [],
   };
 
@@ -120,6 +115,12 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       return;
     }
 
+    const newSubmitting = clone(this.state.configSubmitting);
+    newSubmitting[idx] = true;
+    this.setState({
+      configSubmitting: newSubmitting,
+    });
+
     updateNodeBalancerConfig(nodeBalancerId!, config.id, configPayload)
       .then((nodeBalancerConfig) => {
         // update config data
@@ -134,18 +135,29 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         // update errors
         const newErrors = clone(this.state.configErrors);
         newErrors[idx] = [];
+        // reset submitting
+        const newSubmitting = clone(this.state.configSubmitting);
+        newSubmitting[idx] = false;
         this.setState({
           configs: newConfigs,
           unmodifiedConfigs: newUnmodifiedConfigs,
           panelMessages: newMessages,
           configErrors: newErrors,
+          configSubmitting: newSubmitting,
         });
       })
       .catch((errorResponse) => {
+        // update errors
         const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'], errorResponse);
         const newErrors = clone(this.state.configErrors);
         newErrors[idx] = errors || [];
-        this.setState({ configErrors: newErrors });
+        // reset submitting
+        const newSubmitting = clone(this.state.configSubmitting);
+        newSubmitting[idx] = false;
+        this.setState({
+          configErrors: newErrors,
+          configSubmitting: newSubmitting,
+        });
       });
   }
 
@@ -155,7 +167,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes } = this.props;
-    const { configs, panelMessages } = this.state;
+    const { configs, panelMessages, configErrors, configSubmitting } = this.state;
 
     return (
       <React.Fragment>
@@ -166,18 +178,20 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
             </Typography>
           </Grid>
           <Grid item>
-            <Grid container alignItems="flex-end">
-              <Grid item>
-                <IconTextLink
-                  SideIcon={PlusSquare}
-                  onClick={() => console.log('add configuration')}
-                  title="Add a Configuration"
-                  text="Add a Configuration"
-                >
-                  Add a Configuration
-                </IconTextLink>
+            {/* @todo: implement add config
+              <Grid container alignItems="flex-end">
+                <Grid item>
+                  <IconTextLink
+                    SideIcon={PlusSquare}
+                    onClick={() => console.log('add configuration')}
+                    title="Add a Configuration"
+                    text="Add a Configuration"
+                  >
+                    Add a Configuration
+                  </IconTextLink>
+                </Grid>
               </Grid>
-            </Grid>
+            */}
           </Grid>
         </Grid>
         {configs.map((config, idx) => {
@@ -207,9 +221,11 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
               forEdit
               onSave={() => this.updateConfig(idx)}
               onCancel={() => this.cancelEditing()}
-              onDelete={() => console.log('deleting')}
+              submitting={configSubmitting[idx]}
+              // @todo: implement delete
+              // onDelete={() => console.log('deleting')}
 
-              errors={this.state.configErrors[idx]}
+              errors={configErrors[idx]}
 
               algorithm={defaultTo('roundrobin', view(algorithmLens, this.state))}
               onAlgorithmChange={(algorithm: string) =>
