@@ -31,7 +31,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       ${theme.spacing.unit * 4}px
       ${theme.spacing.unit}px
       ${0}
-      -${theme.spacing.unit}px
+      -${theme.spacing.unit * 2}px
     `,
   },
 });
