@@ -20,20 +20,16 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   backups_enable: {
     notification: e => `Backups have been enabled for ${e.entity!.label}.`,
   },
-  // backups_restore: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
-  // community_question_reply: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
+  backups_restore: {
+    scheduled: e => `Backup restoration scheduled for ${e.entity!.label}`,
+    started: e => `Backup restoration started for ${e.entity!.label}`,
+    failed: e => `Backup restoration has failed for ${e.entity!.label}.`,
+    finished: e => `Backup restoration has completed for ${e.entity!.label}.`,
+    notification: e => `Backup restoration has completed for ${e.entity!.label}.`,
+  },
+  community_question_reply: {
+    notification: e => `There has been a reply to your thread "${e.entity!.label}".`,
+  },
   credit_card_updated: {
     notification: e => `Credit card information has been updated.`,
   },
@@ -218,34 +214,18 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   //   finished: e => ``,
   //   notification: e => ``,
   // },
-  // nodebalancer_config_create: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
-  // nodebalancer_config_delete: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
-  // nodebalancer_create: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
-  // nodebalancer_delete: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
+  nodebalancer_config_create: {
+    notification: e => `NodeBalancer configuration ${e.entity!.label} has been created.`,
+  },
+  nodebalancer_config_delete: {
+    notification: e => `NodeBalancer configuration ${e.entity!.label} has been deleted.`,
+  },
+  nodebalancer_create: {
+    notification: e => `NodeBalancer ${e.entity!.label} has been created.`,
+  },
+  nodebalancer_delete: {
+    notification: e => `NodeBalancer ${e.entity!.label} has been deleted.`,
+  },
   password_reset: {
     scheduled: e => `A password reset for ${e.entity!.label} has been scheduled.`,
     started: e => `The password for ${e.entity!.label} is being reset.`,
@@ -300,13 +280,9 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   //   finished: e => ``,
   //   notification: e => ``,
   // },
-  // ticket_create: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
+  ticket_create: {
+    notification: e => `New support ticket "${e.entity!.label}" created.`,
+  },
   // ticket_reply: {
   //   scheduled: e => ``,
   //   started: e => ``,
@@ -314,6 +290,9 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   //   finished: e => ``,
   //   notification: e => ``,
   // },
+  ticket_update: {
+    notification: e => `Support ticket "${e.entity!.label}" has been updated.`,
+  },
   volume_attach: {
     scheduled: e => `Volume ${e.entity!.label} is scheduled for attachment to a Linode.`,
     started: e => `Volume ${e.entity!.label} is being attached to a Linode.`,
