@@ -439,7 +439,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             errorText={hasErrorFor('label')}
                           />
                         </Grid>
-                        <Grid item xs={11} lg={3}>
+                        <Grid item xs={11} lg={4}>
                           <TextField
                             label="Address"
                             value={node.address}
@@ -456,7 +456,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             errorText={hasErrorFor('weight')}
                           />
                         </Grid>
-                        <Grid item xs={11} lg={2}>
+                        <Grid item xs={11} lg={1}>
                           <TextField
                             label="Mode"
                             value={node.mode}
