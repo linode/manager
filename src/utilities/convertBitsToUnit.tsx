@@ -21,5 +21,5 @@ export const convertBitsToUnit = (value: number, unitType: UnitType) => {
     default:
       break; // just bits
   }
-  return +convertedValue.toFixed(20);
+  return +convertedValue.toFixed(10);
 };
