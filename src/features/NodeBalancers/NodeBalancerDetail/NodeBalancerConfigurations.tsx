@@ -132,7 +132,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         // replace success message with a new one
         const newMessages = [];
         newMessages[idx] = 'NodeBalancer config updated successfully';
-        // update errors
+        // reset errors
         const newErrors = clone(this.state.configErrors);
         newErrors[idx] = [];
         // reset submitting
@@ -161,8 +161,14 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       });
   }
 
-  cancelEditing = () => {
-    this.setState({ configs: this.state.unmodifiedConfigs });
+  cancelEditing = (idx: number) => {
+    // reset errors
+    const newErrors = clone(this.state.configErrors);
+    newErrors[idx] = [];
+    this.setState({
+      configs: this.state.unmodifiedConfigs,
+      configErrors: newErrors,
+    });
   }
 
   render() {
@@ -220,7 +226,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
             <NodeBalancerConfigPanel
               forEdit
               onSave={() => this.updateConfig(idx)}
-              onCancel={() => this.cancelEditing()}
+              onCancel={() => this.cancelEditing(idx)}
               submitting={configSubmitting[idx]}
               // @todo: implement delete
               // onDelete={() => console.log('deleting')}
