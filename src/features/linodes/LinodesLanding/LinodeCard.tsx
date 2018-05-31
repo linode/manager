@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { compose, pathOr } from 'ramda';
 
@@ -33,6 +32,7 @@ type CSSClasses =
   | 'cardContent'
   | 'distroIcon'
   | 'rightMargin'
+  | 'actionMenu'
   | 'cardActions'
   | 'button'
   | 'consoleButton'
@@ -64,11 +64,19 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
+    position: 'relative',
+    '& .title': {
+      height: 48,
+      padding: `0 ${theme.spacing.unit * 3}px`,
+    },
   },
   cardHeader: {
     fontWeight: 700,
     color: 'black',
     flex: 1,
+    '& h3': {
+      transition: theme.transitions.create(['color']),
+    },
   },
   cardContent: {
     flex: 1,
@@ -82,6 +90,13 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   },
   rightMargin: {
     marginRight: theme.spacing.unit,
+  },
+  actionMenu: {
+    position: 'relative',
+    top: 9,
+    '& button': {
+      height: 48,
+    },
   },
   cardActions: {
     backgroundColor: theme.bg.offWhite,
@@ -123,7 +138,17 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     },
   },
   link: {
-    display: 'block',
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    height: 48,
+    width: '100%',
+    '&:hover': {
+      backgroundColor: 'transparent',
+      '& + .title h3': {
+        color: theme.palette.primary.main,
+      },
+    },
   },
 });
 
@@ -155,7 +180,7 @@ type CombinedProps = Props & ConnectedProps & WithStyles<CSSClasses>;
 
 class LinodeCard extends React.Component<CombinedProps> {
   renderTitle() {
-    const { classes, linodeStatus, linodeId, linodeLabel, linodeNotification } = this.props;
+    const { classes, linodeStatus, linodeLabel, linodeNotification } = this.props;
 
     return (
       <Grid container alignItems="center">
@@ -163,11 +188,9 @@ class LinodeCard extends React.Component<CombinedProps> {
           <LinodeStatusIndicator status={linodeStatus} />
         </Grid>
         <Grid item className={classes.cardHeader + ' py0'}>
-          <Link to={`/linodes/${linodeId}`} className={classes.link}>
-            <Typography variant="subheading" data-qa-label>
-              {linodeLabel}
-            </Typography>
-          </Link>
+          <Typography variant="subheading" data-qa-label>
+            {linodeLabel}
+          </Typography>
         </Grid>
         {linodeNotification &&
           <Grid item className="py0">
@@ -260,10 +283,11 @@ class LinodeCard extends React.Component<CombinedProps> {
     return (
       <Grid item xs={12} sm={6} lg={4} xl={3} data-qa-linode={linodeLabel}>
         <Card className={classes.flexContainer}>
+          <Button href={`/linodes/${linodeId}`} className={classes.link} />
           <CardHeader
             subheader={this.renderTitle()}
             action={
-              <div style={{ position: 'relative', top: 6 }}>
+              <div className={classes.actionMenu}>
                 <LinodeActionMenu
                   linodeId={linodeId}
                   linodeLabel={linodeLabel}
@@ -273,7 +297,7 @@ class LinodeCard extends React.Component<CombinedProps> {
                 />
               </div>
             }
-            className={classes.customeMQ}
+            className={`${classes.customeMQ}} ${'title'}`}
           />
           {<Divider />}
           {loading ? this.loadingState() : this.loadedState()}
