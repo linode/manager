@@ -1,3 +1,4 @@
+const util = require('util');
 const https = require('https');
 const axios = require('axios');
 const API_ROOT = process.env.REACT_APP_API_ROOT;
@@ -31,9 +32,9 @@ exports.deleteAll = (token) => {
                     }
                     return res.data;
                 })
-                .catch((err) => {
-                    console.log('Error', err);
-                    return err;
+                .catch((error) => {
+                    console.log('Error', error);
+                    return error;
                 });
         }
 
@@ -42,9 +43,9 @@ exports.deleteAll = (token) => {
                 .then(res => {
                     return res;
                 })
-                .catch((err) => {
-                    console.log('Error', err);
-                    return err
+                .catch((error) => {
+                    console.error('Error', error);
+                    return error
                 });
         }
 
@@ -59,7 +60,7 @@ exports.deleteAll = (token) => {
                             });
                         }
                     })
-                    .catch(err => err);
+                    .catch(error => error);
             });
         }
 
@@ -102,9 +103,9 @@ exports.removeAllLinodes = (token) => {
         const removeInstance = (res, endpoint) => {
             return instance.delete(`${endpoint}/${res.id}`)
                 .then(res => res)
-                .catch((err) => {
-                    console.log('Error', err);
-                    return err
+                .catch((error) => {
+                    console.log('Error', error);
+                    return error
                 });
         }
 
@@ -115,7 +116,7 @@ exports.removeAllLinodes = (token) => {
 
                 Promise.all(promiseArray).then(function(res) {
                     resolve(res);
-                }).catch(err => console.log(err));
+                }).catch(error => console.log(error));
         });
     });
 }
@@ -147,8 +148,13 @@ exports.createLinode = (token, password, linodeLabel) => {
         });
 
         return instance.post(linodesEndpoint, linodeConfig)
-        .then(res => resolve(res.status === 200)) 
-        .catch(err => reject(err));
+            .then(res => {
+                resolve(res.status === 200);
+            })
+            .catch(error => {
+                console.error('Error', error);
+                reject(err.response.status)
+            });
     });
 }
 
@@ -159,9 +165,8 @@ exports.removeAllVolumes = (token) => {
         const removeVolume = (res, endpoint) => {
             return instance.delete(`${endpoint}/${res.id}`)
                 .then(res => res.status)
-                .catch(err => {
-                    console.log('Error', err);
-                    return err;
+                .catch(error => {
+                    console.error('Error', error);
                 });
         }
 
@@ -180,8 +185,8 @@ exports.removeAllVolumes = (token) => {
 
             Promise.all(removeVolumesArray).then(function(res) {
                 resolve(res);
-            }).catch(err => {
-                console.log(err);
+            }).catch(error => {
+                console.log(error);
                 return err;
             });
         });
