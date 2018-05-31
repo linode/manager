@@ -95,8 +95,7 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
         actions={() =>
           <ActionsPanel>
             <Button
-              variant="raised"
-              color="primary"
+              type="primary"
               onClick={this.changeDiskPassword}
               loading={submitting && !passwordError}
               disabled={submitting && !passwordError}
