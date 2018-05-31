@@ -9,6 +9,14 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
+@media screen and (min-width: 960px) {
+  html {
+    /* fix for scrollbar compoensation */
+    width:100vw;
+    overflow-x:hidden;
+  }
+}
+
 body {
   height: 100%;
   margin: 0;
