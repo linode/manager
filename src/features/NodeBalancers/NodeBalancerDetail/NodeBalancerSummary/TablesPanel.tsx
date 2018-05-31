@@ -25,7 +25,8 @@ type ClassNames = 'chart'
   | 'blue'
   | 'green'
   | 'red'
-  | 'yellow';
+  | 'yellow'
+  | 'dropdown';
 
 type StatsUnit = 'bits' | 'bytes' | 'KB' | 'MB' | 'GB';
 
@@ -97,6 +98,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
       '&:before': {
         backgroundColor: theme.color.yellow,
       },
+    },
+    dropdown: {
+      marginBottom: theme.spacing.unit * 3,
     },
   };
 };
@@ -253,7 +257,7 @@ class TablesPanel extends React.Component<CombinedProps, State> {
             >
               <React.Fragment>
                 <Typography variant="subheading">Units</Typography>
-                <FormControl style={{ martginTop: 0 }}>
+                <FormControl className={classes.dropdown} style={{ martginTop: 0 }}>
                   <InputLabel htmlFor="chartRange" disableAnimation hidden>
                     Select Time Range
                 </InputLabel>
