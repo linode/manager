@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as Joi from 'joi';
+import * as Promise from 'bluebird';
 import {
   withStyles,
   StyleRulesCallback,
@@ -77,6 +78,15 @@ type CombinedProps =
   & RouteProps
   & WithStyles<ClassNames>
   & PreloadedProps;
+
+const getConfigsWithNodes = (nodeBalancerId: number) => {
+  return getNodeBalancerConfigs(nodeBalancerId).then((configs) => {
+    return Promise.map(configs.data, (config) => {
+      return getNodeBalancerConfigNodes()
+    })
+    .catch(e => []);
+  });
+};
 
 class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   static defaultDeleteConfirmDialogState = {
@@ -432,7 +442,7 @@ const styled = withStyles(styles, { withTheme: true });
 const preloaded = PromiseLoader<CombinedProps>({
   configs: (props) => {
     const { match: { params: { nodeBalancerId } } } = props;
-    return getNodeBalancerConfigs(nodeBalancerId!);
+    return getConfigsWithNodes(nodeBalancerId!);
   },
 });
 
