@@ -152,7 +152,7 @@ exports.createLinode = (token, password, linodeLabel) => {
             })
             .catch(error => {
                 console.error('Error', error);
-                reject(err.response.status)
+                reject(error)
             });
     });
 }
