@@ -5,10 +5,7 @@ const {
     removeAllVolumes,
 } = require('../setup/setup');
 
-const https = require('https');
-const axios = require('axios');
 const { readToken } = require('../utils/config-utils');
-const API_ROOT = process.env.REACT_APP_API_ROOT;
 
 exports.browserCommands = () => {
     /* Overwrite the native getText function

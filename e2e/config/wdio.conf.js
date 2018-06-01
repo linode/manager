@@ -1,6 +1,5 @@
 require('dotenv').config();
 
-const crypto = require('crypto');
 const { argv } = require('yargs');
 const {
     login,
@@ -26,6 +25,9 @@ const setBaseUrl = () => {
     }
     if (argv.staging) {
         return 'https://cloud-staging.linode.com';
+    }
+    if (argv.prod) {
+        return 'https://cloud.linode.com';
     }
     return 'http://localhost:3000';
 }
@@ -289,16 +291,16 @@ exports.config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      * @param {Array.<String>} specs List of spec file paths that ran
      */
-    after: function (result, capabilities, specs) {
-    },
+    // after: function (result, capabilities, specs) {
+    // },
     /**
      * Gets executed right after terminating the webdriver session.
      * @param {Object} config wdio configuration object
      * @param {Array.<Object>} capabilities list of capabilities details
      * @param {Array.<String>} specs List of spec file paths that ran
      */
-    afterSession: function (config, capabilities, specs) {
-    },
+    // afterSession: function (config, capabilities, specs) {
+    // },
     /**
      * Gets executed after all workers got shut down and the process is about to exit.
      * @param {Object} exitCode 0 - success, 1 - fail
