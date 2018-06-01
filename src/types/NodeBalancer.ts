@@ -12,12 +12,12 @@ namespace Linode {
     transfer: BalancerTransfer;
   }
 
-  export interface NodesStatus{
+  export interface NodesStatus {
     up: number;
     down: number;
   }
 
-  export interface BalancerTransfer{
+  export interface BalancerTransfer {
     in: number;
     out: number;
     total: number;
@@ -54,13 +54,13 @@ namespace Linode {
     cipher_suite: string;
   }
 
-  export interface ExtendedNodeBalancer extends NodeBalancer{
+  export interface ExtendedNodeBalancer extends NodeBalancer {
     up: number;
     down: number;
     ports: number[];
   }
 
-  export interface NodeBalancerStats{
+  export interface NodeBalancerStats {
     title: string;
     data: {
       connections: [number, number][];
