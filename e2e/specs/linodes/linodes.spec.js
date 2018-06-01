@@ -1,4 +1,5 @@
 const { constants } = require('../../constants');
+
 import { flatten } from 'ramda';
 import ListLinodes from '../../pageobjects/list-linodes';
 
