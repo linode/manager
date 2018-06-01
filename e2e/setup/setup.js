@@ -79,8 +79,8 @@ exports.deleteAll = (token) => {
                         .then(() => resolve());
                 }
             })
-            .catch(err => {
-                reject('Error', err);
+            .catch(error => {
+                reject('Error', error);
             });
     });
 }
@@ -186,7 +186,7 @@ exports.removeAllVolumes = (token) => {
                 resolve(res);
             }).catch(error => {
                 console.log(error);
-                return err;
+                return error;
             });
         });
     });
