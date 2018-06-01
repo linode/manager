@@ -10,7 +10,7 @@ describe('List Domains Suite', () => {
     beforeAll(() => {
         browser.url(constants.routes.domains);
         ListDomains.globalCreate.waitForVisible();
-        ListDomains.progressBar.waitForVisible(15000, true);
+        ListDomains.progressBar.waitForVisible(constants.wait.normal, true);
     });
 
     it('should display domains base elements', () => {
@@ -27,7 +27,7 @@ describe('List Domains Suite', () => {
         } catch (err) {
             ListDomains.createDomainName.$('p').waitForVisible();
             ListDomains.cancel.click();
-            ListDomains.drawerTitle.waitForVisible(5000, true);
+            ListDomains.drawerTitle.waitForVisible(constants.wait.short, true);
         }
     });
 
@@ -53,7 +53,7 @@ describe('List Domains Suite', () => {
         // Hit escape to get rid of action menu
         // Refactor once Chrome implements actions api
         browser.keys('\uE00C');
-        ListDomains.actionMenuItem.waitForVisible(5000, true);
+        ListDomains.actionMenuItem.waitForVisible(constants.wait.short, true);
     });
 
     it('should display clone domain drawer', () => {
@@ -77,7 +77,7 @@ describe('List Domains Suite', () => {
     });
 
     it('should remove domain', () => {
-        ListDomains.drawerTitle.waitForExist(10000, true);
+        ListDomains.drawerTitle.waitForExist(constants.wait.normal, true);
         ListDomains.selectActionMenuItem($(domainElement), 'Remove');
         ListDomains.remove($(domainElement), initialDomain);
     });
@@ -85,7 +85,7 @@ describe('List Domains Suite', () => {
     afterAll(() => {
         ListDomains.domains
             .forEach(d => {
-                ListDomains.drawerTitle.waitForExist(5000, true);
+                ListDomains.drawerTitle.waitForExist(constants.wait.short, true);
                 ListDomains.selectActionMenuItem(d, 'Remove');
                 ListDomains.remove(d, d.$(ListDomains.label.selector).getText());
             });

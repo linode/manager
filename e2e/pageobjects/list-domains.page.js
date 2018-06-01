@@ -1,3 +1,5 @@
+const { constants } = require('../constants');
+
 import Page from './page.js';
 
 class ListDomains extends Page {
@@ -77,19 +79,23 @@ class ListDomains extends Page {
         } else {
             browser.waitUntil(function() {
                 return $$('[data-qa-domain-cell]').length > existingDomainsCount;
-            }, 10000);
+            }, constants.wait.normal);
         }
     }
 
     editDnsRecord(domain) {
         this.selectActionMenuItem(domain, 'Edit DNS Records');
-        // wait until DNS Records tabbed panel displays
+        browser.waitUntil(function() {
+            return browser.getUrl().includes('/records');
+        }, constants.wait.normal);
+        browser.waitForVisible('[data-qa-domain-title]');
     }
 
     cloneDrawerElemsDisplay() {
         this.drawerTitle.waitForVisible();
         this.drawerClose.waitForVisible();
         expect(this.drawerTitle.getText()).toBe('Add a new Domain');
+        expect(this.cloneDomainName.isVisible()).toBe(true);
     }
 
     clone(newDomainName) {
@@ -103,7 +109,7 @@ class ListDomains extends Page {
             const domainLabels = domains.map(d => d.getText());
 
             return domainLabels.includes(newDomainName);
-        }, 10000);
+        }, constants.wait.normal);
     }
 
     remove(domain, domainName) {
@@ -113,11 +119,9 @@ class ListDomains extends Page {
         expect(this.cancel.isVisible()).toBe(true);
 
         this.submit.click();
-
-        this.dialogTitle.waitForVisible(10000, true);
-        domain.waitForVisible(10000, true);
+        this.dialogTitle.waitForVisible(constants.wait.normal, true);
+        domain.waitForVisible(constants.wait.normal, true);
     }
-
 }
 
 export default new ListDomains();
