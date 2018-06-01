@@ -25,6 +25,7 @@ import {
   updateNodeBalancerConfig,
   deleteNodeBalancerConfig,
   createNodeBalancerConfigSchema,
+  getNodeBalancerConfigNodes,
 } from 'src/services/nodebalancers';
 import Button from 'src/components/Button';
 // import IconTextLink from 'src/components/IconTextLink';
@@ -52,16 +53,19 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 interface Props {}
 
 type MatchProps = { nodeBalancerId?: number };
-
 type RouteProps = RouteComponentProps<MatchProps>;
 
+interface ConfigWithNodes extends Linode.NodeBalancerConfig {
+  nodes: Linode.NodeBalancerConfigNode[];
+}
+
 interface PreloadedProps {
-  configs: PromiseLoaderResponse<Linode.ResourcePage<Linode.NodeBalancerConfig>>;
+  configs: PromiseLoaderResponse<Linode.ResourcePage<ConfigWithNodes>>;
 }
 
 interface State {
-  configs: Linode.NodeBalancerConfig[];
-  unmodifiedConfigs: Linode.NodeBalancerConfig[];
+  configs: ConfigWithNodes[];
+  unmodifiedConfigs: ConfigWithNodes[];
   configErrors: Linode.ApiFieldError[][];
   configSubmitting: boolean[];
   panelMessages: string[];
@@ -82,7 +86,13 @@ type CombinedProps =
 const getConfigsWithNodes = (nodeBalancerId: number) => {
   return getNodeBalancerConfigs(nodeBalancerId).then((configs) => {
     return Promise.map(configs.data, (config) => {
-      return getNodeBalancerConfigNodes()
+      return getNodeBalancerConfigNodes(nodeBalancerId, config.id)
+        .then(({ data: nodes }) => {
+          return {
+            ...config,
+            nodes,
+          };
+        });
     })
     .catch(e => []);
   });
@@ -97,8 +107,8 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   };
 
   state: State = {
-    configs: pathOr([], ['response', 'data'], this.props.configs),
-    unmodifiedConfigs: pathOr([], ['response', 'data'], this.props.configs),
+    configs: pathOr([], ['response'], this.props.configs),
+    unmodifiedConfigs: pathOr([], ['response'], this.props.configs),
     configErrors: [],
     configSubmitting: [],
     panelMessages: [],
@@ -153,19 +163,28 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       .then((nodeBalancerConfig) => {
         // update config data
         const newConfigs = clone(this.state.configs);
-        newConfigs[idx] = nodeBalancerConfig;
+        newConfigs[idx] = nodeBalancerConfig as ConfigWithNodes;
+        //    while maintaing node data
+        newConfigs[idx].nodes = this.state.configs[idx].nodes;
+
         // update config data for reverting edits
         const newUnmodifiedConfigs = clone(this.state.unmodifiedConfigs);
-        newUnmodifiedConfigs[idx] = nodeBalancerConfig;
+        newUnmodifiedConfigs[idx] = nodeBalancerConfig as ConfigWithNodes;
+        //    while maintaing node data
+        newUnmodifiedConfigs[idx].nodes = this.state.unmodifiedConfigs[idx].nodes;
+
         // replace success message with a new one
         const newMessages = [];
         newMessages[idx] = 'NodeBalancer config updated successfully';
+
         // reset errors
         const newErrors = clone(this.state.configErrors);
         newErrors[idx] = [];
+
         // reset submitting
         const newSubmitting = clone(this.state.configSubmitting);
         newSubmitting[idx] = false;
+
         this.setState({
           configs: newConfigs,
           unmodifiedConfigs: newUnmodifiedConfigs,
@@ -373,7 +392,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
                   set(privateKeyLens, privateKey, state))}
 
               // nodes={this.state.nodeBalancerFields.configs[idx].nodes}
-              nodes={[]}
+              nodes={config.nodes}
 
               // addNode={() => this.addNodeBalancerConfigNode(idx)}
               addNode={() => undefined}

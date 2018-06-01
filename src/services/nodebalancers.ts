@@ -55,6 +55,16 @@ export const createNodeBalancerConfigNode = (
   )
     .then(response => response.data);
 
+export const getNodeBalancerConfigNodes = (
+  nodeBalancerId: number,
+  configId: number,
+) =>
+  Request<Page<Linode.NodeBalancerConfigNode>>(
+    setMethod('GET'),
+    setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes`),
+  )
+    .then(response => response.data);
+
 
 export const createNodeBalancerConfigSchema = Joi.object({
   algorithm: Joi.string(),
