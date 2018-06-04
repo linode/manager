@@ -283,27 +283,19 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
   updateLabel = (label: string) => {
     const { linode } = this.state;
-    const { ...labelInput } = this.state.labelInput;
-    labelInput.label = label;
     renameLinode(linode.id, label)
       .then(() => {
-        labelInput.errorText = '';
-        linode.label = label;
-        this.setState({ labelInput, linode });
+        this.setState({ labelInput: { label, errorText: '' }, linode: { ...linode, label } });
       })
       .catch((err) => {
         const errors: Linode.ApiFieldError[] = pathOr([], ['response', 'data', 'errors'], err);
         const errorStrings: string[] = errors.map(e => e.reason);
-        labelInput.errorText = errorStrings[0];
-        this.setState({ linode, labelInput });
+        this.setState({ labelInput: { label, errorText: errorStrings[0] } });
       });
   }
 
   cancelUpdate = () => {
-    const { labelInput } = this.state;
-    labelInput.errorText = '';
-    labelInput.label = this.state.linode.label;
-    this.setState({ labelInput });
+    this.setState({ labelInput: { label: this.state.linode.label, errorText: '' } });
     this.forceUpdate();
   }
 

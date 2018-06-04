@@ -108,7 +108,7 @@ interface Props {
 
 interface State {
   text: string;
-  editing: Boolean;
+  isEditing: Boolean;
 }
 
 type PassThroughProps = Props & TextFieldProps & TypographyProps;
@@ -116,8 +116,8 @@ type PassThroughProps = Props & TextFieldProps & TypographyProps;
 type FinalProps =  PassThroughProps & WithStyles<ClassNames>;
 
 class EditableText extends React.Component<FinalProps, State> {
-  state = {
-    editing: Boolean(this.props.errorText),
+  state: State = {
+    isEditing: Boolean(this.props.errorText),
     text: this.props.text,
   };
 
@@ -126,9 +126,9 @@ class EditableText extends React.Component<FinalProps, State> {
       this.setState({ text: nextProps.text });
     }
     if (nextProps.errorText) {
-      this.setState({ editing: true });
+      this.setState({ isEditing: true });
     } else {
-      this.setState({ editing: false });
+      this.setState({ isEditing: false });
     }
   }
 
@@ -137,15 +137,14 @@ class EditableText extends React.Component<FinalProps, State> {
   }
 
   toggleEditing = () => {
-    this.setState({ editing: !this.state.editing });
+    this.setState({ isEditing: !this.state.isEditing });
   }
 
   finishEditing = (text: string) => {
     if (text === this.props.text && !this.props.errorText) {
-      this.setState({ editing: false });
-    } else {
-      this.props.onEdit(text);
+      this.setState({ isEditing: false });
     }
+    this.props.onEdit(text);
   }
 
   cancelEditing = () => {
@@ -154,10 +153,10 @@ class EditableText extends React.Component<FinalProps, State> {
 
   render() {
     const { classes, onEdit, errorText, ...rest } = this.props;
-    const { editing, text } = this.state;
+    const { isEditing, text } = this.state;
 
     return (
-      !editing
+      !isEditing
         ? (
             <div className={`${classes.container} ${classes.initial}`}>
               <React.Fragment>
