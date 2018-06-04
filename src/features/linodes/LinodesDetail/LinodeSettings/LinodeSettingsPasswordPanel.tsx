@@ -24,6 +24,7 @@ import Button from 'src/components/Button';
 import PasswordInput from 'src/components/PasswordInput';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
+import HelpIcon from 'src/components/HelpIcon';
 import Select from 'src/components/Select';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import Notice from 'src/components/Notice';
@@ -37,6 +38,7 @@ interface Props {
   linodeId: number;
   linodeLabel: string;
   linodeDisks: Linode.Disk[];
+  linodeStatus: string;
 }
 
 interface State {
@@ -93,6 +95,7 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
     const diskIdError = hasErrorFor('diskId');
     const generalError = hasErrorFor('none');
     const { submitting } = this.state;
+    const { linodeStatus } = this.props;
 
     return (
       <ExpansionPanel
@@ -105,11 +108,16 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
               type="primary"
               onClick={this.changeDiskPassword}
               loading={submitting}
-              disabled={submitting}
+              disabled={linodeStatus !== 'offline' || submitting}
               data-qa-password-save
             >
               Save
             </Button>
+            {linodeStatus !== 'offline' &&
+            <HelpIcon
+              text="Your Linode must be fully powered down
+              in order to change your root password"
+            />}
           </ActionsPanel>
         }
       >
