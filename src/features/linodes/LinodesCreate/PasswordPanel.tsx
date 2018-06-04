@@ -45,6 +45,7 @@ class PasswordPanel extends React.Component<CombinedProps> {
         { error && <Notice text={error} error /> }
         <Typography component="div" variant="title">Password</Typography>
         <PasswordInput
+          value={this.props.password || ''}
           label="Root Password"
           placeholder="Enter a password."
           onChange={e => handleChange(e.target.value)}

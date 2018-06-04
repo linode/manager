@@ -31,7 +31,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       ${theme.spacing.unit * 4}px
       ${theme.spacing.unit}px
       ${0}
-      -${theme.spacing.unit}px
+      -${theme.spacing.unit * 2}px
     `,
   },
 });
@@ -80,9 +80,8 @@ class InfoPanel extends React.Component<CombinedProps> {
             {!!expansion.action &&
               <ActionsPanel className={expansion ? classes.expPanelButton : ''}>
                 <Button
-                  variant="raised"
                   onClick={expansion.action}
-                  color="primary"
+                  type="primary"
                   disabled={expansion.isSubmitting}
                   data-qa-label-save
                 >
