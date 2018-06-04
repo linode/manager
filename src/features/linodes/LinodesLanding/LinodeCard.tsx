@@ -283,7 +283,8 @@ class LinodeCard extends React.Component<CombinedProps> {
     return (
       <Grid item xs={12} sm={6} lg={4} xl={3} data-qa-linode={linodeLabel}>
         <Card className={classes.flexContainer}>
-          <Button href={`/linodes/${linodeId}`} className={classes.link} />
+          {/* Give Button a child of ' ', because the component requires children */}
+          <Button href={`/linodes/${linodeId}`} className={classes.link}> </Button>
           <CardHeader
             subheader={this.renderTitle()}
             action={
@@ -299,7 +300,7 @@ class LinodeCard extends React.Component<CombinedProps> {
             }
             className={`${classes.customeMQ}} ${'title'}`}
           />
-          {<Divider />}
+          <Divider />
           {loading ? this.loadingState() : this.loadedState()}
           <CardActions className={classes.cardActions}>
             <Button
