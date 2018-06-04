@@ -337,8 +337,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
         actions={() =>
           <ActionsPanel>
             <Button
-              variant="raised"
-              color="primary"
+              type="primary"
               onClick={this.setLinodeAlertThresholds}
               disabled={noError}
               loading={noError}
