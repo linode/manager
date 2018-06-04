@@ -1,3 +1,5 @@
+const { constants } = require('../constants');
+
 import Page from './page';
 
 class Volumes extends Page {
@@ -42,7 +44,7 @@ class Volumes extends Page {
 
         browser.waitUntil(function(volumeElement) {
             return $$('[data-qa-volume-cell]').length === (numberOfVolumes-1)
-        }, 30000);
+        }, constants.wait.long);
     }
 
     isAttached(volumeElement) {
