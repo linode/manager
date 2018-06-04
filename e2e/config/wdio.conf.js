@@ -1,36 +1,12 @@
 require('dotenv').config();
 
 const { argv } = require('yargs');
-const {
-    login,
-    readToken,
-} = require('../utils/config-utils');
-const { removeAllLinodes } = require('../setup/setup');
+const { login } = require('../utils/config-utils');
 const { browserCommands } = require('./custom-commands');
 const { browserConf } = require('./browser-config');
-const { constants } = require('../constants');
 const selectedBrowser = argv.b ? browserConf[argv.b] : browserConf['chrome'];
 const username = process.env.MANAGER_USER;
 const password = process.env.MANAGER_PASS;
-
-const setBaseUrl = () => {
-    if (process.env.DOCKER) {
-        return 'https://manager-local:3000';
-    }
-    if (argv.dev) {
-        return 'https://manager.dev.linode.com';
-    }
-    if (argv.test) {
-        return 'https://manager.testing.linode.com';
-    }
-    if (argv.staging) {
-        return 'https://cloud-staging.linode.com';
-    }
-    if (argv.prod) {
-        return 'https://cloud.linode.com';
-    }
-    return 'http://localhost:3000';
-}
 
 const specsToRun = () => {
     if (argv.file) {
@@ -121,7 +97,7 @@ exports.config = {
     // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
     // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
     // gets prepended directly.
-    baseUrl: setBaseUrl(),
+    baseUrl: process.env.REACT_APP_APP_ROOT,
     //
     // Default timeout for all waitFor* commands.
     waitforTimeout: process.env.DOCKER ? 20000 : 10000,
