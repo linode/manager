@@ -10,8 +10,8 @@ import SelectLinodePanel, { Props as SelectLinodeProps } from './SelectLinodePan
 import SelectImagePanel, { Props as SelectImageProps } from './SelectImagePanel';
 import SelectBackupPanel, { Props as SelectBackupProps } from './SelectBackupPanel';
 import SelectRegionPanel, { Props as SelectRegionProps } from 'src/components/SelectRegionPanel';
-// import SelectPlanPanel, { ExtendedType } from './SelectPlanPanel';
-// import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
+import SelectPlanPanel, { Props as SelectPlanProps } from './SelectPlanPanel';
+import LabelAndTagsPanel, { Props as SelectLabelProps } from 'src/components/LabelAndTagsPanel';
 // import PasswordPanel from './PasswordPanel';
 // import AddonsPanel from './AddonsPanel';
 
@@ -37,8 +37,8 @@ interface Props {
   selectImage?: SelectImageProps;
   selectBackup?: SelectBackupProps;
   notice?: Notice;
-  selectPlan?: boolean;
-  selectLabel?: boolean;
+  selectPlan?: SelectPlanProps;
+  selectLabel?: SelectLabelProps;
   selectAddOns?: boolean;
   selectPassword?: boolean;
   errors?: Linode.ApiFieldError[];
@@ -55,7 +55,7 @@ const errorResources = {
 
 const CreateFlowTab: React.StatelessComponent<CombinedProps> = (props) => {
   const { errors, notice, selectImage, selectLinode,
-    selectBackup, selectRegion } = props;
+    selectBackup, selectRegion, selectPlan, selectLabel } = props;
   const hasErrorFor = getAPIErrorsFor(errorResources, errors);
   const generalError = hasErrorFor('none');
 
@@ -102,6 +102,24 @@ const CreateFlowTab: React.StatelessComponent<CombinedProps> = (props) => {
           handleSelection={selectRegion.handleSelection}
           selectedID={selectRegion.selectedID}
           copy={selectRegion.copy}
+        />
+      }
+      {selectPlan &&
+        <SelectPlanPanel
+          error={hasErrorFor('type')}
+          types={selectPlan.types}
+          onSelect={selectPlan.onSelect}
+          selectedID={selectPlan.selectedID}
+        />
+      }
+      {selectLabel &&
+        <LabelAndTagsPanel
+          labelFieldProps={{
+            label: 'Linode Label',
+            value: 'Linode Label',
+            onChange: selectLabel.labelFieldProps!.onChange,
+            errorText: hasErrorFor('label'),
+          }}
         />
       }
     </React.Fragment>
