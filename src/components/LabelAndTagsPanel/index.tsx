@@ -1,2 +1,4 @@
-import LabelAndTagsPanel from './LabelAndTagsPanel';
+import LabelAndTagsPanel, { Props } from './LabelAndTagsPanel';
+
+export { Props };
 export default LabelAndTagsPanel;
