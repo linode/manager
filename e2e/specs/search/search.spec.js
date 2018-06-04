@@ -34,7 +34,7 @@ describe('Header - Search Suite', () => {
 
     it('should not display suggestions when no matching results found', () => {
         SearchBar.executeSearch('blahlblahblah');
-        browser.waitForVisible('[data-qa-suggestion]', 5000, true);
+        browser.waitForVisible('[data-qa-suggestion]', constants.wait.short, true);
     });
 
     it('should display search suggestions on a legitmate search', () => {
@@ -52,7 +52,7 @@ describe('Header - Search Suite', () => {
         
         browser.waitUntil(function() {
             return browser.getUrl() !== currentUrl;
-        }, 10000);
+        }, constants.wait.normal);
     });
 
     it('should navigate to result on click', () => {
@@ -66,6 +66,6 @@ describe('Header - Search Suite', () => {
 
         browser.waitUntil(function() {
             return browser.getUrl() !== currentUrl;
-        }, 10000);
+        }, constants.wait.normal);
     });
 });

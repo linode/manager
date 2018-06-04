@@ -1,3 +1,5 @@
+const { constants } = require('../constants');
+
 import Page from './page';
 
 export const dialogMap = {
@@ -27,7 +29,7 @@ export class OauthCreateDrawer {
             } catch (err) {
                 return false;
             }
-        }, 15000);
+        }, constants.wait.normal);
     }
 }
 
@@ -169,7 +171,7 @@ export class Profile extends Page {
             const deleteButton = $(dialogMap.confirm);
             deleteButton.click();
 
-            browser.waitForVisible(`[data-qa-table-row="${row}"]`, 10000, true);
+            browser.waitForVisible(`[data-qa-table-row="${row}"]`, constants.wait.normal, true);
         }
 
         if (type == 'token') {

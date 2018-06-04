@@ -47,7 +47,7 @@ describe('Header - Search - Volumes Suite', () => {
         // Wait until the volume is created before searching for it
         browser.waitUntil(function() {
             return VolumeDetail.volumeCell.length === volumeCount + 1;
-        }, 25000, 'Volume failed to be created');
+        }, constants.wait.long, 'Volume failed to be created');
 
         testVolume['id'] = VolumeDetail.getVolumeId(testVolume.label);
     });
@@ -56,7 +56,7 @@ describe('Header - Search - Volumes Suite', () => {
         browser.url(constants.routes.linodes);
         SearchBar.assertSearchDisplays();
         SearchBar.executeSearch(testVolume.label);
-        browser.waitForVisible('[data-qa-suggestion]', 5000);
+        browser.waitForVisible('[data-qa-suggestion]', constants.wait.short);
     });
 
     it('should navigate to linode detail volume page', () => {
@@ -72,6 +72,6 @@ describe('Header - Search - Volumes Suite', () => {
 
     it('should not display suggestion after removal', () => {
         SearchBar.executeSearch(testVolume.label);
-        browser.waitForVisible('[data-qa-suggestion]', 5000, true);
+        browser.waitForVisible('[data-qa-suggestion]', constants.wait.short, true);
     });
 });

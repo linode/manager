@@ -1,3 +1,5 @@
+const { constants } = require('../../constants');
+
 import Page from '../page';
 
 class Settings extends Page {
@@ -43,7 +45,7 @@ class Settings extends Page {
         this.confirm.waitForVisible();
         this.cancel.waitForVisible();
         this.confirm.click();
-        browser.waitForVisible(`[data-qa-config="${configLabel}"]`, 5000, true);
+        browser.waitForVisible(`[data-qa-config="${configLabel}"]`, constants.wait.short, true);
     }
 
     remove() {
@@ -61,7 +63,7 @@ class Settings extends Page {
         expect(this.deleteDialogContent.getText()).toBe(confirmContent);
 
         this.confirm.click();
-        browser.waitForVisible('[data-qa-circle-progress]', 15000, true);
+        browser.waitForVisible('[data-qa-circle-progress]', constants.wait.normal, true);
         
         browser.waitUntil(function() {
             if (browser.isVisible('[data-qa-placeholder-title]')) {
@@ -73,7 +75,7 @@ class Settings extends Page {
                 return !labels.include(linodeLabel);
             }
             return false;
-        }, 10000, 'Linode failed to be removed');
+        }, constants.wait.normal, 'Linode failed to be removed');
     }
 
     updateLabel(label) {
@@ -90,7 +92,7 @@ class Settings extends Page {
         const disks = this.disks.map(d => d.getText());
         // Refactor this to use the actions api when chrome supports
         browser.keys('\uE00C');
-        this.disk.waitForVisible(5000, true);
+        this.disk.waitForVisible(constants.wait.short, true);
         return disks;
     }
 
@@ -100,7 +102,7 @@ class Settings extends Page {
         this.disk.waitForVisible();
         browser.jsClick(`[data-qa-disk="${diskLabel}"]`);
 
-        this.disk.waitForVisible(5000, true);
+        this.disk.waitForVisible(constants.wait.short, true);
         this.password.setValue(newPassword);
         this.passwordSave.click();
 
@@ -115,7 +117,7 @@ class Settings extends Page {
             const labelNotice = $$('[data-qa-notice]')
                 .filter(n => n.getText().includes(noticeMsg));
             return labelNotice.length === 1;
-        }, 10000);
+        }, constants.wait.normal);
     }
 
     allAlertsEnabled() {

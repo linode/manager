@@ -61,7 +61,7 @@ describe('Linode Detail - Volumes Suite', () => {
 
         it('should close on cancel', () => {
             VolumeDetail.cancel.click();
-            drawerElems.forEach(e => expect(e.waitForVisible(5000, true)).toBe(true));
+            drawerElems.forEach(e => expect(e.waitForVisible(constants.wait.short, true)).toBe(true));
         });
 
         it('should prepopulate size with 20 gigs', () => {
@@ -86,7 +86,7 @@ describe('Linode Detail - Volumes Suite', () => {
             VolumeDetail.size.$('input').setValue('5');
             VolumeDetail.submit.click();
 
-            browser.waitForVisible('[data-qa-size] p', 15000);
+            browser.waitForVisible('[data-qa-size] p', constants.wait.normal);
 
             const sizeError = VolumeDetail.size.$('p').getText();
             expect(sizeError.includes('Must be 10-1024')).toBe(true);

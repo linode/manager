@@ -1,3 +1,5 @@
+const { constants } = require('../../constants');
+
 import Page from '../page';
 
 export class VolumeDetail extends Page {
@@ -34,7 +36,7 @@ export class VolumeDetail extends Page {
                 .filter(e => e.$('[data-qa-volume-cell-attachment]')
                     .getText().includes(linodeLabel));
             return attachedToLinode.length > 0;
-        }, 10000);
+        }, constants.wait.normal);
     }
 
     removeAllVolumes() {
@@ -47,8 +49,8 @@ export class VolumeDetail extends Page {
 
     closeVolumeDrawer() {
         this.drawerClose.click();
-        this.drawerTitle.waitForVisible(5000, true);
-        browser.waitForExist('[data-qa-drawer]', 10000, true);
+        this.drawerTitle.waitForVisible(constants.wait.short, true);
+        browser.waitForExist('[data-qa-drawer]', constants.wait.normal, true);
         this.globalCreate.waitForVisible();
     }
 
@@ -98,11 +100,11 @@ export class VolumeDetail extends Page {
             const selectedRegion = this.attachRegions[volume.regionIndex].getText();
             this.attachRegions[volume.regionIndex].click();
             
-            browser.waitForVisible('[data-qa-attach-to-region]', 5000, true);
+            browser.waitForVisible('[data-qa-attach-to-region]', constants.wait.short, true);
             
             browser.waitUntil(function() {
                 return $('[data-qa-select-region]').getText() === selectedRegion;
-            }, 5000);
+            }, constants.wait.short);
         }
 
         if (volume.hasOwnProperty('attachedLinode')) {
@@ -110,7 +112,7 @@ export class VolumeDetail extends Page {
             browser.waitForVisible('[data-qa-attached-linode]');
             const linodeToAttach = this.volumeAttachedLinodes.filter(v => v.getText() === volume.attachedLinode);
             linodeToAttach[0].click();
-            browser.waitForVisible('[data-qa-attached-linode]', 5000, true);
+            browser.waitForVisible('[data-qa-attached-linode]', constants.wait.short, true);
         }
         // this.region.setValue(volume.region); 
         this.submit.click();
@@ -120,11 +122,11 @@ export class VolumeDetail extends Page {
                 const volsAttachedToLinode = $$('[data-qa-volume-cell-attachment]')
                     .filter(v => v.getText() === volume.attachedLinode);
                 return volsAttachedToLinode.length > 0;
-            }, 15000, 'Volume failed to attach');
+            }, constants.wait.normal, 'Volume failed to attach');
         }
 
         if (volume.hasOwnProperty('regionIndex')) {
-            browser.waitForExist('[data-qa-drawer]', 10000, true);
+            browser.waitForExist('[data-qa-drawer]', constants.wait.normal, true);
         }
     }
 
@@ -132,13 +134,13 @@ export class VolumeDetail extends Page {
         browser.waitForVisible('[data-qa-drawer-title]');
         const drawerTitle = browser.getText('[data-qa-drawer-title]');
 
-        browser.trySetValue('[data-qa-volume-label] input', newLabel, 10000);
+        browser.trySetValue('[data-qa-volume-label] input', newLabel, constants.wait.normal);
 
         this.submit.click();
 
         browser.waitUntil(function() {
             return newLabel === $(`[data-qa-volume-cell="${volume.id}"]`).$('[data-qa-volume-cell-label]').getText();
-        }, 10000);
+        }, constants.wait.normal);
     }
 
     resizeVolume(volume, newSize) {
@@ -181,8 +183,9 @@ export class VolumeDetail extends Page {
     }
 
     detachConfirm(volumeId) {
+        this.dialogTitle.waitForVisible();
         browser.click('[data-qa-confirm]');
-        browser.waitForVisible(`[data-qa-volume-cell="${volumeId}"]`, 10000, true);
+        browser.waitForVisible(`[data-qa-volume-cell="${volumeId}"]`, constants.wait.long, true);
     }
 
     cloneVolume(volume, newLabel) {
@@ -199,7 +202,7 @@ export class VolumeDetail extends Page {
             browser.waitForVisible('[data-qa-dialog-title]');
             browser.waitUntil(function() {
                 return volumeElement.$('[data-qa-volume-cell-attachment]').getText() === '';
-            }, 45000, 'Volume failed to detach');
+            }, constants.wait.long, 'Volume failed to detach');
         }
         const numberOfVolumes = this.volumeCell.length;
         volumeElement.$('[data-qa-action-menu]').click();
@@ -222,11 +225,11 @@ export class VolumeDetail extends Page {
 
         // Confirm remove
         dialogConfirm.click();
-        dialogConfirm.waitForVisible(10000, true);
+        dialogConfirm.waitForVisible(constants.wait.normal, true);
 
         browser.waitUntil(function(volumeElement) {
             return $$('[data-qa-volume-cell]').length === (numberOfVolumes-1)
-        }, 30000, 'Volume failed to be removed');
+        }, constants.wait.long, 'Volume failed to be removed');
     }
 
     assertVolumeInTable(volume) {

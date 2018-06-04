@@ -39,7 +39,7 @@ describe('Linode Detail - Rebuild Suite', () => {
     });
 
     it('should display error on create an image without selecting an image', () => {
-        browser.waitForVisible('[data-qa-image-option]', 10000, true);
+        browser.waitForVisible('[data-qa-image-option]', constants.wait.normal, true);
         
         Rebuild.submit.click();
 
@@ -51,14 +51,14 @@ describe('Linode Detail - Rebuild Suite', () => {
 
     it('should display error on create image without setting a password', () => {
         Rebuild.selectImage();
-        Rebuild.imageOptions.forEach(opt => opt.waitForVisible(5000, true));
+        Rebuild.imageOptions.forEach(opt => opt.waitForVisible(constants.wait.short, true));
         Rebuild.submit.click();
     });
 
     it('should rebuild linode on valid image and password', () => {
         const testPassword = '~/4gNgmV$_J3vREN'
         Rebuild.selectImage();
-        Rebuild.imageOptions.forEach(opt => opt.waitForVisible(5000, true));
+        Rebuild.imageOptions.forEach(opt => opt.waitForVisible(constants.wait.short, true));
         Rebuild.password.setValue(testPassword);
         Rebuild.rebuild();
     });

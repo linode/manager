@@ -60,6 +60,7 @@ const LinodeSettings: React.StatelessComponent<CombinedProps> = (props) => {
         linodeDisks={linodeDisks}
         linodeLabel={linodeLabel}
         linodeId={linodeId}
+        linodeStatus={linodeStatus}
       />
       <LinodeSettingsAlertsPanel
         linodeId={linodeId}
