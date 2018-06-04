@@ -44,7 +44,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-interface Props {
+export interface Props {
   selectedLinodeID?: number;
   selectedBackupID?: number;
   handleSelection: (key: string) =>
