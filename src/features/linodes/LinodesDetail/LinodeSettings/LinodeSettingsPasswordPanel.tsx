@@ -105,8 +105,7 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
         actions={() =>
           <ActionsPanel>
             <Button
-              variant="raised"
-              color="primary"
+              type="primary"
               onClick={this.changeDiskPassword}
               loading={submitting}
               disabled={linodeStatus !== 'offline' || submitting}
