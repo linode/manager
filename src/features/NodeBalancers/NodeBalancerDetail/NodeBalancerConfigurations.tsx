@@ -11,6 +11,7 @@ import {
   clone,
   defaultTo,
   path,
+  lensPath,
   pathOr,
   filter,
   set,
@@ -249,6 +250,25 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       });
   }
 
+  setNodeValue = (cidx: number, nodeidx: number, key: string, value: any) =>
+    this.setState(
+      set(
+        lensPath(['configs', cidx, 'nodes', nodeidx, key]),
+        value,
+      ))
+
+  onNodeLabelChange = (configIdx: number, nodeIdx: number, value: string) =>
+    this.setNodeValue(configIdx, nodeIdx, 'label', value)
+
+  onNodeAddressChange = (configIdx: number, nodeIdx: number, value: string) =>
+    this.setNodeValue(configIdx, nodeIdx, 'address', value)
+
+  onNodeWeightChange = (configIdx: number, nodeIdx: number, value: number) =>
+    this.setNodeValue(configIdx, nodeIdx, 'weight', value)
+
+  onNodeModeChange = (configIdx: number, nodeIdx: number, value: string) =>
+    this.setNodeValue(configIdx, nodeIdx, 'mode', value)
+
   cancelEditing = (idx: number) => {
     // reset errors
     const newErrors = clone(this.state.configErrors);
@@ -391,7 +411,6 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
                 this.setState(state =>
                   set(privateKeyLens, privateKey, state))}
 
-              // nodes={this.state.nodeBalancerFields.configs[idx].nodes}
               nodes={config.nodes}
 
               // addNode={() => this.addNodeBalancerConfigNode(idx)}
@@ -400,21 +419,17 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
               // removeNode={this.removeNodeBalancerConfigNode(idx)}
               removeNode={() => undefined}
 
-              // onNodeLabelChange={(nodeIndex, value) =>
-              //   this.onNodeLabelChange(idx, nodeIndex, value)}
-              onNodeLabelChange={() => undefined}
+              onNodeLabelChange={(nodeIndex, value) =>
+                this.onNodeLabelChange(idx, nodeIndex, value)}
 
-              // onNodeAddressChange={(nodeIndex, value) =>
-              //   this.onNodeAddressChange(idx, nodeIndex, value)}
-              onNodeAddressChange={() => undefined}
+              onNodeAddressChange={(nodeIndex, value) =>
+                this.onNodeAddressChange(idx, nodeIndex, value)}
 
-              // onNodeWeightChange={(nodeIndex, value) =>
-              //   this.onNodeWeightChange(idx, nodeIndex, value)}
-              onNodeWeightChange={() => undefined}
+              onNodeWeightChange={(nodeIndex, value) =>
+                this.onNodeWeightChange(idx, nodeIndex, value)}
 
-              // onNodeModeChange={(nodeIndex, value) =>
-              //   this.onNodeModeChange(idx, nodeIndex, value)}
-              onNodeModeChange={() => undefined}
+              onNodeModeChange={(nodeIndex, value) =>
+                this.onNodeModeChange(idx, nodeIndex, value)}
             />
           </ExpansionPanel>;
         })}
