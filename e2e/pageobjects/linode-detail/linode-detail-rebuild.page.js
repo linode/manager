@@ -1,3 +1,5 @@
+const { constants } = require('../../constants');
+
 class Rebuild {
     get title() { return $('[data-qa-title]'); }
     get description() { return $('[data-qa-rebuild-desc]'); }
@@ -49,7 +51,7 @@ class Rebuild {
         browser.waitUntil(function() {
             return browser
                 .getText('[data-qa-toast-message]') === toastMessage;
-        }, 15000);
+        }, constants.wait.normal);
     }
 }
 
