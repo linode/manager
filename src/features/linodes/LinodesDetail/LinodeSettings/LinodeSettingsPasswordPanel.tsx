@@ -26,6 +26,7 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Select from 'src/components/Select';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
+import Notice from 'src/components/Notice';
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
@@ -59,9 +60,11 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
   };
 
   changeDiskPassword = () => {
-    this.setState(set(lensPath(['submitting']), true));
-    this.setState(set(lensPath(['success']), undefined));
-    this.setState(set(lensPath(['errors']), undefined));
+    this.setState(compose(
+      set(lensPath(['submitting']), true),
+      set(lensPath(['success']), undefined),
+      set(lensPath(['errors']), undefined),
+    ));
 
     changeLinodeDiskPassword(
       this.props.linodeId,
@@ -77,7 +80,10 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
         ));
       })
       .catch((error) => {
-        this.setState(set(lensPath(['errors']), error.response.data.errors));
+        this.setState(compose(
+          set(lensPath(['errors']), error.response.data.errors),
+          set(lensPath(['submitting']), false),
+        ));
       });
   }
 
@@ -85,6 +91,7 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
     const hasErrorFor = getAPIErrorFor({}, this.state.errors);
     const passwordError = hasErrorFor('password');
     const diskIdError = hasErrorFor('diskId');
+    const generalError = hasErrorFor('none');
     const { submitting } = this.state;
 
     return (
@@ -95,11 +102,10 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
         actions={() =>
           <ActionsPanel>
             <Button
-              variant="raised"
-              color="primary"
+              type="primary"
               onClick={this.changeDiskPassword}
-              loading={submitting && !passwordError}
-              disabled={submitting && !passwordError}
+              loading={submitting}
+              disabled={submitting}
               data-qa-password-save
             >
               Save
@@ -107,6 +113,7 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
           </ActionsPanel>
         }
       >
+        {generalError && <Notice text={generalError} error />}
         <FormControl fullWidth>
           <InputLabel
             htmlFor="disk"
