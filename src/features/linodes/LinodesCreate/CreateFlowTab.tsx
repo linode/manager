@@ -6,10 +6,10 @@ import {
   WithStyles,
 } from 'material-ui';
 
-// import SelectLinodePanel, { ExtendedLinode } from './SelectLinodePanel';
-import SelectImagePanel from './SelectImagePanel';
-// import SelectBackupPanel from './SelectBackupPanel';
-// import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
+import SelectLinodePanel, { Props as SelectLinodeProps } from './SelectLinodePanel';
+import SelectImagePanel, { Props as SelectImageProps } from './SelectImagePanel';
+import SelectBackupPanel, { Props as SelectBackupProps } from './SelectBackupPanel';
+import SelectRegionPanel, { Props as SelectRegionProps } from 'src/components/SelectRegionPanel';
 // import SelectPlanPanel, { ExtendedType } from './SelectPlanPanel';
 // import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 // import PasswordPanel from './PasswordPanel';
@@ -31,17 +31,11 @@ interface Notice {
   level: 'warning' | 'error'; // most likely only going to need these two
 }
 
-interface SelectImage {
-  images: Linode.Image[];
-  handleSelection: (key: string) =>
-    (event: React.SyntheticEvent<HTMLElement>, value: string) => void;
-  selectedImageID: string | null;
-}
-
 interface Props {
-  selectLinode?: boolean;
-  selectRegion?: boolean;
-  selectImage?: SelectImage;
+  selectLinode?: SelectLinodeProps;
+  selectRegion?: SelectRegionProps;
+  selectImage?: SelectImageProps;
+  selectBackup?: SelectBackupProps;
   notice?: Notice;
   selectPlan?: boolean;
   selectLabel?: boolean;
@@ -60,7 +54,8 @@ const errorResources = {
 };
 
 const CreateFlowTab: React.StatelessComponent<CombinedProps> = (props) => {
-  const { errors, notice, selectImage } = props;
+  const { errors, notice, selectImage, selectLinode,
+    selectBackup, selectRegion } = props;
   const hasErrorFor = getAPIErrorsFor(errorResources, errors);
   const generalError = hasErrorFor('none');
 
@@ -81,6 +76,32 @@ const CreateFlowTab: React.StatelessComponent<CombinedProps> = (props) => {
           images={selectImage.images}
           handleSelection={selectImage.handleSelection}
           selectedImageID={selectImage.selectedImageID}
+        />
+      }
+      {selectLinode &&
+        <SelectLinodePanel
+          error={hasErrorFor('linode_id')}
+          linodes={selectLinode.linodes}
+          selectedLinodeID={selectLinode.selectedLinodeID}
+          handleSelection={selectLinode.handleSelection}
+        />
+      }
+      {selectBackup &&
+        <SelectBackupPanel
+          error={hasErrorFor('backup_id')}
+          backups={selectBackup.backups}
+          selectedLinodeID={selectBackup.selectedLinodeID}
+          selectedBackupID={selectBackup.selectedBackupID}
+          handleSelection={selectBackup.handleSelection}
+        />
+      }
+      {selectRegion &&
+        <SelectRegionPanel
+          error={hasErrorFor('region')}
+          regions={selectRegion.regions}
+          handleSelection={selectRegion.handleSelection}
+          selectedID={selectRegion.selectedID}
+          copy={selectRegion.copy}
         />
       }
     </React.Fragment>
