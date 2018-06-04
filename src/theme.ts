@@ -264,13 +264,13 @@ const LinodeTheme: Linode.Theme = {
     },
     MuiFormLabel: {
       root: {
-        color: '#555',
-        fontWeight: 700,
-        fontSize: '.9rem',
-        marginBottom: 2,
+        color: '#666',
+        fontSize: '1rem',
+        lineHeight: '1.46429em',
+        width: '100%',
       },
       focused: {
-        color: '#555',
+        color: '#666',
       },
       error: {
         color: '#555',
@@ -344,6 +344,12 @@ const LinodeTheme: Linode.Theme = {
       },
     },
     MuiInputLabel: {
+      root: {
+        color: '#555',
+        fontWeight: 700,
+        fontSize: '.85rem',
+        marginBottom: 2,
+      },
       formControl: {
         position: 'relative',
       },
@@ -445,7 +451,7 @@ const LinodeTheme: Linode.Theme = {
         padding: '5px 32px 5px 16px',
         color: '#666',
         backgroundColor: '#fff',
-        lineHeight: 2.2,
+        lineHeight: 2.3,
         minHeight: 44,
         '&:focus': {
           backgroundColor: '#fff',

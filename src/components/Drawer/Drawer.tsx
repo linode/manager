@@ -82,8 +82,7 @@ const DDrawer: React.StatelessComponent<CombinedProps> = (props) => {
         </Grid>
         <Grid item>
           <Button
-            variant="raised"
-            color="secondary"
+            type="cancel"
             onClick={props.onClose}
             className={classes.button}
             data-qa-close-drawer

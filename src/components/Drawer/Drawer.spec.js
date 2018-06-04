@@ -25,12 +25,6 @@ describe('Drawer Suite', () => {
         expect(title.getText()).toBe('My Drawer');
     });
 
-    it('should display an text field', () => {
-       const textField = $('[data-qa-text-field]');
-       
-       expect(textField.isVisible()).toBe(true); 
-    });
-
     it('should display save and cancel buttons', () => {
         const cancelButton = $('[data-qa-cancel]');
         const saveButton = $('[data-qa-save]');
@@ -45,7 +39,6 @@ describe('Drawer Suite', () => {
         const close = $('[data-qa-close-drawer]');
         
         expect(close.isVisible()).toBe(true);
-        
         close.click();
         browser.waitForVisible(drawerElem, 10000, true);
     });
@@ -53,8 +46,19 @@ describe('Drawer Suite', () => {
     it('should dismiss on esc', () => {
         browser.click(toggleDrawer);
         browser.waitForVisible(drawerElem);
-        browser.click('[data-qa-text-field]');
-        browser.setValue('[data-qa-text-field] input', '\uE00C');
+
+        // Uncomment this out when Chromedriver implements actions API
+        // browser.actions(
+        //     {
+        //         "type": "key",
+        //         "id": "keyboard",
+        //         "actions": [
+        //             {"type": "keyDown", "value": "\uE00C"},
+        //         ]
+        //     }
+        // );
+        // browser.actions();
+        browser.keys('\uE00C');
         browser.waitForVisible(drawerElem, 10000, true);
     });
 });
