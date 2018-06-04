@@ -30,7 +30,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       ${theme.spacing.unit * 4}px
       ${theme.spacing.unit}px
       ${0}
-      -${theme.spacing.unit}px
+      -${theme.spacing.unit * 2}px
     `,
   },
 });
@@ -79,9 +79,8 @@ class ClientConnectionThrottlePanel extends React.Component<CombinedProps> {
               <ActionsPanel className={expansion ? classes.expPanelButton : ''}>
                 <Button
                   onClick={expansion.action}
-                  variant="raised"
                   disabled={expansion.isSubmitting}
-                  color="primary"
+                  type="primary"
                   data-qa-label-save
                 >
                   Save
