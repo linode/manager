@@ -152,7 +152,7 @@ class DomainDetail extends React.Component<CombinedProps, State> {
         <Grid container justify="space-between">
           <Grid item className={classes.titleWrapper}>
             <IconButton
-              onClick={() => history.goBack()}
+              onClick={() => history.push('/domains')}
               className={classes.backButton}
             >
               <KeyboardArrowLeft />
