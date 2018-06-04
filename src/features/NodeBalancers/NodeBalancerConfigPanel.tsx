@@ -7,12 +7,14 @@ import IconButton from 'material-ui/IconButton';
 import Delete from 'material-ui-icons/Delete';
 import FormControlLabel from 'material-ui/Form/FormControlLabel';
 
+import Button from 'src/components/Button';
 import PlusSquare from 'src/assets/icons/plus-square.svg';
 import IconTextLink from 'src/components/IconTextLink';
 import Grid from 'src/components/Grid';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import ActionsPanel from 'src/components/ActionsPanel';
 
 const parseFormNumber: (s: string) => (string | number) =
   when(compose(not, isEmpty), (v: string) => +v);
@@ -49,6 +51,12 @@ const filterErrors = (idx: number) => reduce((
 
 interface Props {
   errors?: Linode.ApiFieldError[];
+
+  forEdit?: boolean;
+  submitting?: boolean;
+  onSave?: () => void;
+  onCancel?: () => void;
+  onDelete?: () => void;
 
   algorithm: 'roundrobin' | 'leastconn' | 'source';
   onAlgorithmChange: (v: string) => void;
@@ -110,6 +118,12 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       classes,
 
       errors,
+
+      forEdit,
+      submitting,
+      onSave,
+      onCancel,
+      onDelete,
 
       algorithm,
       onAlgorithmChange,
@@ -410,86 +424,125 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               </Grid>
             </Grid>
 
-            <Grid container>
-              <Grid item xs={12}>
-                <Typography variant="title">Choose Backend IPs</Typography>
-              </Grid>
-              <Grid item xs={12}>
-                {
-                  nodes.map((node, idx) => {
-                    const hasErrorFor = getAPIErrorFor({
-                      label: 'label',
-                      address: 'address',
-                      weight: 'weight',
-                      mode: 'mode',
-                    }, filterErrors(idx)(errors || []));
+            {(nodes.length > 0) &&
+              <Grid container>
+                <Grid item xs={12}>
+                  <Typography variant="title">Choose Backend IPs</Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  {
+                    nodes.map((node, idx) => {
+                      const hasErrorFor = getAPIErrorFor({
+                        label: 'label',
+                        address: 'address',
+                        weight: 'weight',
+                        mode: 'mode',
+                      }, filterErrors(idx)(errors || []));
 
-                    return (
-                      <Grid key={idx} container alignItems="flex-end">
-                        {idx !== 0 &&
-                          <Grid item xs={12}>
-                            <Divider style={{ marginTop: 24 }}/>
-                          </Grid>
-                        }
-                        <Grid item xs={11} lg={2}>
-                          <TextField
-                            label="Label"
-                            value={node.label}
-                            onChange={e => onNodeLabelChange(idx, e.target.value)}
-                            errorText={hasErrorFor('label')}
-                          />
-                        </Grid>
-                        <Grid item xs={11} lg={3}>
-                          <TextField
-                            label="Address"
-                            value={node.address}
-                            onChange={e => onNodeAddressChange(idx, e.target.value)}
-                            errorText={hasErrorFor('address')}
-                          />
-                        </Grid>
-                        <Grid item xs={11} lg={3}>
-                          <TextField
-                            label="Weight"
-                            type="number"
-                            value={node.weight}
-                            onChange={e => onNodeWeightChange(idx, e.target.valueAsNumber)}
-                            errorText={hasErrorFor('weight')}
-                          />
-                        </Grid>
-                        <Grid item xs={11} lg={3}>
-                          <TextField
-                            label="Mode"
-                            value={node.mode}
-                            select
-                            onChange={e => onNodeModeChange(idx, e.target.value)}
-                            errorText={hasErrorFor('mode')}
-                          >
-                            <MenuItem value="accept">Accept</MenuItem>
-                            <MenuItem value="reject">Reject</MenuItem>
-                            <MenuItem value="drain">Drain</MenuItem>
-                          </TextField>
-                        </Grid>
-                        <Grid item xs={1}>
+                      return (
+                        <Grid key={idx} container alignItems="flex-end">
                           {idx !== 0 &&
-                            <IconButton onClick={() => removeNode(idx)}><Delete /></IconButton>
+                            <Grid item xs={12}>
+                              <Divider style={{ marginTop: 24 }}/>
+                            </Grid>
                           }
+                          <Grid item xs={11} lg={2}>
+                            <TextField
+                              label="Label"
+                              value={node.label}
+                              onChange={e => onNodeLabelChange(idx, e.target.value)}
+                              errorText={hasErrorFor('label')}
+                            />
+                          </Grid>
+                          <Grid item xs={11} lg={3}>
+                            <TextField
+                              label="Address"
+                              value={node.address}
+                              onChange={e => onNodeAddressChange(idx, e.target.value)}
+                              errorText={hasErrorFor('address')}
+                            />
+                          </Grid>
+                          <Grid item xs={11} lg={3}>
+                            <TextField
+                              label="Weight"
+                              type="number"
+                              value={node.weight}
+                              onChange={e => onNodeWeightChange(idx, e.target.valueAsNumber)}
+                              errorText={hasErrorFor('weight')}
+                            />
+                          </Grid>
+                          <Grid item xs={11} lg={3}>
+                            <TextField
+                              label="Mode"
+                              value={node.mode}
+                              select
+                              onChange={e => onNodeModeChange(idx, e.target.value)}
+                              errorText={hasErrorFor('mode')}
+                            >
+                              <MenuItem value="accept">Accept</MenuItem>
+                              <MenuItem value="reject">Reject</MenuItem>
+                              <MenuItem value="drain">Drain</MenuItem>
+                            </TextField>
+                          </Grid>
+                          <Grid item xs={1}>
+                            {idx !== 0 &&
+                              <IconButton onClick={() => removeNode(idx)}><Delete /></IconButton>
+                            }
+                          </Grid>
                         </Grid>
-                      </Grid>
-                    );
-                  })
-                }
+                      );
+                    })
+                  }
+                </Grid>
+                <Grid item xs={12}>
+                  <IconTextLink
+                    SideIcon={PlusSquare}
+                    onClick={addNode}
+                    title="Add a Node"
+                    text="Add a Node"
+                  >
+                    Add a Node
+                  </IconTextLink>
+                </Grid>
               </Grid>
-              <Grid item xs={12}>
-                <IconTextLink
-                  SideIcon={PlusSquare}
-                  onClick={addNode}
-                  title="Add a Node"
-                  text="Add a Node"
+            }
+
+            {forEdit &&
+              <Grid
+                container
+                justify="space-between"
+                alignItems="center"
+              >
+                <Grid item
+                  style={{ marginLeft: -16 }}
                 >
-                  Add a Node
-              </IconTextLink>
+                  <ActionsPanel>
+                    <Button
+                      variant="raised"
+                      type="primary"
+                      onClick={() => onSave!()}
+                      loading={submitting}
+                    >
+                      Save
+                    </Button>
+                    <Button
+                      onClick={() => onCancel!()}
+                    >
+                      Cancel
+                    </Button>
+                  </ActionsPanel>
+                </Grid>
+                <Grid item>
+                  <Button
+                    onClick={() => onDelete!()}
+                    type="secondary"
+                    destructive
+                  >
+                    Delete
+                  </Button>
+                </Grid>
               </Grid>
-            </Grid>
+            }
           </div>
         </Paper>
       </Grid>

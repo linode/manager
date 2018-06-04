@@ -34,6 +34,7 @@ import setDocs from 'src/components/DocsSidebar/setDocs';
 import EditableText from 'src/components/EditableText';
 
 import NodeBalancerSummary from './NodeBalancerSummary';
+import NodeBalancerConfigurations from './NodeBalancerConfigurations';
 
 
 type ClassNames = 'root'
@@ -174,7 +175,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
         <Grid container justify="space-between">
           <Grid item className={classes.titleWrapper}>
             <IconButton
-              onClick={() => history.goBack()}
+              onClick={() => history.push('/nodebalancers')}
               className={classes.backButton}
             >
               <KeyboardArrowLeft />
@@ -211,13 +212,24 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
               <NodeBalancerSummary nodeBalancer={nodeBalancer} />
             }
           />
-          <Route exact path={`${path}/configurations`} render={() => <div>Hello World</div>} />
-          <Route exact path={`${path}/settings`} render={() =>
-          <NodeBalancerSettings
-            nodeBalancerId={nodeBalancer.id}
-            nodeBalancerLabel={nodeBalancer.label}
-            nodeBalancerClientConnThrottle={nodeBalancer.client_conn_throttle}
-            />} />
+          <Route
+            exact
+            path={`${path}/settings`}
+            render={() =>
+              <NodeBalancerSettings
+                nodeBalancerId={nodeBalancer.id}
+                nodeBalancerLabel={nodeBalancer.label}
+                nodeBalancerClientConnThrottle={nodeBalancer.client_conn_throttle}
+                />
+            }
+          />
+          <Route
+            exact
+            path={`${path}/configurations`}
+            render={() =>
+              <NodeBalancerConfigurations />
+            }
+          />
           {/* 404 */}
           < Redirect to={`${url}/summary`} />
         </Switch>
