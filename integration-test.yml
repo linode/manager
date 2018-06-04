@@ -19,6 +19,7 @@ services:
       - "3000:3000"
     environment:
       - HTTPS=true
+      - REACT_APP_CLIENT_ID='30b7feec6d848549583c'
       - REACT_APP_APP_ROOT=https://manager-local:3000
     build:
       context: .
@@ -36,6 +37,6 @@ services:
     volumes:
       - ./src:/src/src
       - ./e2e:/src/e2e
-    entrypoint: ["./scripts/wait-for-it.sh", "-t", "250", "-s", "manager-local:3000", "--", "yarn","e2e:all", "--log"]
+    entrypoint: ["./scripts/wait-for-it.sh", "-t", "250", "-s", "manager-local:3000", "--", "yarn","e2e", "--log"]
     depends_on:
       - chrome
