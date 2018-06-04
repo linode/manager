@@ -27,6 +27,7 @@ import {
   deleteNodeBalancerConfig,
   createNodeBalancerConfigSchema,
   getNodeBalancerConfigNodes,
+  createNodeBalancerConfigNode,
 } from 'src/services/nodebalancers';
 import Button from 'src/components/Button';
 // import IconTextLink from 'src/components/IconTextLink';
@@ -256,6 +257,12 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   }
 
   addNode = (configIdx: number, nodeIdx: number) => {
+    const { match: { params: { nodeBalancerId } } } = this.props;
+    const config = this.state.configs[configIdx];
+    const node = this.state.configs[configIdx].nodes[nodeIdx];
+    createNodeBalancerConfigNode(nodeBalancerId!, config.id, node)
+      .then(response => undefined);
+
     console.log('addNode', configIdx, nodeIdx);
   }
 
