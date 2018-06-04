@@ -8,6 +8,11 @@ import {
 import Typography from 'material-ui/Typography';
 import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
+// import Paper from 'material-ui/Paper';
+// import TableBody from 'material-ui/Table/TableBody';
+// import TableCell from 'material-ui/Table/TableCell';
+// import TableHead from 'material-ui/Table/TableHead';
+// import TableRow from 'material-ui/Table/TableRow';
 
 import { compose } from 'ramda';
 
@@ -33,7 +38,7 @@ type CombinedProps = Props
   & SetDocsProps
   & WithStyles<ClassNames>;
 
-class StackScriptsLanding extends React.Component<CombinedProps, State> {
+export class StackScriptsLanding extends React.Component<CombinedProps, State> {
   state: State = {
     selectedTab: 0,
   };
