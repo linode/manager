@@ -89,6 +89,11 @@ const getConfigsWithNodes = (nodeBalancerId: number) => {
     return Promise.map(configs.data, (config) => {
       return getNodeBalancerConfigNodes(nodeBalancerId, config.id)
         .then(({ data: nodes }) => {
+          /**
+           * Include a blank node (for the sake of local state) that can be "added"
+           * with the Add button.
+           **/
+          nodes.push({ label: '', address: '', weight: 100, mode: 'accept' });
           return {
             ...config,
             nodes,
@@ -248,6 +253,14 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           },
         });
       });
+  }
+
+  addNode = (configIdx: number, nodeIdx: number) => {
+    console.log('addNode', configIdx, nodeIdx);
+  }
+
+  updateNode = (configIdx: number, nodeIdx: number) => {
+    console.log('updateNode', configIdx, nodeIdx);
   }
 
   setNodeValue = (cidx: number, nodeidx: number, key: string, value: any) =>
@@ -413,11 +426,14 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
               nodes={config.nodes}
 
-              // addNode={() => this.addNodeBalancerConfigNode(idx)}
-              addNode={() => undefined}
+              addNode={(nodeIdx: number) =>
+                this.addNode(idx, nodeIdx)}
 
               // removeNode={this.removeNodeBalancerConfigNode(idx)}
               removeNode={() => undefined}
+
+              onUpdateNode={(nodeIndex: number) =>
+                this.updateNode(idx, nodeIndex)}
 
               onNodeLabelChange={(nodeIndex, value) =>
                 this.onNodeLabelChange(idx, nodeIndex, value)}

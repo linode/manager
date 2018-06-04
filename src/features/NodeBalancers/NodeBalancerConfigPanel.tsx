@@ -98,8 +98,9 @@ interface Props {
   onPrivateKeyChange: (v: string) => void;
 
   nodes: Linode.NodeBalancerConfigNode[];
-  addNode: () => void;
+  addNode: (nodeIdx?: number) => void;
   removeNode: (configId: number) => void;
+  onUpdateNode?: (idx: number) => void;
   onNodeLabelChange: (idx: number, value: string) => void;
   onNodeAddressChange: (idx: number, value: string) => void;
   onNodeWeightChange: (idx: number, value: number) => void;
@@ -167,6 +168,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       nodes,
       addNode,
       removeNode,
+      onUpdateNode,
       onNodeLabelChange,
       onNodeAddressChange,
       onNodeWeightChange,
@@ -510,7 +512,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             errorText={hasErrorFor('weight')}
                           />
                         </Grid>
-                        <Grid item xs={11} lg={3}>
+                        <Grid item xs={11} lg={forEdit ? 2 : 3}>
                           <TextField
                             label="Mode"
                             value={node.mode}
@@ -523,8 +525,33 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             <MenuItem value="drain">Drain</MenuItem>
                           </TextField>
                         </Grid>
+                        {(forEdit && idx !== (nodes.length - 1)) &&
+                          <Grid item xs={1}>
+                            <Button
+                              type="primary"
+                              onClick={e => onUpdateNode!(idx)}
+                            >
+                              Update
+                            </Button>
+                          </Grid>
+                        }
+                        {(forEdit && idx === (nodes.length - 1)) &&
+                          <Grid item xs={1}>
+                            <Button
+                              type="primary"
+                              onClick={e => addNode!(idx)}
+                            >
+                              Add
+                            </Button>
+                          </Grid>
+                        }
                         <Grid item xs={1}>
-                          {idx !== 0 &&
+                          {/**
+                            * Show the delete button for index 0 if we are
+                            * editing the Config. Don't show the delete button
+                            * for the final index if we are editing the Config.
+                            **/}
+                          {(forEdit ? idx !== (nodes.length - 1) : idx !== 0) &&
                             <IconButton onClick={() => removeNode(idx)}><Delete /></IconButton>
                           }
                         </Grid>
@@ -533,16 +560,19 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   })
                 }
               </Grid>
-              <Grid item xs={12}>
-                <IconTextLink
-                  SideIcon={PlusSquare}
-                  onClick={addNode}
-                  title="Add a Node"
-                  text="Add a Node"
-                >
-                  Add a Node
-                </IconTextLink>
-              </Grid>
+              {/* Adding nodes is done in-line when editing the Config */}
+              {!forEdit &&
+                <Grid item xs={12}>
+                  <IconTextLink
+                    SideIcon={PlusSquare}
+                    onClick={addNode}
+                    title="Add a Node"
+                    text="Add a Node"
+                  >
+                    Add a Node
+                  </IconTextLink>
+                </Grid>
+              }
             </Grid>
           </div>
         </Paper>
