@@ -210,7 +210,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
             render={() =>
               <NodeBalancerSummary
                 nodeBalancer={nodeBalancer}
-                errorResponses={this.props.location.state.errors}
+                errorResponses={pathOr(undefined, ['location', 'state', 'errors'], this.props)}
               />
             }
           />
