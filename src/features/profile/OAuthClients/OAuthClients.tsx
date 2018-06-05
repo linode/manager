@@ -10,8 +10,6 @@ import TableRow from 'material-ui/Table/TableRow';
 import TableCell from 'material-ui/Table/TableCell';
 import Button from 'material-ui/Button';
 
-import IconTextLink from 'src/components/IconTextLink';
-import PlusSquare from 'src/assets/icons/plus-square.svg';
 import {
   createOAuthClient,
   getOAuthClients,
@@ -27,6 +25,7 @@ import Notice from 'src/components/Notice';
 
 import ActionMenu from './OAuthClientActionMenu';
 import OAuthFormDrawer from './OAuthFormDrawer';
+import AddNewLink from 'src/components/AddNewLink';
 
 type ClassNames = 'root' | 'title';
 
@@ -239,11 +238,9 @@ class OAuthClients extends React.Component<CombinedProps, State> {
             </Typography>
           </Grid>
           <Grid item>
-            <IconTextLink
-              SideIcon={PlusSquare}
+            <AddNewLink
               onClick={() => this.toggleCreateDrawer(true)}
-              text="Create an OAuth Client"
-              title="Create an OAuth Client"
+              label="Create an OAuth Client"
               data-qa-oauth-create
             />
           </Grid>

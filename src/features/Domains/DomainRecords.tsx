@@ -24,14 +24,13 @@ import TableHead from 'material-ui/Table/TableHead';
 import TableRow from 'material-ui/Table/TableRow';
 
 import { deleteDomainRecord } from 'src/services/domains';
-import PlusSquare from 'src/assets/icons/plus-square.svg';
-import IconTextLink from 'src/components/IconTextLink';
 import Table from 'src/components/Table';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import ActionsPanel from 'src/components/ActionsPanel';
 import ActionMenu from './DomainRecordActionMenu';
 import Drawer from './DomainRecordDrawer';
+import AddNewLink from 'src/components/AddNewLink';
 
 type ClassNames = 'root';
 
@@ -78,12 +77,9 @@ interface IType {
   link?: () => null | JSX.Element;
 }
 
-const createLink = (title: string, handler: () => void) => <IconTextLink
-  SideIcon={PlusSquare}
-  onClick={handler}
-  text={title}
-  title={title}
-/>;
+const createLink = (title: string, handler: () => void) =>
+  <AddNewLink onClick={handler} label={title} />;
+
 
 class DomainRecords extends React.Component<CombinedProps, State> {
   eventsSubscription$: Subscription;

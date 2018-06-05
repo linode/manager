@@ -29,7 +29,7 @@ import ErrorState from 'src/components/ErrorState';
 import Placeholder from 'src/components/Placeholder';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import ActionsPanel from 'src/components/ActionsPanel';
-
+import AddNewLink from 'src/components/AddNewLink';
 
 type ClassNames = 'root' | 'title';
 
@@ -215,10 +215,20 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
     return (
       <React.Fragment>
         <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
-          <Grid item xs={12}>
+          <Grid item>
             <Typography variant="headline" className={classes.title} data-qa-title >
               NodeBalancers
             </Typography>
+          </Grid>
+          <Grid item>
+            <Grid container alignItems="flex-end">
+              <Grid item>
+                <AddNewLink
+                  onClick={() => history.push('/nodebalancer/create')}
+                  label="Add a NodeBalancer"
+                />
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
         <Paper>
