@@ -356,9 +356,10 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     const node = this.state.configs[configIdx].nodes[nodeIdx];
     const fieldPrefix = `nodes_${nodeIdx}_`;
 
+    const nodeData = pick(['label', 'address', 'weight', 'mode'], node);
     /* Perform client-side validation */
     const { error } = Joi.validate(
-      node,
+      nodeData,
       createNodeBalancerConfigNodeSchema,
       { abortEarly: false },
     );
@@ -369,7 +370,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       return;
     }
 
-    createNodeBalancerConfigNode(nodeBalancerId!, config.id, node)
+    createNodeBalancerConfigNode(nodeBalancerId!, config.id, nodeData)
       .then((node) => {
         this.setState(
           set(
@@ -399,9 +400,23 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     const node = this.state.configs[configIdx].nodes[nodeIdx];
     const fieldPrefix = `nodes_${nodeIdx}_`;
 
+    /* set the "updating" flag for this node */
+    this.setState(
+      set(
+        lensPath(['configs', configIdx, 'nodes']),
+        map((_node: any) => {
+          if (_node.id! === node.id) {
+            return { ..._node, updating: true };
+          }
+          return _node;
+        })(this.state.configs[configIdx].nodes),
+      ),
+    );
+
+    const nodeData = pick(['label', 'address', 'weight', 'mode'], node);
     /* Perform client-side validation */
     const { error } = Joi.validate(
-      pick(['label', 'address', 'mode', 'weight'], node),
+      nodeData,
       createNodeBalancerConfigNodeSchema,
       { abortEarly: false },
     );
@@ -412,18 +427,37 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       return;
     }
 
-    updateNodeBalancerConfigNode(nodeBalancerId!, config.id, node!.id!, node)
+    updateNodeBalancerConfigNode(nodeBalancerId!, config.id, node!.id!, nodeData)
       .then((node) => {
+        /* clear the "updating" flag for this node */
         this.setState(
           set(
             lensPath(['configs', configIdx, 'nodes']),
-            this.state.configs[configIdx].nodes,
+            map((_node: any) => {
+              if (_node.id! === node.id) {
+                return { ..._node, updating: false };
+              }
+              return _node;
+            })(this.state.configs[configIdx].nodes),
           ),
         );
         /* clear errors for this node */
         this.updateNodeErrors(configIdx, nodeIdx, []);
       })
       .catch((errResponse) => {
+        /* clear the "updating" flag for this node */
+        this.setState(
+          set(
+            lensPath(['configs', configIdx, 'nodes']),
+            map((_node: any) => {
+              if (_node.id! === node.id) {
+                return { ..._node, updating: false };
+              }
+              return _node;
+            })(this.state.configs[configIdx].nodes),
+          ),
+        );
+        /* set the errors for this node */
         const errors = pathOr([], ['response', 'data', 'errors'], errResponse);
         const prefixedErrors = prefixErrors(fieldPrefix, errors);
         this.updateNodeErrors(configIdx, nodeIdx, prefixedErrors);

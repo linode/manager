@@ -530,6 +530,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             <Button
                               type="primary"
                               onClick={e => onUpdateNode!(idx)}
+                              loading={node.updating}
                             >
                               Update
                             </Button>

@@ -31,6 +31,7 @@ namespace Linode {
     address: string;
     weight?: number;
     mode?: NodeBalancerConfigNodeMode;
+    updating?: boolean;
   }
 
   export interface NodeBalancerConfig {
