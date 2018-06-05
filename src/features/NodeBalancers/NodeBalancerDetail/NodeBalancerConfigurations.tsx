@@ -8,11 +8,14 @@ import {
   WithStyles,
 } from 'material-ui';
 import {
+  compose,
+  append,
   clone,
   defaultTo,
   path,
   lensPath,
   pathOr,
+  concat,
   filter,
   set,
   view,
@@ -85,6 +88,13 @@ type CombinedProps =
   & WithStyles<ClassNames>
   & PreloadedProps;
 
+const blankNode = (): Linode.NodeBalancerConfigNode => ({
+  label: '',
+  address: '',
+  weight: 100,
+  mode: 'accept',
+});
+
 const getConfigsWithNodes = (nodeBalancerId: number) => {
   return getNodeBalancerConfigs(nodeBalancerId).then((configs) => {
     return Promise.map(configs.data, (config) => {
@@ -94,7 +104,7 @@ const getConfigsWithNodes = (nodeBalancerId: number) => {
            * Include a blank node (for the sake of local state) that can be "added"
            * with the Add button.
            **/
-          nodes.push({ label: '', address: '', weight: 100, mode: 'accept' });
+          nodes.push(blankNode());
           return {
             ...config,
             nodes,
@@ -260,10 +270,53 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     const { match: { params: { nodeBalancerId } } } = this.props;
     const config = this.state.configs[configIdx];
     const node = this.state.configs[configIdx].nodes[nodeIdx];
+    const fieldPrefix = `nodes_${nodeIdx}_`;
     createNodeBalancerConfigNode(nodeBalancerId!, config.id, node)
-      .then(response => undefined);
-
-    console.log('addNode', configIdx, nodeIdx);
+      .then((node) => {
+        this.setState(
+          set(
+            lensPath(['configs', configIdx, 'nodes']),
+            compose(
+              /**
+               * Include a blank node (for the sake of local state) that can be "added"
+               * with the Add button.
+               **/
+              append(blankNode()),
+            )(this.state.configs[configIdx].nodes),
+          ),
+        );
+        /* clear errors */
+        this.setState(
+          set(
+            lensPath(['configErrors', configIdx]),
+            filter<Linode.ApiFieldError>(el =>
+              Boolean(el.field) && !el.field.startsWith(fieldPrefix),
+            )(pathOr([], ['configErrors', configIdx], this.state)),
+          ),
+        );
+      })
+      .catch((errResponse) => {
+        const errors = pathOr([], ['response', 'data', 'errors'], errResponse);
+        const prefixedErrors = errors.map((error: Linode.ApiFieldError) => ({
+          field: `${fieldPrefix}${error.field}`,
+          reason: error.reason,
+        }));
+        this.setState(
+          set(
+            lensPath(['configErrors', configIdx]),
+            compose<any, any, any>(
+              // Add the new errors that just came back from the API
+              concat(prefixedErrors),
+              /**
+               * Start with the existing errors for this config, but only those that do not relate
+               * to the node that has just been updated.
+               **/
+              filter<Linode.ApiFieldError>(el =>
+                Boolean(el.field) && !el.field.startsWith(fieldPrefix)),
+            )(pathOr([], ['configErrors', configIdx], this.state)),
+          ),
+        );
+      });
   }
 
   updateNode = (configIdx: number, nodeIdx: number) => {
