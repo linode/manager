@@ -293,12 +293,15 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           map((error: Linode.ApiFieldError) => {
             // parse index from the field name
             const match = /nodes_(\d+)_(.+)/.exec(error.field);
+            // if the index is greater than the node that was just removed
             if (match && match[1] && match[2] && (+match[1] > nodeIdx)) {
+              // update the field name to shift the index back by one
               error.field = `nodes_${+match[1] - 1}_${match[2]}`;
               return error;
             }
             return error;
           }),
+          // first, remove the target node errors
           filter<Linode.ApiFieldError>(el =>
             Boolean(el.field) && !el.field.startsWith(fieldPrefix),
           ),
