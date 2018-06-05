@@ -44,13 +44,18 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
+interface BackupInfo {
+  title: string;
+  details: string;
+}
+
 export interface Props {
   selectedLinodeID?: number;
   selectedBackupID?: number;
-  handleSelection: (key: string) =>
-    (event: React.SyntheticEvent<HTMLElement>, value: any) => void;
   error?: string;
   backups: Linode.LinodeWithBackups[];
+  handleChangeBackup: (id: number) => void;
+  handleChangeBackupInfo: (info: BackupInfo) => void;
 }
 
 interface State {
@@ -66,9 +71,6 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
   state: State = {
     backups: [],
   };
-
-  handleBackupSelection = this.props.handleSelection('selectedBackupID');
-  handleBackupInfoSelection = this.props.handleSelection('selectedBackupInfo');
 
   componentDidMount() {
     const { backups } = this.props;
@@ -103,7 +105,7 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
         title: backupInfo_.infoName,
         details: backupInfo_.subheading,
       };
-      this.handleBackupInfoSelection(undefined as any, backupInfo);
+      this.props.handleChangeBackupInfo(backupInfo);
     }
   }
 
@@ -132,8 +134,8 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
             title: backupInfo_.infoName,
             details: backupInfo_.subheading,
           };
-          this.handleBackupSelection(e, `${backup.id}`);
-          this.handleBackupInfoSelection(e, backupInfo);
+          this.props.handleChangeBackup(backup.id);
+          this.props.handleChangeBackupInfo(backupInfo);
         }}
         heading={backupInfo_.heading}
         subheadings={[backupInfo_.subheading]}

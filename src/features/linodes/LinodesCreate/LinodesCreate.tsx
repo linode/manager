@@ -10,7 +10,6 @@ import { withStyles, WithStyles, Theme, StyleRules } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
 import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
-import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 
 import { parseQueryParams } from 'src/utilities/queryParams';
 import { dcDisplayNames } from 'src/constants';
@@ -26,19 +25,16 @@ import { getImages } from 'src/services/images';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import PromiseLoader from 'src/components/PromiseLoader';
-import CircleProgress from 'src/components/CircleProgress';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-import Placeholder from 'src/components/Placeholder';
+import FromBackupsContent from './TabbedContent/FromBackupsContent';
 
 
 import SelectLinodePanel, { ExtendedLinode } from './SelectLinodePanel';
 import SelectImagePanel from './SelectImagePanel';
-import SelectBackupPanel from './SelectBackupPanel';
 import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
 import SelectPlanPanel, { ExtendedType } from './SelectPlanPanel';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import PasswordPanel from './PasswordPanel';
-import AddonsPanel from './AddonsPanel';
 import { typeLabelDetails, displayType } from '../presentation';
 import CheckoutBar from 'src/components/CheckoutBar';
 import { resetEventsPolling } from 'src/events';
@@ -87,7 +83,7 @@ type CombinedProps = Props
   & PreloadedProps
   & RouteComponentProps<{}>;
 
-interface State {
+export interface State {
   selectedTab: number;
   selectedLinodeID?: number;
   selectedBackupID?: number;
@@ -105,6 +101,7 @@ interface State {
   [index: string]: any;
   isGettingBackups: boolean;
   linodesWithBackups: Linode.LinodeWithBackups[] | null;
+  userHasBackups: boolean;
 }
 
 interface QueryStringOptions {
@@ -113,8 +110,8 @@ interface QueryStringOptions {
   linodeID: string;
 }
 
-const linodesWithBackups = (linodes: Linode.Linode[]) =>
-  linodes.filter(linode => linode.backups.enabled);
+// const linodesWithBackups = (linodes: Linode.Linode[]) =>
+//   linodes.filter(linode => linode.backups.enabled);
 
 const preloaded = PromiseLoader<Props>({
   linodes: () => getLinodes()
@@ -156,6 +153,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     isMakingRequest: false,
     isGettingBackups: false,
     linodesWithBackups: null,
+    userHasBackups: false,
   };
 
   mounted: boolean = false;
@@ -211,8 +209,17 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     }
   }
 
-  updateStateFor = (key: string) => (event: ChangeEvents, value: any) => {
+  resetSelections = () => {
+    // reset all selections here
+  }
+
+  updateStateFor = (key: keyof State) => (event: ChangeEvents, value: any) => {
     this.setState(() => ({ [key]: value }));
+  }
+
+  // ensure we're only allowed to update state that exists in this component
+  updateState = (key: keyof Partial<State>, value: any) => {
+    this.setState({ [key]: value });
   }
 
   getLinodesWithBackups = (linodes: Linode.Linode[]) => {
@@ -231,7 +238,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       .catch(err => this.setState({ isGettingBackups: false }));
   }
 
-  getBackupsMonthlyPrice(): number | null {
+  getBackupsMonthlyPrice = (): number | null => {
     const { selectedTypeID } = this.state;
     if (!selectedTypeID || !this.props.types) { return null; }
     const type = this.getTypeInfo();
@@ -263,15 +270,6 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       top: 0,
       left: 0,
       behavior: 'smooth',
-    });
-  }
-
-  userHasBackups = () => {
-    const { linodesWithBackups } = this.state;
-    return linodesWithBackups!.some((linode: Linode.LinodeWithBackups) => {
-      // automatic backups is an array, but snapshots are either null or an object
-      // user can have up to 3 automatic backups, but one one snapshot
-      return !!linode.currentBackups.automatic.length || !!linode.currentBackups.snapshot.current;
     });
   }
 
@@ -317,12 +315,12 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
               password={this.state.password}
               handleChange={v => this.setState({ password: v })}
             />
-            <AddonsPanel
+            {/* <AddonsPanel
               backups={this.state.backups}
               backupsMonthly={this.getBackupsMonthlyPrice()}
               privateIP={this.state.privateIP}
               handleChange={this.updateStateFor}
-            />
+            /> */}
           </React.Fragment>
         );
       },
@@ -330,73 +328,22 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     {
       title: 'Create from Backup',
       render: () => {
-        const hasErrorFor = getAPIErrorsFor(errorResources, this.state.errors);
-        const generalError = hasErrorFor('none');
         return (
           <React.Fragment>
-            {generalError &&
-              <Notice text={generalError} error={true} />
-            }
-            {(this.state.isGettingBackups)
-              ? <CircleProgress />
-              : (!this.userHasBackups())
-                ? <Placeholder
-                icon={VolumeIcon}
-                copy="You either do not have backups enabled for any Linode
-                or your Linodes have not been backed up. Please visit the 'Backups'
-                panel in the Linode Settings view"
-                title="Create from Backup"
-                />
-                : <React.Fragment>
-                  <Notice text={`This newly created Linode wil be created with
-            the same password as the original Linode`} warning={true} />
-                  <SelectLinodePanel
-                    error={hasErrorFor('linode_id')}
-                    linodes={compose(
-                      (linodes: Linode.Linode[]) => this.extendLinodes(linodes),
-                      linodesWithBackups,
-                    )(this.props.linodes.response)}
-                    selectedLinodeID={this.state.selectedLinodeID}
-                    handleSelection={linode => this.setState({
-                      selectedLinodeID: linode.id,
-                      selectedTypeID: null,
-                      selectedDiskSize: linode.specs.disk,
-                      selectedBackupID: undefined,
-                      selectedRegionID: linode.region,
-                    })}
-                  />
-                  <SelectBackupPanel
-                    error={hasErrorFor('backup_id')}
-                    backups={this.state.linodesWithBackups!
-                      .filter((linode: Linode.LinodeWithBackups) => {
-                        return linode.id === +this.state.selectedLinodeID!;
-                      })}
-                    selectedLinodeID={this.state.selectedLinodeID}
-                    selectedBackupID={this.state.selectedBackupID}
-                    handleSelection={this.updateStateFor}
-                  />
-                  <SelectPlanPanel
-                    error={hasErrorFor('type')}
-                    types={this.props.types}
-                    onSelect={(id: string) => this.setState({ selectedTypeID: id })}
-                    selectedID={this.state.selectedTypeID}
-                    selectedDiskSize={this.state.selectedDiskSize}
-                  />
-                  <LabelAndTagsPanel
-                    labelFieldProps={{
-                      label: 'Linode Label',
-                      value: this.state.label || '',
-                      onChange: e => this.setState({ label: e.target.value }),
-                      errorText: hasErrorFor('label'),
-                    }}
-                  />
-                  <AddonsPanel
-                    backups={this.state.backups}
-                    backupsMonthly={this.getBackupsMonthlyPrice()}
-                    privateIP={this.state.privateIP}
-                    handleChange={this.updateStateFor}
-                  />
-                </React.Fragment>}
+            <FromBackupsContent
+              updateFormState={this.updateState}
+              selectedLinodeID={this.state.selectedLinodeID}
+              selectedBackupID={this.state.selectedBackupID}
+              selectedDiskSize={this.state.selectedDiskSize}
+              selectedTypeID={this.state.selectedTypeID}
+              linodes={this.props.linodes.response}
+              types={this.props.types}
+              label={this.state.label}
+              backups={this.state.backups}
+              privateIP={this.state.privateIP}
+              extendLinodes={this.extendLinodes}
+              getBackupsMonthlyPrice={this.getBackupsMonthlyPrice}
+            />
           </React.Fragment>
         );
       },
@@ -448,12 +395,12 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
                 }}
               />
             </React.Fragment>
-            <AddonsPanel
+            {/* <AddonsPanel
               backups={this.state.backups}
               backupsMonthly={this.getBackupsMonthlyPrice()}
               privateIP={this.state.privateIP}
               handleChange={this.updateStateFor}
-            />
+            /> */}
           </React.Fragment>
         );
       },
@@ -636,7 +583,6 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       selectedImageID,
       selectedRegionID,
       selectedBackupInfo,
-      isGettingBackups,
     } = this.state;
 
     const { classes } = this.props;
@@ -682,56 +628,54 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
             </AppBar>
             {tabRender()}
           </Grid>
-          {isGettingBackups
+          {!this.state.userHasBackups
             ? <React.Fragment />
-            : selectedTab === this.backupTabIndex && !this.userHasBackups()
-              ? <React.Fragment />
-              : <Grid item className={`${classes.sidebar} mlSidebar`}>
-                <Sticky
-                  topOffset={-24}
-                  disableCompensation>
-                  {
-                    (props: StickyProps) => {
-                      const displaySections = [];
-                      if (imageInfo) {
-                        displaySections.push(imageInfo);
-                      }
-
-                      if (regionName) {
-                        displaySections.push({ title: regionName });
-                      }
-
-                      if (typeInfo) {
-                        displaySections.push(typeInfo);
-                      }
-
-                      if (backups && typeInfo && typeInfo.backupsMonthly) {
-                        displaySections.push({
-                          title: 'Backups Enabled',
-                          ...(typeInfo.backupsMonthly &&
-                            { details: `$${typeInfo.backupsMonthly.toFixed(2)} / monthly` }),
-                        });
-                      }
-
-                      let calculatedPrice = pathOr(0, ['monthly'], typeInfo);
-                      if (backups && typeInfo && typeInfo.backupsMonthly) {
-                        calculatedPrice += typeInfo.backupsMonthly;
-                      }
-
-                      return (
-                        <CheckoutBar
-                          heading={`${ label || 'Linode' } Summary`}
-                          calculatedPrice={calculatedPrice}
-                          disabled={this.state.isMakingRequest}
-                          onDeploy={this.onDeploy}
-                          displaySections={displaySections}
-                          {...props}
-                        />
-                      );
+            : <Grid item className={`${classes.sidebar} mlSidebar`}>
+              <Sticky
+                topOffset={-24}
+                disableCompensation>
+                {
+                  (props: StickyProps) => {
+                    const displaySections = [];
+                    if (imageInfo) {
+                      displaySections.push(imageInfo);
                     }
+
+                    if (regionName) {
+                      displaySections.push({ title: regionName });
+                    }
+
+                    if (typeInfo) {
+                      displaySections.push(typeInfo);
+                    }
+
+                    if (backups && typeInfo && typeInfo.backupsMonthly) {
+                      displaySections.push({
+                        title: 'Backups Enabled',
+                        ...(typeInfo.backupsMonthly &&
+                          { details: `$${typeInfo.backupsMonthly.toFixed(2)} / monthly` }),
+                      });
+                    }
+
+                    let calculatedPrice = pathOr(0, ['monthly'], typeInfo);
+                    if (backups && typeInfo && typeInfo.backupsMonthly) {
+                      calculatedPrice += typeInfo.backupsMonthly;
+                    }
+
+                    return (
+                      <CheckoutBar
+                        heading={`${label || 'Linode'} Summary`}
+                        calculatedPrice={calculatedPrice}
+                        disabled={this.state.isMakingRequest}
+                        onDeploy={this.onDeploy}
+                        displaySections={displaySections}
+                        {...props}
+                      />
+                    );
                   }
-                </Sticky>
-              </Grid>
+                }
+              </Sticky>
+            </Grid>
           }
         </Grid>
       </StickyContainer>
