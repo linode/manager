@@ -9,10 +9,10 @@ import Paper from 'material-ui/Paper';
 import Notice from '../Notice';
 
 type ClassNames = 'root'
-| 'inner'
-| 'copy'
-| 'tabs'
-| 'panelBody';
+  | 'inner'
+  | 'copy'
+  | 'tabs'
+  | 'panelBody';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -68,7 +68,7 @@ class TabbedPanel extends React.Component<CombinedProps> {
         <div className={classes.inner}>
           { error && <Notice text={error} error /> }
           <Typography variant="title" data-qa-tp-title>{header}</Typography>
-            {copy && <Typography component="div" className={classes.copy}
+          { copy && <Typography component="div" className={classes.copy }
             data-qa-tp-copy>{copy}</Typography>}
           <AppBar position="static" color="default">
             <Tabs
@@ -82,7 +82,7 @@ class TabbedPanel extends React.Component<CombinedProps> {
             </Tabs>
           </AppBar>
           <Typography component="div" className={classes.panelBody} data-qa-tab-body>
-              { render(rest) }
+            { render(rest) }
           </Typography>
         </div>
       </Paper>
