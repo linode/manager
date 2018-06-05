@@ -1,5 +1,5 @@
-import SelectRegionPanel, { Props, ExtendedRegion } from './SelectRegionPanel';
+import SelectRegionPanel, { ExtendedRegion } from './SelectRegionPanel';
 
-export { ExtendedRegion, Props };
+export { ExtendedRegion };
 
 export default SelectRegionPanel;

@@ -45,7 +45,7 @@ interface ExpansionPanelProps {
   success: string | undefined;
 }
 
-export interface Props {
+interface Props {
   error?: string;
   labelFieldProps?: TextFieldProps;
   expansion?: ExpansionPanelProps;

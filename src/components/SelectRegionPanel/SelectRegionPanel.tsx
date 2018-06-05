@@ -34,7 +34,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-export interface Props {
+interface Props {
   regions: ExtendedRegion[];
   copy?: string;
   error?: string;

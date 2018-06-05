@@ -38,7 +38,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-export interface Props {
+interface Props {
   linodes: ExtendedLinode[];
   selectedLinodeID?: number;
   handleSelection: (linode: Linode.Linode) => void;
