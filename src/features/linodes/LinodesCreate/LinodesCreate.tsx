@@ -240,176 +240,78 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     {
       title: 'Create from Image',
       render: () => {
-        // const hasErrorFor = getAPIErrorsFor(errorResources, this.state.errors);
-        // const generalError = hasErrorFor('none');
         return (
-          <React.Fragment>
-            <FromImageContent
-              errors={this.state.errors}
-              updateFormState={this.updateState}
-              getBackupsMonthlyPrice={this.getBackupsMonthlyPrice}
-              regions={this.props.regions}
-              images={this.props.images.response}
-              types={this.props.types}
-              backups={this.state.backups}
-              privateIP={this.state.privateIP}
-              label={this.state.label}
-              password={this.state.password}
-              selectedRegionID={this.state.selectedRegionID}
-              selectedImageID={this.state.selectedImageID}
-              selectedTypeID={this.state.selectedTypeID}
-            />
-            {/* {generalError &&
-              <Notice text={generalError} error={true} />
-            }
-            <SelectImagePanel
-              images={this.props.images.response}
-              handleSelection={this.updateStateFor}
-              selectedImageID={this.state.selectedImageID}
-            />
-            <SelectRegionPanel
-              error={hasErrorFor('region')}
-              regions={this.props.regions}
-              handleSelection={id => this.setState({ selectedRegionID: id })}
-              selectedID={this.state.selectedRegionID}
-              copy="Determine the best location for your Linode."
-            />
-            <SelectPlanPanel
-              error={hasErrorFor('type')}
-              types={this.props.types}
-              onSelect={(id: string) => this.setState({ selectedTypeID: id })}
-              selectedID={this.state.selectedTypeID}
-            />
-            <LabelAndTagsPanel
-              labelFieldProps={{
-                label: 'Linode Label',
-                value: this.state.label || '',
-                onChange: e => this.setState({ label: e.target.value }),
-                errorText: hasErrorFor('label'),
-              }}
-            />
-            <PasswordPanel
-              error={hasErrorFor('root_pass')}
-              password={this.state.password}
-              handleChange={v => this.setState({ password: v })}
-            />
-            <AddonsPanel
-              backups={this.state.backups}
-              backupsMonthly={this.getBackupsMonthlyPrice()}
-              privateIP={this.state.privateIP}
-              handleChange={this.updateStateFor}
-            /> */}
-          </React.Fragment>
+          <FromImageContent
+            errors={this.state.errors}
+            updateFormState={this.updateState}
+            getBackupsMonthlyPrice={this.getBackupsMonthlyPrice}
+            regions={this.props.regions}
+            images={this.props.images.response}
+            types={this.props.types}
+            backups={this.state.backups}
+            privateIP={this.state.privateIP}
+            label={this.state.label}
+            password={this.state.password}
+            selectedRegionID={this.state.selectedRegionID}
+            selectedImageID={this.state.selectedImageID}
+            selectedTypeID={this.state.selectedTypeID}
+          />
         );
       },
     },
     {
       title: 'Create from Backup',
       render: () => {
-        // const hasErrorFor = getAPIErrorsFor(errorResources, this.state.errors);
-        // const generalError = hasErrorFor('none');
         return (
-          <React.Fragment>
-            <FromBackupsContent
-              notice={{
-                level: 'warning',
-                text: `This newly created Linode wil be created with
+          <FromBackupsContent
+            notice={{
+              level: 'warning',
+              text: `This newly created Linode wil be created with
                 the same password as the original Linode`,
-              }}
-              errors={this.state.errors}
-              updateFormState={this.updateState}
-              selectedLinodeID={this.state.selectedLinodeID}
-              selectedBackupID={this.state.selectedBackupID}
-              selectedDiskSize={this.state.selectedDiskSize}
-              selectedTypeID={this.state.selectedTypeID}
-              linodes={this.props.linodes.response}
-              types={this.props.types}
-              label={this.state.label}
-              backups={this.state.backups}
-              privateIP={this.state.privateIP}
-              extendLinodes={this.extendLinodes}
-              getBackupsMonthlyPrice={this.getBackupsMonthlyPrice}
-            />
-          </React.Fragment>
+            }}
+            errors={this.state.errors}
+            updateFormState={this.updateState}
+            selectedLinodeID={this.state.selectedLinodeID}
+            selectedBackupID={this.state.selectedBackupID}
+            selectedDiskSize={this.state.selectedDiskSize}
+            selectedTypeID={this.state.selectedTypeID}
+            linodes={this.props.linodes.response}
+            types={this.props.types}
+            label={this.state.label}
+            backups={this.state.backups}
+            privateIP={this.state.privateIP}
+            extendLinodes={this.extendLinodes}
+            getBackupsMonthlyPrice={this.getBackupsMonthlyPrice}
+          />
         );
       },
     },
     {
       title: 'Clone From Existing',
       render: () => {
-        // const hasErrorFor = getAPIErrorsFor(errorResources, this.state.errors);
-        // const generalError = hasErrorFor('none');
         return (
-          <React.Fragment>
-            <FromLinodeContent
-              notice={{
-                level: 'warning',
-                text: `This newly created Linode wil be created with
+          <FromLinodeContent
+            notice={{
+              level: 'warning',
+              text: `This newly created Linode wil be created with
                             the same password as the original Linode`,
-              }}
-              errors={this.state.errors}
-              updateFormState={this.updateState}
-              getBackupsMonthlyPrice={this.getBackupsMonthlyPrice}
-              regions={this.props.regions}
-              images={this.props.images.response}
-              types={this.props.types}
-              backups={this.state.backups}
-              linodes={this.props.linodes.response}
-              privateIP={this.state.privateIP}
-              label={this.state.label}
-              selectedRegionID={this.state.selectedRegionID}
-              selectedTypeID={this.state.selectedTypeID}
-              selectedLinodeID={this.state.selectedLinodeID}
-              selectedDiskSize={this.state.selectedDiskSize}
-              extendLinodes={this.extendLinodes}
-            />
-            {/* {generalError &&
-              <Notice text={generalError} error={true} />
-            }
-            <Notice text={`This newly created Linode wil be created with
-            the same password as the original Linode`} warning={true} />
-            <SelectLinodePanel
-              error={hasErrorFor('linode_id')}
-              linodes={this.extendLinodes(this.props.linodes.response)}
-              selectedLinodeID={this.state.selectedLinodeID}
-              header={'Select Linode to Clone From'}
-              handleSelection={linode => this.setState({
-                selectedLinodeID: linode.id,
-                selectedTypeID: null,
-                selectedDiskSize: linode.specs.disk,
-              })}
-            />
-            <React.Fragment>
-              <SelectRegionPanel
-                error={hasErrorFor('region')}
-                regions={this.props.regions}
-                handleSelection={id => this.setState({ selectedRegionID: id })}
-                selectedID={this.state.selectedRegionID}
-                copy="Determine the best location for your Linode."
-              />
-              <SelectPlanPanel
-                error={hasErrorFor('type')}
-                types={this.props.types}
-                onSelect={(id: string) => this.setState({ selectedTypeID: id })}
-                selectedID={this.state.selectedTypeID}
-                selectedDiskSize={this.state.selectedDiskSize}
-              />
-              <LabelAndTagsPanel
-                labelFieldProps={{
-                  label: 'Linode Label',
-                  value: this.state.label || '',
-                  onChange: e => this.setState({ label: e.target.value }),
-                  errorText: hasErrorFor('label'),
-                }}
-              />
-            </React.Fragment>
-            <AddonsPanel
-              backups={this.state.backups}
-              backupsMonthly={this.getBackupsMonthlyPrice()}
-              privateIP={this.state.privateIP}
-              handleChange={this.updateStateFor}
-            /> */}
-          </React.Fragment>
+            }}
+            errors={this.state.errors}
+            updateFormState={this.updateState}
+            getBackupsMonthlyPrice={this.getBackupsMonthlyPrice}
+            regions={this.props.regions}
+            images={this.props.images.response}
+            types={this.props.types}
+            backups={this.state.backups}
+            linodes={this.props.linodes.response}
+            privateIP={this.state.privateIP}
+            label={this.state.label}
+            selectedRegionID={this.state.selectedRegionID}
+            selectedTypeID={this.state.selectedTypeID}
+            selectedLinodeID={this.state.selectedLinodeID}
+            selectedDiskSize={this.state.selectedDiskSize}
+            extendLinodes={this.extendLinodes}
+          />
         );
       },
     },
