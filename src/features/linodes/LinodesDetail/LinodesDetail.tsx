@@ -331,6 +331,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
   cancelUpdate = () => {
     this.setState({ labelInput: { label: this.state.linode.label, errorText: '' } });
+    this.forceUpdate();
   }
 
   render() {
