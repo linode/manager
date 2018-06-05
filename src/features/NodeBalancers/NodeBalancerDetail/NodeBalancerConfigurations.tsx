@@ -21,6 +21,7 @@ import {
   view,
   over,
   map,
+  pick,
 } from 'ramda';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 
@@ -34,6 +35,7 @@ import {
   createNodeBalancerConfigNodeSchema,
   getNodeBalancerConfigNodes,
   createNodeBalancerConfigNode,
+  updateNodeBalancerConfigNode,
   deleteNodeBalancerConfigNode,
 } from 'src/services/nodebalancers';
 import Button from 'src/components/Button';
@@ -343,7 +345,9 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           ),
         );
         this.spliceNodeErrors(configIdx, nodeIdx);
-      });
+      })
+      /* @todo: where do we want to display this error, toast? */
+      .catch(() => undefined);
   }
 
   addNode = (configIdx: number, nodeIdx: number) => {
@@ -379,7 +383,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
             )(this.state.configs[configIdx].nodes),
           ),
         );
-        /* clear errors */
+        /* clear errors for this node */
         this.updateNodeErrors(configIdx, nodeIdx, []);
       })
       .catch((errResponse) => {
@@ -390,7 +394,40 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   }
 
   updateNode = (configIdx: number, nodeIdx: number) => {
-    console.log('updateNode', configIdx, nodeIdx);
+    const { match: { params: { nodeBalancerId } } } = this.props;
+    const config = this.state.configs[configIdx];
+    const node = this.state.configs[configIdx].nodes[nodeIdx];
+    const fieldPrefix = `nodes_${nodeIdx}_`;
+
+    /* Perform client-side validation */
+    const { error } = Joi.validate(
+      pick(['label', 'address', 'mode', 'weight'], node),
+      createNodeBalancerConfigNodeSchema,
+      { abortEarly: false },
+    );
+
+    if (error) {
+      const prefixedErrors = prefixErrors(fieldPrefix, validationErrorsToFieldErrors(error));
+      this.updateNodeErrors(configIdx, nodeIdx, prefixedErrors);
+      return;
+    }
+
+    updateNodeBalancerConfigNode(nodeBalancerId!, config.id, node!.id!, node)
+      .then((node) => {
+        this.setState(
+          set(
+            lensPath(['configs', configIdx, 'nodes']),
+            this.state.configs[configIdx].nodes,
+          ),
+        );
+        /* clear errors for this node */
+        this.updateNodeErrors(configIdx, nodeIdx, []);
+      })
+      .catch((errResponse) => {
+        const errors = pathOr([], ['response', 'data', 'errors'], errResponse);
+        const prefixedErrors = prefixErrors(fieldPrefix, errors);
+        this.updateNodeErrors(configIdx, nodeIdx, prefixedErrors);
+      });
   }
 
   setNodeValue = (cidx: number, nodeidx: number, key: string, value: any) =>
