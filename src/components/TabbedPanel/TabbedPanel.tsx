@@ -37,7 +37,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 
 export interface Tab {
   title: string;
-  render: (props: any) => JSX.Element;
+  render: (props: any) => JSX.Element | null;
 }
 interface Props {
   header: string;

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { compose, map, unless, isEmpty, over, lensIndex, splitAt } from 'ramda';
 import { Link } from 'react-router-dom';
 import * as invariant from 'invariant';
 import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
@@ -7,13 +8,17 @@ import Typography from 'material-ui/Typography';
 import Grid from 'src/components/Grid';
 import Radio from 'src/components/Radio';
 import Tag from 'src/components/Tag';
+import ShowMore from 'src/components/ShowMore';
 
-type ClassNames = 'root' | 'images';
+type ClassNames = 'root' | 'images' | 'colImages';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     padding: theme.spacing.unit * 2,
     borderBottom: `solid 1px ${theme.palette.grey['200']}`,
+  },
+  colImages: {
+    padding: theme.spacing.unit,
   },
   images: {
     marginLeft: theme.spacing.unit,
@@ -67,7 +72,7 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
         </Grid>
       }
 
-      <Grid item xs={onSelect ? 7 : 6}>
+      <Grid item xs={onSelect ? 5 : 4}>
         <Grid container alignItems="center" style={{ height: '100%' }}>
           <Grid item xs={12}>
             <Link to={'/'}>
@@ -86,20 +91,13 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
         <Typography variant="subheading">{deploymentsActive}</Typography>
       </Grid>
 
-      <Grid item xs={1}>
+      <Grid item xs={2}>
         <Typography variant="subheading">{updated}</Typography>
       </Grid>
 
-      <Grid item xs={2}>
+      <Grid item xs={3} className={classes.colImages}>
         {
-          images.map(v => (
-            <Tag
-              label={v}
-              key={v}
-              variant="blue"
-              className={classes.images}
-            />
-          ))
+          displayTagsAndShowMore(images)
         }
       </Grid>
 
@@ -123,3 +121,19 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
 const styled = withStyles(styles, { withTheme: true });
 
 export default styled<Props>(SelectionRow);
+
+const createTag: (images: string) => JSX.Element =
+  v => <Tag label={v} key={v} variant="blue" style={{ margin: '2px 2px' }} />;
+
+const createTags: (images: string[]) => JSX.Element[] =
+  map(createTag);
+
+const createShowMore: (images: string[]) => JSX.Element =
+  images => <ShowMore items={images} render={createTags} />;
+
+const displayTagsAndShowMore: (s: string[]) => JSX.Element[][] =
+  compose<string[], string[][], any, JSX.Element[][]>(
+    over(lensIndex(1), unless(isEmpty, createShowMore)),
+    over(lensIndex(0), createTags),
+    splitAt(3),
+  );
