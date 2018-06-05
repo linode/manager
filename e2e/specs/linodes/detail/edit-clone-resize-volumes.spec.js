@@ -72,14 +72,13 @@ describe('Edit - Clone - Resize Volumes Suite', () => {
         
         browser.waitUntil(function() {
             return browser.getText(`[data-qa-volume-cell="${testVolume.id}"] [data-qa-volume-size]`).includes(newSize);
-        }, constants.wait.normal);
+        }, constants.wait.long);
     });
 
     it('should clone the volume', () => {
         const getPath = /linodes\/\d.*/
         const currentUrl = browser.getUrl();
         const linodeId = currentUrl.match(getPath)[0].match(/\d/g).join('');
-        const numberOfVolumes = VolumeDetail.volumeCell.length;
 
         browser.waitForVisible(`[data-qa-volume-cell="${testVolume.id}"] [data-qa-action-menu]`);
         VolumeDetail.selectActionMenuItem(volume, 'Clone');
@@ -92,6 +91,6 @@ describe('Edit - Clone - Resize Volumes Suite', () => {
 
         VolumeDetail.submit.click();
         VolumeDetail.drawerTitle.waitForVisible(constants.wait.normal, true);
-        browser.waitForVisible('[data-qa-icon-text-link="Attach Existing Volume"]', constants.wait.normal);
+        browser.waitForVisible('[data-qa-icon-text-link="Attach Existing Volume"]', constants.wait.long);
     });
 });

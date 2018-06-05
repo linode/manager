@@ -80,7 +80,7 @@ exports.deleteAll = (token) => {
                 }
             })
             .catch(error => {
-                reject('Error', error);
+                console.error('Error', error);
             });
     });
 }
@@ -127,7 +127,7 @@ exports.createLinode = (token, password, linodeLabel) => {
         const linodeConfig = {
             backups_enabled: false,
             booted: true,
-            image: 'linode/Ubuntu16.10',
+            image: 'linode/debian9',
             region: 'us-east',
             root_pass: password,
             type: 'g6-standard-1'
@@ -152,7 +152,6 @@ exports.createLinode = (token, password, linodeLabel) => {
             })
             .catch(error => {
                 console.error('Error', error);
-                reject(error)
             });
     });
 }

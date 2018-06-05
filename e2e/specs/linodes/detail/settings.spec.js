@@ -31,6 +31,10 @@ describe('Linode Detail - Settings Suite', () =>{
     });
 
     describe('Reset Root Password Suite', () => {
+        it('should powerdown linode', () => {
+            LinodeDetail.setPower('powerOff');
+        });
+
         it('should display a disk in the select, password field and save button', () => {
             Settings.selectDisk.waitForVisible();
             Settings.password.waitForVisible();

@@ -12,6 +12,7 @@ class ConfigureLinode extends Page {
     get selectImageHeader() { return $('[data-qa-tp="Select Image Type"]'); }
     get imageTabs() { return  $$('[data-qa-tp="Select Image Type"] [data-qa-tab]'); }
     get images() { return $$('[data-qa-tp="Select Image Type"] [data-qa-selection-card]'); }
+    get imageNames() { return $$('[data-qa-tp="Select Image Type"] [data-qa-select-card-heading]'); }
     get showOlderImages() { return $('[data-qa-show-more-expanded]'); }
     
     get selectRegionHeader() { return $('[data-qa-tp="Region"]'); }
@@ -21,6 +22,7 @@ class ConfigureLinode extends Page {
     get planHeader() { return $('[data-qa-tp="Linode Plan"]'); }
     get planTabs() { return $$('[data-qa-tp="Linode Plan"] [data-qa-tab]'); }
     get plans() { return $$('[data-qa-tp="Linode Plan"] [data-qa-selection-card]'); }
+    get planNames() { return $$('[data-qa-tp="Linode Plan"] [data-qa-selection-card] [data-qa-select-card-heading]'); }
 
     get labelHeader() { return $('[data-qa-label-header]'); }
     get label() { return $('[data-qa-label-header] input'); }

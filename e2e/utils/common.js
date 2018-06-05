@@ -45,8 +45,7 @@ export const apiCreateLinode = (linodeLabel=false) => {
     } else {
         browser.waitForVisible('[data-qa-linode]', constants.wait.long);
     }
-    browser.waitForVisible('[data-qa-status="booting"]', constants.wait.minute);
-    browser.waitForVisible('[data-qa-status="running"]', constants.wait.minute * 2);
+    browser.waitForVisible('[data-qa-status="running"]', constants.wait.minute * 3);
 }
 
 export const apiDeleteAllLinodes = () => {
