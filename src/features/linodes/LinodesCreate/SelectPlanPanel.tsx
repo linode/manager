@@ -22,7 +22,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-export interface Props {
+interface Props {
   types: ExtendedType[];
   error?: string;
   onSelect: (key: string) => void;
