@@ -224,7 +224,7 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
             <Grid container alignItems="flex-end">
               <Grid item>
                 <AddNewLink
-                  onClick={() => history.push('/nodebalancer/create')}
+                  onClick={() => history.push('/nodebalancers/create')}
                   label="Add a NodeBalancer"
                 />
               </Grid>
