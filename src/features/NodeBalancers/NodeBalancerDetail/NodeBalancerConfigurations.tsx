@@ -29,6 +29,7 @@ import {
   updateNodeBalancerConfig,
   deleteNodeBalancerConfig,
   createNodeBalancerConfigSchema,
+  createNodeBalancerConfigNodeSchema,
   getNodeBalancerConfigNodes,
   createNodeBalancerConfigNode,
 } from 'src/services/nodebalancers';
@@ -114,6 +115,12 @@ const getConfigsWithNodes = (nodeBalancerId: number) => {
     .catch(e => []);
   });
 };
+
+const prefixErrors = (prefix: string, errors: Linode.ApiFieldError[]) =>
+  errors.map((error: Linode.ApiFieldError) => ({
+    field: `${prefix}${error.field}`,
+    reason: error.reason,
+  }));
 
 class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   static defaultDeleteConfirmDialogState = {
@@ -266,11 +273,44 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       });
   }
 
+  updateNodeErrors = (configIdx: number, nodeIdx: number, errors: Linode.ApiFieldError[]) => {
+    const fieldPrefix = `nodes_${nodeIdx}_`;
+    this.setState(
+      set(
+        lensPath(['configErrors', configIdx]),
+        compose<any, any, any>(
+          // Add the new errors that just came back from the API
+          concat(errors),
+          /**
+           * Start with the existing errors for this config, but only those that do not relate
+           * to the node that has just been updated.
+           **/
+          filter<Linode.ApiFieldError>(el =>
+            Boolean(el.field) && !el.field.startsWith(fieldPrefix)),
+        )(pathOr([], ['configErrors', configIdx], this.state)),
+      ),
+    );
+  }
+
   addNode = (configIdx: number, nodeIdx: number) => {
     const { match: { params: { nodeBalancerId } } } = this.props;
     const config = this.state.configs[configIdx];
     const node = this.state.configs[configIdx].nodes[nodeIdx];
     const fieldPrefix = `nodes_${nodeIdx}_`;
+
+    /* Perform client-side validation */
+    const { error } = Joi.validate(
+      node,
+      createNodeBalancerConfigNodeSchema,
+      { abortEarly: false },
+    );
+
+    if (error) {
+      const prefixedErrors = prefixErrors(fieldPrefix, validationErrorsToFieldErrors(error));
+      this.updateNodeErrors(configIdx, nodeIdx, prefixedErrors);
+      return;
+    }
+
     createNodeBalancerConfigNode(nodeBalancerId!, config.id, node)
       .then((node) => {
         this.setState(
@@ -286,36 +326,12 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           ),
         );
         /* clear errors */
-        this.setState(
-          set(
-            lensPath(['configErrors', configIdx]),
-            filter<Linode.ApiFieldError>(el =>
-              Boolean(el.field) && !el.field.startsWith(fieldPrefix),
-            )(pathOr([], ['configErrors', configIdx], this.state)),
-          ),
-        );
+        this.updateNodeErrors(configIdx, nodeIdx, []);
       })
       .catch((errResponse) => {
         const errors = pathOr([], ['response', 'data', 'errors'], errResponse);
-        const prefixedErrors = errors.map((error: Linode.ApiFieldError) => ({
-          field: `${fieldPrefix}${error.field}`,
-          reason: error.reason,
-        }));
-        this.setState(
-          set(
-            lensPath(['configErrors', configIdx]),
-            compose<any, any, any>(
-              // Add the new errors that just came back from the API
-              concat(prefixedErrors),
-              /**
-               * Start with the existing errors for this config, but only those that do not relate
-               * to the node that has just been updated.
-               **/
-              filter<Linode.ApiFieldError>(el =>
-                Boolean(el.field) && !el.field.startsWith(fieldPrefix)),
-            )(pathOr([], ['configErrors', configIdx], this.state)),
-          ),
-        );
+        const prefixedErrors = prefixErrors(fieldPrefix, errors);
+        this.updateNodeErrors(configIdx, nodeIdx, prefixedErrors);
       });
   }
 
