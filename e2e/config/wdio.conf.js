@@ -1,17 +1,12 @@
 require('dotenv').config();
 
 const { argv } = require('yargs');
-const {
-    login,
-    readToken,
-} = require('../utils/config-utils');
-const { removeAllLinodes } = require('../setup/setup');
+const { login } = require('../utils/config-utils');
 const { browserCommands } = require('./custom-commands');
 const { browserConf } = require('./browser-config');
 const selectedBrowser = argv.b ? browserConf[argv.b] : browserConf['chrome'];
 const username = process.env.MANAGER_USER;
 const password = process.env.MANAGER_PASS;
-
 
 const specsToRun = () => {
     if (argv.file) {
@@ -22,6 +17,7 @@ const specsToRun = () => {
     }
     return ['./e2e/setup/setup.spec.js', './e2e/specs/**/*.js'];
 }
+
 const selectedReporters = ['dot'];
 
 if (argv.log) {
@@ -101,10 +97,10 @@ exports.config = {
     // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
     // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
     // gets prepended directly.
-    baseUrl: process.env.DOCKER ? 'https://manager-local:3000' : 'http://localhost:3000',
+    baseUrl: process.env.DOCKER ? 'https://manager-local:3000' : process.env.REACT_APP_APP_ROOT,
     //
     // Default timeout for all waitFor* commands.
-    waitforTimeout: 10000,
+    waitforTimeout: process.env.DOCKER ? 20000 : 10000,
     //
     // Default timeout in milliseconds for request
     // if Selenium Grid doesn't send response
@@ -287,14 +283,6 @@ exports.config = {
      * @param {Object} config wdio configuration object
      * @param {Array.<Object>} capabilities list of capabilities details
      */
-    onComplete: function(exitCode, config, capabilities) {
-        const token = readToken();
-        return removeAllLinodes(token)
-            .then(() => {
-                resolve();
-            })
-            .catch(err => {
-                console.log(err);
-            });
-    }
+    // onComplete: function(exitCode, config, capabilities) {
+    // }
 }

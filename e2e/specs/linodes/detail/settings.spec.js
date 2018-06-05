@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 const { constants } = require('../../../constants');
-const { createGenericLinode, createLinodeIfNone } = require('../../../utils/common');
+import { apiCreateLinode, apiDeleteAllLinodes } from '../../../utils/common';
 
 import ListLinodes from '../../../pageobjects/list-linodes';
 import LinodeDetail from '../../../pageobjects/linode-detail/linode-detail.page';
@@ -8,11 +8,15 @@ import Settings from '../../../pageobjects/linode-detail/linode-detail-settings.
 
 describe('Linode Detail - Settings Suite', () =>{
     beforeAll(() => {
-        createLinodeIfNone();
+        apiCreateLinode();
         ListLinodes.linodesDisplay();
         ListLinodes.navigateToDetail(ListLinodes.linodeElem);
         LinodeDetail.landingElemsDisplay();
         LinodeDetail.changeTab('Settings');
+    });
+
+    afterAll(() => {
+        apiDeleteAllLinodes();
     });
 
     describe('Label Suite', () => {

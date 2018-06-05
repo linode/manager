@@ -31,9 +31,9 @@ exports.deleteAll = (token) => {
                     }
                     return res.data;
                 })
-                .catch((err) => {
-                    console.log('Error', err);
-                    return err;
+                .catch((error) => {
+                    console.log('Error', error);
+                    return error;
                 });
         }
 
@@ -42,9 +42,9 @@ exports.deleteAll = (token) => {
                 .then(res => {
                     return res;
                 })
-                .catch((err) => {
-                    console.log('Error', err);
-                    return err
+                .catch((error) => {
+                    console.error('Error', error);
+                    return error
                 });
         }
 
@@ -59,7 +59,7 @@ exports.deleteAll = (token) => {
                             });
                         }
                     })
-                    .catch(err => err);
+                    .catch(error => error);
             });
         }
 
@@ -79,8 +79,8 @@ exports.deleteAll = (token) => {
                         .then(() => resolve());
                 }
             })
-            .catch(err => {
-                reject('Error', err);
+            .catch(error => {
+                reject('Error', error);
             });
     });
 }
@@ -102,18 +102,92 @@ exports.removeAllLinodes = (token) => {
         const removeInstance = (res, endpoint) => {
             return instance.delete(`${endpoint}/${res.id}`)
                 .then(res => res)
-                .catch((err) => {
-                    console.log('Error', err);
-                    return err
+                .catch((error) => {
+                    console.log('Error', error);
+                    return error
                 });
         }
 
         return instance.get(linodesEndpoint)
             .then(res => {
-                res.data.data.forEach(linode => {
-                    removeInstance(linode, linodesEndpoint)
-                });
+                const promiseArray = 
+                    res.data.data.map(l => removeInstance(l, linodesEndpoint));
+
+                Promise.all(promiseArray).then(function(res) {
+                    resolve(res);
+                }).catch(error => console.log(error));
+        });
+    });
+}
+
+exports.createLinode = (token, password, linodeLabel) => {
+    return new Promise((resolve, reject) => {
+        const linodesEndpoint = '/linode/instances';
+        
+        const linodeConfig = {
+            backups_enabled: false,
+            booted: true,
+            image: 'linode/Ubuntu16.10',
+            region: 'us-east',
+            root_pass: password,
+            type: 'g6-standard-1'
+        }
+
+        if (linodeLabel !== false) {
+            linodeConfig['label'] = linodeLabel;
+        }
+
+        const instance = axios.create({
+            httpsAgent: new https.Agent({
+                rejectUnauthorized: false
+            }),
+            baseURL: API_ROOT,
+            timeout: 5000,
+            headers: { 'Authorization': `Bearer ${token}`},           
+        });
+
+        return instance.post(linodesEndpoint, linodeConfig)
+            .then(res => {
+                resolve(res.status === 200);
             })
-            .catch(err => reject(err));
+            .catch(error => {
+                console.error('Error', error);
+                reject(error)
+            });
+    });
+}
+
+exports.removeAllVolumes = (token) => {
+    return new Promise((resolve, reject) => {
+        const volumesEndpoint = '/volumes';
+
+        const removeVolume = (res, endpoint) => {
+            return instance.delete(`${endpoint}/${res.id}`)
+                .then(res => res.status)
+                .catch(error => {
+                    console.error('Error', error);
+                });
+        }
+
+        const instance = axios.create({
+            httpsAgent: new https.Agent({
+                rejectUnauthorized: false
+            }),
+            baseURL: API_ROOT,
+            timeout: 5000,
+            headers: { 'Authorization': `Bearer ${token}`}, 
+        });
+
+        return instance.get(volumesEndpoint).then(res => {
+            const removeVolumesArray = 
+                res.data.data.map(v => removeVolume(v, volumesEndpoint));
+
+            Promise.all(removeVolumesArray).then(function(res) {
+                resolve(res);
+            }).catch(error => {
+                console.log(error);
+                return error;
+            });
+        });
     });
 }

@@ -1,5 +1,6 @@
 const { constants } = require('../../constants');
 
+import { apiCreateLinode, apiDeleteAllLinodes } from '../../utils/common';
 import SearchBar from '../../pageobjects/search.page';
 import ListLinodes from '../../pageobjects/list-linodes';
 import LinodeDetail from '../../pageobjects/linode-detail/linode-detail.page';
@@ -31,9 +32,15 @@ describe('Header - Search - Volumes Suite', () => {
         }
     }
 
+    afterAll(() => {
+        apiDeleteAllLinodes();
+    });
+
     it('should setup the spec', () => {
         browser.url(constants.routes.linodes);
         
+        apiCreateLinode();
+
         ListLinodes.linodesDisplay();
         linodeName = ListLinodes.linode[0].$(ListLinodes.linodeLabel.selector).getText();
 

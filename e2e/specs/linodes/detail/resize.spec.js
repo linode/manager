@@ -1,6 +1,6 @@
 const { constants } = require('../../../constants');
 
-import { createGenericLinode, deleteLinode } from '../../../utils/common';
+import { apiCreateLinode, apiDeleteAllLinodes } from '../../../utils/common';
 import LinodeDetail from '../../../pageobjects/linode-detail/linode-detail.page';
 import Resize from '../../../pageobjects/linode-detail/linode-detail-resize.page';
 
@@ -10,7 +10,7 @@ describe('Linode Detail - Resize Suite', () => {
     beforeAll(() => {
         browser.url(constants.routes.linodes);
         browser.waitForVisible('[data-qa-add-new-menu-button]');
-        createGenericLinode(linodeName);
+        apiCreateLinode(linodeName);
         browser.click(`[data-qa-linode="${linodeName}"] [data-qa-label]`);
         LinodeDetail
             .landingElemsDisplay()
@@ -19,7 +19,7 @@ describe('Linode Detail - Resize Suite', () => {
     });
 
     afterAll(() => {
-        deleteLinode(linodeName);
+        apiDeleteAllLinodes();
     });
 
     it('should display resize base elements', () => {

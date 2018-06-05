@@ -1,4 +1,4 @@
-FROM node:8.11.0-wheezy
+FROM node:8.11.2-stretch
 
 WORKDIR /src
 

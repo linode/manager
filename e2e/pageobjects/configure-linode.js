@@ -39,15 +39,13 @@ class ConfigureLinode extends Page {
         this.notice.waitForVisible();
         const notices = $$(this.notice.selector);
 
-        const cloneSLA = 'This newly created Linode wil be created with the same root password as the original Linode';
+        const cloneSLA = 'This newly created Linode wil be created with the same password as the original Linode';
         const cloneFromHeader = 'Select Linode to Clone From';
-        const cloneToHeader = 'Select Target Linode';
         const selectLinodePanelText = $$('[data-qa-select-linode-header]').map(h => h.getText());
 
         expect(notices.map(n => n.getText())).toContain(cloneSLA);
-        expect($$('[data-qa-select-linode-header]').length).toBe(2);
+        expect($$('[data-qa-select-linode-header]').length).toBe(1);
         expect(selectLinodePanelText).toContain(cloneFromHeader);
-        expect(selectLinodePanelText).toContain(cloneToHeader);
         expect(this.total.isVisible()).toBe(true);
         expect(this.total.getText()).toBe('$0.00 /mo');
         expect(this.deploy.isVisible()).toBe(true);
@@ -115,23 +113,23 @@ class ConfigureLinode extends Page {
         planElement.click();
         browser.waitUntil(function() {
             return planElement.getAttribute('class').includes('checked');
-        }, 5000);
+        }, 5000, 'Failed to select plan');
     }
 
     cloneSelectSource(linodeLabel) {
         const sourceSection = $$('[data-qa-select-linode-panel]')
             .filter(s => s.$('[data-qa-select-linode-header]').getText() === 'Select Linode to Clone From');
-        const targetSection = $$('[data-qa-select-linode-panel]')
-            .filter(s => s.$('[data-qa-select-linode-header]').getText() === 'Select Target Linode');
+        // const targetSection = $$('[data-qa-select-linode-panel]')
+            // .filter(s => s.$('[data-qa-select-linode-header]').getText() === 'Select Target Linode');
 
         let linodes = sourceSection[0].$$('[data-qa-selection-card]');
         let sourceLinode = linodes[0];
         let sourceLabel = sourceLinode.$('[data-qa-select-card-heading]').getText();
         sourceLinode.click();
 
-        let targetLinodeCard = targetSection[0].$$('[data-qa-selection-card]')
-            .filter(c => c.$('[data-qa-select-card-heading]').getText() === sourceLabel);
-        expect(targetLinodeCard[0].getAttribute('class')).toContain('disabled');
+        // let targetLinodeCard = targetSection[0].$$('[data-qa-selection-card]')
+            // .filter(c => c.$('[data-qa-select-card-heading]').getText() === sourceLabel);
+        // expect(targetLinodeCard[0].getAttribute('class')).toContain('disabled');
 
         if (linodeLabel) {
             linodes = sourceSection[0].$$('[data-qa-selection-card]')
@@ -141,10 +139,10 @@ class ConfigureLinode extends Page {
 
             sourceLinode.click();
             
-            targetLinodeCard = targetSection[0].$$('[data-qa-selection-card]')
-                .filter(c => c.$('[data-qa-select-card-heading]').getText() === sourceLabel);
+            // targetLinodeCard = targetSection[0].$$('[data-qa-selection-card]')
+                // .filter(c => c.$('[data-qa-select-card-heading]').getText() === sourceLabel);
 
-            expect(targetLinodeCard[0].getAttribute('class')).toContain('disabled');
+            // expect(targetLinodeCard[0].getAttribute('class')).toContain('disabled');
         }
     }
 

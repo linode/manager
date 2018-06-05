@@ -1,5 +1,6 @@
 const { constants } = require('../../../constants');
 
+import { apiCreateLinode, apiDeleteAllLinodes } from '../../../utils/common';
 import Rebuild from '../../../pageobjects/linode-detail/linode-detail-rebuild.page';
 import ListLinodes from '../../../pageobjects/list-linodes';
 import LinodeDetail from '../../../pageobjects/linode-detail/linode-detail.page';
@@ -7,6 +8,7 @@ import LinodeDetail from '../../../pageobjects/linode-detail/linode-detail.page'
 describe('Linode Detail - Rebuild Suite', () => {
     beforeAll(() => {
         browser.url(constants.routes.linodes);
+        apiCreateLinode();
 
         ListLinodes.linodeElem.waitForVisible();
         ListLinodes.linode[0].$(ListLinodes.linodeLabel.selector).click();
@@ -18,6 +20,10 @@ describe('Linode Detail - Rebuild Suite', () => {
     beforeEach(() => {
         browser.refresh();
         Rebuild.title.waitForText();
+    });
+
+    afterAll(() => {
+        apiDeleteAllLinodes();
     });
 
     it('should display rebuild base elements', () => {
