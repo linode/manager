@@ -34,10 +34,11 @@ describe('Linode Detail - Networking Suite', () => {
         });
 
         it('should display error msg on click allocate', () => {
+            const noticeMsg = 'Additional IPv4 addresses require technical justification. Please open a Support Ticket describing your requirement';
             Networking.allocate.click();
             Networking.notice.waitForVisible();
             
-            expect(Networking.notice.$('a').getAttribute('href')).toContain('/support');
+            Networking.waitForNotice(noticeMsg);
         });
 
         it('should dismiss drawer on close', () => {

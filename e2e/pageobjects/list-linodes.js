@@ -53,10 +53,10 @@ export class ListLinodes extends Page {
 
     navigateToDetail(linode) {
         if(!linode) {
-            this.linode[0].$(this.linodeLabel.selector).click();
+            this.linode[0].$('a').click();
             return;
         }
-        linode.$(this.linodeLabel.selector).click();
+        linode.$('a').click();
     }
 
     gridElemsDisplay() {

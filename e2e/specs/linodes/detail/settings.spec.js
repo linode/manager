@@ -10,7 +10,7 @@ describe('Linode Detail - Settings Suite', () =>{
     beforeAll(() => {
         apiCreateLinode();
         ListLinodes.linodesDisplay();
-        ListLinodes.navigateToDetail(ListLinodes.linodeElem);
+        ListLinodes.navigateToDetail();
         LinodeDetail.landingElemsDisplay();
         LinodeDetail.changeTab('Settings');
     });

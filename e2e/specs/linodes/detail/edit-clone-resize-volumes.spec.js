@@ -32,7 +32,7 @@ describe('Edit - Clone - Resize Volumes Suite', () => {
         browser.url(constants.routes.linodes);
         ListLinodes.linodeElem.waitForVisible();
 
-        ListLinodes.linode[0].$(ListLinodes.linodeLabel.selector).click();
+        ListLinodes.navigateToDetail();
         LinodeDetail.landingElemsDisplay();
         LinodeDetail.changeTab('Volumes');
         
