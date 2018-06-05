@@ -19,8 +19,10 @@ services:
       - "3000:3000"
     environment:
       - HTTPS=true
-      - REACT_APP_CLIENT_ID='30b7feec6d848549583c'
       - REACT_APP_APP_ROOT=https://manager-local:3000
+      - REACT_APP_LOGIN_ROOT=${REACT_APP_LOGIN_ROOT}
+      - REACT_APP_CLIENT_ID=${REACT_APP_CLIENT_ID}
+      - REACT_APP_API_ROOT=${REACT_APP_API_ROOT}
     build:
       context: .
       dockerfile: Dockerfile
@@ -31,6 +33,9 @@ services:
     container_name: manager_e2e
     environment:
       - DOCKER=true
+      - REACT_APP_API_ROOT=${REACT_APP_API_ROOT}
+      - MANAGER_USER=${MANAGER_USER}
+      - MANAGER_PASS=${MANAGER_PASS}
     build:
       context: .
       dockerfile: Dockerfile
