@@ -1,4 +1,6 @@
-import Page from './page';
+const { constants } = require('../../constants');
+
+import Page from '../page';
 
 class LinodeDetail extends Page {
     get title() { return $('[data-qa-title]'); }
@@ -22,10 +24,9 @@ class LinodeDetail extends Page {
         browser.jsClick(`[data-qa-tab="${tab}"]`);
         browser.waitUntil(function() {
             return browser
-                .getAttribute(`[data-qa-tab="${tab}"]`, 'class')
-                .includes('Selected');
-        }, 5000);
-        browser.waitForVisible('[data-qa-circle-progress]', 10000, true);
+                .getAttribute(`[data-qa-tab="${tab}"]`, 'aria-selected').includes('true');
+        }, constants.wait.short, 'Failed to change tab');
+        browser.waitForVisible('[data-qa-circle-progress]', constants.wait.normal, true);
         return this;
     }
 
@@ -36,7 +37,7 @@ class LinodeDetail extends Page {
         browser.click('[data-qa-save-edit]');
         browser.waitUntil(function() {
             return this.linodeLabel.getText() === name;
-        }, 5000);
+        }, constants.wait.short);
     }
 
     setPower(powerState) {
@@ -49,7 +50,7 @@ class LinodeDetail extends Page {
             return
                 this.powerControl.isEnabled() &&
                 this.powerControl.getAttribute('data-qa-power-control') !== currentPowerState;
-        }, 20000);
+        }, constants.wait.long);
     }
 
     landingElemsDisplay() {

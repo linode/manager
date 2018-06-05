@@ -26,6 +26,7 @@ import AccountLevelNotifications from 'src/features/AccountLevelNotifications';
 import BetaNotification from './BetaNotification';
 import DocsSidebar from 'src/components/DocsSidebar';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
+import { getRegions } from 'src/services/misc';
 
 const LinodesRoutes = DefaultLoader({
   loader: () => import('src/features/linodes'),
@@ -87,6 +88,11 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     flex: 1,
     maxWidth: '100%',
     position: 'relative',
+    '&.mlMain': {
+      [theme.breakpoints.up('lg')]: {
+        maxWidth: '78.8%',
+      },
+    },
   },
 });
 
@@ -123,6 +129,12 @@ export class App extends React.Component<CombinedProps, State> {
     }
 
     const promises = [
+      new Promise(() => {
+        request(['regions']);
+        return getRegions()
+          .then(({ data }) => response(['regions', 'data'], data))
+          .catch(error => response(['regions'], error));
+      }),
       new Promise(() => {
         request(['types']);
         return getLinodeTypes()
@@ -185,6 +197,7 @@ export class App extends React.Component<CombinedProps, State> {
   render() {
     const { menuOpen } = this.state;
     const { classes, longLivedLoaded, documentation, toggleTheme } = this.props;
+    const hasDoc = documentation.length > 0;
 
     return (
       <React.Fragment>
@@ -197,7 +210,7 @@ export class App extends React.Component<CombinedProps, State> {
                 <TopMenu toggleSideMenu={this.toggleMenu} />
                 <div className={classes.wrapper}>
                   <Grid container spacing={0} className={classes.grid}>
-                    <Grid item className={classes.switchWrapper}>
+                    <Grid item className={`${classes.switchWrapper} ${hasDoc ? 'mlMain' : ''}`}>
                       <Switch>
                         <Route exact path="/dashboard" render={() =>
                           <Placeholder title="Dashboard" />} />
@@ -251,7 +264,8 @@ const mapStateToProps = (state: Linode.AppState) => ({
   longLivedLoaded:
     Boolean(pathOr(false, ['resources', 'types', 'data', 'data'], state))
     && Boolean(pathOr(false, ['resources', 'kernels', 'data'], state))
-    && Boolean(pathOr(false, ['resources', 'profile', 'data'], state)),
+    && Boolean(pathOr(false, ['resources', 'profile', 'data'], state))
+    && Boolean(pathOr(false, ['resources', 'regions', 'data'], state)),
   documentation: state.documentation,
 });
 

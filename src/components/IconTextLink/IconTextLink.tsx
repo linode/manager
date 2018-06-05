@@ -10,7 +10,11 @@ import {
 import Button from 'material-ui/Button';
 import SvgIcon from 'material-ui/SvgIcon';
 
-type CSSClasses = 'root' | 'active' | 'disabled' | 'icon';
+type CSSClasses = 'root'
+| 'active'
+| 'disabled'
+| 'icon'
+| 'left';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -22,7 +26,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     transition: theme.transitions.create(['color']),
     margin: '0 -12px 6px 0',
     minHeight: 'auto',
-    '&:hover, &:focus': {
+    '&:hover': {
       color: theme.palette.primary.light,
       backgroundColor: 'transparent',
       '& $icon': {
@@ -54,6 +58,9 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
       transition: theme.transitions.create(['color']),
     },
   },
+  left: {
+    left: -12,
+  },
 });
 
 export interface Props {
@@ -63,6 +70,7 @@ export interface Props {
   active?: Boolean;
   disabled?: Boolean;
   title: string;
+  left?: boolean;
 }
 
 type FinalProps = Props & WithStyles<CSSClasses>;
@@ -76,6 +84,7 @@ const IconTextLink: React.StatelessComponent<FinalProps> = (props) => {
     active,
     disabled,
     title,
+    left,
   } = props;
 
   return (
@@ -85,6 +94,7 @@ const IconTextLink: React.StatelessComponent<FinalProps> = (props) => {
           [classes.root]: true,
           [classes.disabled]: disabled === true,
           [classes.active]: active === true,
+          [classes.left]: left === true,
           iconTextLink: true,
         })
       }

@@ -1,14 +1,9 @@
 import * as React from 'react';
+import * as classNames from 'classnames';
 
-import {
-  withStyles,
-  Theme,
-  WithStyles,
-  StyleRulesCallback,
-} from 'material-ui/styles';
-import Chip from 'material-ui/Chip';
+import { withStyles, Theme, WithStyles, StyleRulesCallback } from 'material-ui/styles';
+import Chip, { ChipProps } from 'material-ui/Chip';
 import Close from 'material-ui-icons/Close';
-
 
 type Variants =
   'white'
@@ -65,7 +60,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   });
 };
 
-interface Props {
+interface Props extends ChipProps {
   label: string;
   variant?: Variants;
   onDelete?: () => void;
@@ -74,19 +69,29 @@ interface Props {
 type PropsWithStyles = Props & WithStyles<CSSClasses>;
 
 const Tag: React.SFC<PropsWithStyles> = (props) => {
-  const { variant, classes, theme, ...rest } = props;
-  const classNames = [
-    props.classes[props.variant!],
-    props.classes.root,
-  ].join(' ');
+  const {
+    variant,
+    classes,
+    theme,
+    className,
+    ...chipProps,
+  } = props;
 
   return <Chip
-    className={classNames}
+    className={classNames({
+      ...(className && { [className]: true }),
+      [classes[props.variant!]]: true,
+      [classes.root]: true,
+    })}
     deleteIcon={<Close />}
     classes={{ label: props.classes.label }}
     data-qa-tag
-    {...rest}
+    {...chipProps}
   />;
+};
+
+Tag.defaultProps = {
+  variant: 'gray',
 };
 
 export default withStyles(styles, { withTheme: true })<Props>(Tag);

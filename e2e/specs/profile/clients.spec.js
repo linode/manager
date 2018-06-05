@@ -35,7 +35,7 @@ describe('Profile - OAuth Clients Suite', () => {
 
         it('should close create drawer on cancel', () => {
             createDrawer.cancel.click();
-            browser.waitForVisible('[data-qa-drawer-title]', 10000, true);
+            browser.waitForVisible('[data-qa-drawer-title]', constants.wait.normal, true);
         });
 
         it('should display dialog with secret on submit', () => {
@@ -51,7 +51,7 @@ describe('Profile - OAuth Clients Suite', () => {
             expect(secret).not.toBe(null);
 
             browser.click(dialogClose);
-            browser.waitForVisible(dialogTitle, 10000, true);
+            browser.waitForVisible(dialogTitle, constants.wait.normal, true);
         });
 
         it('should display new client in table', () => {
@@ -127,7 +127,7 @@ describe('Profile - OAuth Clients Suite', () => {
 
         it('should close on cancel', () => {
             browser.click(dialogCancel);
-            browser.waitForVisible(dialogTitle, 10000, true);
+            browser.waitForVisible(dialogTitle, constants.wait.normal, true);
         });
 
         it('should display new secret on reset', () => {
@@ -138,7 +138,7 @@ describe('Profile - OAuth Clients Suite', () => {
             browser.waitUntil(function() {
                 browser.waitForVisible(dialogTitle);
                 return browser.getText(dialogTitle).includes('Client Secret');
-            }, 5000);
+            }, constants.wait.short);
 
             const content = $(dialogContent).getText();
             expect(content).toContain('Here is your client secret! Store it securely, as it won\'t be shown again.');
@@ -169,7 +169,7 @@ describe('Profile - OAuth Clients Suite', () => {
 
         it('should not delete client on cancel', () => {
             cancelButton.click();
-            browser.waitForVisible(dialogTitle, 10000, true);
+            browser.waitForVisible(dialogTitle, constants.wait.normal, true);
 
             expect($(editedRow).isVisible()).toBe(true);
         });

@@ -23,7 +23,16 @@ namespace Linode {
     total: number;
   }
 
-  export interface NodeBalancerConfig{
+  export type NodeBalancerConfigNodeMode = 'accept' | 'reject' | 'drain';
+
+  export interface NodeBalancerConfigNode {
+    label: string;
+    address: string;
+    weight?: number;
+    mode?: NodeBalancerConfigNodeMode;
+  }
+
+  export interface NodeBalancerConfig {
     id: number;
     nodebalancer_id: number;
     port: number;
@@ -49,5 +58,16 @@ namespace Linode {
     up: number;
     down: number;
     ports: number[];
+  }
+
+  export interface NodeBalancerStats{
+    title: string;
+    data: {
+      connections: [number, number][];
+      traffic: {
+        out: [number, number][];
+        in: [number, number][];
+      }
+    };
   }
 }

@@ -1,8 +1,8 @@
 const { constants } = require('../../../constants');
 
-import VolumeDetail from '../../../pageobjects/linode-detail-volume.page';
+import VolumeDetail from '../../../pageobjects/linode-detail/linode-detail-volume.page';
 import ListLinodes from '../../../pageobjects/list-linodes';
-import LinodeDetail from '../../../pageobjects/linode-detail.page';
+import LinodeDetail from '../../../pageobjects/linode-detail/linode-detail.page';
 
 describe('Edit - Clone - Resize Volumes Suite', () => {
     let volume;
@@ -30,7 +30,7 @@ describe('Edit - Clone - Resize Volumes Suite', () => {
         LinodeDetail.changeTab('Volumes');
         
         VolumeDetail.createVolume(testVolume);
-        browser.waitForVisible('[data-qa-volume-cell]', 25000);
+        browser.waitForVisible('[data-qa-volume-cell]', constants.wait.long);
 
         testVolume['id'] = VolumeDetail.volumeCell[0].getAttribute('data-qa-volume-cell');
         volume = $(`[data-qa-volume-cell="${testVolume.id}"]`);
@@ -42,8 +42,11 @@ describe('Edit - Clone - Resize Volumes Suite', () => {
     });
 
     afterAll(() => {
-        browser.url(constants.routes.linodes);
+        browser.url(constants.routes.volumes);
+        browser.waitForVisible('[data-qa-volume-cell]');
+        VolumeDetail.removeAllVolumes();
 
+        browser.url(constants.routes.linodes);
         ListLinodes.linodeElem.waitForVisible();
         ListLinodes.powerOn(ListLinodes.linode[0]);
     });
@@ -59,11 +62,11 @@ describe('Edit - Clone - Resize Volumes Suite', () => {
 
         VolumeDetail.size.$('input').setValue(newSize);
         VolumeDetail.submit.click();
-        VolumeDetail.drawerTitle.waitForVisible(10000, true);
+        VolumeDetail.drawerTitle.waitForVisible(constants.wait.normal, true);
         
         browser.waitUntil(function() {
             return browser.getText(`[data-qa-volume-cell="${testVolume.id}"] [data-qa-volume-size]`).includes(newSize);
-        }, 10000);
+        }, constants.wait.normal);
     });
 
     it('should clone the volume', () => {
@@ -82,6 +85,7 @@ describe('Edit - Clone - Resize Volumes Suite', () => {
         browser.trySetValue('[data-qa-clone-from] input', 'new-clone');
 
         VolumeDetail.submit.click();
-        VolumeDetail.drawerTitle.waitForVisible(10000, true);
+        VolumeDetail.drawerTitle.waitForVisible(constants.wait.normal, true);
+        browser.waitForVisible('[data-qa-icon-text-link="Attach Existing Volume"]', constants.wait.normal);
     });
 });

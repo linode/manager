@@ -1,3 +1,5 @@
+const { constants } = require('../constants');
+
 import Page from './page';
 
 class SearchBar extends Page {
@@ -40,12 +42,12 @@ class SearchBar extends Page {
         browser.waitForVisible('[data-qa-suggestion]');
 
         suggestion.click();
-        browser.waitForVisible('[data-qa-circle-progress]', 15000, true);
+        browser.waitForVisible('[data-qa-circle-progress]', constants.wait.normal, true);
     }
 
     selectByKeyDown() {
         this.searchInput.setValue('\uE015');
-        const selected = this.suggestions[0].getAttribute('class').includes('selected');
+        const selected = this.suggestions[0].hasFocus();
         expect(selected).toBe(true);
     }
 }

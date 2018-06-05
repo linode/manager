@@ -196,6 +196,7 @@ class PrimaryNav extends React.Component<Props> {
         key={PrimaryLink.display}
         button
         divider
+        focusRipple={true}
         onClick={() => this.navigate(PrimaryLink.href)}
         className={`
           ${classes.listItem}

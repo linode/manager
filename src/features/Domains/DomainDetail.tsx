@@ -152,12 +152,12 @@ class DomainDetail extends React.Component<CombinedProps, State> {
         <Grid container justify="space-between">
           <Grid item className={classes.titleWrapper}>
             <IconButton
-              onClick={() => history.goBack()}
+              onClick={() => history.push('/domains')}
               className={classes.backButton}
             >
               <KeyboardArrowLeft />
             </IconButton>
-            <Typography variant="headline">{domain.domain}</Typography>
+            <Typography variant="headline" data-qa-domain-title>{domain.domain}</Typography>
           </Grid>
         </Grid>
         <AppBar position="static" color="default">

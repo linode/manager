@@ -1,4 +1,6 @@
-import Page from './page';
+const { constants } = require('../../constants');
+
+import Page from '../page';
 
 class Networking extends Page {
     get heading() { return $('[data-qa-title]'); }
@@ -132,7 +134,7 @@ class Networking extends Page {
         browser.click(`[data-qa-ip="${ip}"] [data-qa-action-menu]`);
         browser.waitForVisible(menuItem);
         browser.click(menuItem)
-        browser.waitForVisible(menuItem, 10000, true);
+        browser.waitForVisible(menuItem, constants.wait.normal, true);
     }
 
     editRdns(ip) {

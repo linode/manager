@@ -9,6 +9,14 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
+@media screen and (min-width: 960px) {
+  html {
+    /* fix for scrollbar compoensation */
+    width: 100vw;
+    overflow-x: hidden;
+  }
+}
+
 body {
   height: 100%;
   margin: 0;
@@ -38,6 +46,11 @@ a {
   text-decoration: none;
   color: #3B85D9;
 }
+
+:focus {
+  outline: 1px dotted #999;
+}
+
 /* Scrollbars (webkit only) */
 /* ::-webkit-scrollbar {
   width: 6px;

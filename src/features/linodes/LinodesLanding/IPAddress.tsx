@@ -121,7 +121,10 @@ class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
 
   render() {
     const { classes, ips, copyRight } = this.props;
-    const formattedIPS = ips.map(ip => ip.replace('/64', ''));
+    const privateIPRegex = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/;
+    const formattedIPS = ips
+      .map(ip => ip.replace('/64', ''))
+      .sort(ip => !!ip.match(privateIPRegex) ? 1 : 0);
 
     return (
       <div className={`dif ${classes.root}`}>

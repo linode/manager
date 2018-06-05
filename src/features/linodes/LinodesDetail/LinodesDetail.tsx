@@ -3,11 +3,13 @@ import { pathEq, pathOr, filter, has, allPass } from 'ramda';
 import * as moment from 'moment';
 
 import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
-import { matchPath, Route, Switch, RouteComponentProps, Redirect } from 'react-router-dom';
+import { matchPath, Route, Switch, RouteComponentProps, Redirect, Link } from 'react-router-dom';
 import { Location } from 'history';
 import { Subscription, Observable } from 'rxjs/Rx';
 import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
+import IconButton from 'material-ui/IconButton';
+import KeyboardArrowLeft from 'material-ui-icons/KeyboardArrowLeft';
 import Button from 'material-ui/Button';
 
 import notifications$ from 'src/notifications';
@@ -81,10 +83,23 @@ interface PreloadedProps {
   data: PromiseLoaderResponse<Data>;
 }
 
-type ClassNames = 'cta'
+type ClassNames = 'titleWrapper'
+  | 'backButton'
+  | 'cta'
   | 'launchButton';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+  titleWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  backButton: {
+    margin: '2px 0 0 -16px',
+    '& svg': {
+      width: 34,
+      height: 34,
+    },
+  },
   cta: {
     marginTop: theme.spacing.unit,
     [theme.breakpoints.down('sm')]: {
@@ -155,6 +170,7 @@ const preloaded = PromiseLoader<CombinedProps>({
 
 class LinodeDetail extends React.Component<CombinedProps, State> {
   eventsSubscription: Subscription;
+  volumeEventsSubscription: Subscription;
   notificationsSubscription: Subscription;
   mounted: boolean = false;
 
@@ -193,6 +209,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     this.mounted = false;
     this.eventsSubscription.unsubscribe();
     this.notificationsSubscription.unsubscribe();
+    this.volumeEventsSubscription.unsubscribe();
   }
 
   componentDidMount() {
@@ -207,6 +224,24 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
         requestAllTheThings(linodeId!)
           .then(({ linode, image, volumes, configs, disks }) => {
             this.setState({ linode, image, volumes, configs, disks });
+          });
+      });
+
+    this.volumeEventsSubscription = events$
+      .filter(e => [
+        'volume_attach',
+        'volume_clone',
+        'volume_create',
+        'volume_delete',
+        'volume_detach',
+        'volume_resize',
+      ].includes(e.action))
+      .filter(e => !e._initial)
+      .subscribe((v) => {
+        const { match: { params: { linodeId } } } = this.props;
+        getLinodeVolumes(linodeId!)
+          .then((response) => {
+            this.setState({ volumes: response.data });
           });
       });
 
@@ -318,15 +353,22 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
           container
           justify="space-between"
         >
-          <Grid item style={{ flex: 1 }}>
-            <EditableText
-              variant="headline"
-              text={labelInput.label}
-              errorText={labelInput.errorText}
-              onEdit={this.updateLabel}
-              onCancel={this.cancelUpdate}
-              data-qa-label
-            />
+          <Grid item className={classes.titleWrapper}>
+            <Link to={`/linodes`}>
+              <IconButton
+                className={classes.backButton}
+              >
+                <KeyboardArrowLeft />
+              </IconButton>
+            </Link>
+              <EditableText
+                variant="headline"
+                text={labelInput.label}
+                errorText={labelInput.errorText}
+                onEdit={this.updateLabel}
+                onCancel={this.cancelUpdate}
+                data-qa-label
+              />
           </Grid>
           <Grid item className={classes.cta}>
             <Button

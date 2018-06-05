@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as classNames from 'classnames';
 
 import {
   withStyles,
@@ -7,29 +8,37 @@ import {
   WithStyles,
 } from 'material-ui';
 
-import {
-  ExpansionPanelActions,
-  ExpansionPanelActionsProps,
-} from 'material-ui/ExpansionPanel';
-
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {},
+  root: {
+    paddingTop: 16,
+    paddingBottom: 16,
+    '& > :not(:first-child)': {
+      marginLeft: 8,
+    },
+  },
 });
 
-interface Props extends ExpansionPanelActionsProps {}
+interface Props {
+  className?: string;
+  style?: any;
+}
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const ActionPanel: React.StatelessComponent<CombinedProps> = (props) => {
+  const { classes, className } = props;
+
   return (
-    <ExpansionPanelActions
-      className={`${props.classes.root} actionPanel`}
-      {...props}
+    <div className={classNames({
+      [classes.root]: true,
+      ...(className && { [className]: true }),
+      actionPanel: true,
+    })}
     >
       { props.children }
-    </ExpansionPanelActions>
+    </div>
   );
 };
 

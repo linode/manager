@@ -1,8 +1,8 @@
 const { constants } = require('../../../constants');
 
-import VolumeDetail from '../../../pageobjects/linode-detail-volume.page';
+import VolumeDetail from '../../../pageobjects/linode-detail/linode-detail-volume.page';
 import ListLinodes from '../../../pageobjects/list-linodes';
-import LinodeDetail from '../../../pageobjects/linode-detail.page';
+import LinodeDetail from '../../../pageobjects/linode-detail/linode-detail.page';
 
 describe('Linode - Volumes - Attach, Detach, Delete Suite', () => {
     let linodeName;
@@ -16,12 +16,13 @@ describe('Linode - Volumes - Attach, Detach, Delete Suite', () => {
         browser.url(constants.routes.linodes);
         ListLinodes.linodeElem.waitForVisible();
         linodeName = ListLinodes.linode[0].$(ListLinodes.linodeLabel.selector).getText();
+        ListLinodes.powerOff(ListLinodes.linode[0]);
         ListLinodes.linode[0].$(ListLinodes.linodeLabel.selector).click();
         LinodeDetail.landingElemsDisplay();
         LinodeDetail.changeTab('Volumes');
         
         VolumeDetail.createVolume(testVolume);
-        browser.waitForVisible('[data-qa-volume-cell]', 25000);
+        browser.waitForVisible('[data-qa-volume-cell]', constants.wait.long);
     });
 
     it('should display detach linode dialog', () => {
@@ -34,7 +35,6 @@ describe('Linode - Volumes - Attach, Detach, Delete Suite', () => {
 
     it('should detach the volume', () => {
         VolumeDetail.detachConfirm(testVolume.id);
-
         if (VolumeDetail.placeholderText.isVisible()) {
             const placeholderMsg = VolumeDetail.placeholderText.getText();
             const expectedMsg = 'No volumes attached';

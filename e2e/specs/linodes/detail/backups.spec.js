@@ -1,10 +1,10 @@
 const { constants } = require('../../../constants');
 
 import { createGenericLinode, deleteLinode }  from '../../../utils/common';
-import Backups from '../../../pageobjects/linode-detail-backups.page';
+import Backups from '../../../pageobjects/linode-detail/linode-detail-backups.page';
 import ListLinodes from '../../../pageobjects/list-linodes';
-import LinodeDetail from '../../../pageobjects/linode-detail.page';
-import Settings from '../../../pageobjects/linode-detail-settings.page';
+import LinodeDetail from '../../../pageobjects/linode-detail/linode-detail.page';
+import Settings from '../../../pageobjects/linode-detail/linode-detail-settings.page';
 
 
 describe('Linode Detail - Backups Suite', () => {
@@ -42,7 +42,7 @@ describe('Linode Detail - Backups Suite', () => {
 
         const toastMsg = 'Snapshot label must be a string of 1 to 255 characters';
         Backups.toastDisplays(toastMsg);
-        browser.waitForExist('[data-qa-toast]', 5000, true);
+        browser.waitForExist('[data-qa-toast]', constants.wait.short, true);
     });
 
     it('should cancel backups', () => {
