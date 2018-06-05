@@ -66,7 +66,7 @@ export const createNodeBalancerConfigSchema = Joi.object({
   check_path: Joi.string()
     .when('check', { is: 'http', then: Joi.required() })
     .when('check', { is: 'http_body', then: Joi.required() }),
-  check_timeout: Joi.number(),
+  check_timeout: Joi.number().integer().min(1).max(65535),
   check: Joi.string(),
   cipher_suite: Joi.string(),
   port: Joi.number(),
@@ -83,6 +83,21 @@ export const createNodeBalancerConfig = (nodeBalancerId: number, data: any) =>
     setMethod('POST'),
     setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs`),
     setData(data),
+  )
+    .then(response => response.data);
+
+export const updateNodeBalancerConfig = (nodeBalancerId: number, configId: number, data: any) =>
+  Request<Linode.NodeBalancerConfig>(
+    setMethod('PUT'),
+    setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}`),
+    setData(data),
+  )
+    .then(response => response.data);
+
+export const deleteNodeBalancerConfig = (nodeBalancerId: number, configId: number) =>
+  Request<{}>(
+    setMethod('DELETE'),
+    setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}`),
   )
     .then(response => response.data);
 

@@ -33,7 +33,7 @@ namespace Linode {
     mode?: NodeBalancerConfigNodeMode;
   }
 
-  export interface NodeBalancerConfig{
+  export interface NodeBalancerConfig {
     id: number;
     nodebalancer_id: number;
     port: number;
