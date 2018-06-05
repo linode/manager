@@ -13,7 +13,7 @@ type StackScript = Linode.StackScript.Response;
 
 export const getStackscripts = (params?: any, filter?: any) =>
   Request<Page<StackScript>>(
-    setURL(`${API_ROOT}/stackscripts`),
+    setURL(`${API_ROOT}/linode/stackscripts`),
     setMethod('GET'),
     setParams(params),
     setXFilter(filter),
