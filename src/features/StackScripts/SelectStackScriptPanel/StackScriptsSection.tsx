@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
 import SelectionRow from 'src/components/SelectionRow';
+import { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
@@ -8,33 +9,46 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 });
 
 export interface Props {
-  stackScripts: Linode.StackScript.Response[];
   onSelect: (id: number) => void;
   selectedId?: number;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+interface PreloadedProps {
+  stackScripts: PromiseLoaderResponse<Linode.StackScript.Response[]>;
+}
+
+type CombinedProps = Props & PreloadedProps & WithStyles<ClassNames>;
 
 const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => {
-  const { stackScripts, onSelect, selectedId } = props;
+  const {
+    stackScripts: { response: stackScripts },
+    onSelect,
+    selectedId,
+  } = props;
+
   return (
     <React.Fragment>
       {
-        stackScripts.map((s: Linode.StackScript.Response) => (
-          <SelectionRow
-            label={s.label}
-            description={s.description}
-            images={s.images}
-            deploymentsActive={s.deployments_active}
-            updated={s.updated}
-            onSelect={() => onSelect(s.id)}
-            checked={selectedId === s.id}
-          />
-        ))
+        stackScripts && stackScripts.map(stackScript(onSelect, selectedId))
       }
     </React.Fragment>
   );
 };
+
+const stackScript: (fn: (id: number) => void, id?: number) =>
+  (s: Linode.StackScript.Response) => JSX.Element =
+  (onSelect, selectedId) => s => (
+    <SelectionRow
+      key={s.id}
+      label={s.label}
+      description={s.description}
+      images={s.images}
+      deploymentsActive={s.deployments_active}
+      updated={s.updated}
+      onSelect={() => onSelect(s.id)}
+      checked={selectedId === s.id}
+    />
+  );
 
 const styled = withStyles(styles, { withTheme: true });
 
