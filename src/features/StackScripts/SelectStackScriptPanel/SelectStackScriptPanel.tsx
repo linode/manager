@@ -1,14 +1,10 @@
 import * as React from 'react';
 import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
-import {
-  getMyStackscripts,
-  getCommunityStackscripts,
-  getLinodeStackscripts,
-} from 'src/services/stackscripts';
+import { getStackscripts } from 'src/services/stackscripts';
 import TabbedPanel from 'src/components/TabbedPanel';
-import PromiseLoader from 'src/components/PromiseLoader';
 
-import StackScriptsSection, { Props as StackScriptsSectionProps } from './StackScriptsSection';
+import StackScriptsSection from './StackScriptsSection';
+import CircleProgress from 'src/components/CircleProgress';
 
 export interface ExtendedLinode extends Linode.Linode {
   heading: string;
@@ -39,7 +35,7 @@ type CombinedProps = StyledProps;
 class SelectLinodePanel extends React.Component<CombinedProps> {
 
   render() {
-    const { classes, onSelect, selectedId } = this.props;
+    const { classes } = this.props;
 
     return (
       <TabbedPanel
@@ -49,24 +45,15 @@ class SelectLinodePanel extends React.Component<CombinedProps> {
         tabs={[
           {
             title: 'My StackScripts',
-            render: () => <MyStackScripts
-              onSelect={onSelect}
-              selectedId={selectedId}
-            />,
+            render: () => <Container request={getStackscripts} key={0} />,
           },
           {
             title: 'Linode StackScripts',
-            render: () => <LinodeStackScripts
-              onSelect={onSelect}
-              selectedId={selectedId}
-            />,
+            render: () => <Container request={getStackscripts} key={1} />,
           },
           {
             title: 'Community StackScripts',
-            render: () => <CommunityStackScripts
-              onSelect={onSelect}
-              selectedId={selectedId}
-            />,
+            render: () => <Container request={getStackscripts} key={2} />,
           },
         ]}
       />
@@ -74,17 +61,57 @@ class SelectLinodePanel extends React.Component<CombinedProps> {
   }
 }
 
-const MyStackScripts = PromiseLoader<StackScriptsSectionProps>({
-  stackScripts: () => getMyStackscripts(),
-})(StackScriptsSection);
+interface ContainerProps {
+  request: (page: number) => Promise<Linode.ResourcePage<Linode.StackScript.Response>>;
+}
 
-const LinodeStackScripts = PromiseLoader<StackScriptsSectionProps>({
-  stackScripts: () => getLinodeStackscripts(),
-})(StackScriptsSection);
+interface ContainerState {
+  currentPage: number;
+  selected?: number;
+  loading?: boolean;
+  data?: any;
+}
 
-const CommunityStackScripts = PromiseLoader<StackScriptsSectionProps>({
-  stackScripts: () => getCommunityStackscripts('##username here##'),
-})(StackScriptsSection);
+class Container extends React.Component<ContainerProps, ContainerState> {
+  state: ContainerState = {
+    currentPage: 0,
+    loading: true,
+  };
+
+  getDataAtPage = (page: number) => {
+    const { request } = this.props;
+
+    request(0)
+      .then(response => this.setState({ data: response.data, loading: false }))
+      .catch();
+  }
+
+  componentDidMount() {
+    this.getDataAtPage(0);
+  }
+
+  getNext = () => {
+    this.setState(
+      { currentPage: this.state.currentPage + 1 },
+      () => this.getDataAtPage(this.state.currentPage),
+    );
+  }
+
+  render() {
+    if (this.state.loading) {
+      return <CircleProgress />;
+    }
+
+    return (
+      <StackScriptsSection
+        onSelect={id => this.setState({ selected: id })}
+        selectedId={this.state.selected}
+        data={this.state.data}
+        getNext={() => this.getNext()}
+      />
+    );
+  }
+}
 
 const styled = withStyles(styles, { withTheme: true });
 

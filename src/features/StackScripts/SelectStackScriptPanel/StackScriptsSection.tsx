@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
 import SelectionRow from 'src/components/SelectionRow';
-import { PromiseLoaderResponse } from 'src/components/PromiseLoader';
+
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
@@ -11,27 +11,25 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 export interface Props {
   onSelect: (id: number) => void;
   selectedId?: number;
+  data: Linode.StackScript.Response[];
+  getNext: () => void;
 }
 
-interface PreloadedProps {
-  stackScripts: PromiseLoaderResponse<Linode.StackScript.Response[]>;
-}
-
-type CombinedProps = Props & PreloadedProps & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => {
   const {
-    stackScripts: { response: stackScripts },
     onSelect,
     selectedId,
+    data,
   } = props;
 
   return (
-    <React.Fragment>
+    <div>
       {
-        stackScripts && stackScripts.map(stackScript(onSelect, selectedId))
+        data && data.map(stackScript(onSelect, selectedId))
       }
-    </React.Fragment>
+    </div>
   );
 };
 
