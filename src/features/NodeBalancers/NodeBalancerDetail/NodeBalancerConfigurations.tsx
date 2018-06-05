@@ -19,6 +19,8 @@ import {
   filter,
   set,
   view,
+  over,
+  map,
 } from 'ramda';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 
@@ -32,6 +34,7 @@ import {
   createNodeBalancerConfigNodeSchema,
   getNodeBalancerConfigNodes,
   createNodeBalancerConfigNode,
+  deleteNodeBalancerConfigNode,
 } from 'src/services/nodebalancers';
 import Button from 'src/components/Button';
 // import IconTextLink from 'src/components/IconTextLink';
@@ -273,6 +276,37 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       });
   }
 
+  spliceNodeErrors = (configIdx: number, nodeIdx: number) => {
+    /**
+     * This function removes errors for one Node in an errors array for a NodeBalancer Config
+     * 1. It removes any errors with the matching nodes_${idx} prefix.
+     * 2. It modifies the field string for all nodes errors that need their nodes_${idx} shifted
+     * back by one.
+     * @todo: use this for config creation as well, errors get mis-mapped after
+     *    validation then deleting an invalid node
+     */
+    const fieldPrefix = `nodes_${nodeIdx}_`;
+    this.setState(
+      set(
+        lensPath(['configErrors', configIdx]),
+        compose<any, any, any>(
+          map((error: Linode.ApiFieldError) => {
+            // parse index from the field name
+            const match = /nodes_(\d+)_(.+)/.exec(error.field);
+            if (match && match[1] && match[2] && (+match[1] > nodeIdx)) {
+              error.field = `nodes_${+match[1] - 1}_${match[2]}`;
+              return error;
+            }
+            return error;
+          }),
+          filter<Linode.ApiFieldError>(el =>
+            Boolean(el.field) && !el.field.startsWith(fieldPrefix),
+          ),
+        )(pathOr([], ['configErrors', configIdx], this.state)),
+      ),
+    );
+  }
+
   updateNodeErrors = (configIdx: number, nodeIdx: number, errors: Linode.ApiFieldError[]) => {
     const fieldPrefix = `nodes_${nodeIdx}_`;
     this.setState(
@@ -290,6 +324,23 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         )(pathOr([], ['configErrors', configIdx], this.state)),
       ),
     );
+  }
+
+  removeNode = (configIdx: number) => (nodeIdx: number) => {
+    const { match: { params: { nodeBalancerId } } } = this.props;
+    const config = this.state.configs[configIdx];
+    const nodes = this.state.configs[configIdx].nodes;
+    const node = nodes[nodeIdx];
+    deleteNodeBalancerConfigNode(nodeBalancerId!, config!.id, node!.id!)
+      .then(() => {
+        this.setState(
+          over(
+            lensPath(['configs', configIdx, 'nodes']),
+            nodes => nodes.filter((n: any, idx: number) => idx !== nodeIdx),
+          ),
+        );
+        this.spliceNodeErrors(configIdx, nodeIdx);
+      });
   }
 
   addNode = (configIdx: number, nodeIdx: number) => {
@@ -505,8 +556,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
               addNode={(nodeIdx: number) =>
                 this.addNode(idx, nodeIdx)}
 
-              // removeNode={this.removeNodeBalancerConfigNode(idx)}
-              removeNode={() => undefined}
+              removeNode={this.removeNode(idx)}
 
               onUpdateNode={(nodeIndex: number) =>
                 this.updateNode(idx, nodeIndex)}

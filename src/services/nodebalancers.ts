@@ -55,6 +55,17 @@ export const createNodeBalancerConfigNode = (
   )
     .then(response => response.data);
 
+export const deleteNodeBalancerConfigNode = (
+  nodeBalancerId: number,
+  configId: number,
+  nodeId: number,
+) =>
+  Request<Linode.NodeBalancerConfigNode>(
+    setMethod('DELETE'),
+    setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes/${nodeId}`),
+  )
+    .then(response => response.data);
+
 export const getNodeBalancerConfigNodes = (
   nodeBalancerId: number,
   configId: number,
