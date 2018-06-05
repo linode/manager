@@ -4,8 +4,6 @@ import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { StickyContainer, Sticky, StickyProps } from 'react-sticky';
 
-import * as Promise from 'bluebird';
-
 import { withStyles, WithStyles, Theme, StyleRules } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
 import AppBar from 'material-ui/AppBar';
@@ -18,7 +16,6 @@ import {
   allocatePrivateIP,
   getLinodes,
   cloneLinode,
-  getLinodeBackups,
 } from 'src/services/linodes';
 import { getImages } from 'src/services/images';
 
@@ -110,9 +107,6 @@ interface QueryStringOptions {
   linodeID: string;
 }
 
-// const linodesWithBackups = (linodes: Linode.Linode[]) =>
-//   linodes.filter(linode => linode.backups.enabled);
-
 const preloaded = PromiseLoader<Props>({
   linodes: () => getLinodes()
     /*
@@ -177,7 +171,6 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       parseQueryParams(search.replace('?', '')) as QueryStringOptions;
     if (options.type === 'fromBackup') {
       this.setState({ selectedTab: this.backupTabIndex });
-      this.getLinodesWithBackups(this.props.linodes.response);
     }
 
     if (options.linodeID) {
@@ -204,9 +197,6 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       errors: undefined,
       label: '',
     });
-    if (value === this.backupTabIndex) {
-      this.getLinodesWithBackups(this.props.linodes.response);
-    }
   }
 
   resetSelections = () => {
@@ -220,22 +210,6 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
   // ensure we're only allowed to update state that exists in this component
   updateState = (key: keyof Partial<State>, value: any) => {
     this.setState({ [key]: value });
-  }
-
-  getLinodesWithBackups = (linodes: Linode.Linode[]) => {
-    this.setState({ isGettingBackups: true });
-    return Promise.map(linodes.filter(l => l.backups.enabled), (linode: Linode.Linode) => {
-      return getLinodeBackups(linode.id)
-        .then((backups) => {
-          return {
-            ...linode,
-            currentBackups: {
-              ...backups,
-            },
-          };
-        });
-    }).then(data => this.setState({ linodesWithBackups: data, isGettingBackups: false }))
-      .catch(err => this.setState({ isGettingBackups: false }));
   }
 
   getBackupsMonthlyPrice = (): number | null => {
@@ -328,9 +302,17 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     {
       title: 'Create from Backup',
       render: () => {
+        // const hasErrorFor = getAPIErrorsFor(errorResources, this.state.errors);
+        // const generalError = hasErrorFor('none');
         return (
           <React.Fragment>
             <FromBackupsContent
+              notice={{
+                level: 'warning',
+                text: `This newly created Linode wil be created with
+                the same password as the original Linode`,
+              }}
+              errors={this.state.errors}
               updateFormState={this.updateState}
               selectedLinodeID={this.state.selectedLinodeID}
               selectedBackupID={this.state.selectedBackupID}
