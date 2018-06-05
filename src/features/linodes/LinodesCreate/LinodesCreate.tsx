@@ -20,18 +20,14 @@ import {
 import { getImages } from 'src/services/images';
 
 import Grid from 'src/components/Grid';
-import Notice from 'src/components/Notice';
 import PromiseLoader from 'src/components/PromiseLoader';
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import FromBackupsContent from './TabbedContent/FromBackupsContent';
+import FromImageContent from './TabbedContent/FromImageContent';
+import FromLinodeContent from './TabbedContent/FromLinodeContent';
 
-
-import SelectLinodePanel, { ExtendedLinode } from './SelectLinodePanel';
-import SelectImagePanel from './SelectImagePanel';
-import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
-import SelectPlanPanel, { ExtendedType } from './SelectPlanPanel';
-import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
-import PasswordPanel from './PasswordPanel';
+import { ExtendedLinode } from './SelectLinodePanel';
+import { ExtendedRegion } from 'src/components/SelectRegionPanel';
+import { ExtendedType } from './SelectPlanPanel';
 import { typeLabelDetails, displayType } from '../presentation';
 import CheckoutBar from 'src/components/CheckoutBar';
 import { resetEventsPolling } from 'src/events';
@@ -118,13 +114,6 @@ const preloaded = PromiseLoader<Props>({
   images: () => getImages()
     .then(response => response.data || []),
 });
-
-const errorResources = {
-  type: 'A plan selection',
-  region: 'A region selection',
-  label: 'A label',
-  root_pass: 'A root password',
-};
 
 const formatLinodeSubheading = (typeInfo: string, imageInfo: string) => {
   const subheading = imageInfo
@@ -251,11 +240,26 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     {
       title: 'Create from Image',
       render: () => {
-        const hasErrorFor = getAPIErrorsFor(errorResources, this.state.errors);
-        const generalError = hasErrorFor('none');
+        // const hasErrorFor = getAPIErrorsFor(errorResources, this.state.errors);
+        // const generalError = hasErrorFor('none');
         return (
           <React.Fragment>
-            {generalError &&
+            <FromImageContent
+              errors={this.state.errors}
+              updateFormState={this.updateState}
+              getBackupsMonthlyPrice={this.getBackupsMonthlyPrice}
+              regions={this.props.regions}
+              images={this.props.images.response}
+              types={this.props.types}
+              backups={this.state.backups}
+              privateIP={this.state.privateIP}
+              label={this.state.label}
+              password={this.state.password}
+              selectedRegionID={this.state.selectedRegionID}
+              selectedImageID={this.state.selectedImageID}
+              selectedTypeID={this.state.selectedTypeID}
+            />
+            {/* {generalError &&
               <Notice text={generalError} error={true} />
             }
             <SelectImagePanel
@@ -289,7 +293,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
               password={this.state.password}
               handleChange={v => this.setState({ password: v })}
             />
-            {/* <AddonsPanel
+            <AddonsPanel
               backups={this.state.backups}
               backupsMonthly={this.getBackupsMonthlyPrice()}
               privateIP={this.state.privateIP}
@@ -333,11 +337,33 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     {
       title: 'Clone From Existing',
       render: () => {
-        const hasErrorFor = getAPIErrorsFor(errorResources, this.state.errors);
-        const generalError = hasErrorFor('none');
+        // const hasErrorFor = getAPIErrorsFor(errorResources, this.state.errors);
+        // const generalError = hasErrorFor('none');
         return (
           <React.Fragment>
-            {generalError &&
+            <FromLinodeContent
+              notice={{
+                level: 'warning',
+                text: `This newly created Linode wil be created with
+                            the same password as the original Linode`,
+              }}
+              errors={this.state.errors}
+              updateFormState={this.updateState}
+              getBackupsMonthlyPrice={this.getBackupsMonthlyPrice}
+              regions={this.props.regions}
+              images={this.props.images.response}
+              types={this.props.types}
+              backups={this.state.backups}
+              linodes={this.props.linodes.response}
+              privateIP={this.state.privateIP}
+              label={this.state.label}
+              selectedRegionID={this.state.selectedRegionID}
+              selectedTypeID={this.state.selectedTypeID}
+              selectedLinodeID={this.state.selectedLinodeID}
+              selectedDiskSize={this.state.selectedDiskSize}
+              extendLinodes={this.extendLinodes}
+            />
+            {/* {generalError &&
               <Notice text={generalError} error={true} />
             }
             <Notice text={`This newly created Linode wil be created with
@@ -377,7 +403,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
                 }}
               />
             </React.Fragment>
-            {/* <AddonsPanel
+            <AddonsPanel
               backups={this.state.backups}
               backupsMonthly={this.getBackupsMonthlyPrice()}
               privateIP={this.state.privateIP}
@@ -600,17 +626,17 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
               >
                 {
                   this.tabs.map((tab, idx) =>
-                  <Tab
-                    key={idx}
-                    label={tab.title}
-                    data-qa-create-from={tab.title}
-                  />)
+                    <Tab
+                      key={idx}
+                      label={tab.title}
+                      data-qa-create-from={tab.title}
+                    />)
                 }
               </Tabs>
             </AppBar>
             {tabRender()}
           </Grid>
-          {!this.state.userHasBackups
+          {selectedTab === this.backupTabIndex && !this.state.userHasBackups
             ? <React.Fragment />
             : <Grid item className={`${classes.sidebar} mlSidebar`}>
               <Sticky
