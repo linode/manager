@@ -62,7 +62,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props {}
+interface Props { }
 
 type MatchProps = { nodeBalancerId?: number };
 type RouteProps = RouteComponentProps<MatchProps>;
@@ -118,7 +118,7 @@ const getConfigsWithNodes = (nodeBalancerId: number) => {
           };
         });
     })
-    .catch(e => []);
+      .catch(e => []);
   });
 };
 
@@ -334,10 +334,16 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
   removeNode = (configIdx: number) => (nodeIdx: number) => {
     const { match: { params: { nodeBalancerId } } } = this.props;
-    const config = this.state.configs[configIdx];
     const nodes = this.state.configs[configIdx].nodes;
-    const node = nodes[nodeIdx];
-    deleteNodeBalancerConfigNode(nodeBalancerId!, config!.id, node!.id!)
+    const { id: configId } = this.state.configs[configIdx];
+    const { id: nodeId } = nodes[nodeIdx];
+
+    if (!configId || !nodeId) {
+      console.error(`Config ${configId} or Node ${nodeId} id not set.`);
+      return;
+    }
+
+    deleteNodeBalancerConfigNode(nodeBalancerId!, configId, nodeId)
       .then(() => {
         this.setState(
           over(
@@ -522,8 +528,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     configErrors: any[],
     configSubmitting: any[],
   ) => (
-    config: Linode.NodeBalancerConfig & { nodes: Linode.NodeBalancerConfigNode[] },
-    idx: number,
+    config: Linode.NodeBalancerConfig & { nodes: Linode.NodeBalancerConfigNode[] }, idx: number,
     ) => {
     const lensTo = lensFrom(['configs', idx]);
 
@@ -542,79 +547,79 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     const privateKeyLens = lensTo(['ssl_key']);
 
     return <ExpansionPanel
-      key={idx}
-      defaultExpanded={true}
-      heading={`Port ${config.port}`}
-      success={panelMessages[idx]}
-    >
-      <NodeBalancerConfigPanel
-        forEdit
-        onSave={this.onSaveConfig(idx)}
-        onCancel={this.onCancelEditingConfig(idx)}
-        submitting={configSubmitting[idx]}
-        onDelete={this.onDeleteConfig(config.id)}
+        key={idx}
+        defaultExpanded={true}
+        heading={`Port ${config.port}`}
+        success={panelMessages[idx]}
+      >
+        <NodeBalancerConfigPanel
+          forEdit
+          onSave={this.onSaveConfig(idx)}
+          onCancel={this.onCancelEditingConfig(idx)}
+          submitting={configSubmitting[idx]}
+          onDelete={this.onDeleteConfig(config.id)}
 
-        errors={configErrors[idx]}
+          errors={configErrors[idx]}
 
-        algorithm={defaultTo('roundrobin', view(algorithmLens, this.state))}
-        onAlgorithmChange={this.updateState(algorithmLens)}
+          algorithm={defaultTo('roundrobin', view(algorithmLens, this.state))}
+          onAlgorithmChange={this.updateState(algorithmLens)}
 
-        checkPassive={defaultTo(true, view(checkPassiveLens, this.state))}
-        onCheckPassiveChange={this.updateState(checkPassiveLens)}
+          checkPassive={defaultTo(true, view(checkPassiveLens, this.state))}
+          onCheckPassiveChange={this.updateState(checkPassiveLens)}
 
-        checkBody={defaultTo('', view(checkBodyLens, this.state))}
-        onCheckBodyChange={this.updateState(checkBodyLens)}
+          checkBody={defaultTo('', view(checkBodyLens, this.state))}
+          onCheckBodyChange={this.updateState(checkBodyLens)}
 
-        checkPath={defaultTo('', view(checkPathLens, this.state))}
-        onCheckPathChange={this.updateState(checkPathLens)}
+          checkPath={defaultTo('', view(checkPathLens, this.state))}
+          onCheckPathChange={this.updateState(checkPathLens)}
 
-        port={defaultTo(80, view(portLens, this.state))}
-        onPortChange={this.updateState(portLens)}
+          port={defaultTo(80, view(portLens, this.state))}
+          onPortChange={this.updateState(portLens)}
 
-        protocol={defaultTo('http', view(protocolLens, this.state))}
-        onProtocolChange={this.updateState(protocolLens)}
+          protocol={defaultTo('http', view(protocolLens, this.state))}
+          onProtocolChange={this.updateState(protocolLens)}
 
-        healthCheckType={defaultTo('connection', view(healthCheckTypeLens, this.state))}
-        onHealthCheckTypeChange={this.updateState(healthCheckTypeLens)}
+          healthCheckType={defaultTo('connection', view(healthCheckTypeLens, this.state))}
+          onHealthCheckTypeChange={this.updateState(healthCheckTypeLens)}
 
-        healthCheckAttempts={defaultTo(2, view(healthCheckAttemptsLens, this.state))}
-        onHealthCheckAttemptsChange={this.updateState(healthCheckAttemptsLens)}
+          healthCheckAttempts={defaultTo(2, view(healthCheckAttemptsLens, this.state))}
+          onHealthCheckAttemptsChange={this.updateState(healthCheckAttemptsLens)}
 
-        healthCheckInterval={defaultTo(5, view(healthCheckIntervalLens, this.state))}
-        onHealthCheckIntervalChange={this.updateState(healthCheckIntervalLens)}
+          healthCheckInterval={defaultTo(5, view(healthCheckIntervalLens, this.state))}
+          onHealthCheckIntervalChange={this.updateState(healthCheckIntervalLens)}
 
-        healthCheckTimeout={defaultTo(3, view(healthCheckTimeoutLens, this.state))}
-        onHealthCheckTimeoutChange={this.updateState(healthCheckTimeoutLens)}
+          healthCheckTimeout={defaultTo(3, view(healthCheckTimeoutLens, this.state))}
+          onHealthCheckTimeoutChange={this.updateState(healthCheckTimeoutLens)}
 
-        sessionStickiness={defaultTo('table', view(sessionStickinessLens, this.state))}
-        onSessionStickinessChange={this.updateState(sessionStickinessLens)}
+          sessionStickiness={defaultTo('table', view(sessionStickinessLens, this.state))}
+          onSessionStickinessChange={this.updateState(sessionStickinessLens)}
 
-        sslCertificate={defaultTo('', view(sslCertificateLens, this.state))}
-        onSslCertificateChange={this.updateState(sslCertificateLens)}
+          sslCertificate={defaultTo('', view(sslCertificateLens, this.state))}
+          onSslCertificateChange={this.updateState(sslCertificateLens)}
 
-        privateKey={defaultTo('', view(privateKeyLens, this.state))}
-        onPrivateKeyChange={this.updateState(privateKeyLens)}
+          privateKey={defaultTo('', view(privateKeyLens, this.state))}
+          onPrivateKeyChange={this.updateState(privateKeyLens)}
 
-        nodes={config.nodes}
+          nodes={config.nodes}
 
-        addNode={this.addNode(idx)}
+          addNode={this.addNode(idx)}
 
-        removeNode={this.removeNode(idx)}
+          removeNode={this.removeNode(idx)}
 
-        onUpdateNode={this.onUpdateNode(idx)}
+          onUpdateNode={this.onUpdateNode(idx)}
 
-        onNodeLabelChange={this.onNodeLabelChange(idx)}
+          onNodeLabelChange={this.onNodeLabelChange(idx)}
 
-        onNodeAddressChange={this.onNodeAddressChange(idx)}
+          onNodeAddressChange={this.onNodeAddressChange(idx)}
 
-        onNodeWeightChange={this.onNodeWeightChange(idx)}
+          onNodeWeightChange={this.onNodeWeightChange(idx)}
 
-        onNodeModeChange={this.onNodeModeChange(idx)}
-      />
-    </ExpansionPanel>;
+          onNodeModeChange={this.onNodeModeChange(idx)}
+        />
+      </ExpansionPanel>;
   }
 
-  renderConfirmationActions = ({ onClose }: { onClose: () => void}) => (
+  renderConfirmationActions = ({ onClose }: { onClose: () => void }) => (
     <ActionsPanel style={{ padding: 0 }}>
       <Button
         data-qa-confirm-cancel

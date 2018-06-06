@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { reduce, compose, isEmpty, not, when } from 'ramda';
+import { equals, reduce } from 'ramda';
 import { withStyles, StyleRulesCallback, WithStyles, Theme, Divider, MenuItem } from 'material-ui';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
@@ -15,9 +15,6 @@ import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import ActionsPanel from 'src/components/ActionsPanel';
-
-const parseFormNumber: (s: string) => (string | number) =
-  when(compose(not, isEmpty), (v: string) => +v);
 
 type ClassNames = 'root' | 'inner' | 'divider' | 'suffix';
 
@@ -114,65 +111,154 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
   static defaultProps: Partial<Props> = {
   };
 
+  onAlgorithmChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    this.props.onAlgorithmChange(e.target.value)
+
+  onCheckPassiveChange = (e: React.ChangeEvent<HTMLInputElement>, value: boolean) =>
+    this.props.onCheckPassiveChange(value)
+
+  onCheckBodyChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    this.props.onCheckBodyChange(e.target.value)
+
+  onCheckPathChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    this.props.onCheckPathChange(e.target.value)
+
+  onHealthCheckAttemptsChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    this.props.onHealthCheckAttemptsChange(e.target.value)
+
+  onHealthCheckIntervalChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    this.props.onHealthCheckIntervalChange(e.target.value)
+
+  onHealthCheckTimeoutChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    this.props.onHealthCheckTimeoutChange(e.target.value)
+
+  onHealthCheckTypeChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    this.props.onHealthCheckTypeChange(e.target.value)
+
+  onPortChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    this.props.onPortChange(e.target.value)
+
+  onPrivateKeyChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    this.props.onPrivateKeyChange(e.target.value)
+
+  onProtocolChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    this.props.onProtocolChange(e.target.value)
+
+  onSessionStickinessChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    this.props.onSessionStickinessChange(e.target.value)
+
+  onSslCertificateChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    this.props.onSslCertificateChange(e.target.value)
+
+  onNodeLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const configIdx = e.currentTarget.getAttribute('data-config-idx');
+    if (configIdx) {
+      this.props.onNodeLabelChange(
+        +configIdx,
+        e.target.value,
+      );
+    }
+  }
+
+  onNodeAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const configIdx = e.currentTarget.getAttribute('data-config-idx');
+    if (configIdx) {
+      this.props.onNodeAddressChange(
+        +configIdx,
+        e.target.value,
+      );
+    }
+  }
+
+  onNodeWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const configIdx = e.currentTarget.getAttribute('data-config-idx');
+    if (configIdx) {
+      this.props.onNodeWeightChange(
+        +configIdx,
+        e.target.valueAsNumber,
+      );
+    }
+  }
+
+  onNodeModeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const configIdx = e.currentTarget.getAttribute('data-config-idx');
+    if (configIdx) {
+      this.props.onNodeModeChange(
+        +configIdx,
+        e.target.value,
+      );
+    }
+  }
+
+  addNode = (e: React.MouseEvent<HTMLElement>) => {
+    const configIdx: string | null = e.currentTarget.getAttribute('data-config-idx');
+    if (configIdx) {
+      this.props.addNode(+configIdx);
+    }
+  }
+  onUpdateNode = (e: React.MouseEvent<HTMLElement>) => {
+    const configIdx: string | null = e.currentTarget.getAttribute('data-config-idx');
+    const { onUpdateNode } = this.props;
+    if (onUpdateNode && configIdx) {
+      return onUpdateNode(+configIdx);
+    }
+  }
+
+  removeNode = (e: React.MouseEvent<HTMLElement>) => {
+    const configIdx: string | null = e.currentTarget.getAttribute('data-config-idx');
+    const { removeNode } = this.props;
+    if (removeNode && configIdx) {
+      return removeNode(+configIdx);
+    }
+  }
+
+  onSave = this.props.onSave;
+
+  onCancel = this.props.onCancel;
+
+  onDelete = this.props.onDelete;
+
+  shouldComponentUpdate(nextProps: Props) {
+    return this.props.forEdit !== nextProps.forEdit
+      || this.props.submitting !== nextProps.submitting
+      || this.props.algorithm !== nextProps.algorithm
+      || this.props.checkPassive !== nextProps.checkPassive
+      || this.props.checkBody !== nextProps.checkBody
+      || this.props.checkPath !== nextProps.checkPath
+      || this.props.port !== nextProps.port
+      || this.props.protocol !== nextProps.protocol
+      || this.props.healthCheckType !== nextProps.healthCheckType
+      || this.props.healthCheckAttempts !== nextProps.healthCheckAttempts
+      || this.props.healthCheckInterval !== nextProps.healthCheckInterval
+      || this.props.healthCheckTimeout !== nextProps.healthCheckTimeout
+      || this.props.sessionStickiness !== nextProps.sessionStickiness
+      || this.props.sslCertificate !== nextProps.sslCertificate
+      || this.props.privateKey !== nextProps.privateKey
+      || this.props.nodes !== nextProps.nodes
+      || !equals(this.props.errors, nextProps.errors);
+  }
+
   render() {
     const {
-      classes,
-
-      errors,
-
-      forEdit,
-      submitting,
-      onSave,
-      onCancel,
-      onDelete,
-
-      algorithm,
-      onAlgorithmChange,
-
-      checkBody,
-      onCheckBodyChange,
-
-      checkPath,
-      onCheckPathChange,
-
-      checkPassive,
-      onCheckPassiveChange,
-
-      healthCheckAttempts,
-      onHealthCheckAttemptsChange,
-
-      healthCheckInterval,
-      onHealthCheckIntervalChange,
-
-      healthCheckTimeout,
-      onHealthCheckTimeoutChange,
-
-      healthCheckType,
-      onHealthCheckTypeChange,
-
-      port,
-      onPortChange,
-
-      privateKey,
-      onPrivateKeyChange,
-
-      protocol,
-      onProtocolChange,
-
-      sessionStickiness,
-      onSessionStickinessChange,
-
-      sslCertificate,
-      onSslCertificateChange,
-
-      nodes,
       addNode,
-      removeNode,
-      onUpdateNode,
-      onNodeLabelChange,
-      onNodeAddressChange,
-      onNodeWeightChange,
-      onNodeModeChange,
+      algorithm,
+      checkBody,
+      checkPassive,
+      checkPath,
+      classes,
+      errors,
+      forEdit,
+      healthCheckAttempts,
+      healthCheckInterval,
+      healthCheckTimeout,
+      healthCheckType,
+      nodes,
+      port,
+      privateKey,
+      protocol,
+      sessionStickiness,
+      sslCertificate,
+      submitting,
     } = this.props;
 
     const hasErrorFor = getAPIErrorFor({
@@ -206,7 +292,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   type="number"
                   label="Port"
                   value={port}
-                  onChange={e => onPortChange(parseFormNumber(e.target.value))}
+                  onChange={this.onPortChange}
                   errorText={hasErrorFor('port')}
                 />
               </Grid>
@@ -215,7 +301,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   label="Protocol"
                   value={protocol}
                   select
-                  onChange={e => onProtocolChange(e.target.value)}
+                  onChange={this.onProtocolChange}
                   errorText={hasErrorFor('protocol')}
                 >
                   <MenuItem value="http">HTTP</MenuItem>
@@ -239,7 +325,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     rows={3}
                     label="SSL Certificate"
                     value={sslCertificate}
-                    onChange={e => onSslCertificateChange(e.target.value)}
+                    onChange={this.onSslCertificateChange}
                     required={protocol === 'https'}
                     errorText={hasErrorFor('ssl_cert')}
                   />
@@ -250,7 +336,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     rows={3}
                     label="Private Key"
                     value={privateKey}
-                    onChange={e => onPrivateKeyChange(e.target.value)}
+                    onChange={this.onPrivateKeyChange}
                     required={protocol === 'https'}
                     errorText={hasErrorFor('ssl_key')}
                   />
@@ -270,7 +356,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   label="Algorithm"
                   value={algorithm}
                   select
-                  onChange={e => onAlgorithmChange(e.target.value)}
+                  onChange={this.onAlgorithmChange}
                   errorText={hasErrorFor('algorithm')}
                 >
                   <MenuItem value="roundrobin">Round Robin</MenuItem>
@@ -292,7 +378,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   label="Session Stickiness"
                   value={sessionStickiness}
                   select
-                  onChange={e => onSessionStickinessChange(e.target.value)}
+                  onChange={this.onSessionStickinessChange}
                   errorText={hasErrorFor('stickiness')}
                 >
                   <MenuItem value="none">None</MenuItem>
@@ -315,7 +401,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     label="Active Health Check Type"
                     value={healthCheckType}
                     select
-                    onChange={e => onHealthCheckTypeChange(e.target.value)}
+                    onChange={this.onHealthCheckTypeChange}
                     errorText={hasErrorFor('check')}
                   >
                     <MenuItem value="none">None</MenuItem>
@@ -341,7 +427,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                         </Typography>,
                       }}
                       value={healthCheckInterval}
-                      onChange={e => onHealthCheckIntervalChange(parseFormNumber(e.target.value))}
+                      onChange={this.onHealthCheckIntervalChange}
                       errorText={hasErrorFor('check_interval')}
                     />
                   </Grid>
@@ -358,7 +444,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                         </Typography>,
                       }}
                       value={healthCheckTimeout}
-                      onChange={e => onHealthCheckTimeoutChange(parseFormNumber(e.target.value))}
+                      onChange={this.onHealthCheckTimeoutChange}
                       errorText={hasErrorFor('check_timeout')}
                     />
                   </Grid>
@@ -367,7 +453,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       type="number"
                       label="Health Check Attempts"
                       value={healthCheckAttempts}
-                      onChange={e => onHealthCheckAttemptsChange(parseFormNumber(e.target.value))}
+                      onChange={this.onHealthCheckAttemptsChange}
                       errorText={hasErrorFor('check_attempts')}
                     />
                   </Grid>
@@ -378,7 +464,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                         <TextField
                           label="Check HTTP Path"
                           value={checkPath}
-                          onChange={e => onCheckPathChange(e.target.value)}
+                          onChange={this.onCheckPathChange}
                           required={['http', 'http_body'].includes(healthCheckType)}
                           errorText={hasErrorFor('check_path')}
                         />
@@ -392,7 +478,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                         <TextField
                           label="Expected HTTP Body"
                           value={checkBody}
-                          onChange={e => onCheckBodyChange(e.target.value)}
+                          onChange={this.onCheckBodyChange}
                           required={healthCheckType === 'http_body'}
                           errorText={hasErrorFor('check_body')}
                         />
@@ -411,15 +497,15 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 <Typography variant="title">Passive Checks</Typography>
               </Grid>
               <Grid item xs={12}>
-              <FormControlLabel
-                control={
-                  <Toggle
-                    checked={checkPassive}
-                    onChange={(e, value) => onCheckPassiveChange(value)}
-                  />
-                }
-                label="Passive Checks"
-              />
+                <FormControlLabel
+                  control={
+                    <Toggle
+                      checked={checkPassive}
+                      onChange={this.onCheckPassiveChange}
+                    />
+                  }
+                  label="Passive Checks"
+                />
               </Grid>
               <Grid item xs={12}>
                 <Divider className={classes.divider} />
@@ -439,13 +525,13 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     <Button
                       variant="raised"
                       type="primary"
-                      onClick={() => onSave!()}
+                      onClick={this.onSave}
                       loading={submitting}
                     >
                       Save
                     </Button>
                     <Button
-                      onClick={() => onCancel!()}
+                      onClick={this.onCancel}
                     >
                       Cancel
                     </Button>
@@ -453,7 +539,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 </Grid>
                 <Grid item>
                   <Button
-                    onClick={() => onDelete!()}
+                    onClick={this.onDelete}
                     type="secondary"
                     destructive
                   >
@@ -472,7 +558,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               </Grid>
               <Grid item xs={12}>
                 {
-                  nodes.map((node, idx) => {
+                  nodes && nodes.map((node, idx) => {
                     const hasErrorFor = getAPIErrorFor({
                       label: 'label',
                       address: 'address',
@@ -484,14 +570,15 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       <Grid key={idx} container alignItems="flex-end">
                         {idx !== 0 &&
                           <Grid item xs={12}>
-                            <Divider style={{ marginTop: 24 }}/>
+                            <Divider style={{ marginTop: 24 }} />
                           </Grid>
                         }
                         <Grid item xs={11} lg={2}>
                           <TextField
                             label="Label"
                             value={node.label}
-                            onChange={e => onNodeLabelChange(idx, e.target.value)}
+                            inputProps={{ 'data-config-idx': idx }}
+                            onChange={this.onNodeLabelChange}
                             errorText={hasErrorFor('label')}
                           />
                         </Grid>
@@ -499,7 +586,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                           <TextField
                             label="Address"
                             value={node.address}
-                            onChange={e => onNodeAddressChange(idx, e.target.value)}
+                            inputProps={{ 'data-config-idx': idx }}
+                            onChange={this.onNodeAddressChange}
                             errorText={hasErrorFor('address')}
                           />
                         </Grid>
@@ -508,7 +596,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             label="Weight"
                             type="number"
                             value={node.weight}
-                            onChange={e => onNodeWeightChange(idx, e.target.valueAsNumber)}
+                            inputProps={{ 'data-config-idx': idx }}
+                            onChange={this.onNodeWeightChange}
                             errorText={hasErrorFor('weight')}
                           />
                         </Grid>
@@ -517,7 +606,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             label="Mode"
                             value={node.mode}
                             select
-                            onChange={e => onNodeModeChange(idx, e.target.value)}
+                            inputProps={{ 'data-config-idx': idx }}
+                            onChange={this.onNodeModeChange}
                             errorText={hasErrorFor('mode')}
                           >
                             <MenuItem value="accept">Accept</MenuItem>
@@ -529,7 +619,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                           <Grid item xs={1}>
                             <Button
                               type="primary"
-                              onClick={e => onUpdateNode!(idx)}
+                              data-config-idx={idx}
+                              onClick={this.onUpdateNode}
                               loading={node.updating}
                             >
                               Update
@@ -539,8 +630,9 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                         {(forEdit && idx === (nodes.length - 1)) &&
                           <Grid item xs={1}>
                             <Button
+                              data-config-idx={idx}
                               type="primary"
-                              onClick={e => addNode!(idx)}
+                              onClick={this.addNode}
                             >
                               Add
                             </Button>
@@ -553,7 +645,9 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             * for the final index if we are editing the Config.
                             **/}
                           {(forEdit ? idx !== (nodes.length - 1) : idx !== 0) &&
-                            <IconButton onClick={() => removeNode(idx)}><Delete /></IconButton>
+                            <IconButton data-config-idx={idx} onClick={this.removeNode}>
+                              <Delete />
+                            </IconButton>
                           }
                         </Grid>
                       </Grid>
