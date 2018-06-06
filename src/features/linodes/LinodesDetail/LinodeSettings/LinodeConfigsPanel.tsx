@@ -28,7 +28,6 @@ import TableRow from 'material-ui/Table/TableRow';
 import TableHead from 'material-ui/Table/TableHead';
 import TableCell from 'material-ui/Table/TableCell';
 
-import PlusSquare from 'src/assets/icons/plus-square.svg';
 import { events$ } from 'src/events';
 import {
   createLinodeConfig,
@@ -46,7 +45,6 @@ import { ExtendedDisk, ExtendedVolume }
   from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
-import IconTextLink from 'src/components/IconTextLink';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import createDevicesFromStrings, { DevicesAsStrings } from
   'src/utilities/createDevicesFromStrings';
@@ -59,6 +57,7 @@ import LinodeConfigDrawer from './LinodeConfigDrawer';
 import { genEvent } from 'src/features/linodes/LinodesLanding/powerActions';
 import LinodeDiskActionMenu from './LinodeDiskActionMenu';
 import LinodeDiskDrawer from './LinodeDiskDrawer';
+import AddNewLink from 'src/components/AddNewLink';
 
 type ClassNames = 'root' | 'headline';
 
@@ -264,11 +263,9 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
                 </Typography>
               </Grid>
               <Grid item>
-                <IconTextLink
-                  SideIcon={PlusSquare}
+                <AddNewLink
                   onClick={() => this.setConfigDrawer({ open: true })}
-                  text="Add a Configuration"
-                  title="Add a Configuration"
+                  label="Add a Configuration"
                 />
               </Grid>
             </Grid>
@@ -285,11 +282,9 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
                 </Typography>
               </Grid>
               <Grid item>
-                <IconTextLink
-                  SideIcon={PlusSquare}
+                <AddNewLink
                   onClick={() => this.setDiskDrawer({ open: true })}
-                  text="Add a Disk"
-                  title="Add a Disk"
+                  label="Add a Disk"
                 />
               </Grid>
             </Grid>

@@ -25,14 +25,13 @@ import {
 } from 'src/services/linodes';
 import { getVolumes } from 'src/services/volumes';
 import { resetEventsPolling } from 'src/events';
-import PlusSquare from 'src/assets/icons/plus-square.svg';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
-import IconTextLink from 'src/components/IconTextLink';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import ActionsPanel from 'src/components/ActionsPanel';
 import ErrorState from 'src/components/ErrorState';
 import DeviceSelection, { ExtendedDisk, ExtendedVolume } from './DeviceSelection';
 import createDevicesFromStrings, { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
+import AddNewLink from 'src/components/AddNewLink';
 
 type ClassNames = 'root'
   | 'title'
@@ -188,12 +187,9 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
             counter={this.state.counter}
             rescue
           />
-          <IconTextLink
-            SideIcon={PlusSquare}
+          <AddNewLink
             onClick={() => this.incrementCounter()}
-            text="Add Disk"
-            title="Add Disk"
-            data-qa-oauth-create
+            label="Add Disk"
             disabled={this.state.counter >= 6}
             left
           />

@@ -8,13 +8,12 @@ import Delete from 'material-ui-icons/Delete';
 import FormControlLabel from 'material-ui/Form/FormControlLabel';
 
 import Button from 'src/components/Button';
-import PlusSquare from 'src/assets/icons/plus-square.svg';
-import IconTextLink from 'src/components/IconTextLink';
 import Grid from 'src/components/Grid';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import ActionsPanel from 'src/components/ActionsPanel';
+import AddNewLink from 'src/components/AddNewLink';
 
 const parseFormNumber: (s: string) => (string | number) =
   when(compose(not, isEmpty), (v: string) => +v);
@@ -495,14 +494,10 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   }
                 </Grid>
                 <Grid item xs={12}>
-                  <IconTextLink
-                    SideIcon={PlusSquare}
-                    onClick={addNode}
-                    title="Add a Node"
-                    text="Add a Node"
-                  >
-                    Add a Node
-                  </IconTextLink>
+                <AddNewLink
+                  onClick={addNode}
+                  label="Add a Node"
+                />
                 </Grid>
               </Grid>
             }

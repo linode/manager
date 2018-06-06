@@ -13,19 +13,18 @@ import Typography from 'material-ui/Typography';
 
 import { getDomains, deleteDomain } from 'src/services/domains';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
-import PlusSquare from 'src/assets/icons/plus-square.svg';
 import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
 import Grid from 'src/components/Grid';
 import ErrorState from 'src/components/ErrorState';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import ActionsPanel from 'src/components/ActionsPanel';
-import IconTextLink from 'src/components/IconTextLink';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 
 import ActionMenu from './DomainActionMenu';
 import DomainCreateDrawer from './DomainCreateDrawer';
+import AddNewLink from 'src/components/AddNewLink';
 
 type ClassNames = 'root' | 'title';
 
@@ -199,14 +198,10 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
           <Grid item>
             <Grid container alignItems="flex-end">
               <Grid item>
-                <IconTextLink
-                  SideIcon={PlusSquare}
+                <AddNewLink
                   onClick={() => this.openCreateDrawer()}
-                  title="Add a Domain"
-                  text="Add a Domain"
-                >
-                  Add new Domain
-                </IconTextLink>
+                  label="Add a Domain"
+                />
               </Grid>
             </Grid>
           </Grid>

@@ -24,13 +24,12 @@ import isPast from 'src/utilities/isPast';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import Table from 'src/components/Table';
 import Grid from 'src/components/Grid';
-import IconTextLink from 'src/components/IconTextLink';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Notice from 'src/components/Notice';
 
 import APITokenMenu from './APITokenMenu';
 import APITokenDrawer, { DrawerMode, genExpiryTups } from './APITokenDrawer';
-import PlusSquare from 'src/assets/icons/plus-square.svg';
+import AddNewLink from 'src/components/AddNewLink';
 
 type ClassNames = 'headline'
   | 'paper'
@@ -158,12 +157,9 @@ export class APITokens extends React.Component<CombinedProps, State> {
           </Grid>
           <Grid item>
             {type === 'Personal Access Token' &&
-              <IconTextLink
-                SideIcon={PlusSquare}
+              <AddNewLink
                 onClick={() => this.openCreateDrawer()}
-                text="Add a Personal Access Token"
-                title="Add a Personal Access Token"
-                data-qa-token-create
+                label="Add a Personal Access Token"
               />
             }
           </Grid>
