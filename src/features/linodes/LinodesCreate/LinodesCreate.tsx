@@ -124,7 +124,7 @@ const formatLinodeSubheading = (typeInfo: string, imageInfo: string) => {
   return [subheading];
 };
 
-class LinodeCreate extends React.Component<CombinedProps, State> {
+export class LinodeCreate extends React.Component<CombinedProps, State> {
   state: State = {
     selectedTab: 0,
     selectedImageID: null,
