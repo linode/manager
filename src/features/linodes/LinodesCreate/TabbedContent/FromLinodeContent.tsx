@@ -9,7 +9,7 @@ import {
 import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
 import AddonsPanel from '../AddonsPanel';
 import SelectLinodePanel, { ExtendedLinode } from '../SelectLinodePanel';
-import { State as FormState } from '../LinodesCreate';
+import { StateToUpdate as FormState } from '../LinodesCreate';
 
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
@@ -32,7 +32,7 @@ interface Notice {
 interface Props {
   errors?: Linode.ApiFieldError[];
   notice?: Notice;
-  updateFormState: (key: keyof FormState, value: any) => void;
+  updateFormState: (stateToUpdate: FormState[]) => void;
   selectedRegionID: string | null;
   selectedTypeID: string | null;
   selectedLinodeID: number | undefined;
@@ -83,22 +83,35 @@ const FromBackupsContent: React.StatelessComponent<CombinedProps> = (props) => {
         selectedLinodeID={selectedLinodeID}
         header={'Select Linode to Clone From'}
         handleSelection={(linode) => {
-          updateFormState('selectedLinodeID', linode.id);
-          updateFormState('selectedTypeID', null);
-          updateFormState('selectedDiskSize', linode.specs.disk);
+          updateFormState([
+            {
+              stateKey: 'selectedLinodeID',
+              newValue: linode.id,
+            },
+            {
+              stateKey: 'selectedTypeID',
+              newValue: null,
+            },
+            {
+              stateKey: 'selectedLinodeID',
+              newValue: linode.specs.disk,
+            },
+          ]);
         }}
       />
       <SelectRegionPanel
         error={hasErrorFor('region')}
         regions={regions}
-        handleSelection={(id: string) => updateFormState('selectedRegionID', id)}
+        handleSelection={(id: string) =>
+          updateFormState([{ stateKey: 'selectedRegionID', newValue: id }])}
         selectedID={selectedRegionID}
         copy="Determine the best location for your Linode."
       />
       <SelectPlanPanel
         error={hasErrorFor('type')}
         types={types}
-        onSelect={(id: string) => updateFormState('selectedTypeID', id)}
+        onSelect={(id: string) =>
+          updateFormState([{ stateKey: 'selectedTypeID', newValue: id }])}
         selectedID={selectedTypeID}
         selectedDiskSize={selectedDiskSize}
       />
@@ -106,7 +119,8 @@ const FromBackupsContent: React.StatelessComponent<CombinedProps> = (props) => {
         labelFieldProps={{
           label: 'Linode Label',
           value: label || '',
-          onChange: e => updateFormState('label', e.target.value),
+          onChange: e =>
+            updateFormState([{ stateKey: 'label', newValue: e.target.value }]),
           errorText: hasErrorFor('label'),
         }}
       />
@@ -114,8 +128,10 @@ const FromBackupsContent: React.StatelessComponent<CombinedProps> = (props) => {
         backups={backups}
         backupsMonthly={getBackupsMonthlyPrice()}
         privateIP={privateIP}
-        changeBackups={() => updateFormState('backups', !backups)}
-        changePrivateIP={() => updateFormState('privateIP', !privateIP)}
+        changeBackups={() =>
+          updateFormState([{ stateKey: 'backups', newValue: !backups }])}
+        changePrivateIP={() =>
+          updateFormState([{ stateKey: 'privateIP', newValue: !privateIP }])}
       />
     </React.Fragment>
   );

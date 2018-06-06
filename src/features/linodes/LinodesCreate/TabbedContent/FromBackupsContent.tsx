@@ -22,7 +22,7 @@ import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import CircleProgress from 'src/components/CircleProgress';
 import Placeholder from 'src/components/Placeholder';
 
-import { State as FormState } from '../LinodesCreate';
+import { StateToUpdate as FormState } from '../LinodesCreate';
 
 import {
   getLinodeBackups,
@@ -45,7 +45,7 @@ interface BackupInfo {
 interface Props {
   notice?: Notice;
   errors?: Linode.ApiFieldError[];
-  updateFormState: (key: keyof FormState, value: any) => void;
+  updateFormState: (stateToUpdate: FormState[]) => void;
   selectedLinodeID: number | undefined;
   selectedBackupID: number | undefined;
   selectedDiskSize: number | undefined;
@@ -91,7 +91,10 @@ class FromBackupsContent extends React.Component<CombinedProps, State> {
 
   getLinodesWithBackups = (linodes: Linode.Linode[]) => {
     this.setState({ isGettingBackups: true });
-    this.props.updateFormState('userHasBackups', false);
+    this.props.updateFormState([{
+      stateKey: 'userHasBackups',
+      newValue: false,
+    }]);
     return Promise.map(linodes.filter(l => l.backups.enabled), (linode: Linode.Linode) => {
       return getLinodeBackups(linode.id)
         .then((backups) => {
@@ -103,7 +106,10 @@ class FromBackupsContent extends React.Component<CombinedProps, State> {
           };
         });
     }).then((data) => {
-      this.props.updateFormState('userHasBackups', this.userHasBackups(data));
+      this.props.updateFormState([{
+        stateKey: 'userHasBackups',
+        newValue: this.userHasBackups(data),
+      }]);
       this.setState({ linodesWithBackups: data, isGettingBackups: false });
     })
       .catch(err => this.setState({ isGettingBackups: false }));
@@ -160,12 +166,28 @@ class FromBackupsContent extends React.Component<CombinedProps, State> {
           )(linodes)}
           selectedLinodeID={selectedLinodeID}
           handleSelection={(linode) => {
-            updateFormState('selectedLinodeID', linode.id);
-            updateFormState('selectedTypeID', null);
-            updateFormState('fdsaf', null);
-            updateFormState('selectedRegionID', linode.region);
-            updateFormState('selectedDiskSize', linode.specs.disk);
-            updateFormState('selectedBackupID', undefined);
+            updateFormState([
+              {
+                stateKey: 'selectedLinodeID',
+                newValue: linode.id,
+              },
+              {
+                stateKey: 'selectedTypeID',
+                newValue: null,
+              },
+              {
+                stateKey: 'selectedRegionID',
+                newValue: linode.region,
+              },
+              {
+                stateKey: 'selectedDiskSize',
+                newValue: linode.specs.disk,
+              },
+              {
+                stateKey: 'selectedBackupID',
+                newValue: undefined,
+              },
+            ]);
           }
           }
         />
@@ -177,15 +199,18 @@ class FromBackupsContent extends React.Component<CombinedProps, State> {
             })}
           selectedLinodeID={selectedLinodeID}
           selectedBackupID={selectedBackupID}
-          handleChangeBackup={(id: number) => updateFormState('selectedBackupID', id)}
+          handleChangeBackup={(id: number) =>
+            updateFormState([{ stateKey: 'selectedBackupID', newValue: id }])
+          }
           handleChangeBackupInfo={(info: BackupInfo) =>
-            updateFormState('selectedBackupInfo', info)}
+            updateFormState([{ stateKey: 'selectedBackupInfo', newValue: info }])
+          }
         />
         <SelectPlanPanel
           error={hasErrorFor('type')}
           types={types}
           onSelect={(id: string) => {
-            updateFormState('selectedTypeID', id);
+            updateFormState([{ stateKey: 'selectedTypeID', newValue: id }]);
           }}
           // this.setState({ selectedTypeID: id })}
           selectedID={selectedTypeID}
@@ -196,7 +221,7 @@ class FromBackupsContent extends React.Component<CombinedProps, State> {
             label: 'Linode Label',
             value: label || '',
             onChange: (e) => {
-              updateFormState('label', e.target.value);
+              updateFormState([{ stateKey: 'label', newValue: e.target.value }]);
             },
             // this.setState({ label: e.target.value }),
             errorText: hasErrorFor('label'),
@@ -205,10 +230,10 @@ class FromBackupsContent extends React.Component<CombinedProps, State> {
         <AddonsPanel
           backups={backups}
           changeBackups={() => {
-            updateFormState('backups', !backups);
+            updateFormState([{ stateKey: 'backups', newValue: !backups }]);
           }}
           changePrivateIP={() => {
-            updateFormState('privateIP', !privateIP);
+            updateFormState([{ stateKey: 'privateIP', newValue: !privateIP }]);
           }}
           backupsMonthly={getBackupsMonthlyPrice()}
           privateIP={privateIP}
