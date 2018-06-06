@@ -5,7 +5,7 @@ namespace Linode {
     backups: LinodeBackups;
     created: string;
     region: string;
-    image: string;
+    image: string | null;
     group?: string;
     ipv4: string[];
     ipv6: string;
@@ -45,13 +45,19 @@ namespace Linode {
   export interface LinodeBackupsResponse {
     automatic: LinodeBackup[];
     snapshot: {
-      current: LinodeBackup,
-      in_progress: LinodeBackup,
+      current: LinodeBackup | null,
+      in_progress: LinodeBackup | null,
     };
   }
 
   export interface LinodeWithBackups extends Linode {
     currentBackups: LinodeBackupsResponse;
+  }
+
+  export interface LinodeBackupDisk {
+    size: number;
+    label: string;
+    filesystem: string;
   }
 
   export interface LinodeBackup {
@@ -64,16 +70,16 @@ namespace Linode {
     updated: string;
     finished: string;
     configs: string[];
-    disks: Disk[];
+    disks: LinodeBackupDisk[];
     /**
      * @todo Waiting on API to clarify as this is documented as an ENUM.
      */
     availability?: string;
   }
 
-  type LinodeBackupType = 'auto' | 'snapshot';
+  export type LinodeBackupType = 'auto' | 'snapshot';
 
-  type LinodeBackupStatus =
+  export type LinodeBackupStatus =
     'pending'
     | 'running'
     | 'needsPostProcessing'

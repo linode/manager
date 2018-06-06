@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
 import { FromBackupsContent } from './FromBackupsContent';
-import { mockLinodesWithBackups } from 'src/__data__/LinodesWithBackups';
+import { LinodesWithBackups } from 'src/__data__/LinodesWithBackups';
 
 const mockProps = {
   updateFormState: jest.fn(),
@@ -63,8 +63,8 @@ describe('FromBackupsContent', () => {
 
     it('should render a notice when passed a Notice prop', () => {
       // give our components a Linode with a valid backup
-      componentWithNotice.setState({ linodesWithBackups: mockLinodesWithBackups });
-      component.setState({ linodesWithBackups: mockLinodesWithBackups });
+      componentWithNotice.setState({ linodesWithBackups: LinodesWithBackups });
+      component.setState({ linodesWithBackups: LinodesWithBackups });
       expect(componentWithNotice.find('WithStyles(Notice)')).toHaveLength(1);
     });
 

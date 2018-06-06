@@ -128,7 +128,7 @@ const requestAllTheThings = (linodeId: number) =>
     .then((response) => {
       const { data: linode } = response;
 
-      const imageReq = getImage(linode.image)
+      const imageReq = getImage(linode.image!)
         .catch(err => undefined);
 
       const volumesReq = getLinodeVolumes(linode.id)

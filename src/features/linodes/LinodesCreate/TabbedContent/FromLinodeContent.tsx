@@ -93,7 +93,7 @@ export const FromLinodeContent: React.StatelessComponent<CombinedProps> = (props
               newValue: null,
             },
             {
-              stateKey: 'selectedLinodeID',
+              stateKey: 'selectedDiskSize',
               newValue: linode.specs.disk,
             },
           ]);
