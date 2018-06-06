@@ -1,4 +1,4 @@
-export const mockLinodesWithBackups = [
+export const LinodesWithBackups = [
   {
     label: 'fromnanoooooooode',
     ipv4: [
@@ -14,8 +14,8 @@ export const mockLinodesWithBackups = [
       transfer: 4000,
       vcpus: 2,
     },
-    type: 'g6-standard-2',
-    hypervisor: 'kvm',
+    type: 'g6-standard-2' as Linode.LinodeBackupType,
+    hypervisor: 'kvm' as Linode.Hypervisor,
     region: 'us-central',
     backups: {
       enabled: true,
@@ -32,7 +32,7 @@ export const mockLinodesWithBackups = [
       network_out: 10,
       cpu: 90,
     },
-    status: 'offline',
+    status: 'offline' as Linode.LinodeStatus,
     group: '',
     created: '2018-06-05T16:15:03',
     currentBackups: {
@@ -59,8 +59,8 @@ export const mockLinodesWithBackups = [
           created: '2018-06-06T00:23:17',
           region: 'us-central',
           label: null,
-          type: 'auto',
-          status: 'successful',
+          type: 'auto' as Linode.LinodeBackupType,
+          status: 'successful' as Linode.LinodeBackupStatus,
         }],
       snapshot: {
         in_progress: null,
@@ -86,8 +86,8 @@ export const mockLinodesWithBackups = [
           created: '2018-06-05T16:29:15',
           region: 'us-central',
           label: 'testing',
-          type: 'snapshot',
-          status: 'successful',
+          type: 'snapshot' as Linode.LinodeBackupType,
+          status: 'successful' as Linode.LinodeBackupStatus,
         },
       },
     },
