@@ -8,8 +8,10 @@ class NodeBalancers extends Page {
     get placeholderButton() { return $('[data-qa-placeholder-button]'); }
     get createNodeBalancerMenu() { return $('[data-qa-add-new-menu="NodeBalancer"]'); }
     get createHeader() { return $('[data-qa-create-nodebalancer-header]'); }
+
     get label() { return $('[data-qa-label-input] input'); }
     get selectOption() { return $('[data-qa-option]'); }
+
     get regionSection() { return $('[data-qa-tp="Region"]'); }
     get regionTabs() { return $$('[data-qa-tab]'); }
     get regionCards() { return $$('[data-qa-tp="Region"] [data-qa-selection-card]'); }
@@ -22,6 +24,7 @@ class NodeBalancers extends Page {
     get protocol() { return $('[data-qa-protocol-select]'); }
     get algorithmHeader() { return $('[data-qa-algorithm-header]'); }
     get algorithmSelect() { return $('[data-qa-algorithm-select]'); }
+
     get sessionStickinessHeader() { return $('[data-qa-session-stickiness-header]'); }
     get sessionStickiness() { return $('[data-qa-session-stickiness-select]'); }
     
