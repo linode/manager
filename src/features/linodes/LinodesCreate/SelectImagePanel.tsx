@@ -34,7 +34,7 @@ const distroIcons = {
   Ubuntu: 'ubuntu',
 };
 
-export interface Props {
+interface Props {
   images: Linode.Image[];
   error?: string;
   selectedImageID: string | null;
