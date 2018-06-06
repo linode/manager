@@ -56,7 +56,7 @@ const errorResources = {
   root_pass: 'A root password',
 };
 
-const FromBackupsContent: React.StatelessComponent<CombinedProps> = (props) => {
+export const FromImageContent: React.StatelessComponent<CombinedProps> = (props) => {
   const { notice, errors, backups, privateIP, updateFormState,
     getBackupsMonthlyPrice, label, images, regions, selectedImageID,
     selectedRegionID, selectedTypeID, password, types } = props;
@@ -127,4 +127,4 @@ const FromBackupsContent: React.StatelessComponent<CombinedProps> = (props) => {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(FromBackupsContent);
+export default styled<Props>(FromImageContent);
