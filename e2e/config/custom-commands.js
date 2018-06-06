@@ -3,6 +3,7 @@ const {
     removeAllLinodes,
     createLinode,
     removeAllVolumes,
+    allocatePrivateIp,
 } = require('../setup/setup');
 
 const { readToken } = require('../utils/config-utils');
@@ -44,7 +45,12 @@ exports.browserCommands = () => {
 
     browser.addCommand('removeAllVolumes', function async(token) {
         return removeAllVolumes(token)
-            then(res => res);
+            .then(res => res);
+    });
+
+    browser.addCommand('allocatePrivateIp', function async(token, linodeId) {
+        return allocatePrivateIp(token, linodeId)
+            .then(res => res);
     });
 
     /*

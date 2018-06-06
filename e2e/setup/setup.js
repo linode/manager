@@ -147,12 +147,36 @@ exports.createLinode = (token, password, linodeLabel) => {
         });
 
         return instance.post(linodesEndpoint, linodeConfig)
-            .then(res => {
-                resolve(res.status === 200);
+            .then(response => {
+                resolve(response.data);
             })
             .catch(error => {
                 console.error('Error', error);
-                reject(error)
+            });
+    });
+}
+
+exports.allocatePrivateIp = (token, linodeId) => {
+    return new Promise((resolve, reject) => {
+        const ipsEndpoint = `/linode/instances/${linodeId}/ips`;
+        const instance = axios.create({
+            httpsAgent: new https.Agent({
+                rejectUnauthorized: false
+            }),
+            baseURL: API_ROOT,
+            timeout: 5000,
+            headers: { 'Authorization': `Bearer ${token}`},           
+        });
+
+        const requestPrivate = {
+            public: false,
+            type: 'ipv4',
+        }
+
+        return instance.post(ipsEndpoint, requestPrivate)
+            .then(response => resolve(response.data))
+            .catch(error => {
+                console.error('Error', error);
             });
     });
 }

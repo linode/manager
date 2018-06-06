@@ -205,6 +205,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   value={port}
                   onChange={e => onPortChange(parseFormNumber(e.target.value))}
                   errorText={hasErrorFor('port')}
+                  data-qa-port
                 />
               </Grid>
               <Grid item xs={12} md={4}>
@@ -214,6 +215,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   select
                   onChange={e => onProtocolChange(e.target.value)}
                   errorText={hasErrorFor('protocol')}
+                  data-qa-protocol-select
                 >
                   <MenuItem value="http">HTTP</MenuItem>
                   <MenuItem value="https">HTTPS</MenuItem>
@@ -260,7 +262,11 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
 
             <Grid container>
               <Grid item xs={12}>
-                <Typography variant="title">Algorithm</Typography>
+                <Typography
+                  variant="title"
+                  data-qa-algorithm-header
+                >
+                  Algorithm</Typography>
               </Grid>
               <Grid item xs={12} md={4}>
                 <TextField
@@ -269,10 +275,17 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   select
                   onChange={e => onAlgorithmChange(e.target.value)}
                   errorText={hasErrorFor('algorithm')}
+                  data-qa-algorithm-select
                 >
-                  <MenuItem value="roundrobin">Round Robin</MenuItem>
-                  <MenuItem value="leastconn">Least Connections</MenuItem>
-                  <MenuItem value="source">Source</MenuItem>
+                  <MenuItem value="roundrobin" data-qa-algorithm>
+                    Round Robin
+                  </MenuItem>
+                  <MenuItem value="leastconn" data-qa-algorithm>
+                    Least Connections
+                  </MenuItem>
+                  <MenuItem value="source" data-qa-algorithm>
+                    Source
+                  </MenuItem>
                 </TextField>
               </Grid>
               <Grid item xs={12}>
@@ -282,7 +295,12 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
 
             <Grid container>
               <Grid item xs={12}>
-                <Typography variant="title">Session Stickiness</Typography>
+                <Typography
+                  variant="title"
+                  data-qa-session-stickiness-header
+                >
+                  Session Stickiness
+                </Typography>
               </Grid>
               <Grid item xs={12} md={4}>
                 <TextField
@@ -291,6 +309,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   select
                   onChange={e => onSessionStickinessChange(e.target.value)}
                   errorText={hasErrorFor('stickiness')}
+                  data-qa-session-stickiness-select
                 >
                   <MenuItem value="none">None</MenuItem>
                   <MenuItem value="table">Table</MenuItem>
@@ -304,7 +323,12 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
 
             <Grid container>
               <Grid item xs={12}>
-                <Typography variant="title">Active Health Checks</Typography>
+                <Typography
+                  variant="title"
+                  data-qa-active-checks-header
+                >
+                  Active Health Checks
+                </Typography>
               </Grid>
               <Grid item xs={12}>
                 <Grid item xs={12} lg={4}>
@@ -314,6 +338,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     select
                     onChange={e => onHealthCheckTypeChange(e.target.value)}
                     errorText={hasErrorFor('check')}
+                    data-qa-active-check-select
                   >
                     <MenuItem value="none">None</MenuItem>
                     <MenuItem value="connection">TCP Connection</MenuItem>
@@ -340,6 +365,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       value={healthCheckInterval}
                       onChange={e => onHealthCheckIntervalChange(parseFormNumber(e.target.value))}
                       errorText={hasErrorFor('check_interval')}
+                      data-qa-active-check-interval
                     />
                   </Grid>
                   <Grid item xs={12} lg={4}>
@@ -357,6 +383,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       value={healthCheckTimeout}
                       onChange={e => onHealthCheckTimeoutChange(parseFormNumber(e.target.value))}
                       errorText={hasErrorFor('check_timeout')}
+                      data-qa-active-check-timeout
                     />
                   </Grid>
                   <Grid item xs={12} lg={3}>
@@ -366,6 +393,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       value={healthCheckAttempts}
                       onChange={e => onHealthCheckAttemptsChange(parseFormNumber(e.target.value))}
                       errorText={hasErrorFor('check_attempts')}
+                      data-qa-active-check-attempts
                     />
                   </Grid>
                   {
@@ -405,7 +433,12 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
 
             <Grid container>
               <Grid item xs={12}>
-                <Typography variant="title">Passive Checks</Typography>
+                <Typography
+                  variant="title"
+                  data-qa-passive-checks-header
+                >
+                  Passive Checks
+                </Typography>
               </Grid>
               <Grid item xs={12}>
               <FormControlLabel
@@ -413,6 +446,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   <Toggle
                     checked={checkPassive}
                     onChange={(e, value) => onCheckPassiveChange(value)}
+                    data-qa-passive-checks-toggle
                   />
                 }
                 label="Passive Checks"
@@ -426,7 +460,12 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
             {(nodes.length > 0) &&
               <Grid container>
                 <Grid item xs={12}>
-                  <Typography variant="title">Choose Backend IPs</Typography>
+                  <Typography
+                    variant="title"
+                    data-qa-backend-ip-header
+                  >
+                    Choose Backend IPs
+                  </Typography>
                 </Grid>
                 <Grid item xs={12}>
                   {
@@ -439,7 +478,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       }, filterErrors(idx)(errors || []));
 
                       return (
-                        <Grid key={idx} container alignItems="flex-end">
+                        <Grid key={idx} container alignItems="flex-end" data-qa-backend-ip>
                           {idx !== 0 &&
                             <Grid item xs={12}>
                               <Divider style={{ marginTop: 24 }}/>
@@ -451,6 +490,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                               value={node.label}
                               onChange={e => onNodeLabelChange(idx, e.target.value)}
                               errorText={hasErrorFor('label')}
+                              data-qa-backend-ip-label
                             />
                           </Grid>
                           <Grid item xs={11} lg={3}>
@@ -459,6 +499,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                               value={node.address}
                               onChange={e => onNodeAddressChange(idx, e.target.value)}
                               errorText={hasErrorFor('address')}
+                              data-qa-backend-ip-address
                             />
                           </Grid>
                           <Grid item xs={11} lg={3}>
@@ -468,6 +509,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                               value={node.weight}
                               onChange={e => onNodeWeightChange(idx, e.target.valueAsNumber)}
                               errorText={hasErrorFor('weight')}
+                              data-qa-backend-ip-weight
                             />
                           </Grid>
                           <Grid item xs={11} lg={3}>
@@ -477,6 +519,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                               select
                               onChange={e => onNodeModeChange(idx, e.target.value)}
                               errorText={hasErrorFor('mode')}
+                              data-qa-backend-ip-mode
                             >
                               <MenuItem value="accept">Accept</MenuItem>
                               <MenuItem value="reject">Reject</MenuItem>
@@ -485,7 +528,9 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                           </Grid>
                           <Grid item xs={1}>
                             {idx !== 0 &&
-                              <IconButton onClick={() => removeNode(idx)}><Delete /></IconButton>
+                              <IconButton onClick={() => removeNode(idx)} data-qa-remove-node>
+                                <Delete />
+                              </IconButton>
                             }
                           </Grid>
                         </Grid>
@@ -497,6 +542,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 <AddNewLink
                   onClick={addNode}
                   label="Add a Node"
+                  data-qa-add-node
                 />
                 </Grid>
               </Grid>

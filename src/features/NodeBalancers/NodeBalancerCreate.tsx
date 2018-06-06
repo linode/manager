@@ -300,7 +300,10 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       <StickyContainer>
         <Grid container>
           <Grid item className={`${classes.main} mlMain`}>
-            <Typography variant="headline">
+            <Typography
+              variant="headline"
+              data-qa-create-nodebalancer-header
+            >
               Create a NodeBalancer
           </Typography>
 
@@ -351,7 +354,13 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                 }),
               }}
             />
-            <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }} >
+            <Grid
+              container
+              justify="space-between"
+              alignItems="flex-end"
+              style={{ marginTop: 8 }}
+              data-qa-nodebalancer-settings-section
+            >
               <Grid item xs={12}>
                 <Typography variant="title" className={classes.title}>
                   NodeBalancer Settings
@@ -480,6 +489,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                 <Button
                   type="secondary"
                   onClick={() => this.addNodeBalancerConfig()}
+                  data-qa-add-config
                 >
                   Add another Configuration
               </Button>
