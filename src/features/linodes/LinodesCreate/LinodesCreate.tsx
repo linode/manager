@@ -190,10 +190,6 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     });
   }
 
-  resetSelections = () => {
-    // reset all selections here
-  }
-
   // ensure we're only allowed to update state that exists in this component
   updateState = (statesToUpdate: StateToUpdate[]) => {
     return statesToUpdate.forEach((stateToUpdate) => {

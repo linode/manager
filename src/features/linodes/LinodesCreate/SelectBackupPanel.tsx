@@ -49,7 +49,7 @@ interface BackupInfo {
   details: string;
 }
 
-export interface Props {
+interface Props {
   selectedLinodeID?: number;
   selectedBackupID?: number;
   error?: string;
