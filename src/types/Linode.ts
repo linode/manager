@@ -56,7 +56,7 @@ namespace Linode {
 
   export interface LinodeBackup {
     id: number;
-    label: string;
+    label: string | null;
     status: LinodeBackupStatus;
     type: LinodeBackupType;
     region: string;
@@ -68,7 +68,7 @@ namespace Linode {
     /**
      * @todo Waiting on API to clarify as this is documented as an ENUM.
      */
-    availability: string;
+    availability?: string;
   }
 
   type LinodeBackupType = 'auto' | 'snapshot';

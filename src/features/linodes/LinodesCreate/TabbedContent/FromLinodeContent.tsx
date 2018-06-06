@@ -57,7 +57,7 @@ const errorResources = {
   root_pass: 'A root password',
 };
 
-const FromLinodeContent: React.StatelessComponent<CombinedProps> = (props) => {
+export const FromLinodeContent: React.StatelessComponent<CombinedProps> = (props) => {
   const { notice, errors, backups, privateIP, updateFormState,
     getBackupsMonthlyPrice, label, regions, selectedLinodeID,
     selectedRegionID, selectedTypeID, types, linodes, extendLinodes, selectedDiskSize } = props;
