@@ -10,7 +10,7 @@ import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
 import SelectImagePanel from '../SelectImagePanel';
 import PasswordPanel from '../PasswordPanel';
 import AddonsPanel from '../AddonsPanel';
-import { State as FormState } from '../LinodesCreate';
+import { StateToUpdate as FormState } from '../LinodesCreate';
 
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
@@ -33,7 +33,7 @@ interface Notice {
 interface Props {
   errors?: Linode.ApiFieldError[];
   notice?: Notice;
-  updateFormState: (key: keyof FormState, value: any) => void;
+  updateFormState: (stateToUpdate: FormState[]) => void;
   selectedImageID: string | null;
   selectedRegionID: string | null;
   selectedTypeID: string | null;
@@ -78,41 +78,48 @@ const FromBackupsContent: React.StatelessComponent<CombinedProps> = (props) => {
       }
       <SelectImagePanel
         images={images}
-        handleSelection={(id: string) => updateFormState('selectedImageID', id)}
+        handleSelection={(id: string) =>
+          updateFormState([{ stateKey: 'selectedImageID', newValue: id }])}
         selectedImageID={selectedImageID}
       />
       <SelectRegionPanel
         error={hasErrorFor('region')}
         regions={regions}
-        handleSelection={(id: string) => updateFormState('selectedRegionID', id)}
+        handleSelection={(id: string) =>
+          updateFormState([{ stateKey: 'selectedRegionID', newValue: id }])}
         selectedID={selectedRegionID}
         copy="Determine the best location for your Linode."
       />
       <SelectPlanPanel
         error={hasErrorFor('type')}
         types={types}
-        onSelect={(id: string) => updateFormState('selectedTypeID', id)}
+        onSelect={(id: string) =>
+          updateFormState([{ stateKey: 'selectedTypeID', newValue: id }])}
         selectedID={selectedTypeID}
       />
       <LabelAndTagsPanel
         labelFieldProps={{
           label: 'Linode Label',
           value: label || '',
-          onChange: e => updateFormState('label', e.target.value),
+          onChange: e =>
+            updateFormState([{ stateKey: 'label', newValue: e.target.value }]),
           errorText: hasErrorFor('label'),
         }}
       />
       <PasswordPanel
         error={hasErrorFor('root_pass')}
         password={password}
-        handleChange={v => updateFormState('password', v)}
+        handleChange={v =>
+          updateFormState([{ stateKey: 'password', newValue: v }])}
       />
       <AddonsPanel
         backups={backups}
         backupsMonthly={getBackupsMonthlyPrice()}
         privateIP={privateIP}
-        changeBackups={() => updateFormState('backups', !backups)}
-        changePrivateIP={() => updateFormState('privateIP', !privateIP)}
+        changeBackups={() =>
+          updateFormState([{ stateKey: 'backups', newValue: !backups }])}
+        changePrivateIP={() =>
+          updateFormState([{ stateKey: 'privateIP', newValue: !privateIP }])}
       />
     </React.Fragment>
   );

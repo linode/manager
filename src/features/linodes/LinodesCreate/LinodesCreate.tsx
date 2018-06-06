@@ -32,8 +32,6 @@ import { typeLabelDetails, displayType } from '../presentation';
 import CheckoutBar from 'src/components/CheckoutBar';
 import { resetEventsPolling } from 'src/events';
 
-type ChangeEvents = React.MouseEvent<HTMLElement> | React.ChangeEvent<HTMLInputElement>;
-
 type Info = { title: string, details?: string } | undefined;
 
 export type TypeInfo = {
@@ -76,7 +74,7 @@ type CombinedProps = Props
   & PreloadedProps
   & RouteComponentProps<{}>;
 
-export interface State {
+interface State {
   selectedTab: number;
   selectedLinodeID?: number;
   selectedBackupID?: number;
@@ -91,7 +89,6 @@ export interface State {
   privateIP: boolean;
   errors?: Linode.ApiFieldError[];
   isMakingRequest: boolean;
-  [index: string]: any;
   isGettingBackups: boolean;
   linodesWithBackups: Linode.LinodeWithBackups[] | null;
   userHasBackups: boolean;
@@ -101,6 +98,11 @@ interface QueryStringOptions {
   type: string;
   backupID: string;
   linodeID: string;
+}
+
+export interface StateToUpdate {
+  stateKey: keyof Partial<State>;
+  newValue: any;
 }
 
 const preloaded = PromiseLoader<Props>({
@@ -192,13 +194,13 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     // reset all selections here
   }
 
-  updateStateFor = (key: keyof State) => (event: ChangeEvents, value: any) => {
-    this.setState(() => ({ [key]: value }));
-  }
-
   // ensure we're only allowed to update state that exists in this component
-  updateState = (key: keyof Partial<State>, value: any) => {
-    this.setState({ [key]: value });
+  updateState = (statesToUpdate: StateToUpdate[]) => {
+    return statesToUpdate.forEach((stateToUpdate) => {
+      this.setState({
+        [stateToUpdate.stateKey]: stateToUpdate.newValue,
+      } as Pick<State, keyof State>);
+    });
   }
 
   getBackupsMonthlyPrice = (): number | null => {
