@@ -82,7 +82,7 @@ const errorResources = {
 const filterLinodesWithBackups = (linodes: Linode.Linode[]) =>
   linodes.filter(linode => linode.backups.enabled);
 
-class FromBackupsContent extends React.Component<CombinedProps, State> {
+export class FromBackupsContent extends React.Component<CombinedProps, State> {
   state: State = {
     linodesWithBackups: [],
     isGettingBackups: false,
