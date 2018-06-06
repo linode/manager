@@ -33,7 +33,14 @@ describe('FromImageContent', () => {
   );
 
   it('renders without error', () => {
-    console.log(component.debug());
     expect(component.find('LinodeCreate')).toHaveLength(1);
   });
 });
+
+/*
+@TODO figure out a way to dive into the LinodeCreate
+
+Currently, LinodeCreate has functions, such as updateStateFromQuerystring()
+that relies on location.search so being able to mount the component while
+being able to pass down the Router components would be huge
+*/
