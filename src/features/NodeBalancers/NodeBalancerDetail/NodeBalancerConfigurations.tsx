@@ -22,6 +22,7 @@ import {
   over,
   map,
   pick,
+  Lens,
 } from 'ramda';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 
@@ -237,7 +238,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       });
   }
 
-  deleteConfig = () => {
+  deleteConfig = (e: any) => {
     const { deleteConfirmDialog: { configIdToDelete } } = this.state;
     const { match: { params: { nodeBalancerId } } } = this.props;
     this.setState({
@@ -350,7 +351,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       .catch(() => undefined);
   }
 
-  addNode = (configIdx: number, nodeIdx: number) => {
+  addNode = (configIdx: number) => (nodeIdx: number) => {
     const { match: { params: { nodeBalancerId } } } = this.props;
     const config = this.state.configs[configIdx];
     const node = this.state.configs[configIdx].nodes[nodeIdx];
@@ -471,16 +472,16 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         value,
       ))
 
-  onNodeLabelChange = (configIdx: number, nodeIdx: number, value: string) =>
+  onNodeLabelChange = (configIdx: number) => (nodeIdx: number, value: string) =>
     this.setNodeValue(configIdx, nodeIdx, 'label', value)
 
-  onNodeAddressChange = (configIdx: number, nodeIdx: number, value: string) =>
+  onNodeAddressChange = (configIdx: number) => (nodeIdx: number, value: string) =>
     this.setNodeValue(configIdx, nodeIdx, 'address', value)
 
-  onNodeWeightChange = (configIdx: number, nodeIdx: number, value: number) =>
+  onNodeWeightChange = (configIdx: number) => (nodeIdx: number, value: number) =>
     this.setNodeValue(configIdx, nodeIdx, 'weight', value)
 
-  onNodeModeChange = (configIdx: number, nodeIdx: number, value: string) =>
+  onNodeModeChange = (configIdx: number) => (nodeIdx: number, value: string) =>
     this.setNodeValue(configIdx, nodeIdx, 'mode', value)
 
   cancelEditing = (idx: number) => {
@@ -492,6 +493,148 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       configErrors: newErrors,
     });
   }
+
+  onCloseConfirmation = () => this.setState({
+    deleteConfirmDialog: NodeBalancerConfigurations.defaultDeleteConfirmDialogState,
+  })
+
+  onUpdateNode = (configIdx: number) => (nodeIndex: number) =>
+    this.updateNode(configIdx, nodeIndex)
+
+  confirmationError = (this.state.deleteConfirmDialog.errors || []).map(e => e.reason).join(',');
+
+  updateState = (lens: Lens) => (value: any) => this.setState(set(lens, value));
+
+  onSaveConfig = (idx: number) => () => this.updateConfig(idx);
+
+  onCancelEditingConfig = (idx: number) => () => this.cancelEditing(idx);
+
+  onDeleteConfig = (id: number) => () => this.setState({
+    deleteConfirmDialog: {
+      ...NodeBalancerConfigurations.defaultDeleteConfirmDialogState,
+      open: true,
+      configIdToDelete: id,
+    },
+  })
+
+  renderConfig = (
+    panelMessages: any[],
+    configErrors: any[],
+    configSubmitting: any[],
+  ) => (
+    config: Linode.NodeBalancerConfig & { nodes: Linode.NodeBalancerConfigNode[] },
+    idx: number,
+    ) => {
+    const lensTo = lensFrom(['configs', idx]);
+
+    const algorithmLens = lensTo(['algorithm']);
+    const checkPassiveLens = lensTo(['check_passive']);
+    const checkBodyLens = lensTo(['check_body']);
+    const checkPathLens = lensTo(['check_path']);
+    const portLens = lensTo(['port']);
+    const protocolLens = lensTo(['protocol']);
+    const healthCheckTypeLens = lensTo(['check']);
+    const healthCheckAttemptsLens = lensTo(['check_attempts']);
+    const healthCheckIntervalLens = lensTo(['check_interval']);
+    const healthCheckTimeoutLens = lensTo(['check_timeout']);
+    const sessionStickinessLens = lensTo(['stickiness']);
+    const sslCertificateLens = lensTo(['ssl_cert']);
+    const privateKeyLens = lensTo(['ssl_key']);
+
+    return <ExpansionPanel
+      key={idx}
+      defaultExpanded={true}
+      heading={`Port ${config.port}`}
+      success={panelMessages[idx]}
+    >
+      <NodeBalancerConfigPanel
+        forEdit
+        onSave={this.onSaveConfig(idx)}
+        onCancel={this.onCancelEditingConfig(idx)}
+        submitting={configSubmitting[idx]}
+        onDelete={this.onDeleteConfig(config.id)}
+
+        errors={configErrors[idx]}
+
+        algorithm={defaultTo('roundrobin', view(algorithmLens, this.state))}
+        onAlgorithmChange={this.updateState(algorithmLens)}
+
+        checkPassive={defaultTo(true, view(checkPassiveLens, this.state))}
+        onCheckPassiveChange={this.updateState(checkPassiveLens)}
+
+        checkBody={defaultTo('', view(checkBodyLens, this.state))}
+        onCheckBodyChange={this.updateState(checkBodyLens)}
+
+        checkPath={defaultTo('', view(checkPathLens, this.state))}
+        onCheckPathChange={this.updateState(checkPathLens)}
+
+        port={defaultTo(80, view(portLens, this.state))}
+        onPortChange={this.updateState(portLens)}
+
+        protocol={defaultTo('http', view(protocolLens, this.state))}
+        onProtocolChange={this.updateState(protocolLens)}
+
+        healthCheckType={defaultTo('connection', view(healthCheckTypeLens, this.state))}
+        onHealthCheckTypeChange={this.updateState(healthCheckTypeLens)}
+
+        healthCheckAttempts={defaultTo(2, view(healthCheckAttemptsLens, this.state))}
+        onHealthCheckAttemptsChange={this.updateState(healthCheckAttemptsLens)}
+
+        healthCheckInterval={defaultTo(5, view(healthCheckIntervalLens, this.state))}
+        onHealthCheckIntervalChange={this.updateState(healthCheckIntervalLens)}
+
+        healthCheckTimeout={defaultTo(3, view(healthCheckTimeoutLens, this.state))}
+        onHealthCheckTimeoutChange={this.updateState(healthCheckTimeoutLens)}
+
+        sessionStickiness={defaultTo('table', view(sessionStickinessLens, this.state))}
+        onSessionStickinessChange={this.updateState(sessionStickinessLens)}
+
+        sslCertificate={defaultTo('', view(sslCertificateLens, this.state))}
+        onSslCertificateChange={this.updateState(sslCertificateLens)}
+
+        privateKey={defaultTo('', view(privateKeyLens, this.state))}
+        onPrivateKeyChange={this.updateState(privateKeyLens)}
+
+        nodes={config.nodes}
+
+        addNode={this.addNode(idx)}
+
+        removeNode={this.removeNode(idx)}
+
+        onUpdateNode={this.onUpdateNode(idx)}
+
+        onNodeLabelChange={this.onNodeLabelChange(idx)}
+
+        onNodeAddressChange={this.onNodeAddressChange(idx)}
+
+        onNodeWeightChange={this.onNodeWeightChange(idx)}
+
+        onNodeModeChange={this.onNodeModeChange(idx)}
+      />
+    </ExpansionPanel>;
+  }
+
+  renderConfirmationActions = ({ onClose }: { onClose: () => void}) => (
+    <ActionsPanel style={{ padding: 0 }}>
+      <Button
+        data-qa-confirm-cancel
+        onClick={this.deleteConfig}
+        type="secondary"
+        destructive
+        loading={this.state.deleteConfirmDialog.submitting}
+      >
+        Delete
+    </Button>
+      <Button
+        onClick={() => onClose()}
+        type="secondary"
+        className="cancel"
+        data-qa-cancel-cancel
+      >
+        Cancel
+    </Button>
+    </ActionsPanel>
+  )
 
   render() {
     const { classes } = this.props;
@@ -522,161 +665,13 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
             */}
           </Grid>
         </Grid>
-        {configs.map((config, idx) => {
-          const lensTo = lensFrom(['configs', idx]);
-
-          const algorithmLens = lensTo(['algorithm']);
-          const checkPassiveLens = lensTo(['check_passive']);
-          const checkBodyLens = lensTo(['check_body']);
-          const checkPathLens = lensTo(['check_path']);
-          const portLens = lensTo(['port']);
-          const protocolLens = lensTo(['protocol']);
-          const healthCheckTypeLens = lensTo(['check']);
-          const healthCheckAttemptsLens = lensTo(['check_attempts']);
-          const healthCheckIntervalLens = lensTo(['check_interval']);
-          const healthCheckTimeoutLens = lensTo(['check_timeout']);
-          const sessionStickinessLens = lensTo(['stickiness']);
-          const sslCertificateLens = lensTo(['ssl_cert']);
-          const privateKeyLens = lensTo(['ssl_key']);
-
-          return <ExpansionPanel
-            key={idx}
-            defaultExpanded={true}
-            heading={`Port ${config.port}`}
-            success={panelMessages[idx]}
-          >
-            <NodeBalancerConfigPanel
-              forEdit
-              onSave={() => this.updateConfig(idx)}
-              onCancel={() => this.cancelEditing(idx)}
-              submitting={configSubmitting[idx]}
-              onDelete={() => this.setState({
-                deleteConfirmDialog: {
-                  ...NodeBalancerConfigurations.defaultDeleteConfirmDialogState,
-                  open: true,
-                  configIdToDelete: config.id,
-                },
-              })}
-
-              errors={configErrors[idx]}
-
-              algorithm={defaultTo('roundrobin', view(algorithmLens, this.state))}
-              onAlgorithmChange={(algorithm: string) =>
-                this.setState(state =>
-                  set(algorithmLens, algorithm, state))}
-
-              checkPassive={defaultTo(true, view(checkPassiveLens, this.state))}
-              onCheckPassiveChange={(checkPassive: boolean) =>
-                this.setState(state =>
-                  set(checkPassiveLens, checkPassive, state))}
-
-              checkBody={defaultTo('', view(checkBodyLens, this.state))}
-              onCheckBodyChange={(checkBody: string) =>
-                this.setState(state =>
-                  set(checkBodyLens, checkBody, state))}
-
-              checkPath={defaultTo('', view(checkPathLens, this.state))}
-              onCheckPathChange={(checkPath: string) =>
-                this.setState(state =>
-                  set(checkPathLens, checkPath, state))}
-
-              port={defaultTo(80, view(portLens, this.state))}
-              onPortChange={(port: string | number) =>
-                this.setState(state =>
-                  set(portLens, port, state))}
-
-              protocol={defaultTo('http', view(protocolLens, this.state))}
-              onProtocolChange={(protocol: string) =>
-                this.setState(state =>
-                  set(protocolLens, protocol, state))}
-
-              healthCheckType={defaultTo('connection', view(healthCheckTypeLens, this.state))}
-              onHealthCheckTypeChange={(healthCheckType: string) =>
-                this.setState(state =>
-                  set(healthCheckTypeLens, healthCheckType, state))}
-
-              healthCheckAttempts={defaultTo(2, view(healthCheckAttemptsLens, this.state))}
-              onHealthCheckAttemptsChange={(healthCheckAttempts: string) =>
-                this.setState(state =>
-                  set(healthCheckAttemptsLens, healthCheckAttempts, state))}
-
-              healthCheckInterval={defaultTo(5, view(healthCheckIntervalLens, this.state))}
-              onHealthCheckIntervalChange={(healthCheckInterval: number | string) =>
-                this.setState(state =>
-                  set(healthCheckIntervalLens, healthCheckInterval, state))}
-
-              healthCheckTimeout={defaultTo(3, view(healthCheckTimeoutLens, this.state))}
-              onHealthCheckTimeoutChange={(healthCheckTimeout: number | string) =>
-                this.setState(state =>
-                  set(healthCheckTimeoutLens, healthCheckTimeout, state))}
-
-              sessionStickiness={defaultTo('table', view(sessionStickinessLens, this.state))}
-              onSessionStickinessChange={(sessionStickiness: number | string) =>
-                this.setState(state =>
-                  set(sessionStickinessLens, sessionStickiness, state))}
-
-              sslCertificate={defaultTo('', view(sslCertificateLens, this.state))}
-              onSslCertificateChange={(sslCertificate: string) =>
-                this.setState(state =>
-                  set(sslCertificateLens, sslCertificate, state))}
-
-              privateKey={defaultTo('', view(privateKeyLens, this.state))}
-              onPrivateKeyChange={(privateKey: string) =>
-                this.setState(state =>
-                  set(privateKeyLens, privateKey, state))}
-
-              nodes={config.nodes}
-
-              addNode={(nodeIdx: number) =>
-                this.addNode(idx, nodeIdx)}
-
-              removeNode={this.removeNode(idx)}
-
-              onUpdateNode={(nodeIndex: number) =>
-                this.updateNode(idx, nodeIndex)}
-
-              onNodeLabelChange={(nodeIndex, value) =>
-                this.onNodeLabelChange(idx, nodeIndex, value)}
-
-              onNodeAddressChange={(nodeIndex, value) =>
-                this.onNodeAddressChange(idx, nodeIndex, value)}
-
-              onNodeWeightChange={(nodeIndex, value) =>
-                this.onNodeWeightChange(idx, nodeIndex, value)}
-
-              onNodeModeChange={(nodeIndex, value) =>
-                this.onNodeModeChange(idx, nodeIndex, value)}
-            />
-          </ExpansionPanel>;
-        })}
+        {configs.map(this.renderConfig(panelMessages, configErrors, configSubmitting))}
 
         <ConfirmationDialog
-          onClose={() => this.setState({
-            deleteConfirmDialog: NodeBalancerConfigurations.defaultDeleteConfirmDialogState,
-          })}
+          onClose={this.onCloseConfirmation}
           title="Confirm Deletion"
-          error={(this.state.deleteConfirmDialog.errors || []).map(e => e.reason).join(',')}
-          actions={({ onClose }) =>
-            <ActionsPanel style={{ padding: 0 }}>
-              <Button
-                data-qa-confirm-cancel
-                onClick={() => this.deleteConfig()}
-                type="secondary"
-                destructive
-                loading={this.state.deleteConfirmDialog.submitting}
-              >
-                Delete
-              </Button>
-              <Button
-                onClick={() => onClose()}
-                type="secondary"
-                className="cancel"
-                data-qa-cancel-cancel
-              >
-                Cancel
-            </Button>
-            </ActionsPanel>
-          }
+          error={this.confirmationError}
+          actions={this.renderConfirmationActions}
           open={this.state.deleteConfirmDialog.open}
         >
           <Typography>Are you sure you want to delete this NodeBalancer Configuration?</Typography>

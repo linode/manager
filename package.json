@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@types/promise.prototype.finally": "^2.0.2",
+    "@types/why-did-you-update": "^0.0.8",
     "autoprefixer": "7.1.6",
     "axios": "^0.18.0",
     "bluebird": "^3.5.1",
@@ -142,6 +143,7 @@
     "wdio-junit-reporter": "^0.4.2",
     "wdio-selenium-standalone-service": "^0.0.10",
     "webdriverio": "4.12.0",
+    "why-did-you-update": "^0.1.1",
     "yargs": "11.0.0"
   },
   "jest": {
