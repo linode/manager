@@ -36,7 +36,7 @@ type StyledProps = Props & WithStyles<ClassNames>;
 
 type CombinedProps = StyledProps;
 
-class SelectLinodePanel extends React.Component<CombinedProps> {
+class SelectStackScriptPanel extends React.Component<CombinedProps> {
 
   render() {
     const { classes, onSelect, selectedId } = this.props;
@@ -88,4 +88,4 @@ const CommunityStackScripts = PromiseLoader<StackScriptsSectionProps>({
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(SelectLinodePanel);
+export default styled(SelectStackScriptPanel);
