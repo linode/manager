@@ -7,6 +7,7 @@ import IconButton from 'material-ui/IconButton';
 import Delete from 'material-ui-icons/Delete';
 import FormControlLabel from 'material-ui/Form/FormControlLabel';
 
+import RenderGuard from 'src/components/RenderGuard';
 import Button from 'src/components/Button';
 import PlusSquare from 'src/assets/icons/plus-square.svg';
 import IconTextLink from 'src/components/IconTextLink';
@@ -283,392 +284,520 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
         <Paper className={classes.root} data-qa-label-header>
           <div className={classes.inner}>
 
-            <Grid container>
-              <Grid item xs={12}>
-                <Typography variant="title">Select Port</Typography>
+            <RenderGuard
+              checkProps={['port', 'protocol', 'portError', 'protocolError']}
+              port={port}
+              protocol={protocol}
+              portError={hasErrorFor('port')}
+              protocolError={hasErrorFor('protocol')}
+            >
+              <Grid container>
+                <Grid item xs={12}>
+                  <Typography variant="title">Select Port</Typography>
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <TextField
+                    type="number"
+                    label="Port"
+                    value={port}
+                    onChange={this.onPortChange}
+                    errorText={hasErrorFor('port')}
+                  />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <TextField
+                    label="Protocol"
+                    value={protocol}
+                    select
+                    onChange={this.onProtocolChange}
+                    errorText={hasErrorFor('protocol')}
+                  >
+                    <MenuItem value="http">HTTP</MenuItem>
+                    <MenuItem value="https">HTTPS</MenuItem>
+                  </TextField>
+                </Grid>
+                <Grid item xs={12}>
+                  <Divider className={classes.divider} />
+                </Grid>
               </Grid>
-              <Grid item xs={12} md={4}>
-                <TextField
-                  type="number"
-                  label="Port"
-                  value={port}
-                  onChange={this.onPortChange}
-                  errorText={hasErrorFor('port')}
-                />
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <TextField
-                  label="Protocol"
-                  value={protocol}
-                  select
-                  onChange={this.onProtocolChange}
-                  errorText={hasErrorFor('protocol')}
-                >
-                  <MenuItem value="http">HTTP</MenuItem>
-                  <MenuItem value="https">HTTPS</MenuItem>
-                </TextField>
-              </Grid>
-              <Grid item xs={12}>
-                <Divider className={classes.divider} />
-              </Grid>
-            </Grid>
+            </RenderGuard>
 
             {
               protocol === 'https' &&
+              <RenderGuard
+                checkProps={[
+                  'sslCertificate',
+                  'protocol',
+                  'sslCertError',
+                  'privateKey',
+                  'sslKeyError',
+                ]}
+                sslCertificate={sslCertificate}
+                protocol={protocol}
+                sslCertError={hasErrorFor('ssl_cert')}
+                privateKey={privateKey}
+                sslKeyError={hasErrorFor('ssl_key')}
+              >
+                <Grid container>
+                  <Grid item xs={12}>
+                    <Typography variant="title">SSL Settings</Typography>
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <TextField
+                      multiline
+                      rows={3}
+                      label="SSL Certificate"
+                      value={sslCertificate}
+                      onChange={this.onSslCertificateChange}
+                      required={protocol === 'https'}
+                      errorText={hasErrorFor('ssl_cert')}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <TextField
+                      multiline
+                      rows={3}
+                      label="Private Key"
+                      value={privateKey}
+                      onChange={this.onPrivateKeyChange}
+                      required={protocol === 'https'}
+                      errorText={hasErrorFor('ssl_key')}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Divider className={classes.divider} />
+                  </Grid>
+                </Grid>
+              </RenderGuard>
+            }
+
+            <RenderGuard
+              checkProps={[
+                'algorithm',
+                'algoError',
+              ]}
+              algorithm={algorithm}
+              algoError={hasErrorFor('algorithm')}
+            >
               <Grid container>
                 <Grid item xs={12}>
-                  <Typography variant="title">SSL Settings</Typography>
+                  <Typography variant="title">Algorithm</Typography>
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={4}>
                   <TextField
-                    multiline
-                    rows={3}
-                    label="SSL Certificate"
-                    value={sslCertificate}
-                    onChange={this.onSslCertificateChange}
-                    required={protocol === 'https'}
-                    errorText={hasErrorFor('ssl_cert')}
-                  />
+                    label="Algorithm"
+                    value={algorithm}
+                    select
+                    onChange={this.onAlgorithmChange}
+                    errorText={hasErrorFor('algorithm')}
+                  >
+                    <MenuItem value="roundrobin">Round Robin</MenuItem>
+                    <MenuItem value="leastconn">Least Connections</MenuItem>
+                    <MenuItem value="source">Source</MenuItem>
+                  </TextField>
                 </Grid>
-                <Grid item xs={12} md={6}>
-                  <TextField
-                    multiline
-                    rows={3}
-                    label="Private Key"
-                    value={privateKey}
-                    onChange={this.onPrivateKeyChange}
-                    required={protocol === 'https'}
-                    errorText={hasErrorFor('ssl_key')}
-                  />
-                </Grid>
-                <Grid item>
+                <Grid item xs={12}>
                   <Divider className={classes.divider} />
                 </Grid>
               </Grid>
-            }
+            </RenderGuard>
 
-            <Grid container>
-              <Grid item xs={12}>
-                <Typography variant="title">Algorithm</Typography>
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <TextField
-                  label="Algorithm"
-                  value={algorithm}
-                  select
-                  onChange={this.onAlgorithmChange}
-                  errorText={hasErrorFor('algorithm')}
-                >
-                  <MenuItem value="roundrobin">Round Robin</MenuItem>
-                  <MenuItem value="leastconn">Least Connections</MenuItem>
-                  <MenuItem value="source">Source</MenuItem>
-                </TextField>
-              </Grid>
-              <Grid item xs={12}>
-                <Divider className={classes.divider} />
-              </Grid>
-            </Grid>
-
-            <Grid container>
-              <Grid item xs={12}>
-                <Typography variant="title">Session Stickiness</Typography>
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <TextField
-                  label="Session Stickiness"
-                  value={sessionStickiness}
-                  select
-                  onChange={this.onSessionStickinessChange}
-                  errorText={hasErrorFor('stickiness')}
-                >
-                  <MenuItem value="none">None</MenuItem>
-                  <MenuItem value="table">Table</MenuItem>
-                  <MenuItem value="http_cookie">HTTP Cookie</MenuItem>
-                </TextField>
-              </Grid>
-              <Grid item xs={12}>
-                <Divider className={classes.divider} />
-              </Grid>
-            </Grid>
-
-            <Grid container>
-              <Grid item xs={12}>
-                <Typography variant="title">Active Health Checks</Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <Grid item xs={12} lg={4}>
+            <RenderGuard
+              checkProps={[
+                'sessionStickiness',
+                'stickinessError',
+              ]}
+              sessionStickiness={sessionStickiness}
+              stickinessError={hasErrorFor('sitckiness')}
+            >
+              <Grid container>
+                <Grid item xs={12}>
+                  <Typography variant="title">Session Stickiness</Typography>
+                </Grid>
+                <Grid item xs={12} md={4}>
                   <TextField
-                    label="Active Health Check Type"
-                    value={healthCheckType}
+                    label="Session Stickiness"
+                    value={sessionStickiness}
                     select
-                    onChange={this.onHealthCheckTypeChange}
-                    errorText={hasErrorFor('check')}
+                    onChange={this.onSessionStickinessChange}
+                    errorText={hasErrorFor('stickiness')}
                   >
                     <MenuItem value="none">None</MenuItem>
-                    <MenuItem value="connection">TCP Connection</MenuItem>
-                    <MenuItem value="http">HTTP Status</MenuItem>
-                    <MenuItem value="http_body">HTTP Body</MenuItem>
+                    <MenuItem value="table">Table</MenuItem>
+                    <MenuItem value="http_cookie">HTTP Cookie</MenuItem>
                   </TextField>
                 </Grid>
+                <Grid item xs={12}>
+                  <Divider className={classes.divider} />
+                </Grid>
               </Grid>
+            </RenderGuard>
+
+            <Grid container>
+              <RenderGuard
+                checkProps={[
+                  'healthCheckType',
+                  'checkError',
+                ]}
+                healthCheckType={healthCheckType}
+                checkError={hasErrorFor('check')}
+              >
+                <Grid item xs={12}>
+                  <Typography variant="title">Active Health Checks</Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Grid item xs={12} lg={4}>
+                    <TextField
+                      label="Active Health Check Type"
+                      value={healthCheckType}
+                      select
+                      onChange={this.onHealthCheckTypeChange}
+                      errorText={hasErrorFor('check')}
+                    >
+                      <MenuItem value="none">None</MenuItem>
+                      <MenuItem value="connection">TCP Connection</MenuItem>
+                      <MenuItem value="http">HTTP Status</MenuItem>
+                      <MenuItem value="http_body">HTTP Body</MenuItem>
+                    </TextField>
+                  </Grid>
+                </Grid>
+              </RenderGuard>
               {
                 healthCheckType !== 'none' &&
                 <React.Fragment>
-                  <Grid item xs={12} lg={4}>
-                    <TextField
-                      type="number"
-                      label="Health Check Interval"
-                      InputProps={{
-                        endAdornment: <Typography
-                          variant="caption"
-                          component="span"
-                          className={classes.suffix}>
-                          / second
-                        </Typography>,
-                      }}
-                      value={healthCheckInterval}
-                      onChange={this.onHealthCheckIntervalChange}
-                      errorText={hasErrorFor('check_interval')}
-                    />
-                  </Grid>
-                  <Grid item xs={12} lg={4}>
-                    <TextField
-                      type="number"
-                      label="Health Check Timeout"
-                      InputProps={{
-                        endAdornment: <Typography
-                          variant="caption"
-                          component="span"
-                          className={classes.suffix}>
-                          / second
-                        </Typography>,
-                      }}
-                      value={healthCheckTimeout}
-                      onChange={this.onHealthCheckTimeoutChange}
-                      errorText={hasErrorFor('check_timeout')}
-                    />
-                  </Grid>
-                  <Grid item xs={12} lg={3}>
-                    <TextField
-                      type="number"
-                      label="Health Check Attempts"
-                      value={healthCheckAttempts}
-                      onChange={this.onHealthCheckAttemptsChange}
-                      errorText={hasErrorFor('check_attempts')}
-                    />
-                  </Grid>
+                  <RenderGuard
+                    checkProps={[
+                      'healthCheckInterval',
+                      'checkIntervalError',
+                    ]}
+                    healthCheckInterval={healthCheckInterval}
+                    checkIntervalError={hasErrorFor('check_interval')}
+                  >
+                    <Grid item xs={12} lg={4}>
+                      <TextField
+                        type="number"
+                        label="Health Check Interval"
+                        InputProps={{
+                          endAdornment: <Typography
+                            variant="caption"
+                            component="span"
+                            className={classes.suffix}>
+                            / second
+                          </Typography>,
+                        }}
+                        value={healthCheckInterval}
+                        onChange={this.onHealthCheckIntervalChange}
+                        errorText={hasErrorFor('check_interval')}
+                      />
+                    </Grid>
+                  </RenderGuard>
+                  <RenderGuard
+                    checkProps={[
+                      'healthCheckTimeout',
+                      'checkTimeoutError',
+                    ]}
+                    healthCheckTimeout={healthCheckTimeout}
+                    checkTimeoutError={hasErrorFor('check_timeout')}
+                  >
+                    <Grid item xs={12} lg={4}>
+                      <TextField
+                        type="number"
+                        label="Health Check Timeout"
+                        InputProps={{
+                          endAdornment: <Typography
+                            variant="caption"
+                            component="span"
+                            className={classes.suffix}>
+                            / second
+                          </Typography>,
+                        }}
+                        value={healthCheckTimeout}
+                        onChange={this.onHealthCheckTimeoutChange}
+                        errorText={hasErrorFor('check_timeout')}
+                      />
+                    </Grid>
+                  </RenderGuard>
+                  <RenderGuard
+                    checkProps={[
+                      'healthCheckAttempts',
+                      'checkAttemptsError',
+                    ]}
+                    healthCheckAttempts={healthCheckAttempts}
+                    checkAttemptsError={hasErrorFor('check_attempts')}
+                  >
+                    <Grid item xs={12} lg={3}>
+                      <TextField
+                        type="number"
+                        label="Health Check Attempts"
+                        value={healthCheckAttempts}
+                        onChange={this.onHealthCheckAttemptsChange}
+                        errorText={hasErrorFor('check_attempts')}
+                      />
+                    </Grid>
+                  </RenderGuard>
                   {
                     ['http', 'http_body'].includes(healthCheckType) &&
-                    <React.Fragment>
-                      <Grid item xs={12} md={6}>
-                        <TextField
-                          label="Check HTTP Path"
-                          value={checkPath}
-                          onChange={this.onCheckPathChange}
-                          required={['http', 'http_body'].includes(healthCheckType)}
-                          errorText={hasErrorFor('check_path')}
-                        />
-                      </Grid>
-                    </React.Fragment>
+                      <RenderGuard
+                        checkProps={[
+                          'checkPath',
+                          'healthCheckType',
+                          'checkPathError',
+                        ]}
+                        checkPath={checkPath}
+                        healthCheckType={healthCheckType}
+                        checkPathError={hasErrorFor('check_path')}
+                      >
+                        <React.Fragment>
+                          <Grid item xs={12} md={6}>
+                            <TextField
+                              label="Check HTTP Path"
+                              value={checkPath}
+                              onChange={this.onCheckPathChange}
+                              required={['http', 'http_body'].includes(healthCheckType)}
+                              errorText={hasErrorFor('check_path')}
+                            />
+                          </Grid>
+                        </React.Fragment>
+                      </RenderGuard>
                   }
                   {
                     healthCheckType === 'http_body' &&
-                    <React.Fragment>
-                      <Grid item xs={12} md={6}>
-                        <TextField
-                          label="Expected HTTP Body"
-                          value={checkBody}
-                          onChange={this.onCheckBodyChange}
-                          required={healthCheckType === 'http_body'}
-                          errorText={hasErrorFor('check_body')}
-                        />
-                      </Grid>
-                    </React.Fragment>
+                      <RenderGuard
+                        checkProps={[
+                          'checkBody',
+                          'healthCheckType',
+                          'checkBodyError',
+                        ]}
+                        checkBody={checkBody}
+                        healthCheckType={healthCheckType}
+                        checkBodyError={hasErrorFor('check_body')}
+                      >
+                        <React.Fragment>
+                          <Grid item xs={12} md={6}>
+                            <TextField
+                              label="Expected HTTP Body"
+                              value={checkBody}
+                              onChange={this.onCheckBodyChange}
+                              required={healthCheckType === 'http_body'}
+                              errorText={hasErrorFor('check_body')}
+                            />
+                          </Grid>
+                        </React.Fragment>
+                      </RenderGuard>
                   }
                 </React.Fragment>
               }
-              <Grid item xs={12}>
-                <Divider className={classes.divider} />
-              </Grid>
-            </Grid>
-
-            <Grid container>
-              <Grid item xs={12}>
-                <Typography variant="title">Passive Checks</Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={
-                    <Toggle
-                      checked={checkPassive}
-                      onChange={this.onCheckPassiveChange}
-                    />
-                  }
-                  label="Passive Checks"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Divider className={classes.divider} />
-              </Grid>
-            </Grid>
-
-            {forEdit &&
-              <Grid
-                container
-                justify="space-between"
-                alignItems="center"
-              >
-                <Grid item
-                  style={{ marginLeft: -16 }}
-                >
-                  <ActionsPanel>
-                    <Button
-                      variant="raised"
-                      type="primary"
-                      onClick={this.onSave}
-                      loading={submitting}
-                    >
-                      Save
-                    </Button>
-                    <Button
-                      onClick={this.onCancel}
-                    >
-                      Cancel
-                    </Button>
-                  </ActionsPanel>
+              <RenderGuard>
+                <Grid item xs={12}>
+                  <Divider className={classes.divider} />
                 </Grid>
-                <Grid item>
-                  <Button
-                    onClick={this.onDelete}
-                    type="secondary"
-                    destructive
-                  >
-                    Delete
-                  </Button>
+              </RenderGuard>
+            </Grid>
+
+            <RenderGuard
+              checkProps={[
+                'checkPassive',
+              ]}
+              checkPassive={checkPassive}
+            >
+              <Grid container>
+                <Grid item xs={12}>
+                  <Typography variant="title">Passive Checks</Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <FormControlLabel
+                    control={
+                      <Toggle
+                        checked={checkPassive}
+                        onChange={this.onCheckPassiveChange}
+                      />
+                    }
+                    label="Passive Checks"
+                  />
                 </Grid>
                 <Grid item xs={12}>
                   <Divider className={classes.divider} />
                 </Grid>
               </Grid>
+            </RenderGuard>
+
+            {forEdit &&
+              <RenderGuard
+                checkProps={[
+                  'submitting',
+                ]}
+                submitting={submitting}
+              >
+                <Grid
+                  container
+                  justify="space-between"
+                  alignItems="center"
+                >
+                  <Grid item
+                    style={{ marginLeft: -16 }}
+                  >
+                    <ActionsPanel>
+                      <Button
+                        variant="raised"
+                        type="primary"
+                        onClick={this.onSave}
+                        loading={submitting}
+                      >
+                        Save
+                      </Button>
+                      <Button
+                        onClick={this.onCancel}
+                      >
+                        Cancel
+                      </Button>
+                    </ActionsPanel>
+                  </Grid>
+                  <Grid item>
+                    <Button
+                      onClick={this.onDelete}
+                      type="secondary"
+                      destructive
+                    >
+                      Delete
+                    </Button>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Divider className={classes.divider} />
+                  </Grid>
+                </Grid>
+              </RenderGuard>
             }
 
-            <Grid container>
-              <Grid item xs={12}>
-                <Typography variant="title">Choose Backend IPs</Typography>
-              </Grid>
-              <Grid item xs={12}>
-                {
-                  nodes && nodes.map((node, idx) => {
-                    const hasErrorFor = getAPIErrorFor({
-                      label: 'label',
-                      address: 'address',
-                      weight: 'weight',
-                      mode: 'mode',
-                    }, filterErrors(idx)(errors || []));
+            <RenderGuard
+              deepCheckProps={['nodes']}
+              nodes={nodes}
+            >
+              <Grid container>
+                <Grid item xs={12}>
+                  <Typography variant="title">Choose Backend IPs</Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  {
+                    nodes && nodes.map((node, idx) => {
+                      const hasErrorFor = getAPIErrorFor({
+                        label: 'label',
+                        address: 'address',
+                        weight: 'weight',
+                        mode: 'mode',
+                      }, filterErrors(idx)(errors || []));
 
-                    return (
-                      <Grid key={idx} container alignItems="flex-end">
-                        {idx !== 0 &&
-                          <Grid item xs={12}>
-                            <Divider style={{ marginTop: 24 }} />
+                      return (
+                        <RenderGuard
+                          key={idx}
+                          deepCheckProps={['node']}
+                          node={node}
+                        >
+                          <Grid container alignItems="flex-end">
+                            {idx !== 0 &&
+                              <Grid item xs={12}>
+                                <Divider style={{ marginTop: 24 }} />
+                              </Grid>
+                            }
+                            <Grid item xs={11} lg={2}>
+                              <TextField
+                                label="Label"
+                                value={node.label}
+                                inputProps={{ 'data-config-idx': idx }}
+                                onChange={this.onNodeLabelChange}
+                                errorText={hasErrorFor('label')}
+                              />
+                            </Grid>
+                            <Grid item xs={11} lg={3}>
+                              <TextField
+                                label="Address"
+                                value={node.address}
+                                inputProps={{ 'data-config-idx': idx }}
+                                onChange={this.onNodeAddressChange}
+                                errorText={hasErrorFor('address')}
+                              />
+                            </Grid>
+                            <Grid item xs={11} lg={3}>
+                              <TextField
+                                label="Weight"
+                                type="number"
+                                value={node.weight}
+                                inputProps={{ 'data-config-idx': idx }}
+                                onChange={this.onNodeWeightChange}
+                                errorText={hasErrorFor('weight')}
+                              />
+                            </Grid>
+                            <Grid item xs={11} lg={forEdit ? 2 : 3}>
+                              <TextField
+                                label="Mode"
+                                value={node.mode}
+                                select
+                                inputProps={{ 'data-config-idx': idx }}
+                                onChange={this.onNodeModeChange}
+                                errorText={hasErrorFor('mode')}
+                              >
+                                <MenuItem value="accept">Accept</MenuItem>
+                                <MenuItem value="reject">Reject</MenuItem>
+                                <MenuItem value="drain">Drain</MenuItem>
+                              </TextField>
+                            </Grid>
+                            {(forEdit && idx !== (nodes.length - 1)) &&
+                              <Grid item xs={1}>
+                                <Button
+                                  type="primary"
+                                  data-config-idx={idx}
+                                  onClick={this.onUpdateNode}
+                                  loading={node.updating}
+                                >
+                                  Update
+                                </Button>
+                              </Grid>
+                            }
+                            {(forEdit && idx === (nodes.length - 1)) &&
+                              <Grid item xs={1}>
+                                <Button
+                                  data-config-idx={idx}
+                                  type="primary"
+                                  onClick={this.addNode}
+                                >
+                                  Add
+                                </Button>
+                              </Grid>
+                            }
+                            <Grid item xs={1}>
+                              {/**
+                                * Show the delete button for index 0 if we are
+                                * editing the Config. Don't show the delete button
+                                * for the final index if we are editing the Config.
+                                **/}
+                              {(forEdit ? idx !== (nodes.length - 1) : idx !== 0) &&
+                                <IconButton data-config-idx={idx} onClick={this.removeNode}>
+                                  <Delete />
+                                </IconButton>
+                              }
+                            </Grid>
                           </Grid>
-                        }
-                        <Grid item xs={11} lg={2}>
-                          <TextField
-                            label="Label"
-                            value={node.label}
-                            inputProps={{ 'data-config-idx': idx }}
-                            onChange={this.onNodeLabelChange}
-                            errorText={hasErrorFor('label')}
-                          />
-                        </Grid>
-                        <Grid item xs={11} lg={3}>
-                          <TextField
-                            label="Address"
-                            value={node.address}
-                            inputProps={{ 'data-config-idx': idx }}
-                            onChange={this.onNodeAddressChange}
-                            errorText={hasErrorFor('address')}
-                          />
-                        </Grid>
-                        <Grid item xs={11} lg={3}>
-                          <TextField
-                            label="Weight"
-                            type="number"
-                            value={node.weight}
-                            inputProps={{ 'data-config-idx': idx }}
-                            onChange={this.onNodeWeightChange}
-                            errorText={hasErrorFor('weight')}
-                          />
-                        </Grid>
-                        <Grid item xs={11} lg={forEdit ? 2 : 3}>
-                          <TextField
-                            label="Mode"
-                            value={node.mode}
-                            select
-                            inputProps={{ 'data-config-idx': idx }}
-                            onChange={this.onNodeModeChange}
-                            errorText={hasErrorFor('mode')}
-                          >
-                            <MenuItem value="accept">Accept</MenuItem>
-                            <MenuItem value="reject">Reject</MenuItem>
-                            <MenuItem value="drain">Drain</MenuItem>
-                          </TextField>
-                        </Grid>
-                        {(forEdit && idx !== (nodes.length - 1)) &&
-                          <Grid item xs={1}>
-                            <Button
-                              type="primary"
-                              data-config-idx={idx}
-                              onClick={this.onUpdateNode}
-                              loading={node.updating}
-                            >
-                              Update
-                            </Button>
-                          </Grid>
-                        }
-                        {(forEdit && idx === (nodes.length - 1)) &&
-                          <Grid item xs={1}>
-                            <Button
-                              data-config-idx={idx}
-                              type="primary"
-                              onClick={this.addNode}
-                            >
-                              Add
-                            </Button>
-                          </Grid>
-                        }
-                        <Grid item xs={1}>
-                          {/**
-                            * Show the delete button for index 0 if we are
-                            * editing the Config. Don't show the delete button
-                            * for the final index if we are editing the Config.
-                            **/}
-                          {(forEdit ? idx !== (nodes.length - 1) : idx !== 0) &&
-                            <IconButton data-config-idx={idx} onClick={this.removeNode}>
-                              <Delete />
-                            </IconButton>
-                          }
-                        </Grid>
-                      </Grid>
-                    );
-                  })
+                        </RenderGuard>
+                      );
+                    })
+                  }
+                </Grid>
+                {/* Adding nodes is done in-line when editing the Config */}
+                {!forEdit &&
+                  <RenderGuard>
+                    <Grid item xs={12}>
+                      <IconTextLink
+                        SideIcon={PlusSquare}
+                        onClick={addNode}
+                        title="Add a Node"
+                        text="Add a Node"
+                      >
+                        Add a Node
+                      </IconTextLink>
+                    </Grid>
+                  </RenderGuard>
                 }
               </Grid>
-              {/* Adding nodes is done in-line when editing the Config */}
-              {!forEdit &&
-                <Grid item xs={12}>
-                  <IconTextLink
-                    SideIcon={PlusSquare}
-                    onClick={addNode}
-                    title="Add a Node"
-                    text="Add a Node"
-                  >
-                    Add a Node
-                  </IconTextLink>
-                </Grid>
-              }
-            </Grid>
+            </RenderGuard>
           </div>
         </Paper>
       </Grid>

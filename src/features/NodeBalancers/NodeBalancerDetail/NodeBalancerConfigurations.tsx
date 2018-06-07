@@ -48,6 +48,7 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import ActionsPanel from 'src/components/ActionsPanel';
+import RenderGuard from 'src/components/RenderGuard';
 
 import { lensFrom, validationErrorsToFieldErrors } from '../NodeBalancerCreate';
 import NodeBalancerConfigPanel from '../NodeBalancerConfigPanel';
@@ -552,77 +553,82 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     const sslCertificateLens = lensTo(['ssl_cert']);
     const privateKeyLens = lensTo(['ssl_key']);
 
-    return <ExpansionPanel
+    return <RenderGuard
         key={idx}
-        defaultExpanded={true}
-        heading={`Port ${config.port}`}
-        success={panelMessages[idx]}
+        deepCheckProps={['config']}
+        config={config}
       >
-        <NodeBalancerConfigPanel
-          forEdit
-          onSave={this.onSaveConfig(idx)}
-          onCancel={this.onCancelEditingConfig(idx)}
-          submitting={configSubmitting[idx]}
-          onDelete={this.onDeleteConfig(config.id)}
+        <ExpansionPanel
+          defaultExpanded={true}
+          heading={`Port ${config.port}`}
+          success={panelMessages[idx]}
+        >
+          <NodeBalancerConfigPanel
+            forEdit
+            onSave={this.onSaveConfig(idx)}
+            onCancel={this.onCancelEditingConfig(idx)}
+            submitting={configSubmitting[idx]}
+            onDelete={this.onDeleteConfig(config.id)}
 
-          errors={configErrors[idx]}
+            errors={configErrors[idx]}
 
-          algorithm={defaultTo('roundrobin', view(algorithmLens, this.state))}
-          onAlgorithmChange={this.updateState(algorithmLens)}
+            algorithm={defaultTo('roundrobin', view(algorithmLens, this.state))}
+            onAlgorithmChange={this.updateState(algorithmLens)}
 
-          checkPassive={defaultTo(true, view(checkPassiveLens, this.state))}
-          onCheckPassiveChange={this.updateState(checkPassiveLens)}
+            checkPassive={defaultTo(true, view(checkPassiveLens, this.state))}
+            onCheckPassiveChange={this.updateState(checkPassiveLens)}
 
-          checkBody={defaultTo('', view(checkBodyLens, this.state))}
-          onCheckBodyChange={this.updateState(checkBodyLens)}
+            checkBody={defaultTo('', view(checkBodyLens, this.state))}
+            onCheckBodyChange={this.updateState(checkBodyLens)}
 
-          checkPath={defaultTo('', view(checkPathLens, this.state))}
-          onCheckPathChange={this.updateState(checkPathLens)}
+            checkPath={defaultTo('', view(checkPathLens, this.state))}
+            onCheckPathChange={this.updateState(checkPathLens)}
 
-          port={defaultTo(80, view(portLens, this.state))}
-          onPortChange={this.updateState(portLens)}
+            port={defaultTo(80, view(portLens, this.state))}
+            onPortChange={this.updateState(portLens)}
 
-          protocol={defaultTo('http', view(protocolLens, this.state))}
-          onProtocolChange={this.updateState(protocolLens)}
+            protocol={defaultTo('http', view(protocolLens, this.state))}
+            onProtocolChange={this.updateState(protocolLens)}
 
-          healthCheckType={defaultTo('connection', view(healthCheckTypeLens, this.state))}
-          onHealthCheckTypeChange={this.updateState(healthCheckTypeLens)}
+            healthCheckType={defaultTo('connection', view(healthCheckTypeLens, this.state))}
+            onHealthCheckTypeChange={this.updateState(healthCheckTypeLens)}
 
-          healthCheckAttempts={defaultTo(2, view(healthCheckAttemptsLens, this.state))}
-          onHealthCheckAttemptsChange={this.updateState(healthCheckAttemptsLens)}
+            healthCheckAttempts={defaultTo(2, view(healthCheckAttemptsLens, this.state))}
+            onHealthCheckAttemptsChange={this.updateState(healthCheckAttemptsLens)}
 
-          healthCheckInterval={defaultTo(5, view(healthCheckIntervalLens, this.state))}
-          onHealthCheckIntervalChange={this.updateState(healthCheckIntervalLens)}
+            healthCheckInterval={defaultTo(5, view(healthCheckIntervalLens, this.state))}
+            onHealthCheckIntervalChange={this.updateState(healthCheckIntervalLens)}
 
-          healthCheckTimeout={defaultTo(3, view(healthCheckTimeoutLens, this.state))}
-          onHealthCheckTimeoutChange={this.updateState(healthCheckTimeoutLens)}
+            healthCheckTimeout={defaultTo(3, view(healthCheckTimeoutLens, this.state))}
+            onHealthCheckTimeoutChange={this.updateState(healthCheckTimeoutLens)}
 
-          sessionStickiness={defaultTo('table', view(sessionStickinessLens, this.state))}
-          onSessionStickinessChange={this.updateState(sessionStickinessLens)}
+            sessionStickiness={defaultTo('table', view(sessionStickinessLens, this.state))}
+            onSessionStickinessChange={this.updateState(sessionStickinessLens)}
 
-          sslCertificate={defaultTo('', view(sslCertificateLens, this.state))}
-          onSslCertificateChange={this.updateState(sslCertificateLens)}
+            sslCertificate={defaultTo('', view(sslCertificateLens, this.state))}
+            onSslCertificateChange={this.updateState(sslCertificateLens)}
 
-          privateKey={defaultTo('', view(privateKeyLens, this.state))}
-          onPrivateKeyChange={this.updateState(privateKeyLens)}
+            privateKey={defaultTo('', view(privateKeyLens, this.state))}
+            onPrivateKeyChange={this.updateState(privateKeyLens)}
 
-          nodes={config.nodes}
+            nodes={config.nodes}
 
-          addNode={this.addNode(idx)}
+            addNode={this.addNode(idx)}
 
-          removeNode={this.removeNode(idx)}
+            removeNode={this.removeNode(idx)}
 
-          onUpdateNode={this.onUpdateNode(idx)}
+            onUpdateNode={this.onUpdateNode(idx)}
 
-          onNodeLabelChange={this.onNodeLabelChange(idx)}
+            onNodeLabelChange={this.onNodeLabelChange(idx)}
 
-          onNodeAddressChange={this.onNodeAddressChange(idx)}
+            onNodeAddressChange={this.onNodeAddressChange(idx)}
 
-          onNodeWeightChange={this.onNodeWeightChange(idx)}
+            onNodeWeightChange={this.onNodeWeightChange(idx)}
 
-          onNodeModeChange={this.onNodeModeChange(idx)}
-        />
-      </ExpansionPanel>;
+            onNodeModeChange={this.onNodeModeChange(idx)}
+          />
+        </ExpansionPanel>
+      </RenderGuard>;
   }
 
   renderConfirmationActions = ({ onClose }: { onClose: () => void }) => (
