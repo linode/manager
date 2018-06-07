@@ -45,17 +45,17 @@ describe('FromImageContent', () => {
     expect(component.find('WithStyles(Notice)')).toHaveLength(0);
   });
 
-  // it('should render SelectStackScript panel', () => {
-  //   expect(component.find('SelectStackScript')).toHaveLength(1);
-  // });
-
-  // it('should render UserDefinedFields panel if user defined fields exist', () => {
-  //   expect(component.find('UserDefinedFieldsPanel')).toHaveLength(1);
-  // });
-
-  it('should not render UserDefinedFields panel if no user defined fields exist', () => {
-    expect(component.find('UserDefinedFields')).toHaveLength(0);
+  it('should render SelectStackScript panel', () => {
+    expect(component.find('WithStyles(SelectStackScriptPanel)')).toHaveLength(1);
   });
+
+  it('should render UserDefinedFields panel if user defined fields exist', () => {
+    expect(component.find('WithStyles(UserDefinedFieldsPanel)')).toHaveLength(1);
+  });
+
+  // it('should not render UserDefinedFields panel if no user defined fields exist', () => {
+  //   expect(component.find('WithStyles(UserDefinedFieldsPanel)')).toHaveLength(0);
+  // });
 
   it('should render SelectImage panel', () => {
     expect(component.find('CreateFromImage')).toHaveLength(1);

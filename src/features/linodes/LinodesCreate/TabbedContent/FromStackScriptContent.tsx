@@ -18,6 +18,7 @@ import Notice from 'src/components/Notice';
 import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel';
+import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
 
 
 type ClassNames = 'root';
@@ -49,7 +50,9 @@ interface Props {
   password: string | null;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+interface State {
+  userDefinedFields: Linode.StackScript.UserDefinedField[] | null;
+}
 
 const errorResources = {
   type: 'A plan selection',
@@ -58,82 +61,97 @@ const errorResources = {
   root_pass: 'A root password',
 };
 
-export const FromStackScriptContent: React.StatelessComponent<CombinedProps> = (props) => {
-  const { notice, errors, backups, privateIP, updateFormState,
-    getBackupsMonthlyPrice, label, images, regions, selectedImageID,
-    selectedRegionID, selectedStackScriptID, selectedTypeID, password, types } = props;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
-  const hasErrorFor = getAPIErrorsFor(errorResources, errors);
-  const generalError = hasErrorFor('none');
+export class FromStackScriptContent extends React.Component<CombinedProps, State> {
+  state: State = {
+    userDefinedFields: [],
+  };
 
-  return (
-    <React.Fragment>
-      {notice &&
-        <Notice
-          text={notice.text}
-          error={(notice.level) === 'error'}
-          warning={(notice.level === 'warning')}
+  render() {
+    const { notice, errors, backups, privateIP, updateFormState,
+      getBackupsMonthlyPrice, label, images, regions, selectedImageID,
+      selectedRegionID, selectedStackScriptID, selectedTypeID, password, types } = this.props;
+
+    const { userDefinedFields } = this.state;
+
+    const hasErrorFor = getAPIErrorsFor(errorResources, errors);
+    const generalError = hasErrorFor('none');
+
+    return (
+      <React.Fragment>
+        {notice &&
+          <Notice
+            text={notice.text}
+            error={(notice.level) === 'error'}
+            warning={(notice.level === 'warning')}
+          />
+        }
+        {generalError &&
+          <Notice text={generalError} error={true} />
+        }
+        <SelectStackScriptPanel
+          selectedId={selectedStackScriptID}
+          shrinkPanel={true}
+          onSelect={(id: number) => {
+            updateFormState([{ stateKey: 'selectedStackScriptID', newValue: id }]);
+          }}
         />
-      }
-      {generalError &&
-        <Notice text={generalError} error={true} />
-      }
-      <SelectStackScriptPanel
-        selectedId={selectedStackScriptID}
-        shrinkPanel={true}
-        onSelect={(id: number) => {
-          updateFormState([{ stateKey: 'selectedStackScriptID', newValue: id }]);
-        }}
-      />
-      <SelectImagePanel
-        images={images}
-        handleSelection={(id: string) =>
-          updateFormState([{ stateKey: 'selectedImageID', newValue: id }])}
-        selectedImageID={selectedImageID}
-      />
-      <SelectRegionPanel
-        error={hasErrorFor('region')}
-        regions={regions}
-        handleSelection={(id: string) =>
-          updateFormState([{ stateKey: 'selectedRegionID', newValue: id }])}
-        selectedID={selectedRegionID}
-        copy="Determine the best location for your Linode."
-      />
-      <SelectPlanPanel
-        error={hasErrorFor('type')}
-        types={types}
-        onSelect={(id: string) =>
-          updateFormState([{ stateKey: 'selectedTypeID', newValue: id }])}
-        selectedID={selectedTypeID}
-      />
-      <LabelAndTagsPanel
-        labelFieldProps={{
-          label: 'Linode Label',
-          value: label || '',
-          onChange: e =>
-            updateFormState([{ stateKey: 'label', newValue: e.target.value }]),
-          errorText: hasErrorFor('label'),
-        }}
-      />
-      <PasswordPanel
-        error={hasErrorFor('root_pass')}
-        password={password}
-        handleChange={v =>
-          updateFormState([{ stateKey: 'password', newValue: v }])}
-      />
-      <AddonsPanel
-        backups={backups}
-        backupsMonthly={getBackupsMonthlyPrice()}
-        privateIP={privateIP}
-        changeBackups={() =>
-          updateFormState([{ stateKey: 'backups', newValue: !backups }])}
-        changePrivateIP={() =>
-          updateFormState([{ stateKey: 'privateIP', newValue: !privateIP }])}
-      />
-    </React.Fragment>
-  );
-};
+        {userDefinedFields &&
+          <UserDefinedFieldsPanel
+          />
+        }
+        <SelectImagePanel
+          images={images}
+          handleSelection={(id: string) =>
+            updateFormState([{ stateKey: 'selectedImageID', newValue: id }])}
+          selectedImageID={selectedImageID}
+        />
+        <SelectRegionPanel
+          error={hasErrorFor('region')}
+          regions={regions}
+          handleSelection={(id: string) =>
+            updateFormState([{ stateKey: 'selectedRegionID', newValue: id }])}
+          selectedID={selectedRegionID}
+          copy="Determine the best location for your Linode."
+        />
+        <SelectPlanPanel
+          error={hasErrorFor('type')}
+          types={types}
+          onSelect={(id: string) =>
+            updateFormState([{ stateKey: 'selectedTypeID', newValue: id }])}
+          selectedID={selectedTypeID}
+        />
+        <LabelAndTagsPanel
+          labelFieldProps={{
+            label: 'Linode Label',
+            value: label || '',
+            onChange: e =>
+              updateFormState([{ stateKey: 'label', newValue: e.target.value }]),
+            errorText: hasErrorFor('label'),
+          }}
+        />
+        <PasswordPanel
+          error={hasErrorFor('root_pass')}
+          password={password}
+          handleChange={v =>
+            updateFormState([{ stateKey: 'password', newValue: v }])}
+        />
+        <AddonsPanel
+          backups={backups}
+          backupsMonthly={getBackupsMonthlyPrice()}
+          privateIP={privateIP}
+          changeBackups={() =>
+            updateFormState([{ stateKey: 'backups', newValue: !backups }])}
+          changePrivateIP={() =>
+            updateFormState([{ stateKey: 'privateIP', newValue: !privateIP }])}
+        />
+      </React.Fragment>
+    );
+  }
+}
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(FromStackScriptContent);
+export default styled(FromStackScriptContent);
+
