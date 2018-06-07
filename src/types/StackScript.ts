@@ -20,9 +20,10 @@ namespace Linode {
     export interface UserDefinedField {
       label: string;
       name: string;
-      example: string;
-      oneOf?: string;
-      manyOf?: string;
+      example?: string;
+      oneof?: string;
+      manyof?: string;
+      default?: string;
     }
 
     export type Request = any;
