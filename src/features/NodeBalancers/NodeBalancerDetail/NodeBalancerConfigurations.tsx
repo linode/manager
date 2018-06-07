@@ -8,6 +8,7 @@ import {
   WithStyles,
 } from 'material-ui';
 import {
+  init,
   compose,
   append,
   clone,
@@ -153,6 +154,10 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       el => el !== undefined,
       {
         ...config,
+        check_attempts: +config.check_attempts,
+        check_interval: +config.check_interval,
+        check_timeout: +config.check_timeout,
+        port: +config.port,
         check_body: config.check_body || undefined,
         check_path: config.check_path || undefined,
         ssl_cert: config.ssl_cert === '<REDACTED>'
@@ -166,6 +171,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         nodes_status: undefined,
         id: undefined,
         nodebalancer_id: undefined,
+        nodes: init(config.nodes.map(pick(['label', 'address', 'weight', 'mode']))),
       },
     );
 
