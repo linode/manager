@@ -85,6 +85,7 @@ interface State {
   selectedImageID: string | null;
   selectedRegionID: string | null;
   selectedTypeID: string | null;
+  selectedStackScriptID: number | null;
   label: string | null;
   password: string | null;
   backups: boolean;
@@ -132,6 +133,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
     selectedImageID: null,
     selectedRegionID: null,
     selectedTypeID: null,
+    selectedStackScriptID: null,
     label: null,
     password: null,
     backups: false,
@@ -333,6 +335,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
             selectedRegionID={this.state.selectedRegionID}
             selectedImageID={this.state.selectedImageID}
             selectedTypeID={this.state.selectedTypeID}
+            selectedStackScriptID={this.state.selectedStackScriptID}
           />
         );
       },

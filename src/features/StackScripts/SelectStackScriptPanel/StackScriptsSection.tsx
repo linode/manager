@@ -27,7 +27,7 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => 
   return (
     <div>
       {
-        data && data.map(stackScript(onSelect, selectedId))
+        data && data.slice(0, 5).map(stackScript(onSelect, selectedId))
       }
     </div>
   );

@@ -47,6 +47,7 @@ interface Props {
   tabs: Tab[];
   [index: string]: any;
   initTab?: number;
+  shrinkTabContent?: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -59,16 +60,16 @@ class TabbedPanel extends React.Component<CombinedProps> {
   }
 
   render() {
-    const { classes, header, tabs, copy, error, rootClass, ...rest } = this.props;
+    const { classes, header, tabs, shrinkTabContent, copy, error, rootClass, ...rest } = this.props;
     const { value } = this.state;
     const render = tabs[value].render;
 
     return (
       <Paper className={`${classes.root} ${rootClass}`} data-qa-tp={header}>
-        <div className={classes.inner}>
-          { error && <Notice text={error} error /> }
+        <div className={`${classes.inner}`}>
+          {error && <Notice text={error} error />}
           <Typography variant="title" data-qa-tp-title>{header}</Typography>
-          { copy && <Typography component="div" className={classes.copy }
+          {copy && <Typography component="div" className={classes.copy}
             data-qa-tp-copy>{copy}</Typography>}
           <AppBar position="static" color="default">
             <Tabs
@@ -76,13 +77,14 @@ class TabbedPanel extends React.Component<CombinedProps> {
               onChange={this.handleChange}
               indicatorColor="primary"
               textColor="primary"
-              className={classes.tabs}
+              className={`${classes.tabs}`}
             >
-            { tabs.map((tab, idx) => <Tab key={idx} label={tab.title} data-qa-tab={tab.title} />) }
+              {tabs.map((tab, idx) => <Tab key={idx} label={tab.title} data-qa-tab={tab.title} />)}
             </Tabs>
           </AppBar>
-          <Typography component="div" className={classes.panelBody} data-qa-tab-body>
-            { render(rest) }
+          <Typography component="div" className={`${classes.panelBody} ${shrinkTabContent}`}
+            data-qa-tab-body>
+            {render(rest)}
           </Typography>
         </div>
       </Paper>

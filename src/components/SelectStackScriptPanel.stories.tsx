@@ -6,11 +6,13 @@ import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptP
 import { StaticRouter } from 'react-router';
 
 interface State {
-  selectedId?: number;
+  selectedId: number | null;
 }
 
 class InteractiveExample extends React.Component<{}, State> {
-  state: State = {};
+  state: State = {
+    selectedId: null,
+  };
 
   render() {
     return (

@@ -129,7 +129,7 @@ const createTags: (images: string[]) => JSX.Element[] =
   map(createTag);
 
 const createShowMore: (images: string[]) => JSX.Element =
-  images => <ShowMore items={images} render={createTags} />;
+  images => <ShowMore key={0} items={images} render={createTags} />;
 
 const displayTagsAndShowMore: (s: string[]) => JSX.Element[][] =
   compose<string[], string[][], any, JSX.Element[][]>(
