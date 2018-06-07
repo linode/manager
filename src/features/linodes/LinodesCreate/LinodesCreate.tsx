@@ -21,15 +21,17 @@ import { getImages } from 'src/services/images';
 
 import Grid from 'src/components/Grid';
 import PromiseLoader from 'src/components/PromiseLoader';
+import CheckoutBar from 'src/components/CheckoutBar';
+
 import FromBackupsContent from './TabbedContent/FromBackupsContent';
 import FromImageContent from './TabbedContent/FromImageContent';
 import FromLinodeContent from './TabbedContent/FromLinodeContent';
+import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
 
 import { ExtendedLinode } from './SelectLinodePanel';
 import { ExtendedRegion } from 'src/components/SelectRegionPanel';
 import { ExtendedType } from './SelectPlanPanel';
 import { typeLabelDetails, displayType } from '../presentation';
-import CheckoutBar from 'src/components/CheckoutBar';
 import { resetEventsPolling } from 'src/events';
 
 type Info = { title: string, details?: string } | undefined;
@@ -313,11 +315,34 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
         );
       },
     },
+    {
+      title: 'Create from StackScript',
+      render: () => {
+        return (
+          <FromStackScriptContent
+            errors={this.state.errors}
+            updateFormState={this.updateState}
+            getBackupsMonthlyPrice={this.getBackupsMonthlyPrice}
+            regions={this.props.regions}
+            images={this.props.images.response}
+            types={this.props.types}
+            backups={this.state.backups}
+            privateIP={this.state.privateIP}
+            label={this.state.label}
+            password={this.state.password}
+            selectedRegionID={this.state.selectedRegionID}
+            selectedImageID={this.state.selectedImageID}
+            selectedTypeID={this.state.selectedTypeID}
+          />
+        );
+      },
+    },
   ];
 
   imageTabIndex = this.tabs.findIndex(tab => tab.title.toLowerCase().includes('image'));
   backupTabIndex = this.tabs.findIndex(tab => tab.title.toLowerCase().includes('backup'));
   cloneTabIndex = this.tabs.findIndex(tab => tab.title.toLowerCase().includes('clone'));
+  stackScriptTabIndex = this.tabs.findIndex(tab => tab.title.toLowerCase().includes('stackscript'));
 
   componentWillUnmount() {
     this.mounted = false;
