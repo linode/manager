@@ -144,7 +144,7 @@ export const aggregateBackups = (backups: Linode.LinodeBackupsResponse): Linode.
   const manualSnapshot = path(['status'], backups.snapshot.in_progress) === 'needsPostProcessing'
     ? backups.snapshot.in_progress
     : backups.snapshot.current;
-  return backups && [...backups.automatic, manualSnapshot].filter(b => Boolean(b));
+  return backups && [...backups.automatic!, manualSnapshot!].filter(b => Boolean(b));
 };
 
 export function formatBackupDate(backupDate: string) {
