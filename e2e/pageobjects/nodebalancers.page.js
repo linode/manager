@@ -3,7 +3,7 @@ const { constants } = require('../constants');
 import Page from './page.js';
 
 class NodeBalancers extends Page {
-
+    get create() { return $('[data-qa-deploy-linode]'); }
     get placeholderText() { return $('[data-qa-placeholder-title]'); }
     get placeholderButton() { return $('[data-qa-placeholder-button]'); }
     get createNodeBalancerMenu() { return $('[data-qa-add-new-menu="NodeBalancer"]'); }
@@ -28,7 +28,7 @@ class NodeBalancers extends Page {
     get activeCheckType() { return $('[data-qa-active-check-select]'); }
     get activeCheckInterval() { return $('[data-qa-active-check-interval] input'); }
     get activeCheckTimeout() { return $('[data-qa-active-check-timeout] input'); }
-    get activeCheckAttempts() { return $('[data-qa-active-check-attempts]'); }
+    get activeCheckAttempts() { return $('[data-qa-active-check-attempts] input'); }
     
     get passiveChecksHeader() { return $('[data-qa-passive-checks-header]'); }
     get passiveChecksToggle() { return $('[data-qa-passive-checks-toggle]'); }
@@ -38,7 +38,7 @@ class NodeBalancers extends Page {
     get backendIpLabel() { return $('[data-qa-backend-ip-label] input'); }
     get backendIpAddress() { return $('[data-qa-backend-ip-address] input'); }
     get backendIpWeight() { return $('[data-qa-backend-ip-weight] input'); }
-    get backendIpMode() { return $('[data-qa-backend-ip-mode] input'); }
+    get backendIpMode() { return $('[data-qa-backend-ip-mode]'); }
 
     get removeNode() { return $('[data-qa-remove-node]'); }
     get addNode() { return $('[data-qa-add-node]'); }
@@ -54,7 +54,7 @@ class NodeBalancers extends Page {
             expect(this.regionSection.isVisible()).toBe(true);
             expect(this.regionTabs.length).toBeGreaterThan(0);
             expect(this.regionCards.length).toBeGreaterThan(0);
-            
+
             expect(this.connectionThrottleSection.isVisible()).toBe(true);
             expect(this.connectionThrottle.isVisible()).toBe(true);
             expect(this.settingsSection.isVisible()).toBe(true);
@@ -66,9 +66,19 @@ class NodeBalancers extends Page {
             expect(this.sessionStickiness.getText()).toContain('Table');
             
             expect(this.activeChecksHeader.isVisible()).toBe(true);
-            expect(this.activeCheckAttempts.isVisible()).toBe(true);
-            expect(this.activeCheckTimeout.isVisible()).toBe(true);
+            expect(this.activeCheckAttempts.getValue()).toBe('2');
+            expect(this.activeCheckTimeout.getValue()).toBe('3');
             expect(this.activeCheckType.isVisible()).toBe(true);
+            expect(this.activeCheckInterval.getValue()).toBe('5');
+
+            expect(this.passiveChecksHeader.waitForText()).toBe(true);
+            expect(this.passiveChecksToggle.isVisible()).toBe(true);
+
+            expect(this.backendIpsHeader.waitForText()).toBe(true);
+            expect(this.backendIpLabel.isVisible()).toBe(true);
+            expect(this.backendIpAddress.isVisible()).toBe(true);
+            expect(this.backendIpWeight.getValue()).toBe('100');
+            expect(this.backendIpMode.getText()).toContain('Accept');
         }
     }
 

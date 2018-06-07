@@ -4,6 +4,8 @@ const {
     createLinode,
     removeAllVolumes,
     allocatePrivateIp,
+    getNodebalancers,
+    removeNodebalancer,
 } = require('../setup/setup');
 
 const { readToken } = require('../utils/config-utils');
@@ -40,7 +42,7 @@ exports.browserCommands = () => {
 
     browser.addCommand('removeAllLinodes', function async(token) {
         return removeAllLinodes(token)
-            .then((res) => res.length > 0);
+            .then(res => res.length > 0);
     });
 
     browser.addCommand('removeAllVolumes', function async(token) {
@@ -50,6 +52,16 @@ exports.browserCommands = () => {
 
     browser.addCommand('allocatePrivateIp', function async(token, linodeId) {
         return allocatePrivateIp(token, linodeId)
+            .then(res => res);
+    });
+
+    browser.addCommand('getNodebalancers', function async(token) {
+        return getNodebalancers(token)
+            .then(res => res);
+    });
+
+    browser.addCommand('removeNodebalancers', function async(token, nodebalancerId) {
+        return removeNodebalancer(token, nodebalancerId)
             .then(res => res);
     });
 
