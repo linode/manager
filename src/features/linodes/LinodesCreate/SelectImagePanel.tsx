@@ -38,8 +38,7 @@ interface Props {
   images: Linode.Image[];
   error?: string;
   selectedImageID: string | null;
-  handleSelection: (key: string) =>
-    (event: React.SyntheticEvent<HTMLElement>, value: string) => void;
+  handleSelection: (id: string) => void;
 }
 
 const sortByVendor = sortBy(prop('vendor'));
@@ -79,11 +78,10 @@ export const getMyImages = compose<any, any, any>(
 );
 
 const CreateFromImage: React.StatelessComponent<Props> = (props) => {
-  const { images, error } = props;
+  const { images, error, handleSelection } = props;
   const publicImages = getPublicImages(images);
   const olderPublicImages = getOlderPublicImages(images);
   const myImages = getMyImages(images);
-  const handleSelection = props.handleSelection('selectedImageID');
 
   return (
     <TabbedPanel
@@ -100,7 +98,7 @@ const CreateFromImage: React.StatelessComponent<Props> = (props) => {
                   <SelectionCard
                     key={idx}
                     checked={image.id === String(props.selectedImageID)}
-                    onClick={e => handleSelection(e, image.id)}
+                    onClick={() => handleSelection(image.id)}
                     renderIcon={() => {
                       return <span className={`fl-${distroIcons[(image.vendor as string)]}`} />;
                     }}
@@ -116,7 +114,7 @@ const CreateFromImage: React.StatelessComponent<Props> = (props) => {
                     <SelectionCard
                       key={idx}
                       checked={image.id === String(props.selectedImageID)}
-                      onClick={e => handleSelection(e, image.id)}
+                      onClick={() => handleSelection(image.id)}
                       renderIcon={() => {
                         return <span className={`fl-${distroIcons[(image.vendor as string)]}`} />;
                       }}
@@ -137,7 +135,7 @@ const CreateFromImage: React.StatelessComponent<Props> = (props) => {
                 <SelectionCard
                   key={idx}
                   checked={image.id === String(props.selectedImageID)}
-                  onClick={e => handleSelection(e, image.id)}
+                  onClick={() => handleSelection(image.id)}
                   renderIcon={() => <span className="fl-tux" /> }
                   heading={(image.label as string)}
                   subheadings={[(image.description as string)]}

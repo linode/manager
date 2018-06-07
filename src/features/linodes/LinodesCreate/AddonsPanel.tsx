@@ -76,9 +76,8 @@ interface Props {
   backups: boolean;
   backupsMonthly: number | null;
   privateIP: boolean;
-  handleChange: (key: string) =>
-    (e: React.ChangeEvent<Linode.TodoAny>, value: any) =>
-      void;
+  changeBackups: () => void;
+  changePrivateIP: () => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -97,9 +96,7 @@ class AddonsPanel extends React.Component<CombinedProps> {
   }
 
   render() {
-    const { classes, handleChange } = this.props;
-    const setBackups = handleChange('backups');
-    const setPrivateIP = handleChange('privateIP');
+    const { classes, changeBackups, changePrivateIP } = this.props;
 
     return (
       <Paper className={classes.root} data-qa-add-ons>
@@ -112,7 +109,7 @@ class AddonsPanel extends React.Component<CombinedProps> {
                 control={
                   <CheckBox
                     checked={this.props.backups}
-                    onChange={e => setBackups(e, !this.props.backups)}
+                    onChange={() => changeBackups()}
                   />
                 }
                 label="Backups"
@@ -137,7 +134,7 @@ class AddonsPanel extends React.Component<CombinedProps> {
                 control={
                   <CheckBox
                     checked={this.props.privateIP}
-                    onChange={e => setPrivateIP(e, !this.props.privateIP)}
+                    onChange={() => changePrivateIP()}
                   />
                 }
                 label="Private IP (Free!)"
