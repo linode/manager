@@ -97,7 +97,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
             updateFormState([{ stateKey: 'selectedStackScriptID', newValue: id }]);
           }}
         />
-        {userDefinedFields &&
+        {userDefinedFields && userDefinedFields.length > 0 &&
           <UserDefinedFieldsPanel
           />
         }
