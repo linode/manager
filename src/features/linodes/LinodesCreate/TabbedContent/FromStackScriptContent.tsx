@@ -17,6 +17,7 @@ import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import Notice from 'src/components/Notice';
 import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
+import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel';
 
 
 type ClassNames = 'root';
@@ -37,6 +38,7 @@ interface Props {
   selectedImageID: string | null;
   selectedRegionID: string | null;
   selectedTypeID: string | null;
+  selectedStackScriptID: number | null;
   images: Linode.Image[];
   regions: ExtendedRegion[];
   types: ExtendedType[];
@@ -59,7 +61,7 @@ const errorResources = {
 export const FromStackScriptContent: React.StatelessComponent<CombinedProps> = (props) => {
   const { notice, errors, backups, privateIP, updateFormState,
     getBackupsMonthlyPrice, label, images, regions, selectedImageID,
-    selectedRegionID, selectedTypeID, password, types } = props;
+    selectedRegionID, selectedStackScriptID, selectedTypeID, password, types } = props;
 
   const hasErrorFor = getAPIErrorsFor(errorResources, errors);
   const generalError = hasErrorFor('none');
@@ -76,6 +78,13 @@ export const FromStackScriptContent: React.StatelessComponent<CombinedProps> = (
       {generalError &&
         <Notice text={generalError} error={true} />
       }
+      <SelectStackScriptPanel
+        selectedId={selectedStackScriptID}
+        shrinkPanel={true}
+        onSelect={(id: number) => {
+          updateFormState([{ stateKey: 'selectedStackScriptID', newValue: id }]);
+        }}
+      />
       <SelectImagePanel
         images={images}
         handleSelection={(id: string) =>

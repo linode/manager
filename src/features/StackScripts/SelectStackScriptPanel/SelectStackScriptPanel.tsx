@@ -11,28 +11,33 @@ export interface ExtendedLinode extends Linode.Linode {
   subHeadings: string[];
 }
 
-type ClassNames = 'root' | 'tab';
+type ClassNames = 'root' | 'creating' | 'selecting';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
-    maxHeight: '400px',
+    marginBottom: theme.spacing.unit * 3,
   },
-  tab: {
+  creating: {
     maxHeight: '400px',
+    overflowX: 'hidden',
+  },
+  selecting: {
+    maxHeight: '1000px',
     overflowX: 'hidden',
   },
 });
 
 interface Props {
-  selectedId?: number;
+  selectedId: number | null;
   onSelect: (id: number) => void;
+  shrinkPanel?: boolean;
 }
 
 type StyledProps = Props & WithStyles<ClassNames>;
 
 type CombinedProps = StyledProps;
 
-class SelectLinodePanel extends React.Component<CombinedProps> {
+class SelectStackScriptPanel extends React.Component<CombinedProps> {
 
   render() {
     const { classes } = this.props;
@@ -40,8 +45,8 @@ class SelectLinodePanel extends React.Component<CombinedProps> {
     return (
       <TabbedPanel
         rootClass={classes.root}
+        shrinkTabContent={(this.props.shrinkPanel) ? classes.creating : classes.selecting}
         header="Select StackScript"
-        tabClass={classes.tab}
         tabs={[
           {
             title: 'My StackScripts',
@@ -115,4 +120,4 @@ class Container extends React.Component<ContainerProps, ContainerState> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(SelectLinodePanel);
+export default styled(SelectStackScriptPanel);
