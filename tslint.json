@@ -1,16 +1,37 @@
 {
-    "extends": ["tslint-config-airbnb"],
-    "rules": {
-        "no-console": {
-            "severity": "warning"
-        },
-        "align": {
-          "severity": "warning"
-        },
-        "no-trailing-whitespace": true,
-        "variable-name": false,
-        "import-name": false,
-        "object-shorthand-properties-first": false,
-        "strict-boolean-expressions": false
-    }
+  "extends": [
+    "tslint:recommended",
+    "tslint-react",
+    "tslint-config-prettier"
+  ],
+  "rules": {
+    "align": { "severity": "warning" },
+    "array-type": false,
+    "ban-types": false,
+    "callable-types": { "severity": "warning" },
+    "class-name": { "severity": "warning" },
+    "curly": { "severity": "warning" },
+    "interface-name": { "severity": "warning" },
+    "interface-over-type-literal": { "severity": "warning" },
+    "jsdoc-format": { "severity": "warning" },
+    "jsx-boolean-value": { "severity": "warning" },
+    "jsx-key": { "severity": "warning" },
+    "jsx-no-lambda": { "severity": "warning" },
+    "jsx-self-close": { "severity": "warning" },
+    "max-classes-per-file": { "severity": "warning" },
+    "member-access": { "severity":"warning" },
+    "member-ordering": false,
+    "no-angle-bracket-type-assertion": { "severity": "warning" },
+    "no-console": { "severity": "warning" },
+    "no-empty-interface": { "severity": "warning" },
+    "no-empty": { "severity": "warning" },
+    "no-namespace": { "severity": "warning" },
+    "no-shadowed-variable": { "severity": "warning"},
+    "no-string-literal": { "severity": "warning" },
+    "no-unused-expression": { "severity": "warning" },
+    "object-literal-sort-keys": { "severity": "warning" },
+    "only-arrow-functions": { "severity": "warning" },
+    "ordered-imports": { "severity": "warning" },
+    "variable-name": { "severity": "warning" }
+  }
 }
