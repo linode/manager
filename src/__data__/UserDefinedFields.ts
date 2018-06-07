@@ -1,0 +1,25 @@
+export const UserDefinedFields = [
+  {
+    label: 'Wordpress root password',
+    name: 'wordpress_password',
+    example: 'The password you use to login with Wordpress',
+    default: '',
+  },
+  {
+    label: 'Wordpress user',
+    name: 'wordpress_username',
+    example: 'The user you use to login with Wordpress',
+    default: 'username',
+  },
+  {
+    label: 'Drupal Version',
+    name: 'drupal_version',
+    oneof: 'Latest Drupal 8, Latest Drupal 7',
+  },
+  {
+    label: 'Gems to install',
+    name: 'gems_to_install',
+    manyof: 'rails,mysql,passenger,rcov',
+    default: 'rails,mysql',
+  },
+];
