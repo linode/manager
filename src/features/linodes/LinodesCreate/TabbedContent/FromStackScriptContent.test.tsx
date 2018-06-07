@@ -51,11 +51,12 @@ describe('FromImageContent', () => {
   });
 
   it('should not render UserDefinedFields panel if no user defined fields exist', () => {
+    component.setState({ userDefinedFields: [] }); // set empty state
     expect(component.find('WithStyles(UserDefinedFieldsPanel)')).toHaveLength(0);
   });
 
   it('should render UserDefinedFields panel if user defined fields exist', () => {
-    component.setState({ userDefinedFields: mockUserDefinedFields });
+    component.setState({ userDefinedFields: mockUserDefinedFields }); // give us some dummy fields
     expect(component.find('WithStyles(UserDefinedFieldsPanel)')).toHaveLength(1);
   });
 

@@ -20,6 +20,8 @@ import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
 
+import { UserDefinedFields as mockUserDefinedFields } from 'src/__data__/UserDefinedFields';
+
 
 type ClassNames = 'root';
 
@@ -68,6 +70,10 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
     userDefinedFields: [],
   };
 
+  componentDidMount() {
+    this.setState({ userDefinedFields: mockUserDefinedFields });
+  }
+
   render() {
     const { notice, errors, backups, privateIP, updateFormState,
       getBackupsMonthlyPrice, label, images, regions, selectedImageID,
@@ -99,6 +105,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
         />
         {userDefinedFields && userDefinedFields.length > 0 &&
           <UserDefinedFieldsPanel
+            userDefinedFields={userDefinedFields}
           />
         }
         <SelectImagePanel
