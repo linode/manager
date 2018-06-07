@@ -217,8 +217,18 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   errorText={hasErrorFor('protocol')}
                   data-qa-protocol-select
                 >
-                  <MenuItem value="http">HTTP</MenuItem>
-                  <MenuItem value="https">HTTPS</MenuItem>
+                  <MenuItem
+                    value="http"
+                    data-qa-option="http"
+                  >
+                    HTTP
+                  </MenuItem>
+                  <MenuItem
+                    value="https"
+                    data-qa-option="https"
+                  >
+                    HTTPS
+                  </MenuItem>
                 </TextField>
               </Grid>
               <Grid item xs={12}>
@@ -277,13 +287,13 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   errorText={hasErrorFor('algorithm')}
                   data-qa-algorithm-select
                 >
-                  <MenuItem value="roundrobin" data-qa-algorithm>
+                  <MenuItem value="roundrobin" data-qa-option="roundrobin">
                     Round Robin
                   </MenuItem>
-                  <MenuItem value="leastconn" data-qa-algorithm>
+                  <MenuItem value="leastconn" data-qa-option="leastconn">
                     Least Connections
                   </MenuItem>
-                  <MenuItem value="source" data-qa-algorithm>
+                  <MenuItem value="source" data-qa-option="source">
                     Source
                   </MenuItem>
                 </TextField>
@@ -311,9 +321,24 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   errorText={hasErrorFor('stickiness')}
                   data-qa-session-stickiness-select
                 >
-                  <MenuItem value="none">None</MenuItem>
-                  <MenuItem value="table">Table</MenuItem>
-                  <MenuItem value="http_cookie">HTTP Cookie</MenuItem>
+                  <MenuItem
+                    value="none"
+                    data-qa-option="none"
+                  >
+                    None
+                  </MenuItem>
+                  <MenuItem
+                    value="table"
+                    data-qa-option="table"
+                  >
+                    Table
+                  </MenuItem>
+                  <MenuItem
+                    value="http_cookie"
+                    data-qa-option="http_cookie"
+                  >
+                    HTTP Cookie
+                  </MenuItem>
                 </TextField>
               </Grid>
               <Grid item xs={12}>

@@ -1,9 +1,10 @@
 const { constants } = require('../../constants');
 
 import NodeBalancers from '../../pageobjects/nodebalancers.page';
+import NodeBalancerDetail from '../../pageobjects/nodebalancer-detail/nodebalancer-details.page';
 import { apiCreateLinode, apiDeleteAllLinodes } from '../../utils/common';
 
-describe('Nodebalancer Create Suite', () => {
+describe('Nodebalancer - Create Suite', () => {
     let linode,
         privateIp,
         token;
@@ -16,10 +17,9 @@ describe('Nodebalancer Create Suite', () => {
     });
 
     afterAll(() => {
-        browser.pause(10000);
         apiDeleteAllLinodes();
-        const getAvailableNodebalancers = browser.getNodebalancers(token);
-        console.log(getAvailableNodebalancers);
+        const availableNodeBalancers = browser.getNodebalancers(token);
+        availableNodeBalancers.data.forEach(nb => browser.removeNodebalancer(token, nb.id));
     });
 
     it('should display placeholder message with create button', () => {
@@ -55,5 +55,9 @@ describe('Nodebalancer Create Suite', () => {
         NodeBalancers.backendIpLabel.setValue(linode.label);
         NodeBalancers.backendIpAddress.setValue(`${linode.privateIp}:80`);
         browser.jsClick('[data-qa-deploy-linode]');
+        
+        NodeBalancerDetail.baseElemsDisplay();
+        const detailPageUrl = browser.getUrl();
+        expect(detailPageUrl).toContain('/summary');
     });
 });

@@ -3,11 +3,13 @@ const { constants } = require('../constants');
 import Page from './page.js';
 
 class NodeBalancers extends Page {
-    get create() { return $('[data-qa-deploy-linode]'); }
+    get deploy() { return $('[data-qa-deploy-linode]'); }
     get placeholderText() { return $('[data-qa-placeholder-title]'); }
     get placeholderButton() { return $('[data-qa-placeholder-button]'); }
     get createNodeBalancerMenu() { return $('[data-qa-add-new-menu="NodeBalancer"]'); }
     get createHeader() { return $('[data-qa-create-nodebalancer-header]'); }
+    get label() { return $('[data-qa-label-input] input'); }
+    get selectOption() { return $('[data-qa-option]'); }
     get regionSection() { return $('[data-qa-tp="Region"]'); }
     get regionTabs() { return $$('[data-qa-tab]'); }
     get regionCards() { return $$('[data-qa-tp="Region"] [data-qa-selection-card]'); }
@@ -20,7 +22,6 @@ class NodeBalancers extends Page {
     get protocol() { return $('[data-qa-protocol-select]'); }
     get algorithmHeader() { return $('[data-qa-algorithm-header]'); }
     get algorithmSelect() { return $('[data-qa-algorithm-select]'); }
-    get algorithm() { return $('[data-qa-algorithm]'); }
     get sessionStickinessHeader() { return $('[data-qa-session-stickiness-header]'); }
     get sessionStickiness() { return $('[data-qa-session-stickiness-select]'); }
     
@@ -82,12 +83,37 @@ class NodeBalancers extends Page {
         }
     }
 
-    create(config) {
-
+    create(linodeConfig, nodeBalancerConfig={
+        // NodeBalancer Config Object
+        label: `NB-${new Date().getTime()}`,
+        regionIndex: 0,
+        connectionThrottle: 0,
+        port: 80,
+        protocol: 'http',
+        algorithm: 'roundrobin',
+        sessionStickiness: 'table',
+        activeCheckType: 'TCP Connection',
+        healthCheckInterval: 5,
+        healthCheckTimeout: 3,
+        healthCheckAttempts: 2,
+        passiveChecksToggle: true,
+    }) {
+        this.label.setValue(nodeBalancerConfig.label);
+        this.regionCards[nodeBalancerConfig.regionIndex].click();
+        this.port.setValue(nodeBalancerConfig.port);
+        this.selectMenuOption(this.protocol, nodeBalancerConfig.protocol);
+        this.selectMenuOption(this.algorithmSelect, nodeBalancerConfig.algorithm);
+        this.selectMenuOption(this.sessionStickiness, nodeBalancerConfig.sessionStickiness);
+        this.backendIpLabel.setValue(linodeConfig.label);
+        this.backendIpAddress.setValue(`${linodeConfig.privateIp}:${nodeBalancerConfig.port}`);
+        browser.jsClick('[data-qa-deploy-linode]');
     }
 
-    delete() {
-        
+    selectMenuOption(select, optionName) {
+        select.click();
+        this.selectOption.waitForVisible();
+        $(`[data-qa-option=${optionName}]`).click();
+        $(`[data-qa-option=${optionName}]`).waitForVisible(constants.wait.normal, true);
     }
 }
 

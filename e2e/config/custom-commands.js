@@ -60,7 +60,7 @@ exports.browserCommands = () => {
             .then(res => res);
     });
 
-    browser.addCommand('removeNodebalancers', function async(token, nodebalancerId) {
+    browser.addCommand('removeNodebalancer', function async(token, nodebalancerId) {
         return removeNodebalancer(token, nodebalancerId)
             .then(res => res);
     });
