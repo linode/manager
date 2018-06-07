@@ -14,7 +14,15 @@ namespace Linode {
       updated: string;
       rev_note: string;
       script: string;
-      user_defined_fields: any[];
+      user_defined_fields: UserDefinedField[];
+    }
+
+    export interface UserDefinedField {
+      label: string;
+      name: string;
+      example: string;
+      oneOf?: string;
+      manyOf?: string;
     }
 
     export type Request = any;

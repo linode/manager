@@ -18,6 +18,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     marginBottom: theme.spacing.unit * 3,
   },
   creating: {
+    minHeight: '200px',
     maxHeight: '400px',
     overflowX: 'hidden',
   },
