@@ -2,6 +2,7 @@ const { constants } = require('../constants');
 
 export default class Page {
     get dialogTitle() { return $('[data-qa-dialog-title]'); }
+    get dialogContent() { return $('[data-qa-dialog-content]'); }
     get sidebarTitle() { return $('[data-qa-sidebar-title]'); }
     get drawerTitle() { return $('[data-qa-drawer-title]'); }
     get drawerClose() { return $('[data-qa-close-drawer]'); }
@@ -40,6 +41,13 @@ export default class Page {
         browser.waitUntil(function() {
             return browser.getUrl().includes('/login');
         }, constants.wait.normal, 'Failed to redirect to login page on log out');
+    }
+
+    selectGlobalCreateItem(menuItem) {
+        this.globalCreate.click();
+        browser.waitForVisible('[data-qa-add-new-menu]', constants.wait.normal);
+        browser.click(`[data-qa-add-new-menu="${menuItem}"]`);
+        browser.waitForVisible('[data-qa-add-new-menu]', constants.wait.normal, true);
     }
 
     waitForNotice(noticeMsg, timeout=10000) {

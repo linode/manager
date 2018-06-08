@@ -1,7 +1,7 @@
 const { constants } = require('../../constants');
 
 import NodeBalancers from '../../pageobjects/nodebalancers.page';
-import NodeBalancerDetail from '../../pageobjects/nodebalancer-detail/nodebalancer-details.page';
+import NodeBalancerDetail from '../../pageobjects/nodebalancer-detail/details.page';
 import { apiCreateLinode, apiDeleteAllLinodes } from '../../utils/common';
 
 describe('Nodebalancer - Create Suite', () => {
@@ -13,13 +13,13 @@ describe('Nodebalancer - Create Suite', () => {
         token = browser.readToken();
         linode = apiCreateLinode();
         linode['privateIp'] = browser.allocatePrivateIp(token, linode.id).address;
-        browser.url(constants.routes.nodebalancers);
+        browser.url(constants.routes.nodeBalancers);
     });
 
     afterAll(() => {
         apiDeleteAllLinodes();
-        const availableNodeBalancers = browser.getNodebalancers(token);
-        availableNodeBalancers.data.forEach(nb => browser.removeNodebalancer(token, nb.id));
+        const availableNodeBalancers = browser.getNodeBalancers(token);
+        availableNodeBalancers.data.forEach(nb => browser.removeNodeBalancer(token, nb.id));
     });
 
     it('should display placeholder message with create button', () => {
@@ -55,6 +55,7 @@ describe('Nodebalancer - Create Suite', () => {
         NodeBalancers.backendIpLabel.setValue(linode.label);
         NodeBalancers.backendIpAddress.setValue(`${linode.privateIp}:80`);
         browser.jsClick('[data-qa-deploy-linode]');
+        browser.waitForVisible('[data-qa-circle-progress]');
         
         NodeBalancerDetail.baseElemsDisplay();
         const detailPageUrl = browser.getUrl();

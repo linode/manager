@@ -21,7 +21,7 @@ class NodeBalancers extends Page {
     
     get settingsSection() { return $('[data-qa-nodebalancer-settings-section]'); }
     get port() { return $('[data-qa-port] input'); }
-    get protocol() { return $('[data-qa-protocol-select]'); }
+    get protocolSelect() { return $('[data-qa-protocol-select]'); }
     get algorithmHeader() { return $('[data-qa-algorithm-header]'); }
     get algorithmSelect() { return $('[data-qa-algorithm-select]'); }
 
@@ -63,7 +63,7 @@ class NodeBalancers extends Page {
             expect(this.connectionThrottle.isVisible()).toBe(true);
             expect(this.settingsSection.isVisible()).toBe(true);
             expect(this.port.isVisible()).toBe(true);
-            expect(this.protocol.isVisible()).toBe(true);
+            expect(this.protocolSelect.isVisible()).toBe(true);
             expect(this.algorithmHeader.waitForText()).toBe(true);
             expect(this.algorithmSelect.getText()).toContain('Round Robin');
             expect(this.sessionStickinessHeader.waitForText()).toBe(true);
@@ -86,7 +86,16 @@ class NodeBalancers extends Page {
         }
     }
 
-    create(linodeConfig, nodeBalancerConfig={
+    create() {
+        if (this.placeholderButton.isVisible()) {
+            this.placeholderButton.click();
+            this.baseElemsDisplay();
+        } else {
+            this.selectGlobalCreateItem('NodeBalancer');
+        }
+    }
+
+    configure(linodeConfig, nodeBalancerConfig={
         // NodeBalancer Config Object
         label: `NB-${new Date().getTime()}`,
         regionIndex: 0,
@@ -104,7 +113,7 @@ class NodeBalancers extends Page {
         this.label.setValue(nodeBalancerConfig.label);
         this.regionCards[nodeBalancerConfig.regionIndex].click();
         this.port.setValue(nodeBalancerConfig.port);
-        this.selectMenuOption(this.protocol, nodeBalancerConfig.protocol);
+        this.selectMenuOption(this.protocolSelect, nodeBalancerConfig.protocol);
         this.selectMenuOption(this.algorithmSelect, nodeBalancerConfig.algorithm);
         this.selectMenuOption(this.sessionStickiness, nodeBalancerConfig.sessionStickiness);
         this.backendIpLabel.setValue(linodeConfig.label);
