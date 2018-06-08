@@ -689,7 +689,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             errorText={hasErrorFor('address')}
                           />
                         </Grid>
-                        <Grid item xs={11} lg={3}>
+                        <Grid item xs={11} lg={forEdit ? 2 : 3}>
                           <TextField
                             label="Weight"
                             value={node.weight}
@@ -713,7 +713,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                           </TextField>
                         </Grid>
                         {(forEdit && idx !== (nodes.length - 1)) &&
-                          <Grid item xs={1}>
+                          <Grid item xs={5} lg={2}>
                             <Button
                               type="primary"
                               data-config-idx={idx}
@@ -725,7 +725,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                           </Grid>
                         }
                         {(forEdit && idx === (nodes.length - 1)) &&
-                          <Grid item xs={1}>
+                          <Grid item xs={5} lg={2}>
                             <Button
                               data-config-idx={idx}
                               type="primary"
@@ -735,7 +735,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             </Button>
                           </Grid>
                         }
-                        <Grid item xs={1}>
+                        <Grid item xs={5} lg={1}>
                           {/**
                             * Show the delete button for index 0 if we are
                             * editing the Config. Don't show the delete button
