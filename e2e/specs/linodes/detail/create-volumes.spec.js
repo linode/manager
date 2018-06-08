@@ -21,8 +21,8 @@ describe('Linode Detail - Volumes Suite', () => {
         const linodes = ListLinodes.linode;
         
         ListLinodes.shutdownIfRunning(linodes[0]);
-        ListLinodes.selectMenuItem(linodes[0], 'Settings');
-        LinodeDetail.launchConsole.waitForVisible();
+        ListLinodes.navigateToDetail();
+        LinodeDetail.landingElemsDisplay();
         LinodeDetail.changeTab('Volumes');
     });
 
@@ -56,7 +56,7 @@ describe('Linode Detail - Volumes Suite', () => {
                 VolumeDetail.regionField,
                 VolumeDetail.attachedTo,
                 VolumeDetail.submit,
-                VolumeDetail.cancel
+                VolumeDetail.cancel,
             ]
 
             drawerElems.forEach(e => expect(e.isVisible()).toBe(true));
