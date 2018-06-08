@@ -32,6 +32,7 @@ namespace Linode {
     weight?: number;
     mode?: NodeBalancerConfigNodeMode;
     updating?: boolean;
+    errors?: Linode.ApiFieldError[];
   }
 
   export interface NodeBalancerConfig {

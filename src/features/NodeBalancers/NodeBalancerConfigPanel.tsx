@@ -653,7 +653,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       address: 'address',
                       weight: 'weight',
                       mode: 'mode',
-                    }, filterErrors(idx)(errors || []));
+                    }, node.errors);
 
                     return (
                       <Grid

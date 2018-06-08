@@ -124,12 +124,6 @@ const getConfigsWithNodes = (nodeBalancerId: number) => {
   });
 };
 
-const prefixErrors = (prefix: string, errors: Linode.ApiFieldError[]) =>
-  errors.map((error: Linode.ApiFieldError) => ({
-    field: `${prefix}${error.field}`,
-    reason: error.reason,
-  }));
-
 class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   static defaultDeleteConfirmDialogState = {
     submitting: false,
@@ -201,14 +195,15 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         // update config data
         const newConfigs = clone(this.state.configs);
         newConfigs[idx] = nodeBalancerConfig as ConfigWithNodes;
+        const newNodes = clone(this.state.configs[idx].nodes);
         //    while maintaing node data
-        newConfigs[idx].nodes = this.state.configs[idx].nodes;
+        newConfigs[idx].nodes = newNodes;
 
         // update config data for reverting edits
         const newUnmodifiedConfigs = clone(this.state.unmodifiedConfigs);
         newUnmodifiedConfigs[idx] = nodeBalancerConfig as ConfigWithNodes;
         //    while maintaing node data
-        newUnmodifiedConfigs[idx].nodes = this.state.unmodifiedConfigs[idx].nodes;
+        newUnmodifiedConfigs[idx].nodes = newNodes;
 
         // replace success message with a new one
         const newMessages = [];
@@ -286,34 +281,11 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       });
   }
 
-  spliceNodeErrors_ = (configIdx: number, nodeIdx: number) => {
-    const updatedErrors = spliceNodeErrors(
-      nodeIdx,
-      pathOr([], ['configErrors', configIdx], this.state),
-    );
-    this.setState(
-      set(
-        lensPath(['configErrors', configIdx]),
-        updatedErrors,
-      ),
-    );
-  }
-
   updateNodeErrors = (configIdx: number, nodeIdx: number, errors: Linode.ApiFieldError[]) => {
-    const fieldPrefix = `nodes_${nodeIdx}_`;
     this.setState(
       set(
-        lensPath(['configErrors', configIdx]),
-        compose<any, any, any>(
-          // Add the new errors that just came back from the API
-          concat(errors),
-          /**
-           * Start with the existing errors for this config, but only those that do not relate
-           * to the node that has just been updated.
-           **/
-          filter<Linode.ApiFieldError>(el =>
-            Boolean(el.field) && !el.field.startsWith(fieldPrefix)),
-        )(pathOr([], ['configErrors', configIdx], this.state)),
+        lensPath(['configs', configIdx, 'nodes', nodeIdx, 'errors']),
+        errors,
       ),
     );
   }
@@ -336,7 +308,6 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
             nodes => nodes.filter((n: any, idx: number) => idx !== nodeIdx),
           ),
         );
-        this.spliceNodeErrors_(configIdx, nodeIdx);
       })
       /* @todo: where do we want to display this error, toast? */
       .catch(() => undefined);
@@ -346,7 +317,6 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     const { match: { params: { nodeBalancerId } } } = this.props;
     const config = this.state.configs[configIdx];
     const node = this.state.configs[configIdx].nodes[nodeIdx];
-    const fieldPrefix = `nodes_${nodeIdx}_`;
 
     const nodeData = pick(['label', 'address', 'weight', 'mode'], node);
     /* Perform client-side validation */
@@ -357,8 +327,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     );
 
     if (error) {
-      const prefixedErrors = prefixErrors(fieldPrefix, validationErrorsToFieldErrors(error));
-      this.updateNodeErrors(configIdx, nodeIdx, prefixedErrors);
+      this.updateNodeErrors(configIdx, nodeIdx, validationErrorsToFieldErrors(error));
       return;
     }
 
@@ -382,8 +351,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       })
       .catch((errResponse) => {
         const errors = pathOr([], ['response', 'data', 'errors'], errResponse);
-        const prefixedErrors = prefixErrors(fieldPrefix, errors);
-        this.updateNodeErrors(configIdx, nodeIdx, prefixedErrors);
+        this.updateNodeErrors(configIdx, nodeIdx, errors);
       });
   }
 
@@ -391,7 +359,6 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     const { match: { params: { nodeBalancerId } } } = this.props;
     const config = this.state.configs[configIdx];
     const node = this.state.configs[configIdx].nodes[nodeIdx];
-    const fieldPrefix = `nodes_${nodeIdx}_`;
 
     /* set the "updating" flag for this node */
     this.setState(
@@ -415,8 +382,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     );
 
     if (error) {
-      const prefixedErrors = prefixErrors(fieldPrefix, validationErrorsToFieldErrors(error));
-      this.updateNodeErrors(configIdx, nodeIdx, prefixedErrors);
+      this.updateNodeErrors(configIdx, nodeIdx, validationErrorsToFieldErrors(error));
       return;
     }
 
@@ -452,8 +418,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         );
         /* set the errors for this node */
         const errors = pathOr([], ['response', 'data', 'errors'], errResponse);
-        const prefixedErrors = prefixErrors(fieldPrefix, errors);
-        this.updateNodeErrors(configIdx, nodeIdx, prefixedErrors);
+        this.updateNodeErrors(configIdx, nodeIdx, errors);
       });
   }
 
@@ -679,35 +644,6 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     );
   }
 }
-
-export const spliceNodeErrors = (nodeIdx: number, errors: Linode.ApiFieldError[]) => {
-  /**
-   * This function removes errors for one Node in an errors array for a NodeBalancer Config
-   * 1. It removes any errors with the matching nodes_${idx} prefix.
-   * 2. It modifies the field string for all nodes errors that need their nodes_${idx} shifted
-   * back by one.
-   * @todo: Use this for config creation as well. Errors get mis-mapped after
-   *        validation when deleting an invalid node.
-   */
-  const fieldPrefix = `nodes_${nodeIdx}_`;
-  return compose<any, any, any>(
-    map((error: Linode.ApiFieldError) => {
-      // parse index from the field name
-      const match = /nodes_(\d+)_(.+)/.exec(error.field);
-      // if the index is greater than the node that was just removed
-      if (match && match[1] && match[2] && (+match[1] > nodeIdx)) {
-        // update the field name to shift the index back by one
-        error.field = `nodes_${+match[1] - 1}_${match[2]}`;
-        return error;
-      }
-      return error;
-    }),
-    // first, remove the target node errors
-    filter<Linode.ApiFieldError>(el =>
-      Boolean(el.field) && !el.field.startsWith(fieldPrefix),
-    ),
-  )(errors);
-};
 
 const styled = withStyles(styles, { withTheme: true });
 
