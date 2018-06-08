@@ -15,6 +15,7 @@ import {
   defaultTo,
   path,
   lensPath,
+  lensIndex,
   pathOr,
   concat,
   filter,
@@ -285,36 +286,15 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       });
   }
 
-  spliceNodeErrors = (configIdx: number, nodeIdx: number) => {
-    /**
-     * This function removes errors for one Node in an errors array for a NodeBalancer Config
-     * 1. It removes any errors with the matching nodes_${idx} prefix.
-     * 2. It modifies the field string for all nodes errors that need their nodes_${idx} shifted
-     * back by one.
-     * @todo: use this for config creation as well, errors get mis-mapped after
-     *    validation then deleting an invalid node
-     */
-    const fieldPrefix = `nodes_${nodeIdx}_`;
+  spliceNodeErrors_ = (configIdx: number, nodeIdx: number) => {
+    const updatedErrors = spliceNodeErrors(
+      nodeIdx,
+      pathOr([], ['configErrors', configIdx], this.state),
+    );
     this.setState(
       set(
         lensPath(['configErrors', configIdx]),
-        compose<any, any, any>(
-          map((error: Linode.ApiFieldError) => {
-            // parse index from the field name
-            const match = /nodes_(\d+)_(.+)/.exec(error.field);
-            // if the index is greater than the node that was just removed
-            if (match && match[1] && match[2] && (+match[1] > nodeIdx)) {
-              // update the field name to shift the index back by one
-              error.field = `nodes_${+match[1] - 1}_${match[2]}`;
-              return error;
-            }
-            return error;
-          }),
-          // first, remove the target node errors
-          filter<Linode.ApiFieldError>(el =>
-            Boolean(el.field) && !el.field.startsWith(fieldPrefix),
-          ),
-        )(pathOr([], ['configErrors', configIdx], this.state)),
+        updatedErrors,
       ),
     );
   }
@@ -345,7 +325,6 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     const { id: nodeId } = nodes[nodeIdx];
 
     if (!configId || !nodeId) {
-      console.error(`Config ${configId} or Node ${nodeId} id not set.`);
       return;
     }
 
@@ -357,7 +336,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
             nodes => nodes.filter((n: any, idx: number) => idx !== nodeIdx),
           ),
         );
-        this.spliceNodeErrors(configIdx, nodeIdx);
+        this.spliceNodeErrors_(configIdx, nodeIdx);
       })
       /* @todo: where do we want to display this error, toast? */
       .catch(() => undefined);
@@ -388,12 +367,13 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         this.setState(
           set(
             lensPath(['configs', configIdx, 'nodes']),
-            compose(
+            compose<any, any, any>(
               /**
                * Include a blank node (for the sake of local state) that can be "added"
                * with the Add button.
                **/
               append(blankNode()),
+              set(lensIndex(nodeIdx), node),
             )(this.state.configs[configIdx].nodes),
           ),
         );
@@ -554,6 +534,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
     return (
       <ExpansionPanel
+        key={idx}
         updateFor={[
           config,
           configSubmitting[idx],
@@ -698,6 +679,35 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     );
   }
 }
+
+export const spliceNodeErrors = (nodeIdx: number, errors: Linode.ApiFieldError[]) => {
+  /**
+   * This function removes errors for one Node in an errors array for a NodeBalancer Config
+   * 1. It removes any errors with the matching nodes_${idx} prefix.
+   * 2. It modifies the field string for all nodes errors that need their nodes_${idx} shifted
+   * back by one.
+   * @todo: Use this for config creation as well. Errors get mis-mapped after
+   *        validation when deleting an invalid node.
+   */
+  const fieldPrefix = `nodes_${nodeIdx}_`;
+  return compose<any, any, any>(
+    map((error: Linode.ApiFieldError) => {
+      // parse index from the field name
+      const match = /nodes_(\d+)_(.+)/.exec(error.field);
+      // if the index is greater than the node that was just removed
+      if (match && match[1] && match[2] && (+match[1] > nodeIdx)) {
+        // update the field name to shift the index back by one
+        error.field = `nodes_${+match[1] - 1}_${match[2]}`;
+        return error;
+      }
+      return error;
+    }),
+    // first, remove the target node errors
+    filter<Linode.ApiFieldError>(el =>
+      Boolean(el.field) && !el.field.startsWith(fieldPrefix),
+    ),
+  )(errors);
+};
 
 const styled = withStyles(styles, { withTheme: true });
 

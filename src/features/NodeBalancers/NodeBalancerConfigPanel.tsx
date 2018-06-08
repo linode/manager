@@ -36,14 +36,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 const styled = withStyles(styles, { withTheme: true });
 
 const filterErrors = (idx: number) => reduce((
-  prev: Linode.ApiFieldError[],
-  next: Linode.ApiFieldError): Linode.ApiFieldError[] => {
+    prev: Linode.ApiFieldError[],
+    next: Linode.ApiFieldError): Linode.ApiFieldError[] => {
   const t = new RegExp(`nodes_${idx}_`);
-
   return t.test(next.field)
     ? [...prev, { ...next, field: next.field.replace(t, '') }]
     : prev;
-
 }, []);
 
 interface Props {
@@ -234,7 +232,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       || this.props.sessionStickiness !== nextProps.sessionStickiness
       || this.props.sslCertificate !== nextProps.sslCertificate
       || this.props.privateKey !== nextProps.privateKey
-      || this.props.nodes !== nextProps.nodes
+      || !equals(this.props.nodes, nextProps.nodes)
       || !equals(this.props.errors, nextProps.errors);
   }
 
@@ -661,6 +659,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       <Grid
                         key={idx}
                         updateFor={[
+                          nodes.length,
                           node,
                           errors,
                         ]}

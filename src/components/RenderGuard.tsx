@@ -18,8 +18,11 @@ export default function renderGuard<P>(Component: React.ComponentType) {
     }
 
     render() {
+      // cast of this.props to any needed because of
+      // https://github.com/Microsoft/TypeScript/issues/17281
+      const { updateFor, ...rest } = this.props as any;
       return (
-        <Component {...this.props} />
+        <Component {...rest} />
       );
     }
   };
