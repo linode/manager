@@ -2,7 +2,11 @@ import ListLinodes from '../../../pageobjects/list-linodes';
 import LinodeDetail from '../../../pageobjects/linode-detail/linode-detail.page';
 import VolumeDetail from '../../../pageobjects/linode-detail/linode-detail-volume.page';
 import LinodeSummary from '../../../pageobjects/linode-detail/linode-detail-summary.page';
-import { apiCreateLinode, apiDeleteAllLinodes } from '../../../utils/common';
+import {
+    apiCreateLinode,
+    apiDeleteAllLinodes,
+    apiDeleteAllVolumes,
+} from '../../../utils/common';
 
 const { constants } = require('../../../constants');
 
@@ -27,12 +31,8 @@ describe('Linode Detail - Volumes Suite', () => {
     });
 
     afterAll(() => {
-        // Delete Volume After Test
-        LinodeDetail.changeTab('Volumes');
-        VolumeDetail.volumeCellLabel.waitForVisible();
-
-        VolumeDetail.removeVolume(VolumeDetail.volumeCell[0]);
         apiDeleteAllLinodes();
+        apiDeleteAllVolumes();
     });
 
     describe("Linode Detail - Volumes - Create Suite", () => {     

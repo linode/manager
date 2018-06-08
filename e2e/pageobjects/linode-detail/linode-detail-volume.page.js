@@ -230,7 +230,7 @@ export class VolumeDetail extends Page {
 
         browser.waitUntil(function(volumeElement) {
             return $$('[data-qa-volume-cell]').length === (numberOfVolumes-1)
-        }, constants.wait.long, 'Volume failed to be removed');
+        }, constants.wait.minute, 'Volume failed to be removed');
     }
 
     assertVolumeInTable(volume) {
