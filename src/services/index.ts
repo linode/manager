@@ -3,6 +3,7 @@ import { validate, Schema } from 'joi';
 import {
   compose,
   isEmpty,
+  isNil,
   lensPath,
   lensProp,
   not,
@@ -54,7 +55,7 @@ const L = {
   validationErrors: lensPath(['validationErrors']),
 };
 
-const isNotEmpty = compose(not, isEmpty);
+const isNotEmpty = compose(not, v => isEmpty(v) || isNil(v));
 
 /** URL */
 export const setURL = (url: string) => set(L.url, url);
