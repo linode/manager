@@ -23,7 +23,6 @@ import {
   view,
   over,
   map,
-  pick,
   Lens,
 } from 'ramda';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
@@ -166,7 +165,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         nodes_status: undefined,
         id: undefined,
         nodebalancer_id: undefined,
-        nodes: init(config.nodes.map(pick(['label', 'address', 'weight', 'mode']))),
+        nodes: init(config.nodes.map(nodeForRequest)),
       },
     );
 
@@ -318,7 +317,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     const config = this.state.configs[configIdx];
     const node = this.state.configs[configIdx].nodes[nodeIdx];
 
-    const nodeData = pick(['label', 'address', 'weight', 'mode'], node);
+    const nodeData = nodeForRequest(node);
     /* Perform client-side validation */
     const { error } = Joi.validate(
       nodeData,
@@ -360,6 +359,19 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     const config = this.state.configs[configIdx];
     const node = this.state.configs[configIdx].nodes[nodeIdx];
 
+    const nodeData = nodeForRequest(node);
+    /* Perform client-side validation */
+    const { error } = Joi.validate(
+      nodeData,
+      createNodeBalancerConfigNodeSchema,
+      { abortEarly: false },
+    );
+
+    if (error) {
+      this.updateNodeErrors(configIdx, nodeIdx, validationErrorsToFieldErrors(error));
+      return;
+    }
+
     /* set the "updating" flag for this node */
     this.setState(
       set(
@@ -372,19 +384,6 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         })(this.state.configs[configIdx].nodes),
       ),
     );
-
-    const nodeData = pick(['label', 'address', 'weight', 'mode'], node);
-    /* Perform client-side validation */
-    const { error } = Joi.validate(
-      nodeData,
-      createNodeBalancerConfigNodeSchema,
-      { abortEarly: false },
-    );
-
-    if (error) {
-      this.updateNodeErrors(configIdx, nodeIdx, validationErrorsToFieldErrors(error));
-      return;
-    }
 
     updateNodeBalancerConfigNode(nodeBalancerId!, config.id, node!.id!, nodeData)
       .then((node) => {
@@ -435,7 +434,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   onNodeAddressChange = (configIdx: number) => (nodeIdx: number, value: string) =>
     this.setNodeValue(configIdx, nodeIdx, 'address', value)
 
-  onNodeWeightChange = (configIdx: number) => (nodeIdx: number, value: number) =>
+  onNodeWeightChange = (configIdx: number) => (nodeIdx: number, value: string) =>
     this.setNodeValue(configIdx, nodeIdx, 'weight', value)
 
   onNodeModeChange = (configIdx: number) => (nodeIdx: number, value: string) =>
@@ -644,6 +643,13 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     );
   }
 }
+
+const nodeForRequest = (node: Linode.NodeBalancerConfigNode) => ({
+  label: node.label,
+  address: node.address,
+  weight: +node.weight!,
+  mode: node.mode,
+});
 
 const styled = withStyles(styles, { withTheme: true });
 

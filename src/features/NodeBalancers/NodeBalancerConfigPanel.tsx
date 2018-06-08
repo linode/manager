@@ -98,7 +98,7 @@ interface Props {
   onUpdateNode?: (idx: number) => void;
   onNodeLabelChange: (idx: number, value: string) => void;
   onNodeAddressChange: (idx: number, value: string) => void;
-  onNodeWeightChange: (idx: number, value: number) => void;
+  onNodeWeightChange: (idx: number, value: string) => void;
   onNodeModeChange: (idx: number, value: string) => void;
 }
 
@@ -173,7 +173,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
     if (configIdx) {
       this.props.onNodeWeightChange(
         +configIdx,
-        e.target.valueAsNumber,
+        e.target.value,
       );
     }
   }
@@ -468,7 +468,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                           variant="caption"
                           component="span"
                           className={classes.suffix}>
-                          / second
+                          seconds
                         </Typography>,
                       }}
                       value={healthCheckInterval}
@@ -493,7 +493,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                           variant="caption"
                           component="span"
                           className={classes.suffix}>
-                          / second
+                          seconds
                         </Typography>,
                       }}
                       value={healthCheckTimeout}
@@ -692,7 +692,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                         <Grid item xs={11} lg={3}>
                           <TextField
                             label="Weight"
-                            type="number"
                             value={node.weight}
                             inputProps={{ 'data-config-idx': idx }}
                             onChange={this.onNodeWeightChange}
