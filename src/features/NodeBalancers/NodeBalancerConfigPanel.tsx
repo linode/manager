@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { equals, reduce } from 'ramda';
+import { equals } from 'ramda';
 import { withStyles, StyleRulesCallback, WithStyles, Theme, Divider, MenuItem } from 'material-ui';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
@@ -34,15 +34,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 });
 
 const styled = withStyles(styles, { withTheme: true });
-
-const filterErrors = (idx: number) => reduce((
-    prev: Linode.ApiFieldError[],
-    next: Linode.ApiFieldError): Linode.ApiFieldError[] => {
-  const t = new RegExp(`nodes_${idx}_`);
-  return t.test(next.field)
-    ? [...prev, { ...next, field: next.field.replace(t, '') }]
-    : prev;
-}, []);
 
 interface Props {
   errors?: Linode.ApiFieldError[];

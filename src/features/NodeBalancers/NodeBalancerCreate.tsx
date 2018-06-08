@@ -185,16 +185,64 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   onNodeAddressChange = (configIdx: number, nodeIdx: number, value: string) =>
     this.setNodeValue(configIdx, nodeIdx, 'address', value)
 
-  onNodeWeightChange = (configIdx: number, nodeIdx: number, value: number) =>
+  onNodeWeightChange = (configIdx: number, nodeIdx: number, value: string) =>
     this.setNodeValue(configIdx, nodeIdx, 'weight', value)
 
   onNodeModeChange = (configIdx: number, nodeIdx: number, value: string) =>
     this.setNodeValue(configIdx, nodeIdx, 'mode', value)
 
+  clearNodeErrors = () => {
+    // Build paths to all node errors
+    const nestedPaths = this.state.nodeBalancerFields.configs.map((config, idxC) => {
+      return config.nodes.map((nodes, idxN) => {
+        return ['configs', idxC, 'nodes', idxN, 'errors'];
+      });
+    });
+    const paths = nestedPaths.reduce((acc, pathArr) => [...acc, ...pathArr], []);
+    /* Map those paths to an array of updater functions */
+    const setFns = paths.map((path: any[]) => {
+      return set(lensPath(['nodeBalancerFields', ...path]), []);
+    });
+    /* Apply all of those update functions at once to state */
+    this.setState(
+      (compose as any)(...setFns),
+    );
+  }
+
+  setNodeErrors = (errors: Linode.ApiFieldError[]) => {
+    /* First, parse and insert all of the Node errors */
+    const nodePathErrors = fieldErrorsToNodePathErrors(errors);
+    /* Map the objects with this shape
+        {
+          path: ['configs', 2, 'nodes', 0, 'errors'],
+          error: {
+            field: 'label',
+            reason: 'label cannot be blank"
+          }
+        }
+      to an array of functions that will append the error at the
+      given path in the config state
+    */
+    const setFns = nodePathErrors.map((nodePathError: any) => {
+      return compose(
+        over(lensPath(['nodeBalancerFields', ...nodePathError.path]),
+             append(nodePathError.error)),
+        defaultTo([]),
+      );
+    });
+    // Then apply all of those updater functions with a compose
+    this.setState(
+      (compose as any)(...setFns),
+    );
+  }
+
   createNodeBalancer = () => {
     const { nodeBalancerFields } = this.state;
 
-    /** Clear Errors */
+    /* Clear node errors */
+    this.clearNodeErrors();
+
+    /* Clear config errors */
     this.setState({ errors: undefined });
 
     const { error } = Joi.validate(
@@ -204,8 +252,14 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     );
 
     if (error) {
+      const errors = validationErrorsToFieldErrors(error);
+
+      /* Insert the node errors */
+      this.setNodeErrors(errors);
+
+      /* Then update the config errors */
       this.setState({
-        errors: validationErrorsToFieldErrors(error),
+        errors,
       });
       return;
     }
@@ -289,6 +343,33 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       });
   }
 
+  labelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState(
+      set(
+        lensPath(['nodeBalancerFields', 'label']),
+        e.target.value,
+      ),
+    );
+  }
+
+  regionChange = (region: string) => {
+    this.setState(
+      set(
+        lensPath(['nodeBalancerFields', 'region']),
+        region,
+      ),
+    );
+  }
+
+  clientConnThrottleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState(
+      set(
+        lensPath(['nodeBalancerFields', 'client_conn_throttle']),
+        controlClientConnectionThrottle(e.target.value),
+      ),
+    );
+  }
+
   render() {
     const { classes, regions } = this.props;
     const { nodeBalancerFields } = this.state;
@@ -310,24 +391,14 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                 label: 'NodeBalancer Label',
                 value: nodeBalancerFields.label || '',
                 errorText: hasErrorFor('label'),
-                onChange: e => this.setState({
-                  nodeBalancerFields: {
-                    ...nodeBalancerFields,
-                    label: e.target.value,
-                  },
-                }),
+                onChange: this.labelChange,
               }}
             />
             <SelectRegionPanel
               regions={regions}
               error={hasErrorFor('region')}
               selectedID={nodeBalancerFields.region || null}
-              handleSelection={region => this.setState({
-                nodeBalancerFields: {
-                  ...nodeBalancerFields,
-                  region,
-                },
-              })}
+              handleSelection={this.regionChange}
             />
             <ClientConnectionThrottlePanel
               textFieldProps={{
@@ -342,12 +413,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                     / second
                   </Typography>,
                 },
-                onChange: e => this.setState({
-                  nodeBalancerFields: {
-                    ...nodeBalancerFields,
-                    client_conn_throttle: controlClientConnectionThrottle(e.target.value),
-                  },
-                }),
+                onChange: this.clientConnThrottleChange,
               }}
             />
             <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }} >
@@ -538,6 +604,29 @@ const styled = withStyles(styles, { withTheme: true });
 /* @todo: move to own file */
 export const lensFrom = (p1: (string | number)[]) => (p2: (string | number)[]) =>
   lensPath([...p1, ...p2]);
+
+export const fieldErrorsToNodePathErrors = (errors: Linode.ApiFieldError[]) => {
+  const nodePathErrors = errors.reduce(
+    (acc: any, error: Linode.ApiFieldError) => {
+      const match = /^configs_(\d+)_nodes_(\d+)_(\w+)$/.exec(error.field);
+      if (match && match[1] && match[2] && match[3]) {
+        return [
+          ...acc,
+          {
+            path: ['configs', +match[1], 'nodes', +match[2], 'errors'],
+            error: {
+              field: match[3],
+              reason: error.reason,
+            },
+          },
+        ];
+      }
+      return acc;
+    },
+    [],
+  );
+  return nodePathErrors;
+};
 
 /* @todo: move to own file */
 export const validationErrorsToFieldErrors = (error: Joi.ValidationError) => {

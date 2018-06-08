@@ -8,7 +8,6 @@ import {
   WithStyles,
 } from 'material-ui';
 import {
-  init,
   compose,
   append,
   clone,
@@ -17,7 +16,6 @@ import {
   lensPath,
   lensIndex,
   pathOr,
-  concat,
   filter,
   set,
   view,
@@ -165,7 +163,6 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         nodes_status: undefined,
         id: undefined,
         nodebalancer_id: undefined,
-        nodes: init(config.nodes.map(nodeForRequest)),
       },
     );
 
