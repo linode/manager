@@ -29,11 +29,9 @@ import {
 import Table from 'src/components/Table';
 import Grid from 'src/components/Grid';
 import Placeholder, { PlaceholderProps } from 'src/components/Placeholder';
-import IconTextLink, { IconTextLinkProps } from 'src/components/IconTextLink';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
-import PlusSquare from 'src/assets/icons/plus-square.svg';
 import { getLinodeConfigs, getLinodeVolumes } from 'src/services/linodes';
 import ErrorState from 'src/components/ErrorState';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
@@ -42,6 +40,7 @@ import AttachVolumeDrawer from './AttachVolumeDrawer';
 import UpdateVolumeDrawer, { Props as UpdateVolumeDrawerProps } from './UpdateVolumeDrawer';
 import ActionMenu from './LinodeVolumesActionMenu';
 import { events$, resetEventsPolling } from 'src/events';
+import AddNewLink, { Props as AddNewLinkProps } from 'src/components/AddNewLink';
 
 type ClassNames = 'title';
 
@@ -648,22 +647,18 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
       return null;
     }
 
-    let IconTextLinkProps: IconTextLinkProps = {
-      SideIcon: PlusSquare,
+    let IconTextLinkProps: AddNewLinkProps = {
       onClick: this.openUpdatingDrawer('create', 0, '', 0),
-      text: 'Create a Volume',
-      title: 'Create a Volume',
+      label: 'Create a Volume',
     };
 
     if (attachableVolumes.length > 0) {
       IconTextLinkProps = {
-        SideIcon: PlusSquare,
         onClick: this.openAttachmentDrawer,
-        text: 'Attach Existing Volume',
-        title: 'Attach Existing Volume',
+        label: 'Attach Existing Volume',
       };
     }
-    return <IconTextLink {...IconTextLinkProps} />;
+    return <AddNewLink {...IconTextLinkProps} />;
   }
 
   /**

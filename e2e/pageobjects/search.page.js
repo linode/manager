@@ -47,8 +47,8 @@ class SearchBar extends Page {
 
     selectByKeyDown() {
         this.searchInput.setValue('\uE015');
-        const selected = this.suggestions[0].hasFocus();
-        expect(selected).toBe(true);
+        const selected = this.suggestions[0].getAttribute('data-qa-selected');
+        expect(selected).toBe('true');
     }
 }
 

@@ -321,6 +321,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
           ...nodeBalancer.configs
             .map((c: any) => c.nodes)
             .reduce((prev, current) => [...prev, ...current], [])
+            .filter(Boolean)
             .filter((c: any) => c.hasOwnProperty('errors')),
         ];
 

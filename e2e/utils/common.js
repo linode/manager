@@ -1,4 +1,6 @@
+const crypto = require('crypto');
 const { constants } = require('../constants');
+const { readToken } = require('./config-utils');
 
 import ConfigureLinode from '../pageobjects/configure-linode';
 import ListLinodes from '../pageobjects/list-linodes';
@@ -28,4 +30,32 @@ export const createLinodeIfNone = () => {
     if (!ListLinodes.linodesDisplay()) {
         createGenericLinode(new Date().getTime());
     }
+}
+
+export const apiCreateLinode = (linodeLabel=false) => {
+    const token = readToken();
+    const newLinodePass = crypto.randomBytes(20).toString('hex');
+
+    browser.createLinode(token, newLinodePass, linodeLabel);
+    browser.url(constants.routes.linodes);
+    browser.waitForVisible('[data-qa-add-new-menu-button]');
+    
+    if (linodeLabel) {
+        browser.waitForVisible(`[data-qa-linode="${linodeLabel}"]`);
+    } else {
+        browser.waitForVisible('[data-qa-linode]', constants.wait.long);
+    }
+    browser.waitForVisible('[data-qa-status="booting"]', constants.wait.minute);
+    browser.waitForVisible('[data-qa-status="running"]', constants.wait.minute * 2);
+}
+
+export const apiDeleteAllLinodes = () => {
+    const token = readToken();
+    browser.removeAllLinodes(token);
+}
+
+
+export const apiDeleteAllVolumes = () => {
+    const token = readToken();
+    browser.removeAllVolumes(token);
 }

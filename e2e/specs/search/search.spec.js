@@ -1,5 +1,6 @@
 import SearchBar from '../../pageobjects/search.page';
 import ListLinodes from '../../pageobjects/list-linodes';
+import { apiCreateLinode, apiDeleteAllLinodes } from '../../utils/common';
 
 const { constants } = require('../../constants');
 
@@ -8,8 +9,13 @@ describe('Header - Search Suite', () => {
 
     beforeAll(() => {
         browser.url(constants.routes.linodes);
+        apiCreateLinode();
         ListLinodes.linodesDisplay();
         testLinode = ListLinodes.linode[0].$(ListLinodes.linodeLabel.selector).getText();
+    });
+
+    afterAll(() => {
+        apiDeleteAllLinodes();
     });
 
     describe('Search Displays Suite', () => {

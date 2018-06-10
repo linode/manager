@@ -23,7 +23,6 @@ import {
   getNodeBalancerConfigs,
 } from 'src/services/nodebalancers';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
-// import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import NodeBalancerSettings from './NodeBalancerSettings';
 
@@ -175,7 +174,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
         <Grid container justify="space-between">
           <Grid item className={classes.titleWrapper}>
             <IconButton
-              onClick={() => history.goBack()}
+              onClick={() => history.push('/nodebalancers')}
               className={classes.backButton}
             >
               <KeyboardArrowLeft />
@@ -209,7 +208,10 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
             exact
             path={`${path}/summary`}
             render={() =>
-              <NodeBalancerSummary nodeBalancer={nodeBalancer} />
+              <NodeBalancerSummary
+                nodeBalancer={nodeBalancer}
+                errorResponses={pathOr(undefined, ['location', 'state', 'errors'], this.props)}
+              />
             }
           />
           <Route

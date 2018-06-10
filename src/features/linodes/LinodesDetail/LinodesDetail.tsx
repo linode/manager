@@ -3,11 +3,13 @@ import { pathEq, pathOr, filter, has, allPass } from 'ramda';
 import * as moment from 'moment';
 
 import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
-import { matchPath, Route, Switch, RouteComponentProps, Redirect } from 'react-router-dom';
+import { matchPath, Route, Switch, RouteComponentProps, Redirect, Link } from 'react-router-dom';
 import { Location } from 'history';
 import { Subscription, Observable } from 'rxjs/Rx';
 import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
+import IconButton from 'material-ui/IconButton';
+import KeyboardArrowLeft from 'material-ui-icons/KeyboardArrowLeft';
 import Button from 'material-ui/Button';
 
 import notifications$ from 'src/notifications';
@@ -77,10 +79,23 @@ interface PreloadedProps {
   data: PromiseLoaderResponse<Data>;
 }
 
-type ClassNames = 'cta'
+type ClassNames = 'titleWrapper'
+  | 'backButton'
+  | 'cta'
   | 'launchButton';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+  titleWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  backButton: {
+    margin: '2px 0 0 -16px',
+    '& svg': {
+      width: 34,
+      height: 34,
+    },
+  },
   cta: {
     marginTop: theme.spacing.unit,
     [theme.breakpoints.down('sm')]: {
@@ -113,7 +128,7 @@ const requestAllTheThings = (linodeId: number) =>
     .then((response) => {
       const { data: linode } = response;
 
-      const imageReq = getImage(linode.image)
+      const imageReq = getImage(linode.image!)
         .catch(err => undefined);
 
       const volumesReq = getLinodeVolumes(linode.id)
@@ -317,13 +332,20 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
           container
           justify="space-between"
         >
-          <Grid item style={{ flex: 1 }}>
-            <EditableText
-              variant="headline"
-              text={linode.label}
-              onEdit={this.updateLabel}
-              data-qa-label
-            />
+          <Grid item className={classes.titleWrapper}>
+            <Link to={`/linodes`}>
+              <IconButton
+                className={classes.backButton}
+              >
+                <KeyboardArrowLeft />
+              </IconButton>
+            </Link>
+              <EditableText
+                variant="headline"
+                text={linode.label}
+                onEdit={this.updateLabel}
+                data-qa-label
+              />
           </Grid>
           <Grid item className={classes.cta}>
             <Button

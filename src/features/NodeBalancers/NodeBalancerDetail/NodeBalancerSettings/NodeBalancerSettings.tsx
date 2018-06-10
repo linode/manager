@@ -140,6 +140,7 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
                 label: e.target.value,
               },
             }),
+            value: this.state.fields.label || '',
             label: 'NodeBalancer Label',
             placeholder: 'Enter a label between 3 and 32 characters',
             errorText: hasErrorFor('label'),

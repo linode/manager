@@ -1,13 +1,11 @@
 import * as React from 'react';
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
+import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
 
 import SummaryPanel from './SummaryPanel';
 import TablesPanel from './TablesPanel';
+import NodeBalancerCreationErrors, {
+  ConfigOrNodeErrorResponse,
+} from './NodeBalancerCreationErrors';
 
 
 type ClassNames = 'root';
@@ -18,14 +16,16 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 interface Props {
   nodeBalancer: Linode.ExtendedNodeBalancer;
+  errorResponses?: ConfigOrNodeErrorResponse[];
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const NodeBalancerSummary: React.StatelessComponent<CombinedProps> = (props) => {
-  const { nodeBalancer } = props;
+  const { nodeBalancer, errorResponses } = props;
   return (
     <React.Fragment>
+      <NodeBalancerCreationErrors errors={errorResponses} />
       <SummaryPanel nodeBalancer={nodeBalancer} />
       <TablesPanel nodeBalancer={nodeBalancer} />
     </React.Fragment>
@@ -35,4 +35,3 @@ const NodeBalancerSummary: React.StatelessComponent<CombinedProps> = (props) => 
 const styled = withStyles(styles, { withTheme: true });
 
 export default styled<Props>(NodeBalancerSummary);
-

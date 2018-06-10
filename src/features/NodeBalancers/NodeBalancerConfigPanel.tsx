@@ -8,13 +8,12 @@ import Delete from 'material-ui-icons/Delete';
 import FormControlLabel from 'material-ui/Form/FormControlLabel';
 
 import Button from 'src/components/Button';
-import PlusSquare from 'src/assets/icons/plus-square.svg';
-import IconTextLink from 'src/components/IconTextLink';
 import Grid from 'src/components/Grid';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import ActionsPanel from 'src/components/ActionsPanel';
+import AddNewLink from 'src/components/AddNewLink';
 
 type ClassNames = 'root' | 'inner' | 'divider' | 'suffix';
 
@@ -749,14 +748,10 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   updateFor={[]} // never update after the initial render
                   item xs={12}
                 >
-                  <IconTextLink
-                    SideIcon={PlusSquare}
+                  <AddNewLink
                     onClick={addNode}
-                    title="Add a Node"
-                    text="Add a Node"
-                  >
-                    Add a Node
-                  </IconTextLink>
+                    label="Add a Node"
+                  />
                 </Grid>
               }
             </Grid>

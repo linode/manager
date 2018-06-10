@@ -263,7 +263,7 @@ class SearchBar extends React.Component<FinalProps, State> {
           linode.specs.memory,
           linode.specs.disk,
           linode.specs.vcpus,
-          linode.image,
+          linode.image!,
         ),
         Icon: LinodeIcon,
         path: `/linodes/${linode.id}`,
@@ -363,6 +363,7 @@ class SearchBar extends React.Component<FinalProps, State> {
         className={classes.item}
         classes={{ selected: classes.selectedMenuItem }}
         data-qa-suggestion={suggestion.title}
+        data-qa-selected={isHighlighted}
       >
         <SearchSuggestion
           Icon={suggestion.Icon}

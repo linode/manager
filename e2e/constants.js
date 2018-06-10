@@ -10,8 +10,8 @@ exports.constants = {
 		custom: (milliseconds) => milliseconds,
 	},
 	routes: {
-		storybook: process.env.DOCKER ? 'http://manager-storybook:6006/' : '/',
-		dashboard: process.env.DOCKER ? 'https://manager-local:3000/' : '/',
+		storybook: '/',
+		dashboard: '/',
 		linodes: '/linodes',
 		volumes: '/volumes',
 		nodebalancers: '/nodebalancers',

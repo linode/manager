@@ -10,6 +10,7 @@ namespace Linode {
     created: string;
     updated: string;
     transfer: BalancerTransfer;
+    config?: NodeBalancerConfig[];
   }
 
   export interface NodesStatus{
@@ -55,6 +56,7 @@ namespace Linode {
     algorithm: string;
     ssl_fingerprint: string;
     cipher_suite: string;
+    nodes?: NodeBalancerConfigNode[];
   }
 
   export interface ExtendedNodeBalancer extends NodeBalancer{
