@@ -49,6 +49,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 
 import { lensFrom, validationErrorsToFieldErrors } from '../NodeBalancerCreate';
 import NodeBalancerConfigPanel from '../NodeBalancerConfigPanel';
+import { nodeForRequest } from '../utils';
 
 type ClassNames =
   'root'
@@ -640,13 +641,6 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     );
   }
 }
-
-const nodeForRequest = (node: Linode.NodeBalancerConfigNode) => ({
-  label: node.label,
-  address: node.address,
-  weight: +node.weight!,
-  mode: node.mode,
-});
 
 const styled = withStyles(styles, { withTheme: true });
 

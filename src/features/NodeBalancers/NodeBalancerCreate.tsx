@@ -3,6 +3,7 @@ import * as Joi from 'joi';
 import {
   append,
   clamp,
+  clone,
   compose,
   defaultTo,
   lensPath,
@@ -41,6 +42,10 @@ import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import NodeBalancerConfigPanel from './NodeBalancerConfigPanel';
 import Notice from 'src/components/Notice';
 
+import {
+  NodeBalancerConfigFields,
+  transformConfigNodesForRequest,
+} from './utils';
 
 type Styles =
   'root'
@@ -82,23 +87,6 @@ interface NodeBalancerFieldsState {
   configs: NodeBalancerConfigFields[];
 }
 
-interface NodeBalancerConfigFields {
-  algorithm?: 'roundrobin' | 'leastconn' | 'source';
-  check_attempts?: number; /** 1..30 */
-  check_body?: string;
-  check_interval?: number;
-  check_passive?: boolean;
-  check_path?: string;
-  check_timeout?: number; /** 1..30 */
-  check?: 'none' | 'connection' | 'http' | 'http_body';
-  cipher_suite?: 'recommended' | 'legacy';
-  port?: number; /** 1..65535 */
-  protocol?: 'http' | 'https' | 'tcp';
-  ssl_cert?: string;
-  ssl_key?: string;
-  stickiness?: 'none' | 'table' | 'http_cookie';
-  nodes: Linode.NodeBalancerConfigNode[];
-}
 
 interface State {
   submitting: boolean;
@@ -239,6 +227,11 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   createNodeBalancer = () => {
     const { nodeBalancerFields } = this.state;
 
+    /* transform node data for the requests */
+    const nodeBalancerRequestData = clone(nodeBalancerFields);
+    nodeBalancerRequestData.configs = transformConfigNodesForRequest(
+      nodeBalancerRequestData.configs);
+
     /* Clear node errors */
     this.clearNodeErrors();
 
@@ -246,7 +239,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     this.setState({ errors: undefined });
 
     const { error } = Joi.validate(
-      nodeBalancerFields,
+      nodeBalancerRequestData,
       createNodeBalancerSchema,
       { abortEarly: false },
     );
@@ -264,7 +257,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       return;
     }
 
-    createNodeBalancer(nodeBalancerFields)
+    createNodeBalancer(nodeBalancerRequestData)
       .then((nodeBalancer) => {
         /**
          * @note Beyond this point the NodeBalancer has been created and any
@@ -274,7 +267,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
          */
 
         const { id: nodeBalancerId } = nodeBalancer;
-        const { configs } = this.state.nodeBalancerFields;
+        const { configs } = nodeBalancerRequestData;
 
         return Promise.map(
           configs,
@@ -290,11 +283,15 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                       nodeBalancerConfigId,
                       nodeBalancerConfigNode,
                     )
-                      .then(response => resolveNode(response))
-                      .catch(error => resolveNode({
-                        errors: error.response.data.errors,
-                        config: nodeBalancerConfigNode,
-                      }));
+                      .then((response) => {
+                        resolveNode(response);
+                      })
+                      .catch((error) => {
+                        resolveNode({
+                          errors: error.response.data.errors,
+                          config: nodeBalancerConfigNode,
+                        });
+                      });
                   }),
                 )
                   .then(nodeBalancerConfigNodes => ({
