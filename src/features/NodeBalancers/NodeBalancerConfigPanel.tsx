@@ -3,11 +3,11 @@ import { equals } from 'ramda';
 import { withStyles, StyleRulesCallback, WithStyles, Theme, Divider, MenuItem } from 'material-ui';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
-import IconButton from 'material-ui/IconButton';
 import Delete from 'material-ui-icons/Delete';
 import FormControlLabel from 'material-ui/Form/FormControlLabel';
 
 import Button from 'src/components/Button';
+import IconButton from 'src/components/IconButton';
 import Grid from 'src/components/Grid';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
@@ -808,6 +808,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             <IconButton
                               data-config-idx={idx}
                               onClick={this.removeNode}
+                              destructive
                               data-qa-remove-node
                             >
                               <Delete />
