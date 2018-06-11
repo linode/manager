@@ -35,8 +35,8 @@ export const createLinodeIfNone = () => {
 export const apiCreateLinode = (linodeLabel=false) => {
     const token = readToken();
     const newLinodePass = crypto.randomBytes(20).toString('hex');
+    const linode = browser.createLinode(token, newLinodePass, linodeLabel);
 
-    browser.createLinode(token, newLinodePass, linodeLabel);
     browser.url(constants.routes.linodes);
     browser.waitForVisible('[data-qa-add-new-menu-button]');
     
@@ -46,11 +46,13 @@ export const apiCreateLinode = (linodeLabel=false) => {
         browser.waitForVisible('[data-qa-linode]', constants.wait.long);
     }
     browser.waitForVisible('[data-qa-status="running"]', constants.wait.minute * 3);
+    return linode;
 }
 
 export const apiDeleteAllLinodes = () => {
     const token = readToken();
-    browser.removeAllLinodes(token);
+    const removeAll = browser.removeAllLinodes(token);
+    return removeAll;
 }
 
 
