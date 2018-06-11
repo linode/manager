@@ -55,7 +55,8 @@ class Backups extends Page {
         expect(this.cancelDescription.isVisible()).toBe(true);
         expect(this.cancelButton.isVisible()).toBe(true);
         expect(this.manualSnapshotName.isVisible()).toBe(true);
-        expect(this.cancelButton.getAttribute('class')).toContain('destructive');
+        expect(this.cancelButton.getTagName()).toBe('button');
+        this.cancelDescription.waitForText();
     }
 
     enableBackups() {
