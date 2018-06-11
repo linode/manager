@@ -14,8 +14,7 @@ describe('NodeBalancer - Negative Tests Suite', () => {
         linode['privateIp'] = browser.allocatePrivateIp(token, linode.id).address;
         browser.url(constants.routes.nodeBalancers);
         NodeBalancers.baseElemsDisplay(true);
-        NodeBalancers.placeholderButton.click();
-        NodeBalancers.baseElemsDisplay();
+        NodeBalancers.create();
     });
 
     afterAll(() => {
