@@ -15,6 +15,8 @@ class Rebuild {
     assertElemsDisplay() {
         const expectedTitle = 'Rebuild';
 
+        this.imagesSelect.waitForVisible(constants.wait.normal);
+
         expect(this.help.isVisible()).toBe(true);
         expect(this.title.getText()).toBe(expectedTitle);
         expect(this.description.isVisible()).toBe(true);
