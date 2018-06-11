@@ -40,7 +40,7 @@ import {
 import Button from 'src/components/Button';
 // import IconTextLink from 'src/components/IconTextLink';
 // import PlusSquare from 'src/assets/icons/plus-square.svg';
-import Grid from 'src/components/Grid';
+// import Grid from 'src/components/Grid';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
@@ -61,6 +61,7 @@ type ClassNames =
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
   title: {
+    marginTop: theme.spacing.unit,
     marginBottom: theme.spacing.unit * 2,
   },
 });
@@ -589,13 +590,15 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }} >
-          <Grid item>
-            <Typography variant="headline" data-qa-title className={classes.title}>
-              NodeBalancer Configurations
-            </Typography>
-          </Grid>
-          <Grid item>
+        <Typography
+          variant="headline"
+          data-qa-title
+          className={classes.title}
+        >
+          NodeBalancer Configurations
+        </Typography>
+        {/* <Grid container>
+          <Grid item> */}
             {/* @todo: implement add config
               <Grid container alignItems="flex-end">
                 <Grid item>
@@ -610,8 +613,8 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
                 </Grid>
               </Grid>
             */}
-          </Grid>
-        </Grid>
+          {/* </Grid>
+        </Grid> */}
         {configs.map(this.renderConfig(panelMessages, configErrors, configSubmitting))}
 
         <ConfirmationDialog
