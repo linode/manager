@@ -5,6 +5,7 @@ import {
   Theme,
   WithStyles,
 } from 'material-ui';
+import Typography from 'material-ui/Typography';
 
 import { assocPath } from 'ramda';
 
@@ -21,9 +22,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 interface Props {
   updateFormState: (stateToUpdate: FormState[]) => void;
-  oneof: string;
-  udf_data: any;
-  fieldName: string;
+  udf_data: any; // udf_data we've already selected
+  field: Linode.StackScript.UserDefinedField;
 }
 
 interface State {
@@ -35,14 +35,15 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 class UserDefinedSelect extends React.Component<CombinedProps, State> {
   state: State = {
-    oneof: this.props.oneof.split(','),
+    oneof: this.props.field.oneof!.split(','),
     selectedOption: '',
   };
 
-  checkThing = (e: any) => {
-    const { updateFormState, udf_data, fieldName } = this.props;
+  handleSelectOneOf = (e: any) => {
+    const { updateFormState, udf_data, field } = this.props;
 
-    const newUDFData = assocPath([fieldName], e.target.value, udf_data);
+    // either overwrite or create new selection
+    const newUDFData = assocPath([field.name], e.target.value, udf_data);
 
     updateFormState([{
       stateKey: 'udf_data',
@@ -53,19 +54,29 @@ class UserDefinedSelect extends React.Component<CombinedProps, State> {
 
   render() {
     const { oneof } = this.state;
-    const { udf_data, fieldName } = this.props;
+    const { udf_data, field } = this.props;
 
     return (
       <React.Fragment>
-        {fieldName}
+        <Typography variant="subheading" >
+          {field.label}
+        </Typography>
         {oneof.map((choice: string, index) => {
           return (
             <React.Fragment key={index}>
               <Radio
-                name="Test"
-                checked={!!udf_data[fieldName] && udf_data[fieldName] === choice}
+                name={choice}
+                checked=
+                {(!!udf_data[field.name]
+                  && udf_data[field.name] === choice)}
+                /*
+                NOTE: Although the API returns a default value and we're auto selecting
+                a value for the user, it is not necessary to store this value
+                in the state because it's not necessary for the POST request, since
+                the backend will automatically POST with that default value
+              */
                 value={choice}
-                onChange={this.checkThing}
+                onChange={this.handleSelectOneOf}
                 data-qa-perm-none-radio
               />
               {choice}
