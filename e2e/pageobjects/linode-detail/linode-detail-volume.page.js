@@ -30,6 +30,8 @@ export class VolumeDetail extends Page {
     get attachButton() { return $('[data-qa-confirm-attach]'); }
     get cancelButton() { return $('[data-qa-cancel]'); }
     get cloneLabel() { return $('[data-qa-clone-from] input'); }
+    get copyToolTips() { return $$('[data-qa-copy-tooltip]'); }
+    get configHelpMessages() { return $$('[data-qa-config-help-msg]'); }
 
     volAttachedToLinode(linodeLabel) {
         browser.waitUntil(function() {
@@ -256,6 +258,19 @@ export class VolumeDetail extends Page {
         ]
 
         menuItems.forEach(item => expect($(item).isVisible()).toBe(true));
+    }
+
+    assertConfig() {
+        expect(this.drawerTitle.getText()).toBe('Volume Configuration');
+        expect(this.cancel.isVisible()).toBe(true);
+        expect(this.cancel.getTagName()).toBe('button');
+        expect(this.configHelpMessages.length).toBe(4);
+
+        this.configHelpMessages.forEach(msg => {
+            expect(msg.getText()).toMatch(/\w/ig);
+        });
+
+        expect(this.copyToolTips.length).toBe(4);
     }
 }
 

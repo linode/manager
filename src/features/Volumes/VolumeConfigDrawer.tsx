@@ -42,12 +42,12 @@ const VolumeConfigDrawer: React.StatelessComponent<CombinedProps> = (props) => {
     <Drawer
       open={props.open}
       onClose={props.onClose}
-      title="Volume Configuation"
+      title="Volume Configuration"
     >
       {(props.volumePath && props.volumeLabel) &&
         <React.Fragment>
           <div className={classes.copySection}>
-            <Typography variant="body1">
+            <Typography variant="body1" data-qa-config-help-msg>
               To get started with a new volume, you'll want to create a filesystem on it:
             </Typography>
             <CopyableTextField
@@ -57,7 +57,7 @@ const VolumeConfigDrawer: React.StatelessComponent<CombinedProps> = (props) => {
           </div>
 
           <div className={classes.copySection}>
-            <Typography variant="body1">
+            <Typography variant="body1" data-qa-config-help-msg>
               Once the volume has a filesystem, you can create a mountpoint for it:
             </Typography>
             <CopyableTextField
@@ -67,7 +67,7 @@ const VolumeConfigDrawer: React.StatelessComponent<CombinedProps> = (props) => {
           </div>
 
           <div className={classes.copySection}>
-            <Typography variant="body1">
+            <Typography variant="body1" data-qa-config-help-msg>
               Then you can mount the new volume:
             </Typography>
             <CopyableTextField
@@ -77,7 +77,7 @@ const VolumeConfigDrawer: React.StatelessComponent<CombinedProps> = (props) => {
           </div>
 
           <div className={classes.copySection}>
-            <Typography variant="body1">
+            <Typography variant="body1" data-qa-config-help-msg>
               If you want the volume to automatically mount every time your
               Linode boots, you'll want to add a line like the following to
               your /etc/fstab file:
@@ -87,12 +87,12 @@ const VolumeConfigDrawer: React.StatelessComponent<CombinedProps> = (props) => {
               value={`${props.volumePath} /mnt/${props.volumeLabel}`}
             />
           </div>
-
           <ActionsPanel>
             <Button
               variant="raised"
               color="primary"
               onClick={props.onClose}
+              data-qa-cancel
             >
               Close
             </Button>
