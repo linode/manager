@@ -103,8 +103,8 @@ exports.removeAllLinodes = token => {
             return instance.delete(`${endpoint}/${res.id}`)
                 .then(res => res)
                 .catch((error) => {
-                    console.log('Error', error);
-                    return error
+                    console.error('Error', error);
+                    reject('Error', error);
                 });
         }
 
@@ -115,7 +115,10 @@ exports.removeAllLinodes = token => {
 
                 Promise.all(promiseArray).then(function(res) {
                     resolve(res);
-                }).catch(error => console.log(error));
+                }).catch(error => {
+                    console.error(error);
+                    reject('Error', error);
+                });
         });
     });
 }
@@ -152,6 +155,7 @@ exports.createLinode = (token, password, linodeLabel) => {
             })
             .catch(error => {
                 console.error('Error', error);
+                reject(error);
             });
     });
 }
@@ -177,6 +181,7 @@ exports.allocatePrivateIp = (token, linodeId) => {
             .then(response => resolve(response.data))
             .catch(error => {
                 console.error('Error', error);
+                reject(error);
             });
     });
 }
@@ -195,7 +200,10 @@ exports.getNodebalancers = token => {
 
         return instance.get(endpoint)
             .then(response => resolve(response.data))
-            .catch(error => console.error('Error', error));
+            .catch(error => {
+                console.error('Error', error);
+                reject(error);
+            });
     });
 }
 
@@ -213,7 +221,10 @@ exports.removeNodebalancer = (token, nodeBalancerId) => {
 
         return instance.delete(endpoint)
             .then(response => resolve(response.data))
-            .catch(error => console.error('Error', error));
+            .catch(error => {
+                console.error('Error', error);
+                reject(error);
+            });
     });
 }
 
@@ -223,9 +234,10 @@ exports.removeAllVolumes = token => {
 
         const removeVolume = (res, endpoint) => {
             return instance.delete(`${endpoint}/${res.id}`)
-                .then(res => res.status)
+                .then(response => response.status)
                 .catch(error => {
                     console.error('Error', error);
+                    reject(error);
                 });
         }
 
