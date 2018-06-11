@@ -104,7 +104,7 @@ export const createNodeBalancerConfigSchema = Joi.object({
   check: Joi.string(),
   cipher_suite: Joi.string(),
   port: Joi.number().integer().min(1).max(65535),
-  protocol: Joi.valid('http', 'https'),
+  protocol: Joi.valid('http', 'https', 'tcp'),
   ssl_key: Joi.string().when('protocol', { is: 'https', then: Joi.required() }),
   ssl_cert: Joi.string().when('protocol', { is: 'https', then: Joi.required() }),
   stickiness: Joi.string(),

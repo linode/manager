@@ -121,10 +121,10 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     check: 'connection',
     cipher_suite: undefined,
     port: 80,
-    protocol: 'http',
+    protocol: 'tcp',
     ssl_cert: undefined,
     ssl_key: undefined,
-    stickiness: 'table',
+    stickiness: 'none',
     nodes: [NodeBalancerCreate.createNewNodeBalancerConfigNode()],
   })
 
@@ -211,6 +211,9 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       to an array of functions that will append the error at the
       given path in the config state
     */
+
+    if (nodePathErrors.length === 0) { return; }
+
     const setFns = nodePathErrors.map((nodePathError: any) => {
       return compose(
         over(lensPath(['nodeBalancerFields', ...nodePathError.path]),
