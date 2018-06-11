@@ -80,10 +80,10 @@ describe('View - Personal Access Tokens', () => {
             const eventsPermission = $('[data-qa-row="Events"] [data-qa-perm-rw-radio]');
             const imagesPermission = $('[data-qa-row="Images"] [data-qa-perm-rw-radio]');
 
-            expect(accountPermission.getAttribute('class').includes('checked')).toBe(true);
-            expect(domainPermission.getAttribute('class').includes('checked')).toBe(true);
-            expect(eventsPermission.getAttribute('class').includes('checked')).toBe(true);
-            expect(imagesPermission.getAttribute('class').includes('checked')).toBe(true);
+            expect(accountPermission.getAttribute('data-qa-perm-rw-radio')).toBe('true');
+            expect(domainPermission.getAttribute('data-qa-perm-none-radio')).toBe('true');
+            expect(eventsPermission.getAttribute('data-qa-perm-rw-radio')).toBe('true');
+            expect(imagesPermission.getAttribute('data-qa-perm-rw-radio')).toBe('true');
             browser.click('[data-qa-close-drawer]');
             browser.waitForVisible('[data-qa-close-drawer]', constants.wait.normal, true);
         });
