@@ -1,6 +1,7 @@
 import {
   init,
   filter,
+  isNil,
 } from 'ramda';
 
 export interface NodeBalancerConfigFields {
@@ -40,16 +41,27 @@ export const transformConfigsForRequest =
         el => el !== undefined,
         {
           check_path: config.check_path || undefined,
-          protocol: config.protocol || undefined,
+          protocol: (
+            /*
+             * If the provided protocol is "https" and the cert and key are set
+             * to "<REDACTED", don't try to set the protocol, it has already
+             * been set to "https".
+             */
+            config.protocol === 'https'
+            && config.ssl_cert === '<REDACTED>'
+            && config.ssl_key === '<REDACTED>'
+          )
+            ? undefined
+            : config.protocol || undefined,
           algorithm: config.algorithm || undefined,
           stickiness: config.stickiness || undefined,
           check: config.check || undefined,
-          check_interval: config.check_interval ? +config.check_interval : undefined,
-          check_timeout: config.check_timeout ? +config.check_timeout : undefined,
-          check_attempts: config.check_attempts ? +config.check_attempts : undefined,
+          check_interval: !isNil(config.check_interval) ? +config.check_interval : undefined,
+          check_timeout: !isNil(config.check_timeout) ? +config.check_timeout : undefined,
+          check_attempts: !isNil(config.check_attempts) ? +config.check_attempts : undefined,
           port: config.port ? +config.port : undefined,
           check_body: config.check_body || undefined,
-          check_passive: config.check_passive || undefined,
+          check_passive: config.check_passive, /* will be boolean or undefined */
           cipher_suite: config.cipher_suite || undefined,
           ssl_cert: config.ssl_cert === '<REDACTED>'
             ? undefined

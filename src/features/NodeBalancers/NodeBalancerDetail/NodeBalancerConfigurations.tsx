@@ -509,7 +509,16 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           onPortChange={this.updateState(portLens)}
 
           protocol={defaultTo('http', view(protocolLens, this.state))}
-          onProtocolChange={this.updateState(protocolLens)}
+          onProtocolChange={(value: any) => {
+            this.updateState(protocolLens)(value);
+            /* clear cert and private key upon changing protocol so that they are re-validated */
+            this.setState(
+              compose(
+                set(sslCertificateLens, ''),
+                set(privateKeyLens, ''),
+              ),
+            );
+          }}
 
           healthCheckType={defaultTo('connection', view(healthCheckTypeLens, this.state))}
           onHealthCheckTypeChange={this.updateState(healthCheckTypeLens)}
