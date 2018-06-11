@@ -44,7 +44,7 @@ import Notice from 'src/components/Notice';
 
 import {
   NodeBalancerConfigFields,
-  transformConfigNodesForRequest,
+  transformConfigsForRequest,
 } from './utils';
 
 type Styles =
@@ -229,8 +229,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
     /* transform node data for the requests */
     const nodeBalancerRequestData = clone(nodeBalancerFields);
-    nodeBalancerRequestData.configs = transformConfigNodesForRequest(
-      nodeBalancerRequestData.configs);
+    nodeBalancerRequestData.configs = transformConfigsForRequest(nodeBalancerRequestData.configs);
 
     /* Clear node errors */
     this.clearNodeErrors();

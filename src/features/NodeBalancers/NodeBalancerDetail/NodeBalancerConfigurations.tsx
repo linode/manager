@@ -16,7 +16,6 @@ import {
   lensPath,
   lensIndex,
   pathOr,
-  filter,
   set,
   view,
   over,
@@ -49,7 +48,11 @@ import ActionsPanel from 'src/components/ActionsPanel';
 
 import { lensFrom, validationErrorsToFieldErrors } from '../NodeBalancerCreate';
 import NodeBalancerConfigPanel from '../NodeBalancerConfigPanel';
-import { nodeForRequest } from '../utils';
+import {
+  nodeForRequest,
+  transformConfigsForRequest,
+  NodeBalancerConfigFields,
+} from '../utils';
 
 type ClassNames =
   'root'
@@ -67,17 +70,13 @@ interface Props { }
 type MatchProps = { nodeBalancerId?: number };
 type RouteProps = RouteComponentProps<MatchProps>;
 
-interface ConfigWithNodes extends Linode.NodeBalancerConfig {
-  nodes: Linode.NodeBalancerConfigNode[];
-}
-
 interface PreloadedProps {
-  configs: PromiseLoaderResponse<Linode.ResourcePage<ConfigWithNodes>>;
+  configs: PromiseLoaderResponse<Linode.ResourcePage<NodeBalancerConfigFields>>;
 }
 
 interface State {
-  configs: ConfigWithNodes[];
-  unmodifiedConfigs: ConfigWithNodes[];
+  configs: NodeBalancerConfigFields[];
+  unmodifiedConfigs: NodeBalancerConfigFields[];
   configErrors: Linode.ApiFieldError[][];
   configSubmitting: boolean[];
   panelMessages: string[];
@@ -143,29 +142,8 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     const { match: { params: { nodeBalancerId } } } = this.props;
     const config = this.state.configs[idx];
 
-    const configPayload: Partial<Linode.NodeBalancerConfig> = filter(
-      el => el !== undefined,
-      {
-        ...config,
-        check_attempts: +config.check_attempts,
-        check_interval: +config.check_interval,
-        check_timeout: +config.check_timeout,
-        port: +config.port,
-        check_body: config.check_body || undefined,
-        check_path: config.check_path || undefined,
-        ssl_cert: config.ssl_cert === '<REDACTED>'
-          ? undefined
-          : config.ssl_cert || undefined,
-        ssl_key: config.ssl_key === '<REDACTED>'
-          ? undefined
-          : config.ssl_key || undefined,
-        ssl_commonname: config.ssl_commonname || undefined,
-        ssl_fingerprint: config.ssl_fingerprint || undefined,
-        nodes_status: undefined,
-        id: undefined,
-        nodebalancer_id: undefined,
-      },
-    );
+    const configPayload: Partial<Linode.NodeBalancerConfig> =
+      transformConfigsForRequest([config], true)[0];
 
     // first, validate client-side
     const { error: validationErrors } = Joi.validate(
@@ -187,18 +165,18 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       configSubmitting: newSubmitting,
     });
 
-    updateNodeBalancerConfig(nodeBalancerId!, config.id, configPayload)
+    updateNodeBalancerConfig(nodeBalancerId!, config.id!, configPayload)
       .then((nodeBalancerConfig) => {
         // update config data
         const newConfigs = clone(this.state.configs);
-        newConfigs[idx] = nodeBalancerConfig as ConfigWithNodes;
+        newConfigs[idx] = nodeBalancerConfig as NodeBalancerConfigFields;
         const newNodes = clone(this.state.configs[idx].nodes);
         //    while maintaing node data
         newConfigs[idx].nodes = newNodes;
 
         // update config data for reverting edits
         const newUnmodifiedConfigs = clone(this.state.unmodifiedConfigs);
-        newUnmodifiedConfigs[idx] = nodeBalancerConfig as ConfigWithNodes;
+        newUnmodifiedConfigs[idx] = nodeBalancerConfig as NodeBalancerConfigFields;
         //    while maintaing node data
         newUnmodifiedConfigs[idx].nodes = newNodes;
 
@@ -328,7 +306,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       return;
     }
 
-    createNodeBalancerConfigNode(nodeBalancerId!, config.id, nodeData)
+    createNodeBalancerConfigNode(nodeBalancerId!, config.id!, nodeData)
       .then((node) => {
         this.setState(
           set(
@@ -383,7 +361,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       ),
     );
 
-    updateNodeBalancerConfigNode(nodeBalancerId!, config.id, node!.id!, nodeData)
+    updateNodeBalancerConfigNode(nodeBalancerId!, config.id!, node!.id!, nodeData)
       .then((node) => {
         /* clear the "updating" flag for this node */
         this.setState(
