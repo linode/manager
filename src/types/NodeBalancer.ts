@@ -27,10 +27,13 @@ namespace Linode {
   export type NodeBalancerConfigNodeMode = 'accept' | 'reject' | 'drain';
 
   export interface NodeBalancerConfigNode {
+    id?: number;
     label: string;
     address: string;
     weight?: number;
     mode?: NodeBalancerConfigNodeMode;
+    updating?: boolean;
+    errors?: Linode.ApiFieldError[];
   }
 
   export interface NodeBalancerConfig {
