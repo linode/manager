@@ -15,20 +15,25 @@ import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 
-type ClassNames = 'root' | 'inner' | 'divider' | 'suffix';
+type ClassNames = 'root'
+  | 'inner'
+  | 'divider'
+  | 'suffix'
+  | 'backendIPAction';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
   },
-  inner: {
-    padding: theme.spacing.unit * 3,
-  },
+  inner: {},
   divider: {
     marginTop: theme.spacing.unit * 3,
     marginBottom: theme.spacing.unit * 3,
   },
   suffix: {
     marginRight: theme.spacing.unit * 2,
+  },
+  backendIPAction: {
+    marginTop: theme.spacing.unit * 4,
   },
 });
 
@@ -699,7 +704,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   Choose Backend IPs
                 </Typography>
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} style={{ paddingBottom: 24 }}>
                 {
                   nodes && nodes.map((node, idx) => {
                     const hasErrorFor = getAPIErrorFor({
@@ -718,7 +723,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                           errors,
                         ]}
                         container
-                        alignItems="flex-end"
                       >
                         {idx !== 0 &&
                           <Grid item xs={12}>
@@ -771,7 +775,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                           </TextField>
                         </Grid>
                         {(forEdit && idx !== (nodes.length - 1)) &&
-                          <Grid item xs={5} lg={2}>
+                          <Grid item xs={5} lg={2} className={classes.backendIPAction}>
                             <Button
                               type="primary"
                               data-config-idx={idx}
@@ -783,7 +787,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                           </Grid>
                         }
                         {(forEdit && idx === (nodes.length - 1)) &&
-                          <Grid item xs={5} lg={2}>
+                          <Grid item xs={5} lg={2} className={classes.backendIPAction}>
                             <Button
                               data-config-idx={idx}
                               type="primary"
@@ -794,7 +798,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             </Button>
                           </Grid>
                         }
-                        <Grid item xs={5} lg={1}>
+                        <Grid item xs={5} lg={1} className={classes.backendIPAction}>
                           {/**
                             * Show the delete button for index 0 if we are
                             * editing the Config. Don't show the delete button
