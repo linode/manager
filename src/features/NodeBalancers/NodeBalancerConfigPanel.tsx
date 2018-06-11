@@ -289,6 +289,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   value={port}
                   onChange={this.onPortChange}
                   errorText={hasErrorFor('port')}
+                  data-qa-port
                 />
               </Grid>
               <Grid item xs={12} md={4}>
@@ -298,9 +299,20 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   select
                   onChange={this.onProtocolChange}
                   errorText={hasErrorFor('protocol')}
+                  data-qa-protocol-select
                 >
-                  <MenuItem value="http">HTTP</MenuItem>
-                  <MenuItem value="https">HTTPS</MenuItem>
+                  <MenuItem
+                    value="http"
+                    data-qa-option="http"
+                  >
+                    HTTP
+                  </MenuItem>
+                  <MenuItem
+                    value="https"
+                    data-qa-option="https"
+                  >
+                    HTTPS
+                  </MenuItem>
                 </TextField>
               </Grid>
               <Grid item xs={12}>
@@ -359,7 +371,11 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               container
             >
               <Grid item xs={12}>
-                <Typography variant="title">Algorithm</Typography>
+                <Typography
+                  variant="title"
+                  data-qa-algorithm-header
+                >
+                  Algorithm</Typography>
               </Grid>
               <Grid item xs={12} md={4}>
                 <TextField
@@ -368,10 +384,17 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   select
                   onChange={this.onAlgorithmChange}
                   errorText={hasErrorFor('algorithm')}
+                  data-qa-algorithm-select
                 >
-                  <MenuItem value="roundrobin">Round Robin</MenuItem>
-                  <MenuItem value="leastconn">Least Connections</MenuItem>
-                  <MenuItem value="source">Source</MenuItem>
+                  <MenuItem value="roundrobin" data-qa-option="roundrobin">
+                    Round Robin
+                  </MenuItem>
+                  <MenuItem value="leastconn" data-qa-option="leastconn">
+                    Least Connections
+                  </MenuItem>
+                  <MenuItem value="source" data-qa-option="source">
+                    Source
+                  </MenuItem>
                 </TextField>
               </Grid>
               <Grid item xs={12}>
@@ -387,7 +410,12 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               container
             >
               <Grid item xs={12}>
-                <Typography variant="title">Session Stickiness</Typography>
+                <Typography
+                  variant="title"
+                  data-qa-session-stickiness-header
+                >
+                  Session Stickiness
+                </Typography>
               </Grid>
               <Grid item xs={12} md={4}>
                 <TextField
@@ -396,10 +424,26 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   select
                   onChange={this.onSessionStickinessChange}
                   errorText={hasErrorFor('stickiness')}
+                  data-qa-session-stickiness-select
                 >
-                  <MenuItem value="none">None</MenuItem>
-                  <MenuItem value="table">Table</MenuItem>
-                  <MenuItem value="http_cookie">HTTP Cookie</MenuItem>
+                  <MenuItem
+                    value="none"
+                    data-qa-option="none"
+                  >
+                    None
+                  </MenuItem>
+                  <MenuItem
+                    value="table"
+                    data-qa-option="table"
+                  >
+                    Table
+                  </MenuItem>
+                  <MenuItem
+                    value="http_cookie"
+                    data-qa-option="http_cookie"
+                  >
+                    HTTP Cookie
+                  </MenuItem>
                 </TextField>
               </Grid>
               <Grid item xs={12}>
@@ -413,7 +457,12 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 item
                 xs={12}
               >
-                <Typography variant="title">Active Health Checks</Typography>
+                <Typography
+                  variant="title"
+                  data-qa-active-checks-header
+                >
+                  Active Health Checks
+                </Typography>
               </Grid>
               <Grid
                 updateFor={[
@@ -430,6 +479,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     select
                     onChange={this.onHealthCheckTypeChange}
                     errorText={hasErrorFor('check')}
+                    data-qa-active-check-select
                   >
                     <MenuItem value="none">None</MenuItem>
                     <MenuItem value="connection">TCP Connection</MenuItem>
@@ -464,6 +514,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       value={healthCheckInterval}
                       onChange={this.onHealthCheckIntervalChange}
                       errorText={hasErrorFor('check_interval')}
+                      data-qa-active-check-interval
                     />
                   </Grid>
                   <Grid
@@ -489,6 +540,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       value={healthCheckTimeout}
                       onChange={this.onHealthCheckTimeoutChange}
                       errorText={hasErrorFor('check_timeout')}
+                      data-qa-active-check-timeout
                     />
                   </Grid>
                   <Grid
@@ -506,6 +558,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       value={healthCheckAttempts}
                       onChange={this.onHealthCheckAttemptsChange}
                       errorText={hasErrorFor('check_attempts')}
+                      data-qa-active-check-attempts
                     />
                   </Grid>
                   {
@@ -566,7 +619,12 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               container
             >
               <Grid item xs={12}>
-                <Typography variant="title">Passive Checks</Typography>
+                <Typography
+                  variant="title"
+                  data-qa-passive-checks-header
+                >
+                  Passive Checks
+                </Typography>
               </Grid>
               <Grid item xs={12}>
                 <FormControlLabel
@@ -574,6 +632,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     <Toggle
                       checked={checkPassive}
                       onChange={this.onCheckPassiveChange}
+                      data-qa-passive-checks-toggle
                     />
                   }
                   label="Passive Checks"
@@ -633,7 +692,12 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               container
             >
               <Grid item xs={12}>
-                <Typography variant="title">Choose Backend IPs</Typography>
+                <Typography
+                  variant="title"
+                  data-qa-backend-ip-header
+                >
+                  Choose Backend IPs
+                </Typography>
               </Grid>
               <Grid item xs={12}>
                 {
@@ -668,6 +732,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             inputProps={{ 'data-config-idx': idx }}
                             onChange={this.onNodeLabelChange}
                             errorText={hasErrorFor('label')}
+                            data-qa-backend-ip-label
                           />
                         </Grid>
                         <Grid item xs={11} lg={3}>
@@ -677,6 +742,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             inputProps={{ 'data-config-idx': idx }}
                             onChange={this.onNodeAddressChange}
                             errorText={hasErrorFor('address')}
+                            data-qa-backend-ip-address
                           />
                         </Grid>
                         <Grid item xs={11} lg={forEdit ? 2 : 3}>
@@ -686,6 +752,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             inputProps={{ 'data-config-idx': idx }}
                             onChange={this.onNodeWeightChange}
                             errorText={hasErrorFor('weight')}
+                            data-qa-backend-ip-weight
                           />
                         </Grid>
                         <Grid item xs={11} lg={forEdit ? 2 : 3}>
@@ -696,6 +763,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             inputProps={{ 'data-config-idx': idx }}
                             onChange={this.onNodeModeChange}
                             errorText={hasErrorFor('mode')}
+                            data-qa-backend-ip-mode
                           >
                             <MenuItem value="accept">Accept</MenuItem>
                             <MenuItem value="reject">Reject</MenuItem>
@@ -720,6 +788,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                               data-config-idx={idx}
                               type="primary"
                               onClick={this.addNode}
+                              data-qa-add-node
                             >
                               Add
                             </Button>
@@ -732,7 +801,11 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             * for the final index if we are editing the Config.
                             **/}
                           {(forEdit ? idx !== (nodes.length - 1) : idx !== 0) &&
-                            <IconButton data-config-idx={idx} onClick={this.removeNode}>
+                            <IconButton
+                              data-config-idx={idx}
+                              onClick={this.removeNode}
+                              data-qa-remove-node
+                            >
                               <Delete />
                             </IconButton>
                           }
