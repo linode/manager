@@ -91,10 +91,10 @@ type ClassNames = 'titleWrapper'
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   titleWrapper: {
     display: 'flex',
-    alignItems: 'center',
+    marginTop: 5,
   },
   backButton: {
-    margin: '2px 0 0 -16px',
+    margin: '5px 0 0 -16px',
     '& svg': {
       width: 34,
       height: 34,

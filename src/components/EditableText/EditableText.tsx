@@ -44,7 +44,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   container: {
     display: 'inline-flex',
     justifyContent: 'flex-start',
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
   initial: {
     '&:hover, &:focus': {
@@ -65,13 +65,17 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     margin: 0,
   },
   inputRoot: {
-    border: 0,
-    borderBottom: `2px dotted ${theme.color.black}`,
+    borderTop: 0,
+    borderLeft: 0,
+    borderRight: 0,
+    borderBottomWidth: 2,
+    borderBottomStyle: 'dotted',
     backgroundColor: 'transparent',
   },
   button: {
     minWidth: 'auto',
     padding: 0,
+    marginTop: 10,
     background: 'transparent !important',
   },
   icon: {

@@ -44,10 +44,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
   titleWrapper: {
     display: 'flex',
-    alignItems: 'center',
   },
   backButton: {
-    margin: '2px 0 0 -16px',
+    margin: '5px 0 0 -16px',
     '& svg': {
       width: 34,
       height: 34,
