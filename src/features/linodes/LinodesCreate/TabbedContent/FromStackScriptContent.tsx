@@ -54,7 +54,7 @@ interface Props {
 }
 
 interface State {
-  userDefinedFields: Linode.StackScript.UserDefinedField[] | null;
+  userDefinedFields: Linode.StackScript.UserDefinedField[];
 }
 
 const errorResources = {
@@ -68,11 +68,23 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 export class FromStackScriptContent extends React.Component<CombinedProps, State> {
   state: State = {
-    userDefinedFields: [],
+    userDefinedFields: mockUserDefinedFields,
   };
 
   componentDidMount() {
-    this.setState({ userDefinedFields: mockUserDefinedFields });
+    // add fields with default values to formState here
+    const { userDefinedFields } = this.state;
+    const { updateFormState } = this.props;
+    const defaultUDFData = {};
+    userDefinedFields.forEach((eachField) => {
+      if (!!eachField.default) {
+        defaultUDFData[eachField.name] = eachField.default;
+      }
+    });
+    updateFormState([{
+      stateKey: 'udf_data',
+      newValue: defaultUDFData,
+    }]);
   }
 
   render() {

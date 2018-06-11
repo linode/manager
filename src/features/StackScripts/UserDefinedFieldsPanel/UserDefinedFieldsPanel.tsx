@@ -35,11 +35,15 @@ const UserDefinedFieldsPanel: React.StatelessComponent<CombinedProps> = (props) 
 
   const renderField = (field: Linode.StackScript.UserDefinedField) => {
     if (isMultiSelect(field)) {
-      return <UserDefinedMultiSelect key={field.name} />;
+      return <UserDefinedMultiSelect
+        key={field.name}
+        field={field}
+        udf_data={props.udf_data}
+        updateFormState={updateFormState}
+      />;
     } if (isOneSelect(field)) {
       return <UserDefinedSelect
-        oneof={field.oneof!}
-        fieldName={field.name}
+        field={field}
         updateFormState={updateFormState}
         udf_data={props.udf_data}
         key={field.name} />;

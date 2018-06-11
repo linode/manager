@@ -14,6 +14,7 @@ export const UserDefinedFields: Linode.StackScript.UserDefinedField[] = [
   {
     label: 'Drupal Version',
     name: 'drupal_version',
+    default: 'Latest Drupal 8',
     oneof: 'Latest Drupal 8,Latest Drupal 7',
   },
   {
