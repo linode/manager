@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { compose, pathOr } from 'ramda';
 
@@ -284,7 +285,9 @@ class LinodeCard extends React.Component<CombinedProps> {
       <Grid item xs={12} sm={6} lg={4} xl={3} data-qa-linode={linodeLabel}>
         <Card className={classes.flexContainer}>
           {/* Give Button a child of ' ', because the component requires children */}
-          <Button href={`/linodes/${linodeId}`} className={classes.link}> </Button>
+          <Link to={`/linodes/${linodeId}`}>
+            <Button className={classes.link}> </Button>
+          </Link>
           <CardHeader
             subheader={this.renderTitle()}
             action={
