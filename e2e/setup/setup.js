@@ -86,7 +86,7 @@ exports.deleteAll = (token) => {
 }
 
 
-exports.removeAllLinodes = (token) => {
+exports.removeAllLinodes = token => {
     return new Promise((resolve, reject) => {
         const linodesEndpoint = '/linode/instances';
 
@@ -103,8 +103,8 @@ exports.removeAllLinodes = (token) => {
             return instance.delete(`${endpoint}/${res.id}`)
                 .then(res => res)
                 .catch((error) => {
-                    console.log('Error', error);
-                    return error
+                    console.error('Error', error);
+                    reject('Error', error);
                 });
         }
 
@@ -115,7 +115,10 @@ exports.removeAllLinodes = (token) => {
 
                 Promise.all(promiseArray).then(function(res) {
                     resolve(res);
-                }).catch(error => console.log(error));
+                }).catch(error => {
+                    console.error(error);
+                    reject('Error', error);
+                });
         });
     });
 }
@@ -147,25 +150,94 @@ exports.createLinode = (token, password, linodeLabel) => {
         });
 
         return instance.post(linodesEndpoint, linodeConfig)
-            .then(res => {
-                resolve(res.status === 200);
+            .then(response => {
+                resolve(response.data);
             })
             .catch(error => {
                 console.error('Error', error);
-                reject(error)
+                reject(error);
             });
     });
 }
 
-exports.removeAllVolumes = (token) => {
+exports.allocatePrivateIp = (token, linodeId) => {
     return new Promise((resolve, reject) => {
-        const volumesEndpoint = '/volumes';
+        const ipsEndpoint = `/linode/instances/${linodeId}/ips`;
+        const instance = axios.create({
+            httpsAgent: new https.Agent({
+                rejectUnauthorized: false
+            }),
+            baseURL: API_ROOT,
+            timeout: 5000,
+            headers: { 'Authorization': `Bearer ${token}`},
+        });
+
+        const requestPrivate = {
+            public: false,
+            type: 'ipv4',
+        }
+
+        return instance.post(ipsEndpoint, requestPrivate)
+            .then(response => resolve(response.data))
+            .catch(error => {
+                console.error('Error', error);
+                reject(error);
+            });
+    });
+}
+
+exports.getNodebalancers = token => {
+    return new Promise((resolve, reject) => {
+        const endpoint = '/nodebalancers';
+        const instance = axios.create({
+            httpsAgent: new https.Agent({
+                rejectUnauthorized: false
+            }),
+            baseURL: API_ROOT,
+            timeout: 5000,
+            headers: { 'Authorization': `Bearer ${token}`},
+        });
+
+        return instance.get(endpoint)
+            .then(response => resolve(response.data))
+            .catch(error => {
+                console.error('Error', error);
+                reject(error);
+            });
+    });
+}
+
+exports.removeNodebalancer = (token, nodeBalancerId) => {
+    return new Promise((resolve, reject) => {
+        const endpoint = `/nodebalancers/${nodeBalancerId}`;
+        const instance = axios.create({
+            httpsAgent: new https.Agent({
+                rejectUnauthorized: false
+            }),
+            baseURL: API_ROOT,
+            timeout: 5000,
+            headers: { 'Authorization': `Bearer ${token}`},
+        });
+
+        return instance.delete(endpoint)
+            .then(response => resolve(response.data))
+            .catch(error => {
+                console.error('Error', error);
+                reject(error);
+            });
+    });
+}
+
+exports.removeAllVolumes = token => {
+    return new Promise((resolve, reject) => {
+        const endpoint = '/volumes';
 
         const removeVolume = (res, endpoint) => {
             return instance.delete(`${endpoint}/${res.id}`)
-                .then(res => res.status)
+                .then(response => response.status)
                 .catch(error => {
                     console.error('Error', error);
+                    reject(error);
                 });
         }
 
@@ -178,9 +250,9 @@ exports.removeAllVolumes = (token) => {
             headers: { 'Authorization': `Bearer ${token}`}, 
         });
 
-        return instance.get(volumesEndpoint).then(res => {
+        return instance.get(endpoint).then(res => {
             const removeVolumesArray = 
-                res.data.data.map(v => removeVolume(v, volumesEndpoint));
+                res.data.data.map(v => removeVolume(v, endpoint));
 
             Promise.all(removeVolumesArray).then(function(res) {
                 resolve(res);

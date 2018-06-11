@@ -52,24 +52,25 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
         <Grid item xs={12} sm={6}>
           <Typography
             variant="caption"
+            data-qa-hostname
           >
             <strong>Host Name:</strong> {nodeBalancer.hostname}
           </Typography>
         </Grid>
         <Grid item xs={12} sm={6}>
-          <Typography variant="caption">
+          <Typography variant="caption" data-qa-ports>
             <strong>
               Ports: </strong> {nodeBalancer.ports.length === 0 && 'None'}
               {nodeBalancer.ports.join(', ')}
           </Typography>
         </Grid>
         <Grid item xs={12} sm={6} lg={3}>
-          <Typography variant="caption">
+          <Typography variant="caption" data-qa-node-status>
             <strong>Node Status:</strong> {`${nodeBalancer.up} up, ${nodeBalancer.down} down`}
           </Typography>
         </Grid>
         <Grid item xs={12} sm={6} lg={3}>
-          <Typography variant="caption">
+          <Typography variant="caption" data-qa-transferred>
             <strong>Transferred:</strong> {convertMegabytesTo(nodeBalancer.transfer.total)}
           </Typography>
         </Grid>
@@ -78,7 +79,7 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
           {nodeBalancer.ipv6 && <IPAddress ips={[nodeBalancer.ipv6]} copyRight />}
         </Grid>
         <Grid item xs={12} sm={6}>
-          <Typography variant="caption">
+          <Typography variant="caption" data-qa-region>
             {formatRegion(nodeBalancer.region)}
           </Typography>
         </Grid>
