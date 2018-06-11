@@ -263,7 +263,7 @@ class SearchBar extends React.Component<FinalProps, State> {
           linode.specs.memory,
           linode.specs.disk,
           linode.specs.vcpus,
-          linode.image,
+          linode.image!,
         ),
         Icon: LinodeIcon,
         path: `/linodes/${linode.id}`,
