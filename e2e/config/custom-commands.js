@@ -55,13 +55,13 @@ exports.browserCommands = () => {
             .then(res => res);
     });
 
-    browser.addCommand('getNodebalancers', function async(token) {
+    browser.addCommand('getNodeBalancers', function async(token) {
         return getNodebalancers(token)
             .then(res => res);
     });
 
-    browser.addCommand('removeNodebalancer', function async(token, nodebalancerId) {
-        return removeNodebalancer(token, nodebalancerId)
+    browser.addCommand('removeNodeBalancer', function async(token, nodeBalancerId) {
+        return removeNodebalancer(token, nodeBalancerId)
             .then(res => res);
     });
 

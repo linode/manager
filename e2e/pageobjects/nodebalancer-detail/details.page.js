@@ -19,6 +19,7 @@ class NodeBalancerDetail extends Page {
     baseElemsDisplay() {
         this.label.waitForVisible(constants.wait.normal);
         this.summaryHeading.waitForText(constants.wait.normal);
+        this.summaryTab.waitForVisible();
         expect(this.summaryTab.getAttribute('aria-selected')).toBe('true');
         expect(this.configsTab.isVisible()).toBe(true);
         expect(this.settingsTab.isVisible()).toBe(true);

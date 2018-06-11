@@ -12,16 +12,15 @@ describe('NodeBalancer - Negative Tests Suite', () => {
         token = browser.readToken();
         linode = apiCreateLinode();
         linode['privateIp'] = browser.allocatePrivateIp(token, linode.id).address;
-        browser.url(constants.routes.nodebalancers);
+        browser.url(constants.routes.nodeBalancers);
         NodeBalancers.baseElemsDisplay(true);
-        NodeBalancers.placeholderButton.click();
-        NodeBalancers.baseElemsDisplay();
+        NodeBalancers.create();
     });
 
     afterAll(() => {
         apiDeleteAllLinodes();
-        const availableNodeBalancers = browser.getNodebalancers(token);
-        availableNodeBalancers.data.forEach(nb => browser.removeNodebalancer(token, nb.id));
+        const availableNodeBalancers = browser.getNodeBalancers(token);
+        availableNodeBalancers.data.forEach(nb => browser.removeNodeBalancer(token, nb.id));
     });
 
     it('should display a service error msg on create with an invalid node', () => {
@@ -32,7 +31,7 @@ describe('NodeBalancer - Negative Tests Suite', () => {
         const noticeMsg = `Unable to create node ${badLinode.label}.`;
         const serviceError = 'This address is not allowed.';
 
-        NodeBalancers.create(badLinode, {
+        NodeBalancers.configure(badLinode, {
             label: `NB-${new Date().getTime()}`,
             regionIndex: 0,
             connectionThrottle: 0,
