@@ -110,6 +110,7 @@ class NodeBalancers extends Page {
         healthCheckAttempts: 2,
         passiveChecksToggle: true,
     }) {
+        this.label.waitForVisible(constants.wait.normal);
         this.label.setValue(nodeBalancerConfig.label);
         this.regionCards[nodeBalancerConfig.regionIndex].click();
         this.port.setValue(nodeBalancerConfig.port);

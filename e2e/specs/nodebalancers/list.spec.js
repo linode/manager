@@ -5,7 +5,7 @@ import ListNodeBalancers from '../../pageobjects/list-nodebalancers.page';
 import NodeBalancerDetail from '../../pageobjects/nodebalancer-detail/details.page';
 import { apiCreateLinode, apiDeleteAllLinodes } from '../../utils/common';
 
-describe('Nodebalancer - Create Suite', () => {
+describe('Nodebalancer - List Suite', () => {
     let linode,
         privateIp,
         token;

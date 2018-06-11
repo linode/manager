@@ -18,8 +18,8 @@ describe('Nodebalancer - Create Suite', () => {
 
     afterAll(() => {
         apiDeleteAllLinodes();
-        const availableNodeBalancers = browser.getNodebalancers(token);
-        availableNodeBalancers.data.forEach(nb => browser.removeNodebalancer(token, nb.id));
+        const availableNodeBalancers = browser.getNodeBalancers(token);
+        availableNodeBalancers.data.forEach(nb => browser.removeNodeBalancer(token, nb.id));
     });
 
     it('should display placeholder message with create button', () => {
