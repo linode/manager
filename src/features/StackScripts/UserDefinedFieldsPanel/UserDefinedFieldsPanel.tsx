@@ -7,6 +7,11 @@ import {
 } from 'material-ui';
 import Paper from 'material-ui/Paper';
 
+import UserDefinedText from './FieldTypes/UserDefinedText';
+import UserDefinedMultiSelect from './FieldTypes/UserDefinedMultiSelect';
+import UserDefinedSelect from './FieldTypes/UserDefinedSelect';
+import { StateToUpdate as FormState } from '../../linodes/LinodesCreate';
+
 
 type ClassNames = 'root';
 
@@ -19,24 +24,29 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 interface Props {
   userDefinedFields?: Linode.StackScript.UserDefinedField[];
+  updateFormState: (stateToUpdate: FormState[]) => void;
+  udf_data: any;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const UserDefinedFieldsPanel: React.StatelessComponent<CombinedProps> = (props) => {
-  const { userDefinedFields, classes } = props;
-
-  console.log(userDefinedFields);
+  const { userDefinedFields, classes, updateFormState } = props;
 
   const renderField = (field: Linode.StackScript.UserDefinedField) => {
     if (isMultiSelect(field)) {
-      return <div key={field.name}>multi select</div>;
+      return <UserDefinedMultiSelect key={field.name} />;
     } if (isOneSelect(field)) {
-      return <div key={field.name}>one select</div>;
+      return <UserDefinedSelect
+        oneof={field.oneof!}
+        fieldName={field.name}
+        updateFormState={updateFormState}
+        udf_data={props.udf_data}
+        key={field.name} />;
     } if (isPasswordField(field.name)) {
-      return <div key={field.name}>password field</div>;
+      return <UserDefinedText key={field.name} isPassword={true} />;
     }
-    return <div key={field.name}>text field</div>;
+    return <UserDefinedText key={field.name} />;
   };
 
   return (

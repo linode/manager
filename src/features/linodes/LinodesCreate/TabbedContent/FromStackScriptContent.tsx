@@ -50,6 +50,7 @@ interface Props {
   getBackupsMonthlyPrice: () => number | null;
   label: string | null;
   password: string | null;
+  udf_data: any;
 }
 
 interface State {
@@ -105,7 +106,9 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
         />
         {userDefinedFields && userDefinedFields.length > 0 &&
           <UserDefinedFieldsPanel
+            updateFormState={updateFormState}
             userDefinedFields={userDefinedFields}
+            udf_data={this.props.udf_data}
           />
         }
         <SelectImagePanel

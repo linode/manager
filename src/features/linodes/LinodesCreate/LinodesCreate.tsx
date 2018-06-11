@@ -95,6 +95,12 @@ interface State {
   isGettingBackups: boolean;
   linodesWithBackups: Linode.LinodeWithBackups[] | null;
   userHasBackups: boolean;
+  udf_data: any; // @TODO this can be an object with really anything in it
+  // data shape will look like thie
+  // udf_data: {
+  //   udf_name: 'value'
+  // }
+  // udf_data: null; state will live here and be updated in the field
 }
 
 interface QueryStringOptions {
@@ -143,6 +149,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
     isGettingBackups: false,
     linodesWithBackups: null,
     userHasBackups: false,
+    udf_data: {},
   };
 
   mounted: boolean = false;
@@ -336,6 +343,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
             selectedImageID={this.state.selectedImageID}
             selectedTypeID={this.state.selectedTypeID}
             selectedStackScriptID={this.state.selectedStackScriptID}
+            udf_data={this.state.udf_data}
           />
         );
       },
