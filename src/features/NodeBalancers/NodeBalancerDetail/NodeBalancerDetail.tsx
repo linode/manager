@@ -209,7 +209,11 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
           >
             {
               this.tabs.map(tab =>
-                <Tab key={tab.title} label={tab.title} />,
+                <Tab
+                  key={tab.title}
+                  label={tab.title}
+                  data-qa-tab={tab.title}
+                />,
               )
             }
           </Tabs>

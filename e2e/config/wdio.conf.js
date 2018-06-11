@@ -4,6 +4,7 @@ const { argv } = require('yargs');
 const { login } = require('../utils/config-utils');
 const { browserCommands } = require('./custom-commands');
 const { browserConf } = require('./browser-config');
+const { constants } = require('../constants');
 const selectedBrowser = argv.b ? browserConf[argv.b] : browserConf['chrome'];
 const username = process.env.MANAGER_USER;
 const password = process.env.MANAGER_PASS;

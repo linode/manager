@@ -88,9 +88,4 @@ export default class Page {
         this.drawerClose.click();
         this.drawerTitle.waitForVisible(constants.wait.normal, true);
     }
-
-    selectActionMenuItem(tableCell, item) {
-        tableCell.$(this.actionMenu.selector).click();
-        browser.jsClick(`[data-qa-action-menu-item="${item}"]`);
-    }
 }
