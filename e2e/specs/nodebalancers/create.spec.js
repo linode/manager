@@ -38,8 +38,8 @@ describe('Nodebalancer - Create Suite', () => {
     });
 
     it('should fail to create without choosing a backend ip', () => {
-        const labelError = '"label" is not allowed to be empty';
-        const addressError = '"address" is not allowed to be empty';
+        const labelError = '"label" length must be at least 3 characters long';
+        const addressError = '"address" with value "" fails to match the required pattern';
 
         NodeBalancers.regionCards[0].click();
         browser.jsClick('[data-qa-deploy-linode]');
@@ -48,7 +48,7 @@ describe('Nodebalancer - Create Suite', () => {
         const backendAddressError = $('[data-qa-backend-ip-address]').$('p');
 
         expect(backendLabelError.getText()).toBe(labelError);
-        expect(backendAddressError.getText()).toBe(addressError);
+        expect(backendAddressError.getText()).toContain(addressError);
     });
 
     it('should create a nodebalancer with a valid backend ip', () => {
