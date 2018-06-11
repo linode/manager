@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { reduce, compose, isEmpty, not, when } from 'ramda';
+import { equals } from 'ramda';
 import { withStyles, StyleRulesCallback, WithStyles, Theme, Divider, MenuItem } from 'material-ui';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
@@ -14,9 +14,6 @@ import Toggle from 'src/components/Toggle';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
-
-const parseFormNumber: (s: string) => (string | number) =
-  when(compose(not, isEmpty), (v: string) => +v);
 
 type ClassNames = 'root' | 'inner' | 'divider' | 'suffix';
 
@@ -36,17 +33,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 });
 
 const styled = withStyles(styles, { withTheme: true });
-
-const filterErrors = (idx: number) => reduce((
-  prev: Linode.ApiFieldError[],
-  next: Linode.ApiFieldError): Linode.ApiFieldError[] => {
-  const t = new RegExp(`nodes_${idx}_`);
-
-  return t.test(next.field)
-    ? [...prev, { ...next, field: next.field.replace(t, '') }]
-    : prev;
-
-}, []);
 
 interface Props {
   errors?: Linode.ApiFieldError[];
@@ -97,11 +83,12 @@ interface Props {
   onPrivateKeyChange: (v: string) => void;
 
   nodes: Linode.NodeBalancerConfigNode[];
-  addNode: () => void;
+  addNode: (nodeIdx?: number) => void;
   removeNode: (configId: number) => void;
+  onUpdateNode?: (idx: number) => void;
   onNodeLabelChange: (idx: number, value: string) => void;
   onNodeAddressChange: (idx: number, value: string) => void;
-  onNodeWeightChange: (idx: number, value: number) => void;
+  onNodeWeightChange: (idx: number, value: string) => void;
   onNodeModeChange: (idx: number, value: string) => void;
 }
 
@@ -112,64 +99,154 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
   static defaultProps: Partial<Props> = {
   };
 
+  onAlgorithmChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    this.props.onAlgorithmChange(e.target.value)
+
+  onCheckPassiveChange = (e: React.ChangeEvent<HTMLInputElement>, value: boolean) =>
+    this.props.onCheckPassiveChange(value)
+
+  onCheckBodyChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    this.props.onCheckBodyChange(e.target.value)
+
+  onCheckPathChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    this.props.onCheckPathChange(e.target.value)
+
+  onHealthCheckAttemptsChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    this.props.onHealthCheckAttemptsChange(e.target.value)
+
+  onHealthCheckIntervalChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    this.props.onHealthCheckIntervalChange(e.target.value)
+
+  onHealthCheckTimeoutChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    this.props.onHealthCheckTimeoutChange(e.target.value)
+
+  onHealthCheckTypeChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    this.props.onHealthCheckTypeChange(e.target.value)
+
+  onPortChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    this.props.onPortChange(e.target.value)
+
+  onPrivateKeyChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    this.props.onPrivateKeyChange(e.target.value)
+
+  onProtocolChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    this.props.onProtocolChange(e.target.value)
+
+  onSessionStickinessChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    this.props.onSessionStickinessChange(e.target.value)
+
+  onSslCertificateChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    this.props.onSslCertificateChange(e.target.value)
+
+  onNodeLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const configIdx = e.currentTarget.getAttribute('data-config-idx');
+    if (configIdx) {
+      this.props.onNodeLabelChange(
+        +configIdx,
+        e.target.value,
+      );
+    }
+  }
+
+  onNodeAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const configIdx = e.currentTarget.getAttribute('data-config-idx');
+    if (configIdx) {
+      this.props.onNodeAddressChange(
+        +configIdx,
+        e.target.value,
+      );
+    }
+  }
+
+  onNodeWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const configIdx = e.currentTarget.getAttribute('data-config-idx');
+    if (configIdx) {
+      this.props.onNodeWeightChange(
+        +configIdx,
+        e.target.value,
+      );
+    }
+  }
+
+  onNodeModeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const configIdx = e.currentTarget.getAttribute('data-config-idx');
+    if (configIdx) {
+      this.props.onNodeModeChange(
+        +configIdx,
+        e.target.value,
+      );
+    }
+  }
+
+  addNode = (e: React.MouseEvent<HTMLElement>) => {
+    const configIdx: string | null = e.currentTarget.getAttribute('data-config-idx');
+    if (configIdx) {
+      this.props.addNode(+configIdx);
+    }
+  }
+  onUpdateNode = (e: React.MouseEvent<HTMLElement>) => {
+    const configIdx: string | null = e.currentTarget.getAttribute('data-config-idx');
+    const { onUpdateNode } = this.props;
+    if (onUpdateNode && configIdx) {
+      return onUpdateNode(+configIdx);
+    }
+  }
+
+  removeNode = (e: React.MouseEvent<HTMLElement>) => {
+    const configIdx: string | null = e.currentTarget.getAttribute('data-config-idx');
+    const { removeNode } = this.props;
+    if (removeNode && configIdx) {
+      return removeNode(+configIdx);
+    }
+  }
+
+  onSave = this.props.onSave;
+
+  onCancel = this.props.onCancel;
+
+  onDelete = this.props.onDelete;
+
+  shouldComponentUpdate(nextProps: Props) {
+    return this.props.forEdit !== nextProps.forEdit
+      || this.props.submitting !== nextProps.submitting
+      || this.props.algorithm !== nextProps.algorithm
+      || this.props.checkPassive !== nextProps.checkPassive
+      || this.props.checkBody !== nextProps.checkBody
+      || this.props.checkPath !== nextProps.checkPath
+      || this.props.port !== nextProps.port
+      || this.props.protocol !== nextProps.protocol
+      || this.props.healthCheckType !== nextProps.healthCheckType
+      || this.props.healthCheckAttempts !== nextProps.healthCheckAttempts
+      || this.props.healthCheckInterval !== nextProps.healthCheckInterval
+      || this.props.healthCheckTimeout !== nextProps.healthCheckTimeout
+      || this.props.sessionStickiness !== nextProps.sessionStickiness
+      || this.props.sslCertificate !== nextProps.sslCertificate
+      || this.props.privateKey !== nextProps.privateKey
+      || !equals(this.props.nodes, nextProps.nodes)
+      || !equals(this.props.errors, nextProps.errors);
+  }
+
   render() {
     const {
-      classes,
-
-      errors,
-
-      forEdit,
-      submitting,
-      onSave,
-      onCancel,
-      onDelete,
-
-      algorithm,
-      onAlgorithmChange,
-
-      checkBody,
-      onCheckBodyChange,
-
-      checkPath,
-      onCheckPathChange,
-
-      checkPassive,
-      onCheckPassiveChange,
-
-      healthCheckAttempts,
-      onHealthCheckAttemptsChange,
-
-      healthCheckInterval,
-      onHealthCheckIntervalChange,
-
-      healthCheckTimeout,
-      onHealthCheckTimeoutChange,
-
-      healthCheckType,
-      onHealthCheckTypeChange,
-
-      port,
-      onPortChange,
-
-      privateKey,
-      onPrivateKeyChange,
-
-      protocol,
-      onProtocolChange,
-
-      sessionStickiness,
-      onSessionStickinessChange,
-
-      sslCertificate,
-      onSslCertificateChange,
-
-      nodes,
       addNode,
-      removeNode,
-      onNodeLabelChange,
-      onNodeAddressChange,
-      onNodeWeightChange,
-      onNodeModeChange,
+      algorithm,
+      checkBody,
+      checkPassive,
+      checkPath,
+      classes,
+      errors,
+      forEdit,
+      healthCheckAttempts,
+      healthCheckInterval,
+      healthCheckTimeout,
+      healthCheckType,
+      nodes,
+      port,
+      privateKey,
+      protocol,
+      sessionStickiness,
+      sslCertificate,
+      submitting,
     } = this.props;
 
     const hasErrorFor = getAPIErrorFor({
@@ -193,8 +270,15 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       <Grid item xs={12}>
         <Paper className={classes.root} data-qa-label-header>
           <div className={classes.inner}>
-
-            <Grid container>
+            <Grid
+              updateFor={[
+                port,
+                protocol,
+                hasErrorFor('port'),
+                hasErrorFor('protocol'),
+              ]}
+              container
+            >
               <Grid item xs={12}>
                 <Typography variant="title">Select Port</Typography>
               </Grid>
@@ -203,7 +287,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   type="number"
                   label="Port"
                   value={port}
-                  onChange={e => onPortChange(parseFormNumber(e.target.value))}
+                  onChange={this.onPortChange}
                   errorText={hasErrorFor('port')}
                   data-qa-port
                 />
@@ -213,7 +297,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   label="Protocol"
                   value={protocol}
                   select
-                  onChange={e => onProtocolChange(e.target.value)}
+                  onChange={this.onProtocolChange}
                   errorText={hasErrorFor('protocol')}
                   data-qa-protocol-select
                 >
@@ -238,7 +322,16 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
 
             {
               protocol === 'https' &&
-              <Grid container>
+              <Grid
+                updateFor={[
+                  sslCertificate,
+                  protocol,
+                  hasErrorFor('ssl_cert'),
+                  privateKey,
+                  hasErrorFor('ssl_key'),
+                ]}
+                container
+              >
                 <Grid item xs={12}>
                   <Typography variant="title">SSL Settings</Typography>
                 </Grid>
@@ -248,7 +341,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     rows={3}
                     label="SSL Certificate"
                     value={sslCertificate}
-                    onChange={e => onSslCertificateChange(e.target.value)}
+                    onChange={this.onSslCertificateChange}
                     required={protocol === 'https'}
                     errorText={hasErrorFor('ssl_cert')}
                   />
@@ -259,7 +352,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     rows={3}
                     label="Private Key"
                     value={privateKey}
-                    onChange={e => onPrivateKeyChange(e.target.value)}
+                    onChange={this.onPrivateKeyChange}
                     required={protocol === 'https'}
                     errorText={hasErrorFor('ssl_key')}
                   />
@@ -270,7 +363,13 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               </Grid>
             }
 
-            <Grid container>
+            <Grid
+              updateFor={[
+                algorithm,
+                hasErrorFor('algorithm'),
+              ]}
+              container
+            >
               <Grid item xs={12}>
                 <Typography
                   variant="title"
@@ -283,7 +382,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   label="Algorithm"
                   value={algorithm}
                   select
-                  onChange={e => onAlgorithmChange(e.target.value)}
+                  onChange={this.onAlgorithmChange}
                   errorText={hasErrorFor('algorithm')}
                   data-qa-algorithm-select
                 >
@@ -303,7 +402,13 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               </Grid>
             </Grid>
 
-            <Grid container>
+            <Grid
+              updateFor={[
+                sessionStickiness,
+                hasErrorFor('stickiness'),
+              ]}
+              container
+            >
               <Grid item xs={12}>
                 <Typography
                   variant="title"
@@ -317,7 +422,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   label="Session Stickiness"
                   value={sessionStickiness}
                   select
-                  onChange={e => onSessionStickinessChange(e.target.value)}
+                  onChange={this.onSessionStickinessChange}
                   errorText={hasErrorFor('stickiness')}
                   data-qa-session-stickiness-select
                 >
@@ -347,7 +452,11 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
             </Grid>
 
             <Grid container>
-              <Grid item xs={12}>
+              <Grid
+                updateFor={[]} // never update after initial render
+                item
+                xs={12}
+              >
                 <Typography
                   variant="title"
                   data-qa-active-checks-header
@@ -355,13 +464,20 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   Active Health Checks
                 </Typography>
               </Grid>
-              <Grid item xs={12}>
+              <Grid
+                updateFor={[
+                  healthCheckType,
+                  hasErrorFor('check'),
+                ]}
+                item
+                xs={12}
+              >
                 <Grid item xs={12} lg={4}>
                   <TextField
                     label="Active Health Check Type"
                     value={healthCheckType}
                     select
-                    onChange={e => onHealthCheckTypeChange(e.target.value)}
+                    onChange={this.onHealthCheckTypeChange}
                     errorText={hasErrorFor('check')}
                     data-qa-active-check-select
                   >
@@ -375,7 +491,15 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               {
                 healthCheckType !== 'none' &&
                 <React.Fragment>
-                  <Grid item xs={12} lg={4}>
+                  <Grid
+                    updateFor={[
+                      healthCheckInterval,
+                      hasErrorFor('check_interval'),
+                    ]}
+                    item
+                    xs={12}
+                    lg={4}
+                  >
                     <TextField
                       type="number"
                       label="Health Check Interval"
@@ -384,16 +508,24 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                           variant="caption"
                           component="span"
                           className={classes.suffix}>
-                          / second
+                          seconds
                         </Typography>,
                       }}
                       value={healthCheckInterval}
-                      onChange={e => onHealthCheckIntervalChange(parseFormNumber(e.target.value))}
+                      onChange={this.onHealthCheckIntervalChange}
                       errorText={hasErrorFor('check_interval')}
                       data-qa-active-check-interval
                     />
                   </Grid>
-                  <Grid item xs={12} lg={4}>
+                  <Grid
+                    updateFor={[
+                      healthCheckTimeout,
+                      hasErrorFor('check_timeout'),
+                    ]}
+                    item
+                    xs={12}
+                    lg={4}
+                  >
                     <TextField
                       type="number"
                       label="Health Check Timeout"
@@ -402,61 +534,90 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                           variant="caption"
                           component="span"
                           className={classes.suffix}>
-                          / second
+                          seconds
                         </Typography>,
                       }}
                       value={healthCheckTimeout}
-                      onChange={e => onHealthCheckTimeoutChange(parseFormNumber(e.target.value))}
+                      onChange={this.onHealthCheckTimeoutChange}
                       errorText={hasErrorFor('check_timeout')}
                       data-qa-active-check-timeout
                     />
                   </Grid>
-                  <Grid item xs={12} lg={3}>
+                  <Grid
+                    updateFor={[
+                      healthCheckAttempts,
+                      hasErrorFor('check_attempts'),
+                    ]}
+                    item
+                    xs={12}
+                    lg={3}
+                  >
                     <TextField
                       type="number"
                       label="Health Check Attempts"
                       value={healthCheckAttempts}
-                      onChange={e => onHealthCheckAttemptsChange(parseFormNumber(e.target.value))}
+                      onChange={this.onHealthCheckAttemptsChange}
                       errorText={hasErrorFor('check_attempts')}
                       data-qa-active-check-attempts
                     />
                   </Grid>
                   {
                     ['http', 'http_body'].includes(healthCheckType) &&
-                    <React.Fragment>
-                      <Grid item xs={12} md={6}>
+                      <Grid
+                        updateFor={[
+                          checkPath,
+                          healthCheckType,
+                          hasErrorFor('check_path'),
+                        ]}
+                        item
+                        xs={12}
+                        md={6}
+                      >
                         <TextField
                           label="Check HTTP Path"
                           value={checkPath}
-                          onChange={e => onCheckPathChange(e.target.value)}
+                          onChange={this.onCheckPathChange}
                           required={['http', 'http_body'].includes(healthCheckType)}
                           errorText={hasErrorFor('check_path')}
                         />
                       </Grid>
-                    </React.Fragment>
                   }
                   {
                     healthCheckType === 'http_body' &&
-                    <React.Fragment>
-                      <Grid item xs={12} md={6}>
+                      <Grid
+                        updateFor={[
+                          checkBody,
+                          healthCheckType,
+                          hasErrorFor('check_body'),
+                        ]}
+                        item
+                        xs={12}
+                        md={6}
+                      >
                         <TextField
                           label="Expected HTTP Body"
                           value={checkBody}
-                          onChange={e => onCheckBodyChange(e.target.value)}
+                          onChange={this.onCheckBodyChange}
                           required={healthCheckType === 'http_body'}
                           errorText={hasErrorFor('check_body')}
                         />
                       </Grid>
-                    </React.Fragment>
                   }
                 </React.Fragment>
               }
-              <Grid item xs={12}>
+              <Grid
+                updateFor={[]} // never update after initial render
+                item
+                xs={12}
+              >
                 <Divider className={classes.divider} />
               </Grid>
             </Grid>
 
-            <Grid container>
+            <Grid
+              updateFor={[checkPassive]}
+              container
+            >
               <Grid item xs={12}>
                 <Typography
                   variant="title"
@@ -466,115 +627,25 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 </Typography>
               </Grid>
               <Grid item xs={12}>
-              <FormControlLabel
-                control={
-                  <Toggle
-                    checked={checkPassive}
-                    onChange={(e, value) => onCheckPassiveChange(value)}
-                    data-qa-passive-checks-toggle
-                  />
-                }
-                label="Passive Checks"
-              />
+                <FormControlLabel
+                  control={
+                    <Toggle
+                      checked={checkPassive}
+                      onChange={this.onCheckPassiveChange}
+                      data-qa-passive-checks-toggle
+                    />
+                  }
+                  label="Passive Checks"
+                />
               </Grid>
               <Grid item xs={12}>
                 <Divider className={classes.divider} />
               </Grid>
             </Grid>
 
-            {(nodes.length > 0) &&
-              <Grid container>
-                <Grid item xs={12}>
-                  <Typography
-                    variant="title"
-                    data-qa-backend-ip-header
-                  >
-                    Choose Backend IPs
-                  </Typography>
-                </Grid>
-                <Grid item xs={12}>
-                  {
-                    nodes.map((node, idx) => {
-                      const hasErrorFor = getAPIErrorFor({
-                        label: 'label',
-                        address: 'address',
-                        weight: 'weight',
-                        mode: 'mode',
-                      }, filterErrors(idx)(errors || []));
-
-                      return (
-                        <Grid key={idx} container alignItems="flex-end" data-qa-backend-ip>
-                          {idx !== 0 &&
-                            <Grid item xs={12}>
-                              <Divider style={{ marginTop: 24 }}/>
-                            </Grid>
-                          }
-                          <Grid item xs={11} lg={2}>
-                            <TextField
-                              label="Label"
-                              value={node.label}
-                              onChange={e => onNodeLabelChange(idx, e.target.value)}
-                              errorText={hasErrorFor('label')}
-                              data-qa-backend-ip-label
-                            />
-                          </Grid>
-                          <Grid item xs={11} lg={3}>
-                            <TextField
-                              label="Address"
-                              value={node.address}
-                              onChange={e => onNodeAddressChange(idx, e.target.value)}
-                              errorText={hasErrorFor('address')}
-                              data-qa-backend-ip-address
-                            />
-                          </Grid>
-                          <Grid item xs={11} lg={3}>
-                            <TextField
-                              label="Weight"
-                              type="number"
-                              value={node.weight}
-                              onChange={e => onNodeWeightChange(idx, e.target.valueAsNumber)}
-                              errorText={hasErrorFor('weight')}
-                              data-qa-backend-ip-weight
-                            />
-                          </Grid>
-                          <Grid item xs={11} lg={3}>
-                            <TextField
-                              label="Mode"
-                              value={node.mode}
-                              select
-                              onChange={e => onNodeModeChange(idx, e.target.value)}
-                              errorText={hasErrorFor('mode')}
-                              data-qa-backend-ip-mode
-                            >
-                              <MenuItem value="accept">Accept</MenuItem>
-                              <MenuItem value="reject">Reject</MenuItem>
-                              <MenuItem value="drain">Drain</MenuItem>
-                            </TextField>
-                          </Grid>
-                          <Grid item xs={1}>
-                            {idx !== 0 &&
-                              <IconButton onClick={() => removeNode(idx)} data-qa-remove-node>
-                                <Delete />
-                              </IconButton>
-                            }
-                          </Grid>
-                        </Grid>
-                      );
-                    })
-                  }
-                </Grid>
-                <Grid item xs={12}>
-                <AddNewLink
-                  onClick={addNode}
-                  label="Add a Node"
-                  data-qa-add-node
-                />
-                </Grid>
-              </Grid>
-            }
-
             {forEdit &&
               <Grid
+                updateFor={[submitting]}
                 container
                 justify="space-between"
                 alignItems="center"
@@ -586,13 +657,13 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     <Button
                       variant="raised"
                       type="primary"
-                      onClick={() => onSave!()}
+                      onClick={this.onSave}
                       loading={submitting}
                     >
                       Save
                     </Button>
                     <Button
-                      onClick={() => onCancel!()}
+                      onClick={this.onCancel}
                     >
                       Cancel
                     </Button>
@@ -600,15 +671,163 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 </Grid>
                 <Grid item>
                   <Button
-                    onClick={() => onDelete!()}
+                    onClick={this.onDelete}
                     type="secondary"
                     destructive
                   >
                     Delete
                   </Button>
                 </Grid>
+                <Grid item xs={12}>
+                  <Divider className={classes.divider} />
+                </Grid>
               </Grid>
             }
+
+            <Grid
+              updateFor={[
+                nodes,
+                errors,
+              ]}
+              container
+            >
+              <Grid item xs={12}>
+                <Typography
+                  variant="title"
+                  data-qa-backend-ip-header
+                >
+                  Choose Backend IPs
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                {
+                  nodes && nodes.map((node, idx) => {
+                    const hasErrorFor = getAPIErrorFor({
+                      label: 'label',
+                      address: 'address',
+                      weight: 'weight',
+                      mode: 'mode',
+                    }, node.errors);
+
+                    return (
+                      <Grid
+                        key={idx}
+                        updateFor={[
+                          nodes.length,
+                          node,
+                          errors,
+                        ]}
+                        container
+                        alignItems="flex-end"
+                      >
+                        {idx !== 0 &&
+                          <Grid item xs={12}>
+                            <Divider style={{ marginTop: 24 }} />
+                          </Grid>
+                        }
+                        <Grid item xs={11} lg={2}>
+                          <TextField
+                            label="Label"
+                            value={node.label}
+                            inputProps={{ 'data-config-idx': idx }}
+                            onChange={this.onNodeLabelChange}
+                            errorText={hasErrorFor('label')}
+                            data-qa-backend-ip-label
+                          />
+                        </Grid>
+                        <Grid item xs={11} lg={3}>
+                          <TextField
+                            label="Address"
+                            value={node.address}
+                            inputProps={{ 'data-config-idx': idx }}
+                            onChange={this.onNodeAddressChange}
+                            errorText={hasErrorFor('address')}
+                            data-qa-backend-ip-address
+                          />
+                        </Grid>
+                        <Grid item xs={11} lg={forEdit ? 2 : 3}>
+                          <TextField
+                            label="Weight"
+                            value={node.weight}
+                            inputProps={{ 'data-config-idx': idx }}
+                            onChange={this.onNodeWeightChange}
+                            errorText={hasErrorFor('weight')}
+                            data-qa-backend-ip-weight
+                          />
+                        </Grid>
+                        <Grid item xs={11} lg={forEdit ? 2 : 3}>
+                          <TextField
+                            label="Mode"
+                            value={node.mode}
+                            select
+                            inputProps={{ 'data-config-idx': idx }}
+                            onChange={this.onNodeModeChange}
+                            errorText={hasErrorFor('mode')}
+                            data-qa-backend-ip-mode
+                          >
+                            <MenuItem value="accept">Accept</MenuItem>
+                            <MenuItem value="reject">Reject</MenuItem>
+                            <MenuItem value="drain">Drain</MenuItem>
+                          </TextField>
+                        </Grid>
+                        {(forEdit && idx !== (nodes.length - 1)) &&
+                          <Grid item xs={5} lg={2}>
+                            <Button
+                              type="primary"
+                              data-config-idx={idx}
+                              onClick={this.onUpdateNode}
+                              loading={node.updating}
+                            >
+                              Update
+                            </Button>
+                          </Grid>
+                        }
+                        {(forEdit && idx === (nodes.length - 1)) &&
+                          <Grid item xs={5} lg={2}>
+                            <Button
+                              data-config-idx={idx}
+                              type="primary"
+                              onClick={this.addNode}
+                              data-qa-add-node
+                            >
+                              Add
+                            </Button>
+                          </Grid>
+                        }
+                        <Grid item xs={5} lg={1}>
+                          {/**
+                            * Show the delete button for index 0 if we are
+                            * editing the Config. Don't show the delete button
+                            * for the final index if we are editing the Config.
+                            **/}
+                          {(forEdit ? idx !== (nodes.length - 1) : idx !== 0) &&
+                            <IconButton
+                              data-config-idx={idx}
+                              onClick={this.removeNode}
+                              data-qa-remove-node
+                            >
+                              <Delete />
+                            </IconButton>
+                          }
+                        </Grid>
+                      </Grid>
+                    );
+                  })
+                }
+              </Grid>
+              {/* Adding nodes is done in-line when editing the Config */}
+              {!forEdit &&
+                <Grid
+                  updateFor={[]} // never update after the initial render
+                  item xs={12}
+                >
+                  <AddNewLink
+                    onClick={addNode}
+                    label="Add a Node"
+                  />
+                </Grid>
+              }
+            </Grid>
           </div>
         </Paper>
       </Grid>
