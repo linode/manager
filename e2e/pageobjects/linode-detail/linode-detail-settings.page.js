@@ -58,7 +58,7 @@ class Settings extends Page {
         this.confirm.waitForVisible();
         this.cancel.waitForVisible();
 
-        expect(this.confirm.getAttribute('class')).toContain('destructive');
+        expect(this.confirm.getTagName()).toBe('button');
         expect(this.deleteDialogTitle.getText()).toBe(confirmTitle);
         expect(this.deleteDialogContent.getText()).toBe(confirmContent);
 

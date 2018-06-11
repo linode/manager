@@ -21,7 +21,7 @@ class Rebuild {
         expect(this.title.getText()).toBe(expectedTitle);
         expect(this.description.isVisible()).toBe(true);
         expect(this.imagesSelect.isVisible()).toBe(true);
-        expect(this.submit.getAttribute('class')).toContain('destructive');
+        expect(this.submit.getTagName()).toBe('button');
         expect(this.password.isVisible()).toBe(true);
         return this;
     }

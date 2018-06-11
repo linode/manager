@@ -11,8 +11,8 @@ class Resize extends Page {
 
     landingElemsDisplay() {
         const subHeader = 'Current Plan';
-        const selectedPlanTab = this.tierTabs.filter(tier => tier.getAttribute('class').includes('Selected') && !tier.getText().includes('Resize'));
-        const checkedCards = this.planCards.filter(plan => plan.getAttribute('class').includes('checked'));
+        const selectedPlanTab = this.tierTabs.filter(tier => tier.getAttribute('aria-selected').includes('true') && !tier.getText().includes('Resize'));
+        const checkedCards = $$('[data-qa-checked="true"]');
 
         expect(this.title.getText()).toBe('Resize');
         expect(this.description.isVisible()).toBe(true);
