@@ -111,7 +111,7 @@ class NodeBalancers extends Page {
 
     selectMenuOption(select, optionName) {
         select.click();
-        this.selectOption.waitForVisible();
+        this.selectOption.waitForVisible(constants.wait.normal);
         $(`[data-qa-option=${optionName}]`).click();
         $(`[data-qa-option=${optionName}]`).waitForVisible(constants.wait.normal, true);
     }
