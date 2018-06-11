@@ -12,7 +12,8 @@ class LinodeTextField extends React.Component<Props> {
     return nextProps.value !== this.props.value
       || nextProps.errorText !== this.props.errorText
       || nextProps.affirmative !== this.props.affirmative
-      || nextProps.select !== this.props.select;
+      || nextProps.select !== this.props.select
+      || nextProps.type !== this.props.type;
   }
 
   render() {
