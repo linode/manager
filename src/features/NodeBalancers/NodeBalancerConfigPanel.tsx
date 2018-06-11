@@ -33,7 +33,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     marginRight: theme.spacing.unit * 2,
   },
   backendIPAction: {
-    marginTop: theme.spacing.unit * 4,
+    marginLeft: -theme.spacing.unit,
+    marginTop: theme.spacing.unit * 3,
   },
 });
 
@@ -774,8 +775,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             <MenuItem value="drain">Drain</MenuItem>
                           </TextField>
                         </Grid>
-                        {(forEdit && idx !== (nodes.length - 1)) &&
-                          <Grid item xs={5} lg={2} className={classes.backendIPAction}>
+                        <ActionsPanel className={classes.backendIPAction}>
+                          {(forEdit && idx !== (nodes.length - 1)) &&
                             <Button
                               type="primary"
                               data-config-idx={idx}
@@ -784,10 +785,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             >
                               Update
                             </Button>
-                          </Grid>
-                        }
-                        {(forEdit && idx === (nodes.length - 1)) &&
-                          <Grid item xs={5} lg={2} className={classes.backendIPAction}>
+                          }
+                          {(forEdit && idx === (nodes.length - 1)) &&
                             <Button
                               data-config-idx={idx}
                               type="primary"
@@ -796,9 +795,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             >
                               Add
                             </Button>
-                          </Grid>
-                        }
-                        <Grid item xs={5} lg={1} className={classes.backendIPAction}>
+                          }
                           {/**
                             * Show the delete button for index 0 if we are
                             * editing the Config. Don't show the delete button
@@ -814,7 +811,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                               <Delete />
                             </IconButton>
                           }
-                        </Grid>
+                        </ActionsPanel>
                       </Grid>
                     );
                   })
