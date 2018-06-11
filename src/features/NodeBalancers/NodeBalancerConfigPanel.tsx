@@ -300,6 +300,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 <TextField
                   type="number"
                   label="Port"
+                  required
                   value={port}
                   onChange={this.onPortChange}
                   errorText={hasErrorFor('port')}
