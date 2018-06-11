@@ -27,7 +27,6 @@ export const nodeForRequest = (node: Linode.NodeBalancerConfigNode) => ({
   label: node.label,
   address: node.address,
   weight: +node.weight!,
-  mode: node.mode,
 });
 
 /* Transform an array of configs into valid request data.

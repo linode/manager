@@ -98,7 +98,6 @@ const blankNode = (): Linode.NodeBalancerConfigNode => ({
   label: '',
   address: '',
   weight: 100,
-  mode: 'accept',
 });
 
 const getConfigsWithNodes = (nodeBalancerId: number) => {
@@ -413,9 +412,6 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   onNodeWeightChange = (configIdx: number) => (nodeIdx: number, value: string) =>
     this.setNodeValue(configIdx, nodeIdx, 'weight', value)
 
-  onNodeModeChange = (configIdx: number) => (nodeIdx: number, value: string) =>
-    this.setNodeValue(configIdx, nodeIdx, 'mode', value)
-
   cancelEditing = (idx: number) => {
     // reset errors
     const newErrors = clone(this.state.configErrors);
@@ -554,8 +550,6 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           onNodeAddressChange={this.onNodeAddressChange(idx)}
 
           onNodeWeightChange={this.onNodeWeightChange(idx)}
-
-          onNodeModeChange={this.onNodeModeChange(idx)}
         />
       </ExpansionPanel>
     );
