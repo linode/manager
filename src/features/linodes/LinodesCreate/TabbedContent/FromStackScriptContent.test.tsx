@@ -17,6 +17,7 @@ const mockProps = {
   getBackupsMonthlyPrice: jest.fn(),
   label: 'my label',
   password: 'helllo432.324',
+  udf_data: {},
 };
 
 describe('FromImageContent', () => {
