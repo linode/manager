@@ -13,9 +13,7 @@ import TableRow from 'material-ui/Table/TableRow';
 import TableCell from 'material-ui/Table/TableCell';
 
 import Grid from 'src/components/Grid';
-import PlusSquare from 'src/assets/icons/plus-square.svg';
 import Table from 'src/components/Table';
-import IconTextLink from 'src/components/IconTextLink';
 import { getLinodeIPs } from 'src/services/linodes';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 
@@ -25,6 +23,7 @@ import ViewRangeDrawer from './ViewRangeDrawer';
 import CreateIPv4Drawer from './CreateIPv4Drawer';
 import CreateIPv6Drawer from './CreateIPv6Drawer';
 import EditRDNSDrawer from './EditRDNSDrawer';
+import AddNewLink from 'src/components/AddNewLink';
 
 type ClassNames =
   'root'
@@ -246,13 +245,9 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
             </Typography>
           </Grid>
           <Grid item>
-            <IconTextLink
-              SideIcon={PlusSquare}
-              onClick={() => {
-                this.setState({ createIPv4Drawer: { open: true } });
-              }}
-              text="Add Public IPv4"
-              title="Add Public IPv4"
+            <AddNewLink
+              onClick={() => this.setState({ createIPv4Drawer: { open: true } })}
+              label="Add Public IPv4"
             />
           </Grid>
         </Grid>
@@ -291,11 +286,9 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
             </Typography>
           </Grid>
           <Grid item>
-            <IconTextLink
-              SideIcon={PlusSquare}
+            <AddNewLink
               onClick={() => this.setState({ createIPv6Drawer: { open: true } })}
-              text="Add IPv6"
-              title="Add IPv6"
+              label="Add IPv6"
             />
           </Grid>
         </Grid>

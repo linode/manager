@@ -1,23 +1,17 @@
 const { constants } = require('../constants');
 const { readToken } = require('../utils/config-utils');
 
-import { createGenericLinode } from '../utils/common';
-
 describe('Setup Tests Suite', () => {
-    beforeAll(() => {
-        browser.url(constants.routes.linodes);
-        browser.waitForVisible('[data-qa-circle-progress]', constants.wait.normal, true);
-    });
-
     it('should remove all account data', () => {
         const token = readToken();
         browser.deleteAll(token);
     });
 
-    it('should create a generic linode account', () => {
-        const testLabel = `${new Date().getTime()}-Test`;
-        
-        // Wait for all linodes to be removed
+    it('should display placeholder message', () => {
+        browser.url(constants.routes.linodes);
+        browser.waitForVisible('[data-qa-circle-progress]', constants.wait.normal, true);
+
+        // it should wait for linodes to be removed
         browser.waitUntil(function() {
             browser.refresh();
             browser.waitForVisible('[data-qa-add-new-menu-button]');
@@ -29,8 +23,6 @@ describe('Setup Tests Suite', () => {
             } catch (err) {
                 return false;
             }
-        }, constants.wait.long);
-
-        createGenericLinode(testLabel);
+        }, constants.wait.long, 'linodes failed to be removed');
     });
 });
