@@ -23,7 +23,7 @@ import {
   getNodeBalancerConfigs,
 } from 'src/services/nodebalancers';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
+import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import NodeBalancerSettings from './NodeBalancerSettings';
 
 import Grid from 'src/components/Grid';
@@ -67,6 +67,7 @@ interface State {
   nodeBalancer: Linode.ExtendedNodeBalancer;
   error?: Error;
   ApiError: Linode.ApiFieldError[] | undefined;
+  labelInput?: string;
 }
 
 type CombinedProps = Props &
@@ -120,14 +121,20 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
   updateLabel = (label: string) => {
     const { nodeBalancer } = this.state;
     updateNodeBalancer(nodeBalancer.id, { label })
-      .catch((error) => {
-        error.response.data.errors.map((error: Linode.ApiFieldError) =>
-          sendToast(error.reason, 'error'));
-        this.setState(() => ({
-          ApiError: error.response && error.response.data && error.response.data.errors,
-          nodeBalancer,
-        }));
-      });
+    .then(() => {
+      this.setState({ nodeBalancer: { ...nodeBalancer, label }, ApiError: undefined,
+        labelInput: label });
+    })
+    .catch((error) => {
+      this.setState(() => ({
+        ApiError: error.response && error.response.data && error.response.data.errors,
+        labelInput: label,
+      }));
+    });
+  }
+
+  cancelUpdate = () => {
+    this.setState({ ApiError: undefined, labelInput: this.state.nodeBalancer.label });
   }
 
   static docs: Linode.Doc[] = [
@@ -166,8 +173,11 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
       );
     }
 
-    // @TODO refactor error messages for invalid label changes pending PR M3-422
-    // const hasErrorFor = getAPIErrorsFor({ label: 'label' }, this.state.ApiError);
+    const hasErrorFor = getAPIErrorsFor({ label: 'label' }, this.state.ApiError);
+    const apiErrorText = hasErrorFor('label');
+
+    const nodeBalancerLabel = (this.state.labelInput !== undefined)
+    ? this.state.labelInput : nodeBalancer.label;
 
     return (
       <React.Fragment>
@@ -181,9 +191,10 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
             </IconButton>
             <EditableText
               variant="headline"
-              text={nodeBalancer.label}
+              text={nodeBalancerLabel}
               onEdit={this.updateLabel}
-              onCancel={() => false }
+              onCancel={this.cancelUpdate}
+              errorText={apiErrorText}
               data-qa-label
             />
           </Grid>
