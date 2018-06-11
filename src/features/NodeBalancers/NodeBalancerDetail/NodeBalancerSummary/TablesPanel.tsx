@@ -159,7 +159,7 @@ class TablesPanel extends React.Component<CombinedProps, State> {
                     data={[
                       {
                         label: 'Connections',
-                        borderColor: '#3683dc',
+                        borderColor: '#990066',
                         data: stats.data.connections,
                       },
                     ]}
