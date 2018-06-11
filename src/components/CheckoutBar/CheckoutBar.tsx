@@ -120,7 +120,10 @@ class CheckoutBar extends React.Component<CombinedProps> {
                 [classes.noBorder]: idx === 0,
               })}
             >
-              {title && <Typography variant="subheading">{title}</Typography>}
+              {title &&
+                <Typography variant="subheading" data-qa-subheading={title}>
+                  {title}
+                </Typography>}
               {details && <Typography className={classes.detail}>{details}</Typography>}
             </div>
           ))

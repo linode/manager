@@ -2,7 +2,11 @@ import ListLinodes from '../../../pageobjects/list-linodes';
 import LinodeDetail from '../../../pageobjects/linode-detail/linode-detail.page';
 import VolumeDetail from '../../../pageobjects/linode-detail/linode-detail-volume.page';
 import LinodeSummary from '../../../pageobjects/linode-detail/linode-detail-summary.page';
-import { apiCreateLinode, apiDeleteAllLinodes } from '../../../utils/common';
+import {
+    apiCreateLinode,
+    apiDeleteAllLinodes,
+    apiDeleteAllVolumes,
+} from '../../../utils/common';
 
 const { constants } = require('../../../constants');
 
@@ -21,18 +25,14 @@ describe('Linode Detail - Volumes Suite', () => {
         const linodes = ListLinodes.linode;
         
         ListLinodes.shutdownIfRunning(linodes[0]);
-        ListLinodes.selectMenuItem(linodes[0], 'Settings');
-        LinodeDetail.launchConsole.waitForVisible();
+        ListLinodes.navigateToDetail();
+        LinodeDetail.landingElemsDisplay();
         LinodeDetail.changeTab('Volumes');
     });
 
     afterAll(() => {
-        // Delete Volume After Test
-        LinodeDetail.changeTab('Volumes');
-        VolumeDetail.volumeCellLabel.waitForVisible();
-
-        VolumeDetail.removeVolume(VolumeDetail.volumeCell[0]);
         apiDeleteAllLinodes();
+        apiDeleteAllVolumes();
     });
 
     describe("Linode Detail - Volumes - Create Suite", () => {     
@@ -56,7 +56,7 @@ describe('Linode Detail - Volumes Suite', () => {
                 VolumeDetail.regionField,
                 VolumeDetail.attachedTo,
                 VolumeDetail.submit,
-                VolumeDetail.cancel
+                VolumeDetail.cancel,
             ]
 
             drawerElems.forEach(e => expect(e.isVisible()).toBe(true));

@@ -42,13 +42,13 @@ export default class Page {
         }, constants.wait.normal, 'Failed to redirect to login page on log out');
     }
 
-    waitForNotice(noticeMsg) {
+    waitForNotice(noticeMsg, timeout=10000) {
         return browser.waitUntil(function() {
             const noticeRegex = new RegExp(noticeMsg, 'ig');
             const noticeMsgDisplays = $$('[data-qa-notice]')
                 .filter(n => !!n.getText().match(noticeRegex));
             return noticeMsgDisplays.length > 0;
-        }, 10000, `${noticeMsg} failed to display`);
+        }, timeout, `${noticeMsg} failed to display`);
     }
 
     assertDocsDisplay() {

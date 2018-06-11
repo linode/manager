@@ -23,7 +23,7 @@ describe('Linode - Volumes - Attach, Detach, Delete Suite', () => {
         ListLinodes.linodeElem.waitForVisible();
         linodeName = ListLinodes.linode[0].$(ListLinodes.linodeLabel.selector).getText();
         ListLinodes.powerOff(ListLinodes.linode[0]);
-        ListLinodes.linode[0].$(ListLinodes.linodeLabel.selector).click();
+        ListLinodes.navigateToDetail();
         LinodeDetail.landingElemsDisplay();
         LinodeDetail.changeTab('Volumes');
         
