@@ -60,9 +60,3 @@ export const apiDeleteAllVolumes = () => {
     const token = readToken();
     browser.removeAllVolumes(token);
 }
-
-export const apiDeleteAllDomains = () => {
-    const token = readToken();
-    const domains = browser.getDomains(token);
-    domains.data.forEach(domain => browser.removeDomain(token, domain.id));
-}
