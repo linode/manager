@@ -65,9 +65,6 @@ interface Props {
   history: any;
 }
 
-// functions needed
-// onDeploy
-
 interface State {
   linodesWithBackups: Linode.LinodeWithBackups[] | null;
   isGettingBackups: boolean;
@@ -303,6 +300,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
           )(linodes)}
           selectedLinodeID={selectedLinodeID}
           handleSelection={this.handleSelectLinode}
+          updateFor={[selectedLinodeID]}
         />
         <SelectBackupPanel
           error={hasErrorFor('backup_id')}
@@ -314,6 +312,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
           selectedBackupID={selectedBackupID}
           handleChangeBackup={this.handleSelectBackupID}
           handleChangeBackupInfo={this.handleSelectBackupInfo}
+          updateFor={[selectedLinodeID, selectedBackupID]}
         />
         <SelectPlanPanel
           error={hasErrorFor('type')}
@@ -321,6 +320,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
           onSelect={this.handleSelectPlan}
           selectedID={selectedTypeID}
           selectedDiskSize={selectedDiskSize}
+          updateFor={[selectedTypeID, selectedDiskSize]}
         />
         <LabelAndTagsPanel
           labelFieldProps={{
@@ -329,6 +329,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
             onChange: this.handleSelectLabel,
             errorText: hasErrorFor('label'),
           }}
+          updateFor={[label]}
         />
         <AddonsPanel
           backups={backups}
@@ -336,6 +337,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
           changePrivateIP={this.handleTogglePrivateIP}
           backupsMonthly={getBackupsMonthlyPrice(selectedTypeID)}
           privateIP={privateIP}
+          updateFor={[privateIP, backups]}
         />
         </React.Fragment>
           }

@@ -219,6 +219,7 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
             selectedLinodeID={selectedLinodeID}
             header={'Select Linode to Clone From'}
             handleSelection={this.handleSelectLinode}
+            updateFor={[selectedLinodeID]}
           />
           <SelectRegionPanel
             error={hasErrorFor('region')}
@@ -226,6 +227,7 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
             handleSelection={this.handleSelectRegion}
             selectedID={selectedRegionID}
             copy="Determine the best location for your Linode."
+            updateFor={[selectedRegionID]}
           />
           <SelectPlanPanel
             error={hasErrorFor('type')}
@@ -233,6 +235,7 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
             onSelect={this.handleSelectPlan}
             selectedID={selectedTypeID}
             selectedDiskSize={selectedDiskSize}
+            updateFor={[selectedDiskSize, selectedTypeID]}
           />
           <LabelAndTagsPanel
             labelFieldProps={{
@@ -241,6 +244,7 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
               onChange: this.handleTypeLabel,
               errorText: hasErrorFor('label'),
             }}
+            updateFor={[label]}
           />
           <AddonsPanel
             backups={backups}
@@ -248,6 +252,7 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
             privateIP={privateIP}
             changeBackups={this.handleToggleBackups}
             changePrivateIP={this.handleTogglePrivateIP}
+            updateFor={[privateIP, backups]}
           />
         </Grid>
         <Grid item className={`${classes.sidebar} mlSidebar`}>

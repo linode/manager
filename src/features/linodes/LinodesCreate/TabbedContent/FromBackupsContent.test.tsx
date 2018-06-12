@@ -63,11 +63,11 @@ describe('FromBackupsContent', () => {
     });
 
     it('should render SelectLinode panel', () => {
-      expect(component.find('WithStyles(SelectLinodePanel)')).toHaveLength(1);
+      expect(component.find('WithStyles(WithRenderGuard(SelectLinodePanel))')).toHaveLength(1);
     });
 
     it('should render SelectBackup panel', () => {
-      expect(component.find('WithStyles(SelectBackupPanel)')).toHaveLength(1);
+      expect(component.find('WithStyles(WithRenderGuard(SelectBackupPanel))')).toHaveLength(1);
     });
 
     it('should render SelectPlan panel', () => {

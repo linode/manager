@@ -41,7 +41,7 @@ describe('FromImageContent', () => {
   });
 
   it('should render SelectLinode panel', () => {
-    expect(component.find('WithStyles(SelectLinodePanel)')).toHaveLength(1);
+    expect(component.find('WithStyles(WithRenderGuard(SelectLinodePanel))')).toHaveLength(1);
   });
 
   it('should render SelectRegion panel', () => {
