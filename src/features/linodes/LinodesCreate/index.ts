@@ -1,3 +1,2 @@
-import LinodesCreate, { StateToUpdate } from './LinodesCreate';
-export { StateToUpdate };
+import LinodesCreate from './LinodesCreate';
 export default LinodesCreate;

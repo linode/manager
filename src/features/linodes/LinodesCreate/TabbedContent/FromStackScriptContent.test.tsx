@@ -4,26 +4,19 @@ import { FromStackScriptContent } from './FromStackScriptContent';
 import { UserDefinedFields as mockUserDefinedFields } from 'src/__data__/UserDefinedFields';
 
 const mockProps = {
-  updateFormState: jest.fn(),
-  selectedImageID: '1',
-  selectedRegionID: '1',
-  selectedTypeID: '1',
-  selectedStackScriptID: 0,
   images: [],
   regions: [],
   types: [],
-  backups: true,
-  privateIP: true,
   getBackupsMonthlyPrice: jest.fn(),
-  label: 'my label',
-  password: 'helllo432.324',
-  udf_data: {},
+  getRegionName: jest.fn(),
+  getTypeInfo: jest.fn(),
+  history: null,
 };
 
 describe('FromImageContent', () => {
   const componentWithNotice = shallow(
     <FromStackScriptContent
-      classes={{ root: '' }}
+      classes={{ root: '', main: '', sidebar: '' }}
       {...mockProps}
       notice={{
         text: 'hello world',
@@ -34,7 +27,7 @@ describe('FromImageContent', () => {
 
   const component = shallow(
     <FromStackScriptContent
-      classes={{ root: '' }}
+      classes={{ root: '', main: '', sidebar: '' }}
       {...mockProps}
     />,
   );

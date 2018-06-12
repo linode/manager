@@ -7,11 +7,7 @@ import {
 } from 'material-ui';
 import Typography from 'material-ui/Typography';
 
-import { assocPath } from 'ramda';
-
 import TextField from 'src/components/TextField';
-
-import { StateToUpdate as FormState } from '../../../linodes/LinodesCreate';
 
 
 type ClassNames = 'root';
@@ -25,7 +21,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 interface Props {
   isPassword?: boolean;
   field: Linode.StackScript.UserDefinedField;
-  updateFormState: (stateToUpdate: FormState[]) => void;
+  updateFormState: (key: string, value: any) => void;
   udf_data: Linode.StackScript.UserDefinedField;
 }
 
@@ -60,15 +56,8 @@ class UserDefinedText extends React.Component<CombinedProps, State> {
   }
 
   handleUpdateText = (e: any) => {
-    const { updateFormState, field, udf_data } = this.props;
-
-    // either overwrite or create new selection
-    const newUDFData = assocPath([field.name], e.target.value, udf_data);
-
-    updateFormState([{
-      stateKey: 'udf_data',
-      newValue: { ...udf_data, ...newUDFData },
-    }]);
+    const { updateFormState, field } = this.props;
+    updateFormState(field.name, e.target.value);
   }
 
   render() {

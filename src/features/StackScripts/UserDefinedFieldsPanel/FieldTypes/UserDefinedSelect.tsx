@@ -11,8 +11,6 @@ import { assocPath } from 'ramda';
 
 import Radio from 'src/components/Radio';
 
-import { StateToUpdate as FormState } from '../../../linodes/LinodesCreate';
-
 
 type ClassNames = 'root';
 
@@ -23,7 +21,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 });
 
 interface Props {
-  updateFormState: (stateToUpdate: FormState[]) => void;
+  updateFormState: (value: any) => void;
   udf_data: any; // udf_data we've already selected
   field: Linode.StackScript.UserDefinedField;
 }

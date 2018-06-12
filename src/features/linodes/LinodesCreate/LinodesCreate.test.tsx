@@ -25,7 +25,6 @@ describe('FromImageContent', () => {
         classes={{
           root: '',
           main: '',
-          sidebar: '',
         }}
         {...dummyProps}
       />
