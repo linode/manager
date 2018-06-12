@@ -81,6 +81,7 @@ interface State {
   label: string | null;
   password: string | null;
   isMakingRequest: boolean;
+  compatibleImages: Linode.Image[];
 }
 
 const errorResources = {
@@ -105,13 +106,26 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
     label: '',
     password: '',
     isMakingRequest: false,
+    compatibleImages: [],
   };
 
   mounted: boolean = false;
 
-  handleSelectStackScript = (id: number) => {
+  handleSelectStackScript = (id: number, stackScriptImages: string[]) => {
+    const { images } = this.props;
+    const filteredImages = images.filter((image) => {
+      for (let i = 0; i < stackScriptImages.length; i = i + 1) {
+        if (image.id === stackScriptImages[i]) {
+          return true;
+        }
+      }
+      return false;
+    });
+    // first need to make a request to get the stackscript
+    // then update userDefinedFields to the fields returned
     this.setState({
       selectedStackScriptID: id,
+      compatibleImages: filteredImages,
       // prob gonna need to update UDF here too
     });
   }
@@ -169,7 +183,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
   }
 
   cloneLinode = () => {
-    console.log('created!');
+    console.log(this.props.images);
   }
 
   componentDidMount() {
@@ -193,9 +207,9 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
   render() {
     const { errors, userDefinedFields, udf_data, selectedImageID, selectedRegionID,
       selectedStackScriptID, selectedTypeID, backups, privateIP, label,
-      password, isMakingRequest } = this.state;
+      password, isMakingRequest, compatibleImages } = this.state;
 
-    const { notice, getBackupsMonthlyPrice, images, regions, types, classes,
+    const { notice, getBackupsMonthlyPrice, regions, types, classes,
       getRegionName, getTypeInfo } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
@@ -225,16 +239,18 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
             updateFor={[selectedStackScriptID]}
             onSelect={this.handleSelectStackScript}
           />
-          <UserDefinedFieldsPanel
-            handleChange={this.handleChangeUDF}
-            userDefinedFields={userDefinedFields}
-            updateFor={[udf_data]}
-            udf_data={udf_data}
-          />
+          {userDefinedFields && userDefinedFields.length > 0 &&
+            <UserDefinedFieldsPanel
+              handleChange={this.handleChangeUDF}
+              userDefinedFields={userDefinedFields}
+              updateFor={[udf_data]}
+              udf_data={udf_data}
+            />
+          }
           <SelectImagePanel
-            images={images}
+            images={compatibleImages}
             handleSelection={this.handleSelectImage}
-            updateFor={[selectedImageID]}
+            updateFor={[selectedImageID, compatibleImages]}
             selectedImageID={selectedImageID}
           />
           <SelectRegionPanel

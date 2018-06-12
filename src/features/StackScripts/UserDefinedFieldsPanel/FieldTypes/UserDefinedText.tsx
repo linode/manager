@@ -8,6 +8,7 @@ import {
 import Typography from 'material-ui/Typography';
 
 import TextField from 'src/components/TextField';
+import PasswordPanel from 'src/features/linodes/LinodesCreate/PasswordPanel';
 
 
 type ClassNames = 'root';
@@ -50,14 +51,25 @@ class UserDefinedText extends React.Component<CombinedProps, State> {
   }
 
   renderPasswordField = () => {
+    const { udf_data, field } = this.props;
+
     return (
-      <div>password field</div>
+      <PasswordPanel
+        password={udf_data[field.name] || ''}
+        handleChange={this.handleUpdatePassword}
+        label={field.label}
+      />
     );
   }
 
   handleUpdateText = (e: any) => {
     const { updateFormState, field } = this.props;
     updateFormState(field.name, e.target.value);
+  }
+
+  handleUpdatePassword = (value: string) => {
+    const { updateFormState, field } = this.props;
+    updateFormState(field.name, value);
   }
 
   render() {
