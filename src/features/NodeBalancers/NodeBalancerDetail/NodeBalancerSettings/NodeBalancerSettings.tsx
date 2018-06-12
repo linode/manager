@@ -20,7 +20,6 @@ import { updateNodeBalancer } from 'src/services/nodebalancers';
 
 type ClassNames = 'root'
 | 'title'
-| 'inner'
 | 'adornment';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
@@ -28,9 +27,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   title: {
     marginTop: theme.spacing.unit,
     marginBottom: theme.spacing.unit * 2,
-  },
-  inner: {
-    padding: 0,
   },
   adornment: {
     fontSize: '.9rem',
@@ -124,7 +120,7 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <Typography variant="headline" className={classes.title}>
           Settings
-          </Typography>
+        </Typography>
 
         {generalError && <Notice error>{generalError}</Notice>}
         <LabelAndTagsPanel
