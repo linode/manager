@@ -75,7 +75,7 @@ class InfoPanel extends React.Component<CombinedProps> {
           >
             <div className={!expansion ? classes.inner : ''}>
               {error && <Notice text={error} error />}
-              <TextField {...labelFieldProps} />
+              <TextField data-qa-label-panel {...labelFieldProps} />
             </div>
             {!!expansion.action &&
               <ActionsPanel className={expansion ? classes.expPanelButton : ''}>
