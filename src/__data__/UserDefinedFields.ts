@@ -9,7 +9,7 @@ export const UserDefinedFields: Linode.StackScript.UserDefinedField[] = [
     label: 'Wordpress user',
     name: 'wordpress_username',
     example: 'The user you use to login with Wordpress',
-    default: 'username',
+    default: 'username default',
   },
   {
     label: 'Drupal Version',

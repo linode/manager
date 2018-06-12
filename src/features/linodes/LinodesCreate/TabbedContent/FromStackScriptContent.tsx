@@ -116,13 +116,11 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
             updateFormState([{ stateKey: 'selectedStackScriptID', newValue: id }]);
           }}
         />
-        {userDefinedFields && userDefinedFields.length > 0 &&
-          <UserDefinedFieldsPanel
-            updateFormState={updateFormState}
-            userDefinedFields={userDefinedFields}
-            udf_data={this.props.udf_data}
-          />
-        }
+        <UserDefinedFieldsPanel
+          updateFormState={updateFormState}
+          userDefinedFields={userDefinedFields}
+          udf_data={this.props.udf_data}
+        />
         <SelectImagePanel
           images={images}
           handleSelection={(id: string) =>

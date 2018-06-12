@@ -6,6 +6,7 @@ import {
   WithStyles,
 } from 'material-ui';
 import Paper from 'material-ui/Paper';
+import Typography from 'material-ui/Typography';
 
 import UserDefinedText from './FieldTypes/UserDefinedText';
 import UserDefinedMultiSelect from './FieldTypes/UserDefinedMultiSelect';
@@ -13,12 +14,15 @@ import UserDefinedSelect from './FieldTypes/UserDefinedSelect';
 import { StateToUpdate as FormState } from '../../linodes/LinodesCreate';
 
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'captionEmpty';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     marginBottom: theme.spacing.unit * 3,
     minHeight: '300px',
+  },
+  captionEmpty: {
+    paddingTop: theme.spacing.unit * 5,
   },
 });
 
@@ -32,6 +36,12 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 const UserDefinedFieldsPanel: React.StatelessComponent<CombinedProps> = (props) => {
   const { userDefinedFields, classes, updateFormState } = props;
+
+  const renderEmptyState = () => {
+    return <Typography className={classes.captionEmpty} align="center" variant="caption">
+      Nothing to see here...
+    </Typography>;
+  };
 
   const renderField = (field: Linode.StackScript.UserDefinedField) => {
     if (isMultiSelect(field)) {
@@ -48,17 +58,31 @@ const UserDefinedFieldsPanel: React.StatelessComponent<CombinedProps> = (props) 
         udf_data={props.udf_data}
         key={field.name} />;
     } if (isPasswordField(field.name)) {
-      return <UserDefinedText key={field.name} isPassword={true} />;
+      return <UserDefinedText
+        key={field.name}
+        updateFormState={updateFormState}
+        isPassword={true}
+        field={field}
+        udf_data={props.udf_data}
+      />;
     }
-    return <UserDefinedText key={field.name} />;
+    return <UserDefinedText
+      key={field.name}
+      updateFormState={updateFormState}
+      field={field}
+      udf_data={props.udf_data}
+    />;
   };
 
   return (
     <Paper className={classes.root}>
       {
-        userDefinedFields!.map((field: Linode.StackScript.UserDefinedField) => {
-          return renderField(field);
-        })}
+        userDefinedFields && userDefinedFields.length > 0
+          ? userDefinedFields!.map((field: Linode.StackScript.UserDefinedField) => {
+            return renderField(field);
+          })
+          : renderEmptyState()
+      }
     </Paper>
   );
 };

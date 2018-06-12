@@ -17,7 +17,9 @@ import { StateToUpdate as FormState } from '../../../linodes/LinodesCreate';
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {},
+  root: {
+    margin: theme.spacing.unit * 3,
+  },
 });
 
 interface Props {
@@ -54,10 +56,10 @@ class UserDefinedSelect extends React.Component<CombinedProps, State> {
 
   render() {
     const { oneof } = this.state;
-    const { udf_data, field } = this.props;
+    const { udf_data, field, classes } = this.props;
 
     return (
-      <React.Fragment>
+      <div className={classes.root}>
         <Typography variant="subheading" >
           {field.label}
         </Typography>
@@ -83,7 +85,7 @@ class UserDefinedSelect extends React.Component<CombinedProps, State> {
             </React.Fragment>
           );
         })}
-      </React.Fragment>
+      </div>
     );
   }
 }
