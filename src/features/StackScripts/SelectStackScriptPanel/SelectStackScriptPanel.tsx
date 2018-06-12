@@ -32,8 +32,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 
 interface Props {
   selectedId: number | null;
-  onSelect: (id: number) => void;
   shrinkPanel?: boolean;
+  onSelect: (id: number, images: string[]) => void;
 }
 
 type StyledProps = Props & WithStyles<ClassNames>;
@@ -53,15 +53,24 @@ class SelectStackScriptPanel extends React.Component<CombinedProps> {
         tabs={[
           {
             title: 'My StackScripts',
-            render: () => <Container request={getStackscripts} key={0} />,
+            render: () => <Container
+              onSelect={this.props.onSelect}
+              request={getStackscripts} key={0}
+            />,
           },
           {
             title: 'Linode StackScripts',
-            render: () => <Container request={getStackscripts} key={1} />,
+            render: () => <Container
+              onSelect={this.props.onSelect}
+              request={getStackscripts} key={1}
+            />,
           },
           {
             title: 'Community StackScripts',
-            render: () => <Container request={getStackscripts} key={2} />,
+            render: () => <Container
+              onSelect={this.props.onSelect}
+              request={getStackscripts} key={2}
+            />,
           },
         ]}
       />
@@ -71,6 +80,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps> {
 
 interface ContainerProps {
   request: (page: number) => Promise<Linode.ResourcePage<Linode.StackScript.Response>>;
+  onSelect: (id: number, images: string[]) => void;
 }
 
 interface ContainerState {
@@ -112,7 +122,10 @@ class Container extends React.Component<ContainerProps, ContainerState> {
 
     return (
       <StackScriptsSection
-        onSelect={id => this.setState({ selected: id })}
+        onSelect={(stackscript: Linode.StackScript.Response) => {
+          this.props.onSelect(stackscript.id, stackscript.images);
+          this.setState({ selected: stackscript.id });
+        }}
         selectedId={this.state.selected}
         data={this.state.data}
         getNext={() => this.getNext()}

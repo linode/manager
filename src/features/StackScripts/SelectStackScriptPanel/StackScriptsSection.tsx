@@ -9,7 +9,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 });
 
 export interface Props {
-  onSelect: (id: number) => void;
+  onSelect: (s: Linode.StackScript.Response) => void;
   selectedId?: number;
   data: Linode.StackScript.Response[];
   getNext: () => void;
@@ -33,7 +33,7 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => 
   );
 };
 
-const stackScript: (fn: (id: number) => void, id?: number) =>
+const stackScript: (fn: (s: Linode.StackScript.Response) => void, id?: number) =>
   (s: Linode.StackScript.Response) => JSX.Element =
   (onSelect, selectedId) => s => (
     <SelectionRow
@@ -43,7 +43,7 @@ const stackScript: (fn: (id: number) => void, id?: number) =>
       images={s.images}
       deploymentsActive={s.deployments_active}
       updated={s.updated}
-      onSelect={() => onSelect(s.id)}
+      onSelect={() => onSelect(s)}
       checked={selectedId === s.id}
     />
   );

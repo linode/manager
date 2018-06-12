@@ -236,14 +236,14 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
             handleSelection={this.handleSelectRegion}
             selectedID={selectedRegionID}
             copy="Determine the best location for your Linode."
-            updateFor={[selectedRegionID]}
+            updateFor={[selectedRegionID, errors]}
           />
           <SelectPlanPanel
             error={hasErrorFor('type')}
             types={types}
             onSelect={this.handleSelectPlan}
             selectedID={selectedTypeID}
-            updateFor={[selectedTypeID]}
+            updateFor={[selectedTypeID, errors]}
           />
           <LabelAndTagsPanel
             labelFieldProps={{
@@ -258,7 +258,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
             error={hasErrorFor('root_pass')}
             password={password}
             handleChange={this.handleTypePassword}
-            updateFor={[password]}
+            updateFor={[password, errors]}
           />
           <AddonsPanel
             backups={backups}

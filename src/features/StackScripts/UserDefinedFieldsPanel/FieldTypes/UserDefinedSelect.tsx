@@ -7,8 +7,6 @@ import {
 } from 'material-ui';
 import Typography from 'material-ui/Typography';
 
-import { assocPath } from 'ramda';
-
 import Radio from 'src/components/Radio';
 
 
@@ -21,8 +19,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 });
 
 interface Props {
-  updateFormState: (value: any) => void;
-  udf_data: any; // udf_data we've already selected
+  updateFormState: (key: string, value: any) => void;
+  udf_data: Linode.StackScript.UserDefinedField;
   field: Linode.StackScript.UserDefinedField;
 }
 
@@ -40,16 +38,8 @@ class UserDefinedSelect extends React.Component<CombinedProps, State> {
   };
 
   handleSelectOneOf = (e: any) => {
-    const { updateFormState, udf_data, field } = this.props;
-
-    // either overwrite or create new selection
-    const newUDFData = assocPath([field.name], e.target.value, udf_data);
-
-    updateFormState([{
-      stateKey: 'udf_data',
-      newValue: { ...udf_data, ...newUDFData },
-    }]);
-
+    const { updateFormState, field } = this.props;
+    updateFormState(field.name, e.target.value);
   }
 
   render() {

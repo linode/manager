@@ -49,6 +49,11 @@ describe('FromImageContent', () => {
     expect(component.find('WithStyles(WithRenderGuard(UserDefinedFieldsPanel))')).toHaveLength(1);
   });
 
+  it('should not render UserDefinedFields panel if no UDFs', () => {
+    component.setState({ userDefinedFields: [] }); // give us some dummy fields
+    expect(component.find('WithStyles(WithRenderGuard(UserDefinedFieldsPanel))')).toHaveLength(0);
+  });
+
   it('should render SelectImage panel', () => {
     expect(component.find('WithRenderGuard(CreateFromImage)')).toHaveLength(1);
   });

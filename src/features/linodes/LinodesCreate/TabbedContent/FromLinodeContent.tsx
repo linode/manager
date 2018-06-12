@@ -219,7 +219,7 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
             selectedLinodeID={selectedLinodeID}
             header={'Select Linode to Clone From'}
             handleSelection={this.handleSelectLinode}
-            updateFor={[selectedLinodeID]}
+            updateFor={[selectedLinodeID, errors]}
           />
           <SelectRegionPanel
             error={hasErrorFor('region')}
@@ -227,7 +227,7 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
             handleSelection={this.handleSelectRegion}
             selectedID={selectedRegionID}
             copy="Determine the best location for your Linode."
-            updateFor={[selectedRegionID]}
+            updateFor={[selectedRegionID, errors]}
           />
           <SelectPlanPanel
             error={hasErrorFor('type')}
@@ -235,7 +235,7 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
             onSelect={this.handleSelectPlan}
             selectedID={selectedTypeID}
             selectedDiskSize={selectedDiskSize}
-            updateFor={[selectedDiskSize, selectedTypeID]}
+            updateFor={[selectedDiskSize, selectedTypeID, errors]}
           />
           <LabelAndTagsPanel
             labelFieldProps={{

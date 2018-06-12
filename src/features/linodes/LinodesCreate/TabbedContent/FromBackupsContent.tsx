@@ -300,7 +300,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
           )(linodes)}
           selectedLinodeID={selectedLinodeID}
           handleSelection={this.handleSelectLinode}
-          updateFor={[selectedLinodeID]}
+          updateFor={[selectedLinodeID, errors]}
         />
         <SelectBackupPanel
           error={hasErrorFor('backup_id')}
@@ -312,7 +312,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
           selectedBackupID={selectedBackupID}
           handleChangeBackup={this.handleSelectBackupID}
           handleChangeBackupInfo={this.handleSelectBackupInfo}
-          updateFor={[selectedLinodeID, selectedBackupID]}
+          updateFor={[selectedLinodeID, selectedBackupID, errors]}
         />
         <SelectPlanPanel
           error={hasErrorFor('type')}
@@ -320,7 +320,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
           onSelect={this.handleSelectPlan}
           selectedID={selectedTypeID}
           selectedDiskSize={selectedDiskSize}
-          updateFor={[selectedTypeID, selectedDiskSize]}
+          updateFor={[selectedTypeID, selectedDiskSize, errors]}
         />
         <LabelAndTagsPanel
           labelFieldProps={{

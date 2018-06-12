@@ -20,8 +20,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 });
 
 interface Props {
-  updateFormState: (value: any) => void;
-  udf_data: any; // udf_data we've already selected
+  updateFormState: (key: string, value: any) => void;
+  udf_data: Linode.StackScript.UserDefinedField;
   field: Linode.StackScript.UserDefinedField;
 }
 
@@ -65,10 +65,7 @@ class UserDefinedSelect extends React.Component<CombinedProps, State> {
     // convert back to comma seperated string to send with the POST request
     const newSelections = selectedValuesToArray.join(',');
 
-    updateFormState([{
-      stateKey: 'udf_data',
-      newValue: { ...udf_data, [field.name]: newSelections },
-    }]);
+    updateFormState(field.name, newSelections);
 
   }
 
