@@ -685,6 +685,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                       calculatedPrice={20}
                       displaySections={displaySections && [displaySections]}
                       disabled={this.state.submitting}
+                      {...props}
                     />
                   );
                 }
