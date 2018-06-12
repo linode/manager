@@ -228,11 +228,13 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
           <UserDefinedFieldsPanel
             handleChange={this.handleChangeUDF}
             userDefinedFields={userDefinedFields}
+            updateFor={[udf_data]}
             udf_data={udf_data}
           />
           <SelectImagePanel
             images={images}
             handleSelection={this.handleSelectImage}
+            updateFor={[selectedImageID]}
             selectedImageID={selectedImageID}
           />
           <SelectRegionPanel
@@ -240,12 +242,14 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
             regions={regions}
             handleSelection={this.handleSelectRegion}
             selectedID={selectedRegionID}
+            updateFor={[selectedRegionID]}
             copy="Determine the best location for your Linode."
           />
           <SelectPlanPanel
             error={hasErrorFor('type')}
             types={types}
             onSelect={this.handleSelectPlan}
+            updateFor={[selectedTypeID]}
             selectedID={selectedTypeID}
           />
           <LabelAndTagsPanel
@@ -255,9 +259,11 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
               onChange: this.handleTypeLabel,
               errorText: hasErrorFor('label'),
             }}
+            updateFor={[label]}
           />
           <PasswordPanel
             error={hasErrorFor('root_pass')}
+            updateFor={[password]}
             password={password}
             handleChange={this.handleTypePassword}
           />
@@ -267,6 +273,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
             privateIP={privateIP}
             changeBackups={this.handleToggleBackups}
             changePrivateIP={this.handleTogglePrivateIP}
+            updateFor={[privateIP, backups]}
           />
         </Grid>
         <Grid item className={`${classes.sidebar} mlSidebar`}>

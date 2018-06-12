@@ -10,6 +10,8 @@ import Divider from 'material-ui/Divider';
 import CheckBox from 'src/components/CheckBox';
 import { FormControlLabel } from 'material-ui/Form';
 
+import RenderGuard from 'src/components/RenderGuard';
+
 type ClassNames = 'root'
   | 'flex'
   | 'title'
@@ -147,4 +149,4 @@ class AddonsPanel extends React.Component<CombinedProps> {
   }
 }
 
-export default styled<Props>(AddonsPanel);
+export default styled(RenderGuard<CombinedProps>(AddonsPanel));

@@ -12,6 +12,8 @@ import UserDefinedText from './FieldTypes/UserDefinedText';
 // import UserDefinedMultiSelect from './FieldTypes/UserDefinedMultiSelect';
 // import UserDefinedSelect from './FieldTypes/UserDefinedSelect';
 
+import RenderGuard from 'src/components/RenderGuard';
+
 
 type ClassNames = 'root' | 'captionEmpty';
 
@@ -101,4 +103,4 @@ const UserDefinedFieldsPanel: React.StatelessComponent<CombinedProps> = (props) 
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(UserDefinedFieldsPanel);
+export default styled(RenderGuard<CombinedProps>(UserDefinedFieldsPanel));

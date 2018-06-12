@@ -22,6 +22,8 @@ import TabbedPanel from 'src/components/TabbedPanel';
 import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
 import SelectionCard from 'src/components/SelectionCard';
 
+import RenderGuard from 'src/components/RenderGuard';
+
 export interface ExtendedRegion extends Linode.Region {
   display: string;
 }
@@ -131,4 +133,4 @@ class SelectRegionPanel extends React.Component<Props & WithStyles<ClassNames>> 
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(SelectRegionPanel);
+export default styled(RenderGuard<Props & WithStyles<ClassNames>>(SelectRegionPanel));

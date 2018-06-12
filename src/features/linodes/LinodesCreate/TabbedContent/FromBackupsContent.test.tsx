@@ -71,15 +71,15 @@ describe('FromBackupsContent', () => {
     });
 
     it('should render SelectPlan panel', () => {
-      expect(component.find('WithStyles(SelectPlanPanel)')).toHaveLength(1);
+      expect(component.find('WithStyles(WithRenderGuard(SelectPlanPanel))')).toHaveLength(1);
     });
 
     it('should render SelectLabel panel', () => {
-      expect(component.find('WithStyles(InfoPanel)')).toHaveLength(1);
+      expect(component.find('WithStyles(WithRenderGuard(InfoPanel))')).toHaveLength(1);
     });
 
     it('should render SelectAddOns panel', () => {
-      expect(component.find('WithStyles(AddonsPanel)')).toHaveLength(1);
+      expect(component.find('WithStyles(WithRenderGuard(AddonsPanel))')).toHaveLength(1);
     });
   });
 });

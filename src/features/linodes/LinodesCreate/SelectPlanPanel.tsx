@@ -9,6 +9,8 @@ import TabbedPanel from '../../../components/TabbedPanel';
 import { Tab } from '../../../components/TabbedPanel/TabbedPanel';
 import SelectionCard from '../../../components/SelectionCard';
 
+import RenderGuard from 'src/components/RenderGuard';
+
 export interface ExtendedType extends Linode.LinodeType {
   heading: string;
   subHeadings: [string, string];
@@ -119,4 +121,4 @@ class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNames>> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(SelectPlanPanel);
+export default styled(RenderGuard<Props & WithStyles<ClassNames>>(SelectPlanPanel));
