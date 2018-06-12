@@ -22,6 +22,7 @@ import { StickyContainer, Sticky, StickyProps } from 'react-sticky';
 
 import { withStyles, WithStyles, Theme, StyleRules } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
+import Paper from 'material-ui/Paper';
 
 import Button from 'src/components/Button';
 import {
@@ -456,91 +457,95 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
                   }, [])(this.state.errors || []);
 
-                  return <NodeBalancerConfigPanel
-                    key={idx}
+                  return <Paper style={{ padding: 24, margin: 8, width: '100%' }}>
+                    <NodeBalancerConfigPanel
+                      key={idx}
 
-                    errors={errors}
+                      errors={errors}
 
-                    algorithm={defaultTo('roundrobin', view(algorithmLens, this.state))}
-                    onAlgorithmChange={(algorithm: string) =>
-                      this.setState(state =>
-                        set(algorithmLens, algorithm, state))}
+                      algorithm={defaultTo('roundrobin', view(algorithmLens, this.state))}
+                      onAlgorithmChange={(algorithm: string) =>
+                        this.setState(state =>
+                          set(algorithmLens, algorithm, state))}
 
-                    checkPassive={defaultTo(true, view(checkPassiveLens, this.state))}
-                    onCheckPassiveChange={(checkPassive: boolean) =>
-                      this.setState(state =>
-                        set(checkPassiveLens, checkPassive, state))}
+                      checkPassive={defaultTo(true, view(checkPassiveLens, this.state))}
+                      onCheckPassiveChange={(checkPassive: boolean) =>
+                        this.setState(state =>
+                          set(checkPassiveLens, checkPassive, state))}
 
-                    checkBody={defaultTo('', view(checkBodyLens, this.state))}
-                    onCheckBodyChange={(checkBody: string) =>
-                      this.setState(state =>
-                        set(checkBodyLens, checkBody, state))}
+                      checkBody={defaultTo('', view(checkBodyLens, this.state))}
+                      onCheckBodyChange={(checkBody: string) =>
+                        this.setState(state =>
+                          set(checkBodyLens, checkBody, state))}
 
-                    checkPath={defaultTo('', view(checkPathLens, this.state))}
-                    onCheckPathChange={(checkPath: string) =>
-                      this.setState(state =>
-                        set(checkPathLens, checkPath, state))}
+                      checkPath={defaultTo('', view(checkPathLens, this.state))}
+                      onCheckPathChange={(checkPath: string) =>
+                        this.setState(state =>
+                          set(checkPathLens, checkPath, state))}
 
-                    port={defaultTo(80, view(portLens, this.state))}
-                    onPortChange={(port: string | number) =>
-                      this.setState(state =>
-                        set(portLens, port, state))}
+                      port={defaultTo(80, view(portLens, this.state))}
+                      onPortChange={(port: string | number) =>
+                        this.setState(state =>
+                          set(portLens, port, state))}
 
-                    protocol={defaultTo('http', view(protocolLens, this.state))}
-                    onProtocolChange={(protocol: string) =>
-                      this.setState(state =>
-                        set(protocolLens, protocol, state))}
+                      protocol={defaultTo('http', view(protocolLens, this.state))}
+                      onProtocolChange={(protocol: string) =>
+                        this.setState(state =>
+                          set(protocolLens, protocol, state))}
 
-                    healthCheckType={defaultTo('connection', view(healthCheckTypeLens, this.state))}
-                    onHealthCheckTypeChange={(healthCheckType: string) =>
-                      this.setState(state =>
-                        set(healthCheckTypeLens, healthCheckType, state))}
+                      healthCheckType={
+                        defaultTo('connection', view(healthCheckTypeLens, this.state))}
+                      onHealthCheckTypeChange={(healthCheckType: string) =>
+                        this.setState(state =>
+                          set(healthCheckTypeLens, healthCheckType, state))}
 
-                    healthCheckAttempts={defaultTo(2, view(healthCheckAttemptsLens, this.state))}
-                    onHealthCheckAttemptsChange={(healthCheckAttempts: string) =>
-                      this.setState(state =>
-                        set(healthCheckAttemptsLens, healthCheckAttempts, state))}
+                      healthCheckAttempts={defaultTo(2, view(healthCheckAttemptsLens, this.state))}
+                      onHealthCheckAttemptsChange={(healthCheckAttempts: string) =>
+                        this.setState(state =>
+                          set(healthCheckAttemptsLens, healthCheckAttempts, state))}
 
-                    healthCheckInterval={defaultTo(5, view(healthCheckIntervalLens, this.state))}
-                    onHealthCheckIntervalChange={(healthCheckInterval: number | string) =>
-                      this.setState(state =>
-                        set(healthCheckIntervalLens, healthCheckInterval, state))}
+                      healthCheckInterval={defaultTo(5, view(healthCheckIntervalLens, this.state))}
+                      onHealthCheckIntervalChange={(healthCheckInterval: number | string) =>
+                        this.setState(state =>
+                          set(healthCheckIntervalLens, healthCheckInterval, state))}
 
-                    healthCheckTimeout={defaultTo(3, view(healthCheckTimeoutLens, this.state))}
-                    onHealthCheckTimeoutChange={(healthCheckTimeout: number | string) =>
-                      this.setState(state =>
-                        set(healthCheckTimeoutLens, healthCheckTimeout, state))}
+                      healthCheckTimeout={defaultTo(3, view(healthCheckTimeoutLens, this.state))}
+                      onHealthCheckTimeoutChange={(healthCheckTimeout: number | string) =>
+                        this.setState(state =>
+                          set(healthCheckTimeoutLens, healthCheckTimeout, state))}
 
-                    sessionStickiness={defaultTo('table', view(sessionStickinessLens, this.state))}
-                    onSessionStickinessChange={(sessionStickiness: number | string) =>
-                      this.setState(state =>
-                        set(sessionStickinessLens, sessionStickiness, state))}
+                      sessionStickiness={
+                        defaultTo('table', view(sessionStickinessLens, this.state))}
+                      onSessionStickinessChange={(sessionStickiness: number | string) =>
+                        this.setState(state =>
+                          set(sessionStickinessLens, sessionStickiness, state))}
 
-                    sslCertificate={defaultTo('', view(sslCertificateLens, this.state))}
-                    onSslCertificateChange={(sslCertificate: string) =>
-                      this.setState(state =>
-                        set(sslCertificateLens, sslCertificate, state))}
+                      sslCertificate={defaultTo('', view(sslCertificateLens, this.state))}
+                      onSslCertificateChange={(sslCertificate: string) =>
+                        this.setState(state =>
+                          set(sslCertificateLens, sslCertificate, state))}
 
-                    privateKey={defaultTo('', view(privateKeyLens, this.state))}
-                    onPrivateKeyChange={(privateKey: string) =>
-                      this.setState(state =>
-                        set(privateKeyLens, privateKey, state))}
+                      privateKey={defaultTo('', view(privateKeyLens, this.state))}
+                      onPrivateKeyChange={(privateKey: string) =>
+                        this.setState(state =>
+                          set(privateKeyLens, privateKey, state))}
 
-                    nodes={this.state.nodeBalancerFields.configs[idx].nodes}
+                      nodes={this.state.nodeBalancerFields.configs[idx].nodes}
 
-                    addNode={() => this.addNodeBalancerConfigNode(idx)}
+                      addNode={() => this.addNodeBalancerConfigNode(idx)}
 
-                    removeNode={this.removeNodeBalancerConfigNode(idx)}
+                      removeNode={this.removeNodeBalancerConfigNode(idx)}
 
-                    onNodeLabelChange={(nodeIndex, value) =>
-                      this.onNodeLabelChange(idx, nodeIndex, value)}
+                      onNodeLabelChange={(nodeIndex, value) =>
+                        this.onNodeLabelChange(idx, nodeIndex, value)}
 
-                    onNodeAddressChange={(nodeIndex, value) =>
-                      this.onNodeAddressChange(idx, nodeIndex, value)}
+                      onNodeAddressChange={(nodeIndex, value) =>
+                        this.onNodeAddressChange(idx, nodeIndex, value)}
 
-                    onNodeWeightChange={(nodeIndex, value) =>
-                      this.onNodeWeightChange(idx, nodeIndex, value)}
-                  />;
+                      onNodeWeightChange={(nodeIndex, value) =>
+                        this.onNodeWeightChange(idx, nodeIndex, value)}
+                    />
+                  </Paper>;
                 })
               }
               <Grid item>
