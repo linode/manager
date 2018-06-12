@@ -3,24 +3,19 @@ import { shallow } from 'enzyme';
 import { FromImageContent } from './FromImageContent';
 
 const mockProps = {
-  updateFormState: jest.fn(),
-  selectedImageID: '1',
-  selectedRegionID: '1',
-  selectedTypeID: '1',
   images: [],
   regions: [],
   types: [],
-  backups: true,
-  privateIP: true,
   getBackupsMonthlyPrice: jest.fn(),
-  label: 'my label',
-  password: 'helllo432.324',
+  history: null,
+  getTypeInfo: jest.fn(),
+  getRegionName: jest.fn(),
 };
 
 describe('FromImageContent', () => {
   const componentWithNotice = shallow(
     <FromImageContent
-      classes={{ root: '' }}
+      classes={{ root: '', main: '', sidebar: '' }}
       {...mockProps}
       notice={{
         text: 'hello world',
@@ -31,7 +26,7 @@ describe('FromImageContent', () => {
 
   const component = shallow(
     <FromImageContent
-      classes={{ root: '' }}
+      classes={{ root: '', main: '', sidebar: '' }}
       {...mockProps}
     />,
   );

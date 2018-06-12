@@ -47,7 +47,7 @@ interface Props {
   types: ExtendedType[];
   backups: boolean;
   privateIP: boolean;
-  getBackupsMonthlyPrice: () => number | null;
+  getBackupsMonthlyPrice: (selectedTypeID: string | null) => number | null;
   label: string | null;
   password: string | null;
   udf_data: any;
@@ -112,6 +112,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
         <SelectStackScriptPanel
           selectedId={selectedStackScriptID}
           shrinkPanel={true}
+          updateFor={[selectedStackScriptID]}
           onSelect={(id: number) => {
             updateFormState([{ stateKey: 'selectedStackScriptID', newValue: id }]);
           }}
@@ -159,7 +160,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
         />
         <AddonsPanel
           backups={backups}
-          backupsMonthly={getBackupsMonthlyPrice()}
+          backupsMonthly={getBackupsMonthlyPrice(selectedTypeID)}
           privateIP={privateIP}
           changeBackups={() =>
             updateFormState([{ stateKey: 'backups', newValue: !backups }])}

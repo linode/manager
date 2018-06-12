@@ -6,6 +6,8 @@ import TabbedPanel from 'src/components/TabbedPanel';
 import StackScriptsSection from './StackScriptsSection';
 import CircleProgress from 'src/components/CircleProgress';
 
+import RenderGuard from 'src/components/RenderGuard';
+
 export interface ExtendedLinode extends Linode.Linode {
   heading: string;
   subHeadings: string[];
@@ -121,4 +123,6 @@ class Container extends React.Component<ContainerProps, ContainerState> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(SelectStackScriptPanel);
+
+
+export default styled(RenderGuard<CombinedProps>(SelectStackScriptPanel));

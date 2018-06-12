@@ -47,9 +47,9 @@ describe('FromImageContent', () => {
     expect(component.find('WithStyles(Notice)')).toHaveLength(0);
   });
 
-  it('should render SelectStackScript panel', () => {
-    expect(component.find('WithStyles(SelectStackScriptPanel)')).toHaveLength(1);
-  });
+  // it('should render SelectStackScript panel', () => {
+  //   expect(component.find('WithStyles(SelectStackScriptPanel)')).toHaveLength(1);
+  // });
 
   it('should render UserDefinedFields panel', () => {
     component.setState({ userDefinedFields: mockUserDefinedFields }); // give us some dummy fields
