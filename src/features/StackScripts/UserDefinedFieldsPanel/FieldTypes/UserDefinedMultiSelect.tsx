@@ -16,7 +16,9 @@ import { StateToUpdate as FormState } from '../../../linodes/LinodesCreate';
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {},
+  root: {
+    margin: theme.spacing.unit * 3,
+  },
 });
 
 interface Props {
@@ -67,21 +69,21 @@ class UserDefinedSelect extends React.Component<CombinedProps, State> {
 
     updateFormState([{
       stateKey: 'udf_data',
-      newValue: { [field.name]: newSelections },
+      newValue: { ...udf_data, [field.name]: newSelections },
     }]);
 
   }
 
   render() {
     const { manyof } = this.state;
-    const { udf_data, field } = this.props;
+    const { udf_data, field, classes } = this.props;
 
     // we are setting default values in the parent component, so we want to use these
     // default values to determine what will be checked upon initial render
     const selectedValuesToArray = udf_data[field.name] && udf_data[field.name].split(',') || [];
 
     return (
-      <React.Fragment>
+      <div className={classes.root}>
         <Typography variant="subheading" >
           {field.label}
         </Typography>
@@ -105,7 +107,7 @@ class UserDefinedSelect extends React.Component<CombinedProps, State> {
             </React.Fragment>
           );
         })}
-      </React.Fragment>
+      </div>
     );
   }
 }
