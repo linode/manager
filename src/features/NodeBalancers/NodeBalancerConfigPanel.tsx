@@ -588,7 +588,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       ]}
                       item
                       xs={12}
-                      md={6}
+                      md={4}
                     >
                       <TextField
                         label="Check HTTP Path"
@@ -609,7 +609,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       ]}
                       item
                       xs={12}
-                      md={6}
+                      md={4}
                     >
                       <TextField
                         label="Expected HTTP Body"

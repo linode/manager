@@ -61,7 +61,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   sidebar: {
   },
   title: {
-    marginTop: theme.spacing.unit,
+    marginTop: theme.spacing.unit * 3,
   },
 });
 
@@ -121,7 +121,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     check: 'connection',
     cipher_suite: undefined,
     port: 80,
-    protocol: 'tcp',
+    protocol: 'http',
     ssl_cert: undefined,
     ssl_key: undefined,
     stickiness: 'none',
@@ -403,6 +403,11 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               selectedID={nodeBalancerFields.region || null}
               handleSelection={this.regionChange}
             />
+            <Grid item xs={12}>
+              <Typography variant="title" className={classes.title}>
+                NodeBalancer Settings
+              </Typography>
+            </Grid>
             <ClientConnectionThrottlePanel
               textFieldProps={{
                 errorText: hasErrorFor('client_conn_throttle'),
@@ -426,11 +431,6 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               style={{ marginTop: 8 }}
               data-qa-nodebalancer-settings-section
             >
-              <Grid item xs={12}>
-                <Typography variant="title" className={classes.title}>
-                  NodeBalancer Settings
-                </Typography>
-              </Grid>
               {
                 this.state.nodeBalancerFields.configs.map((nodeBalancerConfig, idx) => {
                   const lensTo = lensFrom(['nodeBalancerFields', 'configs', idx]);
