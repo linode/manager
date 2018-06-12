@@ -14,7 +14,7 @@ exports.constants = {
 		dashboard: '/',
 		linodes: '/linodes',
 		volumes: '/volumes',
-		nodebalancers: '/nodebalancers',
+		nodeBalancers: '/nodebalancers',
 		domains: '/domains',
 		managed: '/managed',
 		longview: '/longview',
