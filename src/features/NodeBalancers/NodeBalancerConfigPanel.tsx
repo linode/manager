@@ -94,6 +94,7 @@ interface Props {
   onUpdateNode?: (idx: number) => void;
   onNodeLabelChange: (idx: number, value: string) => void;
   onNodeAddressChange: (idx: number, value: string) => void;
+  onNodePortChange: (idx: number, value: string) => void;
   onNodeWeightChange: (idx: number, value: string) => void;
 }
 
@@ -171,6 +172,16 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
     const configIdx = e.currentTarget.getAttribute('data-config-idx');
     if (configIdx) {
       this.props.onNodeAddressChange(
+        +configIdx,
+        e.target.value,
+      );
+    }
+  }
+
+  onNodePortChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const configIdx = e.currentTarget.getAttribute('data-config-idx');
+    if (configIdx) {
+      this.props.onNodePortChange(
         +configIdx,
         e.target.value,
       );
@@ -710,6 +721,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       label: 'label',
                       address: 'address',
                       weight: 'weight',
+                      port: 'port',
                     }, node.errors);
 
                     return (
@@ -745,6 +757,16 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             onChange={this.onNodeAddressChange}
                             errorText={hasErrorFor('address')}
                             data-qa-backend-ip-address
+                          />
+                        </Grid>
+                        <Grid item xs={11} lg={2}>
+                          <TextField
+                            label="Port"
+                            value={node.port}
+                            inputProps={{ 'data-config-idx': idx }}
+                            onChange={this.onNodePortChange}
+                            errorText={hasErrorFor('port')}
+                            data-qa-backend-ip-port
                           />
                         </Grid>
                         <Grid item xs={11} lg={forEdit ? 2 : 3}>

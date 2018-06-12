@@ -49,6 +49,9 @@ import {
   nodeForRequest,
   transformConfigsForRequest,
   NodeBalancerConfigFields,
+  formatAddress,
+  parseAddress,
+  parseAddresses,
 } from '../utils';
 
 type ClassNames =
@@ -102,6 +105,7 @@ type CombinedProps =
 const blankNode = (): Linode.NodeBalancerConfigNode => ({
   label: '',
   address: '',
+  port: '80',
   weight: 100,
 });
 
@@ -117,7 +121,7 @@ const getConfigsWithNodes = (nodeBalancerId: number) => {
           nodes.push(blankNode());
           return {
             ...config,
-            nodes,
+            nodes: parseAddresses(nodes),
           };
         });
     })
@@ -343,7 +347,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       return;
     }
 
-    createNodeBalancerConfigNode(nodeBalancerId!, config.id!, nodeData)
+    createNodeBalancerConfigNode(nodeBalancerId!, config.id!, formatAddress(nodeData))
       .then((node) => {
         this.setState(
           set(
@@ -354,7 +358,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
                * with the Add button.
                **/
               append(blankNode()),
-              set(lensIndex(nodeIdx), node),
+              set(lensIndex(nodeIdx), parseAddress(node)),
             )(this.state.configs[configIdx].nodes),
           ),
         );
@@ -398,7 +402,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       ),
     );
 
-    updateNodeBalancerConfigNode(nodeBalancerId!, config.id!, node!.id!, nodeData)
+    updateNodeBalancerConfigNode(nodeBalancerId!, config.id!, node!.id!, formatAddress(nodeData))
       .then((node) => {
         /* clear the "updating" flag for this node */
         this.setState(
@@ -446,6 +450,9 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
   onNodeAddressChange = (configIdx: number) => (nodeIdx: number, value: string) =>
     this.setNodeValue(configIdx, nodeIdx, 'address', value)
+
+  onNodePortChange = (configIdx: number) => (nodeIdx: number, value: string) =>
+    this.setNodeValue(configIdx, nodeIdx, 'port', value)
 
   onNodeWeightChange = (configIdx: number) => (nodeIdx: number, value: string) =>
     this.setNodeValue(configIdx, nodeIdx, 'weight', value)
@@ -604,6 +611,8 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           onNodeLabelChange={this.onNodeLabelChange(idx)}
 
           onNodeAddressChange={this.onNodeAddressChange(idx)}
+
+          onNodePortChange={this.onNodePortChange(idx)}
 
           onNodeWeightChange={this.onNodeWeightChange(idx)}
         />

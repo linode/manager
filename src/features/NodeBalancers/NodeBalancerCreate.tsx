@@ -48,6 +48,7 @@ import Notice from 'src/components/Notice';
 import {
   NodeBalancerConfigFields,
   transformConfigsForRequest,
+  formatAddress,
 } from './utils';
 
 type Styles =
@@ -115,6 +116,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   static createNewNodeBalancerConfigNode = (): Linode.NodeBalancerConfigNode => ({
     label: '',
     address: '',
+    port: '80',
     weight: 100,
   })
 
@@ -189,6 +191,9 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
   onNodeAddressChange = (configIdx: number, nodeIdx: number, value: string) =>
     this.setNodeValue(configIdx, nodeIdx, 'address', value)
+
+  onNodePortChange = (configIdx: number, nodeIdx: number, value: string) =>
+    this.setNodeValue(configIdx, nodeIdx, 'port', value)
 
   onNodeWeightChange = (configIdx: number, nodeIdx: number, value: string) =>
     this.setNodeValue(configIdx, nodeIdx, 'weight', value)
@@ -297,7 +302,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                     createNodeBalancerConfigNode(
                       nodeBalancerId,
                       nodeBalancerConfigId,
-                      nodeBalancerConfigNode,
+                      formatAddress(nodeBalancerConfigNode),
                     )
                       .then((response) => {
                         resolveNode(response);
@@ -635,6 +640,9 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
                       onNodeAddressChange={(nodeIndex, value) =>
                         this.onNodeAddressChange(idx, nodeIndex, value)}
+
+                      onNodePortChange={(nodeIndex, value) =>
+                        this.onNodePortChange(idx, nodeIndex, value)}
 
                       onNodeWeightChange={(nodeIndex, value) =>
                         this.onNodeWeightChange(idx, nodeIndex, value)}

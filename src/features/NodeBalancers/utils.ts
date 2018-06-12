@@ -26,10 +26,32 @@ export interface NodeBalancerConfigFields {
 export const nodeForRequest = (node: Linode.NodeBalancerConfigNode) => ({
   label: node.label,
   address: node.address,
+  port: node.port,
   weight: +node.weight!,
   /* Force Node creation and updates to set mode to 'accept' */
   mode: 'accept' as Linode.NodeBalancerConfigNodeMode,
 });
+
+export const formatAddress = (node: Linode.NodeBalancerConfigNode) => ({
+  ...node,
+  address: `${node.address}:${node.port}`,
+});
+
+export const parseAddress = (node: Linode.NodeBalancerConfigNode) => {
+  const match = /^(192\.168\.\d{1,3}\.\d{1,3}):(\d{1,5})$/.exec(node.address);
+  if (match) {
+    return {
+      ...node,
+      address: match![1],
+      port: match![2],
+    };
+  }
+  return node;
+};
+
+export const parseAddresses = (nodes: Linode.NodeBalancerConfigNode[]) => {
+  return nodes.map(parseAddress);
+};
 
 /* Transform an array of configs into valid request data.
    Does not modify in-place, returns a deep clone of the configs */
