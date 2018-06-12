@@ -340,6 +340,29 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       });
   }
 
+  onRemoveConfig = (configIdx: number) => () => {
+    /* remove the config */
+    this.setState({
+      nodeBalancerFields: {
+        ...this.state.nodeBalancerFields,
+        configs: this.state.nodeBalancerFields.configs.filter(
+          (config: NodeBalancerConfigFields, idx: number) => {
+            return idx !== configIdx;
+          }),
+      },
+    });
+
+    /* remove the errors related to that config */
+    if (this.state.errors) {
+      this.setState({
+        errors: this.state.errors!.filter((error: Linode.ApiFieldError) => {
+          const t = new RegExp(`configs_${configIdx}_`);
+          return !t.test(error.field);
+        }),
+      });
+    }
+  }
+
   labelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState(
       set(
@@ -457,10 +480,8 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
                   }, [])(this.state.errors || []);
 
-                  return <Paper style={{ padding: 24, margin: 8, width: '100%' }}>
+                  return <Paper key={idx} style={{ padding: 24, margin: 8, width: '100%' }}>
                     <NodeBalancerConfigPanel
-                      key={idx}
-
                       errors={errors}
 
                       algorithm={defaultTo('roundrobin', view(algorithmLens, this.state))}
@@ -544,6 +565,8 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
                       onNodeWeightChange={(nodeIndex, value) =>
                         this.onNodeWeightChange(idx, nodeIndex, value)}
+
+                      onDelete={this.onRemoveConfig(idx)}
                     />
                   </Paper>;
                 })

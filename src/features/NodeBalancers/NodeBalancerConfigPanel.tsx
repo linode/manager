@@ -682,15 +682,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     </Button>
                   </ActionsPanel>
                 </Grid>
-                <Grid item>
-                  <Button
-                    onClick={this.onDelete}
-                    type="secondary"
-                    destructive
-                  >
-                    Delete
-                  </Button>
-                </Grid>
                 <Grid item xs={12}>
                   <Divider className={classes.divider} />
                 </Grid>
@@ -808,6 +799,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   })
                 }
               </Grid>
+
               {/* Adding nodes is done in-line when editing the Config */}
               {!forEdit &&
                 <Grid
@@ -820,6 +812,21 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   />
                 </Grid>
               }
+
+              <Grid updateFor={[]} item xs={12}>
+                <Divider className={classes.divider} />
+              </Grid>
+
+              <Grid updateFor={[]} item xs={12}>
+                <Button
+                  onClick={this.onDelete}
+                  type="secondary"
+                  destructive
+                >
+                  Delete
+                </Button>
+              </Grid>
+
             </Grid>
           </div>
         </Paper>
