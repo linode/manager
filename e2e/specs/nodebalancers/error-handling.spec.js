@@ -1,16 +1,15 @@
 const { constants } = require('../../constants');
 
 import NodeBalancers from '../../pageobjects/nodebalancers.page';
-import { apiCreateLinode, apiDeleteAllLinodes } from '../../utils/common';
+import {
+    apiCreateLinode,
+    removeNodeBalancers,
+} from '../../utils/common';
 
 describe('NodeBalancer - Negative Tests Suite', () => {
-    let linode,
-        privateIp,
-        token;
-
     beforeAll(() => {
-        token = browser.readToken();
-        linode = apiCreateLinode();
+        const token = browser.readToken();
+        const linode = apiCreateLinode();
         linode['privateIp'] = browser.allocatePrivateIp(token, linode.id).address;
         browser.url(constants.routes.nodeBalancers);
         NodeBalancers.baseElemsDisplay(true);
@@ -18,9 +17,7 @@ describe('NodeBalancer - Negative Tests Suite', () => {
     });
 
     afterAll(() => {
-        apiDeleteAllLinodes();
-        const availableNodeBalancers = browser.getNodeBalancers(token);
-        availableNodeBalancers.data.forEach(nb => browser.removeNodeBalancer(token, nb.id));
+        removeNodeBalancers();
     });
 
     it('should display a service error msg on create with an invalid node', () => {

@@ -7,6 +7,8 @@ import ListLinodes from '../pageobjects/list-linodes';
 import Create from '../pageobjects/create';
 import Settings from '../pageobjects/linode-detail/linode-detail-settings.page';
 import LinodeDetail from '../pageobjects/linode-detail/linode-detail.page';
+import NodeBalancers from '../pageobjects/nodebalancers.page';
+import NodeBalancerDetail from '../pageobjects/nodebalancer-detail/details.page';
 
 export const createGenericLinode = (label) => {
     Create.menuButton.click();
@@ -65,4 +67,22 @@ export const apiDeleteAllDomains = () => {
     const token = readToken();
     const domains = browser.getDomains(token);
     domains.data.forEach(domain => browser.removeDomain(token, domain.id));
+}
+
+export const createNodeBalancer = () => {
+    const token = readToken();
+    const linode = apiCreateLinode();
+    linode['privateIp'] = browser.allocatePrivateIp(token, linode.id).address;
+    browser.url(constants.routes.nodeBalancers);
+    NodeBalancers.baseElemsDisplay(true);
+    NodeBalancers.create();
+    NodeBalancers.configure(linode);
+    NodeBalancerDetail.baseElemsDisplay();
+}
+
+export const removeNodeBalancers = () => {
+    const token = readToken();
+    apiDeleteAllLinodes();
+    const availableNodeBalancers = browser.getNodeBalancers(token);
+    availableNodeBalancers.data.forEach(nb => browser.removeNodeBalancer(token, nb.id));
 }
