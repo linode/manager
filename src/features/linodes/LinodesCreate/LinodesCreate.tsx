@@ -21,17 +21,17 @@ import { getImages } from 'src/services/images';
 
 import Grid from 'src/components/Grid';
 import PromiseLoader from 'src/components/PromiseLoader';
-import CheckoutBar from 'src/components/CheckoutBar';
-
 import FromBackupsContent from './TabbedContent/FromBackupsContent';
 import FromImageContent from './TabbedContent/FromImageContent';
 import FromLinodeContent from './TabbedContent/FromLinodeContent';
-import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
 
 import { ExtendedLinode } from './SelectLinodePanel';
 import { ExtendedRegion } from 'src/components/SelectRegionPanel';
 import { ExtendedType } from './SelectPlanPanel';
 import { typeLabelDetails, displayType } from '../presentation';
+import CheckoutBar from 'src/components/CheckoutBar';
+import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
+
 import { resetEventsPolling } from 'src/events';
 
 type Info = { title: string, details?: string } | undefined;

@@ -12,6 +12,7 @@ import ExpansionPanel, {
 } from 'material-ui/ExpansionPanel';
 import Typography, { TypographyProps } from 'material-ui/Typography';
 import Grid from 'src/components/Grid';
+import RenderGuard from 'src/components/RenderGuard';
 
 import Plus from '../../assets/icons/plus-square.svg';
 import Minus from '../../assets/icons/minus-square.svg';
@@ -147,4 +148,4 @@ class EExpansionPanel extends React.Component<CombinedProps> {
 }
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(EExpansionPanel);
+export default RenderGuard<Props>(styled<Props>(EExpansionPanel));

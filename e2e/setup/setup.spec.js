@@ -2,6 +2,11 @@ const { constants } = require('../constants');
 const { readToken } = require('../utils/config-utils');
 
 describe('Setup Tests Suite', () => {
+    beforeAll(() => {
+        browser.url(constants.routes.linodes);
+        browser.waitForVisible('[data-qa-circle-progress]', constants.wait.normal, true);
+    });
+
     it('should remove all account data', () => {
         const token = readToken();
         browser.deleteAll(token);

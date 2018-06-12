@@ -37,7 +37,7 @@ describe('Create Linode - Clone from Existing Suite', () => {
         try {
             ConfigureLinode.selectPlan(0);
         } catch (err) {
-            if (!err.Error.includes('Failed to select plan')) throw err;
+            if (!err.message.includes('Failed to select plan')) throw err;
         }
 
         ConfigureLinode.label.setValue(new Date().getTime());

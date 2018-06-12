@@ -25,14 +25,14 @@ describe('Create Linode - Configure Linode Suite', () => {
 
     it('should configure a generic linode and update cost summary', () => {
         const genericPrice = /\$.*\/mo/ig;
-        const genericImage = ConfigureLinode.images[0].getText();
-        const genericType = /Linode 2GB 1 CPU, 50G Storage, 2G RAM/ig
+        const genericImage = ConfigureLinode.imageNames[0].getText();
+        const genericType = ConfigureLinode.planNames[0].getText();
 
         ConfigureLinode.generic();
 
         expect(CheckoutSummary.costSummary.getText()).toMatch(genericPrice);
-        expect(CheckoutSummary.imageSummary.getText()).toBe(genericImage);
-        expect(CheckoutSummary.typeSummary.getText().replace(/\n/g, ' ')).toMatch(genericType);
+        expect(CheckoutSummary.subheaderDisplays(genericImage)).toBe(true);
+        expect(CheckoutSummary.subheaderDisplays(genericType)).toBe(true);
     });
 
     it('should display three regions and have locations available in each', () => {
@@ -50,8 +50,6 @@ describe('Create Linode - Configure Linode Suite', () => {
         const imageName = 'Debian';
         ConfigureLinode.selectImage(imageName);
 
-        expect(CheckoutSummary.imageSummary.isVisible()).toBe(true);
-        expect(CheckoutSummary.imageDetail.isVisible()).toBe(true);
-        expect(CheckoutSummary.imageName.getText()).toBe(imageName);
+        expect(CheckoutSummary.subheaderDisplays(imageName)).toBe(true);
     });
 });

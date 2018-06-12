@@ -32,7 +32,7 @@ class Backups extends Page {
 
     baseElemsDisplay(backupsNotEnabled) {
         if (backupsNotEnabled) {
-            this.placeholderText.waitForVisible();
+            this.placeholderText.waitForVisible(constants.wait.normal);
             expect(this.enableButton.isVisible()).toBe(true);
             return;
         }
