@@ -27,6 +27,8 @@ export const nodeForRequest = (node: Linode.NodeBalancerConfigNode) => ({
   label: node.label,
   address: node.address,
   weight: +node.weight!,
+  /* Force Node creation and updates to set mode to 'accept' */
+  mode: 'accept' as Linode.NodeBalancerConfigNodeMode,
 });
 
 /* Transform an array of configs into valid request data.
@@ -88,4 +90,3 @@ export const transformConfigNodesForRequest = (nodes: Linode.NodeBalancerConfigN
     Linode.NodeBalancerConfigNode[] => {
   return nodes.map((node: Linode.NodeBalancerConfigNode) => nodeForRequest(node));
 };
-
