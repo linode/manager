@@ -228,6 +228,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
             images={images}
             handleSelection={this.handleSelectImage}
             selectedImageID={selectedImageID}
+            updateFor={[selectedImageID]}
           />
           <SelectRegionPanel
             error={hasErrorFor('region')}
@@ -235,12 +236,14 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
             handleSelection={this.handleSelectRegion}
             selectedID={selectedRegionID}
             copy="Determine the best location for your Linode."
+            updateFor={[selectedRegionID]}
           />
           <SelectPlanPanel
             error={hasErrorFor('type')}
             types={types}
             onSelect={this.handleSelectPlan}
             selectedID={selectedTypeID}
+            updateFor={[selectedTypeID]}
           />
           <LabelAndTagsPanel
             labelFieldProps={{
@@ -249,11 +252,13 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
               onChange: this.handleTypeLabel,
               errorText: hasErrorFor('label'),
             }}
+            updateFor={[label]}
           />
           <PasswordPanel
             error={hasErrorFor('root_pass')}
             password={password}
             handleChange={this.handleTypePassword}
+            updateFor={[password]}
           />
           <AddonsPanel
             backups={backups}
@@ -261,6 +266,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
             privateIP={privateIP}
             changeBackups={this.handleToggleBackups}
             changePrivateIP={this.handleTogglePrivateIP}
+            updateFor={[privateIP, backups]}
           />
         </Grid>
         <Grid item className={`${classes.sidebar} mlSidebar`}>

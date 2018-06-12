@@ -13,6 +13,8 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import SelectionCard from 'src/components/SelectionCard';
 
+import RenderGuard from 'src/components/RenderGuard';
+
 export interface ExtendedLinode extends Linode.Linode {
   heading: string;
   subHeadings: string[];
@@ -93,4 +95,4 @@ class SelectLinodePanel extends React.Component<CombinedProps> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(SelectLinodePanel);
+export default styled(RenderGuard<CombinedProps>(SelectLinodePanel));
