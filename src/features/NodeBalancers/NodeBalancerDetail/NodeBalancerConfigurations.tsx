@@ -11,7 +11,6 @@ import {
   compose,
   append,
   clone,
-  defaultTo,
   path,
   lensPath,
   lensIndex,
@@ -38,6 +37,7 @@ import {
   deleteNodeBalancerConfigNode,
 } from 'src/services/nodebalancers';
 import Button from 'src/components/Button';
+import Grid from 'src/components/Grid';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
@@ -52,6 +52,7 @@ import {
   formatAddress,
   parseAddress,
   parseAddresses,
+  createNewNodeBalancerConfig,
 } from '../utils';
 
 type ClassNames =
@@ -80,6 +81,11 @@ interface State {
   unmodifiedConfigs: NodeBalancerConfigFields[];
   configErrors: Linode.ApiFieldError[][];
   configSubmitting: boolean[];
+  /*
+   * If the following is set to true, then the last element of each of the above
+   * arrays is related to this unsaved config.
+   */
+  hasUnsavedConfig: boolean;
   panelMessages: string[];
   deleteConfigConfirmDialog: {
     open: boolean;
@@ -155,6 +161,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       clone(NodeBalancerConfigurations.defaultDeleteConfigConfirmDialogState),
     deleteNodeConfirmDialog:
       clone(NodeBalancerConfigurations.defaultDeleteNodeConfirmDialogState),
+    hasUnsavedConfig: false,
   };
 
   updateConfig = (idx: number) => {
@@ -438,6 +445,16 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       });
   }
 
+  addNodeBalancerConfig = () => {
+    this.setState({
+      configs: append(createNewNodeBalancerConfig(false), this.state.configs),
+      unmodifiedConfigs: append(createNewNodeBalancerConfig(false), this.state.unmodifiedConfigs),
+      configErrors: append([], this.state.configErrors),
+      configSubmitting: append(false, this.state.configSubmitting),
+      hasUnsavedConfig: true,
+    });
+  }
+
   setNodeValue = (cidx: number, nodeidx: number, key: string, value: any) =>
     this.setState(
       set(
@@ -515,6 +532,9 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   ) => (
     config: Linode.NodeBalancerConfig & { nodes: Linode.NodeBalancerConfigNode[] }, idx: number,
     ) => {
+    const isUnsavedConfig = this.state.hasUnsavedConfig && (idx === this.state.configs.length - 1);
+    console.log('isUnsavedConfig', isUnsavedConfig);
+
     const lensTo = lensFrom(['configs', idx]);
 
     const algorithmLens = lensTo(['algorithm']);
@@ -540,7 +560,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           configErrors[idx],
         ]}
         defaultExpanded={true}
-        heading={`Port ${config.port}`}
+        heading={`Port ${config.port !== undefined ? config.port : ''}`}
         success={panelMessages[idx]}
       >
         <NodeBalancerConfigPanel
@@ -552,22 +572,22 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
           errors={configErrors[idx]}
 
-          algorithm={defaultTo('roundrobin', view(algorithmLens, this.state))}
+          algorithm={view(algorithmLens, this.state)}
           onAlgorithmChange={this.updateState(algorithmLens)}
 
-          checkPassive={defaultTo(true, view(checkPassiveLens, this.state))}
+          checkPassive={view(checkPassiveLens, this.state)}
           onCheckPassiveChange={this.updateState(checkPassiveLens)}
 
-          checkBody={defaultTo('', view(checkBodyLens, this.state))}
+          checkBody={view(checkBodyLens, this.state)}
           onCheckBodyChange={this.updateState(checkBodyLens)}
 
-          checkPath={defaultTo('', view(checkPathLens, this.state))}
+          checkPath={view(checkPathLens, this.state)}
           onCheckPathChange={this.updateState(checkPathLens)}
 
-          port={defaultTo(80, view(portLens, this.state))}
+          port={view(portLens, this.state)}
           onPortChange={this.updateState(portLens)}
 
-          protocol={defaultTo('http', view(protocolLens, this.state))}
+          protocol={view(protocolLens, this.state)}
           onProtocolChange={(value: any) => {
             this.updateState(protocolLens)(value);
             /* clear cert and private key upon changing protocol so that they are re-validated */
@@ -579,25 +599,25 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
             );
           }}
 
-          healthCheckType={defaultTo('connection', view(healthCheckTypeLens, this.state))}
+          healthCheckType={view(healthCheckTypeLens, this.state)}
           onHealthCheckTypeChange={this.updateState(healthCheckTypeLens)}
 
-          healthCheckAttempts={defaultTo(2, view(healthCheckAttemptsLens, this.state))}
+          healthCheckAttempts={view(healthCheckAttemptsLens, this.state)}
           onHealthCheckAttemptsChange={this.updateState(healthCheckAttemptsLens)}
 
-          healthCheckInterval={defaultTo(5, view(healthCheckIntervalLens, this.state))}
+          healthCheckInterval={view(healthCheckIntervalLens, this.state)}
           onHealthCheckIntervalChange={this.updateState(healthCheckIntervalLens)}
 
-          healthCheckTimeout={defaultTo(3, view(healthCheckTimeoutLens, this.state))}
+          healthCheckTimeout={view(healthCheckTimeoutLens, this.state)}
           onHealthCheckTimeoutChange={this.updateState(healthCheckTimeoutLens)}
 
-          sessionStickiness={defaultTo('table', view(sessionStickinessLens, this.state))}
+          sessionStickiness={view(sessionStickinessLens, this.state)}
           onSessionStickinessChange={this.updateState(sessionStickinessLens)}
 
-          sslCertificate={defaultTo('', view(sslCertificateLens, this.state))}
+          sslCertificate={view(sslCertificateLens, this.state)}
           onSslCertificateChange={this.updateState(sslCertificateLens)}
 
-          privateKey={defaultTo('', view(privateKeyLens, this.state))}
+          privateKey={view(privateKeyLens, this.state)}
           onPrivateKeyChange={this.updateState(privateKeyLens)}
 
           nodes={config.nodes}
@@ -666,7 +686,13 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes } = this.props;
-    const { configs, panelMessages, configErrors, configSubmitting } = this.state;
+    const {
+      configs,
+      panelMessages,
+      configErrors,
+      configSubmitting,
+      hasUnsavedConfig,
+    } = this.state;
 
     return (
       <React.Fragment>
@@ -696,6 +722,18 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           {/* </Grid>
         </Grid> */}
         {configs.map(this.renderConfig(panelMessages, configErrors, configSubmitting))}
+
+        {!hasUnsavedConfig &&
+          <Grid item>
+            <Button
+              type="secondary"
+              onClick={() => this.addNodeBalancerConfig()}
+              data-qa-add-config
+            >
+              Add another Configuration
+            </Button>
+          </Grid>
+        }
 
         <ConfirmationDialog
           onClose={this.onCloseConfirmation}

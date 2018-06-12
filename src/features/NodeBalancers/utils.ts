@@ -23,6 +23,33 @@ export interface NodeBalancerConfigFields {
   nodes: Linode.NodeBalancerConfigNode[];
 }
 
+export const createNewNodeBalancerConfigNode = (): Linode.NodeBalancerConfigNode => ({
+  label: '',
+  address: '',
+  port: '80',
+  weight: 100,
+  mode: 'accept',
+});
+
+export const createNewNodeBalancerConfig = (withDefaultPort?: boolean):
+  NodeBalancerConfigFields => ({
+    algorithm: 'roundrobin',
+    check_attempts: 2,
+    check_body: undefined,
+    check_interval: 5,
+    check_passive: true,
+    check_path: undefined,
+    check_timeout: 3,
+    check: 'none',
+    cipher_suite: undefined,
+    port: withDefaultPort ? 80 : undefined,
+    protocol: 'http',
+    ssl_cert: undefined,
+    ssl_key: undefined,
+    stickiness: 'none',
+    nodes: [createNewNodeBalancerConfigNode()],
+  });
+
 export const nodeForRequest = (node: Linode.NodeBalancerConfigNode) => ({
   label: node.label,
   address: node.address,

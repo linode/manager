@@ -49,6 +49,8 @@ import {
   NodeBalancerConfigFields,
   transformConfigsForRequest,
   formatAddress,
+  createNewNodeBalancerConfig,
+  createNewNodeBalancerConfigNode,
 } from './utils';
 
 type Styles =
@@ -113,31 +115,6 @@ const errorResources = {
 };
 
 class NodeBalancerCreate extends React.Component<CombinedProps, State> {
-  static createNewNodeBalancerConfigNode = (): Linode.NodeBalancerConfigNode => ({
-    label: '',
-    address: '',
-    port: '80',
-    weight: 100,
-  })
-
-  static createNewNodeBalancerConfig = (): NodeBalancerConfigFields => ({
-    algorithm: 'roundrobin',
-    check_attempts: 2,
-    check_body: undefined,
-    check_interval: 5,
-    check_passive: true,
-    check_path: undefined,
-    check_timeout: 3,
-    check: 'none',
-    cipher_suite: undefined,
-    port: 80,
-    protocol: 'http',
-    ssl_cert: undefined,
-    ssl_key: undefined,
-    stickiness: 'none',
-    nodes: [NodeBalancerCreate.createNewNodeBalancerConfigNode()],
-  })
-
   static defaultDeleteConfigConfirmDialogState = {
     submitting: false,
     open: false,
@@ -146,7 +123,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   };
 
   static defaultFieldsStates = {
-    configs: [NodeBalancerCreate.createNewNodeBalancerConfig()],
+    configs: [createNewNodeBalancerConfig()],
   };
 
   state: State = {
@@ -161,7 +138,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       ...this.state.nodeBalancerFields,
       configs: [
         ...this.state.nodeBalancerFields.configs,
-        NodeBalancerCreate.createNewNodeBalancerConfig(),
+        createNewNodeBalancerConfig(),
       ],
     },
   })
@@ -169,7 +146,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   addNodeBalancerConfigNode = (configIdx: number) => this.setState(
     over(
       lensPath(['nodeBalancerFields', 'configs', configIdx, 'nodes']),
-      append(NodeBalancerCreate.createNewNodeBalancerConfigNode()),
+      append(createNewNodeBalancerConfigNode()),
     ))
 
   removeNodeBalancerConfigNode = (configIdx: number) => (nodeIdx: number) =>
@@ -660,7 +637,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                   data-qa-add-config
                 >
                   Add another Configuration
-              </Button>
+                </Button>
               </Grid>
             </Grid>
           </Grid>
