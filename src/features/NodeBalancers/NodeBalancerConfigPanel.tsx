@@ -193,6 +193,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       this.props.addNode(+configIdx);
     }
   }
+
   onUpdateNode = (e: React.MouseEvent<HTMLElement>) => {
     const configIdx: string | null = e.currentTarget.getAttribute('data-config-idx');
     const { onUpdateNode } = this.props;
