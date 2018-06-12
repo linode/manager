@@ -128,8 +128,22 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
   onPrivateKeyChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     this.props.onPrivateKeyChange(e.target.value)
 
-  onProtocolChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    this.props.onProtocolChange(e.target.value)
+  onProtocolChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { healthCheckType } = this.props;
+    const { target: { value: protocol } } = e;
+
+    this.props.onProtocolChange(e.target.value);
+
+    if (protocol === 'tcp' && (healthCheckType === 'http' || healthCheckType === 'http_body')) {
+      this.props.onHealthCheckTypeChange('connection');
+    }
+    if (protocol === 'http' && healthCheckType === 'connection') {
+      this.props.onHealthCheckTypeChange('http');
+    }
+    if (protocol === 'https' && healthCheckType === 'connection') {
+      this.props.onHealthCheckTypeChange('http');
+    }
+  }
 
   onSessionStickinessChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     this.props.onSessionStickinessChange(e.target.value)
@@ -269,12 +283,13 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               container
             >
               <Grid item xs={12}>
-                <Typography variant="title">Select Port</Typography>
+                <Typography variant="title">Port Configuration</Typography>
               </Grid>
               <Grid item xs={12} md={4}>
                 <TextField
                   type="number"
                   label="Port"
+                  required
                   value={port}
                   onChange={this.onPortChange}
                   errorText={hasErrorFor('port')}
@@ -291,6 +306,12 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   data-qa-protocol-select
                 >
                   <MenuItem
+                    value="tcp"
+                    data-qa-option="tcp"
+                  >
+                    TCP
+                  </MenuItem>
+                  <MenuItem
                     value="http"
                     data-qa-option="http"
                   >
@@ -303,9 +324,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     HTTPS
                   </MenuItem>
                 </TextField>
-              </Grid>
-              <Grid item xs={12}>
-                <Divider className={classes.divider} />
               </Grid>
             </Grid>
 
@@ -321,9 +339,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 ]}
                 container
               >
-                <Grid item xs={12}>
-                  <Typography variant="title">SSL Settings</Typography>
-                </Grid>
                 <Grid item xs={12} md={6}>
                   <TextField
                     multiline
@@ -346,9 +361,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     errorText={hasErrorFor('ssl_key')}
                   />
                 </Grid>
-                <Grid item>
-                  <Divider className={classes.divider} />
-                </Grid>
               </Grid>
             }
 
@@ -359,13 +371,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               ]}
               container
             >
-              <Grid item xs={12}>
-                <Typography
-                  variant="title"
-                  data-qa-algorithm-header
-                >
-                  Algorithm</Typography>
-              </Grid>
               <Grid item xs={12} md={4}>
                 <TextField
                   label="Algorithm"
@@ -386,9 +391,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   </MenuItem>
                 </TextField>
               </Grid>
-              <Grid item xs={12}>
-                <Divider className={classes.divider} />
-              </Grid>
             </Grid>
 
             <Grid
@@ -398,14 +400,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               ]}
               container
             >
-              <Grid item xs={12}>
-                <Typography
-                  variant="title"
-                  data-qa-session-stickiness-header
-                >
-                  Session Stickiness
-                </Typography>
-              </Grid>
               <Grid item xs={12} md={4}>
                 <TextField
                   label="Session Stickiness"
@@ -455,6 +449,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               </Grid>
               <Grid
                 updateFor={[
+                  protocol,
                   healthCheckType,
                   hasErrorFor('check'),
                 ]}
@@ -463,7 +458,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               >
                 <Grid item xs={12} lg={4}>
                   <TextField
-                    label="Active Health Check Type"
+                    label="Type"
                     value={healthCheckType}
                     select
                     onChange={this.onHealthCheckTypeChange}
@@ -471,9 +466,26 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     data-qa-active-check-select
                   >
                     <MenuItem value="none">None</MenuItem>
-                    <MenuItem value="connection">TCP Connection</MenuItem>
-                    <MenuItem value="http">HTTP Status</MenuItem>
-                    <MenuItem value="http_body">HTTP Body</MenuItem>
+                    <MenuItem
+                      value="connection"
+                      disabled={protocol === 'http' || protocol === 'https'}
+                    >
+                      TCP Connection
+                    </MenuItem>
+
+                    <MenuItem
+                      value="http"
+                      disabled={protocol === 'tcp'}
+                    >
+                      HTTP Status
+                      </MenuItem>
+
+                    <MenuItem
+                      value="http_body"
+                      disabled={protocol === 'tcp'}
+                    >
+                      HTTP Body
+                    </MenuItem>
                   </TextField>
                 </Grid>
               </Grid>
@@ -491,8 +503,9 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   >
                     <TextField
                       type="number"
-                      label="Health Check Interval"
+                      label="Interval"
                       InputProps={{
+                        'aria-label': 'Active Health Check Interval',
                         endAdornment: <Typography
                           variant="caption"
                           component="span"
@@ -517,8 +530,9 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   >
                     <TextField
                       type="number"
-                      label="Health Check Timeout"
+                      label="Timeout"
                       InputProps={{
+                        'aria-label': 'Active Health Check Timeout',
                         endAdornment: <Typography
                           variant="caption"
                           component="span"
@@ -543,54 +557,57 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   >
                     <TextField
                       type="number"
-                      label="Health Check Attempts"
+                      label="Attempts"
                       value={healthCheckAttempts}
                       onChange={this.onHealthCheckAttemptsChange}
                       errorText={hasErrorFor('check_attempts')}
+                      InputProps={{
+                        'aria-label': 'Active Health Check Attempts',
+                      }}
                       data-qa-active-check-attempts
                     />
                   </Grid>
                   {
                     ['http', 'http_body'].includes(healthCheckType) &&
-                      <Grid
-                        updateFor={[
-                          checkPath,
-                          healthCheckType,
-                          hasErrorFor('check_path'),
-                        ]}
-                        item
-                        xs={12}
-                        md={6}
-                      >
-                        <TextField
-                          label="Check HTTP Path"
-                          value={checkPath}
-                          onChange={this.onCheckPathChange}
-                          required={['http', 'http_body'].includes(healthCheckType)}
-                          errorText={hasErrorFor('check_path')}
-                        />
-                      </Grid>
+                    <Grid
+                      updateFor={[
+                        checkPath,
+                        healthCheckType,
+                        hasErrorFor('check_path'),
+                      ]}
+                      item
+                      xs={12}
+                      md={4}
+                    >
+                      <TextField
+                        label="Check HTTP Path"
+                        value={checkPath}
+                        onChange={this.onCheckPathChange}
+                        required={['http', 'http_body'].includes(healthCheckType)}
+                        errorText={hasErrorFor('check_path')}
+                      />
+                    </Grid>
                   }
                   {
                     healthCheckType === 'http_body' &&
-                      <Grid
-                        updateFor={[
-                          checkBody,
-                          healthCheckType,
-                          hasErrorFor('check_body'),
-                        ]}
-                        item
-                        xs={12}
-                        md={6}
-                      >
-                        <TextField
-                          label="Expected HTTP Body"
-                          value={checkBody}
-                          onChange={this.onCheckBodyChange}
-                          required={healthCheckType === 'http_body'}
-                          errorText={hasErrorFor('check_body')}
-                        />
-                      </Grid>
+                    <Grid
+                      updateFor={[
+                        checkBody,
+                        healthCheckType,
+                        hasErrorFor('check_body'),
+                      ]}
+                      item
+                      xs={12}
+                      md={4}
+                    >
+                      <TextField
+                        label="Expected HTTP Body"
+                        value={checkBody}
+                        onChange={this.onCheckBodyChange}
+                        required={healthCheckType === 'http_body'}
+                        errorText={hasErrorFor('check_body')}
+                      />
+                    </Grid>
                   }
                 </React.Fragment>
               }
