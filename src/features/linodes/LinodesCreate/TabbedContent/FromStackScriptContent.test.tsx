@@ -40,36 +40,36 @@ describe('FromImageContent', () => {
     expect(component.find('WithStyles(Notice)')).toHaveLength(0);
   });
 
-  // it('should render SelectStackScript panel', () => {
-  //   expect(component.find('WithStyles(SelectStackScriptPanel)')).toHaveLength(1);
-  // });
+  it('should render SelectStackScript panel', () => {
+    expect(component.find('WithStyles(WithRenderGuard(SelectStackScriptPanel))')).toHaveLength(1);
+  });
 
   it('should render UserDefinedFields panel', () => {
     component.setState({ userDefinedFields: mockUserDefinedFields }); // give us some dummy fields
-    expect(component.find('WithStyles(UserDefinedFieldsPanel)')).toHaveLength(1);
+    expect(component.find('WithStyles(WithRenderGuard(UserDefinedFieldsPanel))')).toHaveLength(1);
   });
 
   it('should render SelectImage panel', () => {
-    expect(component.find('CreateFromImage')).toHaveLength(1);
+    expect(component.find('WithRenderGuard(CreateFromImage)')).toHaveLength(1);
   });
 
   it('should render SelectRegion panel', () => {
-    expect(component.find('WithStyles(SelectRegionPanel)')).toHaveLength(1);
+    expect(component.find('WithStyles(WithRenderGuard(SelectRegionPanel))')).toHaveLength(1);
   });
 
   it('should render SelectPlan panel', () => {
-    expect(component.find('WithStyles(SelectPlanPanel)')).toHaveLength(1);
+    expect(component.find('WithStyles(WithRenderGuard(SelectPlanPanel))')).toHaveLength(1);
   });
 
   it('should render SelectLabel panel', () => {
-    expect(component.find('WithStyles(InfoPanel)')).toHaveLength(1);
+    expect(component.find('WithStyles(WithRenderGuard(InfoPanel))')).toHaveLength(1);
   });
 
   it('should render SelectPassword panel', () => {
-    expect(component.find('WithStyles(PasswordPanel)')).toHaveLength(1);
+    expect(component.find('WithStyles(WithRenderGuard(PasswordPanel))')).toHaveLength(1);
   });
 
   it('should render SelectAddOns panel', () => {
-    expect(component.find('WithStyles(AddonsPanel)')).toHaveLength(1);
+    expect(component.find('WithStyles(WithRenderGuard(AddonsPanel))')).toHaveLength(1);
   });
 });

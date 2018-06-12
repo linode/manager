@@ -8,6 +8,8 @@ import Typography from 'material-ui/Typography';
 import PasswordInput from '../../../components/PasswordInput';
 import Notice from '../../../components/Notice';
 
+import RenderGuard from 'src/components/RenderGuard';
+
 type ClassNames = 'root' | 'inner' | 'panelBody';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
@@ -56,4 +58,4 @@ class PasswordPanel extends React.Component<CombinedProps> {
   }
 }
 
-export default styled<Props>(PasswordPanel);
+export default styled(RenderGuard<CombinedProps>(PasswordPanel));
