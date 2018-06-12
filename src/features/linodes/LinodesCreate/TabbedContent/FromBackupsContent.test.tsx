@@ -4,18 +4,13 @@ import { FromBackupsContent } from './FromBackupsContent';
 import { LinodesWithBackups } from 'src/__data__/LinodesWithBackups';
 
 const mockProps = {
-  updateFormState: jest.fn(),
-  selectedLinodeID: 1,
-  selectedBackupID: 1,
-  selectedDiskSize: 100,
-  selectedTypeID: '100',
   linodes: [],
   types: [],
-  label: 'test',
-  backups: true,
-  privateIP: true,
   extendLinodes: jest.fn(),
   getBackupsMonthlyPrice: jest.fn(),
+  getTypeInfo: jest.fn(),
+  getRegionName: jest.fn(),
+  history: null,
 };
 
 const mockPropsWithNotice = {
@@ -23,31 +18,26 @@ const mockPropsWithNotice = {
     text: 'example text',
     level: 'warning' as 'warning' | 'error',
   },
-  updateFormState: jest.fn(),
-  selectedLinodeID: 1,
-  selectedBackupID: 1,
-  selectedDiskSize: 100,
-  selectedTypeID: '100',
   linodes: [],
   types: [],
-  label: 'test',
-  backups: true,
-  privateIP: true,
   extendLinodes: jest.fn(),
   getBackupsMonthlyPrice: jest.fn(),
+  getTypeInfo: jest.fn(),
+  getRegionName: jest.fn(),
+  history: null,
 };
 
 describe('FromBackupsContent', () => {
   const component = shallow(
     <FromBackupsContent
-      classes={{ root: '' }}
+      classes={{ root: '', main: '', sidebar: '' }}
       {...mockProps}
     />,
   );
 
   const componentWithNotice = shallow(
     <FromBackupsContent
-      classes={{ root: '' }}
+      classes={{ root: '', main: '', sidebar: '' }}
       {...mockPropsWithNotice}
     />,
   );

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { compose, find, lensPath, map, pathOr, prop, propEq, set } from 'ramda';
 import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { StickyContainer, Sticky, StickyProps } from 'react-sticky';
+import { StickyContainer } from 'react-sticky';
 
 import { withStyles, WithStyles, Theme, StyleRules } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
@@ -21,16 +21,17 @@ import { getImages } from 'src/services/images';
 
 import Grid from 'src/components/Grid';
 import PromiseLoader from 'src/components/PromiseLoader';
+
 import FromBackupsContent from './TabbedContent/FromBackupsContent';
 import FromImageContent from './TabbedContent/FromImageContent';
-import FromLinodeContent from './TabbedContent/FromLinodeContent';
+// import FromLinodeContent from './TabbedContent/FromLinodeContent';
+// import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
 
 import { ExtendedLinode } from './SelectLinodePanel';
 import { ExtendedRegion } from 'src/components/SelectRegionPanel';
 import { ExtendedType } from './SelectPlanPanel';
 import { typeLabelDetails, displayType } from '../presentation';
-import CheckoutBar from 'src/components/CheckoutBar';
-import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
+// import CheckoutBar from 'src/components/CheckoutBar';
 
 import { resetEventsPolling } from 'src/events';
 
@@ -210,10 +211,9 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
     });
   }
 
-  getBackupsMonthlyPrice = (): number | null => {
-    const { selectedTypeID } = this.state;
+  getBackupsMonthlyPrice = (selectedTypeID: string | null): number | null => {
     if (!selectedTypeID || !this.props.types) { return null; }
-    const type = this.getTypeInfo();
+    const type = this.getTypeInfo(selectedTypeID);
     if (!type) { return null; }
     return type.backupsMonthly;
   }
@@ -252,18 +252,13 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
         return (
           <FromImageContent
             errors={this.state.errors}
-            updateFormState={this.updateState}
             getBackupsMonthlyPrice={this.getBackupsMonthlyPrice}
             regions={this.props.regions}
             images={this.props.images.response}
             types={this.props.types}
-            backups={this.state.backups}
-            privateIP={this.state.privateIP}
-            label={this.state.label}
-            password={this.state.password}
-            selectedRegionID={this.state.selectedRegionID}
-            selectedImageID={this.state.selectedImageID}
-            selectedTypeID={this.state.selectedTypeID}
+            getTypeInfo={this.getTypeInfo}
+            getRegionName={this.getRegionName}
+            history={this.props.history}
           />
         );
       },
@@ -278,76 +273,70 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
               text: `This newly created Linode wil be created with
                 the same password as the original Linode`,
             }}
-            errors={this.state.errors}
-            updateFormState={this.updateState}
-            selectedLinodeID={this.state.selectedLinodeID}
-            selectedBackupID={this.state.selectedBackupID}
-            selectedDiskSize={this.state.selectedDiskSize}
-            selectedTypeID={this.state.selectedTypeID}
             linodes={this.props.linodes.response}
             types={this.props.types}
-            label={this.state.label}
-            backups={this.state.backups}
-            privateIP={this.state.privateIP}
             extendLinodes={this.extendLinodes}
             getBackupsMonthlyPrice={this.getBackupsMonthlyPrice}
+            getTypeInfo={this.getTypeInfo}
+            getRegionName={this.getRegionName}
+            history={this.props.history}
           />
         );
       },
     },
-    {
-      title: 'Clone From Existing',
-      render: () => {
-        return (
-          <FromLinodeContent
-            notice={{
-              level: 'warning',
-              text: `This newly created Linode wil be created with
-                            the same password as the original Linode`,
-            }}
-            errors={this.state.errors}
-            updateFormState={this.updateState}
-            getBackupsMonthlyPrice={this.getBackupsMonthlyPrice}
-            regions={this.props.regions}
-            images={this.props.images.response}
-            types={this.props.types}
-            backups={this.state.backups}
-            linodes={this.props.linodes.response}
-            privateIP={this.state.privateIP}
-            label={this.state.label}
-            selectedRegionID={this.state.selectedRegionID}
-            selectedTypeID={this.state.selectedTypeID}
-            selectedLinodeID={this.state.selectedLinodeID}
-            selectedDiskSize={this.state.selectedDiskSize}
-            extendLinodes={this.extendLinodes}
-          />
-        );
-      },
-    },
-    {
-      title: 'Create from StackScript',
-      render: () => {
-        return (
-          <FromStackScriptContent
-            errors={this.state.errors}
-            updateFormState={this.updateState}
-            getBackupsMonthlyPrice={this.getBackupsMonthlyPrice}
-            regions={this.props.regions}
-            images={this.props.images.response}
-            types={this.props.types}
-            backups={this.state.backups}
-            privateIP={this.state.privateIP}
-            label={this.state.label}
-            password={this.state.password}
-            selectedRegionID={this.state.selectedRegionID}
-            selectedImageID={this.state.selectedImageID}
-            selectedTypeID={this.state.selectedTypeID}
-            selectedStackScriptID={this.state.selectedStackScriptID}
-            udf_data={this.state.udf_data}
-          />
-        );
-      },
-    },
+    // {
+    //   title: 'Clone From Existing',
+    //   render: () => {
+    //     return (
+    //       <FromLinodeContent
+    //         notice={{
+    //           level: 'warning',
+    //           text: `This newly created Linode wil be created with
+    //                         the same password as the original Linode`,
+    //         }}
+    //         errors={this.state.errors}
+    //         updateFormState={this.updateState}
+    //         getBackupsMonthlyPrice={this.getBackupsMonthlyPrice}
+    //         regions={this.props.regions}
+    //         images={this.props.images.response}
+    //         types={this.props.types}
+    //         backups={this.state.backups}
+    //         linodes={this.props.linodes.response}
+    //         privateIP={this.state.privateIP}
+    //         label={this.state.label}
+    //         selectedRegionID={this.state.selectedRegionID}
+    //         selectedTypeID={this.state.selectedTypeID}
+    //         selectedLinodeID={this.state.selectedLinodeID}
+    //         selectedDiskSize={this.state.selectedDiskSize}
+    //         extendLinodes={this.extendLinodes}
+    //       />
+    //     );
+    //   },
+    // },
+    // {
+    //   title: 'Create from StackScript',
+    //   render: () => {
+    //     return (
+    //       <FromStackScriptContent
+    //         errors={this.state.errors}
+    //         updateFormState={this.updateState}
+    //         getBackupsMonthlyPrice={this.getBackupsMonthlyPrice}
+    //         regions={this.props.regions}
+    //         images={this.props.images.response}
+    //         types={this.props.types}
+    //         backups={this.state.backups}
+    //         privateIP={this.state.privateIP}
+    //         label={this.state.label}
+    //         password={this.state.password}
+    //         selectedRegionID={this.state.selectedRegionID}
+    //         selectedImageID={this.state.selectedImageID}
+    //         selectedTypeID={this.state.selectedTypeID}
+    //         selectedStackScriptID={this.state.selectedStackScriptID}
+    //         udf_data={this.state.udf_data}
+    //       />
+    //     );
+    //   },
+    // },
   ];
 
   imageTabIndex = this.tabs.findIndex(tab => tab.title.toLowerCase().includes('image'));
@@ -497,9 +486,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
     };
   }
 
-  getTypeInfo = (): TypeInfo => {
-    const { selectedTypeID } = this.state;
-
+  getTypeInfo = (selectedTypeID: string | null): TypeInfo => {
     const typeInfo = this.reshapeTypeInfo(this.props.types.find(
       type => type.id === selectedTypeID));
 
@@ -515,34 +502,29 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
     };
   }
 
-  getRegionName = (region: ExtendedRegion | undefined): string | undefined => {
-    return region && region.display;
+  getRegionName = (selectedRegionID: string | null): string | undefined => {
+    const selectedRegion = this.props.regions.find(
+      region => region.id === selectedRegionID);
+
+    return selectedRegion && selectedRegion.display;
   }
 
   render() {
-    const {
-      selectedTab,
-      label,
-      backups,
-      selectedImageID,
-      selectedRegionID,
-      selectedBackupInfo,
-    } = this.state;
+    const { selectedTab } = this.state;
 
     const { classes } = this.props;
 
-    let imageInfo: Info;
-    if (selectedTab === this.imageTabIndex) {
-      imageInfo = this.getImageInfo(this.props.images.response.find(
-        image => image.id === selectedImageID));
-    } else if (selectedTab === this.backupTabIndex) {
-      imageInfo = selectedBackupInfo;
-    }
+    // let imageInfo: Info;
+    // if (selectedTab === this.imageTabIndex) {
+    //   imageInfo = this.getImageInfo(this.props.images.response.find(
+    //     image => image.id === selectedImageID));
+    // } else if (selectedTab === this.backupTabIndex) {
+    //   imageInfo = selectedBackupInfo;
+    // }
 
-    const regionName = this.getRegionName(this.props.regions.find(
-      region => region.id === selectedRegionID));
+    // const regionName = this.getRegionName(selectedRegionID);
 
-    const typeInfo = this.getTypeInfo();
+    // const typeInfo = this.getTypeInfo();
 
     const tabRender = this.tabs[selectedTab].render;
 
@@ -570,57 +552,8 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
                 }
               </Tabs>
             </AppBar>
-            {tabRender()}
           </Grid>
-          {selectedTab === this.backupTabIndex && !this.state.userHasBackups
-            ? <React.Fragment />
-            : <Grid item className={`${classes.sidebar} mlSidebar`}>
-              <Sticky
-                topOffset={-24}
-                disableCompensation>
-                {
-                  (props: StickyProps) => {
-                    const displaySections = [];
-                    if (imageInfo) {
-                      displaySections.push(imageInfo);
-                    }
-
-                    if (regionName) {
-                      displaySections.push({ title: regionName });
-                    }
-
-                    if (typeInfo) {
-                      displaySections.push(typeInfo);
-                    }
-
-                    if (backups && typeInfo && typeInfo.backupsMonthly) {
-                      displaySections.push({
-                        title: 'Backups Enabled',
-                        ...(typeInfo.backupsMonthly &&
-                          { details: `$${typeInfo.backupsMonthly.toFixed(2)} / monthly` }),
-                      });
-                    }
-
-                    let calculatedPrice = pathOr(0, ['monthly'], typeInfo);
-                    if (backups && typeInfo && typeInfo.backupsMonthly) {
-                      calculatedPrice += typeInfo.backupsMonthly;
-                    }
-
-                    return (
-                      <CheckoutBar
-                        heading={`${label || 'Linode'} Summary`}
-                        calculatedPrice={calculatedPrice}
-                        disabled={this.state.isMakingRequest}
-                        onDeploy={this.onDeploy}
-                        displaySections={displaySections}
-                        {...props}
-                      />
-                    );
-                  }
-                }
-              </Sticky>
-            </Grid>
-          }
+          {tabRender()}
         </Grid>
       </StickyContainer>
     );
