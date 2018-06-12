@@ -33,9 +33,11 @@ import {
 } from 'src/services/nodebalancers';
 import { dcDisplayNames } from 'src/constants';
 import Grid from 'src/components/Grid';
+import ActionsPanel from 'src/components/ActionsPanel';
 import PromiseLoader from 'src/components/PromiseLoader';
 import CheckoutBar from 'src/components/CheckoutBar';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
 import ClientConnectionThrottlePanel from './ClientConnectionThrottlePanel';
 import defaultNumeric from 'src/utilities/defaultNumeric';
@@ -93,6 +95,12 @@ interface State {
   submitting: boolean;
   nodeBalancerFields: NodeBalancerFieldsState;
   errors?: Linode.ApiFieldError[];
+  deleteConfigConfirmDialog: {
+    open: boolean;
+    submitting: boolean;
+    errors?: Linode.ApiFieldError[];
+    idxToDelete?: number;
+  };
 }
 
 const preloaded = PromiseLoader<Props>({});
@@ -128,6 +136,13 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     nodes: [NodeBalancerCreate.createNewNodeBalancerConfigNode()],
   })
 
+  static defaultDeleteConfigConfirmDialogState = {
+    submitting: false,
+    open: false,
+    errors: undefined,
+    idxToDelete: undefined,
+  };
+
   static defaultFieldsStates = {
     configs: [NodeBalancerCreate.createNewNodeBalancerConfig()],
   };
@@ -135,6 +150,8 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   state: State = {
     submitting: false,
     nodeBalancerFields: NodeBalancerCreate.defaultFieldsStates,
+    deleteConfigConfirmDialog:
+      clone(NodeBalancerCreate.defaultDeleteConfigConfirmDialogState),
   };
 
   addNodeBalancerConfig = () => this.setState({
@@ -340,14 +357,34 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       });
   }
 
-  onRemoveConfig = (configIdx: number) => () => {
+  onDeleteConfig = (configIdx: number) => () =>
+    this.setState({
+      deleteConfigConfirmDialog: {
+        ...clone(NodeBalancerCreate.defaultDeleteConfigConfirmDialogState),
+        open: true,
+        idxToDelete: configIdx,
+      },
+    })
+
+  onRemoveConfig = () => {
+    const { deleteConfigConfirmDialog: { idxToDelete } } = this.state;
+
+    /* show the submitting indicator */
+    this.setState({
+      deleteConfigConfirmDialog: {
+        ...this.state.deleteConfigConfirmDialog,
+        errors: undefined,
+        submitting: true,
+      },
+    });
+
     /* remove the config */
     this.setState({
       nodeBalancerFields: {
         ...this.state.nodeBalancerFields,
         configs: this.state.nodeBalancerFields.configs.filter(
           (config: NodeBalancerConfigFields, idx: number) => {
-            return idx !== configIdx;
+            return idx !== idxToDelete;
           }),
       },
     });
@@ -356,11 +393,17 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     if (this.state.errors) {
       this.setState({
         errors: this.state.errors!.filter((error: Linode.ApiFieldError) => {
-          const t = new RegExp(`configs_${configIdx}_`);
+          const t = new RegExp(`configs_${idxToDelete}_`);
           return !t.test(error.field);
         }),
       });
     }
+
+    /* clear the submitting indicator */
+    this.setState({
+      deleteConfigConfirmDialog:
+        clone(NodeBalancerCreate.defaultDeleteConfigConfirmDialogState),
+    });
   }
 
   labelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -389,6 +432,36 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       ),
     );
   }
+
+  onCloseConfirmation = () => this.setState({
+    deleteConfigConfirmDialog:
+      clone(NodeBalancerCreate.defaultDeleteConfigConfirmDialogState),
+  })
+
+  confirmationConfigError = () =>
+    (this.state.deleteConfigConfirmDialog.errors || []).map(e => e.reason).join(',')
+
+  renderConfigConfirmationActions = ({ onClose }: { onClose: () => void }) => (
+    <ActionsPanel style={{ padding: 0 }}>
+      <Button
+        data-qa-confirm-cancel
+        onClick={this.onRemoveConfig}
+        type="secondary"
+        destructive
+        loading={this.state.deleteConfigConfirmDialog.submitting}
+      >
+        Delete
+    </Button>
+      <Button
+        onClick={() => onClose()}
+        type="secondary"
+        className="cancel"
+        data-qa-cancel-cancel
+      >
+        Cancel
+    </Button>
+    </ActionsPanel>
+  )
 
   render() {
     const { classes, regions } = this.props;
@@ -566,7 +639,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                       onNodeWeightChange={(nodeIndex, value) =>
                         this.onNodeWeightChange(idx, nodeIndex, value)}
 
-                      onDelete={this.onRemoveConfig(idx)}
+                      onDelete={this.onDeleteConfig(idx)}
                     />
                   </Paper>;
                 })
@@ -611,6 +684,16 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
             </Sticky>
           </Grid>
         </Grid>
+
+        <ConfirmationDialog
+          onClose={this.onCloseConfirmation}
+          title="Confirm Deletion"
+          error={this.confirmationConfigError()}
+          actions={this.renderConfigConfirmationActions}
+          open={this.state.deleteConfigConfirmDialog.open}
+        >
+          <Typography>Are you sure you want to delete this NodeBalancer Configuration?</Typography>
+        </ConfirmationDialog>
       </StickyContainer>
     );
   }
