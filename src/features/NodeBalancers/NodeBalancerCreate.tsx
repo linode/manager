@@ -61,7 +61,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   sidebar: {
   },
   title: {
-    marginTop: theme.spacing.unit,
+    marginTop: theme.spacing.unit * 3,
   },
 });
 
@@ -107,7 +107,6 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     label: '',
     address: '',
     weight: 100,
-    mode: 'accept',
   })
 
   static createNewNodeBalancerConfig = (): NodeBalancerConfigFields => ({
@@ -124,7 +123,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     protocol: 'http',
     ssl_cert: undefined,
     ssl_key: undefined,
-    stickiness: 'table',
+    stickiness: 'none',
     nodes: [NodeBalancerCreate.createNewNodeBalancerConfigNode()],
   })
 
@@ -176,9 +175,6 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   onNodeWeightChange = (configIdx: number, nodeIdx: number, value: string) =>
     this.setNodeValue(configIdx, nodeIdx, 'weight', value)
 
-  onNodeModeChange = (configIdx: number, nodeIdx: number, value: string) =>
-    this.setNodeValue(configIdx, nodeIdx, 'mode', value)
-
   clearNodeErrors = () => {
     // Build paths to all node errors
     const nestedPaths = this.state.nodeBalancerFields.configs.map((config, idxC) => {
@@ -211,6 +207,9 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       to an array of functions that will append the error at the
       given path in the config state
     */
+
+    if (nodePathErrors.length === 0) { return; }
+
     const setFns = nodePathErrors.map((nodePathError: any) => {
       return compose(
         over(lensPath(['nodeBalancerFields', ...nodePathError.path]),
@@ -400,6 +399,11 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               selectedID={nodeBalancerFields.region || null}
               handleSelection={this.regionChange}
             />
+            <Grid item xs={12}>
+              <Typography variant="title" className={classes.title}>
+                NodeBalancer Settings
+              </Typography>
+            </Grid>
             <ClientConnectionThrottlePanel
               textFieldProps={{
                 errorText: hasErrorFor('client_conn_throttle'),
@@ -423,11 +427,6 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               style={{ marginTop: 8 }}
               data-qa-nodebalancer-settings-section
             >
-              <Grid item xs={12}>
-                <Typography variant="title" className={classes.title}>
-                  NodeBalancer Settings
-                </Typography>
-              </Grid>
               {
                 this.state.nodeBalancerFields.configs.map((nodeBalancerConfig, idx) => {
                   const lensTo = lensFrom(['nodeBalancerFields', 'configs', idx]);
@@ -541,9 +540,6 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
                     onNodeWeightChange={(nodeIndex, value) =>
                       this.onNodeWeightChange(idx, nodeIndex, value)}
-
-                    onNodeModeChange={(nodeIndex, value) =>
-                      this.onNodeModeChange(idx, nodeIndex, value)}
                   />;
                 })
               }
