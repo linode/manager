@@ -2,6 +2,7 @@ const { constants } = require('../../../constants');
 
 import { apiCreateLinode, apiDeleteAllLinodes } from '../../../utils/common';
 import LinodeDetail from '../../../pageobjects/linode-detail/linode-detail.page';
+import ListLinodes from '../../../pageobjects/list-linodes';
 import Resize from '../../../pageobjects/linode-detail/linode-detail-resize.page';
 
 describe('Linode Detail - Resize Suite', () => {
@@ -11,7 +12,7 @@ describe('Linode Detail - Resize Suite', () => {
         browser.url(constants.routes.linodes);
         browser.waitForVisible('[data-qa-add-new-menu-button]');
         apiCreateLinode(linodeName);
-        browser.click(`[data-qa-linode="${linodeName}"] [data-qa-label]`);
+        ListLinodes.navigateToDetail();
         LinodeDetail
             .landingElemsDisplay()
             .changeTab('Resize');

@@ -73,6 +73,7 @@ describe('View - Personal Access Tokens', () => {
             browser.click('[data-qa-action-menu-item="View Token Scopes"]');
 
             browser.waitForVisible('[data-qa-row="Account"]');
+            browser.waitForVisible('[data-qa-close-drawer]');
 
             const accountPermission = $('[data-qa-row="Account"] [data-qa-perm-rw-radio]');
             const domainPermission = $('[data-qa-row="Domains"] [data-qa-perm-none-radio]');
@@ -84,7 +85,7 @@ describe('View - Personal Access Tokens', () => {
             expect(eventsPermission.getAttribute('class').includes('checked')).toBe(true);
             expect(imagesPermission.getAttribute('class').includes('checked')).toBe(true);
             browser.click('[data-qa-close-drawer]');
-            browser.waitForVisible('[data-qa-close-drawer]', constants.wait.short, true);
+            browser.waitForVisible('[data-qa-close-drawer]', constants.wait.normal, true);
         });
 
         describe('Edit - Personal Access Tokens', () => {
@@ -119,6 +120,7 @@ describe('View - Personal Access Tokens', () => {
 
             it('should close on close icon click', () => {
                 profile.create('token');
+                tokenCreateDrawer.cancel.waitForVisible();
                 tokenCreateDrawer.cancel.click();
                 browser.waitForVisible('[data-qa-drawer-title]', constants.wait.normal, true);
             });
@@ -142,6 +144,8 @@ describe('View - Personal Access Tokens', () => {
 
             it('should revoke on remove', () => {
                 browser.click(dialogConfirm);
+                browser.refresh();
+                browser.waitForVisible('[data-qa-table-row]', constants.wait.normal);
                 browser.waitForVisible(updatedSelector, constants.wait.normal, true);
             });
         });

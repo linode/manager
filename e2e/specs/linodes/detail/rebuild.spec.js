@@ -11,7 +11,7 @@ describe('Linode Detail - Rebuild Suite', () => {
         apiCreateLinode();
 
         ListLinodes.linodeElem.waitForVisible();
-        ListLinodes.linode[0].$(ListLinodes.linodeLabel.selector).click();
+        ListLinodes.navigateToDetail();
 
         LinodeDetail.landingElemsDisplay();
         LinodeDetail.changeTab('Rebuild');
