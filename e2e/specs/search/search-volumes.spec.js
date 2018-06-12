@@ -19,7 +19,7 @@ describe('Header - Search - Volumes Suite', () => {
         }
 
         browser.waitForVisible(`[data-qa-linode="${label}"]`);
-        browser.click(`[data-qa-linode="${label}"] [data-qa-label]`);
+        browser.click(`[data-qa-linode="${label}"] a`);
         LinodeDetail
             .landingElemsDisplay()
             .changeTab('Volumes');

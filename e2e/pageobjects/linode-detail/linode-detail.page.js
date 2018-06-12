@@ -43,14 +43,17 @@ class LinodeDetail extends Page {
     setPower(powerState) {
         const currentPowerState = this.powerControl.getAttribute('data-qa-power-control');
 
-        this.powerControl.click();
-        powerState.click();
-        
-        browser.waitUntil(function() {
-            return
-                this.powerControl.isEnabled() &&
-                this.powerControl.getAttribute('data-qa-power-control') !== currentPowerState;
-        }, constants.wait.long);
+        browser.jsClick('[data-qa-power-control]');
+        browser.click(`[data-qa-set-power="${powerState}"]`);
+
+        if (powerState.includes('powerOff')) {
+            this.dialogTitle.waitForVisible(constants.wait.normal);
+            browser.click('[data-qa-confirm-cancel]');
+            browser.waitUntil(function() {
+                return browser.isVisible('[data-qa-power-control="offline"]');
+            }, constants.wait.minute * 3);
+            return;
+        }
     }
 
     landingElemsDisplay() {

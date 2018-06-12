@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { compose, pathOr } from 'ramda';
 
@@ -32,7 +33,8 @@ type ClassNames = 'bodyRow'
   | 'actionInner'
   | 'flag'
   | 'status'
-  | 'link';
+  | 'link'
+  | 'linkButton';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
   return ({
@@ -81,7 +83,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
     },
     link: {
       display: 'block',
+    },
+    linkButton: {
       padding: 0,
+      width: '100%',
+      textAlign: 'left',
       '&:hover': {
         backgroundColor: 'transparent',
         '& h3': {
@@ -135,21 +141,23 @@ class LinodeRow extends React.Component<PropsWithStyles> {
 
     return (
       <TableCell className={classes.linodeCell}>
-        <Button href={`/linodes/${linodeId}`} className={classes.link}>
-          <Grid container alignItems="center">
-            <Grid item className="py0">
-              <LinodeStatusIndicator status={linodeStatus} />
+        <Link to={`/linodes/${linodeId}`} className={classes.link}>
+          <Button className={classes.linkButton}>
+            <Grid container alignItems="center">
+              <Grid item className="py0">
+                <LinodeStatusIndicator status={linodeStatus} />
+              </Grid>
+              <Grid item className="py0">
+                <Typography variant="subheading" data-qa-label>
+                  {linodeLabel}
+                </Typography>
+                <Typography>
+                  {typeLabel}
+                </Typography>
+              </Grid>
             </Grid>
-            <Grid item className="py0">
-              <Typography variant="subheading" data-qa-label>
-                {linodeLabel}
-              </Typography>
-              <Typography>
-                {typeLabel}
-              </Typography>
-            </Grid>
-          </Grid>
-        </Button>
+          </Button>
+        </Link>
       </TableCell>
     );
   }

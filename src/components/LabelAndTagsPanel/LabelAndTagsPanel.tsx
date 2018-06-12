@@ -94,7 +94,7 @@ class InfoPanel extends React.Component<CombinedProps> {
             <div className={classes.inner}>
               {error && <Notice text={error} error />}
               <Typography variant="title">Label</Typography>
-              <TextField {...labelFieldProps} />
+              <TextField {...labelFieldProps} data-qa-label-input />
             </div>
           </Paper>
         }

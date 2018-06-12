@@ -32,11 +32,14 @@ import './index.css';
 
 import './events';
 
+// import { whyDidYouUpdate } from 'why-did-you-update';
+// whyDidYouUpdate(React);
+
 const Weblish = DefaultLoader({
   loader: () => import('src/features/Weblish'),
 });
 
-/**
+/*
  * Initialize Analytics.
  */
 analytics(GA_ID, isProduction);

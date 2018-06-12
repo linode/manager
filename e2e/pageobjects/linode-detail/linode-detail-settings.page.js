@@ -106,18 +106,7 @@ class Settings extends Page {
         this.password.setValue(newPassword);
         this.passwordSave.click();
 
-        this.waitForNotice(successMsg);
-    }
-
-    waitForNotice(noticeMsg) {
-        browser.waitUntil(function() {
-            browser.waitForVisible('[data-qa-notice');
-
-            // Get all notices, since more than one may appear on the page
-            const labelNotice = $$('[data-qa-notice]')
-                .filter(n => n.getText().includes(noticeMsg));
-            return labelNotice.length === 1;
-        }, constants.wait.normal);
+        this.waitForNotice(successMsg, constants.wait.long);
     }
 
     allAlertsEnabled() {

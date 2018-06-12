@@ -55,6 +55,40 @@ export const createNodeBalancerConfigNode = (
   )
     .then(response => response.data);
 
+export const updateNodeBalancerConfigNode = (
+  nodeBalancerId: number,
+  configId: number,
+  nodeId: number,
+  data: any,
+) =>
+  Request<Linode.NodeBalancerConfigNode>(
+    setMethod('PUT'),
+    setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes/${nodeId}`),
+    setData(data),
+  )
+    .then(response => response.data);
+
+export const deleteNodeBalancerConfigNode = (
+  nodeBalancerId: number,
+  configId: number,
+  nodeId: number,
+) =>
+  Request<Linode.NodeBalancerConfigNode>(
+    setMethod('DELETE'),
+    setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes/${nodeId}`),
+  )
+    .then(response => response.data);
+
+export const getNodeBalancerConfigNodes = (
+  nodeBalancerId: number,
+  configId: number,
+) =>
+  Request<Page<Linode.NodeBalancerConfigNode>>(
+    setMethod('GET'),
+    setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes`),
+  )
+    .then(response => response.data);
+
 
 export const createNodeBalancerConfigSchema = Joi.object({
   algorithm: Joi.string(),
@@ -69,7 +103,7 @@ export const createNodeBalancerConfigSchema = Joi.object({
   check_timeout: Joi.number().integer().min(1).max(65535),
   check: Joi.string(),
   cipher_suite: Joi.string(),
-  port: Joi.number(),
+  port: Joi.number().integer().min(1).max(65535),
   protocol: Joi.valid('http', 'https'),
   ssl_key: Joi.string().when('protocol', { is: 'https', then: Joi.required() }),
   ssl_cert: Joi.string().when('protocol', { is: 'https', then: Joi.required() }),

@@ -88,10 +88,14 @@ class ClientConnectionThrottlePanel extends React.Component<CombinedProps> {
               </ActionsPanel>
             }
           </ExpansionPanel>
-          : <Paper className={classes.root} data-qa-label-header>
+          : <Paper className={classes.root} data-qa-throttle-section>
             <div className={classes.inner}>
               <Typography variant="title">Client Connection Throttle</Typography>
-              <TextField type="number" {...textFieldProps} />
+              <TextField
+                type="number"
+                data-qa-connection-throttle
+                {...textFieldProps}
+              />
             </div>
           </Paper>
         }

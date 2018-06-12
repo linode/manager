@@ -247,25 +247,27 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
             <TableBody>
               {nodeBalancers.map((nodeBalancer) => {
                 return (
-                  <TableRow key={nodeBalancer.id}>
-                    <TableCell>
+                  <TableRow key={nodeBalancer.id} data-qa-nodebalancer-cell>
+                    <TableCell data-qa-nodebalancer-label>
                       <Link to={`/nodebalancers/${nodeBalancer.id}`}>
                         {nodeBalancer.label}
                       </Link>
                     </TableCell>
-                    <TableCell>{`${nodeBalancer.up} up, ${nodeBalancer.down} down`}</TableCell>
-                    <TableCell>
+                    <TableCell data-qa-node-status>
+                      {`${nodeBalancer.up} up, ${nodeBalancer.down} down`}
+                    </TableCell>
+                    <TableCell data-qa-transferred>
                       {convertMegabytesTo(nodeBalancer.transfer.total)}
                     </TableCell>
-                    <TableCell>
+                    <TableCell data-qa-ports>
                       {nodeBalancer.ports.length === 0 && 'None'}
                       {nodeBalancer.ports.join(', ')}
                     </TableCell>
-                    <TableCell>
+                    <TableCell data-qa-nodebalancer-ips>
                       <IPAddress ips={[nodeBalancer.ipv4]} copyRight />
                       {nodeBalancer.ipv6 && <IPAddress ips={[nodeBalancer.ipv6]} copyRight />}
                     </TableCell>
-                    <TableCell>
+                    <TableCell data-qa-region>
                       <RegionIndicator region={nodeBalancer.region} />
                     </TableCell>
                     <TableCell>

@@ -2,6 +2,7 @@ const { constants } = require('../constants');
 
 export default class Page {
     get dialogTitle() { return $('[data-qa-dialog-title]'); }
+    get dialogContent() { return $('[data-qa-dialog-content]'); }
     get sidebarTitle() { return $('[data-qa-sidebar-title]'); }
     get drawerTitle() { return $('[data-qa-drawer-title]'); }
     get drawerClose() { return $('[data-qa-close-drawer]'); }
@@ -42,13 +43,20 @@ export default class Page {
         }, constants.wait.normal, 'Failed to redirect to login page on log out');
     }
 
-    waitForNotice(noticeMsg) {
+    selectGlobalCreateItem(menuItem) {
+        this.globalCreate.click();
+        browser.waitForVisible('[data-qa-add-new-menu]', constants.wait.normal);
+        browser.click(`[data-qa-add-new-menu="${menuItem}"]`);
+        browser.waitForVisible('[data-qa-add-new-menu]', constants.wait.normal, true);
+    }
+
+    waitForNotice(noticeMsg, timeout=10000) {
         return browser.waitUntil(function() {
             const noticeRegex = new RegExp(noticeMsg, 'ig');
             const noticeMsgDisplays = $$('[data-qa-notice]')
                 .filter(n => !!n.getText().match(noticeRegex));
             return noticeMsgDisplays.length > 0;
-        }, 10000, `${noticeMsg} failed to display`);
+        }, timeout, `${noticeMsg} failed to display`);
     }
 
     assertDocsDisplay() {
@@ -87,10 +95,5 @@ export default class Page {
     closeDrawer() {
         this.drawerClose.click();
         this.drawerTitle.waitForVisible(constants.wait.normal, true);
-    }
-
-    selectActionMenuItem(tableCell, item) {
-        tableCell.$(this.actionMenu.selector).click();
-        browser.jsClick(`[data-qa-action-menu-item="${item}"]`);
     }
 }

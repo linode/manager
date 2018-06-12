@@ -10,7 +10,7 @@ describe('Linode Detail - Settings Suite', () =>{
     beforeAll(() => {
         apiCreateLinode();
         ListLinodes.linodesDisplay();
-        ListLinodes.navigateToDetail(ListLinodes.linodeElem);
+        ListLinodes.navigateToDetail();
         LinodeDetail.landingElemsDisplay();
         LinodeDetail.changeTab('Settings');
     });
@@ -31,6 +31,10 @@ describe('Linode Detail - Settings Suite', () =>{
     });
 
     describe('Reset Root Password Suite', () => {
+        it('should powerdown linode', () => {
+            LinodeDetail.setPower('powerOff');
+        });
+
         it('should display a disk in the select, password field and save button', () => {
             Settings.selectDisk.waitForVisible();
             Settings.password.waitForVisible();
