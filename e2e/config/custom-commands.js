@@ -6,6 +6,8 @@ const {
     allocatePrivateIp,
     getNodebalancers,
     removeNodebalancer,
+    getDomains,
+    removeDomain,
 } = require('../setup/setup');
 
 const { readToken } = require('../utils/config-utils');
@@ -47,6 +49,16 @@ exports.browserCommands = () => {
 
     browser.addCommand('removeAllVolumes', function async(token) {
         return removeAllVolumes(token)
+            .then(res => res);
+    });
+
+    browser.addCommand('getDomains', function async(token) {
+        return getDomains(token)
+            .then(res => res);
+    });
+
+    browser.addCommand('removeDomain', function async(token, domainId) {
+        return removeDomain(token, domainId)
             .then(res => res);
     });
 
