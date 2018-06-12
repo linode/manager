@@ -3,26 +3,20 @@ import { shallow } from 'enzyme';
 import { FromLinodeContent } from './FromLinodeContent';
 
 const mockProps = {
-  updateFormState: jest.fn(),
-  selectedRegionID: '1',
-  selectedTypeID: '1',
-  selectedLinodeID: 1,
-  selectedDiskSize: 100,
-  images: [],
   regions: [],
   types: [],
-  backups: true,
-  privateIP: true,
   getBackupsMonthlyPrice: jest.fn(),
-  label: 'my label',
   extendLinodes: jest.fn(),
   linodes: [],
+  getRegionName: jest.fn(),
+  getTypeInfo: jest.fn(),
+  history: null,
 };
 
 describe('FromImageContent', () => {
   const componentWithNotice = shallow(
     <FromLinodeContent
-      classes={{ root: '' }}
+      classes={{ root: '', main: '', sidebar: '' }}
       {...mockProps}
       notice={{
         text: 'hello world',
@@ -33,7 +27,7 @@ describe('FromImageContent', () => {
 
   const component = shallow(
     <FromLinodeContent
-      classes={{ root: '' }}
+      classes={{ root: '', main: '', sidebar: '' }}
       {...mockProps}
     />,
   );
