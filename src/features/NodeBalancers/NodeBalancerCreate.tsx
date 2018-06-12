@@ -107,7 +107,6 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     label: '',
     address: '',
     weight: 100,
-    mode: 'accept',
   })
 
   static createNewNodeBalancerConfig = (): NodeBalancerConfigFields => ({
@@ -175,9 +174,6 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
   onNodeWeightChange = (configIdx: number, nodeIdx: number, value: string) =>
     this.setNodeValue(configIdx, nodeIdx, 'weight', value)
-
-  onNodeModeChange = (configIdx: number, nodeIdx: number, value: string) =>
-    this.setNodeValue(configIdx, nodeIdx, 'mode', value)
 
   clearNodeErrors = () => {
     // Build paths to all node errors
@@ -544,9 +540,6 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
                     onNodeWeightChange={(nodeIndex, value) =>
                       this.onNodeWeightChange(idx, nodeIndex, value)}
-
-                    onNodeModeChange={(nodeIndex, value) =>
-                      this.onNodeModeChange(idx, nodeIndex, value)}
                   />;
                 })
               }
