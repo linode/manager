@@ -95,7 +95,6 @@ interface Props {
   onNodeLabelChange: (idx: number, value: string) => void;
   onNodeAddressChange: (idx: number, value: string) => void;
   onNodeWeightChange: (idx: number, value: string) => void;
-  onNodeModeChange: (idx: number, value: string) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -182,16 +181,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
     const configIdx = e.currentTarget.getAttribute('data-config-idx');
     if (configIdx) {
       this.props.onNodeWeightChange(
-        +configIdx,
-        e.target.value,
-      );
-    }
-  }
-
-  onNodeModeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const configIdx = e.currentTarget.getAttribute('data-config-idx');
-    if (configIdx) {
-      this.props.onNodeModeChange(
         +configIdx,
         e.target.value,
       );
@@ -729,7 +718,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       label: 'label',
                       address: 'address',
                       weight: 'weight',
-                      mode: 'mode',
                     }, node.errors);
 
                     return (
@@ -776,21 +764,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             errorText={hasErrorFor('weight')}
                             data-qa-backend-ip-weight
                           />
-                        </Grid>
-                        <Grid item xs={11} lg={forEdit ? 2 : 3}>
-                          <TextField
-                            label="Mode"
-                            value={node.mode}
-                            select
-                            inputProps={{ 'data-config-idx': idx }}
-                            onChange={this.onNodeModeChange}
-                            errorText={hasErrorFor('mode')}
-                            data-qa-backend-ip-mode
-                          >
-                            <MenuItem value="accept">Accept</MenuItem>
-                            <MenuItem value="reject">Reject</MenuItem>
-                            <MenuItem value="drain">Drain</MenuItem>
-                          </TextField>
                         </Grid>
                         <ActionsPanel className={classes.backendIPAction}>
                           {(forEdit && idx !== (nodes.length - 1)) &&
