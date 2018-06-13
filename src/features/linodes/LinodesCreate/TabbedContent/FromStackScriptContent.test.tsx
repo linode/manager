@@ -16,7 +16,13 @@ const mockProps = {
 describe('FromImageContent', () => {
   const componentWithNotice = shallow(
     <FromStackScriptContent
-      classes={{ root: '', main: '', sidebar: '' }}
+      classes={{
+        root: '',
+        main: '',
+        sidebar: '',
+        emptyImagePanel: '',
+        emptyImagePanelText: '',
+      }}
       {...mockProps}
       notice={{
         text: 'hello world',
@@ -27,7 +33,13 @@ describe('FromImageContent', () => {
 
   const component = shallow(
     <FromStackScriptContent
-      classes={{ root: '', main: '', sidebar: '' }}
+      classes={{
+        root: '',
+        main: '',
+        sidebar: '',
+        emptyImagePanel: '',
+        emptyImagePanelText: '',
+      }}
       {...mockProps}
     />,
   );

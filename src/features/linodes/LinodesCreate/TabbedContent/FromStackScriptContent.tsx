@@ -37,12 +37,23 @@ import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsP
 // import { UserDefinedFields as mockUserDefinedFields } from 'src/__data__/UserDefinedFields';
 
 
-type ClassNames = 'root' | 'main' | 'sidebar';
+type ClassNames = 'root'
+  | 'main'
+  | 'sidebar'
+  | 'emptyImagePanel'
+  | 'emptyImagePanelText';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {},
   main: {},
   sidebar: {},
+  emptyImagePanel: {
+    padding: theme.spacing.unit * 3,
+  },
+  emptyImagePanelText: {
+    marginTop: theme.spacing.unit,
+    padding: `${theme.spacing.unit}px 0`,
+  },
 });
 
 interface Notice {
@@ -258,16 +269,14 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
               updateFor={[selectedImageID, compatibleImages]}
               selectedImageID={selectedImageID}
             />
-            : <Paper>
+            : <Paper className={classes.emptyImagePanel}>
               {/* empty state for images */}
               <Typography variant="title">
                 Select Image
               </Typography>
-              <Grid container alignItems="center">
-                <Typography variant="body1">
-                  No Compatible Images Available
-                        </Typography>
-              </Grid>
+              <Typography variant="body1" className={classes.emptyImagePanelText}>
+                No Compatible Images Available
+              </Typography>
             </Paper>
           }
           <SelectRegionPanel
