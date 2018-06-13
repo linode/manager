@@ -301,8 +301,7 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
               </Button>
               <Button
                 onClick={() => onClose()}
-                type="secondary"
-                className="cancel"
+                type="cancel"
                 data-qa-cancel-cancel
               >
                 Cancel

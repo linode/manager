@@ -299,7 +299,7 @@ const LinodeTheme: Linode.Theme = {
         alignItems: 'center',
         transition: 'border-color 225ms ease-in-out',
         lineHeight: 1,
-        minHeight: 44,
+        minHeight: 48,
         boxSizing: 'border-box',
         backgroundColor: 'white',
         [breakpoints.down('xs')]: {
@@ -448,8 +448,9 @@ const LinodeTheme: Linode.Theme = {
         padding: '5px 32px 5px 16px',
         color: '#666',
         backgroundColor: '#fff',
-        lineHeight: 2.2,
-        minHeight: 44,
+        lineHeight: 2.3,
+        minHeight: 46,
+        minWidth: 150,
         '&:focus': {
           backgroundColor: '#fff',
         },
