@@ -6,12 +6,12 @@ import {
   Theme,
   WithStyles,
 } from 'material-ui';
-import Button from 'material-ui/Button';
 import InputLabel from 'material-ui/Input/InputLabel';
 import MenuItem from 'material-ui/Menu/MenuItem';
 import FormControl from 'material-ui/Form/FormControl';
 import FormHelperText from 'material-ui/Form/FormHelperText';
 
+import Button from 'src/components/Button';
 import Select from 'src/components/Select';
 import Drawer from 'src/components/Drawer';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -95,8 +95,7 @@ const AttachVolumeDrawer: React.StatelessComponent<CombinedProps> = (props) => {
       </FormControl>
       <ActionsPanel>
         <Button
-          variant="raised"
-          color="primary"
+          type="primary"
           onClick={() => onSubmit()}
           data-qa-confirm-attach
         >
@@ -105,6 +104,7 @@ const AttachVolumeDrawer: React.StatelessComponent<CombinedProps> = (props) => {
         <Button
           onClick={onClose}
           data-qa-cancel
+          type="cancel"
         >
           Cancel
         </Button>
