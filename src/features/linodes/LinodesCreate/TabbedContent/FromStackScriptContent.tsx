@@ -34,7 +34,7 @@ import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptP
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
 
 
-import { UserDefinedFields as mockUserDefinedFields } from 'src/__data__/UserDefinedFields';
+// import { UserDefinedFields as mockUserDefinedFields } from 'src/__data__/UserDefinedFields';
 
 
 type ClassNames = 'root' | 'main' | 'sidebar';
@@ -97,7 +97,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 export class FromStackScriptContent extends React.Component<CombinedProps, State> {
   state: State = {
-    userDefinedFields: mockUserDefinedFields,
+    userDefinedFields: [],
     udf_data: [],
     selectedStackScriptID: null,
     selectedImageID: null,
@@ -115,7 +115,6 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
 
   handleSelectStackScript = (id: number, stackScriptImages: string[],
     userDefinedFields: Linode.StackScript.UserDefinedField[]) => {
-    console.log(userDefinedFields);
     const { images } = this.props;
     const filteredImages = images.filter((image) => {
       for (let i = 0; i < stackScriptImages.length; i = i + 1) {
@@ -130,6 +129,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
     this.setState({
       selectedStackScriptID: id,
       compatibleImages: filteredImages,
+      userDefinedFields,
       // prob gonna need to update UDF here too
     });
   }

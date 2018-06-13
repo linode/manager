@@ -9,6 +9,7 @@ import Grid from 'src/components/Grid';
 import Radio from 'src/components/Radio';
 import Tag from 'src/components/Tag';
 import ShowMore from 'src/components/ShowMore';
+import RenderGuard from 'src/components/RenderGuard';
 
 type ClassNames = 'root' | 'images' | 'colImages';
 
@@ -120,7 +121,7 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(SelectionRow);
+export default styled(RenderGuard<CombinedProps>(SelectionRow));
 
 const createTag: (images: string) => JSX.Element =
   v => <Tag label={v} key={v} variant="blue" style={{ margin: '2px 2px' }} />;
