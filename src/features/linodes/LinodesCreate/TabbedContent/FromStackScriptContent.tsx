@@ -247,7 +247,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
             <UserDefinedFieldsPanel
               handleChange={this.handleChangeUDF}
               userDefinedFields={userDefinedFields}
-              updateFor={[userDefinedFields]}
+              updateFor={[userDefinedFields, udf_data]}
               udf_data={udf_data}
             />
           }
