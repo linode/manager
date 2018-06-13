@@ -25,14 +25,15 @@ import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Grid from 'src/components/Grid';
 import CheckoutBar from 'src/components/CheckoutBar';
 
-// import {
-//   allocatePrivateIP,
-//   createLinode,
-// } from 'src/services/linodes';
+import {
+  allocatePrivateIP,
+  createLinode,
+} from 'src/services/linodes';
+
+import { resetEventsPolling } from 'src/events';
 
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
-
 
 // import { UserDefinedFields as mockUserDefinedFields } from 'src/__data__/UserDefinedFields';
 
@@ -106,6 +107,7 @@ const errorResources = {
   region: 'A region selection',
   label: 'A label',
   root_pass: 'A root password',
+  udf: 'UDF',
 };
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -113,7 +115,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 export class FromStackScriptContent extends React.Component<CombinedProps, State> {
   state: State = {
     userDefinedFields: [],
-    udf_data: [],
+    udf_data: null,
     selectedStackScriptID: null,
     selectedImageID: null,
     selectedRegionID: null,
@@ -139,12 +141,20 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
       }
       return false;
     });
+
+    const defaultUDFData = {};
+    userDefinedFields.forEach((eachField) => {
+      if (!!eachField.default) {
+        defaultUDFData[eachField.name] = eachField.default;
+      }
+    });
     // first need to make a request to get the stackscript
     // then update userDefinedFields to the fields returned
     this.setState({
       selectedStackScriptID: id,
       compatibleImages: filteredImages,
       userDefinedFields,
+      udf_data: defaultUDFData,
       // prob gonna need to update UDF here too
     });
   }
@@ -201,22 +211,77 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
     });
   }
 
-  cloneLinode = () => {
-    console.log(this.props.images);
+  createFromStackScript = () => {
+    if (!this.state.selectedStackScriptID) {
+      this.scrollToTop();
+      this.setState({
+        errors: [
+          { field: 'stackscript_id', reason: 'You must select a StackScript' },
+        ],
+      });
+      return;
+    }
+    this.createLinode();
+  }
+
+  createLinode = () => {
+    const { history } = this.props;
+    const {
+      selectedImageID,
+      selectedRegionID,
+      selectedTypeID,
+      selectedStackScriptID,
+      udf_data,
+      label,
+      password,
+      backups,
+      privateIP,
+    } = this.state;
+
+    this.setState({ isMakingRequest: true });
+
+    createLinode({
+      region: selectedRegionID,
+      type: selectedTypeID,
+      stackscript_id: selectedStackScriptID,
+      stackscript_data: udf_data,
+      label, /* optional */
+      root_pass: password, /* required if image ID is provided */
+      image: selectedImageID, /* optional */
+      backups_enabled: backups, /* optional */
+      booted: true,
+    })
+      .then((linode) => {
+        if (privateIP) allocatePrivateIP(linode.id);
+        resetEventsPolling();
+        history.push('/linodes');
+      })
+      .catch((error) => {
+        if (!this.mounted) { return; }
+
+        this.scrollToTop();
+
+        if (error.response && error.response.data && error.response.data.errors) {
+          const listOfErrors = error.response.data.errors;
+          const updatedErrorList = listOfErrors.map((error: Linode.ApiFieldError) => {
+            if (error.reason.toLowerCase().includes('udf')) {
+              return { ...error, field: 'udf' };
+            }
+            return error;
+          });
+          this.setState(() => ({
+            errors: updatedErrorList,
+          }));
+        }
+      })
+      .finally(() => {
+        // regardless of whether request failed or not, change state and enable the submit btn
+        this.setState({ isMakingRequest: false });
+      });
   }
 
   componentDidMount() {
     this.mounted = true;
-
-    // add fields with default values to formState here
-    const { userDefinedFields } = this.state;
-    const defaultUDFData = {};
-    userDefinedFields.forEach((eachField) => {
-      if (!!eachField.default) {
-        defaultUDFData[eachField.name] = eachField.default;
-      }
-    });
-    this.setState({ udf_data: defaultUDFData });
   }
 
   componentWillUnmount() {
@@ -233,6 +298,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
+    const udfErrors = (errors) ? errors.filter(error => error.field === 'udf') : undefined;
 
     const regionName = getRegionName(selectedRegionID);
     const typeInfo = getTypeInfo(selectedTypeID);
@@ -253,16 +319,18 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
             <Notice text={generalError} error={true} />
           }
           <SelectStackScriptPanel
+            error={hasErrorFor('stackscript_id')}
             selectedId={selectedStackScriptID}
             shrinkPanel={true}
-            updateFor={[selectedStackScriptID]}
+            updateFor={[selectedStackScriptID, errors]}
             onSelect={this.handleSelectStackScript}
           />
           {userDefinedFields && userDefinedFields.length > 0 &&
             <UserDefinedFieldsPanel
+              errors={udfErrors}
               handleChange={this.handleChangeUDF}
               userDefinedFields={userDefinedFields}
-              updateFor={[userDefinedFields, udf_data]}
+              updateFor={[userDefinedFields, udf_data, errors]}
               udf_data={udf_data}
             />
           }
@@ -270,7 +338,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
             ? <SelectImagePanel
               images={compatibleImages}
               handleSelection={this.handleSelectImage}
-              updateFor={[selectedImageID, compatibleImages]}
+              updateFor={[selectedImageID, compatibleImages, errors]}
               selectedImageID={selectedImageID}
             />
             : <Paper className={classes.emptyImagePanel}>
@@ -288,14 +356,14 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
             regions={regions}
             handleSelection={this.handleSelectRegion}
             selectedID={selectedRegionID}
-            updateFor={[selectedRegionID]}
+            updateFor={[selectedRegionID, errors]}
             copy="Determine the best location for your Linode."
           />
           <SelectPlanPanel
             error={hasErrorFor('type')}
             types={types}
             onSelect={this.handleSelectPlan}
-            updateFor={[selectedTypeID]}
+            updateFor={[selectedTypeID, errors]}
             selectedID={selectedTypeID}
           />
           <LabelAndTagsPanel
@@ -309,7 +377,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
           />
           <PasswordPanel
             error={hasErrorFor('root_pass')}
-            updateFor={[password]}
+            updateFor={[password, errors]}
             password={password}
             handleChange={this.handleTypePassword}
           />
@@ -359,7 +427,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
                     heading={`${label || 'Linode'} Summary`}
                     calculatedPrice={calculatedPrice}
                     disabled={isMakingRequest}
-                    onDeploy={this.cloneLinode}
+                    onDeploy={this.createFromStackScript}
                     displaySections={displaySections}
                     {...props}
                   />
