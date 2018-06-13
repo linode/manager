@@ -20,7 +20,10 @@ describe('Selection Card Suite', () => {
 
     const assertCardsChecked = () => {
         const selectionCardElems = $$(selectionCard);
-        selectionCardElems.forEach(e => expect(e.getAttribute('class').includes('checked')).toBe(true)  );
+        selectionCardElems.forEach(e => {
+            expect(e.getAttribute('class').includes('checked')).toBe(true);
+            expect(e.$('[data-qa-checked]').getAttribute('data-qa-checked')).toBe('true');
+        });
     }
 
     const assertPlainSvgsDisplay = () => {
@@ -93,13 +96,13 @@ describe('Selection Card Suite', () => {
                 card.click();
                 const classes = card.getAttribute('class');
                 expect(classes.includes('checked')).toBe(true);
+                expect(card.$('[data-qa-checked]').getAttribute('data-qa-checked')).toBe('true');
             }); 
         });
 
         it('should display subheadings for all selection cards', () => {
             const subheadingElems = $$(subheading);
             subheadingElems.forEach(e => expect(e.isVisible()).toBe(true));
- 
         });
     });
 

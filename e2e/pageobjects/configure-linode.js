@@ -114,7 +114,7 @@ class ConfigureLinode extends Page {
         const planElement = this.plans[planIndex];
         planElement.click();
         browser.waitUntil(function() {
-            return planElement.getAttribute('class').includes('checked');
+            return planElement.$('[data-qa-checked]').getAttribute('data-qa-checked').includes('true');
         }, 5000, 'Failed to select plan');
     }
 
