@@ -770,13 +770,22 @@ export const validationErrorsToFieldErrors = (error: Joi.ValidationError) => {
     .map((detail) => {
       const path = detail.path.split('_');
 
-      return path.includes('configs') && detail.constraint === 'unique'
-        ? {
+      if (path.includes('configs') && detail.constraint === 'unique') {
+        return {
           ...detail,
           message: 'Port must be unique',
           path: [...path, 'port'].join('_'),
-        }
-        : detail;
+        };
+      }
+
+      if (path.includes('configs') && path.includes('nodes') && detail.constraint === 'min') {
+        return {
+          ...detail,
+          message: 'You must add at least one Backend IP',
+        };
+      }
+
+      return detail;
     })
     .map((detail) => {
       return {

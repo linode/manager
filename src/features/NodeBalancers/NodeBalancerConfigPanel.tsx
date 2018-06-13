@@ -7,6 +7,7 @@ import Delete from 'material-ui-icons/Delete';
 import FormControlLabel from 'material-ui/Form/FormControlLabel';
 
 import Button from 'src/components/Button';
+import { FormHelperText } from 'material-ui/Form';
 import IconButton from 'src/components/IconButton';
 import Grid from 'src/components/Grid';
 import TextField from 'src/components/TextField';
@@ -284,6 +285,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       ssl_cert: 'SSL certificate',
       ssl_key: 'SSL private key',
       stickiness: 'Session stickiness',
+      nodes: 'Nodes',
     }, errors);
 
     return (
@@ -712,6 +714,9 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 >
                   Choose Backend IPs
                 </Typography>
+                {hasErrorFor('nodes') &&
+                  <FormHelperText error>{hasErrorFor('nodes')}</FormHelperText>
+                }
               </Grid>
               <Grid item xs={12} style={{ paddingBottom: 24 }}>
                 {

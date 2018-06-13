@@ -110,7 +110,7 @@ export const createNodeBalancerConfigSchema = Joi.object({
   ssl_cert: Joi.string().when('protocol', { is: 'https', then: Joi.required() }),
   stickiness: Joi.string(),
   nodes: Joi.array()
-    .items(createNodeBalancerConfigNodeSchema),
+    .items(createNodeBalancerConfigNodeSchema).required().min(1),
 });
 
 export const createNodeBalancerConfig = (nodeBalancerId: number, data: any) =>
