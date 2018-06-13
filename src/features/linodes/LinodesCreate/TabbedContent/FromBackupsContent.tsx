@@ -42,7 +42,11 @@ type ClassNames = 'root' | 'main' | 'sidebar';
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
   main: {},
-  sidebar: {},
+  sidebar: {
+    [theme.breakpoints.up('lg')]: {
+      marginTop: -130,
+    },
+  },
 });
 
 export type TypeInfo = {
