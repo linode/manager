@@ -8,7 +8,6 @@ import {
   Theme,
   WithStyles,
 } from 'material-ui';
-import Button from 'material-ui/Button';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 import TableHead from 'material-ui/Table/TableHead';
@@ -26,6 +25,8 @@ import {
   update as updateVolume,
   resize as resizeVolume,
 } from 'src/services/volumes';
+import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/Button';
 import Table from 'src/components/Table';
 import Grid from 'src/components/Grid';
 import Placeholder, { PlaceholderProps } from 'src/components/Placeholder';
@@ -327,24 +328,23 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
       <ConfirmationDialog
         onClose={this.closeUpdateDialog}
         actions={() => <div>
-          <Button
-            variant="raised"
-            color="secondary"
-            className="destructive"
-            onClick={method}
-            data-qa-confirm
-          >
-            Confirm
-          </Button>
-          <Button
-            onClick={this.closeUpdateDialog}
-            variant="raised"
-            color="secondary"
-            className="cancel"
-            data-qa-cancel
-          >
-            Cancel
-          </Button>
+          <ActionsPanel style={{ padding: 0 }}>
+            <Button
+              type="secondary"
+              destructive
+              onClick={method}
+              data-qa-confirm
+            >
+              Confirm
+            </Button>
+            <Button
+              onClick={this.closeUpdateDialog}
+              type="cancel"
+              data-qa-cancel
+            >
+              Cancel
+            </Button>
+          </ActionsPanel>
         </div>}
         open={open}
         title={title}
