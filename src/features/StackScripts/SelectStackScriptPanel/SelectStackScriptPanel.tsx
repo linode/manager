@@ -32,6 +32,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 
 interface Props {
   selectedId: number | null;
+  error?: string;
   shrinkPanel?: boolean;
   onSelect: (id: number, images: string[],
     userDefinedFields: Linode.StackScript.UserDefinedField[]) => void;
@@ -48,6 +49,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps> {
 
     return (
       <TabbedPanel
+        error={this.props.error}
         rootClass={classes.root}
         shrinkTabContent={(this.props.shrinkPanel) ? classes.creating : classes.selecting}
         header="Select StackScript"
@@ -79,8 +81,14 @@ class SelectStackScriptPanel extends React.Component<CombinedProps> {
   }
 }
 
+interface Params {
+  page?: number;
+  page_size?: number;
+}
+
 interface ContainerProps {
-  request: (page: number) => Promise<Linode.ResourcePage<Linode.StackScript.Response>>;
+  request: (params: Params) =>
+    Promise<Linode.ResourcePage<Linode.StackScript.Response>>;
   onSelect: (id: number, images: string[],
     userDefinedFields: Linode.StackScript.UserDefinedField[]) => void;
 }
@@ -101,7 +109,7 @@ class Container extends React.Component<ContainerProps, ContainerState> {
   getDataAtPage = (page: number) => {
     const { request } = this.props;
 
-    request(0)
+    request({ page: 0, page_size: 50 })
       .then(response => this.setState({ data: response.data, loading: false }))
       .catch();
   }
