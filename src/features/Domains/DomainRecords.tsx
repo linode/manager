@@ -475,12 +475,18 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                       {
                         type.data.map((data, idx) => {
                           return (
-                            <TableRow key={idx}>
-                              {type.columns.length > 0 && type.columns.map(({ render }, idx) => {
-                                return (
-                                  <TableCell key={idx}>{render(data)}</TableCell>
-                                );
-                              })}
+                            <TableRow key={idx} data-qa-record-row>
+                              {type.columns.length > 0
+                                && type.columns.map(({ title, render }, idx) => {
+                                  return (
+                                    <TableCell
+                                      key={idx}
+                                      data-qa-column={title}
+                                    >
+                                      {render(data)}
+                                    </TableCell>
+                                  );
+                                })}
                             </TableRow>
                           );
                         })

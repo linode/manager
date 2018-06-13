@@ -2,7 +2,7 @@ const { constants } = require('../../constants');
 
 import ListDomains from '../../pageobjects/list-domains.page';
 
-describe('List Domains Suite', () => {
+describe('Domains - List Suite', () => {
     let domainId, domainElement;
     const initialDomain = `a${new Date().getTime()}.com`;
     const cloneDomain = `b${new Date().getTime()}.com`;
