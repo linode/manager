@@ -450,6 +450,7 @@ const LinodeTheme: Linode.Theme = {
         backgroundColor: '#fff',
         lineHeight: 2.3,
         minHeight: 46,
+        minWidth: 150,
         '&:focus': {
           backgroundColor: '#fff',
         },
