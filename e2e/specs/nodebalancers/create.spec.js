@@ -2,7 +2,10 @@ const { constants } = require('../../constants');
 
 import NodeBalancers from '../../pageobjects/nodebalancers.page';
 import NodeBalancerDetail from '../../pageobjects/nodebalancer-detail/details.page';
-import { apiCreateLinode, apiDeleteAllLinodes } from '../../utils/common';
+import {
+    apiCreateLinode,
+    removeNodeBalancers,
+} from '../../utils/common';
 
 describe('Nodebalancer - Create Suite', () => {
     let linode,
@@ -17,9 +20,7 @@ describe('Nodebalancer - Create Suite', () => {
     });
 
     afterAll(() => {
-        apiDeleteAllLinodes();
-        const availableNodeBalancers = browser.getNodeBalancers(token);
-        availableNodeBalancers.data.forEach(nb => browser.removeNodeBalancer(token, nb.id));
+        removeNodeBalancers();
     });
 
     it('should display placeholder message with create button', () => {

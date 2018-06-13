@@ -20,16 +20,6 @@ class LinodeDetail extends Page {
     get linodeLabel() { return $('[data-qa-label]'); }
     get editLabel() { return $('[data-qa-label] button'); }
 
-    changeTab(tab) {
-        browser.jsClick(`[data-qa-tab="${tab}"]`);
-        browser.waitUntil(function() {
-            return browser
-                .getAttribute(`[data-qa-tab="${tab}"]`, 'aria-selected').includes('true');
-        }, constants.wait.short, 'Failed to change tab');
-        browser.waitForVisible('[data-qa-circle-progress]', constants.wait.normal, true);
-        return this;
-    }
-
     changeName(name) {
         this.linodeLabel.waitForVisible();
         this.editLabel.click();
