@@ -14,12 +14,14 @@ storiesOf('Editable Text', module)
         variant="headline"
         text="Edit me!"
         onEdit={action('edit-text')}
+        onCancel={action('cancel-edit')}
     />
     <br /><br />
     <EditableText
         variant="title"
         text="Edit me!"
         onEdit={action('edit-text')}
+        onCancel={action('cancel-edit')}
     />
   </div>
 ));
