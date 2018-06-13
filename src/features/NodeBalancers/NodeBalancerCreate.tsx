@@ -128,7 +128,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     check_passive: true,
     check_path: undefined,
     check_timeout: 3,
-    check: 'connection',
+    check: 'none',
     cipher_suite: undefined,
     port: 80,
     protocol: 'http',
@@ -251,7 +251,8 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
     /* transform node data for the requests */
     const nodeBalancerRequestData = clone(nodeBalancerFields);
-    nodeBalancerRequestData.configs = transformConfigsForRequest(nodeBalancerRequestData.configs);
+    nodeBalancerRequestData.configs = transformConfigsForRequest(
+      nodeBalancerRequestData.configs, true);
 
     /* Clear node errors */
     this.clearNodeErrors();

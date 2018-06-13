@@ -13,7 +13,6 @@ import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import ActionsPanel from 'src/components/ActionsPanel';
-import AddNewLink from 'src/components/AddNewLink';
 
 type ClassNames = 'root'
   | 'inner'
@@ -33,6 +32,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     marginRight: theme.spacing.unit * 2,
   },
   backendIPAction: {
+    paddingLeft: theme.spacing.unit * 2,
     marginLeft: -theme.spacing.unit,
     marginTop: theme.spacing.unit * 3,
   },
@@ -249,7 +249,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
 
   render() {
     const {
-      addNode,
       algorithm,
       checkBody,
       checkPassive,
@@ -769,7 +768,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             data-qa-backend-ip-port
                           />
                         </Grid>
-                        <Grid item xs={11} lg={forEdit ? 2 : 3}>
+                        <Grid item xs={11} lg={2}>
                           <TextField
                             label="Weight"
                             value={node.weight}
@@ -780,7 +779,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                           />
                         </Grid>
                         <ActionsPanel className={classes.backendIPAction}>
-                          {(forEdit && idx !== (nodes.length - 1)) &&
+                          {(forEdit && (idx !== (nodes.length - 1))) &&
                             <Button
                               type="primary"
                               data-config-idx={idx}
@@ -790,7 +789,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                               Update
                             </Button>
                           }
-                          {(forEdit && idx === (nodes.length - 1)) &&
+                          {(idx === (nodes.length - 1)) &&
                             <Button
                               data-config-idx={idx}
                               type="primary"
@@ -800,12 +799,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                               Add
                             </Button>
                           }
-                          {/**
-                            * Show the delete button for index 0 if we are
-                            * editing the Config. Don't show the delete button
-                            * for the final index if we are editing the Config.
-                            **/}
-                          {(forEdit ? idx !== (nodes.length - 1) : idx !== 0) &&
+                          {(idx !== (nodes.length - 1)) &&
                             <IconButton
                               data-config-idx={idx}
                               onClick={this.removeNode}
@@ -821,19 +815,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   })
                 }
               </Grid>
-
-              {/* Adding nodes is done in-line when editing the Config */}
-              {!forEdit &&
-                <Grid
-                  updateFor={[]} // never update after the initial render
-                  item xs={12}
-                >
-                  <AddNewLink
-                    onClick={addNode}
-                    label="Add a Node"
-                  />
-                </Grid>
-              }
 
               <Grid updateFor={[]} item xs={12}>
                 <Divider className={classes.divider} />
