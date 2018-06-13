@@ -15,7 +15,6 @@ import {
 import { Subscription } from 'rxjs/Subscription';
 
 import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
-import Button from 'material-ui/Button';
 import Paper from 'material-ui/Paper';
 import Grid from 'material-ui/Grid';
 import TableBody from 'material-ui/Table/TableBody';
@@ -25,6 +24,7 @@ import TableRow from 'material-ui/Table/TableRow';
 
 import { deleteDomainRecord } from 'src/services/domains';
 import Table from 'src/components/Table';
+import Button from 'src/components/Button';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -507,14 +507,18 @@ class DomainRecords extends React.Component<CombinedProps, State> {
           title="Confirm Deletion"
           actions={({ onClose }) =>
             <ActionsPanel>
-              <Button onClick={onClose}>Cancel</Button>
               <Button
-                variant="raised"
-                color="secondary"
-                className="destructive"
+                type="secondary"
+                destructive
                 onClick={() => this.deleteDomainRecord()}
               >
                 Delete
+              </Button>
+              <Button
+                type="cancel"
+                onClick={onClose}
+              >
+                Cancel
               </Button>
             </ActionsPanel>
           }

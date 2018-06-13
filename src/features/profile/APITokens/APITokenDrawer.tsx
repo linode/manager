@@ -43,14 +43,20 @@ export const genExpiryTups = (): Expiry[] => {
 };
 
 type ClassNames = 'permsTable'
+  | 'selectCell'
   | 'accessCell'
   | 'noneCell'
   | 'readOnlyCell'
   | 'readWritecell';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   permsTable: {
     marginTop: theme.spacing.unit * 3,
+  },
+  selectCell: {
+    fontWeight: 700,
+    textTransform: 'uppercase',
+    fontSize: '.9rem',
   },
   accessCell: {
     width: '31%',
@@ -171,10 +177,10 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
         </TableHead>
         <TableBody>
           {mode === 'create' &&
-            <TableRow data-qa-row="Select All">
-              <TableCell padding="checkbox" className={classes.accessCell}>
+            <TableRow data-qa-row="Select All" className={classes.selectCell}>
+              <TableCell padding="checkbox">
                 Select All
-            </TableCell>
+              </TableCell>
               <TableCell padding="checkbox" className={classes.noneCell}>
                 <Radio
                   name="Select All"
