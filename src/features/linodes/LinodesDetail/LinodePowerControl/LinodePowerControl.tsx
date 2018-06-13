@@ -250,7 +250,7 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
           }
         </Menu>
         <ConfirmationDialog
-          title={(bootOption === 'reboot') ? 'Confirm Reboot' : 'Powering Down'}
+          title={(bootOption === 'reboot') ? 'Confirm Reboot' : 'Powering Off'}
           actions={() =>
             <ActionsPanel style={{ padding: 0 }}>
               <Button
@@ -262,7 +262,7 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
               >
                 {(bootOption === 'reboot')
                   ? 'Reboot'
-                  : 'Power Down'}
+                  : 'Power Off'}
               </Button>
               <Button
                 onClick={() => this.setState({ powerAlertOpen: false })}
