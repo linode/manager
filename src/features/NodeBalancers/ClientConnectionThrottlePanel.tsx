@@ -73,7 +73,7 @@ class ClientConnectionThrottlePanel extends React.Component<CombinedProps> {
           >
             <div className={!expansion ? classes.inner : ''}>
               {error && <Notice text={error} error />}
-              <TextField {...textFieldProps} />
+              <TextField data-qa-connection-throttle {...textFieldProps} />
             </div>
             {expansion.action &&
               <ActionsPanel className={expansion ? classes.expPanelButton : ''}>

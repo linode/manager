@@ -671,6 +671,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       type="primary"
                       onClick={this.onSave}
                       loading={submitting}
+                      data-qa-save-config
                     >
                       Save
                     </Button>
@@ -686,6 +687,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     onClick={this.onDelete}
                     type="secondary"
                     destructive
+                    data-qa-delete-config
                   >
                     Delete
                   </Button>
@@ -729,6 +731,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                           errors,
                         ]}
                         container
+                        alignItems="flex-end"
+                        data-qa-node
                       >
                         {idx !== 0 &&
                           <Grid item xs={12}>
