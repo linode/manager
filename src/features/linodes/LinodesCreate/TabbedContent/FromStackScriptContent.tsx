@@ -47,7 +47,11 @@ type ClassNames = 'root'
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {},
   main: {},
-  sidebar: {},
+  sidebar: {
+    [theme.breakpoints.up('lg')]: {
+      marginTop: -130,
+    },
+  },
   emptyImagePanel: {
     padding: theme.spacing.unit * 3,
   },
