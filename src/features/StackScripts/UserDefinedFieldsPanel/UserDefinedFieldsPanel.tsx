@@ -6,6 +6,7 @@ import {
   WithStyles,
 } from 'material-ui';
 import Paper from 'material-ui/Paper';
+import Typography from 'material-ui/Typography';
 
 import UserDefinedText from './FieldTypes/UserDefinedText';
 import UserDefinedMultiSelect from './FieldTypes/UserDefinedMultiSelect';
@@ -67,6 +68,9 @@ const UserDefinedFieldsPanel: React.StatelessComponent<CombinedProps> = (props) 
 
   return (
     <Paper className={classes.root}>
+      <Typography variant="title">
+        Required Fields
+              </Typography>
       {
         userDefinedFields!.map((field: Linode.StackScript.UserDefinedField) => {
           return renderField(field);

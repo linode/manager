@@ -72,12 +72,6 @@ interface State {
   selectedTab: number;
   selectedLinodeID: number | undefined;
   selectedBackupID: number | undefined;
-  // udf_data: any; // @TODO this can be an object with really anything in it
-  // data shape will look like thie
-  // udf_data: {
-  //   udf_name: 'value'
-  // }
-  // udf_data: null; state will live here and be updated in the field
 }
 
 interface QueryStringOptions {
