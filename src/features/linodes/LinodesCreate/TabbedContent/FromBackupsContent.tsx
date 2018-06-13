@@ -63,6 +63,8 @@ interface Props {
   getTypeInfo: (selectedTypeID: string | null) => TypeInfo;
   getRegionName: (selectedRegionID: string | null) => string | undefined;
   history: any;
+  selectedBackupFromQuery?: number;
+  selectedLinodeFromQuery?: number;
 }
 
 interface State {
@@ -105,8 +107,8 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     linodesWithBackups: [],
     isGettingBackups: false,
     userHasBackups: false,
-    selectedLinodeID: undefined,
-    selectedBackupID: undefined,
+    selectedLinodeID: this.props.selectedLinodeFromQuery || undefined,
+    selectedBackupID: this.props.selectedBackupFromQuery || undefined,
     selectedDiskSize: undefined,
     selectedTypeID: null,
     selectedRegionID: null,

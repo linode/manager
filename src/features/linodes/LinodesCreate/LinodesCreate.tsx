@@ -70,8 +70,8 @@ type CombinedProps = Props
 
 interface State {
   selectedTab: number;
-  selectedLinodeID: number | undefined;
-  selectedBackupID: number | undefined;
+  selectedLinodeIDFromQueryString: number | undefined;
+  selectedBackupIDFromQueryString: number | undefined;
 }
 
 interface QueryStringOptions {
@@ -102,8 +102,8 @@ const formatLinodeSubheading = (typeInfo: string, imageInfo: string) => {
 export class LinodeCreate extends React.Component<CombinedProps, State> {
   state: State = {
     selectedTab: 0,
-    selectedLinodeID: undefined,
-    selectedBackupID: undefined,
+    selectedLinodeIDFromQueryString: undefined,
+    selectedBackupIDFromQueryString: undefined,
   };
 
   mounted: boolean = false;
@@ -132,11 +132,11 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
     }
 
     if (options.linodeID) {
-      this.setState({ selectedLinodeID: Number(options.linodeID) || undefined });
+      this.setState({ selectedLinodeIDFromQueryString: Number(options.linodeID) || undefined });
     }
 
     if (options.backupID) {
-      this.setState({ selectedBackupID: Number(options.backupID) || undefined });
+      this.setState({ selectedBackupIDFromQueryString: Number(options.backupID) || undefined });
     }
   }
 
@@ -199,6 +199,8 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
               text: `This newly created Linode wil be created with
                 the same password as the original Linode`,
             }}
+            selectedBackupFromQuery={this.state.selectedBackupIDFromQueryString}
+            selectedLinodeFromQuery={this.state.selectedLinodeIDFromQueryString}
             linodes={this.props.linodes.response}
             types={this.props.types}
             extendLinodes={this.extendLinodes}
