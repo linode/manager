@@ -5,6 +5,8 @@ import {
   Theme,
   WithStyles,
 } from 'material-ui';
+import Paper from 'material-ui/Paper';
+import Typography from 'material-ui/Typography';
 
 import { pathOr, assocPath } from 'ramda';
 
@@ -37,7 +39,7 @@ import { UserDefinedFields as mockUserDefinedFields } from 'src/__data__/UserDef
 
 type ClassNames = 'root' | 'main' | 'sidebar';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {},
   main: {},
   sidebar: {},
@@ -111,7 +113,9 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
 
   mounted: boolean = false;
 
-  handleSelectStackScript = (id: number, stackScriptImages: string[]) => {
+  handleSelectStackScript = (id: number, stackScriptImages: string[],
+    userDefinedFields: Linode.StackScript.UserDefinedField[]) => {
+    console.log(userDefinedFields);
     const { images } = this.props;
     const filteredImages = images.filter((image) => {
       for (let i = 0; i < stackScriptImages.length; i = i + 1) {
@@ -247,12 +251,25 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
               udf_data={udf_data}
             />
           }
-          <SelectImagePanel
-            images={compatibleImages}
-            handleSelection={this.handleSelectImage}
-            updateFor={[selectedImageID, compatibleImages]}
-            selectedImageID={selectedImageID}
-          />
+          {compatibleImages && compatibleImages.length > 0
+            ? <SelectImagePanel
+              images={compatibleImages}
+              handleSelection={this.handleSelectImage}
+              updateFor={[selectedImageID, compatibleImages]}
+              selectedImageID={selectedImageID}
+            />
+            : <Paper>
+              {/* empty state for images */}
+              <Typography variant="title">
+                Select Image
+              </Typography>
+              <Grid container alignItems="center">
+                <Typography variant="body1">
+                  First, select a StackScript
+                        </Typography>
+              </Grid>
+            </Paper>
+          }
           <SelectRegionPanel
             error={hasErrorFor('region')}
             regions={regions}

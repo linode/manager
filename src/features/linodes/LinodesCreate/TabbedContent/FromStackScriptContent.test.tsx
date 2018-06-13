@@ -54,7 +54,12 @@ describe('FromImageContent', () => {
     expect(component.find('WithStyles(WithRenderGuard(UserDefinedFieldsPanel))')).toHaveLength(0);
   });
 
-  it('should render SelectImage panel', () => {
+  it('should render SelectImage panel if no compatibleImages', () => {
+    expect(component.find('WithRenderGuard(CreateFromImage)')).toHaveLength(0);
+  });
+
+  it('should render SelectImage panel if no compatibleImages', () => {
+    component.setState({ compatibleImages: ['linode/centos7'] });
     expect(component.find('WithRenderGuard(CreateFromImage)')).toHaveLength(1);
   });
 
