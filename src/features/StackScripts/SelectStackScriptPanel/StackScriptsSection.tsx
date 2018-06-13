@@ -27,7 +27,7 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => 
   return (
     <div>
       {
-        data && data.slice(0, 5).map(stackScript(onSelect, selectedId))
+        data && data.map(stackScript(onSelect, selectedId))
       }
     </div>
   );
@@ -45,6 +45,7 @@ const stackScript: (fn: (s: Linode.StackScript.Response) => void, id?: number) =
       updated={s.updated}
       onSelect={() => onSelect(s)}
       checked={selectedId === s.id}
+      updateFor={[selectedId === s.id]}
     />
   );
 
