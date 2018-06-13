@@ -125,9 +125,9 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
     const { location: { search } } = this.props;
     const options: QueryStringOptions =
       parseQueryParams(search.replace('?', '')) as QueryStringOptions;
-    if (options.type === 'fromBackup') {
+    if (options.type.toLowerCase() === 'frombackup') {
       this.setState({ selectedTab: this.backupTabIndex });
-    } else if (options.type === 'fromStackScript') {
+    } else if (options.type.toLowerCase() === 'fromstackscript') {
       this.setState({ selectedTab: this.stackScriptTabIndex });
     }
 
