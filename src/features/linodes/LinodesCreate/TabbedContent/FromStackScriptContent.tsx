@@ -247,7 +247,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
             <UserDefinedFieldsPanel
               handleChange={this.handleChangeUDF}
               userDefinedFields={userDefinedFields}
-              updateFor={[udf_data]}
+              updateFor={[userDefinedFields]}
               udf_data={udf_data}
             />
           }
@@ -265,7 +265,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
               </Typography>
               <Grid container alignItems="center">
                 <Typography variant="body1">
-                  First, select a StackScript
+                  No Compatible Images Available
                         </Typography>
               </Grid>
             </Paper>
