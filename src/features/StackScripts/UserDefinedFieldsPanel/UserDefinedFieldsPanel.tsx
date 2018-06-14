@@ -22,6 +22,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     padding: theme.spacing.unit * 3,
     marginBottom: theme.spacing.unit * 3,
+    '& > div:last-child': {
+      border: 0,
+      marginBottom: 0,
+      paddingBottom: 0,
+    },
   },
 });
 
