@@ -11,6 +11,8 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 import Button from 'src/components/Button';
 import ActionsPanel from 'src/components/ActionsPanel';
 
+import RenderGuard from 'src/components/RenderGuard';
+
 type ClassNames = 'root'
   | 'inner'
   | 'expPanelButton';
@@ -103,4 +105,4 @@ class InfoPanel extends React.Component<CombinedProps> {
   }
 }
 
-export default styled<Props>(InfoPanel);
+export default styled(RenderGuard<CombinedProps>(InfoPanel));

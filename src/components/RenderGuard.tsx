@@ -7,6 +7,8 @@ interface Props {
 
 export default function renderGuard<P>(Component: React.ComponentType) {
   return class ComponentWithRenderGuard extends React.Component<Props & P> {
+    static displayName = `WithRenderGuard(${getDisplayName(Component)})`;
+
     shouldComponentUpdate(nextProps: Props & P) {
       if (Array.isArray(this.props.updateFor)) {
         // don't update if the values of the updateFor Array are equal
@@ -26,4 +28,10 @@ export default function renderGuard<P>(Component: React.ComponentType) {
       );
     }
   };
+}
+
+function getDisplayName(Component: React.ComponentType) {
+  return Component.displayName ||
+    Component.name ||
+    'Component';
 }

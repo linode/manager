@@ -4,18 +4,13 @@ import { FromBackupsContent } from './FromBackupsContent';
 import { LinodesWithBackups } from 'src/__data__/LinodesWithBackups';
 
 const mockProps = {
-  updateFormState: jest.fn(),
-  selectedLinodeID: 1,
-  selectedBackupID: 1,
-  selectedDiskSize: 100,
-  selectedTypeID: '100',
   linodes: [],
   types: [],
-  label: 'test',
-  backups: true,
-  privateIP: true,
   extendLinodes: jest.fn(),
   getBackupsMonthlyPrice: jest.fn(),
+  getTypeInfo: jest.fn(),
+  getRegionName: jest.fn(),
+  history: null,
 };
 
 const mockPropsWithNotice = {
@@ -23,31 +18,26 @@ const mockPropsWithNotice = {
     text: 'example text',
     level: 'warning' as 'warning' | 'error',
   },
-  updateFormState: jest.fn(),
-  selectedLinodeID: 1,
-  selectedBackupID: 1,
-  selectedDiskSize: 100,
-  selectedTypeID: '100',
   linodes: [],
   types: [],
-  label: 'test',
-  backups: true,
-  privateIP: true,
   extendLinodes: jest.fn(),
   getBackupsMonthlyPrice: jest.fn(),
+  getTypeInfo: jest.fn(),
+  getRegionName: jest.fn(),
+  history: null,
 };
 
 describe('FromBackupsContent', () => {
   const component = shallow(
     <FromBackupsContent
-      classes={{ root: '' }}
+      classes={{ root: '', main: '', sidebar: '' }}
       {...mockProps}
     />,
   );
 
   const componentWithNotice = shallow(
     <FromBackupsContent
-      classes={{ root: '' }}
+      classes={{ root: '', main: '', sidebar: '' }}
       {...mockPropsWithNotice}
     />,
   );
@@ -73,23 +63,23 @@ describe('FromBackupsContent', () => {
     });
 
     it('should render SelectLinode panel', () => {
-      expect(component.find('WithStyles(SelectLinodePanel)')).toHaveLength(1);
+      expect(component.find('WithStyles(WithRenderGuard(SelectLinodePanel))')).toHaveLength(1);
     });
 
     it('should render SelectBackup panel', () => {
-      expect(component.find('WithStyles(SelectBackupPanel)')).toHaveLength(1);
+      expect(component.find('WithStyles(WithRenderGuard(SelectBackupPanel))')).toHaveLength(1);
     });
 
     it('should render SelectPlan panel', () => {
-      expect(component.find('WithStyles(SelectPlanPanel)')).toHaveLength(1);
+      expect(component.find('WithStyles(WithRenderGuard(SelectPlanPanel))')).toHaveLength(1);
     });
 
     it('should render SelectLabel panel', () => {
-      expect(component.find('WithStyles(InfoPanel)')).toHaveLength(1);
+      expect(component.find('WithStyles(WithRenderGuard(InfoPanel))')).toHaveLength(1);
     });
 
     it('should render SelectAddOns panel', () => {
-      expect(component.find('WithStyles(AddonsPanel)')).toHaveLength(1);
+      expect(component.find('WithStyles(WithRenderGuard(AddonsPanel))')).toHaveLength(1);
     });
   });
 });

@@ -18,6 +18,8 @@ import {
   formatBackupDate,
 } from 'src/features/linodes/LinodesDetail/LinodeBackup';
 
+import RenderGuard from 'src/components/RenderGuard';
+
 type ClassNames =
 'root'
 | 'inner'
@@ -185,4 +187,4 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(SelectBackupPanel);
+export default styled(RenderGuard<CombinedProps>(SelectBackupPanel));
