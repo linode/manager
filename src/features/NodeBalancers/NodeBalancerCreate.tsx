@@ -256,6 +256,8 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       return;
     }
 
+    this.setState({ submitting: true });
+
     createNodeBalancer(nodeBalancerRequestData)
       .then((nodeBalancer) => {
         /**

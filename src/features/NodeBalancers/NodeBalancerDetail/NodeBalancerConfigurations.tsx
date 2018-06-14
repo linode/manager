@@ -235,6 +235,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     config: NodeBalancerConfigFields,
     configPayload: Partial<Linode.NodeBalancerConfig>,
   ) => {
+    /* Update a config and its nodes simultaneously */
     const { match: { params: { nodeBalancerId } } } = this.props;
     const nodeBalUpdate = updateNodeBalancerConfig(nodeBalancerId!, config.id!, configPayload)
       .then((nodeBalancerConfig) => {
@@ -326,6 +327,11 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     config: NodeBalancerConfigFields,
     configPayload: Partial<Linode.NodeBalancerConfig>,
   ) => {
+    /*
+     * Create a config and then its nodes.
+     * If the config creation succeeds here, the UpdatePath will be used upon
+     * subsequent saves.
+    */
     const { match: { params: { nodeBalancerId } } } = this.props;
     createNodeBalancerConfig(nodeBalancerId!, configPayload)
       .then((nodeBalancerConfig) => {
@@ -670,14 +676,16 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
   onSaveConfig = (idx: number) => () => this.saveConfig(idx);
 
-  onDeleteConfig = (id: number) => () =>
+  onDeleteConfig = (idx: number) => () => {
+    const config = this.state.configs[idx];
     this.setState({
       deleteConfigConfirmDialog: {
         ...clone(NodeBalancerConfigurations.defaultDeleteConfigConfirmDialogState),
         open: true,
-        idToDelete: id,
+        idToDelete: config.id,
       },
-    })
+    });
+  }
 
   renderConfig = (
     panelMessages: string[],
@@ -720,9 +728,10 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       >
         <NodeBalancerConfigPanel
           forEdit
+          configIdx={idx}
           onSave={this.onSaveConfig(idx)}
           submitting={configSubmitting[idx]}
-          onDelete={this.onDeleteConfig(config.id)}
+          onDelete={this.onDeleteConfig(idx)}
 
           errors={configErrors[idx]}
           nodeMessage={panelNodeMessages[idx]}

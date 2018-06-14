@@ -787,7 +787,9 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   <Divider className={classes.divider} />
                 </Grid>
                 <Grid
-                  updateFor={[submitting]}
+                  updateFor={[
+                    submitting,
+                  ]}
                   container
                   justify="space-between"
                   alignItems="center"
