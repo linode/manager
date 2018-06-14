@@ -22,10 +22,14 @@ type ClassNames = 'root'
   | 'libDescription'
   | 'colImages';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
     padding: theme.spacing.unit * 2,
     borderBottom: `solid 1px ${theme.palette.grey['200']}`,
+  },
+  labelCell: {
+    background: theme.bg.offWhite,
+    marginBottom: theme.spacing.unit * 2,
   },
   respPadding: {
     [theme.breakpoints.down('md')]: {

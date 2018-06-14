@@ -5,6 +5,7 @@ import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
 import { getStackscripts } from 'src/services/stackscripts';
 
 import Button from 'src/components/Button';
+import Grid from 'src/components/Grid';
 import TabbedPanel from 'src/components/TabbedPanel';
 import StackScriptsSection from './StackScriptsSection';
 import CircleProgress from 'src/components/CircleProgress';
@@ -17,7 +18,10 @@ export interface ExtendedLinode extends Linode.Linode {
 
 type ClassNames = 'root'
   | 'creating'
-  | 'selecting';
+  | 'selecting'
+  | 'container'
+  | 'labelCell'
+  | 'stackscriptLabel';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -31,6 +35,21 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   selecting: {
     maxHeight: '1000px',
     overflowX: 'hidden',
+  },
+  container: {
+    padding: theme.spacing.unit * 2,
+  },
+  labelCell: {
+    background: theme.bg.offWhite,
+    fontSize: '.9rem',
+    fontWeight: 700,
+    paddingTop: '16px !important',
+    paddingBottom: '16px !important',
+  },
+  stackscriptLabel: {
+    [theme.breakpoints.up('lg')]: {
+      paddingLeft: '78px !important',
+    },
   },
 });
 
@@ -60,21 +79,21 @@ class SelectStackScriptPanel extends React.Component<CombinedProps> {
         tabs={[
           {
             title: 'My StackScripts',
-            render: () => <Container
+            render: () => <StyledContainer
               onSelect={this.props.onSelect}
               request={getStackscripts} key={0}
             />,
           },
           {
             title: 'Linode StackScripts',
-            render: () => <Container
+            render: () => <StyledContainer
               onSelect={this.props.onSelect}
               request={getStackscripts} key={1}
             />,
           },
           {
             title: 'Community StackScripts',
-            render: () => <Container
+            render: () => <StyledContainer
               onSelect={this.props.onSelect}
               request={getStackscripts} key={2}
             />,
@@ -105,7 +124,9 @@ interface ContainerState {
   data: any; // @TODO type correctly
 }
 
-class Container extends React.Component<ContainerProps, ContainerState> {
+type ContainerCombinedProps = ContainerProps & WithStyles<ClassNames>;
+
+class Container extends React.Component<ContainerCombinedProps, ContainerState> {
   state: ContainerState = {
     currentPage: 1,
     loading: true,
@@ -149,12 +170,44 @@ class Container extends React.Component<ContainerProps, ContainerState> {
   }
 
   render() {
+    const { classes } = this.props;
+
     if (this.state.loading) {
       return <CircleProgress />;
     }
 
     return (
       <React.Fragment>
+        <Grid container className={classes.container}>
+          <Grid
+            item xs={12}
+            lg={6}
+            className={`${classes.labelCell} ${classes.stackscriptLabel}`}
+          >
+            <label>StackScripts</label>
+          </Grid>
+          <Grid
+            item xs={12}
+            lg={1}
+            className={`${classes.labelCell}`}
+          >
+            <label>Active Deploy</label>
+          </Grid>
+          <Grid
+            item xs={12}
+            lg={2}
+            className={`${classes.labelCell}`}
+          >
+            <label>Last Revision</label>
+          </Grid>
+          <Grid
+            item xs={12}
+            lg={3}
+            className={`${classes.labelCell}`}
+          >
+            <label>Compatible Images</label>
+          </Grid>
+        </Grid>
         <StackScriptsSection
           onSelect={this.handleSelectStackScript}
           selectedId={this.state.selected}
@@ -180,6 +233,6 @@ class Container extends React.Component<ContainerProps, ContainerState> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-
+const StyledContainer = styled(Container);
 
 export default styled(RenderGuard<CombinedProps>(SelectStackScriptPanel));
