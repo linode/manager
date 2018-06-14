@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
-import Button from 'material-ui/Button';
+
 
 import { getStackscripts } from 'src/services/stackscripts';
 
+import Button from 'src/components/Button';
 import TabbedPanel from 'src/components/TabbedPanel';
 import StackScriptsSection from './StackScriptsSection';
 import CircleProgress from 'src/components/CircleProgress';
@@ -14,7 +15,9 @@ export interface ExtendedLinode extends Linode.Linode {
   subHeadings: string[];
 }
 
-type ClassNames = 'root' | 'creating' | 'selecting';
+type ClassNames = 'root'
+  | 'creating'
+  | 'selecting';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -161,7 +164,9 @@ class Container extends React.Component<ContainerProps, ContainerState> {
         <Button
           title="Show More StackScripts"
           onClick={this.getNext}
+          type="secondary"
           disabled={this.state.gettingMoreStackScripts}
+          style={{ marginTop: 32 }}
         >
           {!this.state.gettingMoreStackScripts
             ? 'Show More StackScripts'
