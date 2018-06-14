@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
-import { getStackscripts } from 'src/services/stackscripts';
-import TabbedPanel from 'src/components/TabbedPanel';
+import Button from 'material-ui/Button';
 
+import { getStackscripts } from 'src/services/stackscripts';
+
+import TabbedPanel from 'src/components/TabbedPanel';
 import StackScriptsSection from './StackScriptsSection';
 import CircleProgress from 'src/components/CircleProgress';
-
 import RenderGuard from 'src/components/RenderGuard';
 
 export interface ExtendedLinode extends Linode.Linode {
@@ -97,21 +98,31 @@ interface ContainerState {
   currentPage: number;
   selected?: number;
   loading?: boolean;
-  data?: any;
+  gettingMoreStackScripts: boolean;
+  data: any; // @TODO type correctly
 }
 
 class Container extends React.Component<ContainerProps, ContainerState> {
   state: ContainerState = {
-    currentPage: 0,
+    currentPage: 1,
     loading: true,
+    gettingMoreStackScripts: false,
+    data: [],
   };
 
   getDataAtPage = (page: number) => {
     const { request } = this.props;
+    this.setState({ gettingMoreStackScripts: true });
 
-    request({ page: 0, page_size: 50 })
-      .then(response => this.setState({ data: response.data, loading: false }))
-      .catch();
+    request({ page, page_size: 50 })
+      .then(response => this.setState({
+        data: [...this.state.data, ...response.data],
+        gettingMoreStackScripts: false,
+        loading: false,
+      }))
+      .catch((e) => {
+        this.setState({ gettingMoreStackScripts: false });
+      });
   }
 
   componentDidMount() {
@@ -131,15 +142,29 @@ class Container extends React.Component<ContainerProps, ContainerState> {
     }
 
     return (
-      <StackScriptsSection
-        onSelect={(stackscript: Linode.StackScript.Response) => {
-          this.props.onSelect(stackscript.id, stackscript.images, stackscript.user_defined_fields);
-          this.setState({ selected: stackscript.id });
-        }}
-        selectedId={this.state.selected}
-        data={this.state.data}
-        getNext={() => this.getNext()}
-      />
+      <React.Fragment>
+        <StackScriptsSection
+          onSelect={(stackscript: Linode.StackScript.Response) => {
+            this.props.onSelect(
+              stackscript.id,
+              stackscript.images,
+              stackscript.user_defined_fields);
+            this.setState({ selected: stackscript.id });
+          }}          selectedId={this.state.selected}
+          data={this.state.data}
+          getNext={() => this.getNext()}
+        />
+        <Button
+          title="Show More StackScripts"
+          onClick={this.getNext}
+          disabled={this.state.gettingMoreStackScripts}
+        >
+          {!this.state.gettingMoreStackScripts
+            ? 'Show More StackScripts'
+            : 'Loading'
+          }
+        </Button>
+      </React.Fragment>
     );
   }
 }

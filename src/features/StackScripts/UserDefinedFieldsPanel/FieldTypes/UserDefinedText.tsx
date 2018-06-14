@@ -8,6 +8,7 @@ import {
 import Typography from 'material-ui/Typography';
 
 import TextField from 'src/components/TextField';
+import RenderGuard from 'src/components/RenderGuard';
 import PasswordPanel from 'src/features/linodes/LinodesCreate/PasswordPanel';
 
 
@@ -87,4 +88,4 @@ class UserDefinedText extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(UserDefinedText);
+export default styled(RenderGuard<CombinedProps>(UserDefinedText));
