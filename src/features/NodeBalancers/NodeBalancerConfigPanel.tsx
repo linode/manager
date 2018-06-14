@@ -279,7 +279,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   type="number"
                   label="Port"
                   required
-                  value={port}
+                  value={port || ''}
                   onChange={this.onPortChange}
                   errorText={hasErrorFor('port')}
                   data-qa-port
