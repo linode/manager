@@ -136,6 +136,15 @@ class Container extends React.Component<ContainerProps, ContainerState> {
     );
   }
 
+  handleSelectStackScript = (stackscript: Linode.StackScript.Response) => {
+    this.props.onSelect(
+      stackscript.id,
+      stackscript.images,
+      stackscript.user_defined_fields,
+    );
+    this.setState({ selected: stackscript.id });
+  }
+
   render() {
     if (this.state.loading) {
       return <CircleProgress />;
@@ -144,13 +153,8 @@ class Container extends React.Component<ContainerProps, ContainerState> {
     return (
       <React.Fragment>
         <StackScriptsSection
-          onSelect={(stackscript: Linode.StackScript.Response) => {
-            this.props.onSelect(
-              stackscript.id,
-              stackscript.images,
-              stackscript.user_defined_fields);
-            this.setState({ selected: stackscript.id });
-          }}          selectedId={this.state.selected}
+          onSelect={this.handleSelectStackScript}
+          selectedId={this.state.selected}
           data={this.state.data}
           getNext={() => this.getNext()}
         />
@@ -161,7 +165,7 @@ class Container extends React.Component<ContainerProps, ContainerState> {
         >
           {!this.state.gettingMoreStackScripts
             ? 'Show More StackScripts'
-            : 'Loading'
+            : 'Loading...'
           }
         </Button>
       </React.Fragment>

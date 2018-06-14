@@ -40,6 +40,12 @@ const truncateDescription = (desc: string) => {
   return desc;
 };
 
+const stripImageName = (images: string[]) => {
+  return images.map((image: string) => {
+    return image.replace('linode/', '');
+  });
+};
+
 const stackScript: (fn: (s: Linode.StackScript.Response) => void, id?: number) =>
   (s: Linode.StackScript.Response) => JSX.Element =
   (onSelect, selectedId) => s => (
@@ -47,7 +53,7 @@ const stackScript: (fn: (s: Linode.StackScript.Response) => void, id?: number) =
       key={s.id}
       label={s.label}
       description={truncateDescription(s.description)}
-      images={s.images}
+      images={stripImageName(s.images)}
       deploymentsActive={s.deployments_active}
       updated={s.updated}
       onSelect={() => onSelect(s)}
