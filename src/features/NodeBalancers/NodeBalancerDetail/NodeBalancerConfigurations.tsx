@@ -737,7 +737,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           panelMessages[idx],
           panelNodeMessages[idx],
         ]}
-        defaultExpanded={true}
+        defaultExpanded={false}
         success={panelMessages[idx]}
         heading={`Port ${config.port !== undefined ? config.port : ''}`}
       >
