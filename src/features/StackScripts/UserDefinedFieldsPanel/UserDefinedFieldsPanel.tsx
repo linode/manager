@@ -20,8 +20,8 @@ type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
+    padding: theme.spacing.unit * 3,
     marginBottom: theme.spacing.unit * 3,
-    minHeight: '300px',
   },
 });
 
@@ -81,7 +81,7 @@ const UserDefinedFieldsPanel: React.StatelessComponent<CombinedProps> = (props) 
       })}
       <Typography variant="title">
         Required Fields
-              </Typography>
+      </Typography>
       {
         userDefinedFields!.map((field: Linode.StackScript.UserDefinedField) => {
           return renderField(field);

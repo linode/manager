@@ -35,26 +35,27 @@ interface Props {
   handleChange: (value: string) => void;
   heading?: string;
   label?: string;
+  noPadding?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class PasswordPanel extends React.Component<CombinedProps> {
   render() {
-    const { classes, handleChange, error, heading, label } = this.props;
+    const { classes, handleChange, error, heading, label, noPadding } = this.props;
 
     return (
       <Paper className={classes.root}>
-      <div className={classes.inner} data-qa-password-input>
-        { error && <Notice text={error} error /> }
-        <Typography component="div" variant="title">{heading || 'Password'}</Typography>
-        <PasswordInput
-          value={this.props.password || ''}
-          label={label || 'Root Password'}
-          placeholder="Enter a password."
-          onChange={e => handleChange(e.target.value)}
-        />
-      </div>
+        <div className={!noPadding ? classes.inner : ''} data-qa-password-input>
+          { error && <Notice text={error} error /> }
+          <Typography component="div" variant="title">{heading || 'Password'}</Typography>
+          <PasswordInput
+            value={this.props.password || ''}
+            label={label || 'Root Password'}
+            placeholder="Enter a password."
+            onChange={e => handleChange(e.target.value)}
+          />
+        </div>
     </Paper>
     );
   }

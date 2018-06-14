@@ -15,7 +15,9 @@ type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
-    margin: theme.spacing.unit * 3,
+    margin: `${theme.spacing.unit * 3}px 0`,
+    paddingBottom: theme.spacing.unit * 3,
+    borderBottom: `1px solid ${theme.palette.divider}`,
   },
 });
 
@@ -58,6 +60,7 @@ class UserDefinedText extends React.Component<CombinedProps, State> {
         password={udf_data[field.name] || ''}
         handleChange={this.handleUpdatePassword}
         label={field.label}
+        noPadding
       />
     );
   }
