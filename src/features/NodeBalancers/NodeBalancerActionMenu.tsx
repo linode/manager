@@ -17,9 +17,25 @@ class NodeBalancerActionMenu extends React.Component<CombinedProps> {
     return function (closeMenu: Function): Action[] {
       const actions = [
         {
+          title: 'Summary',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            history.push(`/nodebalancers/${nodeBalancerId}/summary`);
+            e.preventDefault();
+            closeMenu();
+          },
+        },
+        {
           title: 'Configurations',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             history.push(`/nodebalancers/${nodeBalancerId}/configurations`);
+            e.preventDefault();
+            closeMenu();
+          },
+        },
+        {
+          title: 'Settings',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            history.push(`/nodebalancers/${nodeBalancerId}/settings`);
             e.preventDefault();
             closeMenu();
           },
