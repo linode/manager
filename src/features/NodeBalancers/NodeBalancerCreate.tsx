@@ -684,6 +684,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     );
   }
 }
+
 const controlClientConnectionThrottle = compose(
   clamp(0, 20),
   defaultNumeric(0),
@@ -778,6 +779,28 @@ export const validationErrorsToFieldErrors = (error: Joi.ValidationError) => {
         return {
           ...detail,
           message: 'IP Address must be a Linode private address',
+        };
+      }
+
+      if (path.includes('nodes')
+          && path.includes('port')
+          && (detail.constraint === 'base'
+              || detail.constraint === 'min'
+              || detail.constraint === 'max')) {
+        return {
+          ...detail,
+          message: 'Port must be between 1 and 65535',
+        };
+      }
+
+      if (path.includes('nodes')
+          && path.includes('weight')
+          && (detail.constraint === 'base'
+              || detail.constraint === 'min'
+              || detail.constraint === 'max')) {
+        return {
+          ...detail,
+          message: 'Weight must be between 1 and 255',
         };
       }
 
