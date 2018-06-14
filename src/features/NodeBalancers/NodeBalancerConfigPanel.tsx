@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { equals } from 'ramda';
 import { withStyles, StyleRulesCallback, WithStyles, Theme, Divider, MenuItem } from 'material-ui';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
@@ -214,26 +213,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
   onSave = this.props.onSave;
 
   onDelete = this.props.onDelete;
-
-  shouldComponentUpdate(nextProps: Props) {
-    return this.props.forEdit !== nextProps.forEdit
-      || this.props.submitting !== nextProps.submitting
-      || this.props.algorithm !== nextProps.algorithm
-      || this.props.checkPassive !== nextProps.checkPassive
-      || this.props.checkBody !== nextProps.checkBody
-      || this.props.checkPath !== nextProps.checkPath
-      || this.props.port !== nextProps.port
-      || this.props.protocol !== nextProps.protocol
-      || this.props.healthCheckType !== nextProps.healthCheckType
-      || this.props.healthCheckAttempts !== nextProps.healthCheckAttempts
-      || this.props.healthCheckInterval !== nextProps.healthCheckInterval
-      || this.props.healthCheckTimeout !== nextProps.healthCheckTimeout
-      || this.props.sessionStickiness !== nextProps.sessionStickiness
-      || this.props.sslCertificate !== nextProps.sslCertificate
-      || this.props.privateKey !== nextProps.privateKey
-      || !equals(this.props.nodes, nextProps.nodes)
-      || !equals(this.props.errors, nextProps.errors);
-  }
 
   render() {
     const {
@@ -778,53 +757,56 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   />
                 </Grid>
               </Grid>
-
-              {(forEdit || configIdx !== 0) &&
-                <React.Fragment>
-                  <Grid updateFor={[]} item xs={12}>
-                    <Divider className={classes.divider} />
-                  </Grid>
-                  <Grid
-                    updateFor={[submitting]}
-                    container
-                    justify="space-between"
-                    alignItems="center"
-                  >
-                    <Grid
-                      item
-                      style={
-                        forEdit
-                          ? { marginLeft: -8 }
-                          : { marginLeft: 8 }
-                      }
-                    >
-                      <ActionsPanel>
-                        {forEdit &&
-                          <Button
-                            variant="raised"
-                            type="primary"
-                            onClick={this.onSave}
-                            loading={submitting}
-                          >
-                            Save
-                          </Button>
-                        }
-                        {(forEdit || configIdx !== 0) &&
-                          <Button
-                            onClick={this.onDelete}
-                            type="secondary"
-                            destructive
-                          >
-                            Delete
-                          </Button>
-                        }
-                      </ActionsPanel>
-                    </Grid>
-                  </Grid>
-                </React.Fragment>
-              }
             </Grid>
-          </div>
+
+            {(forEdit || configIdx !== 0) &&
+              <React.Fragment>
+                <Grid
+                  updateFor={[]}
+                  item xs={12}
+                >
+                  <Divider className={classes.divider} />
+                </Grid>
+                <Grid
+                  updateFor={[submitting]}
+                  container
+                  justify="space-between"
+                  alignItems="center"
+                >
+                  <Grid
+                    item
+                    style={
+                      forEdit
+                        ? { marginLeft: -8 }
+                        : { marginLeft: 8 }
+                    }
+                  >
+                    <ActionsPanel>
+                      {forEdit &&
+                        <Button
+                          variant="raised"
+                          type="primary"
+                          onClick={this.onSave}
+                          loading={submitting}
+                        >
+                          Save
+                        </Button>
+                      }
+                      {(forEdit || configIdx !== 0) &&
+                        <Button
+                          onClick={this.onDelete}
+                          type="secondary"
+                          destructive
+                        >
+                          Delete
+                        </Button>
+                      }
+                    </ActionsPanel>
+                  </Grid>
+                </Grid>
+              </React.Fragment>
+          }
+        </div>
         </Paper>
       </Grid>
     );

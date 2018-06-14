@@ -27,6 +27,7 @@ import Typography from 'material-ui/Typography';
 import {
   getNodeBalancerConfigs,
   updateNodeBalancerConfig,
+  createNodeBalancerConfig,
   deleteNodeBalancerConfig,
   createNodeBalancerConfigSchema,
   getNodeBalancerConfigNodes,
@@ -49,6 +50,7 @@ import {
   NodeBalancerConfigFields,
   formatAddress,
   parseAddresses,
+  parseAddress,
   createNewNodeBalancerConfig,
   createNewNodeBalancerConfigNode,
 } from '../utils';
@@ -140,6 +142,15 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     hasUnsavedConfig: false,
   };
 
+  resetSubmitting = (configIdx: number) => {
+    // reset submitting
+    const newSubmitting = clone(this.state.configSubmitting);
+    newSubmitting[configIdx] = false;
+    this.setState({
+      configSubmitting: newSubmitting,
+    });
+  }
+
   clearNodeErrors = (configIdx: number) => {
     // Build paths to all node errors
     const paths = this.state.configs[configIdx].nodes.map((nodes, idxN) => {
@@ -217,8 +228,152 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     );
   }
 
-  saveConfig = (idx: number) => {
+  saveConfigUpdatePath = (
+    idx: number,
+    config: NodeBalancerConfigFields,
+    configPayload: Partial<Linode.NodeBalancerConfig>,
+  ) => {
     const { match: { params: { nodeBalancerId } } } = this.props;
+    const nodeBalUpdate = updateNodeBalancerConfig(nodeBalancerId!, config.id!, configPayload)
+      .then((nodeBalancerConfig) => {
+        // update config data
+        const newConfigs = clone(this.state.configs);
+        newConfigs[idx] = nodeBalancerConfig as NodeBalancerConfigFields;
+        const newNodes = clone(this.state.configs[idx].nodes);
+        //    while maintaing node data
+        newConfigs[idx].nodes = newNodes;
+
+        // reset errors
+        const newErrors = clone(this.state.configErrors);
+        newErrors[idx] = [];
+
+        // reset submitting
+        const newSubmitting = clone(this.state.configSubmitting);
+        newSubmitting[idx] = false;
+
+        this.setState({
+          configs: newConfigs,
+          configErrors: newErrors,
+          configSubmitting: newSubmitting,
+        });
+        /* Return true as a Promise for the sake of aggregating results */
+        return true;
+      })
+      .catch((errorResponse) => {
+        // update errors
+        const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'], errorResponse);
+        const newErrors = clone(this.state.configErrors);
+        newErrors[idx] = errors || [];
+        this.setState({
+          configErrors: newErrors,
+        });
+        this.resetSubmitting(idx);
+        /* Return false as a Promise for the sake of aggregating results */
+        return false;
+      });
+
+    // These Node operations execute while the config update request is being made
+    const nodeUpdates = config.nodes.map((node, nodeIdx) => {
+      if (node.modifyStatus === 'delete') {
+        return this.deleteNode(idx, nodeIdx);
+      }
+      if (node.modifyStatus === 'new') {
+        return this.createNode(idx, nodeIdx);
+      }
+      if (node.modifyStatus === 'update') {
+        return this.updateNode(idx, nodeIdx);
+      }
+      return new Promise(resolve => resolve(true));
+    });
+
+    /* Set the success message if all of the requests succeed */
+    Promise.all([nodeBalUpdate, ...nodeUpdates] as any)
+      .then((responseVals) => {
+        const success = responseVals.reduce((acc: boolean, val: boolean) => {
+          return acc && val;
+        }, true);
+        if (success) {
+          // replace success message with a new one
+          const newMessages = [];
+          newMessages[idx] = 'NodeBalancer config updated successfully';
+          this.setState({
+            panelMessages: newMessages,
+          });
+        }
+        this.resetSubmitting(idx);
+      })
+      .catch((requestFailure) => {
+        this.resetSubmitting(idx);
+      });
+  }
+
+  saveConfigNewPath = (
+    idx: number,
+    config: NodeBalancerConfigFields,
+    configPayload: Partial<Linode.NodeBalancerConfig>,
+  ) => {
+    const { match: { params: { nodeBalancerId } } } = this.props;
+    createNodeBalancerConfig(nodeBalancerId!, configPayload)
+      .then((nodeBalancerConfig) => {
+        // update config data
+        const newConfigs = clone(this.state.configs);
+        newConfigs[idx] = nodeBalancerConfig as NodeBalancerConfigFields;
+        const newNodes = clone(this.state.configs[idx].nodes);
+        //    while maintaing node data
+        newConfigs[idx].nodes = newNodes;
+
+        // reset errors
+        const newErrors = clone(this.state.configErrors);
+        newErrors[idx] = [];
+
+        this.setState({
+          configs: newConfigs,
+          configErrors: newErrors,
+        }, () => {
+          // Execute Node operations now that the config has been created
+          const nodeUpdates = config.nodes.map((node, nodeIdx) => {
+            if (node.modifyStatus !== 'delete') {
+              /* All of the Nodes are new since the config was just created */
+              return this.createNode(idx, nodeIdx);
+            }
+            return new Promise(resolve => resolve(true));
+          });
+
+          /* Set the success message if all of the requests succeed */
+          Promise.all([...nodeUpdates] as any)
+            .then((responseVals) => {
+              const success = responseVals.reduce((acc: boolean, val: boolean) => {
+                return acc && val;
+              }, true);
+              if (success) {
+                // replace success message with a new one
+                const newMessages = [];
+                newMessages[idx] = 'New NodeBalancer created successfully';
+                this.setState({
+                  panelMessages: newMessages,
+                });
+              }
+              this.resetSubmitting(idx);
+            })
+            .catch((requestFailure) => {
+              this.resetSubmitting(idx);
+            });
+        });
+      })
+      .catch((errorResponse) => {
+        // update errors
+        const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'], errorResponse);
+        const newErrors = clone(this.state.configErrors);
+        newErrors[idx] = errors || [];
+        this.setState({
+          configErrors: newErrors,
+        });
+        // reset submitting
+        this.resetSubmitting(idx);
+      });
+  }
+
+  saveConfig = (idx: number) => {
     const config = this.state.configs[idx];
 
     const configPayload: Partial<Linode.NodeBalancerConfig> =
@@ -254,80 +409,13 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       configSubmitting: newSubmitting,
     });
 
-    // If updating Config, perform the update and Node creates/deletes/updates simultaneously.
-    const nodeBalUpdate = updateNodeBalancerConfig(nodeBalancerId!, config.id!, configPayload)
-      .then((nodeBalancerConfig) => {
-        // update config data
-        const newConfigs = clone(this.state.configs);
-        newConfigs[idx] = nodeBalancerConfig as NodeBalancerConfigFields;
-        const newNodes = clone(this.state.configs[idx].nodes);
-        //    while maintaing node data
-        newConfigs[idx].nodes = newNodes;
-
-        // reset errors
-        const newErrors = clone(this.state.configErrors);
-        newErrors[idx] = [];
-
-        // reset submitting
-        const newSubmitting = clone(this.state.configSubmitting);
-        newSubmitting[idx] = false;
-
-        this.setState({
-          configs: newConfigs,
-          configErrors: newErrors,
-          configSubmitting: newSubmitting,
-        });
-        /* Return true as a Promise for the sake of aggregating results */
-        return true;
-      })
-      .catch((errorResponse) => {
-        // update errors
-        const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'], errorResponse);
-        const newErrors = clone(this.state.configErrors);
-        newErrors[idx] = errors || [];
-        // reset submitting
-        const newSubmitting = clone(this.state.configSubmitting);
-        newSubmitting[idx] = false;
-        this.setState({
-          configErrors: newErrors,
-          configSubmitting: newSubmitting,
-        });
-        /* Return false as a Promise for the sake of aggregating results */
-        return false;
-      });
-
-    // These Node operations execute while the config update request is being made
-    const nodeUpdates = config.nodes.map((node, nodeIdx) => {
-      if (node.modifyStatus === 'delete') {
-        return this.deleteNode(idx, nodeIdx);
-      }
-      if (node.modifyStatus === 'new') {
-        return this.createNode(idx, nodeIdx);
-      }
-      if (node.modifyStatus === 'update') {
-        return this.updateNode(idx, nodeIdx);
-      }
-      return new Promise(resolve => resolve(true));
-    });
-
-    /* Set the success message if all of the requests succeed */
-    Promise.all([nodeBalUpdate, ...nodeUpdates] as any)
-      .then((responseVals) => {
-        const success = responseVals.reduce((acc: boolean, val: boolean) => {
-          return acc && val;
-        }, true);
-        if (success) {
-          // replace success message with a new one
-          const newMessages = [];
-          newMessages[idx] = 'NodeBalancer config updated successfully';
-          this.setState({
-            panelMessages: newMessages,
-          });
-        }
-      })
-      .catch((requestFailure) => {
-        /* do nothing, errors have already been set to state */
-      });
+    if (config.modifyStatus !== 'new') {
+      // If updating Config, perform the update and Node operations simultaneously.
+      this.saveConfigUpdatePath(idx, config, configPayload);
+    } else {
+      // If it's a new Config, perform the update and Node operations sequentially.
+      this.saveConfigNewPath(idx, config, configPayload);
+    }
   }
 
   deleteConfig = (e: any) => {
@@ -374,15 +462,6 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       set(
         lensPath(['configs', configIdx, 'nodes', nodeIdx, 'errors']),
         errors,
-      ),
-    );
-  }
-
-  clearModifyStatus = (configIdx: number, nodeIdx: number) => {
-    this.setState(
-      set(
-        lensPath(['configs', configIdx, 'nodes', nodeIdx, 'modifyStatus']),
-        undefined,
       ),
     );
   }
@@ -453,10 +532,14 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
     return createNodeBalancerConfigNode(nodeBalancerId!, config.id!, formatAddress(nodeData))
       .then((node) => {
-        /* Clear errors for this node */
-        this.updateNodeErrors(configIdx, nodeIdx, []);
-        /* Clear modifyStatus for this node */
-        this.clearModifyStatus(configIdx, nodeIdx);
+        /* Set the new Node data including the ID
+           This also clears the errors and modify status. */
+        this.setState(
+          set(
+            lensPath(['configs', configIdx, 'nodes', nodeIdx]),
+            parseAddress(node),
+          ),
+        );
         /* Return true as a Promise for the sake of aggregating results */
         return true;
       })
@@ -498,10 +581,14 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     return (
       updateNodeBalancerConfigNode(nodeBalancerId!, config.id!, node!.id!, formatAddress(nodeData))
       .then((node) => {
-        /* Clear errors for this node */
-        this.updateNodeErrors(configIdx, nodeIdx, []);
-        /* Clear modifyStatus for this node */
-        this.clearModifyStatus(configIdx, nodeIdx);
+        /* Set the new Node data including the ID
+           This also clears the errors and modify status. */
+        this.setState(
+          set(
+            lensPath(['configs', configIdx, 'nodes', nodeIdx]),
+            parseAddress(node),
+          ),
+        );
         /* Return true as a Promise for the sake of aggregating results */
         return true;
       })
