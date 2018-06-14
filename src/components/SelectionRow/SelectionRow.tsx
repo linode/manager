@@ -44,6 +44,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   libRadio: {
     display: 'flex',
+    flexWrap: 'wrap',
     height: '100%',
     alignItems: 'center',
     width: 70,
@@ -54,12 +55,16 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   libTitle: {
     display: 'flex',
     flexWrap: 'wrap',
+    maxWidth: '100%',
     justifyContent: 'space-between',
     paddingBottom: '0 !important',
+    '& h3': {
+      marginRight: 10,
+    },
   },
   libTitleLink: {
-    position: 'relative',
-    margin: '-2px 0 0 10px',
+    display: 'block',
+    marginTop: -1,
     fontSize: '.9rem',
   },
   libDescription: {

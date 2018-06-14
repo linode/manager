@@ -610,6 +610,9 @@ const LinodeTheme: Linode.Theme = {
         margin: '16px 0',
         boxShadow: 'inset 0 -1px 0 #C5C6C8',
       },
+      fixed: {
+        overflowX: 'auto',
+      },
     },
     MuiTooltip: {
       tooltip: {

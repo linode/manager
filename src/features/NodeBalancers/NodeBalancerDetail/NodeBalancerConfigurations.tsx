@@ -55,9 +55,7 @@ import {
   createNewNodeBalancerConfigNode,
 } from '../utils';
 
-type ClassNames =
-  'root'
-  | 'title';
+type ClassNames = 'root' | 'title';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
