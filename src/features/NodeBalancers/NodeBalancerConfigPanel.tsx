@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { equals } from 'ramda';
 import { withStyles, StyleRulesCallback, WithStyles, Theme, Divider, MenuItem } from 'material-ui';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
@@ -7,13 +6,15 @@ import Delete from 'material-ui-icons/Delete';
 import FormControlLabel from 'material-ui/Form/FormControlLabel';
 
 import Button from 'src/components/Button';
+import { FormHelperText } from 'material-ui/Form';
+import AddNewLink from 'src/components/AddNewLink';
 import IconButton from 'src/components/IconButton';
 import Grid from 'src/components/Grid';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import ActionsPanel from 'src/components/ActionsPanel';
-import AddNewLink from 'src/components/AddNewLink';
+import Notice from 'src/components/Notice';
 
 type ClassNames = 'root'
   | 'inner'
@@ -33,6 +34,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     marginRight: theme.spacing.unit * 2,
   },
   backendIPAction: {
+    paddingLeft: theme.spacing.unit * 2,
     marginLeft: -theme.spacing.unit,
     marginTop: theme.spacing.unit * 3,
   },
@@ -42,11 +44,12 @@ const styled = withStyles(styles, { withTheme: true });
 
 interface Props {
   errors?: Linode.ApiFieldError[];
+  nodeMessage?: string;
+  configIdx?: number;
 
   forEdit?: boolean;
   submitting?: boolean;
   onSave?: () => void;
-  onCancel?: () => void;
   onDelete?: () => void;
 
   algorithm: 'roundrobin' | 'leastconn' | 'source';
@@ -90,10 +93,10 @@ interface Props {
 
   nodes: Linode.NodeBalancerConfigNode[];
   addNode: (nodeIdx?: number) => void;
-  removeNode: (configId: number) => void;
-  onUpdateNode?: (idx: number) => void;
+  removeNode: (nodeIdx: number) => void;
   onNodeLabelChange: (idx: number, value: string) => void;
   onNodeAddressChange: (idx: number, value: string) => void;
+  onNodePortChange: (idx: number, value: string) => void;
   onNodeWeightChange: (idx: number, value: string) => void;
 }
 
@@ -177,6 +180,16 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
     }
   }
 
+  onNodePortChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const configIdx = e.currentTarget.getAttribute('data-config-idx');
+    if (configIdx) {
+      this.props.onNodePortChange(
+        +configIdx,
+        e.target.value,
+      );
+    }
+  }
+
   onNodeWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const configIdx = e.currentTarget.getAttribute('data-config-idx');
     if (configIdx) {
@@ -188,61 +201,29 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
   }
 
   addNode = (e: React.MouseEvent<HTMLElement>) => {
-    const configIdx: string | null = e.currentTarget.getAttribute('data-config-idx');
-    if (configIdx) {
-      this.props.addNode(+configIdx);
-    }
-  }
-  onUpdateNode = (e: React.MouseEvent<HTMLElement>) => {
-    const configIdx: string | null = e.currentTarget.getAttribute('data-config-idx');
-    const { onUpdateNode } = this.props;
-    if (onUpdateNode && configIdx) {
-      return onUpdateNode(+configIdx);
-    }
+    this.props.addNode();
   }
 
   removeNode = (e: React.MouseEvent<HTMLElement>) => {
-    const configIdx: string | null = e.currentTarget.getAttribute('data-config-idx');
+    const nodeIdx: string | null = e.currentTarget.getAttribute('data-node-idx');
     const { removeNode } = this.props;
-    if (removeNode && configIdx) {
-      return removeNode(+configIdx);
+    if (removeNode && nodeIdx) {
+      return removeNode(+nodeIdx);
     }
   }
 
   onSave = this.props.onSave;
 
-  onCancel = this.props.onCancel;
-
   onDelete = this.props.onDelete;
-
-  shouldComponentUpdate(nextProps: Props) {
-    return this.props.forEdit !== nextProps.forEdit
-      || this.props.submitting !== nextProps.submitting
-      || this.props.algorithm !== nextProps.algorithm
-      || this.props.checkPassive !== nextProps.checkPassive
-      || this.props.checkBody !== nextProps.checkBody
-      || this.props.checkPath !== nextProps.checkPath
-      || this.props.port !== nextProps.port
-      || this.props.protocol !== nextProps.protocol
-      || this.props.healthCheckType !== nextProps.healthCheckType
-      || this.props.healthCheckAttempts !== nextProps.healthCheckAttempts
-      || this.props.healthCheckInterval !== nextProps.healthCheckInterval
-      || this.props.healthCheckTimeout !== nextProps.healthCheckTimeout
-      || this.props.sessionStickiness !== nextProps.sessionStickiness
-      || this.props.sslCertificate !== nextProps.sslCertificate
-      || this.props.privateKey !== nextProps.privateKey
-      || !equals(this.props.nodes, nextProps.nodes)
-      || !equals(this.props.errors, nextProps.errors);
-  }
 
   render() {
     const {
-      addNode,
       algorithm,
       checkBody,
       checkPassive,
       checkPath,
       classes,
+      configIdx,
       errors,
       forEdit,
       healthCheckAttempts,
@@ -250,6 +231,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       healthCheckTimeout,
       healthCheckType,
       nodes,
+      nodeMessage,
       port,
       privateKey,
       protocol,
@@ -273,6 +255,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       ssl_cert: 'SSL certificate',
       ssl_key: 'SSL private key',
       stickiness: 'Session stickiness',
+      nodes: 'Nodes',
     }, errors);
 
     return (
@@ -296,7 +279,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   type="number"
                   label="Port"
                   required
-                  value={port}
+                  value={port || ''}
                   onChange={this.onPortChange}
                   errorText={hasErrorFor('port')}
                   data-qa-port
@@ -655,71 +638,51 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               </Grid>
             </Grid>
 
-            {forEdit &&
-              <Grid
-                updateFor={[submitting]}
-                container
-                justify="space-between"
-                alignItems="center"
-              >
-                <Grid item
-                  style={{ marginLeft: -16 }}
-                >
-                  <ActionsPanel>
-                    <Button
-                      variant="raised"
-                      type="primary"
-                      onClick={this.onSave}
-                      loading={submitting}
-                      data-qa-save-config
-                    >
-                      Save
-                    </Button>
-                    <Button
-                      onClick={this.onCancel}
-                    >
-                      Cancel
-                    </Button>
-                  </ActionsPanel>
-                </Grid>
-                <Grid item>
-                  <Button
-                    onClick={this.onDelete}
-                    type="secondary"
-                    destructive
-                    data-qa-delete-config
-                  >
-                    Delete
-                  </Button>
-                </Grid>
-                <Grid item xs={12}>
-                  <Divider className={classes.divider} />
-                </Grid>
-              </Grid>
-            }
-
             <Grid
               updateFor={[
                 nodes,
                 errors,
+                nodeMessage,
               ]}
               container
             >
               <Grid item xs={12}>
+                <Grid
+                  updateFor={[nodeMessage]}
+                  style={{ marginBottom: 16 }}
+                  item
+                  xs={12}
+                >
+                  {nodeMessage &&
+                    <Notice
+                      text={nodeMessage}
+                      success
+                    />
+                  }
+                </Grid>
                 <Typography
                   variant="title"
                   data-qa-backend-ip-header
                 >
-                  Choose Backend IPs
+                  Backend Nodes
                 </Typography>
+                {hasErrorFor('nodes') &&
+                  <FormHelperText error>{hasErrorFor('nodes')}</FormHelperText>
+                }
               </Grid>
               <Grid item xs={12} style={{ paddingBottom: 24 }}>
                 {
                   nodes && nodes.map((node, idx) => {
+                    if (node.modifyStatus === 'delete') {
+                      /* This node has been marked for deletion, don't display it */
+                      return null;
+                    }
+
                     const hasErrorFor = getAPIErrorFor({
                       label: 'label',
                       address: 'address',
                       weight: 'weight',
+                      port: 'port',
                     }, node.errors);
 
                     return (
@@ -731,7 +694,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                           errors,
                         ]}
                         container
-                        alignItems="flex-end"
                         data-qa-node
                       >
                         {idx !== 0 &&
@@ -751,7 +713,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                         </Grid>
                         <Grid item xs={11} lg={3}>
                           <TextField
-                            label="Address"
+                            label="IP Address"
                             value={node.address}
                             inputProps={{ 'data-config-idx': idx }}
                             onChange={this.onNodeAddressChange}
@@ -759,8 +721,20 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             data-qa-backend-ip-address
                           />
                         </Grid>
-                        <Grid item xs={11} lg={forEdit ? 2 : 3}>
+                        <Grid item xs={11} lg={2}>
                           <TextField
+                            type="number"
+                            label="Port"
+                            value={node.port}
+                            inputProps={{ 'data-config-idx': idx }}
+                            onChange={this.onNodePortChange}
+                            errorText={hasErrorFor('port')}
+                            data-qa-backend-ip-port
+                          />
+                        </Grid>
+                        <Grid item xs={11} lg={2}>
+                          <TextField
+                            type="number"
                             label="Weight"
                             value={node.weight}
                             inputProps={{ 'data-config-idx': idx }}
@@ -770,34 +744,9 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                           />
                         </Grid>
                         <ActionsPanel className={classes.backendIPAction}>
-                          {(forEdit && idx !== (nodes.length - 1)) &&
-                            <Button
-                              type="primary"
-                              data-config-idx={idx}
-                              onClick={this.onUpdateNode}
-                              loading={node.updating}
-                            >
-                              Update
-                            </Button>
-                          }
-                          {(forEdit && idx === (nodes.length - 1)) &&
-                            <Button
-                              data-config-idx={idx}
-                              type="primary"
-                              onClick={this.addNode}
-                              data-qa-add-node
-                            >
-                              Add
-                            </Button>
-                          }
-                          {/**
-                            * Show the delete button for index 0 if we are
-                            * editing the Config. Don't show the delete button
-                            * for the final index if we are editing the Config.
-                            **/}
-                          {(forEdit ? idx !== (nodes.length - 1) : idx !== 0) &&
+                          {(forEdit || idx !== 0) &&
                             <IconButton
-                              data-config-idx={idx}
+                              data-node-idx={idx}
                               onClick={this.removeNode}
                               destructive
                               data-qa-remove-node
@@ -810,21 +759,77 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     );
                   })
                 }
-              </Grid>
-              {/* Adding nodes is done in-line when editing the Config */}
-              {!forEdit &&
                 <Grid
-                  updateFor={[]} // never update after the initial render
-                  item xs={12}
+                  item
+                  xs={12}
+                  updateFor={[]}
+                  // is the Save/Delete ActionsPanel showing?
+                  style={(forEdit || configIdx !== 0) ?
+                    { marginTop: 24, marginBottom: -24 } :
+                    { marginTop: 24 }
+                  }
                 >
                   <AddNewLink
-                    onClick={addNode}
                     label="Add a Node"
+                    onClick={this.addNode}
+                    left
                   />
                 </Grid>
-              }
+              </Grid>
             </Grid>
-          </div>
+
+            {(forEdit || configIdx !== 0) &&
+              <React.Fragment>
+                <Grid
+                  updateFor={[]}
+                  item xs={12}
+                >
+                  <Divider className={classes.divider} />
+                </Grid>
+                <Grid
+                  updateFor={[
+                    submitting,
+                  ]}
+                  container
+                  justify="space-between"
+                  alignItems="center"
+                >
+                  <Grid
+                    item
+                    style={
+                      forEdit
+                        ? { marginLeft: -8 }
+                        : { marginLeft: 8 }
+                    }
+                  >
+                    <ActionsPanel>
+                      {forEdit &&
+                        <Button
+                          variant="raised"
+                          type="primary"
+                          onClick={this.onSave}
+                          loading={submitting}
+                          data-qa-save-config
+                        >
+                          Save
+                        </Button>
+                      }
+                      {(forEdit || configIdx !== 0) &&
+                        <Button
+                          onClick={this.onDelete}
+                          type="secondary"
+                          destructive
+                          data-qa-delete-config
+                        >
+                          Delete
+                        </Button>
+                      }
+                    </ActionsPanel>
+                  </Grid>
+                </Grid>
+              </React.Fragment>
+          }
+        </div>
         </Paper>
       </Grid>
     );
