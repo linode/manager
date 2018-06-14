@@ -798,8 +798,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     item
                     style={
                       forEdit
-                        ? { marginLeft: 0 }
-                        : { marginLeft: 8 }
+                        ? {}
+                        : { marginTop: 8 }
                     }
                   >
                     <ActionsPanel style={{ padding: 0 }}>
