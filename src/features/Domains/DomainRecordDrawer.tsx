@@ -156,6 +156,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       }
       value={defaultTo('', this.state.fields[field])}
       onChange={e => this.updateField(field)(e.target.value)}
+      data-qa-target={label}
     />
 
   NumberField = ({ label, field, defaultValue = 0 }: NumberFieldProps) =>
@@ -226,6 +227,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       select
       value={defaultTo(0, this.state.fields[field])}
       onChange={e => fn(+e.target.value)}
+      data-qa-ns-select={label}
     >
       <MenuItem value={0}>Default</MenuItem>
       <MenuItem value={300}>5 minutes</MenuItem>
@@ -531,12 +533,13 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         {otherErrors.length > 0 && otherErrors.map(err => <Notice error text={err} />)}
         {fields.map((field: any, idx: number) => field(idx))}
         <ActionsPanel>
-          <Button {...buttonProps} />
+          <Button {...buttonProps} data-qa-record-save />
           <Button
             variant="raised"
             color="secondary"
             className="cancel"
             onClick={this.onClose}
+            data-qa-record-cancel
           >
             Cancel
           </Button>

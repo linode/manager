@@ -207,7 +207,11 @@ const SelectionCard: React.StatelessComponent<CombinedProps> = (props) => {
 
               {checked &&
               <Fade in={checked}>
-                <Grid item className={`${classes.icon} ${classes.checked}`}>
+                <Grid
+                  item
+                  className={`${classes.icon} ${classes.checked}`}
+                  data-qa-checked={checked}
+                >
                   <Check />
                 </Grid>
               </Fade>

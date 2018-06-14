@@ -3,6 +3,8 @@ const { constants } = require('../constants');
 export default class Page {
     get dialogTitle() { return $('[data-qa-dialog-title]'); }
     get dialogContent() { return $('[data-qa-dialog-content]'); }
+    get dialogConfirm() { return $('[data-qa-confirm-cancel]'); }
+    get dialogCancel() { return $('[data-qa-cancel-cancel]'); }
     get sidebarTitle() { return $('[data-qa-sidebar-title]'); }
     get drawerTitle() { return $('[data-qa-drawer-title]'); }
     get drawerClose() { return $('[data-qa-close-drawer]'); }
@@ -95,5 +97,15 @@ export default class Page {
     closeDrawer() {
         this.drawerClose.click();
         this.drawerTitle.waitForVisible(constants.wait.normal, true);
+    }
+
+    changeTab(tab) {
+        browser.jsClick(`[data-qa-tab="${tab}"]`);
+        browser.waitUntil(function() {
+            return browser
+                .getAttribute(`[data-qa-tab="${tab}"]`, 'aria-selected').includes('true');
+        }, constants.wait.short, 'Failed to change tab');
+        browser.waitForVisible('[data-qa-circle-progress]', constants.wait.normal, true);
+        return this;
     }
 }
