@@ -16,6 +16,7 @@ type ClassNames = 'root'
   | 'images'
   | 'libTitleContainer'
   | 'libRadio'
+  | 'libRadioLabel'
   | 'libTitle'
   | 'libTitleLink'
   | 'libDescription'
@@ -42,6 +43,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     height: '100%',
     alignItems: 'center',
     width: 70,
+  },
+  libRadioLabel: {
+    cursor: 'pointer',
   },
   libTitle: {
     display: 'flex',
@@ -76,6 +80,7 @@ export interface Props {
   onSelect?: (e: React.ChangeEvent<HTMLElement>, value: boolean) => void;
   checked?: boolean;
   showDeployLink?: boolean;
+  stackScriptID?: number;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -91,6 +96,7 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
     deploymentsActive,
     updated,
     showDeployLink,
+    stackScriptID,
   } = props;
 
   /** onSelect and showDeployLink should not be used simultaneously */
@@ -105,14 +111,14 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
         {onSelect &&
           <Grid item className={classes.libRadio}>
             <div>
-              <Radio checked={checked} onChange={onSelect} />
+              <Radio checked={checked} onChange={onSelect} id={`${stackScriptID}`} />
             </div>
           </Grid>
         }
         <Grid container alignItems="center">
           <Grid item className={classes.libTitle}>
             <Typography variant="subheading">
-              {label}
+              <label htmlFor={`${stackScriptID}`} className={classes.libRadioLabel}>{label}</label>
             </Typography>
             <Link to={'/'} target="_blank" className={classes.libTitleLink}>
               More Info

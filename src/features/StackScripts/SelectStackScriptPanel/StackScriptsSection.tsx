@@ -46,6 +46,7 @@ const stackScript: (fn: (s: Linode.StackScript.Response) => void, id?: number) =
       onSelect={() => onSelect(s)}
       checked={selectedId === s.id}
       updateFor={[selectedId === s.id]}
+      stackScriptID={s.id}
     />
   );
 
