@@ -1,5 +1,4 @@
 import {
-  init,
   filter,
   isNil,
 } from 'ramda';
@@ -21,20 +20,72 @@ export interface NodeBalancerConfigFields {
   ssl_key?: string;
   stickiness?: 'none' | 'table' | 'http_cookie';
   nodes: Linode.NodeBalancerConfigNode[];
+  modifyStatus?: 'new';
 }
+
+export const createNewNodeBalancerConfigNode = (): Linode.NodeBalancerConfigNode => ({
+  label: '',
+  address: '',
+  port: '80',
+  weight: 100,
+  mode: 'accept',
+  modifyStatus: 'new',
+});
+
+export const createNewNodeBalancerConfig = (withDefaultPort?: boolean):
+  NodeBalancerConfigFields => ({
+    algorithm: 'roundrobin',
+    check_attempts: 2,
+    check_body: undefined,
+    check_interval: 5,
+    check_passive: true,
+    check_path: undefined,
+    check_timeout: 3,
+    check: 'none',
+    cipher_suite: undefined,
+    port: withDefaultPort ? 80 : undefined,
+    protocol: 'http',
+    ssl_cert: undefined,
+    ssl_key: undefined,
+    stickiness: 'none',
+    nodes: [createNewNodeBalancerConfigNode()],
+    modifyStatus: 'new',
+  });
 
 export const nodeForRequest = (node: Linode.NodeBalancerConfigNode) => ({
   label: node.label,
   address: node.address,
+  port: node.port,
   weight: +node.weight!,
   /* Force Node creation and updates to set mode to 'accept' */
   mode: 'accept' as Linode.NodeBalancerConfigNodeMode,
 });
 
+export const formatAddress = (node: Linode.NodeBalancerConfigNode) => ({
+  ...node,
+  address: `${node.address}:${node.port}`,
+});
+
+export const parseAddress = (node: Linode.NodeBalancerConfigNode) => {
+  const match = /^(192\.168\.\d{1,3}\.\d{1,3}):(\d{1,5})$/.exec(node.address);
+  if (match) {
+    return {
+      ...node,
+      address: match![1],
+      port: match![2],
+    };
+  }
+  return node;
+};
+
+export const parseAddresses = (nodes: Linode.NodeBalancerConfigNode[]) => {
+  return nodes.map(parseAddress);
+};
+
 /* Transform an array of configs into valid request data.
    Does not modify in-place, returns a deep clone of the configs */
 export const transformConfigsForRequest =
-  (configs: NodeBalancerConfigFields[], stripLastNode?: boolean):
+  (configs: NodeBalancerConfigFields[]):
   NodeBalancerConfigFields[] => {
     return configs.map((config: NodeBalancerConfigFields) => {
       return filter(
@@ -70,10 +121,7 @@ export const transformConfigsForRequest =
           ssl_key: config.ssl_key === '<REDACTED>'
             ? undefined
             : config.ssl_key || undefined,
-          /* Don't include the blank "not yet added" node */
-          nodes: stripLastNode
-            ? init(transformConfigNodesForRequest(config.nodes))
-            : transformConfigNodesForRequest(config.nodes),
+          nodes: config.nodes.map(nodeForRequest),
           id: undefined,
           nodebalancer_id: undefined,
           nodes_status: undefined,
