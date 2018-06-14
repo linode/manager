@@ -27,8 +27,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   inner: {},
   divider: {
-    marginTop: theme.spacing.unit * 3,
-    marginBottom: theme.spacing.unit * 3,
+    marginTop: theme.spacing.unit * 2,
+    marginBottom: theme.spacing.unit * 2,
   },
   suffix: {
     marginRight: theme.spacing.unit * 2,
@@ -798,11 +798,11 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     item
                     style={
                       forEdit
-                        ? { marginLeft: -8 }
-                        : { marginLeft: 8 }
+                        ? {}
+                        : { marginTop: 8 }
                     }
                   >
-                    <ActionsPanel>
+                    <ActionsPanel style={{ padding: 0 }}>
                       {forEdit &&
                         <Button
                           variant="raised"

@@ -864,7 +864,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         {configs.map(this.renderConfig(panelMessages, configErrors, configSubmitting))}
 
         {!hasUnsavedConfig &&
-          <Grid item>
+          <Grid item style={{ marginTop: 16 }}>
             <Button
               type="secondary"
               onClick={() => this.addNodeBalancerConfig()}

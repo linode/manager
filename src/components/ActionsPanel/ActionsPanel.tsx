@@ -28,14 +28,16 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const ActionPanel: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, className } = props;
+  const { classes, className, style } = props;
 
   return (
-    <div className={classNames({
-      [classes.root]: true,
-      ...(className && { [className]: true }),
-      actionPanel: true,
-    })}
+    <div
+      className={classNames({
+        [classes.root]: true,
+        ...(className && { [className]: true }),
+        actionPanel: true,
+      })}
+      style={style}
     >
       { props.children }
     </div>
