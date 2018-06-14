@@ -8,8 +8,6 @@ import {
 import Chip from 'material-ui/Chip';
 import Popover from 'material-ui/Popover';
 
-
-
 type CSSClasses =  'chip' | 'label' | 'popover';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
@@ -34,8 +32,12 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   },
   popover: {
     minWidth: 175,
+    maxWidth: 400,
     overflow: 'visible',
     padding: theme.spacing.unit * 2,
+    [theme.breakpoints.down('xs')]: {
+      maxWidth: 285,
+    },
   },
 });
 
