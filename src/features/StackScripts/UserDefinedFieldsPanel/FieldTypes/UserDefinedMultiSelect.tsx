@@ -10,13 +10,19 @@ import FormControlLabel from 'material-ui/Form/FormControlLabel';
 
 import Toggle from 'src/components/Toggle';
 import RenderGuard from 'src/components/RenderGuard';
+import Grid from 'src/components/Grid';
 
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'toggle';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
-    margin: theme.spacing.unit * 3,
+    margin: `${theme.spacing.unit * 3}px 0`,
+    paddingBottom: theme.spacing.unit * 3,
+    borderBottom: `1px solid ${theme.palette.divider}`,
+  },
+  toggle: {
+
   },
 });
 
@@ -83,26 +89,30 @@ class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
         <Typography variant="subheading" >
           {field.label}
         </Typography>
-        {manyof.map((choice: string, index) => {
-          return (
-            <React.Fragment key={index}>
-              <FormControlLabel
-                className="toggleLabel"
-                control={
-                  <Toggle
-                    value={choice}
-                    checked={
-                      selectedValuesToArray // do we have selected values?
-                        ? selectedValuesToArray.some((selectedValue: string) =>
-                          choice === selectedValue)
-                        : false} // otherwise, nothing is checked
-                    onChange={this.handleSelectManyOf}
-                  />}
-                label={choice}
-              />
-            </React.Fragment>
-          );
-        })}
+        <Grid container>
+          {manyof.map((choice: string, index) => {
+            return (
+              <React.Fragment key={index}>
+                <Grid item xs={12} md={6} lg={4}>
+                  <FormControlLabel
+                    className={classes.toggle}
+                    control={
+                      <Toggle
+                        value={choice}
+                        checked={
+                          selectedValuesToArray // do we have selected values?
+                            ? selectedValuesToArray.some((selectedValue: string) =>
+                              choice === selectedValue)
+                            : false} // otherwise, nothing is checked
+                        onChange={this.handleSelectManyOf}
+                      />}
+                    label={choice}
+                  />
+                </Grid>
+              </React.Fragment>
+            );
+          })}
+        </Grid>
       </div>
     );
   }
