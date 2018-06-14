@@ -27,6 +27,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => ({
     '& .helpPaper': {
       padding: theme.spacing.unit * 2,
       backgroundColor: theme.bg.offWhite,
+      maxWidth: 300,
       '&::after': {
         content: 'poo',
         display: 'block',
@@ -79,8 +80,8 @@ class HelpIcon extends React.Component<CombinedProps, State> {
           open={this.state.open}
           anchorEl={this.state.anchorEl}
           onClose={this.handleClose}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'left' }}
           className={classes.root}
           classes={{ paper: 'helpPaper' }}
         >
