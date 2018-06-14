@@ -124,7 +124,7 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
 
         {generalError && <Notice error>{generalError}</Notice>}
         <LabelAndTagsPanel
-          expansion={{
+          isForm={{
             action: () => this.updateNodeBalancer('label'),
             isSubmitting,
             success: success!.label,
@@ -144,7 +144,7 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
         />
 
         <ClientConnectionThrottlePanel
-          expansion={{
+          isForm={{
             action: () => this.updateNodeBalancer('client_conn_throttle'),
             isSubmitting,
             success: success!.client_conn_throttle,
