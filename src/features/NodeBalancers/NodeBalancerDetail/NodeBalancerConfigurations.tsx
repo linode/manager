@@ -81,6 +81,7 @@ interface State {
   configErrors: Linode.ApiFieldError[][];
   configSubmitting: boolean[];
   panelMessages: string[];
+  panelNodeMessages: string[];
   /*
    * If the following is set to true, then the last element of each of the above
    * arrays is related to this unsaved config.
@@ -137,6 +138,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     configErrors: [],
     configSubmitting: [],
     panelMessages: [],
+    panelNodeMessages: [],
     deleteConfigConfirmDialog:
       clone(NodeBalancerConfigurations.defaultDeleteConfigConfirmDialogState),
     hasUnsavedConfig: false,
@@ -283,22 +285,34 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       if (node.modifyStatus === 'update') {
         return this.updateNode(idx, nodeIdx);
       }
-      return new Promise(resolve => resolve(true));
+      return new Promise(resolve => resolve(undefined));
     });
 
     /* Set the success message if all of the requests succeed */
     Promise.all([nodeBalUpdate, ...nodeUpdates] as any)
       .then((responseVals) => {
-        const success = responseVals.reduce((acc: boolean, val: boolean) => {
-          return acc && val;
-        }, true);
-        if (success) {
-          // replace success message with a new one
+        const [nodeBalSuccess, ...nodeResults] = responseVals;
+        if (nodeBalSuccess) {
+          // replace Config success message with a new one
           const newMessages = [];
           newMessages[idx] = 'NodeBalancer config updated successfully';
           this.setState({
             panelMessages: newMessages,
           });
+        }
+        const filteredNodeResults = nodeResults.filter(el => el !== undefined);
+        if (filteredNodeResults.length) {
+          const nodeSuccess = filteredNodeResults.reduce((acc: boolean, val: boolean) => {
+            return acc && val;
+          }, true);
+          if (nodeSuccess) {
+            // replace Node success message with a new one
+            const newMessages = [];
+            newMessages[idx] = 'All Nodes updated successfully';
+            this.setState({
+              panelNodeMessages: newMessages,
+            });
+          }
         }
         this.resetSubmitting(idx);
       })
@@ -373,6 +387,14 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       });
   }
 
+  clearMessages = () => {
+    // clear any success messages
+    this.setState({
+      panelMessages: [],
+      panelNodeMessages: [],
+    });
+  }
+
   saveConfig = (idx: number) => {
     const config = this.state.configs[idx];
 
@@ -382,11 +404,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     // clear node errors for this config if there are any
     this.clearNodeErrors(idx);
 
-    // clear any success messages
-    const newMessages: string[] = [];
-    this.setState({
-      panelMessages: newMessages,
-    });
+    this.clearMessages();
 
     // first, validate client-side
     const { error: validationErrors } = Joi.validate(
@@ -467,6 +485,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   }
 
   removeNode = (configIdx: number) => (nodeIdx: number) => {
+    this.clearMessages();
     if (this.state.configs[configIdx].nodes[nodeIdx].id !== undefined) {
       /* If the node has an ID, mark it for deletion when the user saves the config */
       this.setState(
@@ -553,6 +572,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   }
 
   setNodeValue = (cidx: number, nodeidx: number, key: string, value: any) => {
+    this.clearMessages();
     /* Check if the node is new */
     const { modifyStatus } = this.state.configs[cidx].nodes[nodeidx];
     /* If it's not new or for deletion set it to be updated */
@@ -631,7 +651,10 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   confirmationConfigError = () =>
     (this.state.deleteConfigConfirmDialog.errors || []).map(e => e.reason).join(',')
 
-  updateState = (lens: Lens) => (value: any) => this.setState(set(lens, value));
+  updateState = (lens: Lens) => (value: any) => {
+    this.clearMessages();
+    this.setState(set(lens, value));
+  }
 
   onSaveConfig = (idx: number) => () => this.saveConfig(idx);
 
@@ -651,8 +674,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   ) => (
     config: Linode.NodeBalancerConfig & { nodes: Linode.NodeBalancerConfigNode[] }, idx: number,
     ) => {
-    const isUnsavedConfig = this.state.hasUnsavedConfig && (idx === this.state.configs.length - 1);
-    console.log('isUnsavedConfig', isUnsavedConfig);
+    const { panelNodeMessages } = this.state;
 
     const lensTo = lensFrom(['configs', idx]);
 
@@ -678,6 +700,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           configSubmitting[idx],
           configErrors[idx],
           panelMessages[idx],
+          panelNodeMessages[idx],
         ]}
         defaultExpanded={true}
         success={panelMessages[idx]}
@@ -690,6 +713,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           onDelete={this.onDeleteConfig(config.id)}
 
           errors={configErrors[idx]}
+          nodeMessage={panelNodeMessages[idx]}
 
           algorithm={view(algorithmLens, this.state)}
           onAlgorithmChange={this.updateState(algorithmLens)}

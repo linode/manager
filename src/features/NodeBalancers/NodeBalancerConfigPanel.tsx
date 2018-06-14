@@ -14,6 +14,7 @@ import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import ActionsPanel from 'src/components/ActionsPanel';
+import Notice from 'src/components/Notice';
 
 type ClassNames = 'root'
   | 'inner'
@@ -43,6 +44,7 @@ const styled = withStyles(styles, { withTheme: true });
 
 interface Props {
   errors?: Linode.ApiFieldError[];
+  nodeMessage?: string;
   configIdx?: number;
 
   forEdit?: boolean;
@@ -229,6 +231,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       healthCheckTimeout,
       healthCheckType,
       nodes,
+      nodeMessage,
       port,
       privateKey,
       protocol,
@@ -640,10 +643,24 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               updateFor={[
                 nodes,
                 errors,
+                nodeMessage,
               ]}
               container
             >
               <Grid item xs={12}>
+                <Grid
+                  updateFor={[nodeMessage]}
+                  style={{ marginBottom: 16 }}
+                  item
+                  xs={12}
+                >
+                  {nodeMessage &&
+                    <Notice
+                      text={nodeMessage}
+                      success
+                    />
+                  }
+                </Grid>
                 <Typography
                   variant="title"
                   data-qa-backend-ip-header
