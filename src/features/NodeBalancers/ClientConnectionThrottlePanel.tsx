@@ -4,8 +4,8 @@ import { withStyles, StyleRulesCallback, WithStyles, Theme } from 'material-ui';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 
-import ExpansionPanel from 'src/components/ExpansionPanel';
 import Button from 'src/components/Button';
+import Grid from 'src/components/Grid';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Notice from 'src/components/Notice';
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
@@ -26,19 +26,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   expPanelButton: {
     padding: 0,
-    margin: `
-      ${theme.spacing.unit * 4}px
-      ${theme.spacing.unit}px
-      ${0}
-      -${theme.spacing.unit * 2}px
-    `,
+    marginTop: theme.spacing.unit * 2,
   },
 });
 
 const styled = withStyles(styles, { withTheme: true });
 
-interface ExpansionPanelProps {
-  expansionHeader?: string;
+interface IsFormProps {
   action?: () => void;
   isSubmitting: boolean;
   success: string | undefined;
@@ -47,7 +41,7 @@ interface ExpansionPanelProps {
 interface Props {
   error?: string;
   textFieldProps?: TextFieldProps;
-  expansion?: ExpansionPanelProps;
+  isForm?: IsFormProps;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -61,33 +55,38 @@ class ClientConnectionThrottlePanel extends React.Component<CombinedProps> {
   };
 
   render() {
-    const { expansion, error, classes, textFieldProps } = this.props;
+    const { isForm, error, classes, textFieldProps } = this.props;
 
     return (
       <React.Fragment>
-        {!!expansion // will either be an expandable panel that will save the settings or a card
-          ? <ExpansionPanel
-            defaultExpanded={true}
-            success={expansion.success}
-            heading={expansion.expansionHeader || 'Client Connection Throttle'}
-          >
-            <div className={!expansion ? classes.inner : ''}>
-              {error && <Notice text={error} error />}
-              <TextField data-qa-connection-throttle {...textFieldProps} />
-            </div>
-            {expansion.action &&
-              <ActionsPanel className={expansion ? classes.expPanelButton : ''}>
-                <Button
-                  onClick={expansion.action}
-                  disabled={expansion.isSubmitting}
-                  type="primary"
-                  data-qa-label-save
-                >
-                  Save
-            </Button>
-              </ActionsPanel>
-            }
-          </ExpansionPanel>
+        {!!isForm // will either be an expandable panel that will save the settings or a card
+          ? <Paper style={{ padding: 24, marginTop: 24 }}>
+              <Grid xs={12}>
+                {isForm.success &&
+                  <Notice
+                    success
+                    text={isForm.success}
+                  />
+                }
+              </Grid>
+              <Typography variant="title">Client Connection Throttle</Typography>
+              <div className={!isForm ? classes.inner : ''}>
+                {error && <Notice text={error} error />}
+                <TextField data-qa-connection-throttle {...textFieldProps} />
+              </div>
+              {isForm.action &&
+                <ActionsPanel className={isForm ? classes.expPanelButton : ''}>
+                  <Button
+                    onClick={isForm.action}
+                    disabled={isForm.isSubmitting}
+                    type="primary"
+                    data-qa-label-save
+                  >
+                    Save
+                  </Button>
+                </ActionsPanel>
+              }
+            </Paper>
           : <Paper className={classes.root} data-qa-throttle-section>
             <div className={classes.inner}>
               <Typography variant="title">Client Connection Throttle</Typography>

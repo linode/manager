@@ -7,7 +7,7 @@ import Typography from 'material-ui/Typography';
 
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 import Notice from 'src/components/Notice';
-import ExpansionPanel from 'src/components/ExpansionPanel';
+import Grid from 'src/components/Grid';
 import Button from 'src/components/Button';
 import ActionsPanel from 'src/components/ActionsPanel';
 
@@ -29,19 +29,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   expPanelButton: {
     padding: 0,
-    margin: `
-      ${theme.spacing.unit * 4}px
-      ${theme.spacing.unit}px
-      ${0}
-      -${theme.spacing.unit * 2}px
-    `,
+    marginTop: theme.spacing.unit * 2,
   },
 });
 
 const styled = withStyles(styles, { withTheme: true });
 
-interface ExpansionPanelProps {
-  expansionHeader?: string;
+interface IsFormProps {
   action?: () => void;
   isSubmitting: boolean;
   success: string | undefined;
@@ -50,7 +44,7 @@ interface ExpansionPanelProps {
 interface Props {
   error?: string;
   labelFieldProps?: TextFieldProps;
-  expansion?: ExpansionPanelProps;
+  isForm?: IsFormProps;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -65,33 +59,40 @@ class InfoPanel extends React.Component<CombinedProps> {
   };
 
   render() {
-    const { classes, error, labelFieldProps, expansion } = this.props;
+    const { classes, error, labelFieldProps, isForm } = this.props;
 
     return (
       <React.Fragment>
-        {!!expansion // will either be an expandable panel that will save the settings or a card
-          ? <ExpansionPanel
-            defaultExpanded={true}
-            success={expansion.success}
-            heading={expansion.expansionHeader || 'Label'}
-          >
-            <div className={!expansion ? classes.inner : ''}>
-              {error && <Notice text={error} error />}
-              <TextField data-qa-label-panel {...labelFieldProps} />
-            </div>
-            {!!expansion.action &&
-              <ActionsPanel className={expansion ? classes.expPanelButton : ''}>
-                <Button
-                  onClick={expansion.action}
-                  type="primary"
-                  disabled={expansion.isSubmitting}
-                  data-qa-label-save
+        {!!isForm // will either be a form that will save the settings or a card
+          ? <Paper style={{ padding: 24 }}>
+              <Grid xs={12}>
+                {isForm.success &&
+                  <Notice
+                    success
+                    text={isForm.success}
+                  />
+                }
+              </Grid>
+              <Typography variant="title">Label</Typography>
+              <div className={!isForm ? classes.inner : ''}>
+                {error && <Notice text={error} error />}
+                <TextField data-qa-label-panel {...labelFieldProps} />
+              </div>
+              {!!isForm.action &&
+                <ActionsPanel
+                  className={isForm ? classes.expPanelButton : ''}
                 >
-                  Save
-              </Button>
-              </ActionsPanel>
-            }
-          </ExpansionPanel>
+                  <Button
+                    onClick={isForm.action}
+                    type="primary"
+                    disabled={isForm.isSubmitting}
+                    data-qa-label-save
+                  >
+                    Save
+                </Button>
+                </ActionsPanel>
+              }
+            </Paper>
           : <Paper className={classes.root} data-qa-label-header>
             <div className={classes.inner}>
               {error && <Notice text={error} error />}
