@@ -108,6 +108,7 @@ const errorResources = {
   label: 'A label',
   root_pass: 'A root password',
   udf: 'UDF',
+  image: 'image',
 };
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -267,6 +268,9 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
             if (error.reason.toLowerCase().includes('udf')) {
               return { ...error, field: 'udf' };
             }
+            if (error.reason.toLowerCase().includes('linode image')) {
+              return { ...error, field: 'image' };
+            }
             return error;
           });
           this.setState(() => ({
@@ -340,9 +344,14 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
               handleSelection={this.handleSelectImage}
               updateFor={[selectedImageID, compatibleImages, errors]}
               selectedImageID={selectedImageID}
+              error={hasErrorFor('image')}
             />
-            : <Paper className={classes.emptyImagePanel}>
+            : <Paper
+              className={classes.emptyImagePanel}>
               {/* empty state for images */}
+              {hasErrorFor('image') &&
+                <Notice error={true} text={hasErrorFor('image')} />
+              }
               <Typography variant="title">
                 Select Image
               </Typography>
