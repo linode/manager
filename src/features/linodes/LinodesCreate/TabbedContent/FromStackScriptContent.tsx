@@ -5,8 +5,10 @@ import {
   Theme,
   WithStyles,
 } from 'material-ui';
+import Paper from 'material-ui/Paper';
+import Typography from 'material-ui/Typography';
 
-import { pathOr } from 'ramda';
+import { pathOr, assocPath } from 'ramda';
 
 import { Sticky, StickyProps } from 'react-sticky';
 
@@ -30,16 +32,32 @@ import {
 
 import { resetEventsPolling } from 'src/events';
 
+import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel';
+import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
 
-type ClassNames = 'root' | 'main' | 'sidebar';
+// import { UserDefinedFields as mockUserDefinedFields } from 'src/__data__/UserDefinedFields';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+
+type ClassNames = 'root'
+  | 'main'
+  | 'sidebar'
+  | 'emptyImagePanel'
+  | 'emptyImagePanelText';
+
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {},
   main: {},
   sidebar: {
     [theme.breakpoints.up('lg')]: {
       marginTop: -130,
     },
+  },
+  emptyImagePanel: {
+    padding: theme.spacing.unit * 3,
+  },
+  emptyImagePanelText: {
+    marginTop: theme.spacing.unit,
+    padding: `${theme.spacing.unit}px 0`,
   },
 });
 
@@ -48,8 +66,16 @@ interface Notice {
   level: 'warning' | 'error'; // most likely only going to need these two
 }
 
+type Info = { title: string, details?: string } | undefined;
+
+export type TypeInfo = {
+  title: string,
+  details: string,
+  monthly: number,
+  backupsMonthly: number | null,
+} | undefined;
+
 interface Props {
-  errors?: Linode.ApiFieldError[];
   notice?: Notice;
   images: Linode.Image[];
   regions: ExtendedRegion[];
@@ -61,48 +87,87 @@ interface Props {
 }
 
 interface State {
+  userDefinedFields: Linode.StackScript.UserDefinedField[];
+  udf_data: any;
+  errors?: Linode.ApiFieldError[];
+  selectedStackScriptID: number | null;
   selectedImageID: string | null;
   selectedRegionID: string | null;
   selectedTypeID: string | null;
-  label: string;
-  errors?: Linode.ApiFieldError[];
   backups: boolean;
   privateIP: boolean;
+  label: string | null;
   password: string | null;
   isMakingRequest: boolean;
+  compatibleImages: Linode.Image[];
 }
-
-export type TypeInfo = {
-  title: string,
-  details: string,
-  monthly: number,
-  backupsMonthly: number | null,
-} | undefined;
 
 const errorResources = {
   type: 'A plan selection',
   region: 'A region selection',
   label: 'A label',
   root_pass: 'A root password',
+  udf: 'UDF',
+  image: 'image',
 };
-
-type Info = { title: string, details?: string } | undefined;
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export class FromImageContent extends React.Component<CombinedProps, State> {
+export class FromStackScriptContent extends React.Component<CombinedProps, State> {
   state: State = {
+    userDefinedFields: [],
+    udf_data: null,
+    selectedStackScriptID: null,
     selectedImageID: null,
-    selectedTypeID: null,
     selectedRegionID: null,
-    password: '',
-    label: '',
+    selectedTypeID: null,
     backups: false,
     privateIP: false,
+    label: '',
+    password: '',
     isMakingRequest: false,
+    compatibleImages: [],
   };
 
   mounted: boolean = false;
+
+  handleSelectStackScript = (id: number, stackScriptImages: string[],
+    userDefinedFields: Linode.StackScript.UserDefinedField[]) => {
+    const { images } = this.props;
+    const filteredImages = images.filter((image) => {
+      for (let i = 0; i < stackScriptImages.length; i = i + 1) {
+        if (image.id === stackScriptImages[i]) {
+          return true;
+        }
+      }
+      return false;
+    });
+
+    const defaultUDFData = {};
+    userDefinedFields.forEach((eachField) => {
+      if (!!eachField.default) {
+        defaultUDFData[eachField.name] = eachField.default;
+      }
+    });
+    // first need to make a request to get the stackscript
+    // then update userDefinedFields to the fields returned
+    this.setState({
+      selectedStackScriptID: id,
+      compatibleImages: filteredImages,
+      userDefinedFields,
+      udf_data: defaultUDFData,
+      // prob gonna need to update UDF here too
+    });
+  }
+
+  handleChangeUDF = (key: string, value: string) => {
+    // either overwrite or create new selection
+    const newUDFData = assocPath([key], value, this.state.udf_data);
+
+    this.setState({
+      udf_data: { ...this.state.udf_data, ...newUDFData },
+    });
+  }
 
   handleSelectImage = (id: string) => {
     this.setState({ selectedImageID: id });
@@ -147,12 +212,27 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
     });
   }
 
-  createNewLinode = () => {
+  createFromStackScript = () => {
+    if (!this.state.selectedStackScriptID) {
+      this.scrollToTop();
+      this.setState({
+        errors: [
+          { field: 'stackscript_id', reason: 'You must select a StackScript' },
+        ],
+      });
+      return;
+    }
+    this.createLinode();
+  }
+
+  createLinode = () => {
     const { history } = this.props;
     const {
       selectedImageID,
       selectedRegionID,
       selectedTypeID,
+      selectedStackScriptID,
+      udf_data,
       label,
       password,
       backups,
@@ -164,6 +244,8 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
     createLinode({
       region: selectedRegionID,
       type: selectedTypeID,
+      stackscript_id: selectedStackScriptID,
+      stackscript_data: udf_data,
       label, /* optional */
       root_pass: password, /* required if image ID is provided */
       image: selectedImageID, /* optional */
@@ -180,9 +262,21 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
 
         this.scrollToTop();
 
-        this.setState(() => ({
-          errors: error.response && error.response.data && error.response.data.errors,
-        }));
+        if (error.response && error.response.data && error.response.data.errors) {
+          const listOfErrors = error.response.data.errors;
+          const updatedErrorList = listOfErrors.map((error: Linode.ApiFieldError) => {
+            if (error.reason.toLowerCase().includes('udf')) {
+              return { ...error, field: 'udf' };
+            }
+            if (error.reason.toLowerCase().includes('linode image')) {
+              return { ...error, field: 'image' };
+            }
+            return error;
+          });
+          this.setState(() => ({
+            errors: updatedErrorList,
+          }));
+        }
       })
       .finally(() => {
         // regardless of whether request failed or not, change state and enable the submit btn
@@ -190,30 +284,30 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
       });
   }
 
-  componentWillUnmount() {
-    this.mounted = false;
-  }
-
   componentDidMount() {
     this.mounted = true;
   }
 
-  render() {
-    const { errors, backups, privateIP, label, selectedImageID,
-      selectedRegionID, selectedTypeID, password, isMakingRequest } = this.state;
+  componentWillUnmount() {
+    this.mounted = false;
+  }
 
-    const { classes, notice, types, regions, images, getBackupsMonthlyPrice,
+  render() {
+    const { errors, userDefinedFields, udf_data, selectedImageID, selectedRegionID,
+      selectedStackScriptID, selectedTypeID, backups, privateIP, label,
+      password, isMakingRequest, compatibleImages } = this.state;
+
+    const { notice, getBackupsMonthlyPrice, regions, types, classes,
       getRegionName, getTypeInfo } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
-
-    const imageInfo = this.getImageInfo(this.props.images.find(
-      image => image.id === selectedImageID));
+    const udfErrors = (errors) ? errors.filter(error => error.field === 'udf') : undefined;
 
     const regionName = getRegionName(selectedRegionID);
-
     const typeInfo = getTypeInfo(selectedTypeID);
+    const imageInfo = this.getImageInfo(this.props.images.find(
+      image => image.id === selectedImageID));
 
     return (
       <React.Fragment>
@@ -228,26 +322,58 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
           {generalError &&
             <Notice text={generalError} error={true} />
           }
-          <SelectImagePanel
-            images={images}
-            handleSelection={this.handleSelectImage}
-            selectedImageID={selectedImageID}
-            updateFor={[selectedImageID]}
+          <SelectStackScriptPanel
+            error={hasErrorFor('stackscript_id')}
+            selectedId={selectedStackScriptID}
+            shrinkPanel={true}
+            updateFor={[selectedStackScriptID, errors]}
+            onSelect={this.handleSelectStackScript}
           />
+          {userDefinedFields && userDefinedFields.length > 0 &&
+            <UserDefinedFieldsPanel
+              errors={udfErrors}
+              handleChange={this.handleChangeUDF}
+              userDefinedFields={userDefinedFields}
+              updateFor={[userDefinedFields, udf_data, errors]}
+              udf_data={udf_data}
+            />
+          }
+          {compatibleImages && compatibleImages.length > 0
+            ? <SelectImagePanel
+              images={compatibleImages}
+              handleSelection={this.handleSelectImage}
+              updateFor={[selectedImageID, compatibleImages, errors]}
+              selectedImageID={selectedImageID}
+              error={hasErrorFor('image')}
+            />
+            : <Paper
+              className={classes.emptyImagePanel}>
+              {/* empty state for images */}
+              {hasErrorFor('image') &&
+                <Notice error={true} text={hasErrorFor('image')} />
+              }
+              <Typography variant="title">
+                Select Image
+              </Typography>
+              <Typography variant="body1" className={classes.emptyImagePanelText}>
+                No Compatible Images Available
+              </Typography>
+            </Paper>
+          }
           <SelectRegionPanel
             error={hasErrorFor('region')}
             regions={regions}
             handleSelection={this.handleSelectRegion}
             selectedID={selectedRegionID}
-            copy="Determine the best location for your Linode."
             updateFor={[selectedRegionID, errors]}
+            copy="Determine the best location for your Linode."
           />
           <SelectPlanPanel
             error={hasErrorFor('type')}
             types={types}
             onSelect={this.handleSelectPlan}
-            selectedID={selectedTypeID}
             updateFor={[selectedTypeID, errors]}
+            selectedID={selectedTypeID}
           />
           <LabelAndTagsPanel
             labelFieldProps={{
@@ -260,9 +386,9 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
           />
           <PasswordPanel
             error={hasErrorFor('root_pass')}
+            updateFor={[password, errors]}
             password={password}
             handleChange={this.handleTypePassword}
-            updateFor={[password, errors]}
           />
           <AddonsPanel
             backups={backups}
@@ -310,7 +436,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
                     heading={`${label || 'Linode'} Summary`}
                     calculatedPrice={calculatedPrice}
                     disabled={isMakingRequest}
-                    onDeploy={this.createNewLinode}
+                    onDeploy={this.createFromStackScript}
                     displaySections={displaySections}
                     {...props}
                   />
@@ -326,5 +452,5 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(FromImageContent);
+export default styled(FromStackScriptContent);
 

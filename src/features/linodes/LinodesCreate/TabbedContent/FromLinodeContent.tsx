@@ -6,22 +6,39 @@ import {
   WithStyles,
 } from 'material-ui';
 
+import { pathOr } from 'ramda';
+
+import { Sticky, StickyProps } from 'react-sticky';
+
 import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
 import AddonsPanel from '../AddonsPanel';
 import SelectLinodePanel, { ExtendedLinode } from '../SelectLinodePanel';
-import { StateToUpdate as FormState } from '../LinodesCreate';
 
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
 import Notice from 'src/components/Notice';
 import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
+import Grid from 'src/components/Grid';
+import CheckoutBar from 'src/components/CheckoutBar';
 
+import {
+  allocatePrivateIP,
+  cloneLinode,
+} from 'src/services/linodes';
 
-type ClassNames = 'root';
+import { resetEventsPolling } from 'src/events';
+
+type ClassNames = 'root' | 'main' | 'sidebar';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
+  main: {},
+  sidebar: {
+    [theme.breakpoints.up('lg')]: {
+      marginTop: -130,
+    },
+  },
 });
 
 interface Notice {
@@ -29,26 +46,38 @@ interface Notice {
   level: 'warning' | 'error'; // most likely only going to need these two
 }
 
-interface Props {
-  errors?: Linode.ApiFieldError[];
-  notice?: Notice;
-  updateFormState: (stateToUpdate: FormState[]) => void;
+export type TypeInfo = {
+  title: string,
+  details: string,
+  monthly: number,
+  backupsMonthly: number | null,
+} | undefined;
+
+interface State {
+  selectedImageID: string | null;
   selectedRegionID: string | null;
   selectedTypeID: string | null;
   selectedLinodeID: number | undefined;
-  selectedDiskSize: number | undefined;
-  images: Linode.Image[];
-  regions: ExtendedRegion[];
-  types: ExtendedType[];
+  selectedDiskSize?: number;
+  label: string;
+  errors?: Linode.ApiFieldError[];
   backups: boolean;
   privateIP: boolean;
-  getBackupsMonthlyPrice: () => number | null;
-  label: string | null;
-  extendLinodes: (linodes: Linode.Linode[]) => ExtendedLinode[];
-  linodes: Linode.Linode[];
+  password: string | null;
+  isMakingRequest: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+interface Props {
+  notice?: Notice;
+  regions: ExtendedRegion[];
+  types: ExtendedType[];
+  getBackupsMonthlyPrice: (selectedTypeID: string | null) => number | null;
+  extendLinodes: (linodes: Linode.Linode[]) => ExtendedLinode[];
+  linodes: Linode.Linode[];
+  getTypeInfo: (selectedTypeID: string | null) => TypeInfo;
+  getRegionName: (selectedRegionID: string | null) => string | undefined;
+  history: any;
+}
 
 const errorResources = {
   type: 'A plan selection',
@@ -57,86 +86,227 @@ const errorResources = {
   root_pass: 'A root password',
 };
 
-export const FromLinodeContent: React.StatelessComponent<CombinedProps> = (props) => {
-  const { notice, errors, backups, privateIP, updateFormState,
-    getBackupsMonthlyPrice, label, regions, selectedLinodeID,
-    selectedRegionID, selectedTypeID, types, linodes, extendLinodes, selectedDiskSize } = props;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
-  const hasErrorFor = getAPIErrorsFor(errorResources, errors);
-  const generalError = hasErrorFor('none');
+export class FromLinodeContent extends React.Component<CombinedProps, State> {
+  state: State = {
+    selectedImageID: null,
+    selectedTypeID: null,
+    selectedRegionID: null,
+    password: '',
+    label: '',
+    backups: false,
+    privateIP: false,
+    isMakingRequest: false,
+    selectedLinodeID: undefined,
+  };
 
-  return (
-    <React.Fragment>
-      {notice &&
-        <Notice
-          text={notice.text}
-          error={(notice.level) === 'error'}
-          warning={(notice.level === 'warning')}
-        />
-      }
-      {generalError &&
-        <Notice text={generalError} error={true} />
-      }
-      <SelectLinodePanel
-        error={hasErrorFor('linode_id')}
-        linodes={extendLinodes(linodes)}
-        selectedLinodeID={selectedLinodeID}
-        header={'Select Linode to Clone From'}
-        handleSelection={(linode) => {
-          updateFormState([
+  mounted: boolean = false;
+
+  handleSelectLinode = (linode: Linode.Linode) => {
+    this.setState({
+      selectedLinodeID: linode.id,
+      selectedTypeID: null,
+      selectedDiskSize: linode.specs.disk,
+    });
+  }
+
+  handleSelectRegion = (id: string) => {
+    this.setState({ selectedRegionID: id });
+  }
+
+  handleSelectPlan = (id: string) => {
+    this.setState({ selectedTypeID: id });
+  }
+
+  handleTypeLabel = (e: any) => {
+    this.setState({ label: e.target.value });
+  }
+
+  handleTypePassword = (value: string) => {
+    this.setState({ password: value });
+  }
+
+  handleToggleBackups = () => {
+    this.setState({ backups: !this.state.backups });
+  }
+
+  handleTogglePrivateIP = () => {
+    this.setState({ privateIP: !this.state.privateIP });
+  }
+
+  scrollToTop = () => {
+    window.scroll({
+      top: 0,
+      left: 0,
+      behavior: 'smooth',
+    });
+  }
+
+  cloneLinode = () => {
+    const { history } = this.props;
+    const {
+      selectedRegionID,
+      selectedTypeID,
+      selectedLinodeID,
+      label, // optional
+      backups, // optional
+      privateIP,
+    } = this.state;
+
+    this.setState({ isMakingRequest: true });
+
+    cloneLinode(selectedLinodeID!, {
+      region: selectedRegionID,
+      type: selectedTypeID,
+      label,
+      backups_enabled: backups,
+    })
+      .then((linode) => {
+        if (privateIP) allocatePrivateIP(linode.id);
+        resetEventsPolling();
+        history.push('/linodes');
+      })
+      .catch((error) => {
+        if (!this.mounted) { return; }
+
+        this.scrollToTop();
+
+        this.setState(() => ({
+          errors: error.response && error.response.data && error.response.data.errors,
+        }));
+      })
+      .finally(() => {
+        // regardless of whether request failed or not, change state and enable the submit btn
+        this.setState({ isMakingRequest: false });
+      });
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
+  }
+
+  componentDidMount() {
+    this.mounted = true;
+  }
+
+  render() {
+    const { errors, backups, privateIP, label, selectedLinodeID,
+      selectedRegionID, selectedTypeID, selectedDiskSize, isMakingRequest } = this.state;
+
+    const { notice, types, linodes, regions, extendLinodes, getBackupsMonthlyPrice,
+      getTypeInfo, getRegionName, classes } = this.props;
+
+    const hasErrorFor = getAPIErrorsFor(errorResources, errors);
+    const generalError = hasErrorFor('none');
+
+    const regionName = getRegionName(selectedRegionID);
+
+    const typeInfo = getTypeInfo(selectedTypeID);
+
+    return (
+      <React.Fragment>
+        <Grid item className={`${classes.main} mlMain`}>
+          {notice &&
+            <Notice
+              text={notice.text}
+              error={(notice.level) === 'error'}
+              warning={(notice.level === 'warning')}
+            />
+          }
+          {generalError &&
+            <Notice text={generalError} error={true} />
+          }
+          <SelectLinodePanel
+            error={hasErrorFor('linode_id')}
+            linodes={extendLinodes(linodes)}
+            selectedLinodeID={selectedLinodeID}
+            header={'Select Linode to Clone From'}
+            handleSelection={this.handleSelectLinode}
+            updateFor={[selectedLinodeID, errors]}
+          />
+          <SelectRegionPanel
+            error={hasErrorFor('region')}
+            regions={regions}
+            handleSelection={this.handleSelectRegion}
+            selectedID={selectedRegionID}
+            copy="Determine the best location for your Linode."
+            updateFor={[selectedRegionID, errors]}
+          />
+          <SelectPlanPanel
+            error={hasErrorFor('type')}
+            types={types}
+            onSelect={this.handleSelectPlan}
+            selectedID={selectedTypeID}
+            selectedDiskSize={selectedDiskSize}
+            updateFor={[selectedDiskSize, selectedTypeID, errors]}
+          />
+          <LabelAndTagsPanel
+            labelFieldProps={{
+              label: 'Linode Label',
+              value: label || '',
+              onChange: this.handleTypeLabel,
+              errorText: hasErrorFor('label'),
+            }}
+            updateFor={[label]}
+          />
+          <AddonsPanel
+            backups={backups}
+            backupsMonthly={getBackupsMonthlyPrice(selectedTypeID)}
+            privateIP={privateIP}
+            changeBackups={this.handleToggleBackups}
+            changePrivateIP={this.handleTogglePrivateIP}
+            updateFor={[privateIP, backups]}
+          />
+        </Grid>
+        <Grid item className={`${classes.sidebar} mlSidebar`}>
+          <Sticky
+            topOffset={-24}
+            disableCompensation>
             {
-              stateKey: 'selectedLinodeID',
-              newValue: linode.id,
-            },
-            {
-              stateKey: 'selectedTypeID',
-              newValue: null,
-            },
-            {
-              stateKey: 'selectedDiskSize',
-              newValue: linode.specs.disk,
-            },
-          ]);
-        }}
-      />
-      <SelectRegionPanel
-        error={hasErrorFor('region')}
-        regions={regions}
-        handleSelection={(id: string) =>
-          updateFormState([{ stateKey: 'selectedRegionID', newValue: id }])}
-        selectedID={selectedRegionID}
-        copy="Determine the best location for your Linode."
-      />
-      <SelectPlanPanel
-        error={hasErrorFor('type')}
-        types={types}
-        onSelect={(id: string) =>
-          updateFormState([{ stateKey: 'selectedTypeID', newValue: id }])}
-        selectedID={selectedTypeID}
-        selectedDiskSize={selectedDiskSize}
-      />
-      <LabelAndTagsPanel
-        labelFieldProps={{
-          label: 'Linode Label',
-          value: label || '',
-          onChange: e =>
-            updateFormState([{ stateKey: 'label', newValue: e.target.value }]),
-          errorText: hasErrorFor('label'),
-        }}
-      />
-      <AddonsPanel
-        backups={backups}
-        backupsMonthly={getBackupsMonthlyPrice()}
-        privateIP={privateIP}
-        changeBackups={() =>
-          updateFormState([{ stateKey: 'backups', newValue: !backups }])}
-        changePrivateIP={() =>
-          updateFormState([{ stateKey: 'privateIP', newValue: !privateIP }])}
-      />
-    </React.Fragment>
-  );
-};
+              (props: StickyProps) => {
+                const displaySections = [];
+                if (regionName) {
+                  displaySections.push({ title: regionName });
+                }
+
+                if (typeInfo) {
+                  displaySections.push(typeInfo);
+                }
+
+                if (backups && typeInfo && typeInfo.backupsMonthly) {
+                  displaySections.push({
+                    title: 'Backups Enabled',
+                    ...(typeInfo.backupsMonthly &&
+                      { details: `$${typeInfo.backupsMonthly.toFixed(2)} / monthly` }),
+                  });
+                }
+
+                let calculatedPrice = pathOr(0, ['monthly'], typeInfo);
+                if (backups && typeInfo && typeInfo.backupsMonthly) {
+                  calculatedPrice += typeInfo.backupsMonthly;
+                }
+
+                return (
+                  <CheckoutBar
+                    heading={`${label || 'Linode'} Summary`}
+                    calculatedPrice={calculatedPrice}
+                    disabled={isMakingRequest}
+                    onDeploy={this.cloneLinode}
+                    displaySections={displaySections}
+                    {...props}
+                  />
+                );
+              }
+            }
+          </Sticky>
+        </Grid>
+      </React.Fragment>
+    );
+  }
+}
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(FromLinodeContent);
+export default styled(FromLinodeContent);
+

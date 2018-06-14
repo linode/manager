@@ -23,6 +23,7 @@ module.exports = {
     ],
     alias: {
       'src/': paths.appSrc,
+      'joi': 'joi-browser',
     },
     plugins: [
       new TsconfigPathsPlugin({configFile: paths.appTsConfig}),

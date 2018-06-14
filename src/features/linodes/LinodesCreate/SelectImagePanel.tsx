@@ -17,10 +17,11 @@ import {
 } from 'ramda';
 
 import Grid from 'src/components/Grid';
-
 import TabbedPanel from 'src/components/TabbedPanel';
 import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
 import SelectionCard from 'src/components/SelectionCard';
+
+import RenderGuard from 'src/components/RenderGuard';
 
 const distroIcons = {
   Arch: 'archlinux',
@@ -150,4 +151,4 @@ const CreateFromImage: React.StatelessComponent<Props> = (props) => {
   );
 };
 
-export default CreateFromImage;
+export default RenderGuard<Props>(CreateFromImage);

@@ -3,26 +3,20 @@ import { shallow } from 'enzyme';
 import { FromLinodeContent } from './FromLinodeContent';
 
 const mockProps = {
-  updateFormState: jest.fn(),
-  selectedRegionID: '1',
-  selectedTypeID: '1',
-  selectedLinodeID: 1,
-  selectedDiskSize: 100,
-  images: [],
   regions: [],
   types: [],
-  backups: true,
-  privateIP: true,
   getBackupsMonthlyPrice: jest.fn(),
-  label: 'my label',
   extendLinodes: jest.fn(),
   linodes: [],
+  getRegionName: jest.fn(),
+  getTypeInfo: jest.fn(),
+  history: null,
 };
 
 describe('FromImageContent', () => {
   const componentWithNotice = shallow(
     <FromLinodeContent
-      classes={{ root: '' }}
+      classes={{ root: '', main: '', sidebar: '' }}
       {...mockProps}
       notice={{
         text: 'hello world',
@@ -33,7 +27,7 @@ describe('FromImageContent', () => {
 
   const component = shallow(
     <FromLinodeContent
-      classes={{ root: '' }}
+      classes={{ root: '', main: '', sidebar: '' }}
       {...mockProps}
     />,
   );
@@ -47,22 +41,22 @@ describe('FromImageContent', () => {
   });
 
   it('should render SelectLinode panel', () => {
-    expect(component.find('WithStyles(SelectLinodePanel)')).toHaveLength(1);
+    expect(component.find('WithStyles(WithRenderGuard(SelectLinodePanel))')).toHaveLength(1);
   });
 
   it('should render SelectRegion panel', () => {
-    expect(component.find('WithStyles(SelectRegionPanel)')).toHaveLength(1);
+    expect(component.find('WithStyles(WithRenderGuard(SelectRegionPanel))')).toHaveLength(1);
   });
 
   it('should render SelectPlan panel', () => {
-    expect(component.find('WithStyles(SelectPlanPanel)')).toHaveLength(1);
+    expect(component.find('WithStyles(WithRenderGuard(SelectPlanPanel))')).toHaveLength(1);
   });
 
   it('should render SelectLabel panel', () => {
-    expect(component.find('WithStyles(InfoPanel)')).toHaveLength(1);
+    expect(component.find('WithStyles(WithRenderGuard(InfoPanel))')).toHaveLength(1);
   });
 
   it('should render SelectAddOns panel', () => {
-    expect(component.find('WithStyles(AddonsPanel)')).toHaveLength(1);
+    expect(component.find('WithStyles(WithRenderGuard(AddonsPanel))')).toHaveLength(1);
   });
 });
