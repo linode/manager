@@ -706,6 +706,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                         </Grid>
                         <Grid item xs={11} lg={2}>
                           <TextField
+                            type="number"
                             label="Port"
                             value={node.port}
                             inputProps={{ 'data-config-idx': idx }}
@@ -716,6 +717,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                         </Grid>
                         <Grid item xs={11} lg={2}>
                           <TextField
+                            type="number"
                             label="Weight"
                             value={node.weight}
                             inputProps={{ 'data-config-idx': idx }}
