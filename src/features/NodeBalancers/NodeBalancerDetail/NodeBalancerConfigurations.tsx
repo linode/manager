@@ -227,6 +227,12 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     // clear node errors for this config if there are any
     this.clearNodeErrors(idx);
 
+    // clear any success messages
+    const newMessages: string[] = [];
+    this.setState({
+      panelMessages: newMessages,
+    });
+
     // first, validate client-side
     const { error: validationErrors } = Joi.validate(
       configPayload,
@@ -372,6 +378,15 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     );
   }
 
+  clearModifyStatus = (configIdx: number, nodeIdx: number) => {
+    this.setState(
+      set(
+        lensPath(['configs', configIdx, 'nodes', nodeIdx, 'modifyStatus']),
+        undefined,
+      ),
+    );
+  }
+
   removeNode = (configIdx: number) => (nodeIdx: number) => {
     if (this.state.configs[configIdx].nodes[nodeIdx].id !== undefined) {
       /* If the node has an ID, mark it for deletion when the user saves the config */
@@ -440,6 +455,8 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       .then((node) => {
         /* Clear errors for this node */
         this.updateNodeErrors(configIdx, nodeIdx, []);
+        /* Clear modifyStatus for this node */
+        this.clearModifyStatus(configIdx, nodeIdx);
         /* Return true as a Promise for the sake of aggregating results */
         return true;
       })
@@ -483,6 +500,8 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       .then((node) => {
         /* Clear errors for this node */
         this.updateNodeErrors(configIdx, nodeIdx, []);
+        /* Clear modifyStatus for this node */
+        this.clearModifyStatus(configIdx, nodeIdx);
         /* Return true as a Promise for the sake of aggregating results */
         return true;
       })

@@ -746,7 +746,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                           />
                         </Grid>
                         <ActionsPanel className={classes.backendIPAction}>
-                          {(idx !== 0) &&
+                          {(forEdit || idx !== 0) &&
                             <IconButton
                               data-node-idx={idx}
                               onClick={this.removeNode}
