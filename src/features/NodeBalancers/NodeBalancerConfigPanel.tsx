@@ -694,7 +694,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                           errors,
                         ]}
                         container
-                        alignItems="flex-end"
                         data-qa-node
                       >
                         {idx !== 0 &&
