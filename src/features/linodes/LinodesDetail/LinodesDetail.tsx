@@ -26,7 +26,6 @@ import { events$ } from 'src/events';
 import Grid from 'src/components/Grid';
 import { newLinodeEvents } from 'src/features/linodes/events';
 import { weblishLaunch } from 'src/features/Weblish';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
 import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawer';
 import EditableText from 'src/components/EditableText';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
@@ -65,6 +64,11 @@ interface State {
   configDrawer: ConfigDrawerState;
   notifications?: Linode.Notification[];
   linode: Linode.Linode & { recentEvent?: Linode.Event };
+  labelInput: {
+    label: string;
+    errorText: string;
+  };
+  type?: Linode.LinodeType;
   image?: Linode.Image;
   volumes?: Linode.Volume[];
   configs?: Linode.Config[];
@@ -87,10 +91,10 @@ type ClassNames = 'titleWrapper'
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   titleWrapper: {
     display: 'flex',
-    alignItems: 'center',
+    marginTop: 5,
   },
   backButton: {
-    margin: '2px 0 0 -16px',
+    margin: '5px 0 0 -16px',
     '& svg': {
       width: 34,
       height: 34,
@@ -176,6 +180,10 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     volumes: this.props.data.response.volumes,
     configs: this.props.data.response.configs,
     disks: this.props.data.response.disks,
+    labelInput: {
+      label: this.props.data.response.linode.label,
+      errorText: '',
+    },
     configDrawer: {
       open: false,
       configs: [],
@@ -192,7 +200,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     return haveAnyBeenModified<State>(
       this.state,
       nextState,
-      ['linode', 'image', 'volumes', 'configs', 'disks', 'configDrawer'],
+      ['linode', 'image', 'volumes', 'configs', 'disks', 'configDrawer', 'labelInput'],
     )
       || haveAnyBeenModified<Location>(location, nextLocation, ['pathname', 'search']);
   }
@@ -304,14 +312,26 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     }
   }
 
+// @TODO add support for multiple error messages
+// (Currently, including multiple error strings
+// breaks the layout)
+
   updateLabel = (label: string) => {
     const { linode } = this.state;
     renameLinode(linode.id, label)
+      .then(() => {
+        this.setState({ labelInput: { label, errorText: '' }, linode: { ...linode, label } });
+      })
       .catch((err) => {
         const errors: Linode.ApiFieldError[] = pathOr([], ['response', 'data', 'errors'], err);
-        errors.forEach(e => sendToast(e.reason, 'error'));
-        this.setState({ linode });
+        const errorStrings: string[] = errors.map(e => e.reason);
+        this.setState({ labelInput: { label, errorText: errorStrings[0] } });
       });
+  }
+
+  cancelUpdate = () => {
+    this.setState({ labelInput: { label: this.state.linode.label, errorText: '' } });
+    this.forceUpdate();
   }
 
   render() {
@@ -320,6 +340,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       image,
       volumes,
       linode,
+      labelInput,
       configs,
       configDrawer,
       disks,
@@ -342,8 +363,10 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
             </Link>
               <EditableText
                 variant="headline"
-                text={linode.label}
+                text={labelInput.label}
+                errorText={labelInput.errorText}
                 onEdit={this.updateLabel}
+                onCancel={this.cancelUpdate}
                 data-qa-label
               />
           </Grid>

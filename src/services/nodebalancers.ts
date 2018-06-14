@@ -38,7 +38,8 @@ export const updateNodeBalancer = (id: number, data: Partial<NodeBalancer>) =>
 
 export const createNodeBalancerConfigNodeSchema = Joi.object({
   label: Joi.string().min(3).max(32).required(),
-  address: Joi.string().regex(/^192\.168\.\d{1,3}\.\d{1,3}:[0-9]+$/).required(),
+  address: Joi.string().regex(/^192\.168\.\d{1,3}\.\d{1,3}$/).required(),
+  port: Joi.string().regex(/^\d{1,5}$/).required(),
   weight: Joi.number().min(1).max(255),
   mode: Joi.valid('accept', 'reject', 'drain'),
 });
@@ -100,16 +101,16 @@ export const createNodeBalancerConfigSchema = Joi.object({
   check_path: Joi.string()
     .when('check', { is: 'http', then: Joi.required() })
     .when('check', { is: 'http_body', then: Joi.required() }),
-  check_timeout: Joi.number().integer().min(1).max(65535),
+  check_timeout: Joi.number().integer(),
   check: Joi.string(),
   cipher_suite: Joi.string(),
-  port: Joi.number().integer().min(1).max(65535),
-  protocol: Joi.valid('http', 'https'),
+  port: Joi.number().integer().min(1).max(65535).required(),
+  protocol: Joi.valid('http', 'https', 'tcp'),
   ssl_key: Joi.string().when('protocol', { is: 'https', then: Joi.required() }),
   ssl_cert: Joi.string().when('protocol', { is: 'https', then: Joi.required() }),
   stickiness: Joi.string(),
   nodes: Joi.array()
-    .items(createNodeBalancerConfigNodeSchema),
+    .items(createNodeBalancerConfigNodeSchema).required().min(1),
 });
 
 export const createNodeBalancerConfig = (nodeBalancerId: number, data: any) =>

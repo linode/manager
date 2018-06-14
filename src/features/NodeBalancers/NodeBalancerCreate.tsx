@@ -22,6 +22,7 @@ import { StickyContainer, Sticky, StickyProps } from 'react-sticky';
 
 import { withStyles, WithStyles, Theme, StyleRules } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
+import Paper from 'material-ui/Paper';
 
 import Button from 'src/components/Button';
 import {
@@ -32,9 +33,11 @@ import {
 } from 'src/services/nodebalancers';
 import { dcDisplayNames } from 'src/constants';
 import Grid from 'src/components/Grid';
+import ActionsPanel from 'src/components/ActionsPanel';
 import PromiseLoader from 'src/components/PromiseLoader';
 import CheckoutBar from 'src/components/CheckoutBar';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
 import ClientConnectionThrottlePanel from './ClientConnectionThrottlePanel';
 import defaultNumeric from 'src/utilities/defaultNumeric';
@@ -45,6 +48,9 @@ import Notice from 'src/components/Notice';
 import {
   NodeBalancerConfigFields,
   transformConfigsForRequest,
+  formatAddress,
+  createNewNodeBalancerConfig,
+  createNewNodeBalancerConfigNode,
 } from './utils';
 
 type Styles =
@@ -61,7 +67,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   sidebar: {
   },
   title: {
-    marginTop: theme.spacing.unit,
+    marginTop: theme.spacing.unit * 3,
   },
 });
 
@@ -92,6 +98,12 @@ interface State {
   submitting: boolean;
   nodeBalancerFields: NodeBalancerFieldsState;
   errors?: Linode.ApiFieldError[];
+  deleteConfigConfirmDialog: {
+    open: boolean;
+    submitting: boolean;
+    errors?: Linode.ApiFieldError[];
+    idxToDelete?: number;
+  };
 }
 
 const preloaded = PromiseLoader<Props>({});
@@ -103,38 +115,22 @@ const errorResources = {
 };
 
 class NodeBalancerCreate extends React.Component<CombinedProps, State> {
-  static createNewNodeBalancerConfigNode = (): Linode.NodeBalancerConfigNode => ({
-    label: '',
-    address: '',
-    weight: 100,
-    mode: 'accept',
-  })
-
-  static createNewNodeBalancerConfig = (): NodeBalancerConfigFields => ({
-    algorithm: 'roundrobin',
-    check_attempts: 2,
-    check_body: undefined,
-    check_interval: 5,
-    check_passive: true,
-    check_path: undefined,
-    check_timeout: 3,
-    check: 'connection',
-    cipher_suite: undefined,
-    port: 80,
-    protocol: 'http',
-    ssl_cert: undefined,
-    ssl_key: undefined,
-    stickiness: 'table',
-    nodes: [NodeBalancerCreate.createNewNodeBalancerConfigNode()],
-  })
+  static defaultDeleteConfigConfirmDialogState = {
+    submitting: false,
+    open: false,
+    errors: undefined,
+    idxToDelete: undefined,
+  };
 
   static defaultFieldsStates = {
-    configs: [NodeBalancerCreate.createNewNodeBalancerConfig()],
+    configs: [createNewNodeBalancerConfig(true)],
   };
 
   state: State = {
     submitting: false,
     nodeBalancerFields: NodeBalancerCreate.defaultFieldsStates,
+    deleteConfigConfirmDialog:
+      clone(NodeBalancerCreate.defaultDeleteConfigConfirmDialogState),
   };
 
   addNodeBalancerConfig = () => this.setState({
@@ -142,7 +138,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       ...this.state.nodeBalancerFields,
       configs: [
         ...this.state.nodeBalancerFields.configs,
-        NodeBalancerCreate.createNewNodeBalancerConfig(),
+        createNewNodeBalancerConfig(),
       ],
     },
   })
@@ -150,7 +146,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   addNodeBalancerConfigNode = (configIdx: number) => this.setState(
     over(
       lensPath(['nodeBalancerFields', 'configs', configIdx, 'nodes']),
-      append(NodeBalancerCreate.createNewNodeBalancerConfigNode()),
+      append(createNewNodeBalancerConfigNode()),
     ))
 
   removeNodeBalancerConfigNode = (configIdx: number) => (nodeIdx: number) =>
@@ -173,11 +169,11 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   onNodeAddressChange = (configIdx: number, nodeIdx: number, value: string) =>
     this.setNodeValue(configIdx, nodeIdx, 'address', value)
 
+  onNodePortChange = (configIdx: number, nodeIdx: number, value: string) =>
+    this.setNodeValue(configIdx, nodeIdx, 'port', value)
+
   onNodeWeightChange = (configIdx: number, nodeIdx: number, value: string) =>
     this.setNodeValue(configIdx, nodeIdx, 'weight', value)
-
-  onNodeModeChange = (configIdx: number, nodeIdx: number, value: string) =>
-    this.setNodeValue(configIdx, nodeIdx, 'mode', value)
 
   clearNodeErrors = () => {
     // Build paths to all node errors
@@ -187,6 +183,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       });
     });
     const paths = nestedPaths.reduce((acc, pathArr) => [...acc, ...pathArr], []);
+    if (paths.length === 0) { return; }
     /* Map those paths to an array of updater functions */
     const setFns = paths.map((path: any[]) => {
       return set(lensPath(['nodeBalancerFields', ...path]), []);
@@ -198,8 +195,6 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   }
 
   setNodeErrors = (errors: Linode.ApiFieldError[]) => {
-    /* First, parse and insert all of the Node errors */
-    const nodePathErrors = fieldErrorsToNodePathErrors(errors);
     /* Map the objects with this shape
         {
           path: ['configs', 2, 'nodes', 0, 'errors'],
@@ -211,14 +206,19 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       to an array of functions that will append the error at the
       given path in the config state
     */
+    const nodePathErrors = fieldErrorsToNodePathErrors(errors);
+
+    if (nodePathErrors.length === 0) { return; }
+
     const setFns = nodePathErrors.map((nodePathError: any) => {
       return compose(
         over(lensPath(['nodeBalancerFields', ...nodePathError.path]),
-             append(nodePathError.error)),
+              append(nodePathError.error)),
         defaultTo([]),
       );
     });
-    // Then apply all of those updater functions with a compose
+
+    // Apply the error updater functions with a compose
     this.setState(
       (compose as any)(...setFns),
     );
@@ -229,7 +229,8 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
     /* transform node data for the requests */
     const nodeBalancerRequestData = clone(nodeBalancerFields);
-    nodeBalancerRequestData.configs = transformConfigsForRequest(nodeBalancerRequestData.configs);
+    nodeBalancerRequestData.configs = transformConfigsForRequest(
+      nodeBalancerRequestData.configs);
 
     /* Clear node errors */
     this.clearNodeErrors();
@@ -256,6 +257,8 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       return;
     }
 
+    this.setState({ submitting: true });
+
     createNodeBalancer(nodeBalancerRequestData)
       .then((nodeBalancer) => {
         /**
@@ -280,7 +283,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                     createNodeBalancerConfigNode(
                       nodeBalancerId,
                       nodeBalancerConfigId,
-                      nodeBalancerConfigNode,
+                      formatAddress(nodeBalancerConfigNode),
                     )
                       .then((response) => {
                         resolveNode(response);
@@ -340,6 +343,55 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       });
   }
 
+  onDeleteConfig = (configIdx: number) => () =>
+    this.setState({
+      deleteConfigConfirmDialog: {
+        ...clone(NodeBalancerCreate.defaultDeleteConfigConfirmDialogState),
+        open: true,
+        idxToDelete: configIdx,
+      },
+    })
+
+  onRemoveConfig = () => {
+    const { deleteConfigConfirmDialog: { idxToDelete } } = this.state;
+
+    /* show the submitting indicator */
+    this.setState({
+      deleteConfigConfirmDialog: {
+        ...this.state.deleteConfigConfirmDialog,
+        errors: undefined,
+        submitting: true,
+      },
+    });
+
+    /* remove the config */
+    this.setState({
+      nodeBalancerFields: {
+        ...this.state.nodeBalancerFields,
+        configs: this.state.nodeBalancerFields.configs.filter(
+          (config: NodeBalancerConfigFields, idx: number) => {
+            return idx !== idxToDelete;
+          }),
+      },
+    });
+
+    /* remove the errors related to that config */
+    if (this.state.errors) {
+      this.setState({
+        errors: this.state.errors!.filter((error: Linode.ApiFieldError) => {
+          const t = new RegExp(`configs_${idxToDelete}_`);
+          return !t.test(error.field);
+        }),
+      });
+    }
+
+    /* clear the submitting indicator */
+    this.setState({
+      deleteConfigConfirmDialog:
+        clone(NodeBalancerCreate.defaultDeleteConfigConfirmDialogState),
+    });
+  }
+
   labelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState(
       set(
@@ -366,6 +418,36 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       ),
     );
   }
+
+  onCloseConfirmation = () => this.setState({
+    deleteConfigConfirmDialog:
+      clone(NodeBalancerCreate.defaultDeleteConfigConfirmDialogState),
+  })
+
+  confirmationConfigError = () =>
+    (this.state.deleteConfigConfirmDialog.errors || []).map(e => e.reason).join(',')
+
+  renderConfigConfirmationActions = ({ onClose }: { onClose: () => void }) => (
+    <ActionsPanel style={{ padding: 0 }}>
+      <Button
+        data-qa-confirm-cancel
+        onClick={this.onRemoveConfig}
+        type="secondary"
+        destructive
+        loading={this.state.deleteConfigConfirmDialog.submitting}
+      >
+        Delete
+    </Button>
+      <Button
+        onClick={() => onClose()}
+        type="secondary"
+        className="cancel"
+        data-qa-cancel-cancel
+      >
+        Cancel
+    </Button>
+    </ActionsPanel>
+  )
 
   render() {
     const { classes, regions } = this.props;
@@ -400,6 +482,11 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               selectedID={nodeBalancerFields.region || null}
               handleSelection={this.regionChange}
             />
+            <Grid item xs={12}>
+              <Typography variant="title" className={classes.title}>
+                NodeBalancer Settings
+              </Typography>
+            </Grid>
             <ClientConnectionThrottlePanel
               textFieldProps={{
                 errorText: hasErrorFor('client_conn_throttle'),
@@ -423,11 +510,6 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               style={{ marginTop: 8 }}
               data-qa-nodebalancer-settings-section
             >
-              <Grid item xs={12}>
-                <Typography variant="title" className={classes.title}>
-                  NodeBalancer Settings
-                </Typography>
-              </Grid>
               {
                 this.state.nodeBalancerFields.configs.map((nodeBalancerConfig, idx) => {
                   const lensTo = lensFrom(['nodeBalancerFields', 'configs', idx]);
@@ -457,94 +539,97 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
                   }, [])(this.state.errors || []);
 
-                  return <NodeBalancerConfigPanel
-                    key={idx}
+                  return <Paper key={idx} style={{ padding: 24, margin: 8, width: '100%' }}>
+                    <NodeBalancerConfigPanel
+                      errors={errors}
+                      configIdx={idx}
 
-                    errors={errors}
+                      algorithm={view(algorithmLens, this.state)}
+                      onAlgorithmChange={(algorithm: string) =>
+                        this.setState(state =>
+                          set(algorithmLens, algorithm, state))}
 
-                    algorithm={defaultTo('roundrobin', view(algorithmLens, this.state))}
-                    onAlgorithmChange={(algorithm: string) =>
-                      this.setState(state =>
-                        set(algorithmLens, algorithm, state))}
+                      checkPassive={view(checkPassiveLens, this.state)}
+                      onCheckPassiveChange={(checkPassive: boolean) =>
+                        this.setState(state =>
+                          set(checkPassiveLens, checkPassive, state))}
 
-                    checkPassive={defaultTo(true, view(checkPassiveLens, this.state))}
-                    onCheckPassiveChange={(checkPassive: boolean) =>
-                      this.setState(state =>
-                        set(checkPassiveLens, checkPassive, state))}
+                      checkBody={view(checkBodyLens, this.state)}
+                      onCheckBodyChange={(checkBody: string) =>
+                        this.setState(state =>
+                          set(checkBodyLens, checkBody, state))}
 
-                    checkBody={defaultTo('', view(checkBodyLens, this.state))}
-                    onCheckBodyChange={(checkBody: string) =>
-                      this.setState(state =>
-                        set(checkBodyLens, checkBody, state))}
+                      checkPath={view(checkPathLens, this.state)}
+                      onCheckPathChange={(checkPath: string) =>
+                        this.setState(state =>
+                          set(checkPathLens, checkPath, state))}
 
-                    checkPath={defaultTo('', view(checkPathLens, this.state))}
-                    onCheckPathChange={(checkPath: string) =>
-                      this.setState(state =>
-                        set(checkPathLens, checkPath, state))}
+                      port={view(portLens, this.state)}
+                      onPortChange={(port: string | number) =>
+                        this.setState(state =>
+                          set(portLens, port, state))}
 
-                    port={defaultTo(80, view(portLens, this.state))}
-                    onPortChange={(port: string | number) =>
-                      this.setState(state =>
-                        set(portLens, port, state))}
+                      protocol={view(protocolLens, this.state)}
+                      onProtocolChange={(protocol: string) =>
+                        this.setState(state =>
+                          set(protocolLens, protocol, state))}
 
-                    protocol={defaultTo('http', view(protocolLens, this.state))}
-                    onProtocolChange={(protocol: string) =>
-                      this.setState(state =>
-                        set(protocolLens, protocol, state))}
+                      healthCheckType={view(healthCheckTypeLens, this.state)}
+                      onHealthCheckTypeChange={(healthCheckType: string) =>
+                        this.setState(state =>
+                          set(healthCheckTypeLens, healthCheckType, state))}
 
-                    healthCheckType={defaultTo('connection', view(healthCheckTypeLens, this.state))}
-                    onHealthCheckTypeChange={(healthCheckType: string) =>
-                      this.setState(state =>
-                        set(healthCheckTypeLens, healthCheckType, state))}
+                      healthCheckAttempts={view(healthCheckAttemptsLens, this.state)}
+                      onHealthCheckAttemptsChange={(healthCheckAttempts: string) =>
+                        this.setState(state =>
+                          set(healthCheckAttemptsLens, healthCheckAttempts, state))}
 
-                    healthCheckAttempts={defaultTo(2, view(healthCheckAttemptsLens, this.state))}
-                    onHealthCheckAttemptsChange={(healthCheckAttempts: string) =>
-                      this.setState(state =>
-                        set(healthCheckAttemptsLens, healthCheckAttempts, state))}
+                      healthCheckInterval={view(healthCheckIntervalLens, this.state)}
+                      onHealthCheckIntervalChange={(healthCheckInterval: number | string) =>
+                        this.setState(state =>
+                          set(healthCheckIntervalLens, healthCheckInterval, state))}
 
-                    healthCheckInterval={defaultTo(5, view(healthCheckIntervalLens, this.state))}
-                    onHealthCheckIntervalChange={(healthCheckInterval: number | string) =>
-                      this.setState(state =>
-                        set(healthCheckIntervalLens, healthCheckInterval, state))}
+                      healthCheckTimeout={view(healthCheckTimeoutLens, this.state)}
+                      onHealthCheckTimeoutChange={(healthCheckTimeout: number | string) =>
+                        this.setState(state =>
+                          set(healthCheckTimeoutLens, healthCheckTimeout, state))}
 
-                    healthCheckTimeout={defaultTo(3, view(healthCheckTimeoutLens, this.state))}
-                    onHealthCheckTimeoutChange={(healthCheckTimeout: number | string) =>
-                      this.setState(state =>
-                        set(healthCheckTimeoutLens, healthCheckTimeout, state))}
+                      sessionStickiness={view(sessionStickinessLens, this.state)}
+                      onSessionStickinessChange={(sessionStickiness: number | string) =>
+                        this.setState(state =>
+                          set(sessionStickinessLens, sessionStickiness, state))}
 
-                    sessionStickiness={defaultTo('table', view(sessionStickinessLens, this.state))}
-                    onSessionStickinessChange={(sessionStickiness: number | string) =>
-                      this.setState(state =>
-                        set(sessionStickinessLens, sessionStickiness, state))}
+                      sslCertificate={view(sslCertificateLens, this.state)}
+                      onSslCertificateChange={(sslCertificate: string) =>
+                        this.setState(state =>
+                          set(sslCertificateLens, sslCertificate, state))}
 
-                    sslCertificate={defaultTo('', view(sslCertificateLens, this.state))}
-                    onSslCertificateChange={(sslCertificate: string) =>
-                      this.setState(state =>
-                        set(sslCertificateLens, sslCertificate, state))}
+                      privateKey={view(privateKeyLens, this.state)}
+                      onPrivateKeyChange={(privateKey: string) =>
+                        this.setState(state =>
+                          set(privateKeyLens, privateKey, state))}
 
-                    privateKey={defaultTo('', view(privateKeyLens, this.state))}
-                    onPrivateKeyChange={(privateKey: string) =>
-                      this.setState(state =>
-                        set(privateKeyLens, privateKey, state))}
+                      nodes={this.state.nodeBalancerFields.configs[idx].nodes}
 
-                    nodes={this.state.nodeBalancerFields.configs[idx].nodes}
+                      addNode={() => this.addNodeBalancerConfigNode(idx)}
 
-                    addNode={() => this.addNodeBalancerConfigNode(idx)}
+                      removeNode={this.removeNodeBalancerConfigNode(idx)}
 
-                    removeNode={this.removeNodeBalancerConfigNode(idx)}
+                      onNodeLabelChange={(nodeIndex, value) =>
+                        this.onNodeLabelChange(idx, nodeIndex, value)}
 
-                    onNodeLabelChange={(nodeIndex, value) =>
-                      this.onNodeLabelChange(idx, nodeIndex, value)}
+                      onNodeAddressChange={(nodeIndex, value) =>
+                        this.onNodeAddressChange(idx, nodeIndex, value)}
 
-                    onNodeAddressChange={(nodeIndex, value) =>
-                      this.onNodeAddressChange(idx, nodeIndex, value)}
+                      onNodePortChange={(nodeIndex, value) =>
+                        this.onNodePortChange(idx, nodeIndex, value)}
 
-                    onNodeWeightChange={(nodeIndex, value) =>
-                      this.onNodeWeightChange(idx, nodeIndex, value)}
+                      onNodeWeightChange={(nodeIndex, value) =>
+                        this.onNodeWeightChange(idx, nodeIndex, value)}
 
-                    onNodeModeChange={(nodeIndex, value) =>
-                      this.onNodeModeChange(idx, nodeIndex, value)}
-                  />;
+                      onDelete={this.onDeleteConfig(idx)}
+                    />
+                  </Paper>;
                 })
               }
               <Grid item>
@@ -554,7 +639,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                   data-qa-add-config
                 >
                   Add another Configuration
-              </Button>
+                </Button>
               </Grid>
             </Grid>
           </Grid>
@@ -580,6 +665,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                       calculatedPrice={20}
                       displaySections={displaySections && [displaySections]}
                       disabled={this.state.submitting}
+                      {...props}
                     />
                   );
                 }
@@ -587,10 +673,21 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
             </Sticky>
           </Grid>
         </Grid>
+
+        <ConfirmationDialog
+          onClose={this.onCloseConfirmation}
+          title="Confirm Deletion"
+          error={this.confirmationConfigError()}
+          actions={this.renderConfigConfirmationActions}
+          open={this.state.deleteConfigConfirmDialog.open}
+        >
+          <Typography>Are you sure you want to delete this NodeBalancer Configuration?</Typography>
+        </ConfirmationDialog>
       </StickyContainer>
     );
   }
 }
+
 const controlClientConnectionThrottle = compose(
   clamp(0, 20),
   defaultNumeric(0),
@@ -613,6 +710,15 @@ export const lensFrom = (p1: (string | number)[]) => (p2: (string | number)[]) =
   lensPath([...p1, ...p2]);
 
 export const fieldErrorsToNodePathErrors = (errors: Linode.ApiFieldError[]) => {
+  /* Return objects with this shape
+      {
+        path: ['configs', 2, 'nodes', 0, 'errors'],
+        error: {
+          field: 'label',
+          reason: 'label cannot be blank"
+        }
+      }
+  */
   const nodePathErrors = errors.reduce(
     (acc: any, error: Linode.ApiFieldError) => {
       const match = /^configs_(\d+)_nodes_(\d+)_(\w+)$/.exec(error.field);
@@ -653,13 +759,55 @@ export const validationErrorsToFieldErrors = (error: Joi.ValidationError) => {
     .map((detail) => {
       const path = detail.path.split('_');
 
-      return path.includes('configs') && detail.constraint === 'unique'
-        ? {
+      if (path.includes('configs') && detail.constraint === 'unique') {
+        return {
           ...detail,
           message: 'Port must be unique',
           path: [...path, 'port'].join('_'),
-        }
-        : detail;
+        };
+      }
+
+      if (path.includes('nodes')
+          && path.includes('label')
+          && detail.constraint === 'min') {
+        return {
+          ...detail,
+          message: 'Label must be at least 3 characters',
+        };
+      }
+
+      if (path.includes('nodes')
+          && path.includes('address')
+          && detail.constraint === 'base') {
+        return {
+          ...detail,
+          message: 'IP Address must be a Linode private address',
+        };
+      }
+
+      if (path.includes('nodes')
+          && path.includes('port')
+          && (detail.constraint === 'base'
+              || detail.constraint === 'min'
+              || detail.constraint === 'max')) {
+        return {
+          ...detail,
+          message: 'Port must be between 1 and 65535',
+        };
+      }
+
+      if (path.includes('nodes')
+          && path.includes('weight')
+          && (detail.constraint === 'base'
+              || detail.constraint === 'min'
+              || detail.constraint === 'max')) {
+        return {
+          ...detail,
+          message: 'Weight must be between 1 and 255',
+        };
+      }
+
+      return detail;
     })
     .map((detail) => {
       return {
