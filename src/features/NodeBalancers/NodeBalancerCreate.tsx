@@ -123,7 +123,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   };
 
   static defaultFieldsStates = {
-    configs: [createNewNodeBalancerConfig()],
+    configs: [createNewNodeBalancerConfig(true)],
   };
 
   state: State = {
@@ -194,8 +194,6 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   }
 
   setNodeErrors = (errors: Linode.ApiFieldError[]) => {
-    /* First, parse and insert all of the Node errors */
-    const nodePathErrors = fieldErrorsToNodePathErrors(errors);
     /* Map the objects with this shape
         {
           path: ['configs', 2, 'nodes', 0, 'errors'],
@@ -207,17 +205,19 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       to an array of functions that will append the error at the
       given path in the config state
     */
+    const nodePathErrors = fieldErrorsToNodePathErrors(errors);
 
     if (nodePathErrors.length === 0) { return; }
 
     const setFns = nodePathErrors.map((nodePathError: any) => {
       return compose(
         over(lensPath(['nodeBalancerFields', ...nodePathError.path]),
-             append(nodePathError.error)),
+              append(nodePathError.error)),
         defaultTo([]),
       );
     });
-    // Then apply all of those updater functions with a compose
+
+    // Apply the error updater functions with a compose
     this.setState(
       (compose as any)(...setFns),
     );
@@ -229,7 +229,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     /* transform node data for the requests */
     const nodeBalancerRequestData = clone(nodeBalancerFields);
     nodeBalancerRequestData.configs = transformConfigsForRequest(
-      nodeBalancerRequestData.configs, true);
+      nodeBalancerRequestData.configs);
 
     /* Clear node errors */
     this.clearNodeErrors();
@@ -539,70 +539,69 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                   return <Paper key={idx} style={{ padding: 24, margin: 8, width: '100%' }}>
                     <NodeBalancerConfigPanel
                       errors={errors}
+                      configIdx={idx}
 
-                      algorithm={defaultTo('roundrobin', view(algorithmLens, this.state))}
+                      algorithm={view(algorithmLens, this.state)}
                       onAlgorithmChange={(algorithm: string) =>
                         this.setState(state =>
                           set(algorithmLens, algorithm, state))}
 
-                      checkPassive={defaultTo(true, view(checkPassiveLens, this.state))}
+                      checkPassive={view(checkPassiveLens, this.state)}
                       onCheckPassiveChange={(checkPassive: boolean) =>
                         this.setState(state =>
                           set(checkPassiveLens, checkPassive, state))}
 
-                      checkBody={defaultTo('', view(checkBodyLens, this.state))}
+                      checkBody={view(checkBodyLens, this.state)}
                       onCheckBodyChange={(checkBody: string) =>
                         this.setState(state =>
                           set(checkBodyLens, checkBody, state))}
 
-                      checkPath={defaultTo('', view(checkPathLens, this.state))}
+                      checkPath={view(checkPathLens, this.state)}
                       onCheckPathChange={(checkPath: string) =>
                         this.setState(state =>
                           set(checkPathLens, checkPath, state))}
 
-                      port={defaultTo(80, view(portLens, this.state))}
+                      port={view(portLens, this.state)}
                       onPortChange={(port: string | number) =>
                         this.setState(state =>
                           set(portLens, port, state))}
 
-                      protocol={defaultTo('http', view(protocolLens, this.state))}
+                      protocol={view(protocolLens, this.state)}
                       onProtocolChange={(protocol: string) =>
                         this.setState(state =>
                           set(protocolLens, protocol, state))}
 
-                      healthCheckType={
-                        defaultTo('connection', view(healthCheckTypeLens, this.state))}
+                      healthCheckType={view(healthCheckTypeLens, this.state)}
                       onHealthCheckTypeChange={(healthCheckType: string) =>
                         this.setState(state =>
                           set(healthCheckTypeLens, healthCheckType, state))}
 
-                      healthCheckAttempts={defaultTo(2, view(healthCheckAttemptsLens, this.state))}
+                      healthCheckAttempts={view(healthCheckAttemptsLens, this.state)}
                       onHealthCheckAttemptsChange={(healthCheckAttempts: string) =>
                         this.setState(state =>
                           set(healthCheckAttemptsLens, healthCheckAttempts, state))}
 
-                      healthCheckInterval={defaultTo(5, view(healthCheckIntervalLens, this.state))}
+                      healthCheckInterval={view(healthCheckIntervalLens, this.state)}
                       onHealthCheckIntervalChange={(healthCheckInterval: number | string) =>
                         this.setState(state =>
                           set(healthCheckIntervalLens, healthCheckInterval, state))}
 
-                      healthCheckTimeout={defaultTo(3, view(healthCheckTimeoutLens, this.state))}
+                      healthCheckTimeout={view(healthCheckTimeoutLens, this.state)}
                       onHealthCheckTimeoutChange={(healthCheckTimeout: number | string) =>
                         this.setState(state =>
                           set(healthCheckTimeoutLens, healthCheckTimeout, state))}
 
-                      sessionStickiness={
-                        defaultTo('table', view(sessionStickinessLens, this.state))}
+                      sessionStickiness={view(sessionStickinessLens, this.state)}
                       onSessionStickinessChange={(sessionStickiness: number | string) =>
                         this.setState(state =>
                           set(sessionStickinessLens, sessionStickiness, state))}
 
-                      sslCertificate={defaultTo('', view(sslCertificateLens, this.state))}
+                      sslCertificate={view(sslCertificateLens, this.state)}
                       onSslCertificateChange={(sslCertificate: string) =>
                         this.setState(state =>
                           set(sslCertificateLens, sslCertificate, state))}
 
-                      privateKey={defaultTo('', view(privateKeyLens, this.state))}
+                      privateKey={view(privateKeyLens, this.state)}
                       onPrivateKeyChange={(privateKey: string) =>
                         this.setState(state =>
                           set(privateKeyLens, privateKey, state))}
@@ -707,6 +706,15 @@ export const lensFrom = (p1: (string | number)[]) => (p2: (string | number)[]) =
   lensPath([...p1, ...p2]);
 
 export const fieldErrorsToNodePathErrors = (errors: Linode.ApiFieldError[]) => {
+  /* Return objects with this shape
+      {
+        path: ['configs', 2, 'nodes', 0, 'errors'],
+        error: {
+          field: 'label',
+          reason: 'label cannot be blank"
+        }
+      }
+  */
   const nodePathErrors = errors.reduce(
     (acc: any, error: Linode.ApiFieldError) => {
       const match = /^configs_(\d+)_nodes_(\d+)_(\w+)$/.exec(error.field);
@@ -755,10 +763,21 @@ export const validationErrorsToFieldErrors = (error: Joi.ValidationError) => {
         };
       }
 
-      if (path.includes('configs') && path.includes('nodes') && detail.constraint === 'min') {
+      if (path.includes('nodes')
+          && path.includes('label')
+          && detail.constraint === 'min') {
         return {
           ...detail,
-          message: 'You must add at least one Backend IP',
+          message: 'Label must be at least 3 characters',
+        };
+      }
+
+      if (path.includes('nodes')
+          && path.includes('address')
+          && detail.constraint === 'base') {
+        return {
+          ...detail,
+          message: 'IP Address must be a Linode private address',
         };
       }
 

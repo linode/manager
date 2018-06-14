@@ -1,5 +1,4 @@
 import {
-  init,
   filter,
   isNil,
 } from 'ramda';
@@ -21,6 +20,7 @@ export interface NodeBalancerConfigFields {
   ssl_key?: string;
   stickiness?: 'none' | 'table' | 'http_cookie';
   nodes: Linode.NodeBalancerConfigNode[];
+  modifyStatus?: 'new';
 }
 
 export const createNewNodeBalancerConfigNode = (): Linode.NodeBalancerConfigNode => ({
@@ -29,6 +29,7 @@ export const createNewNodeBalancerConfigNode = (): Linode.NodeBalancerConfigNode
   port: '80',
   weight: 100,
   mode: 'accept',
+  modifyStatus: 'new',
 });
 
 export const createNewNodeBalancerConfig = (withDefaultPort?: boolean):
@@ -48,6 +49,7 @@ export const createNewNodeBalancerConfig = (withDefaultPort?: boolean):
     ssl_key: undefined,
     stickiness: 'none',
     nodes: [createNewNodeBalancerConfigNode()],
+    modifyStatus: 'new',
   });
 
 export const nodeForRequest = (node: Linode.NodeBalancerConfigNode) => ({
@@ -83,7 +85,7 @@ export const parseAddresses = (nodes: Linode.NodeBalancerConfigNode[]) => {
 /* Transform an array of configs into valid request data.
    Does not modify in-place, returns a deep clone of the configs */
 export const transformConfigsForRequest =
-  (configs: NodeBalancerConfigFields[], stripLastNode?: boolean):
+  (configs: NodeBalancerConfigFields[]):
   NodeBalancerConfigFields[] => {
     return configs.map((config: NodeBalancerConfigFields) => {
       return filter(
@@ -119,10 +121,7 @@ export const transformConfigsForRequest =
           ssl_key: config.ssl_key === '<REDACTED>'
             ? undefined
             : config.ssl_key || undefined,
-          /* Don't include the blank "not yet added" node */
-          nodes: stripLastNode
-            ? init(transformConfigNodesForRequest(config.nodes))
-            : transformConfigNodesForRequest(config.nodes),
+          nodes: config.nodes.map(nodeForRequest),
           id: undefined,
           nodebalancer_id: undefined,
           nodes_status: undefined,

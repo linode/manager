@@ -8,6 +8,7 @@ import FormControlLabel from 'material-ui/Form/FormControlLabel';
 
 import Button from 'src/components/Button';
 import { FormHelperText } from 'material-ui/Form';
+import AddNewLink from 'src/components/AddNewLink';
 import IconButton from 'src/components/IconButton';
 import Grid from 'src/components/Grid';
 import TextField from 'src/components/TextField';
@@ -43,11 +44,11 @@ const styled = withStyles(styles, { withTheme: true });
 
 interface Props {
   errors?: Linode.ApiFieldError[];
+  configIdx?: number;
 
   forEdit?: boolean;
   submitting?: boolean;
   onSave?: () => void;
-  onCancel?: () => void;
   onDelete?: () => void;
 
   algorithm: 'roundrobin' | 'leastconn' | 'source';
@@ -91,8 +92,7 @@ interface Props {
 
   nodes: Linode.NodeBalancerConfigNode[];
   addNode: (nodeIdx?: number) => void;
-  removeNode: (configId: number) => void;
-  onUpdateNode?: (idx: number) => void;
+  removeNode: (nodeIdx: number) => void;
   onNodeLabelChange: (idx: number, value: string) => void;
   onNodeAddressChange: (idx: number, value: string) => void;
   onNodePortChange: (idx: number, value: string) => void;
@@ -200,31 +200,18 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
   }
 
   addNode = (e: React.MouseEvent<HTMLElement>) => {
-    const configIdx: string | null = e.currentTarget.getAttribute('data-config-idx');
-    if (configIdx) {
-      this.props.addNode(+configIdx);
-    }
-  }
-
-  onUpdateNode = (e: React.MouseEvent<HTMLElement>) => {
-    const configIdx: string | null = e.currentTarget.getAttribute('data-config-idx');
-    const { onUpdateNode } = this.props;
-    if (onUpdateNode && configIdx) {
-      return onUpdateNode(+configIdx);
-    }
+    this.props.addNode();
   }
 
   removeNode = (e: React.MouseEvent<HTMLElement>) => {
-    const configIdx: string | null = e.currentTarget.getAttribute('data-config-idx');
+    const nodeIdx: string | null = e.currentTarget.getAttribute('data-node-idx');
     const { removeNode } = this.props;
-    if (removeNode && configIdx) {
-      return removeNode(+configIdx);
+    if (removeNode && nodeIdx) {
+      return removeNode(+nodeIdx);
     }
   }
 
   onSave = this.props.onSave;
-
-  onCancel = this.props.onCancel;
 
   onDelete = this.props.onDelete;
 
@@ -255,6 +242,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       checkPassive,
       checkPath,
       classes,
+      configIdx,
       errors,
       forEdit,
       healthCheckAttempts,
@@ -668,37 +656,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               </Grid>
             </Grid>
 
-            {forEdit &&
-              <Grid
-                updateFor={[submitting]}
-                container
-                justify="space-between"
-                alignItems="center"
-              >
-                <Grid item
-                  style={{ marginLeft: -16 }}
-                >
-                  <ActionsPanel>
-                    <Button
-                      variant="raised"
-                      type="primary"
-                      onClick={this.onSave}
-                      loading={submitting}
-                    >
-                      Save
-                    </Button>
-                    <Button
-                      onClick={this.onCancel}
-                    >
-                      Cancel
-                    </Button>
-                  </ActionsPanel>
-                </Grid>
-                <Grid item xs={12}>
-                  <Divider className={classes.divider} />
-                </Grid>
-              </Grid>
-            }
 
             <Grid
               updateFor={[
@@ -712,7 +669,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   variant="title"
                   data-qa-backend-ip-header
                 >
-                  Choose Backend IPs
+                  Backend Nodes
                 </Typography>
                 {hasErrorFor('nodes') &&
                   <FormHelperText error>{hasErrorFor('nodes')}</FormHelperText>
@@ -721,6 +678,11 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               <Grid item xs={12} style={{ paddingBottom: 24 }}>
                 {
                   nodes && nodes.map((node, idx) => {
+                    if (node.modifyStatus === 'delete') {
+                      /* This node has been marked for deletion, don't display it */
+                      return null;
+                    }
+
                     const hasErrorFor = getAPIErrorFor({
                       label: 'label',
                       address: 'address',
@@ -755,7 +717,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                         </Grid>
                         <Grid item xs={11} lg={3}>
                           <TextField
-                            label="Address"
+                            label="IP Address"
                             value={node.address}
                             inputProps={{ 'data-config-idx': idx }}
                             onChange={this.onNodeAddressChange}
@@ -784,29 +746,9 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                           />
                         </Grid>
                         <ActionsPanel className={classes.backendIPAction}>
-                          {(forEdit && (idx !== (nodes.length - 1))) &&
-                            <Button
-                              type="primary"
-                              data-config-idx={idx}
-                              onClick={this.onUpdateNode}
-                              loading={node.updating}
-                            >
-                              Update
-                            </Button>
-                          }
-                          {(idx === (nodes.length - 1)) &&
-                            <Button
-                              data-config-idx={idx}
-                              type="primary"
-                              onClick={this.addNode}
-                              data-qa-add-node
-                            >
-                              Add
-                            </Button>
-                          }
-                          {(idx !== (nodes.length - 1)) &&
+                          {(idx !== 0) &&
                             <IconButton
-                              data-config-idx={idx}
+                              data-node-idx={idx}
                               onClick={this.removeNode}
                               destructive
                               data-qa-remove-node
@@ -819,22 +761,68 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     );
                   })
                 }
-              </Grid>
-
-              <Grid updateFor={[]} item xs={12}>
-                <Divider className={classes.divider} />
-              </Grid>
-
-              <Grid updateFor={[]} item xs={12}>
-                <Button
-                  onClick={this.onDelete}
-                  type="secondary"
-                  destructive
+                <Grid
+                  item
+                  xs={12}
+                  updateFor={[]}
+                  // is the Save/Delete ActionsPanel showing?
+                  style={(forEdit || configIdx !== 0) ?
+                    { marginTop: 24, marginBottom: -24 } :
+                    { marginTop: 24 }
+                  }
                 >
-                  Delete
-                </Button>
+                  <AddNewLink
+                    label="Add a Node"
+                    onClick={this.addNode}
+                    left
+                  />
+                </Grid>
               </Grid>
 
+              {(forEdit || configIdx !== 0) &&
+                <React.Fragment>
+                  <Grid updateFor={[]} item xs={12}>
+                    <Divider className={classes.divider} />
+                  </Grid>
+                  <Grid
+                    updateFor={[submitting]}
+                    container
+                    justify="space-between"
+                    alignItems="center"
+                  >
+                    <Grid
+                      item
+                      style={
+                        forEdit
+                          ? { marginLeft: -8 }
+                          : { marginLeft: 8 }
+                      }
+                    >
+                      <ActionsPanel>
+                        {forEdit &&
+                          <Button
+                            variant="raised"
+                            type="primary"
+                            onClick={this.onSave}
+                            loading={submitting}
+                          >
+                            Save
+                          </Button>
+                        }
+                        {(forEdit || configIdx !== 0) &&
+                          <Button
+                            onClick={this.onDelete}
+                            type="secondary"
+                            destructive
+                          >
+                            Delete
+                          </Button>
+                        }
+                      </ActionsPanel>
+                    </Grid>
+                  </Grid>
+                </React.Fragment>
+              }
             </Grid>
           </div>
         </Paper>

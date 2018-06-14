@@ -10,15 +10,14 @@ import {
 import {
   compose,
   append,
+  defaultTo,
   clone,
   path,
   lensPath,
-  lensIndex,
   pathOr,
   set,
   view,
   over,
-  map,
   Lens,
 } from 'ramda';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
@@ -30,7 +29,6 @@ import {
   updateNodeBalancerConfig,
   deleteNodeBalancerConfig,
   createNodeBalancerConfigSchema,
-  createNodeBalancerConfigNodeSchema,
   getNodeBalancerConfigNodes,
   createNodeBalancerConfigNode,
   updateNodeBalancerConfigNode,
@@ -50,9 +48,9 @@ import {
   transformConfigsForRequest,
   NodeBalancerConfigFields,
   formatAddress,
-  parseAddress,
   parseAddresses,
   createNewNodeBalancerConfig,
+  createNewNodeBalancerConfigNode,
 } from '../utils';
 
 type ClassNames =
@@ -78,7 +76,6 @@ interface PreloadedProps {
 
 interface State {
   configs: NodeBalancerConfigFields[];
-  unmodifiedConfigs: NodeBalancerConfigFields[];
   configErrors: Linode.ApiFieldError[][];
   configSubmitting: boolean[];
   /*
@@ -86,19 +83,11 @@ interface State {
    * arrays is related to this unsaved config.
    */
   hasUnsavedConfig: boolean;
-  panelMessages: string[];
   deleteConfigConfirmDialog: {
     open: boolean;
     submitting: boolean;
     errors?: Linode.ApiFieldError[];
     idToDelete?: number;
-  };
-  deleteNodeConfirmDialog: {
-    open: boolean;
-    submitting: boolean;
-    errors?: Linode.ApiFieldError[];
-    configIdxToDelete?: number;
-    nodeIdxToDelete?: number;
   };
 }
 
@@ -108,23 +97,12 @@ type CombinedProps =
   & WithStyles<ClassNames>
   & PreloadedProps;
 
-const blankNode = (): Linode.NodeBalancerConfigNode => ({
-  label: '',
-  address: '',
-  port: '80',
-  weight: 100,
-});
 
 const getConfigsWithNodes = (nodeBalancerId: number) => {
   return getNodeBalancerConfigs(nodeBalancerId).then((configs) => {
     return Promise.map(configs.data, (config) => {
       return getNodeBalancerConfigNodes(nodeBalancerId, config.id)
         .then(({ data: nodes }) => {
-          /**
-           * Include a blank node (for the sake of local state) that can be "added"
-           * with the Add button.
-           **/
-          nodes.push(blankNode());
           return {
             ...config,
             nodes: parseAddresses(nodes),
@@ -153,23 +131,99 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
   state: State = {
     configs: pathOr([], ['response'], this.props.configs),
-    unmodifiedConfigs: pathOr([], ['response'], this.props.configs),
     configErrors: [],
     configSubmitting: [],
-    panelMessages: [],
     deleteConfigConfirmDialog:
       clone(NodeBalancerConfigurations.defaultDeleteConfigConfirmDialogState),
-    deleteNodeConfirmDialog:
-      clone(NodeBalancerConfigurations.defaultDeleteNodeConfirmDialogState),
     hasUnsavedConfig: false,
   };
 
-  updateConfig = (idx: number) => {
+  clearNodeErrors = (configIdx: number) => {
+    // Build paths to all node errors
+    const paths = this.state.configs[configIdx].nodes.map((nodes, idxN) => {
+      return ['nodes', idxN, 'errors'];
+    });
+    /* Map those paths to an array of updater functions */
+    const setFns = paths.map((path: any[]) => {
+      return set(lensPath(['configs', configIdx, ...path]), []);
+    });
+    /* Apply all of those update functions at once to state */
+    this.setState(
+      (compose as any)(...setFns),
+    );
+  }
+
+  fieldErrorsToNodePathErrors = (errors: Linode.ApiFieldError[]) => {
+    /* Return objects with this shape
+        {
+          path: [0, 'errors'],
+          error: {
+            field: 'label',
+            reason: 'label cannot be blank"
+          }
+        }
+    */
+    const nodePathErrors = errors.reduce(
+      (acc: any, error: Linode.ApiFieldError) => {
+        const match = /^nodes_(\d+)_(\w+)$/.exec(error.field);
+        if (match && match[1] && match[2]) {
+          return [
+            ...acc,
+            {
+              path: [+match[1], 'errors'],
+              error: {
+                field: match[2],
+                reason: error.reason,
+              },
+            },
+          ];
+        }
+        return acc;
+      },
+      [],
+    );
+    return nodePathErrors;
+  }
+
+  setNodeErrors = (configIdx: number, error: Linode.ApiFieldError[]) => {
+    /* Map the objects with this shape
+        {
+          path: [0, 'errors'],
+          error: {
+            field: 'label',
+            reason: 'label cannot be blank"
+          }
+        }
+      to an array of functions that will append the error at the
+      given path in the config state
+    */
+    const nodePathErrors = this.fieldErrorsToNodePathErrors(error);
+
+    if (nodePathErrors.length === 0) { return; }
+
+    const setFns = nodePathErrors.map((nodePathError: any) => {
+      return compose(
+        over(lensPath(['configs', configIdx, 'nodes', ...nodePathError.path]),
+              append(nodePathError.error)),
+        defaultTo([]),
+      );
+    });
+
+    // Apply the error updater functions with a compose
+    this.setState(
+      (compose as any)(...setFns),
+    );
+  }
+
+  saveConfig = (idx: number) => {
     const { match: { params: { nodeBalancerId } } } = this.props;
     const config = this.state.configs[idx];
 
     const configPayload: Partial<Linode.NodeBalancerConfig> =
-      transformConfigsForRequest([config], true)[0];
+      transformConfigsForRequest([config])[0];
+
+    // clear node errors for this config if there are any
+    this.clearNodeErrors(idx);
 
     // first, validate client-side
     const { error: validationErrors } = Joi.validate(
@@ -182,6 +236,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       const newErrors = clone(this.state.configErrors);
       newErrors[idx] = validationErrorsToFieldErrors(validationErrors);
       this.setState({ configErrors: newErrors });
+      this.setNodeErrors(idx, newErrors[idx]);
       return;
     }
 
@@ -191,6 +246,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       configSubmitting: newSubmitting,
     });
 
+    // If updating Config, perform the update and Node creates/deletes/updates simultaneously.
     updateNodeBalancerConfig(nodeBalancerId!, config.id!, configPayload)
       .then((nodeBalancerConfig) => {
         // update config data
@@ -199,16 +255,6 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         const newNodes = clone(this.state.configs[idx].nodes);
         //    while maintaing node data
         newConfigs[idx].nodes = newNodes;
-
-        // update config data for reverting edits
-        const newUnmodifiedConfigs = clone(this.state.unmodifiedConfigs);
-        newUnmodifiedConfigs[idx] = nodeBalancerConfig as NodeBalancerConfigFields;
-        //    while maintaing node data
-        newUnmodifiedConfigs[idx].nodes = newNodes;
-
-        // replace success message with a new one
-        const newMessages = [];
-        newMessages[idx] = 'NodeBalancer config updated successfully';
 
         // reset errors
         const newErrors = clone(this.state.configErrors);
@@ -220,8 +266,6 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
         this.setState({
           configs: newConfigs,
-          unmodifiedConfigs: newUnmodifiedConfigs,
-          panelMessages: newMessages,
           configErrors: newErrors,
           configSubmitting: newSubmitting,
         });
@@ -239,6 +283,22 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           configSubmitting: newSubmitting,
         });
       });
+
+    // These operations execute while the config update request is being made
+    config.nodes.map((node, nodeIdx) => {
+      if (node.modifyStatus === 'delete') {
+        this.deleteNode(idx, nodeIdx);
+        return;
+      }
+      if (node.modifyStatus === 'new') {
+        this.createNode(idx, nodeIdx);
+        return;
+      }
+      if (node.modifyStatus === 'update') {
+        this.updateNode(idx, nodeIdx);
+        return;
+      }
+    });
   }
 
   deleteConfig = (e: any) => {
@@ -259,12 +319,8 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         // update config data
         const newConfigs = clone(this.state.configs);
         newConfigs.splice(idx, 1);
-        // update config data for reverting edits
-        const newUnmodifiedConfigs = clone(this.state.unmodifiedConfigs);
-        newUnmodifiedConfigs.splice(idx, 1);
         this.setState({
           configs: newConfigs,
-          unmodifiedConfigs: newUnmodifiedConfigs,
           deleteConfigConfirmDialog:
             clone(NodeBalancerConfigurations.defaultDeleteConfigConfirmDialogState),
         });
@@ -293,86 +349,73 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     );
   }
 
-  removeNode = (e: any) => {
+  deleteNode = (configIdx: number, nodeIdx: number) => {
     const { match: { params: { nodeBalancerId } } } = this.props;
-    const { deleteNodeConfirmDialog: { configIdxToDelete, nodeIdxToDelete } } = this.state;
-    const nodes = this.state.configs[configIdxToDelete!].nodes;
-    const { id: configId } = this.state.configs[configIdxToDelete!];
-    const { id: nodeId } = nodes[nodeIdxToDelete!];
+    const config = this.state.configs[configIdx];
+    const node = this.state.configs[configIdx].nodes[nodeIdx];
 
-    this.setState({
-      deleteNodeConfirmDialog: {
-        ...this.state.deleteNodeConfirmDialog,
-        errors: undefined,
-        submitting: true,
-      },
-    });
-
-    deleteNodeBalancerConfigNode(nodeBalancerId!, configId!, nodeId!)
+    deleteNodeBalancerConfigNode(nodeBalancerId!, config.id!, node.id!)
       .then(() => {
         this.setState(
           over(
-            lensPath(['configs', configIdxToDelete!, 'nodes']),
-            nodes => nodes.filter((n: any, idx: number) => idx !== nodeIdxToDelete!),
+            lensPath(['configs', configIdx!, 'nodes']),
+            nodes => nodes.filter((n: any, idx: number) => idx !== nodeIdx!),
           ),
         );
-        this.setState({
-          deleteNodeConfirmDialog:
-            clone(NodeBalancerConfigurations.defaultDeleteNodeConfirmDialogState),
-        });
       })
       .catch((err) => {
+        /* @todo:
         const apiError = path<Linode.ApiFieldError[]>(['response', 'data', 'error'], err);
 
-        return this.setState({
-          deleteNodeConfirmDialog: {
-            ...this.state.deleteNodeConfirmDialog,
-            submitting: false,
-            errors: apiError
-              ? apiError
-              : [{ field: 'none', reason: 'Unable to complete your request at this time.' }],
-          },
-        });
+            place an error on the node and set toDelete to undefined
+
+        */
       });
   }
 
-  addNode = (configIdx: number) => (nodeIdx: number) => {
+  removeNode = (configIdx: number) => (nodeIdx: number) => {
+    if (this.state.configs[configIdx].nodes[nodeIdx].id !== undefined) {
+      /* If the node has an ID, mark it for deletion when the user saves the config */
+      this.setState(
+        set(
+          lensPath(['configs', configIdx, 'nodes', nodeIdx, 'modifyStatus']),
+          'delete',
+        ),
+      );
+    } else {
+      /* If the node doesn't have an ID, remove it from state immediately */
+      this.setState(
+        over(
+          lensPath(['configs', configIdx, 'nodes']),
+          nodes => nodes.filter((n: any, idx: number) => idx !== nodeIdx),
+        ),
+      );
+    }
+  }
+
+  addNode = (configIdx: number) => () => {
+    this.setState(
+      set(
+        lensPath(['configs', configIdx, 'nodes']),
+        append(createNewNodeBalancerConfigNode())(this.state.configs[configIdx].nodes),
+      ),
+    );
+  }
+
+  createNode = (configIdx: number, nodeIdx: number) => {
     const { match: { params: { nodeBalancerId } } } = this.props;
     const config = this.state.configs[configIdx];
     const node = this.state.configs[configIdx].nodes[nodeIdx];
 
     const nodeData = nodeForRequest(node);
-    /* Perform client-side validation */
-    const { error } = Joi.validate(
-      nodeData,
-      createNodeBalancerConfigNodeSchema,
-      { abortEarly: false },
-    );
-
-    if (error) {
-      this.updateNodeErrors(configIdx, nodeIdx, validationErrorsToFieldErrors(error));
-      return;
-    }
 
     createNodeBalancerConfigNode(nodeBalancerId!, config.id!, formatAddress(nodeData))
       .then((node) => {
-        this.setState(
-          set(
-            lensPath(['configs', configIdx, 'nodes']),
-            compose<any, any, any>(
-              /**
-               * Include a blank node (for the sake of local state) that can be "added"
-               * with the Add button.
-               **/
-              append(blankNode()),
-              set(lensIndex(nodeIdx), parseAddress(node)),
-            )(this.state.configs[configIdx].nodes),
-          ),
-        );
-        /* clear errors for this node */
+        /* Clear errors for this node */
         this.updateNodeErrors(configIdx, nodeIdx, []);
       })
       .catch((errResponse) => {
+        /* Set errors for this node */
         const errors = pathOr([], ['response', 'data', 'errors'], errResponse);
         this.updateNodeErrors(configIdx, nodeIdx, errors);
       });
@@ -384,62 +427,14 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     const node = this.state.configs[configIdx].nodes[nodeIdx];
 
     const nodeData = nodeForRequest(node);
-    /* Perform client-side validation */
-    const { error } = Joi.validate(
-      nodeData,
-      createNodeBalancerConfigNodeSchema,
-      { abortEarly: false },
-    );
-
-    if (error) {
-      this.updateNodeErrors(configIdx, nodeIdx, validationErrorsToFieldErrors(error));
-      return;
-    }
-
-    /* set the "updating" flag for this node */
-    this.setState(
-      set(
-        lensPath(['configs', configIdx, 'nodes']),
-        map((_node: any) => {
-          if (_node.id! === node.id) {
-            return { ..._node, updating: true };
-          }
-          return _node;
-        })(this.state.configs[configIdx].nodes),
-      ),
-    );
 
     updateNodeBalancerConfigNode(nodeBalancerId!, config.id!, node!.id!, formatAddress(nodeData))
       .then((node) => {
-        /* clear the "updating" flag for this node */
-        this.setState(
-          set(
-            lensPath(['configs', configIdx, 'nodes']),
-            map((_node: any) => {
-              if (_node.id! === node.id) {
-                return { ..._node, updating: false };
-              }
-              return _node;
-            })(this.state.configs[configIdx].nodes),
-          ),
-        );
-        /* clear errors for this node */
+        /* Clear errors for this node */
         this.updateNodeErrors(configIdx, nodeIdx, []);
       })
       .catch((errResponse) => {
-        /* clear the "updating" flag for this node */
-        this.setState(
-          set(
-            lensPath(['configs', configIdx, 'nodes']),
-            map((_node: any) => {
-              if (_node.id! === node.id) {
-                return { ..._node, updating: false };
-              }
-              return _node;
-            })(this.state.configs[configIdx].nodes),
-          ),
-        );
-        /* set the errors for this node */
+        /* Set errors for this node */
         const errors = pathOr([], ['response', 'data', 'errors'], errResponse);
         this.updateNodeErrors(configIdx, nodeIdx, errors);
       });
@@ -448,19 +443,30 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   addNodeBalancerConfig = () => {
     this.setState({
       configs: append(createNewNodeBalancerConfig(false), this.state.configs),
-      unmodifiedConfigs: append(createNewNodeBalancerConfig(false), this.state.unmodifiedConfigs),
       configErrors: append([], this.state.configErrors),
       configSubmitting: append(false, this.state.configSubmitting),
       hasUnsavedConfig: true,
     });
   }
 
-  setNodeValue = (cidx: number, nodeidx: number, key: string, value: any) =>
+  setNodeValue = (cidx: number, nodeidx: number, key: string, value: any) => {
+    /* Check if the node is new */
+    const { modifyStatus } = this.state.configs[cidx].nodes[nodeidx];
+    /* If it's not new or for deletion set it to be updated */
+    if (!(modifyStatus === 'new' || modifyStatus === 'delete')) {
+      this.setState(
+        set(
+          lensPath(['configs', cidx, 'nodes', nodeidx, 'modifyStatus']),
+          'update',
+        ));
+    }
+    /* Set the { key: value } pair requested */
     this.setState(
       set(
         lensPath(['configs', cidx, 'nodes', nodeidx, key]),
         value,
-      ))
+      ));
+  }
 
   onNodeLabelChange = (configIdx: number) => (nodeIdx: number, value: string) =>
     this.setNodeValue(configIdx, nodeIdx, 'label', value)
@@ -474,37 +480,17 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   onNodeWeightChange = (configIdx: number) => (nodeIdx: number, value: string) =>
     this.setNodeValue(configIdx, nodeIdx, 'weight', value)
 
-  cancelEditing = (idx: number) => {
-    // reset errors
-    const newErrors = clone(this.state.configErrors);
-    newErrors[idx] = [];
-    this.setState({
-      configs: this.state.unmodifiedConfigs,
-      configErrors: newErrors,
-    });
-  }
-
   onCloseConfirmation = () => this.setState({
     deleteConfigConfirmDialog:
       clone(NodeBalancerConfigurations.defaultDeleteConfigConfirmDialogState),
-    deleteNodeConfirmDialog:
-      clone(NodeBalancerConfigurations.defaultDeleteNodeConfirmDialogState),
   })
-
-  onUpdateNode = (configIdx: number) => (nodeIndex: number) =>
-    this.updateNode(configIdx, nodeIndex)
-
-  confirmationNodeError = () =>
-    (this.state.deleteNodeConfirmDialog.errors || []).map(e => e.reason).join(',')
 
   confirmationConfigError = () =>
     (this.state.deleteConfigConfirmDialog.errors || []).map(e => e.reason).join(',')
 
   updateState = (lens: Lens) => (value: any) => this.setState(set(lens, value));
 
-  onSaveConfig = (idx: number) => () => this.updateConfig(idx);
-
-  onCancelEditingConfig = (idx: number) => () => this.cancelEditing(idx);
+  onSaveConfig = (idx: number) => () => this.saveConfig(idx);
 
   onDeleteConfig = (id: number) => () =>
     this.setState({
@@ -515,18 +501,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       },
     })
 
-  onDeleteNode = (configIdx: number) => (nodeIdx: number) =>
-    this.setState({
-      deleteNodeConfirmDialog: {
-        ...clone(NodeBalancerConfigurations.defaultDeleteNodeConfirmDialogState),
-        open: true,
-        configIdxToDelete: configIdx,
-        nodeIdxToDelete: nodeIdx,
-      },
-    })
-
   renderConfig = (
-    panelMessages: any[],
     configErrors: any[],
     configSubmitting: any[],
   ) => (
@@ -561,12 +536,10 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         ]}
         defaultExpanded={true}
         heading={`Port ${config.port !== undefined ? config.port : ''}`}
-        success={panelMessages[idx]}
       >
         <NodeBalancerConfigPanel
           forEdit
           onSave={this.onSaveConfig(idx)}
-          onCancel={this.onCancelEditingConfig(idx)}
           submitting={configSubmitting[idx]}
           onDelete={this.onDeleteConfig(config.id)}
 
@@ -624,9 +597,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
           addNode={this.addNode(idx)}
 
-          removeNode={this.onDeleteNode(idx)}
-
-          onUpdateNode={this.onUpdateNode(idx)}
+          removeNode={this.removeNode(idx)}
 
           onNodeLabelChange={this.onNodeLabelChange(idx)}
 
@@ -639,28 +610,6 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       </ExpansionPanel>
     );
   }
-
-  renderNodeConfirmationActions = ({ onClose }: { onClose: () => void }) => (
-    <ActionsPanel style={{ padding: 0 }}>
-      <Button
-        data-qa-confirm-cancel
-        onClick={this.removeNode}
-        type="secondary"
-        destructive
-        loading={this.state.deleteNodeConfirmDialog.submitting}
-      >
-        Delete
-    </Button>
-      <Button
-        onClick={() => onClose()}
-        type="secondary"
-        className="cancel"
-        data-qa-cancel-cancel
-      >
-        Cancel
-    </Button>
-    </ActionsPanel>
-  )
 
   renderConfigConfirmationActions = ({ onClose }: { onClose: () => void }) => (
     <ActionsPanel style={{ padding: 0 }}>
@@ -688,7 +637,6 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     const { classes } = this.props;
     const {
       configs,
-      panelMessages,
       configErrors,
       configSubmitting,
       hasUnsavedConfig,
@@ -703,25 +651,8 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         >
           NodeBalancer Configurations
         </Typography>
-        {/* <Grid container>
-          <Grid item> */}
-            {/* @todo: implement add config
-              <Grid container alignItems="flex-end">
-                <Grid item>
-                  <IconTextLink
-                    SideIcon={PlusSquare}
-                    onClick={() => console.log('add configuration')}
-                    title="Add a Configuration"
-                    text="Add a Configuration"
-                  >
-                    Add a Configuration
-                  </IconTextLink>
-                </Grid>
-              </Grid>
-            */}
-          {/* </Grid>
-        </Grid> */}
-        {configs.map(this.renderConfig(panelMessages, configErrors, configSubmitting))}
+
+        {configs.map(this.renderConfig(configErrors, configSubmitting))}
 
         {!hasUnsavedConfig &&
           <Grid item>
@@ -743,16 +674,6 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           open={this.state.deleteConfigConfirmDialog.open}
         >
           <Typography>Are you sure you want to delete this NodeBalancer Configuration?</Typography>
-        </ConfirmationDialog>
-
-        <ConfirmationDialog
-          onClose={this.onCloseConfirmation}
-          title="Confirm Deletion"
-          error={this.confirmationNodeError()}
-          actions={this.renderNodeConfirmationActions}
-          open={this.state.deleteNodeConfirmDialog.open}
-        >
-          <Typography>Are you sure you want to delete this NodeBalancer Node?</Typography>
         </ConfirmationDialog>
       </React.Fragment>
     );

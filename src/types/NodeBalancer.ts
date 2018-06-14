@@ -33,7 +33,8 @@ namespace Linode {
     port?: string;
     weight?: number;
     mode?: NodeBalancerConfigNodeMode;
-    updating?: boolean;
+    /* for the sake of local operations */
+    modifyStatus?: 'new' | 'delete' | 'update';
     errors?: Linode.ApiFieldError[];
   }
 
@@ -58,6 +59,7 @@ namespace Linode {
     ssl_fingerprint: string;
     cipher_suite: string;
     nodes?: NodeBalancerConfigNode[];
+    modifyStatus?: 'new';
   }
 
   export interface ExtendedNodeBalancer extends NodeBalancer{
