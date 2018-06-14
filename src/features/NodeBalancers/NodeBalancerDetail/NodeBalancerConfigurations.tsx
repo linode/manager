@@ -295,7 +295,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         if (nodeBalSuccess) {
           // replace Config success message with a new one
           const newMessages = [];
-          newMessages[idx] = 'NodeBalancer config updated successfully';
+          newMessages[idx] = 'NodeBalancer Configuration updated successfully';
           this.setState({
             panelMessages: newMessages,
           });
@@ -344,6 +344,18 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           configs: newConfigs,
           configErrors: newErrors,
         }, () => {
+          // replace success message with a new one
+          const newMessages = [];
+          newMessages[idx] = 'New NodeBalancer Configuration created successfully';
+          this.setState({
+            panelMessages: newMessages,
+          });
+
+          // Allow the user to add yet another config
+          this.setState({
+            hasUnsavedConfig: false,
+          });
+
           // Execute Node operations now that the config has been created
           const nodeUpdates = config.nodes.map((node, nodeIdx) => {
             if (node.modifyStatus !== 'delete') {
@@ -362,9 +374,9 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
               if (success) {
                 // replace success message with a new one
                 const newMessages = [];
-                newMessages[idx] = 'New NodeBalancer created successfully';
+                newMessages[idx] = 'All Nodes created successfully';
                 this.setState({
-                  panelMessages: newMessages,
+                  panelNodeMessages: newMessages,
                 });
               }
               this.resetSubmitting(idx);
@@ -832,7 +844,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
               onClick={() => this.addNodeBalancerConfig()}
               data-qa-add-config
             >
-              Add another Configuration
+              {configs.length === 0 ? 'Add a Configuration' : 'Add another Configuration'}
             </Button>
           </Grid>
         }
