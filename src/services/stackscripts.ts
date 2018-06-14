@@ -20,11 +20,11 @@ export const getStackscripts = (params?: any, filter?: any) =>
   )
     .then(response => response.data);
 
-export const getMyStackscripts = () =>
-  getStackscripts(undefined, { mine: true });
+export const getMyStackscripts = (params?: any) =>
+  getStackscripts(params, { mine: true });
 
-export const getLinodeStackscripts = () =>
-  getStackscripts()
+export const getLinodeStackscripts = (params?: any, filter?: any) =>
+  getStackscripts(params, filter)
     .then(updateData(filterLinodeUser));
 
 export const getCommunityStackscripts = (username: string) =>
