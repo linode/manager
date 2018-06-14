@@ -158,6 +158,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     const paths = this.state.configs[configIdx].nodes.map((nodes, idxN) => {
       return ['nodes', idxN, 'errors'];
     });
+    if (paths.length === 0) { return; }
     /* Map those paths to an array of updater functions */
     const setFns = paths.map((path: any[]) => {
       return set(lensPath(['configs', configIdx, ...path]), []);
