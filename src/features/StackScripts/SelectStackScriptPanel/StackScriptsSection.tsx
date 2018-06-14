@@ -33,13 +33,20 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => 
   );
 };
 
+const truncateDescription = (desc: string) => {
+  if (desc.length > 200) { // 200 characters
+    return `${desc.split(' ').splice(0, 30).join(' ')} [...]`; // truncate to 30 words
+  }
+  return desc;
+};
+
 const stackScript: (fn: (s: Linode.StackScript.Response) => void, id?: number) =>
   (s: Linode.StackScript.Response) => JSX.Element =
   (onSelect, selectedId) => s => (
     <SelectionRow
       key={s.id}
       label={s.label}
-      description={s.description}
+      description={truncateDescription(s.description)}
       images={s.images}
       deploymentsActive={s.deployments_active}
       updated={s.updated}

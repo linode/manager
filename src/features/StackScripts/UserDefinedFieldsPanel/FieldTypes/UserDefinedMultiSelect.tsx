@@ -9,6 +9,7 @@ import Typography from 'material-ui/Typography';
 import FormControlLabel from 'material-ui/Form/FormControlLabel';
 
 import Toggle from 'src/components/Toggle';
+import RenderGuard from 'src/components/RenderGuard';
 
 
 type ClassNames = 'root';
@@ -31,7 +32,7 @@ interface State {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class UserDefinedSelect extends React.Component<CombinedProps, State> {
+class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
   state: State = {
     manyof: this.props.field.manyof!.split(','),
   };
@@ -109,5 +110,5 @@ class UserDefinedSelect extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(UserDefinedSelect);
+export default styled(RenderGuard<CombinedProps>(UserDefinedMultiSelect));
 
