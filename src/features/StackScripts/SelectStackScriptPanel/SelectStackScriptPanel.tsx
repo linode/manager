@@ -111,7 +111,7 @@ interface Params {
 }
 
 interface ContainerProps {
-  request: (params: Params) =>
+  request: (params: Params, filter: any) =>
     Promise<Linode.ResourcePage<Linode.StackScript.Response>>;
   onSelect: (id: number, images: string[],
     userDefinedFields: Linode.StackScript.UserDefinedField[]) => void;
@@ -141,7 +141,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
     const { request } = this.props;
     this.setState({ gettingMoreStackScripts: true });
 
-    request({ page, page_size: 50 })
+    request({ page, page_size: 50 }, { ['+order_by']: 'deployments_total', ['+order']: 'desc' })
       .then((response) => {
         if (!response.data.length) {
           this.setState({ showMoreButtonVisible: false });
