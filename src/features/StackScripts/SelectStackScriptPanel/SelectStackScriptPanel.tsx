@@ -2,7 +2,8 @@ import * as React from 'react';
 import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
 
 
-import { getStackscripts } from 'src/services/stackscripts';
+import { getStackscripts, getMyStackscripts, getLinodeStackscripts }
+  from 'src/services/stackscripts';
 
 import Button from 'src/components/Button';
 import TabbedPanel from 'src/components/TabbedPanel';
@@ -62,14 +63,14 @@ class SelectStackScriptPanel extends React.Component<CombinedProps> {
             title: 'My StackScripts',
             render: () => <Container
               onSelect={this.props.onSelect}
-              request={getStackscripts} key={0}
+              request={getMyStackscripts} key={0}
             />,
           },
           {
             title: 'Linode StackScripts',
             render: () => <Container
               onSelect={this.props.onSelect}
-              request={getStackscripts} key={1}
+              request={getLinodeStackscripts} key={1}
             />,
           },
           {
@@ -102,6 +103,7 @@ interface ContainerState {
   selected?: number;
   loading?: boolean;
   gettingMoreStackScripts: boolean;
+  showMoreButtonVisible: boolean;
   data: any; // @TODO type correctly
 }
 
@@ -111,6 +113,7 @@ class Container extends React.Component<ContainerProps, ContainerState> {
     loading: true,
     gettingMoreStackScripts: false,
     data: [],
+    showMoreButtonVisible: true,
   };
 
   getDataAtPage = (page: number) => {
@@ -118,11 +121,16 @@ class Container extends React.Component<ContainerProps, ContainerState> {
     this.setState({ gettingMoreStackScripts: true });
 
     request({ page, page_size: 50 })
-      .then(response => this.setState({
-        data: [...this.state.data, ...response.data],
-        gettingMoreStackScripts: false,
-        loading: false,
-      }))
+      .then((response) => {
+        if (!response.data.length) {
+          this.setState({ showMoreButtonVisible: false });
+        }
+        this.setState({
+          data: [...this.state.data, ...response.data],
+          gettingMoreStackScripts: false,
+          loading: false,
+        });
+      })
       .catch((e) => {
         this.setState({ gettingMoreStackScripts: false });
       });
@@ -161,18 +169,20 @@ class Container extends React.Component<ContainerProps, ContainerState> {
           data={this.state.data}
           getNext={() => this.getNext()}
         />
-        <Button
-          title="Show More StackScripts"
-          onClick={this.getNext}
-          type="secondary"
-          disabled={this.state.gettingMoreStackScripts}
-          style={{ marginTop: 32 }}
-        >
-          {!this.state.gettingMoreStackScripts
-            ? 'Show More StackScripts'
-            : 'Loading...'
-          }
-        </Button>
+        {this.state.showMoreButtonVisible &&
+          <Button
+            title="Show More StackScripts"
+            onClick={this.getNext}
+            type="secondary"
+            disabled={this.state.gettingMoreStackScripts}
+            style={{ marginTop: 32 }}
+          >
+            {!this.state.gettingMoreStackScripts
+              ? 'Show More StackScripts'
+              : 'Loading...'
+            }
+          </Button>
+        }
       </React.Fragment>
     );
   }
