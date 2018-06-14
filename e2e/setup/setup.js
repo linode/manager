@@ -263,3 +263,45 @@ exports.removeAllVolumes = token => {
         });
     });
 }
+
+exports.getDomains = token => {
+    return new Promise((resolve, reject) => {
+        const endpoint = '/domains';
+        const instance = axios.create({
+            httpsAgent: new https.Agent({
+                rejectUnauthorized: false
+            }),
+            baseURL: API_ROOT,
+            timeout: 5000,
+            headers: { 'Authorization': `Bearer ${token}`},
+        });
+
+        return instance.get(endpoint)
+            .then(response => resolve(response.data))
+            .catch(error => {
+                console.error('Error', error);
+                reject(error);
+            });
+    });
+}
+
+exports.removeDomain = (token, domainId) => {
+    return new Promise((resolve, reject) => {
+        const endpoint = `/domains/${domainId}`;
+        const instance = axios.create({
+            httpsAgent: new https.Agent({
+                rejectUnauthorized: false
+            }),
+            baseURL: API_ROOT,
+            timeout: 5000,
+            headers: { 'Authorization': `Bearer ${token}`},
+        });
+
+        instance.delete(endpoint)
+            .then(response => resolve(response.data))
+            .catch(error => {
+                console.error(error);
+                reject(error);
+            });
+    });
+}

@@ -8,6 +8,7 @@ describe('API Token Drawer', () => {
     <APITokenDrawer
       classes={{
         permsTable: '',
+        selectCell: '',
         accessCell: '',
         noneCell: '',
         readOnlyCell: '',

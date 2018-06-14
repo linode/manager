@@ -4,7 +4,7 @@ import PlusSquare from 'src/assets/icons/plus-square.svg';
 
 export interface Props {
   label: string;
-  onClick: () => void;
+  onClick: (e?: React.MouseEvent<HTMLElement>) => void;
   display?: string;
   disabled?: boolean;
   left?: boolean;

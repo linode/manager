@@ -4,6 +4,7 @@ import Page from './page.js';
 
 class NodeBalancers extends Page {
     get deploy() { return $('[data-qa-deploy-linode]'); }
+    get configTitle() { return $('[data-qa-title]'); }
     get placeholderText() { return $('[data-qa-placeholder-title]'); }
     get placeholderButton() { return $('[data-qa-placeholder-button]'); }
     get createNodeBalancerMenu() { return $('[data-qa-add-new-menu="NodeBalancer"]'); }
@@ -44,6 +45,9 @@ class NodeBalancers extends Page {
     get backendIpWeight() { return $('[data-qa-backend-ip-weight] input'); }
     get backendIpMode() { return $('[data-qa-backend-ip-mode]'); }
 
+    get saveButton() { return $('[data-qa-save-config]'); }
+    get deleteButton() { return $('[data-qa-delete-config]'); }
+    get nodes() { return $$('[data-qa-node]'); }
     get removeNode() { return $('[data-qa-remove-node]'); }
     get addNode() { return $('[data-qa-add-node]'); }
     get addConfiguration() { return $('[data-qa-add-config]'); }
@@ -84,6 +88,83 @@ class NodeBalancers extends Page {
             expect(this.backendIpWeight.getValue()).toBe('100');
             expect(this.backendIpMode.getText()).toContain('Accept');
         }
+    }
+
+    configElemsDisplay() {
+        this.configTitle.waitForVisible(constants.wait.normal);
+
+        expect(this.configTitle.getText()).toBe('NodeBalancer Configurations');
+
+        expect(this.port.isVisible()).toBe(true);
+        expect(this.protocolSelect.isVisible()).toBe(true);
+        expect(this.algorithmHeader.waitForText()).toBe(true);
+        expect(this.algorithmSelect.getText()).toContain('Round Robin');
+        expect(this.sessionStickinessHeader.waitForText()).toBe(true);
+        expect(this.sessionStickiness.getText()).toContain('Table');
+
+        expect(this.activeChecksHeader.isVisible()).toBe(true);
+        expect(this.activeCheckAttempts.getValue()).toBe('2');
+        expect(this.activeCheckTimeout.getValue()).toBe('3');
+        expect(this.activeCheckType.isVisible()).toBe(true);
+        expect(this.activeCheckInterval.getValue()).toBe('5');
+
+        expect(this.passiveChecksHeader.waitForText()).toBe(true);
+        expect(this.passiveChecksToggle.isVisible()).toBe(true);
+
+        expect(this.backendIpsHeader.waitForText()).toBe(true);
+        expect(this.backendIpLabel.isVisible()).toBe(true);
+        expect(this.backendIpAddress.isVisible()).toBe(true);
+        expect(this.backendIpWeight.getValue()).toBe('100');
+        expect(this.backendIpMode.getText()).toContain('Accept');
+    }
+
+    configDelete() {
+        const confirmTitle = 'Confirm Deletion';
+        const confirmMsg = 'Are you sure you want to delete this NodeBalancer Configuration?';
+        this.deleteButton.click();
+        this.dialogTitle.waitForVisible(constants.wait.normal);
+
+        expect(this.dialogTitle.getText()).toBe(confirmTitle);
+        expect(this.dialogContent.getText()).toBe(confirmMsg);
+        expect(this.dialogConfirm.getText()).toBe('Delete');
+        expect(this.dialogCancel.getText()).toBe('Cancel');
+        
+        this.dialogConfirm.click();
+        this.dialogTitle.waitForVisible(constants.wait.normal, true);
+        this.configTitle.waitForVisible(constants.wait.normal);
+
+        expect(this.port.isVisible()).toBe(false);
+        expect(this.protocolSelect.isVisible()).toBe(false);
+    }
+
+
+    configAddNode(nodeConfig) {
+        const labels = $$('[data-qa-backend-ip-label] input')
+            .filter(label => label.getValue() === '');
+        const ips = $$('[data-qa-backend-ip-address] input')
+            .filter(ip => ip.getValue() === '');
+        labels[0].click();
+        labels[0].setValue(nodeConfig.label);
+        ips[0].setValue(nodeConfig.ip);
+    }
+
+    configRemoveNode(nodeLabel) {
+        const node = this.nodes
+            .filter(l => l.$('[data-qa-backend-ip-label] input').getValue() === nodeLabel);
+
+        node[0].$(this.removeNode.selector).click();
+        
+        browser.waitUntil(function() {
+            const matchingNodes = $$('[data-qa-backend-ip-label] input')
+                .filter(l => l.getValue() === nodeLabel);
+            return matchingNodes.length === 0;
+        }, constants.wait.normal);
+    }
+
+    configSave() {
+        const successMsg = 'NodeBalancer config updated successfully'; 
+        this.saveButton.click();
+        this.waitForNotice(successMsg);
     }
 
     create() {

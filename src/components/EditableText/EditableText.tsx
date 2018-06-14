@@ -44,7 +44,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   container: {
     display: 'inline-flex',
     justifyContent: 'flex-start',
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
   initial: {
     '&:hover, &:focus': {
@@ -65,13 +65,17 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     margin: 0,
   },
   inputRoot: {
-    border: 0,
-    borderBottom: `2px dotted ${theme.color.black}`,
+    borderTop: 0,
+    borderLeft: 0,
+    borderRight: 0,
+    borderBottomWidth: 2,
+    borderBottomStyle: 'dotted',
     backgroundColor: 'transparent',
   },
   button: {
     minWidth: 'auto',
     padding: 0,
+    marginTop: 10,
     background: 'transparent !important',
   },
   icon: {
@@ -101,13 +105,14 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
 
 interface Props {
   onEdit: (text: string) => void;
+  onCancel: () => void;
   text: string;
+  errorText?: string;
 }
 
 interface State {
   text: string;
-  savedText: string;
-  editing: Boolean;
+  isEditing: Boolean;
 }
 
 type PassThroughProps = Props & TextFieldProps & TypographyProps;
@@ -115,15 +120,19 @@ type PassThroughProps = Props & TextFieldProps & TypographyProps;
 type FinalProps =  PassThroughProps & WithStyles<ClassNames>;
 
 class EditableText extends React.Component<FinalProps, State> {
-  state = {
-    editing: false,
-    savedText: this.props.text,
+  state: State = {
+    isEditing: Boolean(this.props.errorText),
     text: this.props.text,
   };
 
   componentWillReceiveProps(nextProps: Props) {
     if (nextProps.text !== this.state.text) {
       this.setState({ text: nextProps.text });
+    }
+    if (nextProps.errorText) {
+      this.setState({ isEditing: true });
+    } else {
+      this.setState({ isEditing: false });
     }
   }
 
@@ -132,28 +141,26 @@ class EditableText extends React.Component<FinalProps, State> {
   }
 
   toggleEditing = () => {
-    if (!this.state.editing) {
-      this.setState({ savedText: this.state.text });
-    }
-    this.setState({ editing: !this.state.editing });
+    this.setState({ isEditing: !this.state.isEditing });
   }
 
   finishEditing = (text: string) => {
+    if (text === this.props.text && !this.props.errorText) {
+      this.setState({ isEditing: false });
+    }
     this.props.onEdit(text);
-    this.setState({ editing: false });
   }
 
   cancelEditing = () => {
-    this.setState({ text: this.state.savedText });
-    this.setState({ editing: false });
+    this.props.onCancel();
   }
 
   render() {
-    const { classes, onEdit, ...rest } = this.props;
-    const { editing, text } = this.state;
+    const { classes, onEdit, errorText, ...rest } = this.props;
+    const { isEditing, text } = this.state;
 
     return (
-      !editing
+      !isEditing
         ? (
             <div className={`${classes.container} ${classes.initial}`}>
               <React.Fragment>
@@ -188,6 +195,7 @@ class EditableText extends React.Component<FinalProps, State> {
                     if (e.key === 'Escape' || e.key === 'Esc') { this.cancelEditing(); }
                   }}
                   value={text}
+                  errorText={this.props.errorText}
                   {...rest}
                   InputProps={{ className: classes.inputRoot }}
                   inputProps={{
