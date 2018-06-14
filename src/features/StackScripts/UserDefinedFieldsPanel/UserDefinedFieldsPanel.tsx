@@ -44,12 +44,14 @@ const UserDefinedFieldsPanel: React.StatelessComponent<CombinedProps> = (props) 
         field={field}
         udf_data={props.udf_data}
         updateFormState={handleChange}
+        updateFor={[props.udf_data[field.name]]}
       />;
     } if (isOneSelect(field)) {
       return <UserDefinedSelect
         field={field}
         updateFormState={handleChange}
         udf_data={props.udf_data}
+        updateFor={[props.udf_data[field.name]]}
         key={field.name} />;
     } if (isPasswordField(field.name)) {
       return <UserDefinedText
@@ -58,6 +60,7 @@ const UserDefinedFieldsPanel: React.StatelessComponent<CombinedProps> = (props) 
         isPassword={true}
         field={field}
         udf_data={props.udf_data}
+        updateFor={[props.udf_data[field.name]]}
       />;
     }
     return <UserDefinedText
@@ -65,6 +68,7 @@ const UserDefinedFieldsPanel: React.StatelessComponent<CombinedProps> = (props) 
       updateFormState={handleChange}
       field={field}
       udf_data={props.udf_data}
+      updateFor={[props.udf_data[field.name]]}
     />;
   };
 

@@ -8,6 +8,7 @@ import {
 import Typography from 'material-ui/Typography';
 
 import Radio from 'src/components/Radio';
+import RenderGuard from 'src/components/RenderGuard';
 
 
 type ClassNames = 'root';
@@ -82,4 +83,4 @@ class UserDefinedSelect extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(UserDefinedSelect);
+export default styled(RenderGuard<CombinedProps>(UserDefinedSelect));

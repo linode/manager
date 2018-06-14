@@ -33,14 +33,27 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => 
   );
 };
 
+const truncateDescription = (desc: string) => {
+  if (desc.length > 200) { // 200 characters
+    return `${desc.split(' ').splice(0, 30).join(' ')} [...]`; // truncate to 30 words
+  }
+  return desc;
+};
+
+const stripImageName = (images: string[]) => {
+  return images.map((image: string) => {
+    return image.replace('linode/', '');
+  });
+};
+
 const stackScript: (fn: (s: Linode.StackScript.Response) => void, id?: number) =>
   (s: Linode.StackScript.Response) => JSX.Element =
   (onSelect, selectedId) => s => (
     <SelectionRow
       key={s.id}
       label={s.label}
-      description={s.description}
-      images={s.images}
+      description={truncateDescription(s.description)}
+      images={stripImageName(s.images)}
       deploymentsActive={s.deployments_active}
       updated={s.updated}
       onSelect={() => onSelect(s)}
