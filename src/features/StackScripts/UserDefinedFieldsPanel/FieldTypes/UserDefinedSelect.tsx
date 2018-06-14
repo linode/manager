@@ -4,6 +4,7 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
+  FormControlLabel,
 } from 'material-ui';
 import Typography from 'material-ui/Typography';
 
@@ -57,22 +58,26 @@ class UserDefinedSelect extends React.Component<CombinedProps, State> {
         {oneof.map((choice: string, index) => {
           return (
             <React.Fragment key={index}>
-              <Radio
-                name={choice}
-                checked=
-                {(!!udf_data[field.name]
-                  && udf_data[field.name] === choice)}
-                /*
-                NOTE: Although the API returns a default value and we're auto selecting
-                a value for the user, it is not necessary to store this value
-                in the state because it's not necessary for the POST request, since
-                the backend will automatically POST with that default value
-              */
+              <FormControlLabel
                 value={choice}
-                onChange={this.handleSelectOneOf}
-                data-qa-perm-none-radio
+                control={
+                  <Radio
+                    name={choice}
+                    checked=
+                    {(!!udf_data[field.name]
+                      && udf_data[field.name] === choice)}
+                    /*
+                    NOTE: Although the API returns a default value and we're auto selecting
+                    a value for the user, it is not necessary to store this value
+                    in the state because it's not necessary for the POST request, since
+                    the backend will automatically POST with that default value
+                  */
+                    onChange={this.handleSelectOneOf}
+                    data-qa-perm-none-radio
+                  />
+                }
+                label={choice}
               />
-              {choice}
             </React.Fragment>
           );
         })}
