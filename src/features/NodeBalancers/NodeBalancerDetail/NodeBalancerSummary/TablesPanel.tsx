@@ -5,9 +5,9 @@ import {
   WithStyles,
 } from 'material-ui';
 import Typography from 'material-ui/Typography';
+import Paper from 'material-ui/Paper';
 
 import LineGraph from 'src/components/LineGraph';
-import ExpansionPanel from 'src/components/ExpansionPanel';
 import { getNodeBalancerStats } from 'src/services/nodebalancers';
 
 type ClassNames = 'chart'
@@ -18,14 +18,22 @@ type ClassNames = 'chart'
   | 'blue'
   | 'green'
   | 'red'
-  | 'yellow';
+  | 'yellow'
+  | 'header'
+  | 'graphWrapper';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
   return {
+    header: {
+      padding: theme.spacing.unit * 2,
+    },
+    graphWrapper: {
+      marginTop: theme.spacing.unit * 2,
+    },
     chart: {
       position: 'relative',
       width: '100%',
-      paddingLeft: theme.spacing.unit * 4,
+      padding: theme.spacing.unit * 4,
     },
     leftLegend: {
       position: 'absolute',
@@ -37,6 +45,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
     },
     bottomLegend: {
       margin: `${theme.spacing.unit * 2}px ${theme.spacing.unit}px ${theme.spacing.unit}px`,
+      padding: theme.spacing.unit * 2,
       display: 'flex',
       flexWrap: 'wrap',
       color: '#777',
@@ -145,65 +154,70 @@ class TablesPanel extends React.Component<CombinedProps, State> {
             <div className={classes.graphControls}>
               <Typography variant="title" className={classes.graphTitle}>Graphs</Typography>
             </div>
-            <ExpansionPanel
-              defaultExpanded
-              heading="Connections (5 min avg.)"
+          <Paper>
+            <Typography
+              variant="subheading"
+              className={classes.header}
             >
-              <React.Fragment>
-                <div className={classes.chart}>
-                  <div className={classes.leftLegend} style={{ left: -34, bottom: 60 }}>
-                    connections/sec
+              Connections (5 min avg.)
+          </Typography>
+            <React.Fragment>
+              <div className={classes.chart}>
+                <div className={classes.leftLegend} style={{ left: -34, bottom: 60 }}>
+                  connections/sec
                   </div>
-                  <LineGraph
-                    showToday={true}
-                    data={[
-                      {
-                        label: 'Connections',
-                        borderColor: '#990066',
-                        data: stats.data.connections,
-                      },
-                    ]}
-                  />
-                </div>
-              </React.Fragment>
-            </ExpansionPanel>
-
-            <ExpansionPanel
-              defaultExpanded
-              heading="Traffic (5 min avg.)"
+                <LineGraph
+                  showToday={true}
+                  data={[
+                    {
+                      label: 'Connections',
+                      borderColor: '#990066',
+                      data: stats.data.connections,
+                    },
+                  ]}
+                />
+              </div>
+            </React.Fragment>
+          </Paper>
+          <Paper className={classes.graphWrapper}>
+            <Typography
+              variant="subheading"
+              className={classes.header}
             >
-              <React.Fragment>
-                <div className={classes.chart}>
-                  <div className={classes.leftLegend}>
-                    bits/sec
+              Traffic (5 min avg.)
+          </Typography>
+            <React.Fragment>
+              <div className={classes.chart}>
+                <div className={classes.leftLegend}>
+                  bits/sec
                   </div>
-                  <LineGraph
-                    showToday={true}
-                    data={[
-                      {
-                        label: 'Traffic In',
-                        borderColor: '#3683dc',
-                        data: stats.data.traffic.in,
-                      },
-                      {
-                        label: 'Traffic Out',
-                        borderColor: '#01b159',
-                        data: stats.data.traffic.out,
-                      },
-                    ]}
-                  />
-                </div>
-                <div className={classes.bottomLegend}>
-                  <div className={classes.blue}>
-                    Inbound
+                <LineGraph
+                  showToday={true}
+                  data={[
+                    {
+                      label: 'Traffic In',
+                      borderColor: '#3683dc',
+                      data: stats.data.traffic.in,
+                    },
+                    {
+                      label: 'Traffic Out',
+                      borderColor: '#01b159',
+                      data: stats.data.traffic.out,
+                    },
+                  ]}
+                />
+              </div>
+              <div className={classes.bottomLegend}>
+                <div className={classes.blue}>
+                  Inbound
                   </div>
-                  <div className={classes.green}>
-                    Outbound
+                <div className={classes.green}>
+                  Outbound
                   </div>
-                </div>
-              </React.Fragment>
-            </ExpansionPanel>
-          </React.Fragment>
+              </div>
+            </React.Fragment>
+          </Paper>
+        </React.Fragment>
         }
       </React.Fragment>
     );
