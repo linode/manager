@@ -91,7 +91,7 @@ interface State {
     open: boolean;
     submitting: boolean;
     errors?: Linode.ApiFieldError[];
-    idToDelete?: number;
+    idxToDelete?: number;
   };
 }
 
@@ -122,7 +122,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     submitting: false,
     open: false,
     errors: undefined,
-    idToDelete: undefined,
+    idxToDelete: undefined,
   };
 
   static defaultDeleteNodeConfirmDialogState = {
@@ -455,8 +455,24 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   }
 
   deleteConfig = (e: any) => {
-    const { deleteConfigConfirmDialog: { idToDelete } } = this.state;
-    const { match: { params: { nodeBalancerId } } } = this.props;
+    const { deleteConfigConfirmDialog: { idxToDelete } } = this.state;
+    if (idxToDelete === undefined) { return; }
+
+    // remove an unsaved config from state
+    const config = this.state.configs[idxToDelete];
+    if (config.modifyStatus === 'new') {
+      const newConfigs = clone(this.state.configs);
+      newConfigs.splice(idxToDelete, 1);
+      this.setState({
+        configs: newConfigs,
+        deleteConfigConfirmDialog:
+          clone(NodeBalancerConfigurations.defaultDeleteConfigConfirmDialogState),
+        /* Important to reset this so that we can add another config */
+        hasUnsavedConfig: false,
+      });
+      return;
+    }
+
     this.setState({
       deleteConfigConfirmDialog: {
         ...this.state.deleteConfigConfirmDialog,
@@ -465,13 +481,14 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       },
     });
 
-    deleteNodeBalancerConfig(nodeBalancerId!, idToDelete!)
+    const { match: { params: { nodeBalancerId } } } = this.props;
+
+    // actually delete a real config
+    deleteNodeBalancerConfig(nodeBalancerId!, (config!.id!))
       .then((response) => {
-        /* find index of deleted config */
-        const idx = this.state.configs.findIndex(config => config.id === idToDelete);
         // update config data
         const newConfigs = clone(this.state.configs);
-        newConfigs.splice(idx, 1);
+        newConfigs.splice(idxToDelete, 1);
         this.setState({
           configs: newConfigs,
           deleteConfigConfirmDialog:
@@ -677,12 +694,11 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   onSaveConfig = (idx: number) => () => this.saveConfig(idx);
 
   onDeleteConfig = (idx: number) => () => {
-    const config = this.state.configs[idx];
     this.setState({
       deleteConfigConfirmDialog: {
         ...clone(NodeBalancerConfigurations.defaultDeleteConfigConfirmDialogState),
         open: true,
-        idToDelete: config.id,
+        idxToDelete: idx,
       },
     });
   }
