@@ -19,7 +19,8 @@ type ClassNames = 'root'
   | 'title'
   | 'IPWrapper'
   | 'IPgrouping'
-  | 'transferred';
+  | 'marginTop'
+  | 'nodeTransfer';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
@@ -37,8 +38,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   IPgrouping: {
     margin: '-2px 0 0 2px',
   },
-  transferred: {
-    marginTop: theme.spacing.unit,
+  marginTop: {
+    marginTop: theme.spacing.unit * 2,
+  },
+  nodeTransfer: {
+    marginTop: theme.spacing.unit * 2,
   },
 });
 
@@ -64,47 +68,42 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
         </Grid>
         <Grid item xs={12} sm={6}>
           <div className={classes.IPWrapper}>
-            <Typography variant="caption" data-qa-transferred>
+            <Typography variant="caption">
               <strong>IP:</strong>
             </Typography>
-            <div className={classes.IPgrouping}>
+            <div className={classes.IPgrouping} data-qa-ip>
               <IPAddress ips={[nodeBalancer.ipv4]} copyRight />
               {nodeBalancer.ipv6 && <IPAddress ips={[nodeBalancer.ipv6]} copyRight />}
             </div>
           </div>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <Typography variant="caption" data-qa-ports>
+          <Typography variant="caption" data-qa-ports className={classes.marginTop}>
             <strong>
               Ports: </strong> {nodeBalancer.ports.length === 0 && 'None'}
               {nodeBalancer.ports.join(', ')}
           </Typography>
-          <Typography variant="caption" data-qa-transferred className={classes.transferred}>
-            <strong>Transferred:</strong> {convertMegabytesTo(nodeBalancer.transfer.total)}
-          </Typography>
+          <Grid container className={classes.nodeTransfer}>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="caption" data-qa-node-status>
+                <strong>Node Status:</strong> {`${nodeBalancer.up} up, ${nodeBalancer.down} down`}
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="caption" data-qa-transferred>
+                <strong>Transferred:</strong> {convertMegabytesTo(nodeBalancer.transfer.total)}
+              </Typography>
+            </Grid>
+          </Grid>
         </Grid>
-        <Grid item xs={12}>
-          <Typography
-            variant="caption"
-            data-qa-hostname
-          >
+        <Grid item xs={12} sm={6}>
+          <Typography variant="caption" data-qa-hostname>
             <strong>Host Name:</strong> {nodeBalancer.hostname}
           </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant="caption" data-qa-node-status>
-            <strong>Node Status:</strong> {`${nodeBalancer.up} up, ${nodeBalancer.down} down`}
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant="caption" data-qa-region>
-            <Typography variant="caption" data-qa-transferred>
-              <strong>Region:</strong> {formatRegion(nodeBalancer.region)}
-            </Typography>
+          <Typography variant="caption" data-qa-region className={classes.marginTop}>
+            <strong>Region:</strong> {formatRegion(nodeBalancer.region)}
           </Typography>
         </Grid>
       </Grid>
-    </Paper >
+    </Paper>
   );
 };
 
