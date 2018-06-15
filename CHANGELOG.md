@@ -4,6 +4,51 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.27.1] - 2018-06-15
+### Added:
+- NodeBalancer Management
+    - List NodeBalancers
+    - Create NodeBalancer from action menu
+        - Configure protocol and TLS
+        - Configure stickiness
+        - Configure health checks
+        - Client-side validation
+        - Create, update, delete backend Nodes
+    - NodeBalancer Details Page
+    - NodeBalancer Summary
+    - NodeBalancer Performance Charts
+    - Create, update, delete NodeBalancer Configurations
+    - NodeBalancer Settings
+- Create Linode From StackScript
+    - Select StackScripts Panel
+    - StackScript Detail Row
+    - User Defined Fields dynamic form inputs
+    - Select Image based on selected StackScript
+- AddNewLink component
+- Documentation links on Volumes landing page
+- Documentation links on Linodes detail page
+- Documentation links on NodeBalancers detail page
+### Changed:
+- Prevent changing root password on disks if Linode is not offline
+- Force active status when updating domain
+- Domain records, "Edit" changed to "Save"
+- Rename "Master Record" to "Edit SOA Record"
+- Edit-in-place component now displays errors locally
+### Fixed:
+- List Domains, cancel button fails to dismiss confirmation modal
+- Page crash when editing SOA record
+- Disable ineligible plans in the clone Linode creation flow
+- Don't allow create from backup without selecting a backup
+- Update Linode Volume count on create/delete on Linodes Detail page
+- Display newly created Linodes in the global create Volume drawer
+- Reset password strength indicator after submitting a new password
+- External Links open in a new tab
+- Edit SOA Record, Remove "edit mode" from Domain Status
+- Index the formatted IPs array from public to private
+- Close button on delete domain modal crashing page
+- On hover and focus destructive/cancel button background color
+- Typo in volume drawer
+
 ## [0.25.3] - 2018-05-23
 ### Fixed:
 - Fixed an issue causing the search bar to crash.
