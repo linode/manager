@@ -709,6 +709,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   ) => (
     config: Linode.NodeBalancerConfig & { nodes: Linode.NodeBalancerConfigNode[] }, idx: number,
     ) => {
+    const isNewConfig = this.state.hasUnsavedConfig && idx === this.state.configs.length - 1;
     const { panelNodeMessages } = this.state;
 
     const lensTo = lensFrom(['configs', idx]);
@@ -737,7 +738,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           panelMessages[idx],
           panelNodeMessages[idx],
         ]}
-        defaultExpanded={false}
+        defaultExpanded={isNewConfig}
         success={panelMessages[idx]}
         heading={`Port ${config.port !== undefined ? config.port : ''}`}
       >
