@@ -16,7 +16,11 @@ import { formatRegion } from 'src/features/linodes/presentation';
 import { convertMegabytesTo } from 'src/utilities/convertMegabytesTo';
 
 type ClassNames = 'root'
-| 'title';
+  | 'title'
+  | 'IPWrapper'
+  | 'IPgrouping'
+  | 'marginTop'
+  | 'nodeTransfer';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
@@ -26,6 +30,19 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
   title: {
     marginBottom: theme.spacing.unit * 2,
+  },
+  IPWrapper: {
+    display: 'flex',
+    alignItems: 'flex-start',
+  },
+  IPgrouping: {
+    margin: '-2px 0 0 2px',
+  },
+  marginTop: {
+    marginTop: theme.spacing.unit * 2,
+  },
+  nodeTransfer: {
+    marginTop: theme.spacing.unit * 2,
   },
 });
 
@@ -50,41 +67,43 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
           </Typography>
         </Grid>
         <Grid item xs={12} sm={6}>
-          <Typography
-            variant="caption"
-            data-qa-hostname
-          >
-            <strong>Host Name:</strong> {nodeBalancer.hostname}
-          </Typography>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <Typography variant="caption" data-qa-ports>
+          <div className={classes.IPWrapper}>
+            <Typography variant="caption">
+              <strong>IP:</strong>
+            </Typography>
+            <div className={classes.IPgrouping} data-qa-ip>
+              <IPAddress ips={[nodeBalancer.ipv4]} copyRight />
+              {nodeBalancer.ipv6 && <IPAddress ips={[nodeBalancer.ipv6]} copyRight />}
+            </div>
+          </div>
+          <Typography variant="caption" data-qa-ports className={classes.marginTop}>
             <strong>
               Ports: </strong> {nodeBalancer.ports.length === 0 && 'None'}
               {nodeBalancer.ports.join(', ')}
           </Typography>
-        </Grid>
-        <Grid item xs={12} sm={6} lg={3}>
-          <Typography variant="caption" data-qa-node-status>
-            <strong>Node Status:</strong> {`${nodeBalancer.up} up, ${nodeBalancer.down} down`}
-          </Typography>
-        </Grid>
-        <Grid item xs={12} sm={6} lg={3}>
-          <Typography variant="caption" data-qa-transferred>
-            <strong>Transferred:</strong> {convertMegabytesTo(nodeBalancer.transfer.total)}
-          </Typography>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <IPAddress ips={[nodeBalancer.ipv4]} copyRight />
-          {nodeBalancer.ipv6 && <IPAddress ips={[nodeBalancer.ipv6]} copyRight />}
+          <Grid container className={classes.nodeTransfer}>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="caption" data-qa-node-status>
+                <strong>Node Status:</strong> {`${nodeBalancer.up} up, ${nodeBalancer.down} down`}
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="caption" data-qa-transferred>
+                <strong>Transferred:</strong> {convertMegabytesTo(nodeBalancer.transfer.total)}
+              </Typography>
+            </Grid>
+          </Grid>
         </Grid>
         <Grid item xs={12} sm={6}>
-          <Typography variant="caption" data-qa-region>
-            {formatRegion(nodeBalancer.region)}
+          <Typography variant="caption" data-qa-hostname>
+            <strong>Host Name:</strong> {nodeBalancer.hostname}
+          </Typography>
+          <Typography variant="caption" data-qa-region className={classes.marginTop}>
+            <strong>Region:</strong> {formatRegion(nodeBalancer.region)}
           </Typography>
         </Grid>
       </Grid>
-    </Paper >
+    </Paper>
   );
 };
 
