@@ -35,6 +35,7 @@ import {
 import { resetEventsPolling } from 'src/events';
 
 import * as Promise from 'bluebird';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 
 type ClassNames = 'root' | 'main' | 'sidebar';
@@ -194,6 +195,8 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
         errors: [
           { field: 'backup_id', reason: 'You must select a Backup' },
         ],
+      }, () => {
+        scrollErrorIntoView();
       });
       return;
     }

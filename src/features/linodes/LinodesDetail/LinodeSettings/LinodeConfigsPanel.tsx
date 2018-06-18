@@ -49,6 +49,7 @@ import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoad
 import createDevicesFromStrings, { DevicesAsStrings } from
   'src/utilities/createDevicesFromStrings';
 import createStringsFromDevices from 'src/utilities/createStringsFromDevices';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 
@@ -584,7 +585,9 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
         this.setConfigDrawer(this.defaultConfigDrawerState);
       })
       .catch((error) => {
-        this.setConfigDrawer({ errors: error.response.data.errors });
+        this.setConfigDrawer({ errors: error.response.data.errors }, () => {
+          scrollErrorIntoView();
+        });
       });
   }
 
@@ -617,7 +620,9 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
         });
       })
       .catch((error) => {
-        this.setConfigDrawer({ errors: error.response.data.errors });
+        this.setConfigDrawer({ errors: error.response.data.errors }, () => {
+          scrollErrorIntoView();
+        });
       });
   }
 
@@ -643,7 +648,9 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
         this.setDiskDrawer(this.defaultDiskDrawerState);
       })
       .catch((error) => {
-        this.setDiskDrawer({ errors: error.response.data.errors });
+        this.setDiskDrawer({ errors: error.response.data.errors }, () => {
+          scrollErrorIntoView();
+        });
       });
   }
 
@@ -665,7 +672,9 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
         this.setDiskDrawer(this.defaultDiskDrawerState);
       })
       .catch((error) => {
-        this.setDiskDrawer({ errors: error.response.data.errors });
+        this.setDiskDrawer({ errors: error.response.data.errors }, () => {
+          scrollErrorIntoView();
+        });
       });
   }
 
@@ -686,7 +695,9 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
         this.setConfirmDiskDelete({ open: false, errors: undefined });
       })
       .catch((error) => {
-        this.setConfirmDiskDelete({ errors: error.response.data.error });
+        this.setConfirmDiskDelete({ errors: error.response.data.error }, () => {
+          scrollErrorIntoView();
+        });
       });
   }
 }

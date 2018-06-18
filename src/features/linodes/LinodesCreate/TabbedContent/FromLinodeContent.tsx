@@ -21,6 +21,7 @@ import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPa
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Grid from 'src/components/Grid';
 import CheckoutBar from 'src/components/CheckoutBar';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import {
   allocatePrivateIP,
@@ -164,7 +165,9 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
 
         this.setState(() => ({
           errors: error.response && error.response.data && error.response.data.errors,
-        }));
+        }), () => {
+          scrollErrorIntoView();
+        });
       })
       .finally(() => {
         // regardless of whether request failed or not, change state and enable the submit btn

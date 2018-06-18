@@ -54,6 +54,7 @@ import {
   createNewNodeBalancerConfig,
   createNewNodeBalancerConfigNode,
 } from '../utils';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root' | 'title';
 
@@ -226,6 +227,9 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     // Apply the error updater functions with a compose
     this.setState(
       (compose as any)(...setFns),
+      () => {
+        scrollErrorIntoView();
+      },
     );
   }
 
@@ -268,6 +272,8 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         newErrors[idx] = errors || [];
         this.setState({
           configErrors: newErrors,
+        }, () => {
+          scrollErrorIntoView();
         });
         this.resetSubmitting(idx);
         /* Return false as a Promise for the sake of aggregating results */
@@ -398,6 +404,8 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         newErrors[idx] = errors || [];
         this.setState({
           configErrors: newErrors,
+        }, () => {
+          scrollErrorIntoView();
         });
         // reset submitting
         this.resetSubmitting(idx);
@@ -433,7 +441,9 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     if (validationErrors) {
       const newErrors = clone(this.state.configErrors);
       newErrors[idx] = validationErrorsToFieldErrors(validationErrors);
-      this.setState({ configErrors: newErrors });
+      this.setState({ configErrors: newErrors }, () => {
+        scrollErrorIntoView();
+      });
       this.setNodeErrors(idx, newErrors[idx]);
       return;
     }
@@ -505,6 +515,8 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
               ? apiError
               : [{ field: 'none', reason: 'Unable to complete your request at this time.' }],
           },
+        }, () => {
+          scrollErrorIntoView();
         });
       });
   }
@@ -515,6 +527,9 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         lensPath(['configs', configIdx, 'nodes', nodeIdx, 'errors']),
         errors,
       ),
+      () => {
+        scrollErrorIntoView();
+      },
     );
   }
 

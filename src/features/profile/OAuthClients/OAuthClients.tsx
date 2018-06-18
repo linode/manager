@@ -26,6 +26,7 @@ import Notice from 'src/components/Notice';
 import ActionMenu from './OAuthClientActionMenu';
 import OAuthFormDrawer from './OAuthFormDrawer';
 import AddNewLink from 'src/components/AddNewLink';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root' | 'title';
 
@@ -100,7 +101,9 @@ class OAuthClients extends React.Component<CombinedProps, State> {
   }
 
   setForm = (fn: (v: FormState) => FormState): void => {
-    this.setState(prevState => ({ ...prevState, form: fn(prevState.form) }));
+    this.setState(prevState => ({ ...prevState, form: fn(prevState.form) }), () => {
+      scrollErrorIntoView();
+    });
   }
 
   requestClients = () => {

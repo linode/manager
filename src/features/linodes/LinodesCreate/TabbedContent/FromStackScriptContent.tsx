@@ -34,6 +34,7 @@ import { resetEventsPolling } from 'src/events';
 
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 // import { UserDefinedFields as mockUserDefinedFields } from 'src/__data__/UserDefinedFields';
 
@@ -210,6 +211,8 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
         errors: [
           { field: 'stackscript_id', reason: 'You must select a StackScript' },
         ],
+      }, () => {
+        scrollErrorIntoView();
       });
       return;
     }
@@ -264,7 +267,9 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
           });
           this.setState(() => ({
             errors: updatedErrorList,
-          }));
+          }), () => {
+            scrollErrorIntoView();
+          });
         }
       })
       .finally(() => {

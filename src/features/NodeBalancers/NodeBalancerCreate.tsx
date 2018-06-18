@@ -52,6 +52,7 @@ import {
   createNewNodeBalancerConfig,
   createNewNodeBalancerConfigNode,
 } from './utils';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type Styles =
   'root'
@@ -221,7 +222,9 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     // Apply the error updater functions with a compose
     this.setState(
       (compose as any)(...setFns),
-    );
+      () => {
+        scrollErrorIntoView();
+      });
   }
 
   createNodeBalancer = () => {
@@ -253,6 +256,8 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       /* Then update the config errors */
       this.setState({
         errors,
+      }, () => {
+        scrollErrorIntoView();
       });
       return;
     }
@@ -333,12 +338,16 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
         const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'], errorResponse);
 
         if (errors) {
-          return this.setState({ errors, submitting: false });
+          return this.setState({ errors, submitting: false }, () => {
+            scrollErrorIntoView();
+          });
         }
 
         return this.setState({
           errors: [
             { field: 'none', reason: `An unexpected error has occured..` }],
+        }, () => {
+          scrollErrorIntoView();
         });
       });
   }
