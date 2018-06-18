@@ -26,6 +26,7 @@ interface Props {
   updateFormState: (key: string, value: any) => void;
   udf_data: Linode.StackScript.UserDefinedField;
   field: Linode.StackScript.UserDefinedField;
+  isOptional: boolean;
 }
 
 interface State {
@@ -48,12 +49,15 @@ class UserDefinedSelect extends React.Component<CombinedProps, State> {
 
   render() {
     const { oneof } = this.state;
-    const { udf_data, field, classes } = this.props;
+    const { udf_data, field, classes, isOptional } = this.props;
 
     return (
       <div className={classes.root}>
         <Typography variant="subheading" >
           {field.label}
+          {isOptional &&
+            ' (Optional)'
+          }
         </Typography>
         {oneof.map((choice: string, index) => {
           return (
