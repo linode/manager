@@ -35,6 +35,7 @@ interface Props {
   userDefinedFields?: Linode.StackScript.UserDefinedField[];
   handleChange: (key: string, value: any) => void;
   udf_data: any;
+  selectedLabel: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -43,6 +44,8 @@ const UserDefinedFieldsPanel: React.StatelessComponent<CombinedProps> = (props) 
   const { userDefinedFields, classes, handleChange } = props;
 
   const renderField = (field: Linode.StackScript.UserDefinedField) => {
+    // if the 'default' key is returned from the API, the field is optional
+    const isOptional = field.hasOwnProperty('default');
     if (isMultiSelect(field)) {
       return <UserDefinedMultiSelect
         key={field.name}
@@ -50,6 +53,7 @@ const UserDefinedFieldsPanel: React.StatelessComponent<CombinedProps> = (props) 
         udf_data={props.udf_data}
         updateFormState={handleChange}
         updateFor={[props.udf_data[field.name]]}
+        isOptional={isOptional}
       />;
     } if (isOneSelect(field)) {
       return <UserDefinedSelect
@@ -57,6 +61,7 @@ const UserDefinedFieldsPanel: React.StatelessComponent<CombinedProps> = (props) 
         updateFormState={handleChange}
         udf_data={props.udf_data}
         updateFor={[props.udf_data[field.name]]}
+        isOptional={isOptional}
         key={field.name} />;
     } if (isPasswordField(field.name)) {
       return <UserDefinedText
@@ -66,6 +71,7 @@ const UserDefinedFieldsPanel: React.StatelessComponent<CombinedProps> = (props) 
         field={field}
         udf_data={props.udf_data}
         updateFor={[props.udf_data[field.name]]}
+        isOptional={isOptional}
       />;
     }
     return <UserDefinedText
@@ -74,6 +80,7 @@ const UserDefinedFieldsPanel: React.StatelessComponent<CombinedProps> = (props) 
       field={field}
       udf_data={props.udf_data}
       updateFor={[props.udf_data[field.name]]}
+      isOptional={isOptional}
     />;
   };
 
@@ -89,7 +96,7 @@ const UserDefinedFieldsPanel: React.StatelessComponent<CombinedProps> = (props) 
         );
       })}
       <Typography variant="title">
-        Required Fields
+        {`${props.selectedLabel} Options`}
       </Typography>
       {
         userDefinedFields!.map((field: Linode.StackScript.UserDefinedField) => {

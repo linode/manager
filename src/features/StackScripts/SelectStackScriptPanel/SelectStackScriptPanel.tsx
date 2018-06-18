@@ -101,7 +101,7 @@ interface Props {
   selectedId: number | null;
   error?: string;
   shrinkPanel?: boolean;
-  onSelect: (id: number, images: string[],
+  onSelect: (id: number, label: string, images: string[],
     userDefinedFields: Linode.StackScript.UserDefinedField[]) => void;
 }
 
@@ -156,7 +156,7 @@ interface Params {
 interface ContainerProps {
   request: (params: Params, filter: any) =>
     Promise<Linode.ResourcePage<Linode.StackScript.Response>>;
-  onSelect: (id: number, images: string[],
+  onSelect: (id: number, label: string, images: string[],
     userDefinedFields: Linode.StackScript.UserDefinedField[]) => void;
 }
 
@@ -228,6 +228,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
   handleSelectStackScript = (stackscript: Linode.StackScript.Response) => {
     this.props.onSelect(
       stackscript.id,
+      stackscript.label,
       stackscript.images,
       stackscript.user_defined_fields,
     );

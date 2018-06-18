@@ -30,6 +30,7 @@ interface Props {
   updateFormState: (key: string, value: any) => void;
   udf_data: Linode.StackScript.UserDefinedField;
   field: Linode.StackScript.UserDefinedField;
+  isOptional: boolean;
 }
 
 interface State {
@@ -78,7 +79,7 @@ class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
 
   render() {
     const { manyof } = this.state;
-    const { udf_data, field, classes } = this.props;
+    const { udf_data, field, classes, isOptional } = this.props;
 
     // we are setting default values in the parent component, so we want to use these
     // default values to determine what will be checked upon initial render
@@ -88,6 +89,9 @@ class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
       <div className={classes.root}>
         <Typography variant="subheading" >
           {field.label}
+          {isOptional &&
+            ' (Optional)'
+          }
         </Typography>
         <Grid container>
           {manyof.map((choice: string, index) => {

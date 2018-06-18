@@ -27,6 +27,7 @@ interface Props {
   field: Linode.StackScript.UserDefinedField;
   updateFormState: (key: string, value: any) => void;
   udf_data: Linode.StackScript.UserDefinedField;
+  isOptional: boolean;
 }
 
 interface State { }
@@ -37,12 +38,15 @@ class UserDefinedText extends React.Component<CombinedProps, State> {
   state: State = {};
 
   renderTextField = () => {
-    const { udf_data, field } = this.props;
+    const { udf_data, field, isOptional } = this.props;
 
     return (
       <React.Fragment>
         <Typography variant="subheading" >
           {field.label}
+          {isOptional &&
+            ' (Optional)'
+          }
         </Typography>
         <TextField
           onChange={this.handleUpdateText}

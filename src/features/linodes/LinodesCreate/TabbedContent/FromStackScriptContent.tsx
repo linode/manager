@@ -88,6 +88,7 @@ interface State {
   udf_data: any;
   errors?: Linode.ApiFieldError[];
   selectedStackScriptID: number | null;
+  selectedStackScriptLabel: string;
   selectedImageID: string | null;
   selectedRegionID: string | null;
   selectedTypeID: string | null;
@@ -115,6 +116,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
     userDefinedFields: [],
     udf_data: null,
     selectedStackScriptID: null,
+    selectedStackScriptLabel: '',
     selectedImageID: null,
     selectedRegionID: null,
     selectedTypeID: null,
@@ -128,7 +130,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
 
   mounted: boolean = false;
 
-  handleSelectStackScript = (id: number, stackScriptImages: string[],
+  handleSelectStackScript = (id: number, label: string, stackScriptImages: string[],
     userDefinedFields: Linode.StackScript.UserDefinedField[]) => {
     const { images } = this.props;
     const filteredImages = images.filter((image) => {
@@ -150,6 +152,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
     // then update userDefinedFields to the fields returned
     this.setState({
       selectedStackScriptID: id,
+      selectedStackScriptLabel: label,
       compatibleImages: filteredImages,
       userDefinedFields,
       udf_data: defaultUDFData,
@@ -292,7 +295,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
   render() {
     const { errors, userDefinedFields, udf_data, selectedImageID, selectedRegionID,
       selectedStackScriptID, selectedTypeID, backups, privateIP, label,
-      password, isMakingRequest, compatibleImages } = this.state;
+      password, isMakingRequest, compatibleImages, selectedStackScriptLabel } = this.state;
 
     const { notice, getBackupsMonthlyPrice, regions, types, classes,
       getRegionName, getTypeInfo } = this.props;
@@ -329,6 +332,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
           {userDefinedFields && userDefinedFields.length > 0 &&
             <UserDefinedFieldsPanel
               errors={udfErrors}
+              selectedLabel={selectedStackScriptLabel}
               handleChange={this.handleChangeUDF}
               userDefinedFields={userDefinedFields}
               updateFor={[userDefinedFields, udf_data, errors]}
