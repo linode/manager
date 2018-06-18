@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
+import TableBody from 'material-ui/Table/TableBody';
+
 import SelectionRow from 'src/components/SelectionRow';
 
 type ClassNames = 'root';
@@ -25,11 +27,11 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => 
   } = props;
 
   return (
-    <div>
+    <TableBody>
       {
         data && data.map(stackScript(onSelect, selectedId))
       }
-    </div>
+    </TableBody>
   );
 };
 

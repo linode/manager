@@ -1,16 +1,20 @@
 import * as React from 'react';
 import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
-
+// import TableBody from 'material-ui/Table/TableBody';
+import TableCell from 'material-ui/Table/TableCell';
+import TableHead from 'material-ui/Table/TableHead';
+import TableRow from 'material-ui/Table/TableRow';
 
 import { getStackscripts, getMyStackscripts, getLinodeStackscripts }
   from 'src/services/stackscripts';
 
 import Button from 'src/components/Button';
-import Grid from 'src/components/Grid';
+// import Grid from 'src/components/Grid';
 import TabbedPanel from 'src/components/TabbedPanel';
 import StackScriptsSection from './StackScriptsSection';
 import CircleProgress from 'src/components/CircleProgress';
 import RenderGuard from 'src/components/RenderGuard';
+import Table from 'src/components/Table';
 
 export interface ExtendedLinode extends Linode.Linode {
   heading: string;
@@ -22,7 +26,9 @@ type ClassNames = 'root'
   | 'selecting'
   | 'container'
   | 'labelCell'
-  | 'stackscriptLabel';
+  | 'stackscriptLabel'
+  | 'tableHead'
+  | 'table';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -31,14 +37,17 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   creating: {
     minHeight: '200px',
     maxHeight: '400px',
-    overflowX: 'hidden',
+    overflowX: 'auto',
   },
   selecting: {
     maxHeight: '1000px',
-    overflowX: 'hidden',
+    overflowX: 'auto',
   },
   container: {
     padding: theme.spacing.unit * 2,
+  },
+  table: {
+    overflow: 'scroll',
   },
   labelCell: {
     background: theme.bg.offWhite,
@@ -51,6 +60,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     [theme.breakpoints.up('lg')]: {
       paddingLeft: '78px !important',
     },
+  },
+  tableHead: {
+    position: 'sticky',
+    top: 0,
+    backgroundColor: theme.bg.offWhite,
+    zIndex: 10,
   },
 });
 
@@ -186,7 +201,17 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
 
     return (
       <React.Fragment>
-        <Grid container className={classes.container}>
+        <Table noOverflow={true} tableClass={classes.table} className={classes.container}>
+          <TableHead>
+            <TableRow>
+              <TableCell className={classes.tableHead}></TableCell>
+              <TableCell className={classes.tableHead}>StackScripts</TableCell>
+              <TableCell className={classes.tableHead}>Active Deploys</TableCell>
+              <TableCell className={classes.tableHead}>Last Revision</TableCell>
+              <TableCell className={classes.tableHead}>Compatible Images</TableCell>
+            </TableRow>
+          </TableHead>
+          {/* <Grid container className={classes.container}>
           <Grid
             item xs={12}
             lg={6}
@@ -215,13 +240,14 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
           >
             <label>Compatible Images</label>
           </Grid>
-        </Grid>
-        <StackScriptsSection
-          onSelect={this.handleSelectStackScript}
-          selectedId={this.state.selected}
-          data={this.state.data}
-          getNext={() => this.getNext()}
-        />
+        </Grid> */}
+          <StackScriptsSection
+            onSelect={this.handleSelectStackScript}
+            selectedId={this.state.selected}
+            data={this.state.data}
+            getNext={() => this.getNext()}
+          />
+        </Table>
         {this.state.showMoreButtonVisible &&
           <Button
             title="Show More StackScripts"
