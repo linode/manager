@@ -116,9 +116,12 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     fontWeight: 400,
     fontSize: '.9rem',
     transition: theme.transitions.create(['background-color', 'color']),
-    '&:hover, &:focus': {
+    '&:hover': {
       backgroundColor: theme.palette.primary.main,
       color: 'white',
+    },
+    '&:focus': {
+      outline: '1px dotted #999',
     },
   },
   consoleButton: {
