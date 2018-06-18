@@ -352,7 +352,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
             </TableRow>
           </TableHead>
           <StackScriptsSection
-            isSorting={isSorting}
+            // isSorting={isSorting}
             onSelect={this.handleSelectStackScript}
             selectedId={this.state.selected}
             data={this.state.data}
