@@ -579,6 +579,9 @@ const LinodeTheme: Linode.Theme = {
         '&$selected': {
           fontWeight: 700,
         },
+        '&:hover': {
+          color: '#3B85D9',
+        },
       },
       label: {
         [breakpoints.up('md')]: {
