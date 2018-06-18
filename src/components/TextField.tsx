@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { equals } from 'ramda';
 import TextField, { TextFieldProps } from 'material-ui/TextField';
 
 export interface Props extends TextFieldProps {
@@ -14,7 +15,8 @@ class LinodeTextField extends React.Component<Props> {
       || nextProps.affirmative !== this.props.affirmative
       || nextProps.select !== this.props.select
       || nextProps.type !== this.props.type
-      || Boolean(this.props.select && nextProps.children !== this.props.children);
+      || Boolean(this.props.select && nextProps.children !== this.props.children)
+      || !equals(nextProps.InputProps, this.props.InputProps);
   }
 
   render() {
