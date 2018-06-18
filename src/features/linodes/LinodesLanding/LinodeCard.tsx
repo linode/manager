@@ -228,7 +228,7 @@ class LinodeCard extends React.Component<CombinedProps> {
       <CardContent className={classes.cardContent}>
         <Grid container>
           <Grid item xs={12}>
-            <CircleProgress value={value} />
+            <CircleProgress value={value} noTopMargin />
           </Grid>
           <Grid item xs={12}>
             <Typography align="center" className={classes.loadingStatusText}>
