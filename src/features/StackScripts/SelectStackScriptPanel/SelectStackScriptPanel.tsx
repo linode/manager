@@ -1,15 +1,16 @@
 import * as React from 'react';
+import * as moment from 'moment';
 import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
-// import TableBody from 'material-ui/Table/TableBody';
 import TableCell from 'material-ui/Table/TableCell';
 import TableHead from 'material-ui/Table/TableHead';
 import TableRow from 'material-ui/Table/TableRow';
+
+import { sort } from 'ramda';
 
 import { getStackscripts, getMyStackscripts, getLinodeStackscripts }
   from 'src/services/stackscripts';
 
 import Button from 'src/components/Button';
-// import Grid from 'src/components/Grid';
 import TabbedPanel from 'src/components/TabbedPanel';
 import StackScriptsSection from './StackScriptsSection';
 import CircleProgress from 'src/components/CircleProgress';
@@ -132,6 +133,8 @@ interface ContainerProps {
     userDefinedFields: Linode.StackScript.UserDefinedField[]) => void;
 }
 
+type CurrentFilter = 'label' | 'deploys' | 'revision';
+
 interface ContainerState {
   currentPage: number;
   selected?: number;
@@ -139,6 +142,8 @@ interface ContainerState {
   gettingMoreStackScripts: boolean;
   showMoreButtonVisible: boolean;
   data: any; // @TODO type correctly
+  sortOrder: SortOrder;
+  currentFilter: CurrentFilter | null;
 }
 
 type ContainerCombinedProps = ContainerProps & WithStyles<ClassNames>;
@@ -150,6 +155,8 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
     gettingMoreStackScripts: false,
     data: [],
     showMoreButtonVisible: true,
+    sortOrder: 'asc',
+    currentFilter: null,
   };
 
   getDataAtPage = (page: number) => {
@@ -192,8 +199,48 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
     this.setState({ selected: stackscript.id });
   }
 
+  handleClickStackScriptsTableHeader = () => {
+    const { sortOrder } = this.state;
+    const nextSortOrder = (sortOrder === 'asc') ? 'desc' : 'asc';
+    this.setState({
+      data: sortByName(sortOrder)(this.state.data),
+      sortOrder: nextSortOrder,
+      currentFilter: 'label',
+    });
+  }
+
+  handleClickDeploymentsTableHeader = () => {
+    const { sortOrder } = this.state;
+    const nextSortOrder = (sortOrder === 'asc') ? 'desc' : 'asc';
+    this.setState({
+      data: sortByDeploys(sortOrder)(this.state.data),
+      sortOrder: nextSortOrder,
+      currentFilter: 'deploys',
+    });
+  }
+
+  handleClickRevisionsTableHeader = () => {
+    const { sortOrder } = this.state;
+    const nextSortOrder = (sortOrder === 'asc') ? 'desc' : 'asc';
+    this.setState({
+      data: sortByRevision(sortOrder)(this.state.data),
+      sortOrder: nextSortOrder,
+      currentFilter: 'revision',
+    });
+  }
+
+  renderIcon = () => {
+    const { sortOrder } = this.state;
+    return (
+      sortOrder === 'asc'
+        ? <div>asc</div>
+        : <div>desc</div>
+    );
+  }
+
   render() {
     const { classes } = this.props;
+    const { currentFilter } = this.state;
 
     if (this.state.loading) {
       return <CircleProgress />;
@@ -205,42 +252,33 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
           <TableHead>
             <TableRow>
               <TableCell className={classes.tableHead}></TableCell>
-              <TableCell className={classes.tableHead}>StackScripts</TableCell>
-              <TableCell className={classes.tableHead}>Active Deploys</TableCell>
-              <TableCell className={classes.tableHead}>Last Revision</TableCell>
+              <TableCell
+                className={classes.tableHead}
+                onClick={this.handleClickStackScriptsTableHeader}
+              >
+                StackScripts
+                {currentFilter === 'label' &&
+                  this.renderIcon()}
+              </TableCell>
+              <TableCell
+                className={classes.tableHead}
+                onClick={this.handleClickDeploymentsTableHeader}
+              >
+                Active Deploys
+                {currentFilter === 'deploys' &&
+                  this.renderIcon()}
+              </TableCell>
+              <TableCell
+                className={classes.tableHead}
+                onClick={this.handleClickRevisionsTableHeader}
+              >
+                Last Revision
+                {currentFilter === 'revision' &&
+                  this.renderIcon()}
+              </TableCell>
               <TableCell className={classes.tableHead}>Compatible Images</TableCell>
             </TableRow>
           </TableHead>
-          {/* <Grid container className={classes.container}>
-          <Grid
-            item xs={12}
-            lg={6}
-            className={`${classes.labelCell} ${classes.stackscriptLabel}`}
-          >
-            <label>StackScripts</label>
-          </Grid>
-          <Grid
-            item xs={12}
-            lg={1}
-            className={`${classes.labelCell}`}
-          >
-            <label>Active Deploy</label>
-          </Grid>
-          <Grid
-            item xs={12}
-            lg={2}
-            className={`${classes.labelCell}`}
-          >
-            <label>Last Revision</label>
-          </Grid>
-          <Grid
-            item xs={12}
-            lg={3}
-            className={`${classes.labelCell}`}
-          >
-            <label>Compatible Images</label>
-          </Grid>
-        </Grid> */}
           <StackScriptsSection
             onSelect={this.handleSelectStackScript}
             selectedId={this.state.selected}
@@ -266,6 +304,41 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
     );
   }
 }
+
+type SortOrder = 'asc' | 'desc';
+
+const sortByName = (order: SortOrder) =>
+  sort((a: Linode.StackScript.Response, b: Linode.StackScript.Response) => {
+    let result = 1; // by default a > b
+    if (a.label.toLowerCase() < b.label.toLowerCase()) {
+      result = -1; // otherwise result is -1
+    }
+    if (order === 'desc') {
+      return result; // descending order
+    }
+    return -result; // ascending order
+  });
+
+const sortByRevision = (order: SortOrder) =>
+  sort((a: Linode.StackScript.Response, b: Linode.StackScript.Response) => {
+    const result = moment.utc(b.updated).diff(moment.utc(a.updated));
+    if (order === 'desc') {
+      return -result; // descending order
+    }
+    return result; // ascending order
+  });
+
+const sortByDeploys = (order: SortOrder) =>
+  sort((a: Linode.StackScript.Response, b: Linode.StackScript.Response) => {
+    let result = 1; // by default a > b
+    if (a.deployments_active < b.deployments_active) {
+      result = -1; // otherwise result is -1
+    }
+    if (order === 'desc') {
+      return result; // descending order
+    }
+    return -result; // ascending order
+  });
 
 const styled = withStyles(styles, { withTheme: true });
 

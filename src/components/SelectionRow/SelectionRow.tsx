@@ -7,7 +7,6 @@ import TableCell from 'material-ui/Table/TableCell';
 import TableRow from 'material-ui/Table/TableRow';
 
 import Typography from 'material-ui/Typography';
-// import Grid from 'src/components/Grid';
 import Radio from 'src/components/Radio';
 import Tag from 'src/components/Tag';
 import ShowMore from 'src/components/ShowMore';
@@ -156,59 +155,6 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
           </TableCell>
         }
       </TableRow>
-      {/* <Grid container className={classes.root}>
-        <Grid item xs={12} lg={onSelect ? 6 : 5} className={classes.libTitleContainer}>
-          {onSelect &&
-            <Grid item className={classes.libRadio}>
-              <div>
-                <Radio checked={checked} onChange={onSelect} id={`${stackScriptID}`} />
-              </div>
-            </Grid>
-          }
-          <Grid container alignItems="center">
-            <Grid item className={classes.libTitle}>
-              <Typography variant="subheading">
-                <label htmlFor={`${stackScriptID}`} className={classes.libRadioLabel}>{label}
-                </label>
-              </Typography>
-              <Link to={'/'} target="_blank" className={classes.libTitleLink}>
-                More Info
-            </Link>
-            </Grid>
-            <Grid item xs={12} className={classes.libDescription}>
-              <Typography>{description}</Typography>
-            </Grid>
-          </Grid>
-        </Grid>
-
-        <Grid item xs={12} lg={1} className={classes.respPadding}>
-          <Typography variant="subheading">{deploymentsActive}</Typography>
-        </Grid>
-
-        <Grid item xs={12} lg={2} className={classes.respPadding}>
-          <Typography variant="subheading">{updated}</Typography>
-        </Grid>
-
-        <Grid item xs={12} lg={3} className={`${classes.colImages} ${classes.respPadding}`}>
-          {
-            displayTagsAndShowMore(images)
-          }
-        </Grid>
-
-        {showDeployLink &&
-          <Grid item xs={2}>
-            <Grid container alignItems="center">
-              <Grid item xs={12}>
-                <Link to={'/'}>
-                  <Typography variant="title">
-                    Deploy New Linode
-              </Typography>
-                </Link>
-              </Grid>
-            </Grid>
-          </Grid>
-        }
-      </Grid> */}
     </React.Fragment>
   );
 };

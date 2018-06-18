@@ -35,9 +35,6 @@ import { resetEventsPolling } from 'src/events';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
 
-// import { UserDefinedFields as mockUserDefinedFields } from 'src/__data__/UserDefinedFields';
-
-
 type ClassNames = 'root'
   | 'main'
   | 'sidebar'
