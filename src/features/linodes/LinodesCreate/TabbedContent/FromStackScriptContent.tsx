@@ -204,17 +204,8 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
     };
   }
 
-  scrollToTop = () => {
-    window.scroll({
-      top: 0,
-      left: 0,
-      behavior: 'smooth',
-    });
-  }
-
   createFromStackScript = () => {
     if (!this.state.selectedStackScriptID) {
-      this.scrollToTop();
       this.setState({
         errors: [
           { field: 'stackscript_id', reason: 'You must select a StackScript' },
@@ -259,8 +250,6 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
       })
       .catch((error) => {
         if (!this.mounted) { return; }
-
-        this.scrollToTop();
 
         if (error.response && error.response.data && error.response.data.errors) {
           const listOfErrors = error.response.data.errors;

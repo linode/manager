@@ -16,6 +16,7 @@ import PasswordPanel from '../PasswordPanel';
 import AddonsPanel from '../AddonsPanel';
 
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import Notice from 'src/components/Notice';
 import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
@@ -139,14 +140,6 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
     };
   }
 
-  scrollToTop = () => {
-    window.scroll({
-      top: 0,
-      left: 0,
-      behavior: 'smooth',
-    });
-  }
-
   createNewLinode = () => {
     const { history } = this.props;
     const {
@@ -178,11 +171,11 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
       .catch((error) => {
         if (!this.mounted) { return; }
 
-        this.scrollToTop();
-
         this.setState(() => ({
           errors: error.response && error.response.data && error.response.data.errors,
-        }));
+        }), () => {
+          scrollErrorIntoView();
+        });
       })
       .finally(() => {
         // regardless of whether request failed or not, change state and enable the submit btn

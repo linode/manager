@@ -93,6 +93,7 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
       item
       className={classNames({
         [classes.error]: error,
+        ['error-for-scroll']: error,
         [classes.warning]: warning,
         [classes.success]: success,
         [classes.root]: true,

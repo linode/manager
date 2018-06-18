@@ -135,14 +135,6 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
     this.setState({ privateIP: !this.state.privateIP });
   }
 
-  scrollToTop = () => {
-    window.scroll({
-      top: 0,
-      left: 0,
-      behavior: 'smooth',
-    });
-  }
-
   cloneLinode = () => {
     const { history } = this.props;
     const {
@@ -169,8 +161,6 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
       })
       .catch((error) => {
         if (!this.mounted) { return; }
-
-        this.scrollToTop();
 
         this.setState(() => ({
           errors: error.response && error.response.data && error.response.data.errors,
