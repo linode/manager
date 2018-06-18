@@ -31,6 +31,9 @@ class LinodeTextField extends React.Component<Props> {
     if (errorText) {
       finalProps.error = true;
       finalProps.helperText = errorText;
+      finalProps.InputProps = {
+        className: 'error-for-scroll',
+      };
     }
 
     if (affirmative) {
