@@ -35,6 +35,7 @@ export const linode1: Linode.Linode = {
   },
   status: 'running',
   ipv6: '2600:3c03::f03c:91ff:fe0a:109a/64',
+  watchdog_enabled: false,
 };
 
 export const linode2: Linode.Linode = {
@@ -72,6 +73,7 @@ export const linode2: Linode.Linode = {
   },
   status: 'running',
   ipv6: '2600:3c03::f03c:91ff:fe0a:0d7a/64',
+  watchdog_enabled: false,
 };
 
 export const linodes = [
