@@ -1,15 +1,15 @@
 import * as React from 'react';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from '@material-ui/core/styles';
+import { StyleRulesCallback, Theme,withStyles, WithStyles } from '@material-ui/core/styles';
+
 import IconButton from '@material-ui/core/IconButton';
+
 import NotificationIcon from '../../../assets/icons/bell.svg';
 
-type ClassNames = 'root' | 'icon' | 'new';
+type ClassNames = 'root'
+  | 'icon'
+  | 'new'
+  | 'count';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   '@keyframes fadeIn': {
@@ -43,21 +43,32 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   new: {
     animation: 'fadeIn 225ms ease-in-out',
-    width: 10,
-    height: 10,
+    padding: '0 5px',
+    height: 17,
     backgroundColor: theme.color.red,
-    borderRadius: '50%',
+    borderRadius: 10,
     position: 'absolute',
-    zINdex: 2,
-    bottom: 8,
-    right: 8,
+    zIndex: 2,
+    top: 0,
+    right: 2,
+    display: 'flex',
+    alignItems: 'center',
+  },
+  count: {
+    color: 'white',
+    fontWeight: 700,
+    display: 'block',
+    fontSize: '.7rem',
+    lineHeight: 0,
+    position: 'relative',
+    top: -1,
   },
 });
 
 interface Props {
   onClick: (e: React.MouseEvent<HTMLElement>) => void;
   getRef: (e: HTMLElement) => void;
-  hasNew: boolean;
+  notificationCount?: number;
   disabled?: boolean;
   className?: string;
 }
@@ -66,7 +77,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 const UserNotificationButton: React.StatelessComponent<CombinedProps> = ({
   classes,
-  hasNew,
+  notificationCount,
   onClick,
   getRef,
   disabled,
@@ -81,8 +92,10 @@ const UserNotificationButton: React.StatelessComponent<CombinedProps> = ({
       disabled={disabled}
     >
       <NotificationIcon className={classes.icon} />
-      {hasNew
-        ? <span className={classes.new}/>
+      {(notificationCount as number > 0)
+        ? <div className={classes.new}>
+            <span className={classes.count}>{notificationCount}</span>
+          </div>
         : ''
       }
     </IconButton>
