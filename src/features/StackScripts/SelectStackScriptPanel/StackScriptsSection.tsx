@@ -7,13 +7,16 @@ import TableCell from 'material-ui/Table/TableCell';
 import SelectionRow from 'src/components/SelectionRow';
 import CircleProgress from 'src/components/CircleProgress';
 
-type ClassNames = 'root' | 'loadingWrapper';
+type ClassNames = 'root' | 'loadingWrapper' | 'username';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
   loadingWrapper: {
     border: 0,
     paddingTop: 100,
+  },
+  username: {
+    color: 'grey',
   },
 });
 
@@ -69,6 +72,7 @@ const stackScript: (fn: (s: Linode.StackScript.Response) => void, id?: number) =
     <SelectionRow
       key={s.id}
       label={s.label}
+      stackScriptUsername={s.username}
       description={truncateDescription(s.description)}
       images={stripImageName(s.images)}
       deploymentsActive={s.deployments_active}
