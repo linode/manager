@@ -360,6 +360,8 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     } = this.state;
     const matches = (p: string) => Boolean(matchPath(p, { path: this.props.location.pathname }));
 
+    console.log(linode);
+
     return (
       <React.Fragment>
         <Grid

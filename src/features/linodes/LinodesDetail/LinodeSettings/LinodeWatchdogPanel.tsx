@@ -66,7 +66,7 @@ class LinodeWatchdogPanel extends React.Component<CombinedProps, State> {
     updateLinode(this.props.linodeId, { watchdog_enabled: value })
       .then((response) => {
         this.setSubmitting(false);
-        this.setSuccess(`Watchdog succesfully ${value ? 'enabeld' : 'disabled.'}`);
+        this.setSuccess(`Watchdog succesfully ${value ? 'enabled' : 'disabled.'}`);
       })
       .catch(() => {
         this.setSuccess(`Unable to ${value ? 'disable' : 'enable'} Watchdog.`);
@@ -83,7 +83,7 @@ class LinodeWatchdogPanel extends React.Component<CombinedProps, State> {
           <Grid container>
             {
               (success || error) &&
-              <Grid xs={12}>
+              <Grid item xs={12}>
                 <Notice success={Boolean(success)} error={Boolean(error)} text={success || error} />
               </Grid>
             }
