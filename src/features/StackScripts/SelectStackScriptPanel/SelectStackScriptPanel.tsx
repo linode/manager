@@ -28,6 +28,8 @@ type ClassNames = 'root'
   | 'creating'
   | 'selecting'
   | 'stackscriptLabel'
+  | 'deploys'
+  | 'revisions'
   | 'tr'
   | 'tableHead'
   | 'sortable'
@@ -55,6 +57,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   stackscriptLabel: {
     width: 50,
+  },
+  deploys: {
+    width: '15%',
+  },
+  revisions: {
+    width: '15%',
   },
   tr: {
     height: 48,
@@ -303,6 +311,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
                 className={classNames({
                   [classes.tableHead]: true,
                   [classes.sortable]: true,
+                  [classes.deploys]: true,
                 })}
               >
                 <Button
@@ -320,6 +329,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
                 className={classNames({
                   [classes.tableHead]: true,
                   [classes.sortable]: true,
+                  [classes.revisions]: true,
                 })}
               >
                 <Button
