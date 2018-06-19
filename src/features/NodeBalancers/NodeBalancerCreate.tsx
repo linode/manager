@@ -2,7 +2,6 @@ import * as React from 'react';
 import * as Joi from 'joi';
 import {
   append,
-  clamp,
   clone,
   compose,
   defaultTo,
@@ -39,8 +38,6 @@ import CheckoutBar from 'src/components/CheckoutBar';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
-import ClientConnectionThrottlePanel from './ClientConnectionThrottlePanel';
-import defaultNumeric from 'src/utilities/defaultNumeric';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import NodeBalancerConfigPanel from './NodeBalancerConfigPanel';
 import Notice from 'src/components/Notice';
@@ -89,7 +86,6 @@ type CombinedProps = Props
 interface NodeBalancerFieldsState {
   label?: string;
   region?: string;
-  client_conn_throttle?: number;
   configs: NodeBalancerConfigFields[];
 }
 
@@ -111,7 +107,6 @@ const preloaded = PromiseLoader<Props>({});
 const errorResources = {
   label: 'label',
   region: 'region',
-  client_conn_throttle: 'client connection throttle',
 };
 
 class NodeBalancerCreate extends React.Component<CombinedProps, State> {
@@ -410,15 +405,6 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     );
   }
 
-  clientConnThrottleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState(
-      set(
-        lensPath(['nodeBalancerFields', 'client_conn_throttle']),
-        controlClientConnectionThrottle(e.target.value),
-      ),
-    );
-  }
-
   onCloseConfirmation = () => this.setState({
     deleteConfigConfirmDialog:
       clone(NodeBalancerCreate.defaultDeleteConfigConfirmDialogState),
@@ -487,22 +473,6 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                 NodeBalancer Settings
               </Typography>
             </Grid>
-            <ClientConnectionThrottlePanel
-              textFieldProps={{
-                errorText: hasErrorFor('client_conn_throttle'),
-                value: defaultTo(0, nodeBalancerFields.client_conn_throttle),
-                InputProps: {
-                  endAdornment: <Typography
-                    variant="caption"
-                    component="span"
-                    style={{ marginRight: '8px' }}
-                  >
-                    / second
-                  </Typography>,
-                },
-                onChange: this.clientConnThrottleChange,
-              }}
-            />
             <Grid
               container
               justify="space-between"
@@ -687,11 +657,6 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     );
   }
 }
-
-const controlClientConnectionThrottle = compose(
-  clamp(0, 20),
-  defaultNumeric(0),
-);
 
 const connected = connect((state: Linode.AppState) => ({
   regions: compose(
