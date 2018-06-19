@@ -4,6 +4,10 @@ export default function scrollErrorIntoView(errorGroup?: string) {
     : `.error-for-scroll`;
   const element = document.querySelectorAll(errorScrollClassSelector)[0];
   if (element) {
-    element.scrollIntoView();
+    element.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+      inline: 'nearest',
+    });
   }
 }
