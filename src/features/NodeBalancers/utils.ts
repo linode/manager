@@ -58,7 +58,7 @@ export const nodeForRequest = (node: Linode.NodeBalancerConfigNode) => ({
   port: node.port,
   weight: +node.weight!,
   /* Force Node creation and updates to set mode to 'accept' */
-  mode: 'accept' as Linode.NodeBalancerConfigNodeMode,
+  mode: node.mode,
 });
 
 export const formatAddress = (node: Linode.NodeBalancerConfigNode) => ({

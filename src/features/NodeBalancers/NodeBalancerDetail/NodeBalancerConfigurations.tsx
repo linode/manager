@@ -677,6 +677,10 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   onNodeWeightChange = (configIdx: number) => (nodeIdx: number, value: string) =>
     this.setNodeValue(configIdx, nodeIdx, 'weight', value)
 
+  onNodeModeChange = (configIdx: number) => (nodeIdx: number, value: string) => {
+    this.setNodeValue(configIdx, nodeIdx, 'mode', value);
+  }
+
   onCloseConfirmation = () => this.setState({
     deleteConfigConfirmDialog:
       clone(NodeBalancerConfigurations.defaultDeleteConfigConfirmDialogState),
@@ -813,6 +817,8 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           onNodePortChange={this.onNodePortChange(idx)}
 
           onNodeWeightChange={this.onNodeWeightChange(idx)}
+
+          onNodeModeChange={this.onNodeModeChange(idx)}
         />
       </ExpansionPanel>
     );
