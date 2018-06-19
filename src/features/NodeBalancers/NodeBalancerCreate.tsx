@@ -776,6 +776,14 @@ export const validationErrorsToFieldErrors = (error: Joi.ValidationError) => {
         };
       }
 
+      if (path.includes('path')
+          && detail.constraint === 'base') {
+        return {
+          ...detail,
+          message: 'Path must start with a /',
+        };
+      }
+
       if (path.includes('nodes')
           && path.includes('label')
           && detail.constraint === 'min') {
