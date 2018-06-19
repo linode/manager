@@ -61,7 +61,7 @@ class HelpIcon extends React.Component<CombinedProps, State> {
     });
   }
 
-  handleClickButton = (e: React.MouseEvent<HTMLElement>) => {
+  handleOpen = (e: React.MouseEvent<HTMLElement>) => {
     this.setState({
       open: true,
       anchorEl: e.currentTarget,
@@ -72,7 +72,9 @@ class HelpIcon extends React.Component<CombinedProps, State> {
     const { classes, text } = this.props;
     return (
       <React.Fragment>
-        <IconButton onClick={this.handleClickButton} data-qa-help-button>
+        <IconButton
+          onMouseOver={this.handleOpen}
+          data-qa-help-button>
           <HelpOutline className={classes.helpIcon} />
         </IconButton>
         <Popover
@@ -83,6 +85,7 @@ class HelpIcon extends React.Component<CombinedProps, State> {
           transformOrigin={{ vertical: 'top', horizontal: 'left' }}
           className={classes.root}
           classes={{ paper: 'helpPaper' }}
+          onMouseOut={this.handleClose}
         >
           <Typography data-qa-popover-text>{ text }</Typography>
         </Popover>
