@@ -47,7 +47,7 @@ export const createNewNodeBalancerConfig = (withDefaultPort?: boolean):
     protocol: 'http',
     ssl_cert: undefined,
     ssl_key: undefined,
-    stickiness: 'none',
+    stickiness: 'table',
     nodes: [createNewNodeBalancerConfigNode()],
     modifyStatus: 'new',
   });
