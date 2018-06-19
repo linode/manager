@@ -228,7 +228,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     this.setState(
       (compose as any)(...setFns),
       () => {
-        scrollErrorIntoView();
+        scrollErrorIntoView(`${configIdx}`);
       },
     );
   }
@@ -273,7 +273,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         this.setState({
           configErrors: newErrors,
         }, () => {
-          scrollErrorIntoView();
+          scrollErrorIntoView(`${idx}`);
         });
         this.resetSubmitting(idx);
         /* Return false as a Promise for the sake of aggregating results */
@@ -405,7 +405,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         this.setState({
           configErrors: newErrors,
         }, () => {
-          scrollErrorIntoView();
+          scrollErrorIntoView(`${idx}`);
         });
         // reset submitting
         this.resetSubmitting(idx);
@@ -442,7 +442,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       const newErrors = clone(this.state.configErrors);
       newErrors[idx] = validationErrorsToFieldErrors(validationErrors);
       this.setState({ configErrors: newErrors }, () => {
-        scrollErrorIntoView();
+        scrollErrorIntoView(`${idx}`);
       });
       this.setNodeErrors(idx, newErrors[idx]);
       return;
@@ -516,7 +516,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
               : [{ field: 'none', reason: 'Unable to complete your request at this time.' }],
           },
         }, () => {
-          scrollErrorIntoView();
+          scrollErrorIntoView(`${idxToDelete}`);
         });
       });
   }
@@ -528,7 +528,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         errors,
       ),
       () => {
-        scrollErrorIntoView();
+        scrollErrorIntoView(`${configIdx}`);
       },
     );
   }
@@ -747,6 +747,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       <ExpansionPanel
         key={idx}
         updateFor={[
+          idx,
           config,
           configSubmitting[idx],
           configErrors[idx],

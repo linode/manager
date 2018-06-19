@@ -1,5 +1,8 @@
-export default function scrollErrorIntoView() {
-  const element = document.querySelectorAll('.error-for-scroll')[0];
+export default function scrollErrorIntoView(errorGroup?: string) {
+  const errorScrollClassSelector = errorGroup
+    ? `.error-for-scroll-${errorGroup}`
+    : `.error-for-scroll`;
+  const element = document.querySelectorAll(errorScrollClassSelector)[0];
   if (element) {
     element.scrollIntoView();
   }

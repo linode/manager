@@ -54,6 +54,7 @@ interface Props extends GridProps {
   text?: string;
   html?: string;
   error?: boolean;
+  errorGroup?: string;
   warning?: boolean;
   success?: boolean;
   typeProps?: TypographyProps;
@@ -69,6 +70,7 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
     className,
     text,
     error,
+    errorGroup,
     warning,
     success,
     typeProps,
@@ -88,12 +90,14 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
       </Typography>
     );
 
+  const errorScrollClassName = errorGroup ? `error-for-scroll-${errorGroup}` : `error-for-scroll`;
+
   return (
     <Grid
       item
       className={classNames({
         [classes.error]: error,
-        ['error-for-scroll']: error,
+        [errorScrollClassName]: error,
         [classes.warning]: warning,
         [classes.success]: success,
         [classes.root]: true,
