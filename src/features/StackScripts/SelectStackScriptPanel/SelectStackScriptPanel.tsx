@@ -10,8 +10,6 @@ import KeyboardArrowUp from 'material-ui-icons/KeyboardArrowUp';
 import { getStackscripts, getMyStackscripts, getLinodeStackscripts }
   from 'src/services/stackscripts';
 
-import { sortByString, sortByNumber, sortByUTFDate } from 'src/utilities/sort-by';
-
 import Button from 'src/components/Button';
 import TabbedPanel from 'src/components/TabbedPanel';
 import StackScriptsSection from './StackScriptsSection';
@@ -160,7 +158,9 @@ interface ContainerState {
   showMoreButtonVisible: boolean;
   data: any; // @TODO type correctly
   sortOrder: SortOrder;
-  currentFilter: CurrentFilter | null;
+  currentFilterType: CurrentFilter | null;
+  currentFilter: any; // @TODO type correctly
+  isSorting: boolean;
 }
 
 type ContainerCombinedProps = ContainerProps & WithStyles<ClassNames>;
@@ -173,22 +173,28 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
     data: [],
     showMoreButtonVisible: true,
     sortOrder: 'asc',
-    currentFilter: null,
+    currentFilterType: null,
+    currentFilter: { ['+order_by']: 'deployments_total', ['+order']: 'desc' },
+    isSorting: false,
   };
 
-  getDataAtPage = (page: number) => {
+  getDataAtPage = (page: number,
+    filter: any = this.state.currentFilter,
+    isSorting: boolean = false) => {
     const { request } = this.props;
-    this.setState({ gettingMoreStackScripts: true });
+    this.setState({ gettingMoreStackScripts: true, isSorting });
 
-    request({ page, page_size: 50 }, { ['+order_by']: 'deployments_total', ['+order']: 'desc' })
+    request({ page, page_size: 50 }, filter)
       .then((response) => {
         if (!response.data.length) {
           this.setState({ showMoreButtonVisible: false });
         }
+        const newData = (isSorting) ? response.data : [...this.state.data, ...response.data];
         this.setState({
-          data: [...this.state.data, ...response.data],
+          data: newData,
           gettingMoreStackScripts: false,
           loading: false,
+          isSorting: false,
         });
       })
       .catch((e) => {
@@ -219,30 +225,33 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
   handleClickStackScriptsTableHeader = () => {
     const { sortOrder } = this.state;
     const nextSortOrder = (sortOrder === 'asc') ? 'desc' : 'asc';
+    this.getDataAtPage(1, { ['+order_by']: 'label', ['+order']: sortOrder }, true);
     this.setState({
-      data: sortByString(sortOrder, 'label')(this.state.data),
       sortOrder: nextSortOrder,
-      currentFilter: 'label',
+      currentFilterType: 'label',
+      currentFilter: { ['+order_by']: 'label', ['+order']: sortOrder },
     });
   }
 
   handleClickDeploymentsTableHeader = () => {
     const { sortOrder } = this.state;
     const nextSortOrder = (sortOrder === 'asc') ? 'desc' : 'asc';
+    this.getDataAtPage(1, { ['+order_by']: 'deployments_active', ['+order']: sortOrder }, true);
     this.setState({
-      data: sortByNumber(sortOrder, 'deployments_active')(this.state.data),
       sortOrder: nextSortOrder,
-      currentFilter: 'deploys',
+      currentFilterType: 'deploys',
+      currentFilter: { ['+order_by']: 'deployments_active', ['+order']: sortOrder },
     });
   }
 
   handleClickRevisionsTableHeader = () => {
     const { sortOrder } = this.state;
     const nextSortOrder = (sortOrder === 'asc') ? 'desc' : 'asc';
+    this.getDataAtPage(1, { ['+order_by']: 'updated', ['+order']: sortOrder }, true);
     this.setState({
-      data: sortByUTFDate(sortOrder, 'updated')(this.state.data),
       sortOrder: nextSortOrder,
-      currentFilter: 'revision',
+      currentFilterType: 'revision',
+      currentFilter: { ['+order_by']: 'updated', ['+order']: sortOrder },
     });
   }
 
@@ -250,7 +259,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
     const { sortOrder } = this.state;
     const { classes } = this.props;
     return (
-      sortOrder === 'asc'
+      sortOrder === 'desc'
         ? <KeyboardArrowUp className={classes.sortIcon} />
         : <KeyboardArrowDown className={classes.sortIcon} />
     );
@@ -258,7 +267,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
 
   render() {
     const { classes } = this.props;
-    const { currentFilter } = this.state;
+    const { currentFilterType, isSorting } = this.state;
 
     if (this.state.loading) {
       return <CircleProgress />;
@@ -285,7 +294,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
                   onClick={this.handleClickStackScriptsTableHeader}
                 >
                   StackScripts
-                  {currentFilter === 'label' &&
+                  {currentFilterType === 'label' &&
                     this.renderIcon()
                   }
                 </Button>
@@ -302,7 +311,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
                   onClick={this.handleClickDeploymentsTableHeader}
                 >
                   Active Deploys
-                  {currentFilter === 'deploys' &&
+                  {currentFilterType === 'deploys' &&
                     this.renderIcon()
                   }
                 </Button>
@@ -319,7 +328,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
                   onClick={this.handleClickRevisionsTableHeader}
                 >
                   Last Revision
-                  {currentFilter === 'revision' &&
+                  {currentFilterType === 'revision' &&
                     this.renderIcon()
                   }
                 </Button>
@@ -328,13 +337,14 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
             </TableRow>
           </TableHead>
           <StackScriptsSection
+            isSorting={isSorting}
             onSelect={this.handleSelectStackScript}
             selectedId={this.state.selected}
             data={this.state.data}
             getNext={() => this.getNext()}
           />
         </Table>
-        {this.state.showMoreButtonVisible &&
+        {this.state.showMoreButtonVisible && !isSorting &&
           <Button
             title="Show More StackScripts"
             onClick={this.getNext}
