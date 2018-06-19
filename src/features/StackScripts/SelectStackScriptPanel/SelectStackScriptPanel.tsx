@@ -1,9 +1,12 @@
 import * as React from 'react';
 import * as moment from 'moment';
+import * as classNames from 'classnames';
 import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
 import TableCell from 'material-ui/Table/TableCell';
 import TableHead from 'material-ui/Table/TableHead';
 import TableRow from 'material-ui/Table/TableRow';
+import KeyboardArrowDown from 'material-ui-icons/KeyboardArrowDown';
+import KeyboardArrowUp from 'material-ui-icons/KeyboardArrowUp';
 
 import { sort } from 'ramda';
 
@@ -25,10 +28,11 @@ export interface ExtendedLinode extends Linode.Linode {
 type ClassNames = 'root'
   | 'creating'
   | 'selecting'
-  | 'container'
-  | 'labelCell'
   | 'stackscriptLabel'
   | 'tableHead'
+  | 'sortable'
+  | 'sortButton'
+  | 'sortIcon'
   | 'table';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
@@ -39,34 +43,42 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     minHeight: '200px',
     maxHeight: '400px',
     overflowX: 'auto',
+    paddingTop: 0,
+    marginTop: theme.spacing.unit * 2,
   },
   selecting: {
     maxHeight: '1000px',
     overflowX: 'auto',
   },
-  container: {
-    padding: theme.spacing.unit * 2,
-  },
   table: {
     overflow: 'scroll',
   },
-  labelCell: {
-    background: theme.bg.offWhite,
-    fontSize: '.9rem',
-    fontWeight: 700,
-    paddingTop: '16px !important',
-    paddingBottom: '16px !important',
-  },
   stackscriptLabel: {
-    [theme.breakpoints.up('lg')]: {
-      paddingLeft: '78px !important',
-    },
+    width: 50,
   },
   tableHead: {
     position: 'sticky',
     top: 0,
     backgroundColor: theme.bg.offWhite,
     zIndex: 10,
+    paddingTop: 0,
+    paddingBottom: 0,
+  },
+  sortable: {
+    color: theme.palette.primary.main,
+    fontWeight: 700,
+    cursor: 'pointer',
+  },
+  sortButton: {
+    marginLeft: -26,
+    border: 0,
+    width: '100%',
+    justifyContent: 'flex-start',
+  },
+  sortIcon: {
+    position: 'relative',
+    top: 2,
+    left: 10,
   },
 });
 
@@ -231,10 +243,11 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
 
   renderIcon = () => {
     const { sortOrder } = this.state;
+    const { classes } = this.props;
     return (
       sortOrder === 'asc'
-        ? <div>asc</div>
-        : <div>desc</div>
+        ? <KeyboardArrowUp className={classes.sortIcon} />
+        : <KeyboardArrowDown className={classes.sortIcon} />
     );
   }
 
@@ -248,33 +261,63 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
 
     return (
       <React.Fragment>
-        <Table noOverflow={true} tableClass={classes.table} className={classes.container}>
+        <Table noOverflow={true} tableClass={classes.table}>
           <TableHead>
             <TableRow>
-              <TableCell className={classes.tableHead}></TableCell>
+              <TableCell className={classNames({
+                [classes.tableHead]: true,
+                [classes.stackscriptLabel]: true,
+              })} />
               <TableCell
-                className={classes.tableHead}
-                onClick={this.handleClickStackScriptsTableHeader}
+                className={classNames({
+                  [classes.tableHead]: true,
+                  [classes.sortable]: true,
+                })}
               >
-                StackScripts
-                {currentFilter === 'label' &&
-                  this.renderIcon()}
+                <Button
+                  type="secondary"
+                  className={classes.sortButton}
+                  onClick={this.handleClickStackScriptsTableHeader}
+                >
+                  StackScripts
+                  {currentFilter === 'label' &&
+                    this.renderIcon()
+                  }
+                </Button>
               </TableCell>
               <TableCell
-                className={classes.tableHead}
-                onClick={this.handleClickDeploymentsTableHeader}
+                className={classNames({
+                  [classes.tableHead]: true,
+                  [classes.sortable]: true,
+                })}
               >
-                Active Deploys
-                {currentFilter === 'deploys' &&
-                  this.renderIcon()}
+                <Button
+                  type="secondary"
+                  className={classes.sortButton}
+                  onClick={this.handleClickDeploymentsTableHeader}
+                >
+                  Active Deploys
+                  {currentFilter === 'deploys' &&
+                    this.renderIcon()
+                  }
+                </Button>
               </TableCell>
               <TableCell
-                className={classes.tableHead}
-                onClick={this.handleClickRevisionsTableHeader}
+                className={classNames({
+                  [classes.tableHead]: true,
+                  [classes.sortable]: true,
+                })}
               >
-                Last Revision
-                {currentFilter === 'revision' &&
-                  this.renderIcon()}
+                <Button
+                  type="secondary"
+                  className={classes.sortButton}
+                  onClick={this.handleClickRevisionsTableHeader}
+                >
+                  Last Revision
+                  {currentFilter === 'revision' &&
+                    this.renderIcon()
+                  }
+                </Button>
               </TableCell>
               <TableCell className={classes.tableHead}>Compatible Images</TableCell>
             </TableRow>
