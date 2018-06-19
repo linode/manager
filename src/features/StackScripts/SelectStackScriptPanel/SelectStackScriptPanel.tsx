@@ -28,6 +28,7 @@ type ClassNames = 'root'
   | 'creating'
   | 'selecting'
   | 'stackscriptLabel'
+  | 'stackscriptTitles'
   | 'deploys'
   | 'revisions'
   | 'tr'
@@ -42,11 +43,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     marginBottom: theme.spacing.unit * 3,
   },
   creating: {
-    minHeight: '200px',
-    maxHeight: '400px',
+    height: 400,
     overflowX: 'auto',
     paddingTop: 0,
     marginTop: theme.spacing.unit * 2,
+    overflowY: 'scroll',
   },
   selecting: {
     maxHeight: '1000px',
@@ -56,7 +57,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     overflow: 'scroll',
   },
   stackscriptLabel: {
-    width: 50,
+    width: 84,
+  },
+  stackscriptTitles: {
+    width: '30%',
   },
   deploys: {
     width: '15%',
@@ -294,6 +298,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
                 className={classNames({
                   [classes.tableHead]: true,
                   [classes.sortable]: true,
+                  [classes.stackscriptTitles]: true,
                 })}
               >
                 <Button

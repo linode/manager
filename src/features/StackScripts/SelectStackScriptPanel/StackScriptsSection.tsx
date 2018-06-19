@@ -7,10 +7,14 @@ import TableCell from 'material-ui/Table/TableCell';
 import SelectionRow from 'src/components/SelectionRow';
 import CircleProgress from 'src/components/CircleProgress';
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'loadingWrapper';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
+  loadingWrapper: {
+    border: 0,
+    paddingTop: 100,
+  },
 });
 
 export interface Props {
@@ -29,13 +33,18 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => 
     selectedId,
     data,
     isSorting,
+    classes,
   } = props;
 
   return (
     <TableBody>
       {!isSorting
         ? data && data.map(stackScript(onSelect, selectedId))
-        : <TableRow><TableCell><CircleProgress/></TableCell></TableRow>
+        : <TableRow>
+            <TableCell colSpan={5} className={classes.loadingWrapper}>
+              <CircleProgress />
+            </TableCell>
+          </TableRow>
       }
     </TableBody>
   );
