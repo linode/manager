@@ -7,7 +7,11 @@ import TableRow from 'material-ui/Table/TableRow';
 import KeyboardArrowDown from 'material-ui-icons/KeyboardArrowDown';
 import KeyboardArrowUp from 'material-ui-icons/KeyboardArrowUp';
 
-import { getStackscripts, getMyStackscripts, getLinodeStackscripts }
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { pathOr } from 'ramda';
+
+import { getStackScriptsByUser, getCommunityStackscripts }
   from 'src/services/stackscripts';
 
 import Button from 'src/components/Button';
@@ -125,21 +129,22 @@ class SelectStackScriptPanel extends React.Component<CombinedProps> {
             title: 'My StackScripts',
             render: () => <StyledContainer
               onSelect={this.props.onSelect}
-              request={getMyStackscripts} key={0}
+              request={getStackScriptsByUser} key={0}
             />,
           },
           {
             title: 'Linode StackScripts',
             render: () => <StyledContainer
               onSelect={this.props.onSelect}
-              request={getLinodeStackscripts} key={1}
+              request={getStackScriptsByUser} key={1}
+              isLinodeStackScripts={true}
             />,
           },
           {
             title: 'Community StackScripts',
             render: () => <StyledContainer
               onSelect={this.props.onSelect}
-              request={getStackscripts} key={2}
+              request={getCommunityStackscripts} key={2}
             />,
           },
         ]}
@@ -154,10 +159,12 @@ interface Params {
 }
 
 interface ContainerProps {
-  request: (params: Params, filter: any) =>
+  request: (username: string, params: Params, filter: any) =>
     Promise<Linode.ResourcePage<Linode.StackScript.Response>>;
   onSelect: (id: number, label: string, username: string, images: string[],
     userDefinedFields: Linode.StackScript.UserDefinedField[]) => void;
+  profile: Linode.Profile;
+  isLinodeStackScripts?: boolean;
 }
 
 type CurrentFilter = 'label' | 'deploys' | 'revision';
@@ -195,12 +202,18 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
   getDataAtPage = (page: number,
     filter: any = this.state.currentFilter,
     isSorting: boolean = false) => {
-    const { request } = this.props;
+    const { request, profile, isLinodeStackScripts } = this.props;
     this.setState({ gettingMoreStackScripts: true, isSorting });
-    
-    request({ page, page_size: 50 }, filter)
-      .then((response) => {
-        if (!response.data.length || response.data.length < 50) {
+
+    const filteredUser = (isLinodeStackScripts) ? 'linode' : profile.username;
+
+    request(
+      filteredUser,
+      { page, page_size: 50 },
+      filter)
+      .then((response: any) => {
+        console.log(response);
+        if (!response.data.length) {
           this.setState({ showMoreButtonVisible: false });
         }
         const newData = (isSorting) ? response.data : [...this.state.data, ...response.data];
@@ -212,7 +225,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
           isSorting: false,
         });
       })
-      .catch((e) => {
+      .catch((e: any) => {
         this.setState({ gettingMoreStackScripts: false });
       });
   }
@@ -389,8 +402,15 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
   }
 }
 
+const mapStateToProps = (state: Linode.AppState) => ({
+  profile: pathOr({}, ['resources', 'profile', 'data'], state),
+});
+
 const styled = withStyles(styles, { withTheme: true });
 
-const StyledContainer = styled(Container);
+const StyledContainer = compose<Linode.TodoAny>(
+  connect(mapStateToProps),
+  styled,
+)(Container);
 
 export default styled(RenderGuard<CombinedProps>(SelectStackScriptPanel));
