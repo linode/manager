@@ -92,7 +92,7 @@ const UserNotificationButton: React.StatelessComponent<CombinedProps> = ({
       disabled={disabled}
     >
       <NotificationIcon className={classes.icon} />
-      {(notificationCount as number > 0)
+      {notificationCount && notificationCount > 0
         ? <div className={classes.new}>
             <span className={classes.count}>{notificationCount}</span>
           </div>

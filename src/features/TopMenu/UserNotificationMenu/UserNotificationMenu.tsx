@@ -40,7 +40,7 @@ interface Props {
 interface State {
   anchorEl?: HTMLElement;
   events: Linode.Event[];
-  UnseenCount?: number;
+  unseenCount?: number;
   notifications: Linode.Notification[];
 }
 
@@ -55,7 +55,7 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
     events: [],
     notifications: [],
     anchorEl: undefined,
-    UnseenCount: 0,
+    unseenCount: 0,
   };
 
   subscription: Subscription;
@@ -63,7 +63,7 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
 
   static defaultProps = {
-    UnseenCount: 0,
+    unseenCount: 0,
   };
 
   componentDidMount() {
@@ -94,7 +94,7 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
           if (!this.mounted) { return; }
 
           this.setState({
-            UnseenCount: UnseenCount(events),
+            unseenCount: getNumUnseenEvents(events),
             events,
             notifications,
           });
@@ -128,7 +128,7 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { anchorEl, events, UnseenCount, notifications } = this.state;
+    const { anchorEl, events, unseenCount, notifications } = this.state;
     const { classes } = this.props;
 
     return (
@@ -136,7 +136,7 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
         <UserNotificationButton
           onClick={e => this.setState({ anchorEl: e.currentTarget })}
           getRef={this.setRef}
-          notificationCount={UnseenCount}
+          notificationCount={unseenCount}
           disabled={notifications.length + events.length === 0}
           className={anchorEl ? 'active' : ''}
         />
@@ -165,7 +165,7 @@ const extractAndSortByCreated = compose(
   values,
 );
 
-const UnseenCount = (events: Linode.Event[]) => {
+const getNumUnseenEvents = (events: Linode.Event[]) => {
   const len = events.length;
   let unseenCount = 0;
   let idx = 0;
