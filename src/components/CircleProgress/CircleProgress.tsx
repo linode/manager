@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as classNames from 'classnames';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles  } from '@material-ui/core/styles';
 
@@ -67,7 +68,11 @@ const CircleProgressComponent = (props: Props & WithStyles<CSSClasses>) => {
   const { classes, noTopMargin } = props;
 
   return (
-    <div className={`${classes.root} ${noTopMargin && classes.noTopMargin}`}>
+    <div className={classNames({
+      [classes.root]: true,
+      [classes.noTopMargin]: noTopMargin,
+    })}
+    >
       <div className={classes.topWrapper}>
         <div className={classes.top} />
       </div>
