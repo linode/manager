@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as moment from 'moment';
 import * as classNames from 'classnames';
 import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
 import TableCell from 'material-ui/Table/TableCell';
@@ -8,10 +7,10 @@ import TableRow from 'material-ui/Table/TableRow';
 import KeyboardArrowDown from 'material-ui-icons/KeyboardArrowDown';
 import KeyboardArrowUp from 'material-ui-icons/KeyboardArrowUp';
 
-import { sort } from 'ramda';
-
 import { getStackscripts, getMyStackscripts, getLinodeStackscripts }
   from 'src/services/stackscripts';
+
+import { sortByString, sortByNumber, sortByUTFDate } from 'src/utilities/sort-by';
 
 import Button from 'src/components/Button';
 import TabbedPanel from 'src/components/TabbedPanel';
@@ -24,6 +23,8 @@ export interface ExtendedLinode extends Linode.Linode {
   heading: string;
   subHeadings: string[];
 }
+
+type SortOrder = 'asc' | 'desc';
 
 type ClassNames = 'root'
   | 'creating'
@@ -219,7 +220,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
     const { sortOrder } = this.state;
     const nextSortOrder = (sortOrder === 'asc') ? 'desc' : 'asc';
     this.setState({
-      data: sortByName(sortOrder)(this.state.data),
+      data: sortByString(sortOrder, 'label')(this.state.data),
       sortOrder: nextSortOrder,
       currentFilter: 'label',
     });
@@ -229,7 +230,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
     const { sortOrder } = this.state;
     const nextSortOrder = (sortOrder === 'asc') ? 'desc' : 'asc';
     this.setState({
-      data: sortByDeploys(sortOrder)(this.state.data),
+      data: sortByNumber(sortOrder, 'deployments_active')(this.state.data),
       sortOrder: nextSortOrder,
       currentFilter: 'deploys',
     });
@@ -239,7 +240,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
     const { sortOrder } = this.state;
     const nextSortOrder = (sortOrder === 'asc') ? 'desc' : 'asc';
     this.setState({
-      data: sortByRevision(sortOrder)(this.state.data),
+      data: sortByUTFDate(sortOrder, 'updated')(this.state.data),
       sortOrder: nextSortOrder,
       currentFilter: 'revision',
     });
@@ -351,41 +352,6 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
     );
   }
 }
-
-type SortOrder = 'asc' | 'desc';
-
-const sortByName = (order: SortOrder) =>
-  sort((a: Linode.StackScript.Response, b: Linode.StackScript.Response) => {
-    let result = 1; // by default a > b
-    if (a.label.toLowerCase() < b.label.toLowerCase()) {
-      result = -1; // otherwise result is -1
-    }
-    if (order === 'desc') {
-      return result; // descending order
-    }
-    return -result; // ascending order
-  });
-
-const sortByRevision = (order: SortOrder) =>
-  sort((a: Linode.StackScript.Response, b: Linode.StackScript.Response) => {
-    const result = moment.utc(b.updated).diff(moment.utc(a.updated));
-    if (order === 'desc') {
-      return -result; // descending order
-    }
-    return result; // ascending order
-  });
-
-const sortByDeploys = (order: SortOrder) =>
-  sort((a: Linode.StackScript.Response, b: Linode.StackScript.Response) => {
-    let result = 1; // by default a > b
-    if (a.deployments_active < b.deployments_active) {
-      result = -1; // otherwise result is -1
-    }
-    if (order === 'desc') {
-      return result; // descending order
-    }
-    return -result; // ascending order
-  });
 
 const styled = withStyles(styles, { withTheme: true });
 
