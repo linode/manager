@@ -48,6 +48,10 @@ const NodeBalancers = DefaultLoader({
   loader: () => import('src/features/NodeBalancers'),
 });
 
+const StackScripts = DefaultLoader({
+  loader: () => import('src/features/StackScripts'),
+});
+
 type ClassNames = 'appFrame'
   | 'content'
   | 'wrapper'
@@ -222,8 +226,7 @@ export class App extends React.Component<CombinedProps, State> {
                           <Placeholder title="Managed" />} />
                         <Route exact path="/longview" render={() =>
                           <Placeholder title="Longview" />} />
-                        <Route exact path="/stackscripts" render={() =>
-                          <Placeholder title="StackScripts" />} />
+                        <Route path="/stackscripts" component={StackScripts} />
                         <Route exact path="/images" render={() =>
                           <Placeholder title="Images" />} />
                         <Route exact path="/billing" render={() =>
