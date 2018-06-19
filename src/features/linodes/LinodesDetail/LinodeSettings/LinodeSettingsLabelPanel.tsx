@@ -64,7 +64,7 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
       })
       .catch((error) => {
         this.setState(set(lensPath(['errors']), error.response.data.errors), () => {
-          scrollErrorIntoView();
+          scrollErrorIntoView('linode-settings-label');
         });
       });
   }
@@ -99,6 +99,7 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
           onChange={e =>
             this.setState(set(lensPath(['updatedValue']), e.target.value))}
           errorText={labelError}
+          errorGroup="linode-settings-label"
           error={Boolean(labelError)}
           data-qa-label
         />

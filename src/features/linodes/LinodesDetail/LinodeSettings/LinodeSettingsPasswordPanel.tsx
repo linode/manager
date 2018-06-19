@@ -87,7 +87,7 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
           set(lensPath(['errors']), error.response.data.errors),
           set(lensPath(['submitting']), false),
         ), () => {
-          scrollErrorIntoView();
+          scrollErrorIntoView('linode-settings-password');
         });
       });
   }
@@ -164,6 +164,7 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
           onChange={e =>
             this.setState(set(lensPath(['value']), e.target.value))}
           errorText={passwordError}
+          errorGroup="linode-settings-password"
           error={Boolean(passwordError)}
         />
       </ExpansionPanel>

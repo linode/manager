@@ -166,7 +166,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
       })
       .catch((error) => {
         this.setState(set(lensPath(['errors']), error.response.data.errors), () => {
-          scrollErrorIntoView();
+          scrollErrorIntoView('linode-settings-alerts');
         });
       });
   }
@@ -203,6 +203,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
               }}
               error={Boolean(props.error)}
               errorText={props.error}
+              errorGroup="linode-settings-alerts"
               /**
                * input type of NUMBER and maxlength do not work well together.
                * https://github.com/mui-org/material-ui/issues/5309#issuecomment-355462588

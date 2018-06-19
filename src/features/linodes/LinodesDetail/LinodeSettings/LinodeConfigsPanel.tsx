@@ -586,7 +586,7 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
       })
       .catch((error) => {
         this.setConfigDrawer({ errors: error.response.data.errors }, () => {
-          scrollErrorIntoView();
+          scrollErrorIntoView('linode-config-drawer');
         });
       });
   }
@@ -621,7 +621,7 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
       })
       .catch((error) => {
         this.setConfigDrawer({ errors: error.response.data.errors }, () => {
-          scrollErrorIntoView();
+          scrollErrorIntoView('linode-config-drawer');
         });
       });
   }
@@ -649,7 +649,7 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
       })
       .catch((error) => {
         this.setDiskDrawer({ errors: error.response.data.errors }, () => {
-          scrollErrorIntoView();
+          scrollErrorIntoView('linode-disk-drawer');
         });
       });
   }
@@ -673,7 +673,7 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
       })
       .catch((error) => {
         this.setDiskDrawer({ errors: error.response.data.errors }, () => {
-          scrollErrorIntoView();
+          scrollErrorIntoView('linode-disk-drawer');
         });
       });
   }
@@ -696,7 +696,7 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
       })
       .catch((error) => {
         this.setConfirmDiskDelete({ errors: error.response.data.error }, () => {
-          scrollErrorIntoView();
+          scrollErrorIntoView('linode-disk-drawer');
         });
       });
   }
