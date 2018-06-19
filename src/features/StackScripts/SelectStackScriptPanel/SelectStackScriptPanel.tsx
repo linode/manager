@@ -29,6 +29,7 @@ type ClassNames = 'root'
   | 'creating'
   | 'selecting'
   | 'stackscriptLabel'
+  | 'tr'
   | 'tableHead'
   | 'sortable'
   | 'sortButton'
@@ -55,6 +56,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   stackscriptLabel: {
     width: 50,
+  },
+  tr: {
+    height: 48,
   },
   tableHead: {
     position: 'sticky',
@@ -263,7 +267,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
       <React.Fragment>
         <Table noOverflow={true} tableClass={classes.table}>
           <TableHead>
-            <TableRow>
+            <TableRow className={classes.tr}>
               <TableCell className={classNames({
                 [classes.tableHead]: true,
                 [classes.stackscriptLabel]: true,
