@@ -6,19 +6,17 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
-  Typography,
-  Divider,
 } from 'material-ui';
-import FormControlLabel from 'material-ui/Form/FormControlLabel';
+
 
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import { updateLinode } from 'src/services/linodes';
 import Button from 'src/components/Button';
-import Grid from 'src/components/Grid';
+
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
-import TextField from 'src/components/TextField';
-import Toggle from 'src/components/Toggle';
+import AlertSection from './AlertSection';
+
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 type ClassNames = 'root'
   | 'switch'
@@ -167,55 +165,6 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
       });
   }
 
-  AlertSection = (props: Section) => {
-    const { classes } = this.props;
-
-    return (
-      <React.Fragment>
-        <Grid
-          container
-          alignItems="flex-start"
-          className={classes.root}
-          data-qa-alerts-panel
-        >
-          <Grid item className={classes.switch}>
-            <FormControlLabel
-              className="toggleLabel"
-              control={<Toggle checked={props.state} onChange={props.onStateChange} />}
-              label={props.title}
-              data-qa-alert={props.title}
-            />
-          </Grid>
-          <Grid item className={classes.copy}>
-            <Typography>{props.copy}</Typography>
-          </Grid>
-          <Grid item>
-            {props.state && <TextField
-              label={props.textTitle}
-              type="number"
-              value={props.value}
-              InputProps={{
-                endAdornment: <span className={classes.percentage}>{props.endAdornment}</span>,
-              }}
-              error={Boolean(props.error)}
-              errorText={props.error}
-              /**
-               * input type of NUMBER and maxlength do not work well together.
-               * https://github.com/mui-org/material-ui/issues/5309#issuecomment-355462588
-               */
-              inputProps={{
-                maxLength: 2,
-              }}
-              onChange={props.onValueChange}
-              className={classes.usage}
-            />}
-          </Grid>
-        </Grid>
-        <Divider />
-      </React.Fragment>
-    );
-  }
-
   render() {
     const hasErrorFor = getAPIErrorFor({}, this.state.errors);
     const { submitting } = this.state;
@@ -245,7 +194,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
         textInputLabel: 'disk_io_threshold',
         textTitle: 'IO Threshold',
         title: 'Disk IO Rate',
-        copy: 'Average Disk IO ops/sec over 2 horus exceeding this value triggers this alert.',
+        copy: 'Average Disk IO ops/sec over 2 hours exceeding this value triggers this alert.',
         state: this.state.diskio.state,
         value: this.state.diskio.value,
         onStateChange: (e, checked) =>
@@ -307,7 +256,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
         textInputLabel: 'transfer_quota_threshold',
         textTitle: 'Quota Threshold',
         title: 'Transfer Quota',
-        copy: `Percentage of network transfer quota used being breater than this value will trigger
+        copy: `Percentage of network transfer quota used being greater than this value will trigger
           this alert.`,
         state: this.state.transfer.state,
         value: this.state.transfer.value,
@@ -349,7 +298,8 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
         }
       >
         {
-          alertSections.map((p, idx) => <this.AlertSection key={idx} {...p} />)
+          alertSections.map((p, idx) =>
+          <AlertSection updateFor={[p.state]} key={idx} {...p} />)
         }
       </ExpansionPanel>
     );
