@@ -51,6 +51,7 @@ import {
   formatAddress,
   parseAddresses,
   parseAddress,
+  clampNumericString,
   createNewNodeBalancerConfig,
   createNewNodeBalancerConfigNode,
 } from '../utils';
@@ -705,6 +706,11 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     this.setState(set(lens, value));
   }
 
+  updateStateWithClamp = (lens: Lens) => (value: any) => {
+    const clampedValue = clampNumericString(0, Number.MAX_SAFE_INTEGER)(value);
+    this.setState(set(lens, clampedValue));
+  }
+
   onSaveConfig = (idx: number) => () => this.saveConfig(idx);
 
   onDeleteConfig = (idx: number) => () => {
@@ -799,13 +805,13 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           onHealthCheckTypeChange={this.updateState(healthCheckTypeLens)}
 
           healthCheckAttempts={view(healthCheckAttemptsLens, this.state)}
-          onHealthCheckAttemptsChange={this.updateState(healthCheckAttemptsLens)}
+          onHealthCheckAttemptsChange={this.updateStateWithClamp(healthCheckAttemptsLens)}
 
           healthCheckInterval={view(healthCheckIntervalLens, this.state)}
-          onHealthCheckIntervalChange={this.updateState(healthCheckIntervalLens)}
+          onHealthCheckIntervalChange={this.updateStateWithClamp(healthCheckIntervalLens)}
 
           healthCheckTimeout={view(healthCheckTimeoutLens, this.state)}
-          onHealthCheckTimeoutChange={this.updateState(healthCheckTimeoutLens)}
+          onHealthCheckTimeoutChange={this.updateStateWithClamp(healthCheckTimeoutLens)}
 
           sessionStickiness={view(sessionStickinessLens, this.state)}
           onSessionStickinessChange={this.updateState(sessionStickinessLens)}
