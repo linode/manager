@@ -16,7 +16,7 @@ import RenderGuard from 'src/components/RenderGuard';
 import Notice from 'src/components/Notice';
 
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'username';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
@@ -28,6 +28,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
       paddingBottom: 0,
     },
   },
+  username: {
+    color: 'grey',
+  },
 });
 
 interface Props {
@@ -36,6 +39,7 @@ interface Props {
   handleChange: (key: string, value: any) => void;
   udf_data: any;
   selectedLabel: string;
+  selectedUsername: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -96,7 +100,8 @@ const UserDefinedFieldsPanel: React.StatelessComponent<CombinedProps> = (props) 
         );
       })}
       <Typography variant="title">
-        {`${props.selectedLabel} Options`}
+        <span className={classes.username}>{`${props.selectedUsername} / `}</span>
+        <span>{`${props.selectedLabel} Options`}</span>
       </Typography>
       {
         userDefinedFields!.map((field: Linode.StackScript.UserDefinedField) => {

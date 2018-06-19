@@ -69,8 +69,8 @@ const stripImageName = (images: string[]) => {
 
 const formatDate = (utcDate: string) => {
   const formattedDate = moment.utc(utcDate).toISOString();
-  const startOfTimeStamp = formattedDate.indexOf('T'); // beginning of timestamp
-  return formattedDate.substring(0, startOfTimeStamp);
+  // const startOfTimeStamp = formattedDate.indexOf('T'); // beginning of timestamp
+  return formattedDate.replace('T', ' ').replace('.000Z', '');
 };
 
 const stackScript: (fn: (s: Linode.StackScript.Response) => void, id?: number) =>
