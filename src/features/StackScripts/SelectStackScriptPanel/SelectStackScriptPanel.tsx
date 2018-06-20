@@ -211,8 +211,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
       filteredUser,
       { page, page_size: 50 },
       filter)
-      .then((response: any) => {
-        console.log(response);
+      .then((response: Linode.ResourcePage<Linode.StackScript.Response>) => {
         if (!response.data.length) {
           this.setState({ showMoreButtonVisible: false });
         }
