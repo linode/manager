@@ -573,10 +573,9 @@ const LinodeTheme: Linode.Theme = {
         [breakpoints.up('md')]: {
           minWidth: 75,
         },
-      },
-      textColorPrimarySelected: {
-        color: '#32363C',
-        fontWeight: 700,
+        '&$selected': {
+          fontWeight: 700,
+        },
       },
       label: {
         [breakpoints.up('md')]: {
