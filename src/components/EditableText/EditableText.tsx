@@ -1,13 +1,15 @@
 import * as React from 'react';
+
 import * as classnames from 'classnames';
 
 import { TextFieldProps } from '@material-ui/core/TextField';
 import Typography, { TypographyProps } from '@material-ui/core/Typography';
 
 import  { withStyles, WithStyles, StyleRulesCallback, Theme } from '@material-ui/core/styles';
+
 import Button from '@material-ui/core/Button';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import { ModeEdit, Save, Close } from '@material-ui/icons';
+import { Check, Close, ModeEdit } from '@material-ui/icons';
 import TextField from '../TextField';
 
 type ClassNames = 'root'
@@ -212,7 +214,7 @@ class EditableText extends React.Component<FinalProps, State> {
                   }}
                   data-qa-save-edit
                 >
-                  <Save
+                  <Check
                     className={`${classes.icon} ${classes.save}`}
                   />
                 </Button>
