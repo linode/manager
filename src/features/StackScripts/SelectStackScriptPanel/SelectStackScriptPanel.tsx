@@ -1,56 +1,99 @@
 import * as React from 'react';
+import * as classNames from 'classnames';
 import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
-
+import TableCell from 'material-ui/Table/TableCell';
+import TableHead from 'material-ui/Table/TableHead';
+import TableRow from 'material-ui/Table/TableRow';
+import KeyboardArrowDown from 'material-ui-icons/KeyboardArrowDown';
+import KeyboardArrowUp from 'material-ui-icons/KeyboardArrowUp';
 
 import { getStackscripts, getMyStackscripts, getLinodeStackscripts }
   from 'src/services/stackscripts';
 
 import Button from 'src/components/Button';
-import Grid from 'src/components/Grid';
 import TabbedPanel from 'src/components/TabbedPanel';
 import StackScriptsSection from './StackScriptsSection';
 import CircleProgress from 'src/components/CircleProgress';
 import RenderGuard from 'src/components/RenderGuard';
+import Table from 'src/components/Table';
 
 export interface ExtendedLinode extends Linode.Linode {
   heading: string;
   subHeadings: string[];
 }
 
+type SortOrder = 'asc' | 'desc';
+
 type ClassNames = 'root'
   | 'creating'
   | 'selecting'
-  | 'container'
-  | 'labelCell'
-  | 'stackscriptLabel';
+  | 'stackscriptLabel'
+  | 'stackscriptTitles'
+  | 'deploys'
+  | 'revisions'
+  | 'tr'
+  | 'tableHead'
+  | 'sortable'
+  | 'sortButton'
+  | 'sortIcon'
+  | 'table';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
     marginBottom: theme.spacing.unit * 3,
   },
   creating: {
-    minHeight: '200px',
-    maxHeight: '400px',
-    overflowX: 'hidden',
+    height: 400,
+    overflowX: 'auto',
+    paddingTop: 0,
+    marginTop: theme.spacing.unit * 2,
+    overflowY: 'scroll',
   },
   selecting: {
     maxHeight: '1000px',
-    overflowX: 'hidden',
+    overflowX: 'auto',
   },
-  container: {
-    padding: theme.spacing.unit * 2,
-  },
-  labelCell: {
-    background: theme.bg.offWhite,
-    fontSize: '.9rem',
-    fontWeight: 700,
-    paddingTop: '16px !important',
-    paddingBottom: '16px !important',
+  table: {
+    overflow: 'scroll',
   },
   stackscriptLabel: {
-    [theme.breakpoints.up('lg')]: {
-      paddingLeft: '78px !important',
-    },
+    width: 84,
+  },
+  stackscriptTitles: {
+    width: '30%',
+  },
+  deploys: {
+    width: '15%',
+  },
+  revisions: {
+    width: '15%',
+  },
+  tr: {
+    height: 48,
+  },
+  tableHead: {
+    position: 'sticky',
+    top: 0,
+    backgroundColor: theme.bg.offWhite,
+    zIndex: 10,
+    paddingTop: 0,
+    paddingBottom: 0,
+  },
+  sortable: {
+    color: theme.palette.primary.main,
+    fontWeight: 700,
+    cursor: 'pointer',
+  },
+  sortButton: {
+    marginLeft: -26,
+    border: 0,
+    width: '100%',
+    justifyContent: 'flex-start',
+  },
+  sortIcon: {
+    position: 'relative',
+    top: 2,
+    left: 10,
   },
 });
 
@@ -117,6 +160,8 @@ interface ContainerProps {
     userDefinedFields: Linode.StackScript.UserDefinedField[]) => void;
 }
 
+type CurrentFilter = 'label' | 'deploys' | 'revision';
+
 interface ContainerState {
   currentPage: number;
   selected?: number;
@@ -124,6 +169,10 @@ interface ContainerState {
   gettingMoreStackScripts: boolean;
   showMoreButtonVisible: boolean;
   data: any; // @TODO type correctly
+  sortOrder: SortOrder;
+  currentFilterType: CurrentFilter | null;
+  currentFilter: any; // @TODO type correctly
+  isSorting: boolean;
 }
 
 type ContainerCombinedProps = ContainerProps & WithStyles<ClassNames>;
@@ -135,21 +184,29 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
     gettingMoreStackScripts: false,
     data: [],
     showMoreButtonVisible: true,
+    sortOrder: 'asc',
+    currentFilterType: null,
+    currentFilter: { ['+order_by']: 'deployments_total', ['+order']: 'desc' },
+    isSorting: false,
   };
 
-  getDataAtPage = (page: number) => {
+  getDataAtPage = (page: number,
+    filter: any = this.state.currentFilter,
+    isSorting: boolean = false) => {
     const { request } = this.props;
-    this.setState({ gettingMoreStackScripts: true });
+    this.setState({ gettingMoreStackScripts: true, isSorting });
 
-    request({ page, page_size: 50 }, { ['+order_by']: 'deployments_total', ['+order']: 'desc' })
+    request({ page, page_size: 50 }, filter)
       .then((response) => {
         if (!response.data.length) {
           this.setState({ showMoreButtonVisible: false });
         }
+        const newData = (isSorting) ? response.data : [...this.state.data, ...response.data];
         this.setState({
-          data: [...this.state.data, ...response.data],
+          data: newData,
           gettingMoreStackScripts: false,
           loading: false,
+          isSorting: false,
         });
       })
       .catch((e) => {
@@ -177,8 +234,52 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
     this.setState({ selected: stackscript.id });
   }
 
+  handleClickStackScriptsTableHeader = () => {
+    const { sortOrder } = this.state;
+    const nextSortOrder = (sortOrder === 'asc') ? 'desc' : 'asc';
+    this.getDataAtPage(1, { ['+order_by']: 'label', ['+order']: sortOrder }, true);
+    this.setState({
+      sortOrder: nextSortOrder,
+      currentFilterType: 'label',
+      currentFilter: { ['+order_by']: 'label', ['+order']: sortOrder },
+    });
+  }
+
+  handleClickDeploymentsTableHeader = () => {
+    const { sortOrder } = this.state;
+    const nextSortOrder = (sortOrder === 'asc') ? 'desc' : 'asc';
+    this.getDataAtPage(1, { ['+order_by']: 'deployments_active', ['+order']: sortOrder }, true);
+    this.setState({
+      sortOrder: nextSortOrder,
+      currentFilterType: 'deploys',
+      currentFilter: { ['+order_by']: 'deployments_active', ['+order']: sortOrder },
+    });
+  }
+
+  handleClickRevisionsTableHeader = () => {
+    const { sortOrder } = this.state;
+    const nextSortOrder = (sortOrder === 'asc') ? 'desc' : 'asc';
+    this.getDataAtPage(1, { ['+order_by']: 'updated', ['+order']: sortOrder }, true);
+    this.setState({
+      sortOrder: nextSortOrder,
+      currentFilterType: 'revision',
+      currentFilter: { ['+order_by']: 'updated', ['+order']: sortOrder },
+    });
+  }
+
+  renderIcon = () => {
+    const { sortOrder } = this.state;
+    const { classes } = this.props;
+    return (
+      sortOrder === 'desc'
+        ? <KeyboardArrowUp className={classes.sortIcon} />
+        : <KeyboardArrowDown className={classes.sortIcon} />
+    );
+  }
+
   render() {
     const { classes } = this.props;
+    const { currentFilterType, isSorting } = this.state;
 
     if (this.state.loading) {
       return <CircleProgress />;
@@ -186,43 +287,79 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
 
     return (
       <React.Fragment>
-        <Grid container className={classes.container}>
-          <Grid
-            item xs={12}
-            lg={6}
-            className={`${classes.labelCell} ${classes.stackscriptLabel}`}
-          >
-            <label>StackScripts</label>
-          </Grid>
-          <Grid
-            item xs={12}
-            lg={1}
-            className={`${classes.labelCell}`}
-          >
-            <label>Active Deploy</label>
-          </Grid>
-          <Grid
-            item xs={12}
-            lg={2}
-            className={`${classes.labelCell}`}
-          >
-            <label>Last Revision</label>
-          </Grid>
-          <Grid
-            item xs={12}
-            lg={3}
-            className={`${classes.labelCell}`}
-          >
-            <label>Compatible Images</label>
-          </Grid>
-        </Grid>
-        <StackScriptsSection
-          onSelect={this.handleSelectStackScript}
-          selectedId={this.state.selected}
-          data={this.state.data}
-          getNext={() => this.getNext()}
-        />
-        {this.state.showMoreButtonVisible &&
+        <Table noOverflow={true} tableClass={classes.table}>
+          <TableHead>
+            <TableRow className={classes.tr}>
+              <TableCell className={classNames({
+                [classes.tableHead]: true,
+                [classes.stackscriptLabel]: true,
+              })} />
+              <TableCell
+                className={classNames({
+                  [classes.tableHead]: true,
+                  [classes.sortable]: true,
+                  [classes.stackscriptTitles]: true,
+                })}
+              >
+                <Button
+                  type="secondary"
+                  className={classes.sortButton}
+                  onClick={this.handleClickStackScriptsTableHeader}
+                >
+                  StackScripts
+                  {currentFilterType === 'label' &&
+                    this.renderIcon()
+                  }
+                </Button>
+              </TableCell>
+              <TableCell
+                className={classNames({
+                  [classes.tableHead]: true,
+                  [classes.sortable]: true,
+                  [classes.deploys]: true,
+                })}
+              >
+                <Button
+                  type="secondary"
+                  className={classes.sortButton}
+                  onClick={this.handleClickDeploymentsTableHeader}
+                >
+                  Active Deploys
+                  {currentFilterType === 'deploys' &&
+                    this.renderIcon()
+                  }
+                </Button>
+              </TableCell>
+              <TableCell
+                className={classNames({
+                  [classes.tableHead]: true,
+                  [classes.sortable]: true,
+                  [classes.revisions]: true,
+                })}
+              >
+                <Button
+                  type="secondary"
+                  className={classes.sortButton}
+                  onClick={this.handleClickRevisionsTableHeader}
+                >
+                  Last Revision
+                  {currentFilterType === 'revision' &&
+                    this.renderIcon()
+                  }
+                </Button>
+              </TableCell>
+              <TableCell className={classes.tableHead}>Compatible Images</TableCell>
+            </TableRow>
+          </TableHead>
+          <StackScriptsSection
+            isSorting={isSorting}
+            onSelect={this.handleSelectStackScript}
+            selectedId={this.state.selected}
+            data={this.state.data}
+            getNext={() => this.getNext()}
+          />
+        </Table>
+        {this.state.showMoreButtonVisible && !isSorting &&
           <Button
             title="Show More StackScripts"
             onClick={this.getNext}

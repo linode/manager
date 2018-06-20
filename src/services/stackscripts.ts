@@ -20,8 +20,8 @@ export const getStackscripts = (params?: any, filter?: any) =>
   )
     .then(response => response.data);
 
-export const getMyStackscripts = (params?: any) =>
-  getStackscripts(params, { mine: true });
+export const getMyStackscripts = (params?: any, filter?: any) =>
+  getStackscripts(params, { mine: true, ...filter });
 
 export const getLinodeStackscripts = (params?: any, filter?: any) =>
   getStackscripts(params, filter)

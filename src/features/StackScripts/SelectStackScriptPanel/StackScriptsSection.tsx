@@ -1,11 +1,20 @@
 import * as React from 'react';
 import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
-import SelectionRow from 'src/components/SelectionRow';
+import TableBody from 'material-ui/Table/TableBody';
+import TableRow from 'material-ui/Table/TableRow';
+import TableCell from 'material-ui/Table/TableCell';
 
-type ClassNames = 'root';
+import SelectionRow from 'src/components/SelectionRow';
+import CircleProgress from 'src/components/CircleProgress';
+
+type ClassNames = 'root' | 'loadingWrapper';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
+  loadingWrapper: {
+    border: 0,
+    paddingTop: 100,
+  },
 });
 
 export interface Props {
@@ -13,6 +22,7 @@ export interface Props {
   selectedId?: number;
   data: Linode.StackScript.Response[];
   getNext: () => void;
+  isSorting: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -22,14 +32,21 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => 
     onSelect,
     selectedId,
     data,
+    isSorting,
+    classes,
   } = props;
 
   return (
-    <div>
-      {
-        data && data.map(stackScript(onSelect, selectedId))
+    <TableBody>
+      {!isSorting
+        ? data && data.map(stackScript(onSelect, selectedId))
+        : <TableRow>
+            <TableCell colSpan={5} className={classes.loadingWrapper}>
+              <CircleProgress />
+            </TableCell>
+          </TableRow>
       }
-    </div>
+    </TableBody>
   );
 };
 
