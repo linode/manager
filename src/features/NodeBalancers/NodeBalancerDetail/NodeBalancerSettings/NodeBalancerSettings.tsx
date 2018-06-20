@@ -17,6 +17,7 @@ import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import defaultNumeric from 'src/utilities/defaultNumeric';
 
 import { updateNodeBalancer } from 'src/services/nodebalancers';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root'
 | 'title'
@@ -106,7 +107,9 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
           },
       });
     }).catch((error) => {
-      this.setState({ isSubmitting: false, errors: error.response.data.errors });
+      this.setState({ isSubmitting: false, errors: error.response.data.errors }, () => {
+        scrollErrorIntoView();
+      });
     });
   }
 

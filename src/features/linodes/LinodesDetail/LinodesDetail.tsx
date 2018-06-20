@@ -42,6 +42,7 @@ import LinodeSettings from './LinodeSettings';
 import LinodePowerControl from './LinodePowerControl';
 import reloadableWithRouter from './reloadableWithRouter';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 interface Data {
   linode: Linode.Linode;
@@ -325,7 +326,9 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       .catch((err) => {
         const errors: Linode.ApiFieldError[] = pathOr([], ['response', 'data', 'errors'], err);
         const errorStrings: string[] = errors.map(e => e.reason);
-        this.setState({ labelInput: { label, errorText: errorStrings[0] } });
+        this.setState({ labelInput: { label, errorText: errorStrings[0] } }, () => {
+          scrollErrorIntoView();
+        });
       });
   }
 

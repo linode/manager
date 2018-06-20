@@ -25,6 +25,7 @@ import setDocs from 'src/components/DocsSidebar/setDocs';
 import ActionMenu from './DomainActionMenu';
 import DomainCreateDrawer from './DomainCreateDrawer';
 import AddNewLink from 'src/components/AddNewLink';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root' | 'title';
 
@@ -93,7 +94,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
   }
 
   componentDidCatch(error: Error) {
-    this.setState({ error });
+    this.setState({ error }, () => { scrollErrorIntoView(); });
   }
 
   openCreateDrawer() {

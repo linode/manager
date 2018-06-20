@@ -21,6 +21,7 @@ import Drawer from 'src/components/Drawer';
 import ActionsPanel from 'src/components/ActionsPanel';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import CheckBox from 'src/components/CheckBox';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root';
 
@@ -79,7 +80,9 @@ class RestoreToLinodeDrawer extends React.Component<CombinedProps, State> {
       this.setState({ errors: [
         ...(this.state.errors || []),
         { field: 'linode_id', reason: 'You must select a Linode' },
-      ]});
+      ]}, () => {
+        scrollErrorIntoView();
+      });
       return;
     }
     restoreBackup(linodeID, Number(backupID), Number(selectedLinode), overwrite)
@@ -88,7 +91,9 @@ class RestoreToLinodeDrawer extends React.Component<CombinedProps, State> {
         onSubmit();
       })
       .catch((errResponse) => {
-        this.setState({ errors: path(['response', 'data', 'errors'], errResponse) });
+        this.setState({ errors: path(['response', 'data', 'errors'], errResponse) }, () => {
+          scrollErrorIntoView();
+        });
       });
   }
 

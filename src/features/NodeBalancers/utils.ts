@@ -1,7 +1,17 @@
 import {
   filter,
   isNil,
+  compose,
+  clamp,
+  toString,
 } from 'ramda';
+import defaultNumeric from 'src/utilities/defaultNumeric';
+
+export const clampNumericString = (low: number, hi: number) => compose(
+  toString,
+  clamp(low, hi),
+  defaultNumeric(0),
+);
 
 export interface NodeBalancerConfigFields {
   id?: number;

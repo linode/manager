@@ -31,6 +31,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import ActionMenu from './DomainRecordActionMenu';
 import Drawer from './DomainRecordDrawer';
 import AddNewLink from 'src/components/AddNewLink';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root';
 
@@ -94,7 +95,9 @@ class DomainRecords extends React.Component<CombinedProps, State> {
     this.setState(over(lensPath(['drawer']), fn))
 
   updateConfirmDialog = (fn: (d: ConfirmationState) => ConfirmationState) =>
-    this.setState(over(lensPath(['confirmDialog']), fn))
+    this.setState(over(lensPath(['confirmDialog']), fn), () => {
+      scrollErrorIntoView();
+    })
 
   resetDrawer = () => this.updateDrawer(() => DomainRecords.defaultDrawerState);
 

@@ -20,6 +20,7 @@ import Select from 'src/components/Select';
 import Drawer from 'src/components/Drawer';
 import ActionsPanel from 'src/components/ActionsPanel';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root';
 
@@ -109,7 +110,9 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
       this.setState({ errors: [
         ...(this.state.errors || []),
         { field: 'linode_id', reason: 'You must select a Linode' },
-      ]});
+      ]}, () => {
+        scrollErrorIntoView();
+      });
       return;
     }
 
@@ -119,7 +122,9 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
         onClose();
       })
       .catch((error) => {
-        this.setState({ errors: path(['response', 'data', 'errors'], error) });
+        this.setState({ errors: path(['response', 'data', 'errors'], error) }, () => {
+          scrollErrorIntoView();
+        });
       });
   }
 

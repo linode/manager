@@ -51,9 +51,11 @@ import {
   formatAddress,
   parseAddresses,
   parseAddress,
+  clampNumericString,
   createNewNodeBalancerConfig,
   createNewNodeBalancerConfigNode,
 } from '../utils';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root' | 'title';
 
@@ -226,6 +228,9 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     // Apply the error updater functions with a compose
     this.setState(
       (compose as any)(...setFns),
+      () => {
+        scrollErrorIntoView(`${configIdx}`);
+      },
     );
   }
 
@@ -268,6 +273,8 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         newErrors[idx] = errors || [];
         this.setState({
           configErrors: newErrors,
+        }, () => {
+          scrollErrorIntoView(`${idx}`);
         });
         this.resetSubmitting(idx);
         /* Return false as a Promise for the sake of aggregating results */
@@ -398,6 +405,8 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         newErrors[idx] = errors || [];
         this.setState({
           configErrors: newErrors,
+        }, () => {
+          scrollErrorIntoView(`${idx}`);
         });
         // reset submitting
         this.resetSubmitting(idx);
@@ -433,7 +442,9 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     if (validationErrors) {
       const newErrors = clone(this.state.configErrors);
       newErrors[idx] = validationErrorsToFieldErrors(validationErrors);
-      this.setState({ configErrors: newErrors });
+      this.setState({ configErrors: newErrors }, () => {
+        scrollErrorIntoView(`${idx}`);
+      });
       this.setNodeErrors(idx, newErrors[idx]);
       return;
     }
@@ -505,6 +516,8 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
               ? apiError
               : [{ field: 'none', reason: 'Unable to complete your request at this time.' }],
           },
+        }, () => {
+          scrollErrorIntoView(`${idxToDelete}`);
         });
       });
   }
@@ -515,6 +528,9 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         lensPath(['configs', configIdx, 'nodes', nodeIdx, 'errors']),
         errors,
       ),
+      () => {
+        scrollErrorIntoView(`${configIdx}`);
+      },
     );
   }
 
@@ -690,6 +706,11 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     this.setState(set(lens, value));
   }
 
+  updateStateWithClamp = (lens: Lens) => (value: any) => {
+    const clampedValue = clampNumericString(0, Number.MAX_SAFE_INTEGER)(value);
+    this.setState(set(lens, clampedValue));
+  }
+
   onSaveConfig = (idx: number) => () => this.saveConfig(idx);
 
   onDeleteConfig = (idx: number) => () => {
@@ -732,6 +753,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       <ExpansionPanel
         key={idx}
         updateFor={[
+          idx,
           config,
           configSubmitting[idx],
           configErrors[idx],
@@ -783,13 +805,13 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           onHealthCheckTypeChange={this.updateState(healthCheckTypeLens)}
 
           healthCheckAttempts={view(healthCheckAttemptsLens, this.state)}
-          onHealthCheckAttemptsChange={this.updateState(healthCheckAttemptsLens)}
+          onHealthCheckAttemptsChange={this.updateStateWithClamp(healthCheckAttemptsLens)}
 
           healthCheckInterval={view(healthCheckIntervalLens, this.state)}
-          onHealthCheckIntervalChange={this.updateState(healthCheckIntervalLens)}
+          onHealthCheckIntervalChange={this.updateStateWithClamp(healthCheckIntervalLens)}
 
           healthCheckTimeout={view(healthCheckTimeoutLens, this.state)}
-          onHealthCheckTimeoutChange={this.updateState(healthCheckTimeoutLens)}
+          onHealthCheckTimeoutChange={this.updateStateWithClamp(healthCheckTimeoutLens)}
 
           sessionStickiness={view(sessionStickinessLens, this.state)}
           onSessionStickinessChange={this.updateState(sessionStickinessLens)}

@@ -30,6 +30,7 @@ import Placeholder from 'src/components/Placeholder';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root' | 'title';
 
@@ -175,6 +176,8 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
               ? apiError
               : [{ field: 'none', reason: 'Unable to complete your request at this time.' }],
           },
+        }, () => {
+          scrollErrorIntoView();
         });
       });
   }
