@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as moment from 'moment';
 import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
 import TableBody from 'material-ui/Table/TableBody';
 import TableRow from 'material-ui/Table/TableRow';
@@ -7,6 +6,8 @@ import TableCell from 'material-ui/Table/TableCell';
 
 import SelectionRow from 'src/components/SelectionRow';
 import CircleProgress from 'src/components/CircleProgress';
+
+import { formatDate } from 'src/utilities/format-date-iso8601';
 
 type ClassNames = 'root' | 'loadingWrapper' | 'username';
 
@@ -67,12 +68,6 @@ const stripImageName = (images: string[]) => {
   });
 };
 
-const formatDate = (utcDate: string) => {
-  const formattedDate = moment.utc(utcDate).toISOString();
-  // const startOfTimeStamp = formattedDate.indexOf('T'); // beginning of timestamp
-  return formattedDate.replace('T', ' ').replace('.000Z', '');
-};
-
 const stackScript: (fn: (s: Linode.StackScript.Response) => void, id?: number) =>
   (s: Linode.StackScript.Response) => JSX.Element =
   (onSelect, selectedId) => s => (
@@ -83,7 +78,7 @@ const stackScript: (fn: (s: Linode.StackScript.Response) => void, id?: number) =
       description={truncateDescription(s.description)}
       images={stripImageName(s.images)}
       deploymentsActive={s.deployments_active}
-      updated={formatDate(s.updated)}
+      updated={formatDate(s.updated, false)}
       onSelect={() => onSelect(s)}
       checked={selectedId === s.id}
       updateFor={[selectedId === s.id]}
