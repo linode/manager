@@ -90,6 +90,7 @@ interface State {
     rdns?: string;
   };
   createIPv4Drawer: {
+    forPublic: boolean;
     open: boolean;
   };
   createIPv6Drawer: {
@@ -112,6 +113,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
       open: false,
     },
     createIPv4Drawer: {
+      forPublic: true,
       open: false,
     },
     createIPv6Drawer: {
@@ -210,7 +212,10 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
   closeCreateIPv4Drawer() {
     this.setState({
-      createIPv4Drawer: { open: false },
+      createIPv4Drawer: {
+        ...this.state.createIPv4Drawer,
+        open: false,
+      },
     });
     this.refreshIPs();
   }
@@ -246,7 +251,23 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           </Grid>
           <Grid item>
             <AddNewLink
-              onClick={() => this.setState({ createIPv4Drawer: { open: true } })}
+              onClick={() => this.setState({
+                createIPv4Drawer: {
+                  forPublic: false,
+                  open: true,
+                },
+              })}
+              label="Add Private IPv4"
+            />
+          </Grid>
+          <Grid item>
+            <AddNewLink
+              onClick={() => this.setState({
+                createIPv4Drawer: {
+                  forPublic: true,
+                  open: true,
+                },
+              })}
               label="Add Public IPv4"
             />
           </Grid>
@@ -339,6 +360,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         />
 
         <CreateIPv4Drawer
+          forPublic={this.state.createIPv4Drawer.forPublic}
           open={this.state.createIPv4Drawer.open}
           onClose={() => this.closeCreateIPv4Drawer()}
           linodeID={linodeID}
