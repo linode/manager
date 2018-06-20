@@ -85,7 +85,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     maxWidth: '200px',
   },
   stackScriptUsername: {
-    color: 'grey',
+    color: theme.color.grey1,
   },
 });
 

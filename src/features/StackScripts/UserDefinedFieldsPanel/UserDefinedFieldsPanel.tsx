@@ -18,7 +18,7 @@ import Notice from 'src/components/Notice';
 
 type ClassNames = 'root' | 'username';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
     padding: theme.spacing.unit * 3,
     marginBottom: theme.spacing.unit * 3,
@@ -29,7 +29,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     },
   },
   username: {
-    color: 'grey',
+    color: theme.color.grey1,
   },
 });
 
