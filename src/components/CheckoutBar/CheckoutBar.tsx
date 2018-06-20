@@ -27,8 +27,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     minHeight: '24px',
     minWidth: '24px',
     [theme.breakpoints.down('md')]: {
-      /** @todo had to remove !important from here, we need a solution. */
-      position: 'relative',
+      position: 'relative !important',
       left: '0 !important',
       bottom: '0 !important',
       background: theme.color.white,
