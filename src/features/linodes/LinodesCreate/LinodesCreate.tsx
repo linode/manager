@@ -313,25 +313,12 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
                 textColor="primary"
               >
                 {
-                  // this.tabs.map((tab, idx) =>
-                  //   <Tab
-                  //     key={idx}
-                  //     label={tab.title}
-                  //     data-qa-create-from={tab.title}
-                  //   />)
-                  /* @TODO uncomment at time of merge */
-                  this.tabs.map((tab, idx) => {
-                    if (idx === 3 && !localStorage.linodeDeveloper) {
-                      return;
-                    }
-                    return (
-                      <Tab
-                        key={idx}
-                        label={tab.title}
-                        data-qa-create-from={tab.title}
-                      />
-                    );
-                  })
+                  this.tabs.map((tab, idx) =>
+                    <Tab
+                      key={idx}
+                      label={tab.title}
+                      data-qa-create-from={tab.title}
+                    />)
                 }
               </Tabs>
             </AppBar>
