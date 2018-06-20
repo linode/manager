@@ -298,7 +298,7 @@ const LinodeTheme: Linode.Theme = {
         color: '#3B85D9',
         '&:hover': {
           color: '#5F99EA',
-          background: 'transparent',
+          backgroundColor: 'transparent',
         },
       },
     },

@@ -1,9 +1,10 @@
 import * as React from 'react';
 
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
+import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 
 interface Props {
@@ -27,25 +28,25 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
   deleteDialogActions = () => {
     return (
       <React.Fragment>
-        <Button
-          onClick={() => this.toggleConfirmDelete(false)}
-          variant="raised"
-          color="primary"
-          data-qa-button-cancel
-        >
-          No
-        </Button>
-        <Button
-          variant="raised"
-          color="secondary"
-          className="destructive"
-          onClick={() => {
-            this.toggleConfirmDelete(false);
-            this.props.onDelete();
-          }}
-          data-qa-button-confirm>
-          Yes
-        </Button>
+        <ActionsPanel>
+          <Button
+            destructive
+            type="secondary"
+            onClick={() => {
+              this.toggleConfirmDelete(false);
+              this.props.onDelete();
+            }}
+            data-qa-button-confirm>
+            Yes
+          </Button>
+          <Button
+            onClick={() => this.toggleConfirmDelete(false)}
+            type="cancel"
+            data-qa-button-cancel
+          >
+            No
+          </Button>
+        </ActionsPanel>
       </React.Fragment>
     );
   }
@@ -55,26 +56,25 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
   resetDialogActions = () => {
     return (
       <React.Fragment>
-        <Button
-          variant="raised"
-          color="secondary"
-          className="destructive"
-          onClick={() => {
-            this.toggleConfirmReset(false);
-            this.props.onReset();
-          }}
-          data-qa-button-confirm>
-          Yes
-        </Button>
-        <Button
-          onClick={() => this.toggleConfirmReset(false)}
-          variant="raised"
-          color="secondary"
-          className="cancel"
-          data-qa-button-cancel
-        >
-          No
-        </Button>
+        <ActionsPanel>
+          <Button
+            destructive
+            type="secondary"
+            onClick={() => {
+              this.toggleConfirmReset(false);
+              this.props.onReset();
+            }}
+            data-qa-button-confirm>
+            Yes
+          </Button>
+          <Button
+            onClick={() => this.toggleConfirmReset(false)}
+            type="cancel"
+            data-qa-button-cancel
+          >
+            No
+          </Button>
+        </ActionsPanel>
       </React.Fragment>
     );
   }
