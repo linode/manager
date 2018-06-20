@@ -46,11 +46,17 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     '& .defaultFill': {
       fill: theme.palette.status.warning,
     },
+    '&$checked': {
+      color: theme.palette.status.warningDark,
+    },
   },
   error: {
     color: theme.palette.status.errorDark,
     '& .defaultFill': {
       fill: theme.palette.status.error,
+    },
+    '&$checked': {
+      color: theme.palette.status.errorDark,
     },
   },
   disabled: {
@@ -82,6 +88,7 @@ const LinodeRadioControl: React.StatelessComponent<FinalProps> = (props) => {
 
   return (
     <Radio
+      color="primary"
       className={classnames}
       {...rest}
       icon={<RadioIcon />}
