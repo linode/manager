@@ -28,8 +28,6 @@ const PaginationControls: React.StatelessComponent<Props> = (props) => {
     pages,
   );
 
-  console.log(currentPage);
-
   return (
     <div>
       <PageButton
