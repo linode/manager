@@ -7,9 +7,11 @@ import TableCell from 'material-ui/Table/TableCell';
 import SelectionRow from 'src/components/SelectionRow';
 import CircleProgress from 'src/components/CircleProgress';
 
+import { formatDate } from 'src/utilities/format-date-iso8601';
+
 type ClassNames = 'root' | 'loadingWrapper';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {},
   loadingWrapper: {
     border: 0,
@@ -69,10 +71,11 @@ const stackScript: (fn: (s: Linode.StackScript.Response) => void, id?: number) =
     <SelectionRow
       key={s.id}
       label={s.label}
+      stackScriptUsername={s.username}
       description={truncateDescription(s.description)}
       images={stripImageName(s.images)}
       deploymentsActive={s.deployments_active}
-      updated={s.updated}
+      updated={formatDate(s.updated, false)}
       onSelect={() => onSelect(s)}
       checked={selectedId === s.id}
       updateFor={[selectedId === s.id]}

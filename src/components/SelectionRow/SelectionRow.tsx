@@ -22,7 +22,8 @@ type ClassNames = 'root'
   | 'libTitleLink'
   | 'libDescription'
   | 'colImages'
-  | 'stackScriptCell';
+  | 'stackScriptCell'
+  | 'stackScriptUsername';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -83,6 +84,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   stackScriptCell: {
     maxWidth: '200px',
   },
+  stackScriptUsername: {
+    color: theme.color.grey1,
+  },
 });
 
 export interface Props {
@@ -95,6 +99,7 @@ export interface Props {
   checked?: boolean;
   showDeployLink?: boolean;
   stackScriptID?: number;
+  stackScriptUsername?: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -111,6 +116,7 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
     updated,
     showDeployLink,
     stackScriptID,
+    stackScriptUsername,
   } = props;
 
   /** onSelect and showDeployLink should not be used simultaneously */
@@ -129,8 +135,18 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
         }
         <TableCell className={classes.stackScriptCell}>
           <Typography variant="subheading">
-            <label htmlFor={`${stackScriptID}`} className={classes.libRadioLabel}>{label}
+          {stackScriptUsername &&
+                <label
+                  htmlFor={`${stackScriptID}`}
+                  className={`${classes.libRadioLabel} ${classes.stackScriptUsername}`}>
+                  {stackScriptUsername} /&nbsp;
             </label>
+              }
+              <label
+                htmlFor={`${stackScriptID}`}
+                className={classes.libRadioLabel}>
+                 {label}
+              </label>
           </Typography>
           <Typography>{description}</Typography>
         </TableCell>
