@@ -1,81 +1,28 @@
 import * as React from 'react';
+
 import { compose, lensPath, set } from 'ramda';
 
 import {
-  withStyles,
   StyleRulesCallback,
   Theme,
   WithStyles,
-  Typography,
-  Divider,
+  withStyles,
 } from 'material-ui';
-import FormControlLabel from 'material-ui/Form/FormControlLabel';
 
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import { updateLinode } from 'src/services/linodes';
+
 import Button from 'src/components/Button';
-import Grid from 'src/components/Grid';
-import ExpansionPanel from 'src/components/ExpansionPanel';
-import ActionsPanel from 'src/components/ActionsPanel';
-import TextField from 'src/components/TextField';
-import Toggle from 'src/components/Toggle';
-import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { updateLinode } from 'src/services/linodes';
+import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
-type ClassNames = 'root'
-  | 'switch'
-  | 'copy'
-  | 'usage'
-  | 'percentage';
+import ActionsPanel from 'src/components/ActionsPanel';
+import ExpansionPanel from 'src/components/ExpansionPanel';
+import AlertSection from './AlertSection';
+
+import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
+type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  '@keyframes fadeIn': {
-    from: {
-      opacity: 0,
-    },
-    to: {
-      opacity: 1,
-    },
-  },
-  root: {
-    minHeight: 130,
-    position: 'relative',
-    padding: `${theme.spacing.unit * 3}px 0`,
-    '&:last-of-type + hr': {
-      display: 'none',
-    },
-    '& .toggleLabel > span:last-child': {
-      position: 'absolute',
-      left: 90,
-      top: 40,
-      ...theme.typography.subheading,
-    },
-  },
-  switch: {
-    width: 50,
-    padding: '2px 0 !important',
-  },
-  copy: {
-    [theme.breakpoints.down('sm')]: {
-      flexBasis: '100%',
-    },
-    [theme.breakpoints.up('md')]: {
-      margin: `${theme.spacing.unit * 4}px ${theme.spacing.unit * 4}px 0`,
-      width: 300,
-    },
-    [theme.breakpoints.up('lg')]: {
-      width: 600,
-    },
-  },
-  usage: {
-    animation: 'fadeIn .3s ease-in-out forwards',
-    marginTop: 0,
-    width: 200,
-  },
-  percentage: {
-    fontSize: '.9rem',
-    marginRight: 10,
-  },
+  root: {},
 });
 
 interface Props {
@@ -117,7 +64,7 @@ interface Section {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
-  state: State = {
+  public state: State = {
     submitting: false,
     cpuusage: {
       state: this.props.linodeAlerts.cpu > 0,
@@ -141,7 +88,133 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
     },
   };
 
-  setLinodeAlertThresholds = () => {
+  public renderAlertSections = () => {
+    const hasErrorFor = getAPIErrorFor({}, this.state.errors);
+    return [
+      {
+        title: 'CPU Usage',
+        textTitle: 'Usage Threshold',
+        radioInputLabel: 'cpu_usage_state',
+        textInputLabel: 'cpu_usage_threshold',
+        copy: 'Average CPU usage over 2 hours exceeding this value triggers this alert.',
+        state: this.state.cpuusage.state,
+        value: this.state.cpuusage.value,
+        onStateChange: (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) =>
+          this.setState(set(lensPath(['cpuusage', 'state']), checked)),
+        onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+          e.target.value.length <= 2
+            ? this.setState(
+              set(lensPath(['cpuusage', 'value']), Number(e.target.value)),
+            )
+            : () => null,
+        error: hasErrorFor('alerts.cpu'),
+        endAdornment: '%',
+      },
+      {
+        radioInputLabel: 'disk_io_state',
+        textInputLabel: 'disk_io_threshold',
+        textTitle: 'IO Threshold',
+        title: 'Disk IO Rate',
+        copy: 'Average Disk IO ops/sec over 2 hours exceeding this value triggers this alert.',
+        state: this.state.diskio.state,
+        value: this.state.diskio.value,
+        onStateChange: (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) =>
+          this.setState(
+            set(lensPath(['diskio', 'state']), checked)),
+        onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+          e.target.value.length <= 10
+            ? this.setState(
+              set(lensPath(['diskio', 'value']), Number(e.target.value)),
+            )
+            : () => null,
+        error: hasErrorFor('alerts.io'),
+        endAdornment: 'IOPS',
+      },
+      {
+        radioInputLabel: 'incoming_traffic_state',
+        textInputLabel: 'incoming_traffic_threshold',
+        textTitle: 'Traffic Threshold',
+        title: 'Incoming Traffic',
+        copy: `Average incoming traffic over a 2 hour period exceeding this value triggers this
+        alert.`,
+        state: this.state.incoming.state,
+        value: this.state.incoming.value,
+        onStateChange: (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) =>
+          this.setState(
+            set(lensPath(['incoming', 'state']), checked)),
+        onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+          e.target.value.length <= 2
+            ? this.setState(
+              set(lensPath(['incoming', 'value']), Number(e.target.value)),
+            )
+            : () => null,
+        error: hasErrorFor('alerts.network_in'),
+        endAdornment: 'Mb/s',
+      },
+      {
+        radioInputLabel: 'outbound_traffic_state',
+        textInputLabel: 'outbound_traffic_threshold',
+        textTitle: 'Traffic Threshold',
+        title: 'Outbound Traffic',
+        copy: `Average outbound traffic over a 2 hour period exceeding this value triggers this
+        alert.`,
+        state: this.state.outbound.state,
+        value: this.state.outbound.value,
+        onStateChange: (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) =>
+          this.setState(
+            set(lensPath(['outbound', 'state']), checked)),
+        onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+          e.target.value.length <= 2
+            ? this.setState(
+              set(lensPath(['outbound', 'value']), Number(e.target.value)),
+            )
+            : () => null,
+        error: hasErrorFor('alerts.network_out'),
+        endAdornment: 'Mb/s',
+      },
+      {
+        radioInputLabel: 'transfer_quota_state',
+        textInputLabel: 'transfer_quota_threshold',
+        textTitle: 'Quota Threshold',
+        title: 'Transfer Quota',
+        copy: `Percentage of network transfer quota used being greater than this value will trigger
+          this alert.`,
+        state: this.state.transfer.state,
+        value: this.state.transfer.value,
+        onStateChange: (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) =>
+          this.setState(
+            set(lensPath(['transfer', 'state']), checked),
+          ),
+        onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+          e.target.value.length <= 2
+            ? this.setState(
+              set(lensPath(['transfer', 'value']), Number(e.target.value)),
+            )
+            : () => null,
+        error: hasErrorFor('alerts.transfer_quota'),
+        endAdornment: '%',
+      },
+    ];
+  }
+
+  protected renderExpansionActions = () => {
+    const noError = (this.state.submitting && !this.renderAlertSections()
+      .reduce((result, s) => result || Boolean(s.error), false));
+
+    return <ActionsPanel>
+              <Button
+                type="primary"
+                onClick={this.setLinodeAlertThresholds}
+                disabled={noError}
+                loading={noError}
+                data-qa-alerts-save
+              >
+                Save
+              </Button>
+            </ActionsPanel>;
+  };
+
+  protected setLinodeAlertThresholds = () => {
     this.setState(set(lensPath(['errors']), undefined));
     this.setState(set(lensPath(['success']), undefined));
     this.setState(set(lensPath(['submitting']), true));
@@ -165,196 +238,23 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
         ));
       })
       .catch((error) => {
-        this.setState(set(lensPath(['errors']), error.response.data.errors), () => {
-          scrollErrorIntoView('linode-settings-alerts');
-        });
+        this.setState(set(lensPath(['errors']), error.response.data.errors));
       });
   }
 
-  AlertSection = (props: Section) => {
-    const { classes } = this.props;
-
-    return (
-      <React.Fragment>
-        <Grid
-          container
-          alignItems="flex-start"
-          className={classes.root}
-          data-qa-alerts-panel
-        >
-          <Grid item className={classes.switch}>
-            <FormControlLabel
-              className="toggleLabel"
-              control={<Toggle checked={props.state} onChange={props.onStateChange} />}
-              label={props.title}
-              data-qa-alert={props.title}
-            />
-          </Grid>
-          <Grid item className={classes.copy}>
-            <Typography>{props.copy}</Typography>
-          </Grid>
-          <Grid item>
-            {props.state && <TextField
-              label={props.textTitle}
-              type="number"
-              value={props.value}
-              InputProps={{
-                endAdornment: <span className={classes.percentage}>{props.endAdornment}</span>,
-              }}
-              error={Boolean(props.error)}
-              errorText={props.error}
-              errorGroup="linode-settings-alerts"
-              /**
-               * input type of NUMBER and maxlength do not work well together.
-               * https://github.com/mui-org/material-ui/issues/5309#issuecomment-355462588
-               */
-              inputProps={{
-                maxLength: 2,
-              }}
-              onChange={props.onValueChange}
-              className={classes.usage}
-            />}
-          </Grid>
-        </Grid>
-        <Divider />
-      </React.Fragment>
-    );
-  }
-
-  render() {
-    const hasErrorFor = getAPIErrorFor({}, this.state.errors);
-    const { submitting } = this.state;
-
-    const alertSections: Section[] = [
-      {
-        title: 'CPU Usage',
-        textTitle: 'Usage Threshold',
-        radioInputLabel: 'cpu_usage_state',
-        textInputLabel: 'cpu_usage_threshold',
-        copy: 'Average CPU usage over 2 hours exceeding this value triggers this alert.',
-        state: this.state.cpuusage.state,
-        value: this.state.cpuusage.value,
-        onStateChange: (e, checked) =>
-          this.setState(set(lensPath(['cpuusage', 'state']), checked)),
-        onValueChange: e =>
-          e.target.value.length <= 2
-            ? this.setState(
-              set(lensPath(['cpuusage', 'value']), Number(e.target.value)),
-            )
-            : () => null,
-        error: hasErrorFor('alerts.cpu'),
-        endAdornment: '%',
-      },
-      {
-        radioInputLabel: 'disk_io_state',
-        textInputLabel: 'disk_io_threshold',
-        textTitle: 'IO Threshold',
-        title: 'Disk IO Rate',
-        copy: 'Average Disk IO ops/sec over 2 horus exceeding this value triggers this alert.',
-        state: this.state.diskio.state,
-        value: this.state.diskio.value,
-        onStateChange: (e, checked) =>
-          this.setState(
-            set(lensPath(['diskio', 'state']), checked)),
-        onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-          e.target.value.length <= 2
-            ? this.setState(
-              set(lensPath(['diskio', 'value']), Number(e.target.value)),
-            )
-            : () => null,
-        error: hasErrorFor('alerts.io'),
-        endAdornment: 'IOPS',
-      },
-      {
-        radioInputLabel: 'incoming_traffic_state',
-        textInputLabel: 'incoming_traffic_threshold',
-        textTitle: 'Traffic Threshold',
-        title: 'Incoming Traffic',
-        copy: `Average incoming traffic over a 2 hour period exceeding this value triggers this
-        alert.`,
-        state: this.state.incoming.state,
-        value: this.state.incoming.value,
-        onStateChange: (e, checked) =>
-          this.setState(
-            set(lensPath(['incoming', 'state']), checked)),
-        onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-          e.target.value.length <= 2
-            ? this.setState(
-              set(lensPath(['incoming', 'value']), Number(e.target.value)),
-            )
-            : () => null,
-        error: hasErrorFor('alerts.network_in'),
-        endAdornment: 'Mb/s',
-      },
-      {
-        radioInputLabel: 'outbound_traffic_state',
-        textInputLabel: 'outbound_traffic_threshold',
-        textTitle: 'Traffic Threshold',
-        title: 'Outbound Traffic',
-        copy: `Average outbound traffic over a 2 hour period exceeding this value triggers this
-        alert.`,
-        state: this.state.outbound.state,
-        value: this.state.outbound.value,
-        onStateChange: (e, checked) =>
-          this.setState(
-            set(lensPath(['outbound', 'state']), checked)),
-        onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-          e.target.value.length <= 2
-            ? this.setState(
-              set(lensPath(['outbound', 'value']), Number(e.target.value)),
-            )
-            : () => null,
-        error: hasErrorFor('alerts.network_out'),
-        endAdornment: 'Mb/s',
-      },
-      {
-        radioInputLabel: 'transfer_quota_state',
-        textInputLabel: 'transfer_quota_threshold',
-        textTitle: 'Quota Threshold',
-        title: 'Transfer Quota',
-        copy: `Percentage of network transfer quota used being breater than this value will trigger
-          this alert.`,
-        state: this.state.transfer.state,
-        value: this.state.transfer.value,
-        onStateChange: (e, checked) =>
-          this.setState(
-            set(lensPath(['transfer', 'state']), checked),
-          ),
-        onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-          e.target.value.length <= 2
-            ? this.setState(
-              set(lensPath(['transfer', 'value']), Number(e.target.value)),
-            )
-            : () => null,
-        error: hasErrorFor('alerts.transfer_quota'),
-        endAdornment: '%',
-      },
-    ];
-
-    const noError = (submitting && !alertSections
-      .reduce((result, s) => result || Boolean(s.error), false));
+  public render() {
+    const alertSections: Section[] = this.renderAlertSections();
 
     return (
       <ExpansionPanel
         defaultExpanded
         heading="Notification Thresholds"
         success={this.state.success}
-        actions={() =>
-          <ActionsPanel>
-            <Button
-              type="primary"
-              onClick={this.setLinodeAlertThresholds}
-              disabled={noError}
-              loading={noError}
-              data-qa-alerts-save
-            >
-              Save
-            </Button>
-          </ActionsPanel>
-        }
+        actions={this.renderExpansionActions}
       >
         {
-          alertSections.map((p, idx) => <this.AlertSection key={idx} {...p} />)
+          alertSections.map((p, idx) =>
+          <AlertSection updateFor={[p.state, p.value]} key={idx} {...p} />)
         }
       </ExpansionPanel>
     );
