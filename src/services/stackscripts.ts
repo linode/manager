@@ -34,5 +34,13 @@ export const getStackScriptsByUser = (username: string, params?: any, filter?: a
 //     ...filter,
 //   });
 
-export const getCommunityStackscripts = () =>
-  getStackscripts();
+export const getCommunityStackscripts = (currentUser: string, params?: any, filter?: any) =>
+  getStackscripts(params, filter).then((response) => {
+    const withoutOwnAndLinode = response.data.filter((stackScript) => {
+      return stackScript.username !== 'linode' && stackScript.username !== currentUser;
+    });
+    return {
+      ...response,
+      data: withoutOwnAndLinode,
+    };
+  });
