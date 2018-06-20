@@ -277,14 +277,16 @@ const LinodeTheme: Linode.Theme = {
         '&$focused': {
           color: '#555',
         },
-      },
-      error: {
-        color: '#555',
+        '&$error': {
+          color: '#555',
+        },
       },
     },
     MuiFormHelperText: {
-      error: {
-        color: '#CA0813',
+      root: {
+        '&$error': {
+          color: '#CA0813',
+        },
       },
     },
     MuiIconButton: {
