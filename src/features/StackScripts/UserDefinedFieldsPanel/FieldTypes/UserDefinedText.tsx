@@ -27,6 +27,7 @@ interface Props {
   field: Linode.StackScript.UserDefinedField;
   updateFormState: (key: string, value: any) => void;
   udf_data: Linode.StackScript.UserDefinedField;
+  isOptional: boolean;
 }
 
 interface State { }
@@ -37,7 +38,7 @@ class UserDefinedText extends React.Component<CombinedProps, State> {
   state: State = {};
 
   renderTextField = () => {
-    const { udf_data, field } = this.props;
+    const { udf_data, field, isOptional } = this.props;
 
     return (
       <React.Fragment>
@@ -45,6 +46,7 @@ class UserDefinedText extends React.Component<CombinedProps, State> {
           {field.label}
         </Typography>
         <TextField
+          required={!isOptional}
           onChange={this.handleUpdateText}
           label={field.label}
           value={udf_data[field.name] || ''}
@@ -54,10 +56,11 @@ class UserDefinedText extends React.Component<CombinedProps, State> {
   }
 
   renderPasswordField = () => {
-    const { udf_data, field } = this.props;
+    const { udf_data, field, isOptional } = this.props;
 
     return (
       <PasswordPanel
+        required={!isOptional}
         password={udf_data[field.name] || ''}
         handleChange={this.handleUpdatePassword}
         label={field.label}

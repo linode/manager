@@ -89,6 +89,8 @@ interface State {
   udf_data: any;
   errors?: Linode.ApiFieldError[];
   selectedStackScriptID: number | null;
+  selectedStackScriptLabel: string;
+  selectedStackScriptUsername: string;
   selectedImageID: string | null;
   selectedRegionID: string | null;
   selectedTypeID: string | null;
@@ -116,6 +118,8 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
     userDefinedFields: [],
     udf_data: null,
     selectedStackScriptID: null,
+    selectedStackScriptLabel: '',
+    selectedStackScriptUsername: '',
     selectedImageID: null,
     selectedRegionID: null,
     selectedTypeID: null,
@@ -129,8 +133,8 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
 
   mounted: boolean = false;
 
-  handleSelectStackScript = (id: number, stackScriptImages: string[],
-    userDefinedFields: Linode.StackScript.UserDefinedField[]) => {
+  handleSelectStackScript = (id: number, label: string, username: string,
+     stackScriptImages: string[], userDefinedFields: Linode.StackScript.UserDefinedField[]) => {
     const { images } = this.props;
     const filteredImages = images.filter((image) => {
       for (let i = 0; i < stackScriptImages.length; i = i + 1) {
@@ -151,6 +155,8 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
     // then update userDefinedFields to the fields returned
     this.setState({
       selectedStackScriptID: id,
+      selectedStackScriptUsername: username,
+      selectedStackScriptLabel: label,
       compatibleImages: filteredImages,
       userDefinedFields,
       udf_data: defaultUDFData,
@@ -286,7 +292,8 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
   render() {
     const { errors, userDefinedFields, udf_data, selectedImageID, selectedRegionID,
       selectedStackScriptID, selectedTypeID, backups, privateIP, label,
-      password, isMakingRequest, compatibleImages } = this.state;
+      password, isMakingRequest, compatibleImages, selectedStackScriptLabel,
+      selectedStackScriptUsername } = this.state;
 
     const { notice, getBackupsMonthlyPrice, regions, types, classes,
       getRegionName, getTypeInfo } = this.props;
@@ -323,6 +330,8 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
           {userDefinedFields && userDefinedFields.length > 0 &&
             <UserDefinedFieldsPanel
               errors={udfErrors}
+              selectedLabel={selectedStackScriptLabel}
+              selectedUsername={selectedStackScriptUsername}
               handleChange={this.handleChangeUDF}
               userDefinedFields={userDefinedFields}
               updateFor={[userDefinedFields, udf_data, errors]}

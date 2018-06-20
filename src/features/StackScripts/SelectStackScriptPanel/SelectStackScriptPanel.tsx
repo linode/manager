@@ -101,7 +101,7 @@ interface Props {
   selectedId: number | null;
   error?: string;
   shrinkPanel?: boolean;
-  onSelect: (id: number, images: string[],
+  onSelect: (id: number, label: string, username: string, images: string[],
     userDefinedFields: Linode.StackScript.UserDefinedField[]) => void;
 }
 
@@ -156,7 +156,7 @@ interface Params {
 interface ContainerProps {
   request: (params: Params, filter: any) =>
     Promise<Linode.ResourcePage<Linode.StackScript.Response>>;
-  onSelect: (id: number, images: string[],
+  onSelect: (id: number, label: string, username: string, images: string[],
     userDefinedFields: Linode.StackScript.UserDefinedField[]) => void;
 }
 
@@ -190,18 +190,21 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
     isSorting: false,
   };
 
+  mounted: boolean = false;
+
   getDataAtPage = (page: number,
     filter: any = this.state.currentFilter,
     isSorting: boolean = false) => {
     const { request } = this.props;
     this.setState({ gettingMoreStackScripts: true, isSorting });
-
+    
     request({ page, page_size: 50 }, filter)
       .then((response) => {
-        if (!response.data.length) {
+        if (!response.data.length || response.data.length < 50) {
           this.setState({ showMoreButtonVisible: false });
         }
         const newData = (isSorting) ? response.data : [...this.state.data, ...response.data];
+        if (!this.mounted) { return; }
         this.setState({
           data: newData,
           gettingMoreStackScripts: false,
@@ -216,9 +219,15 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
 
   componentDidMount() {
     this.getDataAtPage(0);
+    this.mounted = true;
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   getNext = () => {
+    if (!this.mounted) { return; }
     this.setState(
       { currentPage: this.state.currentPage + 1 },
       () => this.getDataAtPage(this.state.currentPage),
@@ -228,6 +237,8 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
   handleSelectStackScript = (stackscript: Linode.StackScript.Response) => {
     this.props.onSelect(
       stackscript.id,
+      stackscript.label,
+      stackscript.username,
       stackscript.images,
       stackscript.user_defined_fields,
     );

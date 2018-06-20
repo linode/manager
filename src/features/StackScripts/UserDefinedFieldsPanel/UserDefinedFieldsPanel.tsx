@@ -16,9 +16,9 @@ import RenderGuard from 'src/components/RenderGuard';
 import Notice from 'src/components/Notice';
 
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'username';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
     padding: theme.spacing.unit * 3,
     marginBottom: theme.spacing.unit * 3,
@@ -28,6 +28,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
       paddingBottom: 0,
     },
   },
+  username: {
+    color: theme.color.grey1,
+  },
 });
 
 interface Props {
@@ -35,6 +38,8 @@ interface Props {
   userDefinedFields?: Linode.StackScript.UserDefinedField[];
   handleChange: (key: string, value: any) => void;
   udf_data: any;
+  selectedLabel: string;
+  selectedUsername: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -43,6 +48,8 @@ const UserDefinedFieldsPanel: React.StatelessComponent<CombinedProps> = (props) 
   const { userDefinedFields, classes, handleChange } = props;
 
   const renderField = (field: Linode.StackScript.UserDefinedField) => {
+    // if the 'default' key is returned from the API, the field is optional
+    const isOptional = field.hasOwnProperty('default');
     if (isMultiSelect(field)) {
       return <UserDefinedMultiSelect
         key={field.name}
@@ -50,6 +57,7 @@ const UserDefinedFieldsPanel: React.StatelessComponent<CombinedProps> = (props) 
         udf_data={props.udf_data}
         updateFormState={handleChange}
         updateFor={[props.udf_data[field.name]]}
+        isOptional={isOptional}
       />;
     } if (isOneSelect(field)) {
       return <UserDefinedSelect
@@ -57,6 +65,7 @@ const UserDefinedFieldsPanel: React.StatelessComponent<CombinedProps> = (props) 
         updateFormState={handleChange}
         udf_data={props.udf_data}
         updateFor={[props.udf_data[field.name]]}
+        isOptional={isOptional}
         key={field.name} />;
     } if (isPasswordField(field.name)) {
       return <UserDefinedText
@@ -66,6 +75,7 @@ const UserDefinedFieldsPanel: React.StatelessComponent<CombinedProps> = (props) 
         field={field}
         udf_data={props.udf_data}
         updateFor={[props.udf_data[field.name]]}
+        isOptional={isOptional}
       />;
     }
     return <UserDefinedText
@@ -74,6 +84,7 @@ const UserDefinedFieldsPanel: React.StatelessComponent<CombinedProps> = (props) 
       field={field}
       udf_data={props.udf_data}
       updateFor={[props.udf_data[field.name]]}
+      isOptional={isOptional}
     />;
   };
 
@@ -89,7 +100,8 @@ const UserDefinedFieldsPanel: React.StatelessComponent<CombinedProps> = (props) 
         );
       })}
       <Typography variant="title">
-        Required Fields
+        <span className={classes.username}>{`${props.selectedUsername} / `}</span>
+        <span>{`${props.selectedLabel} Options`}</span>
       </Typography>
       {
         userDefinedFields!.map((field: Linode.StackScript.UserDefinedField) => {
