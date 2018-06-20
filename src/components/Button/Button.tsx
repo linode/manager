@@ -19,6 +19,7 @@ interface Props extends ButtonProps {
   loading?: boolean;
   destructive?: boolean;
   type?: 'primary' | 'secondary' | 'cancel';
+  className?: string;
 }
 
 const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
@@ -101,6 +102,7 @@ const WrappedButton: React.StatelessComponent<CombinedProps> = (props) => {
     loading,
     destructive,
     type,
+    className,
     ...rest,
   } = props;
 
@@ -117,7 +119,9 @@ const WrappedButton: React.StatelessComponent<CombinedProps> = (props) => {
           [classes.root]: true,
           [classes.loading]: loading,
           [classes.destructive]: destructive,
-        }),
+        },
+        className,
+      ),
     },
     loading ? <Reload /> : props.children);
 };

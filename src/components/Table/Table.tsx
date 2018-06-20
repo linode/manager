@@ -18,6 +18,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 
 interface Props {
   className?: string;
+  noOverflow?: boolean;
+  tableClass?: string;
 }
 
 type CombinedProps = Props & TableProps & WithStyles<ClassNames>;
@@ -25,11 +27,13 @@ type CombinedProps = Props & TableProps & WithStyles<ClassNames>;
 class WrappedTable extends React.Component<CombinedProps> {
 
   render() {
-    const { classes, className, ...rest } = this.props;
+    const { classes, className, tableClass, noOverflow, ...rest } = this.props;
+
+    const tableWrapperClasses = (noOverflow) ? className : `${classes.root} ${className}`;
 
     return (
-      <div className={`${classes.root} ${className}`}>
-        <Table {...rest}>{this.props.children}</Table>
+      <div className={tableWrapperClasses}>
+        <Table className={tableClass} {...rest}>{this.props.children}</Table>
       </div>
     );
   }
