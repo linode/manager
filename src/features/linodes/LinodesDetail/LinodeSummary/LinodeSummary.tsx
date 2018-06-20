@@ -75,8 +75,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
       },
     },
     graphTitle: {
-      position: 'relative',
-      top: 6,
       marginRight: theme.spacing.unit * 2,
     },
     graphControls: {

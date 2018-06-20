@@ -227,9 +227,6 @@ const LinodeTheme: Linode.Theme = {
       expanded: {
         margin: 0,
       },
-      contentExpanded: {
-        margin: '12px 0',
-      },
       expandIcon: {
         display: 'flex',
         order: 1,
@@ -252,9 +249,6 @@ const LinodeTheme: Linode.Theme = {
         '&$expanded': {
           transform: 'none',
         },
-      },
-      expandIconExpanded: {
-        transform: 'none',
       },
       focused: {
         backgroundColor: '#fbfbfb',
