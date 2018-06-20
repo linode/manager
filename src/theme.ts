@@ -280,9 +280,9 @@ const LinodeTheme: Linode.Theme = {
         fontWeight: 700,
         fontSize: '.9rem',
         marginBottom: 2,
-      },
-      focused: {
-        color: '#555',
+        '&$focused': {
+          color: '#555',
+        },
       },
       error: {
         color: '#555',
