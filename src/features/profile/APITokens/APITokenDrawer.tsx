@@ -1,29 +1,26 @@
 import * as React from 'react';
 import * as moment from 'moment';
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
-import Drawer from 'src/components/Drawer';
-import TableBody from 'material-ui/Table/TableBody';
-import TableCell from 'material-ui/Table/TableCell';
-import TableHead from 'material-ui/Table/TableHead';
-import TableRow from 'material-ui/Table/TableRow';
-import Typography from 'material-ui/Typography';
-import Button from 'material-ui/Button';
-import { InputLabel } from 'material-ui/Input';
-import { MenuItem } from 'material-ui/Menu';
-import { FormControl, FormHelperText } from 'material-ui/Form';
 
-import Table from 'src/components/Table';
-import Radio from 'src/components/Radio';
-import ActionsPanel from 'src/components/ActionsPanel';
-import TextField from 'src/components/TextField';
-import Select from 'src/components/Select';
+import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Drawer from 'src/components/Drawer';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Typography from '@material-ui/core/Typography';
+
 import { dateFormat } from 'src/time';
+import ActionsPanel from 'src/components/ActionsPanel';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import Radio from 'src/components/Radio';
+import Select from 'src/components/Select';
+import Table from 'src/components/Table';
+import TextField from 'src/components/TextField';
 
 import {
   Permission,
@@ -119,7 +116,6 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
       this.setState({ scopes: scopeStringToPermTuples(nextProps.scopes || '') });
     }
   }
-
 
   handleScopeChange = (e: React.SyntheticEvent<RadioButton>): void => {
     const scopeTups = this.state.scopes;

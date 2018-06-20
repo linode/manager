@@ -1,19 +1,14 @@
 import * as React from 'react';
 import { compose, pathOr } from 'ramda';
-import {
-  matchPath,
-  Redirect,
-  Route,
-  RouteComponentProps,
-  Switch,
-} from 'react-router-dom';
+import { matchPath, Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
-import AppBar from 'material-ui/AppBar';
-import Tabs, { Tab } from 'material-ui/Tabs';
-import Typography from 'material-ui/Typography';
-import IconButton from 'material-ui/IconButton';
-import KeyboardArrowLeft from 'material-ui-icons/KeyboardArrowLeft';
+import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
+import { KeyboardArrowLeft } from '@material-ui/icons';
+import AppBar from '@material-ui/core/AppBar';
+import IconButton from '@material-ui/core/IconButton';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
+import Typography from '@material-ui/core/Typography';
 
 import { getDomain, getDomainRecords } from 'src/services/domains';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
@@ -22,7 +17,6 @@ import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoad
 import ErrorState from 'src/components/ErrorState';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import DomainRecords from './DomainRecords';
-
 
 interface State {
   error?: Error;
@@ -206,7 +200,7 @@ const reloaded = reloadableWithRouter<PreloadedProps, { domainId?: number }>(
   },
 );
 
-export default compose(
+export default compose<any, any, any, any, any>(
   setDocs(DomainDetail.docs),
   reloaded,
   styled,

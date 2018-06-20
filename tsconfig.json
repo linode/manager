@@ -31,6 +31,12 @@
     "acceptance-tests",
     "webpack",
     "jest",
-    "src/setupTests.ts"
+    "src/setupTests.ts",
+    "**/*.stories.ts",
+    "**/*.stories.tsx",
+    "**/*.spec.tsx",
+    "**/*.spec.ts",
+    "**/*.test.tsx",
+    "**/*.test.ts"
   ]
 }

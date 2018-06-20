@@ -1,12 +1,7 @@
 import * as React from 'react';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  WithStyles,
-  Theme,
-} from 'material-ui';
-import CircularProgress from 'material-ui/Progress/CircularProgress';
+import { withStyles, StyleRulesCallback, WithStyles, Theme } from '@material-ui/core/styles';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 type CSSClasses = 'root'
 | 'top'

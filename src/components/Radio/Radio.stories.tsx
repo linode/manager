@@ -3,8 +3,8 @@ import { storiesOf } from '@storybook/react';
 
 import ThemeDecorator from '../../utilities/storybookDecorators';
 import Radio from './Radio';
-import RadioGroup from 'material-ui/Radio/RadioGroup';
-import FormControlLabel from 'material-ui/Form/FormControlLabel';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 class Example extends React.Component<{}, { value?: string }> {
   state = { value: undefined };

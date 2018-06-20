@@ -4,7 +4,7 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
-} from 'material-ui';
+} from '@material-ui/core/styles';
 import * as H from 'history';
 
 type ClassNames = 'root'

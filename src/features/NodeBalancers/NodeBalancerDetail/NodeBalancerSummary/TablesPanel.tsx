@@ -3,9 +3,9 @@ import {
   withStyles,
   StyleRulesCallback,
   WithStyles,
-} from 'material-ui';
-import Typography from 'material-ui/Typography';
-import Paper from 'material-ui/Paper';
+} from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
 
 import LineGraph from 'src/components/LineGraph';
 import { getNodeBalancerStats } from 'src/services/nodebalancers';
@@ -227,4 +227,3 @@ class TablesPanel extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles, { withTheme: true });
 
 export default styled(TablesPanel);
-

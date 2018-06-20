@@ -2,14 +2,14 @@ import * as React from 'react';
 import * as moment from 'moment';
 import { compose, filter, path, pathOr, sort } from 'ramda';
 
-import { withStyles, Theme, WithStyles, StyleRulesCallback } from 'material-ui/styles';
-import Button from 'material-ui/Button';
-import Paper from 'material-ui/Paper';
-import Typography from 'material-ui/Typography';
-import TableBody from 'material-ui/Table/TableBody';
-import TableCell from 'material-ui/Table/TableCell';
-import TableHead from 'material-ui/Table/TableHead';
-import TableRow from 'material-ui/Table/TableRow';
+import { withStyles, Theme, WithStyles, StyleRulesCallback } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 
 import {
   createPersonalAccessToken,
@@ -442,8 +442,7 @@ export class APITokens extends React.Component<CombinedProps, State> {
       Linode.Token[],
       Linode.Token[],
       Linode.Token[],
-      Linode.Token[]
-      >(
+      Linode.Token[]>(
         this.formatDates,
         sortCreatedDateAscending,
         filter<Linode.Token>(t => isPastNow(t.expiry)),
@@ -455,8 +454,7 @@ export class APITokens extends React.Component<CombinedProps, State> {
       Linode.Token[],
       Linode.Token[],
       Linode.Token[],
-      Linode.Token[]
-      >(
+      Linode.Token[]>(
         this.formatDates,
         sortCreatedDateAscending,
         filter<Linode.Token>(t => isPastNow(t.expiry)),

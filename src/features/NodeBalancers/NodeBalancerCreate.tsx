@@ -19,9 +19,9 @@ import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { StickyContainer, Sticky, StickyProps } from 'react-sticky';
 
-import { withStyles, WithStyles, Theme, StyleRules } from 'material-ui/styles';
-import Typography from 'material-ui/Typography';
-import Paper from 'material-ui/Paper';
+import { withStyles, WithStyles, Theme, StyleRules } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
 
 import Button from 'src/components/Button';
 import {
@@ -90,7 +90,6 @@ interface NodeBalancerFieldsState {
   region?: string;
   configs: NodeBalancerConfigFields[];
 }
-
 
 interface State {
   submitting: boolean;
@@ -317,7 +316,6 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       .then((nodeBalancer) => {
         const { history } = this.props;
         const { id } = nodeBalancer;
-
 
         const errors: Linode.ApiFieldError[] = [
           ...nodeBalancer.configs.filter(c => c.hasOwnProperty('errors')),

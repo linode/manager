@@ -2,10 +2,10 @@ import * as React from 'react';
 
 import {
   withStyles, WithStyles, StyleRulesCallback, Theme,
-} from 'material-ui';
-import IconButton from 'material-ui/IconButton';
-import Menu from 'material-ui/Menu';
-import MoreHoriz from 'material-ui-icons/MoreHoriz';
+} from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
+import Menu from '@material-ui/core/Menu';
+import { MoreHoriz } from '@material-ui/icons';
 
 import MenuItem from 'src/components/MenuItem';
 

@@ -350,4 +350,3 @@ export const cloneLinode = (source_linode_id: number, data: LinodeCloneData) => 
   )
     .then(response => response.data);
 };
-

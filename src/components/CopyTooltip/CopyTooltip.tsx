@@ -5,11 +5,10 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
-} from 'material-ui';
+} from '@material-ui/core/styles';
 import * as copy from 'copy-to-clipboard';
 
-import ContentCopyIcon from 'material-ui-icons/ContentCopy';
-
+import { ContentCopy } from '@material-ui/icons';
 
 interface Props {
   text: string;
@@ -96,7 +95,7 @@ class CopyTooltip extends React.Component<CombinedProps, State> {
         className={`${classes.root} ${className}`}
       >
         {copied && <span className={classes.copied} data-qa-copied>copied</span>}
-        <ContentCopyIcon />
+        <ContentCopy />
       </a>
     );
   }

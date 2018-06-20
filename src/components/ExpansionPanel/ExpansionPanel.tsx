@@ -1,22 +1,17 @@
 import * as React from 'react';
-// import * as classNames from 'classnames';
 
-import { withStyles, StyleRulesCallback, WithStyles } from 'material-ui';
-
-import ExpansionPanel, {
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
-  ExpansionPanelProps,
-  ExpansionPanelSummaryProps,
-  ExpansionPanelDetailsProps,
-} from 'material-ui/ExpansionPanel';
-import Typography, { TypographyProps } from 'material-ui/Typography';
+import { withStyles, StyleRulesCallback, WithStyles } from '@material-ui/core/styles';
+import ExpansionPanel, { ExpansionPanelProps } from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelDetails, { ExpansionPanelDetailsProps }
+  from '@material-ui/core/ExpansionPanelDetails';
+import ExpansionPanelSummary, { ExpansionPanelSummaryProps }
+  from '@material-ui/core/ExpansionPanelSummary';
+import Typography, { TypographyProps } from '@material-ui/core/Typography';
 import Grid from 'src/components/Grid';
 import RenderGuard from 'src/components/RenderGuard';
 
 import Plus from '../../assets/icons/plus-square.svg';
 import Minus from '../../assets/icons/minus-square.svg';
-
 import Notice from '../Notice';
 
 type ClassNames = 'root'
@@ -100,7 +95,7 @@ class EExpansionPanel extends React.Component<CombinedProps> {
       headingProps,
       actions,
       success, warning, error, loading,
-      ...expansionPanelProps,
+      ...expansionPanelProps
     } = this.props;
 
     const notice = success || warning || error || null;

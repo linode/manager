@@ -4,14 +4,13 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
-} from 'material-ui';
-import Typography from 'material-ui/Typography';
-import FormControlLabel from 'material-ui/Form/FormControlLabel';
+} from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import Toggle from 'src/components/Toggle';
 import RenderGuard from 'src/components/RenderGuard';
 import Grid from 'src/components/Grid';
-
 
 type ClassNames = 'root' | 'toggle';
 
@@ -125,4 +124,3 @@ class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles, { withTheme: true });
 
 export default styled(RenderGuard<CombinedProps>(UserDefinedMultiSelect));
-

@@ -1,23 +1,22 @@
 import * as React from 'react';
-import { compose, clamp, defaultTo } from 'ramda';
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
-import Typography from 'material-ui/Typography';
-import InputAdornment from 'material-ui/Input/InputAdornment';
+
+import { clamp, compose, defaultTo } from 'ramda';
+
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+
+import InputAdornment from '@material-ui/core/InputAdornment';
+import Typography from '@material-ui/core/Typography';
+
 
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
-import ClientConnectionThrottlePanel from '../../ClientConnectionThrottlePanel';
 import Notice from 'src/components/Notice';
 
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import defaultNumeric from 'src/utilities/defaultNumeric';
+import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 import { updateNodeBalancer } from 'src/services/nodebalancers';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import ClientConnectionThrottlePanel from '../../ClientConnectionThrottlePanel';
 
 type ClassNames = 'root'
 | 'title'

@@ -25,7 +25,7 @@ describe('LinodeRescue', () => {
         sdc: null,
         sdd: { disk_id: 456 },
         sde: null,
-        sdf: { disk_id: 123 },,
+        sdf: { disk_id: 123 }, ,
         sdg: null,
         sdh: null,
       });

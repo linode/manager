@@ -1,20 +1,26 @@
 import * as React from 'react';
-import * as classNames from 'classnames';
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
-import TableCell from 'material-ui/Table/TableCell';
-import TableHead from 'material-ui/Table/TableHead';
-import TableRow from 'material-ui/Table/TableRow';
-import KeyboardArrowDown from 'material-ui-icons/KeyboardArrowDown';
-import KeyboardArrowUp from 'material-ui-icons/KeyboardArrowUp';
 
-import { getStackscripts, getMyStackscripts, getLinodeStackscripts }
+import * as classNames from 'classnames';
+
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+
+import { getLinodeStackscripts, getMyStackscripts, getStackscripts }
   from 'src/services/stackscripts';
 
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+
+import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
+
 import Button from 'src/components/Button';
-import TabbedPanel from 'src/components/TabbedPanel';
-import StackScriptsSection from './StackScriptsSection';
 import CircleProgress from 'src/components/CircleProgress';
 import RenderGuard from 'src/components/RenderGuard';
+import TabbedPanel from 'src/components/TabbedPanel';
+
+import StackScriptsSection from './StackScriptsSection';
+
 import Table from 'src/components/Table';
 
 export interface ExtendedLinode extends Linode.Linode {

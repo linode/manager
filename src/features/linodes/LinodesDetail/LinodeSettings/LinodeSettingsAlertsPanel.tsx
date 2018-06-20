@@ -2,23 +2,18 @@ import * as React from 'react';
 
 import { compose, lensPath, set } from 'ramda';
 
-import {
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-  withStyles,
-} from 'material-ui';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-
-import Button from 'src/components/Button';
 import { updateLinode } from 'src/services/linodes';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/Button';
 import ExpansionPanel from 'src/components/ExpansionPanel';
+import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
+
+import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import AlertSection from './AlertSection';
 
-import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({

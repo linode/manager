@@ -7,7 +7,6 @@ import ThemeDecorator from 'src/utilities/storybookDecorators';
 
 import TableWrapper from './Table';
 
-
 storiesOf('Table', module)
   .addDecorator(ThemeDecorator)
   .add('default', () => (

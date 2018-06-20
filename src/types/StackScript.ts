@@ -29,4 +29,3 @@ namespace Linode {
     export type Request = any;
   }
 }
-

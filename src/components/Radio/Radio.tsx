@@ -1,17 +1,11 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  WithStyles,
-  Theme,
-} from 'material-ui';
-import Radio, { RadioProps } from 'material-ui/Radio';
+import { withStyles, StyleRulesCallback, WithStyles, Theme } from '@material-ui/core/styles';
+import Radio, { RadioProps } from '@material-ui/core/Radio';
+
 import RadioIcon from '../../assets/icons/radio.svg';
 import RadioIconRadioed from '../../assets/icons/radioRadioed.svg';
-
-
 
 type CSSClasses =
   'root'

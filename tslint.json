@@ -33,6 +33,7 @@
     "only-arrow-functions": { "severity": "warning" },
     "ordered-imports": { "severity": "warning" },
     "prefer-for-of": {"severity": "warning"},
+    "trailing-comma": { "severity": "warning" },
     "variable-name": { "severity": "warning" }
   }
 }

@@ -1,9 +1,9 @@
 import * as React from 'react';
 
-import { withStyles, StyleRulesCallback, WithStyles, Theme } from 'material-ui';
+import { withStyles, StyleRulesCallback, WithStyles, Theme } from '@material-ui/core/styles';
 
-import Paper from 'material-ui/Paper';
-import Typography from 'material-ui/Typography';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 import Notice from 'src/components/Notice';

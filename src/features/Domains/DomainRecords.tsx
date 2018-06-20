@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import {
   compose,
   equals,
@@ -12,26 +13,32 @@ import {
   prepend,
   propEq,
 } from 'ramda';
+
 import { Subscription } from 'rxjs/Subscription';
 
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
-import Paper from 'material-ui/Paper';
-import Grid from 'material-ui/Grid';
-import TableBody from 'material-ui/Table/TableBody';
-import TableCell from 'material-ui/Table/TableCell';
-import TableHead from 'material-ui/Table/TableHead';
-import TableRow from 'material-ui/Table/TableRow';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+
+import Paper from '@material-ui/core/Paper';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 
 import { deleteDomainRecord } from 'src/services/domains';
-import Table from 'src/components/Table';
-import Button from 'src/components/Button';
-import ExpansionPanel from 'src/components/ExpansionPanel';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
+
 import ActionsPanel from 'src/components/ActionsPanel';
+import AddNewLink from 'src/components/AddNewLink';
+import Button from 'src/components/Button';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import ExpansionPanel from 'src/components/ExpansionPanel';
+import Grid from 'src/components/Grid';
+import Table from 'src/components/Table';
+
 import ActionMenu from './DomainRecordActionMenu';
 import Drawer from './DomainRecordDrawer';
-import AddNewLink from 'src/components/AddNewLink';
+
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+
 
 type ClassNames = 'root';
 
@@ -80,7 +87,6 @@ interface IType {
 
 const createLink = (title: string, handler: () => void) =>
   <AddNewLink onClick={handler} label={title} />;
-
 
 class DomainRecords extends React.Component<CombinedProps, State> {
   eventsSubscription$: Subscription;

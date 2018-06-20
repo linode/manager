@@ -4,8 +4,8 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
-} from 'material-ui';
-import Paper from 'material-ui/Paper';
+} from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
 
 import LinearProgress from 'src/components/LinearProgress';
 

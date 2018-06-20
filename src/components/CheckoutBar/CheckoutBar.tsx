@@ -2,9 +2,9 @@ import * as React from 'react';
 import * as classNames from 'classnames';
 import { StickyProps } from 'react-sticky';
 
-import { withStyles, WithStyles, Theme, StyleRules } from 'material-ui/styles';
-import Typography from 'material-ui/Typography';
-import Button from 'material-ui/Button';
+import { withStyles, WithStyles, Theme, StyleRules } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 
 type ClassNames = 'root'
   | 'checkoutSection'
@@ -27,7 +27,8 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     minHeight: '24px',
     minWidth: '24px',
     [theme.breakpoints.down('md')]: {
-      position: 'relative !important',
+      /** @todo had to remove !important from here, we need a solution. */
+      position: 'relative',
       left: '0 !important',
       bottom: '0 !important',
       background: theme.color.white,
