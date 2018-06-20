@@ -37,9 +37,6 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   },
   checked: {
     color: theme.palette.primary.main,
-    '&:hover': {
-      fill: '#3683dc',
-    },
   },
   warning: {
     color: theme.palette.status.warningDark,

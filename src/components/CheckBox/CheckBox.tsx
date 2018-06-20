@@ -1,7 +1,9 @@
 import * as React from 'react';
+
 import * as classNames from 'classnames';
 
-import { withStyles, StyleRulesCallback, WithStyles, Theme } from '@material-ui/core/styles';
+import { StyleRulesCallback, Theme, withStyles, WithStyles,  } from '@material-ui/core/styles';
+
 import Checkbox, { CheckboxProps } from '@material-ui/core/Checkbox';
 
 import CheckboxIcon from '../../assets/icons/checkbox.svg';
@@ -43,11 +45,17 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     '& .defaultFill': {
       fill: theme.palette.status.warning,
     },
+    '&$checked': {
+      color: theme.palette.status.warningDark,
+    },
   },
   error: {
     color: theme.palette.status.errorDark,
     '& .defaultFill': {
       fill: theme.palette.status.error,
+    },
+    '&$checked': {
+      color: theme.palette.status.errorDark,
     },
   },
   disabled: {
@@ -79,13 +87,13 @@ const LinodeCheckBox: React.StatelessComponent<FinalProps> = (props) => {
 
   return (
     <Checkbox
+      color="primary"
       className={classnames}
       icon={<CheckboxIcon />}
       checkedIcon={<CheckboxCheckedIcon />}
       data-qa-checked={props.checked}
       { ...rest }
-    >
-    </Checkbox>
+    />
   );
 };
 
