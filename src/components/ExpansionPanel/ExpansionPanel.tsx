@@ -1,7 +1,8 @@
 import * as React from 'react';
 
-import { withStyles, StyleRulesCallback, WithStyles } from '@material-ui/core/styles';
 import ExpansionPanel, { ExpansionPanelProps } from '@material-ui/core/ExpansionPanel';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+
 import ExpansionPanelDetails, { ExpansionPanelDetailsProps }
   from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary, { ExpansionPanelSummaryProps }
@@ -10,8 +11,8 @@ import Typography, { TypographyProps } from '@material-ui/core/Typography';
 import Grid from 'src/components/Grid';
 import RenderGuard from 'src/components/RenderGuard';
 
-import Plus from '../../assets/icons/plus-square.svg';
 import Minus from '../../assets/icons/minus-square.svg';
+import Plus from '../../assets/icons/plus-square.svg';
 import Notice from '../Notice';
 
 type ClassNames = 'root'

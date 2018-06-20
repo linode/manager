@@ -213,13 +213,19 @@ const LinodeTheme: Linode.Theme = {
           outline: '1px dotted #999',
           zIndex: 2,
         },
+        '&$expanded': {
+          minHeight: 48,
+        },
       },
       content: {
         flexGrow: 0,
         order: 2,
+        '&$expanded': {
+          margin: 0,
+        },
       },
       expanded: {
-        minHeight: 48,
+        margin: 0,
       },
       contentExpanded: {
         margin: '12px 0',
@@ -242,6 +248,9 @@ const LinodeTheme: Linode.Theme = {
         },
         '& .border': {
           stroke: '#5F99EA !important',
+        },
+        '&$expanded': {
+          transform: 'none',
         },
       },
       expandIconExpanded: {
