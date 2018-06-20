@@ -7,12 +7,12 @@ import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
 
 import {
-    withStyles,
+    Divider,
     StyleRulesCallback,
     Theme,
-    WithStyles,
     Typography,
-    Divider,
+    WithStyles,
+    withStyles,
   } from 'material-ui';
 
 type ClassNames = 'root'
