@@ -8,6 +8,7 @@ import {
   MenuItem,
 } from 'material-ui';
 import Button from 'material-ui/Button';
+import FormHelperText from 'material-ui/Form/FormHelperText';
 
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import Grid from 'src/components/Grid';
@@ -39,6 +40,8 @@ interface Props extends EditableFields {
   mode: 'create' | 'edit';
   open: boolean;
   errors?: Linode.ApiFieldError[];
+  totalSpaceMB: number;
+  freeSpaceMB: number;
   onClose: () => void;
   onSubmit: () => void;
   onChange: (k: keyof EditableFields, v: any) => void;
@@ -110,15 +113,25 @@ class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
               }
             </TextField>}
 
-            {mode === 'create' && <TextField
-              label="Size"
-              type="number"
-              required
-              value={size}
-              onChange={e => onChange('size', e.target.value === '' ? '' : +e.target.value)}
-              errorText={sizeError}
-              errorGroup="linode-disk-drawer"
-            />}
+            {mode === 'create' && (
+              <React.Fragment>
+                <TextField
+                  label="Size"
+                  type="number"
+                  required
+                  value={size}
+                  onChange={e => onChange('size', e.target.value === '' ? '' : +e.target.value)}
+                  errorText={sizeError}
+                  errorGroup="linode-disk-drawer"
+                  InputProps={{
+                    endAdornment: 'MB',
+                  }}
+                />
+                <FormHelperText style={{ marginTop: 8 }}>
+                  {this.props.freeSpaceMB} MB free of {this.props.totalSpaceMB} MB
+                </FormHelperText>
+              </React.Fragment>
+            )}
           </Grid>
           <Grid item className={classes.section}>
             <ActionsPanel>

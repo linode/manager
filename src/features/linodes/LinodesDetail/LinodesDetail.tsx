@@ -451,6 +451,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               linodeAlerts={linode.alerts}
               linodeConfigs={configs || []}
               linodeMemory={linode.specs.memory}
+              linodeTotalDisk={linode.specs.disk}
               linodeRegion={linode.region}
               linodeStatus={linode.status}
               linodeDisks={disks || []}
