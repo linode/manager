@@ -1,36 +1,42 @@
 import * as React from 'react';
+
 import * as moment from 'moment';
+
 import { compose, filter, path, pathOr, sort } from 'ramda';
 
-import { withStyles, Theme, WithStyles, StyleRulesCallback } from '@material-ui/core/styles';
+import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
+
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Typography from '@material-ui/core/Typography';
 
 import {
   createPersonalAccessToken,
-  getAppTokens,
-  deletePersonalAccessToken,
-  getPersonalAccessTokens,
   deleteAppToken,
+  deletePersonalAccessToken,
+  getAppTokens,
+  getPersonalAccessTokens,
   updatePersonalAccessToken,
 }
   from 'src/services/profile';
+
 import isPast from 'src/utilities/isPast';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+
+import ActionsPanel from 'src/components/ActionsPanel';
+import AddNewLink from 'src/components/AddNewLink';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import Table from 'src/components/Table';
-import Grid from 'src/components/Grid';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import Notice from 'src/components/Notice';
 
-import APITokenMenu from './APITokenMenu';
 import APITokenDrawer, { DrawerMode, genExpiryTups } from './APITokenDrawer';
-import AddNewLink from 'src/components/AddNewLink';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import APITokenMenu from './APITokenMenu';
 
 type ClassNames = 'headline'
   | 'paper'
@@ -495,27 +501,29 @@ export class APITokens extends React.Component<CombinedProps, State> {
           actions={() => {
             return (
               <React.Fragment>
-                <Button
-                  variant="raised"
-                  color="secondary"
-                  className="destructive"
-                  onClick={() => {
-                    this.closeRevokeDialog();
-                    (dialog.type === 'OAuth Client Token')
-                      ? this.revokeAppToken()
-                      : this.revokePersonalAccessToken();
-                  }}
-                  data-qa-button-confirm>
-                  Yes
-                </Button>
-                <Button
-                  variant="raised"
-                  color="secondary"
-                  className="cancel"
-                  onClick={() => this.closeRevokeDialog()} data-qa-button-cancel
-                >
-                  No
-                </Button>
+                <ActionsPanel>
+                  <Button
+                    variant="raised"
+                    color="secondary"
+                    className="destructive"
+                    onClick={() => {
+                      this.closeRevokeDialog();
+                      (dialog.type === 'OAuth Client Token')
+                        ? this.revokeAppToken()
+                        : this.revokePersonalAccessToken();
+                    }}
+                    data-qa-button-confirm>
+                    Yes
+                  </Button>
+                  <Button
+                    variant="raised"
+                    color="secondary"
+                    className="cancel"
+                    onClick={() => this.closeRevokeDialog()} data-qa-button-cancel
+                  >
+                    No
+                  </Button>
+                </ActionsPanel>
               </React.Fragment>
             );
           }}
