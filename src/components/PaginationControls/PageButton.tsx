@@ -1,7 +1,8 @@
 import * as React from 'react';
+
 import * as classnames from 'classnames';
 
-import { withStyles, StyleRulesCallback, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import { KeyboardArrowLeft, KeyboardArrowRight } from '@material-ui/icons';
 
 import Button from 'src/components/Button';
@@ -63,8 +64,10 @@ const PageButton: React.StatelessComponent<Props & WithStyles<CSSClasses>> = ((p
   if (first) {
     return (
     <Button
-      className={`${rootClasses}
-      ${classes.first}` }
+      className={`
+        ${rootClasses}
+        ${classes.first}
+      `}
       onClick={onClick}
       disabled={disabled}
       data-qa-previous-page
@@ -77,8 +80,10 @@ const PageButton: React.StatelessComponent<Props & WithStyles<CSSClasses>> = ((p
   if (last) {
     return (
     <Button
-      className={`${rootClasses}
-      ${classes.last}` }
+      className={`
+        ${rootClasses}
+        ${classes.last}
+      `}
       onClick={onClick}
       disabled={disabled}
       data-qa-next-page
@@ -89,7 +94,12 @@ const PageButton: React.StatelessComponent<Props & WithStyles<CSSClasses>> = ((p
   }
 
   return (
-    <Button className={rootClasses} onClick={onClick} data-qa-page-to={page}>{page}</Button>
+    <Button
+      className={rootClasses}
+      onClick={onClick}
+      data-qa-page-to={page}>
+      {page}
+    </Button>
   );
 });
 
