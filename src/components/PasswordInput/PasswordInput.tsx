@@ -16,6 +16,7 @@ import HideShowText from './HideShowText';
 
 interface Props extends TextFieldProps {
   value?: string;
+  required?: boolean;
 }
 
 interface State {
@@ -58,7 +59,7 @@ class PasswordInput extends React.Component<CombinedProps, State> {
 
   render() {
     const { strength } = this.state;
-    const { classes, value, ...rest } = this.props;
+    const { classes, value, required, ...rest } = this.props;
 
     return (
       <Grid container className={classes.container}>
@@ -68,6 +69,7 @@ class PasswordInput extends React.Component<CombinedProps, State> {
             {...rest}
             onChange={this.onChange}
             fullWidth
+            required={required}
           />
         </Grid>
         {

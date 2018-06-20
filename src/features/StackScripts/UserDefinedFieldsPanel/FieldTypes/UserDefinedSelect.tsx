@@ -55,8 +55,8 @@ class UserDefinedSelect extends React.Component<CombinedProps, State> {
       <div className={classes.root}>
         <Typography variant="subheading" >
           {field.label}
-          {isOptional &&
-            ' (Optional)'
+          {!isOptional &&
+            ' *'
           }
         </Typography>
         {oneof.map((choice: string, index) => {

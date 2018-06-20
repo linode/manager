@@ -89,8 +89,8 @@ class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
       <div className={classes.root}>
         <Typography variant="subheading" >
           {field.label}
-          {isOptional &&
-            ' (Optional)'
+          {!isOptional &&
+            ' *'
           }
         </Typography>
         <Grid container>
