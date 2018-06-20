@@ -36,13 +36,14 @@ interface Props {
   heading?: string;
   label?: string;
   noPadding?: boolean;
+  required?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class PasswordPanel extends React.Component<CombinedProps> {
   render() {
-    const { classes, handleChange, error, heading, label, noPadding } = this.props;
+    const { classes, handleChange, error, heading, label, noPadding, required } = this.props;
 
     return (
       <Paper className={classes.root}>
@@ -50,6 +51,7 @@ class PasswordPanel extends React.Component<CombinedProps> {
           { error && <Notice text={error} error /> }
           <Typography component="div" variant="title">{heading || 'Password'}</Typography>
           <PasswordInput
+            required={required}
             value={this.props.password || ''}
             label={label || 'Root Password'}
             placeholder="Enter a password."

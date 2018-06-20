@@ -10,7 +10,9 @@ interface State {
   hidden: Boolean;
 }
 
-interface Props extends TextFieldProps { }
+interface Props extends TextFieldProps {
+  required?: boolean;
+ }
 
 class HideShowText extends React.Component<Props, State> {
   state = {
@@ -23,12 +25,14 @@ class HideShowText extends React.Component<Props, State> {
 
   render() {
     const { hidden } = this.state;
+    const { required } = this.props;
 
     return (
       <TextField
         {...this.props}
         data-qa-hide={hidden}
         type={hidden ? 'password' : 'text'}
+        required={required}
         InputProps={{
           startAdornment: hidden
             ? <Visibility onClick={this.toggleHidden} style={{ marginLeft: 14 }} />

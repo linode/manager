@@ -44,11 +44,9 @@ class UserDefinedText extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <Typography variant="subheading" >
           {field.label}
-          {isOptional &&
-            ' (Optional)'
-          }
         </Typography>
         <TextField
+          required={!isOptional}
           onChange={this.handleUpdateText}
           label={field.label}
           value={udf_data[field.name] || ''}
@@ -58,10 +56,11 @@ class UserDefinedText extends React.Component<CombinedProps, State> {
   }
 
   renderPasswordField = () => {
-    const { udf_data, field } = this.props;
+    const { udf_data, field, isOptional } = this.props;
 
     return (
       <PasswordPanel
+        required={!isOptional}
         password={udf_data[field.name] || ''}
         handleChange={this.handleUpdatePassword}
         label={field.label}
