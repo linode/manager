@@ -9,6 +9,7 @@ import {
 } from 'material-ui';
 import Button from 'material-ui/Button';
 import FormHelperText from 'material-ui/Form/FormHelperText';
+import InputAdornment from 'material-ui/Input/InputAdornment';
 
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import Grid from 'src/components/Grid';
@@ -124,7 +125,10 @@ class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
                   errorText={sizeError}
                   errorGroup="linode-disk-drawer"
                   InputProps={{
-                    endAdornment: 'MB',
+                    endAdornment: 
+                    <InputAdornment position="end">
+                      / MB
+                    </InputAdornment>
                   }}
                 />
                 <FormHelperText style={{ marginTop: 8 }}>

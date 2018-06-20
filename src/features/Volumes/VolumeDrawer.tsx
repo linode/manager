@@ -12,6 +12,7 @@ import {
 } from 'material-ui';
 import Button from 'material-ui/Button';
 import { InputLabel } from 'material-ui/Input';
+import InputAdornment from 'material-ui/Input/InputAdornment';
 import { MenuItem } from 'material-ui/Menu';
 import { FormControl, FormHelperText } from 'material-ui/Form';
 
@@ -390,7 +391,10 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           errorText={sizeError}
           disabled={mode === modes.CLONING || mode === modes.EDITING}
           InputProps={{
-            endAdornment: <span className={classes.suffix}>GB</span>,
+            endAdornment: 
+            <InputAdornment position="end">
+              GB
+            </InputAdornment>,
           }}
           data-qa-size
         />

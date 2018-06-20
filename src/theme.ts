@@ -316,6 +316,10 @@ const LinodeTheme: Linode.Theme = {
         '&.affirmative': {
           borderColor: '#00B159',
         },
+        '& .adornment': {
+          fontSize: '.9rem',
+          marginRight: 10,
+        },
       },
       inputMultiline: {
         minHeight: 125,
@@ -344,6 +348,16 @@ const LinodeTheme: Linode.Theme = {
         'label + &': {
           marginTop: 0,
         },
+      },
+    },
+    MuiInputAdornment: {
+      root: {
+        '& p': {
+          fontSize: '.9rem',
+        },
+      },
+      positionEnd: {
+        marginRight: 10,
       },
     },
     MuiInputLabel: {
