@@ -88,91 +88,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
     },
   };
 
-<<<<<<< HEAD
   public renderAlertSections = () => {
-=======
-  setLinodeAlertThresholds = () => {
-    this.setState(set(lensPath(['errors']), undefined));
-    this.setState(set(lensPath(['success']), undefined));
-    this.setState(set(lensPath(['submitting']), true));
-
-    updateLinode(
-      this.props.linodeId,
-      {
-        alerts: {
-          cpu: valueUnlessOff(this.state.cpuusage),
-          network_in: valueUnlessOff(this.state.incoming),
-          network_out: valueUnlessOff(this.state.outbound),
-          transfer_quota: valueUnlessOff(this.state.transfer),
-          io: valueUnlessOff(this.state.diskio),
-        },
-      },
-    )
-      .then((response) => {
-        this.setState(compose(
-          set(lensPath(['success']), `Linode alert thresholds changed successfully.`),
-          set(lensPath(['submitting']), false),
-        ));
-      })
-      .catch((error) => {
-        this.setState(set(lensPath(['errors']), error.response.data.errors), () => {
-          scrollErrorIntoView('linode-settings-alerts');
-        });
-      });
-  }
-
-  AlertSection = (props: Section) => {
-    const { classes } = this.props;
-
-    return (
-      <React.Fragment>
-        <Grid
-          container
-          alignItems="flex-start"
-          className={classes.root}
-          data-qa-alerts-panel
-        >
-          <Grid item className={classes.switch}>
-            <FormControlLabel
-              className="toggleLabel"
-              control={<Toggle checked={props.state} onChange={props.onStateChange} />}
-              label={props.title}
-              data-qa-alert={props.title}
-            />
-          </Grid>
-          <Grid item className={classes.copy}>
-            <Typography>{props.copy}</Typography>
-          </Grid>
-          <Grid item>
-            {props.state && <TextField
-              label={props.textTitle}
-              type="number"
-              value={props.value}
-              InputProps={{
-                endAdornment: <span className={classes.percentage}>{props.endAdornment}</span>,
-              }}
-              error={Boolean(props.error)}
-              errorText={props.error}
-              errorGroup="linode-settings-alerts"
-              /**
-               * input type of NUMBER and maxlength do not work well together.
-               * https://github.com/mui-org/material-ui/issues/5309#issuecomment-355462588
-               */
-              inputProps={{
-                maxLength: 2,
-              }}
-              onChange={props.onValueChange}
-              className={classes.usage}
-            />}
-          </Grid>
-        </Grid>
-        <Divider />
-      </React.Fragment>
-    );
-  }
-
-  render() {
->>>>>>> upstream/develop
     const hasErrorFor = getAPIErrorFor({}, this.state.errors);
     return [
       {
@@ -183,7 +99,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
         copy: 'Average CPU usage over 2 hours exceeding this value triggers this alert.',
         state: this.state.cpuusage.state,
         value: this.state.cpuusage.value,
-        onStateChange: (e: React.ChangeEvent<HTMLInputElement>, checked: Boolean) =>
+        onStateChange: (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) =>
           this.setState(set(lensPath(['cpuusage', 'state']), checked)),
         onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
           e.target.value.length <= 2
@@ -202,7 +118,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
         copy: 'Average Disk IO ops/sec over 2 hours exceeding this value triggers this alert.',
         state: this.state.diskio.state,
         value: this.state.diskio.value,
-        onStateChange: (e: React.ChangeEvent<HTMLInputElement>, checked: Boolean) =>
+        onStateChange: (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) =>
           this.setState(
             set(lensPath(['diskio', 'state']), checked)),
         onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -223,7 +139,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
         alert.`,
         state: this.state.incoming.state,
         value: this.state.incoming.value,
-        onStateChange: (e: React.ChangeEvent<HTMLInputElement>, checked: Boolean) =>
+        onStateChange: (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) =>
           this.setState(
             set(lensPath(['incoming', 'state']), checked)),
         onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -244,7 +160,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
         alert.`,
         state: this.state.outbound.state,
         value: this.state.outbound.value,
-        onStateChange: (e: React.ChangeEvent<HTMLInputElement>, checked: Boolean) =>
+        onStateChange: (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) =>
           this.setState(
             set(lensPath(['outbound', 'state']), checked)),
         onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -265,7 +181,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
           this alert.`,
         state: this.state.transfer.state,
         value: this.state.transfer.value,
-        onStateChange: (e: React.ChangeEvent<HTMLInputElement>, checked: Boolean) =>
+        onStateChange: (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) =>
           this.setState(
             set(lensPath(['transfer', 'state']), checked),
           ),
