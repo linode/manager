@@ -13,6 +13,7 @@ import { default as _TextField, Props as TextFieldProps } from 'src/components/T
 import ActionsPanel from 'src/components/ActionsPanel';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import Notice from 'src/components/Notice';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 const TextField = (props: TextFieldProps) =>
   <_TextField {...props} />;
@@ -289,13 +290,17 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
   handleSubmissionErrors = (errorResponse: any) => {
     const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'])(errorResponse);
     if (errors) {
-      this.setState({ errors, submitting: false });
+      this.setState({ errors, submitting: false }, () => {
+        scrollErrorIntoView();
+      });
       return;
     }
 
     this.setState({
       submitting: false,
       errors: [{ reason: 'An unknown error has occured.', field: '_unknown' }],
+    }, () => {
+      scrollErrorIntoView();
     });
   }
 

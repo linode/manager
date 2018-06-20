@@ -15,6 +15,7 @@ import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import { allocatePublicIP } from 'src/services/linodes';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import substituteLink from 'src/utilities/substituteLink';
 
 type ClassNames = 'root';
@@ -53,6 +54,8 @@ class CreateIPv4Drawer extends React.Component<CombinedProps, State> {
       .catch((errResponse) => {
         this.setState({
           errors: path(['response', 'data', 'errors'], errResponse),
+        }, () => {
+          scrollErrorIntoView();
         });
       });
   }

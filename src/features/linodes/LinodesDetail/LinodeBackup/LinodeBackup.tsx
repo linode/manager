@@ -41,6 +41,7 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import { events$, resetEventsPolling } from 'src/events';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import ActionsPanel from 'src/components/ActionsPanel';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import LinodeBackupActionMenu from './LinodeBackupActionMenu';
 import RestoreToLinodeDrawer from './RestoreToLinodeDrawer';
@@ -294,6 +295,8 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
             ...settingsForm,
             errors: path(['response', 'data', 'errors'], err),
           },
+        }, () => {
+          scrollErrorIntoView();
         });
       });
   }

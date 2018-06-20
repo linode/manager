@@ -30,6 +30,7 @@ import Notice from 'src/components/Notice';
 import APITokenMenu from './APITokenMenu';
 import APITokenDrawer, { DrawerMode, genExpiryTups } from './APITokenDrawer';
 import AddNewLink from 'src/components/AddNewLink';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'headline'
   | 'paper'
@@ -334,6 +335,8 @@ export class APITokens extends React.Component<CombinedProps, State> {
             { reason: 'You must select some permissions', field: 'scopes' },
           ],
         },
+      }, () => {
+        scrollErrorIntoView();
       });
       return;
     }
@@ -345,6 +348,8 @@ export class APITokens extends React.Component<CombinedProps, State> {
             { reason: 'You must give your token a label.', field: 'label' },
           ],
         },
+      }, () => {
+        scrollErrorIntoView();
       });
       return;
     }
@@ -359,6 +364,8 @@ export class APITokens extends React.Component<CombinedProps, State> {
                 ...form,
                 errors: [{ field: 'none', reason: 'API did not return a token.' }],
               },
+            }, () => {
+              scrollErrorIntoView();
             });
           }
           this.closeDrawer();
@@ -373,6 +380,8 @@ export class APITokens extends React.Component<CombinedProps, State> {
               ...form,
               errors: path(['response', 'data', 'errors'], errResponse),
             },
+          }, () => {
+            scrollErrorIntoView();
           });
         });
     });
@@ -391,6 +400,8 @@ export class APITokens extends React.Component<CombinedProps, State> {
             { reason: 'You must give your token a label.', field: 'label' },
           ],
         },
+      }, () => {
+        scrollErrorIntoView();
       });
       return;
     }
@@ -406,6 +417,8 @@ export class APITokens extends React.Component<CombinedProps, State> {
             ...this.state.form,
             errors: path(['response', 'data', 'errors'], errResponse),
           },
+        }, () => {
+          scrollErrorIntoView();
         });
       });
     return;

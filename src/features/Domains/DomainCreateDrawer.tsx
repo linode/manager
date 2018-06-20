@@ -17,6 +17,7 @@ import { createDomain, cloneDomain } from 'src/services/domains';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import Reload from 'src/assets/icons/reload.svg';
 import TextField from 'src/components/TextField';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root';
 
@@ -85,6 +86,8 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
         this.setState({
           submitting: false,
           errors: pathOr([], ['response', 'data', 'errors'], err),
+        }, () => {
+          scrollErrorIntoView();
         });
       });
   }
@@ -109,6 +112,8 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
         this.setState({
           submitting: false,
           errors: pathOr([], ['response', 'data', 'errors'], err),
+        }, () => {
+          scrollErrorIntoView();
         });
       });
 
