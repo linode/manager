@@ -157,9 +157,9 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
             placeholder: '0',
             InputProps: {
               endAdornment:
-                <InputAdornment position="end">
+                <InputAdornment position="end" className={classes.adornment}>
                   / second
-                </InputAdornment>,
+                  </InputAdornment>,
             },
             errorText: hasErrorFor('client_conn_throttle'),
             value: defaultTo(0, fields.client_conn_throttle),

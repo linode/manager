@@ -15,7 +15,6 @@ import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import { updateLinode } from 'src/services/linodes';
 import Button from 'src/components/Button';
 import Grid from 'src/components/Grid';
-import InputAdornment from 'material-ui/Input/InputAdornment';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import TextField from 'src/components/TextField';
@@ -26,7 +25,8 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 type ClassNames = 'root'
   | 'switch'
   | 'copy'
-  | 'usage';
+  | 'usage'
+  | 'percentage';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   '@keyframes fadeIn': {
@@ -71,6 +71,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     animation: 'fadeIn .3s ease-in-out forwards',
     marginTop: 0,
     width: 200,
+  },
+  percentage: {
+    fontSize: '.9rem',
+    marginRight: 10,
   },
 });
 
@@ -195,10 +199,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
               type="number"
               value={props.value}
               InputProps={{
-                endAdornment: 
-                <InputAdornment position="end">
-                  {props.endAdornment}
-                </InputAdornment>,
+                endAdornment: <span className={classes.percentage}>{props.endAdornment}</span>,
               }}
               error={Boolean(props.error)}
               errorText={props.error}

@@ -9,7 +9,6 @@ import Button from 'src/components/Button';
 import { FormHelperText } from 'material-ui/Form';
 import AddNewLink from 'src/components/AddNewLink';
 import IconButton from 'src/components/IconButton';
-import InputAdornment from 'material-ui/Input/InputAdornment';
 import Grid from 'src/components/Grid';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
@@ -509,10 +508,12 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       label="Interval"
                       InputProps={{
                         'aria-label': 'Active Health Check Interval',
-                        endAdornment: 
-                        <InputAdornment position="end">
-                          / second
-                        </InputAdornment>,
+                        endAdornment: <Typography
+                          variant="caption"
+                          component="span"
+                          className={classes.suffix}>
+                          seconds
+                        </Typography>,
                       }}
                       value={healthCheckInterval}
                       onChange={this.onHealthCheckIntervalChange}
@@ -536,10 +537,12 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       label="Timeout"
                       InputProps={{
                         'aria-label': 'Active Health Check Timeout',
-                        endAdornment: 
-                        <InputAdornment position="end">
-                          / second
-                        </InputAdornment>,
+                        endAdornment: <Typography
+                          variant="caption"
+                          component="span"
+                          className={classes.suffix}>
+                          seconds
+                        </Typography>,
                       }}
                       value={healthCheckTimeout}
                       onChange={this.onHealthCheckTimeoutChange}
