@@ -61,7 +61,7 @@ class ClientConnectionThrottlePanel extends React.Component<CombinedProps> {
       <React.Fragment>
         {!!isForm // will either be an expandable panel that will save the settings or a card
           ? <Paper style={{ padding: 24, marginTop: 24 }}>
-              <Grid xs={12}>
+              <Grid item xs={12}>
                 {isForm.success &&
                   <Notice
                     success
