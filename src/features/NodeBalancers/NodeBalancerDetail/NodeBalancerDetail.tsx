@@ -31,6 +31,7 @@ import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoad
 import ErrorState from 'src/components/ErrorState';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import EditableText from 'src/components/EditableText';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import NodeBalancerSummary from './NodeBalancerSummary';
 import NodeBalancerConfigurations from './NodeBalancerConfigurations';
@@ -128,7 +129,9 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
       this.setState(() => ({
         ApiError: error.response && error.response.data && error.response.data.errors,
         labelInput: label,
-      }));
+      }), () => {
+        scrollErrorIntoView();
+      });
     });
   }
 

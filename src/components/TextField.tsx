@@ -4,6 +4,7 @@ import TextField, { TextFieldProps } from 'material-ui/TextField';
 
 export interface Props extends TextFieldProps {
   errorText?: string;
+  errorGroup?: string;
   affirmative?: Boolean;
   [index: string]: any;
 }
@@ -22,6 +23,7 @@ class LinodeTextField extends React.Component<Props> {
   render() {
     const {
       errorText,
+      errorGroup,
       affirmative,
       fullWidth,
       children,
@@ -33,6 +35,12 @@ class LinodeTextField extends React.Component<Props> {
     if (errorText) {
       finalProps.error = true;
       finalProps.helperText = errorText;
+      const errorScrollClassName = errorGroup
+        ? `error-for-scroll-${errorGroup}`
+        : `error-for-scroll`;
+      finalProps.InputProps = {
+        className: errorScrollClassName,
+      };
     }
 
     if (affirmative) {

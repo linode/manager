@@ -45,7 +45,11 @@ const ConfirmationDialog: React.StatelessComponent<CombinedProps> = (props) => {
       <DialogTitle id="alert-dialog-title" data-qa-dialog-title>{title}</DialogTitle>
       <DialogContent data-qa-dialog-content>
         { children }
-      { error && <DialogContentText className={classes.error}>{ error }</DialogContentText> }
+      { error &&
+        <DialogContentText className={`${classes.error} error-for-scroll`}>
+          { error }
+        </DialogContentText>
+      }
       </DialogContent>
       <DialogActions>
         { actions(dialogProps) }

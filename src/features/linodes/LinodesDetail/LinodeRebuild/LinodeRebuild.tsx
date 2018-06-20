@@ -26,6 +26,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import ErrorState from 'src/components/ErrorState';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import PasswordInput from 'src/components/PasswordInput';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root'
  | 'title'
@@ -96,7 +97,9 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
 
     if (!selected || !password) {
       /** I hate that I have to do it this way, but TS is complaining.  */
-      this.setState({ errors });
+      this.setState({ errors }, () => {
+        scrollErrorIntoView();
+      });
       return;
     }
 

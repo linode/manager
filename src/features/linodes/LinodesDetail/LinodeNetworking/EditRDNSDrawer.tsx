@@ -15,6 +15,7 @@ import { updateIP } from 'src/services/networking';
 import Drawer from 'src/components/Drawer';
 import ActionsPanel from 'src/components/ActionsPanel';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root';
 
@@ -65,6 +66,8 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
       .catch((errResponse) => {
         this.setState({
           errors: path(['response', 'data', 'errors'], errResponse),
+        }, () => {
+          scrollErrorIntoView();
         });
       });
   }

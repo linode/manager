@@ -20,6 +20,8 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+
 type ClassNames = 'root'
   | 'switch'
   | 'copy'
@@ -163,7 +165,9 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
         ));
       })
       .catch((error) => {
-        this.setState(set(lensPath(['errors']), error.response.data.errors));
+        this.setState(set(lensPath(['errors']), error.response.data.errors), () => {
+          scrollErrorIntoView('linode-settings-alerts');
+        });
       });
   }
 
@@ -199,6 +203,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
               }}
               error={Boolean(props.error)}
               errorText={props.error}
+              errorGroup="linode-settings-alerts"
               /**
                * input type of NUMBER and maxlength do not work well together.
                * https://github.com/mui-org/material-ui/issues/5309#issuecomment-355462588

@@ -28,6 +28,7 @@ import HelpIcon from 'src/components/HelpIcon';
 import Select from 'src/components/Select';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import Notice from 'src/components/Notice';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
@@ -85,7 +86,9 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
         this.setState(compose(
           set(lensPath(['errors']), error.response.data.errors),
           set(lensPath(['submitting']), false),
-        ));
+        ), () => {
+          scrollErrorIntoView('linode-settings-password');
+        });
       });
   }
 
@@ -161,6 +164,7 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
           onChange={e =>
             this.setState(set(lensPath(['value']), e.target.value))}
           errorText={passwordError}
+          errorGroup="linode-settings-password"
           error={Boolean(passwordError)}
         />
       </ExpansionPanel>

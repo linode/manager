@@ -48,7 +48,9 @@ import {
   formatAddress,
   createNewNodeBalancerConfig,
   createNewNodeBalancerConfigNode,
+  clampNumericString,
 } from './utils';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type Styles =
   'root'
@@ -216,7 +218,9 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     // Apply the error updater functions with a compose
     this.setState(
       (compose as any)(...setFns),
-    );
+      () => {
+        scrollErrorIntoView();
+      });
   }
 
   createNodeBalancer = () => {
@@ -248,6 +252,8 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       /* Then update the config errors */
       this.setState({
         errors,
+      }, () => {
+        scrollErrorIntoView();
       });
       return;
     }
@@ -328,12 +334,16 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
         const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'], errorResponse);
 
         if (errors) {
-          return this.setState({ errors, submitting: false });
+          return this.setState({ errors, submitting: false }, () => {
+            scrollErrorIntoView();
+          });
         }
 
         return this.setState({
           errors: [
             { field: 'none', reason: `An unexpected error has occured..` }],
+        }, () => {
+          scrollErrorIntoView();
         });
       });
   }
@@ -550,19 +560,28 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                           set(healthCheckTypeLens, healthCheckType, state))}
 
                       healthCheckAttempts={view(healthCheckAttemptsLens, this.state)}
-                      onHealthCheckAttemptsChange={(healthCheckAttempts: string) =>
+                      onHealthCheckAttemptsChange={(healthCheckAttempts: string) => {
+                        const clampedValue = clampNumericString(0, Number.MAX_SAFE_INTEGER)(
+                          healthCheckAttempts);
                         this.setState(state =>
-                          set(healthCheckAttemptsLens, healthCheckAttempts, state))}
+                          set(healthCheckAttemptsLens, clampedValue, state));
+                      }}
 
                       healthCheckInterval={view(healthCheckIntervalLens, this.state)}
-                      onHealthCheckIntervalChange={(healthCheckInterval: number | string) =>
+                      onHealthCheckIntervalChange={(healthCheckInterval: number | string) => {
+                        const clampedValue = clampNumericString(0, Number.MAX_SAFE_INTEGER)(
+                          healthCheckInterval);
                         this.setState(state =>
-                          set(healthCheckIntervalLens, healthCheckInterval, state))}
+                          set(healthCheckIntervalLens, clampedValue, state));
+                      }}
 
                       healthCheckTimeout={view(healthCheckTimeoutLens, this.state)}
-                      onHealthCheckTimeoutChange={(healthCheckTimeout: number | string) =>
+                      onHealthCheckTimeoutChange={(healthCheckTimeout: number | string) => {
+                        const clampedValue = clampNumericString(0, Number.MAX_SAFE_INTEGER)(
+                          healthCheckTimeout);
                         this.setState(state =>
-                          set(healthCheckTimeoutLens, healthCheckTimeout, state))}
+                          set(healthCheckTimeoutLens, clampedValue, state));
+                      }}
 
                       sessionStickiness={view(sessionStickinessLens, this.state)}
                       onSessionStickinessChange={(sessionStickiness: number | string) =>
@@ -729,6 +748,14 @@ export const validationErrorsToFieldErrors = (error: Joi.ValidationError) => {
           ...detail,
           message: 'Port must be unique',
           path: [...path, 'port'].join('_'),
+        };
+      }
+
+      if (path.includes('path')
+          && detail.constraint === 'base') {
+        return {
+          ...detail,
+          message: 'Path must start with a /',
         };
       }
 
