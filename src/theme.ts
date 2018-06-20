@@ -296,8 +296,9 @@ const LinodeTheme: Linode.Theme = {
     MuiIconButton: {
       root: {
         color: '#3B85D9',
-        '&:hover, &:focus': {
+        '&:hover': {
           color: '#5F99EA',
+          background: 'transparent',
         },
       },
     },
