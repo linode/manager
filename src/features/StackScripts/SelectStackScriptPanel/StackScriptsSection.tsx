@@ -9,16 +9,13 @@ import CircleProgress from 'src/components/CircleProgress';
 
 import { formatDate } from 'src/utilities/format-date-iso8601';
 
-type ClassNames = 'root' | 'loadingWrapper' | 'username';
+type ClassNames = 'root' | 'loadingWrapper';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {},
   loadingWrapper: {
     border: 0,
     paddingTop: 100,
-  },
-  username: {
-    color: 'grey',
   },
 });
 
