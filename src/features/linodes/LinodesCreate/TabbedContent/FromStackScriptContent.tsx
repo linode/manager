@@ -34,6 +34,7 @@ import { resetEventsPolling } from 'src/events';
 
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root'
   | 'main'
@@ -201,21 +202,14 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
     };
   }
 
-  scrollToTop = () => {
-    window.scroll({
-      top: 0,
-      left: 0,
-      behavior: 'smooth',
-    });
-  }
-
   createFromStackScript = () => {
     if (!this.state.selectedStackScriptID) {
-      this.scrollToTop();
       this.setState({
         errors: [
           { field: 'stackscript_id', reason: 'You must select a StackScript' },
         ],
+      }, () => {
+        scrollErrorIntoView();
       });
       return;
     }
@@ -257,8 +251,6 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
       .catch((error) => {
         if (!this.mounted) { return; }
 
-        this.scrollToTop();
-
         if (error.response && error.response.data && error.response.data.errors) {
           const listOfErrors = error.response.data.errors;
           const updatedErrorList = listOfErrors.map((error: Linode.ApiFieldError) => {
@@ -272,7 +264,9 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
           });
           this.setState(() => ({
             errors: updatedErrorList,
-          }));
+          }), () => {
+            scrollErrorIntoView();
+          });
         }
       })
       .finally(() => {

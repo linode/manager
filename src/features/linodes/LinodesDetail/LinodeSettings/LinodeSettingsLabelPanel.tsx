@@ -18,6 +18,7 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import TextField from 'src/components/TextField';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root';
 
@@ -62,7 +63,9 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
         events$.next(genEvent('linode_reboot', linode.id, linode.label));
       })
       .catch((error) => {
-        this.setState(set(lensPath(['errors']), error.response.data.errors));
+        this.setState(set(lensPath(['errors']), error.response.data.errors), () => {
+          scrollErrorIntoView('linode-settings-label');
+        });
       });
   }
 
@@ -96,6 +99,7 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
           onChange={e =>
             this.setState(set(lensPath(['updatedValue']), e.target.value))}
           errorText={labelError}
+          errorGroup="linode-settings-label"
           error={Boolean(labelError)}
           data-qa-label
         />

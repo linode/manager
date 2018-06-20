@@ -124,7 +124,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
         onClose={onClose}
       >
         <Grid container direction="row">
-          {generalError && <Notice error text={generalError} />}
+          {generalError && <Notice error errorGroup="linode-config-drawer" text={generalError} />}
           <Grid item xs={12} className={classes.section}>
             <Typography variant="subheading">Label and Comments</Typography>
             <TextField
@@ -133,6 +133,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               value={label}
               onChange={e => onChange('label', e.target.value)}
               errorText={errorFor('label')}
+              errorGroup="linode-config-drawer"
             />
 
             <TextField
@@ -142,6 +143,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               multiline={true}
               rows={3}
               errorText={errorFor('comments')}
+              errorGroup="linode-config-drawer"
             />
           </Grid>
 
@@ -178,6 +180,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               value={kernel}
               onChange={e => onChange('kernel', e.target.value)}
               errorText={errorFor('kernel')}
+              errorGroup="linode-config-drawer"
             >
               <MenuItem value="none" disabled><em>Select a Kernel</em></MenuItem>
               {
@@ -253,6 +256,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
                 fullWidth
                 autoFocus={useCustomRoot && true}
                 errorText={errorFor('root_device')}
+                errorGroup="linode-config-drawer"
               >
                 {
                   !useCustomRoot &&

@@ -35,6 +35,7 @@ import {
 import { resetEventsPolling } from 'src/events';
 
 import * as Promise from 'bluebird';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 
 type ClassNames = 'root' | 'main' | 'sidebar';
@@ -190,23 +191,16 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
   deployLinode = () => {
     if (!this.state.selectedBackupID) {
       /* a backup selection is also required */
-      this.scrollToTop();
       this.setState({
         errors: [
           { field: 'backup_id', reason: 'You must select a Backup' },
         ],
+      }, () => {
+        scrollErrorIntoView();
       });
       return;
     }
     this.createLinode();
-  }
-
-  scrollToTop = () => {
-    window.scroll({
-      top: 0,
-      left: 0,
-      behavior: 'smooth',
-    });
   }
 
   createLinode = () => {
@@ -237,8 +231,6 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       })
       .catch((error) => {
         if (!this.mounted) { return; }
-
-        this.scrollToTop();
 
         this.setState(() => ({
           errors: error.response && error.response.data && error.response.data.errors,

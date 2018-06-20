@@ -268,6 +268,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 protocol,
                 hasErrorFor('port'),
                 hasErrorFor('protocol'),
+                configIdx,
               ]}
               container
             >
@@ -282,6 +283,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   value={port || ''}
                   onChange={this.onPortChange}
                   errorText={hasErrorFor('port')}
+                  errorGroup={`${configIdx}`}
                   data-qa-port
                 />
               </Grid>
@@ -292,6 +294,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   select
                   onChange={this.onProtocolChange}
                   errorText={hasErrorFor('protocol')}
+                  errorGroup={`${configIdx}`}
                   data-qa-protocol-select
                 >
                   <MenuItem
@@ -325,6 +328,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   hasErrorFor('ssl_cert'),
                   privateKey,
                   hasErrorFor('ssl_key'),
+                  configIdx,
                 ]}
                 container
               >
@@ -337,6 +341,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     onChange={this.onSslCertificateChange}
                     required={protocol === 'https'}
                     errorText={hasErrorFor('ssl_cert')}
+                    errorGroup={`${configIdx}`}
                   />
                 </Grid>
                 <Grid item xs={12} md={6}>
@@ -348,6 +353,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     onChange={this.onPrivateKeyChange}
                     required={protocol === 'https'}
                     errorText={hasErrorFor('ssl_key')}
+                    errorGroup={`${configIdx}`}
                   />
                 </Grid>
               </Grid>
@@ -357,6 +363,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               updateFor={[
                 algorithm,
                 hasErrorFor('algorithm'),
+                configIdx,
               ]}
               container
             >
@@ -367,6 +374,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   select
                   onChange={this.onAlgorithmChange}
                   errorText={hasErrorFor('algorithm')}
+                  errorGroup={`${configIdx}`}
                   data-qa-algorithm-select
                 >
                   <MenuItem value="roundrobin" data-qa-option="roundrobin">
@@ -386,6 +394,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               updateFor={[
                 sessionStickiness,
                 hasErrorFor('stickiness'),
+                configIdx,
               ]}
               container
             >
@@ -396,6 +405,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   select
                   onChange={this.onSessionStickinessChange}
                   errorText={hasErrorFor('stickiness')}
+                  errorGroup={`${configIdx}`}
                   data-qa-session-stickiness-select
                 >
                   <MenuItem
@@ -441,6 +451,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   protocol,
                   healthCheckType,
                   hasErrorFor('check'),
+                  configIdx,
                 ]}
                 item
                 xs={12}
@@ -452,6 +463,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     select
                     onChange={this.onHealthCheckTypeChange}
                     errorText={hasErrorFor('check')}
+                    errorGroup={`${configIdx}`}
                     data-qa-active-check-select
                   >
                     <MenuItem value="none">None</MenuItem>
@@ -485,6 +497,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     updateFor={[
                       healthCheckInterval,
                       hasErrorFor('check_interval'),
+                      configIdx,
                     ]}
                     item
                     xs={12}
@@ -505,6 +518,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       value={healthCheckInterval}
                       onChange={this.onHealthCheckIntervalChange}
                       errorText={hasErrorFor('check_interval')}
+                      errorGroup={`${configIdx}`}
                       data-qa-active-check-interval
                     />
                   </Grid>
@@ -512,6 +526,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     updateFor={[
                       healthCheckTimeout,
                       hasErrorFor('check_timeout'),
+                      configIdx,
                     ]}
                     item
                     xs={12}
@@ -532,6 +547,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       value={healthCheckTimeout}
                       onChange={this.onHealthCheckTimeoutChange}
                       errorText={hasErrorFor('check_timeout')}
+                      errorGroup={`${configIdx}`}
                       data-qa-active-check-timeout
                     />
                   </Grid>
@@ -539,6 +555,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     updateFor={[
                       healthCheckAttempts,
                       hasErrorFor('check_attempts'),
+                      configIdx,
                     ]}
                     item
                     xs={12}
@@ -550,6 +567,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       value={healthCheckAttempts}
                       onChange={this.onHealthCheckAttemptsChange}
                       errorText={hasErrorFor('check_attempts')}
+                      errorGroup={`${configIdx}`}
                       InputProps={{
                         'aria-label': 'Active Health Check Attempts',
                       }}
@@ -563,6 +581,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                         checkPath,
                         healthCheckType,
                         hasErrorFor('check_path'),
+                        configIdx,
                       ]}
                       item
                       xs={12}
@@ -574,6 +593,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                         onChange={this.onCheckPathChange}
                         required={['http', 'http_body'].includes(healthCheckType)}
                         errorText={hasErrorFor('check_path')}
+                        errorGroup={`${configIdx}`}
                       />
                     </Grid>
                   }
@@ -584,6 +604,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                         checkBody,
                         healthCheckType,
                         hasErrorFor('check_body'),
+                        configIdx,
                       ]}
                       item
                       xs={12}
@@ -595,6 +616,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                         onChange={this.onCheckBodyChange}
                         required={healthCheckType === 'http_body'}
                         errorText={hasErrorFor('check_body')}
+                        errorGroup={`${configIdx}`}
                       />
                     </Grid>
                   }
@@ -692,6 +714,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                           nodes.length,
                           node,
                           errors,
+                          configIdx,
                         ]}
                         container
                         data-qa-node
@@ -708,6 +731,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             inputProps={{ 'data-config-idx': idx }}
                             onChange={this.onNodeLabelChange}
                             errorText={hasErrorFor('label')}
+                            errorGroup={`${configIdx}`}
                             data-qa-backend-ip-label
                           />
                         </Grid>
@@ -718,6 +742,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             inputProps={{ 'data-config-idx': idx }}
                             onChange={this.onNodeAddressChange}
                             errorText={hasErrorFor('address')}
+                            errorGroup={`${configIdx}`}
                             data-qa-backend-ip-address
                           />
                         </Grid>
@@ -729,6 +754,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             inputProps={{ 'data-config-idx': idx }}
                             onChange={this.onNodePortChange}
                             errorText={hasErrorFor('port')}
+                            errorGroup={`${configIdx}`}
                             data-qa-backend-ip-port
                           />
                         </Grid>
@@ -740,6 +766,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             inputProps={{ 'data-config-idx': idx }}
                             onChange={this.onNodeWeightChange}
                             errorText={hasErrorFor('weight')}
+                            errorGroup={`${configIdx}`}
                             data-qa-backend-ip-weight
                           />
                         </Grid>

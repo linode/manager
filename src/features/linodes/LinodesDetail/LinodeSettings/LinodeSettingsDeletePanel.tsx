@@ -16,6 +16,7 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
@@ -40,7 +41,9 @@ class LinodeSettingsDeletPanel extends React.Component<CombinedProps, State> {
         this.props.history.push('/');
       })
       .catch((error) => {
-        this.setState(set(lensPath(['errors']), error.response.data.errors));
+        this.setState(set(lensPath(['errors']), error.response.data.errors), () => {
+          scrollErrorIntoView();
+        });
       });
   }
 
