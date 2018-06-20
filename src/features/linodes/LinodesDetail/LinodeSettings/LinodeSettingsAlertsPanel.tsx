@@ -1,77 +1,28 @@
 import * as React from 'react';
+
 import { compose, lensPath, set } from 'ramda';
 
 import {
-  withStyles,
   StyleRulesCallback,
   Theme,
   WithStyles,
+  withStyles,
 } from 'material-ui';
 
 
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import { updateLinode } from 'src/services/linodes';
 import Button from 'src/components/Button';
+import { updateLinode } from 'src/services/linodes';
+import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
-import ExpansionPanel from 'src/components/ExpansionPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
+import ExpansionPanel from 'src/components/ExpansionPanel';
 import AlertSection from './AlertSection';
 
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
-type ClassNames = 'root'
-  | 'switch'
-  | 'copy'
-  | 'usage'
-  | 'percentage';
+type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  '@keyframes fadeIn': {
-    from: {
-      opacity: 0,
-    },
-    to: {
-      opacity: 1,
-    },
-  },
-  root: {
-    minHeight: 130,
-    position: 'relative',
-    padding: `${theme.spacing.unit * 3}px 0`,
-    '&:last-of-type + hr': {
-      display: 'none',
-    },
-    '& .toggleLabel > span:last-child': {
-      position: 'absolute',
-      left: 90,
-      top: 40,
-      ...theme.typography.subheading,
-    },
-  },
-  switch: {
-    width: 50,
-    padding: '2px 0 !important',
-  },
-  copy: {
-    [theme.breakpoints.down('sm')]: {
-      flexBasis: '100%',
-    },
-    [theme.breakpoints.up('md')]: {
-      margin: `${theme.spacing.unit * 4}px ${theme.spacing.unit * 4}px 0`,
-      width: 300,
-    },
-    [theme.breakpoints.up('lg')]: {
-      width: 600,
-    },
-  },
-  usage: {
-    animation: 'fadeIn .3s ease-in-out forwards',
-    marginTop: 0,
-    width: 200,
-  },
-  percentage: {
-    fontSize: '.9rem',
-    marginRight: 10,
-  },
+  root: {},
 });
 
 interface Props {
@@ -201,7 +152,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
           this.setState(
             set(lensPath(['diskio', 'state']), checked)),
         onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-          e.target.value.length <= 2
+          e.target.value.length <= 10
             ? this.setState(
               set(lensPath(['diskio', 'value']), Number(e.target.value)),
             )
@@ -278,28 +229,30 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
     const noError = (submitting && !alertSections
       .reduce((result, s) => result || Boolean(s.error), false));
 
+    const expansionActions = () => {
+      return <ActionsPanel>
+                <Button
+                  type="primary"
+                  onClick={this.setLinodeAlertThresholds}
+                  disabled={noError}
+                  loading={noError}
+                  data-qa-alerts-save
+                >
+                  Save
+                </Button>
+              </ActionsPanel>;
+    };
+
     return (
       <ExpansionPanel
         defaultExpanded
         heading="Notification Thresholds"
         success={this.state.success}
-        actions={() =>
-          <ActionsPanel>
-            <Button
-              type="primary"
-              onClick={this.setLinodeAlertThresholds}
-              disabled={noError}
-              loading={noError}
-              data-qa-alerts-save
-            >
-              Save
-            </Button>
-          </ActionsPanel>
-        }
+        actions={expansionActions}
       >
         {
           alertSections.map((p, idx) =>
-          <AlertSection updateFor={[p.state]} key={idx} {...p} />)
+          <AlertSection updateFor={[p.state, p.value]} key={idx} {...p} />)
         }
       </ExpansionPanel>
     );

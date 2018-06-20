@@ -1,7 +1,8 @@
 import * as React from 'react';
-import RenderGuard from 'src/components/RenderGuard';
+
 import FormControlLabel from 'material-ui/Form/FormControlLabel';
 import Grid from 'src/components/Grid';
+import RenderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
 
