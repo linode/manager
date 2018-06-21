@@ -346,6 +346,16 @@ const LinodeTheme: Linode.Theme = {
         },
       },
     },
+    MuiInputAdornment: {
+      root: {
+        '& p': {
+          fontSize: '.9rem',
+        },
+      },
+      positionEnd: {
+        marginRight: 10,
+      },
+    },
     MuiInputLabel: {
       formControl: {
         position: 'relative',
