@@ -81,7 +81,7 @@ class CreateIPv4Drawer extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { open, onClose } = this.props;
+    const { open, onClose, forPublic } = this.props;
     const { errors } = this.state;
 
     const hasErrorFor = getAPIErrorsFor({}, errors);
@@ -90,7 +90,7 @@ class CreateIPv4Drawer extends React.Component<CombinedProps, State> {
       <Drawer
         open={open}
         onClose={onClose}
-        title="Allocate Public IPv4 Address"
+        title={`Allocate ${forPublic ? 'Public' : 'Private'} IPv4 Address`}
       >
         <React.Fragment>
           <Typography variant="body1" data-qa-service-notice>
