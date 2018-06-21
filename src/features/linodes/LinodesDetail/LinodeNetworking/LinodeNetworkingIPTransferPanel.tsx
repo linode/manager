@@ -1,4 +1,4 @@
-import { compose, equals, isNil, lensPath, over, path, set, view, when } from 'ramda';
+import { both, compose, equals, isNil, lensPath, over, path, set, uniq, view, when } from 'ramda';
 import * as React from 'react';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from 'material-ui';
@@ -16,7 +16,7 @@ import TextField from 'src/components/TextField';
 import { getLinodes } from 'src/services/linodes';
 import { assignAddresses } from 'src/services/networking';
 
-type ClassNames = 'root' | 'title' | 'ipRowLoading';
+type ClassNames = 'root' | 'title';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   ipRowLoading: {
@@ -33,7 +33,7 @@ interface Props {
   linodeID: number;
   linodeRegion: string;
   ipAddresses: string[];
-  refreshIPs: () => Promise<any>;
+  refreshIPs: () => Promise<void>;
 }
 
 type IPStates = NoAction | Swap | Move;
@@ -74,8 +74,8 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
     super(props);
 
     this.state = {
-      ips: props.ipAddresses.reduce((state, ip) => ({
-        ...state,
+      ips: props.ipAddresses.reduce((acc, ip) => ({
+        ...acc,
         [ip]: LinodeNetworkingIPTransferPanel.defaultState(ip, this.props.linodeID),
       }), {}),
       linodes: [],
@@ -92,71 +92,59 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
 
   private onModeChange = (ip: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const mode = e.target.value as Mode;
-    if (isMoving(mode)) {
-      this.setState(
-        compose(
-          set(L.mode(ip), mode),
-          /**
-           * when selectedLinodeId is not set, set it.
-           */
-          when(
-            compose(isNil, view(L.selectedLinodeID(ip))),
-            set(
-              L.selectedLinodeID(ip),
-              this.state.linodes[0].id,
-            )
-          ),
-        ),
-      );
-    }
+    const firstLinode = this.state.linodes[0];
 
-    if (isSwapping(mode)) {
-      this.setState(
-        compose(
-          set(L.mode(ip), mode),
-          when(
-            compose(isNil, view(L.selectedLinodeID(ip))),
-            set(
-              L.selectedLinodeID(ip),
-              this.state.linodes[0].id,
-            )
+    this.setState(
+      compose(
+        /** Always update the mode. */
+        setMode(ip, mode),
+
+        /** When switching back to none, reset the ipState. */
+        when(
+          () => isNone(mode),
+          updateIPState(ip, ipState => LinodeNetworkingIPTransferPanel.defaultState(ipState.sourceIP, ipState.sourceIPsLinodeID))
+        ),
+
+        /** When we're swapping/moving we default to the head of the list if it's not set already. */
+        when(
+          both(
+            () => isSwapping(mode) || isMoving(mode),
+            compose(isNil, view(L.selectedLinodeID(ip)))
           ),
-          set(
-            L.selectedIP(ip),
-            this.state.linodes[0].ips[0],
-          ),
-          set(
-            L.selectedLinodesIPs(ip),
-            this.state.linodes[0].ips,
+          setSelectedLinodeID(ip, firstLinode.id)
+        ),
+
+        /** When we're swapping we defaulting the selectedIP to the first in the list and setting
+         * the selectedLinodesIPs so the same Linode's IPs (which are used in the select IP menu).
+         */
+        when(
+          () => isSwapping(mode),
+          compose(
+            setSelectedIP(ip, firstLinode.ips[0]),
+            setSelectedLinodesIPs(ip, firstLinode.ips),
           ),
         ),
-      );
-    }
+      ),
+    )
   }
 
   private onSelectedLinodeChange = (ip: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState(
       compose(
-        set(
-          L.selectedLinodeID(ip),
-          e.target.value,
-        ),
+        setSelectedLinodeID(ip, e.target.value),
         /**
          * When mode is swapping;
          *  Update the selectedLinodesIPs (since the Linode has changed, the available IPs certainly have)
          *  Update the selectedIP (to provide a sensible default).
          */
         when(
-          compose(
-            equals('swap'),
-            view(L.mode(ip)),
-          ),
-          compose(
+          compose(equals('swap'), view(L.mode(ip))),
 
+          compose(
             /** We need to find and return the newly selected Linode's IPs. */
-            over(
-              L.selectedLinodesIPs(ip),
-              () => {
+            updateSelectedLinodesIPs(
+              ip,
+              (currentIPs: string[]) => {
                 const linode = this.state.linodes.find(l => l.id === Number(e.target.value));
                 if (linode) {
                   return linode.ips;
@@ -166,16 +154,15 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
             ),
 
             /** We need to find the selected Linode's IPs and return the first. */
-            over(
-              L.selectedIP(ip),
-              () => {
-                const linode = this.state.linodes.find(l => l.id === Number(e.target.value));
-                if (linode) {
-                  return linode.ips[0];
-                }
-                return;
-              },
-            ),
+            updateSelectedIP(
+              ip,
+              (currentIP: string) => {
+              const linode = this.state.linodes.find(l => l.id === Number(e.target.value));
+              if (linode) {
+                return linode.ips[0];
+              }
+              return;
+            })
           ),
         ),
       ),
@@ -184,10 +171,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
 
   private onSelectedIPChange = (ip: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState(
-      set(
-        L.selectedIP(ip),
-        e.target.value,
-      ),
+      setSelectedIP(ip, e.target.value)
     );
   }
 
@@ -280,7 +264,10 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
       createRequestData(this.state.ips, this.props.linodeRegion),
     )
       .then((response) => {
-        this.props.refreshIPs()
+        return Promise.all([
+          this.props.refreshIPs(),
+          this.getLinodes()
+        ])
           .then(() => {
             this.setState({ submitting: false, error: undefined })
           })
@@ -292,7 +279,10 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
         const apiErrors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'], response);
 
         if (apiErrors) {
-          return this.setState({ error: apiErrors, submitting: false });
+          return this.setState({
+            error: uniq(apiErrors),
+            submitting: false,
+          });
         }
 
         this.setState({
@@ -313,7 +303,11 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
   }
 
   public componentDidMount() {
-    getLinodes({}, { region: this.props.linodeRegion })
+    this.getLinodes();
+  }
+
+  private getLinodes = () => {
+    return getLinodes({}, { region: this.props.linodeRegion })
       .then(response => ({
         ...response,
         data: response.data.filter(l => l.id !== this.props.linodeID),
@@ -331,7 +325,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
       .catch(() => {
         this.setState({ error: [{ field: 'none', reason: 'Unable to fetch IP addresses. Try reloading?' }] })
       });
-  }
+  };
 
   private transferActions = () => {
     return (
@@ -370,7 +364,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
                 {
                   error &&
                   <Grid item xs={12}>
-                    { error.map(({ field, reason}) => <Notice error text={reason} />)}
+                    {error.map(({ field, reason }) => <Notice error text={reason} />)}
                   </Grid>
                 }
                 <Grid item xs={12}>
@@ -403,11 +397,8 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
   }
 }
 
-const isMoving = (mode: Mode) => mode === 'move';
-
-const isSwapping = (mode: Mode) => mode === 'swap';
-
 const L = {
+  ip: (ip: string) => lensPath(['ips', ip]),
   mode: (ip: string) => lensPath(['ips', ip, 'mode']),
   selectedIP: (ip: string) => lensPath(['ips', ip, 'selectedIP']),
   selectedLinodeID: (ip: string) => lensPath(['ips', ip, 'selectedLinodeID']),
@@ -415,6 +406,28 @@ const L = {
   sourceIP: (ip: string) => lensPath(['ips', ip, 'sourceIP']),
   sourceIPsLinodeID: (ip: string) => lensPath(['ips', ip, 'sourceIPsLinodeID']),
 };
+
+const setMode = (ip: string, mode: Mode) => set(L.mode(ip), mode);
+
+const setSelectedIP = (ip: string, selectedIP: string) => set(L.selectedIP(ip), selectedIP);
+
+const setSelectedLinodeID = (ip: string, selectedLinodeID: number|string) => set(L.selectedLinodeID(ip), selectedLinodeID);
+
+const setSelectedLinodesIPs = (ip: string, selectedLinodesIPs: string[]) => set(L.selectedLinodesIPs(ip), selectedLinodesIPs);
+
+const updateSelectedLinodesIPs = (ip: string, fn: (s: string[]) => string[]) =>
+over(L.selectedLinodesIPs(ip), fn);
+
+const updateSelectedIP = (ip: string, fn: (a: string) => string | undefined) =>
+over(L.selectedIP(ip), fn);
+
+const updateIPState = (ip: string, fn: (v: IPStates) => IPStates) => over( L.ip(ip), fn);
+
+const isMoving = (mode: Mode) => mode === 'move';
+
+const isSwapping = (mode: Mode) => mode === 'swap';
+
+const isNone = (mode: Mode) => mode === 'none';
 
 const isNoneState = (state: NoAction | Move | Swap): state is NoAction =>
   state.mode === 'none';
