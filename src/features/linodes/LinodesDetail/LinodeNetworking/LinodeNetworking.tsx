@@ -11,6 +11,7 @@ import TableHead from 'material-ui/Table/TableHead';
 import TableBody from 'material-ui/Table/TableBody';
 import TableRow from 'material-ui/Table/TableRow';
 import TableCell from 'material-ui/Table/TableCell';
+import Tooltip from 'material-ui/Tooltip';
 
 import Grid from 'src/components/Grid';
 import Table from 'src/components/Table';
@@ -242,6 +243,11 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     });
   }
 
+  hasPrivateIPAddress() {
+    const { linodeIPs } = this.state;
+    return Boolean(linodeIPs.ipv4.private.length);
+  }
+
   render() {
     const { classes, linodeID } = this.props;
     const { linodeIPs } = this.state;
@@ -267,15 +273,23 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
             </Typography>
           </Grid>
           <Grid item>
-            <AddNewLink
-              onClick={() => this.setState({
-                createIPv4Drawer: {
-                  forPublic: false,
-                  open: true,
-                },
-              })}
-              label="Add Private IPv4"
-            />
+            <Tooltip title={this.hasPrivateIPAddress()
+              ? 'This Linode has a private IPv4 address.'
+              : ''
+            }>
+              <div>
+                <AddNewLink
+                  onClick={() => this.setState({
+                    createIPv4Drawer: {
+                      forPublic: false,
+                      open: true,
+                    },
+                  })}
+                  disabled={Boolean(this.hasPrivateIPAddress())}
+                  label="Add Private IPv4"
+                />
+              </div>
+            </Tooltip>
           </Grid>
           <Grid item>
             <AddNewLink
