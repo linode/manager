@@ -16,7 +16,7 @@ import TextField from 'src/components/TextField';
 import { getLinodes } from 'src/services/linodes';
 import { assignAddresses } from 'src/services/networking';
 
-type ClassNames = 'root' | 'title';
+type ClassNames = 'root' | 'title' | 'ipField';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   ipRowLoading: {
@@ -26,6 +26,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   title: {
     marginBottom: theme.spacing.unit * 2,
     marginTop: theme.spacing.unit * 4,
+  },
+  ipField: {
+    marginTop: 0,
   },
 });
 
@@ -180,10 +183,11 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
     renderLinodeSelect?: (s: Move) => JSX.Element,
     renderIPSelect?: (s: Swap) => JSX.Element,
   ) => {
+    const { classes } = this.props;
     return (
       <Grid container key={state.sourceIP}>
         <Grid item xs={3}>
-          <TextField disabled value={state.sourceIP} />
+          <TextField disabled value={state.sourceIP} className={classes.ipField} />
         </Grid>
         <Grid item xs={2}>
           <Select
