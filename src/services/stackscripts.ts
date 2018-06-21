@@ -30,8 +30,8 @@ export const getStackScriptsByUser = (username: string, params?: any, filter?: a
 //     '+and': [
 //       { username: { '+not': 'linode' } },
 //       { username: { '+not': currentUser } },
+//       ...filter,
 //     ],
-//     ...filter,
 //   });
 
 export const getCommunityStackscripts = (currentUser: string, params?: any, filter?: any) =>

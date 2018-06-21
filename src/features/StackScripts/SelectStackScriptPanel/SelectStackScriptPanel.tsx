@@ -212,7 +212,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
       { page, page_size: 50 },
       filter)
       .then((response: Linode.ResourcePage<Linode.StackScript.Response>) => {
-        if (!response.data.length) {
+        if (!response.data.length || response.data.length === response.results) {
           this.setState({ showMoreButtonVisible: false });
         }
         const newData = (isSorting) ? response.data : [...this.state.data, ...response.data];
