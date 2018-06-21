@@ -25,6 +25,8 @@ import { deleteStackScript, getCommunityStackscripts, getStackScript, getStackSc
 
 import StackScriptsSection from './StackScriptsSection';
 
+import DebouncedSearch from 'src/components/DebouncedSearch';
+
 export interface ExtendedLinode extends Linode.Linode {
   heading: string;
   subHeadings: string[];
@@ -573,6 +575,10 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
     )
   }
 
+  handleSearch = (value: string) => {
+    console.log(`making request with ${value}`);
+  }
+
   renderIcon = () => {
     const { sortOrder } = this.state;
 
@@ -611,98 +617,101 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
             You do not have any StackScripts to select from. You must first
           <Link to="/stackscripts/create"> create one</Link>
           </div>
-          : <Table noOverflow={true} tableClass={classes.table}>
-            <TableHead>
-              <TableRow className={classes.tr}>
-                {!!this.props.onSelect &&
-                  <TableCell className={classNames({
-                    [classes.tableHead]: true,
-                    [classes.stackscriptLabel]: true,
-                  })} />
-                }
-                <TableCell
-                  className={classNames({
-                    [classes.tableHead]: true,
-                    [classes.stackscriptTitles]: true,
-                  })}
-                  sortable
-                >
-                  <Button
-                    type="secondary"
-                    className={classes.sortButton}
-                    onClick={this.handleClickStackScriptsTableHeader}
-                    data-qa-stackscript-table-header
+          : <React.Fragment>
+            <DebouncedSearch onSearch={this.handleSearch} />
+            <Table noOverflow={true} tableClass={classes.table}>
+              <TableHead>
+                <TableRow className={classes.tr}>
+                  {!!this.props.onSelect &&
+                    <TableCell className={classNames({
+                      [classes.tableHead]: true,
+                      [classes.stackscriptLabel]: true,
+                    })} />
+                  }
+                  <TableCell
+                    className={classNames({
+                      [classes.tableHead]: true,
+                      [classes.stackscriptTitles]: true,
+                    })}
+                    sortable
                   >
-                    StackScripts
+                    <Button
+                      type="secondary"
+                      className={classes.sortButton}
+                      onClick={this.handleClickStackScriptsTableHeader}
+                      data-qa-stackscript-table-header
+                    >
+                      StackScripts
                   {currentFilterType === 'label' &&
-                      this.renderIcon()
-                    }
-                  </Button>
-                </TableCell>
-                <TableCell
-                  className={classNames({
-                    [classes.tableHead]: true,
-                    [classes.deploys]: true,
-                  })}
-                  noWrap
-                  sortable
-                >
-                  <Button
-                    type="secondary"
-                    className={classes.sortButton}
-                    onClick={this.handleClickDeploymentsTableHeader}
-                    data-qa-stackscript-active-deploy-header
+                        this.renderIcon()
+                      }
+                    </Button>
+                  </TableCell>
+                  <TableCell
+                    className={classNames({
+                      [classes.tableHead]: true,
+                      [classes.deploys]: true,
+                    })}
+                    noWrap
+                    sortable
                   >
-                    Active Deploys
+                    <Button
+                      type="secondary"
+                      className={classes.sortButton}
+                      onClick={this.handleClickDeploymentsTableHeader}
+                      data-qa-stackscript-active-deploy-header
+                    >
+                      Active Deploys
                   {currentFilterType !== 'label' && currentFilterType !== 'revision' &&
-                      this.renderIcon()
-                    }
-                  </Button>
-                </TableCell>
-                <TableCell
-                  className={classNames({
-                    [classes.tableHead]: true,
-                    [classes.revisions]: true,
-                  })}
-                  noWrap
-                  sortable
-                >
-                  <Button
-                    type="secondary"
-                    className={classes.sortButton}
-                    onClick={this.handleClickRevisionsTableHeader}
-                    data-qa-stackscript-revision-header
+                        this.renderIcon()
+                      }
+                    </Button>
+                  </TableCell>
+                  <TableCell
+                    className={classNames({
+                      [classes.tableHead]: true,
+                      [classes.revisions]: true,
+                    })}
+                    noWrap
+                    sortable
                   >
-                    Last Revision
+                    <Button
+                      type="secondary"
+                      className={classes.sortButton}
+                      onClick={this.handleClickRevisionsTableHeader}
+                      data-qa-stackscript-revision-header
+                    >
+                      Last Revision
                   {currentFilterType === 'revision' &&
-                      this.renderIcon()
-                    }
-                  </Button>
-                </TableCell>
-                <TableCell
-                  className={classes.tableHead}
-                  data-qa-stackscript-compatible-images
-                >
-                  Compatible Images
+                        this.renderIcon()
+                      }
+                    </Button>
+                  </TableCell>
+                  <TableCell
+                    className={classes.tableHead}
+                    data-qa-stackscript-compatible-images
+                  >
+                    Compatible Images
               </TableCell>
-                {!this.props.onSelect &&
-                  <TableCell className={classNames({
-                    [classes.tableHead]: true,
-                    [classes.stackscriptLabel]: true,
-                  })} />
-                }
-              </TableRow>
-            </TableHead>
-            <StackScriptsSection
-              isSorting={isSorting}
-              selectedId={this.state.selected}
-              data={this.state.listOfStackScripts}
-              publicImages={publicImages}
-              triggerDelete={this.handleOpenDialog}
-              currentUser={currentUser}
-              {...selectProps}
-            />
-          </Table>
+                  {!this.props.onSelect &&
+                    <TableCell className={classNames({
+                      [classes.tableHead]: true,
+                      [classes.stackscriptLabel]: true,
+                    })} />
+                  }
+                </TableRow>
+              </TableHead>
+              <StackScriptsSection
+                isSorting={isSorting}
+                selectedId={this.state.selected}
+                data={this.state.listOfStackScripts}
+                publicImages={publicImages}
+                triggerDelete={this.handleOpenDialog}
+                currentUser={currentUser}
+                {...selectProps}
+              />
+            </Table>
+          </React.Fragment>
         }
         {this.state.showMoreButtonVisible && !isSorting &&
           <Button
