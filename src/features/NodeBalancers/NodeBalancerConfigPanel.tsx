@@ -713,7 +713,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             <Divider style={{ marginTop: 24 }} />
                           </Grid>
                         }
-                        <Grid item xs={11} lg={2}>
+                        <Grid item xs={11} lg={4} xl={2}>
                           <TextField
                             label="Label"
                             value={node.label}
@@ -723,7 +723,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             data-qa-backend-ip-label
                           />
                         </Grid>
-                        <Grid item xs={11} lg={3}>
+                        <Grid item xs={11} lg={4} xl={3}>
                           <TextField
                             label="IP Address"
                             value={node.address}
@@ -733,7 +733,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             data-qa-backend-ip-address
                           />
                         </Grid>
-                        <Grid item xs={11} lg={2}>
+                        <Grid item xs={11} lg={4} xl={2}>
                           <TextField
                             type="number"
                             label="Port"
@@ -744,7 +744,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             data-qa-backend-ip-port
                           />
                         </Grid>
-                        <Grid item xs={11} lg={2}>
+                        <Grid item xs={11} lg={4} xl={2}>
                           <TextField
                             type="number"
                             label="Weight"
@@ -756,7 +756,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                           />
                         </Grid>
                         {forEdit &&
-                          <Grid item xs={11} lg={2}>
+                          <Grid item xs={11} lg={4} xl={2}>
                             <TextField
                               label="Mode"
                               value={node.mode}
