@@ -30,6 +30,7 @@ interface Props {
   linodeConfigs: Linode.Config[];
   linodeRegion: string;
   linodeMemory: number;
+  linodeTotalDisk: number;
   linodeStatus: string;
   linodeDisks: Linode.Disk[];
 }
@@ -44,6 +45,7 @@ const LinodeSettings: React.StatelessComponent<CombinedProps> = (props) => {
     linodeId,
     linodeLabel,
     linodeMemory,
+    linodeTotalDisk,
     linodeRegion,
     linodeStatus,
     linodeDisks,
@@ -74,6 +76,7 @@ const LinodeSettings: React.StatelessComponent<CombinedProps> = (props) => {
         linodeRegion={linodeRegion}
         linodeConfigs={linodeConfigs}
         linodeMemory={linodeMemory}
+        linodeTotalDisk={linodeTotalDisk}
         linodeStatus={linodeStatus}
       />
       <LinodeSettingsDeletePanel

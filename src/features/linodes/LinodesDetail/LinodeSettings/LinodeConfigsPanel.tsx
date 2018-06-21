@@ -150,6 +150,7 @@ interface Props {
   linodeId: number;
   linodeLabel: string;
   linodeMemory: number;
+  linodeTotalDisk: number;
   linodeRegion: string;
   linodeStatus: string;
 }
@@ -242,6 +243,13 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
     });
   }
 
+  calculateDiskFree = (): number => {
+    return this.props.linodeTotalDisk -
+      this.state.devices.disks.reduce((acc: number, disk: ExtendedDisk) => {
+        return acc + disk.size;
+      }, 0);
+  }
+
   render() {
     const { classes } = this.props;
     const { configDrawer } = this.state;
@@ -312,6 +320,8 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
           label={this.state.diskDrawer.fields.label}
           filesystem={this.state.diskDrawer.fields.filesystem}
           size={this.state.diskDrawer.fields.size}
+          totalSpaceMB={this.props.linodeTotalDisk}
+          freeSpaceMB={this.calculateDiskFree()}
           onChange={(key, value) => this.setDiskDrawer({
             fields: { ...this.state.diskDrawer.fields, [key]: value },
           })}
