@@ -32,7 +32,9 @@ type ClassNames =
   | 'reverseDNS'
   | 'type'
   | 'action'
+  | 'ipv4Container'
   | 'ipv4Title'
+  | 'ipv4TitleContainer'
   | 'ipv6Title';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
@@ -56,6 +58,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
       marginRight: theme.spacing.unit,
     },
   },
+  ipv4Container: {
+    [theme.breakpoints.down('sm')]: {
+      justifyContent: 'flex-start',
+      '& button': {
+        marginLeft: -14,
+      },
+    },
+  },
   ipv4Title: {
     marginTop: theme.spacing.unit,
     marginBottom: theme.spacing.unit * 2,
@@ -64,6 +74,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     marginTop: theme.spacing.unit * 4,
     marginBottom: theme.spacing.unit * 2,
   },
+  ipv4TitleContainer: {
+    flex: 1,
+    [theme.breakpoints.down('sm')]: {
+      flexBasis: '100%',
+    },
+  }
 });
 
 interface Props {
@@ -239,8 +255,9 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           >
           Networking
         </Typography>
-        <Grid container justify="space-between" alignItems="flex-end">
-          <Grid item>
+        <Grid container justify="space-between" alignItems="flex-end" className={classes.ipv4Container}>
+          <Grid item className={classes.ipv4TitleContainer}
+              data-qa-ipv4-subheading>
             <Typography
               variant="title"
               className={classes.ipv4Title}
