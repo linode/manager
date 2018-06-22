@@ -1,11 +1,9 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
 
-import { ListItemText } from 'material-ui/List';
-import { MenuItem, MenuItemProps } from 'material-ui/Menu';
-
-import { withStyles, StyleRulesCallback, WithStyles } from 'material-ui';
-
+import { withStyles, StyleRulesCallback, WithStyles } from '@material-ui/core/styles';
+import ListItemText from '@material-ui/core/ListItemText';
+import MenuItem, { MenuItemProps } from '@material-ui/core/MenuItem';
 
 type ClassNames = 'root'
   | 'error'
@@ -58,7 +56,7 @@ const EventListItem: React.StatelessComponent<FinalProps> = (props) => {
     error,
     warning,
     success,
-    ...rest,
+    ...rest
   } = props;
 
   return (

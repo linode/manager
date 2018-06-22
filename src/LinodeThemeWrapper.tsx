@@ -1,10 +1,8 @@
 import * as React from 'react';
-import createMuiTheme from 'material-ui/styles/createMuiTheme';
-import { MuiThemeProvider } from 'material-ui/styles';
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 
 import LinodeLightTheme from 'src/theme';
 import LinodeDarkTheme from 'src/darkTheme';
-
 import { init } from 'src/events';
 
 interface Props {

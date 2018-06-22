@@ -46,7 +46,6 @@ export const getAppTokens = () =>
   )
     .then(response => response.data);
 
-
 /** Personal Access Tokens */
 export const createPersonalAccessToken = (data: any) =>
   Request<Token>(

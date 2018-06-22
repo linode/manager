@@ -1,21 +1,16 @@
 import * as React from 'react';
 import { clamp, pathOr } from 'ramda';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-  Divider,
-} from 'material-ui';
-import Typography from 'material-ui/Typography';
-import RadioGroup from 'material-ui/Radio/RadioGroup';
-import FormControlLabel from 'material-ui/Form/FormControlLabel';
-import MenuItem from 'material-ui/Menu/MenuItem';
-import FormControl from 'material-ui/Form/FormControl';
-import FormLabel from 'material-ui/Form/FormLabel';
-import FormGroup from 'material-ui/Form/FormGroup';
-import Button from 'material-ui/Button';
+import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormLabel from '@material-ui/core/FormLabel';
+import MenuItem from 'src/components/MenuItem';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import Typography from '@material-ui/core/Typography';
 
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';

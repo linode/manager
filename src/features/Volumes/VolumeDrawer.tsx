@@ -1,42 +1,42 @@
 import * as React from 'react';
+
 import * as Rx from 'rxjs/Rx';
+
 import { path } from 'ramda';
-import { compose, bindActionCreators } from 'redux';
+
+import { bindActionCreators, compose } from 'redux';
+
 import { connect, Dispatch } from 'react-redux';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
-import Button from 'material-ui/Button';
-import { InputLabel } from 'material-ui/Input';
-import { MenuItem } from 'material-ui/Menu';
-import { FormControl, FormHelperText } from 'material-ui/Form';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-import TextField from 'src/components/TextField';
-import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
-import Drawer from 'src/components/Drawer';
-import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Select from 'src/components/Select';
-import Notice from 'src/components/Notice';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
-import { updateVolumes$ } from 'src/features/Volumes/Volumes';
+import Button from '@material-ui/core/Button';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+
+import { close } from 'src/store/reducers/volumeDrawer';
+
+import { clone, create, resize, update, VolumeRequestPayload } from 'src/services/volumes';
+
 import { dcDisplayNames } from 'src/constants';
 import { events$, resetEventsPolling } from 'src/events';
-import { close } from 'src/store/reducers/volumeDrawer';
-import {
-  create,
-  resize,
-  update,
-  clone,
-  VolumeRequestPayload,
-} from 'src/services/volumes';
-import { getLinodes, getLinodeConfigs } from 'src/services/linodes';
+import { getLinodeConfigs, getLinodes } from 'src/services/linodes';
+
+import { sendToast } from 'src/features/ToastNotifications/toasts';
+import { updateVolumes$ } from 'src/features/Volumes/Volumes';
+
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+
+import ActionsPanel from 'src/components/ActionsPanel';
+import Drawer from 'src/components/Drawer';
+import Notice from 'src/components/Notice';
+import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
+import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
+import Select from 'src/components/Select';
+import TextField from 'src/components/TextField';
 
 type ClassNames = 'root'
 |  'suffix'

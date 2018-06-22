@@ -7,7 +7,7 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
-} from 'material-ui';
+} from '@material-ui/core/styles';
 import { pathOr, compose } from 'ramda';
 
 import VolumesIcon from 'src/assets/addnewmenu/volume.svg';

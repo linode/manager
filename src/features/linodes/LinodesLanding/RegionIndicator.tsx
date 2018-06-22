@@ -4,7 +4,7 @@ import {
   Theme,
   WithStyles,
   StyleRulesCallback,
-} from 'material-ui/styles';
+} from '@material-ui/core/styles';
 
 import { formatRegion } from '../presentation';
 

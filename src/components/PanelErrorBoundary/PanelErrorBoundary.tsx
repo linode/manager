@@ -1,14 +1,8 @@
 import * as React from 'react';
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
 
+import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
 import ExpansionPanel, { ExpansionPanelProps } from 'src/components/ExpansionPanel';
 import ErrorState from 'src/components/ErrorState';
-
 
 export interface Props extends ExpansionPanelProps { }
 
@@ -50,5 +44,5 @@ export default (expansionPanelProps: Props) =>
 
     const styled = withStyles(styles, { withTheme: true });
 
-    return styled(PanelErrorBoundary);
+    return styled<any>(PanelErrorBoundary);
   };

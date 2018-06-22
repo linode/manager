@@ -1,12 +1,7 @@
 import * as React from 'react';
 
-import {
-  withStyles,
-  WithStyles,
-  StyleRulesCallback,
-  Theme,
-} from 'material-ui';
-import Table, { TableProps } from 'material-ui/Table';
+import { withStyles, WithStyles, StyleRulesCallback, Theme } from '@material-ui/core/styles';
+import Table, { TableProps } from '@material-ui/core/Table';
 
 type ClassNames = 'root';
 
@@ -40,4 +35,3 @@ class WrappedTable extends React.Component<CombinedProps> {
 }
 
 export default withStyles(styles, { withTheme: true })(WrappedTable);
-

@@ -4,7 +4,7 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
-} from 'material-ui';
+} from '@material-ui/core/styles';
 import { Line } from 'react-chartjs-2';
 import { clone } from 'ramda';
 import { setUpCharts } from 'src/utilities/charts';
@@ -164,5 +164,3 @@ class LineGraph extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles, { withTheme: true });
 
 export default styled(LineGraph);
-
-

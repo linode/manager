@@ -5,9 +5,9 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
-} from 'material-ui';
+} from '@material-ui/core/styles';
 
-import IconButton, { IconButtonProps } from 'material-ui/IconButton';
+import IconButton, { IconButtonProps } from '@material-ui/core/IconButton';
 
 type ClassNames = 'root' | 'destructive';
 

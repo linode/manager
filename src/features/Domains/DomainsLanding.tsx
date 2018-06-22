@@ -2,14 +2,14 @@ import * as React from 'react';
 import { compose, pathOr } from 'ramda';
 import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
 
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
-import Button from 'material-ui/Button';
-import Paper from 'material-ui/Paper';
-import TableBody from 'material-ui/Table/TableBody';
-import TableCell from 'material-ui/Table/TableCell';
-import TableHead from 'material-ui/Table/TableHead';
-import TableRow from 'material-ui/Table/TableRow';
-import Typography from 'material-ui/Typography';
+import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Typography from '@material-ui/core/Typography';
 
 import { getDomains, deleteDomain } from 'src/services/domains';
 import { sendToast } from 'src/features/ToastNotifications/toasts';

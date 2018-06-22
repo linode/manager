@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as moment from 'moment';
 import * as Raven from 'raven-js';
 
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
+import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
 import eventMessageGenerator from 'src/eventMessageGenerator';
 import UserNotificationListItem, {
   UserNotificationListItemProps,

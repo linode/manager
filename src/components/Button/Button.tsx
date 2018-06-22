@@ -1,13 +1,13 @@
 import * as React from 'react';
+
 import * as classNames from 'classnames';
-import { cond, propEq, always } from 'ramda';
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
-import Button, { ButtonProps } from 'material-ui/Button';
+
+import { always, cond, propEq } from 'ramda';
+
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+
+import Button, { ButtonProps } from '@material-ui/core/Button';
+
 import Reload from 'src/assets/icons/reload.svg';
 
 type ClassNames = 'root'
@@ -103,7 +103,7 @@ const WrappedButton: React.StatelessComponent<CombinedProps> = (props) => {
     destructive,
     type,
     className,
-    ...rest,
+    ...rest
   } = props;
 
   return React.createElement(

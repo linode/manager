@@ -4,9 +4,8 @@ import 'font-logos/assets/font-logos.css';
 import {
   MuiThemeProvider,
   createMuiTheme,
-} from 'material-ui/styles';
+} from '@material-ui/core/styles';
 import LinodeThemeLight from 'src/theme';
-
 
 const theme = createMuiTheme(LinodeThemeLight as Linode.TodoAny);
 theme.shadows = theme.shadows.fill('none');

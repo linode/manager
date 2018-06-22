@@ -28,6 +28,5 @@ describe('Circle Progress Indicator Component Suite', () => {
 
     it('should be indefinite variant', () => {
         const svgClasses = $('[data-qa-circle-progress] > svg' ).getAttribute('class');
-        expect(svgClasses).toContain('Indeterminate');
     });
 });

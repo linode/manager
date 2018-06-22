@@ -3,13 +3,15 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { compose, pathOr } from 'ramda';
 
-import { withStyles, Theme, WithStyles, StyleRulesCallback } from 'material-ui/styles';
-import Button from 'material-ui/Button';
-import Card, { CardHeader, CardContent, CardActions } from 'material-ui/Card';
-import Divider from 'material-ui/Divider';
-import Typography from 'material-ui/Typography';
-import Tooltip from 'material-ui/Tooltip';
-
+import { withStyles, Theme, WithStyles, StyleRulesCallback } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardHeader from '@material-ui/core/CardHeader';
+import Divider from '@material-ui/core/Divider';
+import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
 
 import Flag from 'src/assets/icons/flag.svg';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
@@ -201,7 +203,6 @@ class LinodeCard extends React.Component<CombinedProps> {
       </Grid>
     );
   }
-
 
   loadingState = () => {
     const { classes, linodeRecentEvent, linodeStatus } = this.props;

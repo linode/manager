@@ -6,14 +6,14 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
-} from 'material-ui';
-import Typography from 'material-ui/Typography';
-import Button from 'material-ui/Button';
+} from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
-import { allocatePublicIP } from 'src/services/linodes';
+import { allocatePublicIP, allocatePrivateIP } from 'src/services/linodes';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import substituteLink from 'src/utilities/substituteLink';
@@ -26,28 +26,36 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 interface Props {
   open: boolean;
+  forPublic: boolean;
   onClose: () => void;
   linodeID: number;
 }
 
 interface State {
+  forPublic: boolean;
   errors?: Linode.ApiFieldError[];
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class CreateIPv4Drawer extends React.Component<CombinedProps, State> {
-  state: State = {};
+  state: State = {
+    forPublic: this.props.forPublic,
+  };
 
   componentWillReceiveProps(nextProps: CombinedProps) {
     this.setState({
       errors: undefined,
+      forPublic: nextProps.forPublic,
     });
   }
 
   create() {
     const { onClose, linodeID } = this.props;
-    allocatePublicIP(linodeID)
+    const allocateFn = this.state.forPublic
+      ? allocatePublicIP
+      : allocatePrivateIP;
+    allocateFn(linodeID)
       .then((ipAddress) => {
         onClose();
       })
@@ -60,8 +68,20 @@ class CreateIPv4Drawer extends React.Component<CombinedProps, State> {
       });
   }
 
+  getCopy(): string {
+    const publicCopy = `Public IP addresses, over and above the one included
+      with each Linode, incur an additional monthly charge. If you need an
+      additional Public IP Address you must request one. Please open a support
+      ticket if you have not done so already.`;
+    const privateCopy = `Add a private IP address to your Linode. Data sent
+      explicitly to and from private IP addresses in the same data center does
+      not incur transfer quota usage. To ensure that the private IP is properly
+      configured once added, it's best to reboot your Linode.`;
+    return this.state.forPublic ? publicCopy : privateCopy;
+  }
+
   render() {
-    const { open, onClose } = this.props;
+    const { open, onClose, forPublic } = this.props;
     const { errors } = this.state;
 
     const hasErrorFor = getAPIErrorsFor({}, errors);
@@ -70,23 +90,21 @@ class CreateIPv4Drawer extends React.Component<CombinedProps, State> {
       <Drawer
         open={open}
         onClose={onClose}
-        title="Allocate Public IPv4 Address"
+        title={`Allocate ${forPublic ? 'Public' : 'Private'} IPv4 Address`}
       >
         <React.Fragment>
           <Typography variant="body1" data-qa-service-notice>
-            Public IP addresses, over and above the one included with each
-            Linode, incur an additional monthly charge. If you need an
-            additional Public IP Address you must request one. Please open a
-            support ticket if you have not done so already.
+            {this.getCopy()}
           </Typography>
           {hasErrorFor('none') &&
-            <Notice
-              style={{ marginTop: 36 }}
-              error
-              data-qa-notice
-            >
-              {substituteLink(hasErrorFor('none') || '', 'support ticket', '/support')}
-            </Notice>
+            <div style={{ marginTop: 24 }}>
+              <Notice
+                error
+                data-qa-notice
+              >
+                {substituteLink(hasErrorFor('none') || '', 'support ticket', '/support')}
+              </Notice>
+            </div>
           }
           <ActionsPanel style={{ marginTop: 16 }}>
             <Button

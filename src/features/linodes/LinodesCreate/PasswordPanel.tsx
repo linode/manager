@@ -1,8 +1,9 @@
 import * as React from 'react';
 
-import { withStyles, StyleRulesCallback, WithStyles, Theme } from 'material-ui';
+import { withStyles, StyleRulesCallback, WithStyles, Theme } from '@material-ui/core/styles';
 
-import Paper from 'material-ui/Paper';
+import Paper from '@material-ui/core/Paper';
+// import Typography from '@material-ui/core/Typography';
 
 import PasswordInput from '../../../components/PasswordInput';
 import Notice from '../../../components/Notice';
