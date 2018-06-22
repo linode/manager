@@ -294,7 +294,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
       selectedStackScriptUsername } = this.state;
 
     const { notice, getBackupsMonthlyPrice, regions, types, classes,
-      getRegionName, getTypeInfo } = this.props;
+      getRegionName, getTypeInfo, images } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
@@ -302,7 +302,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
 
     const regionName = getRegionName(selectedRegionID);
     const typeInfo = getTypeInfo(selectedTypeID);
-    const imageInfo = this.getImageInfo(this.props.images.find(
+    const imageInfo = this.getImageInfo(images.find(
       image => image.id === selectedImageID));
 
     return (
@@ -324,6 +324,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
             shrinkPanel={true}
             updateFor={[selectedStackScriptID, errors]}
             onSelect={this.handleSelectStackScript}
+            images={images}
           />
           {userDefinedFields && userDefinedFields.length > 0 &&
             <UserDefinedFieldsPanel
@@ -343,6 +344,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
               updateFor={[selectedImageID, compatibleImages, errors]}
               selectedImageID={selectedImageID}
               error={hasErrorFor('image')}
+              hideMyImages={true}
             />
             : <Paper
               className={classes.emptyImagePanel}>
