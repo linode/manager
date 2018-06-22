@@ -24,7 +24,7 @@ describe('Action Menu Suite', () => {
         });
     });
 
-    it('should close hide the menu items on select of an item', () => {
+    it('should hide the menu items on select of an item', () => {
         navigateToStory(component, childStories[0]);
         browser.click(actionMenu);
         browser.waitForVisible(actionMenuItem);
