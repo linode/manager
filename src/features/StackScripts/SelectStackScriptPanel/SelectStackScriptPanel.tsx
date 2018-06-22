@@ -212,6 +212,8 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
 
     const filteredUser = (isLinodeStackScripts) ? 'linode' : profile.username;
 
+    if (!this.mounted) { return; }
+
     request(
       filteredUser,
       { page, page_size: 50 },
