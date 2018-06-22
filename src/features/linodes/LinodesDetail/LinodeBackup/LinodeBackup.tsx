@@ -204,14 +204,8 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
 
   initWindows(timezone: string) {
     let windows = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22].map((hour) => {
-      const start = moment.utc({ hour })
-        .add(moment.duration({ hours: 1 }))
-        .tz(timezone);
-
-      const finish = moment.utc({ hour })
-        .add(moment.duration({ hours: 3 }))
-        .tz(timezone);
-
+      const start = moment.utc({ hour }).tz(timezone);
+      const finish = moment.utc({ hour }).add(moment.duration({ hours: 2 })).tz(timezone);
       return [
         `${start.format('HH:mm')} - ${finish.format('HH:mm')}`,
         `W${evenize(+moment.utc({ hour }).format('H'))}`,
