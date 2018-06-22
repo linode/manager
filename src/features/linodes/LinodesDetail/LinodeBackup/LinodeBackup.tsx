@@ -1,8 +1,9 @@
 import * as React from 'react';
 import * as moment from 'moment-timezone';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { path, sortBy, pathOr } from 'ramda';
+import { compose, path, sortBy, pathOr } from 'ramda';
 import { Subscription } from 'rxjs/Rx';
+import { connect } from 'react-redux';
 
 import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -100,6 +101,10 @@ interface Props {
   backupsSchedule: Linode.LinodeBackupSchedule;
 }
 
+interface ConnectedProps {
+  timezone: string;
+}
+
 interface PreloadedProps {
   backups: PromiseLoaderResponse<Linode.LinodeBackupsResponse>;
   type: PromiseLoaderResponse<Linode.LinodeType>;
@@ -124,7 +129,11 @@ interface State {
   cancelBackupsAlertOpen: boolean;
 }
 
-type CombinedProps = Props & PreloadedProps & WithStyles<ClassNames> & RouteComponentProps<{}>;
+type CombinedProps = Props
+  & PreloadedProps
+  & WithStyles<ClassNames>
+  & RouteComponentProps<{}>
+  & ConnectedProps;
 
 const typeMap = {
   auto: 'Automatic',
@@ -195,14 +204,8 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
 
   initWindows(timezone: string) {
     let windows = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22].map((hour) => {
-      const start = moment.utc({ hour })
-        .add(moment.duration({ hours: 1 }))
-        .tz(timezone);
-
-      const finish = moment.utc({ hour })
-        .add(moment.duration({ hours: 3 }))
-        .tz(timezone);
-
+      const start = moment.utc({ hour }).tz(timezone);
+      const finish = moment.utc({ hour }).add(moment.duration({ hours: 2 })).tz(timezone);
       return [
         `${start.format('HH:mm')} - ${finish.format('HH:mm')}`,
         `W${evenize(+moment.utc({ hour }).format('H'))}`,
@@ -220,7 +223,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     super(props);
 
     /* TODO: use the timezone from the user's profile */
-    this.windows = this.initWindows(moment.tz.guess());
+    this.windows = this.initWindows(this.props.timezone);
 
     this.days = [
       ['Choose a day', 'Scheduling'],
@@ -471,7 +474,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
             </InputLabel>
             <Select
               value={settingsForm.window}
-              onChange={e => this.setState({
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => this.setState({
                 settingsForm:
                   { ...settingsForm, window: e.target.value },
               })}
@@ -484,6 +487,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
                 </MenuItem>
               ))}
             </Select>
+            <FormHelperText>Windows displayed in {this.props.timezone}</FormHelperText>
           </FormControl>
 
           <FormControl>
@@ -492,7 +496,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
             </InputLabel>
             <Select
               value={settingsForm.day}
-              onChange={e => this.setState({
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => this.setState({
                 settingsForm:
                   { ...settingsForm, day: e.target.value },
               })}
@@ -637,4 +641,13 @@ const preloaded = PromiseLoader<Props>({
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default preloaded(styled(withRouter(LinodeBackup)));
+const connected = connect((state) => ({
+  timezone: pathOr(moment.tz.guess(), ['resources', 'profile', 'data', 'timezone'], state),
+}));
+
+export default compose(
+  preloaded,
+  styled as any,
+  withRouter,
+  connected,
+)(LinodeBackup);
