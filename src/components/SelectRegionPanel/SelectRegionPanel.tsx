@@ -6,7 +6,7 @@ import JP from 'flag-icon-css/flags/4x3/jp.svg';
 import UK from 'flag-icon-css/flags/4x3/gb.svg';
 import DE from 'flag-icon-css/flags/4x3/de.svg';
 
-import { withStyles, StyleRulesCallback, WithStyles, Theme } from 'material-ui';
+import { withStyles, StyleRulesCallback, WithStyles, Theme } from '@material-ui/core/styles';
 
 const flags = {
   us: () => <US width="32" height="24" viewBox="0 0 720 480" />,

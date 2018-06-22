@@ -1,16 +1,12 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  WithStyles,
-  Theme,
-} from 'material-ui';
-import Switch, { SwitchProps } from 'material-ui/Switch';
+import { withStyles, StyleRulesCallback, WithStyles, Theme } from '@material-ui/core/styles';
+import Switch, { SwitchProps } from '@material-ui/core/Switch';
 
 import ToggleOff from 'src/assets/icons/toggleOff.svg';
 import ToggleOn from 'src/assets/icons/toggleOn.svg';
+
 import './toggle.css';
 
 type CSSClasses =

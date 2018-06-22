@@ -4,7 +4,7 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
-} from 'material-ui';
+} from '@material-ui/core/styles';
 
 import { pathOr } from 'ramda';
 
@@ -302,4 +302,3 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles, { withTheme: true });
 
 export default styled(FromLinodeContent);
-

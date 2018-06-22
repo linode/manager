@@ -1,4 +1,4 @@
-import createBreakpoints from 'material-ui/styles/createBreakpoints';
+import createBreakpoints from '@material-ui/core/styles/createBreakpoints';
 
 const breakpoints = createBreakpoints({});
 
@@ -121,9 +121,6 @@ const LinodeTheme: Linode.Theme = {
         height: 20,
         borderRadius: 4,
         color: '#555',
-        '&:focus': {
-          outline: '1px dotted #999',
-        },
       },
       label: {
         paddingLeft: 4,
@@ -213,16 +210,19 @@ const LinodeTheme: Linode.Theme = {
           outline: '1px dotted #999',
           zIndex: 2,
         },
+        '&$expanded': {
+          minHeight: 48,
+        },
       },
       content: {
         flexGrow: 0,
         order: 2,
+        '&$expanded': {
+          margin: 0,
+        },
       },
       expanded: {
-        minHeight: 48,
-      },
-      contentExpanded: {
-        margin: '12px 0',
+        margin: 0,
       },
       expandIcon: {
         display: 'flex',
@@ -243,9 +243,9 @@ const LinodeTheme: Linode.Theme = {
         '& .border': {
           stroke: '#5F99EA !important',
         },
-      },
-      expandIconExpanded: {
-        transform: 'none',
+        '&$expanded': {
+          transform: 'none',
+        },
       },
       focused: {
         backgroundColor: '#fbfbfb',
@@ -271,24 +271,27 @@ const LinodeTheme: Linode.Theme = {
         fontWeight: 700,
         fontSize: '.9rem',
         marginBottom: 2,
-      },
-      focused: {
-        color: '#555',
-      },
-      error: {
-        color: '#555',
+        '&$focused': {
+          color: '#555',
+        },
+        '&$error': {
+          color: '#555',
+        },
       },
     },
     MuiFormHelperText: {
-      error: {
-        color: '#CA0813',
+      root: {
+        '&$error': {
+          color: '#CA0813',
+        },
       },
     },
     MuiIconButton: {
       root: {
         color: '#3B85D9',
-        '&:hover, &:focus': {
+        '&:hover': {
           color: '#5F99EA',
+          backgroundColor: 'transparent',
         },
       },
     },
@@ -344,6 +347,16 @@ const LinodeTheme: Linode.Theme = {
         'label + &': {
           marginTop: 0,
         },
+      },
+    },
+    MuiInputAdornment: {
+      root: {
+        '& p': {
+          fontSize: '.9rem',
+        },
+      },
+      positionEnd: {
+        marginRight: 10,
       },
     },
     MuiInputLabel: {
@@ -557,10 +570,9 @@ const LinodeTheme: Linode.Theme = {
         [breakpoints.up('md')]: {
           minWidth: 75,
         },
-      },
-      textColorPrimarySelected: {
-        color: '#32363C',
-        fontWeight: 700,
+        '&$selected': {
+          fontWeight: 700,
+        },
       },
       label: {
         [breakpoints.up('md')]: {

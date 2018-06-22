@@ -1,22 +1,22 @@
 import * as React from 'react';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+
 import { compose, lensPath, set } from 'ramda';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-  Typography,
-} from 'material-ui';
-import Button from 'material-ui/Button';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-import { deleteLinode } from 'src/services/linodes';
-import ExpansionPanel from 'src/components/ExpansionPanel';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import ExpansionPanel from 'src/components/ExpansionPanel';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
+
+import { deleteLinode } from 'src/services/linodes';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({

@@ -5,10 +5,9 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
-} from 'material-ui';
-import IconButton from 'material-ui/IconButton';
+} from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
 import NotificationIcon from '../../../assets/icons/bell.svg';
-
 
 type ClassNames = 'root' | 'icon' | 'new';
 

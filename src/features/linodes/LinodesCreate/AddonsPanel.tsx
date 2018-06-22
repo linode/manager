@@ -1,15 +1,13 @@
 import * as React from 'react';
 
-import { withStyles, StyleRulesCallback, WithStyles, Theme } from 'material-ui';
-
-import Paper from 'material-ui/Paper';
-import Typography from 'material-ui/Typography';
-import Grid from 'src/components/Grid';
-import Divider from 'material-ui/Divider';
+import { withStyles, StyleRulesCallback, WithStyles, Theme } from '@material-ui/core/styles';
+import Divider from '@material-ui/core/Divider';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 
 import CheckBox from 'src/components/CheckBox';
-import { FormControlLabel } from 'material-ui/Form';
-
+import Grid from 'src/components/Grid';
 import RenderGuard from 'src/components/RenderGuard';
 
 type ClassNames = 'root'

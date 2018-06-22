@@ -17,11 +17,10 @@ import {
 } from 'ramda';
 
 import Grid from 'src/components/Grid';
-import TabbedPanel from 'src/components/TabbedPanel';
-import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
-import SelectionCard from 'src/components/SelectionCard';
-
 import RenderGuard from 'src/components/RenderGuard';
+import SelectionCard from 'src/components/SelectionCard';
+import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
+import TabbedPanel from 'src/components/TabbedPanel';
 
 const distroIcons = {
   Arch: 'archlinux',
@@ -44,7 +43,7 @@ interface Props {
 
 const sortByVendor = sortBy(prop('vendor'));
 
-const sortCreatedDESC = compose(
+const sortCreatedDESC = compose<any, any, any>(
   reverse,
   sortBy(
     compose(

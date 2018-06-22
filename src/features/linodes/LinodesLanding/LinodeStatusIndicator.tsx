@@ -4,8 +4,8 @@ import {
   withStyles,
   StyleRulesCallback,
   WithStyles,
-} from 'material-ui';
-import Cached from 'material-ui-icons/Cached';
+} from '@material-ui/core/styles';
+import { Cached } from '@material-ui/icons';
 
 import transitionStatus from '../linodeTransitionStatus';
 

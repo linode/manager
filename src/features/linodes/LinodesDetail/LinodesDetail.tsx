@@ -1,48 +1,58 @@
 import * as React from 'react';
-import { pathEq, pathOr, filter, has, allPass } from 'ramda';
+
+import { allPass, filter, has, pathEq, pathOr } from 'ramda';
+
 import * as moment from 'moment';
 
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
-import { matchPath, Route, Switch, RouteComponentProps, Redirect, Link } from 'react-router-dom';
+import { Link, matchPath, Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
+
 import { Location } from 'history';
-import { Subscription, Observable } from 'rxjs/Rx';
-import AppBar from 'material-ui/AppBar';
-import Tabs, { Tab } from 'material-ui/Tabs';
-import IconButton from 'material-ui/IconButton';
-import KeyboardArrowLeft from 'material-ui-icons/KeyboardArrowLeft';
-import Button from 'material-ui/Button';
+
+import { Observable, Subscription  } from 'rxjs/Rx';
+
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+
+import AppBar from '@material-ui/core/AppBar';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
+
+import { KeyboardArrowLeft } from '@material-ui/icons';
 
 import notifications$ from 'src/notifications';
 import { getImage } from 'src/services/images';
 import {
   getLinode,
-  getLinodeVolumes,
-  getLinodeDisks,
-  renameLinode,
   getLinodeConfigs,
+  getLinodeDisks,
+  getLinodeVolumes,
+  renameLinode,
 } from 'src/services/linodes';
-import { events$ } from 'src/events';
 
-import Grid from 'src/components/Grid';
+import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawer';
+
+import { events$ } from 'src/events';
 import { newLinodeEvents } from 'src/features/linodes/events';
 import { weblishLaunch } from 'src/features/Weblish';
-import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawer';
-import EditableText from 'src/components/EditableText';
-import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
-import ProductNotification from 'src/components/ProductNotification';
 
-import LinodeSummary from './LinodeSummary';
-import LinodeVolumes from './LinodeVolumes';
+import EditableText from 'src/components/EditableText';
+import Grid from 'src/components/Grid';
+import ProductNotification from 'src/components/ProductNotification';
+import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
+import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+
+import LinodeBackup from './LinodeBackup';
 import LinodeNetworking from './LinodeNetworking';
+import LinodePowerControl from './LinodePowerControl';
 import LinodeRebuild from './LinodeRebuild';
 import LinodeRescue from './LinodeRescue';
 import LinodeResize from './LinodeResize';
-import LinodeBackup from './LinodeBackup';
 import LinodeSettings from './LinodeSettings';
-import LinodePowerControl from './LinodePowerControl';
+import LinodeSummary from './LinodeSummary';
+import LinodeVolumes from './LinodeVolumes';
 import reloadableWithRouter from './reloadableWithRouter';
-import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 interface Data {
   linode: Linode.Linode;
@@ -451,6 +461,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               linodeAlerts={linode.alerts}
               linodeConfigs={configs || []}
               linodeMemory={linode.specs.memory}
+              linodeTotalDisk={linode.specs.disk}
               linodeRegion={linode.region}
               linodeStatus={linode.status}
               linodeDisks={disks || []}

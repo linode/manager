@@ -1,20 +1,22 @@
 import * as React from 'react';
-import { withStyles, StyleRulesCallback, WithStyles, Theme, Divider, MenuItem } from 'material-ui';
-import Paper from 'material-ui/Paper';
-import Typography from 'material-ui/Typography';
-import Delete from 'material-ui-icons/Delete';
-import FormControlLabel from 'material-ui/Form/FormControlLabel';
+import { withStyles, StyleRulesCallback, WithStyles, Theme } from '@material-ui/core/styles';
+import { Delete } from '@material-ui/icons';
+import Divider from '@material-ui/core/Divider';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 
-import Button from 'src/components/Button';
-import { FormHelperText } from 'material-ui/Form';
+import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
-import IconButton from 'src/components/IconButton';
+import Button from 'src/components/Button';
+import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import Grid from 'src/components/Grid';
+import IconButton from 'src/components/IconButton';
+import MenuItem from 'src/components/MenuItem';
+import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Notice from 'src/components/Notice';
 
 type ClassNames = 'root'
   | 'inner'
@@ -94,10 +96,11 @@ interface Props {
   nodes: Linode.NodeBalancerConfigNode[];
   addNode: (nodeIdx?: number) => void;
   removeNode: (nodeIdx: number) => void;
-  onNodeLabelChange: (idx: number, value: string) => void;
-  onNodeAddressChange: (idx: number, value: string) => void;
-  onNodePortChange: (idx: number, value: string) => void;
-  onNodeWeightChange: (idx: number, value: string) => void;
+  onNodeLabelChange: (nodeIdx: number, value: string) => void;
+  onNodeAddressChange: (nodeIdx: number, value: string) => void;
+  onNodePortChange: (nodeIdx: number, value: string) => void;
+  onNodeWeightChange: (nodeIdx: number, value: string) => void;
+  onNodeModeChange?: (nodeIdx: number, value: string) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -161,40 +164,50 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
     this.props.onSslCertificateChange(e.target.value)
 
   onNodeLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const configIdx = e.currentTarget.getAttribute('data-config-idx');
-    if (configIdx) {
+    const nodeIdx = e.currentTarget.getAttribute('data-node-idx');
+    if (nodeIdx) {
       this.props.onNodeLabelChange(
-        +configIdx,
+        +nodeIdx,
         e.target.value,
       );
     }
   }
 
   onNodeAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const configIdx = e.currentTarget.getAttribute('data-config-idx');
-    if (configIdx) {
+    const nodeIdx = e.currentTarget.getAttribute('data-node-idx');
+    if (nodeIdx) {
       this.props.onNodeAddressChange(
-        +configIdx,
+        +nodeIdx,
         e.target.value,
       );
     }
   }
 
   onNodePortChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const configIdx = e.currentTarget.getAttribute('data-config-idx');
-    if (configIdx) {
+    const nodeIdx = e.currentTarget.getAttribute('data-node-idx');
+    if (nodeIdx) {
       this.props.onNodePortChange(
-        +configIdx,
+        +nodeIdx,
         e.target.value,
       );
     }
   }
 
   onNodeWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const configIdx = e.currentTarget.getAttribute('data-config-idx');
-    if (configIdx) {
+    const nodeIdx = e.currentTarget.getAttribute('data-node-idx');
+    if (nodeIdx) {
       this.props.onNodeWeightChange(
-        +configIdx,
+        +nodeIdx,
+        e.target.value,
+      );
+    }
+  }
+
+  onNodeModeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const nodeIdx = e.currentTarget.getAttribute('data-node-idx');
+    if (nodeIdx) {
+      this.props.onNodeModeChange!(
+        +nodeIdx,
         e.target.value,
       );
     }
@@ -705,6 +718,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       address: 'address',
                       weight: 'weight',
                       port: 'port',
+                      mode: 'mode',
                     }, node.errors);
 
                     return (
@@ -724,52 +738,84 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             <Divider style={{ marginTop: 24 }} />
                           </Grid>
                         }
-                        <Grid item xs={11} lg={2}>
+                        <Grid item xs={11} lg={4} xl={2}>
                           <TextField
                             label="Label"
                             value={node.label}
-                            inputProps={{ 'data-config-idx': idx }}
+                            inputProps={{ 'data-node-idx': idx }}
                             onChange={this.onNodeLabelChange}
                             errorText={hasErrorFor('label')}
                             errorGroup={`${configIdx}`}
                             data-qa-backend-ip-label
                           />
                         </Grid>
-                        <Grid item xs={11} lg={3}>
+                        <Grid item xs={11} lg={4} xl={3}>
                           <TextField
                             label="IP Address"
                             value={node.address}
-                            inputProps={{ 'data-config-idx': idx }}
+                            inputProps={{ 'data-node-idx': idx }}
                             onChange={this.onNodeAddressChange}
                             errorText={hasErrorFor('address')}
                             errorGroup={`${configIdx}`}
                             data-qa-backend-ip-address
                           />
                         </Grid>
-                        <Grid item xs={11} lg={2}>
+                        <Grid item xs={11} lg={4} xl={2}>
                           <TextField
                             type="number"
                             label="Port"
                             value={node.port}
-                            inputProps={{ 'data-config-idx': idx }}
+                            inputProps={{ 'data-node-idx': idx }}
                             onChange={this.onNodePortChange}
                             errorText={hasErrorFor('port')}
                             errorGroup={`${configIdx}`}
                             data-qa-backend-ip-port
                           />
                         </Grid>
-                        <Grid item xs={11} lg={2}>
+                        <Grid item xs={11} lg={4} xl={2}>
                           <TextField
                             type="number"
                             label="Weight"
                             value={node.weight}
-                            inputProps={{ 'data-config-idx': idx }}
+                            inputProps={{ 'data-node-idx': idx }}
                             onChange={this.onNodeWeightChange}
                             errorText={hasErrorFor('weight')}
                             errorGroup={`${configIdx}`}
                             data-qa-backend-ip-weight
                           />
                         </Grid>
+                        {forEdit &&
+                          <Grid item xs={11} lg={4} xl={2}>
+                            <TextField
+                              label="Mode"
+                              value={node.mode}
+                              select
+                              inputProps={{ 'data-node-idx': idx }}
+                              onChange={this.onNodeModeChange}
+                              errorText={hasErrorFor('mode')}
+                              data-qa-backend-ip-mode
+                            >
+                              <MenuItem
+                                value="accept"
+                                data-node-idx={idx}
+                              >
+                                Accept
+                              </MenuItem>
+                              <MenuItem
+                                value="reject"
+                                data-node-idx={idx}
+                              >
+                                Reject
+                              </MenuItem>
+                              <MenuItem
+                                value="drain"
+                                data-node-idx={idx}
+                              >
+                                Drain
+                              </MenuItem>
+                            </TextField>
+                          </Grid>
+                        }
                         <ActionsPanel className={classes.backendIPAction}>
                           {(forEdit || idx !== 0) &&
                             <IconButton

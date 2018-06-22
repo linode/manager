@@ -1,9 +1,9 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
 
-import { withStyles, Theme, WithStyles, StyleRulesCallback } from 'material-ui/styles';
-import Chip, { ChipProps } from 'material-ui/Chip';
-import Close from 'material-ui-icons/Close';
+import { withStyles, Theme, WithStyles, StyleRulesCallback } from '@material-ui/core/styles';
+import Chip, { ChipProps } from '@material-ui/core/Chip';
+import { Close } from '@material-ui/icons';
 
 type Variants =
   'white'
@@ -20,12 +20,8 @@ type CSSClasses = 'label' | 'root' | Variants;
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => {
   return ({
-    label: {
-
-    },
-    root: {
-
-    },
+    label: {},
+    root: {},
     white: {
       backgroundColor: 'white',
     },
@@ -74,7 +70,7 @@ const Tag: React.SFC<PropsWithStyles> = (props) => {
     classes,
     theme,
     className,
-    ...chipProps,
+    ...chipProps
   } = props;
 
   return <Chip

@@ -3,9 +3,9 @@ import {
   withStyles,
   StyleRulesCallback,
   WithStyles,
-} from 'material-ui';
-import Typography from 'material-ui/Typography';
-import Paper from 'material-ui/Paper';
+} from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
 
 import LineGraph from 'src/components/LineGraph';
 import { getNodeBalancerStats } from 'src/services/nodebalancers';
@@ -69,9 +69,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
       },
     },
     graphTitle: {
-      position: 'relative',
-      top: 6,
       marginRight: theme.spacing.unit * 2,
+      marginTop: theme.spacing.unit * 2,
     },
     graphControls: {
       margin: `${theme.spacing.unit * 2}px 0`,
@@ -227,4 +226,3 @@ class TablesPanel extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles, { withTheme: true });
 
 export default styled(TablesPanel);
-

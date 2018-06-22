@@ -1,20 +1,17 @@
 import * as React from 'react';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-  MenuItem,
-} from 'material-ui';
-import Button from 'material-ui/Button';
+import Button from '@material-ui/core/Button';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import MenuItem from '@material-ui/core/MenuItem';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-import Grid from 'src/components/Grid';
-import Drawer from 'src/components/Drawer';
-import TextField from 'src/components/TextField';
 import ActionsPanel from 'src/components/ActionsPanel';
+import Drawer from 'src/components/Drawer';
+import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
+import TextField from 'src/components/TextField';
+import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
 type ClassNames = 'root'
   | 'section'
@@ -39,6 +36,8 @@ interface Props extends EditableFields {
   mode: 'create' | 'edit';
   open: boolean;
   errors?: Linode.ApiFieldError[];
+  totalSpaceMB: number;
+  freeSpaceMB: number;
   onClose: () => void;
   onSubmit: () => void;
   onChange: (k: keyof EditableFields, v: any) => void;
@@ -110,15 +109,28 @@ class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
               }
             </TextField>}
 
-            {mode === 'create' && <TextField
-              label="Size"
-              type="number"
-              required
-              value={size}
-              onChange={e => onChange('size', e.target.value === '' ? '' : +e.target.value)}
-              errorText={sizeError}
-              errorGroup="linode-disk-drawer"
-            />}
+            {mode === 'create' && (
+              <React.Fragment>
+                <TextField
+                  label="Size"
+                  type="number"
+                  required
+                  value={size}
+                  onChange={e => onChange('size', e.target.value === '' ? '' : +e.target.value)}
+                  errorText={sizeError}
+                  errorGroup="linode-disk-drawer"
+                  InputProps={{
+                    endAdornment:
+                      <InputAdornment position="end">
+                        MB
+                      </InputAdornment>,
+                  }}
+                />
+                <FormHelperText style={{ marginTop: 8 }}>
+                  {this.props.freeSpaceMB} MB free of {this.props.totalSpaceMB} MB
+                </FormHelperText>
+              </React.Fragment>
+            )}
           </Grid>
           <Grid item className={classes.section}>
             <ActionsPanel>

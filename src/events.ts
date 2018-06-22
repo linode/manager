@@ -159,6 +159,5 @@ setInterval(
   (initialPollInterval / 2 - 1),
 );
 
-
 const isBeingDeleted = (events: Linode.Event[], id: number): boolean =>
   events.filter(event => event.id === id && event.action === 'linode_delete').length > 0;

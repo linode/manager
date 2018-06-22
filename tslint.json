@@ -11,15 +11,15 @@
     "callable-types": { "severity": "warning" },
     "class-name": { "severity": "warning" },
     "curly": { "severity": "warning" },
-    "interface-name": { "severity": "warning" },
+    "interface-name": false,
     "interface-over-type-literal": { "severity": "warning" },
     "jsdoc-format": { "severity": "warning" },
-    "jsx-boolean-value": { "severity": "warning" },
+    "jsx-boolean-value": false,
     "jsx-key": { "severity": "warning" },
     "jsx-no-lambda": { "severity": "warning" },
     "jsx-self-close": { "severity": "warning" },
     "max-classes-per-file": { "severity": "warning" },
-    "member-access": { "severity":"warning" },
+    "member-access": false,
     "member-ordering": false,
     "no-angle-bracket-type-assertion": { "severity": "warning" },
     "no-console": { "severity": "warning" },
@@ -33,6 +33,7 @@
     "only-arrow-functions": { "severity": "warning" },
     "ordered-imports": { "severity": "warning" },
     "prefer-for-of": {"severity": "warning"},
+    "trailing-comma": { "severity": "warning" },
     "variable-name": { "severity": "warning" }
   }
 }
