@@ -14,7 +14,6 @@ type ClassNames = 'root' | 'status';
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     padding: theme.spacing.unit * 3,
-    marginTop: theme.spacing.unit * 2,
     marginBottom: theme.spacing.unit * 2,
   },
   status: {
