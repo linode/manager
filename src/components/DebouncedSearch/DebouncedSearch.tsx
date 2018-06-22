@@ -19,24 +19,28 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 });
 
 interface Props {
-  onSearch: (value: string) => void;
+  onSearch: any;
 }
 
 interface State {
   query: string;
+  debouncedSearch: Function;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class DebouncedSearch extends React.Component<CombinedProps, State> {
-  state: State = {
-    query: ''
+
+  public state: State = {
+    query: '',
+    debouncedSearch: debounce(400, false, this.props.onSearch)
   };
 
   handleChangeQuery = (e: any) => {
     // const { onSearch } = this.props;
+    const { debouncedSearch } = this.state;
     this.setState({ query: e.target.value });
-    debounce(200, false, () => console.log('hello world'));
+    debouncedSearch(e.target.value);
   }
 
   render() {
@@ -45,9 +49,8 @@ class DebouncedSearch extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <TextField
           fullWidth
-          // autoFocus={}
           InputProps={{
-            placeholder: 'search for something',
+            placeholder: 'Search for StackScript by Label or Description',
             value: query,
             onChange: this.handleChangeQuery,
           }}
