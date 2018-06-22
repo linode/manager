@@ -1,22 +1,15 @@
 import * as React from 'react';
 import Axios from 'axios';
-import {
-  withRouter,
-  RouteComponentProps,
-} from 'react-router-dom';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { pathOr } from 'ramda';
 import * as md5 from 'md5';
 
-import {
-  withStyles,
-  WithStyles,
-  Theme,
-  StyleRules,
-} from 'material-ui/styles';
-import ButtonBase from 'material-ui/ButtonBase';
-import Menu, { MenuItem } from 'material-ui/Menu';
+import { withStyles, WithStyles, Theme, StyleRules } from '@material-ui/core/styles';
+import ButtonBase from '@material-ui/core/ButtonBase';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
 import UserIcon from 'src/assets/icons/user.svg';
 

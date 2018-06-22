@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { slice } from 'ramda';
 
 import PageButton from './PageButton';

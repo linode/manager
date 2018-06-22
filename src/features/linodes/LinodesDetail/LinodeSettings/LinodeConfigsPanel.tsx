@@ -20,13 +20,13 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
-} from 'material-ui';
-import Button from 'material-ui/Button';
-import Typography from 'material-ui/Typography';
-import TableBody from 'material-ui/Table/TableBody';
-import TableRow from 'material-ui/Table/TableRow';
-import TableHead from 'material-ui/Table/TableHead';
-import TableCell from 'material-ui/Table/TableCell';
+} from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import TableBody from '@material-ui/core/TableBody';
+import TableRow from '@material-ui/core/TableRow';
+import TableHead from '@material-ui/core/TableHead';
+import TableCell from '@material-ui/core/TableCell';
 
 import { events$ } from 'src/events';
 import {
@@ -150,6 +150,7 @@ interface Props {
   linodeId: number;
   linodeLabel: string;
   linodeMemory: number;
+  linodeTotalDisk: number;
   linodeRegion: string;
   linodeStatus: string;
 }
@@ -242,6 +243,13 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
     });
   }
 
+  calculateDiskFree = (): number => {
+    return this.props.linodeTotalDisk -
+      this.state.devices.disks.reduce((acc: number, disk: ExtendedDisk) => {
+        return acc + disk.size;
+      }, 0);
+  }
+
   render() {
     const { classes } = this.props;
     const { configDrawer } = this.state;
@@ -312,6 +320,8 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
           label={this.state.diskDrawer.fields.label}
           filesystem={this.state.diskDrawer.fields.filesystem}
           size={this.state.diskDrawer.fields.size}
+          totalSpaceMB={this.props.linodeTotalDisk}
+          freeSpaceMB={this.calculateDiskFree()}
           onChange={(key, value) => this.setDiskDrawer({
             fields: { ...this.state.diskDrawer.fields, [key]: value },
           })}
@@ -717,8 +727,7 @@ const preloaded = PromiseLoader<Props>({
         Linode.ResourcePage<Linode.Volume>,
         Linode.Volume[],
         ExtendedVolume[],
-        ExtendedVolume[]
-        >(
+        ExtendedVolume[]>(
           filter<ExtendedVolume>(allPass([
             volume => volume.region === linodeRegion,
             volume => volume.linode_id === null || volume.linode_id === linodeId,

@@ -6,10 +6,10 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
-} from 'material-ui';
-import InputLabel from 'material-ui/Input/InputLabel';
-import MenuItem from 'material-ui/Menu/MenuItem';
-import FormControl from 'material-ui/Form/FormControl';
+} from '@material-ui/core/styles';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from 'src/components/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
 
 import Select from 'src/components/Select';
 import { titlecase } from 'src/features/linodes/presentation';

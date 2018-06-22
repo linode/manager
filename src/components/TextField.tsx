@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { equals } from 'ramda';
-import TextField, { TextFieldProps } from 'material-ui/TextField';
+import TextField, { TextFieldProps } from '@material-ui/core/TextField';
 
 export interface Props extends TextFieldProps {
   errorText?: string;
@@ -12,6 +12,7 @@ export interface Props extends TextFieldProps {
 class LinodeTextField extends React.Component<Props> {
   shouldComponentUpdate(nextProps: Props) {
     return nextProps.value !== this.props.value
+      || nextProps.error !== this.props.error
       || nextProps.errorText !== this.props.errorText
       || nextProps.affirmative !== this.props.affirmative
       || nextProps.select !== this.props.select
@@ -28,7 +29,7 @@ class LinodeTextField extends React.Component<Props> {
       affirmative,
       fullWidth,
       children,
-      ...textFieldProps,
+      ...textFieldProps
     } = this.props;
 
     const finalProps: TextFieldProps = { ...textFieldProps };

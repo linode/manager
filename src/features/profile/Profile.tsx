@@ -8,9 +8,10 @@ import {
   Redirect,
 } from 'react-router-dom';
 
-import Typography from 'material-ui/Typography';
-import AppBar from 'material-ui/AppBar';
-import Tabs, { Tab } from 'material-ui/Tabs';
+import AppBar from '@material-ui/core/AppBar';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
+import Typography from '@material-ui/core/Typography';
 
 import APITokens from './APITokens';
 import OAuthClients from './OAuthClients';

@@ -3,12 +3,11 @@ import {
   withStyles,
   StyleRulesCallback,
   WithStyles,
-} from 'material-ui';
+} from '@material-ui/core/styles';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
-import Typography from 'material-ui/Typography';
-import Button, { ButtonProps } from 'material-ui/Button';
+import Typography from '@material-ui/core/Typography';
+import Button, { ButtonProps } from '@material-ui/core/Button';
 import Grid from 'src/components/Grid';
-
 
 type ClassNames = 'root'
   | 'title'

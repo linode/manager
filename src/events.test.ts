@@ -181,4 +181,3 @@ describe('events module', () => {
     });
   });
 });
-

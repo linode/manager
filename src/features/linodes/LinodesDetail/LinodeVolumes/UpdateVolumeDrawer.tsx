@@ -4,8 +4,8 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
-} from 'material-ui';
-import Button from 'material-ui/Button';
+} from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 
 import TextField from 'src/components/TextField';
 import Drawer from 'src/components/Drawer';

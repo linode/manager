@@ -1,17 +1,15 @@
 import * as React from 'react';
-import {
-  withStyles,
-  Theme,
-  WithStyles,
-  StyleRulesCallback,
-} from 'material-ui/styles';
-import Chip from 'material-ui/Chip';
-import Popover from 'material-ui/Popover';
+
+import { withStyles, Theme, WithStyles, StyleRulesCallback } from '@material-ui/core/styles';
+import Chip from '@material-ui/core/Chip';
+import Popover from '@material-ui/core/Popover';
 
 type CSSClasses =  'chip' | 'label' | 'popover';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   chip: {
+    position: 'relative',
+    top: -1,
     height: 20,
     marginLeft: theme.spacing.unit / 2,
     backgroundColor: theme.bg.lightBlue,
@@ -23,6 +21,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     },
     '&:focus': {
       backgroundColor: theme.bg.lightBlue,
+      outline: '1px dotted #999',
     },
   },
   label: {

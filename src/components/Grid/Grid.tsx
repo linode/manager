@@ -1,9 +1,11 @@
 import * as React from 'react';
-import Grid, { GridProps } from 'material-ui/Grid';
+import Grid, { GridProps } from '@material-ui/core/Grid';
 
 import RenderGuard from 'src/components/RenderGuard';
 
-const WrappedGrid: React.StatelessComponent<GridProps> = (props) => {
+export interface Props extends GridProps {}
+
+const WrappedGrid: React.StatelessComponent<Props> = (props) => {
   const updatedProps: GridProps = {
     ...props,
     /** re: https://github.com/mui-org/material-ui/pull/10768 */

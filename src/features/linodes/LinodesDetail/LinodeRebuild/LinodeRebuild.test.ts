@@ -159,5 +159,3 @@ describe('LinodeRebuild', () => {
     });
   });
 });
-
-

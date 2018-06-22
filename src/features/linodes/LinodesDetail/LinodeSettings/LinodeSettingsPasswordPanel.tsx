@@ -11,14 +11,12 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
-  withStyles,
-} from 'material-ui';
+} from '@material-ui/core/styles';
 
-import FormControl from 'material-ui/Form/FormControl';
-import InputLabel from 'material-ui/Input/InputLabel';
-import MenuItem from 'material-ui/Menu/MenuItem';
-
-import FormHelperText from 'material-ui/Form/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from 'src/components/MenuItem';
 
 import { changeLinodeDiskPassword } from 'src/services/linodes';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';

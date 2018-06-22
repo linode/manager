@@ -4,13 +4,12 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
-  FormControlLabel,
-} from 'material-ui';
-import Typography from 'material-ui/Typography';
+} from '@material-ui/core/styles';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Typography from '@material-ui/core/Typography';
 
 import Radio from 'src/components/Radio';
 import RenderGuard from 'src/components/RenderGuard';
-
 
 type ClassNames = 'root';
 

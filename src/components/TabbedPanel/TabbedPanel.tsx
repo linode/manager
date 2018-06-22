@@ -1,10 +1,11 @@
 import * as React from 'react';
 
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui/styles';
-import AppBar from 'material-ui/AppBar';
-import Tabs, { Tab } from 'material-ui/Tabs';
-import Typography from 'material-ui/Typography';
-import Paper from 'material-ui/Paper';
+import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Paper from '@material-ui/core/Paper';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
+import Typography from '@material-ui/core/Typography';
 
 import Notice from '../Notice';
 
@@ -92,4 +93,4 @@ class TabbedPanel extends React.Component<CombinedProps> {
   }
 }
 
-export default withStyles(styles)(TabbedPanel);
+export default withStyles(styles, { withTheme: true })(TabbedPanel) as React.ComponentType<Props>;

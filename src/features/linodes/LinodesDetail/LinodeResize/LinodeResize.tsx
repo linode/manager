@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { compose, pathOr } from 'ramda';
 
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
-import Paper from 'material-ui/Paper';
-import Typography from 'material-ui/Typography';
-import Button from 'material-ui/Button';
+import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 
 import SelectionCard from 'src/components/SelectionCard';
 import SelectPlanPanel, { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';

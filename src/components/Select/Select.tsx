@@ -1,17 +1,11 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
-import Select, { SelectProps } from 'material-ui/Select';
-import Input, { InputProps } from 'material-ui/Input';
-import { MenuProps } from 'material-ui/Menu';
-import Fade from 'material-ui/transitions/Fade';
-
+import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
+import { MenuProps } from '@material-ui/core/Menu';
+// import Fade from '@material-ui/core/Fade';
+import Input, { InputProps } from '@material-ui/core/Input';
+import Select, { SelectProps } from '@material-ui/core/Select';
 
 import HelpIcon from 'src/components/HelpIcon';
 
@@ -49,7 +43,7 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
   success,
   error,
   helpText,
-  ...props,
+  ...props
 }) => {
 
   const menuProps: Partial<MenuProps> = {
@@ -58,7 +52,8 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
     transformOrigin: { vertical: 'top', horizontal: 'left' },
     MenuListProps: { className: 'selectMenuList' },
     PaperProps: { className: 'selectMenuDropdown' },
-    transition: Fade,
+    /** @todo Had to disable transition. */
+    // transition: Fade,
   };
 
   const inputProps: InputProps = {
@@ -89,5 +84,4 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(SSelect);
-
+export default styled<CombinedProps>(SSelect);

@@ -21,5 +21,3 @@ export const getImage = (imageId: string) =>
     setMethod('GET'),
   )
     .then(response => response.data);
-
-

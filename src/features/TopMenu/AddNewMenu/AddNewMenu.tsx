@@ -3,22 +3,17 @@ import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { compose, bindActionCreators } from 'redux';
 import { connect, Dispatch } from 'react-redux';
 
-import {
-  withStyles,
-  WithStyles,
-  StyleRulesCallback,
-  Theme,
-} from 'material-ui';
-import Button from 'material-ui/Button';
-import Menu from 'material-ui/Menu';
-import KeyboardArrowDown from 'material-ui-icons/KeyboardArrowDown';
-import KeyboardArrowUp from 'material-ui-icons/KeyboardArrowUp';
+import { withStyles, WithStyles, StyleRulesCallback, Theme } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Menu from '@material-ui/core/Menu';
+import { KeyboardArrowDown, KeyboardArrowUp } from '@material-ui/icons';
+
+import { openForCreating } from 'src/store/reducers/volumeDrawer';
+import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
+import NodebalancerIcon from 'src/assets/addnewmenu/nodebalancer.svg';
+import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 
 import AddNewMenuItem, { MenuItem } from './AddNewMenuItem';
-import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
-import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
-import NodebalancerIcon from 'src/assets/addnewmenu/nodebalancer.svg';
-import { openForCreating } from 'src/store/reducers/volumeDrawer';
 
 type CSSClasses = 'wrapper' | 'menu' | 'button' | 'caret';
 

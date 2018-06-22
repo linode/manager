@@ -18,38 +18,34 @@ import {
   propEq,
   uniqBy,
 } from 'ramda';
-
 import { Observable, Subscription } from 'rxjs/Rx';
 
-import { withStyles, StyleRulesCallback, Theme } from 'material-ui/styles';
-import Hidden from 'material-ui/Hidden';
+import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Hidden from '@material-ui/core/Hidden';
+import Typography from '@material-ui/core/Typography';
 
+import { events$ } from 'src/events';
 import { getImages } from 'src/services/images';
 import { getLinodes, getLinode } from 'src/services/linodes';
-import { events$ } from 'src/events';
-import notifications$ from 'src/notifications';
-import { rebootLinode, powerOffLinode } from './powerActions';
-
 import { newLinodeEvents } from 'src/features/linodes/events';
-import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
+import ActionsPanel from 'src/components/ActionsPanel';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import LinodeConfigSelectionDrawer, { LinodeConfigSelectionDrawerCallback }
+  from 'src/features/LinodeConfigSelectionDrawer';
+import notifications$ from 'src/notifications';
 import PaginationFooter from 'src/components/PaginationFooter';
-import LinodeConfigSelectionDrawer, {
-  LinodeConfigSelectionDrawerCallback,
-} from 'src/features/LinodeConfigSelectionDrawer';
-import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import ProductNotification from 'src/components/ProductNotification';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'material-ui/Button';
+import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
+import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 
+import { rebootLinode, powerOffLinode } from './powerActions';
 import LinodesListView from './LinodesListView';
 import LinodesGridView from './LinodesGridView';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
 import ToggleBox from './ToggleBox';
-
-import { Typography, WithStyles } from 'material-ui';
 
 type ClassNames = 'root' | 'title';
 
@@ -296,7 +292,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     this.getLinodes(Math.min(page), this.state.pageSize);
   }
 
-  handlePageSizeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  handlePageSizeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     this.getLinodes(this.state.page, parseInt(event.target.value, 0));
   }
 
@@ -357,7 +353,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
         <ErrorState errorText="Error loading data" />
       );
     }
-
 
     const displayGrid: 'grid' | 'list' = getDisplayFormat({ hash, length: linodes.length });
 

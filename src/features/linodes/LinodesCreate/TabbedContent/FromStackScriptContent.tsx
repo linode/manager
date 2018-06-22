@@ -1,29 +1,26 @@
 import * as React from 'react';
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
-import Paper from 'material-ui/Paper';
-import Typography from 'material-ui/Typography';
 
-import { pathOr, assocPath } from 'ramda';
+import { assocPath, pathOr } from 'ramda';
+
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import { Sticky, StickyProps } from 'react-sticky';
 
-import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
-import SelectImagePanel from '../SelectImagePanel';
-import PasswordPanel from '../PasswordPanel';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+
 import AddonsPanel from '../AddonsPanel';
+import PasswordPanel from '../PasswordPanel';
+import SelectImagePanel from '../SelectImagePanel';
+import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
 
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
+import CheckoutBar from 'src/components/CheckoutBar';
+import Grid from 'src/components/Grid';
+import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
 import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
-import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
-import Grid from 'src/components/Grid';
-import CheckoutBar from 'src/components/CheckoutBar';
 
 import {
   allocatePrivateIP,
@@ -35,6 +32,7 @@ import { resetEventsPolling } from 'src/events';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+
 
 type ClassNames = 'root'
   | 'main'
@@ -453,4 +451,3 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
 const styled = withStyles(styles, { withTheme: true });
 
 export default styled(FromStackScriptContent);
-

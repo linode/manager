@@ -1,25 +1,17 @@
 import * as React from 'react';
-import {
-  withRouter,
-  RouteComponentProps,
-  Link,
-} from 'react-router-dom';
+import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
 import { compose } from 'redux';
 
-import {
-  withStyles,
-  WithStyles,
-  StyleRules,
-  Theme,
-} from 'material-ui/styles';
+import { withStyles, WithStyles, StyleRules, Theme } from '@material-ui/core/styles';
+import Divider from '@material-ui/core/Divider';
 import Grid from 'src/components/Grid';
-import { ListItem, ListItemText } from 'material-ui/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 
-import Toggle from 'src/components/Toggle';
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
 import Logo from 'src/assets/logo/logo-text.svg';
 import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
-import { Divider } from 'material-ui';
+import Toggle from 'src/components/Toggle';
 
 type PrimaryLink = {
   display: string,
@@ -133,7 +125,8 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   toggle: {
     '& > span:last-child': {
       backgroundColor: '#f4f4f4 !important',
-      opacity: '0.38 !important',
+      /** @todo Had to remove !important */
+      opacity: 0.38,
     },
     '&.darkTheme .square': {
       fill: '#444 !important',

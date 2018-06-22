@@ -3,9 +3,8 @@ import { storiesOf } from '@storybook/react';
 
 import Button from 'src/components/Button';
 
-import { default as MDivider } from 'material-ui/Divider';
-import KeyboardArrowDown from 'material-ui-icons/KeyboardArrowDown';
-import KeyboardArrowUp from 'material-ui-icons/KeyboardArrowUp';
+import { default as MDivider } from '@material-ui/core/Divider';
+import { KeyboardArrowUp, KeyboardArrowDown } from '@material-ui/icons';
 
 import ThemeDecorator from '../../utilities/storybookDecorators';
 

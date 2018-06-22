@@ -4,10 +4,9 @@ import {
   WithStyles,
   StyleRulesCallback,
   Theme,
-} from 'material-ui';
+} from '@material-ui/core/styles';
 
-import Typography from 'material-ui/Typography';
-
+import Typography from '@material-ui/core/Typography';
 
 export interface Doc {
   title: string;

@@ -15,10 +15,10 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
-} from 'material-ui';
-import Paper from 'material-ui/Paper';
-import Typography from 'material-ui/Typography';
-import Button from 'material-ui/Button';
+} from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 import {
   rescueLinode,
   getLinodeDisks,
@@ -76,8 +76,6 @@ interface State {
 }
 
 type CombinedProps = Props & PromiseLoaderProps & WithStyles<ClassNames>;
-
-
 
 export class LinodeRescue extends React.Component<CombinedProps, State> {
   constructor(props: CombinedProps) {
@@ -220,8 +218,7 @@ export const preloaded = PromiseLoader({
       compose<
         Linode.ResourcePage<Linode.Volume>,
         Linode.Volume[],
-        ExtendedVolume[]
-        >(
+        ExtendedVolume[]>(
           map(volume => assoc('_id', `volume-${volume.id}`, volume)),
           prop('data'),
       ),
@@ -233,4 +230,3 @@ export default compose<any, any, any, any>(
   SectionErrorBoundary,
   styled,
 )(LinodeRescue);
-

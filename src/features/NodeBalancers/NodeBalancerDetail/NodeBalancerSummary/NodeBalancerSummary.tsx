@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
+import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
 
 import SummaryPanel from './SummaryPanel';
 import TablesPanel from './TablesPanel';
 import NodeBalancerCreationErrors, {
   ConfigOrNodeErrorResponse,
 } from './NodeBalancerCreationErrors';
-
 
 type ClassNames = 'root';
 

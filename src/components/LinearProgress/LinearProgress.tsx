@@ -1,12 +1,7 @@
 import * as React from 'react';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  WithStyles,
-  Theme,
-} from 'material-ui';
-import LinearProgress from 'material-ui/Progress/LinearProgress';
+import { withStyles, StyleRulesCallback, WithStyles, Theme } from '@material-ui/core/styles';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 type CSSClasses = 'root';
 

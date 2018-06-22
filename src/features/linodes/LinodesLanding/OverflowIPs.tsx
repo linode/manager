@@ -4,9 +4,9 @@ import {
   Theme,
   WithStyles,
   StyleRulesCallback,
-} from 'material-ui/styles';
-import Chip from 'material-ui/Chip';
-import Popover from 'material-ui/Popover';
+} from '@material-ui/core/styles';
+import Chip from '@material-ui/core/Chip';
+import Popover from '@material-ui/core/Popover';
 
 import IPAddress from './IPAddress';
 
