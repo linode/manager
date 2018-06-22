@@ -210,7 +210,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
       },
     },
     {
-      title: 'Clone From Existing',
+      title: 'Clone from Existing',
       render: () => {
         return (
           <FromLinodeContent
