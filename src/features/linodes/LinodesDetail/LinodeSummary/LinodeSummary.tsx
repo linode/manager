@@ -1,23 +1,21 @@
 import * as React from 'react';
 import * as moment from 'moment';
-// import * as Raven from 'raven-js';
 
-import { withStyles, StyleRulesCallback, WithStyles, Typography } from 'material-ui';
-import { InputLabel } from 'material-ui/Input';
-import { FormControl } from 'material-ui/Form';
-import { MenuItem } from 'material-ui/Menu';
+import { withStyles, StyleRulesCallback, WithStyles } from '@material-ui/core/styles';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import Typography from '@material-ui/core/Typography';
 
-// import { sendToast } from 'src/features/ToastNotifications/toasts';
+import { getLinodeStats } from 'src/services/linodes';
 import { setUpCharts } from 'src/utilities/charts';
-import transitionStatus from 'src/features/linodes/linodeTransitionStatus';
-
 import ExpansionPanel from 'src/components/ExpansionPanel';
-import Select from 'src/components/Select';
 import LineGraph from 'src/components/LineGraph';
+import Select from 'src/components/Select';
+import transitionStatus from 'src/features/linodes/linodeTransitionStatus';
 
 import LinodeBusyStatus from './LinodeBusyStatus';
 import SummaryPanel from './SummaryPanel';
-import { getLinodeStats } from 'src/services/linodes';
 
 setUpCharts();
 
@@ -77,8 +75,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
       },
     },
     graphTitle: {
-      position: 'relative',
-      top: 6,
       marginRight: theme.spacing.unit * 2,
     },
     graphControls: {
@@ -214,7 +210,7 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
     window.clearInterval(this.statsInterval as number);
   }
 
-  handleChartRangeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  handleChartRangeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
     this.setState({ rangeSelection: value }, () => {
       this.getStats();
@@ -237,7 +233,7 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
               <Typography variant="title" className={classes.graphTitle}>
                 Graphs
               </Typography>
-              <FormControl style={{ martginTop: 0 }}>
+              <FormControl style={{ marginTop: 0 }}>
                 <InputLabel htmlFor="chartRange" disableAnimation hidden>
                   Select Time Range
                 </InputLabel>

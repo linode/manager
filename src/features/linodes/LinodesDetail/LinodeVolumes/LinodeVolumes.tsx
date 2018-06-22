@@ -7,13 +7,13 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
-} from 'material-ui';
-import Paper from 'material-ui/Paper';
-import Typography from 'material-ui/Typography';
-import TableHead from 'material-ui/Table/TableHead';
-import TableBody from 'material-ui/Table/TableBody';
-import TableRow from 'material-ui/Table/TableRow';
-import TableCell from 'material-ui/Table/TableCell';
+} from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import TableHead from '@material-ui/core/TableHead';
+import TableBody from '@material-ui/core/TableBody';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
 
 import {
   getVolumes,
@@ -577,7 +577,6 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
         size,
       },
     } = this.state;
-
 
     if (!id) {
       return;

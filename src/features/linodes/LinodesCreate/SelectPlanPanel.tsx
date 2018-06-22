@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { isEmpty } from 'ramda';
 
-import { withStyles, StyleRulesCallback, WithStyles, Theme } from 'material-ui';
+import { withStyles, StyleRulesCallback, WithStyles, Theme } from '@material-ui/core/styles';
 
 import Grid from 'src/components/Grid';
 
@@ -40,7 +40,6 @@ const getStandard = (types: ExtendedType[]) =>
 
 const getHighMem = (types: ExtendedType[]) =>
   types.filter(t => /highmem/.test(t.class));
-
 
 class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNames>> {
   renderCard = (type: ExtendedType) => {

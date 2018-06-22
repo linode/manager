@@ -6,7 +6,7 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
-} from 'material-ui';
+} from '@material-ui/core/styles';
 
 import Notice from 'src/components/Notice';
 

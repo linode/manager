@@ -1,16 +1,11 @@
 import * as React from 'react';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
-import Button from 'material-ui/Button';
+import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 import Grid from 'src/components/Grid';
-import Typography from 'material-ui/Typography';
-import Snackbar, { SnackbarProps } from 'material-ui/Snackbar';
-import Close from 'material-ui-icons/Close';
+import Typography from '@material-ui/core/Typography';
+import Snackbar, { SnackbarProps } from '@material-ui/core/Snackbar';
+import { Close } from '@material-ui/icons';
 
 type ClassNames = 'root'
   | 'content'
@@ -67,7 +62,7 @@ const BetaNotification: React.StatelessComponent<CombinedProps> = (props) => {
 
   return (<Snackbar
     {...rest}
-    SnackbarContentProps={{
+    ContentProps={{
       className: classes.root,
     }}
     message={

@@ -1,12 +1,8 @@
 import * as React from 'react';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  WithStyles,
-  Theme,
-} from 'material-ui';
-import CircularProgress from 'material-ui/Progress/CircularProgress';
+import { StyleRulesCallback, Theme, withStyles, WithStyles  } from '@material-ui/core/styles';
+
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 type CSSClasses = 'root'
 | 'top'
@@ -62,7 +58,7 @@ const CircleProgressComponent = (props: Props & WithStyles<CSSClasses>) => {
       </div>
       <CircularProgress
         className={classes.progress}
-        size={150}
+        size={124}
         value={value}
         variant={variant}
         thickness={2}

@@ -90,7 +90,6 @@ export const getNodeBalancerConfigNodes = (
   )
     .then(response => response.data);
 
-
 export const createNodeBalancerConfigSchema = Joi.object({
   algorithm: Joi.string(),
   check_attempts: Joi.number(),

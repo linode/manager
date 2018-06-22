@@ -1,3 +1,4 @@
+
 import * as React from 'react';
 import { connect } from 'react-redux';
 import * as moment from 'moment';
@@ -5,17 +6,11 @@ import Downshift, { DownshiftState, StateChangeOptions } from 'downshift';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { compose, pathOr } from 'ramda';
 
-import {
-  withStyles,
-  WithStyles,
-  Theme,
-  StyleRules,
-} from 'material-ui/styles';
-import Paper from 'material-ui/Paper';
-import { MenuItem } from 'material-ui/Menu';
-import IconButton from 'material-ui/IconButton';
-import Close from 'material-ui-icons/Close';
-import Search from 'material-ui-icons/Search';
+import { withStyles, WithStyles, Theme, StyleRules } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import MenuItem from '@material-ui/core/MenuItem';
+import IconButton from '@material-ui/core/IconButton';
+import { Close, Search } from '@material-ui/icons';
 
 import { typeLabelLong, displayType } from 'src/features/linodes/presentation';
 import { getLinodesPage } from 'src/services/linodes';
@@ -59,7 +54,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
       backgroundColor: 'white',
       position: 'absolute',
       width: 'calc(100% - 118px)',
-      zIndex: '2',
+      zIndex: 2,
       left: 0,
       visibility: 'hidden',
       opacity: 0,

@@ -25,7 +25,6 @@ const wrapper = <T extends {}>(Component: React.ComponentType) => {
     }
   }
 
-
   return SectionErrorBoundary;
 };
 

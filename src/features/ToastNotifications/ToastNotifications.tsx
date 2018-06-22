@@ -1,24 +1,15 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
 import { Subscription } from 'rxjs/Rx';
-import {
-  lensPath,
-  over,
-  set,
-  tail,
-} from 'ramda';
+import { lensPath, over, set, tail } from 'ramda';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  WithStyles,
-} from 'material-ui';
+import { withStyles, StyleRulesCallback, WithStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Snackbar from '@material-ui/core/Snackbar';
+import Typography from '@material-ui/core/Typography';
+import { Close } from '@material-ui/icons';
 
-import Snackbar from 'material-ui/Snackbar';
-import Button from 'material-ui/Button';
 import Grid from 'src/components/Grid';
-import Close from 'material-ui-icons/Close';
-import Typography from 'material-ui/Typography';
 
 import toasts$, { Toast } from './toasts';
 
@@ -203,7 +194,7 @@ class Notifier extends React.Component<CombinedProps, State> {
               },
             );
           }}
-          SnackbarContentProps={{
+          ContentProps={{
             className:
               classNames({
                 [classes.error]: toast.level === 'error',

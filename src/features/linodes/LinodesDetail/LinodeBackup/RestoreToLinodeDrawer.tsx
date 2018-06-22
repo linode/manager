@@ -6,13 +6,13 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
-} from 'material-ui';
-import Button from 'material-ui/Button';
-import InputLabel from 'material-ui/Input/InputLabel';
-import MenuItem from 'material-ui/Menu/MenuItem';
-import FormControl from 'material-ui/Form/FormControl';
-import FormHelperText from 'material-ui/Form/FormHelperText';
-import { FormControlLabel } from 'material-ui/Form';
+} from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from 'src/components/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import Notice from 'src/components/Notice';
 import { getLinodes, restoreBackup } from 'src/services/linodes';

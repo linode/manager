@@ -5,12 +5,11 @@ import {
   withStyles,
   StyleRulesCallback,
   WithStyles,
-} from 'material-ui';
-import Typography from 'material-ui/Typography';
+} from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import { ErrorOutline } from '@material-ui/icons';
+
 import Grid from 'src/components/Grid';
-
-import ErrorOutline from 'material-ui-icons/ErrorOutline';
-
 
 interface Props {
   errorText: string;

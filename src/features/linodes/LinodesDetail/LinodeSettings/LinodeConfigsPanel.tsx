@@ -20,13 +20,13 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
-} from 'material-ui';
-import Button from 'material-ui/Button';
-import Typography from 'material-ui/Typography';
-import TableBody from 'material-ui/Table/TableBody';
-import TableRow from 'material-ui/Table/TableRow';
-import TableHead from 'material-ui/Table/TableHead';
-import TableCell from 'material-ui/Table/TableCell';
+} from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import TableBody from '@material-ui/core/TableBody';
+import TableRow from '@material-ui/core/TableRow';
+import TableHead from '@material-ui/core/TableHead';
+import TableCell from '@material-ui/core/TableCell';
 
 import { events$ } from 'src/events';
 import {
@@ -727,8 +727,7 @@ const preloaded = PromiseLoader<Props>({
         Linode.ResourcePage<Linode.Volume>,
         Linode.Volume[],
         ExtendedVolume[],
-        ExtendedVolume[]
-        >(
+        ExtendedVolume[]>(
           filter<ExtendedVolume>(allPass([
             volume => volume.region === linodeRegion,
             volume => volume.linode_id === null || volume.linode_id === linodeId,

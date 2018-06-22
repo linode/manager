@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import FormControlLabel from 'material-ui/Form/FormControlLabel';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Grid from 'src/components/Grid';
 import RenderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
@@ -13,7 +13,7 @@ import {
     Typography,
     WithStyles,
     withStyles,
-  } from 'material-ui';
+  } from '@material-ui/core';
 
 type ClassNames = 'root'
   | 'switch'

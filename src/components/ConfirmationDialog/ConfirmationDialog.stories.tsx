@@ -2,7 +2,7 @@ import * as React from 'react';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 
-import Button from 'material-ui/Button';
+import Button from '@material-ui/core/Button';
 
 import ThemeDecorator from '../../utilities/storybookDecorators';
 import ConfirmationDialog from './ConfirmationDialog';

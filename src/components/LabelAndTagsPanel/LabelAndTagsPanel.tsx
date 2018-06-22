@@ -1,9 +1,9 @@
 import * as React from 'react';
 
-import { withStyles, StyleRulesCallback, WithStyles, Theme } from 'material-ui';
+import { withStyles, StyleRulesCallback, WithStyles, Theme } from '@material-ui/core/styles';
 
-import Paper from 'material-ui/Paper';
-import Typography from 'material-ui/Typography';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 import Notice from 'src/components/Notice';
@@ -65,7 +65,7 @@ class InfoPanel extends React.Component<CombinedProps> {
       <React.Fragment>
         {!!isForm // will either be a form that will save the settings or a card
           ? <Paper style={{ padding: 24 }}>
-              <Grid xs={12}>
+              <Grid item xs={12}>
                 {isForm.success &&
                   <Notice
                     success

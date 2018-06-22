@@ -4,22 +4,18 @@ import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { path, sortBy, pathOr } from 'ramda';
 import { Subscription } from 'rxjs/Rx';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
-import Button from 'material-ui/Button';
-import { FormControl, FormHelperText } from 'material-ui/Form';
-import { InputLabel } from 'material-ui/Input';
-import { MenuItem } from 'material-ui/Menu';
-import Paper from 'material-ui/Paper';
-import TableHead from 'material-ui/Table/TableHead';
-import TableBody from 'material-ui/Table/TableBody';
-import TableRow from 'material-ui/Table/TableRow';
-import TableCell from 'material-ui/Table/TableCell';
-import Typography from 'material-ui/Typography';
+import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import Paper from '@material-ui/core/Paper';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Typography from '@material-ui/core/Typography';
 
 import {
   getLinodeBackups,
@@ -29,7 +25,6 @@ import {
   cancelBackups,
   getType,
 } from 'src/services/linodes';
-
 import Table from 'src/components/Table';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
@@ -239,7 +234,6 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     ];
   }
 
-
   enableBackups() {
     const { linodeID } = this.props;
     enableBackups(linodeID)
@@ -265,7 +259,6 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
       });
     this.setState({ cancelBackupsAlertOpen: false });
   }
-
 
   takeSnapshot = () => {
     const { linodeID } = this.props;

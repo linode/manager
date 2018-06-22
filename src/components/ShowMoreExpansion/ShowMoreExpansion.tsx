@@ -1,17 +1,9 @@
 import * as React from 'react';
 
-import {
-  withStyles,
-  WithStyles,
-  StyleRulesCallback,
-  Theme,
-} from 'material-ui';
-import Collapse from 'material-ui/transitions/Collapse';
-
-import { ListItem } from 'material-ui/List';
-import KeyboardArrowRight from 'material-ui-icons/KeyboardArrowRight';
-
-
+import { withStyles, WithStyles, StyleRulesCallback, Theme } from '@material-ui/core/styles';
+import Collapse from '@material-ui/core/Collapse';
+import ListItem from '@material-ui/core/ListItem';
+import { KeyboardArrowRight } from '@material-ui/icons';
 
 type CSSClasses = 'root' | 'header' | 'caret';
 

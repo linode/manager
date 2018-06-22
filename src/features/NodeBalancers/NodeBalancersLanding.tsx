@@ -3,12 +3,13 @@ import { compose, path } from 'ramda';
 import * as Promise from 'bluebird';
 import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
 
-import { withStyles, StyleRulesCallback, Theme, WithStyles, Typography } from 'material-ui';
-import Paper from 'material-ui/Paper';
-import TableBody from 'material-ui/Table/TableBody';
-import TableCell from 'material-ui/Table/TableCell';
-import TableHead from 'material-ui/Table/TableHead';
-import TableRow from 'material-ui/Table/TableRow';
+import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Typography from '@material-ui/core/Typography';
 
 import {
   getNodeBalancers, getNodeBalancerConfigs,
