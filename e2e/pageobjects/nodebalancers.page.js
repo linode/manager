@@ -42,6 +42,7 @@ class NodeBalancers extends Page {
     get backendIps() { return $$('[data-qa-backend-ip]'); }
     get backendIpLabel() { return $('[data-qa-backend-ip-label] input'); }
     get backendIpAddress() { return $('[data-qa-backend-ip-address] input'); }
+    get backendIpPort() { return $('[data-qa-backend-ip-port] input'); }
     get backendIpWeight() { return $('[data-qa-backend-ip-weight] input'); }
     get backendIpMode() { return $('[data-qa-backend-ip-mode]'); }
 
@@ -63,21 +64,16 @@ class NodeBalancers extends Page {
             expect(this.regionTabs.length).toBeGreaterThan(0);
             expect(this.regionCards.length).toBeGreaterThan(0);
 
-            expect(this.connectionThrottleSection.isVisible()).toBe(true);
-            expect(this.connectionThrottle.isVisible()).toBe(true);
+            // expect(this.connectionThrottleSection.isVisible()).toBe(true);
+            // expect(this.connectionThrottle.isVisible()).toBe(true);
             expect(this.settingsSection.isVisible()).toBe(true);
             expect(this.port.isVisible()).toBe(true);
             expect(this.protocolSelect.isVisible()).toBe(true);
-            expect(this.algorithmHeader.waitForText()).toBe(true);
             expect(this.algorithmSelect.getText()).toContain('Round Robin');
-            expect(this.sessionStickinessHeader.waitForText()).toBe(true);
             expect(this.sessionStickiness.getText()).toContain('Table');
             
             expect(this.activeChecksHeader.isVisible()).toBe(true);
-            expect(this.activeCheckAttempts.getValue()).toBe('2');
-            expect(this.activeCheckTimeout.getValue()).toBe('3');
             expect(this.activeCheckType.isVisible()).toBe(true);
-            expect(this.activeCheckInterval.getValue()).toBe('5');
 
             expect(this.passiveChecksHeader.waitForText()).toBe(true);
             expect(this.passiveChecksToggle.isVisible()).toBe(true);
@@ -85,8 +81,8 @@ class NodeBalancers extends Page {
             expect(this.backendIpsHeader.waitForText()).toBe(true);
             expect(this.backendIpLabel.isVisible()).toBe(true);
             expect(this.backendIpAddress.isVisible()).toBe(true);
+            expect(this.backendIpPort.isVisible()).toBe(true);
             expect(this.backendIpWeight.getValue()).toBe('100');
-            expect(this.backendIpMode.getText()).toContain('Accept');
         }
     }
 
@@ -114,6 +110,7 @@ class NodeBalancers extends Page {
         expect(this.backendIpsHeader.waitForText()).toBe(true);
         expect(this.backendIpLabel.isVisible()).toBe(true);
         expect(this.backendIpAddress.isVisible()).toBe(true);
+        expect(this.backendIpPort.isVisible()).toBe(true);
         expect(this.backendIpWeight.getValue()).toBe('100');
         expect(this.backendIpMode.getText()).toContain('Accept');
     }
@@ -199,7 +196,8 @@ class NodeBalancers extends Page {
         this.selectMenuOption(this.algorithmSelect, nodeBalancerConfig.algorithm);
         this.selectMenuOption(this.sessionStickiness, nodeBalancerConfig.sessionStickiness);
         this.backendIpLabel.setValue(linodeConfig.label);
-        this.backendIpAddress.setValue(`${linodeConfig.privateIp}:${nodeBalancerConfig.port}`);
+        this.backendIpAddress.setValue(linodeConfig.privateIp);
+        this.backendIpPort.setValue(linodeConfig.port);
         browser.jsClick('[data-qa-deploy-linode]');
     }
 

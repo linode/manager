@@ -126,7 +126,7 @@ export class ListLinodes extends Page {
     powerOff(linode) {
         linode.$(this.linodeActionMenu.selector).click();
         this.powerOffMenu.click();
-        this.acceptDialog('Powering Down');
+        this.acceptDialog('Powering Off');
         
         browser.waitUntil(function() {
             return browser.isVisible('[data-qa-status="offline"]');

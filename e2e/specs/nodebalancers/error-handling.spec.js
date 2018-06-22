@@ -24,6 +24,7 @@ describe('NodeBalancer - Negative Tests Suite', () => {
         const badLinode = {
             label: 'Something-NotLegit',
             privateIp: '192.168.1.1',
+            port: '80',
         }
         const noticeMsg = `Unable to create node ${badLinode.label}.`;
         const serviceError = 'This address is not allowed.';
