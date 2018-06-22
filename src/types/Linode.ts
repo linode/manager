@@ -15,6 +15,7 @@ namespace Linode {
     updated: string;
     hypervisor: Hypervisor;
     specs: LinodeSpecs;
+    watchdog_enabled: boolean;
   }
 
   export interface EnhancedLinode extends Linode.Linode {

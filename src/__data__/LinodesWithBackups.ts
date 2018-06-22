@@ -91,5 +91,6 @@ export const LinodesWithBackups = [
         },
       },
     },
+    watchdog_enabled: false,
   },
 ];

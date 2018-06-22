@@ -465,6 +465,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               linodeRegion={linode.region}
               linodeStatus={linode.status}
               linodeDisks={disks || []}
+              linodeWatchdogEnabled={linode.watchdog_enabled || false}
             />
           )} />
           {/* 404 */}
