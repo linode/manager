@@ -5,7 +5,6 @@ import {
   Theme,
   WithStyles,
 } from 'material-ui';
-import Typography from 'material-ui/Typography';
 
 import TextField from 'src/components/TextField';
 import RenderGuard from 'src/components/RenderGuard';
@@ -41,17 +40,12 @@ class UserDefinedText extends React.Component<CombinedProps, State> {
     const { udf_data, field, isOptional } = this.props;
 
     return (
-      <React.Fragment>
-        <Typography variant="subheading" >
-          {field.label}
-        </Typography>
-        <TextField
-          required={!isOptional}
-          onChange={this.handleUpdateText}
-          label={field.label}
-          value={udf_data[field.name] || ''}
-        />
-      </React.Fragment>
+      <TextField
+        required={!isOptional}
+        onChange={this.handleUpdateText}
+        label={field.label}
+        value={udf_data[field.name] || ''}
+      />
     );
   }
 
