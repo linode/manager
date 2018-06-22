@@ -83,7 +83,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
     },
   };
 
-  public renderAlertSections = () => {
+  renderAlertSections = () => {
     const hasErrorFor = getAPIErrorFor({}, this.state.errors);
     return [
       {
@@ -192,7 +192,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
     ];
   }
 
-  protected renderExpansionActions = () => {
+  renderExpansionActions = () => {
     const noError = (this.state.submitting && !this.renderAlertSections()
       .reduce((result, s) => result || Boolean(s.error), false));
 
@@ -209,7 +209,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
             </ActionsPanel>;
   };
 
-  protected setLinodeAlertThresholds = () => {
+  setLinodeAlertThresholds = () => {
     this.setState(set(lensPath(['errors']), undefined));
     this.setState(set(lensPath(['success']), undefined));
     this.setState(set(lensPath(['submitting']), true));
