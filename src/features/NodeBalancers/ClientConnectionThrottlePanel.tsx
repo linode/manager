@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import { withStyles, StyleRulesCallback, WithStyles, Theme } from 'material-ui';
 import Paper from 'material-ui/Paper';
-import Typography from 'material-ui/Typography';
 
 import Button from 'src/components/Button';
 import Grid from 'src/components/Grid';
@@ -69,7 +68,6 @@ class ClientConnectionThrottlePanel extends React.Component<CombinedProps> {
                   />
                 }
               </Grid>
-              <Typography variant="title">Client Connection Throttle</Typography>
               <div className={!isForm ? classes.inner : ''}>
                 {error && <Notice text={error} error />}
                 <TextField data-qa-connection-throttle {...textFieldProps} />
@@ -89,7 +87,6 @@ class ClientConnectionThrottlePanel extends React.Component<CombinedProps> {
             </Paper>
           : <Paper className={classes.root} data-qa-throttle-section>
             <div className={classes.inner}>
-              <Typography variant="title">Client Connection Throttle</Typography>
               <TextField
                 type="number"
                 data-qa-connection-throttle

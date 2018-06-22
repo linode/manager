@@ -3,7 +3,6 @@ import * as React from 'react';
 import { withStyles, StyleRulesCallback, WithStyles, Theme } from 'material-ui';
 
 import Paper from 'material-ui/Paper';
-import Typography from 'material-ui/Typography';
 
 import PasswordInput from '../../../components/PasswordInput';
 import Notice from '../../../components/Notice';
@@ -43,13 +42,12 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 class PasswordPanel extends React.Component<CombinedProps> {
   render() {
-    const { classes, handleChange, error, heading, label, noPadding, required } = this.props;
+    const { classes, handleChange, error, label, noPadding, required } = this.props;
 
     return (
       <Paper className={classes.root}>
         <div className={!noPadding ? classes.inner : ''} data-qa-password-input>
           { error && <Notice text={error} error /> }
-          <Typography component="div" variant="title">{heading || 'Password'}</Typography>
           <PasswordInput
             required={required}
             value={this.props.password || ''}
