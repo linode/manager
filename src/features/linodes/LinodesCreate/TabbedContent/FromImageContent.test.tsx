@@ -40,7 +40,7 @@ describe('FromImageContent', () => {
   });
 
   it('should render SelectImage panel', () => {
-    expect(component.find('WithRenderGuard(CreateFromImage)')).toHaveLength(1);
+    expect(component.find('WithRenderGuard(WithStyles(CreateFromImage))')).toHaveLength(1);
   });
 
   it('should render SelectRegion panel', () => {
