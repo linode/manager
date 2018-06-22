@@ -7,7 +7,7 @@ import {
   WithStyles,
 } from '@material-ui/core/styles';
 
-import { debounce } from 'throttle-debounce';
+// import { debounce } from 'throttle-debounce';
 
 import TextField from 'src/components/TextField';
 
@@ -24,7 +24,7 @@ interface Props {
 
 interface State {
   query: string;
-  debouncedSearch: Function;
+  // debouncedSearch: Function;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -33,14 +33,13 @@ class DebouncedSearch extends React.Component<CombinedProps, State> {
 
   public state: State = {
     query: '',
-    debouncedSearch: debounce(400, false, this.props.onSearch)
+    // debouncedSearch: debounce(400, false, this.props.onSearch)
   };
 
   handleChangeQuery = (e: any) => {
-    // const { onSearch } = this.props;
-    const { debouncedSearch } = this.state;
+    // const { debouncedSearch } = this.state;
     this.setState({ query: e.target.value });
-    debouncedSearch(e.target.value);
+    // debouncedSearch(e.target.value);
   }
 
   render() {
