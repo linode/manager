@@ -25,7 +25,6 @@ import {
 import 'src/utilities/request';
 import DefaultLoader from 'src/components/DefaultLoader';
 
-
 import App from './App';
 import LinodeThemeWrapper from './LinodeThemeWrapper';
 import './index.css';

@@ -7,7 +7,7 @@ import * as Promise from 'bluebird';
 import { shim } from 'promise.prototype.finally';
 shim(); // allows for .finally() usage
 
-import { withStyles, WithStyles, StyleRulesCallback, Theme } from 'material-ui/styles';
+import { withStyles, WithStyles, StyleRulesCallback, Theme } from '@material-ui/core/styles';
 import 'typeface-lato';
 
 import { getLinodeTypes, getLinodeKernels } from 'src/services/linodes';
@@ -181,7 +181,6 @@ export class App extends React.Component<CombinedProps, State> {
          */
       });
   }
-
 
   toggleMenu = () => {
     this.setState({

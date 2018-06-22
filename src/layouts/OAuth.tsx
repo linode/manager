@@ -7,7 +7,6 @@ import * as session from 'src/session';
 import { getStorage, setStorage } from 'src/storage';
 import { parseQueryParams, splitIntoTwo } from 'src/utilities/queryParams';
 
-
 export class OAuthCallbackPage extends Component<Linode.TodoAny> {
   checkNonce(nonce: string) {
     const { history } = this.props;

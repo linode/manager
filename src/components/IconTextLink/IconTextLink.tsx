@@ -1,14 +1,9 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  WithStyles,
-  Theme,
-} from 'material-ui';
-import Button from 'material-ui/Button';
-import SvgIcon from 'material-ui/SvgIcon';
+import { withStyles, StyleRulesCallback, WithStyles, Theme } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import SvgIcon from '@material-ui/core/SvgIcon';
 
 type CSSClasses = 'root'
 | 'active'

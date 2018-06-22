@@ -1,10 +1,11 @@
 import * as React from 'react';
 
-import { Typography, withStyles, WithStyles, Theme, StyleRulesCallback } from 'material-ui';
-import Drawer, { DrawerProps } from 'material-ui/Drawer';
+import { withStyles, WithStyles, Theme, StyleRulesCallback } from '@material-ui/core/styles';
+import { Close } from '@material-ui/icons';
+import Button from '@material-ui/core/Button';
+import Drawer, { DrawerProps } from '@material-ui/core/Drawer';
 import Grid from 'src/components/Grid';
-import Button from 'material-ui/Button';
-import Close from 'material-ui-icons/Close';
+import Typography from '@material-ui/core/Typography';
 
 interface Props extends DrawerProps {
   title: string;

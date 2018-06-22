@@ -6,7 +6,7 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
-} from 'material-ui';
+} from '@material-ui/core/styles';
 
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import { events$ } from 'src/events';

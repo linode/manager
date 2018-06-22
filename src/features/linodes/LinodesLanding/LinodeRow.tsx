@@ -3,14 +3,14 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { compose, pathOr } from 'ramda';
 
-import { withStyles, Theme, WithStyles, StyleRulesCallback } from 'material-ui/styles';
-import Button from 'material-ui/Button';
+import { withStyles, Theme, WithStyles, StyleRulesCallback } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 
 import Grid from 'src/components/Grid';
-import Typography from 'material-ui/Typography';
-import TableRow from 'material-ui/Table/TableRow';
-import TableCell from 'material-ui/Table/TableCell';
-import Tooltip from 'material-ui/Tooltip';
+import Typography from '@material-ui/core/Typography';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import { displayType } from 'src/features/linodes/presentation';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';

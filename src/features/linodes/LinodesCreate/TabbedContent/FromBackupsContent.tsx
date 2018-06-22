@@ -4,7 +4,7 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
-} from 'material-ui';
+} from '@material-ui/core/styles';
 
 import { compose, pathOr } from 'ramda';
 
@@ -36,7 +36,6 @@ import { resetEventsPolling } from 'src/events';
 
 import * as Promise from 'bluebird';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-
 
 type ClassNames = 'root' | 'main' | 'sidebar';
 
@@ -397,5 +396,3 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles, { withTheme: true });
 
 export default styled(FromBackupsContent);
-
-

@@ -36,7 +36,6 @@ describe('ResourcesReducer', () => {
     });
   });
 
-
   describe('when type === RESPONSE', () => {
     beforeEach(() => {
       result = reducer({}, response(['types'], data));

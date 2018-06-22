@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { storiesOf } from '@storybook/react';
 
-import InsertPhoto from 'material-ui-icons/InsertPhoto';
-import Alarm from 'material-ui-icons/Alarm';
+import InsertPhoto from '@material-ui/icons/InsertPhoto';
+import Alarm from '@material-ui/icons/Alarm';
 import US from 'flag-icon-css/flags/4x3/us.svg';
 import DE from 'flag-icon-css/flags/4x3/de.svg';
 import FR from 'flag-icon-css/flags/4x3/fr.svg';

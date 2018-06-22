@@ -5,10 +5,9 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
-} from 'material-ui';
+} from '@material-ui/core/styles';
 
 import Grid from 'src/components/Grid';
-
 
 import FooterLogo from 'src/assets/logo/logo-footer.svg';
 

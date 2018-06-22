@@ -7,7 +7,7 @@ import  {
   WithStyles,
   StyleRulesCallback,
   Theme,
-} from 'material-ui';
+} from '@material-ui/core/styles';
 import Grid from 'src/components/Grid';
 
 interface Props {

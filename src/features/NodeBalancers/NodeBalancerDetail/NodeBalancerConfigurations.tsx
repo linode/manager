@@ -6,7 +6,7 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
-} from 'material-ui';
+} from '@material-ui/core/styles';
 import {
   compose,
   append,
@@ -22,7 +22,7 @@ import {
 } from 'ramda';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 
-import Typography from 'material-ui/Typography';
+import Typography from '@material-ui/core/Typography';
 
 import {
   getNodeBalancerConfigs,
@@ -100,7 +100,6 @@ type CombinedProps =
   & RouteProps
   & WithStyles<ClassNames>
   & PreloadedProps;
-
 
 const getConfigsWithNodes = (nodeBalancerId: number) => {
   return getNodeBalancerConfigs(nodeBalancerId).then((configs) => {
@@ -693,6 +692,10 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   onNodeWeightChange = (configIdx: number) => (nodeIdx: number, value: string) =>
     this.setNodeValue(configIdx, nodeIdx, 'weight', value)
 
+  onNodeModeChange = (configIdx: number) => (nodeIdx: number, value: string) => {
+    this.setNodeValue(configIdx, nodeIdx, 'mode', value);
+  }
+
   onCloseConfirmation = () => this.setState({
     deleteConfigConfirmDialog:
       clone(NodeBalancerConfigurations.defaultDeleteConfigConfirmDialogState),
@@ -835,6 +838,8 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           onNodePortChange={this.onNodePortChange(idx)}
 
           onNodeWeightChange={this.onNodeWeightChange(idx)}
+
+          onNodeModeChange={this.onNodeModeChange(idx)}
         />
       </ExpansionPanel>
     );

@@ -6,12 +6,11 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
-} from 'material-ui';
-import Check from 'material-ui-icons/Check';
-import Tooltip from 'material-ui/Tooltip';
+} from '@material-ui/core/styles';
+import { Check } from '@material-ui/icons';
+import Tooltip from '@material-ui/core/Tooltip';
+import Fade from '@material-ui/core/Fade';
 import Grid from 'src/components/Grid';
-import Fade from 'material-ui/transitions/Fade';
-
 
 type CSSClasses =
 'root'
@@ -123,7 +122,6 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
 });
 
 const styled = withStyles(styles, { withTheme: true });
-
 
 export interface Props {
   onClick?: (e: React.SyntheticEvent<HTMLElement>) => void;

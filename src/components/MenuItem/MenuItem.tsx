@@ -1,14 +1,9 @@
 import * as React from 'react';
-import {
-  withStyles,
-  WithStyles,
-  StyleRulesCallback,
-  Theme,
-  IconButton,
-} from 'material-ui';
 
-import MenuItem, { MenuItemProps } from 'material-ui/Menu/MenuItem';
-import HelpOutline from 'material-ui-icons/HelpOutline';
+import { withStyles, WithStyles, StyleRulesCallback, Theme } from '@material-ui/core/styles';
+import { HelpOutline } from '@material-ui/icons';
+import IconButton from '@material-ui/core/IconButton';
+import MenuItem, { MenuItemProps } from '@material-ui/core/MenuItem';
 
 type CSSClasses = 'root'
   | 'toolTip'

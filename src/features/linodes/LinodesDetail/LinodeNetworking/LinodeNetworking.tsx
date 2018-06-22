@@ -4,13 +4,14 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
-} from 'material-ui';
-import Typography from 'material-ui/Typography';
-import Paper from 'material-ui/Paper';
-import TableHead from 'material-ui/Table/TableHead';
-import TableBody from 'material-ui/Table/TableBody';
-import TableRow from 'material-ui/Table/TableRow';
-import TableCell from 'material-ui/Table/TableCell';
+} from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import TableHead from '@material-ui/core/TableHead';
+import TableBody from '@material-ui/core/TableBody';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import Grid from 'src/components/Grid';
 import Table from 'src/components/Table';
@@ -32,7 +33,9 @@ type ClassNames =
   | 'reverseDNS'
   | 'type'
   | 'action'
+  | 'ipv4Container'
   | 'ipv4Title'
+  | 'ipv4TitleContainer'
   | 'ipv6Title';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
@@ -56,6 +59,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
       marginRight: theme.spacing.unit,
     },
   },
+  ipv4Container: {
+    [theme.breakpoints.down('sm')]: {
+      justifyContent: 'flex-start',
+      '& button': {
+        marginLeft: -14,
+      },
+    },
+  },
   ipv4Title: {
     marginTop: theme.spacing.unit,
     marginBottom: theme.spacing.unit * 2,
@@ -64,6 +75,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     marginTop: theme.spacing.unit * 4,
     marginBottom: theme.spacing.unit * 2,
   },
+  ipv4TitleContainer: {
+    flex: 1,
+    [theme.breakpoints.down('sm')]: {
+      flexBasis: '100%',
+    },
+  }
 });
 
 interface Props {
@@ -90,6 +107,7 @@ interface State {
     rdns?: string;
   };
   createIPv4Drawer: {
+    forPublic: boolean;
     open: boolean;
   };
   createIPv6Drawer: {
@@ -112,6 +130,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
       open: false,
     },
     createIPv4Drawer: {
+      forPublic: true,
       open: false,
     },
     createIPv6Drawer: {
@@ -210,7 +229,10 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
   closeCreateIPv4Drawer() {
     this.setState({
-      createIPv4Drawer: { open: false },
+      createIPv4Drawer: {
+        ...this.state.createIPv4Drawer,
+        open: false,
+      },
     });
     this.refreshIPs();
   }
@@ -219,6 +241,11 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     this.setState({
       createIPv6Drawer: { open: false },
     });
+  }
+
+  hasPrivateIPAddress() {
+    const { linodeIPs } = this.state;
+    return Boolean(linodeIPs.ipv4.private.length);
   }
 
   render() {
@@ -234,8 +261,9 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           >
           Networking
         </Typography>
-        <Grid container justify="space-between" alignItems="flex-end">
-          <Grid item>
+        <Grid container justify="space-between" alignItems="flex-end" className={classes.ipv4Container}>
+          <Grid item className={classes.ipv4TitleContainer}
+              data-qa-ipv4-subheading>
             <Typography
               variant="title"
               className={classes.ipv4Title}
@@ -245,8 +273,32 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
             </Typography>
           </Grid>
           <Grid item>
+            <Tooltip title={this.hasPrivateIPAddress()
+              ? 'This Linode has a private IPv4 address.'
+              : ''
+            }>
+              <div>
+                <AddNewLink
+                  onClick={() => this.setState({
+                    createIPv4Drawer: {
+                      forPublic: false,
+                      open: true,
+                    },
+                  })}
+                  disabled={Boolean(this.hasPrivateIPAddress())}
+                  label="Add Private IPv4"
+                />
+              </div>
+            </Tooltip>
+          </Grid>
+          <Grid item>
             <AddNewLink
-              onClick={() => this.setState({ createIPv4Drawer: { open: true } })}
+              onClick={() => this.setState({
+                createIPv4Drawer: {
+                  forPublic: true,
+                  open: true,
+                },
+              })}
               label="Add Public IPv4"
             />
           </Grid>
@@ -339,6 +391,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         />
 
         <CreateIPv4Drawer
+          forPublic={this.state.createIPv4Drawer.forPublic}
           open={this.state.createIPv4Drawer.open}
           onClose={() => this.closeCreateIPv4Drawer()}
           linodeID={linodeID}

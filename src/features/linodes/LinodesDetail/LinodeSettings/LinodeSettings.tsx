@@ -1,18 +1,13 @@
 import * as React from 'react';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-  Typography,
-} from 'material-ui';
+import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
-import LinodeSettingsLabelPanel from './LinodeSettingsLabelPanel';
-import LinodeSettingsPasswordPanel from './LinodeSettingsPasswordPanel';
+import LinodeConfigsPanel from './LinodeConfigsPanel';
 import LinodeSettingsAlertsPanel from './LinodeSettingsAlertsPanel';
 import LinodeSettingsDeletePanel from './LinodeSettingsDeletePanel';
-import LinodeConfigsPanel from './LinodeConfigsPanel';
+import LinodeSettingsLabelPanel from './LinodeSettingsLabelPanel';
+import LinodeSettingsPasswordPanel from './LinodeSettingsPasswordPanel';
 
 type ClassNames = 'root' | 'title';
 
@@ -89,5 +84,3 @@ const LinodeSettings: React.StatelessComponent<CombinedProps> = (props) => {
 const styled = withStyles(styles, { withTheme: true });
 
 export default styled(LinodeSettings);
-
-

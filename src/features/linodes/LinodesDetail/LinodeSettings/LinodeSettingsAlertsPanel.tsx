@@ -2,23 +2,18 @@ import * as React from 'react';
 
 import { compose, lensPath, set } from 'ramda';
 
-import {
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-  withStyles,
-} from 'material-ui';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-
-import Button from 'src/components/Button';
 import { updateLinode } from 'src/services/linodes';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/Button';
 import ExpansionPanel from 'src/components/ExpansionPanel';
+import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
+
+import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import AlertSection from './AlertSection';
 
-import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
@@ -88,7 +83,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
     },
   };
 
-  public renderAlertSections = () => {
+  renderAlertSections = () => {
     const hasErrorFor = getAPIErrorFor({}, this.state.errors);
     return [
       {
@@ -197,7 +192,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
     ];
   }
 
-  protected renderExpansionActions = () => {
+  renderExpansionActions = () => {
     const noError = (this.state.submitting && !this.renderAlertSections()
       .reduce((result, s) => result || Boolean(s.error), false));
 
@@ -214,7 +209,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
             </ActionsPanel>;
   };
 
-  protected setLinodeAlertThresholds = () => {
+  setLinodeAlertThresholds = () => {
     this.setState(set(lensPath(['errors']), undefined));
     this.setState(set(lensPath(['success']), undefined));
     this.setState(set(lensPath(['submitting']), true));

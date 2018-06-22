@@ -1,23 +1,18 @@
 import * as React from 'react';
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui/styles';
+import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
 
-import Button from 'material-ui/Button';
-import Menu from 'material-ui/Menu';
-import MenuItem from 'material-ui/Menu/MenuItem';
-import KeyboardArrowDown from 'material-ui-icons/KeyboardArrowDown';
-import KeyboardArrowUp from 'material-ui-icons/KeyboardArrowUp';
+import Button from '@material-ui/core/Button';
+import Menu from '@material-ui/core/Menu';
+import { KeyboardArrowDown, KeyboardArrowUp } from '@material-ui/icons';
 
-import {
-  powerOffLinode,
-  powerOnLinode,
-  rebootLinode,
-} from 'src/features/linodes/LinodesLanding/powerActions';
-
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { powerOffLinode, powerOnLinode, rebootLinode }
+  from 'src/features/linodes/LinodesLanding/powerActions';
 import ActionsPanel from 'src/components/ActionsPanel';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import MenuItem from 'src/components/MenuItem';
 
-import PowerOn from '../../../../assets/icons/powerOn.svg';
-import Reload from '../../../../assets/icons/reload.svg';
+import PowerOn from 'src/assets/icons/powerOn.svg';
+import Reload from 'src/assets/icons/reload.svg';
 
 type ClassNames = 'root'
   | 'button'

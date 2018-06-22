@@ -4,12 +4,12 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
-} from 'material-ui';
+} from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
 import TextField from 'src/components/TextField';
 import RenderGuard from 'src/components/RenderGuard';
 import PasswordPanel from 'src/features/linodes/LinodesCreate/PasswordPanel';
-
 
 type ClassNames = 'root';
 

@@ -7,7 +7,7 @@ import {
   WithStyles,
   StyleRulesCallback,
   Theme,
-} from 'material-ui';
+} from '@material-ui/core/styles';
 
 import Grid from 'src/components/Grid';
 import StrengthIndicator from '../PasswordInput/StrengthIndicator';
@@ -88,4 +88,3 @@ const maybeStrength = (value?: string) =>
     : zxcvbn(value).score;
 
 export default withStyles(styles, { withTheme: true })<Props>(PasswordInput);
-
