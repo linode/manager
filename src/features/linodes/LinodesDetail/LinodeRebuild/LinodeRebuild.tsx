@@ -119,6 +119,24 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
 
   onPasswordChange = (value: string) => this.setState({ password: value });
 
+  renderImagesMenuItems = (category: string) => {
+    if (this.state.images[category]) {
+      return [
+        <MenuItem key={category} disabled className="selectHeader" data-qa-select-header>
+          {getDisplayNameForGroup(category)}
+        </MenuItem>,
+        ...this.state.images[category].map(
+          ({ id, label }: Linode.Image) => (
+            <MenuItem key={id} value={id} data-qa-image-option>
+              {label}
+            </MenuItem>
+          )
+        )
+      ]
+    }
+    return [];
+  }
+
   render() {
     const { images: { error: imagesError }, classes } = this.props;
     const { errors, selected } = this.state;
@@ -164,15 +182,9 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
                   Select an Image
                 </MenuItem>
                 {
-                  Object
-                    .entries(this.state.images)
-                    .map(([group, images]) => [
-                      <MenuItem disabled className="selectHeader" data-qa-select-header>
-                        {getDisplayNameForGroup(group)
-                      }</MenuItem>,
-                      ...images.map(({ id, label }: Linode.Image) =>
-                        <MenuItem key={id} value={id} data-qa-image-option>{label}</MenuItem>),
-                    ])
+                  ['recommended', 'older', 'images', 'deleted'].map((category) => [
+                    ...this.renderImagesMenuItems(category),
+                  ])
                 }
               </Select>
               {imageError &&
