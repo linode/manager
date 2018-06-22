@@ -576,33 +576,35 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
   }
 
   handleSearch = (value: string) => {
-    const { request } = this.props;
-    const filter = {
-      ["+or"]: [
-        {
-          "label": {
-            ["+contains"]: "security"
-          }
-        },
-        {
-          "description": {
-            ["+contains"]: "security"
-          }
-        },
-        {
-          ["+and"]: [
-            {
-              "username": "linode"
-            }
-          ]
-        }
-      ]
-    }
-    request({ page: 1, page_size: 50 }, filter)
-      .then((response) => {
-        console.log(response);
-      })
-      .catch(e => console.log(e))
+    // const { request, profile, isLinodeStackScripts } = this.props;
+    // const filteredUser = (isLinodeStackScripts) ? 'linode' : profile.username;
+
+    // const filter = {
+    //   ["+or"]: [
+    //     {
+    //       "label": {
+    //         ["+contains"]: "security"
+    //       }
+    //     },
+    //     {
+    //       "description": {
+    //         ["+contains"]: "security"
+    //       }
+    //     },
+    //     {
+    //       ["+and"]: [
+    //         {
+    //           "username": "linode"
+    //         }
+    //       ]
+    //     }
+    //   ]
+    // }
+    // request(filteredUser, { page: 1, page_size: 50 }, filter)
+    //   .then((response) => {
+    //     console.log(response);
+    //   })
+    //   .catch(e => console.log(e));
     console.log(`making request with ${value}`);
   }
 
