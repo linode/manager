@@ -106,11 +106,11 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
       });
   }
 
-  handlePasswordChange = (e) => {
+  handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState(set(lensPath(['value']), e.target.value))
   }
   
-  handleDiskChange = (e) => {
+  handleDiskChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState(set(lensPath(['diskId']), Number(e.target.value)))
   }
 
