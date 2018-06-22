@@ -21,7 +21,10 @@ import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPa
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Grid from 'src/components/Grid';
 import CheckoutBar from 'src/components/CheckoutBar';
+import Placeholder from 'src/components/Placeholder';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+
+import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 
 import {
   allocatePrivateIP,
@@ -199,101 +202,114 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <Grid item className={`${classes.main} mlMain`}>
-          {notice &&
-            <Notice
-              text={notice.text}
-              error={(notice.level) === 'error'}
-              warning={(notice.level === 'warning')}
-            />
-          }
-          {generalError &&
-            <Notice text={generalError} error={true} />
-          }
-          <SelectLinodePanel
-            error={hasErrorFor('linode_id')}
-            linodes={extendLinodes(linodes)}
-            selectedLinodeID={selectedLinodeID}
-            header={'Select Linode to Clone From'}
-            handleSelection={this.handleSelectLinode}
-            updateFor={[selectedLinodeID, errors]}
-          />
-          <SelectRegionPanel
-            error={hasErrorFor('region')}
-            regions={regions}
-            handleSelection={this.handleSelectRegion}
-            selectedID={selectedRegionID}
-            copy="Determine the best location for your Linode."
-            updateFor={[selectedRegionID, errors]}
-          />
-          <SelectPlanPanel
-            error={hasErrorFor('type')}
-            types={types}
-            onSelect={this.handleSelectPlan}
-            selectedID={selectedTypeID}
-            selectedDiskSize={selectedDiskSize}
-            updateFor={[selectedDiskSize, selectedTypeID, errors]}
-          />
-          <LabelAndTagsPanel
-            labelFieldProps={{
-              label: 'Linode Label',
-              value: label || '',
-              onChange: this.handleTypeLabel,
-              errorText: hasErrorFor('label'),
-            }}
-            updateFor={[label]}
-          />
-          <AddonsPanel
-            backups={backups}
-            backupsMonthly={getBackupsMonthlyPrice(selectedTypeID)}
-            privateIP={privateIP}
-            changeBackups={this.handleToggleBackups}
-            changePrivateIP={this.handleTogglePrivateIP}
-            updateFor={[privateIP, backups]}
-          />
-        </Grid>
-        <Grid item className={`${classes.sidebar} mlSidebar`}>
-          <Sticky
-            topOffset={-24}
-            disableCompensation>
-            {
-              (props: StickyProps) => {
-                const displaySections = [];
-                if (regionName) {
-                  displaySections.push({ title: regionName });
-                }
-
-                if (typeInfo) {
-                  displaySections.push(typeInfo);
-                }
-
-                if (backups && typeInfo && typeInfo.backupsMonthly) {
-                  displaySections.push({
-                    title: 'Backups Enabled',
-                    ...(typeInfo.backupsMonthly &&
-                      { details: `$${typeInfo.backupsMonthly.toFixed(2)} / monthly` }),
-                  });
-                }
-
-                let calculatedPrice = pathOr(0, ['monthly'], typeInfo);
-                if (backups && typeInfo && typeInfo.backupsMonthly) {
-                  calculatedPrice += typeInfo.backupsMonthly;
-                }
-
-                return (
-                  <CheckoutBar
-                    heading={`${label || 'Linode'} Summary`}
-                    calculatedPrice={calculatedPrice}
-                    disabled={isMakingRequest}
-                    onDeploy={this.cloneLinode}
-                    displaySections={displaySections}
-                    {...props}
+        {
+          (linodes && linodes.length === 0)
+            ? <Grid item className={`${classes.main} mlMain`}> 
+                <Placeholder
+                  icon={VolumeIcon}
+                  copy="You do not have any existing Linodes to clone from.
+                  Please first create a Linode from either an Image or StackScript."
+                  title="Clone from Existing Linode"
+                />
+              </Grid>
+            : <React.Fragment>
+              <Grid item className={`${classes.main} mlMain`}>
+                {notice &&
+                  <Notice
+                    text={notice.text}
+                    error={(notice.level) === 'error'}
+                    warning={(notice.level === 'warning')}
                   />
-                );
-              }
-            }
-          </Sticky>
-        </Grid>
+                }
+                {generalError &&
+                  <Notice text={generalError} error={true} />
+                }
+                <SelectLinodePanel
+                  error={hasErrorFor('linode_id')}
+                  linodes={extendLinodes(linodes)}
+                  selectedLinodeID={selectedLinodeID}
+                  header={'Select Linode to Clone From'}
+                  handleSelection={this.handleSelectLinode}
+                  updateFor={[selectedLinodeID, errors]}
+                />
+                <SelectRegionPanel
+                  error={hasErrorFor('region')}
+                  regions={regions}
+                  handleSelection={this.handleSelectRegion}
+                  selectedID={selectedRegionID}
+                  copy="Determine the best location for your Linode."
+                  updateFor={[selectedRegionID, errors]}
+                />
+                <SelectPlanPanel
+                  error={hasErrorFor('type')}
+                  types={types}
+                  onSelect={this.handleSelectPlan}
+                  selectedID={selectedTypeID}
+                  selectedDiskSize={selectedDiskSize}
+                  updateFor={[selectedDiskSize, selectedTypeID, errors]}
+                />
+                <LabelAndTagsPanel
+                  labelFieldProps={{
+                    label: 'Linode Label',
+                    value: label || '',
+                    onChange: this.handleTypeLabel,
+                    errorText: hasErrorFor('label'),
+                  }}
+                  updateFor={[label]}
+                />
+                <AddonsPanel
+                  backups={backups}
+                  backupsMonthly={getBackupsMonthlyPrice(selectedTypeID)}
+                  privateIP={privateIP}
+                  changeBackups={this.handleToggleBackups}
+                  changePrivateIP={this.handleTogglePrivateIP}
+                  updateFor={[privateIP, backups]}
+                />
+              </Grid>
+              <Grid item className={`${classes.sidebar} mlSidebar`}>
+                <Sticky
+                  topOffset={-24}
+                  disableCompensation>
+                  {
+                    (props: StickyProps) => {
+                      const displaySections = [];
+                      if (regionName) {
+                        displaySections.push({ title: regionName });
+                      }
+
+                      if (typeInfo) {
+                        displaySections.push(typeInfo);
+                      }
+
+                      if (backups && typeInfo && typeInfo.backupsMonthly) {
+                        displaySections.push({
+                          title: 'Backups Enabled',
+                          ...(typeInfo.backupsMonthly &&
+                            { details: `$${typeInfo.backupsMonthly.toFixed(2)} / monthly` }),
+                        });
+                      }
+
+                      let calculatedPrice = pathOr(0, ['monthly'], typeInfo);
+                      if (backups && typeInfo && typeInfo.backupsMonthly) {
+                        calculatedPrice += typeInfo.backupsMonthly;
+                      }
+
+                      return (
+                        <CheckoutBar
+                          heading={`${label || 'Linode'} Summary`}
+                          calculatedPrice={calculatedPrice}
+                          disabled={isMakingRequest}
+                          onDeploy={this.cloneLinode}
+                          displaySections={displaySections}
+                          {...props}
+                        />
+                      );
+                    }
+                  }
+                </Sticky>
+              </Grid>
+          </React.Fragment>
+        }
       </React.Fragment>
     );
   }
