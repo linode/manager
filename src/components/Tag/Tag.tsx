@@ -20,12 +20,8 @@ type CSSClasses = 'label' | 'root' | Variants;
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => {
   return ({
-    label: {
-
-    },
-    root: {
-
-    },
+    label: {},
+    root: {},
     white: {
       backgroundColor: 'white',
     },
