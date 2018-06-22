@@ -7,6 +7,7 @@ import {
   defaultTo,
   lensPath,
   map,
+  omit,
   over,
   path,
   pathOr,
@@ -14,7 +15,6 @@ import {
   set,
   view,
 } from 'ramda';
-import * as Promise from 'bluebird';
 import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { StickyContainer, Sticky, StickyProps } from 'react-sticky';
@@ -27,8 +27,6 @@ import Button from 'src/components/Button';
 import {
   createNodeBalancer,
   createNodeBalancerSchema,
-  createNodeBalancerConfig,
-  createNodeBalancerConfigNode,
 } from 'src/services/nodebalancers';
 import { dcDisplayNames } from 'src/constants';
 import Grid from 'src/components/Grid';
@@ -45,7 +43,6 @@ import Notice from 'src/components/Notice';
 import {
   NodeBalancerConfigFields,
   transformConfigsForRequest,
-  formatAddress,
   createNewNodeBalancerConfig,
   createNewNodeBalancerConfigNode,
   clampNumericString,
@@ -209,7 +206,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     const setFns = nodePathErrors.map((nodePathError: any) => {
       return compose(
         over(lensPath(['nodeBalancerFields', ...nodePathError.path]),
-              append(nodePathError.error)),
+          append(nodePathError.error)),
         defaultTo([]),
       );
     });
@@ -259,75 +256,17 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
     this.setState({ submitting: true });
 
-    createNodeBalancer(nodeBalancerRequestData)
-      .then((nodeBalancer) => {
-        /**
-         * @note Beyond this point the NodeBalancer has been created and any
-         * error reporting will have to be done on the NodeBalancer summary page.
-         * ie "Unable to create configuration for port 123 because... you can do it here!"
-         * ie "Unable to add node XYZ because... you can do it here!"
-         */
+    const mergeIPAndPort = (data: NodeBalancerFieldsState) => ({
+      ...data,
+      configs: data.configs
+        .map((c) => ({
+          ...c,
+          nodes: c.nodes.map(n => ({ ...omit(['port'], n), address: `${n.address}:${c.port}` })),
+        }))
+    });
 
-        const { id: nodeBalancerId } = nodeBalancer;
-        const { configs } = nodeBalancerRequestData;
-
-        return Promise.map(
-          configs,
-          nodeBalancerConfig => new Promise((resolveConfig) => {
-            createNodeBalancerConfig(nodeBalancerId, nodeBalancerConfig)
-              .then((response) => {
-                const { id: nodeBalancerConfigId } = response;
-                return Promise.map(
-                  nodeBalancerConfig.nodes,
-                  nodeBalancerConfigNode => new Promise((resolveNode) => {
-                    createNodeBalancerConfigNode(
-                      nodeBalancerId,
-                      nodeBalancerConfigId,
-                      formatAddress(nodeBalancerConfigNode),
-                    )
-                      .then((response) => {
-                        resolveNode(response);
-                      })
-                      .catch((error) => {
-                        resolveNode({
-                          errors: error.response.data.errors,
-                          config: nodeBalancerConfigNode,
-                        });
-                      });
-                  }),
-                )
-                  .then(nodeBalancerConfigNodes => ({
-                    ...nodeBalancerConfig,
-                    nodes: nodeBalancerConfigNodes,
-                  }));
-              })
-              .then(response => resolveConfig(response))
-              .catch(error => resolveConfig({
-                errors: error.response.data.errors,
-                config: nodeBalancerConfig,
-              }));
-          }),
-        )
-          .then(nodeBalancerConfigs => ({
-            ...nodeBalancer,
-            configs: nodeBalancerConfigs,
-          }));
-      })
-      .then((nodeBalancer) => {
-        const { history } = this.props;
-        const { id } = nodeBalancer;
-
-        const errors: Linode.ApiFieldError[] = [
-          ...nodeBalancer.configs.filter(c => c.hasOwnProperty('errors')),
-          ...nodeBalancer.configs
-            .map((c: any) => c.nodes)
-            .reduce((prev, current) => [...prev, ...current], [])
-            .filter(Boolean)
-            .filter((c: any) => c.hasOwnProperty('errors')),
-        ];
-
-        return history.push(`/nodebalancers/${id}/summary`, { errors });
-      })
+    createNodeBalancer(mergeIPAndPort(nodeBalancerRequestData))
+      .then((nodeBalancer) => this.props.history.push(`/nodebalancers/${nodeBalancer.id}/summary`))
       .catch((errorResponse) => {
         const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'], errorResponse);
 
@@ -433,7 +372,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
         Delete
     </Button>
       <Button
-        onClick={() => onClose()}
+        onClick={onClose}
         type="secondary"
         className="cancel"
         data-qa-cancel-cancel
@@ -464,10 +403,10 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
             <LabelAndTagsPanel
               labelFieldProps={{
-                label: 'NodeBalancer Label',
-                value: nodeBalancerFields.label || '',
                 errorText: hasErrorFor('label'),
+                label: 'NodeBalancer Label',
                 onChange: this.labelChange,
+                value: nodeBalancerFields.label || '',
               }}
             />
             <SelectRegionPanel
@@ -708,11 +647,11 @@ export const fieldErrorsToNodePathErrors = (errors: Linode.ApiFieldError[]) => {
         return [
           ...acc,
           {
-            path: ['configs', +match[1], 'nodes', +match[2], 'errors'],
             error: {
               field: match[3],
               reason: error.reason,
             },
+            path: ['configs', +match[1], 'nodes', +match[2], 'errors'],
           },
         ];
       }
@@ -750,7 +689,7 @@ export const validationErrorsToFieldErrors = (error: Joi.ValidationError) => {
       }
 
       if (path.includes('path')
-          && detail.constraint === 'base') {
+        && detail.constraint === 'base') {
         return {
           ...detail,
           message: 'Path must start with a /',
@@ -758,8 +697,8 @@ export const validationErrorsToFieldErrors = (error: Joi.ValidationError) => {
       }
 
       if (path.includes('nodes')
-          && path.includes('label')
-          && detail.constraint === 'min') {
+        && path.includes('label')
+        && detail.constraint === 'min') {
         return {
           ...detail,
           message: 'Label must be at least 3 characters',
@@ -767,8 +706,8 @@ export const validationErrorsToFieldErrors = (error: Joi.ValidationError) => {
       }
 
       if (path.includes('nodes')
-          && path.includes('address')
-          && detail.constraint === 'base') {
+        && path.includes('address')
+        && detail.constraint === 'base') {
         return {
           ...detail,
           message: 'IP Address must be a Linode private address',
@@ -776,10 +715,10 @@ export const validationErrorsToFieldErrors = (error: Joi.ValidationError) => {
       }
 
       if (path.includes('nodes')
-          && path.includes('port')
-          && (detail.constraint === 'base'
-              || detail.constraint === 'min'
-              || detail.constraint === 'max')) {
+        && path.includes('port')
+        && (detail.constraint === 'base'
+          || detail.constraint === 'min'
+          || detail.constraint === 'max')) {
         return {
           ...detail,
           message: 'Port must be between 1 and 65535',
@@ -787,10 +726,10 @@ export const validationErrorsToFieldErrors = (error: Joi.ValidationError) => {
       }
 
       if (path.includes('nodes')
-          && path.includes('weight')
-          && (detail.constraint === 'base'
-              || detail.constraint === 'min'
-              || detail.constraint === 'max')) {
+        && path.includes('weight')
+        && (detail.constraint === 'base'
+          || detail.constraint === 'min'
+          || detail.constraint === 'max')) {
         return {
           ...detail,
           message: 'Weight must be between 1 and 255',

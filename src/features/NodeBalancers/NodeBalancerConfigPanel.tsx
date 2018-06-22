@@ -296,7 +296,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   value={port || ''}
                   onChange={this.onPortChange}
                   errorText={hasErrorFor('port')}
-                  errorGroup={`${configIdx}`}
+                  errorGroup={forEdit ? `${configIdx}`: undefined}
                   data-qa-port
                 />
               </Grid>
@@ -307,7 +307,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   select
                   onChange={this.onProtocolChange}
                   errorText={hasErrorFor('protocol')}
-                  errorGroup={`${configIdx}`}
+                  errorGroup={forEdit ? `${configIdx}`: undefined}
                   data-qa-protocol-select
                 >
                   <MenuItem
