@@ -12,9 +12,7 @@ import { setUpCharts } from 'src/utilities/charts';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import LineGraph from 'src/components/LineGraph';
 import Select from 'src/components/Select';
-import transitionStatus from 'src/features/linodes/linodeTransitionStatus';
 
-import LinodeBusyStatus from './LinodeBusyStatus';
 import SummaryPanel from './SummaryPanel';
 
 setUpCharts();
@@ -222,9 +220,6 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
     const { stats, rangeSelection } = this.state;
     return (
       <React.Fragment>
-        {transitionStatus.includes(linode.status) &&
-          <LinodeBusyStatus linode={linode} />
-        }
         <SummaryPanel linode={linode} image={image} volumes={volumes} />
 
         {stats &&
