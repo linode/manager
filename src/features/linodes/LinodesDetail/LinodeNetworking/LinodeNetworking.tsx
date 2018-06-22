@@ -35,6 +35,7 @@ type ClassNames =
   | 'title'
   | 'address'
   | 'reverseDNS'
+  | 'defaultGateway'
   | 'type'
   | 'action'
   | 'ipv4Container'
@@ -48,10 +49,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     marginBottom: `${theme.spacing.unit * 2}px`,
   },
   address: {
-    width: '35%',
+    width: '30%',
   },
   reverseDNS: {
-    width: '35%',
+    width: '30%',
+  },
+  defaultGateway: {
+    width: '20%',
   },
   type: {
     width: '20%',
@@ -196,6 +200,9 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         <TableCell data-qa-ip-address>
           {ip.address}
         </TableCell>
+        <TableCell>
+          {ip.gateway}
+        </TableCell>
         <TableCell data-qa-rdns>
           {ip.rdns}
         </TableCell>
@@ -289,6 +296,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
             <TableHead>
               <TableRow>
                 <TableCell className={classes.address}>Address</TableCell>
+                <TableCell className={classes.defaultGateway}>Default Gateway</TableCell>
                 <TableCell className={classes.reverseDNS}>Reverse DNS</TableCell>
                 <TableCell className={classes.type}>Type</TableCell>
                 <TableCell />
@@ -327,6 +335,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
             <TableHead>
               <TableRow>
                 <TableCell className={classes.address}>Address</TableCell>
+                <TableCell className={classes.defaultGateway}>Default Gateway</TableCell>
                 <TableCell className={classes.reverseDNS}>Reverse DNS</TableCell>
                 <TableCell className={classes.type}>Type</TableCell>
                 <TableCell />
