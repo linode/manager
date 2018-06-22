@@ -164,15 +164,13 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
                   Select an Image
                 </MenuItem>
                 {
-                  Object
-                    .entries(this.state.images)
-                    .map(([group, images]) => [
-                      <MenuItem disabled className="selectHeader" data-qa-select-header>
-                        {getDisplayNameForGroup(group)
-                      }</MenuItem>,
-                      ...images.map(({ id, label }: Linode.Image) =>
-                        <MenuItem key={id} value={id} data-qa-image-option>{label}</MenuItem>),
-                    ])
+                  ['recommended', 'older', 'images', 'deleted'].map((category) => [
+                    <MenuItem key={category} disabled className="selectHeader" data-qa-select-header>
+                      {getDisplayNameForGroup(category)
+                    }</MenuItem>,
+                    ...this.state.images[category].map(({ id, label }: Linode.Image) =>
+                      <MenuItem key={id} value={id} data-qa-image-option>{label}</MenuItem>),
+                  ])
                 }
               </Select>
               {imageError &&
