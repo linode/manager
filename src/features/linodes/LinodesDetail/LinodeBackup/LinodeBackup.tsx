@@ -480,7 +480,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
             </InputLabel>
             <Select
               value={settingsForm.window}
-              onChange={e => this.setState({
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => this.setState({
                 settingsForm:
                   { ...settingsForm, window: e.target.value },
               })}
@@ -493,6 +493,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
                 </MenuItem>
               ))}
             </Select>
+            <FormHelperText>Windows displayed in {this.props.timezone}</FormHelperText>
           </FormControl>
 
           <FormControl>
@@ -501,7 +502,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
             </InputLabel>
             <Select
               value={settingsForm.day}
-              onChange={e => this.setState({
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => this.setState({
                 settingsForm:
                   { ...settingsForm, day: e.target.value },
               })}
@@ -652,7 +653,7 @@ const connected = connect((state) => ({
 
 export default compose(
   preloaded,
-  styled,
+  styled as any,
   withRouter,
   connected,
 )(LinodeBackup);
