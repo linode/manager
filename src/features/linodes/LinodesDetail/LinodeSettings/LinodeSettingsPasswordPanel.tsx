@@ -181,7 +181,7 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
               }
             </Select>
             {singleDisk && <HelpIcon
-                text="This option is available only for Linodes with multiple disks."
+                text="This option is available for Linodes with multiple disks."
             />}
           </div>
           {
