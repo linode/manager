@@ -42,10 +42,8 @@ import ProductNotification from 'src/components/ProductNotification';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import transitionStatus from 'src/features/linodes/linodeTransitionStatus';
 
 import LinodeBackup from './LinodeBackup';
-import LinodeBusyStatus from './LinodeSummary/LinodeBusyStatus';
 import LinodeNetworking from './LinodeNetworking';
 import LinodePowerControl from './LinodePowerControl';
 import LinodeRebuild from './LinodeRebuild';
@@ -236,9 +234,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
         const { match: { params: { linodeId } } } = this.props;
         requestAllTheThings(linodeId!)
           .then(({ linode, image, volumes, configs, disks }) => {
-            this.setState({ 
-              linode: {...linode, recentEvent: linodeEvent },
-              image, volumes, configs, disks });
+            this.setState({ linode, image, volumes, configs, disks });
           });
       });
 
@@ -416,9 +412,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               <Tab key={tab.title} label={tab.title} data-qa-tab={tab.title} />)}
           </Tabs>
         </AppBar>
-        {transitionStatus.includes(linode.status) &&
-          <LinodeBusyStatus linode={linode} />
-        }
         {
           (this.state.notifications || []).map((n, idx) =>
             <ProductNotification key={idx} severity={n.severity} text={n.message} />)
