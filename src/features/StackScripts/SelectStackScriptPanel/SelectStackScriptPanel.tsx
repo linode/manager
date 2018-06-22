@@ -7,9 +7,8 @@ import TableRow from 'material-ui/Table/TableRow';
 import KeyboardArrowDown from 'material-ui-icons/KeyboardArrowDown';
 import KeyboardArrowUp from 'material-ui-icons/KeyboardArrowUp';
 
-import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { pathOr } from 'ramda';
+import { pathOr, compose } from 'ramda';
 
 import { getStackScriptsByUser, getCommunityStackscripts }
   from 'src/services/stackscripts';
@@ -407,7 +406,7 @@ const mapStateToProps = (state: Linode.AppState) => ({
 
 const styled = withStyles(styles, { withTheme: true });
 
-const StyledContainer = compose<Linode.TodoAny>(
+const StyledContainer = compose<Linode.TodoAny, Linode.TodoAny, Linode.TodoAny>(
   connect(mapStateToProps),
   styled,
 )(Container);
