@@ -43,6 +43,7 @@ import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoad
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import transitionStatus from 'src/features/linodes/linodeTransitionStatus';
+import transitionAction from 'src/features/linodes/transitionAction';
 
 import LinodeBackup from './LinodeBackup';
 import LinodeBusyStatus from './LinodeSummary/LinodeBusyStatus';
@@ -416,7 +417,10 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               <Tab key={tab.title} label={tab.title} data-qa-tab={tab.title} />)}
           </Tabs>
         </AppBar>
-        {transitionStatus.includes(linode.status) &&
+        {(transitionStatus.includes(linode.status) 
+          || (transitionAction.includes((linode.recentEvent && linode.recentEvent.action) || '')
+              && linode.recentEvent && ((linode.recentEvent.percent_complete || 100) < 100))
+         ) &&
           <LinodeBusyStatus linode={linode} />
         }
         {
