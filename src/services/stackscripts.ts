@@ -1,5 +1,3 @@
-import { over, lensProp, filter } from 'ramda';
-
 import { API_ROOT } from 'src/constants';
 import Request, {
   setURL,
@@ -20,21 +18,29 @@ export const getStackscripts = (params?: any, filter?: any) =>
   )
     .then(response => response.data);
 
-export const getMyStackscripts = (params?: any, filter?: any) =>
-  getStackscripts(params, { mine: true, ...filter });
+export const getStackScriptsByUser = (username: string, params?: any, filter?: any) =>
+  getStackscripts(params, {
+    username,
+    ...filter,
+  });
 
-export const getLinodeStackscripts = (params?: any, filter?: any) =>
-  getStackscripts(params, filter)
-    .then(updateData(filterLinodeUser));
+// API does not currently support this
+// export const getCommunityStackscripts = (currentUser: string, params?: any, filter?: any) =>
+//   getStackscripts(params, {
+//     '+and': [
+//       { username: { '+not': 'linode' } },
+//       { username: { '+not': currentUser } },
+//       ...filter,
+//     ],
+//   });
 
-export const getCommunityStackscripts = (username: string) =>
-  getStackscripts()
-    .then(updateData(filterLinodeUser))
-    .then(updateData(filterMine(username)));
-
-const updateData = <T>(fn: (a: T[]) => T[]) => over(lensProp('data'), fn);
-
-const filterLinodeUser = filter<Linode.StackScript.Response>(s => s.username !== 'Linode');
-
-const filterMine = (username: string) =>
-  filter<Linode.StackScript.Response>(s => s.username !== username);
+export const getCommunityStackscripts = (currentUser: string, params?: any, filter?: any) =>
+  getStackscripts(params, filter).then((response) => {
+    const withoutOwnAndLinode = response.data.filter((stackScript) => {
+      return stackScript.username !== 'linode' && stackScript.username !== currentUser;
+    });
+    return {
+      ...response,
+      data: withoutOwnAndLinode,
+    };
+  });

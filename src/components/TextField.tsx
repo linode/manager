@@ -12,6 +12,7 @@ export interface Props extends TextFieldProps {
 class LinodeTextField extends React.Component<Props> {
   shouldComponentUpdate(nextProps: Props) {
     return nextProps.value !== this.props.value
+      || nextProps.error !== this.props.error
       || nextProps.errorText !== this.props.errorText
       || nextProps.affirmative !== this.props.affirmative
       || nextProps.select !== this.props.select

@@ -248,7 +248,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
               onChange: this.handleTypeLabel,
               errorText: hasErrorFor('label'),
             }}
-            updateFor={[label]}
+            updateFor={[label, errors]}
           />
           <PasswordPanel
             error={hasErrorFor('root_pass')}

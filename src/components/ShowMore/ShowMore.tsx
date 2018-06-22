@@ -8,6 +8,8 @@ type CSSClasses =  'chip' | 'label' | 'popover';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   chip: {
+    position: 'relative',
+    top: -1,
     height: 20,
     marginLeft: theme.spacing.unit / 2,
     backgroundColor: theme.bg.lightBlue,
@@ -19,6 +21,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     },
     '&:focus': {
       backgroundColor: theme.bg.lightBlue,
+      outline: '1px dotted #999',
     },
   },
   label: {
