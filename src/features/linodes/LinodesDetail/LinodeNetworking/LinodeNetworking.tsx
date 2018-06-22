@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { compose, path, pathOr, head } from 'ramda';
 import {
   withStyles,
   StyleRulesCallback,
@@ -17,6 +18,7 @@ import Grid from 'src/components/Grid';
 import Table from 'src/components/Table';
 import { getLinodeIPs } from 'src/services/linodes';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
+import { ZONES } from 'src/constants';
 
 import LinodeNetworkingActionMenu from './LinodeNetworkingActionMenu';
 import ViewIPDrawer from './ViewIPDrawer';
@@ -25,6 +27,8 @@ import CreateIPv4Drawer from './CreateIPv4Drawer';
 import CreateIPv6Drawer from './CreateIPv6Drawer';
 import EditRDNSDrawer from './EditRDNSDrawer';
 import AddNewLink from 'src/components/AddNewLink';
+
+import LinodeNetworkingSummaryPanel from './LinodeNetworkingSummaryPanel';
 
 type ClassNames =
   'root'
@@ -35,8 +39,7 @@ type ClassNames =
   | 'action'
   | 'ipv4Container'
   | 'ipv4Title'
-  | 'ipv4TitleContainer'
-  | 'ipv6Title';
+  | 'ipv4TitleContainer';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
@@ -68,12 +71,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     },
   },
   ipv4Title: {
-    marginTop: theme.spacing.unit,
     marginBottom: theme.spacing.unit * 2,
-  },
-  ipv6Title: {
     marginTop: theme.spacing.unit * 4,
-    marginBottom: theme.spacing.unit * 2,
   },
   ipv4TitleContainer: {
     flex: 1,
@@ -85,6 +84,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 interface Props {
   linodeID: number;
+  linodeRegion: string;
+  linodeLabel: string;
 }
 
 interface PreloadedProps {
@@ -239,21 +240,21 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, linodeID } = this.props;
+    const { classes, linodeID, linodeLabel, linodeRegion } = this.props;
     const { linodeIPs } = this.state;
-
+    const firstPublicIPAddress = getFirstPublicIPv4FromResponse(linodeIPs);
     return (
       <React.Fragment>
-        <Typography
-          variant="headline"
-          className={classes.title}
-          data-qa-title
-        >
-          Networking
-        </Typography>
-        <Grid container justify="space-between" alignItems="flex-end" className={classes.ipv4Container}>
-          <Grid item className={classes.ipv4TitleContainer}
-            data-qa-ipv4-subheading>
+
+        <LinodeNetworkingSummaryPanel
+          linkLocal={path(['ipv6', 'link_local', 'address'], linodeIPs)}
+          sshIPAddress={firstPublicIPAddress}
+          linodeLabel={linodeLabel}
+          linodeRegion={ZONES[linodeRegion]}
+        />
+
+        <Grid container justify="space-between" alignItems="flex-end">
+          <Grid item className={classes.ipv4TitleContainer}>
             <Typography
               variant="title"
               className={classes.ipv4Title}
@@ -308,7 +309,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           <Grid item>
             <Typography
               variant="title"
-              className={classes.ipv6Title}
+              className={classes.ipv4Title}
               data-qa-ipv6-subheading
             >
               IPv6
@@ -379,5 +380,11 @@ const preloaded = PromiseLoader<Props>({
 });
 
 const styled = withStyles(styles, { withTheme: true });
+
+const getFirstPublicIPv4FromResponse = compose(
+  path<string>(['address']),
+  head,
+  pathOr([], ['ipv4', 'public']),
+);
 
 export default preloaded(styled(LinodeNetworking));
