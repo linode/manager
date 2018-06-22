@@ -1,8 +1,9 @@
 import * as React from 'react';
 import * as moment from 'moment-timezone';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { path, sortBy, pathOr } from 'ramda';
+import { compose, path, sortBy, pathOr } from 'ramda';
 import { Subscription } from 'rxjs/Rx';
+import { connect } from 'react-redux';
 
 import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -100,6 +101,10 @@ interface Props {
   backupsSchedule: Linode.LinodeBackupSchedule;
 }
 
+interface ConnectedProps {
+  timezone: string;
+}
+
 interface PreloadedProps {
   backups: PromiseLoaderResponse<Linode.LinodeBackupsResponse>;
   type: PromiseLoaderResponse<Linode.LinodeType>;
@@ -124,7 +129,11 @@ interface State {
   cancelBackupsAlertOpen: boolean;
 }
 
-type CombinedProps = Props & PreloadedProps & WithStyles<ClassNames> & RouteComponentProps<{}>;
+type CombinedProps = Props
+  & PreloadedProps
+  & WithStyles<ClassNames>
+  & RouteComponentProps<{}>
+  & ConnectedProps;
 
 const typeMap = {
   auto: 'Automatic',
@@ -220,7 +229,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     super(props);
 
     /* TODO: use the timezone from the user's profile */
-    this.windows = this.initWindows(moment.tz.guess());
+    this.windows = this.initWindows(this.props.timezone);
 
     this.days = [
       ['Choose a day', 'Scheduling'],
@@ -637,4 +646,13 @@ const preloaded = PromiseLoader<Props>({
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default preloaded(styled(withRouter(LinodeBackup)));
+const connected = connect((state) => ({
+  timezone: pathOr(moment.tz.guess(), ['resources', 'profile', 'data', 'timezone'], state),
+}));
+
+export default compose(
+  preloaded,
+  styled,
+  withRouter,
+  connected,
+)(LinodeBackup);
