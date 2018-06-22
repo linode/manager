@@ -10,7 +10,7 @@ import {
   uniqBy,
 } from 'ramda';
 
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
+import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
 
 import notifications$ from 'src/notifications';
 import Notice from 'src/components/Notice';

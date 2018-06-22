@@ -1,15 +1,11 @@
 import * as React from 'react';
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
 
-import Dialog, { DialogProps, DialogContentText } from 'material-ui/Dialog';
-import DialogTitle from 'material-ui/Dialog/DialogTitle';
-import DialogContent from 'material-ui/Dialog/DialogContent';
-import DialogActions from 'material-ui/Dialog/DialogActions';
+import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
+import Dialog, { DialogProps } from '@material-ui/core/Dialog';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
 
 type ClassNames = 'root' | 'error';
 
@@ -35,7 +31,7 @@ const ConfirmationDialog: React.StatelessComponent<CombinedProps> = (props) => {
     children,
     actions,
     error,
-    ...dialogProps,
+    ...dialogProps
   } = props;
   return (
     <Dialog

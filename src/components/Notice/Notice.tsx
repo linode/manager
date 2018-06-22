@@ -1,11 +1,10 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
 
-import { withStyles, StyleRulesCallback, WithStyles } from 'material-ui';
-import Typography, { TypographyProps } from 'material-ui/Typography';
-import { GridProps } from 'material-ui/Grid';
+import { withStyles, StyleRulesCallback, WithStyles } from '@material-ui/core/styles';
+import Typography, { TypographyProps } from '@material-ui/core/Typography';
+import Grid, { GridProps } from 'src/components/Grid';
 
-import Grid from 'src/components/Grid';
 import Flag from 'src/assets/icons/flag.svg';
 
 type ClassNames = 'root'

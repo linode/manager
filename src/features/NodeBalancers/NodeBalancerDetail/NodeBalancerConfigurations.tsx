@@ -6,7 +6,7 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
-} from 'material-ui';
+} from '@material-ui/core/styles';
 import {
   compose,
   append,
@@ -22,7 +22,7 @@ import {
 } from 'ramda';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 
-import Typography from 'material-ui/Typography';
+import Typography from '@material-ui/core/Typography';
 
 import {
   getNodeBalancerConfigs,
@@ -100,7 +100,6 @@ type CombinedProps =
   & RouteProps
   & WithStyles<ClassNames>
   & PreloadedProps;
-
 
 const getConfigsWithNodes = (nodeBalancerId: number) => {
   return getNodeBalancerConfigs(nodeBalancerId).then((configs) => {

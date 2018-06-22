@@ -1,22 +1,17 @@
 import * as React from 'react';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-  MenuItem,
-} from 'material-ui';
-import Button from 'material-ui/Button';
-import FormHelperText from 'material-ui/Form/FormHelperText';
-import InputAdornment from 'material-ui/Input/InputAdornment';
+import Button from '@material-ui/core/Button';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import MenuItem from '@material-ui/core/MenuItem';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-import Grid from 'src/components/Grid';
-import Drawer from 'src/components/Drawer';
-import TextField from 'src/components/TextField';
 import ActionsPanel from 'src/components/ActionsPanel';
+import Drawer from 'src/components/Drawer';
+import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
+import TextField from 'src/components/TextField';
+import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
 type ClassNames = 'root'
   | 'section'

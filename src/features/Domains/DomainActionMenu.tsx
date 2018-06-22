@@ -61,6 +61,4 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
   }
 }
 
-
-
 export default LinodeActionMenu;

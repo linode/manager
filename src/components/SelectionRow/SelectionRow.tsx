@@ -1,16 +1,21 @@
 import * as React from 'react';
-import { compose, map, unless, isEmpty, over, lensIndex, splitAt } from 'ramda';
 import { Link } from 'react-router-dom';
-import * as invariant from 'invariant';
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
-import TableCell from 'material-ui/Table/TableCell';
-import TableRow from 'material-ui/Table/TableRow';
 
-import Typography from 'material-ui/Typography';
+import * as invariant from 'invariant';
+
+import { compose, isEmpty, lensIndex, map, over, splitAt, unless } from 'ramda';
+
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
+
 import Radio from 'src/components/Radio';
-import Tag from 'src/components/Tag';
-import ShowMore from 'src/components/ShowMore';
 import RenderGuard from 'src/components/RenderGuard';
+import ShowMore from 'src/components/ShowMore';
+import Tag from 'src/components/Tag';
+
+import Typography from '@material-ui/core/Typography';
 
 type ClassNames = 'root'
   | 'respPadding'

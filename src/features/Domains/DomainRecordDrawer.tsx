@@ -2,9 +2,9 @@ import * as React from 'react';
 import * as classNames from 'classnames';
 import { cond, defaultTo, equals, lensPath, path, pathOr, pick, set } from 'ramda';
 
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
-import Button, { ButtonProps } from 'material-ui/Button';
-import MenuItem from 'material-ui/Menu/MenuItem';
+import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
+import Button, { ButtonProps } from '@material-ui/core/Button';
+import MenuItem from 'src/components/MenuItem';
 
 import { updateDomain, createDomainRecord, updateDomainRecord } from 'src/services/domains';
 import defaultNumeric from 'src/utilities/defaultNumeric';
@@ -75,7 +75,6 @@ interface State {
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
-
 
 interface _TextFieldProps {
   label: string;
@@ -244,7 +243,6 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       <MenuItem value={1209600}>2 weeks</MenuItem>
       <MenuItem value={2419200}>4 weeks</MenuItem>
     </TextField>
-
 
   ProtocolField = () =>
     <TextField

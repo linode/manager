@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
+import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
 import { Subscription, Observable } from 'rxjs/Rx';
 import { assoc, compose, sort, take, values } from 'ramda';
 import * as moment from 'moment';
 
-import Menu from 'material-ui/Menu';
+import Menu from '@material-ui/core/Menu';
 
 import { events$, init } from 'src/events';
 import notifications$ from 'src/notifications';

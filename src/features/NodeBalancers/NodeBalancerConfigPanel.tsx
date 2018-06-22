@@ -1,20 +1,22 @@
 import * as React from 'react';
-import { withStyles, StyleRulesCallback, WithStyles, Theme, Divider, MenuItem } from 'material-ui';
-import Paper from 'material-ui/Paper';
-import Typography from 'material-ui/Typography';
-import Delete from 'material-ui-icons/Delete';
-import FormControlLabel from 'material-ui/Form/FormControlLabel';
+import { withStyles, StyleRulesCallback, WithStyles, Theme } from '@material-ui/core/styles';
+import { Delete } from '@material-ui/icons';
+import Divider from '@material-ui/core/Divider';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 
-import Button from 'src/components/Button';
-import { FormHelperText } from 'material-ui/Form';
+import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
-import IconButton from 'src/components/IconButton';
+import Button from 'src/components/Button';
+import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import Grid from 'src/components/Grid';
+import IconButton from 'src/components/IconButton';
+import MenuItem from 'src/components/MenuItem';
+import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Notice from 'src/components/Notice';
 
 type ClassNames = 'root'
   | 'inner'

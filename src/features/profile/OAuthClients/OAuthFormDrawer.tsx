@@ -4,11 +4,11 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
-} from 'material-ui';
+} from '@material-ui/core/styles';
 
-import FormControl from 'material-ui/Form/FormControl';
-import FormControlLabel from 'material-ui/Form/FormControlLabel';
-import Button from 'material-ui/Button';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Button from '@material-ui/core/Button';
 import Drawer from 'src/components/Drawer';
 import ActionsPanel from 'src/components/ActionsPanel';
 

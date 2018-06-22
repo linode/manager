@@ -4,30 +4,27 @@ import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { StickyContainer } from 'react-sticky';
 
-import { withStyles, WithStyles, Theme, StyleRules } from 'material-ui/styles';
-import Typography from 'material-ui/Typography';
-import AppBar from 'material-ui/AppBar';
-import Tabs, { Tab } from 'material-ui/Tabs';
+import { withStyles, WithStyles, Theme, StyleRules } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
+import Typography from '@material-ui/core/Typography';
 
-import { parseQueryParams } from 'src/utilities/queryParams';
 import { dcDisplayNames } from 'src/constants';
-import {
-  getLinodes,
-} from 'src/services/linodes';
+import { ExtendedRegion } from 'src/components/SelectRegionPanel';
 import { getImages } from 'src/services/images';
-
+import { getLinodes } from 'src/services/linodes';
+import { parseQueryParams } from 'src/utilities/queryParams';
 import Grid from 'src/components/Grid';
 import PromiseLoader from 'src/components/PromiseLoader';
 
+import { ExtendedLinode } from './SelectLinodePanel';
+import { ExtendedType } from './SelectPlanPanel';
+import { typeLabelDetails, displayType } from '../presentation';
 import FromBackupsContent from './TabbedContent/FromBackupsContent';
 import FromImageContent from './TabbedContent/FromImageContent';
 import FromLinodeContent from './TabbedContent/FromLinodeContent';
 import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
-
-import { ExtendedLinode } from './SelectLinodePanel';
-import { ExtendedRegion } from 'src/components/SelectRegionPanel';
-import { ExtendedType } from './SelectPlanPanel';
-import { typeLabelDetails, displayType } from '../presentation';
 
 type Info = { title: string, details?: string } | undefined;
 

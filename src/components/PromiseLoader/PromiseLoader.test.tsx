@@ -14,7 +14,6 @@ describe('PromiseLoaderSpec', () => {
   const LoadedComponent = preloaded(Component);
   let wrapper: ShallowWrapper;
 
-
   describe('before resolution', () => {
     beforeEach(async () => {
       wrapper = shallow(<LoadedComponent />);

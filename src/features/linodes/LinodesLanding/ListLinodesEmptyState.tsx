@@ -7,12 +7,10 @@ import {
   Theme,
   WithStyles,
   StyleRulesCallback,
-} from 'material-ui/styles';
+} from '@material-ui/core/styles';
 import Grid from 'src/components/Grid';
-import Typography from 'material-ui/Typography';
-import Button from 'material-ui/Button';
-
-
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 
 type CSSClasses = 'root' | 'copy' | 'button' | 'icon' | 'title';
 

@@ -5,11 +5,11 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
-} from 'material-ui';
-import Typography from 'material-ui/Typography';
+} from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 import TextField from 'src/components/TextField';
-import FormHelperText from 'material-ui/Form/FormHelperText';
-import Button from 'material-ui/Button';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Button from '@material-ui/core/Button';
 
 import { updateIP } from 'src/services/networking';
 import Drawer from 'src/components/Drawer';

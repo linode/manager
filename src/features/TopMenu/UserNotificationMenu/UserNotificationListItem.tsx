@@ -6,14 +6,12 @@ import {
   StyleRulesCallback,
   WithStyles,
   Theme,
-} from 'material-ui';
-
+} from '@material-ui/core/styles';
 
 type ClassNames = 'root'
   | 'title'
   | 'content'
   | 'unread';
-
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => {
   const { palette: { status } } = theme;

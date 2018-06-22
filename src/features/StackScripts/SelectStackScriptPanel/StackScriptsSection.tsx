@@ -1,11 +1,13 @@
 import * as React from 'react';
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
-import TableBody from 'material-ui/Table/TableBody';
-import TableRow from 'material-ui/Table/TableRow';
-import TableCell from 'material-ui/Table/TableCell';
 
-import SelectionRow from 'src/components/SelectionRow';
+import {  StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
+
 import CircleProgress from 'src/components/CircleProgress';
+import SelectionRow from 'src/components/SelectionRow';
 
 import { formatDate } from 'src/utilities/format-date-iso8601';
 

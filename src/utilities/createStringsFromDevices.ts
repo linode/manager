@@ -27,4 +27,3 @@ export default compose(
   reduce(rdx, {}),
   toPairs,
 );
-

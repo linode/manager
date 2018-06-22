@@ -11,4 +11,3 @@ createResourcePage = data => ({
   number: 1,
   results: 0,
 });
-

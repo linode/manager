@@ -3,12 +3,11 @@ import {
   withStyles,
   WithStyles,
   StyleRulesCallback,
-} from 'material-ui';
-import IconButton from 'material-ui/IconButton';
-import Typography from 'material-ui/Typography';
-import Popover from 'material-ui/Popover';
-import HelpOutline from 'material-ui-icons/HelpOutline';
-
+} from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+import Popover from '@material-ui/core/Popover';
+import { HelpOutline } from '@material-ui/icons';
 
 interface Props {
   text: string;

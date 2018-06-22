@@ -4,9 +4,9 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
-} from 'material-ui';
+} from '@material-ui/core/styles';
 
-import Typography from 'material-ui/Typography';
+import Typography from '@material-ui/core/Typography';
 
 import Button from 'src/components/Button';
 import ActionsPanel from 'src/components/ActionsPanel';

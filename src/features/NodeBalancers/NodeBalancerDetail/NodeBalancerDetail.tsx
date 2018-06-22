@@ -1,40 +1,34 @@
 import * as React from 'react';
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
-import AppBar from 'material-ui/AppBar';
-import Tabs, { Tab } from 'material-ui/Tabs';
-import IconButton from 'material-ui/IconButton';
-import KeyboardArrowLeft from 'material-ui-icons/KeyboardArrowLeft';
+
 import { compose, pathOr } from 'ramda';
-import {
-  matchPath,
-  Redirect,
-  Route,
-  RouteComponentProps,
-  Switch,
-} from 'react-router-dom';
 
-import {
-  getNodeBalancer, updateNodeBalancer,
-  getNodeBalancerConfigs,
-} from 'src/services/nodebalancers';
-import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-import NodeBalancerSettings from './NodeBalancerSettings';
+import { matchPath, Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 
-import Grid from 'src/components/Grid';
-import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
-import ErrorState from 'src/components/ErrorState';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+
+import AppBar from '@material-ui/core/AppBar';
+import IconButton from '@material-ui/core/IconButton';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
+
+import { KeyboardArrowLeft } from '@material-ui/icons';
+
+import { getNodeBalancer, getNodeBalancerConfigs, updateNodeBalancer }
+  from 'src/services/nodebalancers';
+
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import EditableText from 'src/components/EditableText';
+import ErrorState from 'src/components/ErrorState';
+import Grid from 'src/components/Grid';
+import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
+
+import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
+import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-import NodeBalancerSummary from './NodeBalancerSummary';
 import NodeBalancerConfigurations from './NodeBalancerConfigurations';
+import NodeBalancerSettings from './NodeBalancerSettings';
+import NodeBalancerSummary from './NodeBalancerSummary';
 
 
 type ClassNames = 'root'
@@ -265,7 +259,7 @@ const reloaded = reloadableWithRouter<PreloadedProps, { nodeBalancerId?: number 
   },
 );
 
-export default compose(
+export default compose<any, any, any, any, any>(
   setDocs(NodeBalancerDetail.docs),
   reloaded,
   styled,

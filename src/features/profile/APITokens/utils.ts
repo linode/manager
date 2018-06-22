@@ -1,6 +1,5 @@
 export type Permission = [string, number];
 
-
 export const perms = [
   'account',
   'domains',

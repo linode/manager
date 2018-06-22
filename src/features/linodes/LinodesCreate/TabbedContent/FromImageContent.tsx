@@ -4,7 +4,7 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
-} from 'material-ui';
+} from '@material-ui/core/styles';
 
 import { pathOr } from 'ramda';
 
@@ -30,7 +30,6 @@ import {
 } from 'src/services/linodes';
 
 import { resetEventsPolling } from 'src/events';
-
 
 type ClassNames = 'root' | 'main' | 'sidebar';
 
@@ -320,4 +319,3 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles, { withTheme: true });
 
 export default styled(FromImageContent);
-
