@@ -121,9 +121,6 @@ const LinodeTheme: Linode.Theme = {
         height: 20,
         borderRadius: 4,
         color: '#555',
-        '&:focus': {
-          outline: '1px dotted #999',
-        },
       },
       label: {
         paddingLeft: 4,
