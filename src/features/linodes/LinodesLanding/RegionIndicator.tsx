@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import { formatRegion } from '../presentation';
