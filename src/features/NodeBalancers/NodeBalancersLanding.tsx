@@ -258,7 +258,7 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
                       </Link>
                     </TableCell>
                     <TableCell data-qa-node-status>
-                      {`${nodeBalancer.up} up, ${nodeBalancer.down} down`}
+                    {nodeBalancer.up} up <br /> {nodeBalancer.down} down
                     </TableCell>
                     <TableCell data-qa-transferred>
                       {convertMegabytesTo(nodeBalancer.transfer.total)}
