@@ -24,11 +24,9 @@ import { getImage } from 'src/services/images';
 import { getLinode, getLinodeConfigs, getLinodeDisks, getLinodeVolumes, renameLinode } from 'src/services/linodes';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { linodeInTransition } from 'src/features/linodes/transitions';
 
 import { Provider, RequestableProps } from './context';
 import LinodeBackup from './LinodeBackup';
-import LinodeBusyStatus from './LinodeSummary/LinodeBusyStatus';
 import LinodeNetworking from './LinodeNetworking';
 import LinodePowerControl from './LinodePowerControl';
 import LinodeRebuild from './LinodeRebuild';
@@ -605,7 +603,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
             <Route exact path={`${url}/resize`} component={LinodeResize} />
             <Route exact path={`${url}/rescue`} component={LinodeRescue} />
             <Route exact path={`${url}/rebuild`} component={LinodeRebuild} />
-            <Route exact path={`${url}/backup`} render={this.backup(linode)} />
+            <Route exact path={`${url}/backup`} component={LinodeBackup} />
             <Route exact path={`${url}/settings`} render={this.settings(linode, configs, disks)} />
             {/* 404 */}
             <Redirect to={`${url}/summary`} />
@@ -626,10 +624,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
   settings(linode: Linode.Linode, configs?: Linode.Config[], disks?: Linode.Disk[]): () => JSX.Element {
     return () => (<LinodeSettings linodeId={linode.id} linodeLabel={linode.label} linodeAlerts={linode.alerts} linodeConfigs={configs || []} linodeMemory={linode.specs.memory} linodeTotalDisk={linode.specs.disk} linodeRegion={linode.region} linodeStatus={linode.status} linodeDisks={disks || []} linodeWatchdogEnabled={linode.watchdog_enabled || false} />);
-  }
-
-  backup(linode: Linode.Linode): () => JSX.Element {
-    return () => (<LinodeBackup linodeInTransition={linodeInTransition(linode.status)} linodeID={linode.id} linodeRegion={linode.region} linodeType={linode.type} backupsEnabled={linode.backups.enabled} backupsSchedule={linode.backups.schedule} />);
   }
 
   launchWeblish = (id: string) => () => weblishLaunch(id);
