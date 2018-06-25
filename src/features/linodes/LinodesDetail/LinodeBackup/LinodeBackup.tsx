@@ -146,13 +146,9 @@ const evenize = (n: number): number => {
 };
 
 export const aggregateBackups = (backups: Linode.LinodeBackupsResponse): Linode.LinodeBackup[] => {
-  const manualSnapshot =
-    path(['status'], backups.snapshot.in_progress) === 'needsPostProcessing'
-      ? {
-          ...backups.snapshot.in_progress,
-          label: `${backups.snapshot.in_progress!.label} (being processed)`,
-        } as Linode.LinodeBackup
-      : backups.snapshot.current;
+  const manualSnapshot = path(['status'], backups.snapshot.in_progress) === 'needsPostProcessing'
+    ? backups.snapshot.in_progress
+    : backups.snapshot.current;
   return backups && [...backups.automatic!, manualSnapshot!].filter(b => Boolean(b));
 };
 
