@@ -600,7 +600,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
           }
           <Switch>
             <Route exact path={`${url}/summary`} component={LinodeSummary} />
-            <Route exact path={`${url}/volumes`} render={this.volumes(linode, volumes)} />
+            <Route exact path={`${url}/volumes`} component={LinodeVolumes} />
             <Route exact path={`${url}/networking`} render={this.networking(linode)} />
             <Route exact path={`${url}/rescue`} render={this.rescue(linode)} />
             <Route exact path={`${url}/resize`} render={this.resize(linode)} />
@@ -646,10 +646,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
   networking(linode: Linode.Linode): () => JSX.Element {
     return () => (<LinodeNetworking linodeID={linode.id} linodeRegion={linode.region} linodeLabel={linode.label} />);
-  }
-
-  volumes(linode: Linode.Linode, volumes?: Linode.Volume[]): () => JSX.Element {
-    return () => (<LinodeVolumes linodeID={linode.id} linodeLabel={linode.label} linodeRegion={linode.region} linodeVolumes={volumes} />);
   }
 
   launchWeblish = (id: string) => () => weblishLaunch(id);

@@ -43,6 +43,7 @@ import ActionMenu from './LinodeVolumesActionMenu';
 import { events$, resetEventsPolling } from 'src/events';
 import AddNewLink, { Props as AddNewLinkProps } from 'src/components/AddNewLink';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { withContext } from '../context';
 
 type ClassNames = 'title';
 
@@ -54,14 +55,16 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 });
 
 interface Props {
+  /** PromiseLoader */
+  volumes: PromiseLoaderResponse<Linode.Volume[]>;
+  linodeConfigs: PromiseLoaderResponse<Linode.Config[]>;
+}
+
+interface ContextProps {
   linodeVolumes: Linode.Volume[];
   linodeLabel: string;
   linodeRegion: string;
   linodeID: number;
-
-  /** PromiseLoader */
-  volumes: PromiseLoaderResponse<Linode.Volume[]>;
-  linodeConfigs: PromiseLoaderResponse<Linode.Config[]>;
 }
 
 interface AttachVolumeDrawerState {
@@ -89,7 +92,7 @@ interface State {
   updateVolumeDrawer: UpdateVolumeDrawerState;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & ContextProps & WithStyles<ClassNames>;
 
 class LinodeVolumes extends React.Component<CombinedProps, State> {
   static defaultProps = {
@@ -864,16 +867,24 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const preloaded = PromiseLoader({
-  linodeConfigs: (props: Props) => getLinodeConfigs(props.linodeID)
+const preloaded = PromiseLoader<Props & ContextProps>({
+  linodeConfigs: (props) => getLinodeConfigs(props.linodeID)
     .then(response => response.data),
 
-  volumes: (props: Props) => getVolumes()
+  volumes: (props) => getVolumes()
     .then(response => response.data
       .filter(volume => volume.region === props.linodeRegion && volume.linode_id === null)),
 });
 
-export default compose<any, any, any, any>(
+const context = withContext((context) => ({
+  linodeID: context.linode.data!.id,
+  linodeLabel: context.linode.data!.label,
+  linodeRegion: context.linode.data!.region,
+  linodeVolumes: context.volumes.data,
+}));
+
+export default compose<any, any, any, any, any>(
+  context,
   styled,
   SectionErrorBoundary,
   preloaded,
