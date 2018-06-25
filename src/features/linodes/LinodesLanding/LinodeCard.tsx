@@ -19,12 +19,12 @@ import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSe
 import { weblishLaunch } from 'src/features/Weblish';
 import Grid from 'src/components/Grid';
 import CircleProgress from 'src/components/CircleProgress';
+import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
 
 import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';
 import LinodeActionMenu from './LinodeActionMenu';
 import { typeLabelDetails, displayType } from '../presentation';
-import transitionStatus from '../linodeTransitionStatus';
 import LinodeStatusIndicator from './LinodeStatusIndicator';
 
 type CSSClasses =
@@ -216,7 +216,7 @@ class LinodeCard extends React.Component<CombinedProps> {
           </Grid>
           <Grid item xs={12}>
             <Typography align="center" className={classes.loadingStatusText}>
-              {linodeStatus.replace('_', ' ')}
+              {transitionText(linodeStatus, linodeRecentEvent)}
             </Typography>
           </Grid>
         </Grid>
@@ -278,9 +278,9 @@ class LinodeCard extends React.Component<CombinedProps> {
   }
 
   render() {
-    const { classes, openConfigDrawer, linodeId, linodeLabel,
+    const { classes, openConfigDrawer, linodeId, linodeLabel, linodeRecentEvent,
        linodeStatus, toggleConfirmation } = this.props;
-    const loading = transitionStatus.includes(linodeStatus);
+    const loading = linodeInTransition(linodeStatus, linodeRecentEvent)
 
     return (
       <Grid item xs={12} sm={6} lg={4} xl={3} data-qa-linode={linodeLabel}>
