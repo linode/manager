@@ -1,31 +1,29 @@
 import * as React from 'react';
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+
 import Paper from '@material-ui/core/Paper';
-import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
-import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
 
 import Grid from 'src/components/Grid';
 import Table from 'src/components/Table';
 import { getLinodeIPs } from 'src/services/linodes';
+
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 
-import LinodeNetworkingActionMenu from './LinodeNetworkingActionMenu';
-import ViewIPDrawer from './ViewIPDrawer';
-import ViewRangeDrawer from './ViewRangeDrawer';
+import AddNewLink from 'src/components/AddNewLink';
 import CreateIPv4Drawer from './CreateIPv4Drawer';
 import CreateIPv6Drawer from './CreateIPv6Drawer';
 import EditRDNSDrawer from './EditRDNSDrawer';
-import AddNewLink from 'src/components/AddNewLink';
+import LinodeNetworkingActionMenu from './LinodeNetworkingActionMenu';
 import IPTransferPanel from './LinodeNetworkingIPTransferPanel';
+import ViewIPDrawer from './ViewIPDrawer';
+import ViewRangeDrawer from './ViewRangeDrawer';
 
 type ClassNames =
   'root'
