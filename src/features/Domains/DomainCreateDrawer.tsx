@@ -1,22 +1,21 @@
 import * as React from 'react';
+
 import { pathOr } from 'ramda';
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
+
+import { StyleRulesCallback, Theme, withStyles,WithStyles } from '@material-ui/core/styles';
 
 import Drawer from 'src/components/Drawer';
 
-import { sendToast } from 'src/features/ToastNotifications/toasts';
 import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/Button';
 import Notice from 'src/components/Notice';
-import { createDomain, cloneDomain } from 'src/services/domains';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import Reload from 'src/assets/icons/reload.svg';
 import TextField from 'src/components/TextField';
+
+import Reload from 'src/assets/icons/reload.svg';
+
+import { sendToast } from 'src/features/ToastNotifications/toasts';
+import { cloneDomain, createDomain  } from 'src/services/domains';
+import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root';
@@ -181,16 +180,14 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
         <ActionsPanel>
           {!submitting
             ? <Button
-                variant="raised"
-                color="primary"
+                type="primary"
                 onClick={() => this.submit()}
                 data-qa-submit
               >
                 Create
               </Button>
             : <Button
-                variant="raised"
-                color="secondary"
+                type="secondary"
                 disabled
                 className="loading"
               >
@@ -198,9 +195,8 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
               </Button>
           }
           <Button
-            onClick={() => {
-              onClose();
-            }}
+            onClick={() => { onClose() }}
+            type="cancel"
             data-qa-cancel
           >
             Cancel
