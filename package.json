@@ -168,7 +168,9 @@
       "<rootDir>/src/**/?(*.)(spec|test).ts?(x)"
     ],
     "testEnvironment": "node",
-    "testPathIgnorePatterns": ["<rootDir>/src/components/Storyshots.test.tsx"],
+    "testPathIgnorePatterns": [
+      "<rootDir>/src/components/Storyshots.test.tsx"
+    ],
     "testURL": "http://localhost",
     "transform": {
       "^.+\\.tsx?$": "<rootDir>/config/jest/typescriptTransform.js",
