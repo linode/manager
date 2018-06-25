@@ -114,7 +114,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
           <Typography data-qa-description>
             If you're expecting a temporary burst of traffic to your website,
             or if you're not using your Linode as much as you thought,
-            you can temporarily or permenantly resize your Linode
+            you can temporarily or permanently resize your Linode
             to a different plan.
           </Typography>
           <div className={classes.currentPlanContainer} data-qa-current-container>
