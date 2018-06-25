@@ -32,6 +32,7 @@ import ErrorState from 'src/components/ErrorState';
 import DeviceSelection, { ExtendedDisk, ExtendedVolume } from './DeviceSelection';
 import createDevicesFromStrings, { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
 import AddNewLink from 'src/components/AddNewLink';
+import { withContext } from 'src/features/linodes/LinodesDetail/context';
 
 type ClassNames = 'root'
   | 'title'
@@ -54,7 +55,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props {
+interface Props { }
+
+interface ContextProps {
   linodeId: number;
   linodeRegion?: string;
 }
@@ -75,7 +78,7 @@ interface State {
   counter: number;
 }
 
-type CombinedProps = Props & PromiseLoaderProps & WithStyles<ClassNames>;
+type CombinedProps = Props & PromiseLoaderProps & ContextProps & WithStyles<ClassNames>;
 
 export class LinodeRescue extends React.Component<CombinedProps, State> {
   constructor(props: CombinedProps) {
@@ -225,7 +228,13 @@ export const preloaded = PromiseLoader({
   ),
 });
 
-export default compose<any, any, any, any>(
+const context = withContext((context) => ({
+  linodeId: context.linode.data!.id,
+  linodeRegion: context.linode.data!.region,
+}));
+
+export default compose<any, any, any, any, any>(
+  context,
   preloaded,
   SectionErrorBoundary,
   styled,
