@@ -2,6 +2,7 @@ import { both, compose, equals, isNil, lensPath, over, path, set, uniq, view, wh
 import * as React from 'react';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core';
+import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -15,8 +16,15 @@ import Select from 'src/components/Select';
 import TextField from 'src/components/TextField';
 import { getLinodes } from 'src/services/linodes';
 import { assignAddresses } from 'src/services/networking';
+// import { callbackify } from 'util';
 
-type ClassNames = 'root' | 'title' | 'ipField';
+type ClassNames = 'root' 
+  | 'title'
+  | 'containerDivider'
+  | 'ipField'
+  | 'ipFieldLabel'
+  | 'actionsLabel'
+  | 'separator';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   ipRowLoading: {
@@ -27,8 +35,26 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     marginBottom: theme.spacing.unit * 2,
     marginTop: theme.spacing.unit * 4,
   },
+  containerDivider: {
+   marginTop: theme.spacing.unit,
+  },
   ipField: {
     marginTop: 0,
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      width: 175,
+    },
+  },
+  ipFieldLabel: {
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      width: `calc(175px + ${theme.spacing.unit * 2}px)`,
+    },
+  },
+  actionsLabel: {
+    [theme.breakpoints.down('sm')]: {
+      display: 'none',
+    },
   },
 });
 
@@ -186,13 +212,17 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
     const { classes } = this.props;
     return (
       <Grid container key={state.sourceIP}>
-        <Grid item xs={3}>
+        <Grid item xs={12}>
+          <Divider className={classes.containerDivider} />
+        </Grid>
+        <Grid item>
           <TextField disabled value={state.sourceIP} className={classes.ipField} />
         </Grid>
-        <Grid item xs={2}>
+        <Grid item xs={12} sm={'auto'}>
           <Select
             value={state.mode}
             onChange={this.onModeChange(state.sourceIP)}
+            fullWidth={false}
           >
             <MenuItem value="none">Select Action</MenuItem>
             <MenuItem value="move">Move To</MenuItem>
@@ -207,11 +237,12 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
 
   private linodeSelect = ({ mode, sourceIP, selectedLinodeID }: Move) => {
     return (
-      <Grid item xs={3}>
+      <Grid item xs={12} sm={'auto'}>
         <Select
           disabled={this.state.linodes.length === 1}
           value={selectedLinodeID}
           onChange={this.onSelectedLinodeChange(sourceIP)}
+          fullWidth={false}
         >
           {
             this.state.linodes.map(l => (
@@ -224,10 +255,11 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
 
   private ipSelect = ({ sourceIP, selectedIP, selectedLinodesIPs }: Swap) => {
     return (
-      <Grid item xs={3}>
+      <Grid item xs={12} sm={'auto'}>
         <Select
           disabled={selectedLinodesIPs.length === 1}
           value={selectedIP}
+          fullWidth={false}
           onChange={this.onSelectedIPChange(sourceIP)}
         >
           {selectedLinodesIPs.map(ip => <MenuItem key={ip} value={ip}>{ip}</MenuItem>)}
@@ -374,15 +406,15 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
                 <Grid item xs={12}>
                   <Typography>
                     If you have two Linodes in the same data center, you can use the IP transfer feature to
-                    switch their IP addresses. This could be useful in several situations. For example,
+                    switch their IP addresses. <br/>This could be useful in several situations. For example,
                     if you’ve built a new server to replace an old one, you could swap IP addresses instead
                     of updating the DNS records.
                 </Typography>
                 </Grid>
                 <Grid item xs={12}>
                   <Grid container>
-                    <Grid item xs={3}>IP Address</Grid>
-                    <Grid item xs={2}>Actions</Grid>
+                    <Grid item className={classes.ipFieldLabel}>IP Address</Grid>
+                    <Grid item className={classes.actionsLabel}>Actions</Grid>
                   </Grid>
                   {
                     this.state.loading
