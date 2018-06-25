@@ -1,8 +1,8 @@
 import { both, compose, equals, isNil, lensPath, over, path, set, uniq, view, when } from 'ramda';
 import * as React from 'react';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from 'material-ui';
-import Typography from 'material-ui/Typography';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
