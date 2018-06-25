@@ -509,10 +509,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
     const matches = (p: string) => Boolean(matchPath(p, { path: this.props.location.pathname }));
 
-    if (!linode) {
-      return <NotFound />;
-    }
-
     /** @todo Error handling. */
 
     const initialLoad =
@@ -524,6 +520,10 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
     if (initialLoad) {
       return <CircleProgress />
+    }
+
+    if (!linode) {
+      return <NotFound />;
     }
 
     if (!linode) { console.error('Linode undefined in render.'); return null; }
@@ -601,7 +601,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
           <Switch>
             <Route exact path={`${url}/summary`} component={LinodeSummary} />
             <Route exact path={`${url}/volumes`} component={LinodeVolumes} />
-            <Route exact path={`${url}/networking`} render={this.networking(linode)} />
+            <Route exact path={`${url}/networking`} component={LinodeNetworking} />
             <Route exact path={`${url}/rescue`} render={this.rescue(linode)} />
             <Route exact path={`${url}/resize`} render={this.resize(linode)} />
             <Route exact path={`${url}/rebuild`} render={this.rebuild(linode)} />
@@ -642,10 +642,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
   rescue(linode: Linode.Linode): () => JSX.Element {
     return () => (<LinodeRescue linodeId={linode.id} linodeRegion={linode.region} />);
-  }
-
-  networking(linode: Linode.Linode): () => JSX.Element {
-    return () => (<LinodeNetworking linodeID={linode.id} linodeRegion={linode.region} linodeLabel={linode.label} />);
   }
 
   launchWeblish = (id: string) => () => weblishLaunch(id);
