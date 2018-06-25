@@ -1,25 +1,29 @@
 import * as React from 'react';
 
-import {
-  StyleRulesCallback,
-  Theme,
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
+import * as ClassNames from 'classnames';
+
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+
+import InputAdornment from '@material-ui/core/InputAdornment';
+import Search from '@material-ui/icons/Search';
 
 import { debounce } from 'throttle-debounce';
 
 import TextField from 'src/components/TextField';
 
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'searchIcon';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {},
+  searchIcon: {
+    color: `${theme.color.grey1} !important`,
+  },
 });
 
 interface Props {
   onSearch: any;
+  className?: string;
 }
 
 interface State {
@@ -44,6 +48,8 @@ class DebouncedSearch extends React.Component<CombinedProps, State> {
 
   render() {
     const { query } = this.state;
+    const { classes, className } = this.props;
+
     return (
       <React.Fragment>
         <TextField
@@ -52,7 +58,14 @@ class DebouncedSearch extends React.Component<CombinedProps, State> {
             placeholder: 'Search for StackScript by Label or Description',
             value: query,
             onChange: this.handleChangeQuery,
+            startAdornment:
+              <InputAdornment position="end">
+                <Search className={classes.searchIcon} />
+              </InputAdornment>
           }}
+          className={ClassNames(
+            className,
+          )}
         />
       </React.Fragment>
     );

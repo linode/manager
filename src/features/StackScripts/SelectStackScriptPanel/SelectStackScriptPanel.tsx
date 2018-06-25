@@ -44,8 +44,11 @@ type ClassNames = 'root'
   | 'tr'
   | 'tableHead'
   | 'sortButton'
+  | 'emptyState'
+  | 'sortIcon'
   | 'table'
-  | 'emptyState';
+  | 'searchWrapper'
+  | 'searchBar';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -86,7 +89,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   tableHead: {
     position: 'sticky',
-    top: 0,
+    top: 72,
     backgroundColor: theme.bg.offWhite,
     zIndex: 10,
     paddingTop: 0,
@@ -101,7 +104,23 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   emptyState: {
     textAlign: 'center',
     padding: '10em',
-  }
+  },
+  sortIcon: {
+    position: 'relative',
+    top: 2,
+    left: 10,
+  },
+  searchWrapper: {
+    position: 'sticky', 
+    width: '100%',
+    top: 0,
+    zIndex: 11,
+  },
+  searchBar: {
+    marginTop: 0,
+    paddingBottom: theme.spacing.unit * 3,
+    backgroundColor: theme.color.white,
+  },
 });
 
 interface Props {
@@ -647,16 +666,19 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
           <Link to="/stackscripts/create"> create one</Link>
           </div>
           : <React.Fragment>
-            <DebouncedSearch onSearch={this.handleSearch} />
+            <div className={classes.searchWrapper}>
+              <DebouncedSearch
+                onSearch={this.handleSearch}
+                className={classes.searchBar}
+              />
+            </div>
             <Table noOverflow={true} tableClass={classes.table}>
               <TableHead>
                 <TableRow className={classes.tr}>
-                  {!!this.props.onSelect &&
-                    <TableCell className={classNames({
-                      [classes.tableHead]: true,
-                      [classes.stackscriptLabel]: true,
-                    })} />
-                  }
+                  <TableCell className={classNames({
+                    [classes.tableHead]: true,
+                    [classes.stackscriptLabel]: true,
+                  })} />
                   <TableCell
                     className={classNames({
                       [classes.tableHead]: true,
