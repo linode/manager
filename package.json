@@ -159,7 +159,6 @@
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}"
     ],
-
     "setupFiles": [
       "<rootDir>/config/polyfills.js"
     ],
