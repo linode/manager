@@ -17,8 +17,8 @@ import {
 } from 'ramda';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-// import Paper from '@material-ui/core/Paper';
-// import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 
 import Grid from 'src/components/Grid';
 import RenderGuard from 'src/components/RenderGuard';
@@ -33,7 +33,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     padding: theme.spacing.unit * 3,
   },
   flatImagePanelSelections: {
-    marginTop: theme.spacing.unit,
+    marginTop: theme.spacing.unit * 2,
     padding: `${theme.spacing.unit}px 0`,
   },
   root: {},
@@ -103,41 +103,49 @@ const CreateFromImage: React.StatelessComponent<CombinedProps> = (props) => {
   const olderPublicImages = getOlderPublicImages(images);
   const myImages = getMyImages(images);
 
+  const renderPublicImages = () => (
+    publicImages.length
+    && publicImages.map((image: Linode.Image, idx: number) => (
+      <SelectionCard
+        key={idx}
+        checked={image.id === String(props.selectedImageID)}
+        onClick={() => handleSelection(image.id)}
+        renderIcon={() => {
+          return <span className={`fl-${distroIcons[(image.vendor as string)]}`} />;
+        }}
+        heading={(image.vendor as string)}
+        subheadings={[image.label]}
+      />
+    ))
+  );
+
+  const renderOlderPublicImages = () => (
+    olderPublicImages.length
+    && olderPublicImages.map((image: Linode.Image, idx: number) => (
+      <SelectionCard
+        key={idx}
+        checked={image.id === String(props.selectedImageID)}
+        onClick={() => handleSelection(image.id)}
+        renderIcon={() => {
+          return <span className={`fl-${distroIcons[(image.vendor as string)]}`} />;
+        }}
+        heading={(image.vendor as string)}
+        subheadings={[image.label]}
+      />
+    ))
+  );
+
   const tabs = [
     {
       title: 'Public Images',
       render: () => (
         <React.Fragment>
           <Grid container spacing={16}>
-            {publicImages.length
-              && publicImages.map((image: Linode.Image, idx: number) => (
-                <SelectionCard
-                  key={idx}
-                  checked={image.id === String(props.selectedImageID)}
-                  onClick={() => handleSelection(image.id)}
-                  renderIcon={() => {
-                    return <span className={`fl-${distroIcons[(image.vendor as string)]}`} />;
-                  }}
-                  heading={(image.vendor as string)}
-                  subheadings={[image.label]}
-                />
-              ))}
+            {renderPublicImages()}
           </Grid>
           <ShowMoreExpansion name="Show Older Images">
             <Grid container spacing={8} style={{ marginTop: 16 }}>
-              {olderPublicImages.length
-                && olderPublicImages.map((image: Linode.Image, idx: number) => (
-                  <SelectionCard
-                    key={idx}
-                    checked={image.id === String(props.selectedImageID)}
-                    onClick={() => handleSelection(image.id)}
-                    renderIcon={() => {
-                      return <span className={`fl-${distroIcons[(image.vendor as string)]}`} />;
-                    }}
-                    heading={(image.vendor as string)}
-                    subheadings={[image.label]}
-                  />
-                ))}
+              {renderOlderPublicImages()}
             </Grid>
           </ShowMoreExpansion>
         </React.Fragment>
@@ -165,36 +173,36 @@ const CreateFromImage: React.StatelessComponent<CombinedProps> = (props) => {
   const renderTabs = () => {
     const { hideMyImages } = props;
     if (hideMyImages) {
-      return tabs.filter(tab => tab.title !== 'My Images')
+      return tabs;
     }
     return tabs;
   }
 
   return (
-    <TabbedPanel
-      error={error}
-      header="Select Image Type"
-      tabs={renderTabs()}
-    />
-    // <Paper className={props.classes.flatImagePanel}>
-    //   <Typography variant="title">
-    //     Select Image
-    //   </Typography>
-    //   <Grid className={props.classes.flatImagePanelSelections} container>
-    //     {publicImages && publicImages.map((image: Linode.Image, idx: number) => (
-    //       <SelectionCard
-    //         key={idx}
-    //         checked={image.id === String(props.selectedImageID)}
-    //         onClick={() => handleSelection(image.id)}
-    //         renderIcon={() => {
-    //           return <span className={`fl-${distroIcons[(image.vendor as string)]}`} />;
-    //         }}
-    //         heading={(image.vendor as string)}
-    //         subheadings={[image.label]}
-    //       />
-    //     ))}
-    //   </Grid>
-    // </Paper>
+    <React.Fragment>
+      {(props.hideMyImages !== true) // if we have no olderPublicImage, hide the dropdown
+        ? <TabbedPanel
+          error={error}
+          header="Select Image"
+          tabs={renderTabs()}
+        />
+        : <Paper className={props.classes.flatImagePanel}>
+          <Typography variant="title">
+            Select Image
+</Typography>
+          <Grid className={props.classes.flatImagePanelSelections} container>
+            {renderPublicImages()}
+          </Grid>
+          {olderPublicImages.length > 0 &&
+            <ShowMoreExpansion name="Show Older Images">
+              <Grid container spacing={8} style={{ marginTop: 16 }}>
+                {renderOlderPublicImages()}
+              </Grid>
+            </ShowMoreExpansion>
+          }
+        </Paper>
+      }
+    </React.Fragment>
   );
 };
 

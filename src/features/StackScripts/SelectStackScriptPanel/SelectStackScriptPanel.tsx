@@ -112,7 +112,7 @@ interface Props {
   shrinkPanel?: boolean;
   onSelect: (id: number, label: string, username: string, images: string[],
     userDefinedFields: Linode.StackScript.UserDefinedField[]) => void;
-  images?: Linode.Image[];
+  images: Linode.Image[];
 }
 
 type StyledProps = Props & WithStyles<ClassNames>;
@@ -181,7 +181,7 @@ interface ContainerProps {
     userDefinedFields: Linode.StackScript.UserDefinedField[]) => void;
   profile: Linode.Profile;
   isLinodeStackScripts?: boolean;
-  publicImages?: Linode.Image[];
+  publicImages: Linode.Image[];
 }
 
 type CurrentFilter = 'label' | 'deploys' | 'revision';
@@ -319,7 +319,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, publicImages } = this.props;
     const { currentFilterType, isSorting } = this.state;
 
     if (this.state.loading) {
@@ -398,6 +398,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
             selectedId={this.state.selected}
             data={this.state.data}
             getNext={() => this.getNext()}
+            publicImages={publicImages}
           />
         </Table>
         {this.state.showMoreButtonVisible && !isSorting &&
