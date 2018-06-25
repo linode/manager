@@ -27,6 +27,7 @@ import ErrorState from 'src/components/ErrorState';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import PasswordInput from 'src/components/PasswordInput';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { withContext } from '../context';
 
 type ClassNames = 'root'
  | 'title'
@@ -54,7 +55,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props {
+interface Props { }
+
+interface ContextProps {
   linodeId: number;
 }
 
@@ -69,7 +72,7 @@ interface State {
   password?: string;
 }
 
-type CombinedProps = Props & PromiseLoaderProps & WithStyles<ClassNames>;
+type CombinedProps = Props & PromiseLoaderProps & ContextProps &  WithStyles<ClassNames>;
 
 class LinodeRebuild extends React.Component<CombinedProps, State> {
   constructor(props: CombinedProps) {
@@ -223,7 +226,12 @@ const preloaded = PromiseLoader({
     .then(response => response.data),
 });
 
-export default compose<any, any, any, any>(
+const context = withContext((context) => ({
+  linodeId: context.linode.data!.id,
+}));
+
+export default compose<any, any, any, any, any>(
+  context,
   preloaded,
   SectionErrorBoundary,
   styled,

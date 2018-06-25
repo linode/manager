@@ -604,7 +604,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
             <Route exact path={`${url}/networking`} component={LinodeNetworking} />
             <Route exact path={`${url}/resize`} component={LinodeResize} />
             <Route exact path={`${url}/rescue`} component={LinodeRescue} />
-            <Route exact path={`${url}/rebuild`} render={this.rebuild(linode)} />
+            <Route exact path={`${url}/rebuild`} component={LinodeRebuild} />
             <Route exact path={`${url}/backup`} render={this.backup(linode)} />
             <Route exact path={`${url}/settings`} render={this.settings(linode, configs, disks)} />
             {/* 404 */}
@@ -630,10 +630,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
   backup(linode: Linode.Linode): () => JSX.Element {
     return () => (<LinodeBackup linodeInTransition={linodeInTransition(linode.status)} linodeID={linode.id} linodeRegion={linode.region} linodeType={linode.type} backupsEnabled={linode.backups.enabled} backupsSchedule={linode.backups.schedule} />);
-  }
-
-  rebuild(linode: Linode.Linode): () => JSX.Element {
-    return () => (<LinodeRebuild linodeId={linode.id} />);
   }
 
   launchWeblish = (id: string) => () => weblishLaunch(id);
