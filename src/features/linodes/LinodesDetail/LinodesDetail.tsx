@@ -604,7 +604,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
             <Route exact path={`${url}/rescue`} component={LinodeRescue} />
             <Route exact path={`${url}/rebuild`} component={LinodeRebuild} />
             <Route exact path={`${url}/backup`} component={LinodeBackup} />
-            <Route exact path={`${url}/settings`} render={this.settings(linode, configs, disks)} />
+            <Route exact path={`${url}/settings`} component={LinodeSettings} />
             {/* 404 */}
             <Redirect to={`${url}/summary`} />
           </Switch>
@@ -620,10 +620,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
         </Provider>
       </React.Fragment>
     );
-  }
-
-  settings(linode: Linode.Linode, configs?: Linode.Config[], disks?: Linode.Disk[]): () => JSX.Element {
-    return () => (<LinodeSettings linodeId={linode.id} linodeLabel={linode.label} linodeAlerts={linode.alerts} linodeConfigs={configs || []} linodeMemory={linode.specs.memory} linodeTotalDisk={linode.specs.disk} linodeRegion={linode.region} linodeStatus={linode.status} linodeDisks={disks || []} linodeWatchdogEnabled={linode.watchdog_enabled || false} />);
   }
 
   launchWeblish = (id: string) => () => weblishLaunch(id);

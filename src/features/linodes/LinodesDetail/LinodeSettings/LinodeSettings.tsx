@@ -10,6 +10,7 @@ import LinodeSettingsLabelPanel from './LinodeSettingsLabelPanel';
 import LinodeSettingsPasswordPanel from './LinodeSettingsPasswordPanel';
 import LinodeConfigsPanel from './LinodeConfigsPanel';
 import LinodeWatchdogPanel from './LinodeWatchdogPanel';
+import { Consumer } from '../context';
 
 type ClassNames = 'root' | 'title';
 
@@ -20,72 +21,62 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props {
-  linodeId: number;
-  linodeLabel: string;
-  linodeAlerts: Linode.LinodeAlerts;
-  linodeConfigs: Linode.Config[];
-  linodeRegion: string;
-  linodeMemory: number;
-  linodeTotalDisk: number;
-  linodeStatus: string;
-  linodeDisks: Linode.Disk[];
-  linodeWatchdogEnabled: boolean;
-}
-
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = WithStyles<ClassNames>;
 
 const LinodeSettings: React.StatelessComponent<CombinedProps> = (props) => {
-  const {
-    classes,
-    linodeAlerts,
-    linodeConfigs,
-    linodeId,
-    linodeLabel,
-    linodeMemory,
-    linodeTotalDisk,
-    linodeRegion,
-    linodeStatus,
-    linodeDisks,
-    linodeWatchdogEnabled,
-  } = props;
+  const { classes } = props;
 
   return (
-    <React.Fragment>
-      <Typography variant="headline" className={classes.title}>Settings</Typography>
-      <LinodeSettingsLabelPanel
-        linodeLabel={linodeLabel}
-        linodeId={linodeId}
-      />
-      <LinodeSettingsPasswordPanel
-        linodeDisks={linodeDisks}
-        linodeLabel={linodeLabel}
-        linodeId={linodeId}
-        linodeStatus={linodeStatus}
-      />
-      <LinodeSettingsAlertsPanel
-        linodeId={linodeId}
-        linodeLabel={linodeLabel}
-        linodeAlerts={linodeAlerts}
-      />
-      <LinodeWatchdogPanel
-        linodeId={linodeId}
-        currentStatus={linodeWatchdogEnabled}
-      />
-      <LinodeConfigsPanel
-        linodeDisks={linodeDisks}
-        linodeId={linodeId}
-        linodeLabel={linodeLabel}
-        linodeRegion={linodeRegion}
-        linodeConfigs={linodeConfigs}
-        linodeMemory={linodeMemory}
-        linodeTotalDisk={linodeTotalDisk}
-        linodeStatus={linodeStatus}
-      />
-      <LinodeSettingsDeletePanel
-        linodeId={linodeId}
-      />
-    </React.Fragment >
+    <Consumer>
+      {(context) => {
+        const {
+          linode: { data: linode },
+          disks: { data: disks },
+          configs: { data: configs },
+        } = context;
+        if (!linode) { return null; }
+        if (!disks) { return null; }
+        if (!configs) { return null; }
+
+        return (
+          <React.Fragment>
+            <Typography variant="headline" className={classes.title}>Settings</Typography>
+            <LinodeSettingsLabelPanel
+              linodeLabel={linode.label}
+              linodeId={linode.id}
+            />
+            <LinodeSettingsPasswordPanel
+              linodeDisks={disks}
+              linodeLabel={linode.label}
+              linodeId={linode.id}
+              linodeStatus={linode.status}
+            />
+            <LinodeSettingsAlertsPanel
+              linodeId={linode.id}
+              linodeLabel={linode.label}
+              linodeAlerts={linode.alerts}
+            />
+            <LinodeWatchdogPanel
+              linodeId={linode.id}
+              currentStatus={linode.watchdog_enabled}
+            />
+            <LinodeConfigsPanel
+              linodeDisks={disks}
+              linodeId={linode.id}
+              linodeLabel={linode.label}
+              linodeRegion={linode.region}
+              linodeConfigs={configs}
+              linodeMemory={linode.specs.memory}
+              linodeTotalDisk={linode.specs.disk}
+              linodeStatus={linode.status}
+            />
+            <LinodeSettingsDeletePanel
+              linodeId={linode.id}
+            />
+          </React.Fragment>
+        )
+      }}
+    </Consumer>
   );
 };
 
