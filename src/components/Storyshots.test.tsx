@@ -7,8 +7,6 @@ const getMatchOptions = ({context : {kind, story}, url}) => {
   }
 }
 
-jest.mock('global', () => global);
-
 jest.setTimeout(30000);
 
 initStoryshots({suite: 'Image storyshots', test: imageSnapshot({getMatchOptions})});
