@@ -288,11 +288,21 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       });
   }
 
+  scrollToTop = () => {
+    window.scroll({
+      behavior: 'smooth',
+      left: 0,
+      top: 0,
+    });
+  }
+
   handlePageSelection = (page: number) => {
+    this.scrollToTop();
     this.getLinodes(Math.min(page), this.state.pageSize);
   }
 
   handlePageSizeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    this.scrollToTop();
     this.getLinodes(this.state.page, parseInt(event.target.value, 0));
   }
 
