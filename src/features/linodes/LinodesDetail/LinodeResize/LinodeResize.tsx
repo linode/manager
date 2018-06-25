@@ -130,6 +130,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         />
         <ActionsPanel>
           <Button
+            disabled={!this.state.selectedId}
             variant="raised"
             color="primary"
             onClick={this.onSubmit}
