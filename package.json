@@ -99,7 +99,7 @@
     "test": "node scripts/test.js --env=jsdom",
     "storybook": "start-storybook -p 6006",
     "storybook:e2e": "./node_modules/.bin/wdio ./e2e/config/wdio.storybook.conf.js",
-    "storyshot": "npx jest --config ./.storybook/storyshots.jest.config.js src/components/Storyshots.test.tsx --env=jsdom",
+    "storyshots": "npx jest --config ./.storybook/storyshots.jest.config.js src/components/Storyshots.test.tsx --env=jsdom",
     "build-storybook": "build-storybook",
     "serve": "./node_modules/.bin/serve -s -p 3000 --ssl ./build",
     "selenium": "./node_modules/.bin/selenium-standalone install --config=./e2e/config/selenium-config.js && ./node_modules/.bin/selenium-standalone start --config=./e2e/config/selenium-config.js",
