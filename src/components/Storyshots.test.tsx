@@ -1,12 +1,10 @@
 import initStoryshots, { imageSnapshot } from '@storybook/addon-storyshots';
 
-const getMatchOptions = ({context : {kind, story}, url}) => {
-    return {
-        failureThreshold: 0.20,
-        failureThresholdType: 'percent',
-        customDiffConfig:  { threshold: 0.15 }
-    }
-}
+const getMatchOptions = ({context : {kind, story}, url}) => ({
+    failureThreshold: 0.2,
+    failureThresholdType: 'percent',
+    customDiffConfig:  { threshold: 0.15 }
+});
 
 jest.setTimeout(30000);
 
