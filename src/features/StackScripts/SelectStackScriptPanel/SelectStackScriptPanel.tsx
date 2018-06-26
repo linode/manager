@@ -121,9 +121,7 @@ type CombinedProps = StyledProps;
 
 class SelectStackScriptPanel extends React.Component<CombinedProps> {
 
-  filterPublicImages = (images: Linode.Image[]) => {
-    return images.filter((image: Linode.Image) => image.is_public)
-  }
+
 
   render() {
     const { classes, images } = this.props;
@@ -140,7 +138,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps> {
             render: () => <StyledContainer
               onSelect={this.props.onSelect}
               // images is an optional prop, so just send an empty array if we didn't get any
-              publicImages={(images) ? this.filterPublicImages(images) : []}
+              publicImages={images}
               request={getStackScriptsByUser} key={0}
             />,
           },
@@ -149,7 +147,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps> {
             render: () => <StyledContainer
               onSelect={this.props.onSelect}
               // images is an optional prop, so just send an empty array if we didn't get any
-              publicImages={(images) ? this.filterPublicImages(images) : []}
+              publicImages={images}
               request={getStackScriptsByUser} key={1}
               isLinodeStackScripts={true}
             />,
@@ -159,7 +157,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps> {
             render: () => <StyledContainer
               onSelect={this.props.onSelect}
               // images is an optional prop, so just send an empty array if we didn't get any
-              publicImages={(images) ? this.filterPublicImages(images) : []}
+              publicImages={images}
               request={getCommunityStackscripts} key={2}
             />,
           },
