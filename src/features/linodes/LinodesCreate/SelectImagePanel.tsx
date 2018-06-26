@@ -144,7 +144,7 @@ const CreateFromImage: React.StatelessComponent<CombinedProps> = (props) => {
             {renderPublicImages()}
           </Grid>
           <ShowMoreExpansion name="Show Older Images">
-            <Grid container spacing={8} style={{ marginTop: 16 }}>
+            <Grid container spacing={16} style={{ marginTop: 16 }}>
               {renderOlderPublicImages()}
             </Grid>
           </ShowMoreExpansion>
@@ -195,7 +195,7 @@ const CreateFromImage: React.StatelessComponent<CombinedProps> = (props) => {
           </Grid>
           {olderPublicImages.length > 0 &&
             <ShowMoreExpansion name="Show Older Images">
-              <Grid container spacing={8} style={{ marginTop: 16 }}>
+              <Grid container spacing={16} style={{ marginTop: 16 }}>
                 {renderOlderPublicImages()}
               </Grid>
             </ShowMoreExpansion>
