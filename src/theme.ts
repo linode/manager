@@ -139,6 +139,11 @@ const LinodeTheme: Linode.Theme = {
         strokeLinecap: 'inherit',
       },
     },
+    MuiCollapse: {
+      container: {
+        width: '100%',
+      },
+    },
     MuiDialog: {
       paper: {
         boxShadow: '0 0 5px #bbb',
