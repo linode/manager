@@ -1,7 +1,7 @@
 import { both, compose, equals, isNil, lensPath, over, path, set, uniq, view, when } from 'ramda';
 import * as React from 'react';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 
@@ -18,7 +18,7 @@ import { getLinodes } from 'src/services/linodes';
 import { assignAddresses } from 'src/services/networking';
 // import { callbackify } from 'util';
 
-type ClassNames = 'root' 
+type ClassNames = 'root'
   | 'title'
   | 'containerDivider'
   | 'ipField'
