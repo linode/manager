@@ -1,10 +1,6 @@
 import * as React from 'react';
-import {
-  withStyles,
-  Theme,
-  WithStyles,
-  StyleRulesCallback,
-} from '@material-ui/core/styles';
+
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import { formatRegion } from '../presentation';
 
@@ -13,6 +9,7 @@ type CSSClasses =  'regionIndicator';
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   regionIndicator: {
     alignItems: 'center',
+    whiteSpace: 'nowrap',
   },
 });
 
