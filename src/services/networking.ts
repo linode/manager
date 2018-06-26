@@ -7,4 +7,11 @@ export const updateIP = (address: string, payload: any) =>
     setData(payload),
     setMethod('PUT'),
   )
-    .then(response => response.data);
+  .then(response => response.data);
+
+  export const assignAddresses = (data: any) =>
+    Request(
+      setURL(`${API_ROOT}/networking/ipv4/assign`),
+      setMethod('POST'),
+      setData(data),
+    );

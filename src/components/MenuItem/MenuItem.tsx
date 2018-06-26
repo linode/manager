@@ -79,12 +79,16 @@ const WrapperMenuItem: React.StatelessComponent<CombinedProps> = (props) => {
       <span className={tooltip && classes.labelWrapper}>
         <span className={tooltip && classes.label}>{props.children}</span>
         {tooltip &&
-          <IconButton className={classes.helpButton} onClick={e => e.stopPropagation()}>
+          <IconButton
+            className={classes.helpButton}
+            onClick={e => e.stopPropagation()}
+            data-qa-tooltip-icon
+          >
             <HelpOutline className={classes.helpIcon}/>
           </IconButton>
         }
       </span>
-      {tooltip && <span className={classes.toolTip}>{tooltip}</span>}
+      {tooltip && <span className={classes.toolTip} data-qa-tooltip>{tooltip}</span>}
     </MenuItem>
   );
 };

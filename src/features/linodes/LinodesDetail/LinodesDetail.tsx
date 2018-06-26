@@ -38,6 +38,7 @@ import { weblishLaunch } from 'src/features/Weblish';
 
 import EditableText from 'src/components/EditableText';
 import Grid from 'src/components/Grid';
+import NotFound from 'src/components/NotFound';
 import ProductNotification from 'src/components/ProductNotification';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
@@ -192,7 +193,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     configs: this.props.data.response.configs,
     disks: this.props.data.response.disks,
     labelInput: {
-      label: this.props.data.response.linode.label,
+      label: pathOr(undefined, ['linode', 'label'], this.props.data.response),
       errorText: '',
     },
     configDrawer: {
@@ -258,7 +259,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
     this.notificationsSubscription = notifications$
       .map(filter(allPass([
-        pathEq(['entity', 'id'], this.state.linode.id),
+        pathEq(['entity', 'id'], pathOr(undefined, ['id'], this.state.linode)),
         has('message'),
       ])))
       .subscribe((notifications: Linode.Notification[]) =>
@@ -359,6 +360,10 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       disks,
     } = this.state;
     const matches = (p: string) => Boolean(matchPath(p, { path: this.props.location.pathname }));
+
+    if (!linode) {
+      return <NotFound />;
+    }
 
     return (
       <React.Fragment>
@@ -467,6 +472,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               linodeRegion={linode.region}
               linodeStatus={linode.status}
               linodeDisks={disks || []}
+              linodeWatchdogEnabled={linode.watchdog_enabled || false}
             />
           )} />
           {/* 404 */}
