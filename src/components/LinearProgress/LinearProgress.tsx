@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { withStyles, StyleRulesCallback, WithStyles, Theme } from '@material-ui/core/styles';
-import LinearProgress from '@material-ui/core/LinearProgress';
+import LinearProgress, { LinearProgressProps } from '@material-ui/core/LinearProgress';
 
 type CSSClasses = 'root';
 
@@ -9,8 +9,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   root: {},
 });
 
-interface Props {
-  value?: Boolean | number;
+interface Props extends LinearProgressProps {
 }
 
 type CombinedProps = Props & WithStyles<CSSClasses>;
@@ -21,6 +20,7 @@ const LinearProgressComponent: React.StatelessComponent<CombinedProps> = (props)
   return (
     <div className={props.classes.root}>
       <LinearProgress
+        {...props}
         value={value}
         variant={variant}
         data-qa-linear-progress
