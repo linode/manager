@@ -1,4 +1,4 @@
-import { head, path, tail } from 'ramda';
+import { path } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 
@@ -9,7 +9,6 @@ import Typography from '@material-ui/core/Typography';
 import CopyTooltip from 'src/components/CopyTooltip';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 import Grid from 'src/components/Grid';
-import ShowMore from 'src/components/ShowMore';
 
 type ClassNames = 'root'
   | 'title'
@@ -137,9 +136,6 @@ const renderIPv6DNSResolvers = () => () => (
     <IPAddress ips={ipv6DNSResolvers} copyRight />
   </div>
 )
-
-const renderAddresses = (addresses: string[]) => addresses.map(a =>
-  <Typography variant="caption" key={a}>{a}</Typography>)
 
 const renderSSHLink = (address?: string) => () => (
   <div style={{ display: 'flex', alignItems: "center" }}>
