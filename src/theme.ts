@@ -97,6 +97,7 @@ const LinodeTheme: Linode.Theme = {
           },
         },
         '&.loading': {
+          minWidth: 100,
           '& svg': {
             width: 22,
             height: 22,
