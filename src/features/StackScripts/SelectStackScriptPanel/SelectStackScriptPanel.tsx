@@ -112,6 +112,7 @@ interface Props {
   shrinkPanel?: boolean;
   onSelect: (id: number, label: string, username: string, images: string[],
     userDefinedFields: Linode.StackScript.UserDefinedField[]) => void;
+  images: Linode.Image[];
 }
 
 type StyledProps = Props & WithStyles<ClassNames>;
@@ -120,8 +121,10 @@ type CombinedProps = StyledProps;
 
 class SelectStackScriptPanel extends React.Component<CombinedProps> {
 
+
+
   render() {
-    const { classes } = this.props;
+    const { classes, images } = this.props;
 
     return (
       <TabbedPanel
@@ -134,6 +137,8 @@ class SelectStackScriptPanel extends React.Component<CombinedProps> {
             title: 'My StackScripts',
             render: () => <StyledContainer
               onSelect={this.props.onSelect}
+              // images is an optional prop, so just send an empty array if we didn't get any
+              publicImages={images}
               request={getStackScriptsByUser} key={0}
             />,
           },
@@ -141,6 +146,8 @@ class SelectStackScriptPanel extends React.Component<CombinedProps> {
             title: 'Linode StackScripts',
             render: () => <StyledContainer
               onSelect={this.props.onSelect}
+              // images is an optional prop, so just send an empty array if we didn't get any
+              publicImages={images}
               request={getStackScriptsByUser} key={1}
               isLinodeStackScripts={true}
             />,
@@ -149,6 +156,8 @@ class SelectStackScriptPanel extends React.Component<CombinedProps> {
             title: 'Community StackScripts',
             render: () => <StyledContainer
               onSelect={this.props.onSelect}
+              // images is an optional prop, so just send an empty array if we didn't get any
+              publicImages={images}
               request={getCommunityStackscripts} key={2}
             />,
           },
@@ -170,6 +179,7 @@ interface ContainerProps {
     userDefinedFields: Linode.StackScript.UserDefinedField[]) => void;
   profile: Linode.Profile;
   isLinodeStackScripts?: boolean;
+  publicImages: Linode.Image[];
 }
 
 type CurrentFilter = 'label' | 'deploys' | 'revision';
@@ -212,18 +222,16 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
 
     const filteredUser = (isLinodeStackScripts) ? 'linode' : profile.username;
 
-    if (!this.mounted) { return; }
-
     request(
       filteredUser,
       { page, page_size: 50 },
       filter)
       .then((response: Linode.ResourcePage<Linode.StackScript.Response>) => {
+        if (!this.mounted) { return; }
         if (!response.data.length || response.data.length === response.results) {
           this.setState({ showMoreButtonVisible: false });
         }
         const newData = (isSorting) ? response.data : [...this.state.data, ...response.data];
-        if (!this.mounted) { return; }
         this.setState({
           data: newData,
           gettingMoreStackScripts: false,
@@ -232,6 +240,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
         });
       })
       .catch((e: any) => {
+        if (!this.mounted) { return; }
         this.setState({ gettingMoreStackScripts: false });
       });
   }
@@ -308,7 +317,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, publicImages } = this.props;
     const { currentFilterType, isSorting } = this.state;
 
     if (this.state.loading) {
@@ -387,6 +396,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
             selectedId={this.state.selected}
             data={this.state.data}
             getNext={() => this.getNext()}
+            publicImages={publicImages}
           />
         </Table>
         {this.state.showMoreButtonVisible && !isSorting &&
