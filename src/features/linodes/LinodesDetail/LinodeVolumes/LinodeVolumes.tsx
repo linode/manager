@@ -863,7 +863,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
     const { updateVolumeDrawer } = this.state;
 
     if (this.state.redirect) {
-      return <Redirect push to="settings" />;
+      return <Redirect push to="settings#configs" />;
     }
   
 

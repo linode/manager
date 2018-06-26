@@ -243,6 +243,13 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
     });
   }
 
+  componentDidMount() {
+    if (window.location.hash) {
+      const hashWithoutSymbol = window.location.hash.replace('#', '');
+      document.getElementById(hashWithoutSymbol)!.scrollIntoView();
+    }
+  }
+
   calculateDiskFree = (): number => {
     return this.props.linodeTotalDisk -
       this.state.devices.disks.reduce((acc: number, disk: ExtendedDisk) => {
@@ -260,6 +267,7 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
             defaultExpanded
             heading="Advanced Configurations"
             success={this.state.success}
+            id="configs"
           >
             <Grid
               container
