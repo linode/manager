@@ -103,8 +103,15 @@ const errorResources = {
   root_pass: 'A root password',
 };
 
-const filterLinodesWithBackups = (linodes: Linode.Linode[]) =>
-  linodes.filter(linode => linode.backups.enabled);
+const filterLinodesWithBackups = (linodes: Linode.LinodeWithBackups[]) => {
+  return linodes.filter((linode) => {
+    const hasAutomaticBackups = !!linode.currentBackups.automatic.length;
+    const hasSnapshotBackup = !!linode.currentBackups.snapshot.current;
+    // backups both need to be enabled and some backups need to exist
+    // for the panel to show the Linode
+    return linode.backups.enabled && (hasAutomaticBackups || hasSnapshotBackup);
+  })
+};
 
 export class FromBackupsContent extends React.Component<CombinedProps, State> {
   state: State = {
@@ -139,6 +146,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
           };
         });
     }).then((data) => {
+      if (!this.mounted) { return; }
       this.setState({ linodesWithBackups: data, isGettingBackups: false });
     })
       .catch(err => this.setState({ isGettingBackups: false }));
@@ -255,7 +263,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       selectedTypeID, selectedRegionID, label, backups, linodesWithBackups, privateIP,
     selectedBackupInfo, isMakingRequest } = this.state;
     const { extendLinodes, getBackupsMonthlyPrice, classes,
-      linodes, notice, types, getRegionName, getTypeInfo } = this.props;
+       notice, types, getRegionName, getTypeInfo } = this.props;
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
 
@@ -292,9 +300,9 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
         <SelectLinodePanel
           error={hasErrorFor('linode_id')}
           linodes={compose(
-            (linodes: Linode.Linode[]) => extendLinodes(linodes),
+            (linodes: Linode.LinodeWithBackups[]) => extendLinodes(linodes),
             filterLinodesWithBackups,
-          )(linodes)}
+          )(linodesWithBackups!)}
           selectedLinodeID={selectedLinodeID}
           handleSelection={this.handleSelectLinode}
           updateFor={[selectedLinodeID, errors]}

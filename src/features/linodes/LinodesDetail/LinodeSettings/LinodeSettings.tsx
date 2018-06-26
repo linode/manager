@@ -3,11 +3,13 @@ import * as React from 'react';
 import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
-import LinodeConfigsPanel from './LinodeConfigsPanel';
 import LinodeSettingsAlertsPanel from './LinodeSettingsAlertsPanel';
 import LinodeSettingsDeletePanel from './LinodeSettingsDeletePanel';
+
 import LinodeSettingsLabelPanel from './LinodeSettingsLabelPanel';
 import LinodeSettingsPasswordPanel from './LinodeSettingsPasswordPanel';
+import LinodeConfigsPanel from './LinodeConfigsPanel';
+import LinodeWatchdogPanel from './LinodeWatchdogPanel';
 
 type ClassNames = 'root' | 'title';
 
@@ -28,6 +30,7 @@ interface Props {
   linodeTotalDisk: number;
   linodeStatus: string;
   linodeDisks: Linode.Disk[];
+  linodeWatchdogEnabled: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -44,6 +47,7 @@ const LinodeSettings: React.StatelessComponent<CombinedProps> = (props) => {
     linodeRegion,
     linodeStatus,
     linodeDisks,
+    linodeWatchdogEnabled,
   } = props;
 
   return (
@@ -63,6 +67,10 @@ const LinodeSettings: React.StatelessComponent<CombinedProps> = (props) => {
         linodeId={linodeId}
         linodeLabel={linodeLabel}
         linodeAlerts={linodeAlerts}
+      />
+      <LinodeWatchdogPanel
+        linodeId={linodeId}
+        currentStatus={linodeWatchdogEnabled}
       />
       <LinodeConfigsPanel
         linodeDisks={linodeDisks}

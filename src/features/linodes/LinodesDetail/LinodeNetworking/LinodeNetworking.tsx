@@ -1,32 +1,29 @@
 import * as React from 'react';
 import { compose, path, pathOr, head } from 'ramda';
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
-import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
-import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
 
 import Grid from 'src/components/Grid';
 import Table from 'src/components/Table';
 import { getLinodeIPs } from 'src/services/linodes';
+
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import { ZONES } from 'src/constants';
 
-import LinodeNetworkingActionMenu from './LinodeNetworkingActionMenu';
-import ViewIPDrawer from './ViewIPDrawer';
-import ViewRangeDrawer from './ViewRangeDrawer';
+import AddNewLink from 'src/components/AddNewLink';
 import CreateIPv4Drawer from './CreateIPv4Drawer';
 import CreateIPv6Drawer from './CreateIPv6Drawer';
 import EditRDNSDrawer from './EditRDNSDrawer';
-import AddNewLink from 'src/components/AddNewLink';
+import LinodeNetworkingActionMenu from './LinodeNetworkingActionMenu';
+import IPTransferPanel from './LinodeNetworkingIPTransferPanel';
+import ViewIPDrawer from './ViewIPDrawer';
+import ViewRangeDrawer from './ViewRangeDrawer';
 
 import LinodeNetworkingSummaryPanel from './LinodeNetworkingSummaryPanel';
 
@@ -144,7 +141,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
   };
 
   refreshIPs = () => {
-    getLinodeIPs(this.props.linodeID)
+    return getLinodeIPs(this.props.linodeID)
       .then(ips => this.setState({ linodeIPs: ips }))
       .catch(() => {
         /* @todo: we need a pattern for handling these errors */
@@ -348,6 +345,16 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
             </TableBody>
           </Table>
         </Paper>
+
+        <IPTransferPanel
+          linodeID={linodeID}
+          linodeRegion={linodeRegion}
+          refreshIPs={this.refreshIPs}
+          ipAddresses={[
+            ...linodeIPs.ipv4.public.map(i => i.address),
+            ...linodeIPs.ipv4.private.map(i => i.address),
+          ]}
+        />
 
         <ViewIPDrawer
           open={this.state.viewIPDrawer.open}

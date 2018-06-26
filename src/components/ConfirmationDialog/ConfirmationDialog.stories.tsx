@@ -25,8 +25,8 @@ class Example extends React.Component {
   renderActions = () => {
     return (
       <React.Fragment>
-        <Button onClick={this.decline}> No!</Button>
-        <Button onClick={this.confirm}>Yes!</Button>
+        <Button onClick={this.decline} data-qa-dialog-cancel> No!</Button>
+        <Button onClick={this.confirm} data-qa-dialog-confirm>Yes!</Button>
       </React.Fragment>
     );
   }
@@ -34,7 +34,12 @@ class Example extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Button onClick={() => { this.setState({ open: true }); }}>Do something!</Button>
+        <Button
+          onClick={() => { this.setState({ open: true }); }}
+          data-qa-dialog-button
+        >
+          Do something!
+        </Button>
         <ConfirmationDialog
           open={this.state.open}
           onClose={() => { this.setState({ open: false }); }}
