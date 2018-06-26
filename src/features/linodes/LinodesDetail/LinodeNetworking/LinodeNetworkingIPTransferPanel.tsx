@@ -16,21 +16,14 @@ import Select from 'src/components/Select';
 import TextField from 'src/components/TextField';
 import { getLinodes } from 'src/services/linodes';
 import { assignAddresses } from 'src/services/networking';
-// import { callbackify } from 'util';
 
-type ClassNames = 'root'
-  | 'title'
+type ClassNames = 'title'
   | 'containerDivider'
   | 'ipField'
   | 'ipFieldLabel'
-  | 'actionsLabel'
-  | 'separator';
+  | 'actionsLabel';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  ipRowLoading: {
-    backgroundColor: 'red',
-  },
-  root: {},
   title: {
     marginBottom: theme.spacing.unit * 2,
     marginTop: theme.spacing.unit * 4,
@@ -113,13 +106,13 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
     };
   }
 
-  private static defaultState = (sourceIP: string, sourceIPsLinodeID: number): NoAction => ({
+  static defaultState = (sourceIP: string, sourceIPsLinodeID: number): NoAction => ({
     mode: 'none',
     sourceIP,
     sourceIPsLinodeID,
   })
 
-  private onModeChange = (ip: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+  onModeChange = (ip: string) => (e: React.ChangeEvent<HTMLSelectElement>) => {
     const mode = e.target.value as Mode;
     const firstLinode = this.state.linodes[0];
 
@@ -157,7 +150,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
     )
   }
 
-  private onSelectedLinodeChange = (ip: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+  onSelectedLinodeChange = (ip: string) => (e: React.ChangeEvent<HTMLSelectElement>) => {
     this.setState(
       compose(
         setSelectedLinodeID(ip, e.target.value),
@@ -198,13 +191,13 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
     );
   }
 
-  private onSelectedIPChange = (ip: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+  onSelectedIPChange = (ip: string) => (e: React.ChangeEvent<HTMLSelectElement>) => {
     this.setState(
       setSelectedIP(ip, e.target.value)
     );
   }
 
-  private renderRow = (
+  renderRow = (
     state: IPStates,
     renderLinodeSelect?: (s: Move) => JSX.Element,
     renderIPSelect?: (s: Swap) => JSX.Element,
@@ -235,7 +228,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
     );
   }
 
-  private linodeSelect = ({ mode, sourceIP, selectedLinodeID }: Move) => {
+  linodeSelect = ({ mode, sourceIP, selectedLinodeID }: Move) => {
     return (
       <Grid item xs={12} sm={'auto'}>
         <Select
@@ -253,7 +246,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
     )
   }
 
-  private ipSelect = ({ sourceIP, selectedIP, selectedLinodesIPs }: Swap) => {
+  ipSelect = ({ sourceIP, selectedIP, selectedLinodesIPs }: Swap) => {
     return (
       <Grid item xs={12} sm={'auto'}>
         <Select
@@ -268,7 +261,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
     )
   }
 
-  public componentWillReceiveProps(nextProps: CombinedProps) {
+  componentWillReceiveProps(nextProps: CombinedProps) {
     this.setState({
       ips: nextProps.ipAddresses.reduce((state, ip) => ({
         ...state,
@@ -277,7 +270,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
     })
   }
 
-  private ipRow = (ipState: IPStates) => {
+  ipRow = (ipState: IPStates) => {
     if (isNoneState(ipState)) {
       return this.renderRow(ipState);
     }
@@ -293,7 +286,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
     return null;
   }
 
-  private onSubmit = () => {
+  onSubmit = () => {
     this.setState({ submitting: true, error: undefined });
 
     assignAddresses(
@@ -328,7 +321,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
       })
   };
 
-  private onReset = () => {
+  onReset = () => {
     this.setState({
       error: undefined,
       ips: this.props.ipAddresses.reduce((state, ip) => ({
@@ -338,11 +331,11 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
     });
   }
 
-  public componentDidMount() {
+  componentDidMount() {
     this.getLinodes();
   }
 
-  private getLinodes = () => {
+  getLinodes = () => {
     return getLinodes({}, { region: this.props.linodeRegion })
       .then(response => ({
         ...response,
@@ -363,7 +356,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
       });
   };
 
-  private transferActions = () => {
+  transferActions = () => {
     return (
       <ActionsPanel>
         <Button
@@ -377,7 +370,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
       </ActionsPanel>)
   }
 
-  public render() {
+  render() {
     const { classes } = this.props;
     const { ips, error } = this.state;
 
