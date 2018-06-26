@@ -202,14 +202,6 @@ exports.config = {
 
         browserCommands();
 
-        // if (argv.record) {
-        //     // POST RECORD PROXY
-        // }
-
-        // if (argv.replay) {
-        //     // POST REPLAY
-        // }
-
         browser.timeouts('page load', 20000);
         login(username, password);
     },
@@ -278,12 +270,6 @@ exports.config = {
      * @param {Array.<String>} specs List of spec file paths that ran
      */
     after: function (result, capabilities, specs) {
-        // if (mbTest) {
-        //     // DELETE IMPOSTERS
-        //     if (argv.record) { 
-        //         // SAVE
-        //     }
-        // }
     },
     /**
      * Gets executed right after terminating the webdriver session.
