@@ -408,7 +408,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes, regions } = this.props;
-    const { nodeBalancerFields } = this.state;
+    const { nodeBalancerFields, linodesWithPrivateIPs } = this.state;
     const hasErrorFor = getAPIErrorFor(errorResources, this.state.errors);
     const generalError = hasErrorFor('none');
 
@@ -472,6 +472,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                   return <Paper key={idx} style={{ padding: 24, margin: 8, width: '100%' }}>
                     <NodeBalancerConfigPanel
                       errors={nodeBalancerConfig.errors}
+                      linodesWithPrivateIPs={linodesWithPrivateIPs}
                       configIdx={idx}
 
                       algorithm={view(algorithmLens, this.state)}
