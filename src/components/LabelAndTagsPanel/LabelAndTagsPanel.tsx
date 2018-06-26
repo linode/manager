@@ -1,15 +1,14 @@
 import * as React from 'react';
 
-import { withStyles, StyleRulesCallback, WithStyles, Theme } from '@material-ui/core/styles';
+import { StyleRulesCallback, Theme, WithStyles, withStyles, } from '@material-ui/core/styles';
 
 import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 
-import TextField, { Props as TextFieldProps } from 'src/components/TextField';
-import Notice from 'src/components/Notice';
-import Grid from 'src/components/Grid';
-import Button from 'src/components/Button';
 import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/Button';
+import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
+import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 
 import RenderGuard from 'src/components/RenderGuard';
 
@@ -73,7 +72,6 @@ class InfoPanel extends React.Component<CombinedProps> {
                   />
                 }
               </Grid>
-              <Typography variant="title">Label</Typography>
               <div className={!isForm ? classes.inner : ''}>
                 {error && <Notice text={error} error />}
                 <TextField data-qa-label-panel {...labelFieldProps} />
@@ -96,7 +94,6 @@ class InfoPanel extends React.Component<CombinedProps> {
           : <Paper className={classes.root} data-qa-label-header>
             <div className={classes.inner}>
               {error && <Notice text={error} error />}
-              <Typography variant="title">Label</Typography>
               <TextField {...labelFieldProps} data-qa-label-input />
             </div>
           </Paper>

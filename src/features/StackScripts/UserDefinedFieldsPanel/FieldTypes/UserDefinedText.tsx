@@ -1,14 +1,14 @@
 import * as React from 'react';
+
 import {
-  withStyles,
   StyleRulesCallback,
   Theme,
   WithStyles,
+  withStyles,
 } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 
-import TextField from 'src/components/TextField';
 import RenderGuard from 'src/components/RenderGuard';
+import TextField from 'src/components/TextField';
 import PasswordPanel from 'src/features/linodes/LinodesCreate/PasswordPanel';
 
 type ClassNames = 'root';
@@ -40,17 +40,12 @@ class UserDefinedText extends React.Component<CombinedProps, State> {
     const { udf_data, field, isOptional } = this.props;
 
     return (
-      <React.Fragment>
-        <Typography variant="subheading" >
-          {field.label}
-        </Typography>
-        <TextField
-          required={!isOptional}
-          onChange={this.handleUpdateText}
-          label={field.label}
-          value={udf_data[field.name] || ''}
-        />
-      </React.Fragment>
+      <TextField
+        required={!isOptional}
+        onChange={this.handleUpdateText}
+        label={field.label}
+        value={udf_data[field.name] || ''}
+      />
     );
   }
 
