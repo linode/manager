@@ -32,6 +32,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Drawer from 'src/components/Drawer';
+import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
@@ -40,7 +41,8 @@ import TextField from 'src/components/TextField';
 
 type ClassNames = 'root'
 |  'suffix'
-|  'actionPanel';
+|  'actionPanel'
+|  'flexContainer';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
@@ -50,6 +52,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
   actionPanel: {
     marginTop: theme.spacing.unit * 2,
+  },
+  flexContainer: {
+    display: 'flex',
   },
 });
 
@@ -314,6 +319,39 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     }
   }
 
+  setCloneLabel = (e: any) => {
+    if (this.mounted) { this.setState({ cloneLabel: (e.target.value) }); }
+  }
+
+  setLabel = (e: any) => {
+    if (this.mounted) { this.setState({ label: (e.target.value) }); }
+  }
+
+  setSelectedConfig = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    this.setState({ selectedConfig: e.target.value });
+  }
+
+  setSelectedLinode = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    if (this.mounted) { this.setState({ linodeId: +(e.target.value) }); }
+    if (e.target.value) {
+      this.updateConfigs(+e.target.value);
+    }
+  }
+
+  setSelectedRegion = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    if (this.mounted) {
+      this.setState({
+        region: (e.target.value),
+        linodeId: 0,
+        configs: [],
+      });
+    }
+  }
+
+  setSize = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (this.mounted) { this.setState({ size: +(e.target.value) || 0 }); }
+  }
+
   render() {
     const { mode, classes } = this.props;
     const { linodes } = this.state;
@@ -348,7 +386,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     return (
       <Drawer
         open={mode !== modes.CLOSED}
-        onClose={() => this.onClose()}
+        onClose={this.onClose}
         title={titleMap[mode]}
       >
         {generalError &&
@@ -363,7 +401,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           <TextField
             label="Cloned Label"
             value={cloneLabel}
-            onChange={e => this.mounted && this.setState({ cloneLabel: (e.target.value) })}
+            onChange={this.setCloneLabel}
             error={Boolean(labelError)}
             errorText={labelError}
             data-qa-clone-from
@@ -374,7 +412,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           label="Label"
           required
           value={label}
-          onChange={e => this.mounted && this.setState({ label: (e.target.value) })}
+          onChange={this.setLabel}
           error={Boolean(labelError)}
           errorText={labelError}
           disabled={mode === modes.RESIZING || mode === modes.CLONING}
@@ -385,7 +423,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           label="Size"
           required
           value={size}
-          onChange={e => this.mounted && this.setState({ size: +(e.target.value) || 0 })}
+          onChange={this.setSize}
           error={Boolean(sizeError)}
           errorText={sizeError}
           disabled={mode === modes.CLONING || mode === modes.EDITING}
@@ -411,13 +449,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
               || mode === modes.EDITING
               || mode === modes.RESIZING
             }
-            onChange={(e) => {
-              this.mounted && this.setState({
-                region: (e.target.value),
-                linodeId: 0,
-                configs: [],
-              });
-            }}
+            onChange={this.setSelectedRegion}
             inputProps={{ name: 'region', id: 'region' }}
             error={Boolean(regionError)}
             data-qa-select-region
@@ -450,59 +482,58 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
             >
               Linode
             </InputLabel>
-            <Select
-              value={mode === modes.EDITING || mode === modes.RESIZING
-                ? linodeLabel
-                : `${linodeId}`}
-              disabled={
-                mode === modes.EDITING
-                || mode === modes.RESIZING
-              }
-              onChange={(e) => {
-                this.mounted && this.setState({ linodeId: +(e.target.value) });
-                if (e.target.value) {
-                  this.updateConfigs(+e.target.value);
+            <div className={classes.flexContainer}>
+              <Select
+                value={mode === modes.EDITING || mode === modes.RESIZING
+                  ? linodeLabel
+                  : `${linodeId}`}
+                disabled={
+                  mode === modes.EDITING
+                  || mode === modes.RESIZING
                 }
-              }}
-              inputProps={{ name: 'linode', id: 'linode' }}
-              error={Boolean(linodeError)}
-              data-qa-select-linode
-            >
-              <MenuItem key="none" value="0">
-                {mode !== modes.CLONING
-                  ? 'Select a Linode'
-                  : ''
+                onChange={this.setSelectedLinode}
+                inputProps={{ name: 'linode', id: 'linode' }}
+                error={Boolean(linodeError)}
+                data-qa-select-linode
+              >
+                <MenuItem key="none" value="0">
+                  {mode !== modes.CLONING
+                    ? 'Select a Linode'
+                    : ''
+                  }
+                </MenuItem>,
+                {linodes && linodes
+                  .filter((linode) => {
+                    return (
+                      (region && region !== 'none')
+                        /* if the user has selection a region above, limit linodes to that region */
+                        ? linode.region === region
+                        : true
+                    );
+                  })
+                  .map(linode =>
+                    <MenuItem
+                      key={linode.id}
+                      value={`${linode.id}`}
+                      data-qa-attached-linode={linode.label}
+                    >
+                      {linode.label}
+                    </MenuItem>,
+                )}
+                {(mode === modes.EDITING
+                  || mode === modes.RESIZING) &&
+                  /*
+                  * We optimize the lookup of the linodeLabel by providing it
+                  * explicitly when editing or resizing
+                  */
+                  <MenuItem key={linodeLabel} value={linodeLabel}>
+                    {linodeLabel}
+                  </MenuItem>
                 }
-              </MenuItem>,
-              {linodes && linodes
-                .filter((linode) => {
-                  return (
-                    (region && region !== 'none')
-                      /* if the user has selection a region above, limit linodes to that region */
-                      ? linode.region === region
-                      : true
-                  );
-                })
-                .map(linode =>
-                  <MenuItem
-                    key={linode.id}
-                    value={`${linode.id}`}
-                    data-qa-attached-linode={linode.label}
-                  >
-                    {linode.label}
-                  </MenuItem>,
-              )}
-              {(mode === modes.EDITING
-                || mode === modes.RESIZING) &&
-                /*
-                * We optimize the lookup of the linodeLabel by providing it
-                * explicitly when editing or resizing
-                */
-                <MenuItem key={linodeLabel} value={linodeLabel}>
-                  {linodeLabel}
-                </MenuItem>
-              }
-            </Select>
+              </Select>
+              <HelpIcon text="Only Linodes in the selected Region are displayed."/>
+            </div>
+
             {linodeError &&
               <FormHelperText error={Boolean(linodeError)}>
                 {linodeError}
@@ -523,7 +554,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
             </InputLabel>
             <Select
               value={selectedConfig || ''}
-              onChange={(e) => { this.setState({ selectedConfig: e.target.value }); }}
+              onChange={this.setSelectedConfig}
               inputProps={{ name: 'config', id: 'config' }}
               error={Boolean(configError)}
             >
@@ -539,7 +570,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
 
         <ActionsPanel style={{ marginTop: 16 }}>
           <Button
-            onClick={() => this.onSubmit()}
+            onClick={this.onSubmit}
             variant="raised"
             color="primary"
             data-qa-submit
@@ -547,7 +578,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
             Submit
           </Button>
           <Button
-            onClick={() => this.onClose()}
+            onClick={this.onClose}
             variant="raised"
             color="secondary"
             className="cancel"
