@@ -27,7 +27,7 @@ if (argv.log) {
 
 exports.config = {
     // Selenium Host/Port
-    host: process.env.DOCKER ? 'selenium-hub' : 'localhost',
+    host: process.env.DOCKER ? 'selenium-standalone' : 'localhost',
     port: 4444,
     //
     // ==================
@@ -201,6 +201,15 @@ exports.config = {
         require('babel-register');
 
         browserCommands();
+
+        // if (argv.record) {
+        //     // POST RECORD PROXY
+        // }
+
+        // if (argv.replay) {
+        //     // POST REPLAY
+        // }
+
         browser.timeouts('page load', 20000);
         login(username, password);
     },
@@ -268,8 +277,14 @@ exports.config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      * @param {Array.<String>} specs List of spec file paths that ran
      */
-    // after: function (result, capabilities, specs) {
-    // },
+    after: function (result, capabilities, specs) {
+        // if (mbTest) {
+        //     // DELETE IMPOSTERS
+        //     if (argv.record) { 
+        //         // SAVE
+        //     }
+        // }
+    },
     /**
      * Gets executed right after terminating the webdriver session.
      * @param {Object} config wdio configuration object
