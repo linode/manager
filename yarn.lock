@@ -653,12 +653,12 @@
     global "^4.3.2"
     prop-types "^15.6.1"
 
-"@storybook/addon-storyshots@^3.4.8":
-  version "3.4.8"
-  resolved "https://registry.yarnpkg.com/@storybook/addon-storyshots/-/addon-storyshots-3.4.8.tgz#53e8bd697ca26c5880233d6e63690937e10cf183"
+"@storybook/addon-storyshots@3.4.7":
+  version "3.4.7"
+  resolved "https://registry.yarnpkg.com/@storybook/addon-storyshots/-/addon-storyshots-3.4.7.tgz#3bbc5fb671b44640a5aac61cf9dc5a579c811eed"
   dependencies:
-    "@storybook/channels" "3.4.8"
-    "@storybook/node-logger" "3.4.8"
+    "@storybook/channels" "3.4.7"
+    "@storybook/node-logger" "3.4.7"
     babel-runtime "^6.26.0"
     glob "^7.1.2"
     global "^4.3.2"
@@ -682,10 +682,6 @@
 "@storybook/channels@3.4.7":
   version "3.4.7"
   resolved "https://registry.yarnpkg.com/@storybook/channels/-/channels-3.4.7.tgz#b1cc7650d01e677bd02799216b6c1a0f3b903969"
-
-"@storybook/channels@3.4.8":
-  version "3.4.8"
-  resolved "https://registry.yarnpkg.com/@storybook/channels/-/channels-3.4.8.tgz#df0aff0d20a9597402e76caa7e5ddb088ede3591"
 
 "@storybook/client-logger@3.4.7":
   version "3.4.7"
@@ -742,12 +738,6 @@
 "@storybook/node-logger@3.4.7":
   version "3.4.7"
   resolved "https://registry.yarnpkg.com/@storybook/node-logger/-/node-logger-3.4.7.tgz#f9bc32f245a76eb013b6a2a8a365fa808886a36e"
-  dependencies:
-    npmlog "^4.1.2"
-
-"@storybook/node-logger@3.4.8":
-  version "3.4.8"
-  resolved "https://registry.yarnpkg.com/@storybook/node-logger/-/node-logger-3.4.8.tgz#8f8abcd51920545c7458385b0b30199ae48ad78a"
   dependencies:
     npmlog "^4.1.2"
 
@@ -876,10 +866,6 @@
     "@types/cheerio" "*"
     "@types/react" "*"
 
-"@types/events@*":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@types/events/-/events-1.2.0.tgz#81a6731ce4df43619e5c8c945383b3e62a89ea86"
-
 "@types/history@*":
   version "4.6.2"
   resolved "https://registry.yarnpkg.com/@types/history/-/history-4.6.2.tgz#12cfaba693ba20f114ed5765467ff25fdf67ddb0"
@@ -926,13 +912,6 @@
 "@types/promise.prototype.finally@^2.0.2":
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/@types/promise.prototype.finally/-/promise.prototype.finally-2.0.2.tgz#68fefb8f0e23f21893a33740c931c79f44be3499"
-
-"@types/puppeteer@*":
-  version "1.3.4"
-  resolved "https://registry.yarnpkg.com/@types/puppeteer/-/puppeteer-1.3.4.tgz#6fff43968792924ac2b68744641566e6acefdc20"
-  dependencies:
-    "@types/events" "*"
-    "@types/node" "*"
 
 "@types/ramda@^0.25.18":
   version "0.25.33"
@@ -995,13 +974,6 @@
 "@types/storybook__addon-actions@^3.0.3":
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/@types/storybook__addon-actions/-/storybook__addon-actions-3.0.3.tgz#99287c0b9ee6b84ea571ee4cb42d0779c56af208"
-
-"@types/storybook__addon-storyshots@^3.4.2":
-  version "3.4.2"
-  resolved "https://registry.yarnpkg.com/@types/storybook__addon-storyshots/-/storybook__addon-storyshots-3.4.2.tgz#4f3357e700f7ae047653d8426eca2a6989e51190"
-  dependencies:
-    "@types/puppeteer" "*"
-    "@types/react" "*"
 
 "@types/storybook__react@^3.0.7":
   version "3.0.7"
