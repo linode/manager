@@ -49,6 +49,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
       display: 'none',
     },
   },
+  autoGridsm: {
+    [theme.breakpoints.up('sm')]: {
+      maxWidth: 'auto',
+      flexBasis: 'auto',
+    },
+  },
 });
 
 interface Props {
@@ -229,8 +235,9 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
   }
 
   linodeSelect = ({ mode, sourceIP, selectedLinodeID }: Move) => {
+    const { classes } = this.props;
     return (
-      <Grid item xs={12} sm={'auto'}>
+      <Grid item xs={12} className={classes.autoGridsm}>
         <Select
           disabled={this.state.linodes.length === 1}
           value={selectedLinodeID}
@@ -247,8 +254,9 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
   }
 
   ipSelect = ({ sourceIP, selectedIP, selectedLinodesIPs }: Swap) => {
+    const { classes } = this.props;
     return (
-      <Grid item xs={12} sm={'auto'}>
+      <Grid item xs={12} className={classes.autoGridsm}>
         <Select
           disabled={selectedLinodesIPs.length === 1}
           value={selectedIP}
