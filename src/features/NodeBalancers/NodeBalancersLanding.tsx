@@ -33,13 +33,16 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-type ClassNames = 'root' | 'title';
+type ClassNames = 'root' | 'title' | 'NBStatus';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
   title: {
     marginBottom: theme.spacing.unit * 2,
   },
+  NBStatus: {
+    whiteSpace: 'nowrap',
+  }
 });
 
 const preloaded = PromiseLoader<Props>({
@@ -258,7 +261,8 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
                       </Link>
                     </TableCell>
                     <TableCell data-qa-node-status>
-                      {`${nodeBalancer.up} up, ${nodeBalancer.down} down`}
+                    <span className={classes.NBStatus}>{nodeBalancer.up} up</span> <br /> 
+                    <span className={classes.NBStatus}>{nodeBalancer.down} down</span>
                     </TableCell>
                     <TableCell data-qa-transferred>
                       {convertMegabytesTo(nodeBalancer.transfer.total)}
