@@ -3,9 +3,12 @@ import * as React from 'react';
 import Divider from '@material-ui/core/Divider';
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import { Delete } from '@material-ui/icons';
 
+import AddNewLink from 'src/components/AddNewLink';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid'; 
+import IconButton from 'src/components/IconButton';
 import MenuItem from 'src/components/MenuItem';
 import Select from 'src/components/Select';
 import TextField from 'src/components/TextField';
@@ -15,18 +18,19 @@ import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 type ClassNames = 
   'ipFieldLabel'
   | 'containerDivider'
-  | 'ipField';
+  | 'ipField'
+  | 'addNewButton';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+  addNewButton: {
+    marginTop: theme.spacing.unit,
+  },
   containerDivider: {
    marginTop: theme.spacing.unit,
   },
   ipField: {
     marginTop: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: 175,
-    },
+    width: 200,
   },
   ipFieldLabel: {
     width: '100%',
@@ -53,13 +57,15 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 class IPSharingPanel extends React.Component<CombinedProps, State> {
   state: State = {
-    ipChoices: ['Select an IP'],
-    ipsToShare: ['Select an IP'],
+    ipChoices: [IPSharingPanel.selectIPText],
+    ipsToShare: [IPSharingPanel.selectIPText],
     submitting: false,
   };
 
   static errorResources = {
   };
+
+  static selectIPText = 'Select an IP';
 
   renderMyIPRow = (ip: string) => {
     const { classes } = this.props;
@@ -80,28 +86,59 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
     console.log(e.target.value, ipIdx);
   }
   
+  onIPDelete = (e: React.MouseEvent<HTMLElement>) => {
+    const ipIdx = e.currentTarget.getAttribute('data-ip-idx');
+    console.log(ipIdx);
+  }
+  
   renderShareIPRow = (ip: string, idx: number) => {
     const { ipChoices } = this.state;
     const { classes } = this.props;
     return (
-      <Grid container key={ip}>
+      <Grid container key={idx}>
         <Grid item xs={12}>
           <Divider className={classes.containerDivider} />
         </Grid>
         <Grid item>
           <Select
             value={ip}
-            data-ip-idx={idx}
             onChange={this.onIPSelect}
             fullWidth={false}
             className={classes.ipField}
           >
-            {ipChoices.map((ipChoice: string) =>
-              <MenuItem key={ipChoice} value={ipChoice}>{ipChoice}</MenuItem>)}
+            {ipChoices.map((ipChoice: string, choiceIdx: number) =>
+              <MenuItem 
+                data-ip-idx={idx}
+                key={choiceIdx}
+                value={ipChoice}
+              >
+                {ipChoice}
+              </MenuItem>)
+            }
           </Select>
         </Grid>
+        {(idx !== 0) &&
+          <Grid item>
+            <IconButton
+              data-ip-idx={idx}
+              onClick={this.onIPDelete}
+              destructive
+            >
+              <Delete />
+            </IconButton>
+          </Grid>
+        }
       </Grid>
     );
+  }
+
+  addIPToShare = () => {
+    this.setState({
+      ipsToShare: [
+        ...this.state.ipsToShare,
+        IPSharingPanel.selectIPText,
+      ],
+    })
   }
 
   render() {
@@ -134,6 +171,13 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
             </Grid>
             {linodeIPs.map((ip: string) => this.renderMyIPRow(ip))}
             {ipsToShare.map((ip: string, idx: number) => this.renderShareIPRow(ip, idx))}
+            <div className={classes.addNewButton}>
+              <AddNewLink
+                label="Add IP Address"
+                onClick={this.addIPToShare}
+                left
+              />
+            </div>
           </Grid>
         </Grid>
       </ExpansionPanel>
