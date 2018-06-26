@@ -2,7 +2,8 @@ import initStoryshots, { imageSnapshot } from '@storybook/addon-storyshots';
  
 const getMatchOptions = ({context : {kind, story}, url}) => {
   return {
-    failureThreshold: 10.0,
+    // Allow 10% difference
+    failureThreshold: 0.1,
     failureThresholdType: 'percent',
   }
 }
