@@ -287,6 +287,10 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
     this.mounted = false;
   }
 
+  filterPublicImages = (images: Linode.Image[]) => {
+    return images.filter((image: Linode.Image) => image.is_public)
+  }
+
   render() {
     const { errors, userDefinedFields, udf_data, selectedImageID, selectedRegionID,
       selectedStackScriptID, selectedTypeID, backups, privateIP, label,
@@ -324,7 +328,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
             shrinkPanel={true}
             updateFor={[selectedStackScriptID, errors]}
             onSelect={this.handleSelectStackScript}
-            images={images}
+            images={this.filterPublicImages(images) || []}
           />
           {userDefinedFields && userDefinedFields.length > 0 &&
             <UserDefinedFieldsPanel
