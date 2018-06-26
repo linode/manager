@@ -21,7 +21,8 @@ type ClassNames = 'title'
   | 'containerDivider'
   | 'ipField'
   | 'ipFieldLabel'
-  | 'actionsLabel';
+  | 'actionsLabel'
+  | 'autoGridsm';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   title: {
@@ -217,7 +218,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
         <Grid item>
           <TextField disabled value={state.sourceIP} className={classes.ipField} />
         </Grid>
-        <Grid item xs={12} sm={'auto'}>
+        <Grid item xs={12} className={classes.autoGridsm}>
           <Select
             value={state.mode}
             onChange={this.onModeChange(state.sourceIP)}
