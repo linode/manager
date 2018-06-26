@@ -7,6 +7,7 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 import Typography from '@material-ui/core/Typography';
 
 import CopyTooltip from 'src/components/CopyTooltip';
+import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 import Grid from 'src/components/Grid';
 import ShowMore from 'src/components/ShowMore';
 
@@ -102,13 +103,13 @@ const LinodeNetworkingSummaryPanel: React.StatelessComponent<CombinedProps> = (p
               <Typography variant="headline" className={classes.title}>Access</Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <StyledSummarySection title="DNS Resolvers (IPv4)" renderValue={renderIPv4DNSResolvers()} />
-              <StyledSummarySection title="DNS Resolvers (IPv6)" renderValue={renderIPv6DNSResolvers()} />
-            </Grid>
-            <Grid item xs={12} md={6}>
               <StyledSummarySection title="SSH Access" renderValue={renderSSHLink(sshIPAddress)} />
               {username && linodeRegion &&
                 <StyledSummarySection title="Lish via SSH" renderValue={renderLishLink(username, linodeRegion, linodeLabel)} />}
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <StyledSummarySection title="DNS Resolvers (IPv4)" renderValue={renderIPv4DNSResolvers()} />
+              <StyledSummarySection title="DNS Resolvers (IPv6)" renderValue={renderIPv6DNSResolvers()} />
             </Grid>
           </Grid>
         </Paper>
@@ -127,15 +128,13 @@ export default restyled(connected(LinodeNetworkingSummaryPanel)) as React.Compon
 
 const renderIPv4DNSResolvers = () => () => (
   <div style={{ display: 'flex', alignItems: "center" }}>
-    <Grid item><Typography variant="caption">{head(ipv4DNSResolvers)}</Typography></Grid>
-    <Grid item><ShowMore items={tail(ipv4DNSResolvers)} render={renderAddresses} chipProps={{ style: { marginRight: '8px' } }} /></Grid>
+    <IPAddress ips={ipv4DNSResolvers} copyRight />
   </div>
 )
 
 const renderIPv6DNSResolvers = () => () => (
   <div style={{ display: 'flex', alignItems: "center" }}>
-    <Grid item><Typography variant="caption"> {head(ipv6DNSResolvers)}</Typography></Grid>
-    <Grid item><ShowMore items={tail(ipv6DNSResolvers)} render={renderAddresses} /></Grid>
+    <IPAddress ips={ipv6DNSResolvers} copyRight />
   </div>
 )
 
