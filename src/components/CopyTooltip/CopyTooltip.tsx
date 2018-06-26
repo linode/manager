@@ -1,11 +1,8 @@
 import * as React from 'react';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from '@material-ui/core/styles';
+import * as classNames from 'classnames';
+
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import * as copy from 'copy-to-clipboard';
 
 import { ContentCopy } from '@material-ui/icons';
@@ -13,6 +10,7 @@ import { ContentCopy } from '@material-ui/icons';
 interface Props {
   text: string;
   className?: string;
+  standAlone?: boolean;
 }
 
 interface State {
@@ -20,7 +18,8 @@ interface State {
 }
 
 type CSSClasses =  'root'
-| 'copied';
+| 'copied'
+| 'standAlone';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   '@keyframes popUp': {
@@ -65,6 +64,12 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     transition: 'opacity .5s ease-in-out',
     animation: 'popUp 200ms ease-in-out forwards',
   },
+  standAlone: {
+    marginLeft: theme.spacing.unit,
+    '& svg': {
+      width: 14,
+    },
+  },
 });
 
 type CombinedProps = Props & WithStyles<CSSClasses>;
@@ -83,7 +88,7 @@ class CopyTooltip extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, text, className } = this.props;
+    const { classes, text, className, standAlone } = this.props;
     const { copied } = this.state;
 
     return (
@@ -92,7 +97,12 @@ class CopyTooltip extends React.Component<CombinedProps, State> {
         title={text}
         onClick={() => this.clickIcon(text)}
         href="javascript:void(0)"
-        className={`${classes.root} ${className}`}
+        className={classNames(
+          className,
+          {
+          [classes.root]: true,
+          [classes.standAlone]: standAlone,
+        })}
       >
         {copied && <span className={classes.copied} data-qa-copied>copied</span>}
         <ContentCopy />

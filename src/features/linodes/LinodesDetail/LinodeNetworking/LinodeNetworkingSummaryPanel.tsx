@@ -143,8 +143,8 @@ const renderAddresses = (addresses: string[]) => addresses.map(a =>
 
 const renderSSHLink = (address?: string) => () => (
   <div style={{ display: 'flex', alignItems: "center" }}>
-    <Grid item><Typography variant="caption">ssh root@{address}</Typography></Grid>
-    <Grid item><CopyTooltip text={`ssh root@${address}`} /></Grid>
+    <Grid item><Typography variant="caption"><span style={{ marginLeft: 3 }} >ssh root@{address}</span></Typography></Grid>
+    <Grid item><CopyTooltip text={`ssh root@${address}`} standAlone /></Grid>
   </div>
 )
 
@@ -153,6 +153,6 @@ const renderLishLink = (username: string, region: string, linodeLabel: string) =
     <Grid item>
       <Typography variant="caption">ssh -t {username}@lish-{region}.linode.com {linodeLabel}</Typography>
     </Grid>
-    <Grid item><CopyTooltip text={`ssh -t ${username}@lish-${region}.linode.com ${linodeLabel}`} /></Grid>
+    <Grid item><CopyTooltip text={`ssh -t ${username}@lish-${region}.linode.com ${linodeLabel}`} standAlone /></Grid>
   </div>
 )
