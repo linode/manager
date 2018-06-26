@@ -18,6 +18,8 @@ import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
 
+import Downshift, { DownshiftState, StateChangeOptions } from 'downshift';
+
 type ClassNames = 'root'
   | 'inner'
   | 'divider'
@@ -45,6 +47,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 const styled = withStyles(styles, { withTheme: true });
 
 interface Props {
+  linodesWithPrivateIPs?: Linode.Linode[] | null;
   errors?: Linode.ApiFieldError[];
   nodeMessage?: string;
   configIdx?: number;
@@ -174,6 +177,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
   }
 
   onNodeAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { linodesWithPrivateIPs } = this.props;
+    console.log(linodesWithPrivateIPs);
     const nodeIdx = e.currentTarget.getAttribute('data-node-idx');
     if (nodeIdx) {
       this.props.onNodeAddressChange(
@@ -243,6 +248,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       healthCheckInterval,
       healthCheckTimeout,
       healthCheckType,
+      linodesWithPrivateIPs,
       nodes,
       nodeMessage,
       port,
@@ -750,6 +756,46 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                           />
                         </Grid>
                         <Grid item xs={11} lg={4} xl={3}>
+                          <Downshift
+                            onSelect={() => console.log('hello world')}
+                          >
+                            {
+                              ({
+                                getInputProps,
+                                getItemProps,
+                                isOpen,
+                                inputValue,
+                                highlightedIndex
+                              }) => {
+                                return (
+                                  <div>
+                                    <TextField
+                                      label="IP Address"
+                                      value={node.address}
+                                      inputProps={{ 'data-node-idx': idx }}
+                                      InputProps={{
+                                        ...getInputProps({
+                                          onChange: this.onNodeAddressChange,
+                                          placeholder: 'Enter IP Address',
+                                        })
+                                      }}
+                                      errorText={hasErrorFor('address')}
+                                      errorGroup={`${configIdx}`}
+                                      data-qa-backend-ip-address
+                                    />
+                                    {isOpen &&
+                                      <Paper>
+                                        {linodesWithPrivateIPs && linodesWithPrivateIPs
+                                          .map((linode) => {
+                                            return <div key={linode.label}>{linode.label}</div>
+                                          })}
+                                      </Paper>
+                                    }
+                                  </div>
+                                )
+                              }
+                            }
+                          </Downshift>
                           <TextField
                             label="IP Address"
                             value={node.address}
