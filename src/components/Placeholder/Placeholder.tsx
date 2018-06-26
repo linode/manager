@@ -43,9 +43,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => ({
     maxWidth: 350,
   },
   icon: {
-    animation: 'scaleIn .5s ease-in-out',
-    width: 225,
-    height: 225,
+    '&.animate' : {
+      animation: 'scaleIn .5s ease-in-out',
+    },
+    width: '225px !important',
+    height: '225px !important',
     '& .outerCircle': {
       fill: 'white',
       stroke: theme.bg.offWhite,
@@ -65,6 +67,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => ({
 
 export interface Props {
   icon?: React.ComponentType<any>;
+  animate?: boolean;
   copy?: string;
   title?: string;
   buttonProps?: ButtonProps;
@@ -73,7 +76,7 @@ export interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const Placeholder: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, copy, title, icon: Icon, buttonProps } = props;
+  const { animate, classes, copy, title, icon: Icon, buttonProps } = props;
   return (
     <Grid
       container
@@ -85,7 +88,7 @@ const Placeholder: React.StatelessComponent<CombinedProps> = (props) => {
     >
       <Grid item xs={12}>
         {Icon &&
-          <Icon className={classes.icon} />
+          <Icon className={`${classes.icon} ${animate && 'animate'}`} />
         }
       </Grid>
       <Grid item xs={12}>
@@ -115,6 +118,7 @@ Placeholder.defaultProps = {
   icon: LinodeIcon,
   copy: 'The feature you are looking for is currently in development. Please check back soon.',
   title: 'Feature in Progress',
+  animate: true,
 };
 
 const styled = withStyles(styles, { withTheme: true });
