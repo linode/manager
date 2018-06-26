@@ -80,7 +80,7 @@ const ipv6DNSResolvers = [
 ];
 
 const LinodeNetworkingSummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, linkLocal, sshIPAddress, username, linodeRegion, linodeLabel } = props;
+  const { classes, sshIPAddress, username, linodeRegion, linodeLabel } = props;
   return (
     <Grid container justify="space-between" alignItems="flex-end">
       <Grid item xs={12}>
@@ -90,11 +90,9 @@ const LinodeNetworkingSummaryPanel: React.StatelessComponent<CombinedProps> = (p
               <Typography variant="headline">Access</Typography>
             </Grid>
             <Grid item xs={12} sm={6}>
+              <SummarySection title="DNS Resolvers (IPv4)" renderValue={renderIPv4DNSResolvers()} />
 
-              {linkLocal &&
-                <SummarySection title="Link-Local IP" renderValue={renderLinkLocak(linkLocal)} />}
-
-              <SummarySection title="DNS Resolvers" renderValue={renderDNSResolvers()} />
+              <SummarySection title="DNS Resolvers (IPv6)" renderValue={renderIPv6DNSResolvers()} />
 
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -119,14 +117,14 @@ const connected = connect((state: Linode.AppState) => ({
 
 export default styled(connected(LinodeNetworkingSummaryPanel)) as React.ComponentType<Props>;
 
-const renderLinkLocak = (linkLocal: string) => () =>
-  <Typography variant="caption">{linkLocal}</Typography>;
-
-const renderDNSResolvers = () => () => (
+const renderIPv4DNSResolvers = () => () => (
   <React.Fragment>
     <Typography variant="caption" style={{ display: 'inline-block' }}>{head(ipv4DNSResolvers)}</Typography>
     <ShowMore items={tail(ipv4DNSResolvers)} render={renderAddresses} chipProps={{ style: { marginRight: '8px' } }} />
+  </React.Fragment>);
 
+const renderIPv6DNSResolvers = () => () => (
+  <React.Fragment>
     <Typography variant="caption" style={{ display: 'inline-block' }}> {head(ipv6DNSResolvers)}</Typography>
     <ShowMore items={tail(ipv6DNSResolvers)} render={renderAddresses} />
   </React.Fragment>);
@@ -137,7 +135,7 @@ const renderAddresses = (addresses: string[]) => addresses.map(a =>
 const renderSSHLink = (address?: string) => () =>
   <React.Fragment>
     <Typography variant="caption" style={{ display: 'inline-block' }}>ssh root@{address}</Typography>
-    <CopyTooltip text={`ssh root@{address}`} />
+    <CopyTooltip text={`ssh root@${address}`} />
   </React.Fragment>
 
 const renderLishLink = (username: string, region: string, linodeLabel: string) => () =>
@@ -145,6 +143,6 @@ const renderLishLink = (username: string, region: string, linodeLabel: string) =
     <Typography variant="caption" style={{ display: 'inline-block' }}>
       ssh -t {username}@lish-{region}.linode.com {linodeLabel}
     </Typography>
-    <CopyTooltip text={`ssh -t {username}@lish-{region}.linode.com {linodeLabel}`} />
+    <CopyTooltip text={`ssh -t ${username}@lish-${region}.linode.com ${linodeLabel}`} />
   </React.Fragment>
 
