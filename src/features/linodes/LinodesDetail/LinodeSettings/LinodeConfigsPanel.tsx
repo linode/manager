@@ -246,7 +246,8 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
   componentDidMount() {
     if (window.location.hash) {
       const hashWithoutSymbol = window.location.hash.replace('#', '');
-      document.getElementById(hashWithoutSymbol)!.scrollIntoView();
+      const elementToScrollTo = document.getElementById(hashWithoutSymbol);
+      if (elementToScrollTo) { elementToScrollTo.scrollIntoView() };
     }
   }
 
