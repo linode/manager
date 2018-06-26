@@ -48,6 +48,8 @@ import {
 } from './utils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
+import { getLinodes } from 'src/services/linodes';
+
 type Styles =
   'root'
   | 'main'
@@ -88,6 +90,7 @@ interface NodeBalancerFieldsState {
 }
 
 interface State {
+  linodesWithPrivateIPs: Linode.Linode[];
   submitting: boolean;
   nodeBalancerFields: NodeBalancerFieldsState;
   errors?: Linode.ApiFieldError[];
@@ -120,6 +123,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   };
 
   state: State = {
+    linodesWithPrivateIPs: [],
     submitting: false,
     nodeBalancerFields: NodeBalancerCreate.defaultFieldsStates,
     deleteConfigConfirmDialog:
@@ -391,6 +395,16 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     </Button>
     </ActionsPanel>
   )
+
+  componentDidMount() {
+    getLinodes()
+      .then(result => {
+        const linodesWithPrivateIPs = result.data.filter((linode) => {
+          return linode.ipv4.some(ipv4 => ipv4.includes('192.168')); // does it have a private IP address
+        });
+        this.setState({linodesWithPrivateIPs});
+      })
+  }
 
   render() {
     const { classes, regions } = this.props;
