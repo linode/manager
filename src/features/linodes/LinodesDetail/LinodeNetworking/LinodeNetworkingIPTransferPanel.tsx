@@ -402,7 +402,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
                 {
                   error &&
                   <Grid item xs={12}>
-                    {error.map(({ field, reason }) => <Notice error text={reason} />)}
+                    {error.map(({ field, reason }, idx) => <Notice key={idx} error text={reason} />)}
                   </Grid>
                 }
                 <Grid item xs={12}>
