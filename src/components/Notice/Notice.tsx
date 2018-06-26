@@ -27,6 +27,9 @@ const styles: StyleRulesCallback = (theme: Linode.Theme) => {
       '& p': {
         wordWrap: 'break-word',
       },
+      '& + .notice': {
+        marginTop: `${theme.spacing.unit}px !important`,
+      },
     },
     inner: {
       width: '100%',
