@@ -20,6 +20,10 @@ services:
     volumes:
       - ./src:/src/src
     entrypoint: ["/src/scripts/start_manager.sh"]
+    depends_on:
+      - selenium-standalone
+    networks:
+      - backend
   manager-e2e:
     container_name: manager_e2e
     environment:
@@ -36,3 +40,7 @@ services:
     entrypoint: ["./scripts/wait-for-it.sh", "-t", "250", "-s", "manager-local:3000", "--", "yarn","e2e", "--log"]
     depends_on:
       - manager-local
+    networks:
+      - backend
+networks:
+  backend:
