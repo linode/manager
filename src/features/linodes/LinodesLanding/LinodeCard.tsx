@@ -172,7 +172,7 @@ interface Props {
   linodeSpecMemory: number;
   linodeSpecVcpus: number;
   linodeSpecTransfer: number;
-  image?: Linode.Image;
+  imageLabel: string;
   openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
   toggleConfirmation: (bootOption: Linode.BootAction,
     linodeId: number, linodeLabel: string) => void;
@@ -240,7 +240,7 @@ class LinodeCard extends React.Component<CombinedProps> {
   loadedState = () => {
     const {
       classes,
-      image,
+      imageLabel,
       linodeIpv4,
       linodeIpv6,
       linodeRegion,
@@ -265,7 +265,7 @@ class LinodeCard extends React.Component<CombinedProps> {
             <IPAddress ips={[linodeIpv6]} copyRight />
           </div>
           <div className={classes.cardSection} data-qa-image>
-            {image ? image.label : "Unknown Image" }
+            {imageLabel}
           </div>
         </div>
       </CardContent>
