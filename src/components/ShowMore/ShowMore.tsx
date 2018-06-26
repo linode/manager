@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { withStyles, Theme, WithStyles, StyleRulesCallback } from '@material-ui/core/styles';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Chip, { ChipProps } from '@material-ui/core/Chip';
 import Popover from '@material-ui/core/Popover';
 
@@ -30,7 +30,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     fontSize: '.75rem',
   },
   popover: {
-    minWidth: 175,
+    minWidth: 'auto',
     maxWidth: 400,
     overflow: 'visible',
     padding: theme.spacing.unit * 2,
