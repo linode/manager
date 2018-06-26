@@ -342,7 +342,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
           changePrivateIP={this.handleTogglePrivateIP}
           backupsMonthly={getBackupsMonthlyPrice(selectedTypeID)}
           privateIP={privateIP}
-          updateFor={[privateIP, backups]}
+          updateFor={[privateIP, backups, selectedTypeID]}
         />
         </React.Fragment>
           }
