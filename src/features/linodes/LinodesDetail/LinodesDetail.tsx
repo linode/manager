@@ -460,6 +460,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               linodeType={linode.type}
               backupsEnabled={linode.backups.enabled}
               backupsSchedule={linode.backups.schedule}
+              linodeInTransition={linodeInTransition(linode.status, linode.recentEvent)}
             />
           )} />
           <Route exact path={`${url}/settings`} render={() => (

@@ -16,6 +16,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 
 import {
@@ -99,6 +100,7 @@ interface Props {
   linodeType: null | string;
   backupsEnabled: boolean;
   backupsSchedule: Linode.LinodeBackupSchedule;
+  linodeInTransition: boolean;
 }
 
 interface ConnectedProps {
@@ -400,7 +402,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
   }
 
   SnapshotForm = (): JSX.Element | null => {
-    const { classes } = this.props;
+    const { classes, linodeInTransition } = this.props;
     const { snapshotForm } = this.state;
     const getErrorFor = getAPIErrorFor({ label: 'Label' }, snapshotForm.errors);
 
@@ -428,15 +430,23 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
               onChange={e => this.setState({ snapshotForm: { label: e.target.value } })}
               data-qa-manual-name
             />
-            <Button
-              variant="raised"
-              color="primary"
-              onClick={this.takeSnapshot}
-              className={classes.snapshotAction}
-              data-qa-snapshot-button
-            >
-              Take Snapshot
-            </Button>
+            <Tooltip title={linodeInTransition
+              ? 'This Linode is busy'
+              : ''
+            }>
+              <div>
+                <Button
+                  variant="raised"
+                  color="primary"
+                  onClick={this.takeSnapshot}
+                  className={classes.snapshotAction}
+                  data-qa-snapshot-button
+                  disabled={linodeInTransition}
+                >
+                  Take Snapshot
+                </Button>
+              </div>
+            </Tooltip>
             {getErrorFor('none') &&
               <FormHelperText error>{getErrorFor('none')}</FormHelperText>
             }
