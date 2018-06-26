@@ -12,9 +12,11 @@ import ShowMore from 'src/components/ShowMore';
 
 type ClassNames = 'root'
   | 'title'
-  | 'section';
+  | 'section'
+  | 'individualContainer'
+  | 'ips';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
     marginTop: theme.spacing.unit * 2,
     padding: theme.spacing.unit * 3,
@@ -24,9 +26,17 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     marginBottom: theme.spacing.unit,
   },
   title: {
-    marginBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing.unit,
+  },
+  individualContainer: {
+    marginBottom: theme.spacing.unit,
+  },
+  ips: {
+    padding: `0 ${theme.spacing.unit}px !important`,
   },
 });
+
+const styled = withStyles(styles, { withTheme: true });
 
 interface Props {
   linodeRegion: string;
@@ -41,20 +51,22 @@ interface ConnectedProps {
 
 type CombinedProps = Props & ConnectedProps & WithStyles<ClassNames>;
 
-const SummarySection: React.StatelessComponent<any> = ({
-  title,
-  renderValue,
-  ...rest
-}) => (
-    <Grid container style={{ marginTop: '8px' }}>
-      <Grid item >
+const SummarySection: React.StatelessComponent<any> = (props) => {
+  const { title, renderValue, classes, ...rest} = props;
+
+  return(
+    <Grid container alignItems="baseline" className={classes.individualContainer}>
+      <Grid item>
         <Typography variant="caption">
           <strong>{title}:</strong>
         </Typography>
       </Grid>
-      <Grid item style={{ flex: 1 }}>{renderValue(rest)}</Grid>
+      <Grid item className={classes.ips}>{renderValue(rest)}</Grid>
     </Grid>
   )
+}
+
+const StyledSummarySection = styled(SummarySection);
 
 const ipv4DNSResolvers = [
   '66.228.42.5',
@@ -82,25 +94,21 @@ const ipv6DNSResolvers = [
 const LinodeNetworkingSummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
   const { classes, sshIPAddress, username, linodeRegion, linodeLabel } = props;
   return (
-    <Grid container justify="space-between" alignItems="flex-end">
+    <Grid container justify="space-between">
       <Grid item xs={12}>
         <Paper className={classes.root}>
           <Grid container>
             <Grid item xs={12}>
-              <Typography variant="headline">Access</Typography>
+              <Typography variant="headline" className={classes.title}>Access</Typography>
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <SummarySection title="DNS Resolvers (IPv4)" renderValue={renderIPv4DNSResolvers()} />
-
-              <SummarySection title="DNS Resolvers (IPv6)" renderValue={renderIPv6DNSResolvers()} />
-
+            <Grid item xs={12} md={6}>
+              <StyledSummarySection title="DNS Resolvers (IPv4)" renderValue={renderIPv4DNSResolvers()} />
+              <StyledSummarySection title="DNS Resolvers (IPv6)" renderValue={renderIPv6DNSResolvers()} />
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <SummarySection title="SSH Access" renderValue={renderSSHLink(sshIPAddress)} />
-
+            <Grid item xs={12} md={6}>
+              <StyledSummarySection title="SSH Access" renderValue={renderSSHLink(sshIPAddress)} />
               {username && linodeRegion &&
-                <SummarySection title="Lish via SSH" renderValue={renderLishLink(username, linodeRegion, linodeLabel)} />}
-
+                <StyledSummarySection title="Lish via SSH" renderValue={renderLishLink(username, linodeRegion, linodeLabel)} />}
             </Grid>
           </Grid>
         </Paper>
@@ -109,40 +117,43 @@ const LinodeNetworkingSummaryPanel: React.StatelessComponent<CombinedProps> = (p
   );
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const restyled = withStyles(styles, { withTheme: true });
 
 const connected = connect((state: Linode.AppState) => ({
   username: path(['resources', 'profile', 'data', 'username'], state),
 }));
 
-export default styled(connected(LinodeNetworkingSummaryPanel)) as React.ComponentType<Props>;
+export default restyled(connected(LinodeNetworkingSummaryPanel)) as React.ComponentType<Props>;
 
 const renderIPv4DNSResolvers = () => () => (
-  <React.Fragment>
-    <Typography variant="caption" style={{ display: 'inline-block' }}>{head(ipv4DNSResolvers)}</Typography>
-    <ShowMore items={tail(ipv4DNSResolvers)} render={renderAddresses} chipProps={{ style: { marginRight: '8px' } }} />
-  </React.Fragment>);
+  <div style={{ display: 'flex', alignItems: "center" }}>
+    <Grid item><Typography variant="caption">{head(ipv4DNSResolvers)}</Typography></Grid>
+    <Grid item><ShowMore items={tail(ipv4DNSResolvers)} render={renderAddresses} chipProps={{ style: { marginRight: '8px' } }} /></Grid>
+  </div>
+)
 
 const renderIPv6DNSResolvers = () => () => (
-  <React.Fragment>
-    <Typography variant="caption" style={{ display: 'inline-block' }}> {head(ipv6DNSResolvers)}</Typography>
-    <ShowMore items={tail(ipv6DNSResolvers)} render={renderAddresses} />
-  </React.Fragment>);
+  <div style={{ display: 'flex', alignItems: "center" }}>
+    <Grid item><Typography variant="caption"> {head(ipv6DNSResolvers)}</Typography></Grid>
+    <Grid item><ShowMore items={tail(ipv6DNSResolvers)} render={renderAddresses} /></Grid>
+  </div>
+)
 
 const renderAddresses = (addresses: string[]) => addresses.map(a =>
-  <Typography variant="caption" key={a} style={{ marginBottom: '4px', marginTop: '4px' }}>{a}</Typography>)
+  <Typography variant="caption" key={a}>{a}</Typography>)
 
-const renderSSHLink = (address?: string) => () =>
-  <React.Fragment>
-    <Typography variant="caption" style={{ display: 'inline-block' }}>ssh root@{address}</Typography>
-    <CopyTooltip text={`ssh root@${address}`} />
-  </React.Fragment>
+const renderSSHLink = (address?: string) => () => (
+  <div style={{ display: 'flex', alignItems: "center" }}>
+    <Grid item><Typography variant="caption">ssh root@{address}</Typography></Grid>
+    <Grid item><CopyTooltip text={`ssh root@${address}`} /></Grid>
+  </div>
+)
 
-const renderLishLink = (username: string, region: string, linodeLabel: string) => () =>
-  <React.Fragment>
-    <Typography variant="caption" style={{ display: 'inline-block' }}>
-      ssh -t {username}@lish-{region}.linode.com {linodeLabel}
-    </Typography>
-    <CopyTooltip text={`ssh -t ${username}@lish-${region}.linode.com ${linodeLabel}`} />
-  </React.Fragment>
-
+const renderLishLink = (username: string, region: string, linodeLabel: string) => () => (
+  <div style={{ display: 'flex', alignItems: "center" }}>
+    <Grid item>
+      <Typography variant="caption">ssh -t {username}@lish-{region}.linode.com {linodeLabel}</Typography>
+    </Grid>
+    <Grid item><CopyTooltip text={`ssh -t ${username}@lish-${region}.linode.com ${linodeLabel}`} /></Grid>
+  </div>
+)
