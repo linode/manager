@@ -117,7 +117,7 @@ class AddonsPanel extends React.Component<CombinedProps> {
               {this.renderBackupsPrice()}
               <Typography variant="caption" className={classes.caption}>
                 Three backup slots are executed and rotated automatically: a daily backup, a 2-7
-                day old backup, and an 8-14 day old backup. Plans are priced according to you
+                day old backup, and an 8-14 day old backup. Plans are priced according to the
                 Linode plan selected above.
               </Typography>
             </Grid>
