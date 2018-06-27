@@ -1,17 +1,20 @@
 import * as React from 'react';
-import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'redux';
 
-import { withStyles, WithStyles, StyleRules, Theme } from '@material-ui/core/styles';
+import { StyleRules, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+
 import Divider from '@material-ui/core/Divider';
-import Grid from 'src/components/Grid';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
-import Logo from 'src/assets/logo/logo-text.svg';
+
+import Grid from 'src/components/Grid';
 import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
 import Toggle from 'src/components/Toggle';
+
+import Logo from 'src/assets/logo/logo-text.svg';
 
 type PrimaryLink = {
   display: string,
