@@ -277,9 +277,11 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       .then((response) => {
         if (!this.mounted) { return; }
 
+        console.log(response);
+
         this.setState(prevResults => ({
           ...prevResults,
-          linodes: pathOr([], ['data'], response),
+          linodes: response || [],
           page: pathOr(0, ['page'], response),
           pages: pathOr(0, ['pages'], response),
           results: pathOr(0, ['results'], response),
