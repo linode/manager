@@ -10,6 +10,13 @@ const {
     removeDomain,
 } = require('../setup/setup');
 
+const {
+    loadProxyImposter,
+    getImposters,
+    deleteImposters,
+    loadImposter,
+} = require('../utils/mb-utils');
+
 const { readToken } = require('../utils/config-utils');
 
 exports.browserCommands = () => {
@@ -30,6 +37,30 @@ exports.browserCommands = () => {
             return text;
         }
     }
+
+    browser.addCommand('loadProxyImposter', function async(proxyConfig) {
+        return loadProxyImposter(proxyConfig)
+            .then(res => res)
+            .catch(error => console.error(error));
+    });
+
+    browser.addCommand('getImposters', function async(removeProxies, file) {
+        return getImposters(removeProxies, file)
+            .then(res => res)
+            .catch(error => console.error(error));
+    });
+
+    browser.addCommand('loadImposter', function async(imposter) {
+        return loadImposter(imposter)
+            .then(res => res)
+            .catch(error => console.error(error));
+    });
+
+    browser.addCommand('deleteImposters', function async() {
+        return deleteImposters()
+            .then(res => res)
+            .catch(error => console.error(error));
+    });
 
     browser.addCommand('readToken', function() {
         const token = readToken();

@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+const { readFileSync } = require('fs');
 const { argv } = require('yargs');
 const { login } = require('../utils/config-utils');
 const { browserCommands } = require('./custom-commands');
@@ -165,6 +166,16 @@ exports.config = {
             // do something
         }
     },
+
+    mountebankConfig: {
+        proxyConfig: {
+            imposterPort: '8088',
+            imposterProtocol: 'https',
+            imposterName: 'Linode-API',
+            proxyHost: 'https://api.dev.linode.com/',
+            mutualAuth: true,
+        }
+    },
     
     //
     // =====
@@ -201,6 +212,17 @@ exports.config = {
         require('babel-register');
 
         browserCommands();
+
+        if (argv.record) {
+            browser.loadProxyImposter(browser.options.mountebankConfig.proxyConfig);
+        }
+
+        if (argv.replay) {
+            const file = specs[0].replace('.js', '-stub.json');
+            const imposter = JSON.parse(readFileSync(file));
+            browser.loadImposter(imposter);
+        }
+
         browser.timeouts('page load', 20000);
         login(username, password);
     },
@@ -268,8 +290,17 @@ exports.config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      * @param {Array.<String>} specs List of spec file paths that ran
      */
-    // after: function (result, capabilities, specs) {
-    // },
+    after: function (result, capabilities, specs) {
+        if (argv.record) {
+            const recordingFile = specs[0].replace('.js', '-stub.json');
+            browser.getImposters(true, recordingFile);
+            browser.deleteImposters();
+        }
+
+        if (argv.replay) {
+            browser.deleteImposters();
+        }
+    },
     /**
      * Gets executed right after terminating the webdriver session.
      * @param {Object} config wdio configuration object
