@@ -40,6 +40,7 @@ type ClassNames =
   'headerGrid'
   | 'logoItem'
   | 'listItem'
+  | 'collapsible'
   | 'lastItem'
   | 'linkItem'
   | 'active'
@@ -79,6 +80,15 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
         color: 'white',
       },
     },
+    '&:focus, &:active': {
+      '& $linkItem': {
+        color: 'white',
+        zIndex: 2,
+      },
+    },
+  },
+  collapsible: {
+    fontSize: '.9rem',
   },
   linkItem: {
     transition: theme.transitions.create(['color']),
@@ -251,10 +261,12 @@ class PrimaryNav extends React.Component<Props, State> {
 
         <ListItem 
           data-menu-name="account"
+          focusRipple={true}
           button
           onClick={this.expandMenutItem}
           className={classNames({
             [classes.listItem]: true,
+            [classes.collapsible]: true,
           })}
         >
           <ListItemText
@@ -273,8 +285,8 @@ class PrimaryNav extends React.Component<Props, State> {
         </ListItem>
         <Collapse 
           in={expandedMenus.account
-              || this.linkIsActive('/billing') === true
-              || this.linkIsActive('/users') === true}
+              || (this.linkIsActive('/billing') === true)
+              || (this.linkIsActive('/users') === true)}
           timeout="auto" 
           unmountOnExit
           className={classes.sublinkPanel}
@@ -304,8 +316,12 @@ class PrimaryNav extends React.Component<Props, State> {
         <ListItem
           data-menu-name="support"
           button
+          focusRipple={true}
           onClick={this.expandMenutItem}
-          className={classes.listItem}
+          className={classNames({
+            [classes.listItem]: true,
+            [classes.collapsible]: true,
+          })}
         >
           <ListItemText
             disableTypography={true}
