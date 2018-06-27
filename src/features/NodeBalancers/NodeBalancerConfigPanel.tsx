@@ -1,22 +1,27 @@
 import * as React from 'react';
-import { withStyles, StyleRulesCallback, WithStyles, Theme } from '@material-ui/core/styles';
-import { Delete } from '@material-ui/icons';
+
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+
+
 import Divider from '@material-ui/core/Divider';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
+import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+
+import { Delete } from '@material-ui/icons';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import Grid from 'src/components/Grid';
 import IconButton from 'src/components/IconButton';
-import MenuItem from 'src/components/MenuItem';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
+
+import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 import Downshift, { DownshiftState, StateChangeOptions } from 'downshift';
 
@@ -24,7 +29,11 @@ type ClassNames = 'root'
   | 'inner'
   | 'divider'
   | 'suffix'
-  | 'backendIPAction';
+  | 'backendIPAction'
+  | 'suggestionsParent'
+  | 'suggestions'
+  | 'suggestionItem'
+  | 'selectedSuggestionItem';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -41,6 +50,35 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     paddingLeft: theme.spacing.unit * 2,
     marginLeft: -theme.spacing.unit,
     marginTop: theme.spacing.unit * 3,
+  },
+  suggestionsParent: {
+    position: 'relative',
+  },
+  suggestions: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 80,
+    padding: 0,
+    boxShadow: `0 0 5px ${theme.color.boxShadow}`,
+    maxHeight: 150,
+    overflowY: 'auto',
+    width: '100%',
+    maxWidth: 415,
+    zIndex: 2,
+  },
+  suggestionItem: {
+    color: `${theme.palette.primary.main} !important`,
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    '&:hover, &:focus': {
+      backgroundColor: `${theme.bg.offWhite} !important`,
+    },
+    '&:last-item': {
+      border: 0,
+    },
+  },
+  selectedSuggestionItem: {
+    backgroundColor: `${theme.bg.offWhite} !important`,
   },
 });
 
@@ -261,6 +299,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
     itemProps: any,
   ) => {
     const isHighlighted = highlightedIndex === index;
+    const { classes } = this.props;
 
     const privateIP = linode.ipv4.find(ipv4 => ipv4.includes('192.168'));
     return (
@@ -270,8 +309,14 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
         key={index}
         component="div"
         selected={isHighlighted}
+        className={classes.suggestionItem}
+        classes={{ selected: classes.selectedSuggestionItem }}
       >
-        {`${linode.label} ${privateIP}`}
+        {
+          <React.Fragment>
+            <strong>{linode.label}</strong> {privateIP}
+          </React.Fragment>
+        }
       </MenuItem>
     )
   }
@@ -825,7 +870,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                 highlightedIndex,
                               }) => {
                                 return (
-                                  <div>
+                                  <div className={classes.suggestionsParent}>
                                     <TextField
                                       label="IP Address"
                                       inputProps={{ 'data-node-idx': idx }}
@@ -841,7 +886,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                       data-qa-backend-ip-address
                                     />
                                     {isOpen && !!inputValue &&
-                                      <Paper>
+                                      <Paper className={classes.suggestions}>
                                         {linodesWithPrivateIPs && linodesWithPrivateIPs
                                         // filter out the linodes that don't match what we're typing
                                         // filter by private ip and label
