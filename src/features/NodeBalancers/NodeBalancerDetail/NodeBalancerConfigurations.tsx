@@ -24,6 +24,7 @@ import { withRouter, RouteComponentProps } from 'react-router-dom';
 
 import Typography from '@material-ui/core/Typography';
 
+import { getLinodes } from 'src/services/linodes';
 import {
   getNodeBalancerConfigs,
   updateNodeBalancerConfig,
@@ -77,6 +78,7 @@ interface PreloadedProps {
 }
 
 interface State {
+  linodesWithPrivateIPs: Linode.Linode[],
   configs: NodeBalancerConfigFields[];
   configErrors: Linode.ApiFieldError[][];
   configSubmitting: boolean[];
@@ -133,6 +135,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   };
 
   state: State = {
+    linodesWithPrivateIPs: [],
     configs: pathOr([], ['response'], this.props.configs),
     configErrors: [],
     configSubmitting: [],
@@ -768,6 +771,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         heading={`Port ${config.port !== undefined ? config.port : ''}`}
       >
         <NodeBalancerConfigPanel
+          linodesWithPrivateIPs={this.state.linodesWithPrivateIPs}
           forEdit
           configIdx={idx}
           onSave={this.onSaveConfig(idx)}
@@ -866,6 +870,16 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     </Button>
     </ActionsPanel>
   )
+
+  componentDidMount() {
+    getLinodes()
+      .then(result => {
+        const linodesWithPrivateIPs = result.data.filter((linode) => {
+          return linode.ipv4.some(ipv4 => ipv4.includes('192.168')); // does it have a private IP address
+        });
+        this.setState({ linodesWithPrivateIPs });
+      })
+  }
 
   render() {
     const { classes } = this.props;
