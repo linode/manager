@@ -40,7 +40,7 @@ interface Props {
   page?: number;
   first?: boolean;
   last?: boolean;
-  onClick: () => void;
+  onClick: (page?: number) => void;
   disabled?: boolean;
 }
 
@@ -61,6 +61,13 @@ const PageButton: React.StatelessComponent<Props & WithStyles<CSSClasses>> = ((p
     active: active === true,
   });
 
+  const handlePageChange = () => {
+    const isCurrentPage = props.active;
+    if (!isCurrentPage) { // only want to allow clicking if we're clicking a different page
+      onClick(props.page);
+    }
+  }
+
   if (first) {
     return (
     <Button
@@ -68,7 +75,7 @@ const PageButton: React.StatelessComponent<Props & WithStyles<CSSClasses>> = ((p
         ${rootClasses}
         ${classes.first}
       `}
-      onClick={onClick}
+      onClick={handlePageChange}
       disabled={disabled}
       data-qa-previous-page
     >
@@ -84,7 +91,7 @@ const PageButton: React.StatelessComponent<Props & WithStyles<CSSClasses>> = ((p
         ${rootClasses}
         ${classes.last}
       `}
-      onClick={onClick}
+      onClick={handlePageChange}
       disabled={disabled}
       data-qa-next-page
     >
@@ -96,7 +103,7 @@ const PageButton: React.StatelessComponent<Props & WithStyles<CSSClasses>> = ((p
   return (
     <Button
       className={rootClasses}
-      onClick={onClick}
+      onClick={handlePageChange}
       data-qa-page-to={page}>
       {page}
     </Button>

@@ -273,19 +273,16 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       page: Math.min(lastPage, page),
       page_size: pageSize,
     })
-      .then(response => response.data)
       .then((response) => {
         if (!this.mounted) { return; }
 
-        console.log(response);
-
         this.setState(prevResults => ({
           ...prevResults,
-          linodes: response || [],
+          linodes: pathOr([], ['data'], response),
           page: pathOr(0, ['page'], response),
+          pageSize,
           pages: pathOr(0, ['pages'], response),
           results: pathOr(0, ['results'], response),
-          pageSize,
         }));
       });
   }
@@ -304,7 +301,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   }
 
   handlePageSizeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    this.scrollToTop();
     this.getLinodes(this.state.page, parseInt(event.target.value, 0));
   }
 
