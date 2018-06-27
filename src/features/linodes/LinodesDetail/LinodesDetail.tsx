@@ -436,6 +436,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
           <Route exact path={`${url}/networking`} render={() => (
             <LinodeNetworking
               linodeID={linode.id}
+              linodeLabel={linode.label}
               linodeRegion={linode.region}
             />
           )} />
