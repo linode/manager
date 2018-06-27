@@ -17,12 +17,12 @@ import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import Flag from 'src/assets/icons/flag.svg';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import LinearProgress from 'src/components/LinearProgress';
+import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
 
 import LinodeStatusIndicator from './LinodeStatusIndicator';
 import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';
 import LinodeActionMenu from './LinodeActionMenu';
-import transitionStatus from '../linodeTransitionStatus';
 
 type ClassNames = 'bodyRow'
   | 'linodeCell'
@@ -170,7 +170,9 @@ class LinodeRow extends React.Component<PropsWithStyles> {
         {this.headCell()}
         <TableCell colSpan={4}>
           {typeof value === 'number' &&
-            <div className={classes.status}>{linodeStatus.replace('_', ' ')}: {value}%</div>
+            <div className={classes.status}>
+              {transitionText(linodeStatus, linodeRecentEvent)}: {value}%
+            </div>
           }
           <LinearProgress value={value} />
         </TableCell>
@@ -221,7 +223,7 @@ class LinodeRow extends React.Component<PropsWithStyles> {
   }
 
   render() {
-    const loading = transitionStatus.includes(this.props.linodeStatus);
+    const loading = linodeInTransition(this.props.linodeStatus, this.props.linodeRecentEvent);
 
     return loading
       ? this.loadingState()

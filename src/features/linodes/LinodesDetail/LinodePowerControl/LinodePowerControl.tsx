@@ -10,6 +10,7 @@ import { powerOffLinode, powerOnLinode, rebootLinode }
 import ActionsPanel from 'src/components/ActionsPanel';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import MenuItem from 'src/components/MenuItem';
+import { linodeInTransition } from 'src/features/linodes/transitions';
 
 import PowerOn from 'src/assets/icons/powerOn.svg';
 import Reload from 'src/assets/icons/reload.svg';
@@ -105,7 +106,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 interface Props {
   id: number;
   label: string;
-  status: 'running' | 'offline' | string;
+  status: Linode.LinodeStatus;
+  recentEvent?: Linode.Event;
   openConfigDrawer: (config: Linode.Config[], action: (id: number) => void) => void;
 }
 
@@ -164,17 +166,17 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { status, classes } = this.props;
+    const { status, classes, recentEvent } = this.props;
     const { menu: { anchorEl }, bootOption, powerAlertOpen } = this.state;
 
-    const isRunning = status === 'running';
-    const isOffline = status === 'offline';
-    const isBusy = !isRunning && !isOffline;
+    const isBusy = linodeInTransition(status, recentEvent);
+    const isRunning = !isBusy && status === 'running';
+    const isOffline = !isBusy && status === 'offline';
 
     return (
       <React.Fragment>
         <Button
-          disabled={!['running', 'offline'].includes(status)}
+          disabled={isBusy}
           onClick={e => this.openMenu(e.currentTarget)}
           aria-owns={anchorEl ? 'power' : undefined}
           aria-haspopup="true"

@@ -8,13 +8,13 @@ import {
 import Paper from '@material-ui/core/Paper';
 
 import LinearProgress from 'src/components/LinearProgress';
+import { transitionText } from 'src/features/linodes/transitions';
 
 type ClassNames = 'root' | 'status';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     padding: theme.spacing.unit * 3,
-    marginTop: theme.spacing.unit * 2,
     marginBottom: theme.spacing.unit * 2,
   },
   status: {
@@ -24,18 +24,19 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 });
 
 interface Props {
-  linode: Linode.Linode & { recentEvent?: Linode.Event };
+  status: string;
+  recentEvent?: Linode.Event;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const LinodeBusyStatus: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, linode } = props;
-  const value = (linode.recentEvent && linode.recentEvent.percent_complete) || 1;
+  const { classes, status, recentEvent } = props;
+  const value = (recentEvent && recentEvent.percent_complete) || 1;
   return (
     <Paper className={classes.root}>
       <div className={classes.status}>
-        {linode.status.replace('_', ' ')}: {value}%
+        {transitionText(status, recentEvent)}: {value}%
       </div>
       <LinearProgress value={value} />
     </Paper>

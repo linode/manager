@@ -7,10 +7,11 @@ import {
 } from '@material-ui/core/styles';
 import { Cached } from '@material-ui/icons';
 
-import transitionStatus from '../linodeTransitionStatus';
+import { linodeInTransition } from 'src/features/linodes/transitions';
 
 interface Props {
   status: Linode.LinodeStatus;
+  recentEvent?: Linode.Event;
 }
 
 type CSSClasses = 'dot' | 'green' | 'red' | 'transition';
@@ -50,7 +51,7 @@ const LinodeStatusIndicator = (props: Props & WithStyles<CSSClasses>) => {
           &#x25CF;
         </span>
       }
-      {transitionStatus.includes(props.status) &&
+      {linodeInTransition(props.status, props.recentEvent) &&
         <span
           className={`${props.classes.transition}`}
           data-qa-status={props.status}
