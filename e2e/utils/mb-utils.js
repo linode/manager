@@ -1,5 +1,4 @@
-const { readFileSync, writeFileSync } = require('fs');
-
+const { writeFileSync } = require('fs');
 const axios = require('axios');
 
 const proxyImposter = config => {
@@ -55,11 +54,9 @@ const instance = axios.create({
 const mountebankEndpoint = '/imposters?replayable=true';
 
 /*
-* Sends request to mountebank to create a new imposter
-* USE PUT method when loading saved imposters from JSON file
-* USE POST method when loading a proxy
+* Sends POST to mountebank to load an imposter that proxies
 * @param { Object } imposter Imposter object
-* @returns { Promise } Resolves when response status code is 200
+* @returns { Promise } Resolves with response data
 */
 exports.loadProxyImposter = (proxyConfig) => {
     return new Promise((resolve, reject) => {
@@ -71,6 +68,11 @@ exports.loadProxyImposter = (proxyConfig) => {
     });
 }
 
+/*
+* Sends PUT request to mountebank to load an imposter
+* @param { Object } imposter Imposter object
+* @returns { Promise } Resolves with response data
+*/
 exports.loadImposter = (imposter) => {
     return new Promise((resolve, reject) => {
         instance.put(mountebankEndpoint, imposter)
@@ -79,6 +81,12 @@ exports.loadImposter = (imposter) => {
     });
 }
 
+/*
+* GET imposters from mountebank
+* @param { Boolean } removeProxies Adds Remove proxies param to remove proxy stubs
+* @param { String } file filepath and filename to save imposters.
+* @returns { Promise } Resolves writing response data to file
+*/
 exports.getImposters = (removeProxies, file) => {
     return new Promise((resolve, reject) => {
         const removeProxyParam = '&removeProxies=true';
@@ -90,6 +98,10 @@ exports.getImposters = (removeProxies, file) => {
     });
 }
 
+/*
+* Sends a DELETE request to remove all imposters from mountebank
+* @returns { Promise } Resolves with response data
+*/
 exports.deleteImposters = () => {
     return new Promise((resolve, reject) => {
         const impostersEndPoint = '/imposters';
@@ -98,25 +110,3 @@ exports.deleteImposters = () => {
             .catch(error => reject(console.error(error)));
     });
 }
-
-
-// Create an imposter object that proxies to a host
-
-// exports.loadProxyImposter()
-//     .then(response => console.log(response))
-//     .catch(err => console.error(err));
-
-
-// getImposters(true)
-//     .then(res => console.log(res))
-//     .catch(error => console.error(error));
-
-// deleteImposters()
-//     .then(res => console.log(res));
-
-
-// const imposterConfig = readFileSync('./imposters.json');
-
-// loadImposter(imposterConfig)
-//     .then(response => console.log(response))
-//     .catch(error => console.error(error));
