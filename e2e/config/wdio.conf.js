@@ -172,7 +172,7 @@ exports.config = {
             imposterPort: '8088',
             imposterProtocol: 'https',
             imposterName: 'Linode-API',
-            proxyHost: 'https://api.dev.linode.com/',
+            proxyHost: 'https://api.linode.com/v4',
             mutualAuth: true,
         }
     },
