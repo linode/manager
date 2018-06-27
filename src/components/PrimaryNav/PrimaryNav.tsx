@@ -2,16 +2,19 @@ import * as React from 'react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'redux';
 
+import * as classNames from 'classnames';
+
 import { StyleRules, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
+import Collapse from '@material-ui/core/Collapse';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
 
 import Grid from 'src/components/Grid';
-import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
 import Toggle from 'src/components/Toggle';
 
 import Logo from 'src/assets/logo/logo-text.svg';
@@ -32,6 +35,22 @@ const primaryLinks: PrimaryLink[] = [
   { display: 'StackScripts', href: '/stackscripts' },
   { display: 'Images', href: '/images' },
 ];
+
+type ClassNames =
+  'headerGrid'
+  | 'logoItem'
+  | 'listItem'
+  | 'lastItem'
+  | 'linkItem'
+  | 'active'
+  | 'activeLink'
+  | 'sublink'
+  | 'sublinkActive'
+  | 'arrow'
+  | 'sublinkPanel'
+  | 'switchWrapper'
+  | 'toggle'
+  | 'switchText';
 
 const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   headerGrid: {
@@ -78,36 +97,10 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     flex: 1,
     backgroundColor: 'transparent',
   },
-  activeLink: {
-    color: 'white',
-  },
   sublinkPanel: {
-    paddingLeft: theme.spacing.unit * 4,
-    paddingRight: theme.spacing.unit * 4,
+    paddingLeft: theme.spacing.unit * 6,
+    paddingRight: theme.spacing.unit * 2,
     fontSize: '.9rem',
-    transition: theme.transitions.create(['color', 'background-color']),
-    '&:hover, &:focus': {
-      backgroundColor: 'rgba(0, 0, 0, 0.1)',
-    },
-    '& span': {
-      color: '#C9CACB',
-      transition: theme.transitions.create(['color']),
-    },
-    '& svg': {
-      color: '#C9CACB',
-      fontSize: '20px',
-      margin: '5px 2px 4px 0',
-      transition: theme.transitions.create(['color']),
-    },
-    '&:hover, &:focus, & .hOpen': {
-      color: 'white',
-      '& span, & svg': {
-        color: 'white !important',
-      },
-    },
-    '& .pOpen': {
-      margin: '5px 0 0 14px',
-    },
   },
   sublink: {
     padding: '4px 0 4px 8px',
@@ -118,6 +111,22 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
       textDecoration: 'underline',
       outline: 0,
     },
+  },
+  activeLink: {
+    color: 'white',
+    '& $arrow': {
+      transform: 'rotate(90deg)',
+    },
+  },
+  sublinkActive: {
+    textDecoration: 'underline',
+  },
+  arrow: {
+    position: 'relative',
+    top: 4,
+    fontSize: '1.2rem',
+    margin: '0 4px 0 -7px',
+    transition: theme.transitions.create(['transform']),
   },
   switchWrapper: {
     padding: '16px 40px 16px 34px',
@@ -146,28 +155,25 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   },
 });
 
-type ClassNames =
-  'headerGrid'
-  | 'logoItem'
-  | 'listItem'
-  | 'lastItem'
-  | 'linkItem'
-  | 'active'
-  | 'activeLink'
-  | 'sublink'
-  | 'sublinkPanel'
-  | 'switchWrapper'
-  | 'toggle'
-  | 'switchText';
-
 interface Props extends WithStyles<ClassNames>, RouteComponentProps<{}> {
   toggleMenu: () => void;
   toggleTheme: () => void;
 }
 
-class PrimaryNav extends React.Component<Props> {
-  state = {
+interface State {
+  drawerOpen: boolean;
+  expandedMenus: {
+    [key: string]: boolean;
+  };
+}
+
+class PrimaryNav extends React.Component<Props, State> {
+  state: State = {
     drawerOpen: false,
+    expandedMenus: {
+      account: false,
+      support: false,
+    },
   };
 
   constructor(props: Props) {
@@ -183,6 +189,17 @@ class PrimaryNav extends React.Component<Props> {
   linkIsActive(href: string) {
     return isPathOneOf([href], this.props.location.pathname);
   }
+
+  expandMenutItem = (e: React.MouseEvent<HTMLElement>) => {
+    const menuName = e.currentTarget.getAttribute('data-menu-name');
+    if (!menuName) return;
+    this.setState({
+      expandedMenus: {
+        ...this.state.expandedMenus,
+        [menuName]: !this.state.expandedMenus[menuName],
+      }
+    });
+  };
 
   renderPrimaryLink(PrimaryLink: PrimaryLink) {
     const { classes } = this.props;
@@ -213,6 +230,7 @@ class PrimaryNav extends React.Component<Props> {
 
   render() {
     const { classes, toggleTheme } = this.props;
+    const { expandedMenus } = this.state;
     const themeName = (this.props.theme as any).name;
 
     return (
@@ -230,25 +248,84 @@ class PrimaryNav extends React.Component<Props> {
           </Grid>
         </Grid>
         {primaryLinks.map(primaryLink => this.renderPrimaryLink(primaryLink))}
-        <ShowMoreExpansion classes={{ root: classes.sublinkPanel }} name="Account">
+
+        <ListItem 
+          data-menu-name="account"
+          button
+          onClick={this.expandMenutItem}
+          className={classNames({
+            [classes.listItem]: true,
+          })}
+        >
+          <ListItemText
+            disableTypography={true}
+            className={classNames({
+              [classes.linkItem]: true,
+              [classes.activeLink]: 
+                expandedMenus.account
+                || this.linkIsActive('/billing') === true
+                || this.linkIsActive('/users') === true,
+            })}
+          >
+            <KeyboardArrowRight className={classes.arrow} />
+            Account
+          </ListItemText>
+        </ListItem>
+        <Collapse 
+          in={expandedMenus.account
+              || this.linkIsActive('/billing') === true
+              || this.linkIsActive('/users') === true}
+          timeout="auto" 
+          unmountOnExit
+          className={classes.sublinkPanel}
+        >
           <Link
-            className={classes.sublink}
             to="/billing"
             role="menuitem"
+            className={classNames({
+              [classes.sublink]: true,
+              [classes.sublinkActive]: this.linkIsActive('/billing') === true,
+            })}
           >
             Account &amp; Billing
           </Link>
           <Link
-            className={classes.sublink}
             to="/users"
             role="menuitem"
+            className={classNames({
+              [classes.sublink]: true,
+              [classes.sublinkActive]: this.linkIsActive('/users') === true,
+            })}
           >
             Users
           </Link>
-        </ShowMoreExpansion>
-        <ShowMoreExpansion
-          classes={{ root: classes.sublinkPanel }}
-          name="Support"
+        </Collapse>
+
+        <ListItem
+          data-menu-name="support"
+          button
+          onClick={this.expandMenutItem}
+          className={classes.listItem}
+        >
+          <ListItemText
+            disableTypography={true}
+            className={classNames({
+              [classes.linkItem]: true,
+              [classes.activeLink]:
+                expandedMenus.support
+                || this.linkIsActive('/support') === true,
+            })}
+          >
+            <KeyboardArrowRight className={classes.arrow} />
+            Support
+          </ListItemText>
+        </ListItem>
+        <Collapse 
+          in={expandedMenus.support 
+              || this.linkIsActive('/support') === true}
+          timeout="auto" 
+          unmountOnExit
+          className={classes.sublinkPanel}
         >
           <a
             className={classes.sublink}
@@ -267,13 +344,17 @@ class PrimaryNav extends React.Component<Props> {
             Community Forum
           </a>
           <Link
-            className={classes.sublink}
             to="/support"
             role="menuitem"
+            className={classNames({
+              [classes.sublink]: true,
+              [classes.sublinkActive]: this.linkIsActive('/support') === true,
+            })}
           >
             Support Tickets
           </Link>
-        </ShowMoreExpansion>
+        </Collapse>
+
         <Divider className={classes.lastItem} />
         <div className={classes.switchWrapper}>
           <span className={`
