@@ -68,17 +68,18 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     zIndex: 2,
   },
   suggestionItem: {
-    color: `${theme.palette.primary.main} !important`,
     borderBottom: `1px solid ${theme.palette.divider}`,
     '&:hover, &:focus': {
-      backgroundColor: `${theme.bg.offWhite} !important`,
+      backgroundColor: `${theme.palette.primary.main} !important`,
+      color: `${theme.color.white} !important`,
     },
     '&:last-item': {
       border: 0,
     },
   },
   selectedSuggestionItem: {
-    backgroundColor: `${theme.bg.offWhite} !important`,
+    backgroundColor: `${theme.palette.primary.main} !important`,
+    color: `${theme.color.white} !important`,
   },
 });
 
