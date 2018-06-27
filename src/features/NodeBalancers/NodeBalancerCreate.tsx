@@ -11,7 +11,6 @@ import {
   over,
   path,
   pathOr,
-  reduce,
   set,
   view,
 } from 'ramda';
@@ -85,7 +84,7 @@ type CombinedProps = Props
 interface NodeBalancerFieldsState {
   label?: string;
   region?: string;
-  configs: NodeBalancerConfigFields[];
+  configs: (NodeBalancerConfigFields & { errors?: any }) [];
 }
 
 interface State {
@@ -170,14 +169,22 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     this.setNodeValue(configIdx, nodeIdx, 'weight', value)
 
   clearNodeErrors = () => {
+    // Build paths for all config errors.
+    const configPaths = this.state.nodeBalancerFields.configs.map((config, idxC) => {
+      return ['configs', idxC, 'errors'];
+    });
+
     // Build paths to all node errors
-    const nestedPaths = this.state.nodeBalancerFields.configs.map((config, idxC) => {
+    const nodePaths = this.state.nodeBalancerFields.configs.map((config, idxC) => {
       return config.nodes.map((nodes, idxN) => {
         return ['configs', idxC, 'nodes', idxN, 'errors'];
       });
     });
-    const paths = nestedPaths.reduce((acc, pathArr) => [...acc, ...pathArr], []);
+
+    const paths = [...configPaths, ...nodePaths.reduce((acc, pathArr) => [...acc, ...pathArr], [])];
+
     if (paths.length === 0) { return; }
+
     /* Map those paths to an array of updater functions */
     const setFns = paths.map((path: any[]) => {
       return set(lensPath(['nodeBalancerFields', ...path]), []);
@@ -272,7 +279,10 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
         const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'], errorResponse);
 
         if (errors) {
-          this.setNodeErrors(errors);
+          this.setNodeErrors(errors.map((e) => ({
+            ...e,
+            field: e.field.replace(/(\[|\]\.)/g, '_')
+          })));
           return this.setState( { submitting: false }, () => scrollErrorIntoView());
         }
 
@@ -445,20 +455,9 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                   const sslCertificateLens = lensTo(['ssl_cert']);
                   const privateKeyLens = lensTo(['ssl_key']);
 
-                  const errors = reduce((
-                    prev: Linode.ApiFieldError[],
-                    next: Linode.ApiFieldError): Linode.ApiFieldError[] => {
-                    const t = new RegExp(`configs_${idx}_`);
-
-                    return t.test(next.field)
-                      ? [...prev, { ...next, field: next.field.replace(t, '') }]
-                      : prev;
-
-                  }, [])(this.state.errors || []);
-
                   return <Paper key={idx} style={{ padding: 24, margin: 8, width: '100%' }}>
                     <NodeBalancerConfigPanel
-                      errors={errors}
+                      errors={nodeBalancerConfig.errors}
                       configIdx={idx}
 
                       algorithm={view(algorithmLens, this.state)}
@@ -630,6 +629,26 @@ const styled = withStyles(styles, { withTheme: true });
 export const lensFrom = (p1: (string | number)[]) => (p2: (string | number)[]) =>
   lensPath([...p1, ...p2]);
 
+const getPathAnFieldFromFieldString = (value: string) => {
+  let field = value;
+  let path: any[] = [];
+
+  const configRegExp = new RegExp(/configs_(\d+)_/);
+  const configMatch = configRegExp.exec(value);
+  if (configMatch && configMatch[1]) {
+    path = [...path, 'configs', +configMatch[1]];
+    field = field.replace(configRegExp, '');
+  }
+
+  const nodeRegExp = new RegExp(/nodes_(\d+)_/);
+  const nodeMatch = nodeRegExp.exec(value);
+  if (nodeMatch && nodeMatch[1]) {
+    path = [...path, 'nodes', +nodeMatch[1]];
+    field = field.replace(nodeRegExp, '')
+  }
+  return { field, path };
+}
+
 export const fieldErrorsToNodePathErrors = (errors: Linode.ApiFieldError[]) => {
   /**
    * Potentials;
@@ -648,21 +667,20 @@ export const fieldErrorsToNodePathErrors = (errors: Linode.ApiFieldError[]) => {
   */
   return errors.reduce(
     (acc: any, error: Linode.ApiFieldError) => {
-      const match = /^configs_(\d+)_nodes_(\d+)_(\w+)$/.exec(error.field)
-        || /^configs\[(\d+)\]\.nodes\[(\d+)\]\.(\w+)$/.exec(error.field);
+        const { field, path } = getPathAnFieldFromFieldString(error.field);
 
-      if (match && match[1] && match[2] && match[3]) {
+        if(!path.length){ return acc; }
+
         return [
           ...acc,
           {
             error: {
-              field: match[3],
+              field,
               reason: error.reason,
             },
-            path: ['configs', +match[1], 'nodes', +match[2], 'errors'],
+            path: [...path, 'errors'],
           },
         ];
-      }
       return acc;
     },
     [],
