@@ -487,8 +487,11 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
                       protocol={view(protocolLens, this.state)}
                       onProtocolChange={(protocol: string) =>
-                        this.setState(state =>
-                          set(protocolLens, protocol, state))}
+                        this.setState(compose(
+                          set(protocolLens, protocol),
+                          set(sslCertificateLens, ''),
+                          set(privateKeyLens, ''),
+                        ))}
 
                       healthCheckType={view(healthCheckTypeLens, this.state)}
                       onHealthCheckTypeChange={(healthCheckType: string) =>
