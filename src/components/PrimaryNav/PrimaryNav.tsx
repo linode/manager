@@ -7,7 +7,6 @@ import * as classNames from 'classnames';
 import { StyleRules, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import Collapse from '@material-ui/core/Collapse';
-import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
@@ -37,11 +36,10 @@ const primaryLinks: PrimaryLink[] = [
 ];
 
 type ClassNames =
-  'headerGrid'
+  'menuGrid'
   | 'logoItem'
   | 'listItem'
   | 'collapsible'
-  | 'lastItem'
   | 'linkItem'
   | 'active'
   | 'activeLink'
@@ -51,14 +49,16 @@ type ClassNames =
   | 'sublinkPanel'
   | 'switchWrapper'
   | 'toggle'
-  | 'switchText';
+  | 'switchText'
+  | 'spacer';
 
 const styles = (theme: Theme & Linode.Theme): StyleRules => ({
-  headerGrid: {
-    borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
+  menuGrid: {
     minHeight: 64,
     width: '100%',
+    height: '100%',
     margin: 0,
+    paddingBottom: theme.spacing.unit * 3,
     [theme.breakpoints.up('sm')]: {
       minHeight: 72,
     },
@@ -74,6 +74,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     borderBottomColor: 'rgba(0, 0, 0, 0.12)',
     borderLeft: '6px solid transparent',
     transition: theme.transitions.create(['background-color', 'border-left-color']),
+    flexShrink: 0,
     '&:hover': {
       borderLeftColor: 'rgba(0, 0, 0, 0.1)',
       '& $linkItem': {
@@ -103,14 +104,11 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
       borderLeftColor: theme.color.green,
     },
   },
-  lastItem: {
-    flex: 1,
-    backgroundColor: 'transparent',
-  },
   sublinkPanel: {
     paddingLeft: theme.spacing.unit * 6,
     paddingRight: theme.spacing.unit * 2,
     fontSize: '.9rem',
+    flexShrink: 0,
   },
   sublink: {
     padding: '4px 0 4px 8px',
@@ -141,6 +139,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   switchWrapper: {
     padding: '16px 40px 16px 34px',
     alignItems: 'center',
+    marginTop: 'auto',
     // hidding for now - replace with flex
     display: 'none',
   },
@@ -162,6 +161,9 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
       transition: theme.transitions.create(['color']),
       color: '#C9CACB',
     },
+  },
+  spacer: {
+    padding: 25,
   },
 });
 
@@ -246,9 +248,12 @@ class PrimaryNav extends React.Component<Props, State> {
     return (
       <React.Fragment>
         <Grid
-          className={classes.headerGrid}
+          className={classes.menuGrid}
           container
-          alignItems="center"
+          alignItems="flex-start"
+          justify="flex-start"
+          direction="column"
+          wrap="nowrap"
           spacing={0}
         >
           <Grid item>
@@ -256,147 +261,149 @@ class PrimaryNav extends React.Component<Props, State> {
               <Logo width={115} height={43} />
             </div>
           </Grid>
-        </Grid>
-        {primaryLinks.map(primaryLink => this.renderPrimaryLink(primaryLink))}
 
-        <ListItem 
-          data-menu-name="account"
-          focusRipple={true}
-          button
-          onClick={this.expandMenutItem}
-          className={classNames({
-            [classes.listItem]: true,
-            [classes.collapsible]: true,
-          })}
-        >
-          <ListItemText
-            disableTypography={true}
-            className={classNames({
-              [classes.linkItem]: true,
-              [classes.activeLink]: 
-                expandedMenus.account
-                || this.linkIsActive('/billing') === true
-                || this.linkIsActive('/users') === true,
-            })}
-          >
-            <KeyboardArrowRight className={classes.arrow} />
-            Account
-          </ListItemText>
-        </ListItem>
-        <Collapse 
-          in={expandedMenus.account
-              || (this.linkIsActive('/billing') === true)
-              || (this.linkIsActive('/users') === true)}
-          timeout="auto" 
-          unmountOnExit
-          className={classes.sublinkPanel}
-        >
-          <Link
-            to="/billing"
-            role="menuitem"
-            className={classNames({
-              [classes.sublink]: true,
-              [classes.sublinkActive]: this.linkIsActive('/billing') === true,
-            })}
-          >
-            Account &amp; Billing
-          </Link>
-          <Link
-            to="/users"
-            role="menuitem"
-            className={classNames({
-              [classes.sublink]: true,
-              [classes.sublinkActive]: this.linkIsActive('/users') === true,
-            })}
-          >
-            Users
-          </Link>
-        </Collapse>
+          {primaryLinks.map(primaryLink => this.renderPrimaryLink(primaryLink))}
 
-        <ListItem
-          data-menu-name="support"
-          button
-          focusRipple={true}
-          onClick={this.expandMenutItem}
-          className={classNames({
-            [classes.listItem]: true,
-            [classes.collapsible]: true,
-          })}
-        >
-          <ListItemText
-            disableTypography={true}
+          <ListItem 
+            data-menu-name="account"
+            focusRipple={true}
+            button
+            onClick={this.expandMenutItem}
             className={classNames({
-              [classes.linkItem]: true,
-              [classes.activeLink]:
-                expandedMenus.support
-                || this.linkIsActive('/support') === true,
+              [classes.listItem]: true,
+              [classes.collapsible]: true,
             })}
           >
-            <KeyboardArrowRight className={classes.arrow} />
-            Support
-          </ListItemText>
-        </ListItem>
-        <Collapse 
-          in={expandedMenus.support 
-              || this.linkIsActive('/support') === true}
-          timeout="auto" 
-          unmountOnExit
-          className={classes.sublinkPanel}
-        >
-          <a
-            className={classes.sublink}
-            href="https://www.linode.com/docs"
-            target="_blank"
-            role="menuitem"
+            <ListItemText
+              disableTypography={true}
+              className={classNames({
+                [classes.linkItem]: true,
+                [classes.activeLink]: 
+                  expandedMenus.account
+                  || this.linkIsActive('/billing') === true
+                  || this.linkIsActive('/users') === true,
+              })}
+            >
+              <KeyboardArrowRight className={classes.arrow} />
+              Account
+            </ListItemText>
+          </ListItem>
+          <Collapse 
+            in={expandedMenus.account
+                || (this.linkIsActive('/billing') === true)
+                || (this.linkIsActive('/users') === true)}
+            timeout="auto" 
+            unmountOnExit
+            className={classes.sublinkPanel}
           >
-            Documentation
-          </a>
-          <a
-            className={classes.sublink}
-            href="//www.linode.com/community/questions"
-            target="_blank"
-            role="menuitem"
-          >
-            Community Forum
-          </a>
-          <Link
-            to="/support"
-            role="menuitem"
-            className={classNames({
-              [classes.sublink]: true,
-              [classes.sublinkActive]: this.linkIsActive('/support') === true,
-            })}
-          >
-            Support Tickets
-          </Link>
-        </Collapse>
+            <Link
+              to="/billing"
+              role="menuitem"
+              className={classNames({
+                [classes.sublink]: true,
+                [classes.sublinkActive]: this.linkIsActive('/billing') === true,
+              })}
+            >
+              Account &amp; Billing
+            </Link>
+            <Link
+              to="/users"
+              role="menuitem"
+              className={classNames({
+                [classes.sublink]: true,
+                [classes.sublinkActive]: this.linkIsActive('/users') === true,
+              })}
+            >
+              Users
+            </Link>
+          </Collapse>
 
-        <Divider className={classes.lastItem} />
-        <div className={classes.switchWrapper}>
-          <span className={`
-            ${classes.switchText}
-            ${themeName === 'lightTheme' ? 'active' : ''}
-          `}>
-            Light
-          </span>
-          <Toggle
-            onChange={() => toggleTheme()}
-            checked={themeName !== 'lightTheme'}
-            className={`
-              ${classes.toggle}
-              ${themeName}
-            `}
-          />
-          <span
-            className={`
+          <ListItem
+            data-menu-name="support"
+            button
+            focusRipple={true}
+            onClick={this.expandMenutItem}
+            className={classNames({
+              [classes.listItem]: true,
+              [classes.collapsible]: true,
+            })}
+          >
+            <ListItemText
+              disableTypography={true}
+              className={classNames({
+                [classes.linkItem]: true,
+                [classes.activeLink]:
+                  expandedMenus.support
+                  || this.linkIsActive('/support') === true,
+              })}
+            >
+              <KeyboardArrowRight className={classes.arrow} />
+              Support
+            </ListItemText>
+          </ListItem>
+          <Collapse 
+            in={expandedMenus.support 
+                || this.linkIsActive('/support') === true}
+            timeout="auto" 
+            unmountOnExit
+            className={classes.sublinkPanel}
+          >
+            <a
+              className={classes.sublink}
+              href="https://www.linode.com/docs"
+              target="_blank"
+              role="menuitem"
+            >
+              Documentation
+            </a>
+            <a
+              className={classes.sublink}
+              href="//www.linode.com/community/questions"
+              target="_blank"
+              role="menuitem"
+            >
+              Community Forum
+            </a>
+            <Link
+              to="/support"
+              role="menuitem"
+              className={classNames({
+                [classes.sublink]: true,
+                [classes.sublinkActive]: this.linkIsActive('/support') === true,
+              })}
+            >
+              Support Tickets
+            </Link>
+          </Collapse>
+
+          <div className={classes.switchWrapper}>
+            <span className={`
               ${classes.switchText}
-              ${themeName === 'darkTheme' ? 'active' : ''}
-            `}
-            style={{ marginLeft: 4 }}
-          >
-            Dark
-          </span>
-        </div>
+              ${themeName === 'lightTheme' ? 'active' : ''}
+            `}>
+              Light
+            </span>
+            <Toggle
+              onChange={() => toggleTheme()}
+              checked={themeName !== 'lightTheme'}
+              className={`
+                ${classes.toggle}
+                ${themeName}
+              `}
+            />
+            <span
+              className={`
+                ${classes.switchText}
+                ${themeName === 'darkTheme' ? 'active' : ''}
+              `}
+              style={{ marginLeft: 4 }}
+            >
+              Dark
+            </span>
+          </div>
+
+          <div className={classes.spacer} />
+        </Grid>
       </React.Fragment>
     );
   }
