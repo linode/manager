@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import { withStyles, Theme, WithStyles, StyleRulesCallback } from '@material-ui/core/styles';
-import Chip from '@material-ui/core/Chip';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Chip, { ChipProps } from '@material-ui/core/Chip';
 import Popover from '@material-ui/core/Popover';
 
 type CSSClasses =  'chip' | 'label' | 'popover';
@@ -30,7 +30,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     fontSize: '.75rem',
   },
   popover: {
-    minWidth: 175,
+    minWidth: 'auto',
     maxWidth: 400,
     overflow: 'visible',
     padding: theme.spacing.unit * 2,
@@ -43,6 +43,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
 interface Props<T> {
   items: T[];
   render: (items: T[]) => any;
+  chipProps?: ChipProps;
 }
 
 class ShowMore<T> extends React.Component<Props<T> & WithStyles<CSSClasses> > {
@@ -63,7 +64,7 @@ class ShowMore<T> extends React.Component<Props<T> & WithStyles<CSSClasses> > {
   }
 
   render() {
-    const { classes, render, items } = this.props;
+    const { classes, render, items, chipProps } = this.props;
     const { anchorEl } = this.state;
 
     return (
@@ -73,6 +74,7 @@ class ShowMore<T> extends React.Component<Props<T> & WithStyles<CSSClasses> > {
           label={`+${items.length}`}
           classes={{ label: classes.label }}
           onClick={this.handleClick}
+          {...chipProps}
         />
         <Popover
           classes={{ paper: classes.popover }}
