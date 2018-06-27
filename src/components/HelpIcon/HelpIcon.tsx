@@ -61,7 +61,7 @@ class HelpIcon extends React.Component<CombinedProps, State> {
           title={text}
           data-qa-help-tootlip
         > 
-          <IconButton>
+          <IconButton data-qa-help-button>
             <HelpOutline />
           </IconButton>
         </Tooltip>
