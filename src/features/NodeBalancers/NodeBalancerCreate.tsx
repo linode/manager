@@ -105,6 +105,7 @@ const preloaded = PromiseLoader<Props>({});
 const errorResources = {
   label: 'label',
   region: 'region',
+  address: 'address',
 };
 
 class NodeBalancerCreate extends React.Component<CombinedProps, State> {
@@ -126,7 +127,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       clone(NodeBalancerCreate.defaultDeleteConfigConfirmDialogState),
   };
 
-  addNodeBalancerConfig = () => this.setState({
+  addNodeBalancer = () => this.setState({
     nodeBalancerFields: {
       ...this.state.nodeBalancerFields,
       configs: [
@@ -271,9 +272,8 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
         const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'], errorResponse);
 
         if (errors) {
-          return this.setState({ errors, submitting: false }, () => {
-            scrollErrorIntoView();
-          });
+          this.setNodeErrors(errors);
+          return this.setState( { submitting: false }, () => scrollErrorIntoView());
         }
 
         return this.setState({
@@ -561,7 +561,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               <Grid item>
                 <Button
                   type="secondary"
-                  onClick={() => this.addNodeBalancerConfig()}
+                  onClick={() => this.addNodeBalancer()}
                   data-qa-add-config
                 >
                   Add another Configuration
@@ -631,6 +631,12 @@ export const lensFrom = (p1: (string | number)[]) => (p2: (string | number)[]) =
   lensPath([...p1, ...p2]);
 
 export const fieldErrorsToNodePathErrors = (errors: Linode.ApiFieldError[]) => {
+  /**
+   * Potentials;
+   *  JOI error config_0_nodes_0_address
+   *  API error config[0].nodes[0].address
+   */
+
   /* Return objects with this shape
       {
         path: ['configs', 2, 'nodes', 0, 'errors'],
@@ -640,9 +646,11 @@ export const fieldErrorsToNodePathErrors = (errors: Linode.ApiFieldError[]) => {
         }
       }
   */
-  const nodePathErrors = errors.reduce(
+  return errors.reduce(
     (acc: any, error: Linode.ApiFieldError) => {
-      const match = /^configs_(\d+)_nodes_(\d+)_(\w+)$/.exec(error.field);
+      const match = /^configs_(\d+)_nodes_(\d+)_(\w+)$/.exec(error.field)
+        || /^configs\[(\d+)\]\.nodes\[(\d+)\]\.(\w+)$/.exec(error.field);
+
       if (match && match[1] && match[2] && match[3]) {
         return [
           ...acc,
@@ -659,7 +667,6 @@ export const fieldErrorsToNodePathErrors = (errors: Linode.ApiFieldError[]) => {
     },
     [],
   );
-  return nodePathErrors;
 };
 
 /* @todo: move to own file */
