@@ -7,7 +7,7 @@ const profile = new Profile();
 const tokenCreateDrawer = new TokenCreateDrawer();
 
 describe('View - Personal Access Tokens', () => {
-    const timestamp = argv.record || argv.replay ? 'sometimestamp' : new Date().getTime();
+    const timestamp = new Date().getTime();
     const dialogTitle = dialogMap.title;
     const dialogContent = dialogMap.content;
     const dialogConfirm = dialogMap.confirm;
@@ -47,7 +47,7 @@ describe('View - Personal Access Tokens', () => {
         it('should successfully create personal access token on submit', () => {
             tokenCreateDrawer.submit.click();
 
-            browser.waitForVisible(dialogTitle, constants.wait.normal);
+            browser.waitForVisible(dialogTitle);
             const title = $(dialogTitle).getText();
             const content = $(dialogContent);
             const secret = content.$('span').getText();
