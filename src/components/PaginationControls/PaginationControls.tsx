@@ -33,7 +33,8 @@ const PaginationControls: React.StatelessComponent<Props> = (props) => {
       <PageButton
         first
         disabled={isFirstPage}
-        onClick={() => onClickHandler(currentPage - 1) }
+        page={currentPage - 1}
+        onClick={onClickHandler}
         data-qa-prev-page
       />
 
@@ -42,7 +43,7 @@ const PaginationControls: React.StatelessComponent<Props> = (props) => {
           key={idx}
           page={page}
           active={page === currentPage}
-          onClick={() => onClickHandler(page)}
+          onClick={onClickHandler}
         />,
         )
       }
@@ -50,7 +51,8 @@ const PaginationControls: React.StatelessComponent<Props> = (props) => {
       <PageButton
         last
         disabled={isLastPage}
-        onClick={() => onClickHandler(currentPage + 1) }
+        page={currentPage + 1}
+        onClick={onClickHandler}
         data-qa-next-page
       />
     </div>
