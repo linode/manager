@@ -1,6 +1,6 @@
 import * as Joi from 'joi';
 import { API_ROOT } from 'src/constants';
-import Request, { setURL, setMethod, setParams, setData, validateRequestData } from './index';
+import Request, { setURL, setMethod, setParams, setData } from './index';
 
 type Page<T> = Linode.ResourcePage<T>;
 type NodeBalancer = Linode.NodeBalancer;
@@ -149,7 +149,6 @@ export const createNodeBalancer = (data: any) =>
     setMethod('POST'),
     setURL(`${API_ROOT}/nodebalancers`),
     setData(data),
-    validateRequestData(data, createNodeBalancerSchema),
   )
     .then(response => response.data);
 
