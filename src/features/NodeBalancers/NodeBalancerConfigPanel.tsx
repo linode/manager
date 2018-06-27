@@ -255,7 +255,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
   }
 
   renderSearchSuggestion = (
-    inputValue: string,
     linode: Linode.Linode,
     index: number,
     highlightedIndex: number | null,
@@ -264,23 +263,17 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
     const isHighlighted = highlightedIndex === index;
 
     const privateIP = linode.ipv4.find(ipv4 => ipv4.includes('192.168'));
-    // only show suggestions if you're typing an existing linode's label
-    // or a Linode's private IP
-    if (linode.label.includes(inputValue.toLowerCase()) ||
-      privateIP!.includes(inputValue.toLowerCase())) {
-      return (
-        <MenuItem
-          // when the suggested is selected, put the private IP in the field
-          {...itemProps({ item: privateIP })}
-          key={index}
-          component="div"
-          selected={isHighlighted}
-        >
-          {`${linode.label} ${privateIP}`}
-        </MenuItem>
-      )
-    }
-    return;
+    return (
+      <MenuItem
+        // when the suggested is selected, put the private IP in the field
+        {...itemProps({ item: privateIP })}
+        key={index}
+        component="div"
+        selected={isHighlighted}
+      >
+        {`${linode.label} ${privateIP}`}
+      </MenuItem>
+    )
   }
 
   downshiftStateReducer = (state: DownshiftState, changes: StateChangeOptions) => {
@@ -831,7 +824,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                 inputValue,
                                 highlightedIndex,
                               }) => {
-                                console.log(node.address);
                                 return (
                                   <div>
                                     <TextField
@@ -851,9 +843,19 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                     {isOpen && !!inputValue &&
                                       <Paper>
                                         {linodesWithPrivateIPs && linodesWithPrivateIPs
+                                        // filter out the linodes that don't match what we're typing
+                                        // filter by private ip and label
+                                          .filter((linode: Linode.Linode) => {
+                                            const privateIP = linode.ipv4.find(ipv4 => ipv4.includes('192.168'));
+                                            return linode.label.includes(inputValue.toLowerCase())
+                                              || privateIP!.includes(inputValue.toLowerCase())
+                                          })
+                                          // limit the results to 5. we don't want too
+                                          // many in the suggestions
+                                          .splice(0, 10)
+                                          // finally map over the results and render the suggestion
                                           .map((linode, index) => {
                                             return this.renderSearchSuggestion(
-                                              inputValue,
                                               linode,
                                               index,
                                               highlightedIndex,
