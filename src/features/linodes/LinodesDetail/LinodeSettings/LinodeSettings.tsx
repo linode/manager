@@ -41,10 +41,7 @@ const LinodeSettings: React.StatelessComponent<CombinedProps> = (props) => {
         return (
           <React.Fragment>
             <Typography variant="headline" className={classes.title}>Settings</Typography>
-            <LinodeSettingsLabelPanel
-              linodeLabel={linode.label}
-              linodeId={linode.id}
-            />
+            <LinodeSettingsLabelPanel />
             <LinodeSettingsPasswordPanel
               linodeDisks={disks}
               linodeLabel={linode.label}

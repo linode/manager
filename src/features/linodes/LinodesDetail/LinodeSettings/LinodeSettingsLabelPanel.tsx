@@ -9,8 +9,6 @@ import {
 } from '@material-ui/core/styles';
 
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import { events$ } from 'src/events';
-import { genEvent } from 'src/features/linodes/LinodesLanding/powerActions';
 import { updateLinode } from 'src/services/linodes';
 
 import Button from 'src/components/Button';
@@ -19,6 +17,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import TextField from 'src/components/TextField';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { withContext } from 'src/features/linodes/LinodesDetail/context';
 
 type ClassNames = 'root';
 
@@ -26,9 +25,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
 });
 
-interface Props {
+interface Props { }
+
+interface ContextProps {
   linodeLabel: string;
   linodeId: number;
+  updateLinode: (f: (t: Linode.Linode) => Linode.Linode) => void;
 }
 
 interface State {
@@ -39,7 +41,7 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & ContextProps & WithStyles<ClassNames>;
 
 class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
   state: State = {
@@ -56,11 +58,15 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
     updateLinode(this.props.linodeId, { label: this.state.updatedValue })
       .then(response => response.data)
       .then((linode) => {
+        this.props.updateLinode((existingLinode) => ({
+          ...existingLinode,
+          ...linode,
+        }));
+
         this.setState(compose(
           set(lensPath(['success']), `Linode label changed successfully.`),
           set(lensPath(['submitting']), false),
         ));
-        events$.next(genEvent('linode_reboot', linode.id, linode.label));
       })
       .catch((error) => {
         this.setState(set(lensPath(['errors']), error.response.data.errors), () => {
@@ -112,7 +118,14 @@ const styled = withStyles(styles, { withTheme: true });
 
 const errorBoundary = PanelErrorBoundary({ heading: 'Linode Label' });
 
+const context = withContext((context) => ({
+  linodeId: context.linode.data!.id,
+  linodeLabel: context.linode.data!.label,
+  updateLinode: context.linode.update,
+}));
+
 export default compose(
   errorBoundary,
   styled,
+ context
 )(LinodeSettingsLabelPanel) as React.ComponentType<Props>;
