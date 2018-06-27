@@ -108,7 +108,16 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
+interface State {
+  currentNodeAddressIndex: number | null;
+}
+
 class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
+
+
+  state: State = {
+    currentNodeAddressIndex: null,
+  }
 
   static defaultProps: Partial<Props> = {
   };
@@ -177,9 +186,10 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
   }
 
   onNodeAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { linodesWithPrivateIPs } = this.props;
-    console.log(linodesWithPrivateIPs);
     const nodeIdx = e.currentTarget.getAttribute('data-node-idx');
+    // this is necesssary because when we select a suggested
+    // ip address, it needs to know what index we're looking at.
+    this.setState({ currentNodeAddressIndex: nodeIdx });
     if (nodeIdx) {
       this.props.onNodeAddressChange(
         +nodeIdx,
@@ -233,6 +243,59 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
   onSave = this.props.onSave;
 
   onDelete = this.props.onDelete;
+
+  handleSelectSuggestion = (selection: string) => {
+    const { currentNodeAddressIndex } = this.state;
+    if (currentNodeAddressIndex) {
+      this.props.onNodeAddressChange(
+        +currentNodeAddressIndex,
+        selection,
+      );
+    }
+  }
+
+  renderSearchSuggestion = (
+    inputValue: string,
+    linode: Linode.Linode,
+    index: number,
+    highlightedIndex: number | null,
+    itemProps: any,
+  ) => {
+    const isHighlighted = highlightedIndex === index;
+
+    const privateIP = linode.ipv4.find(ipv4 => ipv4.includes('192.168'));
+    // only show suggestions if you're typing an existing linode's label
+    // or a Linode's private IP
+    if (linode.label.includes(inputValue.toLowerCase()) ||
+      privateIP!.includes(inputValue.toLowerCase())) {
+      return (
+        <MenuItem
+          // when the suggested is selected, put the private IP in the field
+          {...itemProps({ item: privateIP })}
+          key={index}
+          component="div"
+          selected={isHighlighted}
+        >
+          {`${linode.label} ${privateIP}`}
+        </MenuItem>
+      )
+    }
+    return;
+  }
+
+  downshiftStateReducer = (state: DownshiftState, changes: StateChangeOptions) => {
+    switch (changes.type) {
+      // basically, don't clear the field value when we leave the field
+      case Downshift.stateChangeTypes.blurInput:
+      case Downshift.stateChangeTypes.mouseUp:
+        return {
+          ...changes,
+          inputValue: state.inputValue || '',
+        }
+        default:
+          return changes;
+    }
+  }
 
   render() {
     const {
@@ -757,7 +820,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                         </Grid>
                         <Grid item xs={11} lg={4} xl={3}>
                           <Downshift
-                            onSelect={() => console.log('hello world')}
+                            onSelect={this.handleSelectSuggestion}
+                            stateReducer={this.downshiftStateReducer}
                           >
                             {
                               ({
@@ -765,8 +829,9 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                 getItemProps,
                                 isOpen,
                                 inputValue,
-                                highlightedIndex
+                                highlightedIndex,
                               }) => {
+                                console.log(node.address);
                                 return (
                                   <div>
                                     <TextField
@@ -783,12 +848,19 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                       errorGroup={`${configIdx}`}
                                       data-qa-backend-ip-address
                                     />
-                                    {isOpen &&
+                                    {isOpen && !!inputValue &&
                                       <Paper>
                                         {linodesWithPrivateIPs && linodesWithPrivateIPs
-                                          .map((linode) => {
-                                            return <div key={linode.label}>{linode.label}</div>
-                                          })}
+                                          .map((linode, index) => {
+                                            return this.renderSearchSuggestion(
+                                              inputValue,
+                                              linode,
+                                              index,
+                                              highlightedIndex,
+                                              getItemProps,
+                                            )
+                                          })
+                                        }
                                       </Paper>
                                     }
                                   </div>
@@ -796,15 +868,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                               }
                             }
                           </Downshift>
-                          <TextField
-                            label="IP Address"
-                            value={node.address}
-                            inputProps={{ 'data-node-idx': idx }}
-                            onChange={this.onNodeAddressChange}
-                            errorText={hasErrorFor('address')}
-                            errorGroup={forEdit ? `${configIdx}`: undefined}
-                            data-qa-backend-ip-address
-                          />
                         </Grid>
                         <Grid item xs={11} lg={4} xl={2}>
                           <TextField

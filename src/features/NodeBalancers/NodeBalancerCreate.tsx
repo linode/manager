@@ -163,8 +163,9 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   onNodeLabelChange = (configIdx: number, nodeIdx: number, value: string) =>
     this.setNodeValue(configIdx, nodeIdx, 'label', value)
 
-  onNodeAddressChange = (configIdx: number, nodeIdx: number, value: string) =>
-    this.setNodeValue(configIdx, nodeIdx, 'address', value)
+  onNodeAddressChange = (configIdx: number, nodeIdx: number, value: string) => {
+    this.setNodeValue(configIdx, nodeIdx, 'address', value);
+  }
 
   onNodePortChange = (configIdx: number, nodeIdx: number, value: string) =>
     this.setNodeValue(configIdx, nodeIdx, 'port', value)
@@ -402,7 +403,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
         const linodesWithPrivateIPs = result.data.filter((linode) => {
           return linode.ipv4.some(ipv4 => ipv4.includes('192.168')); // does it have a private IP address
         });
-        this.setState({linodesWithPrivateIPs});
+        this.setState({ linodesWithPrivateIPs });
       })
   }
 
