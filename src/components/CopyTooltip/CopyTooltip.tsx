@@ -3,6 +3,7 @@ import * as React from 'react';
 import * as classNames from 'classnames';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+
 import * as copy from 'copy-to-clipboard';
 
 import { ContentCopy } from '@material-ui/icons';
@@ -39,6 +40,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     padding: 2,
     transition: theme.transitions.create(['background-color']),
     borderRadius: 4,
+    color: theme.palette.text.primary,
     '& svg': {
       transition: theme.transitions.create(['color']),
       margin: 0,
@@ -47,7 +49,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
       height: 16,
     },
     '&:hover': {
-      backgroundColor: theme.palette.primary.main,
+      backgroundColor: theme.palette.text.primary,
       '& svg': {
         color: 'white',
       },
@@ -56,7 +58,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   copied: {
     fontSize: '.85rem',
     left: -16,
-    color: theme.palette.primary.light,
+    color: theme.palette.text.primary,
     padding: '6px 8px',
     backgroundColor: theme.color.white,
     position: 'absolute',
