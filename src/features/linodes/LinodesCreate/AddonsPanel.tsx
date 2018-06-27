@@ -84,12 +84,12 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 class AddonsPanel extends React.Component<CombinedProps> {
   renderBackupsPrice() {
-    const { classes } = this.props;
+    const { classes, backupsMonthly } = this.props;
 
-    return this.props.backupsMonthly && (
+    return backupsMonthly && (
       <Grid item className={classes.subLabel}>
         <Typography variant="caption">
-          {`$${this.props.backupsMonthly.toFixed(2)}`} per month
+          {`$${backupsMonthly.toFixed(2)}`} per month
         </Typography>
       </Grid>
     );
@@ -117,7 +117,7 @@ class AddonsPanel extends React.Component<CombinedProps> {
               {this.renderBackupsPrice()}
               <Typography variant="caption" className={classes.caption}>
                 Three backup slots are executed and rotated automatically: a daily backup, a 2-7
-                day old backup, and an 8-14 day old backup. Plans are priced according to you
+                day old backup, and an 8-14 day old backup. Plans are priced according to the
                 Linode plan selected above.
               </Typography>
             </Grid>

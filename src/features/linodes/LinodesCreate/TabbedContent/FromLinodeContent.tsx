@@ -263,7 +263,7 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
                   privateIP={privateIP}
                   changeBackups={this.handleToggleBackups}
                   changePrivateIP={this.handleTogglePrivateIP}
-                  updateFor={[privateIP, backups]}
+                  updateFor={[privateIP, backups, selectedTypeID]}
                 />
               </Grid>
               <Grid item className={`${classes.sidebar} mlSidebar`}>

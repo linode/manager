@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import { connect, Dispatch } from 'react-redux';
 import { compose, bindActionCreators } from 'redux';
 import { append, pathOr, range, flatten } from 'ramda';
@@ -19,6 +19,7 @@ import DefaultLoader from 'src/components/DefaultLoader';
 import { request, response } from 'src/store/reducers/resources';
 import Footer from 'src/features/Footer';
 import Placeholder from 'src/components/Placeholder';
+import NotFound from 'src/components/NotFound';
 
 import ToastNotifications from 'src/features/ToastNotifications';
 import AccountLevelNotifications from 'src/features/AccountLevelNotifications';
@@ -232,7 +233,9 @@ export class App extends React.Component<CombinedProps, State> {
                         <Route exact path="/support" render={() =>
                           <Placeholder title="Support" />} />
                         <Route path="/profile" component={Profile} />
-                        <Redirect to="/linodes" />
+                        {/* Update to Dashboard when complete */}
+                        <Route exact path="/" component={LinodesRoutes} />
+                        <Route component={NotFound} />
                       </Switch>
                     </Grid>
                     <DocsSidebar docs={documentation} />

@@ -97,6 +97,7 @@ const LinodeTheme: Linode.Theme = {
           },
         },
         '&.loading': {
+          minWidth: 100,
           '& svg': {
             width: 22,
             height: 22,
@@ -136,6 +137,11 @@ const LinodeTheme: Linode.Theme = {
     MuiCircularProgress: {
       circle: {
         strokeLinecap: 'inherit',
+      },
+    },
+    MuiCollapse: {
+      container: {
+        width: '100%',
       },
     },
     MuiDialog: {
@@ -633,10 +639,13 @@ const LinodeTheme: Linode.Theme = {
         backgroundColor: 'white',
         boxShadow: '0 0 5px #bbb',
         color: '#666',
-        textAlign: 'center',
+        textAlign: 'left',
         [breakpoints.up('sm')]: {
           padding: '12px  16px',
           fontSize: '.9rem',
+        },
+        '&$open': {
+          opacity: 1,
         },
       },
     },

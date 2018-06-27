@@ -287,6 +287,10 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
     this.mounted = false;
   }
 
+  filterPublicImages = (images: Linode.Image[]) => {
+    return images.filter((image: Linode.Image) => image.is_public)
+  }
+
   render() {
     const { errors, userDefinedFields, udf_data, selectedImageID, selectedRegionID,
       selectedStackScriptID, selectedTypeID, backups, privateIP, label,
@@ -294,7 +298,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
       selectedStackScriptUsername } = this.state;
 
     const { notice, getBackupsMonthlyPrice, regions, types, classes,
-      getRegionName, getTypeInfo } = this.props;
+      getRegionName, getTypeInfo, images } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
@@ -302,7 +306,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
 
     const regionName = getRegionName(selectedRegionID);
     const typeInfo = getTypeInfo(selectedTypeID);
-    const imageInfo = this.getImageInfo(this.props.images.find(
+    const imageInfo = this.getImageInfo(images.find(
       image => image.id === selectedImageID));
 
     return (
@@ -324,6 +328,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
             shrinkPanel={true}
             updateFor={[selectedStackScriptID, errors]}
             onSelect={this.handleSelectStackScript}
+            images={this.filterPublicImages(images) || []}
           />
           {userDefinedFields && userDefinedFields.length > 0 &&
             <UserDefinedFieldsPanel
@@ -343,6 +348,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
               updateFor={[selectedImageID, compatibleImages, errors]}
               selectedImageID={selectedImageID}
               error={hasErrorFor('image')}
+              hideMyImages={true}
             />
             : <Paper
               className={classes.emptyImagePanel}>
@@ -394,7 +400,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
             privateIP={privateIP}
             changeBackups={this.handleToggleBackups}
             changePrivateIP={this.handleTogglePrivateIP}
-            updateFor={[privateIP, backups]}
+            updateFor={[privateIP, backups, selectedTypeID]}
           />
         </Grid>
         <Grid item className={`${classes.sidebar} mlSidebar`}>

@@ -1,9 +1,11 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+
 import { compose, pathOr } from 'ramda';
 
-import { withStyles, Theme, WithStyles, StyleRulesCallback } from '@material-ui/core/styles';
+import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
+
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -14,18 +16,18 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 
 import Flag from 'src/assets/icons/flag.svg';
-import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
-import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
-import { weblishLaunch } from 'src/features/Weblish';
-import Grid from 'src/components/Grid';
 import CircleProgress from 'src/components/CircleProgress';
+import Grid from 'src/components/Grid';
+import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
+import { weblishLaunch } from 'src/features/Weblish';
+import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 
-import RegionIndicator from './RegionIndicator';
+import { displayType, typeLabelDetails } from '../presentation';
 import IPAddress from './IPAddress';
 import LinodeActionMenu from './LinodeActionMenu';
-import { typeLabelDetails, displayType } from '../presentation';
 import LinodeStatusIndicator from './LinodeStatusIndicator';
+import RegionIndicator from './RegionIndicator';
 
 type CSSClasses =
   'customeMQ'
@@ -169,7 +171,7 @@ interface Props {
   linodeSpecMemory: number;
   linodeSpecVcpus: number;
   linodeSpecTransfer: number;
-  image?: Linode.Image;
+  imageLabel: string;
   openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
   toggleConfirmation: (bootOption: Linode.BootAction,
     linodeId: number, linodeLabel: string) => void;
@@ -204,6 +206,16 @@ class LinodeCard extends React.Component<CombinedProps> {
     );
   }
 
+  handleConsoleButtonClick = () => {
+    const { linodeId } = this.props;
+    weblishLaunch(`${linodeId}`);
+  }
+
+  handleRebootButtonClick = () => {
+    const { linodeId, linodeLabel, toggleConfirmation} = this.props;
+    toggleConfirmation('reboot', linodeId, linodeLabel);
+  }
+
   loadingState = () => {
     const { classes, linodeRecentEvent, linodeStatus } = this.props;
     const value = (linodeRecentEvent && linodeRecentEvent.percent_complete) || 1;
@@ -227,7 +239,7 @@ class LinodeCard extends React.Component<CombinedProps> {
   loadedState = () => {
     const {
       classes,
-      image,
+      imageLabel,
       linodeIpv4,
       linodeIpv6,
       linodeRegion,
@@ -251,11 +263,9 @@ class LinodeCard extends React.Component<CombinedProps> {
             <IPAddress ips={linodeIpv4} copyRight />
             <IPAddress ips={[linodeIpv6]} copyRight />
           </div>
-          {image &&
-            <div className={classes.cardSection} data-qa-image>
-              {image.label}
-            </div>
-          }
+          <div className={classes.cardSection} data-qa-image>
+            {imageLabel}
+          </div>
         </div>
       </CardContent>
     );
@@ -302,14 +312,14 @@ class LinodeCard extends React.Component<CombinedProps> {
                 />
               </div>
             }
-            className={`${classes.customeMQ}} ${'title'}`}
+            className={`${classes.customeMQ} ${'title'}`}
           />
           <Divider />
           {loading ? this.loadingState() : this.loadedState()}
           <CardActions className={classes.cardActions}>
             <Button
               className={`${classes.button} ${classes.consoleButton}`}
-              onClick={() => weblishLaunch(`${linodeId}`)}
+              onClick={this.handleConsoleButtonClick}
               data-qa-console
             >
               Launch Console
@@ -317,7 +327,7 @@ class LinodeCard extends React.Component<CombinedProps> {
             <Button
               className={`${classes.button}
               ${classes.rebootButton}`}
-              onClick={() => toggleConfirmation('reboot', linodeId, linodeLabel)}
+              onClick={this.handleRebootButtonClick}
               data-qa-reboot
             >
               Reboot

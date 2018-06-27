@@ -100,7 +100,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   //   notification: e => ``,
   // },
   linode_addip: {
-    notification: e => `An IP as been added to ${e.entity!.label}.`,
+    notification: e => `An IP has been added to ${e.entity!.label}.`,
   },
   linode_boot: {
     scheduled: e => `Linode ${e.entity!.label} is scheduled to boot.`,
