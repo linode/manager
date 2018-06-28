@@ -4,7 +4,7 @@ import { compose, pathOr } from 'ramda';
 
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
@@ -14,11 +14,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 
-import AddNewLink from 'src/components/AddNewLink';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
-
 import ActionsPanel from 'src/components/ActionsPanel';
-
+import AddNewLink from 'src/components/AddNewLink';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
@@ -28,10 +25,13 @@ import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoad
 import Table from 'src/components/Table';
 
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
-import { deleteDomain, getDomains  } from 'src/services/domains';
 
 import ActionMenu from './DomainActionMenu';
 import DomainCreateDrawer from './DomainCreateDrawer';
+
+import { sendToast } from 'src/features/ToastNotifications/toasts';
+
+import { deleteDomain, getDomains } from 'src/services/domains';
 
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -105,7 +105,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
     this.setState({ error }, () => { scrollErrorIntoView(); });
   }
 
-  openCreateDrawer() {
+  openCreateDrawer = () => {
     this.setState({
       createDrawer: { open: true, mode: 'create' },
     });
@@ -127,6 +127,32 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
       });
     }
   }
+
+  getActions = () => {
+    return (
+      <ActionsPanel>
+        <Button
+          variant="raised"
+          color="secondary"
+          className="destructive"
+          onClick={this.removeDomain}
+          data-qa-submit
+        >
+          Confirm
+        </Button>
+        <Button
+          onClick={this.closeRemoveDialog}
+          variant="raised"
+          color="secondary"
+          className="cancel"
+          data-qa-cancel
+        >
+          Cancel
+        </Button>
+      </ActionsPanel>
+    )
+  }
+
 
   removeDomain = () => {
     const { removeDialog: { domainID } } = this.state;
@@ -209,7 +235,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
             <Grid container alignItems="flex-end">
               <Grid item>
                 <AddNewLink
-                  onClick={() => this.openCreateDrawer()}
+                  onClick={this.openCreateDrawer}
                   label="Add a Domain"
                 />
               </Grid>
@@ -222,8 +248,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
               <TableRow>
                 <TableCell data-qa-domain-name-header>Domain</TableCell>
                 <TableCell data-qa-domain-type-header>Type</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell></TableCell>
+                <TableCell />
               </TableRow>
             </TableHead>
             <TableBody>
@@ -235,7 +260,6 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
                     </Link>
                   </TableCell>
                   <TableCell data-qa-domain-type>{domain.type}</TableCell>
-                  <TableCell>{domain.status}</TableCell>
                   <TableCell>
                     <ActionMenu
                       onEditRecords={() => {
@@ -259,28 +283,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
           open={this.state.removeDialog.open}
           title={`Remove ${this.state.removeDialog.domain}`}
           onClose={this.closeRemoveDialog}
-          actions={() =>
-            <ActionsPanel>
-              <Button
-                variant="raised"
-                color="secondary"
-                className="destructive"
-                onClick={this.removeDomain}
-                data-qa-submit
-              >
-                Confirm
-              </Button>
-              <Button
-                onClick={this.closeRemoveDialog}
-                variant="raised"
-                color="secondary"
-                className="cancel"
-                data-qa-cancel
-              >
-                Cancel
-              </Button>
-            </ActionsPanel>
-          }
+          actions={this.getActions}
         >
           <Typography>Are you sure you want to remove this domain?</Typography>
         </ConfirmationDialog>
