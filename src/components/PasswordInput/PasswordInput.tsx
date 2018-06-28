@@ -1,17 +1,14 @@
 import * as React from 'react';
+
 import * as zxcvbn from 'zxcvbn';
+
 import { isEmpty } from 'ramda';
 
-import {
-  withStyles,
-  WithStyles,
-  StyleRulesCallback,
-  Theme,
-} from '@material-ui/core/styles';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import Grid from 'src/components/Grid';
-import StrengthIndicator from '../PasswordInput/StrengthIndicator';
 import { Props as TextFieldProps } from 'src/components/TextField';
+import StrengthIndicator from '../PasswordInput/StrengthIndicator';
 import HideShowText from './HideShowText';
 
 interface Props extends TextFieldProps {
@@ -35,6 +32,9 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     position: 'absolute',
     width: '100%',
     bottom: 0,
+    [theme.breakpoints.down('xs')]: {
+      maxWidth: 240 + theme.spacing.unit * 2,
+    },
   },
 });
 
