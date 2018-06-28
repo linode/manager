@@ -60,6 +60,8 @@ class HelpIcon extends React.Component<CombinedProps, State> {
         <Tooltip 
           title={text}
           data-qa-help-tootlip
+          enterTouchDelay={0}
+          leaveTouchDelay={5000}
         > 
           <IconButton data-qa-help-button>
             <HelpOutline />
