@@ -103,7 +103,8 @@
     "serve": "./node_modules/.bin/serve -s -p 3000 --ssl ./build",
     "selenium": "./node_modules/.bin/selenium-standalone install --config=./e2e/config/selenium-config.js && ./node_modules/.bin/selenium-standalone start --config=./e2e/config/selenium-config.js",
     "e2e": "./node_modules/.bin/wdio ./e2e/config/wdio.conf.js",
-    "e2e:all": "./node_modules/.bin/wdio ./e2e/config/wdio.conf.js; ./node_modules/.bin/wdio ./e2e/config/wdio.storybook.conf.js"
+    "e2e:all": "./node_modules/.bin/wdio ./e2e/config/wdio.conf.js; ./node_modules/.bin/wdio ./e2e/config/wdio.storybook.conf.js",
+    "mb": "npx mb"
   },
   "pre-commit": [
     "precommit"
@@ -140,6 +141,7 @@
     "babel-preset-react-app": "^3.1.1",
     "csstype": "^2.5.5",
     "eslint": "4.19.1",
+    "mountebank": "^1.14.1",
     "selenium-standalone": "^6.13.0",
     "svgr": "^1.9.0",
     "tslint-config-airbnb": "^5.6.0",
