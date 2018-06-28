@@ -14,6 +14,7 @@ import { Observable, Subscription } from 'rxjs/Rx';
 import CircleProgress from 'src/components/CircleProgress';
 import EditableText from 'src/components/EditableText';
 import Grid from 'src/components/Grid';
+import NotFound from 'src/components/NotFound';
 import ProductNotification from 'src/components/ProductNotification';
 import { events$ } from 'src/events';
 import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawer';
@@ -24,9 +25,9 @@ import { getImage } from 'src/services/images';
 import { getLinode, getLinodeConfigs, getLinodeDisks, getLinodeVolumes, renameLinode } from 'src/services/linodes';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-
 import { Provider, RequestableProps } from './context';
 import LinodeBackup from './LinodeBackup';
+import LinodeDetailErrorBoundary from './LinodeDetailErrorBoundary';
 import LinodeNetworking from './LinodeNetworking';
 import LinodePowerControl from './LinodePowerControl';
 import LinodeRebuild from './LinodeRebuild';
@@ -36,7 +37,7 @@ import LinodeSettings from './LinodeSettings';
 import LinodeSummary from './LinodeSummary';
 import LinodeVolumes from './LinodeVolumes';
 import reloadableWithRouter from './reloadableWithRouter';
-import NotFound from 'src/components/NotFound';
+
 
 interface ConfigDrawerState {
   open: boolean;
@@ -316,7 +317,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       },
     },
     labelInput: {
-      label: '', /** @todo */
+      label: '',
       errorText: '',
     },
   };
@@ -482,41 +483,39 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
   }
 
   render() {
+
     const { match: { url }, classes } = this.props;
     const {
       labelInput,
       configDrawer,
       context: {
-        image: {
-          data: image,
-          lastUpdated: imageLastUpdated,
-        },
         volumes: {
           data: volumes,
           lastUpdated: volumesLastUpdated,
+          errors: volumesErrors,
         },
         linode: {
           data: linode,
           lastUpdated: linodeLastUpdated,
+          errors: linodeErrors,
         },
         configs: {
           data: configs,
           lastUpdated: configsLastUpdated,
+          errors: configsErrors,
         },
         disks: {
           data: disks,
           lastUpdated: disksLastUpdated,
+          errors: disksErrors,
         },
       },
     } = this.state;
 
     const matches = (p: string) => Boolean(matchPath(p, { path: this.props.location.pathname }));
 
-    /** @todo Error handling. */
-
     const initialLoad =
       linodeLastUpdated === 0 ||
-      imageLastUpdated === 0 ||
       volumesLastUpdated === 0 ||
       configsLastUpdated === 0 ||
       disksLastUpdated === 0;
@@ -529,11 +528,33 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       return <NotFound />;
     }
 
-    if (!linode) { console.error('Linode undefined in render.'); return null; }
-    if (!image) { console.error('Image undefined in render.'); return null; }
-    if (!volumes) { console.error('Volumes undefined in render.'); return null; }
-    if (!configs) { console.error('Configs undefined in render.'); return null; }
-    if (!disks) { console.error('Disks undefined in render.'); return null; }
+    if (linodeErrors) {
+      throw Error('Error while loading Linode.')
+    }
+
+    if (!volumes) {
+      throw Error('Volumes undefined on LinodeLanding.');
+    }
+
+    if (volumesErrors) {
+      throw Error('Error loading volumes data.')
+    }
+
+    if (!configs) {
+      throw Error('Configs undefined on LinodeLanding.');
+    }
+
+    if (configsErrors) {
+      throw Error('Error loading configs data.')
+    }
+
+    if (!disks) {
+      throw Error('Disks undefined on LinodeLanding.');
+    }
+
+    if (disksErrors) {
+      throw Error('Error loading disks data.')
+    }
 
     return (
       <React.Fragment>
@@ -628,6 +649,10 @@ const reloadable = reloadableWithRouter<CombinedProps, MatchProps>((routePropsOl
   return routePropsOld.match.params.linodeId !== routePropsNew.match.params.linodeId;
 });
 
-const enhanced = compose(styled, reloadable);
+const enhanced = compose(
+  styled,
+  reloadable,
+  LinodeDetailErrorBoundary,
+);
 
 export default enhanced(LinodeDetail);
