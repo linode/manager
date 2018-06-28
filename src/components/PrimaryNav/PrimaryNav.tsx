@@ -1,17 +1,22 @@
 import * as React from 'react';
-import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'redux';
 
-import { withStyles, WithStyles, StyleRules, Theme } from '@material-ui/core/styles';
-import Divider from '@material-ui/core/Divider';
-import Grid from 'src/components/Grid';
+import * as classNames from 'classnames';
+
+import { StyleRules, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+
+import Collapse from '@material-ui/core/Collapse';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
-import Logo from 'src/assets/logo/logo-text.svg';
-import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
+
+import Grid from 'src/components/Grid';
 import Toggle from 'src/components/Toggle';
+
+import Logo from 'src/assets/logo/logo-text.svg';
 
 type PrimaryLink = {
   display: string,
@@ -30,12 +35,30 @@ const primaryLinks: PrimaryLink[] = [
   { display: 'Images', href: '/images' },
 ];
 
+type ClassNames =
+  'menuGrid'
+  | 'logoItem'
+  | 'listItem'
+  | 'collapsible'
+  | 'linkItem'
+  | 'active'
+  | 'activeLink'
+  | 'sublink'
+  | 'sublinkActive'
+  | 'arrow'
+  | 'sublinkPanel'
+  | 'switchWrapper'
+  | 'toggle'
+  | 'switchText'
+  | 'spacer';
+
 const styles = (theme: Theme & Linode.Theme): StyleRules => ({
-  headerGrid: {
-    borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
+  menuGrid: {
     minHeight: 64,
     width: '100%',
+    height: '100%',
     margin: 0,
+    paddingBottom: theme.spacing.unit * 3,
     [theme.breakpoints.up('sm')]: {
       minHeight: 72,
     },
@@ -51,12 +74,22 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     borderBottomColor: 'rgba(0, 0, 0, 0.12)',
     borderLeft: '6px solid transparent',
     transition: theme.transitions.create(['background-color', 'border-left-color']),
+    flexShrink: 0,
     '&:hover': {
       borderLeftColor: 'rgba(0, 0, 0, 0.1)',
       '& $linkItem': {
         color: 'white',
       },
     },
+    '&:focus, &:active': {
+      '& $linkItem': {
+        color: 'white',
+        zIndex: 2,
+      },
+    },
+  },
+  collapsible: {
+    fontSize: '.9rem',
   },
   linkItem: {
     transition: theme.transitions.create(['color']),
@@ -71,40 +104,11 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
       borderLeftColor: theme.color.green,
     },
   },
-  lastItem: {
-    flex: 1,
-    backgroundColor: 'transparent',
-  },
-  activeLink: {
-    color: 'white',
-  },
   sublinkPanel: {
-    paddingLeft: theme.spacing.unit * 4,
-    paddingRight: theme.spacing.unit * 4,
+    paddingLeft: theme.spacing.unit * 6,
+    paddingRight: theme.spacing.unit * 2,
     fontSize: '.9rem',
-    transition: theme.transitions.create(['color', 'background-color']),
-    '&:hover, &:focus': {
-      backgroundColor: 'rgba(0, 0, 0, 0.1)',
-    },
-    '& span': {
-      color: '#C9CACB',
-      transition: theme.transitions.create(['color']),
-    },
-    '& svg': {
-      color: '#C9CACB',
-      fontSize: '20px',
-      margin: '5px 2px 4px 0',
-      transition: theme.transitions.create(['color']),
-    },
-    '&:hover, &:focus, & .hOpen': {
-      color: 'white',
-      '& span, & svg': {
-        color: 'white !important',
-      },
-    },
-    '& .pOpen': {
-      margin: '5px 0 0 14px',
-    },
+    flexShrink: 0,
   },
   sublink: {
     padding: '4px 0 4px 8px',
@@ -116,9 +120,26 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
       outline: 0,
     },
   },
+  activeLink: {
+    color: 'white',
+    '& $arrow': {
+      transform: 'rotate(90deg)',
+    },
+  },
+  sublinkActive: {
+    textDecoration: 'underline',
+  },
+  arrow: {
+    position: 'relative',
+    top: 4,
+    fontSize: '1.2rem',
+    margin: '0 4px 0 -7px',
+    transition: theme.transitions.create(['transform']),
+  },
   switchWrapper: {
     padding: '16px 40px 16px 34px',
     alignItems: 'center',
+    marginTop: 'auto',
     // hidding for now - replace with flex
     display: 'none',
   },
@@ -141,30 +162,30 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
       color: '#C9CACB',
     },
   },
+  spacer: {
+    padding: 25,
+  },
 });
-
-type ClassNames =
-  'headerGrid'
-  | 'logoItem'
-  | 'listItem'
-  | 'lastItem'
-  | 'linkItem'
-  | 'active'
-  | 'activeLink'
-  | 'sublink'
-  | 'sublinkPanel'
-  | 'switchWrapper'
-  | 'toggle'
-  | 'switchText';
 
 interface Props extends WithStyles<ClassNames>, RouteComponentProps<{}> {
   toggleMenu: () => void;
   toggleTheme: () => void;
 }
 
-class PrimaryNav extends React.Component<Props> {
-  state = {
+interface State {
+  drawerOpen: boolean;
+  expandedMenus: {
+    [key: string]: boolean;
+  };
+}
+
+class PrimaryNav extends React.Component<Props, State> {
+  state: State = {
     drawerOpen: false,
+    expandedMenus: {
+      account: false,
+      support: false,
+    },
   };
 
   constructor(props: Props) {
@@ -180,6 +201,17 @@ class PrimaryNav extends React.Component<Props> {
   linkIsActive(href: string) {
     return isPathOneOf([href], this.props.location.pathname);
   }
+
+  expandMenutItem = (e: React.MouseEvent<HTMLElement>) => {
+    const menuName = e.currentTarget.getAttribute('data-menu-name');
+    if (!menuName) return;
+    this.setState({
+      expandedMenus: {
+        ...this.state.expandedMenus,
+        [menuName]: !this.state.expandedMenus[menuName],
+      }
+    });
+  };
 
   renderPrimaryLink(PrimaryLink: PrimaryLink) {
     const { classes } = this.props;
@@ -210,14 +242,18 @@ class PrimaryNav extends React.Component<Props> {
 
   render() {
     const { classes, toggleTheme } = this.props;
+    const { expandedMenus } = this.state;
     const themeName = (this.props.theme as any).name;
 
     return (
       <React.Fragment>
         <Grid
-          className={classes.headerGrid}
+          className={classes.menuGrid}
           container
-          alignItems="center"
+          alignItems="flex-start"
+          justify="flex-start"
+          direction="column"
+          wrap="nowrap"
           spacing={0}
         >
           <Grid item>
@@ -225,78 +261,149 @@ class PrimaryNav extends React.Component<Props> {
               <Logo width={115} height={43} />
             </div>
           </Grid>
-        </Grid>
-        {primaryLinks.map(primaryLink => this.renderPrimaryLink(primaryLink))}
-        <ShowMoreExpansion classes={{ root: classes.sublinkPanel }} name="Account">
-          <Link
-            className={classes.sublink}
-            to="/billing"
-            role="menuitem"
+
+          {primaryLinks.map(primaryLink => this.renderPrimaryLink(primaryLink))}
+
+          <ListItem 
+            data-menu-name="account"
+            focusRipple={true}
+            button
+            onClick={this.expandMenutItem}
+            className={classNames({
+              [classes.listItem]: true,
+              [classes.collapsible]: true,
+            })}
           >
-            Account &amp; Billing
-          </Link>
-          <Link
-            className={classes.sublink}
-            to="/users"
-            role="menuitem"
+            <ListItemText
+              disableTypography={true}
+              className={classNames({
+                [classes.linkItem]: true,
+                [classes.activeLink]: 
+                  expandedMenus.account
+                  || this.linkIsActive('/billing') === true
+                  || this.linkIsActive('/users') === true,
+              })}
+            >
+              <KeyboardArrowRight className={classes.arrow} />
+              Account
+            </ListItemText>
+          </ListItem>
+          <Collapse 
+            in={expandedMenus.account
+                || (this.linkIsActive('/billing') === true)
+                || (this.linkIsActive('/users') === true)}
+            timeout="auto" 
+            unmountOnExit
+            className={classes.sublinkPanel}
           >
-            Users
-          </Link>
-        </ShowMoreExpansion>
-        <ShowMoreExpansion
-          classes={{ root: classes.sublinkPanel }}
-          name="Support"
-        >
-          <a
-            className={classes.sublink}
-            href="https://www.linode.com/docs"
-            target="_blank"
-            role="menuitem"
+            <Link
+              to="/billing"
+              role="menuitem"
+              className={classNames({
+                [classes.sublink]: true,
+                [classes.sublinkActive]: this.linkIsActive('/billing') === true,
+              })}
+            >
+              Account &amp; Billing
+            </Link>
+            <Link
+              to="/users"
+              role="menuitem"
+              className={classNames({
+                [classes.sublink]: true,
+                [classes.sublinkActive]: this.linkIsActive('/users') === true,
+              })}
+            >
+              Users
+            </Link>
+          </Collapse>
+
+          <ListItem
+            data-menu-name="support"
+            button
+            focusRipple={true}
+            onClick={this.expandMenutItem}
+            className={classNames({
+              [classes.listItem]: true,
+              [classes.collapsible]: true,
+            })}
           >
-            Documentation
-          </a>
-          <a
-            className={classes.sublink}
-            href="//www.linode.com/community/questions"
-            target="_blank"
-            role="menuitem"
+            <ListItemText
+              disableTypography={true}
+              className={classNames({
+                [classes.linkItem]: true,
+                [classes.activeLink]:
+                  expandedMenus.support
+                  || this.linkIsActive('/support') === true,
+              })}
+            >
+              <KeyboardArrowRight className={classes.arrow} />
+              Support
+            </ListItemText>
+          </ListItem>
+          <Collapse 
+            in={expandedMenus.support 
+                || this.linkIsActive('/support') === true}
+            timeout="auto" 
+            unmountOnExit
+            className={classes.sublinkPanel}
           >
-            Community Forum
-          </a>
-          <Link
-            className={classes.sublink}
-            to="/support"
-            role="menuitem"
-          >
-            Support Tickets
-          </Link>
-        </ShowMoreExpansion>
-        <Divider className={classes.lastItem} />
-        <div className={classes.switchWrapper}>
-          <span className={`
-            ${classes.switchText}
-            ${themeName === 'lightTheme' ? 'active' : ''}
-          `}>
-            Light
-          </span>
-          <Toggle
-            onChange={() => toggleTheme()}
-            checked={themeName !== 'lightTheme'}
-            className={`
-              ${classes.toggle}
-              ${themeName}
-            `}
-          />
-          <span
-            className={`
+            <a
+              className={classes.sublink}
+              href="https://www.linode.com/docs"
+              target="_blank"
+              role="menuitem"
+            >
+              Documentation
+            </a>
+            <a
+              className={classes.sublink}
+              href="//www.linode.com/community/questions"
+              target="_blank"
+              role="menuitem"
+            >
+              Community Forum
+            </a>
+            <Link
+              to="/support"
+              role="menuitem"
+              className={classNames({
+                [classes.sublink]: true,
+                [classes.sublinkActive]: this.linkIsActive('/support') === true,
+              })}
+            >
+              Support Tickets
+            </Link>
+          </Collapse>
+
+          <div className={classes.switchWrapper}>
+            <span className={`
               ${classes.switchText}
-              ${themeName === 'darkTheme' ? 'active' : ''}
-            `}
-            style={{ marginLeft: 4 }}
-          >
-            Dark
-          </span>
-        </div>
+              ${themeName === 'lightTheme' ? 'active' : ''}
+            `}>
+              Light
+            </span>
+            <Toggle
+              onChange={() => toggleTheme()}
+              checked={themeName !== 'lightTheme'}
+              className={`
+                ${classes.toggle}
+                ${themeName}
+              `}
+            />
+            <span
+              className={`
+                ${classes.switchText}
+                ${themeName === 'darkTheme' ? 'active' : ''}
+              `}
+              style={{ marginLeft: 4 }}
+            >
+              Dark
+            </span>
+          </div>
+
+          <div className={classes.spacer} />
+        </Grid>
       </React.Fragment>
     );
   }
