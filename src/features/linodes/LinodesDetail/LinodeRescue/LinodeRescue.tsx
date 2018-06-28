@@ -32,7 +32,7 @@ import ErrorState from 'src/components/ErrorState';
 import DeviceSelection, { ExtendedDisk, ExtendedVolume } from './DeviceSelection';
 import createDevicesFromStrings, { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
 import AddNewLink from 'src/components/AddNewLink';
-import { withContext } from 'src/features/linodes/LinodesDetail/context';
+import { withLinode } from 'src/features/linodes/LinodesDetail/context';
 
 type ClassNames = 'root'
   | 'title'
@@ -228,13 +228,13 @@ export const preloaded = PromiseLoader({
   ),
 });
 
-const context = withContext((context) => ({
-  linodeId: context.linode.data!.id,
-  linodeRegion: context.linode.data!.region,
+const linodeContext = withLinode((context) => ({
+  linodeId: context.data!.id,
+  linodeRegion: context.data!.region,
 }));
 
 export default compose<any, any, any, any, any>(
-  context,
+  linodeContext,
   preloaded,
   SectionErrorBoundary,
   styled,

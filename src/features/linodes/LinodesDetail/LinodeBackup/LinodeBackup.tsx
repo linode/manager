@@ -42,7 +42,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import LinodeBackupActionMenu from './LinodeBackupActionMenu';
 import RestoreToLinodeDrawer from './RestoreToLinodeDrawer';
-import { withContext } from '../context';
+import { withLinode } from '../context';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 
 type ClassNames =
@@ -661,17 +661,17 @@ const connected = connect((state) => ({
   timezone: pathOr(moment.tz.guess(), ['resources', 'profile', 'data', 'timezone'], state),
 }));
 
-const context = withContext((context) => ({
-  backupsEnabled: context.linode.data!.backups.enabled,
-  backupsSchedule: context.linode.data!.backups.schedule,
-  linodeID: context.linode.data!.id,
-  linodeInTransition: linodeInTransition(context.linode.data!.status),
-  linodeRegion: context.linode.data!.region,
-  linodeType: context.linode.data!.type,
+const linodeContext = withLinode((context) => ({
+  backupsEnabled: context.data!.backups.enabled,
+  backupsSchedule: context.data!.backups.schedule,
+  linodeID: context.data!.id,
+  linodeInTransition: linodeInTransition(context.data!.status),
+  linodeRegion: context.data!.region,
+  linodeType: context.data!.type,
 }));
 
 export default compose(
-  context,
+  linodeContext,
   preloaded,
   styled as any,
   withRouter,

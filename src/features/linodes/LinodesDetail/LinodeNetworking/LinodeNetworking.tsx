@@ -14,7 +14,7 @@ import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoad
 import Table from 'src/components/Table';
 import { ZONES } from 'src/constants';
 import { getLinodeIPs } from 'src/services/linodes';
-import { withContext } from '../context';
+import { withLinode } from '../context';
 import CreateIPv4Drawer from './CreateIPv4Drawer';
 import CreateIPv6Drawer from './CreateIPv6Drawer';
 import EditRDNSDrawer from './EditRDNSDrawer';
@@ -402,14 +402,14 @@ const getFirstPublicIPv4FromResponse = compose(
   pathOr([], ['ipv4', 'public']),
 );
 
-const context = withContext((context) => ({
-  linodeID: context.linode.data!.id,
-  linodeLabel: context.linode.data!.label,
-  linodeRegion: context.linode.data!.region,
+const linodeContext = withLinode((context) => ({
+  linodeID: context.data!.id,
+  linodeLabel: context.data!.label,
+  linodeRegion: context.data!.region,
 }));
 
 const enhanced = compose<any, any, any, any>(
-  context,
+  linodeContext,
   preloaded,
   styled,
 );

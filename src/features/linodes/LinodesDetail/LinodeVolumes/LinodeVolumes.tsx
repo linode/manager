@@ -43,7 +43,7 @@ import ActionMenu from './LinodeVolumesActionMenu';
 import { events$, resetEventsPolling } from 'src/events';
 import AddNewLink, { Props as AddNewLinkProps } from 'src/components/AddNewLink';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { withContext } from '../context';
+import { withLinode, withVolumes } from '../context';
 
 type ClassNames = 'title';
 
@@ -876,15 +876,19 @@ const preloaded = PromiseLoader<Props & ContextProps>({
       .filter(volume => volume.region === props.linodeRegion && volume.linode_id === null)),
 });
 
-const context = withContext((context) => ({
-  linodeID: context.linode.data!.id,
-  linodeLabel: context.linode.data!.label,
-  linodeRegion: context.linode.data!.region,
-  linodeVolumes: context.volumes.data,
+const linodeContext = withLinode((context) => ({
+  linodeID: context.data!.id,
+  linodeLabel: context.data!.label,
+  linodeRegion: context.data!.region,
 }));
 
-export default compose<any, any, any, any, any>(
-  context,
+const volumesContext = withVolumes((context) => ({
+  linodeVolumes: context.data,
+}));
+
+export default compose<any, any, any, any, any, any>(
+  linodeContext,
+  volumesContext,
   styled,
   SectionErrorBoundary,
   preloaded,

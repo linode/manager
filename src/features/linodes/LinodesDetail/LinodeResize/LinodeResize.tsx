@@ -19,7 +19,7 @@ import { resetEventsPolling } from 'src/events';
 
 import { typeLabelDetails } from 'src/features/linodes/presentation';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
-import { withContext } from 'src/features/linodes/LinodesDetail/context';
+import { withLinode } from 'src/features/linodes/LinodesDetail/context';
 
 type ClassNames = 'root'
   | 'title'
@@ -192,13 +192,13 @@ const preloaded = PromiseLoader<CombinedProps>({
     }),
 });
 
-const context = withContext((context) => ({
-  linodeId: context.linode.data!.id,
-  linodeType: context.linode.data!.type,
+const linodeContext = withLinode((context) => ({
+  linodeId: context.data!.id,
+  linodeType: context.data!.type,
 }));
 
 export default compose<any, any, any, any>(
-  context,
+  linodeContext,
   preloaded,
   styled,
 )(LinodeResize);

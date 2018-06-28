@@ -10,7 +10,7 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 import LineGraph from 'src/components/LineGraph';
 import Select from 'src/components/Select';
 
-import { withContext, RequestableProps } from 'src/features/linodes/LinodesDetail/context';
+import { withImage, withLinode, withVolumes } from 'src/features/linodes/LinodesDetail/context';
 import { getLinodeStats } from 'src/services/linodes';
 import { setUpCharts } from 'src/utilities/charts';
 import SummaryPanel from './SummaryPanel';
@@ -103,7 +103,16 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
   };
 };
 
-interface Props extends RequestableProps {
+interface Props {
+}
+
+interface ContextProps {
+  linodeCreated: string;
+  linodeId: number;
+
+  linodeData: Linode.Linode;
+  imageData: Linode.Image;
+  volumesData: Linode.Volume[];
 }
 
 interface State {
@@ -112,7 +121,7 @@ interface State {
   statsLoadError?: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & ContextProps & WithStyles<ClassNames>;
 
 const chartHeight = 300;
 
@@ -131,13 +140,13 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
 
   constructor(props: CombinedProps) {
     super(props);
-    const { linode: { data: linode } } = props;
-    if(!linode) { return };
+    const { linodeCreated } = props;
+    if(!linodeCreated) { return };
 
     const options: [string, string][] = [['24', 'Last 24 Hours']];
     const [createMonth, createYear] = [
-      moment.utc(linode.created).month() + 1,
-      moment.utc(linode.created).year(),
+      moment.utc(linodeCreated).month() + 1,
+      moment.utc(linodeCreated).year(),
     ];
     const creationFirstOfMonth = moment(`${createYear}-${createMonth}-01`);
     let [testMonth, testYear] = [moment.utc().month() + 1, moment.utc().year()];
@@ -161,16 +170,16 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
   }
 
   getStats() {
-    const { linode: {data: linodeData } } = this.props;
+    const { linodeId } = this.props;
     const { rangeSelection } = this.state;
-    if (!linodeData) { return; }
+    if (!linodeId) { return; }
 
     let req;
     if (rangeSelection === '24') {
-      req = getLinodeStats(linodeData.id);
+      req = getLinodeStats(linodeId);
     } else {
       const [year, month] = rangeSelection.split(' ');
-      req = getLinodeStats(linodeData.id, year, month);
+      req = getLinodeStats(linodeId, year, month);
     }
     req
       .then((response) => {
@@ -217,9 +226,9 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
 
   render() {
     const {
-      linode: { data: linode },
-      image: { data: image },
-      volumes: { data: volumes },
+      linodeData: linode,
+      imageData: image,
+      volumesData: volumes,
       classes,
     } = this.props;
 
@@ -434,8 +443,26 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const connected = withContext();
+const linodeContext = withLinode((context) => ({
+  linodeCreated: context.data!.created,
+  linodeId: context.data!.id,
 
-const enhanced = compose(styled, connected);
+  linodeData: context.data, /** @todo get rid of this */
+}));
+
+const imageContext = withImage((context) => ({
+  imageData: context.data!,
+}))
+
+const volumesContext = withVolumes((context) => ({
+  volumesData: context.data!,
+}))
+
+const enhanced = compose(
+  styled,
+  linodeContext,
+  imageContext,
+  volumesContext,
+);
 
 export default enhanced(LinodeSummary);

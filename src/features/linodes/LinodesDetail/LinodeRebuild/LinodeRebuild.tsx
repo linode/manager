@@ -27,7 +27,7 @@ import ErrorState from 'src/components/ErrorState';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import PasswordInput from 'src/components/PasswordInput';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { withContext } from '../context';
+import { withLinode } from '../context';
 
 type ClassNames = 'root'
  | 'title'
@@ -226,12 +226,12 @@ const preloaded = PromiseLoader({
     .then(response => response.data),
 });
 
-const context = withContext((context) => ({
-  linodeId: context.linode.data!.id,
+const linodeContext = withLinode((context) => ({
+  linodeId: context.data!.id,
 }));
 
 export default compose<any, any, any, any, any>(
-  context,
+  linodeContext,
   preloaded,
   SectionErrorBoundary,
   styled,

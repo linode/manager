@@ -25,7 +25,7 @@ import { getImage } from 'src/services/images';
 import { getLinode, getLinodeConfigs, getLinodeDisks, getLinodeVolumes, renameLinode } from 'src/services/linodes';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { Provider, RequestableProps } from './context';
+import { ConfigsProvider, DisksProvider, ImageProvider, LinodeProvider, VolumesProvider, Requestable } from './context';
 import LinodeBackup from './LinodeBackup';
 import LinodeDetailErrorBoundary from './LinodeDetailErrorBoundary';
 import LinodeNetworking from './LinodeNetworking';
@@ -48,7 +48,13 @@ interface ConfigDrawerState {
 }
 
 interface State {
-  context: RequestableProps;
+  context: {
+    configs: Requestable<Linode.Config[]>;
+    disks: Requestable<Linode.Disk[]>;
+    image: Requestable<Linode.Image>;
+    linode: Requestable<Linode.Linode>;
+    volumes: Requestable<Linode.Volume[]>;
+  };
   configDrawer: ConfigDrawerState;
   labelInput: { label: string; errorText: string; };
   notifications?: Linode.Notification[];
@@ -563,84 +569,92 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <Provider value={this.state.context}>
-          <Grid
-            container
-            justify="space-between"
-          >
-            <Grid item className={classes.titleWrapper}>
-              <Link to={`/linodes`}>
-                <IconButton
-                  className={classes.backButton}
-                >
-                  <KeyboardArrowLeft />
-                </IconButton>
-              </Link>
-              <EditableText
-                variant="headline"
-                text={labelInput.label}
-                errorText={labelInput.errorText}
-                onEdit={this.updateLabel}
-                onCancel={this.cancelUpdate}
-                data-qa-label
-              />
-            </Grid>
-            <Grid item className={classes.cta}>
-              <Button
-                onClick={this.launchWeblish(`${linode.id}`)}
-                className={classes.launchButton}
-                data-qa-launch-console
-              >
-                Launch Console
+        <ConfigsProvider value={this.state.context.configs}>
+          <DisksProvider value={this.state.context.disks}>
+            <ImageProvider value={this.state.context.image}>
+              <LinodeProvider value={this.state.context.linode}>
+                <VolumesProvider value={this.state.context.volumes}>
+                  <Grid
+                    container
+                    justify="space-between"
+                  >
+                    <Grid item className={classes.titleWrapper}>
+                      <Link to={`/linodes`}>
+                        <IconButton
+                          className={classes.backButton}
+                        >
+                          <KeyboardArrowLeft />
+                        </IconButton>
+                      </Link>
+                      <EditableText
+                        variant="headline"
+                        text={labelInput.label}
+                        errorText={labelInput.errorText}
+                        onEdit={this.updateLabel}
+                        onCancel={this.cancelUpdate}
+                        data-qa-label
+                      />
+                    </Grid>
+                    <Grid item className={classes.cta}>
+                      <Button
+                        onClick={this.launchWeblish(`${linode.id}`)}
+                        className={classes.launchButton}
+                        data-qa-launch-console
+                      >
+                        Launch Console
             </Button>
-              <LinodePowerControl
-                status={linode.status}
-                recentEvent={linode.recentEvent}
-                id={linode.id}
-                label={linode.label}
-                openConfigDrawer={this.openConfigDrawer}
-              />
-            </Grid>
-          </Grid>
-          <AppBar position="static" color="default">
-            <Tabs
-              value={this.tabs.findIndex(tab => matches(tab.routeName))}
-              onChange={this.handleTabChange}
-              indicatorColor="primary"
-              textColor="primary"
-              scrollable
-              scrollButtons="off"
-            >
-              {this.tabs.map(tab =>
-                <Tab key={tab.title} label={tab.title} data-qa-tab={tab.title} />)}
-            </Tabs>
-          </AppBar>
-          {
-            (this.state.notifications || []).map((n, idx) =>
-              <ProductNotification key={idx} severity={n.severity} text={n.message} />)
-          }
-          <Switch>
-            <Route exact path={`${url}/summary`} component={LinodeSummary} />
-            <Route exact path={`${url}/volumes`} component={LinodeVolumes} />
-            <Route exact path={`${url}/networking`} component={LinodeNetworking} />
-            <Route exact path={`${url}/resize`} component={LinodeResize} />
-            <Route exact path={`${url}/rescue`} component={LinodeRescue} />
-            <Route exact path={`${url}/rebuild`} component={LinodeRebuild} />
-            <Route exact path={`${url}/backup`} component={LinodeBackup} />
-            <Route exact path={`${url}/settings`} component={LinodeSettings} />
-            {/* 404 */}
-            <Redirect to={`${url}/summary`} />
-          </Switch>
-          <LinodeConfigSelectionDrawer
-            onClose={this.closeConfigDrawer}
-            onSubmit={this.submitConfigChoice}
-            onChange={this.selectConfig}
-            open={configDrawer.open}
-            configs={configDrawer.configs}
-            selected={String(configDrawer.selected)}
-            error={configDrawer.error}
-          />
-        </Provider>
+                      <LinodePowerControl
+                        status={linode.status}
+                        recentEvent={linode.recentEvent}
+                        id={linode.id}
+                        label={linode.label}
+                        openConfigDrawer={this.openConfigDrawer}
+                      />
+                    </Grid>
+                  </Grid>
+                  <AppBar position="static" color="default">
+                    <Tabs
+                      value={this.tabs.findIndex(tab => matches(tab.routeName))}
+                      onChange={this.handleTabChange}
+                      indicatorColor="primary"
+                      textColor="primary"
+                      scrollable
+                      scrollButtons="off"
+                    >
+                      {this.tabs.map(tab =>
+                        <Tab key={tab.title} label={tab.title} data-qa-tab={tab.title} />)}
+                    </Tabs>
+                  </AppBar>
+                  {
+                    (this.state.notifications || []).map((n, idx) =>
+                      <ProductNotification key={idx} severity={n.severity} text={n.message} />)
+                  }
+                  <Switch>
+                    <Route exact path={`${url}/summary`} component={LinodeSummary} />
+                    <Route exact path={`${url}/volumes`} component={LinodeVolumes} />
+                    <Route exact path={`${url}/networking`} component={LinodeNetworking} />
+                    <Route exact path={`${url}/resize`} component={LinodeResize} />
+                    <Route exact path={`${url}/rescue`} component={LinodeRescue} />
+                    <Route exact path={`${url}/rebuild`} component={LinodeRebuild} />
+                    <Route exact path={`${url}/backup`} component={LinodeBackup} />
+                    <Route exact path={`${url}/settings`} component={LinodeSettings} />
+                    {/* 404 */}
+                    <Redirect to={`${url}/summary`} />
+                  </Switch>
+                  <LinodeConfigSelectionDrawer
+                    onClose={this.closeConfigDrawer}
+                    onSubmit={this.submitConfigChoice}
+                    onChange={this.selectConfig}
+                    open={configDrawer.open}
+                    configs={configDrawer.configs}
+                    selected={String(configDrawer.selected)}
+                    error={configDrawer.error}
+                  />
+                </VolumesProvider>
+              </LinodeProvider>
+            </ImageProvider>
+          </DisksProvider>
+        </ConfigsProvider>
       </React.Fragment>
     );
   }

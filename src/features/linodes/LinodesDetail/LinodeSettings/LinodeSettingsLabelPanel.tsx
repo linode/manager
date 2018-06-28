@@ -17,7 +17,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import TextField from 'src/components/TextField';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { withContext } from 'src/features/linodes/LinodesDetail/context';
+import { withLinode } from 'src/features/linodes/LinodesDetail/context';
 
 type ClassNames = 'root';
 
@@ -118,14 +118,14 @@ const styled = withStyles(styles, { withTheme: true });
 
 const errorBoundary = PanelErrorBoundary({ heading: 'Linode Label' });
 
-const context = withContext((context) => ({
-  linodeId: context.linode.data!.id,
-  linodeLabel: context.linode.data!.label,
-  updateLinode: context.linode.update,
+const linodeContext = withLinode((context) => ({
+  linodeId: context.data!.id,
+  linodeLabel: context.data!.label,
+  updateLinode: context.update,
 }));
 
 export default compose(
   errorBoundary,
   styled,
- context
+ linodeContext
 )(LinodeSettingsLabelPanel) as React.ComponentType<Props>;
