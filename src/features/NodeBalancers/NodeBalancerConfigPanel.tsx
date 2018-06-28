@@ -303,12 +303,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
     const { classes } = this.props;
 
     const privateIPRegex = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/; 
-    const privateIP = linode.ipv4.find(ipv4 => {
-      if(ipv4.match(privateIPRegex)){
-        return true;
-      }
-      return false;
-    });
+    const privateIP = linode.ipv4.find(ipv4 => !!ipv4.match(privateIPRegex));
     return (
       <MenuItem
         // when the suggested is selected, put the private IP in the field
@@ -897,12 +892,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                         // filter by private ip and label
                                           .filter((linode: Linode.Linode) => {
                                             const privateIPRegex = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/; 
-                                            const privateIP = linode.ipv4.find(ipv4 => {
-                                              if(ipv4.match(privateIPRegex)){
-                                                return true;
-                                              }
-                                              return false;
-                                            });
+                                            const privateIP = linode.ipv4.find(ipv4 => !!ipv4.match(privateIPRegex));
                                             return linode.label.includes(inputValue.toLowerCase())
                                               || privateIP!.includes(inputValue.toLowerCase())
                                           })
