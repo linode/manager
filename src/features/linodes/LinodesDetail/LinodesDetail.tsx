@@ -159,6 +159,8 @@ const L = {
   },
 };
 
+type StateSetter = <S>(v: S) => S;
+
 class LinodeDetail extends React.Component<CombinedProps, State> {
   eventsSubscription: Subscription;
 
@@ -185,18 +187,18 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
           return getLinodeConfigs(this.props.match.params.linodeId!)
             .then(({ data }) => {
-              this.setState(compose(
+              this.composeState(
                 set(L.configs.loading, false),
                 set(L.configs.data, data),
                 set(L.configs.lastUpdated, Date.now()),
-              ));
+              );
               return data;
             })
             .catch((r) => {
-              this.setState(compose(
+              this.composeState(
                 set(L.configs.loading, false),
                 set(L.configs.errors, [{ field: 'none', reason: 'Could not load instance config for some reason.' }])
-              ));
+              );
             });
         },
       },
@@ -208,18 +210,18 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
           return getLinodeDisks(this.props.match.params.linodeId!)
             .then(({ data }) => {
-              this.setState(compose(
+              this.composeState(
                 set(L.disks.loading, false),
                 set(L.disks.data, data),
                 set(L.disks.lastUpdated, Date.now()),
-              ));
+              );
               return data;
             })
             .catch((r) => {
-              this.setState(compose(
+              this.composeState(
                 set(L.disks.loading, false),
                 set(L.disks.errors, [{ field: 'none', reason: 'Could not load Linode disks for some reason.' }])
-              ));
+              );
             });
         },
       },
@@ -230,10 +232,10 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
           if (!image) {
             const i: Partial<Linode.Image> = { id: 'unknown', label: 'Unknown Image', type: 'Unknown', vendor: 'unknown' };
-            this.setState(compose(
+            this.composeState(
               set(L.image.lastUpdated, Date.now()),
               set(L.image.data, i),
-            ));
+            );
 
             return Promise.resolve();
           }
@@ -242,18 +244,18 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
           return getImage(image)
             .then((data) => {
-              this.setState(compose(
+              this.composeState(
                 set(L.image.loading, false),
                 set(L.image.data, data),
                 set(L.image.lastUpdated, Date.now()),
-              ));
+              );
               return data;
             })
             .catch((r) => {
-              this.setState(compose(
+              this.composeState(
                 set(L.image.loading, false),
                 set(L.image.errors, [{ field: 'none', reason: 'Could not load Linode for some reason.' }])
-              ));
+              );
             });
         },
       },
@@ -265,19 +267,19 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
           return getLinode(this.props.match.params.linodeId!)
             .then(({ data }) => {
-              this.setState(compose(
+              this.composeState(
                 set(L.labelInput.label, data.label),
                 set(L.linode.loading, false),
                 set(L.linode.data, data),
                 set(L.linode.lastUpdated, Date.now()),
-              ));
+              );
               return data;
             })
             .catch((r) => {
-              this.setState(compose(
+              this.composeState(
                 set(L.linode.loading, false),
                 set(L.linode.errors, [{ field: 'none', reason: 'Could not load instance for some reason.' }])
-              ));
+              );
             });
         },
         update: (fn) => {
@@ -286,10 +288,10 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
           const updatedLinode = fn(linode);
 
-          this.setState(compose(
+          this.composeState(
             set(L.linode.data, updatedLinode),
             set(L.labelInput.label, updatedLinode.label),
-          ));
+          );
         },
       },
       volumes: {
@@ -300,18 +302,18 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
           return getLinodeVolumes(this.props.match.params.linodeId!)
             .then(({ data }) => {
-              this.setState(compose(
+              this.composeState(
                 set(L.volumes.loading, false),
                 set(L.volumes.data, data),
                 set(L.volumes.lastUpdated, Date.now()),
-              ));
+              );
               return data;
             })
             .catch((r) => {
-              this.setState(compose(
+              this.composeState(
                 set(L.volumes.loading, false),
                 set(L.volumes.errors, [{ field: 'none', reason: 'Could not load Linode for some reason.' }])
-              ));
+              );
             });
         },
       },
@@ -321,6 +323,9 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       errorText: '',
     },
   };
+
+  composeState = (...fns: StateSetter[]) =>
+    this.setState((state) => fns.reverse().reduce((result, current) => current(result), state));
 
   shouldComponentUpdate(nextProps: CombinedProps, nextState: State) {
     const { location } = this.props;
@@ -459,11 +464,11 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
     renameLinode(linode.id, label)
       .then((linodeResponse) => {
-        this.setState(compose(
+        this.composeState(
           set(L.linode.data, linodeResponse),
           set(L.labelInput.label, linodeResponse.label),
           set(L.labelInput.errorText, undefined),
-        ));
+        );
       })
       .catch((err) => {
         const errors: Linode.ApiFieldError[] = pathOr([], ['response', 'data', 'errors'], err);
