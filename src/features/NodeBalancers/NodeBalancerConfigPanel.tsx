@@ -315,7 +315,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       >
         {
           <React.Fragment>
-            <strong>{linode.label}</strong> {privateIP}
+            <strong>{linode.label}</strong>&nbsp;{privateIP}
           </React.Fragment>
         }
       </MenuItem>
