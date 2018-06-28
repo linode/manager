@@ -879,6 +879,10 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         });
         this.setState({ linodesWithPrivateIPs });
       })
+      // we don't really need to do anything here because if the request fails
+      // the user won't be presented with any suggestions when typing in the
+      // node address field, which isn't the end of the world.
+      .catch(err => err);
   }
 
   render() {
