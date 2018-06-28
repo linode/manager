@@ -29,7 +29,7 @@
     "no-shadowed-variable": { "severity": "warning"},
     "no-string-literal": { "severity": "warning" },
     "no-unused-expression": { "severity": "warning" },
-    "object-literal-sort-keys": { "severity": "warning" },
+    "object-literal-sort-keys": false,
     "only-arrow-functions": { "severity": "warning" },
     "ordered-imports": { "severity": "warning" },
     "prefer-for-of": {"severity": "warning"},
