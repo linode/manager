@@ -46,7 +46,8 @@ interface ConfigDrawerState {
   action?: (id: number) => void;
 }
 
-interface State extends RequestableProps {
+interface State {
+  context: RequestableProps;
   configDrawer: ConfigDrawerState;
   labelInput: { label: string; errorText: string; };
   notifications?: Linode.Notification[];
@@ -103,11 +104,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 type CombinedProps = RouteProps & WithStyles<ClassNames>;
 
 const labelInputLens = lensPath(['labelInput']);
-const configsLens = lensPath(['configs']);
-const disksLens = lensPath(['disks']);
-const imageLens = lensPath(['image']);
-const linodeLens = lensPath(['linode']);
-const volumesLens = lensPath(['volumes']);
+const configsLens = lensPath(['context', 'configs']);
+const disksLens = lensPath(['context', 'disks']);
+const imageLens = lensPath(['context', 'image']);
+const linodeLens = lensPath(['context', 'linode']);
+const volumesLens = lensPath(['context', 'volumes']);
 
 const L = {
   configs: {
@@ -174,146 +175,149 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       open: false,
       selected: undefined,
     },
-    configs: {
-      lastUpdated: 0,
-      loading: true,
-      request: () => {
-        this.setState(set(L.configs.loading, true));
+    context: {
+      configs: {
+        lastUpdated: 0,
+        loading: true,
+        request: () => {
+          this.setState(set(L.configs.loading, true));
 
-        return getLinodeConfigs(this.props.match.params.linodeId!)
-          .then(({ data }) => {
-            this.setState(compose(
-              set(L.configs.loading, false),
-              set(L.configs.data, data),
-              set(L.configs.lastUpdated, Date.now()),
-            ));
-            return data;
-          })
-          .catch((r) => {
-            this.setState(compose(
-              set(L.configs.loading, false),
-              set(L.configs.errors, [{ field: 'none', reason: 'Could not load instance config for some reason.' }])
-            ));
-          });
+          return getLinodeConfigs(this.props.match.params.linodeId!)
+            .then(({ data }) => {
+              this.setState(compose(
+                set(L.configs.loading, false),
+                set(L.configs.data, data),
+                set(L.configs.lastUpdated, Date.now()),
+              ));
+              return data;
+            })
+            .catch((r) => {
+              this.setState(compose(
+                set(L.configs.loading, false),
+                set(L.configs.errors, [{ field: 'none', reason: 'Could not load instance config for some reason.' }])
+              ));
+            });
+        },
       },
-    },
-    disks: {
-      lastUpdated: 0,
-      loading: true,
-      request: () => {
-        this.setState(set(L.disks.loading, true));
+      disks: {
+        lastUpdated: 0,
+        loading: true,
+        request: () => {
+          this.setState(set(L.disks.loading, true));
 
-        return getLinodeDisks(this.props.match.params.linodeId!)
-          .then(({ data }) => {
-            this.setState(compose(
-              set(L.disks.loading, false),
-              set(L.disks.data, data),
-              set(L.disks.lastUpdated, Date.now()),
-            ));
-            return data;
-          })
-          .catch((r) => {
-            this.setState(compose(
-              set(L.disks.loading, false),
-              set(L.disks.errors, [{ field: 'none', reason: 'Could not load Linode disks for some reason.' }])
-            ));
-          });
+          return getLinodeDisks(this.props.match.params.linodeId!)
+            .then(({ data }) => {
+              this.setState(compose(
+                set(L.disks.loading, false),
+                set(L.disks.data, data),
+                set(L.disks.lastUpdated, Date.now()),
+              ));
+              return data;
+            })
+            .catch((r) => {
+              this.setState(compose(
+                set(L.disks.loading, false),
+                set(L.disks.errors, [{ field: 'none', reason: 'Could not load Linode disks for some reason.' }])
+              ));
+            });
+        },
       },
-    },
-    image: {
-      lastUpdated: 0,
-      loading: true,
-      request: (image: string) => {
+      image: {
+        lastUpdated: 0,
+        loading: true,
+        request: (image: string) => {
 
-        if (!image) {
-          const i: Partial<Linode.Image> = { id: 'unknown', label: 'Unknown Image', type: 'Unknown', vendor: 'unknown' };
-          this.setState(compose(
-            set(L.image.lastUpdated, Date.now()),
-            set(L.image.data, i),
-          ));
-
-          return Promise.resolve();
-        }
-
-        this.setState(set(L.image.loading, true));
-
-        return getImage(image)
-          .then((data) => {
+          if (!image) {
+            const i: Partial<Linode.Image> = { id: 'unknown', label: 'Unknown Image', type: 'Unknown', vendor: 'unknown' };
             this.setState(compose(
-              set(L.image.loading, false),
-              set(L.image.data, data),
               set(L.image.lastUpdated, Date.now()),
+              set(L.image.data, i),
             ));
-            return data;
-          })
-          .catch((r) => {
-            this.setState(compose(
-              set(L.image.loading, false),
-              set(L.image.errors, [{ field: 'none', reason: 'Could not load Linode for some reason.' }])
-            ));
-          });
+
+            return Promise.resolve();
+          }
+
+          this.setState(set(L.image.loading, true));
+
+          return getImage(image)
+            .then((data) => {
+              this.setState(compose(
+                set(L.image.loading, false),
+                set(L.image.data, data),
+                set(L.image.lastUpdated, Date.now()),
+              ));
+              return data;
+            })
+            .catch((r) => {
+              this.setState(compose(
+                set(L.image.loading, false),
+                set(L.image.errors, [{ field: 'none', reason: 'Could not load Linode for some reason.' }])
+              ));
+            });
+        },
+      },
+      linode: {
+        lastUpdated: 0,
+        loading: true,
+        request: () => {
+          this.setState(set(L.linode.loading, true));
+
+          return getLinode(this.props.match.params.linodeId!)
+            .then(({ data }) => {
+              this.setState(compose(
+                set(L.labelInput.label, data.label),
+                set(L.linode.loading, false),
+                set(L.linode.data, data),
+                set(L.linode.lastUpdated, Date.now()),
+              ));
+              return data;
+            })
+            .catch((r) => {
+              this.setState(compose(
+                set(L.linode.loading, false),
+                set(L.linode.errors, [{ field: 'none', reason: 'Could not load instance for some reason.' }])
+              ));
+            });
+        },
+        update: (fn) => {
+          const { data: linode } = this.state.context.linode;
+          if (!linode) { return }
+
+          const updatedLinode = fn(linode);
+
+          this.setState(compose(
+            set(L.linode.data, updatedLinode),
+            set(L.labelInput.label, updatedLinode.label),
+          ));
+        },
+      },
+      volumes: {
+        lastUpdated: 0,
+        loading: true,
+        request: () => {
+          this.setState(set(L.volumes.loading, true));
+
+          return getLinodeVolumes(this.props.match.params.linodeId!)
+            .then(({ data }) => {
+              this.setState(compose(
+                set(L.volumes.loading, false),
+                set(L.volumes.data, data),
+                set(L.volumes.lastUpdated, Date.now()),
+              ));
+              return data;
+            })
+            .catch((r) => {
+              this.setState(compose(
+                set(L.volumes.loading, false),
+                set(L.volumes.errors, [{ field: 'none', reason: 'Could not load Linode for some reason.' }])
+              ));
+            });
+        },
       },
     },
     labelInput: {
       label: '', /** @todo */
       errorText: '',
-    },
-    linode: {
-      lastUpdated: 0,
-      loading: true,
-      request: () => {
-        this.setState(set(L.linode.loading, true));
-
-        return getLinode(this.props.match.params.linodeId!)
-          .then(({ data }) => {
-            this.setState(compose(
-              set(L.labelInput.label, data.label),
-              set(L.linode.loading, false),
-              set(L.linode.data, data),
-              set(L.linode.lastUpdated, Date.now()),
-            ));
-            return data;
-          })
-          .catch((r) => {
-            this.setState(compose(
-              set(L.linode.loading, false),
-              set(L.linode.errors, [{ field: 'none', reason: 'Could not load instance for some reason.' }])
-            ));
-          });
-      },
-      update: (fn) => {
-        if (!this.state.linode.data) { return }
-        const { data: linode } = this.state.linode;
-        const updatedLinode = fn(linode);
-
-        this.setState(compose(
-          set(L.linode.data, updatedLinode),
-          set(L.labelInput.label, updatedLinode.label),
-        ));
-    },
-    },
-    volumes: {
-      lastUpdated: 0,
-      loading: true,
-      request: () => {
-        this.setState(set(L.volumes.loading, true));
-
-        return getLinodeVolumes(this.props.match.params.linodeId!)
-          .then(({ data }) => {
-            this.setState(compose(
-              set(L.volumes.loading, false),
-              set(L.volumes.data, data),
-              set(L.volumes.lastUpdated, Date.now()),
-            ));
-            return data;
-          })
-          .catch((r) => {
-            this.setState(compose(
-              set(L.volumes.loading, false),
-              set(L.volumes.errors, [{ field: 'none', reason: 'Could not load Linode for some reason.' }])
-            ));
-          });
-      },
     },
   };
 
@@ -324,7 +328,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     return haveAnyBeenModified<State>(
       this.state,
       nextState,
-      ['linode', 'image', 'volumes', 'configs', 'disks', 'configDrawer', 'labelInput'],
+      ['context', 'configDrawer', 'labelInput'],
     )
       || haveAnyBeenModified<Location>(location, nextLocation, ['pathname', 'search']);
   }
@@ -339,7 +343,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
   componentDidMount() {
     this.mounted = true;
 
-    const { configs, disks, image, linode, volumes } = this.state;
+    const { context: { configs, disks, image, linode, volumes } } = this.state;
     const mountTime = moment().subtract(5, 'seconds');
     const { match: { params: { linodeId } } } = this.props;
 
@@ -368,7 +372,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       ].includes(e.action))
       .filter(e => !e._initial)
       .subscribe((v) => {
-        this.state.volumes.request();
+        volumes.request();
       });
     /** Get /notifications relevant to this Linode */
     this.notificationsSubscription = notifications$
@@ -449,7 +453,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
   // (Currently, including multiple error strings
   // breaks the layout)
   updateLabel = (label: string) => {
-    const { linode: { data: linode } } = this.state;
+    const { data: linode } = this.state.context.linode;
     if (!linode) { return; }
 
     renameLinode(linode.id, label)
@@ -470,7 +474,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
   }
 
   cancelUpdate = () => {
-    const { data: linode } = this.state.linode;
+    const { data: linode } = this.state.context.linode;
     if (!linode) { return; }
 
     this.setState({ labelInput: { label: linode.label, errorText: '' } });
@@ -482,26 +486,27 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     const {
       labelInput,
       configDrawer,
-
-      image: {
-        data: image,
-        lastUpdated: imageLastUpdated,
-      },
-      volumes: {
-        data: volumes,
-        lastUpdated: volumesLastUpdated,
-      },
-      linode: {
-        data: linode,
-        lastUpdated: linodeLastUpdated,
-      },
-      configs: {
-        data: configs,
-        lastUpdated: configsLastUpdated,
-      },
-      disks: {
-        data: disks,
-        lastUpdated: disksLastUpdated,
+      context: {
+        image: {
+          data: image,
+          lastUpdated: imageLastUpdated,
+        },
+        volumes: {
+          data: volumes,
+          lastUpdated: volumesLastUpdated,
+        },
+        linode: {
+          data: linode,
+          lastUpdated: linodeLastUpdated,
+        },
+        configs: {
+          data: configs,
+          lastUpdated: configsLastUpdated,
+        },
+        disks: {
+          data: disks,
+          lastUpdated: disksLastUpdated,
+        },
       },
     } = this.state;
 
@@ -532,15 +537,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <Provider
-          value={{
-            configs: this.state.configs,
-            disks: this.state.disks,
-            image: this.state.image,
-            linode: this.state.linode,
-            volumes: this.state.volumes,
-          }}
-        >
+        <Provider value={this.state.context}>
           <Grid
             container
             justify="space-between"
