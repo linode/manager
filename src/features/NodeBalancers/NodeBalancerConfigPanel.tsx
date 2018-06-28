@@ -873,15 +873,13 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                 return (
                                   <div className={classes.suggestionsParent}>
                                     <TextField
+                                      {...getInputProps({
+                                        onChange: this.onNodeAddressChange,
+                                        placeholder: 'Enter IP Address',
+                                        value: node.address
+                                      })}
                                       label="IP Address"
                                       inputProps={{ 'data-node-idx': idx }}
-                                      InputProps={{
-                                        ...getInputProps({
-                                          onChange: this.onNodeAddressChange,
-                                          placeholder: 'Enter IP Address',
-                                          value: node.address
-                                        })
-                                      }}
                                       errorText={hasErrorFor('address')}
                                       errorGroup={`${configIdx}`}
                                       data-qa-backend-ip-address
