@@ -27,16 +27,25 @@ export const { Provider, Consumer } = React.createContext<RequestableProps>({
 
 export function withContext<P>(mapStateToProps?: (v: RequestableProps) => any) {
   return function (Component: React.ComponentType<P>) {
-    return (props: P) => {
-      return (
-        <Consumer>
-          {c => {
-            const context = mapStateToProps ? mapStateToProps(c) : c;
+    return class ComponentWithContext extends React.Component<RequestableProps & P> {
+      static displayName = `WithContext(${getDisplayName(Component)})`;
+      render() {
+        return (
+          <Consumer>
+            {c => {
+              const context = mapStateToProps ? mapStateToProps(c) : c;
 
-            return <Component {...props} {...context} />
-          }}
-        </Consumer>
-      );
-    };
+              return <Component {...this.props} {...context} />
+            }}
+          </Consumer>
+        );
+      }
+    }
   };
+}
+
+function getDisplayName(Component: React.ComponentType) {
+  return Component.displayName ||
+    Component.name ||
+    'Component';
 }
