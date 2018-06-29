@@ -4,7 +4,7 @@ import { ErrorOutline } from '@material-ui/icons';
 
 import Placeholder from 'src/components/Placeholder';
 
-const notFound = () => {
+const NotFound = () => {
   return (
     <Placeholder 
       icon={ErrorOutline}
@@ -15,4 +15,4 @@ const notFound = () => {
   );
 }
 
-export default notFound;
+export default NotFound;
