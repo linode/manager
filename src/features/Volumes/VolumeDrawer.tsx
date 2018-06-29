@@ -125,12 +125,15 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
         !event._initial
         && [
           'volume_detach',
+          'volume_create',
         ].includes(event.action)
       ))
       .subscribe((event) => {
-        if (event.action === 'volume_detach'
-            && event.status === 'finished') {
+        if (event.status === 'finished') {
           sendToast(`Volume ${event.entity && event.entity.label} finished detaching`);
+        }
+        if (event.action === ('volume_create' as Linode.EventAction) && event.status === 'notification') {
+          sendToast(`Volume ${event.entity && event.entity.label} created successfully.`);
         }
       });
   }
