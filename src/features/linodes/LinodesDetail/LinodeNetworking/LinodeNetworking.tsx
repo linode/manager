@@ -391,7 +391,12 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
               />
               <IPSharingPanel
                 linodeID={linodeID}
-                linodeIPs={[...linodeIPs.ipv4.public.map(i => i.address)]}
+                linodeIPs={[
+                  ...linodeIPs.ipv4.public.map(i => i.address),
+                ]}
+                linodeSharedIPs={[
+                  ...linodeIPs.ipv4.shared.map(i => i.address),
+                ]}
                 linodeRegion={linodeRegion}
               />
           </Grid>

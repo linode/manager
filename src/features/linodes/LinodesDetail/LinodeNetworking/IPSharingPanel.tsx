@@ -1,4 +1,4 @@
-import { clone, pathOr } from 'ramda';
+import { clone, pathOr, uniq } from 'ramda';
 import * as React from 'react';
 
 import Divider from '@material-ui/core/Divider';
@@ -16,7 +16,7 @@ import LinearProgress from 'src/components/LinearProgress';
 import MenuItem from 'src/components/MenuItem';
 import Select from 'src/components/Select';
 import TextField from 'src/components/TextField';
-import { listIPs } from 'src/services/networking';
+import { listIPs, shareAddresses } from 'src/services/networking';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
 type ClassNames = 
@@ -49,6 +49,7 @@ interface Props {
   linodeID: number;
   linodeRegion: string;
   linodeIPs: string[];
+  linodeSharedIPs: string[];
 }
 
 interface State {
@@ -65,7 +66,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 class IPSharingPanel extends React.Component<CombinedProps, State> {
   state: State = {
     ipChoices: [],
-    ipsToShare: [],
+    ipsToShare: this.props.linodeSharedIPs,
     loading: true,
     submitting: false,
   };
@@ -83,6 +84,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
         const ipChoices = ips
           .filter((ip: Linode.IPAddress) => {
             return ip.type === 'ipv4'
+                   && ip.public === true
                    && !this.props.linodeIPs.includes(ip.address);
           })
           .map((ip: Linode.IPAddress) => ip.address);
@@ -184,13 +186,33 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
   }
 
   onSubmit = () => {
-    console.log('submit');
+    const finalIPs = uniq(this.state.ipsToShare
+      .filter((ip: string) => ip !== IPSharingPanel.selectIPText));
+    this.setState({
+      errors: undefined,
+      submitting: true,
+    })
+    shareAddresses({ linode_id: this.props.linodeID, ips: finalIPs })
+      .then((response) => {
+        this.setState({
+          errors: undefined,
+          submitting: false,
+          successMessage: 'IP Sharing updated successfully',
+        })
+      })
+      .catch((response) => {
+        const errors = pathOr([], ['response', 'data', 'errors'], response);
+        this.setState({
+          errors,
+          submitting: false,
+        })
+      });
   }
 
   onCancel = () => {
     this.setState({
       errors: undefined,
-      ipsToShare: [],
+      ipsToShare: this.props.linodeSharedIPs,
     })
   }
 

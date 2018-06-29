@@ -27,3 +27,10 @@ export const listIPs = (region?: string) => {
   return Request(...requestOptions)
     .then(response => response.data);
 }
+
+export const shareAddresses = (data: any) =>
+  Request(
+    setURL(`${API_ROOT}/networking/ipv4/share`),
+    setMethod('POST'),
+    setData(data),
+  );
