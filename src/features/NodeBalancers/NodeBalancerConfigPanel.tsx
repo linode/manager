@@ -286,7 +286,12 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               container
             >
               <Grid item xs={12}>
-                <Typography variant="title">Port Configuration</Typography>
+                <Typography
+                  variant="title"
+                  data-qa-port-config-header
+                >
+                  Port Configuration
+                </Typography>
               </Grid>
               <Grid item xs={12} md={4}>
                 <TextField
@@ -662,7 +667,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     <Toggle
                       checked={checkPassive}
                       onChange={this.onCheckPassiveChange}
-                      data-qa-passive-checks-toggle
+                      data-qa-passive-checks-toggle={checkPassive}
                     />
                   }
                   label="Passive Checks"
