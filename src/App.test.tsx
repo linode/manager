@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { shallow } from 'enzyme';
 
 import * as React from 'react';
 import { StaticRouter } from 'react-router-dom';
@@ -9,7 +9,7 @@ import { App } from './App';
 import LinodeThemeWrapper from './LinodeThemeWrapper';
 
 it('renders without crashing', () => {
-  mount(
+  const component = shallow(
     <LinodeThemeWrapper>
       <Provider store={store}>
         <StaticRouter location="/" context={{}}>
@@ -31,4 +31,5 @@ it('renders without crashing', () => {
       </Provider>
     </LinodeThemeWrapper>,
   );
+  expect(component.find('App')).toHaveLength(1);
 });
