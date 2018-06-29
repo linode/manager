@@ -8,9 +8,10 @@ describe('Help Icon Component Suite', () => {
         'left',
         'right',
     ]
-
+    
+    const page = 'body';
     const helpButton = '[data-qa-help-button]';
-    const popoverText = '[data-qa-popover-text]';
+    const popoverText = '[role="tooltip"]';
     
     it('should display icon on the page', () => {
         executeInAllStories(component, childStories, () => {
@@ -18,32 +19,25 @@ describe('Help Icon Component Suite', () => {
         });
     });
 
-    it('should display popover text on click', () => {
+    it('should display popover text on Mouse Over', () => {
         executeInAllStories(component, childStories, () => {
             browser.waitForVisible(helpButton);
 
-            browser.click(helpButton);
+            browser.moveToObject(helpButton);
             const popOver = $(popoverText);
 
-            expect(popOver.isVisible()).toBe(true);
+            expect(popOver.getAttribute('aria-hidden')).toBe('false');
             expect(popOver.getText()).toBe('There is some help text! Yada, yada, yada...');
         });
     });
 
-    it('should hide popover text on outside click', () => {
+    it('should hide popover text on Mouse Out', () => {
         executeInAllStories(component, childStories, () => {
             browser.waitForVisible(helpButton);
 
-            browser.click(helpButton);
             const popOver = $(popoverText);
-            expect(popOver.isVisible()).toBe(true);
-            
-            browser.jsClick(helpButton);
+            expect(popOver.getAttribute('aria-hidden')).toBe('true');            
 
-            browser.waitForVisible(helpButton);
-            const popOverTextHidden = browser.isVisible(popoverText);
-            
-            expect(popOverTextHidden).toBe(true);
         });
     });
 });

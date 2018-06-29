@@ -273,7 +273,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       page: Math.min(lastPage, page),
       page_size: pageSize,
     })
-      .then(response => response.data)
       .then((response) => {
         if (!this.mounted) { return; }
 
@@ -281,14 +280,23 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           ...prevResults,
           linodes: pathOr([], ['data'], response),
           page: pathOr(0, ['page'], response),
+          pageSize,
           pages: pathOr(0, ['pages'], response),
           results: pathOr(0, ['results'], response),
-          pageSize,
         }));
       });
   }
 
+  scrollToTop = () => {
+    window.scroll({
+      behavior: 'smooth',
+      left: 0,
+      top: 0,
+    });
+  }
+
   handlePageSelection = (page: number) => {
+    this.scrollToTop();
     this.getLinodes(Math.min(page), this.state.pageSize);
   }
 

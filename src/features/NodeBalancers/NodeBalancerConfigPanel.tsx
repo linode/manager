@@ -296,7 +296,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   value={port || ''}
                   onChange={this.onPortChange}
                   errorText={hasErrorFor('port')}
-                  errorGroup={`${configIdx}`}
+                  errorGroup={forEdit ? `${configIdx}`: undefined}
                   data-qa-port
                 />
               </Grid>
@@ -307,7 +307,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   select
                   onChange={this.onProtocolChange}
                   errorText={hasErrorFor('protocol')}
-                  errorGroup={`${configIdx}`}
+                  errorGroup={forEdit ? `${configIdx}`: undefined}
                   data-qa-protocol-select
                 >
                   <MenuItem
@@ -354,7 +354,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     onChange={this.onSslCertificateChange}
                     required={protocol === 'https'}
                     errorText={hasErrorFor('ssl_cert')}
-                    errorGroup={`${configIdx}`}
+                    errorGroup={forEdit ? `${configIdx}`: undefined}
                   />
                 </Grid>
                 <Grid item xs={12} md={6}>
@@ -366,7 +366,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     onChange={this.onPrivateKeyChange}
                     required={protocol === 'https'}
                     errorText={hasErrorFor('ssl_key')}
-                    errorGroup={`${configIdx}`}
+                    errorGroup={forEdit ? `${configIdx}`: undefined}
                   />
                 </Grid>
               </Grid>
@@ -387,7 +387,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   select
                   onChange={this.onAlgorithmChange}
                   errorText={hasErrorFor('algorithm')}
-                  errorGroup={`${configIdx}`}
+                  errorGroup={forEdit ? `${configIdx}`: undefined}
                   data-qa-algorithm-select
                 >
                   <MenuItem value="roundrobin" data-qa-option="roundrobin">
@@ -418,7 +418,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   select
                   onChange={this.onSessionStickinessChange}
                   errorText={hasErrorFor('stickiness')}
-                  errorGroup={`${configIdx}`}
+                  errorGroup={forEdit ? `${configIdx}`: undefined}
                   data-qa-session-stickiness-select
                 >
                   <MenuItem
@@ -476,7 +476,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     select
                     onChange={this.onHealthCheckTypeChange}
                     errorText={hasErrorFor('check')}
-                    errorGroup={`${configIdx}`}
+                    errorGroup={forEdit ? `${configIdx}`: undefined}
                     data-qa-active-check-select
                   >
                     <MenuItem value="none">None</MenuItem>
@@ -531,7 +531,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       value={healthCheckInterval}
                       onChange={this.onHealthCheckIntervalChange}
                       errorText={hasErrorFor('check_interval')}
-                      errorGroup={`${configIdx}`}
+                      errorGroup={forEdit ? `${configIdx}`: undefined}
                       data-qa-active-check-interval
                     />
                   </Grid>
@@ -560,7 +560,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       value={healthCheckTimeout}
                       onChange={this.onHealthCheckTimeoutChange}
                       errorText={hasErrorFor('check_timeout')}
-                      errorGroup={`${configIdx}`}
+                      errorGroup={forEdit ? `${configIdx}`: undefined}
                       data-qa-active-check-timeout
                     />
                   </Grid>
@@ -580,7 +580,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       value={healthCheckAttempts}
                       onChange={this.onHealthCheckAttemptsChange}
                       errorText={hasErrorFor('check_attempts')}
-                      errorGroup={`${configIdx}`}
+                      errorGroup={forEdit ? `${configIdx}`: undefined}
                       InputProps={{
                         'aria-label': 'Active Health Check Attempts',
                       }}
@@ -606,7 +606,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                         onChange={this.onCheckPathChange}
                         required={['http', 'http_body'].includes(healthCheckType)}
                         errorText={hasErrorFor('check_path')}
-                        errorGroup={`${configIdx}`}
+                        errorGroup={forEdit ? `${configIdx}`: undefined}
                       />
                     </Grid>
                   }
@@ -629,7 +629,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                         onChange={this.onCheckBodyChange}
                         required={healthCheckType === 'http_body'}
                         errorText={hasErrorFor('check_body')}
-                        errorGroup={`${configIdx}`}
+                        errorGroup={forEdit ? `${configIdx}`: undefined}
                       />
                     </Grid>
                   }
@@ -745,7 +745,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             inputProps={{ 'data-node-idx': idx }}
                             onChange={this.onNodeLabelChange}
                             errorText={hasErrorFor('label')}
-                            errorGroup={`${configIdx}`}
+                            errorGroup={forEdit ? `${configIdx}`: undefined}
                             data-qa-backend-ip-label
                           />
                         </Grid>
@@ -756,7 +756,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             inputProps={{ 'data-node-idx': idx }}
                             onChange={this.onNodeAddressChange}
                             errorText={hasErrorFor('address')}
-                            errorGroup={`${configIdx}`}
+                            errorGroup={forEdit ? `${configIdx}`: undefined}
                             data-qa-backend-ip-address
                           />
                         </Grid>
@@ -768,7 +768,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             inputProps={{ 'data-node-idx': idx }}
                             onChange={this.onNodePortChange}
                             errorText={hasErrorFor('port')}
-                            errorGroup={`${configIdx}`}
+                            errorGroup={forEdit ? `${configIdx}`: undefined}
                             data-qa-backend-ip-port
                           />
                         </Grid>
@@ -780,7 +780,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             inputProps={{ 'data-node-idx': idx }}
                             onChange={this.onNodeWeightChange}
                             errorText={hasErrorFor('weight')}
-                            errorGroup={`${configIdx}`}
+                            errorGroup={forEdit ? `${configIdx}`: undefined}
                             data-qa-backend-ip-weight
                           />
                         </Grid>

@@ -84,12 +84,12 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 class AddonsPanel extends React.Component<CombinedProps> {
   renderBackupsPrice() {
-    const { classes } = this.props;
+    const { classes, backupsMonthly } = this.props;
 
-    return this.props.backupsMonthly && (
+    return backupsMonthly && (
       <Grid item className={classes.subLabel}>
         <Typography variant="caption">
-          {`$${this.props.backupsMonthly.toFixed(2)}`} per month
+          {`$${backupsMonthly.toFixed(2)}`} per month
         </Typography>
       </Grid>
     );

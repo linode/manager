@@ -55,7 +55,7 @@ describe('NodeBalancers', () => {
     <StaticRouter context={{}}>
       <LinodeThemeWrapper>
         <NodeBalancersLanding
-          classes={{ root: '', title: '' }}
+          classes={{ root: '', title: '', NBStatus: '' }}
           setDocs={setDocs}
           clearDocs={clearDocs}
           nodeBalancers={mockNodeBalancers}

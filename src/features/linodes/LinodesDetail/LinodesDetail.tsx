@@ -43,8 +43,10 @@ import ProductNotification from 'src/components/ProductNotification';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { linodeInTransition } from 'src/features/linodes/transitions';
 
 import LinodeBackup from './LinodeBackup';
+import LinodeBusyStatus from './LinodeSummary/LinodeBusyStatus';
 import LinodeNetworking from './LinodeNetworking';
 import LinodePowerControl from './LinodePowerControl';
 import LinodeRebuild from './LinodeRebuild';
@@ -235,7 +237,9 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
         const { match: { params: { linodeId } } } = this.props;
         requestAllTheThings(linodeId!)
           .then(({ linode, image, volumes, configs, disks }) => {
-            this.setState({ linode, image, volumes, configs, disks });
+            this.setState({ 
+              linode: {...linode, recentEvent: linodeEvent },
+              image, volumes, configs, disks });
           });
       });
 
@@ -398,6 +402,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
             </Button>
             <LinodePowerControl
               status={linode.status}
+              recentEvent={linode.recentEvent}
               id={linode.id}
               label={linode.label}
               openConfigDrawer={this.openConfigDrawer}
@@ -417,6 +422,9 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               <Tab key={tab.title} label={tab.title} data-qa-tab={tab.title} />)}
           </Tabs>
         </AppBar>
+        {linodeInTransition(linode.status, linode.recentEvent) &&
+          <LinodeBusyStatus status={linode.status} recentEvent={linode.recentEvent} />
+        }
         {
           (this.state.notifications || []).map((n, idx) =>
             <ProductNotification key={idx} severity={n.severity} text={n.message} />)
@@ -436,6 +444,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
           <Route exact path={`${url}/networking`} render={() => (
             <LinodeNetworking
               linodeID={linode.id}
+              linodeLabel={linode.label}
               linodeRegion={linode.region}
             />
           )} />
@@ -458,6 +467,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               linodeType={linode.type}
               backupsEnabled={linode.backups.enabled}
               backupsSchedule={linode.backups.schedule}
+              linodeInTransition={linodeInTransition(linode.status, linode.recentEvent)}
             />
           )} />
           <Route exact path={`${url}/settings`} render={() => (

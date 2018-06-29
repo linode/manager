@@ -67,12 +67,12 @@ describe('FromImageContent', () => {
   });
 
   it('should render SelectImage panel if no compatibleImages', () => {
-    expect(component.find('WithRenderGuard(CreateFromImage)')).toHaveLength(0);
+    expect(component.find('WithRenderGuard(WithStyles(CreateFromImage))')).toHaveLength(0);
   });
 
   it('should render SelectImage panel if no compatibleImages', () => {
-    component.setState({ compatibleImages: ['linode/centos7'] });
-    expect(component.find('WithRenderGuard(CreateFromImage)')).toHaveLength(1);
+    component.setState({ compatibleImages: [{label: 'linode/centos7', is_public: true}] });
+    expect(component.find('WithRenderGuard(WithStyles(CreateFromImage))')).toHaveLength(1);
   });
 
   it('should render SelectRegion panel', () => {
