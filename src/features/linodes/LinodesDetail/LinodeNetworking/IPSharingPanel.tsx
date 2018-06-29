@@ -50,6 +50,7 @@ interface Props {
   linodeRegion: string;
   linodeIPs: string[];
   linodeSharedIPs: string[];
+  refreshIPs: () => Promise<void>;
 }
 
 interface State {
@@ -101,6 +102,12 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
           loading: false,
         })
       })
+  }
+
+  componentWillReceiveProps(nextProps: Props) {
+    this.setState({
+      ipsToShare: nextProps.linodeSharedIPs,
+    })
   }
 
   renderMyIPRow = (ip: string) => {
@@ -194,6 +201,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
     })
     shareAddresses({ linode_id: this.props.linodeID, ips: finalIPs })
       .then((response) => {
+        this.props.refreshIPs();
         this.setState({
           errors: undefined,
           submitting: false,
