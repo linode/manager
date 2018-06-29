@@ -1,22 +1,13 @@
 version: '3.1'
 services: 
-  selenium-hub:
-    image: selenium/hub:3.11.0-bismuth
-    ports:
-      - "4444:4444"
-  chrome:
-    image: selenium/node-chrome:3.11.0-bismuth
-    depends_on:
-      - selenium-hub
+  selenium-standalone:
+    image: selenium/standalone-chrome:3.4.0-francium
     volumes:
       - /dev/shm:/dev/shm #Mitigates the Chromium issue described at https://code.google.com/p/chromium/issues/detail?id=519952
-    environment:
-      - HUB_PORT_4444_TCP_ADDR=selenium-hub
-      - HUB_PORT_4444_TCP_PORT=4444
+    networks:
+      - backend
   manager-storybook:
     container_name: manager_storybook
-    ports:
-      - "6006:6006"
     build:
       context: .
       dockerfile: Dockerfile
@@ -24,7 +15,9 @@ services:
       - ./src:/src/src
     entrypoint: yarn storybook
     depends_on:
-      - chrome
+      - selenium-standalone
+    networks:
+      - backend
   storybook-test:
     container_name: storybook_test
     environment:
@@ -41,3 +34,7 @@ services:
     entrypoint: ["./scripts/storybook_entrypoint.sh"]
     depends_on:
       - manager-storybook
+    networks:
+      - backend
+networks:
+  backend:

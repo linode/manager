@@ -1,22 +1,13 @@
 version: '3.1'
 services: 
-  selenium-hub:
-    image: selenium/hub:3.4.0-francium
-    ports:
-      - "4444:4444"
-  chrome:
-    image: selenium/node-chrome:3.4.0-francium
-    depends_on:
-      - selenium-hub
+  selenium-standalone:
+    image: selenium/standalone-chrome:3.4.0-francium
     volumes:
       - /dev/shm:/dev/shm #Mitigates the Chromium issue described at https://code.google.com/p/chromium/issues/detail?id=519952
-    environment:
-      - HUB_PORT_4444_TCP_ADDR=selenium-hub
-      - HUB_PORT_4444_TCP_PORT=4444
+    networks:
+      - backend
   manager-local:
     container_name: manager_local
-    ports:
-      - "3000:3000"
     environment:
       - HTTPS=true
       - REACT_APP_APP_ROOT=https://manager-local:3000
@@ -29,6 +20,10 @@ services:
     volumes:
       - ./src:/src/src
     entrypoint: ["/src/scripts/start_manager.sh"]
+    depends_on:
+      - selenium-standalone
+    networks:
+      - backend
   manager-e2e:
     container_name: manager_e2e
     environment:
@@ -44,4 +39,8 @@ services:
       - ./e2e:/src/e2e
     entrypoint: ["./scripts/wait-for-it.sh", "-t", "250", "-s", "manager-local:3000", "--", "yarn","e2e", "--log"]
     depends_on:
-      - chrome
+      - manager-local
+    networks:
+      - backend
+networks:
+  backend:
