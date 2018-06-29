@@ -1,3 +1,4 @@
+import { pathOr, clone } from 'ramda';
 import * as React from 'react';
 
 import Divider from '@material-ui/core/Divider';
@@ -9,10 +10,11 @@ import AddNewLink from 'src/components/AddNewLink';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid'; 
 import IconButton from 'src/components/IconButton';
+import LinearProgress from 'src/components/LinearProgress';
 import MenuItem from 'src/components/MenuItem';
 import Select from 'src/components/Select';
 import TextField from 'src/components/TextField';
-
+import { listIPs } from 'src/services/networking';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
 type ClassNames = 
@@ -42,12 +44,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 interface Props {
   linodeID: number;
+  linodeRegion: string;
   linodeIPs: string[];
 }
 
 interface State {
   ipChoices: string[];
   ipsToShare: string[];
+  loading: boolean;
   submitting: boolean;
   successMessage?: string;
   errors?: Linode.ApiFieldError[];
@@ -59,6 +63,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
   state: State = {
     ipChoices: [IPSharingPanel.selectIPText],
     ipsToShare: [IPSharingPanel.selectIPText],
+    loading: true,
     submitting: false,
   };
 
@@ -66,6 +71,32 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
   };
 
   static selectIPText = 'Select an IP';
+
+  componentDidMount() {
+    const { linodeRegion } = this.props;
+    listIPs(linodeRegion)
+      .then(response => {
+        const ips = pathOr([], ['data'], response);
+        const ipChoices = ips
+          .filter((ip: Linode.IPAddress) => {
+            return ip.type === 'ipv4'
+                   && !this.props.linodeIPs.includes(ip.address);
+          })
+          .map((ip: Linode.IPAddress) => ip.address);
+        ipChoices.unshift(IPSharingPanel.selectIPText);
+        this.setState({
+          ipChoices,
+          loading: false,
+        })
+      })
+      .catch((response) => {
+        const errors = pathOr([], ['response', 'data', 'errors'], response);
+        this.setState({
+          errors,
+          loading: false,
+        })
+      })
+  }
 
   renderMyIPRow = (ip: string) => {
     const { classes } = this.props;
@@ -83,12 +114,22 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
 
   onIPSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const ipIdx = e.currentTarget.getAttribute('data-ip-idx');
-    console.log(e.target.value, ipIdx);
+    if (!ipIdx) { return; }
+    const newIPsToShare = clone(this.state.ipsToShare);
+    newIPsToShare[+ipIdx] = e.target.value;
+    this.setState({
+      ipsToShare: newIPsToShare,
+    })
   }
   
   onIPDelete = (e: React.MouseEvent<HTMLElement>) => {
     const ipIdx = e.currentTarget.getAttribute('data-ip-idx');
-    console.log(ipIdx);
+    if (!ipIdx) { return; }
+    const newIPsToShare = clone(this.state.ipsToShare);
+    newIPsToShare.splice(+ipIdx, 1);
+    this.setState({
+      ipsToShare: newIPsToShare,
+    })
   }
   
   renderShareIPRow = (ip: string, idx: number) => {
@@ -143,7 +184,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes, linodeIPs } = this.props;
-    const { errors, successMessage, ipsToShare } = this.state;
+    const { errors, successMessage, ipsToShare, loading } = this.state;
 
     const errorFor = getAPIErrorsFor(IPSharingPanel.errorResources, errors);
     const generalError = errorFor('none');
@@ -169,15 +210,20 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
             <Grid container>
               <Grid item className={classes.ipFieldLabel}>IP Addresses</Grid>
             </Grid>
-            {linodeIPs.map((ip: string) => this.renderMyIPRow(ip))}
-            {ipsToShare.map((ip: string, idx: number) => this.renderShareIPRow(ip, idx))}
-            <div className={classes.addNewButton}>
-              <AddNewLink
-                label="Add IP Address"
-                onClick={this.addIPToShare}
-                left
-              />
-            </div>
+            {loading
+              ? <LinearProgress style={{ margin: '50px' }} />
+              : <React.Fragment>
+                  {linodeIPs.map((ip: string) => this.renderMyIPRow(ip))}
+                  {ipsToShare.map((ip: string, idx: number) => this.renderShareIPRow(ip, idx))}
+                  <div className={classes.addNewButton}>
+                    <AddNewLink
+                      label="Add IP Address"
+                      onClick={this.addIPToShare}
+                      left
+                    />
+                  </div>
+                </React.Fragment>
+            }
           </Grid>
         </Grid>
       </ExpansionPanel>
