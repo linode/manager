@@ -41,6 +41,10 @@ const Domains = DefaultLoader({
   loader: () => import('src/features/Domains'),
 });
 
+const Images = DefaultLoader({
+  loader: () => import('src/features/Images'),
+})
+
 const Profile = DefaultLoader({
   loader: () => import('src/features/profile'),
 });
@@ -224,8 +228,7 @@ export class App extends React.Component<CombinedProps, State> {
                           <Placeholder title="Longview" />} />
                         <Route exact path="/stackscripts" render={() =>
                           <Placeholder title="StackScripts" />} />
-                        <Route exact path="/images" render={() =>
-                          <Placeholder title="Images" />} />
+                        <Route path="/images" component={Images} />
                         <Route exact path="/billing" render={() =>
                           <Placeholder title="Billing" />} />
                         <Route exact path="/users" render={() =>
