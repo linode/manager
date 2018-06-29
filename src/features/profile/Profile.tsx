@@ -1,11 +1,11 @@
 import * as React from 'react';
 import {
   matchPath,
-  withRouter,
-  Route,
-  Switch,
-  RouteComponentProps,
   Redirect,
+  Route,
+  RouteComponentProps,
+  Switch,
+  withRouter,
 } from 'react-router-dom';
 
 import AppBar from '@material-ui/core/AppBar';
@@ -15,6 +15,7 @@ import Typography from '@material-ui/core/Typography';
 
 import APITokens from './APITokens';
 import OAuthClients from './OAuthClients';
+import Settings from './Settings';
 
 type Props = RouteComponentProps<{}>;
 
@@ -27,6 +28,7 @@ class Profile extends React.Component<Props> {
 
   tabs = [
     /* NB: These must correspond to the routes inside the Switch */
+    { title: 'Settings', routeName: `${this.props.match.url}/settings` },
     { title: 'API Tokens', routeName: `${this.props.match.url}/tokens` },
     { title: 'OAuth Clients', routeName: `${this.props.match.url}/clients` },
   ];
@@ -55,9 +57,10 @@ class Profile extends React.Component<Props> {
           </Tabs>
         </AppBar>
         <Switch>
+          <Route exact path={`${url}/settings`} component={Settings} />
           <Route exact path={`${url}/tokens`} component={APITokens} />
           <Route exact path={`${url}/clients`} component={OAuthClients} />
-          <Redirect to={`${path}/tokens`} />
+          <Redirect to={`${path}/settings`} />
         </Switch>
       </React.Fragment>
     );
