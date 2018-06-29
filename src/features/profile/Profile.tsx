@@ -15,6 +15,7 @@ import Typography from '@material-ui/core/Typography';
 
 import APITokens from './APITokens';
 import OAuthClients from './OAuthClients';
+import LishSettings from './LishSettings';
 
 type Props = RouteComponentProps<{}>;
 
@@ -29,6 +30,7 @@ class Profile extends React.Component<Props> {
     /* NB: These must correspond to the routes inside the Switch */
     { title: 'API Tokens', routeName: `${this.props.match.url}/tokens` },
     { title: 'OAuth Clients', routeName: `${this.props.match.url}/clients` },
+    { title: 'LISH', routeName: `${this.props.match.url}/list` },
   ];
 
   render() {
@@ -57,6 +59,7 @@ class Profile extends React.Component<Props> {
         <Switch>
           <Route exact path={`${url}/tokens`} component={APITokens} />
           <Route exact path={`${url}/clients`} component={OAuthClients} />
+          <Route exact path={`${url}/list`} component={LishSettings} />
           <Redirect to={`${path}/tokens`} />
         </Switch>
       </React.Fragment>
