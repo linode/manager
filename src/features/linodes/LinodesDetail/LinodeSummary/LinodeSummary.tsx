@@ -145,11 +145,20 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
 
     const options: [string, string][] = [['24', 'Last 24 Hours']];
     const [createMonth, createYear] = [
-      moment.utc(linodeCreated).month() + 1,
+      // prepend "0" to the month if it's only 1 digit
+      // otherwise, console complains the date isn't in
+      // ISO or RFC2822 format
+      (moment.utc(linodeCreated).month() + 1).toString().length === 1
+        ? `0${moment.utc(linodeCreated).month() + 1}`
+        : moment.utc(linodeCreated).month() + 1,
       moment.utc(linodeCreated).year(),
     ];
     const creationFirstOfMonth = moment(`${createYear}-${createMonth}-01`);
-    let [testMonth, testYear] = [moment.utc().month() + 1, moment.utc().year()];
+    let [testMonth, testYear] = [
+      moment.utc().month() + 1,
+      moment.utc().year()
+    ];
+    let formattedTestDate;
     do {
       options.push([
         `${testYear} ${testMonth.toString().padStart(2, '0')}`,
@@ -162,7 +171,12 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
       } else {
         testMonth -= 1;
       }
-    } while (moment(`${testYear}-${testMonth}-01`).diff(creationFirstOfMonth) >= 0);
+      // same comment as above. Month needs to be prepended with a "0"
+      // if it's only one digit to appease moment.js
+      formattedTestDate = (testMonth.toString().length === 1)
+      ? `${testYear}-0${testMonth}-01`
+      : `${testYear}-${testMonth}-01`;
+    } while (moment(formattedTestDate).diff(creationFirstOfMonth) >= 0);
     (this.rangeSelectOptions as Linode.TodoAny) = options.map((option) => {
       return <MenuItem key={option[0]} value={option[0]}>{option[1]}</MenuItem>;
     });

@@ -9,7 +9,7 @@ import { App } from './App';
 import LinodeThemeWrapper from './LinodeThemeWrapper';
 
 it('renders without crashing', () => {
-  const component = shallow(
+  shallow(
     <LinodeThemeWrapper>
       <Provider store={store}>
         <StaticRouter location="/" context={{}}>
@@ -31,5 +31,4 @@ it('renders without crashing', () => {
       </Provider>
     </LinodeThemeWrapper>,
   );
-  expect(component.find('App')).toHaveLength(1);
 });
