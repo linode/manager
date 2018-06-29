@@ -171,6 +171,11 @@ class Notifier extends React.Component<CombinedProps, State> {
     this.subscription.unsubscribe();
   }
 
+  onExited = () => this.setState(
+    { toasts: removeFirstToast(this.state.toasts) },
+    () => this.setState(({ toasts: openFirstToast(this.state.toasts) })),
+  );
+
   render() {
     const { classes } = this.props;
     const { toasts } = this.state;
@@ -187,13 +192,7 @@ class Notifier extends React.Component<CombinedProps, State> {
           open={Boolean(toast.open)}
           autoHideDuration={6000}
           onClose={this.onClose}
-          onExited={() => {
-            this.setState({ toasts: removeFirstToast(this.state.toasts) },
-              () => {
-                this.setState(({ toasts: openFirstToast(this.state.toasts) }));
-              },
-            );
-          }}
+          onExited={this.onExited}
           ContentProps={{
             className:
               classNames({
