@@ -1,4 +1,4 @@
-import { pathOr, clone } from 'ramda';
+import { clone, pathOr } from 'ramda';
 import * as React from 'react';
 
 import Divider from '@material-ui/core/Divider';
@@ -6,7 +6,9 @@ import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/
 import Typography from '@material-ui/core/Typography';
 import { Delete } from '@material-ui/icons';
 
+import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
+import Button from 'src/components/Button';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid'; 
 import IconButton from 'src/components/IconButton';
@@ -25,7 +27,8 @@ type ClassNames =
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   addNewButton: {
-    marginTop: theme.spacing.unit,
+    marginTop: theme.spacing.unit * 3,
+    marginBottom: -theme.spacing.unit * 2,
   },
   containerDivider: {
    marginTop: theme.spacing.unit,
@@ -61,8 +64,8 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 class IPSharingPanel extends React.Component<CombinedProps, State> {
   state: State = {
-    ipChoices: [IPSharingPanel.selectIPText],
-    ipsToShare: [IPSharingPanel.selectIPText],
+    ipChoices: [],
+    ipsToShare: [],
     loading: true,
     submitting: false,
   };
@@ -158,17 +161,15 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
             }
           </Select>
         </Grid>
-        {(idx !== 0) &&
-          <Grid item>
-            <IconButton
-              data-ip-idx={idx}
-              onClick={this.onIPDelete}
-              destructive
-            >
-              <Delete />
-            </IconButton>
-          </Grid>
-        }
+        <Grid item>
+          <IconButton
+            data-ip-idx={idx}
+            onClick={this.onIPDelete}
+            destructive
+          >
+            <Delete />
+          </IconButton>
+        </Grid>
       </Grid>
     );
   }
@@ -180,6 +181,40 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
         IPSharingPanel.selectIPText,
       ],
     })
+  }
+
+  onSubmit = () => {
+    console.log('submit');
+  }
+
+  onCancel = () => {
+    this.setState({
+      errors: undefined,
+      ipsToShare: [],
+    })
+  }
+
+  renderActions = () => {
+    const { submitting, loading } = this.state;
+    return (
+      <ActionsPanel>
+        <Button
+          loading={submitting}
+          disabled={loading}
+          onClick={this.onSubmit}
+          type="primary"
+        >
+          Save
+      </Button>
+        <Button
+          disabled={submitting || loading}
+          onClick={this.onCancel}
+          type="secondary"
+        >
+          Cancel
+        </Button>
+      </ActionsPanel>
+    );
   }
 
   render() {
@@ -195,6 +230,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
         heading="IP Sharing"
         error={generalError}
         success={successMessage}
+        actions={this.renderActions}
       >
         <Grid container>
           <Grid item sm={12} lg={8} xl={6}>
