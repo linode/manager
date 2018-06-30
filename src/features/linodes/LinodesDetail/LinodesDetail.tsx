@@ -146,8 +146,10 @@ const requestAllTheThings = (linodeId: number) =>
     .then((response) => {
       const { data: linode } = response;
 
-      const imageReq = getImage(linode.image!)
-        .catch(err => undefined);
+      const imageReq = !linode.image
+        ? Promise.resolve(undefined)
+        : getImage(linode.image!)
+            .catch(err => undefined);
 
       const volumesReq = getLinodeVolumes(linode.id)
         .then(response => response.data)
@@ -237,7 +239,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
         const { match: { params: { linodeId } } } = this.props;
         requestAllTheThings(linodeId!)
           .then(({ linode, image, volumes, configs, disks }) => {
-            this.setState({ 
+            this.setState({
               linode: {...linode, recentEvent: linodeEvent },
               image, volumes, configs, disks });
           });
