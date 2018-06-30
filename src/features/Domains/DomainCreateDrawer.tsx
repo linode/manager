@@ -1,27 +1,28 @@
-import * as React from 'react';
-
-import { pathOr } from 'ramda';
-
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import RadioGroup from '@material-ui/core/RadioGroup';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-
-import Drawer from 'src/components/Drawer';
-
-import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
-import Notice from 'src/components/Notice';
-import TextField from 'src/components/TextField';
-
+import { compose, Lens, lensPath, over, pathOr, set, view } from 'ramda';
+import * as React from 'react';
 import Reload from 'src/assets/icons/reload.svg';
-
+import ActionsPanel from 'src/components/ActionsPanel';
+import AddNewLink from 'src/components/AddNewLink';
+import Button from 'src/components/Button';
+import Drawer from 'src/components/Drawer';
+import Notice from 'src/components/Notice';
+import Radio from 'src/components/Radio';
+import TextField from 'src/components/TextField';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { cloneDomain, createDomain } from 'src/services/domains';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'masterIPErrorNotice';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
+  masterIPErrorNotice: {
+    marginTop: theme.spacing.unit * 2
+  },
 });
 
 interface Props {
@@ -39,9 +40,19 @@ interface State {
   cloneName: string;
   errors?: Linode.ApiFieldError[];
   submitting: boolean;
+  master_ips: string[];
+  masterIPsCount: number;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
+
+const masterIPsLens = lensPath(['master_ips']);
+const masterIPLens = (idx: number) => compose(masterIPsLens, lensPath([idx])) as Lens;
+const viewMasterIP = (idx: number, obj: any) => view<any, string | undefined>(masterIPLens(idx), obj);
+const setMasterIP = (idx: number, value: string) => set(masterIPLens(idx), value);
+
+const masterIPsCountLens = lensPath(['masterIPsCount']);
+const uodateMasterIPsCount = (fn: (s: any) => any) => (obj: any) => over(masterIPsCountLens, fn, obj);
 
 class DomainCreateDrawer extends React.Component<CombinedProps, State> {
   defaultState: State = {
@@ -51,6 +62,8 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
     cloneName: '',
     submitting: false,
     errors: [],
+    master_ips: [],
+    masterIPsCount: 3,
   };
 
   state: State = {
@@ -65,12 +78,13 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { open, mode } = this.props;
-    const { domain, soaEmail, cloneName, errors, submitting } = this.state;
+    const { classes, open, mode } = this.props;
+    const { type, domain, soaEmail, cloneName, errors, submitting } = this.state;
 
     const errorFor = getAPIErrorFor(this.errorResources, errors);
 
     const generalError = errorFor('none');
+    const masterIPsError = errorFor('master_ips');
 
     return (
       <Drawer
@@ -78,6 +92,17 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
         open={open}
         onClose={this.closeDrawer}
       >
+        <RadioGroup
+          aria-label="type"
+          name="type"
+          value={type}
+          onChange={this.updateType}
+          row
+        >
+          <FormControlLabel value="master" label="Master" control={<Radio />} />
+          <FormControlLabel value="slave" label="Slave" control={<Radio />} />
+        </RadioGroup>
+
         <TextField
           errorText={(mode === 'create' || '') && errorFor('domain')}
           value={domain}
@@ -95,7 +120,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
             data-qa-clone-name
           />
         }
-        {mode === 'create' &&
+        {mode === 'create' && type === 'master' &&
           <TextField
             errorText={errorFor('soa_email')}
             value={soaEmail}
@@ -103,6 +128,24 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
             onChange={this.updateEmailAddress}
             data-qa-soa-email
           />
+        }
+        {mode === 'create' && type === 'slave' &&
+          <React.Fragment>
+            { masterIPsError && <Notice className={classes.masterIPErrorNotice} error text={`Master IP address must be valid IPv4 addresses.`} />}
+            {
+              Array.from(Array(this.state.masterIPsCount)).map((slave, idx) => (
+                <TextField
+                  key={idx}
+                  label="IP Address"
+                  InputProps={{ "aria-label": `ip-address-${idx}` }}
+                  value={viewMasterIP(idx, this.state) || ''}
+                  onChange={this.updateMasterIPAddress(idx)}
+                  data-qa-master-ip={idx}
+                />
+              ))
+            }
+            <AddNewLink onClick={this.addIPField} label="Add IP" data-qa-add-master-ip-field />
+          </React.Fragment>
         }
         {generalError &&
           <Notice error>
@@ -148,13 +191,14 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
 
   create = () => {
     const { onClose } = this.props;
-    const { domain, type, soaEmail } = this.state;
+    const { domain, type, soaEmail, master_ips } = this.state;
+
+    const data = type === 'master'
+      ? { domain, type, soa_email: soaEmail }
+      : { domain, type, master_ips: master_ips.filter(v => v !== '') }
+
     this.setState({ submitting: true });
-    createDomain({
-      domain,
-      type,
-      soa_email: soaEmail,
-    })
+    createDomain(data)
       .then((res) => {
         this.reset();
         onClose(res.data);
@@ -211,6 +255,12 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
   updateCloneLabel = (e: React.ChangeEvent<HTMLInputElement>) => this.setState({ cloneName: e.target.value })
 
   updateEmailAddress = (e: React.ChangeEvent<HTMLInputElement>) => this.setState({ soaEmail: e.target.value })
+
+  updateType = (e: React.ChangeEvent<HTMLInputElement>, value: 'master' | 'slave') => this.setState({ type: value })
+
+  updateMasterIPAddress = (idx: number) => (e: React.ChangeEvent<HTMLInputElement>) => this.setState(setMasterIP(idx, e.target.value), () => console.log(this.state.master_ips))
+
+  addIPField = () => this.setState(uodateMasterIPsCount(v => v + 1))
 }
 
 const styled = withStyles(styles, { withTheme: true });
