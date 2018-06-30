@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { pathOr } from 'ramda';
 
-import { StyleRulesCallback, Theme, withStyles,WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import Drawer from 'src/components/Drawer';
 
@@ -14,7 +14,7 @@ import TextField from 'src/components/TextField';
 import Reload from 'src/assets/icons/reload.svg';
 
 import { sendToast } from 'src/features/ToastNotifications/toasts';
-import { cloneDomain, createDomain  } from 'src/services/domains';
+import { cloneDomain, createDomain } from 'src/services/domains';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -59,16 +59,94 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
 
   componentDidUpdate(prevProps: Props, prevState: State) {
     if (this.props.mode === 'clone' &&
-        prevState.domain !== (this.props.domain || '')) {
+      prevState.domain !== (this.props.domain || '')) {
       this.setState({ domain: this.props.domain || '' });
     }
   }
 
-  reset() {
-    this.setState({ ...this.defaultState });
+  render() {
+    const { open, mode } = this.props;
+    const { domain, soaEmail, cloneName, errors, submitting } = this.state;
+
+    const errorFor = getAPIErrorFor(this.errorResources, errors);
+
+    const generalError = errorFor('none');
+
+    return (
+      <Drawer
+        title="Add a new Domain"
+        open={open}
+        onClose={this.closeDrawer}
+      >
+        <TextField
+          errorText={(mode === 'create' || '') && errorFor('domain')}
+          value={domain}
+          disabled={mode === 'clone'}
+          label="Domain"
+          onChange={this.updateLabel}
+          data-qa-domain-name
+        />
+        {mode === 'clone' &&
+          <TextField
+            errorText={errorFor('domain')}
+            value={cloneName}
+            label="New Domain"
+            onChange={this.updateCloneLabel}
+            data-qa-clone-name
+          />
+        }
+        {mode === 'create' &&
+          <TextField
+            errorText={errorFor('soa_email')}
+            value={soaEmail}
+            label="SOA Email Address"
+            onChange={this.updateEmailAddress}
+            data-qa-soa-email
+          />
+        }
+        {generalError &&
+          <Notice error>
+            generalError
+          </Notice>
+        }
+        <ActionsPanel>
+          {!submitting
+            ? <Button
+              type="primary"
+              onClick={this.submit}
+              data-qa-submit
+            >
+              Create
+              </Button>
+            : <Button
+              type="secondary"
+              disabled
+              className="loading"
+            >
+              <Reload />
+            </Button>
+          }
+          <Button
+            onClick={this.closeDrawer}
+            type="cancel"
+            data-qa-cancel
+          >
+            Cancel
+          </Button>
+        </ActionsPanel>
+      </Drawer>
+    );
   }
 
-  create() {
+  errorResources = {
+    domain: 'Domain',
+    type: 'Type',
+    soa_email: 'SOA Email',
+  };
+
+  reset = () => this.setState({ ...this.defaultState });
+
+  create = () => {
     const { onClose } = this.props;
     const { domain, type, soaEmail } = this.state;
     this.setState({ submitting: true });
@@ -91,7 +169,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
       });
   }
 
-  clone() {
+  clone = () => {
     const { onClose, cloneID } = this.props;
     const { cloneName } = this.state;
 
@@ -118,7 +196,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
 
   }
 
-  submit() {
+  submit = () => {
     if (this.props.mode === 'create') {
       this.create();
     } else if (this.props.mode === 'clone') {
@@ -126,85 +204,13 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
     }
   }
 
-  errorResources = {
-    domain: 'Domain',
-    type: 'Type',
-    soa_email: 'SOA Email',
-  };
+  closeDrawer = () => this.props.onClose();
 
-  render() {
-    const { open, onClose, mode } = this.props;
-    const { domain, soaEmail, cloneName, errors, submitting } = this.state;
+  updateLabel = (e: React.ChangeEvent<HTMLInputElement>) => this.setState({ domain: e.target.value });
 
-    const errorFor = getAPIErrorFor(this.errorResources, errors);
+  updateCloneLabel = (e: React.ChangeEvent<HTMLInputElement>) => this.setState({ cloneName: e.target.value })
 
-    const generalError = errorFor('none');
-
-    return (
-      <Drawer
-        title="Add a new Domain"
-        open={open}
-        onClose={() => onClose()}
-      >
-        <TextField
-          errorText={(mode === 'create' || '') && errorFor('domain')}
-          value={domain}
-          disabled={mode === 'clone'}
-          label="Domain"
-          onChange={e => this.setState({ domain: e.target.value })}
-          data-qa-domain-name
-        />
-        {mode === 'clone' &&
-          <TextField
-            errorText={errorFor('domain')}
-            value={cloneName}
-            label="New Domain"
-            onChange={e => this.setState({ cloneName: e.target.value })}
-            data-qa-clone-name
-          />
-        }
-        {mode === 'create' &&
-          <TextField
-            errorText={errorFor('soa_email')}
-            value={soaEmail}
-            label="SOA Email Address"
-            onChange={e => this.setState({ soaEmail: e.target.value })}
-            data-qa-soa-email
-          />
-        }
-        {generalError &&
-          <Notice error>
-            generalError
-          </Notice>
-        }
-        <ActionsPanel>
-          {!submitting
-            ? <Button
-                type="primary"
-                onClick={() => this.submit()}
-                data-qa-submit
-              >
-                Create
-              </Button>
-            : <Button
-                type="secondary"
-                disabled
-                className="loading"
-              >
-                <Reload />
-              </Button>
-          }
-          <Button
-            onClick={() => { onClose() }}
-            type="cancel"
-            data-qa-cancel
-          >
-            Cancel
-          </Button>
-        </ActionsPanel>
-      </Drawer>
-    );
-  }
+  updateEmailAddress = (e: React.ChangeEvent<HTMLInputElement>) => this.setState({ soaEmail: e.target.value })
 }
 
 const styled = withStyles(styles, { withTheme: true });
