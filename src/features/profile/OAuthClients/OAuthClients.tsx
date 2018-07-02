@@ -1,31 +1,36 @@
 import * as React from 'react';
+
 import { compose, path } from 'ramda';
 
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, Theme, withStyles,  WithStyles } from '@material-ui/core/styles';
+
+import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
-import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+
 
 import {
   createOAuthClient,
-  getOAuthClients,
-  updateOAuthClient,
   deleteOAuthClient,
+  getOAuthClients,
   resetOAuthClientSecret,
+  updateOAuthClient,
 } from 'src/services/account';
+
+import AddNewLink from 'src/components/AddNewLink';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 import Preload, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import Table from 'src/components/Table';
-import Grid from 'src/components/Grid';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import Notice from 'src/components/Notice';
 
 import ActionMenu from './OAuthClientActionMenu';
 import OAuthFormDrawer from './OAuthFormDrawer';
-import AddNewLink from 'src/components/AddNewLink';
+
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root' | 'title';
