@@ -141,10 +141,16 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
                   value={viewMasterIP(idx, this.state) || ''}
                   onChange={this.updateMasterIPAddress(idx)}
                   data-qa-master-ip={idx}
+                  style={{ marginBottom: 16 }}
                 />
               ))
             }
-            <AddNewLink onClick={this.addIPField} label="Add IP" data-qa-add-master-ip-field />
+            <AddNewLink
+              onClick={this.addIPField}
+              label="Add IP"
+              data-qa-add-master-ip-field
+              left
+            />
           </React.Fragment>
         }
         {generalError &&
