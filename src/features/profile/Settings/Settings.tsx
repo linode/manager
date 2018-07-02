@@ -11,13 +11,20 @@ import Toggle from 'src/components/Toggle';
 import { updateProfile } from 'src/services/profile';
 import { response } from 'src/store/reducers/resources';
 
-type ClassNames = 'root';
+type ClassNames = 'root'
+  | 'title'
+  | 'label';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     padding: theme.spacing.unit * 3,
-    paddingBottom: 20,
     marginTop: theme.spacing.unit * 2,
+  },
+  title: {
+    marginBottom: theme.spacing.unit * 2,
+  },
+  label: {
+    marginLeft: theme.spacing.unit,
   },
 });
 
@@ -44,22 +51,22 @@ class ProfileSettings extends React.Component<CombinedProps, State> {
 
     return (
       <Paper className={classes.root}>
-        <Grid container>
+        <Typography variant="title" className={classes.title}>
+          Notifications
+        </Typography>
+        <Grid container alignItems="center">
           <Grid item xs={12}>
-            <Typography variant="title">Notifications</Typography>
-          </Grid>
-          <Grid item xs={12} md={2}>
             <FormControlLabel
               className="toggleLassie"
               control={
                 <Toggle onChange={this.toggle} checked={status} />
               }
-              label={status ? 'Enabled' : 'Disabled'}
+              label={`
+                ${status ? 'Disable' : 'Enable'}
+                ${'notifications to receive email alerts if a Linode exceeds thresholds defined in it\'s settings.'}
+              `}
               disabled={this.state.submitting}
             />
-          </Grid>
-          <Grid item xs={12} md={10}>
-            <Typography>Enable notifications to receive email alerts if a Linode exceeds thresholds defined in it's settings.</Typography>
           </Grid>
         </Grid>
       </Paper>
