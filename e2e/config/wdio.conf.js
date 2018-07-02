@@ -28,7 +28,7 @@ if (argv.log) {
 
 exports.config = {
     // Selenium Host/Port
-    host: process.env.DOCKER ? 'selenium-hub' : 'localhost',
+    host: process.env.DOCKER ? 'selenium-standalone' : 'localhost',
     port: 4444,
     //
     // ==================
