@@ -56,11 +56,6 @@ interface State {
     imageID?: string,
     label?: string,
   };
-  // removeDialog: {
-  //   open: boolean,
-  //   image?: string,
-  //   imageID?: number,
-  // };
 }
 
 type CombinedProps = Props & PromiseLoaderProps & WithStyles<ClassNames> & RouteComponentProps<{}>;
@@ -75,9 +70,6 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
       label: '',
       description: '',
     },
-    // removeDialog: {
-    //   open: false,
-    // },
   };
 
   static docs: Linode.Doc[] = [
@@ -121,14 +113,12 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
           variant="raised"
           color="secondary"
           className="destructive"
-          // onClick={this.removeImage}
           onClick={() => null}
           data-qa-submit
         >
           Confirm
         </Button>
         <Button
-          // onClick={this.closeRemoveDialog}
           variant="raised"
           color="secondary"
           className="cancel"
@@ -139,18 +129,6 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
       </ActionsPanel>
     )
   }
-
-  // openRemoveDialog = (image: string, imageID: number) => {
-  //   this.setState({
-  //     removeDialog: { open: true, image, imageID },
-  //   });
-  // }
-
-  // closeRemoveDialog = () => {
-  //   this.setState({
-  //     removeDialog: { open: false, image: undefined, imageID: undefined },
-  //   });
-  // }
 
   openForEdit = (label: string, description: string, imageID: string) => {
     this.setState({
@@ -201,7 +179,6 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
               children: 'Add an Image',
             }}
           />
-          {/* <this.ImageCreateDrawer /> */}
         </React.Fragment>
       );
     }
@@ -270,14 +247,6 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
           setLabel={this.setLabel}
           setDescription={this.setDescription}
         />
-        {/* <ConfirmationDialog
-          open={this.state.removeDialog.open}
-          title={`Remove ${this.state.removeDialog.image}`}
-          onClose={this.closeRemoveDialog}
-          actions={this.getActions}
-        >
-          <Typography>Are you sure you want to remove this image?</Typography>
-        </ConfirmationDialog> */}
       </React.Fragment>
     );
   }
