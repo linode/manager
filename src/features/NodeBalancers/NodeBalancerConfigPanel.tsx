@@ -852,7 +852,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             <Divider style={{ marginTop: 24 }} />
                           </Grid>
                         }
-                        <Grid item xs={11} lg={4} xl={2}>
+                        <Grid item xs={11} lg={forEdit ? 2 : 3}>
                           <TextField
                             label="Label"
                             value={node.label}
@@ -922,7 +922,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             }
                           </Downshift>
                         </Grid>
-                        <Grid item xs={11} lg={4} xl={2}>
+                        <Grid item xs={11} lg={2}>
                           <TextField
                             type="number"
                             label="Port"
@@ -934,7 +934,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             data-qa-backend-ip-port
                           />
                         </Grid>
-                        <Grid item xs={11} lg={4} xl={2}>
+                        <Grid item xs={11} lg={2}>
                           <TextField
                             type="number"
                             label="Weight"
@@ -947,7 +947,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                           />
                         </Grid>
                         {forEdit &&
-                          <Grid item xs={11} lg={4} xl={2}>
+                          <Grid item xs={11} lg={3}>
                             <TextField
                               label="Mode"
                               value={node.mode}
@@ -985,6 +985,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                               onClick={this.removeNode}
                               destructive
                               data-qa-remove-node
+                              style={{  width: 'auto' }}
                             >
                               <Delete />
                             </IconButton>
