@@ -1,25 +1,23 @@
 import * as React from 'react';
+
 import {
-  withStyles,
   StyleRulesCallback,
   Theme,
+  withStyles,
   WithStyles,
-} from 'material-ui';
-import Typography from 'material-ui/Typography';
-import AppBar from 'material-ui/AppBar';
-import Tabs, { Tab } from 'material-ui/Tabs';
-// import Paper from 'material-ui/Paper';
-// import TableBody from 'material-ui/Table/TableBody';
-// import TableCell from 'material-ui/Table/TableCell';
-// import TableHead from 'material-ui/Table/TableHead';
-// import TableRow from 'material-ui/Table/TableRow';
+} from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
 import { compose } from 'ramda';
 
+import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import Grid from 'src/components/Grid';
 import IconTextLink from 'src/components/IconTextLink';
-import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import PlusSquare from '../../../src/assets/icons/plus-square.svg';
+
+import SelectStackScriptPanel from './SelectStackScriptPanel';
+
+import { images } from 'src/__data__/images';
 
 
 type ClassNames = 'root';
@@ -31,7 +29,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 interface Props { }
 
 interface State {
-  selectedTab: number;
 }
 
 type CombinedProps = Props
@@ -40,7 +37,6 @@ type CombinedProps = Props
 
 export class StackScriptsLanding extends React.Component<CombinedProps, State> {
   state: State = {
-    selectedTab: 0,
   };
 
   static docs = [
@@ -55,42 +51,15 @@ export class StackScriptsLanding extends React.Component<CombinedProps, State> {
     this.setState({ selectedTab: value });
   }
 
-  tabs = [
-    {
-      title: 'My StackScripts',
-      render: () => {
-        return (
-          <React.Fragment>
-            My StackScripts
-          </React.Fragment>
-        );
-      },
-    },
-    {
-      title: 'Linode StackScripts',
-      render: () => {
-        return (
-          <React.Fragment>
-            Linode StackScripts
-          </React.Fragment>
-        );
-      },
-    },
-    {
-      title: 'Community StackScripts',
-      render: () => {
-        return (
-          <React.Fragment>
-            Community StackScripts
-          </React.Fragment>
-        );
-      },
-    },
-  ];
+  filterPublicImages = () => {
+    // get images and preloaded and give us just the public ones
+    // to pass to selectstackscriptpanel
+    // we dont' want to display the deprecated ones because
+    // they're useless.
+    return;
+  }
 
   render() {
-
-    const { selectedTab } = this.state;
 
     return (
       <React.Fragment>
@@ -108,23 +77,11 @@ export class StackScriptsLanding extends React.Component<CombinedProps, State> {
               title="Create New StackScript"
             />
           </Grid>
+          <SelectStackScriptPanel
+            publicImages={images}
+            noHeader={true}
+          />
         </Grid>
-        <AppBar position="static" color="default">
-          <Tabs
-            value={selectedTab}
-            indicatorColor="primary"
-            textColor="primary"
-            onChange={this.handleTabClick}
-          >
-            {
-              this.tabs.map((tab, idx) =>
-                <Tab
-                  key={idx}
-                  label={tab.title}
-                />)
-            }
-          </Tabs>
-        </AppBar>
       </React.Fragment>
     );
   }

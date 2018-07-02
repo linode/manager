@@ -329,7 +329,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
             shrinkPanel={true}
             updateFor={[selectedStackScriptID, errors]}
             onSelect={this.handleSelectStackScript}
-            images={this.filterPublicImages(images) || []}
+            publicImages={this.filterPublicImages(images) || []}
           />
           {userDefinedFields && userDefinedFields.length > 0 &&
             <UserDefinedFieldsPanel
