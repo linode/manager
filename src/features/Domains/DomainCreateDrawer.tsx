@@ -52,7 +52,7 @@ const viewMasterIP = (idx: number, obj: any) => view<any, string | undefined>(ma
 const setMasterIP = (idx: number, value: string) => set(masterIPLens(idx), value);
 
 const masterIPsCountLens = lensPath(['masterIPsCount']);
-const uodateMasterIPsCount = (fn: (s: any) => any) => (obj: any) => over(masterIPsCountLens, fn, obj);
+const updateMasterIPsCount = (fn: (s: any) => any) => (obj: any) => over(masterIPsCountLens, fn, obj);
 
 class DomainCreateDrawer extends React.Component<CombinedProps, State> {
   defaultState: State = {
@@ -260,7 +260,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
 
   updateMasterIPAddress = (idx: number) => (e: React.ChangeEvent<HTMLInputElement>) => this.setState(setMasterIP(idx, e.target.value), () => console.log(this.state.master_ips))
 
-  addIPField = () => this.setState(uodateMasterIPsCount(v => v + 1))
+  addIPField = () => this.setState(updateMasterIPsCount(v => v + 1))
 }
 
 const styled = withStyles(styles, { withTheme: true });
