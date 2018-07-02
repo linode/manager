@@ -26,8 +26,13 @@ export const getImage = (imageId: string) =>
   )
     .then(response => response.data);
 
-export const updateImage = (imageId: string, label: string, description: string) => Request<{}>(
-  setURL(`${API_ROOT}/images/${imageId}`),
-  setMethod('PUT'),
-  setData({ label, description }),
-);
+export const updateImage = (imageId: string, label: string, description: string) => { 
+  // Blank descriptions are represented as ' ' in the API; 
+  // API will return an error if passed the empty string.
+  if (description=== '') { description = ' '; }
+  return Request<{}>(
+    setURL(`${API_ROOT}/images/${imageId}`),
+    setMethod('PUT'),
+    setData({ label, description }),
+  );
+}
