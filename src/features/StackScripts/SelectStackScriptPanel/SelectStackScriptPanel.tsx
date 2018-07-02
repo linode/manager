@@ -43,7 +43,6 @@ type ClassNames = 'root'
   | 'tr'
   | 'tableHead'
   | 'sortButton'
-  | 'sortIcon'
   | 'table';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
@@ -72,10 +71,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     width: '30%',
   },
   deploys: {
-    width: '15%',
+    width: '20%',
   },
   revisions: {
-    width: '15%',
+    width: '20%',
   },
   tr: {
     height: 48,
@@ -93,11 +92,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     border: 0,
     width: '100%',
     justifyContent: 'flex-start',
-  },
-  sortIcon: {
-    position: 'relative',
-    top: 2,
-    left: 10,
   },
 });
 
@@ -303,11 +297,11 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
 
   renderIcon = () => {
     const { sortOrder } = this.state;
-    const { classes } = this.props;
+
     return (
       sortOrder === 'desc'
-        ? <KeyboardArrowUp className={classes.sortIcon} />
-        : <KeyboardArrowDown className={classes.sortIcon} />
+        ? <KeyboardArrowUp className="sortIcon" />
+        : <KeyboardArrowDown className="sortIcon" />
     );
   }
 

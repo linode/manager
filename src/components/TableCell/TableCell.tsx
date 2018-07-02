@@ -15,13 +15,19 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     whiteSpace: 'nowrap',
   },
   sortable: {
-    color: theme.palette.text.primary,
+    color: theme.color.headline,
     fontWeight: 'normal',
     cursor: 'pointer',
     '& button': {
-      color: theme.palette.text.primary,
+      color: theme.color.headline,
       fontWeight: 'normal',
       fontSize: '.9rem',
+    },
+    '& .sortIcon': {
+      position: 'relative',
+      top: 2,
+      left: 10,
+      color: theme.palette.primary.main,
     },
   },
 });
