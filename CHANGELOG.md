@@ -4,6 +4,51 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.28.0] - 2018-07-02
+### Added:
+- Networking
+  - Default DNS resolvers for both IPv4 and IPv6, SSH access, and Lish via SSH are now all available on the Linode Networking feature.
+  - Users can now add a private IP to their Linode via the Linode Networking feature.
+  - Transfer or move an IP to another Linode.
+- Display a progress bar during back-up snapshot generation.
+- Linode Watchdog settings; Enable to automatically start a Linode.
+- Added help text to the volume creation drawer.
+- Display the remaining space on a Linode during disk creation.
+### Changed:
+- Linode
+  - Page scrolls top upon switching pages on Linode landing view
+  - Disable current plan in list of target plans for LinodeResize view
+  - Disable Linode Resize submit btn if no plan is selected
+  - Rebooting a Linode is disabled while provisioning.
+  - Display "Unknown Image" on Linode cards when using a non-standard image.
+  - Corrected sort order of available images in dropdown during Linode rebuild.
+  - Users will now see a 404 when attempting to access a nonexistent Linode.
+  - Simplified the password change form in the Linode settings feature.
+  - When changing Linode alert thresholds, we no longer hide the initial value.
+  - Users without any Linodes, who are attempting to create a Linode by cloning, will now see a placeholder.
+  - The backup window selection is now displayed in the timezone the user has selected in their profile.
+  - Linodes without backups are no longer displayed in the Create Linode from Backup feature.
+- Node Balancer
+  - Updated changes to interval text on and view features.
+  - "Client Connection Throttle" is no longer displayed on creation (Still available during editing).
+  - "Session Stickiness" is now defaulted to "table" during creation.
+  - "Mode" option is now available during editing (but not creation) of a Node Balancer.
+- StackScripts
+  - StackScripts creation, including configurations and nodes, is now made with a single request.
+  - StackScripts which only apply to deprecated images are no longer displayed during creation of a Linode from StackScript.
+  - Title of required fields updated to reflect the StackScript's name.
+  - Changed the color of image tags during creation from Linode.
+  - Use a Github style naming convention for StackScripts. (username/Title)
+  - Corrected "active deploy" to "active deploys".
+  - Update dates to use ISO-8601.
+### Fixed:
+- Users are now correctly scrolled to the top of the list when using pagination.
+- Users are now correctly scrolled to the first error in a form on submission.
+- Fix an issue where users could issue a resize command without selecting a plan or their current plan.
+- Removed several duplicate form labels.
+- During StackScript creation Linode StackScripts will no longer appear under the "community" category.
+- Corrected an issue preventing the search bar from displaying results.
+
 ## [0.27.1] - 2018-06-15
 ### Added:
 - NodeBalancer Management
