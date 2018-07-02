@@ -18,7 +18,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     color: theme.color.headline,
     fontWeight: 'normal',
     cursor: 'pointer',
-    '& button': {
+    '& button, & button:focus': {
       color: theme.color.headline,
       fontWeight: 'normal',
       fontSize: '.9rem',
