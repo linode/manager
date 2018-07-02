@@ -1,19 +1,7 @@
 import * as Axios from 'axios';
-import { validate, Schema } from 'joi';
-import {
-  compose,
-  isEmpty,
-  isNil,
-  lensPath,
-  lensProp,
-  not,
-  omit,
-  path,
-  pathOr,
-  set,
-  tap,
-  when,
-} from 'ramda';
+
+import { Schema, validate } from 'joi';
+import { compose, isEmpty, isNil, lensPath, lensProp, not, omit, path, pathOr, set, tap, when } from 'ramda';
 import * as Raven from 'raven-js';
 
 const errorsMap: { [index: string]: string } = {
@@ -105,4 +93,30 @@ export default <T>(...fns: Function[]): Axios.AxiosPromise<T> => {
   }
 
   return Axios.default(config);
+};
+
+/**
+ * Mock Error Function
+ *
+ * Use this function in place of your API request to mock errors. This returns the same
+ * same response body as an Axios error.
+ *
+ * @example getLinodes = () => mockAPIError();
+ * @example getLinode = () => mockAPIError(404, 'Not Found');
+ * @example getLinodes = () => mockAPIError(404, 'Not Found');
+ */
+export const mockAPIError = (
+  status: number = 400,
+  statusText: string = 'Internal Server Error',
+  data: any = {},
+): Promise<Axios.AxiosError> => Promise.reject(
+  createError(
+    `Request failed with a status of ${status}`,
+    { data, status, statusText, headers: {}, config: {} },
+  ));
+
+const createError = (message: string, response: Axios.AxiosResponse) => {
+  const error = new Error(message) as any;
+  error.response = response;
+  return error;
 };
