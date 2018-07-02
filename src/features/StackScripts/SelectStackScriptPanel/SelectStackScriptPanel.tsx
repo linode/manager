@@ -360,7 +360,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
                   onClick={this.handleClickDeploymentsTableHeader}
                 >
                   Active Deploys
-                  {currentFilterType === 'deploys' &&
+                  {currentFilterType !== 'label' && currentFilterType !== 'revision' &&
                     this.renderIcon()
                   }
                 </Button>
