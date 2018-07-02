@@ -58,6 +58,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     '-webkit-appearance': 'none',
   },
   selecting: {
+    minHeight: '200px',
     maxHeight: '1000px',
     overflowX: 'auto',
   },
@@ -96,12 +97,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 });
 
 interface Props {
-  selectedId: number | null;
+  selectedId?: number | null;
   error?: string;
   shrinkPanel?: boolean;
-  onSelect: (id: number, label: string, username: string, images: string[],
+  onSelect?: (id: number, label: string, username: string, images: string[],
     userDefinedFields: Linode.StackScript.UserDefinedField[]) => void;
-  images: Linode.Image[];
+  publicImages: Linode.Image[];
+  noHeader?: boolean;
 }
 
 type StyledProps = Props & WithStyles<ClassNames>;
@@ -113,21 +115,21 @@ class SelectStackScriptPanel extends React.Component<CombinedProps> {
 
 
   render() {
-    const { classes, images } = this.props;
+    const { classes, publicImages, noHeader } = this.props;
 
     return (
       <TabbedPanel
         error={this.props.error}
         rootClass={classes.root}
         shrinkTabContent={(this.props.shrinkPanel) ? classes.creating : classes.selecting}
-        header="Select StackScript"
+        header={(noHeader) ? "" : "Select StackScript"}
         tabs={[
           {
             title: 'My StackScripts',
             render: () => <StyledContainer
               onSelect={this.props.onSelect}
               // images is an optional prop, so just send an empty array if we didn't get any
-              publicImages={images}
+              publicImages={publicImages}
               request={getStackScriptsByUser} key={0}
             />,
           },
@@ -136,7 +138,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps> {
             render: () => <StyledContainer
               onSelect={this.props.onSelect}
               // images is an optional prop, so just send an empty array if we didn't get any
-              publicImages={images}
+              publicImages={publicImages}
               request={getStackScriptsByUser} key={1}
               isLinodeStackScripts={true}
             />,
@@ -146,7 +148,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps> {
             render: () => <StyledContainer
               onSelect={this.props.onSelect}
               // images is an optional prop, so just send an empty array if we didn't get any
-              publicImages={images}
+              publicImages={publicImages}
               request={getCommunityStackscripts} key={2}
             />,
           },
