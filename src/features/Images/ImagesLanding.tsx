@@ -222,7 +222,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
                     </Link>
                   </TableCell>
                   <TableCell data-qa-image-date>{formatDate(image.created)}</TableCell>
-                  <TableCell data-qa-image-size>{image.size} GiB</TableCell>
+                  <TableCell data-qa-image-size>{image.size} MB</TableCell>
                   <TableCell>
                     <ActionMenu
                       onRestore={() => { null; }}
