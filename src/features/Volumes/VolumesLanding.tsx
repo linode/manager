@@ -25,12 +25,21 @@ import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
 import VolumeConfigDrawer from './VolumeConfigDrawer';
 import VolumesActionMenu from './VolumesActionMenu';
 
-type ClassNames = 'root' | 'title';
+type ClassNames = 'root'
+  | 'title'
+  | 'label'
+  | 'attachment';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
   title: {
     marginBottom: theme.spacing.unit * 2,
+  },
+  label: {
+    width: '15%',
+  },
+  attachment: {
+    width: '15%',
   },
 });
 
@@ -213,8 +222,8 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Label</TableCell>
-                <TableCell>Attachment</TableCell>
+                <TableCell className={classes.label}>Label</TableCell>
+                <TableCell className={classes.attachment}>Attachment</TableCell>
                 <TableCell>Size</TableCell>
                 <TableCell>File System Path</TableCell>
                 <TableCell>Region</TableCell>
