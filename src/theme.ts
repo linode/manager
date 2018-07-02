@@ -598,7 +598,7 @@ const LinodeTheme: Linode.Theme = {
       },
       textColorPrimary: {
         '&$selected': {
-          color: '#666',
+          color: '#32363C',
         },
       },
     },
