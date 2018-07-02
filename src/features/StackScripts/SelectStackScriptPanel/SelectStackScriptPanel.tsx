@@ -5,12 +5,11 @@ import * as classNames from 'classnames';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import { connect } from 'react-redux';
-import { pathOr, compose } from 'ramda';
 
-import { getStackScriptsByUser, getCommunityStackscripts }
-  from 'src/services/stackscripts';
+import { compose, pathOr } from 'ramda';
 
-import TableCell from '@material-ui/core/TableCell';
+import { getCommunityStackscripts, getStackScriptsByUser } from 'src/services/stackscripts';
+
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
@@ -21,6 +20,7 @@ import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import RenderGuard from 'src/components/RenderGuard';
 import TabbedPanel from 'src/components/TabbedPanel';
+import TableCell from 'src/components/TableCell';
 
 import StackScriptsSection from './StackScriptsSection';
 
@@ -42,7 +42,6 @@ type ClassNames = 'root'
   | 'revisions'
   | 'tr'
   | 'tableHead'
-  | 'sortable'
   | 'sortButton'
   | 'sortIcon'
   | 'table';
@@ -57,6 +56,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     paddingTop: 0,
     marginTop: theme.spacing.unit * 2,
     overflowY: 'scroll',
+    '-webkit-appearance': 'none',
   },
   selecting: {
     maxHeight: '1000px',
@@ -87,11 +87,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     zIndex: 10,
     paddingTop: 0,
     paddingBottom: 0,
-  },
-  sortable: {
-    color: theme.palette.primary.main,
-    fontWeight: 700,
-    cursor: 'pointer',
   },
   sortButton: {
     marginLeft: -26,
@@ -336,9 +331,9 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
               <TableCell
                 className={classNames({
                   [classes.tableHead]: true,
-                  [classes.sortable]: true,
                   [classes.stackscriptTitles]: true,
                 })}
+                sortable
               >
                 <Button
                   type="secondary"
@@ -354,9 +349,10 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
               <TableCell
                 className={classNames({
                   [classes.tableHead]: true,
-                  [classes.sortable]: true,
                   [classes.deploys]: true,
                 })}
+                noWrap
+                sortable
               >
                 <Button
                   type="secondary"
@@ -372,9 +368,10 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
               <TableCell
                 className={classNames({
                   [classes.tableHead]: true,
-                  [classes.sortable]: true,
                   [classes.revisions]: true,
                 })}
+                noWrap
+                sortable
               >
                 <Button
                   type="secondary"
