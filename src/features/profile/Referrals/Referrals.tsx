@@ -7,15 +7,19 @@ import { connect } from 'react-redux';
 import Grid from 'src/components/Grid';
 import CopyableTextField from 'src/features/Volumes/CopyableTextField';
 
-type ClassNames = 'root' | 'title' | 'copyField';
+type ClassNames = 'root'
+  | 'results'
+  | 'title'
+  | 'copyField';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     padding: theme.spacing.unit * 3,
-    paddingBottom: theme.spacing.unit * 3,
   },
   title: {
-    marginBottom: theme.spacing.unit * 2,
+  },
+  results: {
+    margin: `${theme.spacing.unit * 2}px 0`,
   },
   copyField: {
     marginTop: theme.spacing.unit,
@@ -57,16 +61,16 @@ class Referrals extends React.Component<CombinedProps, State> {
     return (
       <Paper className={classes.root}>
         <Grid container>
-          <Grid item>
+          <Grid item xs={12}>
             <Typography
-              variant="headline"
+              variant="title"
               className={classes.title}
               data-qa-title
             >
               Referrals
           </Typography>
           </Grid>
-          <Grid item>
+          <Grid item xs={12}>
             <Typography>Referrals reward you when you refer people to Linode. If someone signs up using your referral code, you'll receive a credit of $20.00, so long as the person you referred remains an active customer for 90 days.</Typography>
           </Grid>
           {
@@ -75,7 +79,9 @@ class Referrals extends React.Component<CombinedProps, State> {
               : (
                 <React.Fragment>
                   <Grid item>
-                    <Typography variant="headline">You have {total} total referrals: {completed} completed (${credit} ) and {pending} pending.</Typography>
+                    <Typography variant="subheading" className={classes.results}>
+                      You have {total} total referrals: {completed} completed (${credit} ) and {pending} pending.
+                    </Typography>
                   </Grid>
                   <Grid item xs={12}>
                     <CopyableTextField value={code} label='Referral Code' className={classes.copyField} />

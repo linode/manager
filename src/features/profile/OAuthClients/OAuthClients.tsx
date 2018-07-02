@@ -38,7 +38,7 @@ type ClassNames = 'root' | 'title';
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
   title: {
-    margin: `${theme.spacing.unit * 2}px 0`,
+    margin: `0 0 ${theme.spacing.unit * 2}px`,
   },
 });
 
@@ -238,7 +238,6 @@ class OAuthClients extends React.Component<CombinedProps, State> {
           container
           justify="space-between"
           alignItems="flex-end"
-          style={{ marginTop: 8 }}
         >
           <Grid item>
             <Typography className={classes.title} variant="title" data-qa-table={classes.title}>
