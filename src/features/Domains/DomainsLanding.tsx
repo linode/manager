@@ -35,12 +35,15 @@ import { deleteDomain, getDomains } from 'src/services/domains';
 
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-type ClassNames = 'root' | 'title';
+type ClassNames = 'root' | 'title' | 'domain';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
   title: {
     marginBottom: theme.spacing.unit * 2,
+  },
+  domain: {
+    minWidth: '75%',
   },
 });
 
@@ -254,7 +257,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
             <TableBody>
               {domains.map(domain =>
                 <TableRow key={domain.id} data-qa-domain-cell={domain.id}>
-                  <TableCell data-qa-domain-label>
+                  <TableCell className={classes.domain} data-qa-domain-label>
                     <Link to={`/domains/${domain.id}`}>
                       {domain.domain}
                     </Link>
