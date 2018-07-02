@@ -26,6 +26,7 @@ import ActionMenu from './DomainActionMenu';
 import DomainCreateDrawer from './DomainCreateDrawer';
 import AddNewLink from 'src/components/AddNewLink';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 
 type ClassNames = 'root' | 'title';
 
@@ -45,6 +46,13 @@ interface PromiseLoaderProps {
 interface State {
   domains: Linode.Domain[];
   error?: Error;
+  importDrawer: {
+    open: boolean,
+    submitting: boolean,
+    errors?: Linode.ApiFieldError[];
+    domain?: string;
+    remote_nameserver?: string;
+  },
   createDrawer: {
     open: boolean,
     mode: 'clone' | 'create',
@@ -64,6 +72,10 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
   state: State = {
     domains: pathOr([], ['response', 'data'], this.props.domains),
     error: pathOr(undefined, ['error'], this.props.domains),
+    importDrawer: {
+      open: false,
+      submitting: false,
+    },
     createDrawer: {
       open: false,
       mode: 'create',
@@ -96,6 +108,16 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
   componentDidCatch(error: Error) {
     this.setState({ error }, () => { scrollErrorIntoView(); });
   }
+
+  openImportZoneDrawer = () => this.setState({ importDrawer: { ...this.state.importDrawer, open: true }});
+
+  closeImportZoneDrawer = () => this.setState({ importDrawer: {
+    open: false,
+    submitting: false,
+    remote_nameserver: undefined,
+    domain: undefined,
+    errors: undefined,
+  }});
 
   openCreateDrawer() {
     this.setState({
@@ -200,6 +222,12 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
             <Grid container alignItems="flex-end">
               <Grid item>
                 <AddNewLink
+                  onClick={this.openImportZoneDrawer}
+                  label="Import a Zone"
+                />
+              </Grid>
+              <Grid item>
+                <AddNewLink
                   onClick={() => this.openCreateDrawer()}
                   label="Add a Domain"
                 />
@@ -246,6 +274,10 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
           </Table>
         </Paper>
         <this.DomainCreateDrawer />
+        <DomainZoneImportDrawer
+          open={this.state.importDrawer.open}
+          onClose={this.closeImportZoneDrawer}
+        />
         <ConfirmationDialog
           open={this.state.removeDialog.open}
           title={`Remove ${this.state.removeDialog.domain}`}

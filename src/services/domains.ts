@@ -1,5 +1,6 @@
 import { API_ROOT } from 'src/constants';
-import Request, { setURL, setMethod, setParams, setData } from './index';
+import Request, { setURL, setMethod, setParams, setData, validateRequestData } from './index';
+import * as Joi from 'joi';
 
 type Page<T> = Linode.ResourcePage<T>;
 type Domain = Linode.Domain;
@@ -79,3 +80,16 @@ export const cloneDomain = (domainID: number, cloneName: string) =>
   setURL(`${API_ROOT}/domains/${domainID}/clone`),
   setMethod('POST'),
 );
+
+const importZoneSchema = Joi.object({
+  domain: Joi.string().required(),
+  remote_nameserver: Joi.string().required(),
+});
+
+export const importZone = (domain?: string, remote_nameserver?: string) =>
+  Request(
+    validateRequestData({ domain, remote_nameserver }, importZoneSchema),
+    setData({ domain, remote_nameserver }),
+    setURL(`${API_ROOT}/domains/import`),
+    setMethod('POST'),
+  );
