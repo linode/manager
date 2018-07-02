@@ -58,7 +58,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     '-webkit-appearance': 'none',
   },
   selecting: {
-    minHeight: '200px',
+    minHeight: '400px',
     maxHeight: '1000px',
     overflowX: 'auto',
   },
@@ -166,7 +166,7 @@ interface Params {
 interface ContainerProps {
   request: (username: string, params: Params, filter: any) =>
     Promise<Linode.ResourcePage<Linode.StackScript.Response>>;
-  onSelect: (id: number, label: string, username: string, images: string[],
+  onSelect?: (id: number, label: string, username: string, images: string[],
     userDefinedFields: Linode.StackScript.UserDefinedField[]) => void;
   profile: Linode.Profile;
   isLinodeStackScripts?: boolean;
@@ -278,6 +278,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
   }
 
   handleSelectStackScript = (stackscript: Linode.StackScript.Response) => {
+    if (!this.props.onSelect) { return; }
     this.props.onSelect(
       stackscript.id,
       stackscript.label,
@@ -332,22 +333,28 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, publicImages } = this.props;
     const { currentFilterType, isSorting } = this.state;
 
     if (this.state.loading) {
       return <CircleProgress noTopMargin />;
     }
 
+    const selectProps = (!!this.props.onSelect)
+      ? { onSelect: this.handleSelectStackScript }
+      : {}
+
     return (
       <React.Fragment>
         <Table noOverflow={true} tableClass={classes.table}>
           <TableHead>
             <TableRow className={classes.tr}>
-              <TableCell className={classNames({
-                [classes.tableHead]: true,
-                [classes.stackscriptLabel]: true,
-              })} />
+              {!!this.props.onSelect &&
+                <TableCell className={classNames({
+                  [classes.tableHead]: true,
+                  [classes.stackscriptLabel]: true,
+                })} />
+              }
               <TableCell
                 className={classNames({
                   [classes.tableHead]: true,
@@ -405,13 +412,21 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
                 </Button>
               </TableCell>
               <TableCell className={classes.tableHead}>Compatible Images</TableCell>
+              {!this.props.onSelect &&
+                <TableCell className={classNames({
+                  [classes.tableHead]: true,
+                  [classes.stackscriptLabel]: true,
+                })} />
+              }
             </TableRow>
           </TableHead>
           <StackScriptsSection
             isSorting={isSorting}
-            onSelect={this.handleSelectStackScript}
             selectedId={this.state.selected}
             data={this.state.data}
+            getNext={() => this.getNext()}
+            publicImages={publicImages}
+            {...selectProps}
           />
         </Table>
         {this.state.showMoreButtonVisible && !isSorting &&
