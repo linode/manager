@@ -11,12 +11,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   - Users can now add a private IP to their Linode via the Linode Networking feature.
   - Transfer or move an IP to another Linode.
 - Display a progress bar during back-up snapshot generation.
-- Linode Watchdog settings; Enable to automatically start a Linode.
+- Linode Watchdog settings; Enable to automatically restart a Linode.
 - Added help text to the volume creation drawer.
 - Display the remaining space on a Linode during disk creation.
 ### Changed:
 - Linode
-  - Page scrolls top upon switching pages on Linode landing view
+  - Page scrolls to top upon switching pages on Linode landing view
   - Disable current plan in list of target plans for LinodeResize view
   - Disable Linode Resize submit btn if no plan is selected
   - Rebooting a Linode is disabled while provisioning.
@@ -24,18 +24,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   - Corrected sort order of available images in dropdown during Linode rebuild.
   - Users will now see a 404 when attempting to access a nonexistent Linode.
   - Simplified the password change form in the Linode settings feature.
-  - When changing Linode alert thresholds, we no longer hide the initial value.
+  - When changing Linode alert thresholds, we no longer hide the input field.
   - Users without any Linodes, who are attempting to create a Linode by cloning, will now see a placeholder.
   - The backup window selection is now displayed in the timezone the user has selected in their profile.
   - Linodes without backups are no longer displayed in the Create Linode from Backup feature.
 - Node Balancer
+  - NodeBalancer creation, including configurations and nodes, is now made with a single request.
   - Updated changes to interval text on and view features.
   - "Client Connection Throttle" is no longer displayed on creation (Still available during editing).
   - "Session Stickiness" is now defaulted to "table" during creation.
-  - "Mode" option is now available during editing (but not creation) of a Node Balancer.
+  - "Mode" option is now available during editing (but not creation) of a Node Balancer Node.
 - StackScripts
-  - StackScripts creation, including configurations and nodes, is now made with a single request.
   - StackScripts which only apply to deprecated images are no longer displayed during creation of a Linode from StackScript.
+  - StackScripts can now be sorted by label, revision date, and active deploys in the create Linode from StackScript form
   - Title of required fields updated to reflect the StackScript's name.
   - Changed the color of image tags during creation from Linode.
   - Use a Github style naming convention for StackScripts. (username/Title)
