@@ -42,6 +42,8 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import LinodeBackupActionMenu from './LinodeBackupActionMenu';
 import RestoreToLinodeDrawer from './RestoreToLinodeDrawer';
+import { withLinode } from '../context';
+import { linodeInTransition } from 'src/features/linodes/transitions';
 
 type ClassNames =
   'paper'
@@ -94,7 +96,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props {
+interface Props { }
+
+interface ContextProps {
   linodeID: number;
   linodeRegion: string;
   linodeType: null | string;
@@ -102,6 +106,7 @@ interface Props {
   backupsSchedule: Linode.LinodeBackupSchedule;
   linodeInTransition: boolean;
 }
+
 
 interface ConnectedProps {
   timezone: string;
@@ -135,6 +140,7 @@ type CombinedProps = Props
   & PreloadedProps
   & WithStyles<ClassNames>
   & RouteComponentProps<{}>
+  & ContextProps
   & ConnectedProps;
 
 const typeMap = {
@@ -638,9 +644,9 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
   }
 }
 
-const preloaded = PromiseLoader<Props>({
-  backups: (props: Props) => getLinodeBackups(props.linodeID),
-  types: ({ linodeType }: Props) => {
+const preloaded = PromiseLoader<Props & ContextProps>({
+  backups: (props) => getLinodeBackups(props.linodeID),
+  types: ({ linodeType }) => {
     if (!linodeType) {
       return Promise.resolve(undefined);
     }
@@ -655,7 +661,17 @@ const connected = connect((state) => ({
   timezone: pathOr(moment.tz.guess(), ['resources', 'profile', 'data', 'timezone'], state),
 }));
 
+const linodeContext = withLinode((context) => ({
+  backupsEnabled: context.data!.backups.enabled,
+  backupsSchedule: context.data!.backups.schedule,
+  linodeID: context.data!.id,
+  linodeInTransition: linodeInTransition(context.data!.status),
+  linodeRegion: context.data!.region,
+  linodeType: context.data!.type,
+}));
+
 export default compose(
+  linodeContext,
   preloaded,
   styled as any,
   withRouter,
