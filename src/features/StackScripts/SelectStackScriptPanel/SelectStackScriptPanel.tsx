@@ -110,52 +110,54 @@ type StyledProps = Props & WithStyles<ClassNames>;
 
 type CombinedProps = StyledProps;
 
-class SelectStackScriptPanel extends React.Component<CombinedProps> {
+const SelectStackScriptPanel: React.StatelessComponent<CombinedProps> = (props) => {
+  const { classes, publicImages, noHeader, error,
+  shrinkPanel, onSelect } = props;
+  
+  const tabs = [
+    {
+      title: 'My StackScripts',
+      render: () => <StyledContainer
+        onSelect={onSelect}
+        // images is an optional prop, so just send an empty array if we didn't get any
+        publicImages={publicImages}
+        request={getStackScriptsByUser} key={0}
+      />,
+    },
+    {
+      title: 'Linode StackScripts',
+      render: () => <StyledContainer
+        onSelect={onSelect}
+        // images is an optional prop, so just send an empty array if we didn't get any
+        publicImages={publicImages}
+        request={getStackScriptsByUser} key={1}
+        isLinodeStackScripts={true}
+      />,
+    },
+    {
+      title: 'Community StackScripts',
+      render: () => <StyledContainer
+        onSelect={onSelect}
+        // images is an optional prop, so just send an empty array if we didn't get any
+        publicImages={publicImages}
+        request={getCommunityStackscripts} key={2}
+      />,
+    },
+  ]
 
+  const myTabIndex = tabs.findIndex(tab => tab.title.toLowerCase().includes('my'));
+  const linodeTabIndex = tabs.findIndex(tab => tab.title.toLowerCase().includes('linode'));
+  const communityTabIndex = tabs.findIndex(tab => tab.title.toLowerCase().includes('community'));
 
-
-  render() {
-    const { classes, publicImages, noHeader } = this.props;
-
-    return (
-      <TabbedPanel
-        error={this.props.error}
-        rootClass={classes.root}
-        shrinkTabContent={(this.props.shrinkPanel) ? classes.creating : classes.selecting}
-        header={(noHeader) ? "" : "Select StackScript"}
-        tabs={[
-          {
-            title: 'My StackScripts',
-            render: () => <StyledContainer
-              onSelect={this.props.onSelect}
-              // images is an optional prop, so just send an empty array if we didn't get any
-              publicImages={publicImages}
-              request={getStackScriptsByUser} key={0}
-            />,
-          },
-          {
-            title: 'Linode StackScripts',
-            render: () => <StyledContainer
-              onSelect={this.props.onSelect}
-              // images is an optional prop, so just send an empty array if we didn't get any
-              publicImages={publicImages}
-              request={getStackScriptsByUser} key={1}
-              isLinodeStackScripts={true}
-            />,
-          },
-          {
-            title: 'Community StackScripts',
-            render: () => <StyledContainer
-              onSelect={this.props.onSelect}
-              // images is an optional prop, so just send an empty array if we didn't get any
-              publicImages={publicImages}
-              request={getCommunityStackscripts} key={2}
-            />,
-          },
-        ]}
-      />
-    );
-  }
+  return (
+    <TabbedPanel
+      error={error}
+      rootClass={classes.root}
+      shrinkTabContent={(shrinkPanel) ? classes.creating : classes.selecting}
+      header={(noHeader) ? "" : "Select StackScript"}
+      tabs={tabs}
+    />
+  );
 }
 
 interface Params {

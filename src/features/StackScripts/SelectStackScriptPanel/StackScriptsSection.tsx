@@ -30,12 +30,6 @@ export interface Props {
   publicImages: Linode.Image[];
 }
 
-// interface OnSelect {
-//   onSelect: (s: Linode.StackScript.Response) => void;
-// }
-
-// type VariantProp = OnSelect | boolean;
-
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => {
@@ -59,10 +53,6 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => 
     return false;
   }
 
-  // const handleSelectStackScript = (s: Linode.StackScript.Response) => {
-  //   onSelect!(s);
-  // }
-
   const renderStackScriptTable = () => {
     return (!!onSelect)
     ? selectStackScript(onSelect, selectedId)
@@ -77,7 +67,7 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => 
           .map(renderStackScriptTable())
         : <TableRow>
           <TableCell colSpan={5} className={classes.loadingWrapper}>
-            <CircleProgress />
+            <CircleProgress noTopMargin/>
           </TableCell>
         </TableRow>
       }
@@ -128,7 +118,6 @@ const listStackScript: (showDeployLink: boolean, id?: number) =>
       deploymentsActive={s.deployments_active}
       updated={formatDate(s.updated, false)}
       showDeployLink={showDeployLink}
-      updateFor={[selectedId === s.id]}
       stackScriptID={s.id}
     />
   )
