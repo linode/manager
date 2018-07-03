@@ -246,7 +246,10 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     switch (mode) {
       case modes.CREATING:
 
-      this.composeState([set(L.submitting, true)]);
+      this.composeState([
+        set(L.submitting, true),
+        set(L.errors, undefined),
+      ]);
 
         const payload: VolumeRequestPayload = {
           label,
