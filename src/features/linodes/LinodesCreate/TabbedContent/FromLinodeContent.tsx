@@ -173,6 +173,7 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
         });
       })
       .finally(() => {
+        if (!this.mounted) { return; }
         // regardless of whether request failed or not, change state and enable the submit btn
         this.setState({ isMakingRequest: false });
       });

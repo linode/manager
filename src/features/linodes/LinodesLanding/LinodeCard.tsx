@@ -115,9 +115,12 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     fontWeight: 400,
     fontSize: '.9rem',
     transition: theme.transitions.create(['background-color', 'color']),
-    '&:hover, &:focus': {
+    '&:hover': {
       backgroundColor: theme.palette.primary.main,
       color: 'white',
+    },
+    '&:focus': {
+      outline: '1px dotted #999',
     },
   },
   consoleButton: {
@@ -224,7 +227,7 @@ class LinodeCard extends React.Component<CombinedProps> {
       <CardContent className={classes.cardContent}>
         <Grid container>
           <Grid item xs={12}>
-            <CircleProgress value={value} />
+            <CircleProgress value={value} noTopMargin />
           </Grid>
           <Grid item xs={12}>
             <Typography align="center" className={classes.loadingStatusText}>
