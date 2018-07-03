@@ -1,4 +1,4 @@
-import { clone, pathOr, uniq } from 'ramda';
+import { clone, flatten, pathOr, uniq } from 'ramda';
 import * as React from 'react';
 
 import Divider from '@material-ui/core/Divider';
@@ -16,6 +16,7 @@ import LinearProgress from 'src/components/LinearProgress';
 import MenuItem from 'src/components/MenuItem';
 import Select from 'src/components/Select';
 import TextField from 'src/components/TextField';
+import { getLinodes } from 'src/services/linodes';
 import { listIPs, shareAddresses } from 'src/services/networking';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
@@ -23,7 +24,8 @@ type ClassNames =
   'ipFieldLabel'
   | 'containerDivider'
   | 'ipField'
-  | 'addNewButton';
+  | 'addNewButton'
+  | 'noIPsMessage';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   addNewButton: {
@@ -35,7 +37,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
   ipField: {
     marginTop: 0,
-    width: 200,
+    width: 260,
   },
   ipFieldLabel: {
     width: '100%',
@@ -43,6 +45,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
       width: `calc(175px + ${theme.spacing.unit * 2}px)`,
     },
   },
+  noIPsMessage: {
+    marginTop: theme.spacing.unit * 2,
+  }
 });
 
 interface Props {
@@ -55,6 +60,9 @@ interface Props {
 
 interface State {
   ipChoices: string[];
+  ipChoiceLabels: {
+    [key: string]: string;
+  };
   ipsToShare: string[];
   loading: boolean;
   submitting: boolean;
@@ -67,6 +75,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 class IPSharingPanel extends React.Component<CombinedProps, State> {
   state: State = {
     ipChoices: [],
+    ipChoiceLabels: {},
     ipsToShare: this.props.linodeSharedIPs,
     loading: true,
     submitting: false,
@@ -78,21 +87,32 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     this.mounted = true;
-    const { linodeRegion } = this.props;
-    listIPs(linodeRegion)
+    const { linodeRegion, linodeID } = this.props;
+    const choiceLabels = {}
+    getLinodes({}, { region: linodeRegion })
       .then(response => {
-        const ips = pathOr([], ['data'], response);
-        const ipChoices = ips
-          .filter((ip: Linode.IPAddress) => {
-            return ip.type === 'ipv4'
-                   && ip.public === true
-                   && !this.props.linodeIPs.includes(ip.address);
-          })
-          .map((ip: Linode.IPAddress) => ip.address);
+        const linodes = pathOr([], ['data'], response);
+        const ipChoices = flatten<string>(
+          linodes
+            .filter((linode: Linode.Linode) => {
+              return linode.id !== linodeID;
+            })
+            .map((linode: Linode.Linode) => {
+              // side-effect of this mapping is saving the labels
+              linode.ipv4.map((ip: string) => {
+                choiceLabels[ip] = linode.label;
+              });
+              return linode.ipv4;
+            })
+          )
+            .filter((ip: string) => {
+              return !ip.startsWith('192.168.');
+            });
         ipChoices.unshift(IPSharingPanel.selectIPText);
         if (!this.mounted) { return ;}
         this.setState({
           ipChoices,
+          ipChoiceLabels: choiceLabels,
           loading: false,
         })
       })
@@ -180,7 +200,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
                 key={choiceIdx}
                 value={ipChoice}
               >
-                {ipChoice}
+                {ipChoice} {this.state.ipChoiceLabels[ipChoice]}
               </MenuItem>)
             }
           </Select>
@@ -246,18 +266,19 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
 
   renderActions = () => {
     const { submitting, loading } = this.state;
+    const noChoices = this.state.ipChoices.length <= 1;
     return (
       <ActionsPanel>
         <Button
           loading={submitting}
-          disabled={loading}
+          disabled={loading || noChoices}
           onClick={this.onSubmit}
           type="primary"
         >
           Save
       </Button>
         <Button
-          disabled={submitting || loading}
+          disabled={submitting || loading || noChoices}
           onClick={this.onCancel}
           type="secondary"
         >
@@ -269,7 +290,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes, linodeIPs } = this.props;
-    const { errors, successMessage, ipsToShare, loading } = this.state;
+    const { errors, successMessage, ipsToShare, loading, ipChoices } = this.state;
 
     const errorFor = getAPIErrorsFor(IPSharingPanel.errorResources, errors);
     const generalError = errorFor('none');
@@ -298,20 +319,24 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
             </Grid>
             {loading
               ? <LinearProgress style={{ margin: '50px' }} />
-              : <React.Fragment>
-                  {linodeIPs.map((ip: string) => this.renderMyIPRow(ip))}
-                  {ipsToShare.map((ip: string, idx: number) => this.renderShareIPRow(ip, idx))}
-                  {/* the "1" that will always be there is the selectionText */}
-                  {this.remainingChoices('').length > 1 &&
-                    <div className={classes.addNewButton}>
-                      <AddNewLink
-                        label="Add IP Address"
-                        onClick={this.addIPToShare}
-                        left
-                      />
-                    </div>
-                  }
-                </React.Fragment>
+              : ipChoices.length <= 1
+                ? <Typography className={classes.noIPsMessage}>
+                    You have no other Linodes in this Linode's datacenter with which to share IPs.
+                  </Typography>
+                : <React.Fragment>
+                    {linodeIPs.map((ip: string) => this.renderMyIPRow(ip))}
+                    {ipsToShare.map((ip: string, idx: number) => this.renderShareIPRow(ip, idx))}
+                    {/* the "1" that will always be there is the selectionText */}
+                    {this.remainingChoices('').length > 1 &&
+                      <div className={classes.addNewButton}>
+                        <AddNewLink
+                          label="Add IP Address"
+                          onClick={this.addIPToShare}
+                          left
+                        />
+                      </div>
+                    }
+                  </React.Fragment>
             }
           </Grid>
         </Grid>
