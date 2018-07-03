@@ -80,6 +80,8 @@ interface Props {
   getTypeInfo: (selectedTypeID: string | null) => TypeInfo;
   getRegionName: (selectedRegionID: string | null) => string | undefined;
   history: any;
+  selectedTabFromQuery?: string;
+  selectedStackScriptFromQuery?: number;
 }
 
 interface State {

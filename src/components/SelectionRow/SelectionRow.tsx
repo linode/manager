@@ -168,7 +168,8 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
         </TableCell>
         {showDeployLink &&
           <TableCell>
-            <Link to={'/'}>
+          <Link to={`/linodes/create?type=fromStackScript` +
+            `&stackScriptID=${stackScriptID}&stackScriptUsername=${stackScriptUsername}`}>
               <Typography variant="title">
                 Deploy New Linode
               </Typography>
