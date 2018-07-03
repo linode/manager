@@ -51,7 +51,6 @@ class ImagesActionMenu extends React.Component<CombinedProps> {
         },
         {
           title: 'Delete',
-          disabled: true,
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             onDelete();
             closeMenu();
