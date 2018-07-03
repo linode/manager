@@ -168,12 +168,14 @@ class EditableText extends React.Component<FinalProps, State> {
                   className={classes.root}
                   onClick={this.toggleEditing}
                   {...rest}
+                  data-qa-editable-text
                 >
                   {text}
                 </Typography>
                 <Button
                   className={classes.button}
                   onClick={this.toggleEditing}
+                  data-qa-edit-button
                 >
                   <ModeEdit className={`${classes.icon} ${classes.edit}`}/>
                 </Button>
