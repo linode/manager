@@ -43,7 +43,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     marginBottom: theme.spacing.unit * 2,
   },
   domain: {
-    minWidth: '75%',
+    width: '75%',
   },
 });
 
