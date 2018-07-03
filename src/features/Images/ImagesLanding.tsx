@@ -23,7 +23,7 @@ import Placeholder from 'src/components/Placeholder';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import Table from 'src/components/Table';
 
-import { getUserImages, deleteImage } from 'src/services/images';
+import { deleteImage, getUserImages } from 'src/services/images';
 
 import { formatDate } from 'src/utilities/format-date-iso8601';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -123,6 +123,9 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
       .catch((error) => {
         console.log(error);
         this.closeRemoveDialog();
+      })
+      .finally(() => {
+        this.refreshImages();
       });
   }
 
@@ -187,6 +190,15 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
 
   closeImageDrawer = () => {
     this.setState({ imageDrawer: { open: false, mode: 'create', label: '', description: '' }});
+  }
+
+  renderActionMenu = (image: Linode.Image) => {
+    return <ActionMenu
+      onRestore={() => { null; }}
+      onDeploy={() => { null; }}
+      onEdit={() => this.openForEdit(image.label, image.description ? image.description : ' ', image.id)}
+      onDelete={() => { this.openRemoveDialog(image.label, image.id); }}
+    />
   }
 
   render() {
@@ -258,12 +270,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
                   <TableCell data-qa-image-date>{formatDate(image.created)}</TableCell>
                   <TableCell data-qa-image-size>{image.size} GiB</TableCell>
                   <TableCell>
-                    <ActionMenu
-                      onRestore={() => { null; }}
-                      onDeploy={() => { null; }}
-                      onEdit={() => this.openForEdit(image.label, image.description ? image.description : ' ', image.id)}
-                      onDelete={() => { this.openRemoveDialog(image.label, image.id); }}
-                    />
+                    {this.renderActionMenu(image)}
                   </TableCell>
                 </TableRow>
               )}
