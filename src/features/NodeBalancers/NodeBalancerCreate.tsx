@@ -84,7 +84,7 @@ type CombinedProps = Props
 interface NodeBalancerFieldsState {
   label?: string;
   region?: string;
-  configs: (NodeBalancerConfigFields & { errors?: any }) [];
+  configs: (NodeBalancerConfigFields & { errors?: any })[];
 }
 
 interface State {
@@ -281,9 +281,9 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
         if (errors) {
           this.setNodeErrors(errors.map((e) => ({
             ...e,
-            field: e.field.replace(/(\[|\]\.)/g, '_')
+            ...(e.field && { field: e.field.replace(/(\[|\]\.)/g, '_') })
           })));
-          return this.setState( { submitting: false }, () => scrollErrorIntoView());
+          return this.setState({ submitting: false }, () => scrollErrorIntoView());
         }
 
         return this.setState({
@@ -671,20 +671,20 @@ export const fieldErrorsToNodePathErrors = (errors: Linode.ApiFieldError[]) => {
   */
   return errors.reduce(
     (acc: any, error: Linode.ApiFieldError) => {
-        const { field, path } = getPathAnFieldFromFieldString(error.field);
+      const { field, path } = getPathAnFieldFromFieldString(error.field);
 
-        if(!path.length){ return acc; }
+      if (!path.length) { return acc; }
 
-        return [
-          ...acc,
-          {
-            error: {
-              field,
-              reason: error.reason,
-            },
-            path: [...path, 'errors'],
+      return [
+        ...acc,
+        {
+          error: {
+            field,
+            reason: error.reason,
           },
-        ];
+          path: [...path, 'errors'],
+        },
+      ];
       return acc;
     },
     [],
