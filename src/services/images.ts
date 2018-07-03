@@ -29,10 +29,10 @@ export const getImage = (imageId: string) =>
 export const updateImage = (imageId: string, label: string, description: string) => { 
   // Blank descriptions are represented as ' ' in the API; 
   // API will return an error if passed the empty string.
-  if (description=== '') { description = ' '; }
+  const safeDescription = description === '' ? ' ' : description;
   return Request<{}>(
     setURL(`${API_ROOT}/images/${imageId}`),
     setMethod('PUT'),
-    setData({ label, description }),
+    setData({ label, description: safeDescription }),
   );
 }
