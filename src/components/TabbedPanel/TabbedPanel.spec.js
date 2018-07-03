@@ -56,8 +56,11 @@ describe('Tabbed Panel Suite', () => {
         const tabs = $$(tab);
         tabs.forEach(t => {
             t.click();
+            const buttonColor = t.getCssProperty('color');
             const selected = t.getAttribute('aria-selected').includes('true');
+
             expect(selected).toBe(true);
-        })
+            expect(buttonColor.parsed.hex).toBe('#32363c')
+        });
     });
 });

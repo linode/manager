@@ -1,9 +1,13 @@
 import * as React from 'react';
-import { compose, path } from 'ramda';
-import * as Promise from 'bluebird';
-import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
 
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
+
+import { compose, path } from 'ramda';
+
+import * as Promise from 'bluebird';
+
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+
 import Paper from '@material-ui/core/Paper';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -11,26 +15,28 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 
-import {
-  getNodeBalancers, getNodeBalancerConfigs,
-  deleteNodeBalancer,
-} from 'src/services/nodebalancers';
-import Button from 'src/components/Button';
-import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
+
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
+import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
+import { deleteNodeBalancer, getNodeBalancers, getNodeBalancerConfigs } from 'src/services/nodebalancers';
 import { convertMegabytesTo } from 'src/utilities/convertMegabytesTo';
 
-import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
-import Grid from 'src/components/Grid';
-import Table from 'src/components/Table';
-import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
-import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
-import NodeBalancerActionMenu from './NodeBalancerActionMenu';
-import ErrorState from 'src/components/ErrorState';
-import Placeholder from 'src/components/Placeholder';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
+import Button from 'src/components/Button';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
+import ErrorState from 'src/components/ErrorState';
+import Grid from 'src/components/Grid';
+import Placeholder from 'src/components/Placeholder';
+import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
+import Table from 'src/components/Table';
+
+import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
+import NodeBalancerActionMenu from './NodeBalancerActionMenu';
+
+import NodeBalancer from 'src/assets/addnewmenu/nodebalancer.svg';
+
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root' | 'title' | 'NBStatus';
@@ -212,6 +218,7 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
       return <Placeholder
         title="Add a NodeBalancer"
         copy="Adding a NodeBalancer is easy. Click below to add a NodeBalancer."
+        icon={NodeBalancer}
         buttonProps={{
           onClick: () => history.push('/nodebalancers/create'),
           children: 'Add a NodeBalancer',

@@ -1,4 +1,6 @@
+const { constants } = require('../../constants');
 import NodeBalancers from '../../pageobjects/nodebalancers.page';
+import NodeBalancerConfigurations from '../../pageobjects/nodebalancer-detail/configurations.page';
 import {
     createNodeBalancer,
     removeNodeBalancers,
@@ -8,13 +10,18 @@ describe('NodeBalancer - Configurations Suite', () => {
     let nodeLabel,
         nodeIp;
 
-    beforeAll(() => {
-        createNodeBalancer();
-        NodeBalancers.changeTab('Configurations');
-    });
-
     afterAll(() => {
         removeNodeBalancers();
+    });
+
+    it('should configure the nodebalancer', () => {
+        createNodeBalancer();
+        NodeBalancers.changeTab('Configurations');
+        browser.waitForVisible('[data-qa-panel]', constants.wait.normal);
+        
+        const configPanel = NodeBalancerConfigurations.panels[0];
+        
+        NodeBalancerConfigurations.expandConfiguration(configPanel);
     });
 
     it('should display default configuration', () => {

@@ -42,6 +42,7 @@ class NodeBalancers extends Page {
     get backendIps() { return $$('[data-qa-backend-ip]'); }
     get backendIpLabel() { return $('[data-qa-backend-ip-label] input'); }
     get backendIpAddress() { return $('[data-qa-backend-ip-address] input'); }
+    get backendIpPort() { return $('[data-qa-backend-ip-port] input'); }
     get backendIpWeight() { return $('[data-qa-backend-ip-weight] input'); }
     get backendIpMode() { return $('[data-qa-backend-ip-mode]'); }
 
@@ -49,7 +50,7 @@ class NodeBalancers extends Page {
     get deleteButton() { return $('[data-qa-delete-config]'); }
     get nodes() { return $$('[data-qa-node]'); }
     get removeNode() { return $('[data-qa-remove-node]'); }
-    get addNode() { return $('[data-qa-add-node]'); }
+    get addNode() { return $('[data-qa-icon-text-link="Add a Node"]'); }
     get addConfiguration() { return $('[data-qa-add-config]'); }
 
     baseElemsDisplay(initial) {
@@ -63,21 +64,16 @@ class NodeBalancers extends Page {
             expect(this.regionTabs.length).toBeGreaterThan(0);
             expect(this.regionCards.length).toBeGreaterThan(0);
 
-            expect(this.connectionThrottleSection.isVisible()).toBe(true);
-            expect(this.connectionThrottle.isVisible()).toBe(true);
+            // expect(this.connectionThrottleSection.isVisible()).toBe(true);
+            // expect(this.connectionThrottle.isVisible()).toBe(true);
             expect(this.settingsSection.isVisible()).toBe(true);
             expect(this.port.isVisible()).toBe(true);
             expect(this.protocolSelect.isVisible()).toBe(true);
-            expect(this.algorithmHeader.waitForText()).toBe(true);
             expect(this.algorithmSelect.getText()).toContain('Round Robin');
-            expect(this.sessionStickinessHeader.waitForText()).toBe(true);
             expect(this.sessionStickiness.getText()).toContain('Table');
             
             expect(this.activeChecksHeader.isVisible()).toBe(true);
-            expect(this.activeCheckAttempts.getValue()).toBe('2');
-            expect(this.activeCheckTimeout.getValue()).toBe('3');
             expect(this.activeCheckType.isVisible()).toBe(true);
-            expect(this.activeCheckInterval.getValue()).toBe('5');
 
             expect(this.passiveChecksHeader.waitForText()).toBe(true);
             expect(this.passiveChecksToggle.isVisible()).toBe(true);
@@ -85,8 +81,8 @@ class NodeBalancers extends Page {
             expect(this.backendIpsHeader.waitForText()).toBe(true);
             expect(this.backendIpLabel.isVisible()).toBe(true);
             expect(this.backendIpAddress.isVisible()).toBe(true);
+            expect(this.backendIpPort.isVisible()).toBe(true);
             expect(this.backendIpWeight.getValue()).toBe('100');
-            expect(this.backendIpMode.getText()).toContain('Accept');
         }
     }
 
@@ -97,25 +93,29 @@ class NodeBalancers extends Page {
 
         expect(this.port.isVisible()).toBe(true);
         expect(this.protocolSelect.isVisible()).toBe(true);
-        expect(this.algorithmHeader.waitForText()).toBe(true);
         expect(this.algorithmSelect.getText()).toContain('Round Robin');
-        expect(this.sessionStickinessHeader.waitForText()).toBe(true);
+        // expect(this.sessionStickinessHeader.waitForText()).toBe(true);
         expect(this.sessionStickiness.getText()).toContain('Table');
 
         expect(this.activeChecksHeader.isVisible()).toBe(true);
-        expect(this.activeCheckAttempts.getValue()).toBe('2');
-        expect(this.activeCheckTimeout.getValue()).toBe('3');
-        expect(this.activeCheckType.isVisible()).toBe(true);
-        expect(this.activeCheckInterval.getValue()).toBe('5');
+        // expect(this.activeCheckTimeout.getValue()).toBe('3');
+        expect(this.activeCheckType.getText()).toContain('None');
+        // expect(this.activeCheckInterval.getValue()).toBe('5');
 
         expect(this.passiveChecksHeader.waitForText()).toBe(true);
-        expect(this.passiveChecksToggle.isVisible()).toBe(true);
+        expect(this.passiveChecksToggle.getAttribute('data-qa-passive-checks-toggle')).toBe('true');
 
         expect(this.backendIpsHeader.waitForText()).toBe(true);
         expect(this.backendIpLabel.isVisible()).toBe(true);
         expect(this.backendIpAddress.isVisible()).toBe(true);
+        expect(this.backendIpPort.isVisible()).toBe(true);
         expect(this.backendIpWeight.getValue()).toBe('100');
         expect(this.backendIpMode.getText()).toContain('Accept');
+        expect(this.addNode.isVisible()).toBe(true);
+        expect(this.addNode.getTagName()).toBe('button');
+        expect(this.addConfiguration.getTagName()).toBe('button');
+        expect(this.addConfiguration.getText()).toBe('Add another Configuration');
+        expect(this.removeNode.isVisible()).toBe(true)
     }
 
     configDelete() {
@@ -139,6 +139,7 @@ class NodeBalancers extends Page {
 
 
     configAddNode(nodeConfig) {
+        this.addNode.click();
         const labels = $$('[data-qa-backend-ip-label] input')
             .filter(label => label.getValue() === '');
         const ips = $$('[data-qa-backend-ip-address] input')
@@ -162,7 +163,7 @@ class NodeBalancers extends Page {
     }
 
     configSave() {
-        const successMsg = 'NodeBalancer config updated successfully'; 
+        const successMsg = 'NodeBalancer Configuration updated successfully'; 
         this.saveButton.click();
         this.waitForNotice(successMsg);
     }
@@ -181,7 +182,7 @@ class NodeBalancers extends Page {
         label: `NB-${new Date().getTime()}`,
         regionIndex: 0,
         connectionThrottle: 0,
-        port: 80,
+        port: '80',
         protocol: 'http',
         algorithm: 'roundrobin',
         sessionStickiness: 'table',
@@ -199,7 +200,8 @@ class NodeBalancers extends Page {
         this.selectMenuOption(this.algorithmSelect, nodeBalancerConfig.algorithm);
         this.selectMenuOption(this.sessionStickiness, nodeBalancerConfig.sessionStickiness);
         this.backendIpLabel.setValue(linodeConfig.label);
-        this.backendIpAddress.setValue(`${linodeConfig.privateIp}:${nodeBalancerConfig.port}`);
+        this.backendIpAddress.setValue(linodeConfig.privateIp);
+        this.backendIpPort.setValue(80);
         browser.jsClick('[data-qa-deploy-linode]');
     }
 

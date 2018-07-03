@@ -324,7 +324,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
         }
 
         this.setState({
-          error: [{ field: 'none', reason: 'Update to transfer IP addresses at this time. Please try again later.' }],
+          error: [{ field: 'none', reason: 'Unable to transfer IP addresses at this time. Please try again later.' }],
           submitting: false
         });
       })

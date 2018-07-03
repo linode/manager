@@ -19,6 +19,7 @@ import { resetEventsPolling } from 'src/events';
 
 import { typeLabelDetails } from 'src/features/linodes/presentation';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
+import { withLinode } from 'src/features/linodes/LinodesDetail/context';
 
 type ClassNames = 'root'
   | 'title'
@@ -26,9 +27,13 @@ type ClassNames = 'root'
   | 'currentPlanContainer';
 
 interface Props {
+  /** Preloaded Props */
+  types: { response: ExtendedType[] };
+}
+
+interface ContextProps {
   linodeId: number;
   linodeType: null | string;
-  types: { response: ExtendedType[] };
 }
 
 interface State {
@@ -36,7 +41,7 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & ContextProps & WithStyles<ClassNames>;
 
 export class LinodeResize extends React.Component<CombinedProps, State> {
   state: State = {
@@ -187,7 +192,13 @@ const preloaded = PromiseLoader<CombinedProps>({
     }),
 });
 
-export default compose<any, any, any>(
+const linodeContext = withLinode((context) => ({
+  linodeId: context.data!.id,
+  linodeType: context.data!.type,
+}));
+
+export default compose<any, any, any, any>(
+  linodeContext,
   preloaded,
   styled,
 )(LinodeResize);
