@@ -31,3 +31,10 @@ export const updateImage = (imageId: string, label: string, description: string)
   setMethod('PUT'),
   setData({ label, description }),
 );
+
+export const deleteImage = (imageId: string) => {
+  return Request<{}>(
+    setURL(`${API_ROOT}/images/${imageId}`),
+    setMethod('DELETE'),
+  );
+}

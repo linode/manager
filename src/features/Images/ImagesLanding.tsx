@@ -15,7 +15,7 @@ import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
-// import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
@@ -23,7 +23,7 @@ import Placeholder from 'src/components/Placeholder';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import Table from 'src/components/Table';
 
-import { getUserImages } from 'src/services/images';
+import { getUserImages, deleteImage } from 'src/services/images';
 
 import { formatDate } from 'src/utilities/format-date-iso8601';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -56,11 +56,11 @@ interface State {
     imageID?: string,
     label?: string,
   };
-  // removeDialog: {
-  //   open: boolean,
-  //   image?: string,
-  //   imageID?: number,
-  // };
+  removeDialog: {
+    open: boolean,
+    image?: string,
+    imageID?: string,
+  };
 }
 
 type CombinedProps = Props & PromiseLoaderProps & WithStyles<ClassNames> & RouteComponentProps<{}>;
@@ -75,9 +75,9 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
       label: '',
       description: '',
     },
-    // removeDialog: {
-    //   open: false,
-    // },
+    removeDialog: {
+      open: false,
+    },
   };
 
   static docs: Linode.Doc[] = [
@@ -114,6 +114,18 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
     });
   }
 
+  removeImage = () => {
+    if (!this.state.removeDialog.imageID) { return; }
+    deleteImage(this.state.removeDialog.imageID)
+      .then(() => {
+        this.closeRemoveDialog();
+      })
+      .catch((error) => {
+        console.log(error);
+        this.closeRemoveDialog();
+      });
+  }
+
   getActions = () => {
     return (
       <ActionsPanel>
@@ -121,14 +133,13 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
           variant="raised"
           color="secondary"
           className="destructive"
-          // onClick={this.removeImage}
-          onClick={() => null}
+          onClick={this.removeImage}
           data-qa-submit
         >
           Confirm
         </Button>
         <Button
-          // onClick={this.closeRemoveDialog}
+          onClick={this.closeRemoveDialog}
           variant="raised"
           color="secondary"
           className="cancel"
@@ -140,17 +151,17 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
     )
   }
 
-  // openRemoveDialog = (image: string, imageID: number) => {
-  //   this.setState({
-  //     removeDialog: { open: true, image, imageID },
-  //   });
-  // }
+  openRemoveDialog = (image: string, imageID: string) => {
+    this.setState({
+      removeDialog: { open: true, image, imageID },
+    });
+  }
 
-  // closeRemoveDialog = () => {
-  //   this.setState({
-  //     removeDialog: { open: false, image: undefined, imageID: undefined },
-  //   });
-  // }
+  closeRemoveDialog = () => {
+    this.setState({
+      removeDialog: { open: false, image: undefined, imageID: undefined },
+    });
+  }
 
   openForEdit = (label: string, description: string, imageID: string) => {
     this.setState({
@@ -251,7 +262,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
                       onRestore={() => { null; }}
                       onDeploy={() => { null; }}
                       onEdit={() => this.openForEdit(image.label, image.description ? image.description : ' ', image.id)}
-                      onDelete={() => { null; }}
+                      onDelete={() => { this.openRemoveDialog(image.label, image.id); }}
                     />
                   </TableCell>
                 </TableRow>
@@ -270,14 +281,14 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
           setLabel={this.setLabel}
           setDescription={this.setDescription}
         />
-        {/* <ConfirmationDialog
+        <ConfirmationDialog
           open={this.state.removeDialog.open}
           title={`Remove ${this.state.removeDialog.image}`}
           onClose={this.closeRemoveDialog}
           actions={this.getActions}
         >
           <Typography>Are you sure you want to remove this image?</Typography>
-        </ConfirmationDialog> */}
+        </ConfirmationDialog>
       </React.Fragment>
     );
   }
