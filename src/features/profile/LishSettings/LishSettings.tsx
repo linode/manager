@@ -112,7 +112,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
                       >
                         <MenuItem value={'password_keys'}>Allow both password and key authentication</MenuItem>
                         <MenuItem value={'keys_only'}>Allow key authentication only</MenuItem>
-                        <MenuItem value={'disabled'}>Disabled Lish</MenuItem>
+                        <MenuItem value={'disabled'}>Disable Lish</MenuItem>
                       </Select>
                       {authMethodError && <FormHelperText error>{authMethodError}</FormHelperText>}
                     </div>
