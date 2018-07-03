@@ -24,7 +24,7 @@ class Profile extends React.Component<Props> {
     { title: 'Settings', routeName: `${this.props.match.url}/settings` },
     { title: 'API Tokens', routeName: `${this.props.match.url}/tokens` },
     { title: 'OAuth Clients', routeName: `${this.props.match.url}/clients` },
-    { title: 'LISH', routeName: `${this.props.match.url}/list` },
+    { title: 'LISH', routeName: `${this.props.match.url}/lish` },
     { title: 'Referrals', routeName: `${this.props.match.url}/referrals` },
   ];
 
@@ -54,7 +54,7 @@ class Profile extends React.Component<Props> {
         <Switch>
           <Route exact path={`${url}/tokens`} component={APITokens} />
           <Route exact path={`${url}/clients`} component={OAuthClients} />
-          <Route exact path={`${url}/list`} component={LishSettings} />
+          <Route exact path={`${url}/lish`} component={LishSettings} />
           <Route exact path={`${url}/referrals`} component={Referrals} />
           <Route path={`${url}`} component={Settings} />
         </Switch>

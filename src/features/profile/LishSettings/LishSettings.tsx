@@ -3,15 +3,19 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import { compose } from 'ramda';
+import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import MenuItem from 'src/components/MenuItem';
+import Notice from 'src/components/Notice';
 import Select from 'src/components/Select';
 import TextField from 'src/components/TextField';
+import { updateProfile } from 'src/services/profile';
+import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import { FormHelperText } from '@material-ui/core';
 
 type ClassNames = 'root'
   | 'title'
@@ -42,26 +46,38 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 interface Props { }
 
 interface ConnectedProps {
-  mode: string;
+  lishAuthMethod: string;
   loading: boolean;
 }
 
 interface State {
-  mode: string;
-  publicKey?: string;
+  submitting: boolean;
+  errors?: Linode.ApiFieldError[];
+  success?: string;
+  lishAuthMethod: string;
+  authorizedKeys?: string;
 }
 
 type CombinedProps = Props & ConnectedProps & WithStyles<ClassNames>;
 
 class LishSettings extends React.Component<CombinedProps, State> {
   state: State = {
-    mode: this.props.mode,
-    publicKey: '',
+    submitting: false,
+    lishAuthMethod: this.props.lishAuthMethod,
+    authorizedKeys: '',
   };
 
   render() {
     const { classes, loading } = this.props;
-    const { mode, publicKey } = this.state;
+    const { lishAuthMethod, authorizedKeys, success, errors } = this.state;
+    const hasErrorFor = getAPIErrorFor({
+      lish_auth_method: 'authentication method',
+      authorized_keys: 'ssh public keys',
+    }, errors);
+    const generalError = hasErrorFor('none');
+    const authMethodError = hasErrorFor('lish_auth_method');
+    const authorizedKeysError = hasErrorFor('authorized_keys');
+
     return (
       <React.Fragment>
         <Paper className={classes.root}>
@@ -72,6 +88,8 @@ class LishSettings extends React.Component<CombinedProps, State> {
           >
             LISH
           </Typography>
+          {success && <Notice success text={success} />}
+          {generalError && <Notice error text={generalError} />}
           <Typography className={classes.intro}>
             This controls what authentication methods are allowed to connect to the Lish console servers.
           </Typography>
@@ -87,26 +105,38 @@ class LishSettings extends React.Component<CombinedProps, State> {
                     <div>
                       <Select
                         inputProps={{ name: 'mode-select', id: 'mode-select' }}
-                        value={mode}
+                        value={lishAuthMethod}
                         onChange={this.onModeChange}
                       >
                         <MenuItem value={'password_keys'}>Allow both password and key authentication</MenuItem>
                         <MenuItem value={'keys_only'}>Allow key authentication only</MenuItem>
                         <MenuItem value={'disabled'}>Disabled Lish</MenuItem>
                       </Select>
+                      {authMethodError && <FormHelperText error>{authMethodError}</FormHelperText>}
                     </div>
                   </FormControl>
-                  <TextField
-                    label="SSH Public Key"
-                    onChange={this.onPublicKeyChange}
-                    value={publicKey || ''}
-                    helperText="Place your SSH public keys here for use with Lish console access."
-                  />
+                  {lishAuthMethod !== 'disabled' &&
+                    <TextField
+                      label="SSH Public Key"
+                      onChange={this.onPublicKeyChange}
+                      value={authorizedKeys || ''}
+                      helperText="Place your SSH public keys here for use with Lish console access."
+                      multiline
+                      rows="4"
+                      errorText={authorizedKeysError}
+                    />
+                  }
                 </React.Fragment>
               )
           }
           <ActionsPanel>
-            <Button type="primary" onClick={this.onSubmit}> Save</Button>
+            <Button
+              type="primary"
+              onClick={this.onSubmit}
+              loading={this.state.submitting}
+            >
+              Save
+            </Button>
           </ActionsPanel>
         </Paper>
       </React.Fragment>
@@ -120,12 +150,35 @@ class LishSettings extends React.Component<CombinedProps, State> {
   }];
 
   onSubmit = () => {
-    /** Waiting on https://github.com/linode/manager/pull/3500/files */
+    const { authorizedKeys, lishAuthMethod } = this.state;
+    /** clear errors, start submutting */
+    this.setState({ errors: undefined, submitting: true });
+
+    updateProfile({
+      lish_auth_method: lishAuthMethod,
+      ...(lishAuthMethod !== 'disabled' && { authorized_keys: [authorizedKeys] }),
+    })
+      .then((response) => {
+        this.setState({
+          submitting: false,
+          success: 'LISH authentication settings have been updated.',
+          authorizedKeys: undefined,
+        })
+      })
+      .catch((error) => {
+        const err = [{ reason: 'An unexpected error has occured.' }];
+        this.setState({
+          submitting: false,
+          errors: pathOr(err, ['response', 'data', 'errors'], error),
+          authorizedKeys: undefined,
+          success: undefined,
+        })
+      });
   };
 
-  onModeChange = (e: React.ChangeEvent<HTMLSelectElement>) => this.setState({ mode: e.target.value });
+  onModeChange = (e: React.ChangeEvent<HTMLSelectElement>) => this.setState({ lishAuthMethod: e.target.value });
 
-  onPublicKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => this.setState({ publicKey: e.target.value });
+  onPublicKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => this.setState({ authorizedKeys: e.target.value });
 }
 
 const styled = withStyles(styles, { withTheme: true });
@@ -139,7 +192,7 @@ const connected = connect((state: Linode.AppState) => {
 
   return {
     loading: false,
-    mode: data.lish_auth_method,
+    lishAuthMethod: data.lish_auth_method,
   };
 });
 
