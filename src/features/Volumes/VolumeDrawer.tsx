@@ -133,7 +133,8 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
   };
 
   handleAPIErrorResponse = (errorResponse: any) => this.composeState([
-    set(L.errors, path(['response', 'data', 'errors'], errorResponse))
+    set(L.errors, path(['response', 'data', 'errors'], errorResponse)),
+    set(L.submitting, false)
   ], () => scrollErrorIntoView());
 
   composeState = (fns: ((s: State) => State)[], callback?: () => void) =>
@@ -223,7 +224,18 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
       });
   }
 
+  reset = () => this.composeState([
+    set(L.cloneLabel, ''),
+    set(L.errors, undefined),
+    set(L.label, ''),
+    set(L.linodeId, 0),
+    set(L.region, 'none'),
+    set(L.submitting, false),
+    set(L.success, undefined),
+  ]);
+
   onClose = () => {
+    this.reset();
     this.props.close();
   }
 
@@ -266,7 +278,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
 
         if (!label) {
           this.composeState([
-            set(L.errors, [{ filed: 'label', reason: 'Label cannot be blank.' }])
+            set(L.errors, [{ field: 'label', reason: 'Label cannot be blank.' }])
           ], () => scrollErrorIntoView());
 
           return;
@@ -344,7 +356,11 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
 
   setSelectedLinode = (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (this.mounted) { this.setState({ linodeId: +(e.target.value) }); }
-    if (e.target.value) {
+    /**
+     * linodeId of 0 indicates user has selected the "Select a Linode" option, and we
+     * dont need to get configs for it.
+     */
+    if (e.target.value && +e.target.value !== 0) {
       this.updateConfigs(+e.target.value);
     }
   }
