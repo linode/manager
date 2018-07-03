@@ -40,7 +40,7 @@ interface Props {
 interface State {
   anchorEl?: HTMLElement;
   events: Linode.Event[];
-  hasNew?: boolean;
+  unseenCount?: number;
   notifications: Linode.Notification[];
 }
 
@@ -55,7 +55,7 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
     events: [],
     notifications: [],
     anchorEl: undefined,
-    hasNew: false,
+    unseenCount: 0,
   };
 
   subscription: Subscription;
@@ -63,7 +63,7 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
 
   static defaultProps = {
-    hasNew: false,
+    unseenCount: 0,
   };
 
   componentDidMount() {
@@ -94,7 +94,7 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
           if (!this.mounted) { return; }
 
           this.setState({
-            hasNew: hasUnseenEvent(events),
+            unseenCount: getNumUnseenEvents(events),
             events,
             notifications,
           });
@@ -128,7 +128,7 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { anchorEl, hasNew, events, notifications } = this.state;
+    const { anchorEl, events, unseenCount, notifications } = this.state;
     const { classes } = this.props;
 
     return (
@@ -136,7 +136,7 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
         <UserNotificationButton
           onClick={e => this.setState({ anchorEl: e.currentTarget })}
           getRef={this.setRef}
-          hasNew={hasNew}
+          notificationCount={unseenCount}
           disabled={notifications.length + events.length === 0}
           className={anchorEl ? 'active' : ''}
         />
@@ -165,18 +165,19 @@ const extractAndSortByCreated = compose(
   values,
 );
 
-const hasUnseenEvent = (events: Linode.Event[]) => {
+const getNumUnseenEvents = (events: Linode.Event[]) => {
   const len = events.length;
+  let unseenCount = 0;
   let idx = 0;
   while (idx < len) {
     if (!events[idx].seen) {
-      return true;
+      unseenCount += 1;
     }
 
     idx += 1;
   }
 
-  return false;
+  return unseenCount;
 };
 
 export default styled<Props>(UserNotificationMenu);

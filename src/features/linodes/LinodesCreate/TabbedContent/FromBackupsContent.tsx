@@ -277,7 +277,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       <React.Fragment>
       <Grid item className={`${classes.main} mlMain`}>
         {(this.state.isGettingBackups)
-          ? <CircleProgress />
+          ? <CircleProgress noTopMargin />
           : (!this.userHasBackups())
             ? <Placeholder
             icon={VolumeIcon}

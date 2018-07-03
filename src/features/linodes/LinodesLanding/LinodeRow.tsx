@@ -141,7 +141,7 @@ class LinodeRow extends React.Component<PropsWithStyles> {
 
     return (
       <TableCell className={classes.linodeCell}>
-        <Link to={`/linodes/${linodeId}`} className={classes.link}>
+        <Link to={`/linodes/${linodeId}`} className={classes.link} tabIndex={-1}>
           <Button className={classes.linkButton}>
             <Grid container alignItems="center">
               <Grid item className="py0">
