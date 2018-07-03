@@ -63,7 +63,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
     submitting: false,
     errors: [],
     master_ips: [],
-    masterIPsCount: 3,
+    masterIPsCount: 1,
   };
 
   state: State = {
