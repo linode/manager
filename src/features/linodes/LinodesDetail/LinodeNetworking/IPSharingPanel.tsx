@@ -71,13 +71,13 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
     loading: true,
     submitting: false,
   };
+  mounted = false;
 
-  static errorResources = {
-  };
-
+  static errorResources = { };
   static selectIPText = 'Select an IP';
 
   componentDidMount() {
+    this.mounted = true;
     const { linodeRegion } = this.props;
     listIPs(linodeRegion)
       .then(response => {
@@ -90,6 +90,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
           })
           .map((ip: Linode.IPAddress) => ip.address);
         ipChoices.unshift(IPSharingPanel.selectIPText);
+        if (!this.mounted) { return ;}
         this.setState({
           ipChoices,
           loading: false,
@@ -97,6 +98,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
       })
       .catch((response) => {
         const errors = pathOr([], ['response', 'data', 'errors'], response);
+        if (!this.mounted) { return ;}
         this.setState({
           errors,
           loading: false,
@@ -104,7 +106,12 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
       })
   }
 
+  componentWillUnmount() {
+    this.mounted = false;
+  }
+
   componentWillReceiveProps(nextProps: Props) {
+    if (!this.mounted) { return ;}
     this.setState({
       ipsToShare: nextProps.linodeSharedIPs,
     })
@@ -129,6 +136,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
     if (!ipIdx) { return; }
     const newIPsToShare = clone(this.state.ipsToShare);
     newIPsToShare[+ipIdx] = e.target.value;
+    if (!this.mounted) { return ;}
     this.setState({
       ipsToShare: newIPsToShare,
     })
@@ -139,6 +147,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
     if (!ipIdx) { return; }
     const newIPsToShare = clone(this.state.ipsToShare);
     newIPsToShare.splice(+ipIdx, 1);
+    if (!this.mounted) { return ;}
     this.setState({
       ipsToShare: newIPsToShare,
     })
@@ -184,6 +193,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
   }
 
   addIPToShare = () => {
+    if (!this.mounted) { return ;}
     this.setState({
       ipsToShare: [
         ...this.state.ipsToShare,
@@ -195,6 +205,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
   onSubmit = () => {
     const finalIPs = uniq(this.state.ipsToShare
       .filter((ip: string) => ip !== IPSharingPanel.selectIPText));
+    if (!this.mounted) { return ;}
     this.setState({
       errors: undefined,
       submitting: true,
@@ -202,6 +213,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
     shareAddresses({ linode_id: this.props.linodeID, ips: finalIPs })
       .then((response) => {
         this.props.refreshIPs();
+        if (!this.mounted) { return ;}
         this.setState({
           errors: undefined,
           submitting: false,
@@ -210,6 +222,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
       })
       .catch((response) => {
         const errors = pathOr([], ['response', 'data', 'errors'], response);
+        if (!this.mounted) { return ;}
         this.setState({
           errors,
           submitting: false,
@@ -218,6 +231,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
   }
 
   onCancel = () => {
+    if (!this.mounted) { return ;}
     this.setState({
       errors: undefined,
       ipsToShare: this.props.linodeSharedIPs,
