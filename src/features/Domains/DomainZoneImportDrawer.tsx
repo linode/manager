@@ -18,6 +18,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 interface Props {
   open: boolean;
   onClose: () => void;
+  onSuccess: () => void;
 }
 
 interface State {
@@ -89,6 +90,7 @@ class DomainZoneImportDrawer extends React.Component<CombinedProps, State> {
     importZone(domain, remote_nameserver)
       .then((response) => {
         this.onClose();
+        this.props.onSuccess();
       })
       .catch((error) => {
         const err: Linode.ApiFieldError[] = [{ field: 'none', reason: 'An unexpected error has ocurred.' }];

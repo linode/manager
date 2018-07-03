@@ -95,7 +95,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
     },
   ];
 
-  refreshDomains() {
+  refreshDomains = () => {
     getDomains()
       .then((response) => {
         this.setState({ domains: response.data });
@@ -274,6 +274,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
         <DomainZoneImportDrawer
           open={this.state.importDrawer.open}
           onClose={this.closeImportZoneDrawer}
+          onSuccess={this.refreshDomains}
         />
         <ConfirmationDialog
           open={this.state.removeDialog.open}
