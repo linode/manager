@@ -1,6 +1,6 @@
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
+import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
@@ -25,12 +26,15 @@ import ActionMenu from './DomainActionMenu';
 import DomainCreateDrawer from './DomainCreateDrawer';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 
-type ClassNames = 'root' | 'title';
+type ClassNames = 'root' | 'title' | 'domain';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
   title: {
     marginBottom: theme.spacing.unit * 2,
+  },
+  domain: {
+    width: '60%',
   },
 });
 
@@ -116,7 +120,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
     errors: undefined,
   }});
 
-  openCreateDrawer() {
+  openCreateDrawer = () => {
     this.setState({
       createDrawer: { open: true, mode: 'create' },
     });
@@ -138,6 +142,32 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
       });
     }
   }
+
+  getActions = () => {
+    return (
+      <ActionsPanel>
+        <Button
+          variant="raised"
+          color="secondary"
+          className="destructive"
+          onClick={this.removeDomain}
+          data-qa-submit
+        >
+          Confirm
+        </Button>
+        <Button
+          onClick={this.closeRemoveDialog}
+          variant="raised"
+          color="secondary"
+          className="cancel"
+          data-qa-cancel
+        >
+          Cancel
+        </Button>
+      </ActionsPanel>
+    )
+  }
+
 
   removeDomain = () => {
     const { removeDialog: { domainID } } = this.state;
@@ -197,6 +227,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
           <Placeholder
             title="Add a Domain"
             copy="Adding a new domain is easy. Click below to add a domain."
+            icon={DomainIcon}
             buttonProps={{
               onClick: () => this.openCreateDrawer(),
               children: 'Add a Domain',
@@ -225,7 +256,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
               </Grid>
               <Grid item>
                 <AddNewLink
-                  onClick={() => this.openCreateDrawer()}
+                  onClick={this.openCreateDrawer}
                   label="Add a Domain"
                 />
               </Grid>
@@ -236,22 +267,20 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell data-qa-domain-name-header>Domain</TableCell>
+                <TableCell data-qa-domain-name-header className={classes.domain}>Domain</TableCell>
                 <TableCell data-qa-domain-type-header>Type</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell></TableCell>
+                <TableCell />
               </TableRow>
             </TableHead>
             <TableBody>
               {domains.map(domain =>
                 <TableRow key={domain.id} data-qa-domain-cell={domain.id}>
-                  <TableCell data-qa-domain-label>
+                  <TableCell className={classes.domain} data-qa-domain-label>
                     <Link to={`/domains/${domain.id}`}>
                       {domain.domain}
                     </Link>
                   </TableCell>
                   <TableCell data-qa-domain-type>{domain.type}</TableCell>
-                  <TableCell>{domain.status}</TableCell>
                   <TableCell>
                     <ActionMenu
                       onEditRecords={() => {
@@ -280,28 +309,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
           open={this.state.removeDialog.open}
           title={`Remove ${this.state.removeDialog.domain}`}
           onClose={this.closeRemoveDialog}
-          actions={() =>
-            <ActionsPanel>
-              <Button
-                variant="raised"
-                color="secondary"
-                className="destructive"
-                onClick={this.removeDomain}
-                data-qa-submit
-              >
-                Confirm
-              </Button>
-              <Button
-                onClick={this.closeRemoveDialog}
-                variant="raised"
-                color="secondary"
-                className="cancel"
-                data-qa-cancel
-              >
-                Cancel
-              </Button>
-            </ActionsPanel>
-          }
+          actions={this.getActions}
         >
           <Typography>Are you sure you want to remove this domain?</Typography>
         </ConfirmationDialog>
