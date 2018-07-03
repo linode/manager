@@ -59,7 +59,7 @@ class DomainZoneImportDrawer extends React.Component<CombinedProps, State> {
         <LinodeTextField label="Remote Nameserver" onChange={this.updateRemoteNameserver} errorText={remoteNameserverError} />
         <ActionsPanel>
           <Button type="primary" loading={submitting} onClick={this.onSubmit}>Save</Button>
-          <Button type="secondary" onClick={this.onClose}>Cancel</Button>
+          <Button type="cancel" onClick={this.onClose}>Cancel</Button>
         </ActionsPanel>
       </Drawer>
     );
