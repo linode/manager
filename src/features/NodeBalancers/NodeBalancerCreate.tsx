@@ -209,7 +209,8 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     */
     const nodePathErrors = fieldErrorsToNodePathErrors(errors);
 
-    if (nodePathErrors.length === 0) { return; }
+    /** We still need to set the errors */
+    if (nodePathErrors.length === 0) { return this.setState({ errors }); }
 
     const setFns = nodePathErrors.map((nodePathError: any) => {
       return compose(
