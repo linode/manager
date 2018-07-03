@@ -91,6 +91,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
             LISH
           </Typography>
           {success && <Notice success text={success} />}
+          {authorizedKeysError && <Notice error text={authorizedKeysError} />}
           {generalError && <Notice error text={generalError} />}
           <Typography className={classes.intro}>
             This controls what authentication methods are allowed to connect to the Lish console servers.
@@ -126,8 +127,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
                         value={authorizedKeys[idx] || ''}
                         helperText="Place your SSH public keys here for use with Lish console access."
                         multiline
-                        rows="4"
-                        errorText={authorizedKeysError}
+                        rows="4"      errorText={authorizedKeysError}
                       />
                     ))
                   }
