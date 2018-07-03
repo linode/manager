@@ -221,8 +221,20 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
           this.setState({ showMoreButtonVisible: false });
         }
         const newData = (isSorting) ? response.data : [...this.state.data, ...response.data];
+
+        const newDataWithoutDeprecatedDistros =
+          newData.filter(stackScript => this.hasNonDeprecatedImages(stackScript.images));
+
+        // @TODO: deprecate this once compound filtering becomes available in the API
+        // basically, if the result set after filtering out StackScripts with
+        // deprecated distos is 0, request the next page with the same filter.
+        if(newDataWithoutDeprecatedDistros.length === 0) {
+          this.getNext();
+          return;
+        }
+        
         this.setState({
-          data: newData,
+          data: newDataWithoutDeprecatedDistros,
           gettingMoreStackScripts: false,
           loading: false,
           isSorting: false,
@@ -247,8 +259,20 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
     if (!this.mounted) { return; }
     this.setState(
       { currentPage: this.state.currentPage + 1 },
-      () => this.getDataAtPage(this.state.currentPage),
+      () => this.getDataAtPage(this.state.currentPage, this.state.currentFilter, this.state.isSorting),
     );
+  }
+
+  hasNonDeprecatedImages = (stackScriptImages: string[]) => {
+    const { publicImages } = this.props;
+    for (const stackScriptImage of stackScriptImages) {
+      for (const publicImage of publicImages) {
+        if (stackScriptImage === publicImage.id) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   handleSelectStackScript = (stackscript: Linode.StackScript.Response) => {
@@ -306,7 +330,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
   }
 
   render() {
-    const { classes, publicImages } = this.props;
+    const { classes } = this.props;
     const { currentFilterType, isSorting } = this.state;
 
     if (this.state.loading) {
@@ -386,8 +410,6 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
             onSelect={this.handleSelectStackScript}
             selectedId={this.state.selected}
             data={this.state.data}
-            getNext={() => this.getNext()}
-            publicImages={publicImages}
           />
         </Table>
         {this.state.showMoreButtonVisible && !isSorting &&
