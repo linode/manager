@@ -186,7 +186,10 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
 
   eventSubscription: Subscription;
 
+  mounted: boolean = false;
+
   componentDidMount() {
+    this.mounted = true;
     this.eventSubscription = events$
       .filter(e => [
         'linode_snapshot',
@@ -207,6 +210,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
   }
 
   componentWillUnmount() {
+    this.mounted = false;
     this.eventSubscription.unsubscribe();
   }
 
@@ -268,6 +272,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         pathOr([], ['response', 'data', 'errors'], errorResponse)
           .forEach((err: Linode.ApiFieldError) => sendToast(err.reason, 'error'));
       });
+    if (!this.mounted) { return; }
     this.setState({ cancelBackupsAlertOpen: false });
   }
 
@@ -314,6 +319,32 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
 
   closeRestoreDrawer = () => {
     this.setState({ restoreDrawer: { open: false, backupID: undefined, backupCreated: '' } });
+  }
+
+  handleSelectBackupWindow = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    this.setState({
+      settingsForm:
+        { ...this.state.settingsForm, window: e.target.value },
+    })
+  }
+
+  handleSelectBackupTime = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    this.setState({
+      settingsForm:
+        { ...this.state.settingsForm, day: e.target.value },
+    })
+  }
+
+  handleSnapshotNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ snapshotForm: { label: e.target.value } });
+  }
+
+  handleCloseBackupsAlert = () => {
+    this.setState({ cancelBackupsAlertOpen: false });
+  }
+
+  handleOpenBackupsAlert = () => {
+    this.setState({ cancelBackupsAlertOpen: true });
   }
 
   Placeholder = (): JSX.Element | null => {
@@ -433,7 +464,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
               errorText={getErrorFor('label')}
               label="Name Snapshot"
               value={snapshotForm.label || ''}
-              onChange={e => this.setState({ snapshotForm: { label: e.target.value } })}
+              onChange={this.handleSnapshotNameChange}
               data-qa-manual-name
             />
             <Tooltip title={linodeInTransition
@@ -490,10 +521,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
             </InputLabel>
             <Select
               value={settingsForm.window}
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => this.setState({
-                settingsForm:
-                  { ...settingsForm, window: e.target.value },
-              })}
+              onChange={this.handleSelectBackupWindow}
               inputProps={{ name: 'window', id: 'window' }}
               data-qa-time-select
             >
@@ -512,10 +540,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
             </InputLabel>
             <Select
               value={settingsForm.day}
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => this.setState({
-                settingsForm:
-                  { ...settingsForm, day: e.target.value },
-              })}
+              onChange={this.handleSelectBackupTime}
               inputProps={{ name: 'day', id: 'day' }}
               data-qa-weekday-select
             >
@@ -573,7 +598,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
             ${classes.cancelButton}
             destructive
           `}
-          onClick={() => this.setState({ cancelBackupsAlertOpen: true })}
+          onClick={this.handleOpenBackupsAlert}
           data-qa-cancel
         >
           Cancel Backups
@@ -611,7 +636,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
                 Cancel Backups
               </Button>
               <Button
-                onClick={() => this.setState({ cancelBackupsAlertOpen: false })}
+                onClick={this.handleCloseBackupsAlert}
                 variant="raised"
                 color="secondary"
                 className="cancel"

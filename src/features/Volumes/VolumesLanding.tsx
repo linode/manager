@@ -81,6 +81,8 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     },
   };
 
+  mounted: boolean = false;
+
   static docs: Linode.Doc[] = [
     {
       title: 'How to Use Block Storage with Your Linode',
@@ -107,6 +109,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     const xFilter = generateInFilter('id', linodeIDs);
     getLinodes(undefined, xFilter)
       .then((response) => {
+        if (!this.mounted) { return; }
         const linodeLabels = {};
         for (const linode of response.data) {
           linodeLabels[linode.id] = linode.label;
@@ -123,7 +126,12 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   }
 
   componentDidMount() {
+    this.mounted = true;
     this.getLinodeLabels();
+  }
+  
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   componentDidUpdate(prevProps: CombinedProps) {
