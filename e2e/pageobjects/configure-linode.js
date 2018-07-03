@@ -9,10 +9,10 @@ class ConfigureLinode extends Page {
     // get selectLinodePanel() {}
 
     get selectLinodeHeader() { return $('[data-qa-select-linode-header]'); }
-    get selectImageHeader() { return $('[data-qa-tp="Select Image Type"]'); }
-    get imageTabs() { return  $$('[data-qa-tp="Select Image Type"] [data-qa-tab]'); }
-    get images() { return $$('[data-qa-tp="Select Image Type"] [data-qa-selection-card]'); }
-    get imageNames() { return $$('[data-qa-tp="Select Image Type"] [data-qa-select-card-heading]'); }
+    get selectImageHeader() { return $('[data-qa-tp="Select Image"]'); }
+    get imageTabs() { return  $$('[data-qa-tp="Select Image"] [data-qa-tab]'); }
+    get images() { return $$('[data-qa-tp="Select Image"] [data-qa-selection-card]'); }
+    get imageNames() { return $$('[data-qa-tp="Select Image"] [data-qa-select-card-heading]'); }
     get showOlderImages() { return $('[data-qa-show-more-expanded]'); }
     
     get selectRegionHeader() { return $('[data-qa-tp="Region"]'); }

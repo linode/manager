@@ -399,6 +399,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
             <Typography
               variant="title"
               className={classes.title}
+              data-qa-networking-actions-subheading
             >
               Networking Actions
             </Typography>
