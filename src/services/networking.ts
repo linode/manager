@@ -7,11 +7,19 @@ export const updateIP = (address: string, payload: any) =>
     setData(payload),
     setMethod('PUT'),
   )
-  .then(response => response.data);
+    .then(response => response.data);
 
-  export const assignAddresses = (data: any) =>
-    Request(
-      setURL(`${API_ROOT}/networking/ipv4/assign`),
-      setMethod('POST'),
-      setData(data),
-    );
+export const assignAddresses = (data: any) =>
+  Request(
+    setURL(`${API_ROOT}/networking/ipv4/assign`),
+    setMethod('POST'),
+    setData(data),
+  );
+
+export const getIPs = () => {
+  return Request<Linode.ResourcePage<Linode.IPAddress>>(
+    setURL(`${API_ROOT}/networking/ips`),
+    setMethod('GET'),
+  )
+    .then(response => response.data);
+}

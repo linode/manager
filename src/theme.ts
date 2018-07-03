@@ -312,7 +312,7 @@ const LinodeTheme: Linode.Theme = {
         boxSizing: 'border-box',
         backgroundColor: 'white',
         [breakpoints.down('xs')]: {
-          maxWidth: 250,
+          maxWidth: 240,
         },
         '& svg': {
           fontSize: 18,
@@ -579,6 +579,9 @@ const LinodeTheme: Linode.Theme = {
         '&$selected': {
           fontWeight: 700,
         },
+        '&:hover': {
+          color: '#3B85D9',
+        },
       },
       label: {
         [breakpoints.up('md')]: {
@@ -591,6 +594,11 @@ const LinodeTheme: Linode.Theme = {
         [breakpoints.up('md')]: {
           paddingLeft: 18,
           paddingRight: 18,
+        },
+      },
+      textColorPrimary: {
+        '&$selected': {
+          color: '#32363C',
         },
       },
     },

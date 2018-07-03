@@ -38,9 +38,9 @@ namespace Linode {
   }
 
   export interface ResourcesState {
-    types?: { loading: boolean; data: ResourcePage<Linode.LinodeType>; };
-    kernels?: { loading: boolean; data: Linode.Kernel[] };
-    profile?: { loading: boolean; data: Linode.Profile };
+    types: { loading: boolean; data: ResourcePage<Linode.LinodeType>; };
+    kernels: { loading: boolean; data: Linode.Kernel[] };
+    profile: { loading: boolean; data: Linode.Profile };
   }
 
   export type DocumentationState = Linode.Doc[];
