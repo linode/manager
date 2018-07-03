@@ -254,7 +254,10 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
     }
   }
 
-  closeDrawer = () => this.props.onClose();
+  closeDrawer = () => {
+    this.reset();
+    this.props.onClose();
+  }
 
   updateLabel = (e: React.ChangeEvent<HTMLInputElement>) =>
     this.setState({ domain: e.target.value });
