@@ -191,13 +191,8 @@ class LishSettings extends React.Component<CombinedProps, State> {
 
   onPublicKeyChange = (idx: number) =>
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      console.log(this.state.authorizedKeys, idx, e.target.value);
       this.setState(
-        set(
-          lensPath(['authorizedKeys', idx]),
-          e.target.value,
-        ),
-        () => console.log(this.state.authorizedKeys));
+        set(lensPath(['authorizedKeys', idx]), e.target.value))
     }
 }
 
