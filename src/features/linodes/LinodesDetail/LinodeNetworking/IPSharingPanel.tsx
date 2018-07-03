@@ -152,9 +152,15 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
       ipsToShare: newIPsToShare,
     })
   }
+
+  remainingChoices = (selectedIP: string) => {
+    return this.state.ipChoices.filter((ip: string) => {
+      const hasBeenSelected = this.state.ipsToShare.includes(ip);
+      return ip === selectedIP || !hasBeenSelected;
+    })
+  }
   
   renderShareIPRow = (ip: string, idx: number) => {
-    const { ipChoices } = this.state;
     const { classes } = this.props;
     return (
       <Grid container key={idx}>
@@ -168,7 +174,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
             fullWidth={false}
             className={classes.ipField}
           >
-            {ipChoices.map((ipChoice: string, choiceIdx: number) =>
+            {this.remainingChoices(ip).map((ipChoice: string, choiceIdx: number) =>
               <MenuItem 
                 data-ip-idx={idx}
                 key={choiceIdx}
@@ -295,13 +301,16 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
               : <React.Fragment>
                   {linodeIPs.map((ip: string) => this.renderMyIPRow(ip))}
                   {ipsToShare.map((ip: string, idx: number) => this.renderShareIPRow(ip, idx))}
-                  <div className={classes.addNewButton}>
-                    <AddNewLink
-                      label="Add IP Address"
-                      onClick={this.addIPToShare}
-                      left
-                    />
-                  </div>
+                  {/* the "1" that will always be there is the selectionText */}
+                  {this.remainingChoices('').length > 1 &&
+                    <div className={classes.addNewButton}>
+                      <AddNewLink
+                        label="Add IP Address"
+                        onClick={this.addIPToShare}
+                        left
+                      />
+                    </div>
+                  }
                 </React.Fragment>
             }
           </Grid>
