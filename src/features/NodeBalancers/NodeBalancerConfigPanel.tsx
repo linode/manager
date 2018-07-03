@@ -893,7 +893,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                           .filter((linode: Linode.Linode) => {
                                             const privateIPRegex = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/; 
                                             const privateIP = linode.ipv4.find(ipv4 => !!ipv4.match(privateIPRegex));
-                                            return linode.label.includes(inputValue.toLowerCase())
+                                            return linode.label.toLowerCase().includes(inputValue.toLowerCase())
                                               || privateIP!.includes(inputValue.toLowerCase())
                                           })
                                           // limit the results to 5. we don't want too

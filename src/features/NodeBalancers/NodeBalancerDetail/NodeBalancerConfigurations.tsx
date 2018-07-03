@@ -874,8 +874,9 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   componentDidMount() {
     getLinodes()
       .then(result => {
+        const privateIPRegex = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/;
         const linodesWithPrivateIPs = result.data.filter((linode) => {
-          return linode.ipv4.some(ipv4 => ipv4.includes('192.168')); // does it have a private IP address
+          return linode.ipv4.some(ipv4 => !!ipv4.match(privateIPRegex)); // does it have a private IP address
         });
         this.setState({ linodesWithPrivateIPs });
       })
