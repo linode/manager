@@ -194,10 +194,11 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
 
   renderActionMenu = (image: Linode.Image) => {
     return <ActionMenu
+      image={image}
       onRestore={() => { null; }}
       onDeploy={() => { null; }}
-      onEdit={() => this.openForEdit(image.label, image.description ? image.description : ' ', image.id)}
-      onDelete={() => { this.openRemoveDialog(image.label, image.id); }}
+      onEdit={this.openForEdit}
+      onDelete={this.openRemoveDialog}
     />
   }
 
