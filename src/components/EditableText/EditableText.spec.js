@@ -30,7 +30,7 @@ describe('Editable Text Suite', () => {
     it('should edit the textfield', () => {
         $(editField).$('input').setValue(newLabel);
         browser.click(saveEdit);
-        expect($(editableTextSelector).getText()).toContain(newLabel);
+        expect($(editableTextSelector).getText()).toBe(newLabel);
     });
 
     it('should not update the textfield on cancel', () => {
