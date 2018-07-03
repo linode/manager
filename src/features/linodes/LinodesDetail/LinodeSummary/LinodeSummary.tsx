@@ -1,18 +1,18 @@
-import * as React from 'react';
-import * as moment from 'moment';
-
-import { withStyles, StyleRulesCallback, WithStyles } from '@material-ui/core/styles';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-
-import { getLinodeStats } from 'src/services/linodes';
-import { setUpCharts } from 'src/utilities/charts';
+import * as moment from 'moment';
+import { compose } from 'ramda';
+import * as React from 'react';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import LineGraph from 'src/components/LineGraph';
 import Select from 'src/components/Select';
 
+import { withImage, withLinode, withVolumes } from 'src/features/linodes/LinodesDetail/context';
+import { getLinodeStats } from 'src/services/linodes';
+import { setUpCharts } from 'src/utilities/charts';
 import SummaryPanel from './SummaryPanel';
 
 setUpCharts();
@@ -104,9 +104,15 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
 };
 
 interface Props {
-  linode: Linode.Linode & { recentEvent?: Linode.Event };
-  image?: Linode.Image;
-  volumes: Linode.Volume[];
+}
+
+interface ContextProps {
+  linodeCreated: string;
+  linodeId: number;
+
+  linodeData: Linode.Linode;
+  imageData: Linode.Image;
+  volumesData: Linode.Volume[];
 }
 
 interface State {
@@ -115,7 +121,7 @@ interface State {
   statsLoadError?: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & ContextProps & WithStyles<ClassNames>;
 
 const chartHeight = 300;
 
@@ -134,15 +140,25 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
 
   constructor(props: CombinedProps) {
     super(props);
-    const { linode } = props;
+    const { linodeCreated } = props;
+    if(!linodeCreated) { return };
 
     const options: [string, string][] = [['24', 'Last 24 Hours']];
     const [createMonth, createYear] = [
-      moment.utc(linode.created).month() + 1,
-      moment.utc(linode.created).year(),
+      // prepend "0" to the month if it's only 1 digit
+      // otherwise, console complains the date isn't in
+      // ISO or RFC2822 format
+      (moment.utc(linodeCreated).month() + 1).toString().length === 1
+        ? `0${moment.utc(linodeCreated).month() + 1}`
+        : moment.utc(linodeCreated).month() + 1,
+      moment.utc(linodeCreated).year(),
     ];
     const creationFirstOfMonth = moment(`${createYear}-${createMonth}-01`);
-    let [testMonth, testYear] = [moment.utc().month() + 1, moment.utc().year()];
+    let [testMonth, testYear] = [
+      moment.utc().month() + 1,
+      moment.utc().year()
+    ];
+    let formattedTestDate;
     do {
       options.push([
         `${testYear} ${testMonth.toString().padStart(2, '0')}`,
@@ -155,7 +171,12 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
       } else {
         testMonth -= 1;
       }
-    } while (moment(`${testYear}-${testMonth}-01`).diff(creationFirstOfMonth) >= 0);
+      // same comment as above. Month needs to be prepended with a "0"
+      // if it's only one digit to appease moment.js
+      formattedTestDate = (testMonth.toString().length === 1)
+      ? `${testYear}-0${testMonth}-01`
+      : `${testYear}-${testMonth}-01`;
+    } while (moment(formattedTestDate).diff(creationFirstOfMonth) >= 0);
     (this.rangeSelectOptions as Linode.TodoAny) = options.map((option) => {
       return <MenuItem key={option[0]} value={option[0]}>{option[1]}</MenuItem>;
     });
@@ -163,14 +184,16 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
   }
 
   getStats() {
-    const { linode } = this.props;
+    const { linodeId } = this.props;
     const { rangeSelection } = this.state;
+    if (!linodeId) { return; }
+
     let req;
     if (rangeSelection === '24') {
-      req = getLinodeStats(linode.id);
+      req = getLinodeStats(linodeId);
     } else {
       const [year, month] = rangeSelection.split(' ');
-      req = getLinodeStats(linode.id, year, month);
+      req = getLinodeStats(linodeId, year, month);
     }
     req
       .then((response) => {
@@ -216,8 +239,19 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { linode, image, volumes, classes } = this.props;
+    const {
+      linodeData: linode,
+      imageData: image,
+      volumesData: volumes,
+      classes,
+    } = this.props;
+
     const { stats, rangeSelection } = this.state;
+
+    if (!linode || !image || !volumes) {
+      return null;
+    }
+
     return (
       <React.Fragment>
         <SummaryPanel linode={linode} image={image} volumes={volumes} />
@@ -257,9 +291,9 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
                     suggestedMax={100}
                     data={[
                       {
-                        label: 'CPU %',
                         borderColor: '#428ade',
                         data: stats.data.cpu,
+                        label: 'CPU %',
                       },
                     ]}
                   />
@@ -286,24 +320,24 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
                     showToday={rangeSelection === '24'}
                     data={[
                       {
-                        label: 'Public Traffic In',
                         borderColor: '#3683dc',
                         data: stats.data.netv4.in,
+                        label: 'Public Traffic In',
                       },
                       {
-                        label: 'Public Traffic Out',
                         borderColor: '#01b159',
                         data: stats.data.netv4.out,
+                        label: 'Public Traffic Out',
                       },
                       {
-                        label: 'Private Traffic In',
                         borderColor: '#d01e1e',
                         data: stats.data.netv4.private_in,
+                        label: 'Private Traffic In',
                       },
                       {
-                        label: 'Private Traffic Out',
                         borderColor: '#ffd100',
                         data: stats.data.netv4.private_out,
+                        label: 'Private Traffic Out',
                       },
                     ]}
                   />
@@ -339,24 +373,24 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
                     showToday={rangeSelection === '24'}
                     data={[
                       {
-                        label: 'Public Traffic In',
                         borderColor: '#3683dc',
                         data: stats.data.netv6.in,
+                        label: 'Public Traffic In',
                       },
                       {
-                        label: 'Public Traffic Out',
                         borderColor: '#01b159',
                         data: stats.data.netv6.out,
+                        label: 'Public Traffic Out',
                       },
                       {
-                        label: 'Private Traffic In',
                         borderColor: '#d01e1e',
                         data: stats.data.netv6.private_in,
+                        label: 'Private Traffic In',
                       },
                       {
-                        label: 'Private Traffic Out',
                         borderColor: '#ffd100',
                         data: stats.data.netv6.private_out,
+                        label: 'Private Traffic Out',
                       },
                     ]}
                   />
@@ -392,14 +426,14 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
                     showToday={rangeSelection === '24'}
                     data={[
                       {
-                        label: 'Disk I/O',
                         borderColor: '#d01e1e',
                         data: stats.data.io.io,
+                        label: 'Disk I/O',
                       },
                       {
-                        label: 'Swap I/O',
                         borderColor: '#ffd100',
                         data: stats.data.io.swap,
+                        label: 'Swap I/O',
                       },
                     ]}
                   />
@@ -423,4 +457,26 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(LinodeSummary);
+const linodeContext = withLinode((context) => ({
+  linodeCreated: context.data!.created,
+  linodeId: context.data!.id,
+
+  linodeData: context.data, /** @todo get rid of this */
+}));
+
+const imageContext = withImage((context) => ({
+  imageData: context.data!,
+}))
+
+const volumesContext = withVolumes((context) => ({
+  volumesData: context.data!,
+}))
+
+const enhanced = compose(
+  styled,
+  linodeContext,
+  imageContext,
+  volumesContext,
+);
+
+export default enhanced(LinodeSummary);

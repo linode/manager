@@ -109,6 +109,8 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
     };
   }
 
+  mounted: boolean = false;
+
   static defaultState = (sourceIP: string, sourceIPsLinodeID: number): NoAction => ({
     mode: 'none',
     sourceIP,
@@ -320,7 +322,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
         }
 
         this.setState({
-          error: [{ field: 'none', reason: 'Update to transfer IP addresses at this time. Please try again later.' }],
+          error: [{ field: 'none', reason: 'Unable to transfer IP addresses at this time. Please try again later.' }],
           submitting: false
         });
       })
@@ -337,7 +339,12 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
   }
 
   componentDidMount() {
+    this.mounted = true;
     this.getLinodes();
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   getLinodes = () => {
@@ -347,6 +354,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
         data: response.data.filter(l => l.id !== this.props.linodeID),
       }))
       .then((response) => {
+        if (!this.mounted) { return; }
         this.setState({
           linodes: response.data.map(linode => ({
             id: linode.id,
@@ -357,6 +365,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
         });
       })
       .catch(() => {
+        if (!this.mounted) { return; }
         this.setState({ error: [{ field: 'none', reason: 'Unable to fetch IP addresses. Try reloading?' }] })
       });
   };

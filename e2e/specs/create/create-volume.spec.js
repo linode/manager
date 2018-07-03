@@ -24,7 +24,7 @@ describe('Create - Volume Suite', () => {
 
     it('should display create volumes option in global create menu', () => {
         ListLinodes.globalCreate.click();
-        ListLinodes.addVolumeMenu.waitForVisible();
+        ListLinodes.addVolumeMenu.waitForVisible(constants.wait.normal);
     });
 
     it('should display global volume create drawer', () => {
@@ -36,14 +36,14 @@ describe('Create - Volume Suite', () => {
 
     it('should display form error on create without a label', () => {
         VolumeDetail.createVolume(testVolume, true);
-        VolumeDetail.label.$('p').waitForText();
+        VolumeDetail.label.$('p').waitForText(constants.wait.normal);
         VolumeDetail.closeVolumeDrawer();
     });
 
     it('should display a error notice on create without region', () => {
         testVolume['label'] = `ASD${new Date().getTime()}`;
         VolumeDetail.createVolume(testVolume, true);
-        VolumeDetail.notice.waitForVisible();
+        VolumeDetail.notice.waitForVisible(constants.wait.normal);
         VolumeDetail.closeVolumeDrawer();
     });
 
@@ -58,7 +58,7 @@ describe('Create - Volume Suite', () => {
             return VolumeDetail.getVolumeId(testVolume.label).length > 0;
         }, 10000);
 
-        VolumeDetail.volumeCellElem.waitForVisible();
+        VolumeDetail.volumeCellElem.waitForVisible(constants.wait.normal);
         VolumeDetail.removeAllVolumes();
     });
 
@@ -68,12 +68,17 @@ describe('Create - Volume Suite', () => {
 
         VolumeDetail.createVolume(testVolume, true);
 
-        VolumeDetail.volumeCellElem.waitForVisible();
+        VolumeDetail.volumeCellElem.waitForVisible(constants.wait.normal);
         VolumeDetail.removeAllVolumes();
     });
 
     afterAll(() => {
         apiDeleteAllLinodes();
-        apiDeleteAllVolumes();
+        try {
+            // attempt to remove all volumes, in case the ui failed
+            apiDeleteAllVolumes();
+        } catch (err) {
+            // do nothing
+        }
     });
 });

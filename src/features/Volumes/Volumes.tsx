@@ -50,6 +50,12 @@ class Volumes extends React.Component<CombinedProps, State> {
   componentDidMount() {
     this.mounted = true;
 
+    const maybeAddEvent = (e: boolean | Linode.Event, volume: Linode.Volume) => {
+      if (typeof e === 'boolean') { return {} };
+      if (!e.entity || e.entity.id !== volume.id) { return {} }
+      return { recentEvent: e };
+    };
+
     this.eventsSub = events$
       .filter(event => (
         !event._initial
@@ -63,10 +69,15 @@ class Volumes extends React.Component<CombinedProps, State> {
         ].includes(event.action)
       ))
       .merge(updateVolumes$)
-      .subscribe(() => {
+      .subscribe((event) => {
         getVolumes()
           .then((volumes) => {
-            this.setState({ volumes: volumes.data });
+            this.setState({
+              volumes: volumes.data.map((v) => ({
+                ...v,
+                ...maybeAddEvent(event, v),
+              })),
+            });
           })
           .catch(() => {
             /* @todo: how do we want to display this error? */
@@ -88,17 +99,17 @@ class Volumes extends React.Component<CombinedProps, State> {
       <React.Fragment>
         {volumes.length
           ? <VolumesLanding
-              volumes={volumes}
-            />
+            volumes={volumes}
+          />
           : <Placeholder
-              title="Create a Volume"
-              copy="Add storage to your Linodes using the resilient Volumes service"
-              icon={VolumesIcon}
-              buttonProps={{
-                onClick: () => this.openVolumesDrawer(),
-                children: 'Create a Volume',
-              }}
-            />
+            title="Create a Volume"
+            copy="Add storage to your Linodes using the resilient Volumes service"
+            icon={VolumesIcon}
+            buttonProps={{
+              onClick: () => this.openVolumesDrawer(),
+              children: 'Create a Volume',
+            }}
+          />
         }
       </React.Fragment>
     );

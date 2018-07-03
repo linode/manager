@@ -40,8 +40,8 @@ namespace Linode {
   }
 
   export interface LinodeBackupSchedule {
-    window: string;
-    day: string;
+    window: string | null;
+    day: string | null;
   }
 
   export interface LinodeBackupsResponse {

@@ -1,32 +1,29 @@
-import * as React from 'react';
-import { compose, path, pathOr, head } from 'ramda';
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
-
-import Grid from 'src/components/Grid';
-import Table from 'src/components/Table';
-import { getLinodeIPs } from 'src/services/linodes';
-
-import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
-import { ZONES } from 'src/constants';
-
+import { compose, head, path, pathOr } from 'ramda';
+import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
+import Grid from 'src/components/Grid';
+import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
+import Table from 'src/components/Table';
+import { ZONES } from 'src/constants';
+import { getLinodeIPs } from 'src/services/linodes';
+import { withLinode } from '../context';
 import CreateIPv4Drawer from './CreateIPv4Drawer';
 import CreateIPv6Drawer from './CreateIPv6Drawer';
 import EditRDNSDrawer from './EditRDNSDrawer';
+import IPSharingPanel from './IPSharingPanel';
 import LinodeNetworkingActionMenu from './LinodeNetworkingActionMenu';
 import IPTransferPanel from './LinodeNetworkingIPTransferPanel';
-import IPSharingPanel from './IPSharingPanel';
+import LinodeNetworkingSummaryPanel from './LinodeNetworkingSummaryPanel';
 import ViewIPDrawer from './ViewIPDrawer';
 import ViewRangeDrawer from './ViewRangeDrawer';
-
-import LinodeNetworkingSummaryPanel from './LinodeNetworkingSummaryPanel';
 
 type ClassNames =
   'root'
@@ -89,7 +86,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props {
+interface Props { }
+
+interface ContextProps {
   linodeID: number;
   linodeRegion: string;
   linodeLabel: string;
@@ -123,7 +122,7 @@ interface State {
   };
 }
 
-type CombinedProps = Props & PreloadedProps & WithStyles<ClassNames>;
+type CombinedProps = Props & PreloadedProps & ContextProps & WithStyles<ClassNames>;
 
 class LinodeNetworking extends React.Component<CombinedProps, State> {
   state: State = {
@@ -418,8 +417,8 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
   }
 }
 
-const preloaded = PromiseLoader<Props>({
-  linodeIPs: (props: Props) => getLinodeIPs(props.linodeID),
+const preloaded = PromiseLoader<Props & ContextProps>({
+  linodeIPs: props => getLinodeIPs(props.linodeID),
 });
 
 const styled = withStyles(styles, { withTheme: true });
@@ -430,4 +429,16 @@ const getFirstPublicIPv4FromResponse = compose(
   pathOr([], ['ipv4', 'public']),
 );
 
-export default preloaded(styled(LinodeNetworking));
+const linodeContext = withLinode((context) => ({
+  linodeID: context.data!.id,
+  linodeLabel: context.data!.label,
+  linodeRegion: context.data!.region,
+}));
+
+const enhanced = compose<any, any, any, any>(
+  linodeContext,
+  preloaded,
+  styled,
+);
+
+export default enhanced(LinodeNetworking);

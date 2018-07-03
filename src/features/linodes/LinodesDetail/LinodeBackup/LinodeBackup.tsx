@@ -42,6 +42,8 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import LinodeBackupActionMenu from './LinodeBackupActionMenu';
 import RestoreToLinodeDrawer from './RestoreToLinodeDrawer';
+import { withLinode } from '../context';
+import { linodeInTransition } from 'src/features/linodes/transitions';
 
 type ClassNames =
   'paper'
@@ -94,7 +96,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props {
+interface Props { }
+
+interface ContextProps {
   linodeID: number;
   linodeRegion: string;
   linodeType: null | string;
@@ -102,6 +106,7 @@ interface Props {
   backupsSchedule: Linode.LinodeBackupSchedule;
   linodeInTransition: boolean;
 }
+
 
 interface ConnectedProps {
   timezone: string;
@@ -135,6 +140,7 @@ type CombinedProps = Props
   & PreloadedProps
   & WithStyles<ClassNames>
   & RouteComponentProps<{}>
+  & ContextProps
   & ConnectedProps;
 
 const typeMap = {
@@ -180,7 +186,10 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
 
   eventSubscription: Subscription;
 
+  mounted: boolean = false;
+
   componentDidMount() {
+    this.mounted = true;
     this.eventSubscription = events$
       .filter(e => [
         'linode_snapshot',
@@ -201,6 +210,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
   }
 
   componentWillUnmount() {
+    this.mounted = false;
     this.eventSubscription.unsubscribe();
   }
 
@@ -262,6 +272,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         pathOr([], ['response', 'data', 'errors'], errorResponse)
           .forEach((err: Linode.ApiFieldError) => sendToast(err.reason, 'error'));
       });
+    if (!this.mounted) { return; }
     this.setState({ cancelBackupsAlertOpen: false });
   }
 
@@ -308,6 +319,32 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
 
   closeRestoreDrawer = () => {
     this.setState({ restoreDrawer: { open: false, backupID: undefined, backupCreated: '' } });
+  }
+
+  handleSelectBackupWindow = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    this.setState({
+      settingsForm:
+        { ...this.state.settingsForm, window: e.target.value },
+    })
+  }
+
+  handleSelectBackupTime = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    this.setState({
+      settingsForm:
+        { ...this.state.settingsForm, day: e.target.value },
+    })
+  }
+
+  handleSnapshotNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ snapshotForm: { label: e.target.value } });
+  }
+
+  handleCloseBackupsAlert = () => {
+    this.setState({ cancelBackupsAlertOpen: false });
+  }
+
+  handleOpenBackupsAlert = () => {
+    this.setState({ cancelBackupsAlertOpen: true });
   }
 
   Placeholder = (): JSX.Element | null => {
@@ -427,7 +464,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
               errorText={getErrorFor('label')}
               label="Name Snapshot"
               value={snapshotForm.label || ''}
-              onChange={e => this.setState({ snapshotForm: { label: e.target.value } })}
+              onChange={this.handleSnapshotNameChange}
               data-qa-manual-name
             />
             <Tooltip title={linodeInTransition
@@ -484,10 +521,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
             </InputLabel>
             <Select
               value={settingsForm.window}
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => this.setState({
-                settingsForm:
-                  { ...settingsForm, window: e.target.value },
-              })}
+              onChange={this.handleSelectBackupWindow}
               inputProps={{ name: 'window', id: 'window' }}
               data-qa-time-select
             >
@@ -506,10 +540,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
             </InputLabel>
             <Select
               value={settingsForm.day}
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => this.setState({
-                settingsForm:
-                  { ...settingsForm, day: e.target.value },
-              })}
+              onChange={this.handleSelectBackupTime}
               inputProps={{ name: 'day', id: 'day' }}
               data-qa-weekday-select
             >
@@ -567,7 +598,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
             ${classes.cancelButton}
             destructive
           `}
-          onClick={() => this.setState({ cancelBackupsAlertOpen: true })}
+          onClick={this.handleOpenBackupsAlert}
           data-qa-cancel
         >
           Cancel Backups
@@ -605,7 +636,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
                 Cancel Backups
               </Button>
               <Button
-                onClick={() => this.setState({ cancelBackupsAlertOpen: false })}
+                onClick={this.handleCloseBackupsAlert}
                 variant="raised"
                 color="secondary"
                 className="cancel"
@@ -638,9 +669,9 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
   }
 }
 
-const preloaded = PromiseLoader<Props>({
-  backups: (props: Props) => getLinodeBackups(props.linodeID),
-  types: ({ linodeType }: Props) => {
+const preloaded = PromiseLoader<Props & ContextProps>({
+  backups: (props) => getLinodeBackups(props.linodeID),
+  types: ({ linodeType }) => {
     if (!linodeType) {
       return Promise.resolve(undefined);
     }
@@ -655,7 +686,17 @@ const connected = connect((state) => ({
   timezone: pathOr(moment.tz.guess(), ['resources', 'profile', 'data', 'timezone'], state),
 }));
 
+const linodeContext = withLinode((context) => ({
+  backupsEnabled: context.data!.backups.enabled,
+  backupsSchedule: context.data!.backups.schedule,
+  linodeID: context.data!.id,
+  linodeInTransition: linodeInTransition(context.data!.status),
+  linodeRegion: context.data!.region,
+  linodeType: context.data!.type,
+}));
+
 export default compose(
+  linodeContext,
   preloaded,
   styled as any,
   withRouter,

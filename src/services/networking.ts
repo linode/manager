@@ -7,7 +7,7 @@ export const updateIP = (address: string, payload: any) =>
     setData(payload),
     setMethod('PUT'),
   )
-  .then(response => response.data);
+    .then(response => response.data);
 
 export const assignAddresses = (data: any) =>
   Request(
@@ -16,7 +16,7 @@ export const assignAddresses = (data: any) =>
     setData(data),
   );
 
-export const listIPs = (region?: string) => {
+export const getIPs = (region?: string) => {
   const requestOptions = [
     setURL(`${API_ROOT}/networking/ips`),
     setMethod('GET'),
