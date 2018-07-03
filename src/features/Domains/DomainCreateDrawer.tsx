@@ -131,7 +131,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
         }
         {mode === 'create' && type === 'slave' &&
           <React.Fragment>
-            { masterIPsError && <Notice className={classes.masterIPErrorNotice} error text={`Master IP address must be valid IPv4 addresses.`} />}
+            {masterIPsError && <Notice className={classes.masterIPErrorNotice} error text={`Master IP address must be valid IPv4 addresses.`} />}
             {
               Array.from(Array(this.state.masterIPsCount)).map((slave, idx) => (
                 <TextField
@@ -256,15 +256,20 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
 
   closeDrawer = () => this.props.onClose();
 
-  updateLabel = (e: React.ChangeEvent<HTMLInputElement>) => this.setState({ domain: e.target.value });
+  updateLabel = (e: React.ChangeEvent<HTMLInputElement>) =>
+    this.setState({ domain: e.target.value });
 
-  updateCloneLabel = (e: React.ChangeEvent<HTMLInputElement>) => this.setState({ cloneName: e.target.value })
+  updateCloneLabel = (e: React.ChangeEvent<HTMLInputElement>) =>
+    this.setState({ cloneName: e.target.value })
 
-  updateEmailAddress = (e: React.ChangeEvent<HTMLInputElement>) => this.setState({ soaEmail: e.target.value })
+  updateEmailAddress = (e: React.ChangeEvent<HTMLInputElement>) =>
+    this.setState({ soaEmail: e.target.value })
 
-  updateType = (e: React.ChangeEvent<HTMLInputElement>, value: 'master' | 'slave') => this.setState({ type: value })
+  updateType = (e: React.ChangeEvent<HTMLInputElement>, value: 'master' | 'slave') =>
+    this.setState({ type: value })
 
-  updateMasterIPAddress = (idx: number) => (e: React.ChangeEvent<HTMLInputElement>) => this.setState(setMasterIP(idx, e.target.value), () => console.log(this.state.master_ips))
+  updateMasterIPAddress = (idx: number) => (e: React.ChangeEvent<HTMLInputElement>) =>
+    this.setState(setMasterIP(idx, e.target.value))
 
   addIPField = () => this.setState(updateMasterIPsCount(v => v + 1))
 }
