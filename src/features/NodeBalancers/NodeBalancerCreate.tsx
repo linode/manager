@@ -289,7 +289,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
         return this.setState({
           errors: [
-            { field: 'none', reason: `An unexpected error has occured..` }],
+            { reason: `An unexpected error has occured..` }],
         }, () => {
           scrollErrorIntoView();
         });
@@ -333,7 +333,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       this.setState({
         errors: this.state.errors!.filter((error: Linode.ApiFieldError) => {
           const t = new RegExp(`configs_${idxToDelete}_`);
-          return !t.test(error.field);
+          return error.field && !t.test(error.field);
         }),
       });
     }
@@ -672,7 +672,7 @@ export const fieldErrorsToNodePathErrors = (errors: Linode.ApiFieldError[]) => {
   */
   return errors.reduce(
     (acc: any, error: Linode.ApiFieldError) => {
-      const { field, path } = getPathAnFieldFromFieldString(error.field);
+      const { field, path } = getPathAnFieldFromFieldString(error.field!);
 
       if (!path.length) { return acc; }
 
