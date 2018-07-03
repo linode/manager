@@ -13,33 +13,33 @@ describe('Editable Text Suite', () => {
     const cancelEdit = '[data-qa-cancel-edit]';
     const newLabel = 'someNewValue!';
 
-    let originalValue, editableText;
+    let originalLabel;
 
     beforeAll(() => {
         navigateToStory(component, childStories[0]);
-        browser.waitForVisible(editableText);
+        browser.waitForVisible(editableTextSelector);
     });
 
     it('should become an editable field on click', () => {
-        editableText = $$(editableTextSelector);
-        originalValue = editableText[0].getText();
+        originalLabel = $(editableTextSelector).getText();
 
-        $$(editButtonSelector)[0].click();
+        $(editButtonSelector).click();
         browser.waitForVisible(editField);
     });
 
     it('should edit the textfield', () => {
         $(editField).$('input').setValue(newLabel);
         browser.click(saveEdit);
-        expect($$(editableTextSelector)[0].getText()).toContain(newLabel);
+        expect($(editableTextSelector).getText()).toContain(newLabel);
     });
 
     it('should not update the textfield on cancel', () => {
-        editableText[0].click();
-        editableText[0].$('input').setValue(originalValue);
+        $(editableTextSelector).click();
+        $(cancelEdit).waitForVisible();
+        $(editField).$('input').setValue(originalLabel);
         browser.click(cancelEdit);
 
         // Should contain the new label from the prior test
-        expect(editableText[0].getText()).toContain(newLabel);
+        expect($(editableTextSelector).getText()).toBe(newLabel);
     });
 });
