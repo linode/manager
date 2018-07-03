@@ -24,11 +24,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-interface Props {
+interface Props extends TextFieldProps {
   className: string;
 }
 
-type CombinedProps = Props & TextFieldProps & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 class CopyableTextField extends React.Component<CombinedProps> {
   clickIcon = (value: string) => {
@@ -40,7 +40,7 @@ class CopyableTextField extends React.Component<CombinedProps> {
   }
 
   render() {
-    const { value, restProps, classes, className } = this.props;
+    const { value, classes, className, ...restProps } = this.props;
 
     return (
       <TextField
