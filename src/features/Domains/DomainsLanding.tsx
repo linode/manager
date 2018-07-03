@@ -43,7 +43,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     marginBottom: theme.spacing.unit * 2,
   },
   domain: {
-    width: '75%',
+    width: '60%',
   },
 });
 
@@ -249,7 +249,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell data-qa-domain-name-header>Domain</TableCell>
+                <TableCell data-qa-domain-name-header className={classes.domain}>Domain</TableCell>
                 <TableCell data-qa-domain-type-header>Type</TableCell>
                 <TableCell />
               </TableRow>
