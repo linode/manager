@@ -619,7 +619,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           </Button>
           <Button
             onClick={this.onClose}
-            type="secondary"
+            type="cancel"
             data-qa-cancel
           >
             Cancel

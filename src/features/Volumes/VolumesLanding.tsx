@@ -15,7 +15,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 
-
+import AddNewLink from 'src/components/AddNewLink';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import Grid from 'src/components/Grid';
 import Table from 'src/components/Table';
@@ -27,7 +27,7 @@ import { getLinodes } from 'src/services/linodes';
 import { _delete, detach,  } from 'src/services/volumes';
 
 import { generateInFilter, resetEventsPolling } from 'src/events';
-import { openForClone, openForEdit, openForResize,  } from 'src/store/reducers/volumeDrawer';
+import { openForClone, openForCreating, openForEdit, openForResize,  } from 'src/store/reducers/volumeDrawer';
 
 import DestructiveVolumeDialog from './DestructiveVolumeDialog';
 import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
@@ -48,6 +48,7 @@ interface Props {
   openForEdit: typeof openForEdit;
   openForResize: typeof openForResize;
   openForClone: typeof openForClone;
+  openForCreating: typeof openForCreating;
 }
 
 interface State {
@@ -146,6 +147,11 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     });
   }
 
+  openCreateVolumeDrawer = (e: any) => {
+    this.props.openForCreating();
+    e.preventDefault();
+}
+
   detachVolume = () => {
     const { destructiveDialog: { volumeID } } = this.state;
     if (!volumeID) { return; }
@@ -187,11 +193,21 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     const { linodeLabels, linodeStatuses } = this.state;
     return (
       <React.Fragment>
-        <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }} >
+        <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
           <Grid item>
-            <Typography variant="headline" data-qa-title className={classes.title}>
+            <Typography variant="headline" className={classes.title} data-qa-title >
               Volumes
             </Typography>
+          </Grid>
+          <Grid item>
+            <Grid container alignItems="flex-end">
+              <Grid item>
+                <AddNewLink
+                  onClick={this.openCreateVolumeDrawer}
+                  label="Create a Volume"
+                />
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
         <Paper>
@@ -203,7 +219,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
                 <TableCell>Size</TableCell>
                 <TableCell>File System Path</TableCell>
                 <TableCell>Region</TableCell>
-                <TableCell></TableCell>
+                <TableCell/>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -322,7 +338,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
-  { openForEdit, openForResize, openForClone },
+  { openForEdit, openForResize, openForClone, openForCreating },
   dispatch,
 );
 
