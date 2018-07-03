@@ -131,12 +131,12 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
         }
         {mode === 'create' && type === 'slave' &&
           <React.Fragment>
-            {masterIPsError && <Notice className={classes.masterIPErrorNotice} error text={`Master IP address must be valid IPv4 addresses.`} />}
+            {masterIPsError && <Notice className={classes.masterIPErrorNotice} error text={`Master IP addresses must be valid IPv4 addresses.`} />}
             {
               Array.from(Array(this.state.masterIPsCount)).map((slave, idx) => (
                 <TextField
                   key={idx}
-                  label="IP Address"
+                  label="Master Nameserver IP Address"
                   InputProps={{ "aria-label": `ip-address-${idx}` }}
                   value={viewMasterIP(idx, this.state) || ''}
                   onChange={this.updateMasterIPAddress(idx)}
@@ -199,9 +199,24 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
     const { onClose } = this.props;
     const { domain, type, soaEmail, master_ips } = this.state;
 
+    const finalMasterIPs = master_ips.filter(v => v !== '');
+
+    if (type === 'slave' && finalMasterIPs.length === 0) {
+      this.setState({
+        submitting: false,
+        errors: [
+          {
+            field: 'master_ips',
+            reason: 'You must provide at least one Master Nameserver IP Address'
+          }
+        ],
+      });
+      return;
+    }
+
     const data = type === 'master'
       ? { domain, type, soa_email: soaEmail }
-      : { domain, type, master_ips: master_ips.filter(v => v !== '') }
+      : { domain, type, master_ips: finalMasterIPs }
 
     this.setState({ submitting: true });
     createDomain(data)
