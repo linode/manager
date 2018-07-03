@@ -9,7 +9,6 @@ describe('Help Icon Component Suite', () => {
         'right',
     ]
     
-    const page = 'body';
     const helpButton = '[data-qa-help-button]';
     const popoverText = '[role="tooltip"]';
     

@@ -10,6 +10,7 @@ shim(); // allows for .finally() usage
 import { withStyles, WithStyles, StyleRulesCallback, Theme } from '@material-ui/core/styles';
 import 'typeface-lato';
 
+import StackScriptIcon from 'src/assets/addnewmenu/stackscripts.svg';
 import { getLinodeTypes, getLinodeKernels } from 'src/services/linodes';
 import { getProfile } from 'src/services/profile';
 import TopMenu from 'src/features/TopMenu';
@@ -101,8 +102,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   },
 });
 
-interface Props {
-  toggleTheme: () => void;
+interface Props { toggleTheme: () => void;
   longLivedLoaded: boolean;
 }
 
@@ -227,7 +227,7 @@ export class App extends React.Component<CombinedProps, State> {
                         <Route exact path="/longview" render={() =>
                           <Placeholder title="Longview" />} />
                         <Route exact path="/stackscripts" render={() =>
-                          <Placeholder title="StackScripts" />} />
+                          <Placeholder title="StackScripts" icon={StackScriptIcon} />} />
                         <Route path="/images" component={Images} />
                         <Route exact path="/billing" render={() =>
                           <Placeholder title="Billing" />} />

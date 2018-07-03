@@ -24,21 +24,48 @@ describe('ResourcesReducer', () => {
   const err = new Error();
   let result: Linode.ResourcesState;
 
+  const resources: Linode.ResourcesState = {
+    types: { loading: false, data: { data: [], results: 0, pages: 1, page: 0 }, },
+    kernels: { loading: false, data: [], },
+    profile: {
+      loading: false, data: {
+        uid: 1,
+        username: '',
+        email: '',
+        timezone: '',
+        email_notifications: false,
+        referrals: {
+          code: '',
+          url: '',
+          total: 0,
+          completed: 0,
+          pending: 0,
+          credit: 0,
+        },
+        ip_whitelist_enabled: false,
+        list_auth_method: 'password_keys',
+        authorized_keys: [],
+        two_factor_auth: false,
+        restricted: false,
+      },
+    }
+  };
+
   it('should ignore irrelevant actions', () => {
-    result = reducer({}, { type: 'not-involved' });
-    expect(result).toEqual({});
+    result = reducer(resources, { type: 'not-involved' });
+    expect(result).toEqual(resources);
   });
 
   describe('when type === REQUEST', () => {
     it('should set loading to true.', () => {
-      result = reducer({}, request(['types']));
+      result = reducer(resources, request(['types']));
       expect(result.types).toHaveProperty('loading', true);
     });
   });
 
   describe('when type === RESPONSE', () => {
     beforeEach(() => {
-      result = reducer({}, response(['types'], data));
+      result = reducer(resources, response(['types'], data));
     });
 
     it('should set loading to false', () => {
@@ -51,7 +78,7 @@ describe('ResourcesReducer', () => {
 
     describe('and is error', () => {
       beforeEach(() => {
-        result = reducer({}, response(['types'], err));
+        result = reducer(resources, response(['types'], err));
       });
 
       it('should set loading to false', () => {

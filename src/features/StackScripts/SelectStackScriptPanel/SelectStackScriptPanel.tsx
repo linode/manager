@@ -321,7 +321,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
     const { currentFilterType, isSorting } = this.state;
 
     if (this.state.loading) {
-      return <CircleProgress />;
+      return <CircleProgress noTopMargin />;
     }
 
     return (

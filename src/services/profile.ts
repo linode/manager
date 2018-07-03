@@ -9,6 +9,15 @@ export const getProfile = () => Request<Linode.Profile>(
   setMethod('GET'),
 );
 
+export const updateProfile = (data: any) => Request<Linode.Profile>(
+  setURL(`${API_ROOT}/profile`),
+  setMethod('PUT'),
+  /** @todo */
+  // validateRequestData(data, ProfileUpdateSchema)
+  setData(data),
+)
+  .then(response => response.data);
+
 /** App Tokens */
 export const createAppToken = (data: any) =>
   Request<Token>(

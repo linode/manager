@@ -54,7 +54,12 @@ describe('Edit - Clone - Resize Volumes Suite', () => {
         VolumeDetail.removeAllVolumes();
 
         apiDeleteAllLinodes();
-        apiDeleteAllVolumes();
+        try {
+            // API remove all volumes, in case the UI fails to
+            apiDeleteAllVolumes();
+        } catch (err) {
+            // do nothing
+        }
     });
 
     it('should edit the volume label', () => {

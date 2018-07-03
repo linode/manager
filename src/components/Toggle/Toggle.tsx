@@ -15,7 +15,9 @@ type CSSClasses =
   | 'disabled';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
-  root: {},
+  root: {
+    marginRight: theme.spacing.unit,
+  },
   checked: {},
   disabled: {},
 });
@@ -37,8 +39,7 @@ const LinodeSwitchControl: React.StatelessComponent<CombinedProps> = (props) => 
       icon={<ToggleOff />}
       checkedIcon={<ToggleOn />}
       {...rest}
-    >
-    </Switch>
+    />
   );
 };
 

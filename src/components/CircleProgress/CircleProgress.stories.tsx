@@ -5,5 +5,5 @@ import CircleProgress from './CircleProgress';
 
 storiesOf('Circle Progress Indicator', module)
   .add('Indefinite', () => (
-    <CircleProgress />
+    <CircleProgress noTopMargin />
   ));

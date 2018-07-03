@@ -244,6 +244,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
         }));
       })
       .finally(() => {
+        if (!this.mounted) { return; }
         // regardless of whether request failed or not, change state and enable the submit btn
         this.setState({ isMakingRequest: false });
       });
@@ -277,7 +278,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       <React.Fragment>
       <Grid item className={`${classes.main} mlMain`}>
         {(this.state.isGettingBackups)
-          ? <CircleProgress />
+          ? <CircleProgress noTopMargin />
           : (!this.userHasBackups())
             ? <Placeholder
             icon={VolumeIcon}
