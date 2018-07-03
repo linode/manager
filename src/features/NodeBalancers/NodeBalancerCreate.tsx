@@ -412,6 +412,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
             {generalError && <Notice error>{generalError}</Notice>}
 
             <LabelAndTagsPanel
+              data-qa-label-input
               labelFieldProps={{
                 errorText: hasErrorFor('label'),
                 label: 'NodeBalancer Label',

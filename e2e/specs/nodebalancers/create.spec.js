@@ -39,8 +39,8 @@ describe('Nodebalancer - Create Suite', () => {
     });
 
     it('should fail to create without choosing a backend ip', () => {
-        const labelError = '"label" length must be at least 3 characters long';
-        const addressError = '"address" with value "" fails to match the required pattern';
+        const labelError = 'Label must be at least 3 characters';
+        const addressError = 'IP Address must be a Linode private address';
 
         NodeBalancers.regionCards[0].click();
         browser.jsClick('[data-qa-deploy-linode]');
@@ -53,8 +53,9 @@ describe('Nodebalancer - Create Suite', () => {
     });
 
     it('should create a nodebalancer with a valid backend ip', () => {
-        NodeBalancers.backendIpLabel.setValue(linode.label);
-        NodeBalancers.backendIpAddress.setValue(`${linode.privateIp}:80`);
+        NodeBalancers.backendIpLabel.addValue(linode.label);
+        NodeBalancers.backendIpAddress.addValue(linode.privateIp);
+        NodeBalancers.backendIpPort.setValue('80');
         browser.jsClick('[data-qa-deploy-linode]');
         
         NodeBalancerDetail.baseElemsDisplay();
