@@ -161,7 +161,6 @@ class LishSettings extends React.Component<CombinedProps, State> {
 
   onSubmit = () => {
     const { authorizedKeys, lishAuthMethod } = this.state;
-    /** clear errors, start submutting */
     this.setState({ errors: undefined, submitting: true });
 
     updateProfile({
