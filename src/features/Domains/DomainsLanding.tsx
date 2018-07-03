@@ -1,31 +1,28 @@
-import * as React from 'react';
-import { compose, pathOr } from 'ramda';
-import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
-
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
-
-import { getDomains, deleteDomain } from 'src/services/domains';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
-import Placeholder from 'src/components/Placeholder';
-import Table from 'src/components/Table';
-import Grid from 'src/components/Grid';
-import ErrorState from 'src/components/ErrorState';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { compose, pathOr } from 'ramda';
+import * as React from 'react';
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
-import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
+import AddNewLink from 'src/components/AddNewLink';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import setDocs from 'src/components/DocsSidebar/setDocs';
-
+import ErrorState from 'src/components/ErrorState';
+import Grid from 'src/components/Grid';
+import Placeholder from 'src/components/Placeholder';
+import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
+import Table from 'src/components/Table';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
+import { deleteDomain, getDomains } from 'src/services/domains';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import ActionMenu from './DomainActionMenu';
 import DomainCreateDrawer from './DomainCreateDrawer';
-import AddNewLink from 'src/components/AddNewLink';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 
 type ClassNames = 'root' | 'title';
