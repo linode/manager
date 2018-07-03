@@ -1,35 +1,38 @@
 import * as React from 'react';
-import { compose, pathOr, equals } from 'ramda';
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from '@material-ui/core/styles';
-import { bindActionCreators } from 'redux';
-import { connect, Dispatch } from 'react-redux';
 
-import Typography from '@material-ui/core/Typography';
+import { compose, equals, pathOr } from 'ramda';
+
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+
+import { connect, Dispatch } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+
 import Paper from '@material-ui/core/Paper';
-import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
-import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Typography from '@material-ui/core/Typography';
+
 
 import setDocs from 'src/components/DocsSidebar/setDocs';
-import Table from 'src/components/Table';
 import Grid from 'src/components/Grid';
-import { getLinodes } from 'src/services/linodes';
-import { dcDisplayNames } from 'src/constants';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
-import { generateInFilter, resetEventsPolling } from 'src/events';
-import { openForEdit, openForResize, openForClone } from 'src/store/reducers/volumeDrawer';
-import { detach, _delete } from 'src/services/volumes';
+import Table from 'src/components/Table';
 
-import VolumesActionMenu from './VolumesActionMenu';
-import VolumeConfigDrawer from './VolumeConfigDrawer';
-import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
+
+import { dcDisplayNames } from 'src/constants';
+import { getLinodes } from 'src/services/linodes';
+import { _delete, detach,  } from 'src/services/volumes';
+
+import { generateInFilter, resetEventsPolling } from 'src/events';
+import { openForClone, openForEdit, openForResize,  } from 'src/store/reducers/volumeDrawer';
+
 import DestructiveVolumeDialog from './DestructiveVolumeDialog';
+import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
+import VolumeConfigDrawer from './VolumeConfigDrawer';
+import VolumesActionMenu from './VolumesActionMenu';
 
 type ClassNames = 'root' | 'title';
 
