@@ -7,12 +7,14 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 import Button from '@material-ui/core/Button';
 
 import { updateImage } from 'src/services/images';
+import { getLinodes } from 'src/services/linodes';
 
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Drawer from 'src/components/Drawer';
+import LinodeSelect from 'src/components/LinodeSelect';
 import Notice from 'src/components/Notice';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import TextField from 'src/components/TextField';
@@ -45,6 +47,8 @@ export interface Props {
 interface State {
   label: string;
   description: string;
+  linodes: string[][];
+  selectedLinode: string;
   imageID?: string;
   errors?: Linode.ApiFieldError[];
 }
@@ -72,20 +76,41 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
   state = { 
     description: this.props.description ? this.props.description : ' ',
     label: this.props.label ? this.props.label : '',
+    linodes: [],
     errors: undefined,
+    selectedLinode: '',
   };
 
   componentDidMount() {
     this.mounted = true;
+    this.updateLinodes();
   }
 
   componentWillUnmount() {
     this.mounted = false;
   }
 
+  changeSelectedLinode = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    this.setState({ selectedLinode: e.target.value });
+  }
+
   close = () => {
     this.setState({ description: '', label: '', errors: undefined });
     this.props.onClose();
+  }
+
+  updateLinodes() {
+    /*
+     * @todo: We're only getting page 1 here, what if the account has over 100
+     * Linodes?
+     */
+    getLinodes({ page: 1 })
+      .then((response) => {
+        const linodeChoices = response.data.map((linode) => {
+          return [`${linode.id}`, linode.label];
+        });
+        this.setState({ linodes: linodeChoices });
+      });
   }
 
   onSubmit = () => {
@@ -137,7 +162,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
 
   render() {
     const { mode, } = this.props;
-    const { label, description } = this.state;
+    const { label, linodes, description, selectedLinode } = this.state;
 
     const { errors } = this.state;
 
@@ -167,15 +192,13 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
         }
 
         {mode === 'create' &&
-        <TextField
-        label="Testing"
-        required
-        value={label}
-        onChange={this.setLabel}
-        error={Boolean(labelError)}
-        errorText={labelError}
-        data-qa-volume-label
-      />
+        <LinodeSelect
+          linodes={linodes}
+          selectedLinode={selectedLinode}
+          linodeError="hello"
+          generalError="goodbye"
+          handleChange={this.changeSelectedLinode}
+        />
       
       
       }
