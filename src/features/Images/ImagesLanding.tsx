@@ -131,7 +131,8 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
       })
       .catch((err) => {
         const errors: Linode.ApiFieldError[] = pathOr([], ['response', 'data', 'errors'], err);
-        this.setState({ removeDialog:  { ...removeDialog, error: errors[0].reason} });
+        const error: string = errors.length > 0 ? errors[0].reason : "There was an error deleting the image."
+        this.setState({ removeDialog:  { ...removeDialog, error} });
       })
   }
 
