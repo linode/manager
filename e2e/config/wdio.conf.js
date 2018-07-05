@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+const { readFileSync } = require('fs');
 const { argv } = require('yargs');
 const { login } = require('../utils/config-utils');
 const { browserCommands } = require('./custom-commands');
@@ -85,7 +86,7 @@ exports.config = {
     coloredLogs: true,
     //
     // Warns when a deprecated command is used
-    deprecationWarnings: false,
+    deprecationWarnings: true,
     //
     // If you only want to run your tests until a specific amount of tests have failed use
     // bail (default is 0 - don't bail, run all tests).
@@ -165,6 +166,16 @@ exports.config = {
             // do something
         }
     },
+
+    mountebankConfig: {
+        proxyConfig: {
+            imposterPort: '8088',
+            imposterProtocol: 'https',
+            imposterName: 'Linode-API',
+            proxyHost: 'https://api.linode.com/v4',
+            mutualAuth: true,
+        }
+    },
     
     //
     // =====
@@ -201,6 +212,19 @@ exports.config = {
         require('babel-register');
 
         browserCommands();
+
+        // Timecount needed to generate unqiue timestamp values for mocks
+        global.timeCount = 0;
+
+        if (argv.record) {
+            browser.loadProxyImposter(browser.options.mountebankConfig.proxyConfig);
+        }
+
+        if (argv.replay) {
+            const file = specs[0].replace('.js', '-stub.json');
+            const imposter = JSON.parse(readFileSync(file));
+            browser.loadImposter(imposter);
+        }
 
         browser.timeouts('page load', 20000);
         login(username, password);
@@ -270,6 +294,15 @@ exports.config = {
      * @param {Array.<String>} specs List of spec file paths that ran
      */
     after: function (result, capabilities, specs) {
+        if (argv.record) {
+            const recordingFile = specs[0].replace('.js', '-stub.json');
+            browser.getImposters(true, recordingFile);
+            browser.deleteImposters();
+        }
+
+        if (argv.replay) {
+            browser.deleteImposters();
+        }
     },
     /**
      * Gets executed right after terminating the webdriver session.

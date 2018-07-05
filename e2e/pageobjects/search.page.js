@@ -13,7 +13,7 @@ class SearchBar extends Page {
     executeSearch(query) {
         this.searchElem.waitForVisible();
         this.searchElem.click();
-        this.searchInput.setValue(query);
+        browser.trySetValue('[data-qa-search] input', query);
     }
 
     assertSearchDisplays() {

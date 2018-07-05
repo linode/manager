@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const { argv } = require('yargs');
 const { constants } = require('../constants');
 const { readToken } = require('./config-utils');
 
@@ -9,6 +10,14 @@ import Settings from '../pageobjects/linode-detail/linode-detail-settings.page';
 import LinodeDetail from '../pageobjects/linode-detail/linode-detail.page';
 import NodeBalancers from '../pageobjects/nodebalancers.page';
 import NodeBalancerDetail from '../pageobjects/nodebalancer-detail/details.page';
+
+export const timestamp = () => {
+    if (argv.record || argv.replay) {
+        global.timeCount++
+        return `Unique${timeCount}`;
+    }
+    return `A${new Date().getTime()}`;
+}
 
 export const createGenericLinode = (label) => {
     Create.menuButton.click();
