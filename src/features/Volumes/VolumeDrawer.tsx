@@ -107,11 +107,13 @@ const titleMap = {
 
 const L = {
   cloneLabel: lensPath(['cloneLabel']),
+  configs: lensPath(['configs']),
   errors: lensPath(['errors']),
   label: lensPath(['label']),
   linodeId: lensPath(['linodeId']),
   linodes: lensPath(['linodes']),
   region: lensPath(['region']),
+  selectedConfig: lensPath(['selectedConfig']),
   size: lensPath(['size']),
   submitting: lensPath(['submitting']),
   success: lensPath(['success']),
@@ -140,7 +142,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
   composeState = (fns: ((s: State) => State)[], callback?: () => void) =>
     this.mounted && this.setState(
       state => fns.reverse().reduce((result, current) => current(result), state),
-      () => { callback && callback() }
+      () => { if (callback) { callback() } }
     );
 
   componentDidMount() {
@@ -211,9 +213,11 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           return [`${config.id}`, config.label];
         });
         this.setState({ configs: configChoices });
-        configChoices.length > 1 && this.setState({
+        if (configChoices.length > 1) {
+          this.setState({
           selectedConfig: configChoices[0][0],
         });
+        }
       })
       .catch(() => {
         /*
@@ -232,6 +236,8 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     set(L.region, 'none'),
     set(L.submitting, false),
     set(L.success, undefined),
+    set(L.configs, []),
+    set(L.selectedConfig, undefined),
   ]);
 
   onClose = () => {

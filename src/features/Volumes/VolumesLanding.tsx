@@ -128,7 +128,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           });
       });
   }
-  
+
   componentWillUnmount() {
     this.mounted = false;
   }
@@ -154,12 +154,12 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     if (volumes.length === 0) {
       return (
         <Placeholder
-          title="Add a Volume"
+          title="Create a Volume"
           copy="Add storage to your Linodes using the resilient Volumes service"
           icon={VolumesIcon}
           buttonProps={{
             onClick: this.props.openForCreating,
-            children: 'Add a Volume',
+            children: 'Create a Volume',
           }}
         />
       );
