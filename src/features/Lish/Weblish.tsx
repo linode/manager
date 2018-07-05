@@ -43,6 +43,10 @@ export class Weblish extends React.Component<CombinedProps, State> {
     this.getLinode();
   }
 
+  componentWillUnmount() {
+    this.mounted = false;
+  }
+
   getLishSchemeAndHostname(region: string): string {
     if (LISH_ROOT.includes('alpha')) {
       /* Note: This is only the case for pre-production environments! */

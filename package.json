@@ -64,6 +64,7 @@
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "react-sticky": "^6.0.1",
+    "react-vnc-display": "^1.1.0",
     "redux": "^3.7.2",
     "rxjs": "^5.5.6",
     "serve": "6.4.8",
