@@ -4,7 +4,7 @@ class ConfigureLinode extends Page {
     get createHeader() { return $('[data-qa-create-linode-header]'); }
     get createFromImage() { return $('[data-qa-create-from="Create from Image"]'); }
     get createFromBackup() { return $('[data-qa-create-from="Create from Backup"]'); }
-    get createFromExisting() { return $('[data-qa-create-from="Clone From Existing"]'); }
+    get createFromExisting() { return $('[data-qa-create-from="Clone from Existing"]'); }
     
     // get selectLinodePanel() {}
 
@@ -120,7 +120,7 @@ class ConfigureLinode extends Page {
 
     cloneSelectSource(linodeLabel) {
         const sourceSection = $$('[data-qa-select-linode-panel]')
-            .filter(s => s.$('[data-qa-select-linode-header]').getText() === 'Select Linode to Clone From');
+        expect(sourceSection[0].$('[data-qa-select-linode-header]').getText()).toBe('Select Linode to Clone From');
         // const targetSection = $$('[data-qa-select-linode-panel]')
             // .filter(s => s.$('[data-qa-select-linode-header]').getText() === 'Select Target Linode');
 
