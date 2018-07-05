@@ -10,7 +10,6 @@ shim(); // allows for .finally() usage
 import { withStyles, WithStyles, StyleRulesCallback, Theme } from '@material-ui/core/styles';
 import 'typeface-lato';
 
-import StackScriptIcon from 'src/assets/addnewmenu/stackscripts.svg';
 import { getLinodeTypes, getLinodeKernels } from 'src/services/linodes';
 import { getProfile } from 'src/services/profile';
 import TopMenu from 'src/features/TopMenu';

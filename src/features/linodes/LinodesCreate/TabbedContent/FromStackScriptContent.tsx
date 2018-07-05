@@ -88,7 +88,7 @@ interface State {
   userDefinedFields: Linode.StackScript.UserDefinedField[];
   udf_data: any;
   errors?: Linode.ApiFieldError[];
-  selectedStackScriptID: number | null;
+  selectedStackScriptID: number | undefined;
   selectedStackScriptLabel: string;
   selectedStackScriptUsername: string;
   selectedImageID: string | null;
@@ -117,9 +117,9 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
   state: State = {
     userDefinedFields: [],
     udf_data: null,
-    selectedStackScriptID: null,
+    selectedStackScriptID: this.props.selectedStackScriptFromQuery || undefined,
     selectedStackScriptLabel: '',
-    selectedStackScriptUsername: '',
+    selectedStackScriptUsername: this.props.selectedTabFromQuery || '',
     selectedImageID: null,
     selectedRegionID: null,
     selectedTypeID: null,
@@ -328,6 +328,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
           <SelectStackScriptPanel
             error={hasErrorFor('stackscript_id')}
             selectedId={selectedStackScriptID}
+            selectedUsername={selectedStackScriptUsername}
             shrinkPanel={true}
             updateFor={[selectedStackScriptID, errors]}
             onSelect={this.handleSelectStackScript}
