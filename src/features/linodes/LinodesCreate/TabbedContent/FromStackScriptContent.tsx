@@ -164,6 +164,19 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
     });
   }
 
+  resetStackScriptSelection = () => {
+    // reset stackscript selection to unselected
+    this.setState({
+      selectedStackScriptID: undefined,
+      selectedStackScriptLabel: '',
+      selectedStackScriptUsername: '',
+      udf_data: null,
+      userDefinedFields: [],
+      compatibleImages: [],
+      selectedImageID: null, // stackscripts don't support all images, so we need to reset it
+    })
+  }
+
   handleChangeUDF = (key: string, value: string) => {
     // either overwrite or create new selection
     const newUDFData = assocPath([key], value, this.state.udf_data);
@@ -333,6 +346,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
             updateFor={[selectedStackScriptID, errors]}
             onSelect={this.handleSelectStackScript}
             publicImages={this.filterPublicImages(images) || []}
+            resetSelectedStackScript={this.resetStackScriptSelection}
           />
           {userDefinedFields && userDefinedFields.length > 0 &&
             <UserDefinedFieldsPanel

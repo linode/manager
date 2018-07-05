@@ -107,60 +107,66 @@ interface Props {
   publicImages: Linode.Image[];
   noHeader?: boolean;
   profile: Linode.Profile;
+  resetSelectedStackScript?: () => void;
 }
 
 type StyledProps = Props & WithStyles<ClassNames>;
 
 type CombinedProps = StyledProps;
 
-const SelectStackScriptPanel = (props: CombinedProps) => {
+interface State {
+  shouldPreSelectStackScript: boolean;
+}
 
-  const { error, noHeader, profile, shrinkPanel, classes,
-    publicImages, onSelect, selectedId, selectedUsername } = props;
+class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
 
-  const tabs = [
+  state: State = {
+    shouldPreSelectStackScript: true,
+  }
+
+  tabs = [
     {
       title: 'My StackScripts',
       render: () => <StyledContainer
-        onSelect={onSelect}
-        // images is an optional prop, so just send an empty array if we didn't get any
-        publicImages={publicImages}
-        currentUser={profile.username}
+        onSelect={this.props.onSelect}
+        publicImages={this.props.publicImages}
+        currentUser={this.props.profile.username}
         request={getStackScriptsByUser}
-        selectedStackScriptIDFromQuery={selectedId}
+        selectedStackScriptIDFromQuery={this.props.selectedId}
+        shouldPreSelectStackScript={this.state.shouldPreSelectStackScript}
         key={0}
       />,
     },
     {
       title: 'Linode StackScripts',
       render: () => <StyledContainer
-        onSelect={onSelect}
-        // images is an optional prop, so just send an empty array if we didn't get any
-        publicImages={publicImages}
-        currentUser={profile.username}
+        onSelect={this.props.onSelect}
+        publicImages={this.props.publicImages}
+        currentUser={this.props.profile.username}
         request={getStackScriptsByUser}
-        selectedStackScriptIDFromQuery={selectedId}
+        selectedStackScriptIDFromQuery={this.props.selectedId}
         key={1}
         isLinodeStackScripts={true}
+        shouldPreSelectStackScript={this.state.shouldPreSelectStackScript}
       />,
     },
     {
       title: 'Community StackScripts',
       render: () => <StyledContainer
-        onSelect={onSelect}
-        // images is an optional prop, so just send an empty array if we didn't get any
-        publicImages={publicImages}
-        currentUser={profile.username}
+        onSelect={this.props.onSelect}
+        publicImages={this.props.publicImages}
+        currentUser={this.props.profile.username}
         request={getCommunityStackscripts}
-        selectedStackScriptIDFromQuery={selectedId}
+        selectedStackScriptIDFromQuery={this.props.selectedId}
+        shouldPreSelectStackScript={this.state.shouldPreSelectStackScript}
         key={2}
       />,
     },
   ];
 
-  const myTabIndex = tabs.findIndex(tab => tab.title.toLowerCase().includes('my'));
-  const linodeTabIndex = tabs.findIndex(tab => tab.title.toLowerCase().includes('linode'));
-  const communityTabIndex = tabs.findIndex(tab => tab.title.toLowerCase().includes('community'));
+  myTabIndex = this.tabs.findIndex(tab => tab.title.toLowerCase().includes('my'));
+  linodeTabIndex = this.tabs.findIndex(tab => tab.title.toLowerCase().includes('linode'));
+  communityTabIndex = this.tabs.findIndex(tab => tab.title.toLowerCase().includes('community'));
 
   /*
   ** init tab needs to be set if we're being navigated from another page
@@ -169,32 +175,52 @@ const SelectStackScriptPanel = (props: CombinedProps) => {
   ** so we need a way to determined what tab the user should be on when
   ** seeing the panel. Default to 0 index if no query string
   */
-  const getInitTab = () => {
+  getInitTab = () => {
+    const { profile, onSelect, selectedUsername } = this.props;
+
     if (profile.username === selectedUsername) {
-      return myTabIndex;
+      return this.myTabIndex;
     }
     if (selectedUsername === 'linode') {
-      return linodeTabIndex;
+      return this.linodeTabIndex;
     }
     if (selectedUsername !== ''
       && selectedUsername !== 'linode'
       && selectedUsername !== profile.username
       && !!onSelect) {
-      return communityTabIndex;
+      return this.communityTabIndex;
     }
-    return myTabIndex;
+    return this.myTabIndex;
   }
 
-  return (
-    <TabbedPanel
-      error={error}
-      rootClass={classes.root}
-      shrinkTabContent={(shrinkPanel) ? classes.creating : classes.selecting}
-      header={(noHeader) ? "" : "Select StackScript"}
-      tabs={tabs}
-      initTab={getInitTab()}
-    />
-  );
+  handleTabChange = () => {
+    const { resetSelectedStackScript } = this.props;
+    /*
+    * if we're coming from a query string, the stackscript will be preselected
+    * however, we don't want the user to have their stackscript still preselected
+    * when they change StackScript tabs
+    */
+    this.setState({ shouldPreSelectStackScript: false });
+    if (!!resetSelectedStackScript) {
+      resetSelectedStackScript();
+    }
+  }
+
+  render() {
+    const { error, noHeader, shrinkPanel, classes } = this.props;
+
+    return (
+      <TabbedPanel
+        error={error}
+        rootClass={classes.root}
+        shrinkTabContent={(shrinkPanel) ? classes.creating : classes.selecting}
+        header={(noHeader) ? "" : "Select StackScript"}
+        tabs={this.tabs}
+        initTab={this.getInitTab()}
+        handleTabChange={this.handleTabChange}
+      />
+    );
+  }
 }
 
 interface Params {
@@ -211,6 +237,7 @@ interface ContainerProps {
   isLinodeStackScripts?: boolean;
   publicImages: Linode.Image[];
   selectedStackScriptIDFromQuery: number | undefined;
+  shouldPreSelectStackScript: boolean;
 }
 
 type CurrentFilter = 'label' | 'deploys' | 'revision';
@@ -263,7 +290,13 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
         if (!response.data.length || response.data.length === response.results) {
           this.setState({ showMoreButtonVisible: false });
         }
+
+        /*
+        * if we're sorting, just return the first page, since 
+        */
         const newData = (isSorting) ? response.data : [...this.state.data, ...response.data];
+
+
         const cleanedData = (!!selectedStackScriptIDFromQuery)
         ? newData.filter((stackScript, index) => {
           if(index !== 0) {
@@ -288,12 +321,25 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
   }
 
   componentDidMount() {
-    const { selectedStackScriptIDFromQuery } = this.props;
+    const { selectedStackScriptIDFromQuery, shouldPreSelectStackScript,
+    onSelect } = this.props;
     this.mounted = true;
-    if (!!selectedStackScriptIDFromQuery) {
+    /*
+    * if the user is coming to the StackScripts panel from a query string
+    * we need to first request the stackscript that's in the query string
+    * and then prepend it to the first page request.
+    * The only issue here is that we could end up with duplicate entries
+    * in the list of data, but this is handled in getDataAtPage()
+    */
+    if (!!selectedStackScriptIDFromQuery && shouldPreSelectStackScript) {
       return getStackScript(selectedStackScriptIDFromQuery)
         .then(data => {
-          this.setState({ data: [data] })
+          this.setState({ data: [data] });
+          if (!!onSelect) {
+            // preselect our stackscript here
+            onSelect(data.id, data.label, data.username,
+              data.images, data.user_defined_fields)
+          }
           return data;
         })
         .then(data => {
