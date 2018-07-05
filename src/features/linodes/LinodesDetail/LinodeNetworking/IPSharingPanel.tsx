@@ -17,7 +17,7 @@ import MenuItem from 'src/components/MenuItem';
 import Select from 'src/components/Select';
 import TextField from 'src/components/TextField';
 import { getLinodes } from 'src/services/linodes';
-import { listIPs, shareAddresses } from 'src/services/networking';
+import { shareAddresses } from 'src/services/networking';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
 type ClassNames = 
@@ -151,9 +151,8 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
     );
   }
 
-  onIPSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const ipIdx = e.currentTarget.getAttribute('data-ip-idx');
-    if (!ipIdx) { return; }
+  onIPSelect = (ipIdx: number) => (e: React.ChangeEvent<HTMLSelectElement>) => {
+    if (ipIdx === undefined) { return; }
     const newIPsToShare = clone(this.state.ipsToShare);
     newIPsToShare[+ipIdx] = e.target.value;
     if (!this.mounted) { return ;}
@@ -162,9 +161,8 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
     })
   }
   
-  onIPDelete = (e: React.MouseEvent<HTMLElement>) => {
-    const ipIdx = e.currentTarget.getAttribute('data-ip-idx');
-    if (!ipIdx) { return; }
+  onIPDelete = (ipIdx: number) => (e: React.MouseEvent<HTMLElement>) => {
+    if (ipIdx === undefined) { return; }
     const newIPsToShare = clone(this.state.ipsToShare);
     newIPsToShare.splice(+ipIdx, 1);
     if (!this.mounted) { return ;}
@@ -190,7 +188,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
         <Grid item>
           <Select
             value={ip}
-            onChange={this.onIPSelect}
+            onChange={this.onIPSelect(idx)}
             fullWidth={false}
             className={classes.ipField}
           >
@@ -207,8 +205,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
         </Grid>
         <Grid item>
           <IconButton
-            data-ip-idx={idx}
-            onClick={this.onIPDelete}
+            onClick={this.onIPDelete(idx)}
             destructive
           >
             <Delete />
