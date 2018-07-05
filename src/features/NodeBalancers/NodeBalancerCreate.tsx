@@ -673,8 +673,7 @@ export const fieldErrorsToNodePathErrors = (errors: Linode.ApiFieldError[]) => {
   */
   return errors.reduce(
     (acc: any, error: Linode.ApiFieldError) => {
-      const { field, path } = getPathAnFieldFromFieldString(error.field!
-      );
+      const { field, path } = getPathAnFieldFromFieldString(error.field!);
 
       if (!path.length) { return acc; }
 
