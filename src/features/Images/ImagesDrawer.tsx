@@ -33,18 +33,19 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 });
 
 export interface Props {
-  label: string;
-  description: string;
-  imageID: string;
   mode: string;
   open: boolean;
+  description?: string;
+  imageID?: string;
+  label?: string;
   onClose: () => void;
   onSuccess: () => void;
-  setLabel: (e:React.ChangeEvent<HTMLInputElement>) => void;
-  setDescription: (e:React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 interface State {
+  label: string;
+  description: string;
+  imageID?: string;
   errors?: Linode.ApiFieldError[];
 }
 
@@ -68,7 +69,11 @@ const titleMap = {
 
 class ImageDrawer extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
-  state = { errors: undefined };
+  state = { 
+    description: this.props.description ? this.props.description : ' ',
+    label: this.props.label ? this.props.label : '',
+    errors: undefined,
+  };
 
   componentDidMount() {
     this.mounted = true;
@@ -79,12 +84,13 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
   }
 
   close = () => {
-    this.setState({ errors: undefined });
+    this.setState({ description: '', label: '', errors: undefined });
     this.props.onClose();
   }
 
   onSubmit = () => {
-    const { mode, onSuccess, label, description, imageID } = this.props;
+    const { mode, onSuccess, imageID } = this.props;
+    const { label, description } = this.state;
 
     switch (mode) {
       case modes.EDITING:
@@ -121,8 +127,17 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
     }
   }
 
+  setLabel = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ label: e.target.value });
+  }
+
+  setDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ description: e.target.value });
+  }
+
   render() {
-    const { mode, label, description, setLabel, setDescription } = this.props;
+    const { mode, } = this.props;
+    const { label, description } = this.state;
 
     const { errors } = this.state;
 
@@ -155,7 +170,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
           label="Label"
           required
           value={label}
-          onChange={setLabel}
+          onChange={this.setLabel}
           error={Boolean(labelError)}
           errorText={labelError}
           data-qa-volume-label
@@ -166,7 +181,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
           required
           multiline
           value={description}
-          onChange={setDescription}
+          onChange={this.setDescription}
           error={Boolean(descriptionError)}
           errorText={descriptionError}
           data-qa-size
