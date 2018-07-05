@@ -4,7 +4,7 @@ import { LinodeCreate } from './LinodesCreate';
 
 import { images, ExtendedType, LinodesWithBackups } from 'src/__data__/index';
 
-import { RouteComponentProps, MemoryRouter } from 'react-router';
+import { reactRouterProps } from 'src/__data__/reactRouterProps';
 
 const dummyProps = {
   types: ExtendedType,
@@ -19,27 +19,17 @@ const dummyProps = {
 
 describe('FromImageContent', () => {
   const component = shallow(
-    <MemoryRouter initialEntries={['/']}>
       <LinodeCreate
-        {...({} as RouteComponentProps<any>)}
         classes={{
           root: '',
           main: '',
         }}
         {...dummyProps}
+        {...reactRouterProps}
       />
-    </MemoryRouter>,
   );
 
-  it('renders without error', () => {
-    expect(component.find('LinodeCreate')).toHaveLength(1);
+  it('should render create tabs', () => {
+    expect(component.find('WithStyles(Tab)')).toHaveLength(4);
   });
 });
-
-/*
-@TODO figure out a way to dive into the LinodeCreate
-
-Currently, LinodeCreate has functions, such as updateStateFromQuerystring()
-that relies on location.search so being able to mount the component while
-being able to pass down the Router components would be huge
-*/
