@@ -59,6 +59,10 @@ module.exports = {
       {
         test: /\.tsx?$/,
         include: paths.appSrc,
+        exclude: [
+          path.resolve(__dirname, 'src/components/__image_snapshots__'),
+          path.resolve(__dirname, 'src/components/__snapshots__'),
+        ],
         use: [
           {
             loader: require.resolve('ts-loader'),

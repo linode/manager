@@ -99,6 +99,7 @@
     "test": "node scripts/test.js --env=jsdom",
     "storybook": "start-storybook -p 6006",
     "storybook:e2e": "./node_modules/.bin/wdio ./e2e/config/wdio.storybook.conf.js",
+    "storyshots": "npx jest --config ./.storybook/storyshots.jest.config.js src/components/Storyshots.test.tsx --env=jsdom",
     "build-storybook": "build-storybook",
     "serve": "./node_modules/.bin/serve -s -p 3000 --ssl ./build",
     "selenium": "./node_modules/.bin/selenium-standalone install --config=./e2e/config/selenium-config.js && ./node_modules/.bin/selenium-standalone start --config=./e2e/config/selenium-config.js",
@@ -111,6 +112,7 @@
   "devDependencies": {
     "@storybook/addon-actions": "^3.3.15",
     "@storybook/addon-links": "^3.3.15",
+    "@storybook/addon-storyshots": "3.4.7",
     "@storybook/addons": "^3.3.15",
     "@storybook/react": "^3.3.15",
     "@types/bluebird": "^3.5.20",
@@ -166,6 +168,9 @@
       "<rootDir>/src/**/?(*.)(spec|test).ts?(x)"
     ],
     "testEnvironment": "node",
+    "testPathIgnorePatterns": [
+      "<rootDir>/src/components/Storyshots.test.tsx"
+    ],
     "testURL": "http://localhost",
     "transform": {
       "^.+\\.tsx?$": "<rootDir>/config/jest/typescriptTransform.js",
