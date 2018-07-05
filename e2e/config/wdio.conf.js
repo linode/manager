@@ -215,8 +215,6 @@ exports.config = {
             browser.loadImposter(imposter);
         }
 
-        browser.windowHandleSize({width: 1200, height: 720})
-
         if (browser.options.desiredCapabilities.browserName.includes('chrome')) {
             browser.timeouts('page load', 20000);
         }
