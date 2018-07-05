@@ -5,12 +5,11 @@ import * as classNames from 'classnames';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import { connect } from 'react-redux';
-import { pathOr, compose } from 'ramda';
 
-import { getStackScriptsByUser, getCommunityStackscripts }
-  from 'src/services/stackscripts';
+import { compose, pathOr } from 'ramda';
 
-import TableCell from '@material-ui/core/TableCell';
+import { getCommunityStackscripts, getStackScriptsByUser } from 'src/services/stackscripts';
+
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
@@ -21,6 +20,7 @@ import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import RenderGuard from 'src/components/RenderGuard';
 import TabbedPanel from 'src/components/TabbedPanel';
+import TableCell from 'src/components/TableCell';
 
 import StackScriptsSection from './StackScriptsSection';
 
@@ -42,9 +42,7 @@ type ClassNames = 'root'
   | 'revisions'
   | 'tr'
   | 'tableHead'
-  | 'sortable'
   | 'sortButton'
-  | 'sortIcon'
   | 'table';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
@@ -57,6 +55,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     paddingTop: 0,
     marginTop: theme.spacing.unit * 2,
     overflowY: 'scroll',
+    '-webkit-appearance': 'none',
   },
   selecting: {
     maxHeight: '1000px',
@@ -72,10 +71,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     width: '30%',
   },
   deploys: {
-    width: '15%',
+    width: '20%',
   },
   revisions: {
-    width: '15%',
+    width: '20%',
   },
   tr: {
     height: 48,
@@ -88,21 +87,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     paddingTop: 0,
     paddingBottom: 0,
   },
-  sortable: {
-    color: theme.palette.primary.main,
-    fontWeight: 700,
-    cursor: 'pointer',
-  },
   sortButton: {
     marginLeft: -26,
     border: 0,
     width: '100%',
     justifyContent: 'flex-start',
-  },
-  sortIcon: {
-    position: 'relative',
-    top: 2,
-    left: 10,
   },
 });
 
@@ -232,8 +221,20 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
           this.setState({ showMoreButtonVisible: false });
         }
         const newData = (isSorting) ? response.data : [...this.state.data, ...response.data];
+
+        const newDataWithoutDeprecatedDistros =
+          newData.filter(stackScript => this.hasNonDeprecatedImages(stackScript.images));
+
+        // @TODO: deprecate this once compound filtering becomes available in the API
+        // basically, if the result set after filtering out StackScripts with
+        // deprecated distos is 0, request the next page with the same filter.
+        if(newDataWithoutDeprecatedDistros.length === 0) {
+          this.getNext();
+          return;
+        }
+        
         this.setState({
-          data: newData,
+          data: newDataWithoutDeprecatedDistros,
           gettingMoreStackScripts: false,
           loading: false,
           isSorting: false,
@@ -258,8 +259,20 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
     if (!this.mounted) { return; }
     this.setState(
       { currentPage: this.state.currentPage + 1 },
-      () => this.getDataAtPage(this.state.currentPage),
+      () => this.getDataAtPage(this.state.currentPage, this.state.currentFilter, this.state.isSorting),
     );
+  }
+
+  hasNonDeprecatedImages = (stackScriptImages: string[]) => {
+    const { publicImages } = this.props;
+    for (const stackScriptImage of stackScriptImages) {
+      for (const publicImage of publicImages) {
+        if (stackScriptImage === publicImage.id) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   handleSelectStackScript = (stackscript: Linode.StackScript.Response) => {
@@ -308,16 +321,16 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
 
   renderIcon = () => {
     const { sortOrder } = this.state;
-    const { classes } = this.props;
+
     return (
       sortOrder === 'desc'
-        ? <KeyboardArrowUp className={classes.sortIcon} />
-        : <KeyboardArrowDown className={classes.sortIcon} />
+        ? <KeyboardArrowUp className="sortIcon" />
+        : <KeyboardArrowDown className="sortIcon" />
     );
   }
 
   render() {
-    const { classes, publicImages } = this.props;
+    const { classes } = this.props;
     const { currentFilterType, isSorting } = this.state;
 
     if (this.state.loading) {
@@ -336,9 +349,9 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
               <TableCell
                 className={classNames({
                   [classes.tableHead]: true,
-                  [classes.sortable]: true,
                   [classes.stackscriptTitles]: true,
                 })}
+                sortable
               >
                 <Button
                   type="secondary"
@@ -354,9 +367,10 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
               <TableCell
                 className={classNames({
                   [classes.tableHead]: true,
-                  [classes.sortable]: true,
                   [classes.deploys]: true,
                 })}
+                noWrap
+                sortable
               >
                 <Button
                   type="secondary"
@@ -364,7 +378,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
                   onClick={this.handleClickDeploymentsTableHeader}
                 >
                   Active Deploys
-                  {currentFilterType === 'deploys' &&
+                  {currentFilterType !== 'label' && currentFilterType !== 'revision' &&
                     this.renderIcon()
                   }
                 </Button>
@@ -372,9 +386,10 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
               <TableCell
                 className={classNames({
                   [classes.tableHead]: true,
-                  [classes.sortable]: true,
                   [classes.revisions]: true,
                 })}
+                noWrap
+                sortable
               >
                 <Button
                   type="secondary"
@@ -395,8 +410,6 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
             onSelect={this.handleSelectStackScript}
             selectedId={this.state.selected}
             data={this.state.data}
-            getNext={() => this.getNext()}
-            publicImages={publicImages}
           />
         </Table>
         {this.state.showMoreButtonVisible && !isSorting &&

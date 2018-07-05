@@ -25,9 +25,7 @@ export interface Props {
   onSelect: (s: Linode.StackScript.Response) => void;
   selectedId?: number;
   data: Linode.StackScript.Response[];
-  getNext: () => void;
   isSorting: boolean;
-  publicImages: Linode.Image[];
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -39,25 +37,12 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => 
     data,
     isSorting,
     classes,
-    publicImages,
   } = props;
-
-  const hasNonDeprecatedImages = (stackScriptImages: string[]) => {
-    for (const stackScriptImage of stackScriptImages) {
-      for (const publicImage of publicImages) {
-        if (stackScriptImage === publicImage.id) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
 
   return (
     <TableBody>
       {!isSorting
         ? data && data
-          .filter(stackScript => hasNonDeprecatedImages(stackScript.images))
           .map(stackScript(onSelect, selectedId))
         : <TableRow>
           <TableCell colSpan={5} className={classes.loadingWrapper}>
