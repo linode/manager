@@ -19,10 +19,10 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import Table from 'src/components/Table';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { deleteImage, getUserImages } from 'src/services/images';
 
 
@@ -58,9 +58,10 @@ interface State {
   };
   removeDialog: {
     open: boolean,
+    submitting: boolean,
     image?: string,
     imageID?: string,
-    submitting: boolean,
+    error?: string,
   };
 }
 
@@ -118,17 +119,20 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
 
   removeImage = () => {
     const { removeDialog } = this.state;
-    this.setState({ removeDialog: { ...removeDialog, submitting: true, }});
-    if (!this.state.removeDialog.imageID) { return; }
+    if (!this.state.removeDialog.imageID) { 
+      this.setState({ removeDialog: { ...removeDialog, error: "Image is not available."}});
+      return;
+     }
+    this.setState({ removeDialog: { ...removeDialog, submitting: true, errors: undefined, }});
     deleteImage(this.state.removeDialog.imageID)
-      .catch((err) => {
-        const errors: Linode.ApiFieldError[] = pathOr([], ['response', 'data', 'errors'], err);
-        errors.forEach((error) => sendToast(error.reason, 'error'));
-      })
-      .finally(() => {
+      .then(() => {
         this.closeRemoveDialog();
         this.refreshImages();
-      });
+      })
+      .catch((err) => {
+        const errors: Linode.ApiFieldError[] = pathOr([], ['response', 'data', 'errors'], err);
+        this.setState({ removeDialog:  { ...removeDialog, error: errors[0].reason} });
+      })
   }
 
   getActions = () => {
@@ -159,7 +163,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
 
   openRemoveDialog = (image: string, imageID: string) => {
     this.setState({
-      removeDialog: { open: true, image, imageID, submitting: false, },
+      removeDialog: { open: true, image, imageID, submitting: false, error: undefined, },
     });
   }
 
@@ -284,6 +288,9 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
           onClose={this.closeRemoveDialog}
           actions={this.getActions}
         >
+          { this.state.removeDialog.error &&
+          <Notice error text={this.state.removeDialog.error} />
+          }
           <Typography>Are you sure you want to remove this image?</Typography>
         </ConfirmationDialog>
       </React.Fragment>
