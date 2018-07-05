@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import { compose, pathOr } from 'ramda';
 
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 
-import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -15,6 +14,7 @@ import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
+import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
@@ -22,13 +22,13 @@ import Grid from 'src/components/Grid';
 import Placeholder from 'src/components/Placeholder';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import Table from 'src/components/Table';
-
+import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { deleteImage, getUserImages } from 'src/services/images';
 
-import { formatDate } from 'src/utilities/format-date-iso8601';
+
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-import ActionMenu from './ImagesActionMenu';
+import ImageRow from './ImageRow';
 import ImagesDrawer from './ImagesDrawer';
 
 type ClassNames = 'root' | 'title';
@@ -60,6 +60,7 @@ interface State {
     open: boolean,
     image?: string,
     imageID?: string,
+    submitting: boolean,
   };
 }
 
@@ -77,6 +78,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
     },
     removeDialog: {
       open: false,
+      submitting: false,
     },
   };
 
@@ -115,16 +117,16 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
   }
 
   removeImage = () => {
+    const { removeDialog } = this.state;
+    this.setState({ removeDialog: { ...removeDialog, submitting: true, }});
     if (!this.state.removeDialog.imageID) { return; }
     deleteImage(this.state.removeDialog.imageID)
-      .then(() => {
-        this.closeRemoveDialog();
-      })
-      .catch((error) => {
-        console.log(error);
-        this.closeRemoveDialog();
+      .catch((err) => {
+        const errors: Linode.ApiFieldError[] = pathOr([], ['response', 'data', 'errors'], err);
+        errors.forEach((error) => sendToast(error.reason, 'error'));
       })
       .finally(() => {
+        this.closeRemoveDialog();
         this.refreshImages();
       });
   }
@@ -134,8 +136,9 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
       <ActionsPanel>
         <Button
           variant="raised"
-          color="secondary"
-          className="destructive"
+          type="secondary"
+          destructive={true}
+          loading={this.state.removeDialog.submitting}
           onClick={this.removeImage}
           data-qa-submit
         >
@@ -156,13 +159,14 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
 
   openRemoveDialog = (image: string, imageID: string) => {
     this.setState({
-      removeDialog: { open: true, image, imageID },
+      removeDialog: { open: true, image, imageID, submitting: false, },
     });
   }
 
   closeRemoveDialog = () => {
+    const { removeDialog } = this.state;
     this.setState({
-      removeDialog: { open: false, image: undefined, imageID: undefined },
+      removeDialog: { ...removeDialog, open: false, },
     });
   }
 
@@ -190,16 +194,6 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
 
   closeImageDrawer = () => {
     this.setState({ imageDrawer: { open: false, mode: 'create', label: '', description: '' }});
-  }
-
-  renderActionMenu = (image: Linode.Image) => {
-    return <ActionMenu
-      image={image}
-      onRestore={() => { null; }}
-      onDeploy={() => { null; }}
-      onEdit={this.openForEdit}
-      onDelete={this.openRemoveDialog}
-    />
   }
 
   render() {
@@ -261,19 +255,14 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
               </TableRow>
             </TableHead>
             <TableBody>
-              {images.map(image =>
-                <TableRow key={image.id} data-qa-image-cell={image.id}>
-                  <TableCell data-qa-image-label>
-                    <Link to={`/images/${image.id}`}>
-                      {image.label}
-                    </Link>
-                  </TableCell>
-                  <TableCell data-qa-image-date>{formatDate(image.created)}</TableCell>
-                  <TableCell data-qa-image-size>{image.size} GiB</TableCell>
-                  <TableCell>
-                    {this.renderActionMenu(image)}
-                  </TableCell>
-                </TableRow>
+              {images.map((image, idx) =>
+                <ImageRow key={idx} 
+                          image={image}
+                          onRestore={() => null}
+                          onDeploy={() => null}
+                          onEdit={this.openForEdit} 
+                          onDelete={this.openRemoveDialog}
+                          updateFor={[image]} />
               )}
             </TableBody>
           </Table>
