@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Redirect } from 'react-router';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import { compose, pathOr } from 'ramda';
 
@@ -96,10 +96,12 @@ interface State {
   attachVolumeDrawer: AttachVolumeDrawerState;
   updateDialog: UpdateDialogState;
   updateVolumeDrawer: UpdateVolumeDrawerState;
-  redirect: boolean;
 }
 
-type CombinedProps = Props & ContextProps & WithStyles<ClassNames>;
+type CombinedProps = Props
+& WithStyles<ClassNames>
+& ContextProps
+& RouteComponentProps<{}>;
 
 export class LinodeVolumes extends React.Component<CombinedProps, State> {
   static defaultProps = {
@@ -139,7 +141,6 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
       attachVolumeDrawer: LinodeVolumes.attachVolumeDrawerDefaultState,
       updateDialog: LinodeVolumes.updateDialogDefaultState,
       updateVolumeDrawer: LinodeVolumes.updateVolumeDrawerDefaultState,
-      redirect: false,
     };
   }
 
@@ -196,7 +197,8 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
   }
 
   goToSettings = () => {
-    this.setState({redirect: true});
+    const { history, linodeID } = this.props;
+    history.push(`/linodes/${linodeID}/settings#configs`);
   }
 
   /** Attachment */
@@ -861,10 +863,6 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
     } = this.props;
 
     const { updateVolumeDrawer } = this.state;
-
-    if (this.state.redirect) {
-      return <Redirect push to="settings#configs" />;
-    }
   
 
     if (volumesError || linodeConfigsError) {
@@ -903,10 +901,11 @@ const volumesContext = withVolumes((context) => ({
   linodeVolumes: context.data,
 }));
 
-export default compose<any, any, any, any, any, any>(
+export default compose<any, any, any, any, any, any, any>(
   linodeContext,
   volumesContext,
   styled,
+  withRouter,
   SectionErrorBoundary,
   preloaded,
 )(LinodeVolumes);
