@@ -68,7 +68,7 @@ ReactDOM.render(
         <Route render={() =>
           <AuthenticationWrapper>
             <Switch>
-              <Route exact path="/linodes/:linodeId/lish" component={Lish} />
+              <Route path="/linodes/:linodeId/lish" component={Lish} />
               <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
               {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
               <Route exact path="/nullauth" render={() => <span>null auth route</span>} />

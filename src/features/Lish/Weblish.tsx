@@ -1,11 +1,9 @@
 import * as React from 'react';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Terminal } from 'xterm';
-import 'typeface-ubuntu-mono';
 
 import { LISH_ROOT, ZONES } from 'src/constants';
 import { getLinode, getLinodeLishToken } from 'src/services/linodes';
-
 
 interface State {
   token: string;
@@ -23,34 +21,26 @@ export class Weblish extends React.Component<CombinedProps, State> {
 
   mounted: boolean = false;
 
-  getLinode() {
+  getLinode = () => {
     const { match: { params: { linodeId } } } = this.props;
+
     if (!linodeId) { return; }
 
     getLinode(linodeId)
       .then((response) => {
         if (!this.mounted) { return; }
-
         const { data: linode } = response;
         this.setState({ linode }, this.connect);
       })
       .catch(() => {
         if (!this.mounted) { return; }
-
         this.setState({ renderingLish: false });
       });
   }
 
-  componentWillMount() {
-    const webLishCss = import('' + '../../assets/weblish/weblish.css');
-    const xtermCss = import('' + '../../assets/weblish/xterm.css');
-    this.mounted = false;
-    Promise.all([webLishCss, xtermCss])
-      .then(() => this.getLinode());
-  }
-
   componentDidMount() {
     this.mounted = true;
+    this.getLinode();
   }
 
   getLishSchemeAndHostname(region: string): string {
@@ -95,7 +85,8 @@ export class Weblish extends React.Component<CombinedProps, State> {
     });
 
     terminal.on('data', (data: string) => socket.send(data));
-    terminal.open(document.getElementById('root') as HTMLElement);
+    const terminalDiv = document.getElementById('terminal');
+    terminal.open(terminalDiv as HTMLElement);
 
     terminal.writeln('\x1b[32mLinode Lish Console\x1b[m');
 
@@ -111,20 +102,23 @@ export class Weblish extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    return this.state.renderingLish ? null : (
-      <div>
-        <div id="disconnected">
-          <h2>Connection Lost</h2>
-          {this.state.linode === undefined
-            ? <p>Data for this Linode is unavailble.</p>
-            : <p>Lish appears to be temporarily unavailable.</p>
-          }
-          {this.state.linode !== undefined &&
-            <button onClick={() => this.connect()}>Reconnect &#x27f3;</button>
-          }
+    return <React.Fragment>
+      <div id="terminal" className="terminal" />
+      {!this.state.renderingLish &&
+        <div>
+          <div id="disconnected">
+            <h2>Connection Lost</h2>
+            {this.state.linode === undefined
+              ? <p>Data for this Linode is unavailble.</p>
+              : <p>Lish appears to be temporarily unavailable.</p>
+            }
+            {this.state.linode !== undefined &&
+              <button onClick={this.connect}>Reconnect &#x27f3;</button>
+            }
+          </div>
         </div>
-      </div>
-    );
+      }
+    </React.Fragment>;
   }
 }
 

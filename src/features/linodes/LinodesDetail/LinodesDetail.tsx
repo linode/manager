@@ -607,7 +607,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                         data-qa-launch-console
                       >
                         Launch Console
-            </Button>
+                      </Button>
                       <LinodePowerControl
                         status={linode.status}
                         recentEvent={linode.recentEvent}
