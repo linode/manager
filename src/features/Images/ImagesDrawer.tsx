@@ -53,9 +53,9 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const modes = {
   CLOSED: 'closed',
-  CREATING: 'creating',
-  RESTORING: 'resizing',
-  DEPLOYING: 'cloning',
+  CREATING: 'create',
+  RESTORING: 'restore',
+  DEPLOYING: 'deploy',
   EDITING: 'edit',
 };
 
@@ -165,6 +165,20 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
             data-qa-notice
           />
         }
+
+        {mode === 'create' &&
+        <TextField
+        label="Testing"
+        required
+        value={label}
+        onChange={this.setLabel}
+        error={Boolean(labelError)}
+        errorText={labelError}
+        data-qa-volume-label
+      />
+      
+      
+      }
 
         <TextField
           label="Label"
