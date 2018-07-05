@@ -6,16 +6,6 @@ import 'typeface-ubuntu-mono';
 import { LISH_ROOT, ZONES } from 'src/constants';
 import { getLinode, getLinodeLishToken } from 'src/services/linodes';
 
-export function weblishLaunch(linodeId: string) {
-  window.open(
-    `${window.location.protocol}//${window.location.host}/linodes/${linodeId}/weblish`,
-    `weblish_con_${linodeId}`,
-    'left=100,top=100,width=1080,height=680,toolbar=0,resizable=1',
-  );
-}
-
-interface Props {
-}
 
 interface State {
   token: string;
@@ -23,7 +13,7 @@ interface State {
   linode?: Linode.Linode;
 }
 
-type CombinedProps = Props & RouteComponentProps<{ linodeId?: number }>;
+type CombinedProps = RouteComponentProps<{ linodeId?: number }>;
 
 export class Weblish extends React.Component<CombinedProps, State> {
   state: State = {
