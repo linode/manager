@@ -173,7 +173,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   currentPlanContainer: {
     '& .selectionCard': {
-      padding: 0,
+      padding: `0 ${theme.spacing.unit}px 0 0`,
       cursor: 'not-allowed',
       '& > div, &:focus > div': {
         backgroundColor: theme.bg.main,

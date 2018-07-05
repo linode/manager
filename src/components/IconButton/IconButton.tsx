@@ -13,6 +13,7 @@ type ClassNames = 'root' | 'destructive';
 
 interface Props {
   destructive?: boolean;
+  style?: any;
   onClick?: (e: React.SyntheticEvent<HTMLElement>) => void;
 }
 
@@ -35,7 +36,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
 type CombinedProps = IconButtonProps & Props & WithStyles<ClassNames>;
 
 const IconButtonWrapper: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, destructive, ...rest } = props;
+  const { classes, destructive, style, ...rest } = props;
 
   return (
     <IconButton
@@ -43,6 +44,7 @@ const IconButtonWrapper: React.StatelessComponent<CombinedProps> = (props) => {
         [classes.root]: true,
         [classes.destructive]: destructive,
       })}
+      style={style}
       {...rest}
     >
       {props.children}
