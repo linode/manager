@@ -8,7 +8,8 @@ import { connect } from 'react-redux';
 
 import { compose, pathOr } from 'ramda';
 
-import { getCommunityStackscripts, getStackScriptsByUser } from 'src/services/stackscripts';
+import { getCommunityStackscripts, getStackScript, getStackScriptsByUser }
+  from 'src/services/stackscripts';
 
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
@@ -97,23 +98,26 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 });
 
 interface Props {
-  selectedId?: number | null;
+  selectedId: number | undefined;
+  selectedUsername?: string;
   error?: string;
   shrinkPanel?: boolean;
   onSelect?: (id: number, label: string, username: string, images: string[],
     userDefinedFields: Linode.StackScript.UserDefinedField[]) => void;
   publicImages: Linode.Image[];
   noHeader?: boolean;
+  profile: Linode.Profile;
 }
 
 type StyledProps = Props & WithStyles<ClassNames>;
 
 type CombinedProps = StyledProps;
 
-const SelectStackScriptPanel: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, publicImages, noHeader, error,
-  shrinkPanel, onSelect } = props;
-  
+const SelectStackScriptPanel = (props: CombinedProps) => {
+
+  const { error, noHeader, profile, shrinkPanel, classes,
+    publicImages, onSelect, selectedId, selectedUsername } = props;
+
   const tabs = [
     {
       title: 'My StackScripts',
@@ -121,7 +125,10 @@ const SelectStackScriptPanel: React.StatelessComponent<CombinedProps> = (props) 
         onSelect={onSelect}
         // images is an optional prop, so just send an empty array if we didn't get any
         publicImages={publicImages}
-        request={getStackScriptsByUser} key={0}
+        currentUser={profile.username}
+        request={getStackScriptsByUser}
+        selectedStackScriptIDFromQuery={selectedId}
+        key={0}
       />,
     },
     {
@@ -130,7 +137,10 @@ const SelectStackScriptPanel: React.StatelessComponent<CombinedProps> = (props) 
         onSelect={onSelect}
         // images is an optional prop, so just send an empty array if we didn't get any
         publicImages={publicImages}
-        request={getStackScriptsByUser} key={1}
+        currentUser={profile.username}
+        request={getStackScriptsByUser}
+        selectedStackScriptIDFromQuery={selectedId}
+        key={1}
         isLinodeStackScripts={true}
       />,
     },
@@ -140,14 +150,40 @@ const SelectStackScriptPanel: React.StatelessComponent<CombinedProps> = (props) 
         onSelect={onSelect}
         // images is an optional prop, so just send an empty array if we didn't get any
         publicImages={publicImages}
-        request={getCommunityStackscripts} key={2}
+        currentUser={profile.username}
+        request={getCommunityStackscripts}
+        selectedStackScriptIDFromQuery={selectedId}
+        key={2}
       />,
     },
-  ]
+  ];
 
   const myTabIndex = tabs.findIndex(tab => tab.title.toLowerCase().includes('my'));
   const linodeTabIndex = tabs.findIndex(tab => tab.title.toLowerCase().includes('linode'));
   const communityTabIndex = tabs.findIndex(tab => tab.title.toLowerCase().includes('community'));
+
+  /*
+  ** init tab needs to be set if we're being navigated from another page
+  ** by means of a query string. The query string may looks similar to this:
+  ** /linodes/create?type=fromStackScript&stackScriptID=9409&stackScriptUsername=clowwindy
+  ** so we need a way to determined what tab the user should be on when
+  ** seeing the panel. Default to 0 index if no query string
+  */
+  const getInitTab = () => {
+    if (profile.username === selectedUsername) {
+      return myTabIndex;
+    }
+    if (selectedUsername === 'linode') {
+      return linodeTabIndex;
+    }
+    if (selectedUsername !== ''
+      && selectedUsername !== 'linode'
+      && selectedUsername !== profile.username
+      && !!onSelect) {
+      return communityTabIndex;
+    }
+    return myTabIndex;
+  }
 
   return (
     <TabbedPanel
@@ -156,6 +192,7 @@ const SelectStackScriptPanel: React.StatelessComponent<CombinedProps> = (props) 
       shrinkTabContent={(shrinkPanel) ? classes.creating : classes.selecting}
       header={(noHeader) ? "" : "Select StackScript"}
       tabs={tabs}
+      initTab={getInitTab()}
     />
   );
 }
@@ -170,9 +207,10 @@ interface ContainerProps {
     Promise<Linode.ResourcePage<Linode.StackScript.Response>>;
   onSelect?: (id: number, label: string, username: string, images: string[],
     userDefinedFields: Linode.StackScript.UserDefinedField[]) => void;
-  profile: Linode.Profile;
+  currentUser: string;
   isLinodeStackScripts?: boolean;
   publicImages: Linode.Image[];
+  selectedStackScriptIDFromQuery: number | undefined;
 }
 
 type CurrentFilter = 'label' | 'deploys' | 'revision';
@@ -194,6 +232,7 @@ type ContainerCombinedProps = ContainerProps & WithStyles<ClassNames>;
 
 class Container extends React.Component<ContainerCombinedProps, ContainerState> {
   state: ContainerState = {
+    selected: this.props.selectedStackScriptIDFromQuery || undefined,
     currentPage: 1,
     loading: true,
     gettingMoreStackScripts: false,
@@ -210,12 +249,12 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
   getDataAtPage = (page: number,
     filter: any = this.state.currentFilter,
     isSorting: boolean = false) => {
-    const { request, profile, isLinodeStackScripts } = this.props;
+    const { request, currentUser, isLinodeStackScripts, selectedStackScriptIDFromQuery } = this.props;
     this.setState({ gettingMoreStackScripts: true, isSorting });
 
-    const filteredUser = (isLinodeStackScripts) ? 'linode' : profile.username;
+    const filteredUser = (isLinodeStackScripts) ? 'linode' : currentUser;
 
-    request(
+    return request(
       filteredUser,
       { page, page_size: 50 },
       filter)
@@ -225,34 +264,44 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
           this.setState({ showMoreButtonVisible: false });
         }
         const newData = (isSorting) ? response.data : [...this.state.data, ...response.data];
-
-        const newDataWithoutDeprecatedDistros =
-          newData.filter(stackScript => this.hasNonDeprecatedImages(stackScript.images));
-
-        // @TODO: deprecate this once compound filtering becomes available in the API
-        // basically, if the result set after filtering out StackScripts with
-        // deprecated distos is 0, request the next page with the same filter.
-        if(newDataWithoutDeprecatedDistros.length === 0) {
-          this.getNext();
-          return;
-        }
-        
+        const cleanedData = (!!selectedStackScriptIDFromQuery)
+        ? newData.filter((stackScript, index) => {
+          if(index !== 0) {
+            return stackScript.id !== selectedStackScriptIDFromQuery;
+          }
+          return stackScript;
+        })
+        : newData;
         this.setState({
-          data: newDataWithoutDeprecatedDistros,
+          data: cleanedData,
           gettingMoreStackScripts: false,
           loading: false,
           isSorting: false,
         });
+        return newData;
       })
       .catch((e: any) => {
         if (!this.mounted) { return; }
         this.setState({ gettingMoreStackScripts: false });
+        return e;
       });
   }
 
   componentDidMount() {
-    this.getDataAtPage(0);
+    const { selectedStackScriptIDFromQuery } = this.props;
     this.mounted = true;
+    if (!!selectedStackScriptIDFromQuery) {
+      return getStackScript(selectedStackScriptIDFromQuery)
+        .then(data => {
+          this.setState({ data: [data] })
+          return data;
+        })
+        .then(data => {
+          this.getDataAtPage(0)
+        })
+        .catch(e => e);
+    }
+    return this.getDataAtPage(0);
   }
 
   componentWillUnmount() {
@@ -456,9 +505,10 @@ const mapStateToProps = (state: Linode.AppState) => ({
 
 const styled = withStyles(styles, { withTheme: true });
 
-const StyledContainer = compose<Linode.TodoAny, Linode.TodoAny, Linode.TodoAny>(
-  connect(mapStateToProps),
-  styled,
-)(Container);
+const StyledContainer = styled(Container);
 
-export default styled(RenderGuard<CombinedProps>(SelectStackScriptPanel));
+export default compose<Linode.TodoAny, Linode.TodoAny, Linode.TodoAny, Linode.TodoAny>(
+  connect(mapStateToProps),
+  RenderGuard,
+  styled,
+)(SelectStackScriptPanel);
