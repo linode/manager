@@ -53,7 +53,11 @@ describe('Header - Search Suite', () => {
     });
 
     it('should navigate to result on enter', () => {
-        SearchBar.searchInput.setValue('\uE006');
+        if (browser.options.desiredCapabilities.browserName.includes('chrome')) {
+            SearchBar.searchInput.setValue('\uE006');
+        } else {
+            browser.keys('Enter');
+        }
         const currentUrl = browser.getUrl();
         
         browser.waitUntil(function() {
