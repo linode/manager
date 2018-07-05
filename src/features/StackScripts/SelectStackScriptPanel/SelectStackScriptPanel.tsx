@@ -292,11 +292,18 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
         }
 
         /*
-        * if we're sorting, just return the first page, since 
+        * if we're sorting, just return the requested data, since we're
+        * scrolling the user to the top and resetting the data
         */
         const newData = (isSorting) ? response.data : [...this.state.data, ...response.data];
 
-
+        /*
+        * We need to further clean up the data because when we are preselecting
+        * a stackscript based on the URL query string, it's possible for the
+        * stackscript to appear again on the first page or any subsequent page
+        * so we need to filter out that stackscript so we don't run into
+        * the duplicate key error
+        */
         const cleanedData = (!!selectedStackScriptIDFromQuery)
         ? newData.filter((stackScript, index) => {
           if(index !== 0) {
