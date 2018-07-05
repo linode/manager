@@ -9,21 +9,29 @@ import { compose, equals, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Subject } from 'rxjs/Subject';
+import { ISubscription } from 'rxjs/Subscription';
+import VolumesIcon from 'src/assets/addnewmenu/volume.svg';
 import AddNewLink from 'src/components/AddNewLink';
+import CircleProgress from 'src/components/CircleProgress';
 import setDocs from 'src/components/DocsSidebar/setDocs';
+import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
+import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
 import { dcDisplayNames } from 'src/constants';
-import { generateInFilter, resetEventsPolling } from 'src/events';
+import { events$, generateInFilter, resetEventsPolling } from 'src/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { getLinodes } from 'src/services/linodes';
-import { detach, _delete } from 'src/services/volumes';
+import { detach, getVolumes, _delete } from 'src/services/volumes';
 import { openForClone, openForCreating, openForEdit, openForResize } from 'src/store/reducers/volumeDrawer';
 import DestructiveVolumeDialog from './DestructiveVolumeDialog';
 import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
 import VolumeConfigDrawer from './VolumeConfigDrawer';
 import VolumesActionMenu from './VolumesActionMenu';
+
+export const updateVolumes$ = new Subject<boolean>();
 
 type ClassNames = 'root' | 'title';
 
@@ -35,7 +43,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 });
 
 interface Props {
-  volumes: Linode.Volume[];
   openForEdit: typeof openForEdit;
   openForResize: typeof openForResize;
   openForClone: typeof openForClone;
@@ -43,6 +50,9 @@ interface Props {
 }
 
 interface State {
+  loading: boolean;
+  errors?: Linode.ApiFieldError[];
+  volumes: Linode.Volume[];
   linodeLabels: { [id: number]: string };
   linodeStatuses: { [id: number]: string };
   configDrawer: {
@@ -67,6 +77,8 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 class VolumesLanding extends React.Component<CombinedProps, State> {
   state: State = {
+    volumes: [],
+    loading: true,
     linodeLabels: {},
     linodeStatuses: {},
     configDrawer: {
@@ -81,115 +93,78 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     },
   };
 
-  mounted: boolean = false;
-
-  static docs: Linode.Doc[] = [
-    {
-      title: 'How to Use Block Storage with Your Linode',
-      /* tslint:disable-next-line */
-      src: `https://www.linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode`,
-      body: `Linode’s Block Storage service allows you to attach additional storage volumes to your
-      Linode. A single volume can range from 10 GiB to 10,000 GiB in size and costs $0.10/GiB per
-      month. They can be partitioned however you like and can accommodate any filesystem type you
-      choose. Up to eight volumes can be attached to a single Linode, be it new or already
-      existing, so you do not need to recreate your server to add a Block Storage Volume.`,
-    },
-    {
-      title: 'Boot a Linode from a Block Storage Volume',
-      src: `https://www.linode.com/docs/platform/block-storage/boot-from-block-storage-volume/`,
-      body: `Linode’s Block Storage service allows you to attach additional storage volumes to your
-      Linode. In addition to storing files and media, you can also use a Block Storage Volume as a
-      boot disk. This can provide a low-cost way to maintain an image that can be quickly attached
-      to a new Linode and booted up when needed.`,
-    },
-  ];
-
-  getLinodeLabels() {
-    const linodeIDs = this.props.volumes.map(volume => volume.linode_id).filter(Boolean);
-    const xFilter = generateInFilter('id', linodeIDs);
-    getLinodes(undefined, xFilter)
-      .then((response) => {
-        if (!this.mounted) { return; }
-        const linodeLabels = {};
-        for (const linode of response.data) {
-          linodeLabels[linode.id] = linode.label;
-        }
-        this.setState({ linodeLabels });
-
-        const linodeStatuses = {};
-        for (const linode of response.data) {
-          linodeStatuses[linode.id] = linode.status;
-        }
-        this.setState({ linodeStatuses });
-      })
-      .catch((err) => { /** @todo how do we want to display this error */ });
-  }
-
   componentDidMount() {
     this.mounted = true;
+
+    this.getVolumes();
+
     this.getLinodeLabels();
+
+    this.eventsSub = events$
+      .filter(event => (
+        !event._initial
+        && [
+          'volume_create',
+          'volume_attach',
+          'volume_delete',
+          'volume_detach',
+          'volume_resize',
+          'volume_clone',
+        ].includes(event.action)
+      ))
+      .merge(updateVolumes$)
+      .subscribe((event) => {
+        getVolumes()
+          .then((volumes) => {
+            this.setState({
+              volumes: volumes.data.map((v) => ({
+                ...v,
+                ...maybeAddEvent(event, v),
+              })),
+            });
+          })
+          .catch(() => {
+            /* @todo: how do we want to display this error? */
+          });
+      });
   }
   
   componentWillUnmount() {
     this.mounted = false;
   }
 
-  componentDidUpdate(prevProps: CombinedProps) {
-    if (!equals(prevProps.volumes, this.props.volumes)) {
+  componentDidUpdate(prevProps: CombinedProps, prevState: State) {
+    if (!equals(prevState.volumes, this.state.volumes)) {
       this.getLinodeLabels();
     }
   }
 
-  closeDestructiveDialog() {
-    this.setState({
-      destructiveDialog: { open: false, mode: 'detach' },
-    });
-  }
-
-  openCreateVolumeDrawer = (e: any) => {
-    this.props.openForCreating();
-    e.preventDefault();
-}
-
-  detachVolume = () => {
-    const { destructiveDialog: { volumeID } } = this.state;
-    if (!volumeID) { return; }
-
-    detach(volumeID)
-      .then((response) => {
-        /* @todo: show a progress bar for volume detachment */
-        sendToast('Volume detachment started');
-        this.closeDestructiveDialog();
-        resetEventsPolling();
-      })
-      .catch((response) => {
-        /** @todo Error handling. */
-      });
-  }
-
-  deleteVolume = () => {
-    const { destructiveDialog: { volumeID } } = this.state;
-    if (!volumeID) { return; }
-
-    _delete(volumeID)
-      .then((response) => {
-        this.closeDestructiveDialog();
-        resetEventsPolling();
-      })
-      .catch((response) => {
-        /** @todo Error handling. */
-      });
-  }
-
   render() {
-    const {
-      volumes,
-      classes,
-      openForEdit,
-      openForResize,
-      openForClone,
-    } = this.props;
-    const { linodeLabels, linodeStatuses } = this.state;
+    const { classes, openForEdit, openForResize, openForClone } = this.props;
+    const { loading, errors, volumes, linodeLabels, linodeStatuses } = this.state;
+
+    if (errors) {
+      return <ErrorState errorText="An error occured while loading Volumes." />
+    }
+
+    if (loading) {
+      return <CircleProgress />
+    }
+
+    if (volumes.length === 0) {
+      return (
+        <Placeholder
+          title="Add a Volume"
+          copy="Add storage to your Linodes using the resilient Volumes service"
+          icon={VolumesIcon}
+          buttonProps={{
+            onClick: this.props.openForCreating,
+            children: 'Add a Volume',
+          }}
+        />
+      );
+    }
+
     return (
       <React.Fragment>
         <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
@@ -218,7 +193,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
                 <TableCell>Size</TableCell>
                 <TableCell>File System Path</TableCell>
                 <TableCell>Region</TableCell>
-                <TableCell/>
+                <TableCell />
               </TableRow>
             </TableHead>
             <TableBody>
@@ -344,6 +319,106 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       </React.Fragment>
     );
   }
+
+  eventsSub: ISubscription;
+
+  mounted: boolean = false;
+
+  static docs: Linode.Doc[] = [
+    {
+      title: 'How to Use Block Storage with Your Linode',
+      /* tslint:disable-next-line */
+      src: `https://www.linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode`,
+      body: `Linode’s Block Storage service allows you to attach additional storage volumes to your
+      Linode. A single volume can range from 10 GiB to 10,000 GiB in size and costs $0.10/GiB per
+      month. They can be partitioned however you like and can accommodate any filesystem type you
+      choose. Up to eight volumes can be attached to a single Linode, be it new or already
+      existing, so you do not need to recreate your server to add a Block Storage Volume.`,
+    },
+    {
+      title: 'Boot a Linode from a Block Storage Volume',
+      src: `https://www.linode.com/docs/platform/block-storage/boot-from-block-storage-volume/`,
+      body: `Linode’s Block Storage service allows you to attach additional storage volumes to your
+      Linode. In addition to storing files and media, you can also use a Block Storage Volume as a
+      boot disk. This can provide a low-cost way to maintain an image that can be quickly attached
+      to a new Linode and booted up when needed.`,
+    },
+  ];
+
+
+  getVolumes = () => {
+    getVolumes()
+      .then((response) => this.mounted && this.setState({
+        loading: false,
+        volumes: response.data,
+      }))
+      .catch((err) => this.mounted && this.setState({
+        loading: false,
+        errors: pathOr([{ reason: 'Unable to load Volumes.' }], ['response', 'data', 'errors'], err),
+      }));
+  };
+
+  getLinodeLabels() {
+    const linodeIDs = this.state.volumes.map(volume => volume.linode_id).filter(Boolean);
+    const xFilter = generateInFilter('id', linodeIDs);
+    getLinodes(undefined, xFilter)
+      .then((response) => {
+        if (!this.mounted) { return; }
+        const linodeLabels = {};
+        for (const linode of response.data) {
+          linodeLabels[linode.id] = linode.label;
+        }
+        this.setState({ linodeLabels });
+
+        const linodeStatuses = {};
+        for (const linode of response.data) {
+          linodeStatuses[linode.id] = linode.status;
+        }
+        this.setState({ linodeStatuses });
+      })
+      .catch((err) => { /** @todo how do we want to display this error */ });
+  }
+
+  closeDestructiveDialog() {
+    this.setState({
+      destructiveDialog: { open: false, mode: 'detach' },
+    });
+  }
+
+  openCreateVolumeDrawer = (e: any) => {
+    this.props.openForCreating();
+    e.preventDefault();
+  }
+
+  detachVolume = () => {
+    const { destructiveDialog: { volumeID } } = this.state;
+    if (!volumeID) { return; }
+
+    detach(volumeID)
+      .then((response) => {
+        /* @todo: show a progress bar for volume detachment */
+        sendToast('Volume detachment started');
+        this.closeDestructiveDialog();
+        resetEventsPolling();
+      })
+      .catch((response) => {
+        /** @todo Error handling. */
+      });
+  }
+
+  deleteVolume = () => {
+    const { destructiveDialog: { volumeID } } = this.state;
+    if (!volumeID) { return; }
+
+    _delete(volumeID)
+      .then((response) => {
+        this.closeDestructiveDialog();
+        resetEventsPolling();
+      })
+      .catch((response) => {
+        /** @todo Error handling. */
+      });
+  }
 }
 
 const isVolumeUpdating = (e?: Linode.Event) => {
@@ -361,6 +436,12 @@ const progressFromEvent = (e?: Linode.Event) => {
 
   return undefined;
 }
+
+const maybeAddEvent = (e: boolean | Linode.Event, volume: Linode.Volume) => {
+  if (typeof e === 'boolean') { return {} };
+  if (!e.entity || e.entity.id !== volume.id) { return {} }
+  return { recentEvent: e };
+};
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
   { openForEdit, openForResize, openForClone, openForCreating },
