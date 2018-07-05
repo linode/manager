@@ -52,9 +52,9 @@ interface State {
   imageDrawer: {
     open: boolean,
     mode: 'edit' | 'create' | 'delete' | 'deploy',
-    description?: string,
     imageID?: string,
     label?: string,
+    description?: string, 
   };
   removeDialog: {
     open: boolean,
@@ -113,7 +113,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
 
   openCreateDrawer = () => {
     this.setState({
-      imageDrawer: { open: true, mode: 'edit' },
+      imageDrawer: { open: true, mode: 'edit', },
     });
   }
 
@@ -185,16 +185,6 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
         label,
       }
     })
-  }
-
-  setLabel = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { imageDrawer } = this.state;
-    this.setState({ imageDrawer: {...imageDrawer, label: e.target.value }});
-  }
-
-  setDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { imageDrawer } = this.state;
-    this.setState({ imageDrawer: {...imageDrawer, description: e.target.value }});
   }
 
   closeImageDrawer = () => {
@@ -272,17 +262,16 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
             </TableBody>
           </Table>
         </Paper>
+        {this.state.imageDrawer.open &&
         <ImagesDrawer
           open={this.state.imageDrawer.open}
-          label={this.state.imageDrawer.label}
-          imageID={this.state.imageDrawer.imageID}
           mode={this.state.imageDrawer.mode}
+          label={this.state.imageDrawer.label}
           description={this.state.imageDrawer.description}
+          imageID={this.state.imageDrawer.imageID}
           onClose={this.closeImageDrawer}
           onSuccess={this.refreshImages}
-          setLabel={this.setLabel}
-          setDescription={this.setDescription}
-        />
+        />}
         <ConfirmationDialog
           open={this.state.removeDialog.open}
           title={`Remove ${this.state.removeDialog.image}`}
