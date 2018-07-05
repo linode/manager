@@ -111,9 +111,9 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
     this.setState({ error }, () => { scrollErrorIntoView(); });
   }
 
-  openCreateDrawer = () => {
+  openForCreate = () => {
     this.setState({
-      imageDrawer: { open: true, mode: 'edit', },
+      imageDrawer: { open: true, mode: 'create', },
     });
   }
 
@@ -210,7 +210,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
             title="Add an Image"
             copy="Adding a new image is easy. Click below to add an image."
             buttonProps={{
-              onClick: () => this.openCreateDrawer(),
+              onClick: () => this.openForCreate(),
               children: 'Add an Image',
             }}
           />
@@ -231,9 +231,8 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
             <Grid container alignItems="flex-end">
               <Grid item>
                 <AddNewLink
-                  onClick={() => null}
+                  onClick={this.openForCreate}
                   label="Add an Image"
-                  disabled={true}
                 />
               </Grid>
             </Grid>
