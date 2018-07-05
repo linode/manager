@@ -18,6 +18,7 @@ import { withLinode } from '../context';
 import CreateIPv4Drawer from './CreateIPv4Drawer';
 import CreateIPv6Drawer from './CreateIPv6Drawer';
 import EditRDNSDrawer from './EditRDNSDrawer';
+import IPSharingPanel from './IPSharingPanel';
 import LinodeNetworkingActionMenu from './LinodeNetworkingActionMenu';
 import IPTransferPanel from './LinodeNetworkingIPTransferPanel';
 import LinodeNetworkingSummaryPanel from './LinodeNetworkingSummaryPanel';
@@ -34,7 +35,8 @@ type ClassNames =
   | 'action'
   | 'ipv4Container'
   | 'ipv4Title'
-  | 'ipv4TitleContainer';
+  | 'ipv4TitleContainer'
+  | 'netActionsTitle';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
@@ -77,7 +79,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     [theme.breakpoints.down('sm')]: {
       flexBasis: '100%',
     },
-  }
+  },
+  netActionsTitle: {
+    marginBottom: theme.spacing.unit * 2,
+    marginTop: theme.spacing.unit * 4,
+  },
 });
 
 interface Props { }
@@ -345,15 +351,36 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           </Table>
         </Paper>
 
-        <IPTransferPanel
-          linodeID={linodeID}
-          linodeRegion={linodeRegion}
-          refreshIPs={this.refreshIPs}
-          ipAddresses={[
-            ...linodeIPs.ipv4.public.map(i => i.address),
-            ...linodeIPs.ipv4.private.map(i => i.address),
-          ]}
-        />
+        <Grid container>
+          <Grid item xs={12}>
+            <Typography
+              variant="title"
+              className={classes.netActionsTitle}
+            >
+              Networking Actions
+            </Typography>
+              <IPTransferPanel
+                linodeID={linodeID}
+                linodeRegion={linodeRegion}
+                refreshIPs={this.refreshIPs}
+                ipAddresses={[
+                  ...linodeIPs.ipv4.public.map(i => i.address),
+                  ...linodeIPs.ipv4.private.map(i => i.address),
+                ]}
+              />
+              <IPSharingPanel
+                linodeID={linodeID}
+                linodeIPs={[
+                  ...linodeIPs.ipv4.public.map(i => i.address),
+                ]}
+                linodeSharedIPs={[
+                  ...linodeIPs.ipv4.shared.map(i => i.address),
+                ]}
+                linodeRegion={linodeRegion}
+                refreshIPs={this.refreshIPs}
+              />
+          </Grid>
+        </Grid>
 
         <ViewIPDrawer
           open={this.state.viewIPDrawer.open}
