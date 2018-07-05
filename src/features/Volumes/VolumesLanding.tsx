@@ -24,7 +24,7 @@ import { dcDisplayNames } from 'src/constants';
 import { events$, generateInFilter, resetEventsPolling } from 'src/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { getLinodes } from 'src/services/linodes';
-import { detach, getVolumes, _delete } from 'src/services/volumes';
+import { detachVolume, getVolumes, deleteVolume } from 'src/services/volumes';
 import { openForClone, openForCreating, openForEdit, openForResize } from 'src/store/reducers/volumeDrawer';
 import DestructiveVolumeDialog from './DestructiveVolumeDialog';
 import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
@@ -394,7 +394,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     const { destructiveDialog: { volumeID } } = this.state;
     if (!volumeID) { return; }
 
-    detach(volumeID)
+    detachVolume(volumeID)
       .then((response) => {
         /* @todo: show a progress bar for volume detachment */
         sendToast('Volume detachment started');
@@ -410,7 +410,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     const { destructiveDialog: { volumeID } } = this.state;
     if (!volumeID) { return; }
 
-    _delete(volumeID)
+    deleteVolume(volumeID)
       .then((response) => {
         this.closeDestructiveDialog();
         resetEventsPolling();

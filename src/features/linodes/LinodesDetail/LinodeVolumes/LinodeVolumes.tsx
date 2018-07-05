@@ -17,13 +17,13 @@ import TableCell from '@material-ui/core/TableCell';
 
 import {
   getVolumes,
-  attach as attachtoLinode,
-  detach as detachVolume,
-  _delete as deleteVolume,
-  clone as cloneVolume,
-  create as createVolume,
-  update as updateVolume,
-  resize as resizeVolume,
+  attachVolume,
+  detachVolume,
+  deleteVolume,
+  cloneVolume,
+  createVolume,
+  updateVolume,
+  resizeVolume,
 } from 'src/services/volumes';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -215,7 +215,7 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
       return;
     }
 
-    attachtoLinode(Number(selectedVolume), { linode_id: Number(linodeID) })
+    attachVolume(Number(selectedVolume), { linode_id: Number(linodeID) })
       .then((response) => {
         this.closeAttachmentDrawer();
         resetEventsPolling();

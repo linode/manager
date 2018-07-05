@@ -17,7 +17,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 
 import { close } from 'src/store/reducers/volumeDrawer';
 
-import { clone, create, resize, update, VolumeRequestPayload } from 'src/services/volumes';
+import { cloneVolume, createVolume, resizeVolume, updateVolume, VolumeRequestPayload } from 'src/services/volumes';
 
 import { dcDisplayNames } from 'src/constants';
 import { events$, resetEventsPolling } from 'src/events';
@@ -264,7 +264,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           linode_id: linodeId === 0 ? undefined : linodeId,
         };
 
-        create(payload)
+        createVolume(payload)
           .then(() => {
             resetEventsPolling();
             this.composeState([
@@ -293,7 +293,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           return;
         }
 
-        update(volumeID, label)
+        updateVolume(volumeID, label)
           .then(() => {
             updateVolumes$.next(true);
             close();
@@ -316,7 +316,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           return;
         }
 
-        resize(volumeID, Number(size))
+        resizeVolume(volumeID, Number(size))
           .then(() => {
             resetEventsPolling();
             close();
@@ -339,7 +339,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           return;
         }
 
-        clone(volumeID, cloneLabel)
+        cloneVolume(volumeID, cloneLabel)
           .then(() => {
             resetEventsPolling();
             close();
