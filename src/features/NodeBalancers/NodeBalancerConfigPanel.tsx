@@ -947,7 +947,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                           />
                         </Grid>
                         {forEdit &&
-                          <Grid item xs={11} lg={3}>
+                          <Grid item xs={12} lg={3} xl={2}>
                             <TextField
                               label="Mode"
                               value={node.mode}
