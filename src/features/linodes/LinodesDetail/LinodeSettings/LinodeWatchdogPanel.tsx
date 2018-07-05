@@ -95,12 +95,12 @@ class LinodeWatchdogPanel extends React.Component<CombinedProps, State> {
                 disabled={submitting}
               />
             </Grid>
-            <Grid item xs={12} md={10}>
+            <Grid item xs={12} md={10} lg={8} xl={6}>
               <Typography>
                 Shutdown Watchdog, also known as Lassie, is a Linode Manager feature capable of
-              automatically rebooting your Linode if it powers off unexpectedly. <br />Lassie is not
-              technically an availability monitoring tool, but it can help get your Linode back
-              online fast if it’s accidentally powered off.
+                automatically rebooting your Linode if it powers off unexpectedly. Lassie is not
+                technically an availability monitoring tool, but it can help get your Linode back
+                online fast if it’s accidentally powered off.
               </Typography>
             </Grid>
           </Grid>
