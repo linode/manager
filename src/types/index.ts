@@ -118,6 +118,7 @@ namespace Linode {
     'domain_delete' |
     'domain_record_create' |
     'domain_record_delete' |
+    'image_delete' |
     'stackscript_create' |
     'stackscript_publicize' |
     'stackscript_revise' |

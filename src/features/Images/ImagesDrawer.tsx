@@ -49,7 +49,6 @@ export interface Props {
   imageID?: string;
   label?: string;
   onClose: () => void;
-  onSuccess: () => void;
 }
 
 interface State {
@@ -57,6 +56,7 @@ interface State {
   description: string;
   disks: Linode.Disk[];
   linodes: string[][];
+  notice?: string;
   selectedLinode?: string;
   selectedDisk?: string;
   imageID?: string;
@@ -90,6 +90,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
     label: this.props.label ? this.props.label : '',
     linodes: [],
     errors: undefined,
+    notice: undefined,
     selectedDisk: undefined,
     selectedLinode: undefined,
   };
@@ -114,9 +115,9 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
         if (event.action === 'disk_imagize' && event.status === 'failed') {
           sendToast(`There was an error creating image ${event.entity && event.entity.label}.`, 'error');
         }
-        // if (event.action === 'image_delete' && event.status === 'notification') {
-        //   sendToast(`Image ${event.entity && event.entity.label} has been deleted.`);
-        // }
+        if (event.action === 'image_delete' && event.status === 'notification') {
+          sendToast(`Image ${event.entity && event.entity.label} has been deleted.`);
+        }
       });
   }
 
@@ -129,7 +130,6 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
       getLinodeDisks(Number(this.state.selectedLinode))
       .then((response) => {
         const filteredDisks = response.data.filter((disk) => disk.filesystem !== 'swap')
-        console.log(filteredDisks);
         if (!equals(this.state.disks, filteredDisks)) {
           this.setState({ disks: filteredDisks })
         }
@@ -165,7 +165,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
   }
 
   onSubmit = () => {
-    const { mode, onSuccess, imageID } = this.props;
+    const { mode, imageID } = this.props;
     const { label, description, selectedDisk } = this.state;
 
     if (!label) {
@@ -187,7 +187,6 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
           .then(() => {
             resetEventsPolling();
             this.close();
-            onSuccess();
           })
           .catch((errorResponse) => {
             if (this.mounted) {
@@ -202,8 +201,10 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
       case modes.CREATING:
         createImage(Number(selectedDisk), label, description)
           .then((response) => {
-            this.close();
-            onSuccess();
+            this.setState({
+              notice: "Image queued for creation.",
+            });
+            setTimeout(this.close, 4000);
           })
           .catch((errorResponse) => {
             this.setState({
@@ -227,7 +228,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
 
   render() {
     const { mode, } = this.props;
-    const { disks, label, linodes, description, selectedDisk, selectedLinode } = this.state;
+    const { disks, label, linodes, description, notice, selectedDisk, selectedLinode } = this.state;
     const { errors } = this.state;
 
     const hasErrorFor = getAPIErrorFor({
@@ -252,6 +253,14 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
           <Notice
             error
             text={generalError}
+            data-qa-notice
+          />
+        }
+
+        {notice &&
+          <Notice
+            success
+            text={notice}
             data-qa-notice
           />
         }
