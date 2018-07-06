@@ -68,13 +68,17 @@ const CircleProgressComponent = (props: Props & WithStyles<CSSClasses>) => {
   const value = typeof props.value === 'number' ? props.value : 0;
   const { classes, noTopMargin } = props;
 
+  const outerClasses = {
+    [classes.root]: true,
+    [classes.noTopMargin]: noTopMargin,
+  };
+
+  if (props.className) {
+    outerClasses[props.className] = true;
+  }
+
   return (
-    <div className={classNames({
-      [classes.root]: true,
-      [classes.noTopMargin]: noTopMargin,
-      [props.className]: Boolean(props.className),
-    })}
-    >
+    <div className={classNames(outerClasses)}>
       <div className={classes.topWrapper}>
         <div className={classes.top} />
       </div>

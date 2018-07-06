@@ -9,10 +9,15 @@ import { getLinode, getLinodeLishToken } from 'src/services/linodes';
 
 import { getLishSchemeAndHostname, resizeViewPort } from '.';
 
-type ClassNames = 'root';
+type ClassNames = 'container';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {},
+  container: {
+    '& canvas': {
+      margin: 'auto',
+      display: 'block',
+    }
+  },
 });
 
 interface State {
@@ -79,7 +84,7 @@ class Glish extends React.Component<CombinedProps, State> {
   componentDidMount() {
     this.mounted = true;
 
-    resizeViewPort(1080, 830);
+    resizeViewPort(1080, 840);
 
     this.getLinodeData()
       .then((linode) => {
@@ -193,6 +198,7 @@ class Glish extends React.Component<CombinedProps, State> {
   }
 
   render() {
+    const { classes } = this.props;
     const { linode, token, activeVnc, initialConnect } = this.state;
     const region = linode && (linode as Linode.Linode).region;
 
@@ -203,7 +209,10 @@ class Glish extends React.Component<CombinedProps, State> {
         }
 
         {(activeVnc && token && region) &&
-          <div style={!initialConnect ? { display: 'none' } : {}}>
+          <div
+            className={classes.container}
+            style={!initialConnect ? { display: 'none' } : {}}
+          >
             <VncDisplay
               url={`${getLishSchemeAndHostname(region)}:8080/${token}`}
               onUpdateState={this.onUpdateVNCState}
