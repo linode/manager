@@ -5,6 +5,8 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 import Typography from '@material-ui/core/Typography';
 
 import AddNewLink from 'src/components/AddNewLink';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import Grid from 'src/components/Grid';
 import PromiseLoader from 'src/components/PromiseLoader';
@@ -33,7 +35,8 @@ interface State {
 type CombinedProps = Props
   & SetDocsProps
   & WithStyles<ClassNames>
-  & PreloadedProps;
+  & PreloadedProps
+  & RouteComponentProps<{}>;
 
   const preloaded = PromiseLoader<Props>({
     images: () => getImages()
@@ -60,6 +63,11 @@ export class StackScriptsLanding extends React.Component<CombinedProps, State> {
     return images.filter((image: Linode.Image) => image.is_public)
   }
 
+  goToCreateStackScript = () => {
+    const { history } = this.props;
+    history.push('/stackscripts/create');
+  }
+
   render() {
 
     const { images, classes } = this.props;
@@ -76,9 +84,8 @@ export class StackScriptsLanding extends React.Component<CombinedProps, State> {
             <Grid container alignItems="flex-end">
               <Grid item>
                 <AddNewLink
-                  onClick={() => console.log('Feature Not currently available')}
+                  onClick={this.goToCreateStackScript}
                   label="Create New StackScript"
-                  disabled
                   data-qa-create-new-stackscript
                 />
               </Grid>
@@ -101,5 +108,6 @@ const styled = withStyles(styles, { withTheme: true });
 export default compose(
   preloaded,
   styled,
+  withRouter,
   setDocs(StackScriptsLanding.docs),
 )(StackScriptsLanding);

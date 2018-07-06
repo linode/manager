@@ -32,6 +32,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 interface Props extends SelectProps {
   helpText?: string;
   success?: boolean;
+  open?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -68,6 +69,7 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
   return (
     <React.Fragment>
       <Select
+        open={props.open}
         className={c}
         MenuProps={menuProps}
         input={<Input {...inputProps} />}
