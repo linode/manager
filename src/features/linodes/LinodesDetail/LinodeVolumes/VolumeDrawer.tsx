@@ -8,6 +8,7 @@ import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
 import MenuItem from 'src/components/MenuItem';
 import Radio from 'src/components/Radio';
+import renderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
 import { dcDisplayNames } from 'src/constants';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
@@ -53,6 +54,10 @@ const jawn = {
   size: 'size',
 };
 
+interface DisableableProps {
+  disabled?: boolean;
+}
+
 class VolumeDrawer extends React.Component<CombinedProps, State> {
   state: State = {};
 
@@ -77,7 +82,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
   onModeChange = (e: React.ChangeEvent<HTMLInputElement>, value: string) =>
     this.props.onModeChange && this.props.onModeChange(value);
 
-  labelField = (disabled: boolean = false) => (
+  labelField: React.StatelessComponent<DisableableProps> = ({ disabled }) => (
     <TextField
       data-qa-volume-label
       disabled={disabled}
@@ -88,7 +93,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     />
   );
 
-  cloneLabelField = (disabled: boolean = false) => (
+  cloneLabelField: React.StatelessComponent<DisableableProps> = ({ disabled }) => (
     <TextField
       data-qa-clone-from
       errorText={getAPIErrorFor(jawn, this.props.errors)('label')}
@@ -99,7 +104,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     />
   );
 
-  sizeField = (disabled: boolean = false) => (
+  sizeField: React.StatelessComponent<DisableableProps> = ({ disabled }) => (
     <TextField
       data-qa-size
       disabled={disabled}
@@ -110,7 +115,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     />
   );
 
-  regionField = (disabled: boolean = false) => (
+  regionField: React.StatelessComponent<DisableableProps> = ({ disabled }) => (
     <TextField
       data-qa-region
       disabled={disabled}
@@ -121,7 +126,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     />
   );
 
-  linodeField = (disabled: boolean = false) => (
+  linodeField: React.StatelessComponent<DisableableProps> = ({ disabled }) => (
     <TextField
       data-qa-attach-to
       disabled={disabled}
@@ -135,28 +140,28 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
   createForm = () => {
     return (
       <React.Fragment>
-        {this.labelField()}
-        {this.sizeField()}
+        <this.labelField />
+        <this.sizeField />
       </React.Fragment>
     );
   }
 
   renameForm = () => {
-    return this.labelField()
+    return <this.labelField />
   }
 
   resizeForm = () => {
-    return this.sizeField();
+    return <this.sizeField />
   }
 
   cloneForm = () => {
     return (
       <React.Fragment>
-        {this.cloneLabelField()}
-        {this.labelField(true)}
-        {this.sizeField(true)}
-        {this.regionField(true)}
-        {this.linodeField(true)}
+        <this.cloneLabelField />
+        <this.labelField disabled />
+        <this.sizeField disabled />
+        <this.regionField disabled />
+        <this.linodeField disabled />
       </React.Fragment>
     );
   }
@@ -181,7 +186,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     );
   }
 
-  modeSelection = () => {
+  modeSelection = renderGuard(() => {
     const { mode } = this.props;
     return (
       <RadioGroup
@@ -195,30 +200,34 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
         <FormControlLabel value="attach" label="Attach Existing Volume" control={<Radio />} />
       </RadioGroup>
     )
-  }
+  })
+
+  actions = renderGuard(() => (
+    <ActionsPanel>
+      <Button onClick={this.props.onSubmit} type="primary" data-qa-submit>
+        Submit
+      </Button>
+      <Button onClick={this.props.onClose} type="secondary" data-qa-cancel>
+        Cancel
+      </Button>
+    </ActionsPanel>
+  ));
 
   render() {
-    const { attachableVolumes, mode, open, title, onClose, onSubmit } = this.props;
+    const { attachableVolumes, mode, open, title, onClose } = this.props;
     const displayModeSelection =
       attachableVolumes && attachableVolumes.length > 0 && ['create', 'attach'].includes(mode);
 
     return (
       <Drawer open={open} onClose={onClose} title={title}>
-        {displayModeSelection && this.modeSelection()}
+        {displayModeSelection && <this.modeSelection updateFor={[mode]} />}
         {mode === 'create' && this.createForm()}
         {mode === 'edit' && this.renameForm()}
         {mode === 'resize' && this.resizeForm()}
         {mode === 'clone' && this.cloneForm()}
         {mode === 'attach' && this.attachForm()}
 
-        <ActionsPanel>
-          <Button onClick={onSubmit} type="primary" data-qa-submit>
-            Submit
-          </Button>
-          <Button onClick={onClose} type="secondary" data-qa-cancel>
-            Cancel
-          </Button>
-        </ActionsPanel>
+        <this.actions updateFor={[]} />
       </Drawer>
     );
   }

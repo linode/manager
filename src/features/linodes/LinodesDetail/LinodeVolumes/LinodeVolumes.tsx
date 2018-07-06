@@ -17,6 +17,7 @@ import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Placeholder, { PlaceholderProps } from 'src/components/Placeholder';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
+import renderGuard from 'src/components/RenderGuard';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import Table from 'src/components/Table';
 import { events$, resetEventsPolling } from 'src/events';
@@ -26,7 +27,6 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { withLinode, withVolumes } from '../context';
 import ActionMenu from './LinodeVolumesActionMenu';
 import VolumeDrawer, { Modes, Props as VolumeDrawerProps } from './VolumeDrawer';
-
 
 type ClassNames = 'title';
 
@@ -686,7 +686,7 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
    * - If Linode has no volumes, null.
    * - Else show rows of volumes.
    */
-  Table = (): null | JSX.Element => {
+  Table = renderGuard((): null | JSX.Element => {
     const { classes } = this.props;
     const { attachedVolumes } = this.state;
 
@@ -716,7 +716,7 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
                 <TableCell>Label</TableCell>
                 <TableCell>Size</TableCell>
                 <TableCell>File System Path</TableCell>
-                <TableCell></TableCell>
+                <TableCell />
               </TableRow>
             </TableHead>
             <TableBody>
@@ -769,7 +769,7 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
         <this.UpdateDialog />
       </React.Fragment>
     );
-  }
+  })
 
   /**
    * Important numbers;
@@ -792,7 +792,7 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <this.Placeholder />
-        <this.Table />
+        <this.Table updateFor={[this.state.attachableVolumes]} />
         <VolumeDrawer {...volumeDrawer} />
       </React.Fragment>
     );
