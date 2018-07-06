@@ -647,7 +647,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
    *    - Else "Create a Volume"
    */
   Placeholder = (): null | JSX.Element => {
-    // const { linodeConfigs: { response: configs } } = this.props;
+    const { linodeConfigs: { response: configs } } = this.props;
     const { attachedVolumes } = this.state;
     let props: PlaceholderProps;
 
@@ -655,18 +655,18 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
       return null;
     }
 
-    // if (configs.length === 0) {
-    //   props = {
-    //     buttonProps: {
-    //       onClick: this.openAttachmentDrawer,
-    //       children: 'View Linode Config',
-    //     },
-    //     icon: VolumeIcon,
-    //     title: 'No configs available',
-    //     copy: 'This Linode has no configurations. Click below to create a configuration.',
-    //   };
-    //   return <Placeholder {...props} />;
-    // }
+    if (configs.length === 0) {
+      props = {
+        buttonProps: {
+          onClick: () => null,
+          children: 'View Linode Config',
+        },
+        icon: VolumeIcon,
+        title: 'No configs available',
+        copy: 'This Linode has no configurations. Click below to create a configuration.',
+      };
+      return <Placeholder {...props} />;
+    }
 
     props = {
       buttonProps: {
