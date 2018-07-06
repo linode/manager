@@ -1,13 +1,20 @@
 import * as React from 'react';
 
 import { compose, equals, path } from 'ramda';
+import * as Rx from 'rxjs/Rx';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import Button from '@material-ui/core/Button';
 
+import { events$, resetEventsPolling } from 'src/events';
+
+import { sendToast } from 'src/features/ToastNotifications/toasts';
+
+
 import { createImage, updateImage } from 'src/services/images';
 import { getLinodeDisks, getLinodes } from 'src/services/linodes';
+
 
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -76,6 +83,7 @@ const titleMap = {
 
 class ImageDrawer extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
+  eventsSub: Rx.Subscription;
   state = { 
     description: this.props.description ? this.props.description : ' ',
     disks: [],
@@ -89,6 +97,27 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
   componentDidMount() {
     this.mounted = true;
     this.updateLinodes();
+
+    this.eventsSub = events$
+      .filter(event => (
+        !event._initial
+        && [
+          'disk_imagize',
+          'image_delete',
+        ].includes(event.action)
+      ))
+      .subscribe((event) => {
+        if (event.action === 'disk_imagize' && (event.status === 'notification' || event.status === 'finished')) {
+          sendToast(`Image ${event.entity && event.entity.label} created successfully.`);
+        }
+
+        if (event.action === 'disk_imagize' && event.status === 'failed') {
+          sendToast(`There was an error creating image ${event.entity && event.entity.label}.`, 'error');
+        }
+        // if (event.action === 'image_delete' && event.status === 'notification') {
+        //   sendToast(`Image ${event.entity && event.entity.label} has been deleted.`);
+        // }
+      });
   }
 
   componentWillUnmount() {
@@ -156,6 +185,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
 
         updateImage(imageID, label, description)
           .then(() => {
+            resetEventsPolling();
             this.close();
             onSuccess();
           })
