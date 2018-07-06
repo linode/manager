@@ -766,7 +766,6 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
             </TableBody>
           </Table>
         </Paper>
-        <this.UpdateDialog />
       </React.Fragment>
     );
   })
@@ -794,6 +793,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
         <this.Placeholder />
         <this.Table updateFor={[this.state.attachableVolumes]} />
         <VolumeDrawer {...volumeDrawer} />
+        <this.UpdateDialog />
       </React.Fragment>
     );
   }

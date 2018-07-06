@@ -14,7 +14,7 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
-class LinodeActionMenu extends React.Component<CombinedProps> {
+class LinodeVolumeActionMenu extends React.Component<CombinedProps> {
   createLinodeActions = () => {
     const {
       onDetach,
@@ -78,4 +78,4 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
   }
 }
 
-export default withRouter(LinodeActionMenu);
+export default withRouter(LinodeVolumeActionMenu);
