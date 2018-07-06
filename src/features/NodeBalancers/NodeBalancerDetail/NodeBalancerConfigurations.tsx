@@ -183,7 +183,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     */
     const nodePathErrors = errors.reduce(
       (acc: any, error: Linode.ApiFieldError) => {
-        const match = /^nodes_(\d+)_(\w+)$/.exec(error.field);
+        const match = /^nodes_(\d+)_(\w+)$/.exec(error.field!);
         if (match && match[1] && match[2]) {
           return [
             ...acc,

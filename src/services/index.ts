@@ -109,11 +109,13 @@ export const mockAPIError = (
   status: number = 400,
   statusText: string = 'Internal Server Error',
   data: any = {},
-): Promise<Axios.AxiosError> => Promise.reject(
-  createError(
-    `Request failed with a status of ${status}`,
-    { data, status, statusText, headers: {}, config: {} },
-  ));
+): Promise<Axios.AxiosError> =>
+  new Promise((resolve, reject) => setTimeout(() => reject(
+    createError(
+      `Request failed with a status of ${status}`,
+      { data, status, statusText, headers: {}, config: {} },
+    )
+  ), process.env.NODE_ENV === 'test' ? 0 : 250));
 
 const createError = (message: string, response: Axios.AxiosResponse) => {
   const error = new Error(message) as any;
