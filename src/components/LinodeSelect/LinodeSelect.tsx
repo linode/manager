@@ -24,9 +24,9 @@ import Select from 'src/components/Select';
 
   
   interface Props {
-    generalError: string,
+    generalError?: string,
     linodes: string[][],
-    linodeError: string,
+    linodeError?: string,
     selectedLinode?: string,
     handleChange: (e: React.ChangeEvent<HTMLSelectElement>) => void,
   }
