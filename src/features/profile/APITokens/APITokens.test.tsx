@@ -6,89 +6,13 @@ import { createPromiseLoaderResponse } from 'src/utilities/testHelpers';
 
 import { APITokens } from './APITokens';
 
-describe('APITokens', () => {
-  const pats = createPromiseLoaderResponse<Linode.Token[]>([
-    {
-      created: '2018-04-09T20:00:00',
-      expiry: moment.utc().subtract(1, 'day').format(),
-      id: 1,
-      token: 'aa588915b6368b80',
-      scopes: 'account:read_write',
-      label: 'test-1',
-    },
-    {
-      created: '2017-04-09T20:00:00',
-      expiry: moment.utc().add(3, 'months').format(),
-      id: 2,
-      token: 'ae8adb9a37263b4d',
-      scopes: 'account:read_only',
-      label: 'test-2',
-    },
-    {
-      created: '2018-04-09T20:00:00',
-      expiry: moment.utc().add(1, 'year').format(),
-      id: 3,
-      token: '019774b077bb5fda',
-      scopes: 'account:read_write',
-      label: 'test-3',
-    },
-    {
-      created: '2011-04-09T20:00:00',
-      expiry: moment.utc().add(1, 'year').format(),
-      id: 4,
-      token: '019774b077bb5fda',
-      scopes: 'account:read_write',
-      label: 'test-4',
-    },
-  ]);
+import { appTokens } from 'src/__data__/appTokens';
+import { personalAccessTokens } from 'src/__data__/personalAccessTokens';
 
-  const appTokens = createPromiseLoaderResponse<Linode.Token[]>([
-    {
-      created: '2018-04-26T20:00:00',
-      expiry: moment.utc().subtract(1, 'day').format(),
-      thumbnail_url: null,
-      id: 1,
-      scopes: '*',
-      website: 'http://localhost:3000',
-      label: 'test-app-1',
-    },
-    {
-      created: '2015-04-26T14:45:07',
-      expiry: moment.utc().add(1, 'day').format(),
-      thumbnail_url: null,
-      id: 2,
-      scopes: '*',
-      website: 'http://localhost:3000',
-      label: 'test-app-2',
-    },
-    {
-      created: '2017-04-26T14:45:07',
-      expiry: moment.utc().add(3, 'months').format(),
-      thumbnail_url: null,
-      id: 3,
-      scopes: '*',
-      website: 'http://localhost:3000',
-      label: 'test-app-3',
-    },
-    {
-      created: '2011-04-26T14:45:07',
-      expiry: moment.utc().add(3, 'months').format(),
-      thumbnail_url: null,
-      id: 4,
-      scopes: '*',
-      website: 'http://localhost:3000',
-      label: 'test-app-4',
-    },
-    {
-      created: '2028-04-26T14:45:07',
-      expiry: moment.utc().add(3, 'months').format(),
-      thumbnail_url: null,
-      id: 5,
-      scopes: '*',
-      website: 'http://localhost:3000',
-      label: '',
-    },
-  ]);
+const patsAsPromise = createPromiseLoaderResponse(personalAccessTokens);
+const appTokensAsPromise = createPromiseLoaderResponse(appTokens);
+
+describe('APITokens', () => {
 
   const component = mount(
     <APITokens
@@ -99,8 +23,8 @@ describe('APITokens', () => {
         typeCell: '',
         createdCell: '',
       }}
-      pats={pats}
-      appTokens={appTokens}
+      pats={patsAsPromise}
+      appTokens={appTokensAsPromise}
     />,
   );
 
@@ -137,18 +61,6 @@ describe('create and edit tokens', () => {
     },
   ]);
 
-  const appTokens = createPromiseLoaderResponse<Linode.Token[]>([
-    {
-      created: '2018-04-26T20:00:00',
-      expiry: moment.utc().subtract(1, 'day').format(),
-      thumbnail_url: null,
-      id: 1,
-      scopes: '*',
-      website: 'http://localhost:3000',
-      label: 'test-app-1',
-    },
-  ]);
-
   const component = mount(
     <APITokens
       classes={{
@@ -159,7 +71,7 @@ describe('create and edit tokens', () => {
         createdCell: '',
       }}
       pats={pats}
-      appTokens={appTokens}
+      appTokens={appTokensAsPromise}
     />,
   );
 
