@@ -36,9 +36,9 @@ describe('Linode Detail - Networking Suite', () => {
         it('should display error msg on click allocate', () => {
             const noticeMsg = 'Additional IPv4 addresses require technical justification. Please open a Support Ticket describing your requirement';
             Networking.allocate.click();
-            Networking.notice.waitForVisible();
+            Networking.notice.waitForVisible(constants.wait.normal);
             
-            Networking.waitForNotice(noticeMsg);
+            Networking.waitForNotice(noticeMsg, constants.wait.normal);
         });
 
         it('should dismiss drawer on close', () => {

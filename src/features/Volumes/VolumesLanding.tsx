@@ -238,7 +238,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
 
                 return isVolumeUpdating(volume.recentEvent)
                   ? (
-                    <TableRow key={volume.id} data-qa-volume-cell={volume.id}>
+                    <TableRow key={volume.id} data-qa-volume-loading>
                       <TableCell data-qa-volume-cell-label>{label}</TableCell>
                       <TableCell colSpan={5}>
                         <LinearProgress value={progressFromEvent(volume.recentEvent)} />
