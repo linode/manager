@@ -7,6 +7,10 @@ const StackScriptsLanding = DefaultLoader({
   loader: () => import('./StackScriptsLanding'),
 });
 
+const StackScriptCreate = DefaultLoader({
+  loader: () => import('./StackScriptCreate'),
+});
+
 type Props = RouteComponentProps<{}>;
 
 class NodeBalancers extends React.Component<Props> {
@@ -16,6 +20,7 @@ class NodeBalancers extends React.Component<Props> {
     return (
       <Switch>
         <Route component={StackScriptsLanding} path={path} exact />
+        <Route component={StackScriptCreate} path={`${path}/create`} exact />
       </Switch>
     );
   }
