@@ -6,8 +6,9 @@ import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 interface Props {
   onRestore: () => void;
   onDeploy: () => void;
-  onEdit: () => void;
-  onDelete: () => void;
+  onEdit: (label:string, description:string, imageID:string) => void;
+  onDelete: (label:string, imageID:string) => void;
+  image: Linode.Image;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}>;
@@ -19,6 +20,7 @@ class ImagesActionMenu extends React.Component<CombinedProps> {
       onDeploy,
       onEdit,
       onDelete,
+      image,
     } = this.props;
 
     return (closeMenu: Function): Action[] => {
@@ -44,16 +46,16 @@ class ImagesActionMenu extends React.Component<CombinedProps> {
         {
           title: 'Edit',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            onEdit();
+            const description = image.description ? image.description : ' ';
+            onEdit(image.label, description, image.id);
             closeMenu();
             e.preventDefault();
           },
         },
         {
           title: 'Delete',
-          disabled: true,
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            onDelete();
+            onDelete(image.label, image.id);
             closeMenu();
             e.preventDefault();
           },

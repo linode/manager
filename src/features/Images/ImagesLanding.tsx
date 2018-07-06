@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import { compose, pathOr } from 'ramda';
 
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 
-import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -15,20 +14,21 @@ import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
-// import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import Button from 'src/components/Button';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import Table from 'src/components/Table';
+import { deleteImage, getUserImages } from 'src/services/images';
 
-import { getUserImages } from 'src/services/images';
 
-import { formatDate } from 'src/utilities/format-date-iso8601';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-import ActionMenu from './ImagesActionMenu';
+import ImageRow from './ImageRow';
 import ImagesDrawer from './ImagesDrawer';
 
 type ClassNames = 'root' | 'title';
@@ -56,6 +56,13 @@ interface State {
     imageID?: string,
     label?: string,
   };
+  removeDialog: {
+    open: boolean,
+    submitting: boolean,
+    image?: string,
+    imageID?: string,
+    error?: string,
+  };
 }
 
 type CombinedProps = Props & PromiseLoaderProps & WithStyles<ClassNames> & RouteComponentProps<{}>;
@@ -69,6 +76,10 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
       mode: 'edit',
       label: '',
       description: '',
+    },
+    removeDialog: {
+      open: false,
+      submitting: false,
     },
   };
 
@@ -106,19 +117,40 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
     });
   }
 
+  removeImage = () => {
+    const { removeDialog } = this.state;
+    if (!this.state.removeDialog.imageID) { 
+      this.setState({ removeDialog: { ...removeDialog, error: "Image is not available."}});
+      return;
+     }
+    this.setState({ removeDialog: { ...removeDialog, submitting: true, errors: undefined, }});
+    deleteImage(this.state.removeDialog.imageID)
+      .then(() => {
+        this.closeRemoveDialog();
+        this.refreshImages();
+      })
+      .catch((err) => {
+        const errors: Linode.ApiFieldError[] = pathOr([], ['response', 'data', 'errors'], err);
+        const error: string = errors.length > 0 ? errors[0].reason : "There was an error deleting the image."
+        this.setState({ removeDialog:  { ...removeDialog, error} });
+      })
+  }
+
   getActions = () => {
     return (
       <ActionsPanel>
         <Button
           variant="raised"
-          color="secondary"
-          className="destructive"
-          onClick={() => null}
+          type="secondary"
+          destructive={true}
+          loading={this.state.removeDialog.submitting}
+          onClick={this.removeImage}
           data-qa-submit
         >
           Confirm
         </Button>
         <Button
+          onClick={this.closeRemoveDialog}
           variant="raised"
           color="secondary"
           className="cancel"
@@ -128,6 +160,19 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
         </Button>
       </ActionsPanel>
     )
+  }
+
+  openRemoveDialog = (image: string, imageID: string) => {
+    this.setState({
+      removeDialog: { open: true, image, imageID, submitting: false, error: undefined, },
+    });
+  }
+
+  closeRemoveDialog = () => {
+    const { removeDialog } = this.state;
+    this.setState({
+      removeDialog: { ...removeDialog, open: false, },
+    });
   }
 
   openForEdit = (label: string, description: string, imageID: string) => {
@@ -179,6 +224,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
               children: 'Add an Image',
             }}
           />
+          {/* <this.ImageCreateDrawer /> */}
         </React.Fragment>
       );
     }
@@ -214,24 +260,14 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
               </TableRow>
             </TableHead>
             <TableBody>
-              {images.map(image =>
-                <TableRow key={image.id} data-qa-image-cell={image.id}>
-                  <TableCell data-qa-image-label>
-                    <Link to={`/images/${image.id}`}>
-                      {image.label}
-                    </Link>
-                  </TableCell>
-                  <TableCell data-qa-image-date>{formatDate(image.created)}</TableCell>
-                  <TableCell data-qa-image-size>{image.size} MB</TableCell>
-                  <TableCell>
-                    <ActionMenu
-                      onRestore={() => { null; }}
-                      onDeploy={() => { null; }}
-                      onEdit={() => this.openForEdit(image.label, image.description ? image.description : ' ', image.id)}
-                      onDelete={() => { null; }}
-                    />
-                  </TableCell>
-                </TableRow>
+              {images.map((image, idx) =>
+                <ImageRow key={idx} 
+                          image={image}
+                          onRestore={() => null}
+                          onDeploy={() => null}
+                          onEdit={this.openForEdit} 
+                          onDelete={this.openRemoveDialog}
+                          updateFor={[image]} />
               )}
             </TableBody>
           </Table>
@@ -247,6 +283,17 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
           setLabel={this.setLabel}
           setDescription={this.setDescription}
         />
+        <ConfirmationDialog
+          open={this.state.removeDialog.open}
+          title={`Remove ${this.state.removeDialog.image}`}
+          onClose={this.closeRemoveDialog}
+          actions={this.getActions}
+        >
+          { this.state.removeDialog.error &&
+          <Notice error text={this.state.removeDialog.error} />
+          }
+          <Typography>Are you sure you want to remove this image?</Typography>
+        </ConfirmationDialog>
       </React.Fragment>
     );
   }
