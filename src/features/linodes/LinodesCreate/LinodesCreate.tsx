@@ -69,12 +69,16 @@ interface State {
   selectedTab: number;
   selectedLinodeIDFromQueryString: number | undefined;
   selectedBackupIDFromQueryString: number | undefined;
+  selectedStackScriptIDFromQueryString: number | undefined;
+  selectedStackScriptTabFromQueryString: string | undefined;
 }
 
 interface QueryStringOptions {
   type: string;
   backupID: string;
   linodeID: string;
+  stackScriptID: string;
+  stackScriptUsername: string;
 }
 
 const preloaded = PromiseLoader<Props>({
@@ -101,6 +105,8 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
     selectedTab: 0,
     selectedLinodeIDFromQueryString: undefined,
     selectedBackupIDFromQueryString: undefined,
+    selectedStackScriptIDFromQueryString: undefined,
+    selectedStackScriptTabFromQueryString: undefined,
   };
 
   mounted: boolean = false;
@@ -126,6 +132,14 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
       this.setState({ selectedTab: this.backupTabIndex });
     } else if (options.type === 'fromStackScript') {
       this.setState({ selectedTab: this.stackScriptTabIndex });
+    }
+
+    if(options.stackScriptUsername) {
+      this.setState({selectedStackScriptTabFromQueryString: options.stackScriptUsername})
+    }
+
+    if(options.stackScriptID) {
+      this.setState({selectedStackScriptIDFromQueryString: +options.stackScriptID || undefined})
     }
 
     if (options.linodeID) {
@@ -243,6 +257,8 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
             getTypeInfo={this.getTypeInfo}
             getRegionName={this.getRegionName}
             history={this.props.history}
+            selectedStackScriptFromQuery={this.state.selectedStackScriptIDFromQueryString}
+            selectedTabFromQuery={this.state.selectedStackScriptTabFromQueryString}
           />
         );
       },

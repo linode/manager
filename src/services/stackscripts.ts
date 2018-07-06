@@ -1,13 +1,20 @@
 import { API_ROOT } from 'src/constants';
 import Request, {
-  setURL,
   setMethod,
   setParams,
+  setURL,
   setXFilter,
 } from './index';
 
 type Page<T> = Linode.ResourcePage<T>;
 type StackScript = Linode.StackScript.Response;
+
+export const getStackScript = (id: number) =>
+  Request<StackScript>(
+    setURL(`${API_ROOT}/linode/stackscripts/${id}`),
+    setMethod('GET'),
+  )
+  .then(response => response.data);
 
 export const getStackscripts = (params?: any, filter?: any) =>
   Request<Page<StackScript>>(
