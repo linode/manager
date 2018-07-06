@@ -94,7 +94,7 @@ interface State {
 
 type CombinedProps = Props & ContextProps & WithStyles<ClassNames>;
 
-class LinodeVolumes extends React.Component<CombinedProps, State> {
+export class LinodeVolumes extends React.Component<CombinedProps, State> {
   static defaultProps = {
     volumes: [],
     linodeConfigs: [],

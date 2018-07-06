@@ -43,16 +43,31 @@ const getHighMem = (types: ExtendedType[]) =>
   types.filter(t => /highmem/.test(t.class));
 
 export class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNames>> {
+  onSelect = (id: string) => () => this.props.onSelect(id);
+
   renderCard = (type: ExtendedType) => {
-    const { selectedID, onSelect, currentPlanHeading } = this.props;
+    const { selectedID, currentPlanHeading } = this.props;
     const selectedDiskSize = (this.props.selectedDiskSize) ? this.props.selectedDiskSize : 0;
+    let tooltip;
+    const planToSmall = selectedDiskSize > type.disk
+    const isSamePlan = type.heading === currentPlanHeading;
+
+    if(planToSmall){
+      tooltip = `This plan is to small for the selected image.`;
+    }
+
+    if(isSamePlan){
+      tooltip = `This is your current plan. Please select another to resize.`;
+    }
+
     return <SelectionCard
       key={type.id}
       checked={type.id === String(selectedID)}
-      onClick={e => onSelect(type.id)}
+      onClick={this.onSelect(type.id)}
       heading={type.heading}
       subheadings={type.subHeadings}
-      disabled={selectedDiskSize > type.disk || type.heading === currentPlanHeading}
+      disabled={planToSmall || isSamePlan}
+      tooltip={tooltip}
     />;
   }
 

@@ -48,6 +48,8 @@ import {
 } from './utils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
+import { getLinodes } from 'src/services/linodes';
+
 type Styles =
   'root'
   | 'main'
@@ -84,10 +86,11 @@ type CombinedProps = Props
 interface NodeBalancerFieldsState {
   label?: string;
   region?: string;
-  configs: (NodeBalancerConfigFields & { errors?: any }) [];
+  configs: (NodeBalancerConfigFields & { errors?: any })[];
 }
 
 interface State {
+  linodesWithPrivateIPs: Linode.Linode[];
   submitting: boolean;
   nodeBalancerFields: NodeBalancerFieldsState;
   errors?: Linode.ApiFieldError[];
@@ -120,6 +123,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   };
 
   state: State = {
+    linodesWithPrivateIPs: [],
     submitting: false,
     nodeBalancerFields: NodeBalancerCreate.defaultFieldsStates,
     deleteConfigConfirmDialog:
@@ -159,8 +163,9 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   onNodeLabelChange = (configIdx: number, nodeIdx: number, value: string) =>
     this.setNodeValue(configIdx, nodeIdx, 'label', value)
 
-  onNodeAddressChange = (configIdx: number, nodeIdx: number, value: string) =>
-    this.setNodeValue(configIdx, nodeIdx, 'address', value)
+  onNodeAddressChange = (configIdx: number, nodeIdx: number, value: string) => {
+    this.setNodeValue(configIdx, nodeIdx, 'address', value);
+  }
 
   onNodePortChange = (configIdx: number, nodeIdx: number, value: string) =>
     this.setNodeValue(configIdx, nodeIdx, 'port', value)
@@ -209,7 +214,8 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     */
     const nodePathErrors = fieldErrorsToNodePathErrors(errors);
 
-    if (nodePathErrors.length === 0) { return; }
+    /** We still need to set the errors */
+    if (nodePathErrors.length === 0) { return this.setState({ errors }); }
 
     const setFns = nodePathErrors.map((nodePathError: any) => {
       return compose(
@@ -281,14 +287,15 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
         if (errors) {
           this.setNodeErrors(errors.map((e) => ({
             ...e,
-            field: e.field.replace(/(\[|\]\.)/g, '_')
+            ...(e.field && { field: e.field.replace(/(\[|\]\.)/g, '_') })
           })));
-          return this.setState( { submitting: false }, () => scrollErrorIntoView());
+
+          return this.setState({ errors, submitting: false }, () => scrollErrorIntoView());
         }
 
         return this.setState({
           errors: [
-            { field: 'none', reason: `An unexpected error has occured..` }],
+            { reason: `An unexpected error has occured..` }],
         }, () => {
           scrollErrorIntoView();
         });
@@ -332,7 +339,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       this.setState({
         errors: this.state.errors!.filter((error: Linode.ApiFieldError) => {
           const t = new RegExp(`configs_${idxToDelete}_`);
-          return !t.test(error.field);
+          return error.field && !t.test(error.field);
         }),
       });
     }
@@ -392,9 +399,24 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     </ActionsPanel>
   )
 
+  componentDidMount() {
+    getLinodes()
+      .then(result => {
+        const privateIPRegex = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/;
+        const linodesWithPrivateIPs = result.data.filter((linode) => {
+          return linode.ipv4.some(ipv4 => !!ipv4.match(privateIPRegex)); // does it have a private IP address
+        });
+        this.setState({ linodesWithPrivateIPs });
+      })
+      // we don't really need to do anything here because if the request fails
+      // the user won't be presented with any suggestions when typing in the
+      // node address field, which isn't the end of the world.
+      .catch(err => err);
+  }
+
   render() {
     const { classes, regions } = this.props;
-    const { nodeBalancerFields } = this.state;
+    const { nodeBalancerFields, linodesWithPrivateIPs } = this.state;
     const hasErrorFor = getAPIErrorFor(errorResources, this.state.errors);
     const generalError = hasErrorFor('none');
 
@@ -459,6 +481,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                   return <Paper key={idx} style={{ padding: 24, margin: 8, width: '100%' }}>
                     <NodeBalancerConfigPanel
                       errors={nodeBalancerConfig.errors}
+                      linodesWithPrivateIPs={linodesWithPrivateIPs}
                       configIdx={idx}
 
                       algorithm={view(algorithmLens, this.state)}
@@ -671,20 +694,20 @@ export const fieldErrorsToNodePathErrors = (errors: Linode.ApiFieldError[]) => {
   */
   return errors.reduce(
     (acc: any, error: Linode.ApiFieldError) => {
-        const { field, path } = getPathAnFieldFromFieldString(error.field);
+      const { field, path } = getPathAnFieldFromFieldString(error.field!);
 
-        if(!path.length){ return acc; }
+      if (!path.length) { return acc; }
 
-        return [
-          ...acc,
-          {
-            error: {
-              field,
-              reason: error.reason,
-            },
-            path: [...path, 'errors'],
+      return [
+        ...acc,
+        {
+          error: {
+            field,
+            reason: error.reason,
           },
-        ];
+          path: [...path, 'errors'],
+        },
+      ];
       return acc;
     },
     [],

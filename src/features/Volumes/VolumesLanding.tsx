@@ -1,42 +1,45 @@
-import * as React from 'react';
-import { compose, pathOr, equals } from 'ramda';
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from '@material-ui/core/styles';
-import { bindActionCreators } from 'redux';
-import { connect, Dispatch } from 'react-redux';
-
-import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-import TableHead from '@material-ui/core/TableHead';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
-import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
-
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Typography from '@material-ui/core/Typography';
+import { compose, equals, pathOr } from 'ramda';
+import * as React from 'react';
+import { connect, Dispatch } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import AddNewLink from 'src/components/AddNewLink';
 import setDocs from 'src/components/DocsSidebar/setDocs';
-import Table from 'src/components/Table';
 import Grid from 'src/components/Grid';
-import { getLinodes } from 'src/services/linodes';
+import LinearProgress from 'src/components/LinearProgress';
+import Table from 'src/components/Table';
 import { dcDisplayNames } from 'src/constants';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { generateInFilter, resetEventsPolling } from 'src/events';
-import { openForEdit, openForResize, openForClone } from 'src/store/reducers/volumeDrawer';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
+import { getLinodes } from 'src/services/linodes';
 import { detach, _delete } from 'src/services/volumes';
-
-import VolumesActionMenu from './VolumesActionMenu';
-import VolumeConfigDrawer from './VolumeConfigDrawer';
-import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
+import { openForClone, openForCreating, openForEdit, openForResize } from 'src/store/reducers/volumeDrawer';
 import DestructiveVolumeDialog from './DestructiveVolumeDialog';
+import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
+import VolumeConfigDrawer from './VolumeConfigDrawer';
+import VolumesActionMenu from './VolumesActionMenu';
 
-type ClassNames = 'root' | 'title';
+type ClassNames = 'root'
+  | 'title'
+  | 'label'
+  | 'attachment';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
   title: {
     marginBottom: theme.spacing.unit * 2,
+  },
+  label: {
+    width: '15%',
+  },
+  attachment: {
+    width: '15%',
   },
 });
 
@@ -45,6 +48,7 @@ interface Props {
   openForEdit: typeof openForEdit;
   openForResize: typeof openForResize;
   openForClone: typeof openForClone;
+  openForCreating: typeof openForCreating;
 }
 
 interface State {
@@ -86,6 +90,8 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     },
   };
 
+  mounted: boolean = false;
+
   static docs: Linode.Doc[] = [
     {
       title: 'How to Use Block Storage with Your Linode',
@@ -112,6 +118,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     const xFilter = generateInFilter('id', linodeIDs);
     getLinodes(undefined, xFilter)
       .then((response) => {
+        if (!this.mounted) { return; }
         const linodeLabels = {};
         for (const linode of response.data) {
           linodeLabels[linode.id] = linode.label;
@@ -128,7 +135,12 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   }
 
   componentDidMount() {
+    this.mounted = true;
     this.getLinodeLabels();
+  }
+  
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   componentDidUpdate(prevProps: CombinedProps) {
@@ -142,6 +154,11 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       destructiveDialog: { open: false, mode: 'detach' },
     });
   }
+
+  openCreateVolumeDrawer = (e: any) => {
+    this.props.openForCreating();
+    e.preventDefault();
+}
 
   detachVolume = () => {
     const { destructiveDialog: { volumeID } } = this.state;
@@ -184,23 +201,33 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     const { linodeLabels, linodeStatuses } = this.state;
     return (
       <React.Fragment>
-        <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }} >
+        <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
           <Grid item>
-            <Typography variant="headline" data-qa-title className={classes.title}>
+            <Typography variant="headline" className={classes.title} data-qa-title >
               Volumes
             </Typography>
+          </Grid>
+          <Grid item>
+            <Grid container alignItems="flex-end">
+              <Grid item>
+                <AddNewLink
+                  onClick={this.openCreateVolumeDrawer}
+                  label="Create a Volume"
+                />
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
         <Paper>
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Label</TableCell>
-                <TableCell>Attachment</TableCell>
+                <TableCell className={classes.label}>Label</TableCell>
+                <TableCell className={classes.attachment}>Attachment</TableCell>
                 <TableCell>Size</TableCell>
                 <TableCell>File System Path</TableCell>
                 <TableCell>Region</TableCell>
-                <TableCell></TableCell>
+                <TableCell/>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -217,78 +244,88 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
                 );
                 const regionID = pathOr('', ['region'], volume);
                 const region = dcDisplayNames[regionID];
-                return (
-                  <TableRow key={volume.id} data-qa-volume-cell={volume.id}>
-                    <TableCell data-qa-volume-cell-label>{label}</TableCell>
-                    <TableCell data-qa-volume-cell-attachment>{linodeLabel}</TableCell>
-                    <TableCell data-qa-volume-size>{size} GB</TableCell>
-                    <TableCell data-qa-fs-path>{filesystem_path}</TableCell>
-                    <TableCell data-qa-volume-region>{region}</TableCell>
-                    <TableCell>
-                      <VolumesActionMenu
-                        onShowConfig={() => {
-                          this.setState({
-                            configDrawer: {
-                              open: true,
-                              volumePath: filesystem_path,
-                              volumeLabel: label,
-                            },
-                          });
-                        }}
-                        onEdit={() => openForEdit(
-                          volume.id,
-                          label,
-                          size,
-                          regionID,
-                          linodeLabel,
-                        )}
-                        onResize={() => openForResize(
-                          volume.id,
-                          label,
-                          size,
-                          regionID,
-                          linodeLabel,
-                        )}
-                        onClone={() => openForClone(
-                          volume.id,
-                          label,
-                          size,
-                          regionID,
-                        )}
-                        attached={Boolean(linodeLabel)}
-                        onAttach={() => {
-                          this.setState({
-                            attachmentDrawer: {
-                              open: true,
-                              volumeID: volume.id,
-                              volumeLabel: label,
-                              linodeRegion: regionID,
-                            },
-                          });
-                        }}
-                        onDetach={() => {
-                          this.setState({
-                            destructiveDialog: {
-                              open: true,
-                              mode: 'detach',
-                              volumeID: volume.id,
-                            },
-                          });
-                        }}
-                        poweredOff={linodeStatus === 'offline'}
-                        onDelete={() => {
-                          this.setState({
-                            destructiveDialog: {
-                              open: true,
-                              mode: 'delete',
-                              volumeID: volume.id,
-                            },
-                          });
-                        }}
-                      />
-                    </TableCell>
-                  </TableRow>
-                );
+
+                return isVolumeUpdating(volume.recentEvent)
+                  ? (
+                    <TableRow key={volume.id} data-qa-volume-cell={volume.id}>
+                      <TableCell data-qa-volume-cell-label>{label}</TableCell>
+                      <TableCell colSpan={5}>
+                        <LinearProgress value={progressFromEvent(volume.recentEvent)} />
+                      </TableCell>
+                    </TableRow>
+                  )
+                  : (
+                    <TableRow key={volume.id} data-qa-volume-cell={volume.id}>
+                      <TableCell data-qa-volume-cell-label>{label}</TableCell>
+                      <TableCell data-qa-volume-cell-attachment>{linodeLabel}</TableCell>
+                      <TableCell data-qa-volume-size>{size} GB</TableCell>
+                      <TableCell data-qa-fs-path>{filesystem_path}</TableCell>
+                      <TableCell data-qa-volume-region>{region}</TableCell>
+                      <TableCell>
+                        <VolumesActionMenu
+                          onShowConfig={() => {
+                            this.setState({
+                              configDrawer: {
+                                open: true,
+                                volumePath: filesystem_path,
+                                volumeLabel: label,
+                              },
+                            });
+                          }}
+                          onEdit={() => openForEdit(
+                            volume.id,
+                            label,
+                            size,
+                            regionID,
+                            linodeLabel,
+                          )}
+                          onResize={() => openForResize(
+                            volume.id,
+                            label,
+                            size,
+                            regionID,
+                            linodeLabel,
+                          )}
+                          onClone={() => openForClone(
+                            volume.id,
+                            label,
+                            size,
+                            regionID,
+                          )}
+                          attached={Boolean(linodeLabel)}
+                          onAttach={() => {
+                            this.setState({
+                              attachmentDrawer: {
+                                open: true,
+                                volumeID: volume.id,
+                                volumeLabel: label,
+                                linodeRegion: regionID,
+                              },
+                            });
+                          }}
+                          onDetach={() => {
+                            this.setState({
+                              destructiveDialog: {
+                                open: true,
+                                mode: 'detach',
+                                volumeID: volume.id,
+                              },
+                            });
+                          }}
+                          poweredOff={linodeStatus === 'offline'}
+                          onDelete={() => {
+                            this.setState({
+                              destructiveDialog: {
+                                open: true,
+                                mode: 'delete',
+                                volumeID: volume.id,
+                              },
+                            });
+                          }}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  );
               })}
             </TableBody>
           </Table>
@@ -318,8 +355,24 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   }
 }
 
+const isVolumeUpdating = (e?: Linode.Event) => {
+  return e
+    && ['volume_attach', 'volume_detach', 'volume_create'].includes(e.action)
+    && e.status !== 'finished';
+};
+
+const progressFromEvent = (e?: Linode.Event) => {
+  if (!e) { return undefined }
+
+  if (e.status === 'started' && e.percent_complete) {
+    return e.percent_complete;
+  }
+
+  return undefined;
+}
+
 const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
-  { openForEdit, openForResize, openForClone },
+  { openForEdit, openForResize, openForClone, openForCreating },
   dispatch,
 );
 

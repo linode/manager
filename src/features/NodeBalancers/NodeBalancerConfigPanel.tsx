@@ -1,28 +1,39 @@
 import * as React from 'react';
-import { withStyles, StyleRulesCallback, WithStyles, Theme } from '@material-ui/core/styles';
-import { Delete } from '@material-ui/icons';
+
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+
+
 import Divider from '@material-ui/core/Divider';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
+import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+
+import { Delete } from '@material-ui/icons';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import Grid from 'src/components/Grid';
 import IconButton from 'src/components/IconButton';
-import MenuItem from 'src/components/MenuItem';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
+
+import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+
+import Downshift, { DownshiftState, StateChangeOptions } from 'downshift';
 
 type ClassNames = 'root'
   | 'inner'
   | 'divider'
   | 'suffix'
-  | 'backendIPAction';
+  | 'backendIPAction'
+  | 'suggestionsParent'
+  | 'suggestions'
+  | 'suggestionItem'
+  | 'selectedSuggestionItem';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -40,11 +51,42 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     marginLeft: -theme.spacing.unit,
     marginTop: theme.spacing.unit * 3,
   },
+  suggestionsParent: {
+    position: 'relative',
+  },
+  suggestions: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 80,
+    padding: 0,
+    boxShadow: `0 0 5px ${theme.color.boxShadow}`,
+    maxHeight: 150,
+    overflowY: 'auto',
+    width: '100%',
+    maxWidth: 415,
+    zIndex: 2,
+  },
+  suggestionItem: {
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    '&:hover, &:focus': {
+      backgroundColor: `${theme.palette.primary.main} !important`,
+      color: `${theme.color.white} !important`,
+    },
+    '&:last-item': {
+      border: 0,
+    },
+  },
+  selectedSuggestionItem: {
+    backgroundColor: `${theme.palette.primary.main} !important`,
+    color: `${theme.color.white} !important`,
+  },
 });
 
 const styled = withStyles(styles, { withTheme: true });
 
 interface Props {
+  linodesWithPrivateIPs?: Linode.Linode[] | null;
   errors?: Linode.ApiFieldError[];
   nodeMessage?: string;
   configIdx?: number;
@@ -105,7 +147,16 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
+interface State {
+  currentNodeAddressIndex: number | null;
+}
+
 class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
+
+
+  state: State = {
+    currentNodeAddressIndex: null,
+  }
 
   static defaultProps: Partial<Props> = {
   };
@@ -175,6 +226,9 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
 
   onNodeAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const nodeIdx = e.currentTarget.getAttribute('data-node-idx');
+    // this is necesssary because when we select a suggested
+    // ip address, it needs to know what index we're looking at.
+    this.setState({ currentNodeAddressIndex: nodeIdx });
     if (nodeIdx) {
       this.props.onNodeAddressChange(
         +nodeIdx,
@@ -229,6 +283,60 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
 
   onDelete = this.props.onDelete;
 
+  handleSelectSuggestion = (selection: string) => {
+    const { currentNodeAddressIndex } = this.state;
+    if (currentNodeAddressIndex) {
+      this.props.onNodeAddressChange(
+        +currentNodeAddressIndex,
+        selection,
+      );
+    }
+  }
+
+  renderSearchSuggestion = (
+    linode: Linode.Linode,
+    index: number,
+    highlightedIndex: number | null,
+    itemProps: any,
+  ) => {
+    const isHighlighted = highlightedIndex === index;
+    const { classes } = this.props;
+
+    const privateIPRegex = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/; 
+    const privateIP = linode.ipv4.find(ipv4 => !!ipv4.match(privateIPRegex));
+    return (
+      <MenuItem
+        // when the suggested is selected, put the private IP in the field
+        {...itemProps({ item: privateIP })}
+        key={index}
+        component="div"
+        selected={isHighlighted}
+        className={classes.suggestionItem}
+        classes={{ selected: classes.selectedSuggestionItem }}
+      >
+        {
+          <React.Fragment>
+            <strong>{linode.label}</strong>&nbsp;{privateIP}
+          </React.Fragment>
+        }
+      </MenuItem>
+    )
+  }
+
+  downshiftStateReducer = (state: DownshiftState, changes: StateChangeOptions) => {
+    switch (changes.type) {
+      // basically, don't clear the field value when we leave the field
+      case Downshift.stateChangeTypes.blurInput:
+      case Downshift.stateChangeTypes.mouseUp:
+        return {
+          ...changes,
+          inputValue: state.inputValue || '',
+        }
+        default:
+          return changes;
+    }
+  }
+
   render() {
     const {
       algorithm,
@@ -243,6 +351,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       healthCheckInterval,
       healthCheckTimeout,
       healthCheckType,
+      linodesWithPrivateIPs,
       nodes,
       nodeMessage,
       port,
@@ -743,7 +852,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             <Divider style={{ marginTop: 24 }} />
                           </Grid>
                         }
-                        <Grid item xs={11} lg={4} xl={2}>
+                        <Grid item xs={11} lg={forEdit ? 2 : 3}>
                           <TextField
                             label="Label"
                             value={node.label}
@@ -755,17 +864,65 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                           />
                         </Grid>
                         <Grid item xs={11} lg={4} xl={3}>
-                          <TextField
-                            label="IP Address"
-                            value={node.address}
-                            inputProps={{ 'data-node-idx': idx }}
-                            onChange={this.onNodeAddressChange}
-                            errorText={hasErrorFor('address')}
-                            errorGroup={forEdit ? `${configIdx}`: undefined}
-                            data-qa-backend-ip-address
-                          />
+                          <Downshift
+                            onSelect={this.handleSelectSuggestion}
+                            stateReducer={this.downshiftStateReducer}
+                          >
+                            {
+                              ({
+                                getInputProps,
+                                getItemProps,
+                                isOpen,
+                                inputValue,
+                                highlightedIndex,
+                              }) => {
+                                return (
+                                  <div className={classes.suggestionsParent}>
+                                    <TextField
+                                      {...getInputProps({
+                                        onChange: this.onNodeAddressChange,
+                                        placeholder: 'Enter IP Address',
+                                        value: node.address
+                                      })}
+                                      label="IP Address"
+                                      inputProps={{ 'data-node-idx': idx }}
+                                      errorText={hasErrorFor('address')}
+                                      errorGroup={`${configIdx}`}
+                                      data-qa-backend-ip-address
+                                    />
+                                    {isOpen && !!inputValue &&
+                                      <Paper className={classes.suggestions}>
+                                        {linodesWithPrivateIPs && linodesWithPrivateIPs
+                                        // filter out the linodes that don't match what we're typing
+                                        // filter by private ip and label
+                                          .filter((linode: Linode.Linode) => {
+                                            const privateIPRegex = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/; 
+                                            const privateIP = linode.ipv4.find(ipv4 => !!ipv4.match(privateIPRegex));
+                                            return linode.label.toLowerCase().includes(inputValue.toLowerCase())
+                                              || privateIP!.includes(inputValue.toLowerCase())
+                                          })
+                                          // limit the results to 5. we don't want too
+                                          // many in the suggestions
+                                          .splice(0, 10)
+                                          // finally map over the results and render the suggestion
+                                          .map((linode, index) => {
+                                            return this.renderSearchSuggestion(
+                                              linode,
+                                              index,
+                                              highlightedIndex,
+                                              getItemProps,
+                                            )
+                                          })
+                                        }
+                                      </Paper>
+                                    }
+                                  </div>
+                                )
+                              }
+                            }
+                          </Downshift>
                         </Grid>
-                        <Grid item xs={11} lg={4} xl={2}>
+                        <Grid item xs={11} lg={2}>
                           <TextField
                             type="number"
                             label="Port"
@@ -777,7 +934,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             data-qa-backend-ip-port
                           />
                         </Grid>
-                        <Grid item xs={11} lg={4} xl={2}>
+                        <Grid item xs={11} lg={2}>
                           <TextField
                             type="number"
                             label="Weight"
@@ -790,7 +947,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                           />
                         </Grid>
                         {forEdit &&
-                          <Grid item xs={11} lg={4} xl={2}>
+                          <Grid item xs={12} lg={3} xl={2}>
                             <TextField
                               label="Mode"
                               value={node.mode}
@@ -828,6 +985,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                               onClick={this.removeNode}
                               destructive
                               data-qa-remove-node
+                              style={{  width: 'auto' }}
                             >
                               <Delete />
                             </IconButton>

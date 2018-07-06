@@ -121,6 +121,8 @@ namespace Linode {
     'stackscript_publicize' |
     'stackscript_revise' |
     'stackscript_delete' |
+    'volume_create' |
+    'volume_delete' |
     'volume_detach';
 
   export type EventStatus =
@@ -146,7 +148,7 @@ namespace Linode {
   }
 
   export interface ApiFieldError {
-    field: string;
+    field?: string;
     reason: string;
   }
 }
