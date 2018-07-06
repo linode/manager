@@ -7,7 +7,9 @@ import Typography from '@material-ui/core/Typography';
 import { compose, lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators, Dispatch } from 'redux';
 import ActionsPanel from 'src/components/ActionsPanel';
+import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import MenuItem from 'src/components/MenuItem';
@@ -15,8 +17,8 @@ import Notice from 'src/components/Notice';
 import Select from 'src/components/Select';
 import TextField from 'src/components/TextField';
 import { updateProfile } from 'src/services/profile';
+import { response } from 'src/store/reducers/resources';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import AddNewLink from 'src/components/AddNewLink';
 
 type ClassNames = 'root'
   | 'title'
@@ -48,7 +50,9 @@ interface Props { }
 
 interface ConnectedProps {
   lishAuthMethod: string;
+  authorizedKeys: string[];
   loading: boolean;
+  updateProfile: (v: Linode.Profile) => void;
 }
 
 interface State {
@@ -66,8 +70,8 @@ class LishSettings extends React.Component<CombinedProps, State> {
   state: State = {
     submitting: false,
     lishAuthMethod: this.props.lishAuthMethod,
-    authorizedKeys: [],
-    authorizedKeysCount: 1,
+    authorizedKeys: this.props.authorizedKeys || [],
+    authorizedKeysCount: this.props.authorizedKeys ? this.props.authorizedKeys.length : 1,
   };
 
   render() {
@@ -165,14 +169,15 @@ class LishSettings extends React.Component<CombinedProps, State> {
 
     updateProfile({
       lish_auth_method: lishAuthMethod,
-      ...(lishAuthMethod !== 'disabled' && { authorized_keys: authorizedKeys }),
+      ...(lishAuthMethod !== 'disabled' && { authorized_keys: authorizedKeys.filter((v) => v !== '') }),
     })
       .then((response) => {
+        this.props.updateProfile(response);
         this.setState({
           submitting: false,
           success: 'LISH authentication settings have been updated.',
-          authorizedKeys: [],
-          authorizedKeysCount: 1,
+          authorizedKeys: response.authorized_keys || [],
+          authorizedKeysCount: response.authorized_keys? response.authorized_keys.length : 1,
         })
       })
       .catch((error) => {
@@ -180,8 +185,6 @@ class LishSettings extends React.Component<CombinedProps, State> {
         this.setState({
           submitting: false,
           errors: pathOr(err, ['response', 'data', 'errors'], error),
-          authorizedKeys: [],
-          authorizedKeysCount: 1,
           success: undefined,
         })
       });
@@ -198,7 +201,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const connected = connect((state: Linode.AppState) => {
+const mapStateToProps = (state: Linode.AppState) => {
   const { loading, data } = state.resources.profile!;
 
   if (loading) {
@@ -208,8 +211,18 @@ const connected = connect((state: Linode.AppState) => {
   return {
     loading: false,
     lishAuthMethod: data.lish_auth_method,
+    authorizedKeys: data.authorized_keys,
   };
-});
+};
+
+const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
+  {
+    updateProfile: (v: Linode.Profile) => response(['profile'], v),
+  },
+  dispatch,
+);
+
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
 const enhanced = compose(
   styled,
