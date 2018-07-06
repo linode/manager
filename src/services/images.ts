@@ -30,12 +30,24 @@ export const updateImage = (imageId: string, label: string, description: string)
   // Blank descriptions are represented as ' ' in the API; 
   // API will return an error if passed the empty string.
   const safeDescription = description === '' ? ' ' : description;
-  return Request<{}>(
+  return Request<Image>(
     setURL(`${API_ROOT}/images/${imageId}`),
     setMethod('PUT'),
     setData({ label, description: safeDescription }),
   );
 }
+
+export const createImage = (
+  diskID: number,
+  label: string,
+  description: string,
+) => Request<Image>(
+  setURL(`${API_ROOT}/images`),
+  setMethod('POST'),
+  setData({ disk_id: diskID,
+            label, 
+            description: description === '' ? ' ' : description}),
+  );
 
 export const deleteImage = (imageId: string) => {
   return Request<{}>(

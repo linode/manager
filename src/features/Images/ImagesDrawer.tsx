@@ -1,18 +1,19 @@
 import * as React from 'react';
 
-import { compose, path } from 'ramda';
+import { compose, equals, path } from 'ramda';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import Button from '@material-ui/core/Button';
 
-import { updateImage } from 'src/services/images';
-import { getLinodes } from 'src/services/linodes';
+import { createImage, updateImage } from 'src/services/images';
+import { getLinodeDisks, getLinodes } from 'src/services/linodes';
 
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import ActionsPanel from 'src/components/ActionsPanel';
+import DiskSelect from 'src/components/DiskSelect';
 import Drawer from 'src/components/Drawer';
 import LinodeSelect from 'src/components/LinodeSelect';
 import Notice from 'src/components/Notice';
@@ -47,8 +48,10 @@ export interface Props {
 interface State {
   label: string;
   description: string;
+  disks: Linode.Disk[];
   linodes: string[][];
-  selectedLinode: string;
+  selectedLinode?: string;
+  selectedDisk?: string;
   imageID?: string;
   errors?: Linode.ApiFieldError[];
 }
@@ -75,10 +78,12 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
   state = { 
     description: this.props.description ? this.props.description : ' ',
+    disks: [],
     label: this.props.label ? this.props.label : '',
     linodes: [],
     errors: undefined,
-    selectedLinode: '',
+    selectedDisk: undefined,
+    selectedLinode: undefined,
   };
 
   componentDidMount() {
@@ -90,8 +95,25 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
     this.mounted = false;
   }
 
+  componentDidUpdate(prevProps: CombinedProps, prevState: State) {
+    if (this.state.selectedLinode && this.state.selectedLinode !== prevState.selectedLinode) {
+      getLinodeDisks(Number(this.state.selectedLinode))
+      .then((response) => {
+        const filteredDisks = response.data.filter((disk) => disk.filesystem !== 'swap')
+        console.log(filteredDisks);
+        if (!equals(this.state.disks, filteredDisks)) {
+          this.setState({ disks: filteredDisks })
+        }
+      });
+    }
+  }
+
   changeSelectedLinode = (e: React.ChangeEvent<HTMLSelectElement>) => {
     this.setState({ selectedLinode: e.target.value });
+  }
+
+  changeSelectedDisk = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    this.setState({ selectedDisk: e.target.value });
   }
 
   close = () => {
@@ -115,21 +137,21 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
 
   onSubmit = () => {
     const { mode, onSuccess, imageID } = this.props;
-    const { label, description } = this.state;
+    const { label, description, selectedDisk } = this.state;
+
+    if (!label) {
+      this.setState({
+        errors: [{ field: 'label', reason: 'Label cannot be blank.' }],
+      }, () => {
+        scrollErrorIntoView();
+      });
+      return;
+    }
 
     switch (mode) {
       case modes.EDITING:
         if (!imageID) {
           return;
-        }
-
-        if (!label) {
-            this.setState({
-              errors: [{ field: 'label', reason: 'Label cannot be blank.' }],
-            }, () => {
-              scrollErrorIntoView();
-            });
-            return;
         }
 
         updateImage(imageID, label, description)
@@ -147,6 +169,19 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
             }
           });
         return;
+      case modes.CREATING:
+        createImage(Number(selectedDisk), label, description)
+          .then((response) => {
+            this.close();
+            onSuccess();
+          })
+          .catch((errorResponse) => {
+            this.setState({
+              errors: path(['response', 'data', 'errors'], errorResponse),
+            }, () => {
+              scrollErrorIntoView();
+            });
+          })
       default:
         return;
     }
@@ -162,8 +197,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
 
   render() {
     const { mode, } = this.props;
-    const { label, linodes, description, selectedLinode } = this.state;
-
+    const { disks, label, linodes, description, selectedDisk, selectedLinode } = this.state;
     const { errors } = this.state;
 
     const hasErrorFor = getAPIErrorFor({
@@ -176,6 +210,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
     const labelError = hasErrorFor('label');
     const descriptionError = hasErrorFor('description');
     const generalError = hasErrorFor('none');
+    const linodeError = hasErrorFor('linode_id');
 
     return (
       <Drawer
@@ -194,14 +229,20 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
         {mode === 'create' &&
         <LinodeSelect
           linodes={linodes}
-          selectedLinode={selectedLinode}
-          linodeError="hello"
-          generalError="goodbye"
+          selectedLinode={selectedLinode || ''}
+          linodeError={linodeError}
           handleChange={this.changeSelectedLinode}
         />
-      
-      
-      }
+        }
+
+        {mode === 'create' && selectedLinode &&
+        <DiskSelect
+          selectedDisk={selectedDisk}
+          disks={disks}
+          diskError={undefined}
+          handleChange={this.changeSelectedDisk}
+        />
+       }
 
         <TextField
           label="Label"
