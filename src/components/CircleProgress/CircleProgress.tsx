@@ -60,6 +60,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
 interface Props {
   value?: Boolean | number;
   noTopMargin?: boolean;
+  className?: string;
 }
 
 const CircleProgressComponent = (props: Props & WithStyles<CSSClasses>) => {
@@ -71,6 +72,7 @@ const CircleProgressComponent = (props: Props & WithStyles<CSSClasses>) => {
     <div className={classNames({
       [classes.root]: true,
       [classes.noTopMargin]: noTopMargin,
+      [props.className]: Boolean(props.className),
     })}
     >
       <div className={classes.topWrapper}>

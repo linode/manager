@@ -4,8 +4,10 @@ import { VncDisplay } from 'react-vnc-display';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-import { LISH_ROOT, ZONES } from 'src/constants';
+import CircleProgress from 'src/components/CircleProgress';
 import { getLinode, getLinodeLishToken } from 'src/services/linodes';
+
+import { getLishSchemeAndHostname } from '.';
 
 type ClassNames = 'root';
 
@@ -13,28 +15,30 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
 });
 
-interface Props {}
-
 interface State {
   linode?: Linode.Linode;
   token?: string;
   activeVnc: boolean;
   connected: boolean;
-  powered: boolean
+  powered: boolean;
+  /* used to prevent flickering of the progress indicator */
+  initialConnect: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{ linodeId?: number }>;
+type CombinedProps = WithStyles<ClassNames> & RouteComponentProps<{ linodeId?: number }>;
 
 class Glish extends React.Component<CombinedProps, State> {
-  state = {
+  state: State = {
     activeVnc: true,
     connected: false,
     powered: true,
+    initialConnect: false,
   };
 
   mounted: boolean = false;
   lastDisconnect: number = Date.now();
 
+  monitor: WebSocket;
   monitorInterval: number;
   renewInterval: number;
   
@@ -45,17 +49,13 @@ class Glish extends React.Component<CombinedProps, State> {
 
     return getLinode(linodeId)
       .then((response) => {
-        if (!this.mounted) {
-          throw new Error('Component not mounted');
-        }
         const { data: linode } = response;
+        if (!this.mounted) { throw new Error('Component not mounted'); }
         this.setState({ linode });
         return linode;
       })
       .catch(() => {
-        if (!this.mounted) {
-          throw new Error('Component not mounted');
-        }
+        throw new Error('Uncaught Error in getLinodeData');
       });
   }
 
@@ -66,17 +66,13 @@ class Glish extends React.Component<CombinedProps, State> {
     
     return getLinodeLishToken(linodeId)
       .then((response) => {
-        if (!this.mounted) {
-          throw new Error('Component not mounted');
-        }
         const { data: { lish_token: token } } = response;
+        if (!this.mounted) { throw new Error('Component not mounted'); }
         this.setState({ token });
         return token;
       })
       .catch(() => {
-        if (!this.mounted) {
-          throw new Error('Component not mounted');
-        }
+        throw new Error('Uncaught Error in getLishToken');
       });
   }
   
@@ -94,8 +90,8 @@ class Glish extends React.Component<CombinedProps, State> {
           });
       })
       .then(([linode, token]) => {
-        const region = linode && ZONES[(linode as Linode.Linode).region];
-        this.refreshMonitor(region, token);
+        const region = (linode as Linode.Linode).region;
+        this.refreshMonitor(region, token as string);
         this.renewVncToken();
       })
       .catch(() => {
@@ -110,28 +106,37 @@ class Glish extends React.Component<CombinedProps, State> {
     if (this.monitor) {
       this.monitor.close();
     }
+    this.mounted = false;
   }
   
   onUpdateVNCState = (rfb: any, newState: string) => {
     switch (newState) {
       case 'normal':
-        this.setState({ connected: true });
+        if (!this.mounted) { return; }
+        this.setState({ 
+          connected: true,
+          initialConnect: true,
+        });
         break;
       case 'disconnected':
       case 'failed':
       case 'fatal':
+        if (!this.mounted) { return; }
         this.setState({
           connected: false,
           activeVnc: false
         });
-        setTimeout(() => this.setState({ activeVnc: true }), 3000);
+        setTimeout(() => {
+          if (!this.mounted) { return; }
+          this.setState({ activeVnc: true });
+        }, 3000);
         break;
       default:
         break;
     }
   }
   
-  linodeOnClick = (linodeID: number) => {
+  linodeOnClick = (linodeID: number) => () => {
     window.opener.location = `/linodes/${linodeID}`;
   }
   
@@ -139,16 +144,71 @@ class Glish extends React.Component<CombinedProps, State> {
     return (
       <a
         className="force-link text-muted"
-        onClick={() => this.linodeOnClick(linodeID)}
+        onClick={this.linodeOnClick(linodeID)}
       >
         {linodeLabel}
       </a>
     );
   }
 
+  renewVncToken = () => {
+    // renew our VNC session every 5 minutes
+    clearInterval(this.renewInterval);
+    this.renewInterval = window.setInterval(() => {
+      if (this.monitor.readyState === this.monitor.OPEN) {
+        this.monitor.send(JSON.stringify({ action: 'renew' }));
+      }
+    }, 5 * 60 * 1000);
+  }
+  
+  refreshMonitor = (region: string, token: string) => {
+    this.connectMonitor(region, token);
+    /* Renew our monitor connection every 5 seconds.
+       We do this because the monitor only sends us power info once, and we need
+       to detect when a linode shuts down if it was powered-on to begin-with */
+    clearInterval(this.monitorInterval);
+    this.monitorInterval = window.setInterval(() => {
+      if (this.monitor) {
+        this.monitor.close();
+      }
+      this.connectMonitor(region, token);
+    }, 5 * 1000);
+  }
+
+  connectMonitor = (region: string, token: string) => {
+    const url = `${getLishSchemeAndHostname(region)}:8080/${token}/monitor`;
+    this.monitor = new WebSocket(url);
+    this.monitor.addEventListener('message', ev => {
+      const data = JSON.parse(ev.data);
+      if (data.poweredStatus === 'Running') {
+        if (!this.mounted) { return; }
+        this.setState({ powered: true });
+      } else {
+        if (!this.mounted) { return; }
+        this.setState({ powered: false });
+      }
+    });
+  }
+
   render() {
+    const { linode, token, activeVnc, initialConnect } = this.state;
+    const region = linode && (linode as Linode.Linode).region;
+
     return (
-      <div>Hello Glish</div>
+      <div id="Glish">
+        {!initialConnect && 
+          <CircleProgress />
+        }
+
+        {(activeVnc && token && region) &&
+          <div style={!initialConnect ? { display: 'none' } : {}}>
+            <VncDisplay
+              url={`${getLishSchemeAndHostname(region)}:8080/${token}`}
+              onUpdateState={this.onUpdateVNCState}
+            />
+          </div>
+        }
+      </div>
     );
   }
 }

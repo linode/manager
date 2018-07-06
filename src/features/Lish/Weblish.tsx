@@ -2,8 +2,20 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Terminal } from 'xterm';
 
-import { LISH_ROOT, ZONES } from 'src/constants';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+
+import CircleProgress from 'src/components/CircleProgress';
 import { getLinode, getLinodeLishToken } from 'src/services/linodes';
+
+import { getLishSchemeAndHostname } from '.';
+
+type ClassNames = 'progress';
+
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+  progress: {
+    height: 'auto',
+  },
+});
 
 interface State {
   token: string;
@@ -11,7 +23,7 @@ interface State {
   linode?: Linode.Linode;
 }
 
-type CombinedProps = RouteComponentProps<{ linodeId?: number }>;
+type CombinedProps = WithStyles<ClassNames> & RouteComponentProps<{ linodeId?: number }>;
 
 export class Weblish extends React.Component<CombinedProps, State> {
   state: State = {
@@ -20,6 +32,8 @@ export class Weblish extends React.Component<CombinedProps, State> {
   };
 
   mounted: boolean = false;
+
+  socket: WebSocket;
 
   getLinode = () => {
     const { match: { params: { linodeId } } } = this.props;
@@ -47,13 +61,6 @@ export class Weblish extends React.Component<CombinedProps, State> {
     this.mounted = false;
   }
 
-  getLishSchemeAndHostname(region: string): string {
-    if (LISH_ROOT.includes('alpha')) {
-      /* Note: This is only the case for pre-production environments! */
-      return `wss://${LISH_ROOT}`;
-    }
-    return `wss://${ZONES[region]}.${LISH_ROOT}`;
-  }
 
   connect() {
     const { linode } = this.state;
@@ -67,14 +74,14 @@ export class Weblish extends React.Component<CombinedProps, State> {
       .then((response) => {
         const { data: { lish_token: token } } = response;
         this.setState({ token });
-        const socket = new WebSocket(
-          `${this.getLishSchemeAndHostname(region)}:8181/${token}/weblish`);
-        socket.addEventListener('open', () =>
-          this.setState({ renderingLish: true }, () => this.renderTerminal(socket)));
+        this.socket = new WebSocket(
+          `${getLishSchemeAndHostname(region)}:8181/${token}/weblish`);
+        this.socket.addEventListener('open', () =>
+          this.setState({ renderingLish: true }, () => this.renderTerminal()));
       });
   }
 
-  renderTerminal(socket: WebSocket) {
+  renderTerminal() {
     const { linode } = this.state;
     if (linode === undefined) {
       throw new Error('No Linode data before attempting to render Weblish.');
@@ -88,15 +95,15 @@ export class Weblish extends React.Component<CombinedProps, State> {
       fontFamily: '"Ubuntu Mono", monospace, sans-serif',
     });
 
-    terminal.on('data', (data: string) => socket.send(data));
+    terminal.on('data', (data: string) => this.socket.send(data));
     const terminalDiv = document.getElementById('terminal');
     terminal.open(terminalDiv as HTMLElement);
 
     terminal.writeln('\x1b[32mLinode Lish Console\x1b[m');
 
-    socket.addEventListener('message', evt => terminal.write(evt.data));
+    this.socket.addEventListener('message', evt => terminal.write(evt.data));
 
-    socket.addEventListener('close', () => {
+    this.socket.addEventListener('close', () => {
       terminal.destroy();
       this.setState({ renderingLish: false });
     });
@@ -106,24 +113,19 @@ export class Weblish extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    return <React.Fragment>
-      <div id="terminal" className="terminal" />
-      {!this.state.renderingLish &&
-        <div>
-          <div id="disconnected">
-            <h2>Connection Lost</h2>
-            {this.state.linode === undefined
-              ? <p>Data for this Linode is unavailble.</p>
-              : <p>Lish appears to be temporarily unavailable.</p>
-            }
-            {this.state.linode !== undefined &&
-              <button onClick={this.connect}>Reconnect &#x27f3;</button>
-            }
-          </div>
-        </div>
-      }
-    </React.Fragment>;
+    const { classes } = this.props;
+
+    return (
+      <React.Fragment>
+        {this.socket && (this.socket.readyState === this.socket.OPEN)
+          ? <div id="terminal" className="terminal" />
+          : <CircleProgress className={classes.progress}/>
+        }
+      </React.Fragment>
+    );
   }
 }
 
-export default withRouter(Weblish);
+const styled = withStyles(styles, { withTheme: true });
+
+export default styled(withRouter(Weblish));
