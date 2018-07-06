@@ -205,7 +205,7 @@ class Glish extends React.Component<CombinedProps, State> {
     return (
       <div id="Glish">
         {!initialConnect && 
-          <CircleProgress />
+          <CircleProgress noInner/>
         }
 
         {(activeVnc && token && region) &&

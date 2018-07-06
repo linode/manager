@@ -61,6 +61,7 @@ interface Props {
   value?: Boolean | number;
   noTopMargin?: boolean;
   className?: string;
+  noInner?: boolean;
 }
 
 const CircleProgressComponent = (props: Props & WithStyles<CSSClasses>) => {
@@ -79,9 +80,11 @@ const CircleProgressComponent = (props: Props & WithStyles<CSSClasses>) => {
 
   return (
     <div className={classNames(outerClasses)}>
-      <div className={classes.topWrapper}>
-        <div className={classes.top} />
-      </div>
+      {(props.noInner !== true) &&
+        <div className={classes.topWrapper}>
+          <div className={classes.top} />
+        </div>
+      }
       <CircularProgress
         className={classes.progress}
         size={124}

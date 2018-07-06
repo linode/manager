@@ -119,7 +119,7 @@ export class Weblish extends React.Component<CombinedProps, State> {
       <React.Fragment>
         {this.socket && (this.socket.readyState === this.socket.OPEN)
           ? <div id="terminal" className="terminal" />
-          : <CircleProgress className={classes.progress}/>
+          : <CircleProgress className={classes.progress} noInner/>
         }
       </React.Fragment>
     );
