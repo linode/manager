@@ -14,5 +14,5 @@ export default (
     return;
   }
 
-  return err.reason.replace(err.field, errorMap[err.field]);
+  return err.field ? err.reason.replace(err.field, errorMap[err.field]) : err.reason;
 };

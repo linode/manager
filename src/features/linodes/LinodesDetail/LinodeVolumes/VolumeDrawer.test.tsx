@@ -1,7 +1,7 @@
 import { mount, ReactWrapper } from 'enzyme';
 import * as React from 'react';
+import { volumes } from 'src/__data__/volumes';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
-import { volume } from 'src/__data__/volumes';
 import VolumeDrawer from './VolumeDrawer';
 
 const getLabelField = (w: ReactWrapper): ReactWrapper => w.find('TextField[data-qa-volume-label]');
@@ -74,7 +74,7 @@ describe('LinodeVolumes/VolumeDrawer', () => {
             title={'what'}
             onClose={onClose}
             onSubmit={onSubmit}
-            attachableVolumes={[volume]}
+            attachableVolumes={volumes}
           />
         </LinodeThemeWrapper>
       );
@@ -104,7 +104,7 @@ describe('LinodeVolumes/VolumeDrawer', () => {
               title={'what'}
               onClose={onClose}
               onSubmit={onSubmit}
-              attachableVolumes={[volume]}
+              attachableVolumes={volumes}
             />
           </LinodeThemeWrapper>
         );
@@ -159,7 +159,7 @@ describe('LinodeVolumes/VolumeDrawer', () => {
             title={'what'}
             onClose={onClose}
             onSubmit={onSubmit}
-            attachableVolumes={[volume]}
+            attachableVolumes={volumes}
           />
         </LinodeThemeWrapper>
       );

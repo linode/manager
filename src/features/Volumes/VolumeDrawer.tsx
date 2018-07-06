@@ -24,7 +24,7 @@ import { events$, resetEventsPolling } from 'src/events';
 import { getLinodeConfigs, getLinodes } from 'src/services/linodes';
 
 import { sendToast } from 'src/features/ToastNotifications/toasts';
-import { updateVolumes$ } from 'src/features/Volumes/VolumesLanding';
+import { updateVolumes$ } from 'src/features/Volumes/Volumes';
 
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';

@@ -9,7 +9,6 @@ import { compose, equals, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Subject } from 'rxjs/Subject';
 import { ISubscription } from 'rxjs/Subscription';
 import VolumesIcon from 'src/assets/addnewmenu/volume.svg';
 import AddNewLink from 'src/components/AddNewLink';
@@ -23,22 +22,30 @@ import Table from 'src/components/Table';
 import { dcDisplayNames } from 'src/constants';
 import { events$, generateInFilter, resetEventsPolling } from 'src/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
+import { updateVolumes$ } from 'src/features/Volumes/Volumes.tsx';
 import { getLinodes } from 'src/services/linodes';
-import { detachVolume, getVolumes, deleteVolume } from 'src/services/volumes';
+import { deleteVolume, detachVolume, getVolumes } from 'src/services/volumes';
 import { openForClone, openForCreating, openForEdit, openForResize } from 'src/store/reducers/volumeDrawer';
 import DestructiveVolumeDialog from './DestructiveVolumeDialog';
 import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
 import VolumeConfigDrawer from './VolumeConfigDrawer';
 import VolumesActionMenu from './VolumesActionMenu';
 
-export const updateVolumes$ = new Subject<boolean>();
-
-type ClassNames = 'root' | 'title';
+type ClassNames = 'root'
+  | 'title'
+  | 'label'
+  | 'attachment';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
   title: {
     marginBottom: theme.spacing.unit * 2,
+  },
+  label: {
+    width: '15%',
+  },
+  attachment: {
+    width: '15%',
   },
 });
 
@@ -188,8 +195,8 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Label</TableCell>
-                <TableCell>Attachment</TableCell>
+                <TableCell className={classes.label}>Label</TableCell>
+                <TableCell className={classes.attachment}>Attachment</TableCell>
                 <TableCell>Size</TableCell>
                 <TableCell>File System Path</TableCell>
                 <TableCell>Region</TableCell>

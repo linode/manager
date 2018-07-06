@@ -22,10 +22,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 });
 
 export interface Props {
-  onSelect: (s: Linode.StackScript.Response) => void;
+  onSelect?: (s: Linode.StackScript.Response) => void;
   selectedId?: number;
   data: Linode.StackScript.Response[];
-  getNext: () => void;
   isSorting: boolean;
   publicImages: Linode.Image[];
 }
@@ -39,7 +38,7 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => 
     data,
     isSorting,
     classes,
-    publicImages,
+    publicImages
   } = props;
 
   const hasNonDeprecatedImages = (stackScriptImages: string[]) => {
@@ -53,15 +52,21 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => 
     return false;
   }
 
+  const renderStackScriptTable = () => {
+    return (!!onSelect)
+    ? selectStackScript(onSelect, selectedId)
+    : listStackScript(true, selectedId)
+  }
+
   return (
     <TableBody>
       {!isSorting
         ? data && data
           .filter(stackScript => hasNonDeprecatedImages(stackScript.images))
-          .map(stackScript(onSelect, selectedId))
+          .map(renderStackScriptTable())
         : <TableRow>
           <TableCell colSpan={5} className={classes.loadingWrapper}>
-            <CircleProgress />
+            <CircleProgress noTopMargin/>
           </TableCell>
         </TableRow>
       }
@@ -82,7 +87,7 @@ const stripImageName = (images: string[]) => {
   });
 };
 
-const stackScript: (fn: (s: Linode.StackScript.Response) => void, id?: number) =>
+const selectStackScript: (fn: (s: Linode.StackScript.Response) => void, id?: number) =>
   (s: Linode.StackScript.Response) => JSX.Element =
   (onSelect, selectedId) => s => (
     <SelectionRow
@@ -96,6 +101,22 @@ const stackScript: (fn: (s: Linode.StackScript.Response) => void, id?: number) =
       onSelect={() => onSelect(s)}
       checked={selectedId === s.id}
       updateFor={[selectedId === s.id]}
+      stackScriptID={s.id}
+    />
+  )
+
+const listStackScript: (showDeployLink: boolean, id?: number) =>
+  (s: Linode.StackScript.Response) => JSX.Element =
+  (showDeployLink, selectedId) => s => (
+    <SelectionRow
+      key={s.id}
+      label={s.label}
+      stackScriptUsername={s.username}
+      description={truncateDescription(s.description)}
+      images={stripImageName(s.images)}
+      deploymentsActive={s.deployments_active}
+      updated={formatDate(s.updated, false)}
+      showDeployLink={showDeployLink}
       stackScriptID={s.id}
     />
   )

@@ -135,13 +135,15 @@ namespace Linode {
     kernel: string;
     comments: string;
     memory_limit: number;
-    root_device_ro: boolean;
     root_device: string;
     run_level: 'default' | 'single' | 'binbash';
     virt_mode: 'paravirt' | 'fullvirt';
     helpers: any;
     label: any;
     devices: Devices;
+    created: string;
+    updated: string;
+    initrd: string | null;
   }
 
   export interface DiskDevice {
