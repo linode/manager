@@ -130,7 +130,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
     this.mounted = false;
   }
 
-  refreshImages() {
+  refreshImages = () => {
      getUserImages()
        .then((response) => {
         if (this.mounted) { this.setState({ images: response.data }); }
@@ -229,6 +229,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
       description={this.state.imageDrawer.description}
       imageID={this.state.imageDrawer.imageID}
       onClose={this.closeImageDrawer}
+      onSuccess={this.refreshImages}
     />
   }
 
