@@ -20,12 +20,13 @@ import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import ActionsPanel from 'src/components/ActionsPanel';
-import DiskSelect from 'src/components/DiskSelect';
 import Drawer from 'src/components/Drawer';
-import LinodeSelect from 'src/components/LinodeSelect';
 import Notice from 'src/components/Notice';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import TextField from 'src/components/TextField';
+
+import DiskSelect from 'src/features/linodes/DiskSelect';
+import LinodeSelect from 'src/features/linodes/LinodeSelect';
 
 type ClassNames = 'root'
 |  'suffix'
@@ -109,13 +110,13 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
       ))
       .subscribe((event) => {
         if (event.action === 'disk_imagize' && (event.status === 'notification' || event.status === 'finished')) {
-          sendToast(`Image ${event.entity && event.entity.label} created successfully.`);
+          sendToast('Image created successfully.');
         }
 
         if (event.action === 'disk_imagize' && event.status === 'failed') {
           sendToast(`There was an error creating image ${event.entity && event.entity.label}.`, 'error');
         }
-        if (event.action === 'image_delete' && event.status === 'notification') {
+        if (event.action === 'image_delete') {
           sendToast(`Image ${event.entity && event.entity.label} has been deleted.`);
         }
       });
