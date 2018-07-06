@@ -7,7 +7,7 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 import CircleProgress from 'src/components/CircleProgress';
 import { getLinode, getLinodeLishToken } from 'src/services/linodes';
 
-import { getLishSchemeAndHostname } from '.';
+import { getLishSchemeAndHostname, resizeViewPort } from '.';
 
 type ClassNames = 'root';
 
@@ -78,6 +78,8 @@ class Glish extends React.Component<CombinedProps, State> {
   
   componentDidMount() {
     this.mounted = true;
+
+    resizeViewPort(1080, 830);
 
     this.getLinodeData()
       .then((linode) => {

@@ -7,7 +7,7 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 import CircleProgress from 'src/components/CircleProgress';
 import { getLinode, getLinodeLishToken } from 'src/services/linodes';
 
-import { getLishSchemeAndHostname } from '.';
+import { getLishSchemeAndHostname, resizeViewPort } from '.';
 
 type ClassNames = 'progress';
 
@@ -54,13 +54,13 @@ export class Weblish extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     this.mounted = true;
+    resizeViewPort(1080, 730);
     this.getLinode();
   }
 
   componentWillUnmount() {
     this.mounted = false;
   }
-
 
   connect() {
     const { linode } = this.state;
