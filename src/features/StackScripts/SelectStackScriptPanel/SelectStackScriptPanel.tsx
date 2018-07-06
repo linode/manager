@@ -4,6 +4,8 @@ import * as classNames from 'classnames';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
+import { Link } from 'react-router-dom';
+
 import { connect } from 'react-redux';
 
 import { compose, pathOr } from 'ramda';
@@ -45,7 +47,8 @@ type ClassNames = 'root'
   | 'tr'
   | 'tableHead'
   | 'sortButton'
-  | 'table';
+  | 'table'
+  | 'emptyState';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -96,6 +99,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     width: '100%',
     justifyContent: 'flex-start',
   },
+  emptyState: {
+    textAlign: 'center',
+    padding: '10em',
+  }
 });
 
 interface Props {
@@ -299,6 +306,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
       filter)
       .then((response: Linode.ResourcePage<Linode.StackScript.Response>) => {
         if (!this.mounted) { return; }
+
         if (!response.data.length || response.data.length === response.results) {
           this.setState({ showMoreButtonVisible: false });
         }
@@ -471,7 +479,12 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
 
     return (
       <React.Fragment>
-        <Table noOverflow={true} tableClass={classes.table}>
+        {this.state.listOfStackScripts.length === 0
+        ? <div className={classes.emptyState}>
+          You do not have any StackScripts to select from. You must first
+          <Link to="/stackscripts/create"> create one</Link>
+        </div>
+        : <Table noOverflow={true} tableClass={classes.table}>
           <TableHead>
             <TableRow className={classes.tr}>
               {!!this.props.onSelect &&
@@ -553,6 +566,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
             {...selectProps}
           />
         </Table>
+        }
         {this.state.showMoreButtonVisible && !isSorting &&
           <Button
             title="Show More StackScripts"
