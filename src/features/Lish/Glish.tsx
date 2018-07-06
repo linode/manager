@@ -5,11 +5,12 @@ import { VncDisplay } from 'react-vnc-display';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import CircleProgress from 'src/components/CircleProgress';
+import ErrorState from 'src/components/ErrorState';
 import { getLinode, getLinodeLishToken } from 'src/services/linodes';
 
 import { getLishSchemeAndHostname, resizeViewPort } from '.';
 
-type ClassNames = 'container';
+type ClassNames = 'container' | 'errorState';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   container: {
@@ -18,6 +19,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
       display: 'block',
     }
   },
+  errorState: {
+    '& *': {
+      color: '#f4f4f4 !important',
+    }
+  }
 });
 
 interface State {
@@ -199,16 +205,22 @@ class Glish extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes } = this.props;
-    const { linode, token, activeVnc, initialConnect } = this.state;
+    const { linode, token, activeVnc, initialConnect, powered } = this.state;
     const region = linode && (linode as Linode.Linode).region;
 
     return (
       <div id="Glish">
-        {!initialConnect && 
+        {!powered &&
+          <div className={classes.errorState}>
+            <ErrorState errorText="Please power on your Linode to use Glish" />
+          </div>
+        }
+
+        {(powered && !initialConnect) &&
           <CircleProgress noInner/>
         }
 
-        {(activeVnc && token && region) &&
+        {(powered &&activeVnc && token && region) &&
           <div
             className={classes.container}
             style={!initialConnect ? { display: 'none' } : {}}

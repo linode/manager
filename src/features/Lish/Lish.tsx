@@ -13,6 +13,7 @@ type ClassNames = 'tabs' | 'tabRoot';
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   tabs: {
     backgroundColor: '#f4f4f4',
+    margin: 0,
   },
   tabRoot: {
     minWidth: '50%',
