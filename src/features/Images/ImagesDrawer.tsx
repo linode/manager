@@ -50,6 +50,7 @@ export interface Props {
   imageID?: string;
   label?: string;
   onClose: () => void;
+  onSuccess: () => void;
 }
 
 interface State {
@@ -166,7 +167,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
   }
 
   onSubmit = () => {
-    const { mode, imageID } = this.props;
+    const { mode, imageID, onSuccess } = this.props;
     const { label, description, selectedDisk } = this.state;
 
     if (!label) {
@@ -186,7 +187,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
 
         updateImage(imageID, label, description)
           .then(() => {
-            resetEventsPolling();
+            onSuccess();
             this.close();
           })
           .catch((errorResponse) => {
@@ -202,6 +203,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
       case modes.CREATING:
         createImage(Number(selectedDisk), label, description)
           .then((response) => {
+            resetEventsPolling();
             this.setState({
               notice: "Image queued for creation.",
             });
