@@ -86,7 +86,7 @@ type CombinedProps = Props
 interface NodeBalancerFieldsState {
   label?: string;
   region?: string;
-  configs: (NodeBalancerConfigFields & { errors?: any }) [];
+  configs: (NodeBalancerConfigFields & { errors?: any })[];
 }
 
 interface State {
@@ -214,7 +214,8 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     */
     const nodePathErrors = fieldErrorsToNodePathErrors(errors);
 
-    if (nodePathErrors.length === 0) { return; }
+    /** We still need to set the errors */
+    if (nodePathErrors.length === 0) { return this.setState({ errors }); }
 
     const setFns = nodePathErrors.map((nodePathError: any) => {
       return compose(
@@ -286,14 +287,15 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
         if (errors) {
           this.setNodeErrors(errors.map((e) => ({
             ...e,
-            field: e.field.replace(/(\[|\]\.)/g, '_')
+            ...(e.field && { field: e.field.replace(/(\[|\]\.)/g, '_') })
           })));
-          return this.setState( { submitting: false }, () => scrollErrorIntoView());
+
+          return this.setState({ errors, submitting: false }, () => scrollErrorIntoView());
         }
 
         return this.setState({
           errors: [
-            { field: 'none', reason: `An unexpected error has occured..` }],
+            { reason: `An unexpected error has occured..` }],
         }, () => {
           scrollErrorIntoView();
         });
@@ -337,7 +339,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       this.setState({
         errors: this.state.errors!.filter((error: Linode.ApiFieldError) => {
           const t = new RegExp(`configs_${idxToDelete}_`);
-          return !t.test(error.field);
+          return error.field && !t.test(error.field);
         }),
       });
     }
@@ -692,20 +694,20 @@ export const fieldErrorsToNodePathErrors = (errors: Linode.ApiFieldError[]) => {
   */
   return errors.reduce(
     (acc: any, error: Linode.ApiFieldError) => {
-        const { field, path } = getPathAnFieldFromFieldString(error.field);
+      const { field, path } = getPathAnFieldFromFieldString(error.field!);
 
-        if(!path.length){ return acc; }
+      if (!path.length) { return acc; }
 
-        return [
-          ...acc,
-          {
-            error: {
-              field,
-              reason: error.reason,
-            },
-            path: [...path, 'errors'],
+      return [
+        ...acc,
+        {
+          error: {
+            field,
+            reason: error.reason,
           },
-        ];
+          path: [...path, 'errors'],
+        },
+      ];
       return acc;
     },
     [],
