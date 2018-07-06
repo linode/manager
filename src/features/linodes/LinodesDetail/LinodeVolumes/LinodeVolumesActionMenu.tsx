@@ -27,7 +27,7 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
     return function (closeMenu: Function): Action[] {
       const actions = [
         {
-          title: 'Edit',
+          title: 'Rename',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             onEdit();
             closeMenu();

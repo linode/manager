@@ -1,49 +1,32 @@
-import * as React from 'react';
-import { pathOr, compose } from 'ramda';
-import { Subscription } from 'rxjs/Rx';
-
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import TableHead from '@material-ui/core/TableHead';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
-import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
-
-import {
-  getVolumes,
-  attachVolume,
-  detachVolume,
-  deleteVolume,
-  cloneVolume,
-  createVolume,
-  updateVolume,
-  resizeVolume,
-} from 'src/services/volumes';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Typography from '@material-ui/core/Typography';
+import { compose, pathOr } from 'ramda';
+import * as React from 'react';
+import { Subscription } from 'rxjs/Rx';
+import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
+import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
-import Table from 'src/components/Table';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Placeholder, { PlaceholderProps } from 'src/components/Placeholder';
-import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
-import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
-import { getLinodeConfigs, getLinodeVolumes } from 'src/services/linodes';
-import ErrorState from 'src/components/ErrorState';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
-
-import AttachVolumeDrawer from './AttachVolumeDrawer';
-import UpdateVolumeDrawer, { Props as UpdateVolumeDrawerProps } from './UpdateVolumeDrawer';
-import ActionMenu from './LinodeVolumesActionMenu';
+import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
+import Table from 'src/components/Table';
 import { events$, resetEventsPolling } from 'src/events';
-import AddNewLink, { Props as AddNewLinkProps } from 'src/components/AddNewLink';
+import { getLinodeConfigs, getLinodeVolumes } from 'src/services/linodes';
+import { attachVolume, cloneVolume, createVolume, deleteVolume, detachVolume, getVolumes, resizeVolume, updateVolume } from 'src/services/volumes';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { withLinode, withVolumes } from '../context';
+import ActionMenu from './LinodeVolumesActionMenu';
+import VolumeDrawer, { Modes, Props as VolumeDrawerProps } from './VolumeDrawer';
+
 
 type ClassNames = 'title';
 
@@ -67,29 +50,22 @@ interface ContextProps {
   linodeID: number;
 }
 
-interface AttachVolumeDrawerState {
-  open: boolean;
-  errors?: Linode.ApiFieldError[];
-  selectedVolume: null | number;
-}
-
 interface UpdateDialogState {
   open: boolean;
   mode?: 'detach' | 'delete';
   id?: number;
 }
 
-interface UpdateVolumeDrawerState extends UpdateVolumeDrawerProps {
-  mode?: 'create' | 'edit' | 'resize' | 'clone';
+interface VolumeDrawer extends VolumeDrawerProps {
+  mode: Modes;
   id?: number;
 }
 
 interface State {
   attachedVolumes: Linode.Volume[];
   attachableVolumes: Linode.Volume[];
-  attachVolumeDrawer: AttachVolumeDrawerState;
   updateDialog: UpdateDialogState;
-  updateVolumeDrawer: UpdateVolumeDrawerState;
+  volumeDrawer: VolumeDrawer;
 }
 
 type CombinedProps = Props & ContextProps & WithStyles<ClassNames>;
@@ -109,7 +85,9 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
     open: false,
   };
 
-  static updateVolumeDrawerDefaultState = {
+  static volumeDrawerDefaultState = {
+    mode: 'create' as Modes,
+    selectedVolume: 'none',
     open: false,
     label: '',
     title: '',
@@ -129,9 +107,8 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
     this.state = {
       attachedVolumes: linodeVolumes,
       attachableVolumes: props.volumes.response,
-      attachVolumeDrawer: LinodeVolumes.attachVolumeDrawerDefaultState,
       updateDialog: LinodeVolumes.updateDialogDefaultState,
-      updateVolumeDrawer: LinodeVolumes.updateVolumeDrawerDefaultState,
+      volumeDrawer: LinodeVolumes.volumeDrawerDefaultState,
     };
   }
 
@@ -188,25 +165,14 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
   }
 
   /** Attachment */
-  openAttachmentDrawer = () => this.setState(prevState => ({
-    attachVolumeDrawer: {
-      ...prevState.attachVolumeDrawer,
-      open: true,
-    },
-  }))
-
-  closeAttachmentDrawer = () => this.setState(prevState => ({
-    attachVolumeDrawer: LinodeVolumes.attachVolumeDrawerDefaultState,
-  }))
-
   attachVolume = () => {
     const { linodeID } = this.props;
-    const { attachVolumeDrawer: { selectedVolume } } = this.state;
+    const { volumeDrawer: { selectedVolume } } = this.state;
 
-    if (!selectedVolume) {
+    if (selectedVolume === "none") {
       this.setState({
-        attachVolumeDrawer: {
-          ...this.state.attachVolumeDrawer,
+        volumeDrawer: {
+          ...this.state.volumeDrawer,
           errors: [{ field: 'volume', reason: 'volume cannot be blank.' }],
         },
       }, () => {
@@ -217,49 +183,19 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
 
     attachVolume(Number(selectedVolume), { linode_id: Number(linodeID) })
       .then((response) => {
-        this.closeAttachmentDrawer();
+        this.closeUpdatingDrawer();
         resetEventsPolling();
       })
       .catch((error) => {
         this.setState({
-          attachVolumeDrawer: {
-            ...this.state.attachVolumeDrawer,
+          volumeDrawer: {
+            ...this.state.volumeDrawer,
             errors: [{ field: 'volume', reason: 'Could not attach volume.' }],
           },
         }, () => {
           scrollErrorIntoView();
         });
       });
-  }
-
-  AttachVolumeDrawer = (): JSX.Element => {
-    const { linodeLabel } = this.props;
-    const {
-      attachableVolumes,
-      attachVolumeDrawer: {
-        selectedVolume,
-        open,
-        errors,
-      },
-    } = this.state;
-
-    return (
-      <AttachVolumeDrawer
-        open={open}
-        linodeLabel={linodeLabel}
-        volumes={attachableVolumes}
-        errors={errors}
-        selectedVolume={selectedVolume}
-        onClose={this.closeAttachmentDrawer}
-        onChange={(key, value) => this.setState({
-          attachVolumeDrawer: {
-            ...this.state.attachVolumeDrawer,
-            [key]: value,
-          },
-        })}
-        onSubmit={this.attachVolume}
-      />
-    );
   }
 
   /** Detachment / Deletion */
@@ -358,7 +294,7 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
         title={title}
       >
         <Typography> Are you sure you want to {mode} this volume?</Typography>
-    </ConfirmationDialog>
+      </ConfirmationDialog>
     );
   }
 
@@ -374,7 +310,10 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
     switch (mode) {
       case 'create':
         return this.setState({
-          updateVolumeDrawer: {
+          volumeDrawer: {
+            errors: undefined,
+            selectedVolume: undefined,
+            mode: 'create',
             open: true,
             label: '',
             title: 'Create a Volume',
@@ -382,18 +321,30 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
             size: 20,
             region: linodeRegion,
             linodeId: linodeID,
-            disabled: { region: true, linode: true },
             onClose: this.closeUpdatingDrawer,
+            attachableVolumes: this.state.attachableVolumes,
+            onModeChange: (mode: Modes) => this.setState(prevState => ({
+              volumeDrawer: {
+                ...prevState.volumeDrawer,
+                mode,
+              },
+            })),
             onLabelChange: (label: string) => this.setState(prevState => ({
-              updateVolumeDrawer: {
-                ...prevState.updateVolumeDrawer,
+              volumeDrawer: {
+                ...prevState.volumeDrawer,
                 label,
               },
             })),
             onSizeChange: (size: string) => this.setState(prevState => ({
-              updateVolumeDrawer: {
-                ...prevState.updateVolumeDrawer,
+              volumeDrawer: {
+                ...prevState.volumeDrawer,
                 size: Number(size),
+              },
+            })),
+            onVolumeChange: (selectedVolume: string) => this.setState(prevState => ({
+              volumeDrawer: {
+                ...prevState.volumeDrawer,
+                selectedVolume,
               },
             })),
             onSubmit: this.createVolume,
@@ -402,7 +353,10 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
 
       case 'resize':
         return this.setState({
-          updateVolumeDrawer: {
+          volumeDrawer: {
+            errors: undefined,
+            selectedVolume: undefined,
+            mode: 'resize',
             open: true,
             id,
             label: label!,
@@ -411,11 +365,10 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
             size: size!,
             region: linodeRegion,
             linodeId: linodeID,
-            disabled: { region: true, linode: true, label: true },
             onClose: this.closeUpdatingDrawer,
             onSizeChange: (size: string) => this.setState(prevState => ({
-              updateVolumeDrawer: {
-                ...prevState.updateVolumeDrawer,
+              volumeDrawer: {
+                ...prevState.volumeDrawer,
                 size: Number(size),
               },
             })),
@@ -425,7 +378,10 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
 
       case 'clone':
         return this.setState({
-          updateVolumeDrawer: {
+          volumeDrawer: {
+            errors: undefined,
+            selectedVolume: undefined,
+            mode: 'clone',
             open: true,
             id,
             label: label!,
@@ -436,11 +392,10 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
             size: size!,
             region: linodeRegion,
             linodeId: linodeID,
-            disabled: { region: true, linode: true, size: true, label: true },
             onClose: this.closeUpdatingDrawer,
             onCloneLabelChange: (cloneLabel: string) => this.setState(prevState => ({
-              updateVolumeDrawer: {
-                ...prevState.updateVolumeDrawer,
+              volumeDrawer: {
+                ...prevState.volumeDrawer,
                 cloneLabel,
               },
             })),
@@ -450,7 +405,10 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
 
       case 'edit':
         return this.setState({
-          updateVolumeDrawer: {
+          volumeDrawer: {
+            errors: undefined,
+            selectedVolume: undefined,
+            mode: 'edit',
             open: true,
             id,
             label: label!,
@@ -458,12 +416,11 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
             linodeLabel,
             size: size!,
             region: linodeRegion,
-            disabled: { region: true, linode: true, size: true },
             linodeId: linodeID,
             onClose: this.closeUpdatingDrawer,
             onLabelChange: (label: string) => this.setState(prevState => ({
-              updateVolumeDrawer: {
-                ...prevState.updateVolumeDrawer,
+              volumeDrawer: {
+                ...prevState.volumeDrawer,
                 label,
               },
             })),
@@ -476,12 +433,19 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
   }
 
   closeUpdatingDrawer = () => this.setState(prevState => ({
-    updateVolumeDrawer: LinodeVolumes.updateVolumeDrawerDefaultState,
+    volumeDrawer: {
+      ...prevState.volumeDrawer,
+      open: false,
+    },
   }))
 
   createVolume = () => {
+    if (this.state.volumeDrawer.mode === 'attach') {
+      return this.attachVolume();
+    }
+
     const {
-      updateVolumeDrawer: {
+      volumeDrawer: {
         label, size, region, linodeId,
       },
     } = this.state;
@@ -490,8 +454,8 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
 
     if (!label) {
       return this.setState({
-        updateVolumeDrawer: {
-          ...this.state.updateVolumeDrawer,
+        volumeDrawer: {
+          ...this.state.volumeDrawer,
           errors: [{ field: 'label', reason: 'Label cannot be blank.' }],
         },
       }, () => {
@@ -501,8 +465,8 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
 
     if (!size) {
       return this.setState({
-        updateVolumeDrawer: {
-          ...this.state.updateVolumeDrawer,
+        volumeDrawer: {
+          ...this.state.volumeDrawer,
           errors: [{ field: 'size', reason: 'cannot be blank.' }],
         },
       }, () => {
@@ -523,8 +487,8 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
       })
       .catch((errorResponse) => {
         this.setState({
-          updateVolumeDrawer: {
-            ...this.state.updateVolumeDrawer,
+          volumeDrawer: {
+            ...this.state.volumeDrawer,
             errors: errorResponse.response.data.errors,
           },
         }, () => {
@@ -535,7 +499,7 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
 
   editVolume = () => {
     const {
-      updateVolumeDrawer: {
+      volumeDrawer: {
         id,
         label,
       },
@@ -547,8 +511,8 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
 
     if (!label) {
       return this.setState({
-        updateVolumeDrawer: {
-          ...this.state.updateVolumeDrawer,
+        volumeDrawer: {
+          ...this.state.volumeDrawer,
           errors: [{ field: 'label', reason: 'Label cannot be blank.' }],
         },
       }, () => {
@@ -563,8 +527,8 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
       })
       .catch((errorResponse: any) => {
         this.setState({
-          updateVolumeDrawer: {
-            ...this.state.updateVolumeDrawer,
+          volumeDrawer: {
+            ...this.state.volumeDrawer,
             errors: errorResponse.response.data.errors,
           },
         }, () => {
@@ -575,7 +539,7 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
 
   resizeVolume = () => {
     const {
-      updateVolumeDrawer: {
+      volumeDrawer: {
         id,
         size,
       },
@@ -587,8 +551,8 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
 
     if (!size) {
       return this.setState({
-        updateVolumeDrawer: {
-          ...this.state.updateVolumeDrawer,
+        volumeDrawer: {
+          ...this.state.volumeDrawer,
           errors: [{ field: 'size', reason: 'Size cannot be blank.' }],
         },
       }, () => {
@@ -603,8 +567,8 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
       })
       .catch((errorResponse: any) => {
         this.setState({
-          updateVolumeDrawer: {
-            ...this.state.updateVolumeDrawer,
+          volumeDrawer: {
+            ...this.state.volumeDrawer,
             errors: errorResponse.response.data.errors.map(({ reason }: Linode.ApiFieldError) => ({
               field: 'size',
               reason,
@@ -617,12 +581,12 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
   }
 
   cloneVolume = () => {
-    const { updateVolumeDrawer: { id, cloneLabel } } = this.state;
+    const { volumeDrawer: { id, cloneLabel } } = this.state;
 
     if (!cloneLabel) {
       return this.setState({
-        updateVolumeDrawer: {
-          ...this.state.updateVolumeDrawer,
+        volumeDrawer: {
+          ...this.state.volumeDrawer,
           errors: [{ field: 'label', reason: 'Label cannot be blank.' }],
         },
       }, () => {
@@ -645,8 +609,8 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
       .catch((error) => {
         /** @todo Error handling. */
         this.setState({
-          updateVolumeDrawer: {
-            ...this.state.updateVolumeDrawer,
+          volumeDrawer: {
+            ...this.state.volumeDrawer,
             errors: error.response.data.errors,
           },
         }, () => {
@@ -660,30 +624,19 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
    *
    * IconTextLink is
    *  - If user has no configs, show null.
-   *  - Else
-   *    - If User has eligible volumes, show "Attach a Volume"
-   *    - Else show "Create a Volume"
+   *  - Else "Create a Volume"
    */
   IconTextLink = (): null | JSX.Element => {
     const { linodeConfigs: { response: configs } } = this.props;
-    const { attachableVolumes } = this.state;
 
     if (configs.length === 0) {
       return null;
     }
 
-    let IconTextLinkProps: AddNewLinkProps = {
-      onClick: this.openUpdatingDrawer('create', 0, '', 0),
-      label: 'Create a Volume',
-    };
-
-    if (attachableVolumes.length > 0) {
-      IconTextLinkProps = {
-        onClick: this.openAttachmentDrawer,
-        label: 'Attach Existing Volume',
-      };
-    }
-    return <AddNewLink {...IconTextLinkProps} />;
+    return <AddNewLink
+      onClick={this.openUpdatingDrawer('create', 0, '', 0)}
+      label='Add a Volume'
+    />;
   }
 
   /**
@@ -691,56 +644,38 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
    * - If Linode has volumes, null.
    *  - Else
    *    - If user has no configs, show "View Linode Config"
-   *    - Else
-   *      - If user has eligible Volumes, show "Attach a Volume"
-   *      - Else, show "Create a Volume"
+   *    - Else "Create a Volume"
    */
   Placeholder = (): null | JSX.Element => {
-    const {
-      linodeConfigs: { response: configs },
-    } = this.props;
-    const { attachedVolumes, attachableVolumes } = this.state;
+    // const { linodeConfigs: { response: configs } } = this.props;
+    const { attachedVolumes } = this.state;
     let props: PlaceholderProps;
 
     if (attachedVolumes.length > 0) {
       return null;
     }
 
-    if (configs.length === 0) {
-      props = {
-        buttonProps: {
-          onClick: this.openAttachmentDrawer,
-          children: 'View Linode Config',
-        },
-        icon: VolumeIcon,
-        title: 'No configs available',
-        copy: 'This Linode has no configurations. Click below to create a configuration.',
-      };
-      return <Placeholder {...props} />;
-    }
+    // if (configs.length === 0) {
+    //   props = {
+    //     buttonProps: {
+    //       onClick: this.openAttachmentDrawer,
+    //       children: 'View Linode Config',
+    //     },
+    //     icon: VolumeIcon,
+    //     title: 'No configs available',
+    //     copy: 'This Linode has no configurations. Click below to create a configuration.',
+    //   };
+    //   return <Placeholder {...props} />;
+    // }
 
-    if (attachableVolumes.length > 0) {
-      props = {
-        buttonProps: {
-          onClick: this.openAttachmentDrawer,
-          children: 'Attach a Volume',
-        },
-        icon: VolumeIcon,
-        title: 'No volumes attached',
-        copy: 'Click below to attach a volume.',
-      };
-      return < Placeholder {...props} />;
-    }
-
-    /** We have at least one config, but we have no volumes. */
     props = {
       buttonProps: {
         onClick: this.openUpdatingDrawer('create', 0, '', 0),
-        children: 'Create a Volume',
+        children: 'Add a Volume',
       },
       icon: VolumeIcon,
       title: 'No volumes found',
-      copy: 'Click below to create a volume.',
+      copy: 'Click below to add a volume.',
     };
 
     return <Placeholder {...props} />;
@@ -848,7 +783,7 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
       linodeConfigs: { error: linodeConfigsError },
     } = this.props;
 
-    const { updateVolumeDrawer } = this.state;
+    const { volumeDrawer } = this.state;
 
     if (volumesError || linodeConfigsError) {
       return <ErrorState errorText="An error has occured." />;
@@ -858,8 +793,7 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <this.Placeholder />
         <this.Table />
-        <this.AttachVolumeDrawer />
-        <UpdateVolumeDrawer {...updateVolumeDrawer} />
+        <VolumeDrawer {...volumeDrawer} />
       </React.Fragment>
     );
   }
