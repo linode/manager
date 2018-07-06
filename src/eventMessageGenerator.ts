@@ -54,13 +54,13 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   //   finished: e => ``,
   //   notification: e => ``,
   // },
-  // disk_imagize: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
+  disk_imagize: {
+    scheduled: e => `Image ${e.entity!.label} scheduled for creation.`,
+    started: e => `Image ${e.entity!.label} being created.`,
+    failed: e => `There was an error creating image ${e.entity!.label}.`,
+    finished: e => `Image ${e.entity!.label} created successfully.`,
+    // notification: e => ``,
+  },
   // disk_resize: {
   //   scheduled: e => ``,
   //   started: e => ``,
@@ -92,13 +92,13 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   domain_record_delete: {
     notification: e => `A domain record has been deleted from ${e.entity!.label}`,
   },
-  // image_delete: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
+  image_delete: {
+    // scheduled: e => `Image ${e.entity!.label} scheduled for deletion.`,
+    // started: e => `Image ${e.entity!.label} is being deleted.`,
+    // failed: e => `There was a problem deleting ${e.entity!.label}.`,
+    // finished: e => `${e.entity!.label}`,
+    notification: e => `${e.entity!.label} has been deleted.`,
+  },
   linode_addip: {
     notification: e => `An IP has been added to ${e.entity!.label}.`,
   },
