@@ -1,4 +1,6 @@
 
+
+
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
@@ -196,7 +198,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
         onChange={this.onModeChange}
         data-qa-mode-radio-group
       >
-        <FormControlLabel value="create" label="Create New Volume" control={<Radio />} />
+        <FormControlLabel value="create" label="Create and Attach Volume" control={<Radio />} />
         <FormControlLabel value="attach" label="Attach Existing Volume" control={<Radio />} />
       </RadioGroup>
     )
