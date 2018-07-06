@@ -1,8 +1,8 @@
 import { API_ROOT } from 'src/constants';
 import Request, {
-  setURL,
   setMethod,
   setParams,
+  setURL,
   setXFilter,
 } from './index';
 

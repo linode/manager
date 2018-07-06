@@ -26,7 +26,6 @@ export interface Props {
   selectedId?: number;
   data: Linode.StackScript.Response[];
   isSorting: boolean;
-  getNext: () => void;
   publicImages: Linode.Image[];
 }
 

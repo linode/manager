@@ -19,6 +19,7 @@ import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
 
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
+import ErrorState from 'src/components/ErrorState';
 import RenderGuard from 'src/components/RenderGuard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import TableCell from 'src/components/TableCell';
@@ -135,6 +136,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
         selectedStackScriptIDFromQuery={this.props.selectedId}
         shouldPreSelectStackScript={this.state.shouldPreSelectStackScript}
         key={0}
+        resetStackScriptSelection={this.maybeResetStackScript}
       />,
     },
     {
@@ -148,6 +150,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
         key={1}
         isLinodeStackScripts={true}
         shouldPreSelectStackScript={this.state.shouldPreSelectStackScript}
+        resetStackScriptSelection={this.maybeResetStackScript}
       />,
     },
     {
@@ -159,6 +162,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
         request={getCommunityStackscripts}
         selectedStackScriptIDFromQuery={this.props.selectedId}
         shouldPreSelectStackScript={this.state.shouldPreSelectStackScript}
+        resetStackScriptSelection={this.maybeResetStackScript}
         key={2}
       />,
     },
@@ -193,17 +197,22 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
     return this.myTabIndex;
   }
 
-  handleTabChange = () => {
+  maybeResetStackScript = () => {
     const { resetSelectedStackScript } = this.props;
+    if (resetSelectedStackScript) {
+      resetSelectedStackScript();
+    }
+    return;
+  }
+
+  handleTabChange = () => {
     /*
     * if we're coming from a query string, the stackscript will be preselected
     * however, we don't want the user to have their stackscript still preselected
     * when they change StackScript tabs
     */
     this.setState({ shouldPreSelectStackScript: false });
-    if (!!resetSelectedStackScript) {
-      resetSelectedStackScript();
-    }
+    this.maybeResetStackScript();
   }
 
   render() {
@@ -238,6 +247,7 @@ interface ContainerProps {
   publicImages: Linode.Image[];
   selectedStackScriptIDFromQuery: number | undefined;
   shouldPreSelectStackScript: boolean;
+  resetStackScriptSelection: () => void;
 }
 
 type CurrentFilter = 'label' | 'deploys' | 'revision';
@@ -248,11 +258,12 @@ interface ContainerState {
   loading?: boolean;
   gettingMoreStackScripts: boolean;
   showMoreButtonVisible: boolean;
-  data: any; // @TODO type correctly
+  listOfStackScripts: Linode.StackScript.Response[]; // @TODO type correctly
   sortOrder: SortOrder;
   currentFilterType: CurrentFilter | null;
   currentFilter: any; // @TODO type correctly
   isSorting: boolean;
+  error?: Error;
 }
 
 type ContainerCombinedProps = ContainerProps & WithStyles<ClassNames>;
@@ -263,12 +274,13 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
     currentPage: 1,
     loading: true,
     gettingMoreStackScripts: false,
-    data: [],
+    listOfStackScripts: [],
     showMoreButtonVisible: true,
     sortOrder: 'asc',
     currentFilterType: null,
     currentFilter: { ['+order_by']: 'deployments_total', ['+order']: 'desc' },
     isSorting: false,
+    error: undefined,
   };
 
   mounted: boolean = false;
@@ -295,7 +307,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
         * if we're sorting, just return the requested data, since we're
         * scrolling the user to the top and resetting the data
         */
-        const newData = (isSorting) ? response.data : [...this.state.data, ...response.data];
+        const newData = (isSorting) ? response.data : [...this.state.listOfStackScripts, ...response.data];
 
         /*
         * We need to further clean up the data because when we are preselecting
@@ -313,7 +325,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
         })
         : newData;
         this.setState({
-          data: cleanedData,
+          listOfStackScripts: cleanedData,
           gettingMoreStackScripts: false,
           loading: false,
           isSorting: false,
@@ -322,8 +334,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
       })
       .catch((e: any) => {
         if (!this.mounted) { return; }
-        this.setState({ gettingMoreStackScripts: false });
-        return e;
+        this.setState({ error: e.response });
       });
   }
 
@@ -341,7 +352,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
     if (!!selectedStackScriptIDFromQuery && shouldPreSelectStackScript) {
       return getStackScript(selectedStackScriptIDFromQuery)
         .then(data => {
-          this.setState({ data: [data] });
+          this.setState({ listOfStackScripts: [data] });
           if (!!onSelect) {
             // preselect our stackscript here
             onSelect(data.id, data.label, data.username,
@@ -352,7 +363,11 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
         .then(data => {
           this.getDataAtPage(0)
         })
-        .catch(e => e);
+        .catch(e => {
+          if (!this.mounted) { return; }
+          this.props.resetStackScriptSelection();
+          this.setState({error: e.response});
+        });
     }
     return this.getDataAtPage(0);
   }
@@ -438,7 +453,13 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
 
   render() {
     const { classes, publicImages } = this.props;
-    const { currentFilterType, isSorting } = this.state;
+    const { currentFilterType, isSorting, error } = this.state;
+
+    if(error) {
+      return <ErrorState 
+        errorText="There was an error loading your StackScripts. Please try again later."
+      />
+    }
 
     if (this.state.loading) {
       return <CircleProgress noTopMargin />;
@@ -527,8 +548,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
           <StackScriptsSection
             isSorting={isSorting}
             selectedId={this.state.selected}
-            data={this.state.data}
-            getNext={() => this.getNext()}
+            data={this.state.listOfStackScripts}
             publicImages={publicImages}
             {...selectProps}
           />
