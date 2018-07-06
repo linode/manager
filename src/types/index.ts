@@ -109,6 +109,7 @@ namespace Linode {
     'disk_delete' |
     'disk_duplicate' |
     'disk_resize' |
+    'disk_imagize' |
     'backups_enable' |
     'backups_cancel' |
     'backups_restore' |
