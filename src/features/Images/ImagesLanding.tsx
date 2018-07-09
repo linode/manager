@@ -115,12 +115,13 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
         ].includes(event.action)
       ))
       .subscribe((event) => {
-        if (event.action === 'disk_imagize' && (event.status === 'finished')) {
+        if (event.action === 'disk_imagize' && event.status === 'finished') {
+          sendToast('Image created successfully.');
           this.refreshImages();
         }
 
-        if (event.action === 'image_delete') {
-          sendToast(`Image ${event.entity && event.entity.label} has been deleted.`);
+        if (event.action === 'disk_imagize' && event.status === 'failed') {
+          sendToast('There was an error creating the image.', 'error');
           this.refreshImages();
         }
       });
@@ -133,8 +134,6 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
   componentDidCatch(error: Error) {
     this.setState({ error }, () => { scrollErrorIntoView(); });
   }
-
-
 
   refreshImages = () => {
     getUserImages()
