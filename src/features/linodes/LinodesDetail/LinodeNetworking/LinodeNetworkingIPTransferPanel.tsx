@@ -424,7 +424,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
               this.state.loading
                 ? <LinearProgress style={{ margin: '50px' }} /> // Loading, chill out man.
                 : this.state.linodes.length === 0
-                  ? <Typography className={classes.emptyStateText}>You have no other linodes in this Linode's datacenter with which to share IPs.</Typography>
+                  ? <Typography className={classes.emptyStateText}>You have no other linodes in this Linode's datacenter with which to transfer IPs.</Typography>
                   : Object.values(ips).map(this.ipRow)
             }
           </Grid>
