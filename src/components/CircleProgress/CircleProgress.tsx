@@ -8,7 +8,8 @@ type CSSClasses = 'root'
 | 'top'
 | 'progress'
 | 'topWrapper'
-| 'noTopMargin';
+| 'noTopMargin'
+| 'mini';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -54,6 +55,9 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
       top: 0,
     },
   },
+  mini: {
+    padding: theme.spacing.unit * 1.3,
+  }
 });
 
 interface Props {
@@ -61,9 +65,10 @@ interface Props {
   noTopMargin?: boolean;
   className?: string;
   noInner?: boolean;
+  mini?: boolean; 
 }
 
-const CircleProgressComponent = (props: Props & WithStyles<CSSClasses>) => {
+const circleProgressComponent = (props: Props & WithStyles<CSSClasses>) => {
   const variant = typeof props.value === 'number' ? 'static' : 'indeterminate';
   const value = typeof props.value === 'number' ? props.value : 0;
   const { classes, noTopMargin } = props;
@@ -78,24 +83,32 @@ const CircleProgressComponent = (props: Props & WithStyles<CSSClasses>) => {
   }
 
   return (
-    <div className={classNames(outerClasses)}>
-      {(props.noInner !== true) &&
-        <div className={classes.topWrapper}>
-          <div className={classes.top} />
-        </div>
-      }
-      <CircularProgress
-        className={classes.progress}
-        size={124}
-        value={value}
-        variant={variant}
-        thickness={2}
-        data-qa-circle-progress
-      />
-    </div>
+    (!props.mini)
+      ? <div className={classNames({
+        [classes.root]: true,
+        [classes.noTopMargin]: noTopMargin,
+      },
+        outerClasses,
+      )}
+      >
+        {(props.noInner !== true) &&
+          <div className={classes.topWrapper}>
+            <div className={classes.top} />
+          </div>
+        }
+        <CircularProgress
+          className={classes.progress}
+          size={124}
+          value={value}
+          variant={variant}
+          thickness={2}
+          data-qa-circle-progress
+        />
+      </div>
+      : <CircularProgress className={classes.mini} />
   );
 };
 
 const decorate = withStyles(styles, { withTheme: true });
 
-export default decorate<Props>(CircleProgressComponent);
+export default decorate<Props>(circleProgressComponent);
