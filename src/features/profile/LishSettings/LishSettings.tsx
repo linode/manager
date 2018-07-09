@@ -1,13 +1,15 @@
+import { compose, lensPath, pathOr, set } from 'ramda';
+import * as React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators, Dispatch } from 'redux';
+
 import { FormHelperText } from '@material-ui/core';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import { compose, lensPath, pathOr, set } from 'ramda';
-import * as React from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators, Dispatch } from 'redux';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
@@ -19,6 +21,7 @@ import TextField from 'src/components/TextField';
 import { updateProfile } from 'src/services/profile';
 import { response } from 'src/store/reducers/resources';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root'
   | 'title'
@@ -102,7 +105,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
           </Typography>
           {
             loading
-              ? (<div />)
+              ? null
               : (
                 <React.Fragment>
                   <FormControl className={classes.modeControl}>
@@ -132,7 +135,6 @@ class LishSettings extends React.Component<CombinedProps, State> {
                         helperText="Place your SSH public keys here for use with Lish console access."
                         multiline
                         rows="4"
-                        errorText={authorizedKeysError}
                       />
                     ))
                   }
@@ -184,11 +186,13 @@ class LishSettings extends React.Component<CombinedProps, State> {
         })
       })
       .catch((error) => {
-        const err = [{ reason: 'An unexpected error has occured.' }];
+        const fallbackError = [{ reason: 'An unexpected error has occured.' }];
         this.setState({
           submitting: false,
-          errors: pathOr(err, ['response', 'data', 'errors'], error),
+          errors: pathOr(fallbackError, ['response', 'data', 'errors'], error),
           success: undefined,
+        }, () => {
+          scrollErrorIntoView();
         })
       });
   };
