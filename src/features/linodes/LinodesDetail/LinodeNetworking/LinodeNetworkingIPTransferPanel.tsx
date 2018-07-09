@@ -1,8 +1,8 @@
 import { both, compose, equals, isNil, lensPath, over, path, set, uniq, view, when } from 'ramda';
 import * as React from 'react';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -17,18 +17,14 @@ import TextField from 'src/components/TextField';
 import { getLinodes } from 'src/services/linodes';
 import { assignAddresses } from 'src/services/networking';
 
-type ClassNames = 'title'
-  | 'containerDivider'
+type ClassNames =
+  'containerDivider'
   | 'ipField'
   | 'ipFieldLabel'
   | 'actionsLabel'
   | 'autoGridsm';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  title: {
-    marginBottom: theme.spacing.unit * 2,
-    marginTop: theme.spacing.unit * 4,
-  },
   containerDivider: {
    marginTop: theme.spacing.unit,
   },
@@ -393,54 +389,42 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
     const { ips, error } = this.state;
 
     return (
-      <React.Fragment>
+      <ExpansionPanel
+        defaultExpanded
+        heading="IP Transfer"
+        actions={this.transferActions}
+        data-qa-networking-actions-subheading
+      >
         <Grid container>
+          {
+            error &&
+            <Grid item xs={12}>
+              {error.map(({ field, reason }, idx) => <Notice key={idx} error text={reason} />)}
+            </Grid>
+          }
+          <Grid item sm={12} lg={8} xl={6}>
+            <Typography>
+              If you have two Linodes in the same data center, you can use the IP transfer feature to
+              switch their IP addresses. This could be useful in several situations. For example,
+              if you’ve built a new server to replace an old one, you could swap IP addresses instead
+              of updating the DNS records.
+          </Typography>
+          </Grid>
           <Grid item xs={12}>
-            <Typography
-              variant="title"
-              className={classes.title}
-              data-qa-networking-actions-subheading
-            >
-              Networking Actions
-            </Typography>
-            <ExpansionPanel
-              defaultExpanded
-              heading="IP Transfer"
-              actions={this.transferActions}
-            >
-              <Grid container>
-                {
-                  error &&
-                  <Grid item xs={12}>
-                    {error.map(({ field, reason }, idx) => <Notice key={idx} error text={reason} />)}
-                  </Grid>
-                }
-                <Grid item xs={12}>
-                  <Typography>
-                    If you have two Linodes in the same data center, you can use the IP transfer feature to
-                    switch their IP addresses. <br/>This could be useful in several situations. For example,
-                    if you’ve built a new server to replace an old one, you could swap IP addresses instead
-                    of updating the DNS records.
-                </Typography>
-                </Grid>
-                <Grid item xs={12}>
-                  <Grid container>
-                    <Grid item className={classes.ipFieldLabel}>IP Address</Grid>
-                    <Grid item className={classes.actionsLabel}>Actions</Grid>
-                  </Grid>
-                  {
-                    this.state.loading
-                      ? <LinearProgress style={{ margin: '50px' }} /> // Loading, chill out man.
-                      : this.state.linodes.length === 0
-                        ? null // They don't have any other Linodes to transfer/swap with.
-                        : Object.values(ips).map(this.ipRow)
-                  }
-                </Grid>
-              </Grid>
-            </ExpansionPanel>
+            <Grid container>
+              <Grid item className={classes.ipFieldLabel}>IP Address</Grid>
+              <Grid item className={classes.actionsLabel}>Actions</Grid>
+            </Grid>
+            {
+              this.state.loading
+                ? <LinearProgress style={{ margin: '50px' }} /> // Loading, chill out man.
+                : this.state.linodes.length === 0
+                  ? null // They don't have any other Linodes to transfer/swap with.
+                  : Object.values(ips).map(this.ipRow)
+            }
           </Grid>
         </Grid>
-      </React.Fragment>
+      </ExpansionPanel>
     );
   }
 }

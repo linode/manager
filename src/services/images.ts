@@ -36,3 +36,10 @@ export const updateImage = (imageId: string, label: string, description: string)
     setData({ label, description: safeDescription }),
   );
 }
+
+export const deleteImage = (imageId: string) => {
+  return Request<{}>(
+    setURL(`${API_ROOT}/images/${imageId}`),
+    setMethod('DELETE'),
+  )
+}

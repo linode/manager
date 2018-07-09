@@ -10,6 +10,7 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 
+import Button from 'src/components/Button';
 import Radio from 'src/components/Radio';
 import RenderGuard from 'src/components/RenderGuard';
 import ShowMore from 'src/components/ShowMore';
@@ -28,7 +29,8 @@ type ClassNames = 'root'
   | 'libDescription'
   | 'colImages'
   | 'stackScriptCell'
-  | 'stackScriptUsername';
+  | 'stackScriptUsername'
+  | 'deployButton';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -91,6 +93,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   stackScriptUsername: {
     color: theme.color.grey1,
+  },
+  deployButton: {
+    marginLeft: -26,
+    border: 0,
+    width: '100%',
+    justifyContent: 'flex-start',
   },
 });
 
@@ -173,11 +181,15 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
         </TableCell>
         {showDeployLink &&
           <TableCell>
-            <Link to={'/'}>
-              <Typography variant="title">
-                Deploy New Linode
-              </Typography>
-            </Link>
+          <Link to={`/linodes/create?type=fromStackScript` +
+            `&stackScriptID=${stackScriptID}&stackScriptUsername=${stackScriptUsername}`}>
+            <Button
+              type="secondary"
+              className={classes.deployButton}
+            >
+              Deploy New Linode
+            </Button>
+          </Link>
           </TableCell>
         }
       </TableRow>
