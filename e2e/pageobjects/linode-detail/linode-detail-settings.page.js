@@ -96,13 +96,16 @@ class Settings extends Page {
         return disks;
     }
 
-    resetPassword(newPassword, diskLabel) {
+    resetPassword(newPassword, diskLabel='none') {
         const successMsg = 'Linode password changed successfully.';
-        this.selectDisk.click();
-        this.disk.waitForVisible();
-        browser.jsClick(`[data-qa-disk="${diskLabel}"]`);
+        
+        if (diskLabel !== 'none') {
+            this.selectDisk.click();
+            this.disk.waitForVisible();
+            browser.jsClick(`[data-qa-disk="${diskLabel}"]`);
+            this.disk.waitForVisible(constants.wait.short, true);
+        }
 
-        this.disk.waitForVisible(constants.wait.short, true);
         this.password.setValue(newPassword);
         this.passwordSave.click();
 

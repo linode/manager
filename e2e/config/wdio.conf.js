@@ -6,7 +6,7 @@ const { login } = require('../utils/config-utils');
 const { browserCommands } = require('./custom-commands');
 const { browserConf } = require('./browser-config');
 const { constants } = require('../constants');
-const selectedBrowser = argv.b ? browserConf[argv.b] : browserConf['chrome'];
+const selectedBrowser = argv.browser ? browserConf[argv.browser] : browserConf['chrome'];
 const username = process.env.MANAGER_USER;
 const password = process.env.MANAGER_PASS;
 
@@ -226,7 +226,9 @@ exports.config = {
             browser.loadImposter(imposter);
         }
 
-        browser.timeouts('page load', 20000);
+        if (browser.options.desiredCapabilities.browserName.includes('chrome')) {
+            browser.timeouts('page load', 20000);
+        }
         login(username, password);
     },
     /**

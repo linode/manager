@@ -167,7 +167,7 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
             onChange={this.handleDiskChange}
             inputProps={{ name: 'disk', id: 'disk' }}
             error={Boolean(diskIdError)}
-            data-qa-select-disk
+            data-qa-select-disk={singleDisk}
             >
               {
                 this.state.linodeDisks.map(disk =>
