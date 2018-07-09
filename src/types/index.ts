@@ -148,7 +148,7 @@ namespace Linode {
   }
 
   export interface ApiFieldError {
-    field: string;
+    field?: string;
     reason: string;
   }
 }

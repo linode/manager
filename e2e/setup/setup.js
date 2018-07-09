@@ -146,7 +146,7 @@ exports.createLinode = (token, password, linodeLabel) => {
             }),
             baseURL: API_ROOT,
             timeout: 5000,
-            headers: { 'Authorization': `Bearer ${token}`},           
+            headers: { 'Authorization': `Bearer ${token}`},
         });
 
         return instance.post(linodesEndpoint, linodeConfig)
