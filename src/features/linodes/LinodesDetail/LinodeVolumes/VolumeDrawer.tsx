@@ -15,10 +15,14 @@ import TextField from 'src/components/TextField';
 import { dcDisplayNames } from 'src/constants';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'suffix';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
+  suffix: {
+    fontSize: '.9rem',
+    marginRight: theme.spacing.unit,
+  },
 });
 
 export type Modes = 'create' | 'edit' | 'resize' | 'clone' | 'attach';
@@ -114,6 +118,9 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
       label="Size"
       onChange={this.onSizeChange}
       value={this.props.size}
+      InputProps={{
+        endAdornment: <span className={this.props.classes.suffix}>GB</span>,
+      }}
     />
   );
 
