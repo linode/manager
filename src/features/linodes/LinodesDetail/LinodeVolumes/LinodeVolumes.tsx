@@ -5,7 +5,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
-import { compose, pathOr } from 'ramda';
+import { compose, pathOr, equals } from 'ramda';
 import * as React from 'react';
 import { Subscription } from 'rxjs/Rx';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
@@ -71,6 +71,8 @@ interface State {
 type CombinedProps = Props & ContextProps & WithStyles<ClassNames>;
 
 export class LinodeVolumes extends React.Component<CombinedProps, State> {
+  mounted: boolean = false;
+
   static defaultProps = {
     volumes: [],
     linodeConfigs: [],
@@ -102,19 +104,33 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
 
   constructor(props: CombinedProps) {
     super(props);
-    const { linodeVolumes } = props;
 
     this.state = {
-      attachedVolumes: linodeVolumes,
-      attachableVolumes: props.volumes.response,
+      attachedVolumes: [],
+      attachableVolumes: [],
       updateDialog: LinodeVolumes.updateDialogDefaultState,
       volumeDrawer: LinodeVolumes.volumeDrawerDefaultState,
     };
   }
 
+  static getDerivedStateFromProps(props: CombinedProps, state: State) {
+    const attachedVolumesUpdate = !equals(props.linodeVolumes, state.attachedVolumes);
+    const attachableVolumesUpdate = !equals(props.volumes.response, state.attachableVolumes);
+
+    if (attachedVolumesUpdate || attachableVolumesUpdate) {
+      return {
+        attachedVolumes: props.linodeVolumes,
+        attachableVolumes: props.volumes.response,
+      };
+    }
+
+    return null;
+  }
+
   eventSubscription: Subscription;
 
   componentDidMount() {
+    this.mounted = true;
 
     this.eventSubscription = events$
       /** @todo filter on mount time. */
@@ -128,18 +144,15 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
       ].includes(e.action))
       .filter(e => !e._initial)
       .subscribe((v) => {
-        this.getAllVolumes();
+        if (this.mounted) {
+          this.getAllVolumes();
+        }
       });
   }
 
   componentWillUnmount() {
+    this.mounted = false;
     this.eventSubscription.unsubscribe();
-  }
-
-  componentDidUpdate(prevProps: CombinedProps) {
-    if (this.props.linodeVolumes !== prevProps.linodeVolumes) {
-      this.setState({ attachedVolumes: this.props.linodeVolumes });
-    }
   }
 
   getAllVolumes = () => {
@@ -791,7 +804,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <this.Placeholder />
-        <this.Table updateFor={[this.state.attachableVolumes]} />
+        <this.Table updateFor={[this.props.linodeVolumes]} />
         <VolumeDrawer {...volumeDrawer} />
         <this.UpdateDialog />
       </React.Fragment>

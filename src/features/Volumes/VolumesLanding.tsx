@@ -123,12 +123,14 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       .subscribe((event) => {
         getVolumes()
           .then((volumes) => {
-            this.setState({
-              volumes: volumes.data.map((v) => ({
-                ...v,
-                ...maybeAddEvent(event, v),
-              })),
-            });
+            if (this.mounted) {
+              this.setState({
+                volumes: volumes.data.map((v) => ({
+                  ...v,
+                  ...maybeAddEvent(event, v),
+                })),
+              });
+            }
           })
           .catch(() => {
             /* @todo: how do we want to display this error? */
