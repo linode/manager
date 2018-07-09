@@ -1,3 +1,7 @@
+import { compose, equals, pathOr } from 'ramda';
+import * as React from 'react';
+import { Subscription } from 'rxjs/Rx';
+
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
@@ -5,9 +9,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
-import { compose, pathOr, equals } from 'ramda';
-import * as React from 'react';
-import { Subscription } from 'rxjs/Rx';
+
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
@@ -24,6 +26,7 @@ import { events$, resetEventsPolling } from 'src/events';
 import { getLinodeConfigs, getLinodeVolumes } from 'src/services/linodes';
 import { attachVolume, cloneVolume, createVolume, deleteVolume, detachVolume, getVolumes, resizeVolume, updateVolume } from 'src/services/volumes';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+
 import { withLinode, withVolumes } from '../context';
 import ActionMenu from './LinodeVolumesActionMenu';
 import VolumeDrawer, { Modes, Props as VolumeDrawerProps } from './VolumeDrawer';
@@ -239,16 +242,26 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
   }
 
   detachVolume = () => {
+    const { updateVolumes } = this.props;
     const { updateDialog: { id } } = this.state;
     if (!id) { return; }
 
     detachVolume(id)
-      .then((response) => {
+      .then(() => {
         this.closeUpdateDialog();
-        resetEventsPolling();
+        updateVolumes((volumes) => volumes.filter((v) => v.id !== id));
       })
-      .catch((response) => {
-        /** @todo Error handling. */
+      .catch((errorResponse) => {
+        const fallbackError = [{ reason: 'Unable to attach volume.' }];
+
+        this.setState({
+          volumeDrawer: {
+            ...this.state.volumeDrawer,
+            errors: pathOr(fallbackError, ['response', 'data', 'errors'], errorResponse),
+          },
+        }, () => {
+          scrollErrorIntoView();
+        });
       });
   }
 
