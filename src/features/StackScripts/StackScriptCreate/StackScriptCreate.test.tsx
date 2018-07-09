@@ -5,6 +5,8 @@ import { StackScriptCreate } from './StackScriptCreate';
 
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 
+import { images } from 'src/__data__/images';
+
 describe('StackScriptCreate', () => {
   const component = shallow(
     <StackScriptCreate
@@ -16,6 +18,7 @@ describe('StackScriptCreate', () => {
         createTitle: '',
       }}
       profile={[]}
+      images={{ response: images }}
     />
   )
   it('should render a title that reads "Create New StackScript', () => {
