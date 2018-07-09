@@ -13,6 +13,7 @@ describe('Linode Volumes', () => {
 
   const component = shallow(
     <LinodeVolumes
+      updateVolumes={jest.fn()}
       classes={{ title: '' }}
       volumes={volumesAsPromiseResponse}
       linodeConfigs={linodeConfigsAsPromiseResponse}
@@ -32,6 +33,7 @@ describe('Linode Volumes', () => {
       <StaticRouter context={{}}>
         <LinodeThemeWrapper>
           <LinodeVolumes
+            updateVolumes={jest.fn()}
             classes={{ title: '' }}
             volumes={volumesAsPromiseResponse}
             linodeConfigs={createPromiseLoaderResponse([])}
@@ -53,6 +55,7 @@ describe('Linode Volumes', () => {
       <StaticRouter context={{}}>
         <LinodeThemeWrapper>
           <LinodeVolumes
+            updateVolumes={jest.fn()}
             classes={{ title: '' }}
             volumes={volumesAsPromiseResponse}
             linodeConfigs={linodeConfigsAsPromiseResponse}
@@ -77,6 +80,7 @@ describe('Linode Volumes', () => {
         <StaticRouter context={{}}>
           <LinodeThemeWrapper>
             <LinodeVolumes
+              updateVolumes={jest.fn()}
               classes={{ title: '' }}
               volumes={volumesAsPromiseResponse}
               linodeConfigs={linodeConfigsAsPromiseResponse}

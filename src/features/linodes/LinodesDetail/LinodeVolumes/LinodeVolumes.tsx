@@ -43,8 +43,12 @@ interface Props {
   linodeConfigs: PromiseLoaderResponse<Linode.Config[]>;
 }
 
-interface ContextProps {
+interface VolumesContextProps {
   linodeVolumes: Linode.Volume[];
+  updateVolumes: (update: (volumes: Linode.Volume[]) => Linode.Volume[]) => void;
+}
+
+interface LinodeContextProps {
   linodeLabel: string;
   linodeRegion: string;
   linodeID: number;
@@ -68,7 +72,10 @@ interface State {
   volumeDrawer: VolumeDrawer;
 }
 
-type CombinedProps = Props & ContextProps & WithStyles<ClassNames>;
+type CombinedProps = Props
+  & VolumesContextProps
+  & LinodeContextProps
+  & WithStyles<ClassNames>;
 
 export class LinodeVolumes extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
@@ -179,9 +186,10 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
 
   /** Attachment */
   attachVolume = () => {
-    const { linodeID } = this.props;
+    const { linodeID, updateVolumes } = this.props;
     const { volumeDrawer: { selectedVolume } } = this.state;
 
+    /** This should be handled by Joi */
     if (selectedVolume === "none") {
       this.setState({
         volumeDrawer: {
@@ -195,15 +203,17 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
     }
 
     attachVolume(Number(selectedVolume), { linode_id: Number(linodeID) })
-      .then((response) => {
+      .then(({ data }) => {
         this.closeUpdatingDrawer();
-        resetEventsPolling();
+        updateVolumes((volumes) => ([...volumes, data]));
       })
-      .catch((error) => {
+      .catch((errorResponse) => {
+        const fallbackError = [{ reason: 'Unable to attach volume.' }];
+
         this.setState({
           volumeDrawer: {
             ...this.state.volumeDrawer,
-            errors: [{ field: 'volume', reason: 'Could not attach volume.' }],
+            errors: pathOr(fallbackError, ['response', 'data', 'errors'], errorResponse),
           },
         }, () => {
           scrollErrorIntoView();
@@ -814,7 +824,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const preloaded = PromiseLoader<Props & ContextProps>({
+const preloaded = PromiseLoader<Props & LinodeContextProps & VolumesContextProps>({
   linodeConfigs: (props) => getLinodeConfigs(props.linodeID)
     .then(response => response.data),
 
@@ -831,6 +841,7 @@ const linodeContext = withLinode((context) => ({
 
 const volumesContext = withVolumes((context) => ({
   linodeVolumes: context.data,
+  updateVolumes: context.update,
 }));
 
 export default compose<any, any, any, any, any, any>(

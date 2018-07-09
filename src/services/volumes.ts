@@ -19,7 +19,7 @@ export const getVolumes = (): Promise<Linode.ResourcePage<Linode.Volume>> =>
 export const attachVolume = (volumeId: number, payload: {
   linode_id: number,
   config_id?: number,
-}) => Request<{}>(
+}) => Request<Linode.Volume>(
   setURL(`${API_ROOT}/volumes/${volumeId}/attach`),
   setMethod('POST'),
   setData(payload),
