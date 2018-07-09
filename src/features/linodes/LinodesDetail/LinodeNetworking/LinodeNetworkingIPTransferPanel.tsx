@@ -1,3 +1,4 @@
+
 import { both, compose, equals, isNil, lensPath, over, path, set, uniq, view, when } from 'ramda';
 import * as React from 'react';
 
@@ -22,6 +23,7 @@ type ClassNames =
   | 'ipField'
   | 'ipFieldLabel'
   | 'actionsLabel'
+  | 'emptyStateText'
   | 'autoGridsm';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
@@ -52,6 +54,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
       flexBasis: 'auto',
     },
   },
+  emptyStateText: {
+    marginTop: theme.spacing.unit * 2,
+  }
 });
 
 interface Props {
@@ -377,10 +382,11 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
           loading={this.state.submitting}
           onClick={this.onSubmit}
           type="primary"
+          disabled={this.state.linodes.length === 0}
         >
           Save
       </Button>
-        <Button disabled={this.state.submitting} onClick={this.onReset} type="secondary">Cancel</Button>
+        <Button disabled={this.state.submitting || this.state.linodes.length === 0} onClick={this.onReset} type="secondary">Cancel</Button>
       </ActionsPanel>)
   }
 
@@ -418,7 +424,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
               this.state.loading
                 ? <LinearProgress style={{ margin: '50px' }} /> // Loading, chill out man.
                 : this.state.linodes.length === 0
-                  ? <Typography>You have no other linodes in this Linode's datacenter with which to share IPs.</Typography>
+                  ? <Typography className={classes.emptyStateText}>You have no other linodes in this Linode's datacenter with which to share IPs.</Typography>
                   : Object.values(ips).map(this.ipRow)
             }
           </Grid>
