@@ -7593,7 +7593,7 @@ object.getownpropertydescriptors@^2.0.3:
     define-properties "^1.1.2"
     es-abstract "^1.5.1"
 
-object.omit@^2.0.0, object.omit@^2.0.1:
+object.omit@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/object.omit/-/object.omit-2.0.1.tgz#1a9c744829f39dbb858c76ca3579ae2a54ebd1fa"
   dependencies:
@@ -8807,14 +8807,6 @@ react-treebeard@^2.1.0:
     radium "^0.19.0"
     shallowequal "^0.2.2"
     velocity-react "^1.3.1"
-
-react-vnc-display@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/react-vnc-display/-/react-vnc-display-1.1.0.tgz#1081c1bcd072fbd3b6bc055b1ef4d59db316a5b9"
-  dependencies:
-    novnc-node "^0.5.3"
-    object.omit "^2.0.1"
-    prop-types "^15.5.10"
 
 react@^16.4.1:
   version "16.4.1"
