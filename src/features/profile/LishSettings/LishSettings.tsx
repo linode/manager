@@ -122,7 +122,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
                       {authMethodError && <FormHelperText error>{authMethodError}</FormHelperText>}
                     </div>
                   </FormControl>
-                  {lishAuthMethod !== 'disabled' &&
+                  {
                     Array.from(Array(authorizedKeysCount)).map((value, idx) => (
                       <TextField
                         key={idx}
@@ -131,7 +131,8 @@ class LishSettings extends React.Component<CombinedProps, State> {
                         value={authorizedKeys[idx] || ''}
                         helperText="Place your SSH public keys here for use with Lish console access."
                         multiline
-                        rows="4"      errorText={authorizedKeysError}
+                        rows="4"
+                        errorText={authorizedKeysError}
                       />
                     ))
                   }
@@ -165,11 +166,13 @@ class LishSettings extends React.Component<CombinedProps, State> {
 
   onSubmit = () => {
     const { authorizedKeys, lishAuthMethod } = this.state;
+    const keys = authorizedKeys.filter((v) => v !== '');
+
     this.setState({ errors: undefined, submitting: true });
 
     updateProfile({
       lish_auth_method: lishAuthMethod,
-      ...(lishAuthMethod !== 'disabled' && { authorized_keys: authorizedKeys.filter((v) => v !== '') }),
+      ...(lishAuthMethod !== 'disabled' && { authorized_keys: keys }),
     })
       .then((response) => {
         this.props.updateProfile(response);
@@ -177,7 +180,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
           submitting: false,
           success: 'LISH authentication settings have been updated.',
           authorizedKeys: response.authorized_keys || [],
-          authorizedKeysCount: response.authorized_keys? response.authorized_keys.length : 1,
+          authorizedKeysCount: response.authorized_keys ? response.authorized_keys.length : 1,
         })
       })
       .catch((error) => {
