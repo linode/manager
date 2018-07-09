@@ -1,3 +1,10 @@
+import { Location } from 'history';
+import * as moment from 'moment';
+import { allPass, compose, filter, has, Lens, lensPath, pathEq, pathOr, set } from 'ramda';
+import * as React from 'react';
+import { Link, matchPath, Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
+import { Observable, Subscription } from 'rxjs/Rx';
+
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
@@ -5,12 +12,7 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import { KeyboardArrowLeft } from '@material-ui/icons';
-import { Location } from 'history';
-import * as moment from 'moment';
-import { allPass, compose, filter, has, Lens, lensPath, pathEq, pathOr, set } from 'ramda';
-import * as React from 'react';
-import { Link, matchPath, Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
-import { Observable, Subscription } from 'rxjs/Rx';
+
 import CircleProgress from 'src/components/CircleProgress';
 import EditableText from 'src/components/EditableText';
 import Grid from 'src/components/Grid';
@@ -25,7 +27,8 @@ import { getImage } from 'src/services/images';
 import { getLinode, getLinodeConfigs, getLinodeDisks, getLinodeVolumes, renameLinode } from 'src/services/linodes';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { ConfigsProvider, DisksProvider, ImageProvider, LinodeProvider, VolumesProvider, Requestable } from './context';
+
+import { ConfigsProvider, DisksProvider, ImageProvider, LinodeProvider, Requestable, VolumesProvider } from './context';
 import LinodeBackup from './LinodeBackup';
 import LinodeDetailErrorBoundary from './LinodeDetailErrorBoundary';
 import LinodeNetworking from './LinodeNetworking';
@@ -173,6 +176,8 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
   volumeEventsSubscription: Subscription;
 
   notificationsSubscription: Subscription;
+
+  diskResizeSubscription: Subscription;
 
   mounted: boolean = false;
 
@@ -380,6 +385,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
   componentWillUnmount() {
     this.mounted = false;
     this.eventsSubscription.unsubscribe();
+    this.diskResizeSubscription.unsubscribe();
     this.notificationsSubscription.unsubscribe();
     this.volumeEventsSubscription.unsubscribe();
   }
@@ -390,6 +396,12 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     const { context: { configs, disks, image, linode, volumes } } = this.state;
     const mountTime = moment().subtract(5, 'seconds');
     const { match: { params: { linodeId } } } = this.props;
+
+    this.diskResizeSubscription = events$
+      .filter((e) => !e._initial)
+      .filter(pathEq(['entity', 'id'], Number(this.props.match.params.linodeId)))
+      .filter((e) => e.status === 'finished' && e.action === 'disk_resize')
+      .subscribe((e) => disks.request())
 
     this.eventsSubscription = events$
       .filter(pathEq(['entity', 'id'], Number(this.props.match.params.linodeId)))
@@ -524,7 +536,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     this.setState({ labelInput: { label: linode.label, errorText: '' } });
     this.forceUpdate();
   }
-  
+
   launchLish = () => {
     const { data: linode } = this.state.context.linode;
     lishLaunch(`${linode!.id}`);

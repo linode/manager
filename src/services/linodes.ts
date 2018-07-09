@@ -1,6 +1,7 @@
+import * as Joi from 'joi';
 import { omit } from 'ramda';
 import { API_ROOT } from 'src/constants';
-import Request, { setData, setURL, setMethod, setXFilter, setParams } from '.';
+import Request, { setData, setMethod, setParams, setURL, setXFilter, validateRequestData } from '.';
 
 type Page<T> = Linode.ResourcePage<T>;
 type Linode = Linode.Linode;
@@ -323,6 +324,18 @@ export const updateLinodeDisk = (
   setURL(`${API_ROOT}/linode/instances/${linodeId}/disks/${diskId}`),
   setMethod('PUT'),
   setData(data),
+  );
+
+const resizeLinodeDiskSchema = Joi.object({
+  size: Joi.number().required().min(1),
+});
+
+export const resizeLinodeDisk = (linodeId: number, diskId: number, size: number) =>
+  Request<Linode.Disk>(
+    validateRequestData({ size }, resizeLinodeDiskSchema),
+    setURL(`${API_ROOT}/linode/instances/${linodeId}/disks/${diskId}/resize`),
+    setMethod('POST'),
+    setData({ size }),
   );
 
 export const deleteLinodeDisk = (

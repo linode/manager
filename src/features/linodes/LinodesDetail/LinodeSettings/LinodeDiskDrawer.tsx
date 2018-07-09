@@ -1,12 +1,12 @@
 import * as React from 'react';
 
-import Button from '@material-ui/core/Button';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import MenuItem from '@material-ui/core/MenuItem';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -33,115 +33,131 @@ interface EditableFields {
 }
 
 interface Props extends EditableFields {
-  mode: 'create' | 'edit';
+  mode: 'create' | 'rename' | 'resize';
   open: boolean;
   errors?: Linode.ApiFieldError[];
   totalSpaceMB: number;
   freeSpaceMB: number;
+  submitting: boolean;
   onClose: () => void;
   onSubmit: () => void;
-  onChange: (k: keyof EditableFields, v: any) => void;
+  onLabelChange: (value: string) => void;
+  onFilesystemChange: (value: string) => void;
+  onSizeChange: (value: number) => void;
 }
 
-interface State { }
+interface State {
+  hasErrorFor?: (v: string) => any,
+}
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
-  state: State = {};
+  state: State = {
+    hasErrorFor: (v) => null,
+  };
+
+  static getDerivedStateFromProps(props: CombinedProps, state: State) {
+    return {
+      hasErrorFor: getAPIErrorsFor({ label: 'label', size: 'size' }, props.errors || []),
+    };
+  }
+
+  static getTitle(v: 'create' | 'rename' | 'resize') {
+    switch (v) {
+      case 'create':
+        return 'Add Disk';
+
+      case 'rename':
+        return 'Edit Disk';
+
+      case 'resize':
+        return 'Resize Disk';
+    }
+  }
+
+  onLabelChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    this.props.onLabelChange(e.target.value);
+
+  onSizeChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    this.props.onSizeChange(e.target.valueAsNumber || 0);
+
+  onFilesystemChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    this.props.onFilesystemChange(e.target.value);
+
+  getErrors = (key: string) => this.state.hasErrorFor && this.state.hasErrorFor(key);
+
+  labelField = () => (
+    <TextField
+      disabled={['resize'].includes(this.props.mode)}
+      label="Label"
+      required
+      value={this.props.label}
+      onChange={this.onLabelChange}
+      errorText={this.getErrors('label')}
+      errorGroup="linode-disk-drawer"
+    />
+  );
+
+  filesystemField = () => (
+    <TextField
+      disabled={['resize', 'edit'].includes(this.props.mode)}
+      label="Filesystem"
+      select
+      value={this.props.filesystem}
+      onChange={this.onFilesystemChange}
+      errorText={this.getErrors('filesystem')}
+      errorGroup="linode-disk-drawer"
+    >
+      <MenuItem value="_none_"><em>Select a Filesystem</em></MenuItem>
+      {
+        ['raw', 'swap', 'ext3', 'ext4', 'initrd'].map(fs =>
+          <MenuItem value={fs} key={fs}>{fs}</MenuItem>)
+      }
+    </TextField>
+  );
+
+  sizeField = () => (
+    <React.Fragment>
+      <TextField
+        disabled={['edit'].includes(this.props.mode)}
+        label="Size"
+        type="number"
+        required
+        value={this.props.size}
+        onChange={this.onSizeChange}
+        errorText={this.getErrors('size')}
+        errorGroup="linode-disk-drawer"
+        InputProps={{
+          endAdornment:
+            <InputAdornment position="end"> MB </InputAdornment>,
+        }}
+      />
+      <FormHelperText style={{ marginTop: 8 }}>
+        {this.props.freeSpaceMB} MB free of {this.props.totalSpaceMB} MB
+      </FormHelperText>
+    </React.Fragment>
+  );
 
   render() {
-    const {
-      errors,
-      open,
-      mode,
+    const { open, mode, onSubmit, submitting, onClose, classes } = this.props;
 
-      // Editable Values
-      label,
-      filesystem,
-      size,
-
-      // Handlers
-      onSubmit,
-      onClose,
-      onChange,
-
-      classes,
-    } = this.props;
-    const title = mode === 'create' ? 'Add Disk' : 'Edit Disk';
-    const errorFor = getAPIErrorsFor({}, errors);
-    const generalError = errorFor('none');
-    const labelError = errorFor('label');
-    const filesystemError = errorFor('filesystem');
-    const sizeError = errorFor('size');
+    const generalError = this.getErrors('none');
 
     return (
-      <Drawer
-        title={title}
-        open={open}
-        onClose={onClose}
-      >
+      <Drawer title={LinodeDiskDrawer.getTitle(mode)} open={open} onClose={onClose}>
         <Grid container direction="row">
           {generalError && <Notice error errorGroup="linode-disk-drawer" text={generalError} />}
           <Grid item xs={12} className={classes.section}>
-
-            <TextField
-              label="Label"
-              required
-              value={label}
-              onChange={e => onChange('label', e.target.value)}
-              errorText={labelError}
-              errorGroup="linode-disk-drawer"
-            />
-
-            {mode === 'create' && <TextField
-              label="Filesystem"
-              select
-              value={filesystem}
-              onChange={e => onChange('filesystem', e.target.value)}
-              errorText={filesystemError}
-              errorGroup="linode-disk-drawer"
-            >
-              <MenuItem value="_none_"><em>Select a Filesystem</em></MenuItem>
-              {
-                ['raw', 'swap', 'ext3', 'ext4', 'initrd'].map(fs =>
-                  <MenuItem value={fs} key={fs}>{fs}</MenuItem>)
-              }
-            </TextField>}
-
-            {mode === 'create' && (
-              <React.Fragment>
-                <TextField
-                  label="Size"
-                  type="number"
-                  required
-                  value={size}
-                  onChange={e => onChange('size', e.target.value === '' ? '' : +e.target.value)}
-                  errorText={sizeError}
-                  errorGroup="linode-disk-drawer"
-                  InputProps={{
-                    endAdornment:
-                      <InputAdornment position="end">
-                        MB
-                      </InputAdornment>,
-                  }}
-                />
-                <FormHelperText style={{ marginTop: 8 }}>
-                  {this.props.freeSpaceMB} MB free of {this.props.totalSpaceMB} MB
-                </FormHelperText>
-              </React.Fragment>
-            )}
+            <this.labelField />
+            <this.filesystemField />
+            <this.sizeField />
           </Grid>
           <Grid item className={classes.section}>
             <ActionsPanel>
-              <Button onClick={onSubmit} variant="raised" color="primary">Submit</Button>
-              <Button
-                onClick={onClose}
-                variant="raised"
-                color="secondary"
-                className="cancel"
-              >
-                  Cancel
+              <Button onClick={onSubmit} type="primary" loading={submitting}>Submit</Button>
+              <Button onClick={onClose} type="secondary" className="cancel">
+                Cancel
               </Button>
             </ActionsPanel>
           </Grid>

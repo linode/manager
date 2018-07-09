@@ -433,7 +433,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
 const isVolumeUpdating = (e?: Linode.Event) => {
   return e
     && ['volume_attach', 'volume_detach', 'volume_create'].includes(e.action)
-    && e.status !== 'finished';
+    && ['scheculed', 'started'].includes(e.status);
 };
 
 const progressFromEvent = (e?: Linode.Event) => {
