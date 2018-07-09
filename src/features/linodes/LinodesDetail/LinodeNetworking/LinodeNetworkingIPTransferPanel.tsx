@@ -1,3 +1,4 @@
+
 import { both, compose, equals, isNil, lensPath, over, path, set, uniq, view, when } from 'ramda';
 import * as React from 'react';
 
@@ -22,9 +23,11 @@ type ClassNames =
   | 'ipField'
   | 'ipFieldLabel'
   | 'actionsLabel'
+  | 'networkActionText'
+  | 'emptyStateText'
   | 'autoGridsm';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   containerDivider: {
    marginTop: theme.spacing.unit,
   },
@@ -52,6 +55,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
       flexBasis: 'auto',
     },
   },
+  networkActionText: {
+    marginBottom: theme.spacing.unit * 2,
+  },
+  emptyStateText: {
+    marginTop: theme.spacing.unit * 2,
+    color: theme.color.grey1,
+  }
 });
 
 interface Props {
@@ -377,10 +387,11 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
           loading={this.state.submitting}
           onClick={this.onSubmit}
           type="primary"
+          disabled={this.state.linodes.length === 0}
         >
           Save
       </Button>
-        <Button disabled={this.state.submitting} onClick={this.onReset} type="secondary">Cancel</Button>
+        <Button disabled={this.state.submitting || this.state.linodes.length === 0} onClick={this.onReset} type="secondary">Cancel</Button>
       </ActionsPanel>)
   }
 
@@ -403,7 +414,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
             </Grid>
           }
           <Grid item sm={12} lg={8} xl={6}>
-            <Typography>
+            <Typography className={classes.networkActionText}>
               If you have two Linodes in the same data center, you can use the IP transfer feature to
               switch their IP addresses. This could be useful in several situations. For example,
               if you’ve built a new server to replace an old one, you could swap IP addresses instead
@@ -419,7 +430,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
               this.state.loading
                 ? <LinearProgress style={{ margin: '50px' }} /> // Loading, chill out man.
                 : this.state.linodes.length === 0
-                  ? null // They don't have any other Linodes to transfer/swap with.
+                  ? <Typography className={classes.emptyStateText}>You have no other linodes in this Linode's datacenter with which to transfer IPs.</Typography>
                   : Object.values(ips).map(this.ipRow)
             }
           </Grid>

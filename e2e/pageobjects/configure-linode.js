@@ -16,6 +16,7 @@ class ConfigureLinode extends Page {
     get images() { return $$('[data-qa-tp="Select Image"] [data-qa-selection-card]'); }
     get imageNames() { return $$('[data-qa-tp="Select Image"] [data-qa-select-card-heading]'); }
     get noCompatibleImages() { return $('[data-qa-no-compatible-images]'); }
+
     get showOlderImages() { return $('[data-qa-show-more-expanded]'); }
 
     get selectStackScriptHeader() { return $('[data-qa-tp="Select StackScript"]'); }
