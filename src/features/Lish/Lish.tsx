@@ -75,6 +75,21 @@ class Lish extends React.Component<CombinedProps, State> {
         this.setState({ loading: false });
       });
 
+    this.refreshToken();
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
+  }
+
+  refreshToken = () => {
+    const { match: { params: { linodeId } } } = this.props;
+
+    if (!linodeId) {
+      this.setState({ loading: false });
+      return;
+    }
+
     getLinodeLishToken(linodeId)
       .then((response) => {
         const { data: { lish_token: token } } = response;
@@ -88,10 +103,6 @@ class Lish extends React.Component<CombinedProps, State> {
         if (!this.mounted) { return; }
         this.setState({ loading: false });
       });
-  }
-
-  componentWillUnmount() {
-    this.mounted = false;
   }
   
   handleTabChange = (event: React.ChangeEvent<HTMLDivElement>, value: number) => {
@@ -119,7 +130,7 @@ class Lish extends React.Component<CombinedProps, State> {
   renderGlish = () => {
     const { linode, token } = this.state;
     if (linode && token) {
-      return <Glish token={token} linode={linode} />;
+      return <Glish token={token} linode={linode} refreshToken={this.refreshToken}/>;
     }
     return null;
   }

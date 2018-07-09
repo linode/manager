@@ -28,6 +28,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 interface Props {
   linode: Linode.Linode;
   token: string;
+  refreshToken: () => void;
 }
 
 interface State {
@@ -67,12 +68,20 @@ class Glish extends React.Component<CombinedProps, State> {
   }
 
   componentWillUnmount() {
+    this.mounted = false;
     clearInterval(this.monitorInterval);
     clearInterval(this.renewInterval);
-    if (this.monitor) {
+    if (this.monitor && this.monitor.readyState === this.monitor.OPEN) {
       this.monitor.close();
     }
-    this.mounted = false;
+  }
+
+  componentDidUpdate(prevProps: CombinedProps) {
+    if (this.props.token !== prevProps.token) {
+      const { linode } = this.props;
+      const region = (linode as Linode.Linode).region;
+      this.refreshMonitor(region, this.props.token);
+    }
   }
   
   onUpdateVNCState = (rfb: any, newState: string) => {
@@ -124,34 +133,45 @@ class Glish extends React.Component<CombinedProps, State> {
       if (this.monitor.readyState === this.monitor.OPEN) {
         this.monitor.send(JSON.stringify({ action: 'renew' }));
       }
-    }, 5 * 60 * 1000);
+    }, 30 * 1000);
   }
   
   refreshMonitor = (region: string, token: string) => {
     this.connectMonitor(region, token);
-    /* Renew our monitor connection every 5 seconds.
-       We do this because the monitor only sends us power info once, and we need
-       to detect when a linode shuts down if it was powered-on to begin-with */
+    /* Get status every 5 seconds. */
     clearInterval(this.monitorInterval);
     this.monitorInterval = window.setInterval(() => {
-      if (this.monitor) {
-        this.monitor.close();
+      if (this.monitor.readyState === this.monitor.OPEN) {
+        this.monitor.send(JSON.stringify({ action: 'status' }));
       }
-      this.connectMonitor(region, token);
     }, 5 * 1000);
   }
 
   connectMonitor = (region: string, token: string) => {
+    if (this.monitor && this.monitor.readyState === this.monitor.OPEN) {
+      this.monitor.close();
+    }
+
     const url = `${getLishSchemeAndHostname(region)}:8080/${token}/monitor`;
     this.monitor = new WebSocket(url);
     this.monitor.addEventListener('message', ev => {
       const data = JSON.parse(ev.data);
+
       if (data.poweredStatus === 'Running') {
         if (!this.mounted) { return; }
         this.setState({ powered: true });
       } else if (data.poweredStatus === 'Powered Off') {
         if (!this.mounted) { return; }
         this.setState({ powered: false });
+      }
+
+      if (data.type === 'error'
+          && data.reason === 'Your session has expired.') {
+        this.props.refreshToken();
+      }
+
+      if (data.type === 'kick') {
+        this.refreshMonitor(region, token);
       }
     });
   }
@@ -173,7 +193,7 @@ class Glish extends React.Component<CombinedProps, State> {
           <CircleProgress noInner/>
         }
 
-        {(powered &&activeVnc && token && region) &&
+        {(powered && activeVnc && token && region) &&
           <div
             className={classes.container}
             style={!initialConnect ? { display: 'none' } : {}}

@@ -52,10 +52,13 @@ export class Weblish extends React.Component<CombinedProps, State> {
 
     this.socket = new WebSocket(
       `${getLishSchemeAndHostname(region)}:8181/${token}/weblish`);
-    this.socket.addEventListener('open', () =>
-      this.setState({ renderingLish: true },
-      () => this.renderTerminal())
-    );
+    this.socket.addEventListener('open', () => {
+      if (!this.mounted) { return; }
+      this.setState(
+        { renderingLish: true },
+        () => this.renderTerminal()
+      );
+    });
   }
 
   renderTerminal() {
@@ -78,6 +81,7 @@ export class Weblish extends React.Component<CombinedProps, State> {
 
     this.socket.addEventListener('close', () => {
       terminal.destroy();
+      if (!this.mounted) { return; }
       this.setState({ renderingLish: false });
     });
 
