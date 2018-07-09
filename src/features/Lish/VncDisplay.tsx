@@ -9,17 +9,18 @@ import * as React from 'react';
  */
 
 interface Props {
-  style: any;
-  encrypt: boolean;
-  wsProtocols: string[];
-  trueColor: boolean;
-  localCursor: boolean;
-  connectTimeout: number;
-  disconnectTimeout: number;
-  scale: number;
-  width: number;
-  height: number;
   url: string;
+  onUpdateState?: (rfb: any, newState: string) => void;
+  style?: any;
+  encrypt?: boolean;
+  wsProtocols?: string[];
+  trueColor?: boolean;
+  localCursor?: boolean;
+  connectTimeout?: number;
+  disconnectTimeout?: number;
+  scale?: number;
+  width?: number;
+  height?: number;
 }
 
 class VncDisplay extends React.PureComponent<Props> {
