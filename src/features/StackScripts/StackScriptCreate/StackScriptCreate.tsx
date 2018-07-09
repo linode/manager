@@ -26,7 +26,7 @@ import PromiseLoader from 'src/components/PromiseLoader';
 import Select from 'src/components/Select';
 import TextField from 'src/components/TextField';
 
-import { getImages } from 'src/services/images';
+import { getLinodeImages } from 'src/services/images';
 
 
 type ClassNames = 'root'
@@ -72,6 +72,8 @@ interface State {
   labelText: string;
   descriptionText: string;
   imageSelectOpen: boolean;
+  selectedImages: string[];
+  availableImages: Linode.Image[];
  }
 
 type CombinedProps = Props
@@ -79,7 +81,7 @@ type CombinedProps = Props
   & PreloadedProps;
 
 const preloaded = PromiseLoader<Props>({
-  images: () => getImages()
+  images: () => getLinodeImages()
     .then(response => response.data || [])
 })
 
@@ -88,9 +90,12 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     labelText: '',
     descriptionText: '',
     imageSelectOpen: false,
+    selectedImages: [],
+    /* available images to select from in the dropdown */
+    availableImages: this.props.images.response,
   };
 
-  handleLabelChagne = (e: React.ChangeEvent<HTMLInputElement>) => {
+  handleLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({labelText: e.target.value});
   }
 
@@ -107,7 +112,8 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
   }
 
   handleChooseImage = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log(e.target.value);
+    console.log(this.state.selectedImages);
+    this.setState({ selectedImages: [...this.state.selectedImages, e.target.value] })
     this.setState({ imageSelectOpen: true });
   }
 
@@ -141,7 +147,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
             // errorText={hasErrorFor('client_conn_throttle')}
             label='StackScript Label'
             required
-            onChange={this.handleLabelChagne}
+            onChange={this.handleLabelChange}
             placeholder='Enter a label'
           />
           <HelpIcon text="Select a StackScript Label" />

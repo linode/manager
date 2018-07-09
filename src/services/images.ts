@@ -17,7 +17,10 @@ export const getImages = () =>
   getImagesPage(1);
 
 export const getUserImages = () =>
-  getImagesPage(1, { 'is_public': false });
+  getImagesPage(1, { "is_public": false });
+
+export const getLinodeImages = () =>
+  getImagesPage(1, { "is_public": true });
 
 export const getImage = (imageId: string) =>
   Request<Image>(
