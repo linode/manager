@@ -91,24 +91,6 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
   componentDidMount() {
     this.mounted = true;
     this.updateLinodes();
-
-    this.eventsSub = events$
-      .filter(event => (
-        !event._initial
-        && [
-          'disk_imagize',
-          'image_delete',
-        ].includes(event.action)
-      ))
-      .subscribe((event) => {
-        if (event.action === 'disk_imagize' && event.status === 'finished') {
-          sendToast('Image created successfully.');
-        }
-
-        if (event.action === 'disk_imagize' && event.status === 'failed') {
-          sendToast('There was an error creating the image.', 'error');
-        }
-      });
   }
 
   componentWillUnmount() {
