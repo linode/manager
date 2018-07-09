@@ -124,6 +124,10 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
           sendToast('There was an error creating the image.', 'error');
           this.refreshImages();
         }
+
+        if (event.action === 'image_delete' && event.status === 'notification') {
+          sendToast('Image has been deleted successfully.')
+        }
       });
   }
 
