@@ -309,6 +309,8 @@ interface ContainerState {
   error?: Error;
   fieldError: Linode.ApiFieldError | undefined;
   dialog: Dialog;
+  isSearching: boolean;
+  didSearch: boolean;
 }
 
 type ContainerCombinedProps = ContainerProps & WithStyles<ClassNames>;
@@ -331,7 +333,9 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
       open: false,
       stackScriptID: undefined,
       stackScriptLabel: '',
-    }
+    },
+    isSearching: false,
+    didSearch: false,
   };
 
   mounted: boolean = false;
@@ -595,36 +599,40 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
   }
 
   handleSearch = (value: string) => {
-    // const { request, profile, isLinodeStackScripts } = this.props;
-    // const filteredUser = (isLinodeStackScripts) ? 'linode' : profile.username;
+    const { request, currentUser, isLinodeStackScripts } = this.props;
+    const { currentFilter } = this.state;
+    const filteredUser = (isLinodeStackScripts) ? 'linode' : currentUser;
 
-    // const filter = {
-    //   ["+or"]: [
-    //     {
-    //       "label": {
-    //         ["+contains"]: "security"
-    //       }
-    //     },
-    //     {
-    //       "description": {
-    //         ["+contains"]: "security"
-    //       }
-    //     },
-    //     {
-    //       ["+and"]: [
-    //         {
-    //           "username": "linode"
-    //         }
-    //       ]
-    //     }
-    //   ]
-    // }
-    // request(filteredUser, { page: 1, page_size: 50 }, filter)
-    //   .then((response) => {
-    //     console.log(response);
-    //   })
-    //   .catch(e => console.log(e));
-    console.log(`making request with ${value}`);
+    this.setState({ isSearching: true, didSearch: true });
+    
+    const filter = {
+      ["+or"]: [
+        {
+          "label": {
+            ["+contains"]: value
+          },
+        },
+        {
+          "description": {
+            ["+contains"]: value
+          },
+        },
+      ],
+    }
+
+    request(
+      filteredUser,
+      { page: 1, page_size: 50 },
+      { ...filter, ...currentFilter }
+    )
+      .then((response) => {
+        if (!this.mounted) { return; }
+        this.setState({ listOfStackScripts: response.data, isSearching: false });
+      })
+      .catch(e => {
+        if (!this.mounted) { return; }
+        this.setState({ error: e, isSearching: false })
+      });
   }
 
   renderIcon = () => {
@@ -639,7 +647,8 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
 
   render() {
     const { classes, publicImages, currentUser } = this.props;
-    const { currentFilterType, isSorting, fieldError, error } = this.state;
+    const { currentFilterType, isSorting, error, fieldError,
+      isSearching, listOfStackScripts, didSearch } = this.state;
 
     if (error) {
       return <ErrorState
@@ -660,7 +669,12 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
         {fieldError && fieldError.reason &&
           <Notice text={fieldError.reason} error />
         }
-        {this.state.listOfStackScripts.length === 0
+        {/*
+        * We only want to show this empty state on the initial GET StackScripts request
+        * If the user is searching and 0 results come back, we just want to show
+        * an empty table, rather than showing a message indicating no StackScripts exist
+        */}
+        {!didSearch && listOfStackScripts.length === 0
           ? <div className={classes.emptyState} data-qa-stackscript-empty-msg>
             You do not have any StackScripts to select from. You must first
           <Link to="/stackscripts/create"> create one</Link>
@@ -670,6 +684,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
               <DebouncedSearch
                 onSearch={this.handleSearch}
                 className={classes.searchBar}
+                actionBeingPerfomed={isSearching}
               />
             </div>
             <Table noOverflow={true} tableClass={classes.table}>

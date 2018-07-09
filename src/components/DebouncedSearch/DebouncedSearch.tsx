@@ -9,6 +9,7 @@ import Search from '@material-ui/icons/Search';
 
 import { debounce } from 'throttle-debounce';
 
+import CircleProgress from 'src/components/CircleProgress';
 import TextField from 'src/components/TextField';
 
 
@@ -24,6 +25,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 interface Props {
   onSearch: any;
   className?: string;
+  actionBeingPerfomed?: boolean;
 }
 
 interface State {
@@ -48,7 +50,7 @@ class DebouncedSearch extends React.Component<CombinedProps, State> {
 
   render() {
     const { query } = this.state;
-    const { classes, className } = this.props;
+    const { classes, className, actionBeingPerfomed } = this.props;
 
     return (
       <React.Fragment>
@@ -61,7 +63,13 @@ class DebouncedSearch extends React.Component<CombinedProps, State> {
             startAdornment:
               <InputAdornment position="end">
                 <Search className={classes.searchIcon} />
-              </InputAdornment>
+              </InputAdornment>,
+            endAdornment:
+              actionBeingPerfomed
+                ? <InputAdornment position="end">
+                  <CircleProgress mini={true} />
+                </InputAdornment>
+                : <React.Fragment />
           }}
           className={ClassNames(
             className,
