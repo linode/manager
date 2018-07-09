@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { VncDisplay } from 'react-vnc-display';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
@@ -8,6 +7,7 @@ import CircleProgress from 'src/components/CircleProgress';
 import ErrorState from 'src/components/ErrorState';
 import { getLinode, getLinodeLishToken } from 'src/services/linodes';
 
+import VncDisplay from './VncDisplay';
 import { getLishSchemeAndHostname, resizeViewPort } from '.';
 
 type ClassNames = 'container' | 'errorState';

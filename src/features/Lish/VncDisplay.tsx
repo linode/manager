@@ -22,7 +22,7 @@ interface Props {
   url: string;
 }
 
-export class VncDisplay extends React.PureComponent<Props> {
+class VncDisplay extends React.PureComponent<Props> {
   static defaultProps: Props = {
     style: {},
     encrypt: false,
@@ -38,7 +38,7 @@ export class VncDisplay extends React.PureComponent<Props> {
   };
 
   rfb: any;
-  canvas: React.RefObject<HTMLCanvasElement> = React.createRef();
+  canvas: HTMLCanvasElement;
 
   componentDidMount() {
     this.connect();
@@ -109,13 +109,19 @@ export class VncDisplay extends React.PureComponent<Props> {
     this.rfb.get_mouse().ungrab();
   };
 
+  getCanvas = (el: HTMLCanvasElement) => {
+    this.canvas = el;
+  }
+
   render() {
     return (
       <canvas
         style={this.props.style}
-        ref={this.canvas}
+        ref={this.getCanvas}
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseLeave} />
     )
   }
 }
+
+export default VncDisplay;
