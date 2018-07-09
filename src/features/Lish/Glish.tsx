@@ -196,7 +196,7 @@ class Glish extends React.Component<CombinedProps, State> {
       if (data.poweredStatus === 'Running') {
         if (!this.mounted) { return; }
         this.setState({ powered: true });
-      } else {
+      } else if (data.poweredStatus === 'Powered Off') {
         if (!this.mounted) { return; }
         this.setState({ powered: false });
       }
