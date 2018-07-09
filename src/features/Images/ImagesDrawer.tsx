@@ -110,12 +110,12 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
         ].includes(event.action)
       ))
       .subscribe((event) => {
-        if (event.action === 'disk_imagize' && (event.status === 'notification' || event.status === 'finished')) {
+        if (event.action === 'disk_imagize' && event.status === 'finished') {
           sendToast('Image created successfully.');
         }
 
         if (event.action === 'disk_imagize' && event.status === 'failed') {
-          sendToast(`There was an error creating image ${event.entity && event.entity.label}.`, 'error');
+          sendToast('There was an error creating the image.', 'error');
         }
       });
   }
@@ -130,30 +130,33 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
       .then((response) => {
         const filteredDisks = response.data.filter((disk) => disk.filesystem !== 'swap')
         if (!equals(this.state.disks, filteredDisks)) {
-          this.setState({ disks: filteredDisks })
+          this.setState({ disks: filteredDisks, selectedDisk: undefined })
         }
-      });
+      })
+      .catch((error) => {
+        if (this.mounted) { 
+          this.setState({ 
+          errors: [{ field: 'disk', reason: 'Could not retrieve disks for this Linode.' }], 
+        });
+      }
+     });
     }
   }
 
-  changeSelectedLinode = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  changeSelectedLinode = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ selectedLinode: e.target.value });
   }
 
-  changeSelectedDisk = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  changeSelectedDisk = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ selectedDisk: e.target.value });
   }
 
   close = () => {
-    this.setState({ description: '', label: '', errors: undefined });
+    this.setState({ description: '', label: '', errors: undefined, });
     this.props.onClose();
   }
 
   updateLinodes() {
-    /*
-     * @todo: We're only getting page 1 here, what if the account has over 100
-     * Linodes?
-     */
     getLinodes({ page: 1 })
       .then((response) => {
         const linodeChoices = response.data.map((linode) => {
@@ -170,8 +173,6 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
     if (!label) {
       this.setState({
         errors: [{ field: 'label', reason: 'Label cannot be blank.' }],
-      }, () => {
-        scrollErrorIntoView();
       });
       return;
     }
@@ -191,13 +192,17 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
             if (this.mounted) {
               this.setState({
                 errors: path(['response', 'data', 'errors'], errorResponse),
-              }, () => {
-                scrollErrorIntoView();
               });
             }
           });
         return;
       case modes.CREATING:
+        if (!selectedDisk) {
+          this.setState({
+            errors: [{ field: 'disk_id', reason: 'Choose a disk.' }],
+          });
+          return;
+        }
         createImage(Number(selectedDisk), label, description)
           .then((response) => {
             resetEventsPolling();
@@ -242,6 +247,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
     const descriptionError = hasErrorFor('description');
     const generalError = hasErrorFor('none');
     const linodeError = hasErrorFor('linode_id');
+    const diskError = hasErrorFor('disk_id');
 
     return (
       <Drawer
@@ -268,7 +274,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
         {mode === 'create' &&
         <LinodeSelect
           linodes={linodes}
-          selectedLinode={selectedLinode || ''}
+          selectedLinode={selectedLinode || 'none'}
           linodeError={linodeError}
           handleChange={this.changeSelectedLinode}
         />
@@ -276,9 +282,9 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
 
         {mode === 'create' && selectedLinode &&
         <DiskSelect
-          selectedDisk={selectedDisk}
+          selectedDisk={selectedDisk || 'none'}
           disks={disks}
-          diskError={undefined}
+          diskError={diskError}
           handleChange={this.changeSelectedDisk}
         />
        }

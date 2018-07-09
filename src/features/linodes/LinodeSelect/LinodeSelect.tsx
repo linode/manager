@@ -11,29 +11,24 @@ import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from 'src/components/MenuItem';
+import TextField from 'src/components/TextField';
 
-import Select from 'src/components/Select';
+type ClassNames = 'root';
 
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+  root: {},
+});
 
+interface Props {
+  generalError?: string,
+  linodes: string[][],
+  linodeError?: string,
+  selectedLinode?: string,
+  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
+}
 
-  type ClassNames = 'root';
+type CombinedProps = Props & WithStyles<ClassNames>;
   
-  const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-    root: {},
-  });
-
-  
-  interface Props {
-    generalError?: string,
-    linodes: string[][],
-    linodeError?: string,
-    selectedLinode?: string,
-    handleChange: (e: React.ChangeEvent<HTMLSelectElement>) => void,
-  }
-  
-  type CombinedProps = Props & WithStyles<ClassNames>;
-  
-
 const LinodeSelect: React.StatelessComponent<CombinedProps> = (props) => {
     return(
         <FormControl fullWidth>
@@ -45,11 +40,12 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = (props) => {
         >
         Linode
         </InputLabel>
-        <Select
-        value={props.selectedLinode || ''}
+        <TextField
+        value={props.selectedLinode || 'none'}
         onChange={props.handleChange}
         inputProps={{ name: 'linode', id: 'linode' }}
         error={Boolean(props.linodeError)}
+        select
         >
         <MenuItem value="none" disabled>Select a Linode</MenuItem>
         {
@@ -57,7 +53,7 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = (props) => {
             return <MenuItem key={l[0]} value={l[0]}>{l[1]}</MenuItem>;
             })
         }
-        </Select>
+        </TextField>
         { Boolean(props.linodeError) && <FormHelperText error>{ props.linodeError }</FormHelperText> }
         { Boolean(props.generalError) && <FormHelperText error>{ props.generalError }</FormHelperText> }
     </FormControl>

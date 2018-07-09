@@ -97,7 +97,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     // started: e => `Image ${e.entity!.label} is being deleted.`,
     // failed: e => `There was a problem deleting ${e.entity!.label}.`,
     // finished: e => `${e.entity!.label}`,
-    notification: e => `${e.entity!.label} has been deleted.`,
+    notification: e => `Image ${e.entity!.label} has been deleted.`,
   },
   linode_addip: {
     notification: e => `An IP has been added to ${e.entity!.label}.`,
