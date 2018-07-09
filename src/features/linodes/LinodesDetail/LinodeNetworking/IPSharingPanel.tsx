@@ -25,9 +25,10 @@ type ClassNames =
   | 'containerDivider'
   | 'ipField'
   | 'addNewButton'
-  | 'noIPsMessage';
+  | 'noIPsMessage'
+  | 'networkActionText';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   addNewButton: {
     marginTop: theme.spacing.unit * 3,
     marginBottom: -theme.spacing.unit * 2,
@@ -47,7 +48,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
   noIPsMessage: {
     marginTop: theme.spacing.unit * 2,
-  }
+    color: theme.color.grey1,
+  },
+  networkActionText: {
+    marginBottom: theme.spacing.unit * 2,
+  },
 });
 
 interface Props {
@@ -302,7 +307,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
       >
         <Grid container>
           <Grid item sm={12} lg={8} xl={6}>
-            <Typography>
+            <Typography className={classes.networkActionText}>
               IP Sharing allows a Linode to share an IP address assignment
               (one or more additional IPv4 addresses). This can be
               used to allow one Linode to begin serving requests should

@@ -6,6 +6,7 @@ class Networking extends Page {
     get heading() { return $('[data-qa-title]'); }
     get ipv4Subheading() { return $('[data-qa-ipv4-subheading]'); }
     get ipv6Subheading() { return $('[data-qa-ipv6-subheading]'); }
+    get networkingActionsSubheading() { return $('[data-qa-networking-actions-subheading]'); }
     get drawerTitle() { return $('[data-qa-drawer-title]'); }
     get ips() { return $$('[data-qa-ip]'); }
     get ip() {return $('[data-qa-ip]'); }
@@ -41,9 +42,10 @@ class Networking extends Page {
     get lookupError() { return $('[data-qa-error]'); }
 
     landingElemsDisplay() {
-        expect(this.heading.getText()).toBe('Networking');
+        expect(this.heading.getText()).toBe('Access');
         expect(this.ipv4Subheading.getText()).toBe('IPv4');
         expect(this.ipv6Subheading.getText()).toBe('IPv6');
+        expect(this.networkingActionsSubheading.getText()).toBe('Networking Actions');
         expect(this.ips.length).toBeGreaterThan(0);
 
         // IPv4 Elems display

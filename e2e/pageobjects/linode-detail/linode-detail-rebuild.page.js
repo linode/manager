@@ -4,7 +4,7 @@ class Rebuild {
     get title() { return $('[data-qa-title]'); }
     get description() { return $('[data-qa-rebuild-desc]'); }
     get help() { return $('[data-qa-help-button]'); }
-    get popoverMsg() { return $('[data-qa-popover-text]'); }
+    get popoverMsg() { return $('[role="tooltip"]'); }
     get imagesSelect() { return $('[data-qa-rebuild-image]'); }
     get password() { return $('[data-qa-hide] input'); }
     get submit() { return $('[data-qa-rebuild]'); }
