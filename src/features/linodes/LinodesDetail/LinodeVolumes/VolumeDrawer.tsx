@@ -1,14 +1,14 @@
-
-
+import * as React from 'react';
 
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
 import MenuItem from 'src/components/MenuItem';
+import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import renderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
@@ -58,6 +58,8 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 const jawn = {
   size: 'size',
+  volume: 'volume',
+  config_id: 'config',
 };
 
 interface DisableableProps {
@@ -223,13 +225,21 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
   ));
 
   render() {
-    const { attachableVolumes, mode, open, title, onClose } = this.props;
+    const { attachableVolumes, mode, open, title, onClose, errors } = this.props;
+    const hasErrorFor = getAPIErrorFor(jawn, errors);
+    const generalError = hasErrorFor('none');
+    const configError = hasErrorFor('config_id');
+    const errorNotice = (generalError || configError)
+      ? <Notice error text={generalError || configError} />
+      : null
+
     const displayModeSelection =
       attachableVolumes && attachableVolumes.length > 0 && ['create', 'attach'].includes(mode);
 
     return (
       <Drawer open={open} onClose={onClose} title={title}>
         {displayModeSelection && <this.modeSelection updateFor={[mode]} />}
+        {errorNotice}
         {mode === 'create' && this.createForm()}
         {mode === 'edit' && this.renameForm()}
         {mode === 'resize' && this.resizeForm()}
