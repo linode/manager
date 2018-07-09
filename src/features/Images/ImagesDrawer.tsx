@@ -117,9 +117,6 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
         if (event.action === 'disk_imagize' && event.status === 'failed') {
           sendToast(`There was an error creating image ${event.entity && event.entity.label}.`, 'error');
         }
-        if (event.action === 'image_delete') {
-          sendToast(`Image ${event.entity && event.entity.label} has been deleted.`);
-        }
       });
   }
 
@@ -298,7 +295,6 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
 
         <TextField
           label="Description"
-          required
           multiline
           value={description}
           onChange={this.setDescription}

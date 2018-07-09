@@ -25,6 +25,7 @@ import Placeholder from 'src/components/Placeholder';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import Table from 'src/components/Table';
 import { events$ } from 'src/events';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { deleteImage, getUserImages } from 'src/services/images';
 
 
@@ -121,7 +122,11 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
         }
 
         if (event.action === 'image_delete') {
+          if (event.action === 'image_delete') {
+          sendToast(`Image ${event.entity && event.entity.label} has been deleted.`);
+        }
           this.refreshImages();
+
         }   
       });
   }
