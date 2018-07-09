@@ -122,12 +122,9 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
         }
 
         if (event.action === 'image_delete') {
-          if (event.action === 'image_delete') {
           sendToast(`Image ${event.entity && event.entity.label} has been deleted.`);
-        }
           this.refreshImages();
-
-        }   
+        }
       });
   }
 
