@@ -19,7 +19,7 @@ describe('SelectionRow Suite', () => {
         });
     });
 
-    it('should display 3 rows with radios with only one selected at a time', () => {
+    it('should display 3 rows with radios with only one selectable at a time', () => {
         // Get rows with radio buttons
         const radioRows = $$(tableRowSelector).filter(row => row.$('[data-qa-radio]').isVisible());
 
