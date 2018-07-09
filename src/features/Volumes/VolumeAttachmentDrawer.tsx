@@ -93,7 +93,7 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
       });
   }
 
-  changeSelectedLinode = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  changeSelectedLinode = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ selectedLinode: e.target.value });
     if (e.target.value) { this.updateConfigs(+e.target.value); }
   }
