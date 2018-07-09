@@ -724,7 +724,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
       props = {
         buttonProps: {
           onClick: this.goToSettings,
-          children: 'View Linode Config',
+          children: 'View Linode Configurations',
         },
         icon: VolumeIcon,
         title: 'No configs available',
