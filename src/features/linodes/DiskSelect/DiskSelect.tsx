@@ -11,31 +11,26 @@ import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from 'src/components/MenuItem';
+import TextField from 'src/components/TextField';
 
-import Select from 'src/components/Select';
+type ClassNames = 'root';
 
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+  root: {},
+});
 
+interface Props {
+  generalError?: string,
+  diskError?: string,
+  disks: Linode.Disk[],
+  selectedDisk?: string,
+  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
+}
 
-  type ClassNames = 'root';
-  
-  const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-    root: {},
-  });
-
-  
-  interface Props {
-    generalError?: string,
-    diskError?: string,
-    disks: Linode.Disk[],
-    selectedDisk?: string,
-    handleChange: (e: React.ChangeEvent<HTMLSelectElement>) => void,
-  }
-  
-  type CombinedProps = Props & WithStyles<ClassNames>;
-  
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 const DiskSelect: React.StatelessComponent<CombinedProps> = (props) => {
-    return(
+  return(
         <FormControl fullWidth>
         <InputLabel
         htmlFor="disk"
@@ -45,19 +40,20 @@ const DiskSelect: React.StatelessComponent<CombinedProps> = (props) => {
         >
         Disk
         </InputLabel>
-        <Select
-        value={props.selectedDisk || ''}
+        <TextField
+        value={props.selectedDisk || 'none'}
         onChange={props.handleChange}
         inputProps={{ name: 'linode', id: 'linode' }}
         error={Boolean(props.diskError)}
+        select
         >
         <MenuItem value="none" disabled>Select a Disk</MenuItem>
         {
-            props.disks && props.disks.map((disk) => {
-            return <MenuItem key={disk.id} value={disk.id}>{disk.label}</MenuItem>;
-            })
+          props.disks && props.disks.map((disk) => {
+          return <MenuItem key={disk.id} value={disk.id}>{disk.label}</MenuItem>;
+          })
         }
-        </Select>
+        </TextField>
         { Boolean(props.diskError) && <FormHelperText error>{ props.diskError }</FormHelperText> }
         { Boolean(props.generalError) && <FormHelperText error>{ props.generalError }</FormHelperText> }
     </FormControl>
