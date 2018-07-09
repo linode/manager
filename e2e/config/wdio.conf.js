@@ -202,9 +202,6 @@ exports.config = {
 
         browserCommands();
 
-        // Timecount needed to generate unqiue timestamp values for mocks
-        global.timeCount = 0;
-
         if (argv.record) {
             browser.loadProxyImposter(browser.options.mountebankConfig.proxyConfig);
         }
