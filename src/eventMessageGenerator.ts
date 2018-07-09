@@ -55,10 +55,12 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   //   notification: e => ``,
   // },
   disk_imagize: {
-    scheduled: e => `Image ${e.entity!.label} scheduled for creation.`,
-    started: e => `Image ${e.entity!.label} being created.`,
-    failed: e => `There was an error creating image ${e.entity!.label}.`,
-    finished: e => `Image ${e.entity!.label} created successfully.`,
+    // Currently, the event contains no information about the image,
+    // making it impossible to access the label for these messages.
+    scheduled: e => `Image scheduled for creation.`,
+    started: e => `Image being created.`,
+    failed: e => `There was an error creating the image.`,
+    finished: e => `Image created successfully.`,
     // notification: e => ``,
   },
   // disk_resize: {
