@@ -27,8 +27,6 @@ import Table from 'src/components/Table';
 import { events$ } from 'src/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { deleteImage, getUserImages } from 'src/services/images';
-
-
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import ImageRow from './ImageRow';
@@ -132,21 +130,48 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
     this.mounted = false;
   }
 
-  refreshImages = () => {
-     getUserImages()
-       .then((response) => {
-        if (this.mounted) { this.setState({ images: response.data }); }
-       });
-  }
-
   componentDidCatch(error: Error) {
     this.setState({ error }, () => { scrollErrorIntoView(); });
   }
+
+
+
+  refreshImages = () => {
+    getUserImages()
+      .then((response) => {
+       if (this.mounted) { this.setState({ images: response.data }); }
+      });
+ }
 
   openForCreate = () => {
     this.setState({
       imageDrawer: { open: true, mode: 'create', label: '', description: '', },
     });
+  }
+
+  openRemoveDialog = (image: string, imageID: string) => {
+    this.setState({
+      removeDialog: { open: true, image, imageID, submitting: false, error: undefined, },
+    });
+  }
+
+  closeRemoveDialog = () => {
+    const { removeDialog } = this.state;
+    this.setState({
+      removeDialog: { ...removeDialog, open: false, },
+    });
+  }
+
+  openForEdit = (label: string, description: string, imageID: string) => {
+    this.setState({
+      imageDrawer: {
+        open: true,
+        mode: 'edit',
+        description,
+        imageID,
+        label,
+      }
+    })
   }
 
   removeImage = () => {
@@ -192,31 +217,6 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
         </Button>
       </ActionsPanel>
     )
-  }
-
-  openRemoveDialog = (image: string, imageID: string) => {
-    this.setState({
-      removeDialog: { open: true, image, imageID, submitting: false, error: undefined, },
-    });
-  }
-
-  closeRemoveDialog = () => {
-    const { removeDialog } = this.state;
-    this.setState({
-      removeDialog: { ...removeDialog, open: false, },
-    });
-  }
-
-  openForEdit = (label: string, description: string, imageID: string) => {
-    this.setState({
-      imageDrawer: {
-        open: true,
-        mode: 'edit',
-        description,
-        imageID,
-        label,
-      }
-    })
   }
 
   closeImageDrawer = () => {

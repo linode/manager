@@ -3,30 +3,21 @@ import * as React from 'react';
 import { compose, equals, path } from 'ramda';
 import * as Rx from 'rxjs/Rx';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import Button from '@material-ui/core/Button';
-
-import { events$, resetEventsPolling } from 'src/events';
-
-import { sendToast } from 'src/features/ToastNotifications/toasts';
-
-
-import { createImage, updateImage } from 'src/services/images';
-import { getLinodeDisks, getLinodes } from 'src/services/linodes';
-
-
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import TextField from 'src/components/TextField';
-
+import { events$, resetEventsPolling } from 'src/events';
 import DiskSelect from 'src/features/linodes/DiskSelect';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
+import { createImage, updateImage } from 'src/services/images';
+import { getLinodeDisks, getLinodes } from 'src/services/linodes';
+import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 type ClassNames = 'root'
 |  'suffix'
@@ -156,6 +147,70 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
     this.props.onClose();
   }
 
+  
+  onSubmit = () => {
+    const { mode, imageID, onSuccess } = this.props;
+    const { label, description, selectedDisk } = this.state;
+    
+    if (!label) {
+      this.setState({
+        errors: [{ field: 'label', reason: 'Label cannot be blank.' }],
+      });
+      return;
+    }
+    
+    switch (mode) {
+      case modes.EDITING:
+      if (!imageID) {
+        return;
+      }
+      
+      updateImage(imageID, label, description)
+      .then(() => {
+        onSuccess();
+        this.close();
+      })
+      .catch((errorResponse) => {
+        if (this.mounted) {
+          this.setState({
+            errors: path(['response', 'data', 'errors'], errorResponse),
+          });
+        }
+      });
+      return;
+      case modes.CREATING:
+      if (!selectedDisk) {
+        this.setState({
+          errors: [{ field: 'disk_id', reason: 'Choose a disk.' }],
+        });
+        return;
+      }
+      createImage(Number(selectedDisk), label, description)
+      .then((response) => {
+        resetEventsPolling();
+        this.setState({
+          notice: "Image queued for creation.",
+        });
+        setTimeout(this.close, 4000);
+      })
+      .catch((errorResponse) => {
+        this.setState({
+          errors: path(['response', 'data', 'errors'], errorResponse),
+        });
+      });
+      default:
+      return;
+    }
+  }
+  
+  setLabel = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ label: e.target.value });
+  }
+  
+  setDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ description: e.target.value });
+  }
+  
   updateLinodes() {
     getLinodes({ page: 1 })
       .then((response) => {
@@ -164,71 +219,6 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
         });
         this.setState({ linodes: linodeChoices });
       });
-  }
-
-  onSubmit = () => {
-    const { mode, imageID, onSuccess } = this.props;
-    const { label, description, selectedDisk } = this.state;
-
-    if (!label) {
-      this.setState({
-        errors: [{ field: 'label', reason: 'Label cannot be blank.' }],
-      });
-      return;
-    }
-
-    switch (mode) {
-      case modes.EDITING:
-        if (!imageID) {
-          return;
-        }
-
-        updateImage(imageID, label, description)
-          .then(() => {
-            onSuccess();
-            this.close();
-          })
-          .catch((errorResponse) => {
-            if (this.mounted) {
-              this.setState({
-                errors: path(['response', 'data', 'errors'], errorResponse),
-              });
-            }
-          });
-        return;
-      case modes.CREATING:
-        if (!selectedDisk) {
-          this.setState({
-            errors: [{ field: 'disk_id', reason: 'Choose a disk.' }],
-          });
-          return;
-        }
-        createImage(Number(selectedDisk), label, description)
-          .then((response) => {
-            resetEventsPolling();
-            this.setState({
-              notice: "Image queued for creation.",
-            });
-            setTimeout(this.close, 4000);
-          })
-          .catch((errorResponse) => {
-            this.setState({
-              errors: path(['response', 'data', 'errors'], errorResponse),
-            }, () => {
-              scrollErrorIntoView();
-            });
-          })
-      default:
-        return;
-    }
-  }
-
-  setLabel = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ label: e.target.value });
-  }
-
-  setDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ description: e.target.value });
   }
 
   render() {
