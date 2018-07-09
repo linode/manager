@@ -5,10 +5,9 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 
 import CircleProgress from 'src/components/CircleProgress';
 import ErrorState from 'src/components/ErrorState';
-import { getLinode, getLinodeLishToken } from 'src/services/linodes';
 
-import VncDisplay from './VncDisplay';
 import { getLishSchemeAndHostname, resizeViewPort } from '.';
+import VncDisplay from './VncDisplay';
 
 type ClassNames = 'container' | 'errorState';
 
@@ -26,9 +25,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   }
 });
 
+interface Props {
+  linode: Linode.Linode;
+  token: string;
+}
+
 interface State {
-  linode?: Linode.Linode;
-  token?: string;
   activeVnc: boolean;
   connected: boolean;
   powered: boolean;
@@ -36,7 +38,7 @@ interface State {
   initialConnect: boolean;
 }
 
-type CombinedProps = WithStyles<ClassNames> & RouteComponentProps<{ linodeId?: number }>;
+type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{ linodeId?: number }>;
 
 class Glish extends React.Component<CombinedProps, State> {
   state: State = {
@@ -53,64 +55,15 @@ class Glish extends React.Component<CombinedProps, State> {
   monitorInterval: number;
   renewInterval: number;
   
-  getLinodeData = () => {
-    const { match: { params: { linodeId } } } = this.props;
-
-    if (!linodeId) { throw new Error('No Linode ID'); }
-
-    return getLinode(linodeId)
-      .then((response) => {
-        const { data: linode } = response;
-        if (!this.mounted) { throw new Error('Component not mounted'); }
-        this.setState({ linode });
-        return linode;
-      })
-      .catch(() => {
-        throw new Error('Uncaught Error in getLinodeData');
-      });
-  }
-
-  getLishToken = () => {
-    const { match: { params: { linodeId } } } = this.props;
-    
-    if (!linodeId) { throw new Error('No Linode ID'); }
-    
-    return getLinodeLishToken(linodeId)
-      .then((response) => {
-        const { data: { lish_token: token } } = response;
-        if (!this.mounted) { throw new Error('Component not mounted'); }
-        this.setState({ token });
-        return token;
-      })
-      .catch(() => {
-        throw new Error('Uncaught Error in getLishToken');
-      });
-  }
-  
   componentDidMount() {
     this.mounted = true;
+    const { linode, token } = this.props;
 
     resizeViewPort(1080, 840);
 
-    this.getLinodeData()
-      .then((linode) => {
-        return this.getLishToken()
-          .then((token) => {
-            return [linode, token];
-          })
-          .catch(() => {
-            throw new Error('Uncaught error in getLishToken');
-          });
-      })
-      .then(([linode, token]) => {
-        const region = (linode as Linode.Linode).region;
-        this.refreshMonitor(region, token as string);
-        this.renewVncToken();
-      })
-      .catch(() => {
-        if (!this.mounted) { return; }
-        this.setState({ activeVnc: false });
-      });
+    const region = (linode as Linode.Linode).region;
+    this.refreshMonitor(region, token as string);
+    this.renewVncToken();
   }
 
   componentWillUnmount() {
@@ -204,8 +157,8 @@ class Glish extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes } = this.props;
-    const { linode, token, activeVnc, initialConnect, powered } = this.state;
+    const { classes, linode, token } = this.props;
+    const { activeVnc, initialConnect, powered } = this.state;
     const region = linode && (linode as Linode.Linode).region;
 
     return (

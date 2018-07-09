@@ -5,10 +5,14 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 
+import CircleProgress from 'src/components/CircleProgress';
+import NotFound from 'src/components/NotFound';
+import { getLinode, getLinodeLishToken } from 'src/services/linodes';
+
 import Glish from './Glish';
 import Weblish from './Weblish';
 
-type ClassNames = 'tabs' | 'tabRoot';
+type ClassNames = 'tabs' | 'tabRoot' | 'progress' | 'notFound';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   tabs: {
@@ -17,18 +21,77 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
   tabRoot: {
     minWidth: '50%',
+  },
+  progress: {
+    height: 'auto',
+  },
+  notFound: {
+    color: '#f4f4f4 !important',
+    '& h1': {
+      color: '#f4f4f4 !important',
+    },
   }
 });
 
-type CombinedProps = WithStyles<ClassNames> & RouteComponentProps<{}>;
+interface State {
+  loading: boolean;
+  linode?: Linode.Linode;
+  token?: string;
+}
 
-class Lish extends React.Component<CombinedProps> {
-  state = {};
+type CombinedProps = WithStyles<ClassNames> & RouteComponentProps<{ linodeId?: number }>;
+
+class Lish extends React.Component<CombinedProps, State> {
+  state: State = {
+    loading: true,
+  };
+  
+  mounted: boolean;
 
   componentDidMount() {
+    this.mounted = true;
+    const { match: { params: { linodeId } } } = this.props;
+
     const webLishCss = import('' + '../../assets/weblish/weblish.css');
     const xtermCss = import('' + '../../assets/weblish/xterm.css');
     Promise.all([webLishCss, xtermCss]);
+
+    if (!linodeId) {
+      this.setState({ loading: false });
+      return;
+    }
+
+    getLinode(linodeId)
+      .then((response) => {
+        const { data: linode } = response;
+        if (!this.mounted) { return; }
+        this.setState({ 
+          linode,
+          loading: false,
+        });
+      })
+      .catch(() => {
+        if (!this.mounted) { return; }
+        this.setState({ loading: false });
+      });
+
+    getLinodeLishToken(linodeId)
+      .then((response) => {
+        const { data: { lish_token: token } } = response;
+        if (!this.mounted) { return; }
+        this.setState({ 
+          token,
+          loading: false,
+        });
+      })
+      .catch(() => {
+        if (!this.mounted) { return; }
+        this.setState({ loading: false });
+      });
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
   
   handleTabChange = (event: React.ChangeEvent<HTMLDivElement>, value: number) => {
@@ -45,8 +108,25 @@ class Lish extends React.Component<CombinedProps> {
 
   matches = (p: string) => Boolean(matchPath(p, { path: this.props.location.pathname }));
 
+  renderWeblish = () => {
+    const { linode, token } = this.state;
+    if (linode && token) {
+      return <Weblish token={token} linode={linode} />;
+    }
+    return null;
+  }
+  
+  renderGlish = () => {
+    const { linode, token } = this.state;
+    if (linode && token) {
+      return <Glish token={token} linode={linode} />;
+    }
+    return null;
+  }
+
   render() {
     const { classes, match: { path } } = this.props;
+    const { loading, linode, token } = this.state;
 
     return (
       <React.Fragment>
@@ -69,10 +149,19 @@ class Lish extends React.Component<CombinedProps> {
               data-qa-tab={tab.title}
             />)}
         </Tabs>
-        <Switch>
-          <Route exact path={`${path}/weblish`} component={Weblish} />
-          <Route exact path={`${path}/glish`} component={Glish} />
-        </Switch>
+        {loading &&
+          <CircleProgress noInner className={classes.progress}/>
+        }
+        {/* Only show 404 component if we are missing _both_ linode and token */}
+        {(!loading && !linode && !token) &&
+          <NotFound className={classes.notFound}/>
+        }
+        {(!loading && token && linode) &&
+          <Switch>
+            <Route exact path={`${path}/weblish`} render={this.renderWeblish} />
+            <Route exact path={`${path}/glish`} render={this.renderGlish} />
+          </Switch>
+        }
       </React.Fragment>
     );
   }

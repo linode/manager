@@ -5,7 +5,6 @@ import { Terminal } from 'xterm';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import CircleProgress from 'src/components/CircleProgress';
-import { getLinode, getLinodeLishToken } from 'src/services/linodes';
 
 import { getLishSchemeAndHostname, resizeViewPort } from '.';
 
@@ -17,17 +16,19 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface State {
+interface Props {
+  linode: Linode.Linode;
   token: string;
-  renderingLish: boolean;
-  linode?: Linode.Linode;
 }
 
-type CombinedProps = WithStyles<ClassNames> & RouteComponentProps<{ linodeId?: number }>;
+interface State {
+  renderingLish: boolean;
+}
+
+type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{ linodeId?: number }>;
 
 export class Weblish extends React.Component<CombinedProps, State> {
   state: State = {
-    token: '',
     renderingLish: true,
   };
 
@@ -35,27 +36,10 @@ export class Weblish extends React.Component<CombinedProps, State> {
 
   socket: WebSocket;
 
-  getLinode = () => {
-    const { match: { params: { linodeId } } } = this.props;
-
-    if (!linodeId) { return; }
-
-    getLinode(linodeId)
-      .then((response) => {
-        if (!this.mounted) { return; }
-        const { data: linode } = response;
-        this.setState({ linode }, this.connect);
-      })
-      .catch(() => {
-        if (!this.mounted) { return; }
-        this.setState({ renderingLish: false });
-      });
-  }
-
   componentDidMount() {
     this.mounted = true;
     resizeViewPort(1080, 730);
-    this.getLinode();
+    this.connect();
   }
 
   componentWillUnmount() {
@@ -63,30 +47,19 @@ export class Weblish extends React.Component<CombinedProps, State> {
   }
 
   connect() {
-    const { linode } = this.state;
-    if (linode === undefined) {
-      throw new Error('No Linode data before attempting to connect to Weblish.');
-    }
+    const { linode, token } = this.props;
+    const { region } = linode;
 
-    const { id, region } = linode;
-
-    getLinodeLishToken(id)
-      .then((response) => {
-        const { data: { lish_token: token } } = response;
-        this.setState({ token });
-        this.socket = new WebSocket(
-          `${getLishSchemeAndHostname(region)}:8181/${token}/weblish`);
-        this.socket.addEventListener('open', () =>
-          this.setState({ renderingLish: true }, () => this.renderTerminal()));
-      });
+    this.socket = new WebSocket(
+      `${getLishSchemeAndHostname(region)}:8181/${token}/weblish`);
+    this.socket.addEventListener('open', () =>
+      this.setState({ renderingLish: true },
+      () => this.renderTerminal())
+    );
   }
 
   renderTerminal() {
-    const { linode } = this.state;
-    if (linode === undefined) {
-      throw new Error('No Linode data before attempting to render Weblish.');
-    }
-
+    const { linode } = this.props;
     const { group, label } = linode;
 
     const terminal = new Terminal({
