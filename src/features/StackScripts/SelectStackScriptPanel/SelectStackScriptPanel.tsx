@@ -344,6 +344,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
                   type="secondary"
                   className={classes.sortButton}
                   onClick={this.handleClickStackScriptsTableHeader}
+                  data-qa-stackscript-table-header
                 >
                   StackScripts
                   {currentFilterType === 'label' &&
@@ -362,6 +363,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
                   type="secondary"
                   className={classes.sortButton}
                   onClick={this.handleClickDeploymentsTableHeader}
+                  data-qa-stackscript-active-deploy-header
                 >
                   Active Deploys
                   {currentFilterType === 'deploys' &&
@@ -380,6 +382,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
                   type="secondary"
                   className={classes.sortButton}
                   onClick={this.handleClickRevisionsTableHeader}
+                  data-qa-stackscript-revision-header
                 >
                   Last Revision
                   {currentFilterType === 'revision' &&
@@ -387,7 +390,12 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
                   }
                 </Button>
               </TableCell>
-              <TableCell className={classes.tableHead}>Compatible Images</TableCell>
+              <TableCell
+                className={classes.tableHead}
+                data-qa-stackscript-compatible-images
+              >
+                Compatible Images
+              </TableCell>
             </TableRow>
           </TableHead>
           <StackScriptsSection

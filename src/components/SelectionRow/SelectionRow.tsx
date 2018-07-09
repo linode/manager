@@ -132,14 +132,14 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
 
   return (
     <React.Fragment>
-      <TableRow>
+      <TableRow data-qa-table-row={label}>
         {onSelect &&
           <TableCell>
             <Radio checked={checked} onChange={onSelect} id={`${stackScriptID}`} />
           </TableCell>
         }
         <TableCell className={classes.stackScriptCell}>
-          <Typography variant="subheading">
+          <Typography variant="subheading" data-qa-stackscript-title>
           {stackScriptUsername &&
                 <label
                   htmlFor={`${stackScriptID}`}
@@ -156,10 +156,15 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
           <Typography>{description}</Typography>
         </TableCell>
         <TableCell>
-          <Typography variant="subheading">{deploymentsActive}</Typography>
+          <Typography
+            variant="subheading"
+            data-qa-stackscript-deploys
+          >
+            {deploymentsActive}
+          </Typography>
         </TableCell>
         <TableCell>
-          <Typography variant="subheading">{updated}</Typography>
+          <Typography variant="subheading" data-qa-stackscript-revision>{updated}</Typography>
         </TableCell>
         <TableCell className={classes.stackScriptCell}>
           {

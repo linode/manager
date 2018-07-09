@@ -115,6 +115,7 @@ const CreateFromImage: React.StatelessComponent<CombinedProps> = (props) => {
         }}
         heading={(image.vendor as string)}
         subheadings={[image.label]}
+        data-qa-selection-card
       />
     ))
   );
@@ -186,10 +187,10 @@ const CreateFromImage: React.StatelessComponent<CombinedProps> = (props) => {
           header="Select Image"
           tabs={renderTabs()}
         />
-        : <Paper className={props.classes.flatImagePanel}>
-          <Typography variant="title">
+        : <Paper className={props.classes.flatImagePanel} data-qa-tp="Select Image">
+          <Typography variant="title" data-qa-tp="Select Image">
             Select Image
-</Typography>
+          </Typography>
           <Grid className={props.classes.flatImagePanelSelections} container>
             {renderPublicImages()}
           </Grid>
