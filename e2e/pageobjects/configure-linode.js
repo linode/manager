@@ -33,7 +33,7 @@ class ConfigureLinode extends Page {
     get stackScriptTitle() { return $('[data-qa-stackscript-title]'); }
     get stackScriptDeploys() { return $('[data-qa-stackscript-deploys]'); }
     get stackScriptRevision() { return $('[data-qa-stackscript-revision]'); }
-
+    get stackScriptEmptyMsg() { return $('[data-qa-stackscript-empty-msg]'); }
 
     get userDefinedFieldsHeader() { return $('[data-qa-user-defined-field-header]'); }
     // User defined text field

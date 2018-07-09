@@ -480,7 +480,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
     return (
       <React.Fragment>
         {this.state.listOfStackScripts.length === 0
-        ? <div className={classes.emptyState}>
+        ? <div className={classes.emptyState} data-qa-stackscript-empty-msg>
           You do not have any StackScripts to select from. You must first
           <Link to="/stackscripts/create"> create one</Link>
         </div>
