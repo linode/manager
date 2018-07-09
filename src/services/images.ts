@@ -4,12 +4,12 @@ import Request, { setData, setMethod, setParams, setURL, setXFilter } from 'src/
 type Page<T> = Linode.ResourcePage<T>;
 type Image = Linode.Image;
 
-export const getImagesPage = (page: number, userOnly: boolean = false) =>
+export const getImagesPage = (page: number, filter: object = {}) =>
   Request<Page<Image>>(
     setURL(`${API_ROOT}/images`),
     setMethod('GET'),
     setParams({ page }),
-    setXFilter({...(userOnly && {'is_public': false })}),
+    setXFilter(filter),
   )
     .then(response => response.data);
 
@@ -17,7 +17,7 @@ export const getImages = () =>
   getImagesPage(1);
 
 export const getUserImages = () =>
-  getImagesPage(1, true);
+  getImagesPage(1, { 'is_public': false });
 
 export const getImage = (imageId: string) =>
   Request<Image>(
