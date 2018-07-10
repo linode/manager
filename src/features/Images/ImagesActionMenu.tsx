@@ -4,7 +4,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
-  onRestore: () => void;
+  onRestore: (imageID: string) => void;
   onDeploy: (imageID: string) => void;
   onEdit: (label:string, description:string, imageID:string) => void;
   onDelete: (label:string, imageID:string) => void;
@@ -27,9 +27,8 @@ class ImagesActionMenu extends React.Component<CombinedProps> {
       const actions = [
         {
           title: 'Restore to Existing Linode',
-          disabled: true,
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            onRestore();
+            onRestore(image.id);
             closeMenu();
             e.preventDefault();
           },
