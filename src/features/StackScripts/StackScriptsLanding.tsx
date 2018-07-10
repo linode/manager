@@ -20,7 +20,6 @@ import SelectStackScriptPanel from './SelectStackScriptPanel';
 
 import { getImages } from 'src/services/images';
 
-
 type ClassNames = 'root' | 'title';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
@@ -36,7 +35,8 @@ interface PreloadedProps {
   images: { response: Linode.Image[] };
 }
 
-interface State {}
+interface State {
+}
 
 type CombinedProps = Props
   & SetDocsProps
@@ -49,7 +49,8 @@ type CombinedProps = Props
   });
 
 export class StackScriptsLanding extends React.Component<CombinedProps, State> {
-  state: State = {};
+  state: State = {
+  };
 
   static docs = [
     {
@@ -58,10 +59,6 @@ export class StackScriptsLanding extends React.Component<CombinedProps, State> {
       body: `Create Custom Instances and Automate Deployment with StackScripts.`,
     },
   ];
-
-  handleTabClick = (event: React.ChangeEvent<HTMLDivElement>, value: number) => {
-    this.setState({ selectedTab: value });
-  }
 
   filterPublicImages = (images: Linode.Image[]) => {
     // get images and preloaded and give us just the public ones
