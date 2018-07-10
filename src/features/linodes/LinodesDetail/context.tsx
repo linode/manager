@@ -4,7 +4,7 @@ export interface Requestable<T> {
   lastUpdated: number;
   loading: boolean;
   request: (...args: any[]) => Promise<any>;
-  update?: (f: (t: T) => T) => void;
+  update: (f: (t: T) => T) => void;
   data?: T;
   errors?: Linode.ApiFieldError[];
 }
@@ -30,27 +30,34 @@ function createHOCForConsumer <T>(Consumer: any, displayName: string) {
   }
 }
 
-const configsContext = React.createContext<Requestable<Linode.Config[]>>({ lastUpdated: 0, loading: true, request: () => Promise.resolve() });
+const initialState = {
+  lastUpdated: 0,
+  loading: true,
+  request: () => Promise.resolve(),
+  update: () => null,
+};
+
+const configsContext = React.createContext<Requestable<Linode.Config[]>>({ ...initialState });
 export const withConfigs = createHOCForConsumer<Linode.Config[]>(configsContext.Consumer, 'WithConfigs');
 export const ConfigsProvider = configsContext.Provider;
 export const ConfigsConsumer = configsContext.Consumer;
 
-const disksContext = React.createContext<Requestable<Linode.Disk[]>>({ lastUpdated: 0, loading: true, request: () => Promise.resolve() });
+const disksContext = React.createContext<Requestable<Linode.Disk[]>>({...initialState});
 export const withDisks = createHOCForConsumer<Linode.Disk[]>(disksContext.Consumer, 'WithDisks');
 export const DisksProvider = disksContext.Provider;
 export const DisksConsumer = disksContext.Consumer;
 
-const linodeContext = React.createContext<Requestable<Linode.Linode>>({ lastUpdated: 0, loading: true, request: (image: string) => Promise.resolve() });
+const linodeContext = React.createContext<Requestable<Linode.Linode>>({...initialState});
 export const withLinode = createHOCForConsumer<Linode.Linode>(linodeContext.Consumer, 'WithLinode');
 export const LinodeProvider = linodeContext.Provider;
 export const LinodeConsumer = linodeContext.Consumer;
 
-const volumesContext = React.createContext<Requestable<Linode.Volume[]>>({ lastUpdated: 0, loading: true, request: () => Promise.resolve() });
+const volumesContext = React.createContext<Requestable<Linode.Volume[]>>({...initialState});
 export const withVolumes = createHOCForConsumer<Linode.Volume[]>(volumesContext.Consumer, 'WithVolumes');
 export const VolumesProvider = volumesContext.Provider;
 export const VolumesConsumer = volumesContext.Consumer;
 
-const imageContext = React.createContext<Requestable<Linode.Image>>({ lastUpdated: 0, loading: true, request: () => Promise.resolve() });
+const imageContext = React.createContext<Requestable<Linode.Image>>({...initialState});
 export const withImage = createHOCForConsumer<Linode.Image>(imageContext.Consumer, 'WithImage');
 export const ImageProvider = imageContext.Provider;
 export const ImageConsumer = imageContext.Consumer;
