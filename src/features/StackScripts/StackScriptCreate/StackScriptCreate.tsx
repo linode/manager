@@ -31,6 +31,8 @@ import Select from 'src/components/Select';
 import Tag from 'src/components/Tag';
 import TextField from 'src/components/TextField';
 
+import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
+
 import { getLinodeImages } from 'src/services/images';
 import { createStackScript } from 'src/services/stackscripts';
 
@@ -95,6 +97,7 @@ interface State {
  }
 
 type CombinedProps = Props
+  & SetDocsProps
   & WithStyles<ClassNames>
   & PreloadedProps
   & RouteComponentProps<{}>;
@@ -124,6 +127,14 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     isSubmitting: false,
     dialogOpen: false,
   };
+
+  static docs = [
+    {
+      title: 'Automate Deployment with StackScripts',
+      src: 'https://www.linode.com/docs/platform/stackscripts/',
+      body: `Create Custom Instances and Automate Deployment with StackScripts.`,
+    },
+  ];
   
   mounted: boolean = false;
 
@@ -456,8 +467,9 @@ const mapStateToProps = (state: Linode.AppState) => ({
 const styled = withStyles(styles, { withTheme: true });
 
 export default compose(
+  setDocs(StackScriptCreate.docs),
   styled,
   withRouter,
   connect(mapStateToProps),
-  preloaded
+  preloaded,
 )(StackScriptCreate)

@@ -1,12 +1,13 @@
 import { compose } from 'ramda';
 import * as React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+
+import { compose } from 'ramda';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import AddNewLink from 'src/components/AddNewLink';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
-
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import Grid from 'src/components/Grid';
 import PromiseLoader from 'src/components/PromiseLoader';
