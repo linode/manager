@@ -26,8 +26,8 @@ export const getImage = (imageId: string) =>
   )
     .then(response => response.data);
 
-export const updateImage = (imageId: string, label: string, description: string) => { 
-  // Blank descriptions are represented as ' ' in the API; 
+export const updateImage = (imageId: string, label: string, description: string) => {
+  // Blank descriptions are represented as ' ' in the API;
   // API will return an error if passed the empty string.
   const safeDescription = description === '' ? ' ' : description;
   return Request<{}>(
