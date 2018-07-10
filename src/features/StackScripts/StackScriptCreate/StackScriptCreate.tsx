@@ -145,6 +145,13 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
   componentWillUnmount() {
     this.mounted = false;
   }
+  
+  /*
+  * Gets images by two types: deprecated and non-deprecated
+  */
+  getImagesByDeprecationStatus = (deprecated: boolean) => {
+    return this.state.availableImages.filter(image => image.deprecated === deprecated);
+  }
 
   handleLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({labelText: e.target.value});
@@ -311,7 +318,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes, profile } = this.props;
-    const { availableImages, selectedImages, script,
+    const { selectedImages, script,
     labelText, descriptionText, revisionNote, errors } = this.state;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
@@ -383,13 +390,22 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
               errorText={hasErrorFor('images')}
             >
               <MenuItem disabled key="none" value="none">Select Compatible Images</MenuItem>,
-            {availableImages && availableImages.map(image =>
+            {this.getImagesByDeprecationStatus(false).map(image =>
                 <MenuItem
                   key={image.id}
                   value={image.id}
                 >
                   {image.label}
-              </MenuItem>,
+                </MenuItem>,
+              )}
+              <MenuItem disabled key="deprecated" value="deprecated">Older Images</MenuItem>,
+            {this.getImagesByDeprecationStatus(true).map(image =>
+                <MenuItem
+                  key={image.id}
+                  value={image.id}
+                >
+                  {image.label}
+                </MenuItem>,
               )}
             </Select>
           </FormControl>
