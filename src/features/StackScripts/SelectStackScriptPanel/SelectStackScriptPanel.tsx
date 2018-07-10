@@ -66,6 +66,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     minHeight: '400px',
     maxHeight: '1000px',
     overflowX: 'auto',
+    paddingTop: 0,
+    marginTop: theme.spacing.unit * 2,
   },
   table: {
     overflow: 'scroll',

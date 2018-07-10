@@ -10,32 +10,33 @@ import Typography from '@material-ui/core/Typography';
 
 import { compose } from 'ramda';
 
+import AddNewLink from 'src/components/AddNewLink';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import Grid from 'src/components/Grid';
-import IconTextLink from 'src/components/IconTextLink';
-import PromiseLoader from 'src/components/PromiseLoader';
 
-import PlusSquare from '../../../src/assets/icons/plus-square.svg';
+import PromiseLoader from 'src/components/PromiseLoader';
 
 import SelectStackScriptPanel from './SelectStackScriptPanel';
 
 import { getImages } from 'src/services/images';
 
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'title';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
+  title: {
+    marginBottom: theme.spacing.unit * 2,
+  },
 });
 
-interface Props { }
+interface Props {}
 
 interface PreloadedProps {
   images: { response: Linode.Image[] };
 }
 
-interface State {
-}
+interface State {}
 
 type CombinedProps = Props
   & SetDocsProps
@@ -48,8 +49,7 @@ type CombinedProps = Props
   });
 
 export class StackScriptsLanding extends React.Component<CombinedProps, State> {
-  state: State = {
-  };
+  state: State = {};
 
   static docs = [
     {
@@ -73,24 +73,30 @@ export class StackScriptsLanding extends React.Component<CombinedProps, State> {
 
   render() {
 
-    const { images } = this.props;
+    const { images, classes } = this.props;
 
     return (
       <React.Fragment>
+        <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
+          <Grid item>
+            <Typography variant="headline" className={classes.title} data-qa-title >
+                StackScripts
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Grid container alignItems="flex-end">
+              <Grid item>
+                <AddNewLink
+                  onClick={() => console.log('Feature Not currently available')}
+                  label="Create New StackScript"
+                  disabled
+                  data-qa-create-new-stackscript
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
         <Grid container>
-          <Grid item xs={9}>
-            <Typography variant="headline">
-              StackScripts
-        </Typography>
-          </Grid>
-          <Grid item xs={3}>
-            <IconTextLink
-              SideIcon={PlusSquare}
-              text="Create New StackScript"
-              onClick={() => console.log('hello world')}
-              title="Create New StackScript"
-            />
-          </Grid>
           <SelectStackScriptPanel
             publicImages={this.filterPublicImages(images.response)}
             noHeader={true}
