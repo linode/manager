@@ -29,7 +29,10 @@ type ClassNames = 'root'
   | 'title'
   | 'intro'
   | 'modeControl'
-  | 'image';
+  | 'sshWrap'
+  | 'image'
+  | 'addNew'
+  | 'deleteIcon';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
@@ -48,6 +51,19 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   image: {
     display: 'flex',
     flexWrap: 'wrap',
+  },
+  addNew: {
+    marginTop: theme.spacing.unit * 2,
+  },
+  sshWrap: {
+    margin: `${theme.spacing.unit}px 0`,
+    position: 'relative',
+    maxWidth: 415,
+  },
+  deleteIcon: {
+    position: 'absolute',
+    right: -9,
+    bottom: 14,
   },
 });
 
@@ -93,7 +109,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <Paper className={classes.root}>
           <Typography
-            variant="headline"
+            variant="title"
             className={classes.title}
             data-qa-title
           >
@@ -129,7 +145,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
                   </FormControl>
                   {
                     Array.from(Array(authorizedKeysCount)).map((value, idx) => (
-                      <React.Fragment>
+                      <div className={classes.sshWrap}>
                         <TextField
                           key={idx}
                           label="SSH Public Key"
@@ -138,18 +154,24 @@ class LishSettings extends React.Component<CombinedProps, State> {
                           helperText="Place your SSH public keys here for use with Lish console access."
                           multiline
                           rows="4"
+                          // fullWidth={false}
                         />
                         <IconButton
                           onClick={this.onPublicKeyRemove(idx)}
                           destructive
-                          style={{ width: 'auto' }}
+                          className={classes.deleteIcon}
                         >
                           <Delete />
                         </IconButton>
-                      </React.Fragment>
+                      </div>
                     ))
                   }
-                  <AddNewLink onClick={this.addSSHPublicKeyField} label="Add SSH Public Key" />
+                  <AddNewLink
+                    onClick={this.addSSHPublicKeyField}
+                    label="Add SSH Public Key"
+                    left
+                    className={classes.addNew}
+                  />
                 </React.Fragment>
               )
           }
