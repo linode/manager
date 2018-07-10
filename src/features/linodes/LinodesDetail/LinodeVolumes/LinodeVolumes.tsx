@@ -1,5 +1,6 @@
 import { compose, equals, pathOr } from 'ramda';
 import * as React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Subscription } from 'rxjs/Rx';
 
 import Paper from '@material-ui/core/Paper';
@@ -26,7 +27,6 @@ import { events$, resetEventsPolling } from 'src/events';
 import { getLinodeConfigs, getLinodeVolumes } from 'src/services/linodes';
 import { attachVolume, cloneVolume, createVolume, deleteVolume, detachVolume, getVolumes, resizeVolume, updateVolume } from 'src/services/volumes';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-
 import { withLinode, withVolumes } from '../context';
 import ActionMenu from './LinodeVolumesActionMenu';
 import VolumeDrawer, { Modes, Props as VolumeDrawerProps } from './VolumeDrawer';
@@ -78,6 +78,7 @@ interface State {
 type CombinedProps = Props
   & VolumesContextProps
   & LinodeContextProps
+  & RouteComponentProps<{}>
   & WithStyles<ClassNames>;
 
 export class LinodeVolumes extends React.Component<CombinedProps, State> {
@@ -185,6 +186,11 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
           attachableVolumes,
         });
       });
+  }
+
+  goToSettings = () => {
+    const { history, linodeID } = this.props;
+    history.push(`/linodes/${linodeID}/settings#configs`);
   }
 
   /** Attachment */
@@ -694,8 +700,8 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
     if (configs.length === 0) {
       props = {
         buttonProps: {
-          onClick: () => null,
-          children: 'View Linode Config',
+          onClick: this.goToSettings,
+          children: 'View Linode Configurations',
         },
         icon: VolumeIcon,
         title: 'No configs available',
@@ -820,6 +826,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
 
     const { volumeDrawer } = this.state;
 
+
     if (volumesError || linodeConfigsError) {
       return <ErrorState errorText="An error has occured." />;
     }
@@ -857,10 +864,11 @@ const volumesContext = withVolumes((context) => ({
   updateVolumes: context.update,
 }));
 
-export default compose<any, any, any, any, any, any>(
+export default compose<any, any, any, any, any, any, any>(
   linodeContext,
   volumesContext,
   styled,
+  withRouter,
   SectionErrorBoundary,
   preloaded,
 )(LinodeVolumes);

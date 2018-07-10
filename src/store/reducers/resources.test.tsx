@@ -43,7 +43,7 @@ describe('ResourcesReducer', () => {
           credit: 0,
         },
         ip_whitelist_enabled: false,
-        list_auth_method: 'password_keys',
+        lish_auth_method: 'password_keys',
         authorized_keys: [],
         two_factor_auth: false,
         restricted: false,

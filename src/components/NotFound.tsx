@@ -4,13 +4,18 @@ import { ErrorOutline } from '@material-ui/icons';
 
 import Placeholder from 'src/components/Placeholder';
 
-const NotFound = () => {
+interface Props {
+  className?: string;
+}
+
+const NotFound = (props: Props) => {
   return (
     <Placeholder 
       icon={ErrorOutline}
       title="Not Found" 
       copy=""
       animate={false}
+      className={props.className}
     />
   );
 }

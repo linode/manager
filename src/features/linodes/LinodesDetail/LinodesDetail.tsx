@@ -19,7 +19,7 @@ import ProductNotification from 'src/components/ProductNotification';
 import { events$ } from 'src/events';
 import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawer';
 import { newLinodeEvents } from 'src/features/linodes/events';
-import { weblishLaunch } from 'src/features/Weblish';
+import { lishLaunch } from 'src/features/Lish';
 import notifications$ from 'src/notifications';
 import { getImage } from 'src/services/images';
 import { getLinode, getLinodeConfigs, getLinodeDisks, getLinodeVolumes, renameLinode } from 'src/services/linodes';
@@ -524,6 +524,11 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     this.setState({ labelInput: { label: linode.label, errorText: '' } });
     this.forceUpdate();
   }
+  
+  launchLish = () => {
+    const { data: linode } = this.state.context.linode;
+    lishLaunch(`${linode!.id}`);
+  }
 
   render() {
 
@@ -629,12 +634,12 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                     </Grid>
                     <Grid item className={classes.cta}>
                       <Button
-                        onClick={this.launchWeblish(`${linode.id}`)}
+                        onClick={this.launchLish}
                         className={classes.launchButton}
                         data-qa-launch-console
                       >
                         Launch Console
-            </Button>
+                      </Button>
                       <LinodePowerControl
                         status={linode.status}
                         recentEvent={linode.recentEvent}
@@ -691,7 +696,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     );
   }
 
-  launchWeblish = (id: string) => () => weblishLaunch(id);
 }
 
 const styled = withStyles(styles, { withTheme: true });
