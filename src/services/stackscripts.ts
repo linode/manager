@@ -1,6 +1,11 @@
 import { API_ROOT } from 'src/constants';
-
-import Request, { setMethod, setParams, setURL, setXFilter } from './index';
+import Request, {
+  setData,
+  setMethod,
+  setParams,
+  setURL,
+  setXFilter,
+} from './index';
 
 type Page<T> = Linode.ResourcePage<T>;
 type StackScript = Linode.StackScript.Response;
@@ -54,3 +59,18 @@ export const deleteStackScript = (id: number) =>
     setMethod('DELETE'),
   )
     .then(response => response.data);
+  interface CreatePayload {
+    script: string;
+    label: string;
+    images: string[];
+    description?: string;
+    is_public?: boolean;
+    rev_note?: string;
+  }
+
+export const createStackScript = (payload: CreatePayload) =>
+  Request(
+    setURL(`${API_ROOT}/linode/stackscripts`),
+    setMethod('POST'),
+    setData(payload)
+  )
