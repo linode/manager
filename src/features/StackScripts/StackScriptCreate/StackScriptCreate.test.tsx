@@ -22,19 +22,29 @@ describe('StackScriptCreate', () => {
     />
   )
   it('should render a title that reads "Create New StackScript', () => {
-    const titleText = component.find('WithStyles(Typography)').children().text();
+    const titleText = component.find('WithStyles(Typography)').first().children().text();
     expect(titleText).toBe('Create New StackScript');
   });
 
   it('should render three text fields', () => {
     expect(component.find('LinodeTextField')).toHaveLength(4);
   });
-  
+
   it('should render a select field', () => {
     expect(component.find('WithStyles(SSelect)')).toHaveLength(1);
   });
 
   it('should render a code text field', () => {
-    // render code text
+    // not done yet!!
   });
+
+  it('should render a checkbox', () => {
+    expect(component.find('WithStyles(LinodeCheckBox)')).toHaveLength(1);
+  });
+
+  it(`should render a confirmation dialog with the
+  title "Clear StackScript Configuration?"`, () => {
+      const modalTitle = component.find('WithStyles(ConfirmationDialog)').prop('title');
+      expect(modalTitle).toBe('Clear StackScript Configuration?');
+    });
 });

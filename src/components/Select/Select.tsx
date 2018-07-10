@@ -9,7 +9,8 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 import HelpIcon from 'src/components/HelpIcon';
 
 type ClassNames = 'inputSucess'
-  | 'inputError';
+  | 'inputError'
+  | 'textError';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   inputError: {
@@ -17,6 +18,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     '&[class*="focused"]': {
       borderColor: theme.color.red,
     },
+  },
+  textError: {
+    marginTop: theme.spacing.unit,
+    color: theme.color.red,
+    fontSize: '0.8571428571428571rem',
+    minHeight: '1em',
+    lineHeight: '1em',
   },
   inputSucess: {
     borderColor: theme.color.green,
@@ -33,6 +41,8 @@ interface Props extends SelectProps {
   helpText?: string;
   success?: boolean;
   open?: boolean;
+  errorText?: string;
+  errorGroup?: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -43,8 +53,14 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
   success,
   error,
   helpText,
+  errorText,
+  errorGroup,
   ...props
 }) => {
+
+  const errorScrollClassName = errorGroup
+    ? `error-for-scroll-${errorGroup}`
+    : `error-for-scroll`;
 
   const menuProps: Partial<MenuProps> = {
     getContentAnchorEl: undefined,
@@ -64,6 +80,7 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
   const c = classNames({
     [classes.inputSucess]: success === true,
     [classes.inputError]: error === true,
+    [errorScrollClassName]: !!errorScrollClassName,
   });
 
   return (
@@ -78,6 +95,7 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
       >
         {children}
       </Select>
+      {errorText && <p className={classes.textError}>{errorText}</p>}
       {helpText && <HelpIcon text={helpText} />}
     </React.Fragment>
   );

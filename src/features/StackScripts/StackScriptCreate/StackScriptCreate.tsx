@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 
 import { compose, pathOr } from 'ramda';
 
@@ -12,7 +12,6 @@ import {
 } from '@material-ui/core/styles';
 
 import FormControl from '@material-ui/core/FormControl';
-// import FormHelperText from '@material-ui/core/FormHelperText';
 import IconButton from '@material-ui/core/IconButton';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -23,6 +22,7 @@ import { KeyboardArrowLeft } from '@material-ui/icons';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Checkbox from 'src/components/CheckBox';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
@@ -32,12 +32,17 @@ import Tag from 'src/components/Tag';
 import TextField from 'src/components/TextField';
 
 import { getLinodeImages } from 'src/services/images';
+import { createStackScript } from 'src/services/stackscripts';
+
+import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root'
   | 'backButton'
   | 'titleWrapper'
   | 'createTitle'
-  | 'adornment';
+  | 'adornment'
+  | 'tips';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -62,6 +67,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     marginLeft: 5,
     color: theme.color.grey1
   },
+  tips: {
+    backgroundColor: theme.bg.main,
+  }
 });
 
 interface Props { 
@@ -81,16 +89,26 @@ interface State {
   script: string;
   revisionNote: string;
   is_public: boolean;
+  isSubmitting: boolean;
+  errors?: Linode.ApiFieldError[];
+  dialogOpen: boolean;
  }
 
 type CombinedProps = Props
   & WithStyles<ClassNames>
-  & PreloadedProps;
+  & PreloadedProps
+  & RouteComponentProps<{}>;
 
 const preloaded = PromiseLoader<Props>({
   images: () => getLinodeImages()
     .then(response => response.data || [])
 })
+
+const errorResources = {
+  label: 'A label',
+  images: 'Images',
+  script: 'A script'
+};
 
 export class StackScriptCreate extends React.Component<CombinedProps, State> {
   state: State = {
@@ -103,7 +121,19 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     script: '',
     revisionNote: '',
     is_public: false,
+    isSubmitting: false,
+    dialogOpen: false,
   };
+  
+  mounted: boolean = false;
+
+  componentDidMount() {
+    this.mounted = true;
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
+  }
 
   handleLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({labelText: e.target.value});
@@ -130,7 +160,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
   handleChooseImage = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { availableImages } = this.state;
     const filteredAvailableImages = availableImages.filter((image) => {
-      return image.label !== e.target.value;
+      return image.id !== e.target.value;
     })
     this.setState({
       selectedImages: [...this.state.selectedImages, e.target.value],
@@ -152,6 +182,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
   }
 
   resetAllFields = () => {
+    this.handleCloseDialog();
     this.setState({
       script: '',
       labelText: '',
@@ -160,6 +191,50 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       is_public: false,
       revisionNote: '',
     })
+  }
+
+  handleCreateStackScript = () => {
+    const { script, labelText, selectedImages, descriptionText,
+      is_public, revisionNote } = this.state;
+
+    const { history } = this.props;
+
+    const payload = {
+      script,
+      label: labelText,
+      images: selectedImages,
+      description: descriptionText,
+      is_public,
+      rev_note: revisionNote,
+    }
+
+    if (!this.mounted) { return; }
+    this.setState({ isSubmitting: true });
+
+    createStackScript(payload)
+      .then(stackScript => {
+        if (!this.mounted) { return; }
+        this.setState({ isSubmitting: false });
+        history.push('/stackscripts');
+      })
+      .catch(error => {
+        if (!this.mounted) { return; }
+
+        this.setState(() => ({
+          isSubmitting: false,
+          errors: error.response && error.response.data && error.response.data.errors,
+        }), () => {
+          scrollErrorIntoView();
+        });
+      })
+  }
+
+  handleOpenDialog = () => {
+    this.setState({ dialogOpen: true })
+  }
+
+  handleCloseDialog = () => {
+    this.setState({ dialogOpen: false })
   }
 
   renderNoticeHTML = () => {
@@ -171,24 +246,71 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     )
   }
 
+  renderTipsHTML = () => {
+    return (
+      `<h3>Tips</h3>
+      <p>There are four default environment variables provided to you:</p>
+      <ul>
+        <li>LINODE_ID</li>
+        <li>LINODE_LISTUSERNAME</li>
+        <li>LINODE_RAM</li>
+        <li>LINODE_DATACENTERID</li>
+      </ul>`
+    )
+  }
+
+  renderDialogActions = () => {
+    return (
+      <React.Fragment>
+        <ActionsPanel>
+          <Button
+            variant="raised"
+            color="secondary"
+            className="destructive"
+            onClick={this.resetAllFields}>
+            Yes
+          </Button>
+          <Button
+            variant="raised"
+            color="secondary"
+            className="cancel"
+            onClick={this.handleCloseDialog}
+          >
+            No
+          </Button>
+        </ActionsPanel>
+      </React.Fragment>
+    )
+  }
+
+  renderCancelStackScriptDialog = () => {
+    const { dialogOpen } = this.state;
+
+    return (
+      <ConfirmationDialog
+        title={`Clear StackScript Configuration?`}
+        open={dialogOpen}
+        actions={this.renderDialogActions}
+        onClose={this.handleCloseDialog}
+      >
+        <Typography>Are you sure you want to reset your StackScript configuration?</Typography>
+      </ConfirmationDialog>
+    )
+  }
+
   render() {
     const { classes, profile } = this.props;
     const { availableImages, selectedImages, script,
-    labelText, descriptionText, revisionNote } = this.state;
+    labelText, descriptionText, revisionNote, errors } = this.state;
 
-    const payload = {
-      script: this.state.script,
-      label: this.state.labelText,
-      images: this.state.selectedImages,
-      description: this.state.descriptionText,
-      is_public: this.state.is_public,
-      rev_note: this.state.revisionNote,
-    }
-
-    console.log(payload);
+    const hasErrorFor = getAPIErrorsFor(errorResources, errors);
+    const generalError = hasErrorFor('none');
 
     return (
       <React.Fragment>
+        {generalError &&
+          <Notice error text={generalError} />
+        }
         <Grid
           container
           justify="space-between"
@@ -212,12 +334,12 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
               startAdornment: <span className={classes.adornment}>
                 {profile.username} /</span>,
             }}
-            // errorText={hasErrorFor('client_conn_throttle')}
             label='StackScript Label'
             required
             onChange={this.handleLabelChange}
             placeholder='Enter a label'
             value={labelText}
+            errorText={hasErrorFor('label')}
           />
           <HelpIcon text="Select a StackScript Label" />
           <TextField
@@ -227,8 +349,6 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
             placeholder="Enter a description"
             onChange={this.handleDescriptionChange}
             value={descriptionText}
-          // errorText={hasErrorFor('ssl_cert')}
-          // errorGroup={forEdit ? `${configIdx}`: undefined}
           />
           <HelpIcon text="Give your StackScript a description" />
           <FormControl fullWidth>
@@ -237,7 +357,6 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
               disableAnimation
               shrink={true}
               required
-            // error={Boolean(regionError)}
             >
               Target Images
           </InputLabel>
@@ -248,20 +367,21 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
               value='none'
               onChange={this.handleChooseImage}
               inputProps={{ name: 'image', id: 'image' }}
-            // error={Boolean(regionError)}
+              helpText='Select which images are compatible with this StackScript'
+              error={Boolean(hasErrorFor('images'))}
+              errorText={hasErrorFor('images')}
             >
               <MenuItem disabled key="none" value="none">Select Compatible Images</MenuItem>,
             {availableImages && availableImages.map(image =>
                 <MenuItem
                   key={image.id}
-                  value={image.label}
+                  value={image.id}
                 >
                   {image.label}
               </MenuItem>,
               )}
             </Select>
           </FormControl>
-          <HelpIcon text="Select Multiple Images" />
           {selectedImages && selectedImages.map((selectedImage, index) => {
             return (
               <Tag
@@ -272,6 +392,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
               />
             )
           })}
+          <Notice className={classes.tips} html={this.renderTipsHTML()} />
           <TextField
             multiline
             rows={1}
@@ -280,8 +401,6 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
             onChange={this.handleChangeScript}
             value={script}
             required
-          // errorText={hasErrorFor('ssl_cert')}
-          // errorGroup={forEdit ? `${configIdx}`: undefined}
           />
           <TextField
             multiline
@@ -290,15 +409,12 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
             placeholder='Enter a revision note'
             onChange={this.handleChangeRevisionNote}
             value={revisionNote}
-          // errorText={hasErrorFor('ssl_cert')}
-          // errorGroup={forEdit ? `${configIdx}`: undefined}
           />
           <Notice warning flag html={this.renderNoticeHTML()} />
           <InputLabel
             htmlFor="make_public"
             disableAnimation
             shrink={true}
-          // error={Boolean(regionError)}
           >
             <Checkbox
               name='make_public'
@@ -311,14 +427,14 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
           <ActionsPanel style={{ padding: 0 }}>
             <Button
               data-qa-confirm-cancel
-              onClick={() => console.log('saved')}
+              onClick={this.handleCreateStackScript}
               type="primary"
-              loading={false}
+              loading={this.state.isSubmitting}
             >
               Save
             </Button>
             <Button
-              onClick={this.resetAllFields}
+              onClick={this.handleOpenDialog}
               type="secondary"
               className="cancel"
               data-qa-cancel-cancel
@@ -327,6 +443,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
             </Button>
           </ActionsPanel>
         </Paper>
+        {this.renderCancelStackScriptDialog()}
       </React.Fragment>
     );
   }
@@ -340,6 +457,7 @@ const styled = withStyles(styles, { withTheme: true });
 
 export default compose(
   styled,
+  withRouter,
   connect(mapStateToProps),
   preloaded
 )(StackScriptCreate)
