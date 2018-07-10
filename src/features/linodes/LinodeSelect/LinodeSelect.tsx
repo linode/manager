@@ -33,19 +33,19 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = (props) => {
     return(
         <FormControl fullWidth>
         <InputLabel
-        htmlFor="linode"
-        disableAnimation
-        shrink={true}
-        error={Boolean(props.linodeError)}
+            htmlFor="linode"
+            disableAnimation
+            shrink={true}
+            error={Boolean(props.linodeError)}
         >
         Linode
         </InputLabel>
         <TextField
-        value={props.selectedLinode || 'none'}
-        onChange={props.handleChange}
-        inputProps={{ name: 'linode', id: 'linode' }}
-        error={Boolean(props.linodeError)}
-        select
+            value={props.selectedLinode || 'none'}
+            onChange={props.handleChange}
+            inputProps={{ name: 'linode', id: 'linode' }}
+            error={Boolean(props.linodeError)}
+            select
         >
         <MenuItem value="none" disabled>Select a Linode</MenuItem>
         {

@@ -33,19 +33,19 @@ const DiskSelect: React.StatelessComponent<CombinedProps> = (props) => {
   return(
         <FormControl fullWidth>
         <InputLabel
-        htmlFor="disk"
-        disableAnimation
-        shrink={true}
-        error={Boolean(props.diskError)}
+          htmlFor="disk"
+          disableAnimation
+          shrink={true}
+          error={Boolean(props.diskError)}
         >
         Disk
         </InputLabel>
         <TextField
-        value={props.selectedDisk || 'none'}
-        onChange={props.handleChange}
-        inputProps={{ name: 'linode', id: 'linode' }}
-        error={Boolean(props.diskError)}
-        select
+          value={props.selectedDisk || 'none'}
+          onChange={props.handleChange}
+          inputProps={{ name: 'linode', id: 'linode' }}
+          error={Boolean(props.diskError)}
+          select
         >
         <MenuItem value="none" disabled>Select a Disk</MenuItem>
         {
