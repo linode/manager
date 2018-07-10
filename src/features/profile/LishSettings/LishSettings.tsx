@@ -1,4 +1,4 @@
-import { compose, lensPath, pathOr, set } from 'ramda';
+import { compose, dec, lensPath, pathOr, remove, set } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
@@ -9,11 +9,13 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import { Delete } from '@material-ui/icons';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import setDocs from 'src/components/DocsSidebar/setDocs';
+import IconButton from 'src/components/IconButton';
 import MenuItem from 'src/components/MenuItem';
 import Notice from 'src/components/Notice';
 import Select from 'src/components/Select';
@@ -127,15 +129,24 @@ class LishSettings extends React.Component<CombinedProps, State> {
                   </FormControl>
                   {
                     Array.from(Array(authorizedKeysCount)).map((value, idx) => (
-                      <TextField
-                        key={idx}
-                        label="SSH Public Key"
-                        onChange={this.onPublicKeyChange(idx)}
-                        value={authorizedKeys[idx] || ''}
-                        helperText="Place your SSH public keys here for use with Lish console access."
-                        multiline
-                        rows="4"
-                      />
+                      <React.Fragment>
+                        <TextField
+                          key={idx}
+                          label="SSH Public Key"
+                          onChange={this.onPublicKeyChange(idx)}
+                          value={authorizedKeys[idx] || ''}
+                          helperText="Place your SSH public keys here for use with Lish console access."
+                          multiline
+                          rows="4"
+                        />
+                        <IconButton
+                          onClick={this.onPublicKeyRemove(idx)}
+                          destructive
+                          style={{ width: 'auto' }}
+                        >
+                          <Delete />
+                        </IconButton>
+                      </React.Fragment>
                     ))
                   }
                   <AddNewLink onClick={this.addSSHPublicKeyField} label="Add SSH Public Key" />
@@ -203,6 +214,14 @@ class LishSettings extends React.Component<CombinedProps, State> {
     (e: React.ChangeEvent<HTMLInputElement>) => {
       this.setState(
         set(lensPath(['authorizedKeys', idx]), e.target.value))
+    }
+
+  onPublicKeyRemove = (idx: number) =>
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      this.setState({
+        authorizedKeys: remove(idx, 1, this.state.authorizedKeys),
+        authorizedKeysCount: dec(this.state.authorizedKeysCount),
+      });
     }
 }
 
