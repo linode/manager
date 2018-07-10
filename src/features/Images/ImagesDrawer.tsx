@@ -1,21 +1,17 @@
+import { compose, path } from 'ramda';
 import * as React from 'react';
 
-import { compose, path } from 'ramda';
-
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import Button from '@material-ui/core/Button';
-
-import { updateImage } from 'src/services/images';
-
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import TextField from 'src/components/TextField';
+import { updateImage } from 'src/services/images';
+import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root'
 |  'suffix'
