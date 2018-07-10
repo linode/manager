@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import { compose, equals, path } from 'ramda';
-import * as Rx from 'rxjs/Rx';
+import { compose, equals, pathOr } from 'ramda';
+import { Subscription } from 'rxjs/Rx';
 
 import Button from '@material-ui/core/Button';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
@@ -75,7 +75,7 @@ const titleMap = {
 
 class ImageDrawer extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
-  eventsSub: Rx.Subscription;
+  eventsSub: Subscription;
   state = { 
     description: this.props.description ? this.props.description : ' ',
     disks: [],
@@ -154,7 +154,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
       .catch((errorResponse) => {
         if (this.mounted) {
           this.setState({
-            errors: path(['response', 'data', 'errors'], errorResponse),
+            errors: pathOr('Image could not be updated.', ['response', 'data', 'errors'], errorResponse),
           });
         }
       });
@@ -176,7 +176,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
       })
       .catch((errorResponse) => {
         this.setState({
-          errors: path(['response', 'data', 'errors'], errorResponse),
+          errors: pathOr('There was an error creating the image.', ['response', 'data', 'errors'], errorResponse),
         });
       });
       default:
@@ -206,6 +206,11 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
     const { mode, } = this.props;
     const { disks, label, linodes, description, notice, selectedDisk, selectedLinode } = this.state;
     const { errors } = this.state;
+    // When creating an image, disable the submit button until a Linode,
+    // disk, and label are selected. When editing, only a label is required.
+    const requirementsMet = (mode === 'create')
+                            ? !(selectedDisk && selectedLinode && label)
+                            : !label;
 
     const hasErrorFor = getAPIErrorFor({
       linode_id: 'Linode',
@@ -251,7 +256,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
         />
         }
 
-        {mode === 'create' && selectedLinode &&
+        {mode === 'create' &&
         <DiskSelect
           selectedDisk={selectedDisk || 'none'}
           disks={disks}
@@ -273,6 +278,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
         <TextField
           label="Description"
           multiline
+          rows={4}
           value={description}
           onChange={this.setDescription}
           error={Boolean(descriptionError)}
@@ -283,6 +289,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
         <ActionsPanel style={{ marginTop: 16 }}>
           <Button
             onClick={this.onSubmit}
+            disabled={requirementsMet}
             variant="raised"
             color="primary"
             data-qa-submit
