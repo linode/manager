@@ -9,12 +9,14 @@ import {
 
 import IconButton, { IconButtonProps } from '@material-ui/core/IconButton';
 
-type ClassNames = 'root' | 'destructive';
+type ClassNames = 'root' 
+  | 'destructive'
 
 interface Props {
   destructive?: boolean;
   style?: any;
   onClick?: (e: React.SyntheticEvent<HTMLElement>) => void;
+  className?: any;
 }
 
 const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
@@ -36,14 +38,16 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
 type CombinedProps = IconButtonProps & Props & WithStyles<ClassNames>;
 
 const IconButtonWrapper: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, destructive, style, ...rest } = props;
+  const { classes, destructive, style, className, ...rest } = props;
 
   return (
     <IconButton
       className={classNames({
         [classes.root]: true,
         [classes.destructive]: destructive,
-      })}
+        },
+        className
+      )}
       style={style}
       {...rest}
     >
