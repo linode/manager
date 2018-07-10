@@ -177,6 +177,14 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
     })
   }
 
+  deployNewLinode = (imageID: string) => {
+    const { history } = this.props;
+    history.push({
+      pathname: '/linodes/create',
+      state: { selectedImageId: imageID, selectedTab: 0, initTab: 1},
+    });
+  }
+
   removeImage = () => {
     const { removeDialog } = this.state;
     if (!this.state.removeDialog.imageID) { 
@@ -300,7 +308,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
                 <ImageRow key={idx} 
                           image={image}
                           onRestore={() => null}
-                          onDeploy={() => null}
+                          onDeploy={this.deployNewLinode}
                           onEdit={this.openForEdit} 
                           onDelete={this.openRemoveDialog}
                           updateFor={[image]} />
