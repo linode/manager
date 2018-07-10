@@ -139,6 +139,25 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
     'onSelect and showDeployLink are mutually exclusive.',
   );
 
+  const renderLabel = () => {
+    return (
+      <Typography variant="subheading">
+        {stackScriptUsername &&
+          <label
+            htmlFor={`${stackScriptID}`}
+            className={`${classes.libRadioLabel} ${classes.stackScriptUsername}`}>
+            {stackScriptUsername} /&nbsp;
+    </label>
+        }
+        <label
+          htmlFor={`${stackScriptID}`}
+          className={classes.libRadioLabel}>
+          {label}
+        </label>
+      </Typography>
+    )
+  }
+
   return (
     <React.Fragment>
       <TableRow>
@@ -148,20 +167,12 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
           </TableCell>
         }
         <TableCell className={classes.stackScriptCell}>
-          <Typography variant="subheading">
-          {stackScriptUsername &&
-                <label
-                  htmlFor={`${stackScriptID}`}
-                  className={`${classes.libRadioLabel} ${classes.stackScriptUsername}`}>
-                  {stackScriptUsername} /&nbsp;
-            </label>
-              }
-              <label
-                htmlFor={`${stackScriptID}`}
-                className={classes.libRadioLabel}>
-                 {label}
-              </label>
-          </Typography>
+          {!showDeployLink
+            ? renderLabel()
+            : <a target="_blank" href={`https://www.linode.com/stackscripts/view/${stackScriptID}`}>
+              {renderLabel()}
+            </a>
+          }
           <Typography>{description}</Typography>
         </TableCell>
         <TableCell>
