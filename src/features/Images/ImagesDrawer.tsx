@@ -130,6 +130,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
   onSubmit = () => {
     const { mode, history, imageID, onSuccess } = this.props;
     const { label, description, selectedDisk, selectedLinode } = this.state;
+    const errors = [];
     
     switch (mode) {
       case modes.EDITING:
@@ -158,18 +159,13 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
         });
         return;
       case modes.CREATING:
-        if (!selectedDisk) {
-          this.setState({
-            errors: [{ field: 'disk_id', reason: 'Choose a disk.' }],
-          });
+        if (!selectedDisk) { errors.push({ field: 'disk_id', reason: 'Choose a disk.' }); }
+        else if (!label)   { errors.push({ field: 'label', reason: 'Label cannot be blank.' }); }
+        if (errors) { 
+          this.setState({ errors }) 
           return;
-        }
-        else if (!label) {
-          this.setState({
-            errors: [{ field: 'label', reason: 'Label cannot be blank.' }],
-          });
-          return;
-        }
+        };
+
         createImage(Number(selectedDisk), label, description)
         .then((response) => {
           resetEventsPolling();
@@ -296,28 +292,28 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
        }
 
         {['create','edit'].includes(mode) &&
-        <TextField
-          label="Label"
-          required
-          value={label}
-          onChange={this.setLabel}
-          error={Boolean(labelError)}
-          errorText={labelError}
-          data-qa-volume-label
-        />
-        }
+          <React.Fragment>
+            <TextField
+              label="Label"
+              required
+              value={label}
+              onChange={this.setLabel}
+              error={Boolean(labelError)}
+              errorText={labelError}
+              data-qa-volume-label
+            />
 
-        {['create','edit'].includes(mode) &&
-        <TextField
-          label="Description"
-          multiline
-          rows={4}
-          value={description}
-          onChange={this.setDescription}
-          error={Boolean(descriptionError)}
-          errorText={descriptionError}
-          data-qa-size
-        />
+            <TextField
+              label="Description"
+              multiline
+              rows={4}
+              value={description}
+              onChange={this.setDescription}
+              error={Boolean(descriptionError)}
+              errorText={descriptionError}
+              data-qa-size
+            />
+          </React.Fragment>
         }
 
         <ActionsPanel style={{ marginTop: 16 }}>
