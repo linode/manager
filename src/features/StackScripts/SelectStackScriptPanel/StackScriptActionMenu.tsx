@@ -43,8 +43,8 @@ const StackScriptActionMenu: React.StatelessComponent<CombinedProps> = (props) =
         actions.push({
           title: 'Delete',
           onClick: (e) => {
-            triggerDelete(stackScriptID, stackScriptLabel);
             closeMenu();
+            triggerDelete(stackScriptID, stackScriptLabel);
           },
         });
       }
