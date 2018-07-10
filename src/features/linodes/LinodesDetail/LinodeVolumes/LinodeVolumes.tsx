@@ -1,47 +1,53 @@
 import * as React from 'react';
-import { pathOr, compose } from 'ramda';
+
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+
+import { compose, pathOr } from 'ramda';
+
 import { Subscription } from 'rxjs/Rx';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from '@material-ui/core/styles';
+import { StyleRulesCallback, Theme, withStyles,  WithStyles } from '@material-ui/core/styles';
+
 import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
-import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Typography from '@material-ui/core/Typography';
 
 import {
-  getVolumes,
-  attach as attachtoLinode,
-  detach as detachVolume,
   _delete as deleteVolume,
+  attach as attachtoLinode,
   clone as cloneVolume,
   create as createVolume,
-  update as updateVolume,
+  detach as detachVolume,
+  getVolumes,
   resize as resizeVolume,
+  update as updateVolume,
 } from 'src/services/volumes';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import Table from 'src/components/Table';
 import Grid from 'src/components/Grid';
-import Placeholder, { PlaceholderProps } from 'src/components/Placeholder';
-import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
-import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
+import Table from 'src/components/Table';
+
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
-import { getLinodeConfigs, getLinodeVolumes } from 'src/services/linodes';
-import ErrorState from 'src/components/ErrorState';
+
+import AddNewLink, { Props as AddNewLinkProps } from 'src/components/AddNewLink';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import ErrorState from 'src/components/ErrorState';
+import Placeholder, { PlaceholderProps } from 'src/components/Placeholder';
+import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
+import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
+
+import { events$, resetEventsPolling } from 'src/events';
+import { getLinodeConfigs, getLinodeVolumes } from 'src/services/linodes';
+
 
 import AttachVolumeDrawer from './AttachVolumeDrawer';
-import UpdateVolumeDrawer, { Props as UpdateVolumeDrawerProps } from './UpdateVolumeDrawer';
 import ActionMenu from './LinodeVolumesActionMenu';
-import { events$, resetEventsPolling } from 'src/events';
-import AddNewLink, { Props as AddNewLinkProps } from 'src/components/AddNewLink';
+import UpdateVolumeDrawer, { Props as UpdateVolumeDrawerProps } from './UpdateVolumeDrawer';
+
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { withLinode, withVolumes } from '../context';
 
@@ -92,7 +98,10 @@ interface State {
   updateVolumeDrawer: UpdateVolumeDrawerState;
 }
 
-type CombinedProps = Props & ContextProps & WithStyles<ClassNames>;
+type CombinedProps = Props
+& WithStyles<ClassNames>
+& ContextProps
+& RouteComponentProps<{}>;
 
 export class LinodeVolumes extends React.Component<CombinedProps, State> {
   static defaultProps = {
@@ -185,6 +194,11 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
           attachableVolumes,
         });
       });
+  }
+
+  goToSettings = () => {
+    const { history, linodeID } = this.props;
+    history.push(`/linodes/${linodeID}/settings#configs`);
   }
 
   /** Attachment */
@@ -709,8 +723,8 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
     if (configs.length === 0) {
       props = {
         buttonProps: {
-          onClick: this.openAttachmentDrawer,
-          children: 'View Linode Config',
+          onClick: this.goToSettings,
+          children: 'View Linode Configurations',
         },
         icon: VolumeIcon,
         title: 'No configs available',
@@ -849,6 +863,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
     } = this.props;
 
     const { updateVolumeDrawer } = this.state;
+  
 
     if (volumesError || linodeConfigsError) {
       return <ErrorState errorText="An error has occured." />;
@@ -886,10 +901,11 @@ const volumesContext = withVolumes((context) => ({
   linodeVolumes: context.data,
 }));
 
-export default compose<any, any, any, any, any, any>(
+export default compose<any, any, any, any, any, any, any>(
   linodeContext,
   volumesContext,
   styled,
+  withRouter,
   SectionErrorBoundary,
   preloaded,
 )(LinodeVolumes);
