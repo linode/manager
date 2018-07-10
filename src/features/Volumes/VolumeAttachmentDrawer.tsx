@@ -1,19 +1,19 @@
-import * as React from 'react';
 import { path } from 'ramda';
+import * as React from 'react';
 
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from 'src/components/MenuItem';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-import { resetEventsPolling } from 'src/events';
-import { getLinodes, getLinodeConfigs } from 'src/services/linodes';
-import { attachVolume } from 'src/services/volumes';
-import Select from 'src/components/Select';
-import Drawer from 'src/components/Drawer';
 import ActionsPanel from 'src/components/ActionsPanel';
+import Drawer from 'src/components/Drawer';
+import MenuItem from 'src/components/MenuItem';
+import Select from 'src/components/Select';
+import { resetEventsPolling } from 'src/events';
+import { getLinodeConfigs, getLinodes } from 'src/services/linodes';
+import { attachVolume } from 'src/services/volumes';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 

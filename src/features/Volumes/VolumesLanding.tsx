@@ -1,3 +1,9 @@
+import { compose, equals, pathOr } from 'ramda';
+import * as React from 'react';
+import { connect, Dispatch } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { ISubscription } from 'rxjs/Subscription';
+
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
@@ -5,11 +11,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
-import { compose, equals, pathOr } from 'ramda';
-import * as React from 'react';
-import { connect, Dispatch } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { ISubscription } from 'rxjs/Subscription';
+
 import VolumesIcon from 'src/assets/addnewmenu/volume.svg';
 import AddNewLink from 'src/components/AddNewLink';
 import CircleProgress from 'src/components/CircleProgress';
@@ -26,6 +28,7 @@ import { updateVolumes$ } from 'src/features/Volumes/Volumes.tsx';
 import { getLinodes } from 'src/services/linodes';
 import { deleteVolume, detachVolume, getVolumes } from 'src/services/volumes';
 import { openForClone, openForCreating, openForEdit, openForResize } from 'src/store/reducers/volumeDrawer';
+
 import DestructiveVolumeDialog from './DestructiveVolumeDialog';
 import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
 import VolumeConfigDrawer from './VolumeConfigDrawer';

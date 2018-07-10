@@ -1,33 +1,14 @@
-import * as React from 'react';
-
-import * as Rx from 'rxjs/Rx';
-
 import { lensPath, path, set, view } from 'ramda';
-
-import { bindActionCreators, compose } from 'redux';
-
+import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
-
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { bindActionCreators, compose } from 'redux';
+import * as Rx from 'rxjs/Rx';
 
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-
-import { close } from 'src/store/reducers/volumeDrawer';
-
-import { cloneVolume, createVolume, resizeVolume, updateVolume, VolumeRequestPayload } from 'src/services/volumes';
-
-import { dcDisplayNames } from 'src/constants';
-import { events$, resetEventsPolling } from 'src/events';
-import { getLinodeConfigs, getLinodes } from 'src/services/linodes';
-
-import { sendToast } from 'src/features/ToastNotifications/toasts';
-import { updateVolumes$ } from 'src/features/Volumes/Volumes';
-
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -37,6 +18,15 @@ import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoad
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import Select from 'src/components/Select';
 import TextField from 'src/components/TextField';
+import { dcDisplayNames } from 'src/constants';
+import { events$, resetEventsPolling } from 'src/events';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
+import { updateVolumes$ } from 'src/features/Volumes/Volumes';
+import { getLinodeConfigs, getLinodes } from 'src/services/linodes';
+import { cloneVolume, createVolume, resizeVolume, updateVolume, VolumeRequestPayload } from 'src/services/volumes';
+import { close } from 'src/store/reducers/volumeDrawer';
+import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root'
   | 'suffix'

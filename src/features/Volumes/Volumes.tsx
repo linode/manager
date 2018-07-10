@@ -1,22 +1,18 @@
+import { compose, pathOr } from 'ramda';
 import * as React from 'react';
-import * as Rx from 'rxjs/Rx';
-import { bindActionCreators } from 'redux';
 import { connect, Dispatch } from 'react-redux';
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from '@material-ui/core/styles';
-import { pathOr, compose } from 'ramda';
+import { bindActionCreators } from 'redux';
+import * as Rx from 'rxjs/Rx';
+
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import VolumesIcon from 'src/assets/addnewmenu/volume.svg';
 import Placeholder from 'src/components/Placeholder';
-import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
+import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import { events$ } from 'src/events';
-import { openForCreating } from 'src/store/reducers/volumeDrawer';
 import { getVolumes } from 'src/services/volumes';
+import { openForCreating } from 'src/store/reducers/volumeDrawer';
 
 import VolumesLanding from './VolumesLanding';
 
