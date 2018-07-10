@@ -1,15 +1,10 @@
-import * as React from 'react';
 import * as classNames from 'classnames';
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from '@material-ui/core/styles';
+import * as React from 'react';
 
 import IconButton, { IconButtonProps } from '@material-ui/core/IconButton';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-type ClassNames = 'root' 
+type ClassNames = 'root'
   | 'destructive'
 
 interface Props {

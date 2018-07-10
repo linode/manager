@@ -1,15 +1,13 @@
-import * as React from 'react';
-
 import * as classnames from 'classnames';
-
-import { TextFieldProps } from '@material-ui/core/TextField';
-import Typography, { TypographyProps } from '@material-ui/core/Typography';
-
-import  { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import * as React from 'react';
 
 import Button from '@material-ui/core/Button';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { TextFieldProps } from '@material-ui/core/TextField';
+import Typography, { TypographyProps } from '@material-ui/core/Typography';
 import { Check, Close, ModeEdit } from '@material-ui/icons';
+
 import TextField from '../TextField';
 
 type ClassNames = 'root'

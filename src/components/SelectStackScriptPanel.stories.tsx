@@ -1,11 +1,11 @@
-import * as React from 'react';
 import { storiesOf } from '@storybook/react';
-
-import ThemeDecorator from '../utilities/storybookDecorators';
-import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel';
+import * as React from 'react';
 import { StaticRouter } from 'react-router';
 
 import { images } from 'src/__data__/images';
+import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel';
+
+import ThemeDecorator from '../utilities/storybookDecorators';
 
 interface State {
   selectedId: number | null;

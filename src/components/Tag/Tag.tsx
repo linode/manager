@@ -1,8 +1,8 @@
-import * as React from 'react';
 import * as classNames from 'classnames';
+import * as React from 'react';
 
-import { withStyles, Theme, WithStyles, StyleRulesCallback } from '@material-ui/core/styles';
 import Chip, { ChipProps } from '@material-ui/core/Chip';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import { Close } from '@material-ui/icons';
 
 type Variants =

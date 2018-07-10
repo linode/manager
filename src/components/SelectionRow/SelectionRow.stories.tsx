@@ -1,9 +1,10 @@
-import * as React from 'react';
 import { storiesOf } from '@storybook/react';
+import * as React from 'react';
 import { StaticRouter } from 'react-router-dom';
 
-import ThemeDecorator from '../../utilities/storybookDecorators';
 import SelectionRow, { SelectionRowProps } from 'src/components/SelectionRow';
+
+import ThemeDecorator from '../../utilities/storybookDecorators';
 
 interface State {
   selected: number;
