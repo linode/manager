@@ -1,14 +1,15 @@
-import * as React from 'react';
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
-import { Subscription, Observable } from 'rxjs/Rx';
-import { assoc, compose, sort, take, values } from 'ramda';
 import * as moment from 'moment';
+import { assoc, compose, sort, take, values } from 'ramda';
+import * as React from 'react';
+import { Observable, Subscription } from 'rxjs/Rx';
 
 import Menu from '@material-ui/core/Menu';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import { events$, init } from 'src/events';
 import notifications$ from 'src/notifications';
 import { markEventsSeen } from 'src/services/account';
+
 import UserNotificationButton from './UserNotificationButton';
 import UserNotificationList from './UserNotificationList';
 
