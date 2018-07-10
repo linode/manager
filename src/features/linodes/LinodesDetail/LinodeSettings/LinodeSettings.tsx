@@ -60,16 +60,7 @@ const LinodeSettings: React.StatelessComponent<CombinedProps> = (props) => {
                           linodeId={linode.id}
                           currentStatus={linode.watchdog_enabled}
                         />
-                        <LinodeAdvancedConfigurationsPanel
-                          linodeDisks={disks}
-                          linodeId={linode.id}
-                          linodeLabel={linode.label}
-                          linodeRegion={linode.region}
-                          linodeConfigs={configs}
-                          linodeMemory={linode.specs.memory}
-                          linodeTotalDisk={linode.specs.disk}
-                          linodeStatus={linode.status}
-                        />
+                        <LinodeAdvancedConfigurationsPanel />
                         <LinodeSettingsDeletePanel
                           linodeId={linode.id}
                         />
