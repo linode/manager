@@ -69,7 +69,7 @@ export default function preload<P>(requests: RequestMap<P>) {
       render() {
         const { loading, ...responses } = this.state;
         if (loading) {
-          return <CircleProgress />;
+          return <CircleProgress data-qa-circle-progress />;
         }
 
         return <Component {...this.props} {...responses} />;

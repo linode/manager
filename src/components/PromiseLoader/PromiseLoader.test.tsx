@@ -21,7 +21,7 @@ describe('PromiseLoaderSpec', () => {
     });
 
     it('should display loading component.', async () => {
-      expect(wrapper.find('WithStyles(CircleProgressComponent)').exists()).toBeTruthy();
+      expect(wrapper.find('[data-qa-circle-progress]').exists()).toBeTruthy();
     });
   });
 

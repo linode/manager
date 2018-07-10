@@ -650,10 +650,14 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
     const { currentFilterType, isSorting, error, fieldError,
       isSearching, listOfStackScripts, didSearch } = this.state;
 
-    if (error) {
-      return <ErrorState
-        errorText="There was an error loading your StackScripts. Please try again later."
-      />
+    if(error) {
+      return (
+        <div style={{ overflow: 'hidden' }}>
+          <ErrorState 
+            errorText="There was an error loading your StackScripts. Please try again later."
+          />
+        </div>
+      )
     }
 
     if (this.state.loading) {
