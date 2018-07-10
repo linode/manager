@@ -38,7 +38,6 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => 
     data,
     isSorting,
     classes,
-    publicImages,
     triggerDelete,
     currentUser,
   } = props;
