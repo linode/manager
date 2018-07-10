@@ -43,17 +43,6 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => 
     currentUser,
   } = props;
 
-  const hasNonDeprecatedImages = (stackScriptImages: string[]) => {
-    for (const stackScriptImage of stackScriptImages) {
-      for (const publicImage of publicImages) {
-        if (stackScriptImage === publicImage.id) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
   const renderStackScriptTable = () => {
     return (!!onSelect)
     ? selectStackScript(onSelect, selectedId)
@@ -116,7 +105,6 @@ const listStackScript: (
     <TableBody>
       {!isSorting
         ? data && data
-          .filter(stackScript => hasNonDeprecatedImages(stackScript.images))
           .map(renderStackScriptTable())
         : <TableRow>
           <TableCell colSpan={5} className={classes.loadingWrapper}>
