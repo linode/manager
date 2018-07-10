@@ -59,7 +59,6 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
 interface Props extends ChipProps {
   label: string;
   variant?: Variants;
-  onDelete?: () => void;
 }
 
 type PropsWithStyles = Props & WithStyles<CSSClasses>;
