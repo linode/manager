@@ -62,7 +62,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
   deleteIcon: {
     position: 'absolute',
-    right: -9,
+    left: -9,
     bottom: 14,
   },
 });
