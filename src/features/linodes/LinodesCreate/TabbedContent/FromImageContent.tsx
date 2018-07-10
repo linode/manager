@@ -1,35 +1,23 @@
-import * as React from 'react';
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from '@material-ui/core/styles';
-
 import { pathOr } from 'ramda';
-
+import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
 
-import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
-import SelectImagePanel from '../SelectImagePanel';
-import PasswordPanel from '../PasswordPanel';
-import AddonsPanel from '../AddonsPanel';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
+import CheckoutBar from 'src/components/CheckoutBar';
+import Grid from 'src/components/Grid';
+import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
+import Notice from 'src/components/Notice';
+import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
+import { resetEventsPolling } from 'src/events';
+import { allocatePrivateIP, createLinode } from 'src/services/linodes';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-import Notice from 'src/components/Notice';
-import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
-import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
-import Grid from 'src/components/Grid';
-import CheckoutBar from 'src/components/CheckoutBar';
-
-import {
-  allocatePrivateIP,
-  createLinode,
-} from 'src/services/linodes';
-
-import { resetEventsPolling } from 'src/events';
+import AddonsPanel from '../AddonsPanel';
+import PasswordPanel from '../PasswordPanel';
+import SelectImagePanel from '../SelectImagePanel';
+import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
 
 type ClassNames = 'root' | 'main' | 'sidebar';
 

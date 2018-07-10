@@ -1,23 +1,9 @@
-import * as React from 'react';
 import * as moment from 'moment';
-import {
-  compose,
-  filter,
-  flatten,
-  groupBy,
-  head,
-  map,
-  prop,
-  propSatisfies,
-  reverse,
-  sortBy,
-  startsWith,
-  tail,
-  values,
-} from 'ramda';
+import { compose, filter, flatten, groupBy, head, map, prop, propSatisfies, reverse, sortBy, startsWith, tail, values } from 'ramda';
+import * as React from 'react';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import Grid from 'src/components/Grid';
@@ -169,7 +155,7 @@ const CreateFromImage: React.StatelessComponent<CombinedProps> = (props) => {
       ),
     },
   ];
-  
+
   const renderTabs = () => {
     const { hideMyImages } = props;
     if (hideMyImages) {

@@ -1,19 +1,17 @@
 import * as React from 'react';
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
 
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import { KeyboardArrowDown, KeyboardArrowUp } from '@material-ui/icons';
-
-import { powerOffLinode, powerOnLinode, rebootLinode }
-  from 'src/features/linodes/LinodesLanding/powerActions';
-import ActionsPanel from 'src/components/ActionsPanel';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import MenuItem from 'src/components/MenuItem';
-import { linodeInTransition } from 'src/features/linodes/transitions';
 
 import PowerOn from 'src/assets/icons/powerOn.svg';
 import Reload from 'src/assets/icons/reload.svg';
+import ActionsPanel from 'src/components/ActionsPanel';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import MenuItem from 'src/components/MenuItem';
+import { powerOffLinode, powerOnLinode, rebootLinode } from 'src/features/linodes/LinodesLanding/powerActions';
+import { linodeInTransition } from 'src/features/linodes/transitions';
 
 type ClassNames = 'root'
   | 'button'

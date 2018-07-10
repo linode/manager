@@ -1,3 +1,6 @@
+import { compose, head, path, pathOr } from 'ramda';
+import * as React from 'react';
+
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
@@ -6,14 +9,14 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
-import { compose, head, path, pathOr } from 'ramda';
-import * as React from 'react';
+
 import AddNewLink from 'src/components/AddNewLink';
 import Grid from 'src/components/Grid';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import Table from 'src/components/Table';
 import { ZONES } from 'src/constants';
 import { getLinodeIPs } from 'src/services/linodes';
+
 import { withLinode } from '../context';
 import CreateIPv4Drawer from './CreateIPv4Drawer';
 import CreateIPv6Drawer from './CreateIPv6Drawer';

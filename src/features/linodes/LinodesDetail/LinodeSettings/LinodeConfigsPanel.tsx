@@ -1,64 +1,36 @@
+import { allPass, append, assoc, compose, defaultTo, filter, findIndex, lensPath, map, prop, propEq, set } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import {
-  allPass,
-  append,
-  assoc,
-  compose,
-  defaultTo,
-  filter,
-  findIndex,
-  lensPath,
-  map,
-  prop,
-  propEq,
-  set,
-} from 'ramda';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
-import TableRow from '@material-ui/core/TableRow';
-import TableHead from '@material-ui/core/TableHead';
 import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Typography from '@material-ui/core/Typography';
 
-import { events$ } from 'src/events';
-import {
-  createLinodeConfig,
-  deleteLinodeConfig,
-  updateLinodeConfig,
-  createLinodeDisk,
-  updateLinodeDisk,
-  deleteLinodeDisk,
-} from 'src/services/linodes';
-
-import Grid from 'src/components/Grid';
-import Table from 'src/components/Table';
-import { getVolumes } from 'src/services/volumes';
-import { ExtendedDisk, ExtendedVolume }
-  from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
-import ExpansionPanel from 'src/components/ExpansionPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
+import AddNewLink from 'src/components/AddNewLink';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import ExpansionPanel from 'src/components/ExpansionPanel';
+import Grid from 'src/components/Grid';
+import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
-import createDevicesFromStrings, { DevicesAsStrings } from
-  'src/utilities/createDevicesFromStrings';
+import Table from 'src/components/Table';
+import { events$ } from 'src/events';
+import { ExtendedDisk, ExtendedVolume } from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
+import { genEvent } from 'src/features/linodes/LinodesLanding/powerActions';
+import { createLinodeConfig, createLinodeDisk, deleteLinodeConfig, deleteLinodeDisk, updateLinodeConfig, updateLinodeDisk } from 'src/services/linodes';
+import { getVolumes } from 'src/services/volumes';
+import createDevicesFromStrings, { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
 import createStringsFromDevices from 'src/utilities/createStringsFromDevices';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 
 import LinodeConfigActionMenu from './LinodeConfigActionMenu';
 import LinodeConfigDrawer from './LinodeConfigDrawer';
-import { genEvent } from 'src/features/linodes/LinodesLanding/powerActions';
 import LinodeDiskActionMenu from './LinodeDiskActionMenu';
 import LinodeDiskDrawer from './LinodeDiskDrawer';
-import AddNewLink from 'src/components/AddNewLink';
 
 type ClassNames = 'root' | 'headline';
 

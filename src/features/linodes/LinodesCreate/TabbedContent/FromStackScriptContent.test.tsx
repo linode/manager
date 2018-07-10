@@ -1,7 +1,9 @@
-import * as React from 'react';
 import { shallow } from 'enzyme';
-import { FromStackScriptContent } from './FromStackScriptContent';
+import * as React from 'react';
+
 import { UserDefinedFields as mockUserDefinedFields } from 'src/__data__/UserDefinedFields';
+
+import { FromStackScriptContent } from './FromStackScriptContent';
 
 const mockProps = {
   images: [],

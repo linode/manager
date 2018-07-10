@@ -1,24 +1,14 @@
 import * as React from 'react';
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from '@material-ui/core/styles';
 
 import Paper from '@material-ui/core/Paper';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import SelectionCard from 'src/components/SelectionCard';
-
-import {
-  aggregateBackups,
-  formatBackupDate,
-} from 'src/features/linodes/LinodesDetail/LinodeBackup';
-
 import RenderGuard from 'src/components/RenderGuard';
+import SelectionCard from 'src/components/SelectionCard';
+import { aggregateBackups, formatBackupDate } from 'src/features/linodes/LinodesDetail/LinodeBackup';
 
 type ClassNames =
 'root'

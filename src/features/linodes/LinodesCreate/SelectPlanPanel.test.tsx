@@ -1,10 +1,9 @@
+import { shallow } from 'enzyme';
 import * as React from 'react';
 
-import { shallow } from 'enzyme';
+import { ExtendedType } from 'src/__data__/ExtendedType';
 
 import { SelectPlanPanel } from './SelectPlanPanel';
-
-import { ExtendedType } from 'src/__data__/ExtendedType';
 
 describe('Select Plan Panel', () => {
 

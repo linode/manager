@@ -1,28 +1,27 @@
-import * as React from 'react';
 import { clamp, pathOr } from 'ramda';
+import * as React from 'react';
 
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormLabel from '@material-ui/core/FormLabel';
-import MenuItem from 'src/components/MenuItem';
 import RadioGroup from '@material-ui/core/RadioGroup';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-import { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
-import DeviceSelection, { ExtendedDisk, ExtendedVolume }
-  from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
-import Grid from 'src/components/Grid';
-import Drawer from 'src/components/Drawer';
-import TextField from 'src/components/TextField';
-import Radio from 'src/components/Radio';
-import Toggle from 'src/components/Toggle';
 import ActionsPanel from 'src/components/ActionsPanel';
+import Drawer from 'src/components/Drawer';
+import Grid from 'src/components/Grid';
+import MenuItem from 'src/components/MenuItem';
 import Notice from 'src/components/Notice';
+import Radio from 'src/components/Radio';
+import TextField from 'src/components/TextField';
+import Toggle from 'src/components/Toggle';
+import DeviceSelection, { ExtendedDisk, ExtendedVolume } from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
+import { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
+import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
 type ClassNames = 'root'
   | 'section'

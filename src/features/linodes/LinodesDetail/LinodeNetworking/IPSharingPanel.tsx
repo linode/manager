@@ -10,7 +10,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import ExpansionPanel from 'src/components/ExpansionPanel';
-import Grid from 'src/components/Grid'; 
+import Grid from 'src/components/Grid';
 import IconButton from 'src/components/IconButton';
 import LinearProgress from 'src/components/LinearProgress';
 import MenuItem from 'src/components/MenuItem';
@@ -20,7 +20,7 @@ import { getLinodes } from 'src/services/linodes';
 import { shareAddresses } from 'src/services/networking';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
-type ClassNames = 
+type ClassNames =
   'ipFieldLabel'
   | 'containerDivider'
   | 'ipField'
@@ -165,7 +165,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
       ipsToShare: newIPsToShare,
     })
   }
-  
+
   onIPDelete = (ipIdx: number) => (e: React.MouseEvent<HTMLElement>) => {
     if (ipIdx === undefined) { return; }
     const newIPsToShare = clone(this.state.ipsToShare);
@@ -182,7 +182,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
       return ip === selectedIP || !hasBeenSelected;
     })
   }
-  
+
   renderShareIPRow = (ip: string, idx: number) => {
     const { classes } = this.props;
     return (
@@ -198,7 +198,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
             className={classes.ipField}
           >
             {this.remainingChoices(ip).map((ipChoice: string, choiceIdx: number) =>
-              <MenuItem 
+              <MenuItem
                 data-ip-idx={idx}
                 key={choiceIdx}
                 value={ipChoice}

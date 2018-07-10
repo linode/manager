@@ -1,17 +1,17 @@
-import * as React from 'react';
 import * as moment from 'moment-timezone';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { compose, path, sortBy, pathOr } from 'ramda';
-import { Subscription } from 'rxjs/Rx';
+import { compose, path, pathOr, sortBy } from 'ramda';
+import * as React from 'react';
 import { connect } from 'react-redux';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { Subscription } from 'rxjs/Rx';
 
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
@@ -19,31 +19,24 @@ import TableRow from '@material-ui/core/TableRow';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 
-import {
-  getLinodeBackups,
-  enableBackups,
-  takeSnapshot,
-  updateBackupsWindow,
-  cancelBackups,
-  getType,
-} from 'src/services/linodes';
-import Table from 'src/components/Table';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
-import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
-import Placeholder from 'src/components/Placeholder';
-import TextField from 'src/components/TextField';
-import Select from 'src/components/Select';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import { events$, resetEventsPolling } from 'src/events';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import ActionsPanel from 'src/components/ActionsPanel';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import Placeholder from 'src/components/Placeholder';
+import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
+import Select from 'src/components/Select';
+import Table from 'src/components/Table';
+import TextField from 'src/components/TextField';
+import { events$, resetEventsPolling } from 'src/events';
+import { linodeInTransition } from 'src/features/linodes/transitions';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
+import { cancelBackups, enableBackups, getLinodeBackups, getType, takeSnapshot, updateBackupsWindow } from 'src/services/linodes';
+import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
+import { withLinode } from '../context';
 import LinodeBackupActionMenu from './LinodeBackupActionMenu';
 import RestoreToLinodeDrawer from './RestoreToLinodeDrawer';
-import { withLinode } from '../context';
-import { linodeInTransition } from 'src/features/linodes/transitions';
 
 type ClassNames =
   'paper'
