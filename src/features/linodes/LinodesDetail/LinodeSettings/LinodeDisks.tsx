@@ -488,14 +488,12 @@ const linodeContext = withLinode((context) => {
     };
   }
 
-  if (data) {
-    return {
-      linodeId: data.id,
-      linodeError: errors,
-      linodeTotalDisk: data.specs.disk,
-      linodeStatus: data.status,
-    };
-  }
+  return {
+    linodeError: errors,
+    linodeId: data!.id,
+    linodeTotalDisk: data!.specs.disk,
+    linodeStatus: data!.status,
+  };
 });
 
 const enhanced = compose(styled, linodeContext, diskContext);

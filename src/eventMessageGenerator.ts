@@ -33,20 +33,20 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   credit_card_updated: {
     notification: e => `Credit card information has been updated.`,
   },
-  // disk_create: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
-  // disk_delete: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
+  disk_create: {
+    scheduled: e => `A disk on ${e.entity!.label} is being created.`,
+    started: e => `A disk on Linode ${e.entity!.label} is being created.`,
+    failed: e => `A disk on Linode ${e.entity!.label} could not be created.`,
+    finished: e => `A disk on Linode ${e.entity!.label} was created.`,
+    // notification: e => ``,
+  },
+  disk_delete: {
+    scheduled: e => `A disk on ${e.entity!.label} is being deleted.`,
+    started: e => `A disk on Linode ${e.entity!.label} is being deleted.`,
+    failed: e => `A disk on Linode ${e.entity!.label} could not be deleted.`,
+    finished: e => `A disk on Linode ${e.entity!.label} was deleted`,
+    // notification: e => ``,
+  },
   // disk_duplicate: {
   //   scheduled: e => ``,
   //   started: e => ``,
@@ -61,13 +61,13 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   //   finished: e => ``,
   //   notification: e => ``,
   // },
-  // disk_resize: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
+  disk_resize: {
+    scheduled: e => `A disk on ${e.entity!.label} is being resized.`,
+    started: e => `A disk on Linode ${e.entity!.label} is being resized.`,
+    failed: e => `A disk on Linode ${e.entity!.label} could not be resized.`,
+    finished: e => `A disk on Linode ${e.entity!.label} was resized`,
+    // notification: e => ``,
+  },
   dns_record_create: {
     notification: e => `DNS record added to ${e.entity!.label}`,
   },
@@ -298,6 +298,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     started: e => `Volume ${e.entity!.label} is being attached to a Linode.`,
     failed: e => `Volume ${e.entity!.label} failed to attach to a Linode.`,
     finished: e => `Volume ${e.entity!.label} has been attached to a Linode.`,
+    notification: e => `Volume ${e.entity!.label} has been attached to a Linode.`,
   },
   volume_clone: {
     notification: e => `Volume ${e.entity!.label} has been cloned.`,
