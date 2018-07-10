@@ -26,8 +26,8 @@ describe('StackScriptCreate', () => {
     expect(titleText).toBe('Create New StackScript');
   });
 
-  it('should render two text fields', () => {
-    expect(component.find('LinodeTextField')).toHaveLength(2);
+  it('should render three text fields', () => {
+    expect(component.find('LinodeTextField')).toHaveLength(4);
   });
   
   it('should render a select field', () => {

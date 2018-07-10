@@ -20,8 +20,12 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import { KeyboardArrowLeft } from '@material-ui/icons';
 
+import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/Button';
+import Checkbox from 'src/components/CheckBox';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
+import Notice from 'src/components/Notice';
 import PromiseLoader from 'src/components/PromiseLoader';
 import Select from 'src/components/Select';
 import Tag from 'src/components/Tag';
@@ -74,6 +78,9 @@ interface State {
   imageSelectOpen: boolean;
   selectedImages: string[];
   availableImages: Linode.Image[];
+  script: string;
+  revisionNote: string;
+  is_public: boolean;
  }
 
 type CombinedProps = Props
@@ -93,6 +100,9 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     selectedImages: [],
     /* available images to select from in the dropdown */
     availableImages: this.props.images.response,
+    script: '',
+    revisionNote: '',
+    is_public: false,
   };
 
   handleLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -129,9 +139,54 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     this.setState({ imageSelectOpen: true });
   }
 
+  handleChangeScript = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ script: e.target.value });
+  }
+
+  handleChangeRevisionNote = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ revisionNote: e.target.value });
+  }
+
+  handleToggleIsPublic = () => {
+    this.setState({ is_public: !this.state.is_public });
+  }
+
+  resetAllFields = () => {
+    this.setState({
+      script: '',
+      labelText: '',
+      selectedImages: [],
+      descriptionText: '',
+      is_public: false,
+      revisionNote: '',
+    })
+  }
+
+  renderNoticeHTML = () => {
+    return (
+      `<h3>Woah, just a word of caution...</h3>
+        <p>Making this StackScript public cannot be undone. Once made public, your StackScript will
+          be available to all Linode users and can be used to provision new Linodes.
+      </p>`
+    )
+  }
+
   render() {
     const { classes, profile } = this.props;
-    const { availableImages, selectedImages } = this.state;
+    const { availableImages, selectedImages, script,
+    labelText, descriptionText, revisionNote } = this.state;
+
+    const payload = {
+      script: this.state.script,
+      label: this.state.labelText,
+      images: this.state.selectedImages,
+      description: this.state.descriptionText,
+      is_public: this.state.is_public,
+      rev_note: this.state.revisionNote,
+    }
+
+    console.log(payload);
+
     return (
       <React.Fragment>
         <Grid
@@ -162,6 +217,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
             required
             onChange={this.handleLabelChange}
             placeholder='Enter a label'
+            value={labelText}
           />
           <HelpIcon text="Select a StackScript Label" />
           <TextField
@@ -170,6 +226,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
             label="Description"
             placeholder="Enter a description"
             onChange={this.handleDescriptionChange}
+            value={descriptionText}
           // errorText={hasErrorFor('ssl_cert')}
           // errorGroup={forEdit ? `${configIdx}`: undefined}
           />
@@ -179,6 +236,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
               htmlFor="image"
               disableAnimation
               shrink={true}
+              required
             // error={Boolean(regionError)}
             >
               Target Images
@@ -202,11 +260,6 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
               </MenuItem>,
               )}
             </Select>
-            {/* {regionError &&
-            <FormHelperText error={Boolean(regionError)}>
-              {regionError}
-            </FormHelperText>
-          } */}
           </FormControl>
           <HelpIcon text="Select Multiple Images" />
           {selectedImages && selectedImages.map((selectedImage, index) => {
@@ -219,6 +272,60 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
               />
             )
           })}
+          <TextField
+            multiline
+            rows={1}
+            label="Script"
+            placeholder={`#!/bin/bash \n\n# Your script goes here`}
+            onChange={this.handleChangeScript}
+            value={script}
+            required
+          // errorText={hasErrorFor('ssl_cert')}
+          // errorGroup={forEdit ? `${configIdx}`: undefined}
+          />
+          <TextField
+            multiline
+            rows={1}
+            label="Revision Note"
+            placeholder='Enter a revision note'
+            onChange={this.handleChangeRevisionNote}
+            value={revisionNote}
+          // errorText={hasErrorFor('ssl_cert')}
+          // errorGroup={forEdit ? `${configIdx}`: undefined}
+          />
+          <Notice warning flag html={this.renderNoticeHTML()} />
+          <InputLabel
+            htmlFor="make_public"
+            disableAnimation
+            shrink={true}
+          // error={Boolean(regionError)}
+          >
+            <Checkbox
+              name='make_public'
+              variant='warning'
+              onChange={this.handleToggleIsPublic}
+              checked={this.state.is_public}
+            />
+            Publish this StackScript to the Public Library
+          </InputLabel>
+          <ActionsPanel style={{ padding: 0 }}>
+            <Button
+              data-qa-confirm-cancel
+              onClick={() => console.log('saved')}
+              type="primary"
+              loading={false}
+            >
+              Save
+            </Button>
+            <Button
+              onClick={this.resetAllFields}
+              type="secondary"
+              className="cancel"
+              data-qa-cancel-cancel
+            >
+              Cancel
+            </Button>
+          </ActionsPanel>
         </Paper>
       </React.Fragment>
     );
