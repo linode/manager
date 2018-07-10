@@ -24,10 +24,10 @@ import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
 import PromiseLoader from 'src/components/PromiseLoader';
 import Select from 'src/components/Select';
+import Tag from 'src/components/Tag';
 import TextField from 'src/components/TextField';
 
 import { getLinodeImages } from 'src/services/images';
-
 
 type ClassNames = 'root'
   | 'backButton'
@@ -111,14 +111,27 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     this.setState({ imageSelectOpen: false });
   }
 
+  handleRemoveImage = (indexToRemove: any) => {
+    const selectedImagesCopy = this.state.selectedImages;
+    selectedImagesCopy.splice(indexToRemove, 1);
+    this.setState({ selectedImages: selectedImagesCopy });
+  }
+
   handleChooseImage = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log(this.state.selectedImages);
-    this.setState({ selectedImages: [...this.state.selectedImages, e.target.value] })
+    const { availableImages } = this.state;
+    const filteredAvailableImages = availableImages.filter((image) => {
+      return image.label !== e.target.value;
+    })
+    this.setState({
+      selectedImages: [...this.state.selectedImages, e.target.value],
+      availableImages: filteredAvailableImages,
+    })
     this.setState({ imageSelectOpen: true });
   }
 
   render() {
-    const { classes, profile, images } = this.props;
+    const { classes, profile } = this.props;
+    const { availableImages, selectedImages } = this.state;
     return (
       <React.Fragment>
         <Grid
@@ -180,7 +193,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
             // error={Boolean(regionError)}
             >
               <MenuItem disabled key="none" value="none">Select Compatible Images</MenuItem>,
-            {images && images.response.map(image =>
+            {availableImages && availableImages.map(image =>
                 <MenuItem
                   key={image.id}
                   value={image.label}
@@ -196,6 +209,16 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
           } */}
           </FormControl>
           <HelpIcon text="Select Multiple Images" />
+          {selectedImages && selectedImages.map((selectedImage, index) => {
+            return (
+              <Tag
+                key={selectedImage}
+                label={selectedImage}
+                variant='lightBlue'
+                onDelete={() => this.handleRemoveImage(index)}
+              />
+            )
+          })}
         </Paper>
       </React.Fragment>
     );
