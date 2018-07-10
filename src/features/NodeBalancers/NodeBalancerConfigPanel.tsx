@@ -1,15 +1,13 @@
+import Downshift, { DownshiftState, StateChangeOptions } from 'downshift';
 import * as React from 'react';
-
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-
 
 import Divider from '@material-ui/core/Divider';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-
 import { Delete } from '@material-ui/icons';
 
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -20,10 +18,7 @@ import IconButton from 'src/components/IconButton';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
-
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-
-import Downshift, { DownshiftState, StateChangeOptions } from 'downshift';
 
 type ClassNames = 'root'
   | 'inner'
@@ -302,7 +297,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
     const isHighlighted = highlightedIndex === index;
     const { classes } = this.props;
 
-    const privateIPRegex = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/; 
+    const privateIPRegex = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/;
     const privateIP = linode.ipv4.find(ipv4 => !!ipv4.match(privateIPRegex));
     return (
       <MenuItem
@@ -896,7 +891,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                         // filter out the linodes that don't match what we're typing
                                         // filter by private ip and label
                                           .filter((linode: Linode.Linode) => {
-                                            const privateIPRegex = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/; 
+                                            const privateIPRegex = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/;
                                             const privateIP = linode.ipv4.find(ipv4 => !!ipv4.match(privateIPRegex));
                                             return linode.label.toLowerCase().includes(inputValue.toLowerCase())
                                               || privateIP!.includes(inputValue.toLowerCase())

@@ -1,17 +1,12 @@
+import { mount } from 'enzyme';
 import * as React from 'react';
-
 import { StaticRouter, withRouter } from 'react-router-dom';
 
-import { mount } from 'enzyme';
-
-import { clearDocs, setDocs } from 'src/store/reducers/documentation';
-
-import { createPromiseLoaderResponse } from 'src/utilities/testHelpers';
-
+import { extendedNodeBalancers } from 'src/__data__/nodeBalancers';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
+import { clearDocs, setDocs } from 'src/store/reducers/documentation';
+import { createPromiseLoaderResponse } from 'src/utilities/testHelpers';
 import { NodeBalancersLanding as _NodeBalancersLanding } from './NodeBalancersLanding';
-
-import {extendedNodeBalancers} from 'src/__data__/nodeBalancers';
 
 describe('NodeBalancers', () => {
   const NodeBalancersLanding = withRouter(_NodeBalancersLanding);

@@ -1,35 +1,27 @@
-import * as React from 'react';
-
 import { compose, pathOr } from 'ramda';
-
+import * as React from 'react';
 import { matchPath, Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
-
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import AppBar from '@material-ui/core/AppBar';
 import IconButton from '@material-ui/core/IconButton';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
-
 import { KeyboardArrowLeft } from '@material-ui/icons';
-
-import { getNodeBalancer, getNodeBalancerConfigs, updateNodeBalancer }
-  from 'src/services/nodebalancers';
 
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import EditableText from 'src/components/EditableText';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
-
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
+import { getNodeBalancer, getNodeBalancerConfigs, updateNodeBalancer } from 'src/services/nodebalancers';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import NodeBalancerConfigurations from './NodeBalancerConfigurations';
 import NodeBalancerSettings from './NodeBalancerSettings';
 import NodeBalancerSummary from './NodeBalancerSummary';
-
 
 type ClassNames = 'root'
   | 'titleWrapper'
