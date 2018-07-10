@@ -1,11 +1,12 @@
 import * as React from 'react';
 
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import Grid from 'src/components/Grid';
-import Typography from '@material-ui/core/Typography';
 import Snackbar, { SnackbarProps } from '@material-ui/core/Snackbar';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 import { Close } from '@material-ui/icons';
+
+import Grid from 'src/components/Grid';
 
 type ClassNames = 'root'
   | 'content'
