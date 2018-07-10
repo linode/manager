@@ -1,4 +1,5 @@
 import * as CSS from 'csstype';
+
 declare module 'csstype' {
   interface Properties<TLength = string | 0> extends
     CSS.StandardProperties<TLength>,
