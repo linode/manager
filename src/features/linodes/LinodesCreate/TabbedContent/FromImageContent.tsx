@@ -1,35 +1,32 @@
 import * as React from 'react';
+
 import {
-  withStyles,
   StyleRulesCallback,
   Theme,
   WithStyles,
+  withStyles,
 } from '@material-ui/core/styles';
-
 import { pathOr } from 'ramda';
-
 import { Sticky, StickyProps } from 'react-sticky';
 
-import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
-import SelectImagePanel from '../SelectImagePanel';
-import PasswordPanel from '../PasswordPanel';
-import AddonsPanel from '../AddonsPanel';
-
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-
+import CheckoutBar from 'src/components/CheckoutBar';
+import Grid from 'src/components/Grid';
+import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
 import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
-import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
-import Grid from 'src/components/Grid';
-import CheckoutBar from 'src/components/CheckoutBar';
+import { resetEventsPolling } from 'src/events';
+import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import {
   allocatePrivateIP,
   createLinode,
 } from 'src/services/linodes';
 
-import { resetEventsPolling } from 'src/events';
+import AddonsPanel from '../AddonsPanel';
+import PasswordPanel from '../PasswordPanel';
+import SelectImagePanel from '../SelectImagePanel';
+import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
 
 type ClassNames = 'root' | 'main' | 'sidebar';
 
@@ -70,6 +67,7 @@ interface State {
   privateIP: boolean;
   password: string | null;
   isMakingRequest: boolean;
+  initTab?: number;
 }
 
 export type TypeInfo = {
@@ -92,7 +90,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 export class FromImageContent extends React.Component<CombinedProps, State> {
   state: State = {
-    selectedImageID: null,
+    selectedImageID: pathOr(null, ['history', 'location', 'state', 'selectedImageId'], this.props),
     selectedTypeID: null,
     selectedRegionID: null,
     password: '',
@@ -100,6 +98,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
     backups: false,
     privateIP: false,
     isMakingRequest: false,
+    initTab: pathOr(null, ['history', 'location', 'state', 'initTab'], this.props),
   };
 
   mounted: boolean = false;
@@ -163,7 +162,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
       booted: true,
     })
       .then((linode) => {
-        if (privateIP) allocatePrivateIP(linode.id);
+        if (privateIP) { allocatePrivateIP(linode.id); }
         resetEventsPolling();
         history.push('/linodes');
       })
@@ -193,7 +192,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
 
   render() {
     const { errors, backups, privateIP, label, selectedImageID,
-      selectedRegionID, selectedTypeID, password, isMakingRequest } = this.state;
+      selectedRegionID, selectedTypeID, password, isMakingRequest, initTab } = this.state;
 
     const { classes, notice, types, regions, images, getBackupsMonthlyPrice,
       getRegionName, getTypeInfo } = this.props;
@@ -226,6 +225,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
             handleSelection={this.handleSelectImage}
             selectedImageID={selectedImageID}
             updateFor={[selectedImageID]}
+            initTab={initTab}
           />
           <SelectRegionPanel
             error={hasErrorFor('region')}

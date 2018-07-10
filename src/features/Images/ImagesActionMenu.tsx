@@ -5,7 +5,7 @@ import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   onRestore: () => void;
-  onDeploy: () => void;
+  onDeploy: (imageID: string) => void;
   onEdit: (label:string, description:string, imageID:string) => void;
   onDelete: (label:string, imageID:string) => void;
   image: Linode.Image;
@@ -37,8 +37,7 @@ class ImagesActionMenu extends React.Component<CombinedProps> {
         {
           title: 'Deploy New Linode',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            onDeploy();
-            closeMenu();
+            onDeploy(image.id);
             e.preventDefault();
           },
         },
