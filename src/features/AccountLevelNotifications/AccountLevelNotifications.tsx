@@ -1,19 +1,11 @@
+import { compose, contains, filter, pathOr, prop, propSatisfies, uniqBy } from 'ramda';
 import * as React from 'react';
 import { Subscription } from 'rxjs/Rx';
-import {
-  compose,
-  contains,
-  filter,
-  pathOr,
-  prop,
-  propSatisfies,
-  uniqBy,
-} from 'ramda';
 
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-import notifications$ from 'src/notifications';
 import Notice from 'src/components/Notice';
+import notifications$ from 'src/notifications';
 
 type ClassNames = 'root';
 
