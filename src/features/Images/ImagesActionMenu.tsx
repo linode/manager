@@ -36,7 +36,6 @@ class ImagesActionMenu extends React.Component<CombinedProps> {
         },
         {
           title: 'Deploy New Linode',
-          disabled: true,
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             onDeploy();
             closeMenu();
