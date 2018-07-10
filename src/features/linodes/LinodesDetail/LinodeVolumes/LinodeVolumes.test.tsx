@@ -12,6 +12,13 @@ describe('Linode Volumes', () => {
   const linodeConfigsAsPromiseResponse = createPromiseLoaderResponse(linodeConfigs);
   const volumesAsPromiseResponse = createPromiseLoaderResponse(volumes);
 
+  const mockLocation = {
+    pathname: 'localhost',
+    search: 'search',
+    state: 'hello',
+    hash: 'hash',
+  }
+
   const component = shallow(
     <LinodeVolumes
       classes={{ title: '' }}
@@ -21,6 +28,27 @@ describe('Linode Volumes', () => {
       linodeLabel="test"
       linodeRegion="us-east"
       linodeID={100}
+      history={{
+        length: 2,
+        action: 'PUSH',
+        location: mockLocation,
+        push: jest.fn(),
+        replace: jest.fn(),
+        go: jest.fn(),
+        goBack: jest.fn(),
+        goForward: jest.fn(),
+        block: jest.fn(),
+        listen: jest.fn(),
+        createHref: jest.fn(),
+      }}
+      location={mockLocation}
+      match={{
+        params: 'test',
+        isExact: false,
+        path: 'localhost',
+        url: 'localhost'
+      }}
+      staticContext={undefined}
     />
   )
   it('should render Update Volume Drawer', () => {
