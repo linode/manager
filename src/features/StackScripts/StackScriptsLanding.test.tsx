@@ -14,9 +14,10 @@ describe('StackScripts Landing', () => {
       images={{ response: images }}
       setDocs={setDocs}
       clearDocs={clearDocs}
-      classes={{ root: '' }}
+      classes={{ root: '', title: '' }}
     />
   )
+
   it('title of page should read "StackScripts"', () => {
     const titleText = component.find('WithStyles(Typography)[variant="headline"]')
     .children().text();
@@ -24,11 +25,11 @@ describe('StackScripts Landing', () => {
   });
 
   it('should have an Icon Text Link', () => {
-    expect(component.find('WithStyles(IconTextLink)')).toHaveLength(1);
+    expect(component.find('[data-qa-create-new-stackscript]')).toHaveLength(1);
   });
 
   it('icon text link text should read "Create New StackScript"', () => {
-    const iconText = component.find('WithStyles(IconTextLink)').prop('text');
+    const iconText = component.find('[data-qa-create-new-stackscript]').prop('label');
     expect(iconText).toBe('Create New StackScript');
   });
 

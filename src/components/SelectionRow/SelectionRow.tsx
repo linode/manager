@@ -95,10 +95,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     color: theme.color.grey1,
   },
   deployButton: {
-    marginLeft: -26,
+    // marginLeft: -26,
+    // width: '100%',
+    // justifyContent: 'flex-start',
+    whiteSpace: 'nowrap',
     border: 0,
-    width: '100%',
-    justifyContent: 'flex-start',
   },
 });
 
