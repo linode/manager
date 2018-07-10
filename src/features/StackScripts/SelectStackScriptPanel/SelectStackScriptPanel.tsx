@@ -329,6 +329,22 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
         const newData = (isSorting) ? response.data : [...this.state.listOfStackScripts, ...response.data];
 
         /*
+        * BEGIN @TODO: deprecate this once compound filtering becomes available in the API
+        * basically, if the result set after filtering out StackScripts with
+        * deprecated distos is 0, request the next page with the same filter.
+        */
+        const newDataWithoutDeprecatedDistros =
+          newData.filter(stackScript => this.hasNonDeprecatedImages(stackScript.images));
+
+        if (newDataWithoutDeprecatedDistros.length === 0) {
+          this.getNext();
+          return;
+        }
+        /*
+        * END @TODO
+        */
+
+        /*
         * We need to further clean up the data because when we are preselecting
         * a stackscript based on the URL query string, it's possible for the
         * stackscript to appear again on the first page or any subsequent page
@@ -336,20 +352,20 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
         * the duplicate key error
         */
         const cleanedData = (!!selectedStackScriptIDFromQuery)
-        ? newData.filter((stackScript, index) => {
+        ? newDataWithoutDeprecatedDistros.filter((stackScript, index) => {
           if(index !== 0) {
             return stackScript.id !== selectedStackScriptIDFromQuery;
           }
           return stackScript;
         })
-        : newData;
+        : newDataWithoutDeprecatedDistros;
         this.setState({
           listOfStackScripts: cleanedData,
           gettingMoreStackScripts: false,
           loading: false,
           isSorting: false,
         });
-        return newData;
+        return cleanedData;
       })
       .catch((e: any) => {
         if (!this.mounted) { return; }
