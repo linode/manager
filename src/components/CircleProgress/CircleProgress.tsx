@@ -105,7 +105,10 @@ const circleProgressComponent = (props: Props & WithStyles<CSSClasses>) => {
           data-qa-circle-progress
         />
       </div>
-      : <CircularProgress className={classes.mini} />
+      : <CircularProgress 
+          className={classes.mini}
+          data-qa-circle-progress
+        />
   );
 };
 
