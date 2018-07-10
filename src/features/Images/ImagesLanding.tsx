@@ -2,7 +2,7 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import { compose, pathOr } from 'ramda';
-import * as Rx from 'rxjs/Rx';
+import { Subscription } from 'rxjs/Rx';
 
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 
@@ -70,7 +70,7 @@ type CombinedProps = Props & PromiseLoaderProps & WithStyles<ClassNames> & Route
 
 class ImagesLanding extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
-  eventsSub: Rx.Subscription;
+  eventsSub: Subscription;
   state: State = {
     images: pathOr([], ['response', 'data'], this.props.images),
     error: pathOr(undefined, ['error'], this.props.images),
