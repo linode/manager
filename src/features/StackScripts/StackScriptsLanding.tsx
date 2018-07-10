@@ -1,25 +1,16 @@
+import { compose } from 'ramda';
 import * as React from 'react';
 
-import {
-  StyleRulesCallback,
-  Theme,
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-
-import { compose } from 'ramda';
 
 import AddNewLink from 'src/components/AddNewLink';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import Grid from 'src/components/Grid';
-
 import PromiseLoader from 'src/components/PromiseLoader';
-
-import SelectStackScriptPanel from './SelectStackScriptPanel';
-
 import { getImages } from 'src/services/images';
 
+import SelectStackScriptPanel from './SelectStackScriptPanel';
 
 type ClassNames = 'root' | 'title';
 
