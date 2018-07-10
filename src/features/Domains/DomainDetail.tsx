@@ -1,21 +1,22 @@
-import * as React from 'react';
 import { compose, pathOr } from 'ramda';
-import { matchPath, Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
+import * as React from 'react';
 
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
-import { KeyboardArrowLeft } from '@material-ui/icons';
 import AppBar from '@material-ui/core/AppBar';
 import IconButton from '@material-ui/core/IconButton';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
+import { KeyboardArrowLeft } from '@material-ui/icons';
 
-import { getDomain, getDomainRecords } from 'src/services/domains';
-import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
+import { matchPath, Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
+import setDocs from 'src/components/DocsSidebar/setDocs';
+import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
-import ErrorState from 'src/components/ErrorState';
-import setDocs from 'src/components/DocsSidebar/setDocs';
+import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
+import { getDomain, getDomainRecords } from 'src/services/domains';
+
 import DomainRecords from './DomainRecords';
 
 interface State {
