@@ -52,7 +52,7 @@ interface State {
   error?: Error;
   imageDrawer: {
     open: boolean,
-    mode: 'edit' | 'create' | 'delete' | 'deploy',
+    mode: 'edit' | 'create' | 'restore' | 'deploy',
     imageID?: string,
     label?: string,
     description?: string, 
@@ -173,6 +173,16 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
         description,
         imageID,
         label,
+      }
+    })
+  }
+
+  openForRestore = (imageID: string) => {
+    this.setState({
+      imageDrawer: {
+        open: true,
+        mode: 'restore',
+        imageID,
       }
     })
   }
@@ -307,7 +317,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
               {images.map((image, idx) =>
                 <ImageRow key={idx} 
                           image={image}
-                          onRestore={() => null}
+                          onRestore={this.openForRestore}
                           onDeploy={this.deployNewLinode}
                           onEdit={this.openForEdit} 
                           onDelete={this.openRemoveDialog}

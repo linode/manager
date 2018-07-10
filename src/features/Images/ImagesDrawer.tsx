@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import { compose, equals, pathOr } from 'ramda';
 import { Subscription } from 'rxjs/Rx';
@@ -55,13 +56,12 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
 
 export const modes = {
   CLOSED: 'closed',
   CREATING: 'create',
   RESTORING: 'restore',
-  DEPLOYING: 'deploy',
   EDITING: 'edit',
 };
 
@@ -69,7 +69,6 @@ const titleMap = {
   [modes.CLOSED]: '',
   [modes.CREATING]: 'Create an Image',
   [modes.RESTORING]: 'Restore from an Image',
-  [modes.DEPLOYING]: 'Deploy a New Linode',
   [modes.EDITING]: 'Edit an Image',
 };
 
@@ -127,58 +126,74 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
     this.setState({ description: '', label: '', errors: undefined, });
     this.props.onClose();
   }
-
   
   onSubmit = () => {
-    const { mode, imageID, onSuccess } = this.props;
-    const { label, description, selectedDisk } = this.state;
-    
-    if (!label) {
-      this.setState({
-        errors: [{ field: 'label', reason: 'Label cannot be blank.' }],
-      });
-      return;
-    }
+    const { mode, history, imageID, onSuccess } = this.props;
+    const { label, description, selectedDisk, selectedLinode } = this.state;
     
     switch (mode) {
       case modes.EDITING:
-      if (!imageID) {
-        return;
-      }
-      
-      updateImage(imageID, label, description)
-      .then(() => {
-        onSuccess();
-        this.close();
-      })
-      .catch((errorResponse) => {
-        if (this.mounted) {
-          this.setState({
-            errors: pathOr('Image could not be updated.', ['response', 'data', 'errors'], errorResponse),
-          });
+        if (!imageID) {
+          return;
         }
-      });
-      return;
-      case modes.CREATING:
-      if (!selectedDisk) {
-        this.setState({
-          errors: [{ field: 'disk_id', reason: 'Choose a disk.' }],
+
+        if (!label) {
+          this.setState({
+            errors: [{ field: 'label', reason: 'Label cannot be blank.' }],
+          });
+          return;
+        }
+        
+        updateImage(imageID, label, description)
+        .then(() => {
+          onSuccess();
+          this.close();
+        })
+        .catch((errorResponse) => {
+          if (this.mounted) {
+            this.setState({
+              errors: pathOr('Image could not be updated.', ['response', 'data', 'errors'], errorResponse),
+            });
+          }
         });
         return;
-      }
-      createImage(Number(selectedDisk), label, description)
-      .then((response) => {
-        resetEventsPolling();
-        this.setState({
-          notice: "Image queued for creation.",
+      case modes.CREATING:
+        if (!selectedDisk) {
+          this.setState({
+            errors: [{ field: 'disk_id', reason: 'Choose a disk.' }],
+          });
+          return;
+        }
+        else if (!label) {
+          this.setState({
+            errors: [{ field: 'label', reason: 'Label cannot be blank.' }],
+          });
+          return;
+        }
+        createImage(Number(selectedDisk), label, description)
+        .then((response) => {
+          resetEventsPolling();
+          this.setState({
+            notice: "Image queued for creation.",
+          });
+          setTimeout(this.close, 4000);
+        })
+        .catch((errorResponse) => {
+          this.setState({
+            errors: pathOr('There was an error creating the image.', ['response', 'data', 'errors'], errorResponse),
+          });
         });
-        setTimeout(this.close, 4000);
-      })
-      .catch((errorResponse) => {
-        this.setState({
-          errors: pathOr('There was an error creating the image.', ['response', 'data', 'errors'], errorResponse),
-        });
-      });
+      case modes.RESTORING:
+        if (!selectedLinode) {
+          this.setState({
+            errors: [{ field: 'linode_id', reason: 'Choose a Linode.' }],
+          });
+          return;
+        }
+        history.push({
+          pathname: `/linodes/${selectedLinode}/rebuild`,
+          state: { selectedImageId: imageID },
+        })
       default:
       return;
     }
@@ -202,15 +217,30 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
       });
   }
 
+  checkRequirements = () => {
+    // When creating an image, disable the submit button until a Linode,
+    // disk, and label are selected. When editing, only a label is required.
+    // When restoring to an existing Linode, the Linode select is the only field.
+    const { mode, } = this.props;
+    const { label, selectedDisk, selectedLinode } = this.state;
+    switch(mode) {
+      case 'create':
+        return !(selectedDisk && selectedLinode && label);
+      case 'edit':
+        return !label;
+      case 'restore':
+        return !selectedLinode;
+      default:
+        return false;
+    }
+  }
+
   render() {
     const { mode, } = this.props;
     const { disks, label, linodes, description, notice, selectedDisk, selectedLinode } = this.state;
     const { errors } = this.state;
-    // When creating an image, disable the submit button until a Linode,
-    // disk, and label are selected. When editing, only a label is required.
-    const requirementsMet = (mode === 'create')
-                            ? !(selectedDisk && selectedLinode && label)
-                            : !label;
+    
+    const requirementsMet = this.checkRequirements();
 
     const hasErrorFor = getAPIErrorFor({
       linode_id: 'Linode',
@@ -247,7 +277,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
           />
         }
 
-        {mode === 'create' &&
+        {['create','restore'].includes(mode) &&
         <LinodeSelect
           linodes={linodes}
           selectedLinode={selectedLinode || 'none'}
@@ -265,6 +295,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
         />
        }
 
+        {['create','edit'].includes(mode) &&
         <TextField
           label="Label"
           required
@@ -274,7 +305,9 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
           errorText={labelError}
           data-qa-volume-label
         />
+        }
 
+        {['create','edit'].includes(mode) &&
         <TextField
           label="Description"
           multiline
@@ -285,6 +318,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
           errorText={descriptionError}
           data-qa-size
         />
+        }
 
         <ActionsPanel style={{ marginTop: 16 }}>
           <Button
@@ -313,7 +347,8 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default compose<any, any, any>(
+export default compose<any, any, any, any>(
   styled,
+  withRouter,
   SectionErrorBoundary,
 )(ImageDrawer);

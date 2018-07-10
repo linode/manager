@@ -21,7 +21,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 interface Props {
   onEdit: (label: string, description: string, imageID: string) => void;
   onDelete: (image: string, imageID: string) => void;
-  onRestore: () => void;
+  onRestore: (imageID: string) => void;
   onDeploy: (imageID: string) => void;
   image: Linode.Image;
 }

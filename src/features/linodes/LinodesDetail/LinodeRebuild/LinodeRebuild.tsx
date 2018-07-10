@@ -79,6 +79,7 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
     super(props);
     this.state = {
       images: groupImages(props.images.response),
+      selected: pathOr(undefined, ['history', 'location', 'state', 'selectedImageId'], props)
     };
   }
 
