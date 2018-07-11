@@ -21,6 +21,7 @@ import ProductNotification from 'src/components/ProductNotification';
 import { events$ } from 'src/events';
 import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawer';
 import { newLinodeEvents } from 'src/features/linodes/events';
+import { linodeInTransition } from 'src/features/linodes/transitions';
 import { lishLaunch } from 'src/features/Lish';
 import notifications$ from 'src/notifications';
 import { getImage } from 'src/services/images';
@@ -38,6 +39,7 @@ import LinodeRescue from './LinodeRescue';
 import LinodeResize from './LinodeResize';
 import LinodeSettings from './LinodeSettings';
 import LinodeSummary from './LinodeSummary';
+import LinodeBusyStatus from './LinodeSummary/LinodeBusyStatus';
 import LinodeVolumes from './LinodeVolumes';
 import reloadableWithRouter from './reloadableWithRouter';
 
@@ -297,7 +299,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       linode: {
         lastUpdated: 0,
         loading: true,
-        request: () => {
+        request: (recentEvent?: Linode.Event) => {
           this.setState(set(L.linode.loading, true));
 
           return getLinode(this.props.match.params.linodeId!)
@@ -305,7 +307,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               this.composeState(
                 set(L.labelInput.label, data.label),
                 set(L.linode.loading, false),
-                set(L.linode.data, data),
+                set(L.linode.data, { ...data, recentEvent }),
                 set(L.linode.lastUpdated, Date.now()),
               );
               return data;
@@ -411,7 +413,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
         configs.request();
         disks.request();
         volumes.request();
-        linode.request()
+        linode.request(linodeEvent)
           .then((l) => image.request(l.image))
           .catch(console.error);
       });
@@ -677,6 +679,9 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                   {
                     (this.state.notifications || []).map((n, idx) =>
                       <ProductNotification key={idx} severity={n.severity} text={n.message} />)
+                  }
+                  {linodeInTransition(linode.status, linode.recentEvent) &&
+                    <LinodeBusyStatus status={linode.status} recentEvent={linode.recentEvent} />
                   }
                   <Switch>
                     <Route exact path={`${url}/summary`} component={LinodeSummary} />
