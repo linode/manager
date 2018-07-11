@@ -1,8 +1,7 @@
 import { shallow } from 'enzyme';
-
 import * as React from 'react';
-import { StaticRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import { StaticRouter } from 'react-router-dom';
 
 import store from 'src/store';
 import { App } from './App';

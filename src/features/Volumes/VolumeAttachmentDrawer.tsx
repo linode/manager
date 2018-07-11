@@ -1,17 +1,15 @@
-import * as React from 'react';
-
-import { path } from 'ramda';
-
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
+import { path } from 'ramda';
+import * as React from 'react';
 
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from 'src/components/MenuItem';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Drawer from 'src/components/Drawer';
+import MenuItem from 'src/components/MenuItem';
 import Select from 'src/components/Select';
 import { resetEventsPolling } from 'src/events';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
@@ -98,13 +96,13 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
     if (e.target.value) { this.updateConfigs(+e.target.value); }
   }
 
-  changeSelectedConfig = (e: React.ChangeEvent<HTMLSelectElement>) => { 
+  changeSelectedConfig = (e: React.ChangeEvent<HTMLSelectElement>) => {
     this.setState({ selectedConfig: e.target.value });
   }
 
-  handleClose = () => { 
-    this.reset(); 
-    this.props.onClose(); 
+  handleClose = () => {
+    this.reset();
+    this.props.onClose();
   }
 
   componentWillReceiveProps(nextProps: CombinedProps) {

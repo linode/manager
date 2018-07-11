@@ -1,4 +1,4 @@
-import { getMyImages, getPublicImages, getOlderPublicImages } from './SelectImagePanel';
+import { getMyImages, getOlderPublicImages, getPublicImages } from './SelectImagePanel';
 
 describe('CreateFromImage', () => {
   const images: Partial<Linode.Image>[] = [

@@ -1,7 +1,7 @@
-import * as React from 'react';
 import { storiesOf } from '@storybook/react';
+import * as React from 'react';
 
-import PlusSquare from '../../../src/assets/icons/plus-square.svg';
+import PlusSquare from 'src/assets/icons/plus-square.svg';
 
 import ThemeDecorator from '../../utilities/storybookDecorators';
 import IconTextLink from './IconTextLink';

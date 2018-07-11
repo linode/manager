@@ -1,6 +1,6 @@
-import Lish from './Lish';
-
 import { LISH_ROOT, ZONES } from 'src/constants';
+
+import Lish from './Lish';
 
 export const lishLaunch = (linodeId: string) => {
   window.open(
@@ -9,7 +9,7 @@ export const lishLaunch = (linodeId: string) => {
     'left=100,top=100,width=1080,height=730,toolbar=0,resizable=1',
   );
 }
-  
+
 export const getLishSchemeAndHostname = (region: string): string => {
   if (LISH_ROOT.includes('alpha')) {
     /* Note: This is only the case for pre-production environments! */

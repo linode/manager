@@ -1,25 +1,20 @@
-import * as React from 'react';
-
 import { compose, pathOr } from 'ramda';
+import * as React from 'react';
 
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
-import SelectionCard from 'src/components/SelectionCard';
-import SelectPlanPanel, { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
-
 import ActionsPanel from 'src/components/ActionsPanel';
 import PromiseLoader from 'src/components/PromiseLoader';
-
-import { getLinodeTypes, resizeLinode } from 'src/services/linodes';
-
+import SelectionCard from 'src/components/SelectionCard';
 import { resetEventsPolling } from 'src/events';
-
+import SelectPlanPanel, { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
+import { withLinode } from 'src/features/linodes/LinodesDetail/context';
 import { typeLabelDetails } from 'src/features/linodes/presentation';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
-import { withLinode } from 'src/features/linodes/LinodesDetail/context';
+import { getLinodeTypes, resizeLinode } from 'src/services/linodes';
 
 type ClassNames = 'root'
   | 'title'

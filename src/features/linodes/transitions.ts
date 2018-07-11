@@ -14,7 +14,7 @@ export const transitionAction = [
 
 export const linodeInTransition = (status: string, recentEvent?: Linode.Event): boolean => {
   return (
-    transitionStatus.includes(status) 
+    transitionStatus.includes(status)
     || (
       (recentEvent || false)
       && (transitionAction.includes(recentEvent.action || ''))

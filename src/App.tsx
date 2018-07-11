@@ -1,33 +1,33 @@
-import * as React from 'react';
-import { Switch, Route } from 'react-router-dom';
-import { connect, Dispatch } from 'react-redux';
-import { compose, bindActionCreators } from 'redux';
-import { append, pathOr, range, flatten } from 'ramda';
 import * as Promise from 'bluebird';
 import { shim } from 'promise.prototype.finally';
-shim(); // allows for .finally() usage
-
-import { withStyles, WithStyles, StyleRulesCallback, Theme } from '@material-ui/core/styles';
+import { append, flatten, pathOr, range } from 'ramda';
+import * as React from 'react';
+import { connect, Dispatch } from 'react-redux';
+import { Route, Switch } from 'react-router-dom';
+import { bindActionCreators, compose } from 'redux';
 import 'typeface-lato';
 
-import { getLinodeTypes, getLinodeKernels } from 'src/services/linodes';
-import { getProfile } from 'src/services/profile';
-import TopMenu from 'src/features/TopMenu';
-import Grid from 'src/components/Grid';
-import SideMenu from 'src/components/SideMenu';
-import DefaultLoader from 'src/components/DefaultLoader';
-import { request, response } from 'src/store/reducers/resources';
-import Footer from 'src/features/Footer';
-import Placeholder from 'src/components/Placeholder';
-import NotFound from 'src/components/NotFound';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-import ToastNotifications from 'src/features/ToastNotifications';
+import DefaultLoader from 'src/components/DefaultLoader';
+import DocsSidebar from 'src/components/DocsSidebar';
+import Grid from 'src/components/Grid';
+import NotFound from 'src/components/NotFound';
+import Placeholder from 'src/components/Placeholder';
+import SideMenu from 'src/components/SideMenu';
 import AccountLevelNotifications from 'src/features/AccountLevelNotifications';
+import Footer from 'src/features/Footer';
+import ToastNotifications from 'src/features/ToastNotifications';
+import TopMenu from 'src/features/TopMenu';
+import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
+import { getLinodeKernels, getLinodeTypes } from 'src/services/linodes';
+import { getRegions } from 'src/services/misc';
+import { getProfile } from 'src/services/profile';
+import { request, response } from 'src/store/reducers/resources';
 
 import BetaNotification from './BetaNotification';
-import DocsSidebar from 'src/components/DocsSidebar';
-import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
-import { getRegions } from 'src/services/misc';
+
+shim(); // allows for .finally() usage
 
 const LinodesRoutes = DefaultLoader({
   loader: () => import('src/features/linodes'),

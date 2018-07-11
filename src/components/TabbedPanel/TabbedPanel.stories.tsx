@@ -1,9 +1,10 @@
-import * as React from 'react';
 import { storiesOf } from '@storybook/react';
+import * as React from 'react';
 
-import TabbedPanel from './TabbedPanel';
-import ThemeDecorator from '../../utilities/storybookDecorators';
 import Grid from 'src/components/Grid';
+
+import ThemeDecorator from '../../utilities/storybookDecorators';
+import TabbedPanel from './TabbedPanel';
 
 storiesOf('TabbedPanel', module)
   .addDecorator(ThemeDecorator)

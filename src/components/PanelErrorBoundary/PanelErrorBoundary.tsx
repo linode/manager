@@ -1,8 +1,9 @@
 import * as React from 'react';
 
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
-import ExpansionPanel, { ExpansionPanelProps } from 'src/components/ExpansionPanel';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+
 import ErrorState from 'src/components/ErrorState';
+import ExpansionPanel, { ExpansionPanelProps } from 'src/components/ExpansionPanel';
 
 export interface Props extends ExpansionPanelProps { }
 

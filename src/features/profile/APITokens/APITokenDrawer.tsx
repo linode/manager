@@ -1,32 +1,28 @@
-import * as React from 'react';
 import * as moment from 'moment';
+import * as React from 'react';
 
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import Drawer from 'src/components/Drawer';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 
-import { dateFormat } from 'src/time';
 import ActionsPanel from 'src/components/ActionsPanel';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import Drawer from 'src/components/Drawer';
 import Radio from 'src/components/Radio';
 import Select from 'src/components/Select';
 import Table from 'src/components/Table';
 import TextField from 'src/components/TextField';
+import { dateFormat } from 'src/time';
+import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
-import {
-  Permission,
-  scopeStringToPermTuples,
-  permTuplesToScopeString,
-} from './utils';
+import { Permission, permTuplesToScopeString, scopeStringToPermTuples } from './utils';
 
 type Expiry = [string, string];
 

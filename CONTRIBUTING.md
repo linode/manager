@@ -75,17 +75,17 @@ adding features/elements/components that don't have a clear precedent. If this
 is the case, you will need to submit an issue with a mockup and send a request
 for comments to the [(#linode-next channel on irc.oftc.net)](https://webchat.oftc.net/?channels=linode-next&uio=d4).
 
-## Development 
+## Development
 
 Run:
 
     yarn start
 
 Or, using Docker:
-    
+
     docker run --rm -p 3000:3000 -v $(pwd)/src:/src/src linode-manager start
-    
-    ## If you have installed yarn, 
+
+    ## If you have installed yarn,
     ## you can call the following convenience script:
 
     yarn docker:local
@@ -107,7 +107,7 @@ set the NODE_ENV flag to "production" or set the DEVTOOLS_DISABLED flag to false
 
 We are doing our best to follow [a successful git branching model](http://nvie.com/posts/a-successful-git-branching-model/)
 
-In addition, updates should be accompanied by a [CHANGELOG.md](https://github.com/linode/manager/blob/master/CHANGELOG.md). 
+In addition, updates should be accompanied by a [CHANGELOG.md](https://github.com/linode/manager/blob/master/CHANGELOG.md).
 See [Keepachangelog](http://keepachangelog.com/en/0.3.0/) for formatting details
 
 We use [pre-commit](https://www.npmjs.com/package/pre-commit) to run linting and testing on commit. If either fail the commit will be aborted. Address the reported issues, stage the changes, and attempt the commit again. This behaviour can be skipped using the
@@ -124,7 +124,7 @@ When creating a new feature:
 6. `git push -u your-remote my-feature-name` # push to your remote and --set-upstream-to
 7. `git checkout develop` and `git pull origin develop` # make sure you're up to date
 8. `git rebase develop` or `git rebase -i develop` # rebase and cleanup your changes if desired
-9. `git push -f` # push your rebased feature to your remote 
+9. `git push -f` # push your rebased feature to your remote
 10. open a pull request against origin develop
 
 Updating your fork's develop from origin:
@@ -144,7 +144,7 @@ Creating a hotfix:
 8. `git push -u your-remote hf-v0.9.1`
 9. open a pull request against master for the hotfix (to be merged with "Create a Merge Commit" (--no-ff))
 10. open a pull request against develop for the hotfix (to be merged with "Create a Merge Commit" (--no-ff))
-10. after the pull request is approved and merged, follow up to make sure a release is tagged in github against master. 
+10. after the pull request is approved and merged, follow up to make sure a release is tagged in github against master.
 Copy relative changes from the [CHANGELOG.md](https://github.com/linode/manager/blob/master/CHANGELOG.md) into the release description.
 
 Creating a release candidate:
@@ -158,7 +158,7 @@ Creating a release candidate:
 8. `git push -u your-remote rc-v0.9.0`
 9. open a pull request against master for the release (to be merged with "Create a Merge Commit" (--no-ff))
 10. open a pull request against develop for the release (to be merged with "Create a Merge Commit" (--no-ff))
-10. after the pull request is approved and merged, follow up to make sure a release is tagged in github against master. 
+10. after the pull request is approved and merged, follow up to make sure a release is tagged in github against master.
 Copy relative changes from the [CHANGELOG.md](https://github.com/linode/manager/blob/master/CHANGELOG.md) into the release description.
 
 **Tip**: set up your local git repository to lint before every commit.
@@ -169,12 +169,12 @@ chmod +x .git/hooks/pre-commit
 ```
 
 ## Testing
-This project uses [Jest](https://facebook.github.io/jest/docs/en/api.html) for unit testing, snapshot testing, assertions, and mocking. [Sinon](http://sinonjs.org/) is still found throughout the project, however is being phased out in favor of Jest mocking. 
+This project uses [Jest](https://facebook.github.io/jest/docs/en/api.html) for unit testing, snapshot testing, assertions, and mocking. [Sinon](http://sinonjs.org/) is still found throughout the project, however is being phased out in favor of Jest mocking.
 
 End-to-end tests are written using WebdriverIO. More documentation on running these tests can be found in the testing [docs](/TESTING.md)
 
 ### Naming
-Test files are collocated with their target file and are suffixed "spec.js" (ie `myFile.js` and `myFile.spec.js`). 
+Test files are collocated with their target file and are suffixed "spec.js" (ie `myFile.js` and `myFile.spec.js`).
 
 ### Commands
 To run tests:
@@ -184,7 +184,7 @@ To run tests:
 
 To test a specific file or files found in a  folder:
 
-    yarn test MyFile.spec.js 
+    yarn test MyFile.spec.js
     yarn test src/some-folder
 
 ### Coverage Reporting
@@ -206,7 +206,7 @@ Or, using Docker:
     docker build -f Dockerfile . -t 'storybook'
     docker run -it --rm -p 6006:6006 -v $(pwd)/src:/src/src storybook storybook
 
-    ## If you have installed yarn, 
+    ## If you have installed yarn,
     ## you can call the following convenience script:
 
     yarn docker:storybook
@@ -217,6 +217,37 @@ The manager is written in ES6, with some ES7 in use as well. A general guideline
 for the coding style is "imitate the code that's already there". When in doubt,
 apply the [Airbnb style guide](https://github.com/airbnb/javascript) or just let
 the linter do its thing.
+
+## Dependencies
+
+This project relies on a number of third-party dependencies. It us important that when importing those
+dependencies you import only the necessary files. For example, if I needed to create an Observable
+using RxJS I would import only Observable and the type of Observable I want to create. This keeps bundle
+size down substantially.
+```
+## Good
+import 'rxjs/add/observable/of';
+import { Observable } from 'rxjs/Observable';
+
+## Bad
+import { Observable } from 'rxjs/Rx';
+```
+Additionally we order imports alphabetically within certain blocks. The blocks are;
+```
+/** Third Party Libs /**
+import * as React from 'react';
+
+/** Material UI Imports /**
+import { WithStyles } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
+
+/** Source Components /**
+import { getLinodes } from 'src/services/linodes';
+
+/** Relative Imports /**
+import something from '../some/where/nearby';
+```
+
 
 ## Reporting Bugs
 

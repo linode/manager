@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { ErrorOutline } from '@material-ui/icons';
+import ErrorOutline from '@material-ui/icons/ErrorOutline';
 
 import Placeholder from 'src/components/Placeholder';
 
@@ -10,9 +10,9 @@ interface Props {
 
 const NotFound = (props: Props) => {
   return (
-    <Placeholder 
+    <Placeholder
       icon={ErrorOutline}
-      title="Not Found" 
+      title="Not Found"
       copy=""
       animate={false}
       className={props.className}

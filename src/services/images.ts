@@ -26,7 +26,7 @@ export const getImage = (imageId: string) =>
   )
     .then(response => response.data);
 
-export const updateImage = (imageId: string, label: string, description: string) => 
+export const updateImage = (imageId: string, label: string, description: string) =>
   Request<Image>(
     setURL(`${API_ROOT}/images/${imageId}`),
     setMethod('PUT'),
@@ -41,7 +41,7 @@ export const createImage = (
   setURL(`${API_ROOT}/images`),
   setMethod('POST'),
   setData({ disk_id: diskID,
-            label, 
+            label,
             description: getSafeDescription(description) }),
   );
 
@@ -53,7 +53,7 @@ export const deleteImage = (imageId: string) => {
 }
 
 const getSafeDescription = (description: string) => {
-  // Blank descriptions are represented as ' ' in the API; 
+  // Blank descriptions are represented as ' ' in the API;
   // API will return an error if passed the empty string.
   const trimmed = description.trim();
   return trimmed === ''

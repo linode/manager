@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { withStyles, WithStyles, StyleRulesCallback, Theme } from '@material-ui/core/styles';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Table, { TableProps } from '@material-ui/core/Table';
 
 type ClassNames = 'root';

@@ -1,23 +1,17 @@
-import * as React from 'react';
 import { compose, lensPath, set } from 'ramda';
+import * as React from 'react';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from '@material-ui/core/styles';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import { updateLinode } from 'src/services/linodes';
-
+import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ExpansionPanel from 'src/components/ExpansionPanel';
-import ActionsPanel from 'src/components/ActionsPanel';
-import TextField from 'src/components/TextField';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import TextField from 'src/components/TextField';
 import { withLinode } from 'src/features/linodes/LinodesDetail/context';
+import { updateLinode } from 'src/services/linodes';
+import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root';
 

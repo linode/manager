@@ -1,16 +1,15 @@
 import * as React from 'react';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import Paper from '@material-ui/core/Paper';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+
+import Notice from 'src/components/Notice';
+import RenderGuard from 'src/components/RenderGuard';
 
 import UserDefinedMultiSelect from './FieldTypes/UserDefinedMultiSelect';
 import UserDefinedSelect from './FieldTypes/UserDefinedSelect';
 import UserDefinedText from './FieldTypes/UserDefinedText';
-
-import Notice from 'src/components/Notice';
-import RenderGuard from 'src/components/RenderGuard';
 
 type ClassNames = 'root' | 'username';
 

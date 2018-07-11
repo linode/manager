@@ -1,10 +1,9 @@
-import * as React from 'react';
 import { shallow } from 'enzyme';
+import * as React from 'react';
 import { StaticRouter } from 'react-router-dom';
 
+import { images, linodes } from 'src/__data__';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
-
-import { linodes, images } from 'src/__data__';
 
 import LinodesGridView from './LinodesGridView';
 

@@ -1,12 +1,11 @@
+import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-
-import { compose, pathOr } from 'ramda';
-import { Subscription } from 'rxjs/Rx';
-
-import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
+import 'rxjs/add/operator/filter';
+import { Subscription } from 'rxjs/Subscription';
 
 import Paper from '@material-ui/core/Paper';
+import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
@@ -92,10 +91,10 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
     {
       title: 'Linode Images',
       src: 'https://linode.com/docs/platform/linode-images/',
-      body: `Linode Images allows you to take snapshots of your disks, 
-      and then deploy them to any Linode under your account. 
-      This can be useful for bootstrapping a master image for a large deployment, 
-      or retaining a disk for a configuration that you may not need running, 
+      body: `Linode Images allows you to take snapshots of your disks,
+      and then deploy them to any Linode under your account.
+      This can be useful for bootstrapping a master image for a large deployment,
+      or retaining a disk for a configuration that you may not need running,
       but wish to return to in the future.`,
     },
     {
@@ -107,7 +106,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     this.mounted = true;
-    
+
     this.eventsSub = events$
       .filter(event => (
         !event._initial
@@ -189,7 +188,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
 
   removeImage = () => {
     const { removeDialog } = this.state;
-    if (!this.state.removeDialog.imageID) { 
+    if (!this.state.removeDialog.imageID) {
       this.setState({ removeDialog: { ...removeDialog, error: "Image is not available."}});
       return;
      }
@@ -217,7 +216,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
   setLabel = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ imageDrawer: { ...this.state.imageDrawer, label: e.target.value }});
   }
-  
+
   setDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ imageDrawer: { ...this.state.imageDrawer, description: e.target.value }});
   }
@@ -330,11 +329,11 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
             </TableHead>
             <TableBody>
               {images.map((image, idx) =>
-                <ImageRow key={idx} 
+                <ImageRow key={idx}
                           image={image}
                           onRestore={() => null}
                           onDeploy={this.deployNewLinode}
-                          onEdit={this.openForEdit} 
+                          onEdit={this.openForEdit}
                           onDelete={this.openRemoveDialog}
                           updateFor={[image]} />
               )}

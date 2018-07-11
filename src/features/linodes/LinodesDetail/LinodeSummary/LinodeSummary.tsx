@@ -1,18 +1,20 @@
+import * as moment from 'moment';
+import { compose } from 'ramda';
+import * as React from 'react';
+
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import * as moment from 'moment';
-import { compose } from 'ramda';
-import * as React from 'react';
+
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import LineGraph from 'src/components/LineGraph';
 import Select from 'src/components/Select';
-
 import { withImage, withLinode, withVolumes } from 'src/features/linodes/LinodesDetail/context';
 import { getLinodeStats } from 'src/services/linodes';
 import { setUpCharts } from 'src/utilities/charts';
+
 import SummaryPanel from './SummaryPanel';
 
 setUpCharts();

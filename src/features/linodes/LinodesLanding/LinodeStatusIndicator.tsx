@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import { Cached } from '@material-ui/icons';
+import Cached from '@material-ui/icons/Cached';
 
 import { linodeInTransition } from 'src/features/linodes/transitions';
 

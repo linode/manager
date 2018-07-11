@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
+import { bindActionCreators, Dispatch } from 'redux';
 
-import { setDocs, clearDocs } from 'src/store/reducers/documentation';
+import { clearDocs, setDocs } from 'src/store/reducers/documentation';
 
 export interface SetDocsProps {
   setDocs: typeof setDocs;

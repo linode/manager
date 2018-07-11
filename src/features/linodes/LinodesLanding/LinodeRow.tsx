@@ -1,28 +1,27 @@
-import * as React from 'react';
-import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
 import { compose, pathOr } from 'ramda';
+import * as React from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
-import { withStyles, Theme, WithStyles, StyleRulesCallback } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-
-import Grid from 'src/components/Grid';
-import Typography from '@material-ui/core/Typography';
-import TableRow from '@material-ui/core/TableRow';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
 import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
 
-import { displayType } from 'src/features/linodes/presentation';
-import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import Flag from 'src/assets/icons/flag.svg';
-import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
+import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
+import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
+import { displayType } from 'src/features/linodes/presentation';
 import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
+import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 
-import LinodeStatusIndicator from './LinodeStatusIndicator';
-import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';
 import LinodeActionMenu from './LinodeActionMenu';
+import LinodeStatusIndicator from './LinodeStatusIndicator';
+import RegionIndicator from './RegionIndicator';
 
 type ClassNames = 'bodyRow'
   | 'linodeCell'

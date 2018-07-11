@@ -1,10 +1,10 @@
-import * as React from 'react';
 import { storiesOf } from '@storybook/react';
+import * as React from 'react';
 
 import { List } from '@material-ui/core';
-import EventListItem from './EventListItem';
 
 import ThemeDecorator from '../../utilities/storybookDecorators';
+import EventListItem from './EventListItem';
 
 const testContent = 'We hope you\'re doing well! We\'re sending you this update ' +
   'because you\'re participating in our Block Storage beta and we would like to ' +

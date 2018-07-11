@@ -1,9 +1,11 @@
+import * as React from 'react';
+import { matchPath, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
+
 import AppBar from '@material-ui/core/AppBar';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
-import * as React from 'react';
-import { matchPath, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
+
 import APITokens from './APITokens';
 import LishSettings from './LishSettings';
 import OAuthClients from './OAuthClients';

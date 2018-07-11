@@ -1,25 +1,14 @@
-import * as React from 'react';
-
 import { compose, path } from 'ramda';
-
-import { StyleRulesCallback, Theme, withStyles,  WithStyles } from '@material-ui/core/styles';
+import * as React from 'react';
 
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
-
-
-import {
-  createOAuthClient,
-  deleteOAuthClient,
-  getOAuthClients,
-  resetOAuthClientSecret,
-  updateOAuthClient,
-} from 'src/services/account';
 
 import AddNewLink from 'src/components/AddNewLink';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
@@ -27,11 +16,11 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import Preload, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import Table from 'src/components/Table';
+import { createOAuthClient, deleteOAuthClient, getOAuthClients, resetOAuthClientSecret, updateOAuthClient } from 'src/services/account';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import ActionMenu from './OAuthClientActionMenu';
 import OAuthFormDrawer from './OAuthFormDrawer';
-
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root' | 'title';
 

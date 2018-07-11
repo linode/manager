@@ -1,15 +1,9 @@
 import * as React from 'react';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from '@material-ui/core/styles';
-
-import Grid from 'src/components/Grid';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import FooterLogo from 'src/assets/logo/logo-footer.svg';
+import Grid from 'src/components/Grid';
 
 type CSSClasses = 'container'
 | 'link'

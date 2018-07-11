@@ -1,6 +1,7 @@
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { StaticRouter } from 'react-router-dom';
-import { mount } from 'enzyme';
+
 import ActionMenu from './ActionMenu';
 
 describe('ActionMenu', () => {

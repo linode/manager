@@ -1,9 +1,10 @@
+import { mount, shallow } from 'enzyme';
 import * as React from 'react';
-import AddNewMenuItem from './AddNewMenuItem';
-import { shallow, mount } from 'enzyme';
-import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 
+import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
+
+import AddNewMenuItem from './AddNewMenuItem';
 
 describe('AddNewMenuItem', () => {
   it('should render without error', () => {

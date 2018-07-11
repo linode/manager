@@ -1,8 +1,8 @@
-import * as React from 'react';
 import { storiesOf } from '@storybook/react';
+import * as React from 'react';
 
-import ErrorState from './ErrorState';
 import ThemeDecorator from '../../utilities/storybookDecorators';
+import ErrorState from './ErrorState';
 
 storiesOf('Error Display', module)
   .addDecorator(ThemeDecorator)

@@ -1,28 +1,27 @@
-
+import Downshift, { DownshiftState, StateChangeOptions } from 'downshift';
+import * as moment from 'moment';
+import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import * as moment from 'moment';
-import Downshift, { DownshiftState, StateChangeOptions } from 'downshift';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { compose, pathOr } from 'ramda';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 
-import { withStyles, WithStyles, Theme, StyleRules } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import MenuItem from '@material-ui/core/MenuItem';
 import IconButton from '@material-ui/core/IconButton';
-import { Close, Search } from '@material-ui/icons';
+import MenuItem from '@material-ui/core/MenuItem';
+import Paper from '@material-ui/core/Paper';
+import { StyleRules, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Close from '@material-ui/icons/Close';
+import Search from '@material-ui/icons/Search';
 
-import { typeLabelLong, displayType } from 'src/features/linodes/presentation';
-import { getLinodesPage } from 'src/services/linodes';
-import { getVolumesPage } from 'src/services/volumes';
-import { getNodeBalancersPage } from 'src/services/nodebalancers';
+import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
+import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
+import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
+import TextField from 'src/components/TextField';
+import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
 import { getDomainsPage } from 'src/services/domains';
 import { getImagesPage } from 'src/services/images';
-import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
-import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
-import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
-
-import TextField from 'src/components/TextField';
+import { getLinodesPage } from 'src/services/linodes';
+import { getNodeBalancersPage } from 'src/services/nodebalancers';
+import { getVolumesPage } from 'src/services/volumes';
 
 import SearchSuggestion, { SearchSuggestionT } from './SearchSuggestion';
 

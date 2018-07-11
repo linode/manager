@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { mount } from 'enzyme';
+import * as React from 'react';
 import { StaticRouter } from 'react-router-dom';
 
 import { AuthenticationWrapper } from 'src/components/AuthenticationWrapper/AuthenticationWrapper';

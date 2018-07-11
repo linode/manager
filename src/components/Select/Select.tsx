@@ -1,11 +1,10 @@
-import * as React from 'react';
 import * as classNames from 'classnames';
+import * as React from 'react';
 
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
-import { MenuProps } from '@material-ui/core/Menu';
-// import Fade from '@material-ui/core/Fade';
 import Input, { InputProps } from '@material-ui/core/Input';
+import { MenuProps } from '@material-ui/core/Menu';
 import Select, { SelectProps } from '@material-ui/core/Select';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import HelpIcon from 'src/components/HelpIcon';
 

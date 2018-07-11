@@ -1,10 +1,10 @@
 import * as React from 'react';
 
-import { withStyles, Theme, WithStyles, StyleRulesCallback } from '@material-ui/core/styles';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-import Select from 'src/components/Select';
-import MenuItem from 'src/components/MenuItem';
 import Grid from 'src/components/Grid';
+import MenuItem from 'src/components/MenuItem';
+import Select from 'src/components/Select';
 
 import PaginationControls from '../PaginationControls';
 

@@ -1,13 +1,11 @@
+import * as classNames from 'classnames';
 import * as React from 'react';
 
-import * as classNames from 'classnames';
-
-import { StyleRulesCallback, Theme, withStyles, WithStyles,  } from '@material-ui/core/styles';
-
 import Checkbox, { CheckboxProps } from '@material-ui/core/Checkbox';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-import CheckboxIcon from '../../assets/icons/checkbox.svg';
-import CheckboxCheckedIcon from '../../assets/icons/checkboxChecked.svg';
+import CheckboxIcon from 'src/assets/icons/checkbox.svg';
+import CheckboxCheckedIcon from 'src/assets/icons/checkboxChecked.svg';
 
 type CSSClasses =
   'root'

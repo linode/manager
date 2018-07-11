@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { equals } from 'ramda';
+import * as React from 'react';
 
 interface Props {
   updateFor?: any[];

@@ -1,7 +1,5 @@
-import * as React from 'react';
-
 import { compose, equals, pathOr } from 'ramda';
-import { Subscription } from 'rxjs/Rx';
+import * as React from 'react';
 
 import Button from '@material-ui/core/Button';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
@@ -76,8 +74,7 @@ const titleMap = {
 
 class ImageDrawer extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
-  eventsSub: Subscription;
-  state = { 
+  state = {
     disks: [],
     linodes: [],
     errors: undefined,
@@ -103,9 +100,9 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
         }
       })
       .catch((error) => {
-        if (this.mounted) { 
-          this.setState({ 
-          errors: [{ field: 'disk', reason: 'Could not retrieve disks for this Linode.' }], 
+        if (this.mounted) {
+          this.setState({
+          errors: [{ field: 'disk', reason: 'Could not retrieve disks for this Linode.' }],
         });
       }
      });
@@ -118,24 +115,24 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
     this.props.onClose();
   }
 
-  
+
   onSubmit = () => {
     const { mode, imageID, onSuccess, label, description, selectedDisk } = this.props;
     const safeDescription = description ? description : ' ';
-    
+
     if (!label) {
       this.setState({
         errors: [{ field: 'label', reason: 'Label cannot be blank.' }],
       });
       return;
     }
-    
+
     switch (mode) {
       case modes.EDITING:
       if (!imageID) {
         return;
       }
-      
+
       updateImage(imageID, label, safeDescription)
       .then(() => {
         onSuccess();
@@ -173,7 +170,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
       return;
     }
   }
-  
+
   updateLinodes() {
     getLinodes({ page: 1 })
       .then((response) => {
@@ -185,10 +182,10 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { label, 
-            description, 
-            selectedDisk, 
-            selectedLinode, 
+    const { label,
+            description,
+            selectedDisk,
+            selectedLinode,
             mode,
             changeDisk,
             changeLinode,

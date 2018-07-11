@@ -1,12 +1,10 @@
+import { shallow } from 'enzyme';
 import * as React from 'react';
 
-import { shallow } from 'enzyme';
-
-import { StackScriptsLanding } from './StackScriptsLanding';
-
+import { images } from 'src/__data__/images';
 import { clearDocs, setDocs } from 'src/store/reducers/documentation';
 
-import { images } from 'src/__data__/images';
+import { StackScriptsLanding } from './StackScriptsLanding';
 
 describe('StackScripts Landing', () => {
   const component = shallow(

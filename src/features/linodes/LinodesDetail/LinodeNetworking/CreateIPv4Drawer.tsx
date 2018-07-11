@@ -1,19 +1,14 @@
-import * as React from 'react';
 import { path } from 'ramda';
+import * as React from 'react';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
-import { allocatePublicIP, allocatePrivateIP } from 'src/services/linodes';
+import { allocatePrivateIP, allocatePublicIP } from 'src/services/linodes';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import substituteLink from 'src/utilities/substituteLink';
