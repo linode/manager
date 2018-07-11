@@ -23,6 +23,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import LinodeDiskActionMenu from './LinodeDiskActionMenu';
 import LinodeDiskDrawer from './LinodeDiskDrawer';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
 
 type ClassNames = 'root' | 'headline';
 
@@ -318,6 +319,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     resizeLinodeDisk(linodeId, diskId, size)
       .then(({ data }) => {
         this.setDrawer(LinodeDisks.defaultDrawerState);
+        sendToast(`Disk queued for resizing.`);
         disksUpdate((disks) => disks.map((disk) => disk.id === data.id ? data : disk));
       })
       .catch((error) => {
