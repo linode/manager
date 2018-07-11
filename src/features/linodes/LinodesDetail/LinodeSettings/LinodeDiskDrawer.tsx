@@ -101,7 +101,7 @@ class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
 
   filesystemField = () => (
     <TextField
-      disabled={['resize', 'edit'].includes(this.props.mode)}
+      disabled={['resize', 'rename'].includes(this.props.mode)}
       label="Filesystem"
       select
       value={this.props.filesystem}
