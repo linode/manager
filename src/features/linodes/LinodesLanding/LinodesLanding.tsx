@@ -2,7 +2,10 @@ import * as moment from 'moment';
 import { allPass, clone, compose, filter, gte, has, ifElse, isEmpty, path, pathEq, pathOr, prop, propEq, uniqBy } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { Observable, Subscription } from 'rxjs/Rx';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/filter';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
 import Button from '@material-ui/core/Button';
 import Hidden from '@material-ui/core/Hidden';

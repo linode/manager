@@ -1,6 +1,7 @@
 import { compose, contains, filter, pathOr, prop, propSatisfies, uniqBy } from 'ramda';
 import * as React from 'react';
-import { Subscription } from 'rxjs/Rx';
+import 'rxjs/add/operator/map';
+import { Subscription } from 'rxjs/Subscription';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 

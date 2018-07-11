@@ -3,7 +3,8 @@ import { compose, path, pathOr, sortBy } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { Subscription } from 'rxjs/Rx';
+import 'rxjs/add/operator/filter';
+import { Subscription } from 'rxjs/Subscription';
 
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';

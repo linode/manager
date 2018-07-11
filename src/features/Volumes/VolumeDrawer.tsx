@@ -2,7 +2,8 @@ import { lensPath, path, set, view } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
-import * as Rx from 'rxjs/Rx';
+import 'rxjs/add/operator/filter';
+import { Subscription } from 'rxjs/Subscription';
 
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
@@ -111,7 +112,7 @@ const L = {
 
 class VolumeDrawer extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
-  eventsSub: Rx.Subscription;
+  eventsSub: Subscription;
 
   state: State = {
     submitting: false,

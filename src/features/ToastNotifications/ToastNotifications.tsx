@@ -1,7 +1,8 @@
 import * as classNames from 'classnames';
 import { lensPath, over, set, tail } from 'ramda';
 import * as React from 'react';
-import { Subscription } from 'rxjs/Rx';
+import 'rxjs/add/operator/bufferTime';
+import { Subscription } from 'rxjs/Subscription';
 
 import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';

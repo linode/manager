@@ -2,7 +2,10 @@ import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as Rx from 'rxjs/Rx';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/merge';
+import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
@@ -16,7 +19,7 @@ import { openForCreating } from 'src/store/reducers/volumeDrawer';
 
 import VolumesLanding from './VolumesLanding';
 
-export const updateVolumes$ = new Rx.Subject<boolean>();
+export const updateVolumes$ = new Subject<boolean>();
 
 type ClassNames = 'root';
 
@@ -36,7 +39,7 @@ interface State {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class Volumes extends React.Component<CombinedProps, State> {
-  eventsSub: Rx.Subscription;
+  eventsSub: Subscription;
   mounted: boolean = false;
 
   state = {

@@ -2,7 +2,8 @@ import { compose, equals, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { ISubscription } from 'rxjs/Subscription';
+import 'rxjs/add/operator/filter';
+import { Subscription } from 'rxjs/Subscription';
 
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
@@ -28,7 +29,6 @@ import { updateVolumes$ } from 'src/features/Volumes/Volumes.tsx';
 import { getLinodes } from 'src/services/linodes';
 import { deleteVolume, detachVolume, getVolumes } from 'src/services/volumes';
 import { openForClone, openForCreating, openForEdit, openForResize } from 'src/store/reducers/volumeDrawer';
-
 import DestructiveVolumeDialog from './DestructiveVolumeDialog';
 import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
 import VolumeConfigDrawer from './VolumeConfigDrawer';
@@ -332,7 +332,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     );
   }
 
-  eventsSub: ISubscription;
+  eventsSub: Subscription;
 
   mounted: boolean = false;
 

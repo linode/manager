@@ -1,6 +1,6 @@
 import * as moment from 'moment';
 import { assoc, compose, ifElse, isEmpty, isNil, lensPath, map, not, over, path, view, when } from 'ramda';
-import * as Rx from 'rxjs/Rx';
+import { Subject } from 'rxjs/Subject';
 
 import { getEvents } from 'src/services/account';
 import { dateFormat } from 'src/time';
@@ -11,7 +11,7 @@ function createInitialDatestamp() {
   return moment('1970-01-01 00:00:00.000Z').utc().format(dateFormat);
 }
 
-export const events$ = new Rx.Subject<Linode.Event>();
+export const events$ = new Subject<Linode.Event>();
 
 let filterDatestamp = createInitialDatestamp();
 const pollIDs: { [key: string]: boolean } = {};
