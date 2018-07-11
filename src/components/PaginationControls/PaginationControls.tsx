@@ -1,6 +1,5 @@
-import * as React from 'react';
-
 import { slice } from 'ramda';
+import * as React from 'react';
 
 import PageButton from './PageButton';
 

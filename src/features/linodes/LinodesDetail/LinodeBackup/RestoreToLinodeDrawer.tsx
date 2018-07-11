@@ -1,26 +1,21 @@
-import * as React from 'react';
 import { path } from 'ramda';
+import * as React from 'react';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from 'src/components/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import InputLabel from '@material-ui/core/InputLabel';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-import Notice from 'src/components/Notice';
-import { getLinodes, restoreBackup } from 'src/services/linodes';
-import Select from 'src/components/Select';
-import Drawer from 'src/components/Drawer';
 import ActionsPanel from 'src/components/ActionsPanel';
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import CheckBox from 'src/components/CheckBox';
+import Drawer from 'src/components/Drawer';
+import MenuItem from 'src/components/MenuItem';
+import Notice from 'src/components/Notice';
+import Select from 'src/components/Select';
+import { getLinodes, restoreBackup } from 'src/services/linodes';
+import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root';

@@ -1,15 +1,13 @@
-import * as React from 'react';
-
 import { isEmpty } from 'ramda';
+import * as React from 'react';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import Grid from 'src/components/Grid';
-import SelectionCard from '../../../components/SelectionCard';
-import TabbedPanel from '../../../components/TabbedPanel';
-import { Tab } from '../../../components/TabbedPanel/TabbedPanel';
-
 import RenderGuard from 'src/components/RenderGuard';
+import SelectionCard from 'src/components/SelectionCard';
+import TabbedPanel from 'src/components/TabbedPanel';
+import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
 
 export interface ExtendedType extends Linode.LinodeType {
   heading: string;

@@ -1,12 +1,10 @@
 import * as React from 'react';
-import {
-  withStyles,
-  StyleRulesCallback,
-  WithStyles,
-} from '@material-ui/core/styles';
-import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
-import Typography from '@material-ui/core/Typography';
+
 import Button, { ButtonProps } from '@material-ui/core/Button';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+
+import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import Grid from 'src/components/Grid';
 
 type ClassNames = 'root'

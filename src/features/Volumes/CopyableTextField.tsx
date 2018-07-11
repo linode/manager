@@ -1,14 +1,10 @@
-import * as React from 'react';
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from '@material-ui/core/styles';
 import * as copy from 'copy-to-clipboard';
+import * as React from 'react';
 
-import TextField, { Props as TextFieldProps } from 'src/components/TextField';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+
 import CopyTooltip from 'src/components/CopyTooltip';
+import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 
 type ClassNames = 'root'
 | 'input'

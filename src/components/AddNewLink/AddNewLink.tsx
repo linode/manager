@@ -1,6 +1,7 @@
 import * as React from 'react';
-import IconTextLink from 'src/components/IconTextLink';
+
 import PlusSquare from 'src/assets/icons/plus-square.svg';
+import IconTextLink from 'src/components/IconTextLink';
 
 export interface Props {
   label: string;

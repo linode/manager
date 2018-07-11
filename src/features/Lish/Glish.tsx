@@ -55,7 +55,7 @@ class Glish extends React.Component<CombinedProps, State> {
   monitor: WebSocket;
   monitorInterval: number;
   renewInterval: number;
-  
+
   componentDidMount() {
     this.mounted = true;
     const { linode, token } = this.props;
@@ -83,12 +83,12 @@ class Glish extends React.Component<CombinedProps, State> {
       this.refreshMonitor(region, this.props.token);
     }
   }
-  
+
   onUpdateVNCState = (rfb: any, newState: string) => {
     switch (newState) {
       case 'normal':
         if (!this.mounted) { return; }
-        this.setState({ 
+        this.setState({
           connected: true,
           initialConnect: true,
         });
@@ -110,11 +110,11 @@ class Glish extends React.Component<CombinedProps, State> {
         break;
     }
   }
-  
+
   linodeOnClick = (linodeID: number) => () => {
     window.opener.location = `/linodes/${linodeID}`;
   }
-  
+
   linodeAnchor = (linodeID: number, linodeLabel: string) => {
     return (
       <a
@@ -135,7 +135,7 @@ class Glish extends React.Component<CombinedProps, State> {
       }
     }, 30 * 1000);
   }
-  
+
   refreshMonitor = (region: string, token: string) => {
     this.connectMonitor(region, token);
     /* Get status every 5 seconds. */

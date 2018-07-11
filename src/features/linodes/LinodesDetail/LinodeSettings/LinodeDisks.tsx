@@ -17,14 +17,14 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
+import { resetEventsPolling } from 'src/events';
 import { withDisks, withLinode } from 'src/features/linodes/LinodesDetail/context';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { createLinodeDisk, deleteLinodeDisk, resizeLinodeDisk, updateLinodeDisk } from 'src/services/linodes';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import LinodeDiskActionMenu from './LinodeDiskActionMenu';
 import LinodeDiskDrawer from './LinodeDiskDrawer';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
-import { resetEventsPolling } from 'src/events';
 
 type ClassNames = 'root' | 'headline';
 

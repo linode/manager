@@ -1,5 +1,6 @@
 import { API_ROOT } from 'src/constants';
-import Request, { setURL, setMethod, setData } from '.';
+
+import Request, { setData, setMethod, setURL } from '.';
 
 type Page<T> = Linode.ResourcePage<T>;
 type Token = Linode.Token;

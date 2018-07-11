@@ -1,6 +1,8 @@
 import * as Joi from 'joi';
 import { omit } from 'ramda';
+
 import { API_ROOT } from 'src/constants';
+
 import Request, { setData, setMethod, setParams, setURL, setXFilter, validateRequestData } from '.';
 
 type Page<T> = Linode.ResourcePage<T>;

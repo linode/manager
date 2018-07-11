@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { compose } from 'redux';
 
-import { withStyles, Theme, WithStyles, StyleRulesCallback } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import { ViewList, ViewModule } from '@material-ui/icons';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import ViewList from '@material-ui/icons/ViewList';
+import ViewModule from '@material-ui/icons/ViewModule';
 
 type CSSClasses =
   'root'

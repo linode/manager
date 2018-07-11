@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Chip, { ChipProps } from '@material-ui/core/Chip';
 import Popover from '@material-ui/core/Popover';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 type CSSClasses =  'chip' | 'label' | 'popover';
 
@@ -75,6 +75,7 @@ class ShowMore<T> extends React.Component<Props<T> & WithStyles<CSSClasses> > {
           classes={{ label: classes.label }}
           onClick={this.handleClick}
           {...chipProps}
+          data-qa-show-more-chip
         />
         <Popover
           classes={{ paper: classes.popover }}

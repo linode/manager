@@ -1,10 +1,9 @@
 import * as React from 'react';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
-import { MoreHoriz } from '@material-ui/icons';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import MoreHoriz from '@material-ui/icons/MoreHoriz';
 
 import MenuItem from 'src/components/MenuItem';
 

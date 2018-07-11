@@ -1,3 +1,10 @@
+import { compose, equals, pathOr } from 'ramda';
+import * as React from 'react';
+import { connect, Dispatch } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import 'rxjs/add/operator/filter';
+import { Subscription } from 'rxjs/Subscription';
+
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
@@ -5,11 +12,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
-import { compose, equals, pathOr } from 'ramda';
-import * as React from 'react';
-import { connect, Dispatch } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { ISubscription } from 'rxjs/Subscription';
+
 import VolumesIcon from 'src/assets/addnewmenu/volume.svg';
 import AddNewLink from 'src/components/AddNewLink';
 import CircleProgress from 'src/components/CircleProgress';
@@ -329,7 +332,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     );
   }
 
-  eventsSub: ISubscription;
+  eventsSub: Subscription;
 
   mounted: boolean = false;
 

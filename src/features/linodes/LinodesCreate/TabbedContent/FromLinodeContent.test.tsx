@@ -1,7 +1,9 @@
-import * as React from 'react';
 import { shallow } from 'enzyme';
-import { FromLinodeContent } from './FromLinodeContent';
+import * as React from 'react';
+
 import { linodes } from 'src/__data__/linodes';
+
+import { FromLinodeContent } from './FromLinodeContent';
 
 const mockProps = {
   regions: [],

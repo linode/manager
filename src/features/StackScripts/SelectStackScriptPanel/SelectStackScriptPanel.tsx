@@ -1,25 +1,13 @@
-import * as React from 'react';
-
 import * as classNames from 'classnames';
-
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-
+import { compose, pathOr } from 'ramda';
+import * as React from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { connect } from 'react-redux';
-
-import { compose, pathOr } from 'ramda';
-
-import {
-  deleteStackScript,
-  getCommunityStackscripts, getStackScript, getStackScriptsByUser
-}
-  from 'src/services/stackscripts';
-
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
-
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
 
@@ -33,6 +21,7 @@ import RenderGuard from 'src/components/RenderGuard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
+import { deleteStackScript, getCommunityStackscripts, getStackScript, getStackScriptsByUser } from 'src/services/stackscripts';
 
 import StackScriptsSection from './StackScriptsSection';
 
@@ -571,7 +560,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
     const { currentFilterType, isSorting, fieldError, error } = this.state;
 
     if(error) {
-      return <ErrorState 
+      return <ErrorState
         errorText="There was an error loading your StackScripts. Please try again later."
       />
     }
@@ -590,7 +579,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
           <Notice text={fieldError.reason} error />
         }
         {this.state.listOfStackScripts.length === 0
-        ? <div className={classes.emptyState}>
+        ? <div className={classes.emptyState} data-qa-stackscript-empty-msg>
           You do not have any StackScripts to select from. You must first
           <Link to="/stackscripts/create"> create one</Link>
         </div>
@@ -614,6 +603,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
                   type="secondary"
                   className={classes.sortButton}
                   onClick={this.handleClickStackScriptsTableHeader}
+                  data-qa-stackscript-table-header
                 >
                   StackScripts
                   {currentFilterType === 'label' &&
@@ -633,6 +623,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
                   type="secondary"
                   className={classes.sortButton}
                   onClick={this.handleClickDeploymentsTableHeader}
+                  data-qa-stackscript-active-deploy-header
                 >
                   Active Deploys
                   {currentFilterType !== 'label' && currentFilterType !== 'revision' &&
@@ -652,6 +643,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
                   type="secondary"
                   className={classes.sortButton}
                   onClick={this.handleClickRevisionsTableHeader}
+                  data-qa-stackscript-revision-header
                 >
                   Last Revision
                   {currentFilterType === 'revision' &&
@@ -659,7 +651,12 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
                   }
                 </Button>
               </TableCell>
-              <TableCell className={classes.tableHead}>Compatible Images</TableCell>
+              <TableCell
+                className={classes.tableHead}
+                data-qa-stackscript-compatible-images
+              >
+                Compatible Images
+              </TableCell>
               {!this.props.onSelect &&
                 <TableCell className={classNames({
                   [classes.tableHead]: true,

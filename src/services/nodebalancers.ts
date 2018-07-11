@@ -1,6 +1,8 @@
 import * as Joi from 'joi';
+
 import { API_ROOT } from 'src/constants';
-import Request, { setURL, setMethod, setParams, setData } from './index';
+
+import Request, { setData, setMethod, setParams, setURL } from './index';
 
 type Page<T> = Linode.ResourcePage<T>;
 type NodeBalancer = Linode.NodeBalancer;

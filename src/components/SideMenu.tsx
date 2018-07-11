@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import { withStyles, WithStyles, Theme, StyleRulesCallback } from '@material-ui/core/styles';
-import Hidden from '@material-ui/core/Hidden';
 import Drawer from '@material-ui/core/Drawer';
+import Hidden from '@material-ui/core/Hidden';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import PrimaryNav from 'src/components/PrimaryNav';
 

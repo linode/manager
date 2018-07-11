@@ -1,6 +1,6 @@
+import { append, compose, has, when } from 'ramda';
 import * as React from 'react';
-import { compose, append, has, when } from 'ramda';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 

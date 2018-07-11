@@ -1,38 +1,27 @@
-import * as React from 'react';
-
 import { assocPath, pathOr } from 'ramda';
-
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-
+import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
 
 import Paper from '@material-ui/core/Paper';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-
-import AddonsPanel from '../AddonsPanel';
-import PasswordPanel from '../PasswordPanel';
-import SelectImagePanel from '../SelectImagePanel';
-import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
-
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
 import CheckoutBar from 'src/components/CheckoutBar';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
 import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
-
-import {
-  allocatePrivateIP,
-  createLinode,
-} from 'src/services/linodes';
-
 import { resetEventsPolling } from 'src/events';
-
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
+import { allocatePrivateIP, createLinode } from 'src/services/linodes';
+import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
+import AddonsPanel from '../AddonsPanel';
+import PasswordPanel from '../PasswordPanel';
+import SelectImagePanel from '../SelectImagePanel';
+import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
 
 type ClassNames = 'root'
   | 'main'
@@ -374,10 +363,14 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
               {hasErrorFor('image') &&
                 <Notice error={true} text={hasErrorFor('image')} />
               }
-              <Typography variant="title">
+              <Typography variant="title" data-qa-tp="Select Image">
                 Select Image
               </Typography>
-              <Typography variant="body1" className={classes.emptyImagePanelText}>
+              <Typography
+                variant="body1"
+                className={classes.emptyImagePanelText}
+                data-qa-no-compatible-images
+              >
                 No Compatible Images Available
               </Typography>
             </Paper>

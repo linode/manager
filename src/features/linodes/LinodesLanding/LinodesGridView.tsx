@@ -1,10 +1,9 @@
 import * as React from 'react';
 
 import Grid from 'src/components/Grid';
+import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 
 import LinodeCard from './LinodeCard';
-
-import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 
 interface Props {
   linodes: Linode.EnhancedLinode[];

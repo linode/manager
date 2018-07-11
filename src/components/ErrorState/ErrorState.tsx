@@ -1,13 +1,9 @@
-import * as React from 'react';
 import * as classNames from 'classnames';
+import * as React from 'react';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  WithStyles,
-} from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import { ErrorOutline } from '@material-ui/icons';
+import ErrorOutline from '@material-ui/icons/ErrorOutline';
 
 import Grid from 'src/components/Grid';
 

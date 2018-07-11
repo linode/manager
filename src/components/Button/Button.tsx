@@ -1,12 +1,9 @@
+import * as classNames from 'classnames';
+import { always, cond, propEq } from 'ramda';
 import * as React from 'react';
 
-import * as classNames from 'classnames';
-
-import { always, cond, propEq } from 'ramda';
-
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import Button, { ButtonProps } from '@material-ui/core/Button';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import Reload from 'src/assets/icons/reload.svg';
 
