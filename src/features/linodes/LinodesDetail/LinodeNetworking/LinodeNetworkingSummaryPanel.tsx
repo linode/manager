@@ -99,7 +99,7 @@ const LinodeNetworkingSummaryPanel: React.StatelessComponent<CombinedProps> = (p
         <Paper className={classes.root}>
           <Grid container>
             <Grid item xs={12}>
-              <Typography variant="headline" className={classes.title}>Access</Typography>
+              <Typography variant="headline" className={classes.title} data-qa-title>Access</Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <StyledSummarySection title="SSH Access" renderValue={renderSSHLink(sshIPAddress)} />

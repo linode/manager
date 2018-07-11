@@ -17,7 +17,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 
 import { close } from 'src/store/reducers/volumeDrawer';
 
-import { clone, create, resize, update, VolumeRequestPayload } from 'src/services/volumes';
+import { cloneVolume, createVolume, resizeVolume, updateVolume, VolumeRequestPayload } from 'src/services/volumes';
 
 import { dcDisplayNames } from 'src/constants';
 import { events$, resetEventsPolling } from 'src/events';
@@ -107,11 +107,13 @@ const titleMap = {
 
 const L = {
   cloneLabel: lensPath(['cloneLabel']),
+  configs: lensPath(['configs']),
   errors: lensPath(['errors']),
   label: lensPath(['label']),
   linodeId: lensPath(['linodeId']),
   linodes: lensPath(['linodes']),
   region: lensPath(['region']),
+  selectedConfig: lensPath(['selectedConfig']),
   size: lensPath(['size']),
   submitting: lensPath(['submitting']),
   success: lensPath(['success']),
@@ -140,7 +142,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
   composeState = (fns: ((s: State) => State)[], callback?: () => void) =>
     this.mounted && this.setState(
       state => fns.reverse().reduce((result, current) => current(result), state),
-      () => { callback && callback() }
+      () => { if (callback) { callback() } }
     );
 
   componentDidMount() {
@@ -163,6 +165,10 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
          * If a volume is created, but not attached, the event is volume_create with a status of notification.
          * If a volume is created and attached, the event is volume_create with status of scheduled, started, failed, finished.
          */
+        if (event.action === 'volume_create' && event.status === 'scheduled') {
+          sendToast(`Volume ${event.entity && event.entity.label} queued for creation.`);
+        }
+
         if (event.action === 'volume_create' && (event.status === 'notification' || event.status === 'finished')) {
           sendToast(`Volume ${event.entity && event.entity.label} created successfully.`);
         }
@@ -211,9 +217,11 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           return [`${config.id}`, config.label];
         });
         this.setState({ configs: configChoices });
-        configChoices.length > 1 && this.setState({
+        if (configChoices.length > 1) {
+          this.setState({
           selectedConfig: configChoices[0][0],
         });
+        }
       })
       .catch(() => {
         /*
@@ -232,6 +240,8 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     set(L.region, 'none'),
     set(L.submitting, false),
     set(L.success, undefined),
+    set(L.configs, []),
+    set(L.selectedConfig, undefined),
   ]);
 
   onClose = () => {
@@ -258,7 +268,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           linode_id: linodeId === 0 ? undefined : linodeId,
         };
 
-        create(payload)
+        createVolume(payload)
           .then(() => {
             resetEventsPolling();
             this.composeState([
@@ -287,7 +297,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           return;
         }
 
-        update(volumeID, label)
+        updateVolume(volumeID, label)
           .then(() => {
             updateVolumes$.next(true);
             close();
@@ -310,7 +320,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           return;
         }
 
-        resize(volumeID, Number(size))
+        resizeVolume(volumeID, Number(size))
           .then(() => {
             resetEventsPolling();
             close();
@@ -333,7 +343,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           return;
         }
 
-        clone(volumeID, cloneLabel)
+        cloneVolume(volumeID, cloneLabel)
           .then(() => {
             resetEventsPolling();
             close();

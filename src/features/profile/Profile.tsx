@@ -5,6 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
 import { matchPath, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
 import APITokens from './APITokens';
+import LishSettings from './LishSettings';
 import OAuthClients from './OAuthClients';
 import Referrals from './Referrals';
 import Settings from './Settings';
@@ -23,6 +24,7 @@ class Profile extends React.Component<Props> {
     { title: 'Settings', routeName: `${this.props.match.url}/settings` },
     { title: 'API Tokens', routeName: `${this.props.match.url}/tokens` },
     { title: 'OAuth Clients', routeName: `${this.props.match.url}/clients` },
+    { title: 'LISH', routeName: `${this.props.match.url}/lish` },
     { title: 'Referrals', routeName: `${this.props.match.url}/referrals` },
   ];
 
@@ -52,6 +54,7 @@ class Profile extends React.Component<Props> {
         <Switch>
           <Route exact path={`${url}/tokens`} component={APITokens} />
           <Route exact path={`${url}/clients`} component={OAuthClients} />
+          <Route exact path={`${url}/lish`} component={LishSettings} />
           <Route exact path={`${url}/referrals`} component={Referrals} />
           <Route path={`${url}`} component={Settings} />
         </Switch>

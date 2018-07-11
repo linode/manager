@@ -53,7 +53,7 @@ export class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNam
     const isSamePlan = type.heading === currentPlanHeading;
 
     if(planToSmall){
-      tooltip = `This plan is to small for the selected image.`;
+      tooltip = `This plan is too small for the selected image.`;
     }
 
     if(isSamePlan){

@@ -2547,6 +2547,10 @@ boom@5.x.x:
   dependencies:
     hoek "4.x.x"
 
+bowser@^0.7.2:
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/bowser/-/bowser-0.7.3.tgz#4fc0cb4e0e2bdd9b394df0d2038c32c2cc2712c8"
+
 bowser@^1.0.0, bowser@^1.7.3:
   version "1.9.3"
   resolved "https://registry.yarnpkg.com/bowser/-/bowser-1.9.3.tgz#6643ae4d783f31683f6d23156976b74183862162"
@@ -7474,6 +7478,13 @@ normalize-url@^1.4.0:
     prepend-http "^1.0.0"
     query-string "^4.1.0"
     sort-keys "^1.0.0"
+
+novnc-node@^0.5.3:
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/novnc-node/-/novnc-node-0.5.3.tgz#69f20a4a2ff0c54ca2f942ff59553f523eb61fa7"
+  dependencies:
+    bowser "^0.7.2"
+    debug "^2.2.0"
 
 npm-bundled@^1.0.1:
   version "1.0.3"

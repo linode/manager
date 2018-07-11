@@ -20,7 +20,7 @@ import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/Grid';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
-import { weblishLaunch } from 'src/features/Weblish';
+import { lishLaunch } from 'src/features/Lish';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 
 import { displayType, typeLabelDetails } from '../presentation';
@@ -211,7 +211,7 @@ class LinodeCard extends React.Component<CombinedProps> {
 
   handleConsoleButtonClick = () => {
     const { linodeId } = this.props;
-    weblishLaunch(`${linodeId}`);
+    lishLaunch(`${linodeId}`);
   }
 
   handleRebootButtonClick = () => {

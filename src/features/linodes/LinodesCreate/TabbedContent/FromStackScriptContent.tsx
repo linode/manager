@@ -80,13 +80,15 @@ interface Props {
   getTypeInfo: (selectedTypeID: string | null) => TypeInfo;
   getRegionName: (selectedRegionID: string | null) => string | undefined;
   history: any;
+  selectedTabFromQuery?: string;
+  selectedStackScriptFromQuery?: number;
 }
 
 interface State {
   userDefinedFields: Linode.StackScript.UserDefinedField[];
   udf_data: any;
   errors?: Linode.ApiFieldError[];
-  selectedStackScriptID: number | null;
+  selectedStackScriptID: number | undefined;
   selectedStackScriptLabel: string;
   selectedStackScriptUsername: string;
   selectedImageID: string | null;
@@ -115,9 +117,9 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
   state: State = {
     userDefinedFields: [],
     udf_data: null,
-    selectedStackScriptID: null,
+    selectedStackScriptID: this.props.selectedStackScriptFromQuery || undefined,
     selectedStackScriptLabel: '',
-    selectedStackScriptUsername: '',
+    selectedStackScriptUsername: this.props.selectedTabFromQuery || '',
     selectedImageID: null,
     selectedRegionID: null,
     selectedTypeID: null,
@@ -160,6 +162,19 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
       udf_data: defaultUDFData,
       // prob gonna need to update UDF here too
     });
+  }
+
+  resetStackScriptSelection = () => {
+    // reset stackscript selection to unselected
+    this.setState({
+      selectedStackScriptID: undefined,
+      selectedStackScriptLabel: '',
+      selectedStackScriptUsername: '',
+      udf_data: null,
+      userDefinedFields: [],
+      compatibleImages: [],
+      selectedImageID: null, // stackscripts don't support all images, so we need to reset it
+    })
   }
 
   handleChangeUDF = (key: string, value: string) => {
@@ -326,10 +341,12 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
           <SelectStackScriptPanel
             error={hasErrorFor('stackscript_id')}
             selectedId={selectedStackScriptID}
+            selectedUsername={selectedStackScriptUsername}
             shrinkPanel={true}
             updateFor={[selectedStackScriptID, errors]}
             onSelect={this.handleSelectStackScript}
-            images={this.filterPublicImages(images) || []}
+            publicImages={this.filterPublicImages(images) || []}
+            resetSelectedStackScript={this.resetStackScriptSelection}
           />
           {userDefinedFields && userDefinedFields.length > 0 &&
             <UserDefinedFieldsPanel

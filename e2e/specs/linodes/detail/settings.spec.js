@@ -43,8 +43,7 @@ describe('Linode Detail - Settings Suite', () =>{
 
         it('should successfully change root password', () => {
             const newPassword = crypto.randomBytes(20).toString('hex');
-            const disks = Settings.getDiskLabels();
-            Settings.resetPassword(newPassword, disks[0]);
+            Settings.resetPassword(newPassword);
         });
     });
 

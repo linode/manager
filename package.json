@@ -46,6 +46,7 @@
     "md5": "^2.2.1",
     "moment": "^2.21.0",
     "moment-timezone": "^0.5.16",
+    "novnc-node": "^0.5.3",
     "object-assign": "4.1.1",
     "postcss-flexbugs-fixes": "3.2.0",
     "postcss-loader": "2.0.8",
