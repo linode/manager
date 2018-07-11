@@ -83,6 +83,22 @@ class StoryActionMenuWithTooltip extends React.Component<CombinedProps> {
   }
 }
 
+class StoryActionMenuWithOneAction extends React.Component<CombinedProps> {
+  createActions = () => (closeMenu: Function): Action[] => {
+    return [
+      {
+        title: 'First Action',
+        onClick: (e: React.MouseEvent<HTMLElement>) => {
+          e.preventDefault();
+        },
+      }
+    ];
+  }
+  render() {
+    return (<ActionMenu createActions={this.createActions()} />);
+  }
+}
+
 storiesOf('Action Menu', module)
   .addDecorator(ThemeDecorator)
   .add('Action Menu', () => (
@@ -94,5 +110,10 @@ storiesOf('Action Menu', module)
     <div style={{ float: 'left' }}>
       <StoryActionMenuWithTooltip />
     </div>
+  ))
+  .add('Action Menu with one action', () => (
+      <div style={{ float: 'left' }}>
+        <StoryActionMenuWithOneAction />
+      </div>
   ))
 ;
