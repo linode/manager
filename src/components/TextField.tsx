@@ -18,7 +18,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   root: {},
   helpWrapper: {
     display: 'flex',
-    flexWrap: 'wrap',
     alignItems: 'flex-end',
   },
   helpWrapperTextField: {

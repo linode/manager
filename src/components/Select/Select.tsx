@@ -40,7 +40,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   helpWrapper: {
     display: 'flex',
-    flexWrap: 'wrap',
     alignItems: 'flex-end',
   },
   helpWrapperSelectField: {
@@ -99,22 +98,24 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
   });
 
   return (
-    <div className={classNames({
-      [classes.helpWrapper]: Boolean(helpText),
-    })}>
-      <Select
-        open={props.open}
-        className={c}
-        MenuProps={menuProps}
-        input={<Input {...inputProps} />}
-        {...props}
-        data-qa-select
-      >
-        {children}
-      </Select>
+    <React.Fragment>
+      <div className={classNames({
+        [classes.helpWrapper]: Boolean(helpText),
+      })}>
+        <Select
+          open={props.open}
+          className={c}
+          MenuProps={menuProps}
+          input={<Input {...inputProps} />}
+          {...props}
+          data-qa-select
+        >
+          {children}
+        </Select>
+        {helpText && <HelpIcon text={helpText} />}
+      </div>
       {errorText && <FormHelperText className={classes.textError}>{errorText}</FormHelperText>}
-      {helpText && <HelpIcon text={helpText} />}
-    </div>
+    </React.Fragment>
   );
 };
 
