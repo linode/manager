@@ -19,12 +19,6 @@ describe('Create Linode - Create from StackScript Suite', () => {
         ConfigureLinode.createFrom('StackScript');
         ConfigureLinode.stackScriptsBaseElemsDisplay();
     });
-    
-    it('should show create a stackscript message when user does not have personal stackscripts', () => {
-        const emptyMsg = 'You do not have any StackScripts to select from. You must first create one';
-        ConfigureLinode.stackScriptEmptyMsg.waitForVisible();
-        expect(ConfigureLinode.stackScriptEmptyMsg.getText()).toBe(emptyMsg);
-    });
 
     it('should display stackscript table', () => {
         ConfigureLinode.changeTab('Community StackScripts');

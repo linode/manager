@@ -109,6 +109,7 @@ namespace Linode {
     'disk_delete' |
     'disk_duplicate' |
     'disk_resize' |
+    'disk_imagize' |
     'backups_enable' |
     'backups_cancel' |
     'backups_restore' |
@@ -117,6 +118,7 @@ namespace Linode {
     'domain_delete' |
     'domain_record_create' |
     'domain_record_delete' |
+    'image_delete' |
     'stackscript_create' |
     'stackscript_publicize' |
     'stackscript_revise' |
