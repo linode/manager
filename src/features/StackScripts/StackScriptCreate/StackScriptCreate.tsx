@@ -289,16 +289,13 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <ActionsPanel>
           <Button
-            variant="raised"
-            color="secondary"
-            className="destructive"
+            type="secondary"
+            destructive
             onClick={this.resetAllFields}>
             Yes
           </Button>
           <Button
-            variant="raised"
-            color="secondary"
-            className="cancel"
+            type="cancel"
             onClick={this.handleCloseDialog}
           >
             No
