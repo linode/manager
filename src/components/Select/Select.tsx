@@ -10,7 +10,9 @@ import HelpIcon from 'src/components/HelpIcon';
 
 type ClassNames = 'inputSucess'
   | 'inputError'
-  | 'textError';
+  | 'textError'
+  | 'helpWrapper'
+  | 'helpWrapperSelectField';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   inputError: {
@@ -33,6 +35,17 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     },
     '& + p': {
       color: theme.color.green,
+    },
+  },
+  helpWrapper: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    alignItems: 'flex-end',
+  },
+  helpWrapperSelectField: {
+    width: 380,
+    [theme.breakpoints.down('xs')]: {
+      width: 240,
     },
   },
 });
@@ -81,10 +94,13 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
     [classes.inputSucess]: success === true,
     [classes.inputError]: error === true,
     [errorScrollClassName]: !!errorScrollClassName,
+    [classes.helpWrapperSelectField]: Boolean(helpText),
   });
 
   return (
-    <React.Fragment>
+    <div className={classNames({
+      [classes.helpWrapper]: Boolean(helpText),
+    })}>
       <Select
         open={props.open}
         className={c}
@@ -97,7 +113,7 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
       </Select>
       {errorText && <p className={classes.textError}>{errorText}</p>}
       {helpText && <HelpIcon text={helpText} />}
-    </React.Fragment>
+    </div>
   );
 };
 
