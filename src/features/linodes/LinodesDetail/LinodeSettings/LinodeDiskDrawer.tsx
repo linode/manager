@@ -120,7 +120,7 @@ class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
   sizeField = () => (
     <React.Fragment>
       <TextField
-        disabled={['edit'].includes(this.props.mode)}
+        disabled={['rename'].includes(this.props.mode)}
         label="Size"
         type="number"
         required
