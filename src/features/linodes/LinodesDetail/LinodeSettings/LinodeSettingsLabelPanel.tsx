@@ -96,7 +96,7 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
         <TextField
           label="Label"
           value={this.state.updatedValue}
-          onChange={e =>
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             this.setState(set(lensPath(['updatedValue']), e.target.value))}
           errorText={labelError}
           errorGroup="linode-settings-label"
