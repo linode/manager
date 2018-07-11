@@ -75,7 +75,8 @@ const DDrawer: React.StatelessComponent<CombinedProps> = (props) => {
         container
         justify="space-between"
         alignItems="center"
-        className={classes.drawerHeader}>
+        className={classes.drawerHeader}
+        updateFor={[title]}>
         <Grid item>
           <Typography variant="title" data-qa-drawer-title>
             {title}

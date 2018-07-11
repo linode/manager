@@ -7,7 +7,7 @@ namespace Linode {
     email_notifications: boolean;
     referrals: Referrals;
     ip_whitelist_enabled: boolean;
-    list_auth_method: 'password_keys' | 'keys_only' | 'disabled';
+    lish_auth_method: 'password_keys' | 'keys_only' | 'disabled';
     authorized_keys: string[];
     two_factor_auth: boolean;
     restricted: boolean;

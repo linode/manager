@@ -122,6 +122,7 @@ export class VolumeDetail extends Page {
 
         if (volume.hasOwnProperty('attachedLinode')) {
             browser.waitUntil(function() {
+                browser.waitForVisible('[data-qa-volume-cell-attachment]', constants.wait.long);
                 const volsAttachedToLinode = $$('[data-qa-volume-cell-attachment]')
                     .filter(v => v.getText() === volume.attachedLinode);
                 return volsAttachedToLinode.length > 0;
@@ -180,7 +181,6 @@ export class VolumeDetail extends Page {
         expect(dialogContent.getText()).toMatch(/\w/ig);
         expect(dialogConfirm.isVisible()).toBe(true);
         expect(dialogConfirm.getTagName()).toBe('button');
-        // expect(dialogConfirm.getAttribute('class')).toContain('destructive');
         expect(dialogCancel.isVisible()).toBe(true);
         expect(dialogCancel.getTagName()).toBe('button');
     }
@@ -189,6 +189,12 @@ export class VolumeDetail extends Page {
         this.dialogTitle.waitForVisible();
         browser.click('[data-qa-confirm]');
         browser.waitForVisible(`[data-qa-volume-cell="${volumeId}"]`, constants.wait.long, true);
+
+        // Wait for progress bars to not display on volume detail pages
+        if (!browser.getUrl().includes('/linodes')) {
+            browser.waitForVisible('[data-qa-volume-loading]', constants.wait.long);
+            browser.waitForVisible('[data-qa-volume-loading]', constants.wait.long, true);
+        }
     }
 
     cloneVolume(volume, newLabel) {
@@ -196,16 +202,19 @@ export class VolumeDetail extends Page {
     }
 
     removeVolume(volumeElement) {
-        if (volumeElement.$('[data-qa-volume-cell-attachment]').isVisible() && volumeElement.$('[data-qa-volume-cell-attachment]').getText() !== '') {
+        if (volumeElement.$('[data-qa-volume-cell-attachment]').isExisting() && volumeElement.$('[data-qa-volume-cell-attachment]').getText() !== '') {
             volumeElement.$('[data-qa-action-menu]').click();
             browser.waitForVisible('[data-qa-action-menu-item="Detach"]');
             browser.jsClick('[data-qa-action-menu-item="Detach"]');
             browser.waitForVisible('[data-qa-dialog-title]');
             browser.click('[data-qa-confirm]');
-            browser.waitForVisible('[data-qa-dialog-title]');
-            browser.waitUntil(function() {
-                return volumeElement.$('[data-qa-volume-cell-attachment]').getText() === '';
-            }, constants.wait.long, 'Volume failed to detach');
+            browser.waitForVisible('[data-qa-dialog-title]', constants.wait.normal, true);
+
+            // Wait for progress bars to not display on volume detail pages
+            if (!browser.getUrl().includes('/linodes')) {
+                browser.waitForVisible('[data-qa-volume-loading]', constants.wait.long);
+                browser.waitForVisible('[data-qa-volume-loading]', constants.wait.long, true);
+            }
         }
         const numberOfVolumes = this.volumeCell.length;
         volumeElement.$('[data-qa-action-menu]').click();

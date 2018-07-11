@@ -46,7 +46,13 @@ class SearchBar extends Page {
     }
 
     selectByKeyDown() {
-        this.searchInput.setValue('\uE015');
+        if (browser.options.desiredCapabilities.browserName.includes('chrome')) {
+            this.searchInput.setValue('\uE015');
+        } else {
+            browser.keys('ArrowDown');
+        }
+        browser.waitForVisible('[data-qa-suggestion]');
+        // key down and enter fails to work on firefox
         const selected = this.suggestions[0].getAttribute('data-qa-selected');
         expect(selected).toBe('true');
     }

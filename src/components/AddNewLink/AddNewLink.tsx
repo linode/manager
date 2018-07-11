@@ -8,12 +8,13 @@ export interface Props {
   display?: string;
   disabled?: boolean;
   left?: boolean;
+  className?: any;
 }
 
 type CombinedProps = Props;
 
 const AddNewLink: React.StatelessComponent<CombinedProps> = (props) => {
-  const { onClick, label, display, disabled, left } = props;
+  const { onClick, label, display, disabled, left, className } = props;
   return (
     <IconTextLink
       SideIcon={PlusSquare}
@@ -22,6 +23,7 @@ const AddNewLink: React.StatelessComponent<CombinedProps> = (props) => {
       text={label}
       disabled={disabled}
       left={left}
+      className={className}
     >
       {display || label}
     </IconTextLink>

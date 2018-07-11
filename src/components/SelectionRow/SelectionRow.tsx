@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
 import * as invariant from 'invariant';
 
@@ -17,6 +16,9 @@ import Tag from 'src/components/Tag';
 
 import Typography from '@material-ui/core/Typography';
 
+import StackScriptsActionMenu
+  from 'src/features/StackScripts/SelectStackScriptPanel/StackScriptActionMenu';
+
 type ClassNames = 'root'
   | 'respPadding'
   | 'images'
@@ -28,7 +30,8 @@ type ClassNames = 'root'
   | 'libDescription'
   | 'colImages'
   | 'stackScriptCell'
-  | 'stackScriptUsername';
+  | 'stackScriptUsername'
+  | 'deployButton';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -92,6 +95,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   stackScriptUsername: {
     color: theme.color.grey1,
   },
+  deployButton: {
+    // marginLeft: -26,
+    // width: '100%',
+    // justifyContent: 'flex-start',
+    whiteSpace: 'nowrap',
+    border: 0,
+  },
 });
 
 export interface Props {
@@ -103,8 +113,10 @@ export interface Props {
   onSelect?: (e: React.ChangeEvent<HTMLElement>, value: boolean) => void;
   checked?: boolean;
   showDeployLink?: boolean;
-  stackScriptID?: number;
-  stackScriptUsername?: string;
+  stackScriptID: number;
+  stackScriptUsername: string;
+  triggerDelete?: (id: number, label: string) => void;
+  canDelete: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -122,6 +134,8 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
     showDeployLink,
     stackScriptID,
     stackScriptUsername,
+    triggerDelete,
+    canDelete,
   } = props;
 
   /** onSelect and showDeployLink should not be used simultaneously */
@@ -129,6 +143,25 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
     !(onSelect && showDeployLink),
     'onSelect and showDeployLink are mutually exclusive.',
   );
+
+  const renderLabel = () => {
+    return (
+      <Typography variant="subheading">
+        {stackScriptUsername &&
+          <label
+            htmlFor={`${stackScriptID}`}
+            className={`${classes.libRadioLabel} ${classes.stackScriptUsername}`}>
+            {stackScriptUsername} /&nbsp;
+    </label>
+        }
+        <label
+          htmlFor={`${stackScriptID}`}
+          className={classes.libRadioLabel}>
+          {label}
+        </label>
+      </Typography>
+    )
+  }
 
   return (
     <React.Fragment>
@@ -139,20 +172,12 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
           </TableCell>
         }
         <TableCell className={classes.stackScriptCell}>
-          <Typography variant="subheading">
-          {stackScriptUsername &&
-                <label
-                  htmlFor={`${stackScriptID}`}
-                  className={`${classes.libRadioLabel} ${classes.stackScriptUsername}`}>
-                  {stackScriptUsername} /&nbsp;
-            </label>
-              }
-              <label
-                htmlFor={`${stackScriptID}`}
-                className={classes.libRadioLabel}>
-                 {label}
-              </label>
-          </Typography>
+          {!showDeployLink
+            ? renderLabel()
+            : <a target="_blank" href={`https://www.linode.com/stackscripts/view/${stackScriptID}`}>
+              {renderLabel()}
+            </a>
+          }
           <Typography>{description}</Typography>
         </TableCell>
         <TableCell>
@@ -168,11 +193,13 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
         </TableCell>
         {showDeployLink &&
           <TableCell>
-            <Link to={'/'}>
-              <Typography variant="title">
-                Deploy New Linode
-              </Typography>
-            </Link>
+          <StackScriptsActionMenu
+            stackScriptID={stackScriptID}
+            stackScriptUsername={stackScriptUsername}
+            stackScriptLabel={label}
+            triggerDelete={triggerDelete!}
+            canDelete={canDelete}
+          /> 
           </TableCell>
         }
       </TableRow>

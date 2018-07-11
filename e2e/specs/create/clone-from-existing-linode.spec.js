@@ -35,7 +35,10 @@ describe('Create Linode - Clone from Existing Suite', () => {
         ConfigureLinode.selectPlanTab('Nanode');
         
         try {
-            ConfigureLinode.selectPlan(0);
+            $$('[data-qa-tp="Linode Plan"] [data-qa-selection-card]')[0].click();
+            browser.waitForVisible('[role="tooltip"]');
+            const toolTipMsg = browser.getText('[role="tooltip"]');
+            expect(toolTipMsg).toBe('This plan is too small for the selected image.');
         } catch (err) {
             if (!err.message.includes('Failed to select plan')) throw err;
         }

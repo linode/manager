@@ -28,11 +28,11 @@ describe('Linode Detail - Resize Suite', () => {
     });
 
     it('should fail to resize on the same plan selection', () => {
-        const toastMsg = 'Linode is already running this service plan.';
+        // const toastMsg = 'Linode is already running this service plan.';
         
         Resize.planCards[0].click();
-        Resize.submit.click();
-        Resize.toastDisplays(toastMsg);
+        browser.waitForVisible('[role="tooltip"]');
+        expect($('[role="tooltip"]').getText()).toBe('This is your current plan. Please select another to resize.');
     });
 
     it('should display toast message on resize', () => {

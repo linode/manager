@@ -1,4 +1,9 @@
-html, body {
+#root {
+    background-color: #000;
+}
+
+#terminal {
+    width: 100%;
     margin: 0;
     padding: 0;
     font-family: Helvetica;
@@ -9,11 +14,12 @@ html, body {
     background-size: 10px 10px;
     background-position: 0 0, 5px 5px;
 }
+
 .full-height {
   height: auto;
 }
 
-body>div.terminal {
+body > div.terminal {
     font-family: 'Source Code Pro for Powerline', monospace, fixed;
 }
 
