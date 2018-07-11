@@ -10,25 +10,31 @@ import { connect } from 'react-redux';
 
 import { compose, pathOr } from 'ramda';
 
-import { getCommunityStackscripts, getStackScript, getStackScriptsByUser }
+import {
+  deleteStackScript,
+  getCommunityStackscripts, getStackScript, getStackScriptsByUser
+}
   from 'src/services/stackscripts';
 
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Typography from '@material-ui/core/Typography';
 
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
 
+import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import ErrorState from 'src/components/ErrorState';
+import Notice from 'src/components/Notice';
 import RenderGuard from 'src/components/RenderGuard';
 import TabbedPanel from 'src/components/TabbedPanel';
+import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 
 import StackScriptsSection from './StackScriptsSection';
-
-import Table from 'src/components/Table';
 
 export interface ExtendedLinode extends Linode.Linode {
   heading: string;
@@ -261,6 +267,12 @@ interface ContainerProps {
 
 type CurrentFilter = 'label' | 'deploys' | 'revision';
 
+interface Dialog {
+  open: boolean;
+  stackScriptID: number | undefined;
+  stackScriptLabel: string;
+}
+
 interface ContainerState {
   currentPage: number;
   selected?: number;
@@ -273,6 +285,8 @@ interface ContainerState {
   currentFilter: any; // @TODO type correctly
   isSorting: boolean;
   error?: Error;
+  fieldError: Linode.ApiFieldError | undefined;
+  dialog: Dialog;
 }
 
 type ContainerCombinedProps = ContainerProps & WithStyles<ClassNames>;
@@ -290,6 +304,12 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
     currentFilter: { ['+order_by']: 'deployments_total', ['+order']: 'desc' },
     isSorting: false,
     error: undefined,
+    fieldError: undefined,
+    dialog: {
+      open: false,
+      stackScriptID: undefined,
+      stackScriptLabel: '',
+    }
   };
 
   mounted: boolean = false;
@@ -451,6 +471,91 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
     });
   }
 
+  handleOpenDialog = (id: number, label: string) => {
+    this.setState({
+      dialog: {
+        open: true,
+        stackScriptID: id,
+        stackScriptLabel: label,
+      }
+    })
+  }
+
+  handleCloseDialog = () => {
+    this.setState({
+      dialog: {
+        open: false,
+        stackScriptID: undefined,
+        stackScriptLabel: '',
+      }
+    })
+  }
+
+  handleDeleteStackScript = () => {
+    deleteStackScript(this.state.dialog.stackScriptID!)
+      .then(response => {
+        this.setState({
+          dialog: {
+            open: false,
+            stackScriptID: undefined,
+            stackScriptLabel: '',
+          }
+        });
+        this.getDataAtPage(1, this.state.currentFilter, true);
+      })
+      .catch(e => {
+        this.setState({
+          dialog: {
+            open: false,
+            stackScriptID: undefined,
+            stackScriptLabel: '',
+          },
+          fieldError: {
+            reason: 'Unable to complete your request at this time'
+          }
+        })
+      });
+  }
+
+  renderDialogActions = () => {
+    return (
+      <React.Fragment>
+        <ActionsPanel>
+          <Button
+            variant="raised"
+            type="secondary"
+            destructive
+            onClick={this.handleDeleteStackScript}>
+            Yes
+          </Button>
+          <Button
+            variant="raised"
+            type="secondary"
+            className="cancel"
+            onClick={this.handleCloseDialog}
+          >
+            No
+          </Button>
+        </ActionsPanel>
+      </React.Fragment>
+    )
+  }
+
+  renderDeleteStackScriptDialog = () => {
+    const { dialog } = this.state;
+
+    return (
+      <ConfirmationDialog
+        title={`Delete ${dialog.stackScriptLabel}?`}
+        open={dialog.open}
+        actions={this.renderDialogActions}
+        onClose={this.handleCloseDialog}
+      >
+        <Typography>Are you sure you want to delete this StackScript?</Typography>
+      </ConfirmationDialog>
+    )
+  }
+
   renderIcon = () => {
     const { sortOrder } = this.state;
 
@@ -462,8 +567,8 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
   }
 
   render() {
-    const { classes, publicImages } = this.props;
-    const { currentFilterType, isSorting, error } = this.state;
+    const { classes, publicImages, currentUser } = this.props;
+    const { currentFilterType, isSorting, fieldError, error } = this.state;
 
     if(error) {
       return <ErrorState 
@@ -481,6 +586,9 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
 
     return (
       <React.Fragment>
+        {fieldError && fieldError.reason &&
+          <Notice text={fieldError.reason} error />
+        }
         {this.state.listOfStackScripts.length === 0
         ? <div className={classes.emptyState}>
           You do not have any StackScripts to select from. You must first
@@ -565,6 +673,8 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
             selectedId={this.state.selected}
             data={this.state.listOfStackScripts}
             publicImages={publicImages}
+            triggerDelete={this.handleOpenDialog}
+            currentUser={currentUser}
             {...selectProps}
           />
         </Table>
@@ -583,6 +693,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
             }
           </Button>
         }
+        {this.renderDeleteStackScriptDialog()}
       </React.Fragment>
     );
   }
