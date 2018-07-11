@@ -12,6 +12,7 @@ import {
 } from '@material-ui/core/styles';
 
 import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -46,7 +47,9 @@ type ClassNames = 'root'
   | 'labelField'
   | 'gridWithTips'
   | 'tips'
-  | 'warning';
+  | 'chipsContainer'
+  | 'warning'
+  | 'targetTag';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -89,9 +92,15 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       paddingLeft: theme.spacing.unit * 2,
     },
   },
+  chipsContainer: {
+    maxWidth: 415,
+  },
   warning: {
     marginTop: theme.spacing.unit * 2,
-  }
+  },
+  targetTag: {
+    margin: `${theme.spacing.unit}px ${theme.spacing.unit}px 0 0`,
+  },
 });
 
 interface Props { 
@@ -412,16 +421,19 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
                   )}
                 </Select>
               </FormControl>
-              {selectedImages && selectedImages.map((selectedImage, index) => {
-                return (
-                  <Tag
-                    key={selectedImage}
-                    label={selectedImage}
-                    variant='lightBlue'
-                    onDelete={() => this.handleRemoveImage(index)}
-                  />
-                )
-              })}
+              <div className={classes.chipsContainer}>
+                {selectedImages && selectedImages.map((selectedImage, index) => {
+                  return (
+                    <Tag
+                      key={selectedImage}
+                      label={selectedImage}
+                      variant='lightBlue'
+                      onDelete={() => this.handleRemoveImage(index)}
+                      className={classes.targetTag}
+                    />
+                  )
+                })}
+              </div>
             </Grid>
             <Grid item className={classes.gridWithTips}>
               <Notice 
@@ -468,20 +480,18 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
                 be available to all Linode users and can be used to provision new Linodes.
             </Typography>
           </Notice>
-          <InputLabel
-            htmlFor="make_public"
-            disableAnimation
-            shrink={true}
-          >
-            <Checkbox
-              name='make_public'
-              variant='warning'
-              onChange={this.handleToggleIsPublic}
-              checked={this.state.is_public}
+          <FormControlLabel
+            control={
+              <Checkbox
+                name='make_public'
+                variant='warning'
+                onChange={this.handleToggleIsPublic}
+                checked={this.state.is_public}
+              />
+            }
+              label="Publish this StackScript to the Public Library"
             />
-            Publish this StackScript to the Public Library
-          </InputLabel>
-          <ActionsPanel style={{ padding: 0 }}>
+          <ActionsPanel style={{ paddingBottom: 0 }}>
             <Button
               data-qa-confirm-cancel
               onClick={this.handleCreateStackScript}

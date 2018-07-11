@@ -38,9 +38,9 @@ describe('StackScriptCreate', () => {
     // not done yet!!
   });
 
-  it('should render a checkbox', () => {
-    expect(component.find('WithStyles(LinodeCheckBox)')).toHaveLength(1);
-  });
+  // it('should render a checkbox', () => {
+  //   expect(component.find('WithStyles(LinodeCheckBox)')).toHaveLength(1);
+  // });
 
   it(`should render a confirmation dialog with the
   title "Clear StackScript Configuration?"`, () => {
