@@ -3,6 +3,8 @@ import * as React from 'react';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
+import RenderGuard from 'src/components/RenderGuard';
+
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
@@ -41,4 +43,4 @@ const ActionPanel: React.StatelessComponent<CombinedProps> = (props) => {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(ActionPanel);
+export default styled(RenderGuard<Props& WithStyles<ClassNames>>(ActionPanel));
