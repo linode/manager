@@ -31,7 +31,7 @@ describe('Linode Detail - Rebuild Suite', () => {
     });
 
     it('should display a help icon with tooltip on click', () => {
-        Rebuild.help.click();
+        Rebuild.help.moveToObject();
         Rebuild.popoverMsg.waitForVisible();
 
         expect(Rebuild.popoverMsg.getText()).toBe('Choosing a 64-bit distro is recommended.');

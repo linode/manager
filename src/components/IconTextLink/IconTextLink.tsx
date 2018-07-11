@@ -66,6 +66,7 @@ export interface Props {
   disabled?: Boolean;
   title: string;
   left?: boolean;
+  className?: any;
 }
 
 type FinalProps = Props & WithStyles<CSSClasses>;
@@ -80,6 +81,7 @@ const IconTextLink: React.StatelessComponent<FinalProps> = (props) => {
     disabled,
     title,
     left,
+    className,
   } = props;
 
   return (
@@ -91,7 +93,9 @@ const IconTextLink: React.StatelessComponent<FinalProps> = (props) => {
           [classes.active]: active === true,
           [classes.left]: left === true,
           iconTextLink: true,
-        })
+        },
+        className
+      )
       }
       title={title}
       onClick={onClick}

@@ -71,6 +71,7 @@ export interface Props {
   copy?: string;
   title?: string;
   buttonProps?: ButtonProps;
+  className?: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -84,7 +85,7 @@ const Placeholder: React.StatelessComponent<CombinedProps> = (props) => {
       alignItems="center"
       direction="column"
       justify="center"
-      className={classes.root}
+      className={`${classes.root} ${props.className}`}
     >
       <Grid item xs={12}>
         {Icon &&

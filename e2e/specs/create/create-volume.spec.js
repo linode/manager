@@ -74,11 +74,11 @@ describe('Create - Volume Suite', () => {
 
     afterAll(() => {
         apiDeleteAllLinodes();
-        try {
+        // try {
             // attempt to remove all volumes, in case the ui failed
-            apiDeleteAllVolumes();
-        } catch (err) {
+            // apiDeleteAllVolumes();
+        // } catch (err) {
             // do nothing
-        }
+        // }
     });
 });

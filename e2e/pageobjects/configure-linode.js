@@ -4,15 +4,15 @@ class ConfigureLinode extends Page {
     get createHeader() { return $('[data-qa-create-linode-header]'); }
     get createFromImage() { return $('[data-qa-create-from="Create from Image"]'); }
     get createFromBackup() { return $('[data-qa-create-from="Create from Backup"]'); }
-    get createFromExisting() { return $('[data-qa-create-from="Clone From Existing"]'); }
+    get createFromExisting() { return $('[data-qa-create-from="Clone from Existing"]'); }
     
     // get selectLinodePanel() {}
 
     get selectLinodeHeader() { return $('[data-qa-select-linode-header]'); }
-    get selectImageHeader() { return $('[data-qa-tp="Select Image Type"]'); }
-    get imageTabs() { return  $$('[data-qa-tp="Select Image Type"] [data-qa-tab]'); }
-    get images() { return $$('[data-qa-tp="Select Image Type"] [data-qa-selection-card]'); }
-    get imageNames() { return $$('[data-qa-tp="Select Image Type"] [data-qa-select-card-heading]'); }
+    get selectImageHeader() { return $('[data-qa-tp="Select Image"]'); }
+    get imageTabs() { return  $$('[data-qa-tp="Select Image"] [data-qa-tab]'); }
+    get images() { return $$('[data-qa-tp="Select Image"] [data-qa-selection-card]'); }
+    get imageNames() { return $$('[data-qa-tp="Select Image"] [data-qa-select-card-heading]'); }
     get showOlderImages() { return $('[data-qa-show-more-expanded]'); }
     
     get selectRegionHeader() { return $('[data-qa-tp="Region"]'); }
@@ -120,7 +120,7 @@ class ConfigureLinode extends Page {
 
     cloneSelectSource(linodeLabel) {
         const sourceSection = $$('[data-qa-select-linode-panel]')
-            .filter(s => s.$('[data-qa-select-linode-header]').getText() === 'Select Linode to Clone From');
+        expect(sourceSection[0].$('[data-qa-select-linode-header]').getText()).toBe('Select Linode to Clone From');
         // const targetSection = $$('[data-qa-select-linode-panel]')
             // .filter(s => s.$('[data-qa-select-linode-header]').getText() === 'Select Target Linode');
 
