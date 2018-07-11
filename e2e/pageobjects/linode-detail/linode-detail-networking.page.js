@@ -6,7 +6,19 @@ class Networking extends Page {
     get heading() { return $('[data-qa-title]'); }
     get ipv4Subheading() { return $('[data-qa-ipv4-subheading]'); }
     get ipv6Subheading() { return $('[data-qa-ipv6-subheading]'); }
+    
+    get networkActionsTitle() { return $('[data-qa-network-actions-title]'); }
     get networkingActionsSubheading() { return $('[data-qa-networking-actions-subheading]'); }
+    get ipTransferSubheading() { return $('[data-qa-transfer-ip-label]'); }
+    get ipTransferActionMenu() { return $('[data-qa-ip-transfer-action-menu]'); }
+    get ipTransferActionMenus() { return $$('[data-qa-ip-transfer-action-menu]'); }
+    get moveIpButton() { return $('[data-qa-transfer-action="move"]'); }
+    get swapIpButton() { return $('[data-qa-transfer-action="swap"]') }
+    get swapIpActionMenu() { return $('[data-qa-swap-ip-action-menu]'); }
+    get swapWithIps() { return $$('[data-qa-swap-with]'); }
+    get ipTransferSave() { return $('[data-qa-ip-transfer-save]'); }
+    get ipTransferCancel() { return $('[data-qa-ip-transfer-cancel]'); }
+    
     get drawerTitle() { return $('[data-qa-drawer-title]'); }
     get ips() { return $$('[data-qa-ip]'); }
     get ip() {return $('[data-qa-ip]'); }

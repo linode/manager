@@ -231,10 +231,11 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
             value={state.mode}
             onChange={this.onModeChange(state.sourceIP)}
             fullWidth={false}
+            data-qa-ip-transfer-action-menu
           >
             <MenuItem value="none">Select Action</MenuItem>
-            <MenuItem value="move">Move To</MenuItem>
-            <MenuItem value="swap">Swap With</MenuItem>
+            <MenuItem value="move" data-qa-transfer-action="move">Move To</MenuItem>
+            <MenuItem value="swap" data-qa-transfer-action="swap">Swap With</MenuItem>
           </Select>
         </Grid>
         {renderLinodeSelect && renderLinodeSelect(state as Move)}
@@ -271,8 +272,11 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
           value={selectedIP}
           fullWidth={false}
           onChange={this.onSelectedIPChange(sourceIP)}
+          data-qa-swap-ip-action-menu
         >
-          {selectedLinodesIPs.map(ip => <MenuItem key={ip} value={ip}>{ip}</MenuItem>)}
+          {selectedLinodesIPs
+            .map(ip => <MenuItem key={ip} value={ip} data-qa-swap-with={ip}>{ip}</MenuItem>)
+          }
         </Select>
       </Grid>
     )
@@ -388,10 +392,16 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
           onClick={this.onSubmit}
           type="primary"
           disabled={this.state.linodes.length === 0}
+          data-qa-ip-transfer-save
         >
           Save
       </Button>
-        <Button disabled={this.state.submitting || this.state.linodes.length === 0} onClick={this.onReset} type="secondary">Cancel</Button>
+        <Button
+          disabled={this.state.submitting || this.state.linodes.length === 0} onClick={this.onReset} type="secondary"
+          data-qa-ip-transfer-cancel
+        >
+          Cancel
+        </Button>
       </ActionsPanel>)
   }
 
@@ -423,7 +433,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
           </Grid>
           <Grid item xs={12}>
             <Grid container>
-              <Grid item className={classes.ipFieldLabel}>IP Address</Grid>
+              <Grid item className={classes.ipFieldLabel} data-qa-transfer-ip-label>IP Address</Grid>
               <Grid item className={classes.actionsLabel}>Actions</Grid>
             </Grid>
             {
