@@ -77,6 +77,7 @@ class LinodeTextField extends React.Component<CombinedProps> {
         : `error-for-scroll`;
       finalProps.InputProps = {
         className: errorScrollClassName,
+        ...finalProps.InputProps
       };
     }
 

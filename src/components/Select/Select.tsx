@@ -1,6 +1,7 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 
+import FormHelperText from '@material-ui/core/FormHelperText';
 import Input, { InputProps } from '@material-ui/core/Input';
 import { MenuProps } from '@material-ui/core/Menu';
 import Select, { SelectProps } from '@material-ui/core/Select';
@@ -111,7 +112,7 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
       >
         {children}
       </Select>
-      {errorText && <p className={classes.textError}>{errorText}</p>}
+      {errorText && <FormHelperText className={classes.textError}>{errorText}</FormHelperText>}
       {helpText && <HelpIcon text={helpText} />}
     </div>
   );

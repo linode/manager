@@ -75,9 +75,9 @@ const createStackScriptSchema = Joi.object({
   script: Joi.string().required(),
   label: Joi.string().required(),
   images: Joi.array().items(Joi.string()).required(),
-  description: Joi.string(),
+  description: Joi.string().allow(""),
   is_public: Joi.boolean(),
-  rev_note: Joi.string(),
+  rev_note: Joi.string().allow(""),
 });
 
 export const createStackScript = (payload: CreatePayload) =>
