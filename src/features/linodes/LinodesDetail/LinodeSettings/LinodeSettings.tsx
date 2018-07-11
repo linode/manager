@@ -4,7 +4,7 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 import Typography from '@material-ui/core/Typography';
 
 import { ConfigsConsumer, DisksConsumer, LinodeConsumer } from '../context';
-import LinodeConfigsPanel from './LinodeConfigsPanel';
+import LinodeAdvancedConfigurationsPanel from './LinodeAdvancedConfigurationsPanel';
 import LinodeSettingsAlertsPanel from './LinodeSettingsAlertsPanel';
 import LinodeSettingsDeletePanel from './LinodeSettingsDeletePanel';
 import LinodeSettingsLabelPanel from './LinodeSettingsLabelPanel';
@@ -60,16 +60,7 @@ const LinodeSettings: React.StatelessComponent<CombinedProps> = (props) => {
                           linodeId={linode.id}
                           currentStatus={linode.watchdog_enabled}
                         />
-                        <LinodeConfigsPanel
-                          linodeDisks={disks}
-                          linodeId={linode.id}
-                          linodeLabel={linode.label}
-                          linodeRegion={linode.region}
-                          linodeConfigs={configs}
-                          linodeMemory={linode.specs.memory}
-                          linodeTotalDisk={linode.specs.disk}
-                          linodeStatus={linode.status}
-                        />
+                        <LinodeAdvancedConfigurationsPanel />
                         <LinodeSettingsDeletePanel
                           linodeId={linode.id}
                         />

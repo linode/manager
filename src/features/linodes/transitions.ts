@@ -9,7 +9,8 @@ export const transitionStatus = [
 ];
 
 export const transitionAction = [
-  'linode_snapshot'
+  'linode_snapshot',
+  'disk_resize'
 ];
 
 export const linodeInTransition = (status: string, recentEvent?: Linode.Event): boolean => {
@@ -26,7 +27,7 @@ export const linodeInTransition = (status: string, recentEvent?: Linode.Event): 
 
 export const transitionText = (status: string, recentEvent?: Linode.Event): string => {
   if (recentEvent && transitionAction.includes(recentEvent.action)) {
-    return recentEvent.action.replace('linode_', '');
+    return recentEvent.action.replace('linode_', '').replace('_', ' ');
   }
   return status.replace('_', ' ');
 }
