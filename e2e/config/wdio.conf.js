@@ -229,6 +229,7 @@ exports.config = {
         if (browser.options.desiredCapabilities.browserName.includes('chrome')) {
             browser.timeouts('page load', 20000);
         }
+
         login(username, password);
     },
     /**
