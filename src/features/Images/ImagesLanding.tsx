@@ -2,6 +2,7 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import { compose, pathOr } from 'ramda';
+import { Subscription } from 'rxjs/Rx';
 
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 
@@ -23,9 +24,9 @@ import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import Table from 'src/components/Table';
+import { events$ } from 'src/events';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { deleteImage, getUserImages } from 'src/services/images';
-
-
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import ImageRow from './ImageRow';
@@ -52,9 +53,11 @@ interface State {
   imageDrawer: {
     open: boolean,
     mode: 'edit' | 'create' | 'delete' | 'deploy',
-    description?: string,
     imageID?: string,
     label?: string,
+    description?: string,
+    selectedLinode?: string,
+    selectedDisk?: string,
   };
   removeDialog: {
     open: boolean,
@@ -68,6 +71,8 @@ interface State {
 type CombinedProps = Props & PromiseLoaderProps & WithStyles<ClassNames> & RouteComponentProps<{}>;
 
 class ImagesLanding extends React.Component<CombinedProps, State> {
+  mounted: boolean = false;
+  eventsSub: Subscription;
   state: State = {
     images: pathOr([], ['response', 'data'], this.props.images),
     error: pathOr(undefined, ['error'], this.props.images),
@@ -100,21 +105,78 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
     }
   ];
 
-  refreshImages = () => {
-     getUserImages()
-       .then((response) => {
-        this.setState({ images: response.data });
-       });
+  componentDidMount() {
+    this.mounted = true;
+    
+    this.eventsSub = events$
+      .filter(event => (
+        !event._initial
+        && [
+          'disk_imagize',
+          'image_delete',
+        ].includes(event.action)
+      ))
+      .subscribe((event) => {
+        if (event.action === 'disk_imagize' && event.status === 'finished') {
+          sendToast('Image created successfully.');
+          this.refreshImages();
+        }
+
+        if (event.action === 'disk_imagize' && event.status === 'failed') {
+          sendToast('There was an error creating the image.', 'error');
+          this.refreshImages();
+        }
+
+        if (event.action === 'image_delete' && event.status === 'notification') {
+          sendToast('Image has been deleted successfully.')
+        }
+      });
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   componentDidCatch(error: Error) {
     this.setState({ error }, () => { scrollErrorIntoView(); });
   }
 
-  openCreateDrawer = () => {
+  refreshImages = () => {
+    getUserImages()
+      .then((response) => {
+       if (this.mounted) { this.setState({ images: response.data }); }
+      });
+ }
+
+  openForCreate = () => {
     this.setState({
-      imageDrawer: { open: true, mode: 'edit' },
+      imageDrawer: { open: true, mode: 'create', label: '', description: '', selectedLinode: '', },
     });
+  }
+
+  openRemoveDialog = (image: string, imageID: string) => {
+    this.setState({
+      removeDialog: { open: true, image, imageID, submitting: false, error: undefined, },
+    });
+  }
+
+  closeRemoveDialog = () => {
+    const { removeDialog } = this.state;
+    this.setState({
+      removeDialog: { ...removeDialog, open: false, },
+    });
+  }
+
+  openForEdit = (label: string, description: string, imageID: string) => {
+    this.setState({
+      imageDrawer: {
+        open: true,
+        mode: 'edit',
+        description,
+        imageID,
+        label,
+      }
+    })
   }
 
   removeImage = () => {
@@ -134,6 +196,22 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
         const error: string = errors.length > 0 ? errors[0].reason : "There was an error deleting the image."
         this.setState({ removeDialog:  { ...removeDialog, error} });
       })
+  }
+
+  changeSelectedLinode = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ imageDrawer: { ...this.state.imageDrawer, selectedLinode: e.target.value }});
+  }
+
+  changeSelectedDisk = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ imageDrawer: { ...this.state.imageDrawer, selectedDisk: e.target.value }});
+  }
+
+  setLabel = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ imageDrawer: { ...this.state.imageDrawer, label: e.target.value }});
+  }
+  
+  setDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ imageDrawer: { ...this.state.imageDrawer, description: e.target.value }});
   }
 
   getActions = () => {
@@ -162,43 +240,27 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
     )
   }
 
-  openRemoveDialog = (image: string, imageID: string) => {
-    this.setState({
-      removeDialog: { open: true, image, imageID, submitting: false, error: undefined, },
-    });
-  }
-
-  closeRemoveDialog = () => {
-    const { removeDialog } = this.state;
-    this.setState({
-      removeDialog: { ...removeDialog, open: false, },
-    });
-  }
-
-  openForEdit = (label: string, description: string, imageID: string) => {
-    this.setState({
-      imageDrawer: {
-        open: true,
-        mode: 'edit',
-        description,
-        imageID,
-        label,
-      }
-    })
-  }
-
-  setLabel = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { imageDrawer } = this.state;
-    this.setState({ imageDrawer: {...imageDrawer, label: e.target.value }});
-  }
-
-  setDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { imageDrawer } = this.state;
-    this.setState({ imageDrawer: {...imageDrawer, description: e.target.value }});
-  }
-
   closeImageDrawer = () => {
     this.setState({ imageDrawer: { open: false, mode: 'create', label: '', description: '' }});
+  }
+
+  renderImageDrawer = () => {
+    const { imageDrawer } = this.state;
+    return <ImagesDrawer
+      open={imageDrawer.open}
+      mode={imageDrawer.mode}
+      label={imageDrawer.label}
+      description={imageDrawer.description}
+      selectedDisk={imageDrawer.selectedDisk}
+      selectedLinode={imageDrawer.selectedLinode}
+      imageID={imageDrawer.imageID}
+      changeDisk={this.changeSelectedDisk}
+      changeLinode={this.changeSelectedLinode}
+      changeLabel={this.setLabel}
+      changeDescription={this.setDescription}
+      onClose={this.closeImageDrawer}
+      onSuccess={this.refreshImages}
+    />
   }
 
   render() {
@@ -220,11 +282,11 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
             title="Add an Image"
             copy="Adding a new image is easy. Click below to add an image."
             buttonProps={{
-              onClick: () => this.openCreateDrawer(),
+              onClick: this.openForCreate,
               children: 'Add an Image',
             }}
           />
-          {/* <this.ImageCreateDrawer /> */}
+          {this.renderImageDrawer()}
         </React.Fragment>
       );
     }
@@ -241,9 +303,8 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
             <Grid container alignItems="flex-end">
               <Grid item>
                 <AddNewLink
-                  onClick={() => null}
+                  onClick={this.openForCreate}
                   label="Add an Image"
-                  disabled={true}
                 />
               </Grid>
             </Grid>
@@ -272,17 +333,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
             </TableBody>
           </Table>
         </Paper>
-        <ImagesDrawer
-          open={this.state.imageDrawer.open}
-          label={this.state.imageDrawer.label}
-          imageID={this.state.imageDrawer.imageID}
-          mode={this.state.imageDrawer.mode}
-          description={this.state.imageDrawer.description}
-          onClose={this.closeImageDrawer}
-          onSuccess={this.refreshImages}
-          setLabel={this.setLabel}
-          setDescription={this.setDescription}
-        />
+        {this.renderImageDrawer()}
         <ConfirmationDialog
           open={this.state.removeDialog.open}
           title={`Remove ${this.state.removeDialog.image}`}
