@@ -4,7 +4,8 @@ import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   linodeStatus: string;
-  onEdit: () => void;
+  onRename: () => void;
+  onResize: () => void;
   onDelete: () => void;
 }
 
@@ -15,10 +16,18 @@ class DiskActionMenu extends React.Component<CombinedProps> {
     const { linodeStatus } = this.props;
     const actions = [
       {
-        title: 'Edit',
+        title: 'Rename',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           e.preventDefault();
-          this.props.onEdit();
+          this.props.onRename();
+          closeMenu();
+        },
+      },
+      {
+        title: 'Resize',
+        onClick: (e: React.MouseEvent<HTMLElement>) => {
+          e.preventDefault();
+          this.props.onResize();
           closeMenu();
         },
       },
