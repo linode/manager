@@ -52,7 +52,7 @@ interface State {
   error?: Error;
   imageDrawer: {
     open: boolean,
-    mode: 'edit' | 'create' | 'restore' | 'deploy',
+    mode: 'edit' | 'create' | 'restore',
     imageID?: string,
     label?: string,
     description?: string,
@@ -259,7 +259,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
   }
 
   closeImageDrawer = () => {
-    this.setState({ imageDrawer: { open: false, mode: 'create', label: '', description: '' }});
+    this.setState({ imageDrawer: { ...this.state.imageDrawer, open: false, }});
   }
 
   renderImageDrawer = () => {

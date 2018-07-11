@@ -111,10 +111,9 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
     }
   }
 
-
   close = () => {
-    this.setState({ errors: undefined, notice: undefined, });
     this.props.onClose();
+    this.setState({ errors: undefined, notice: undefined, });
   }
   
   onSubmit = () => {
@@ -180,6 +179,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
           });
           return;
         }
+        this.close();
         history.push({
           pathname: `/linodes/${selectedLinode}/rebuild`,
           state: { selectedImageId: imageID },
