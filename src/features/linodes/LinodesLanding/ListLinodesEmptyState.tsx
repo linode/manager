@@ -1,16 +1,13 @@
 import * as React from 'react';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'redux';
-import LinodeSvg from 'src/assets/addnewmenu/linode.svg';
-import {
-  withStyles,
-  Theme,
-  WithStyles,
-  StyleRulesCallback,
-} from '@material-ui/core/styles';
-import Grid from 'src/components/Grid';
-import Typography from '@material-ui/core/Typography';
+
 import Button from '@material-ui/core/Button';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+
+import LinodeSvg from 'src/assets/addnewmenu/linode.svg';
+import Grid from 'src/components/Grid';
 
 type CSSClasses = 'root' | 'copy' | 'button' | 'icon' | 'title';
 

@@ -1,14 +1,12 @@
 import * as React from 'react';
 
-import {  StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 
 import CircleProgress from 'src/components/CircleProgress';
 import SelectionRow from 'src/components/SelectionRow';
-
 import { formatDate } from 'src/utilities/format-date-iso8601';
 
 type ClassNames = 'root' | 'loadingWrapper';

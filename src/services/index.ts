@@ -1,5 +1,4 @@
 import * as Axios from 'axios';
-
 import { Schema, validate } from 'joi';
 import { compose, isEmpty, isNil, lensPath, lensProp, not, omit, path, pathOr, set, tap, when } from 'ramda';
 import * as Raven from 'raven-js';

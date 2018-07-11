@@ -1,37 +1,22 @@
+import { compose, lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
-
-import {
-  compose,
-  lensPath,
-  pathOr,
-  set,
-} from 'ramda';
-
-import {
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-  withStyles,
-} from '@material-ui/core/styles';
 
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from 'src/components/MenuItem';
-
-import { changeLinodeDiskPassword } from 'src/services/linodes';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ExpansionPanel from 'src/components/ExpansionPanel';
-import PasswordInput from 'src/components/PasswordInput';
-
-
 import HelpIcon from 'src/components/HelpIcon';
+import MenuItem from 'src/components/MenuItem';
 import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
+import PasswordInput from 'src/components/PasswordInput';
 import Select from 'src/components/Select';
+import { changeLinodeDiskPassword } from 'src/services/linodes';
+import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root';
@@ -66,7 +51,7 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
     const diskId = linodeDisks.length === 1 ?
                    linodeDisks[0].id :
                    pathOr('', ['disks', 'response', 0, 'id'], this.props);
-    
+
     this.state = {
       diskId,
       linodeDisks,
@@ -108,7 +93,7 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
   handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState(set(lensPath(['value']), e.target.value))
   }
-  
+
   handleDiskChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     this.setState(set(lensPath(['diskId']), Number(e.target.value)))
   }
@@ -116,7 +101,7 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
   renderExpansionActions = () => {
     const { submitting } = this.state;
     const { linodeStatus } = this.props;
-    
+
     return <ActionsPanel>
               <Button
                 type="primary"
@@ -141,7 +126,7 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
     const diskIdError = hasErrorFor('diskId');
     const generalError = hasErrorFor('none');
     const singleDisk = this.state.linodeDisks.length === 1;
-    
+
 
     return (
       <ExpansionPanel

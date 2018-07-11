@@ -1,16 +1,12 @@
 import * as React from 'react';
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-import Toggle from 'src/components/Toggle';
-import RenderGuard from 'src/components/RenderGuard';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+
 import Grid from 'src/components/Grid';
+import RenderGuard from 'src/components/RenderGuard';
+import Toggle from 'src/components/Toggle';
 
 type ClassNames = 'root' | 'toggle';
 

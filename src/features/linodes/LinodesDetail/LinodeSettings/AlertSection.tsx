@@ -1,19 +1,12 @@
 import * as React from 'react';
 
+import { Divider, StyleRulesCallback, Theme, Typography, WithStyles, withStyles } from '@material-ui/core';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+
 import Grid from 'src/components/Grid';
 import RenderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
-
-import {
-    Divider,
-    StyleRulesCallback,
-    Theme,
-    Typography,
-    WithStyles,
-    withStyles,
-  } from '@material-ui/core';
 
 type ClassNames = 'root'
   | 'switch'

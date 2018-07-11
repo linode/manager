@@ -1,6 +1,8 @@
-import { API_ROOT } from 'src/constants';
-import Request, { setURL, setMethod, setParams, setData, validateRequestData } from './index';
 import * as Joi from 'joi';
+
+import { API_ROOT } from 'src/constants';
+
+import Request, { setData, setMethod, setParams, setURL, validateRequestData } from './index';
 
 type Page<T> = Linode.ResourcePage<T>;
 type Domain = Linode.Domain;

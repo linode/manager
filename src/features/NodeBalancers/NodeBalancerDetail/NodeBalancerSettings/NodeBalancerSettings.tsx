@@ -1,10 +1,8 @@
+import { clamp, compose, defaultTo } from 'ramda';
 import * as React from 'react';
 
-import { clamp, compose, defaultTo } from 'ramda';
-
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import Paper from '@material-ui/core/Paper';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -12,9 +10,7 @@ import Button from 'src/components/Button';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-
 import { updateNodeBalancer } from 'src/services/nodebalancers';
-
 import defaultNumeric from 'src/utilities/defaultNumeric';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -22,7 +18,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 type ClassNames = 'root'
 | 'title'
 | 'adornment'
-| 'inner' 
+| 'inner'
 | 'expPanelButton';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
@@ -126,7 +122,7 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
     const { fields, isSubmitting, success } = this.state;
     const { classes } = this.props;
     const hasErrorFor = getAPIErrorFor(errorResources, this.state.errors);
-    const generalError = hasErrorFor('none');  
+    const generalError = hasErrorFor('none');
 
     return (
       <React.Fragment>
@@ -139,7 +135,7 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
             {success && <Notice success text={success}/>}
           </Grid>
           <div className={classes.inner}>
-            <TextField 
+            <TextField
               data-qa-label-panel
               errorText={hasErrorFor('label')}
               label='Label'
@@ -149,7 +145,7 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
               />
           </div>
           <div className={classes.inner}>
-            <TextField 
+            <TextField
                 data-qa-connection-throttle
                 InputProps={{
                   endAdornment: <span className={classes.adornment}>

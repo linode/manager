@@ -1,12 +1,12 @@
-import * as React from 'react';
 import { storiesOf } from '@storybook/react';
+import * as React from 'react';
 
 import Button from '@material-ui/core/Button';
 
-import ActionsPanel from '../ActionsPanel';
 import ThemeDecorator from '../../utilities/storybookDecorators';
-import Drawer from './Drawer';
+import ActionsPanel from '../ActionsPanel';
 import TextField from '../TextField';
+import Drawer from './Drawer';
 
 class Example extends React.Component {
   state = { open: false };

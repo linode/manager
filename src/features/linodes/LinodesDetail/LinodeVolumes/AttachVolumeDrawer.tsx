@@ -1,20 +1,15 @@
 import * as React from 'react';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from '@material-ui/core/styles';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from 'src/components/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
+import InputLabel from '@material-ui/core/InputLabel';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-import Button from 'src/components/Button';
-import Select from 'src/components/Select';
-import Drawer from 'src/components/Drawer';
 import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/Button';
+import Drawer from 'src/components/Drawer';
+import MenuItem from 'src/components/MenuItem';
+import Select from 'src/components/Select';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
 type ClassNames = 'root';

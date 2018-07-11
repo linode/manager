@@ -1,10 +1,9 @@
 import * as React from 'react';
 
-import { StyleRulesCallback, Theme,withStyles, WithStyles } from '@material-ui/core/styles';
-
 import IconButton from '@material-ui/core/IconButton';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-import NotificationIcon from '../../../assets/icons/bell.svg';
+import NotificationIcon from 'src/assets/icons/bell.svg';
 
 type ClassNames = 'root'
   | 'icon'

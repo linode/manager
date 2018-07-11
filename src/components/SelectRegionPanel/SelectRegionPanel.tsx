@@ -1,12 +1,18 @@
-import * as React from 'react';
-import { isEmpty } from 'ramda';
-import US from 'flag-icon-css/flags/4x3/us.svg';
-import SG from 'flag-icon-css/flags/4x3/sg.svg';
-import JP from 'flag-icon-css/flags/4x3/jp.svg';
-import UK from 'flag-icon-css/flags/4x3/gb.svg';
 import DE from 'flag-icon-css/flags/4x3/de.svg';
+import UK from 'flag-icon-css/flags/4x3/gb.svg';
+import JP from 'flag-icon-css/flags/4x3/jp.svg';
+import SG from 'flag-icon-css/flags/4x3/sg.svg';
+import US from 'flag-icon-css/flags/4x3/us.svg';
+import { isEmpty } from 'ramda';
+import * as React from 'react';
 
-import { withStyles, StyleRulesCallback, WithStyles, Theme } from '@material-ui/core/styles';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+
+import Grid from 'src/components/Grid';
+import RenderGuard from 'src/components/RenderGuard';
+import SelectionCard from 'src/components/SelectionCard';
+import TabbedPanel from 'src/components/TabbedPanel';
+import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
 
 const flags = {
   us: () => <US width="32" height="24" viewBox="0 0 720 480" />,
@@ -16,13 +22,8 @@ const flags = {
   de: () => <DE width="32" height="24" viewBox="0 0 720 480" />,
 };
 
-import Grid from 'src/components/Grid';
 
-import TabbedPanel from 'src/components/TabbedPanel';
-import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
-import SelectionCard from 'src/components/SelectionCard';
 
-import RenderGuard from 'src/components/RenderGuard';
 
 export interface ExtendedRegion extends Linode.Region {
   display: string;

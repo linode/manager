@@ -46,6 +46,7 @@ export default class Page {
     }
 
     selectGlobalCreateItem(menuItem) {
+        this.globalCreate.waitForVisible();
         this.globalCreate.click();
         browser.waitForVisible('[data-qa-add-new-menu]', constants.wait.normal);
         browser.click(`[data-qa-add-new-menu="${menuItem}"]`);

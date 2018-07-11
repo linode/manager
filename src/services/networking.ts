@@ -1,5 +1,6 @@
 import { API_ROOT } from 'src/constants';
-import Request, { setURL, setMethod, setData, setXFilter } from './index';
+
+import Request, { setData, setMethod, setURL, setXFilter } from './index';
 
 export const updateIP = (address: string, payload: any) =>
   Request<Linode.IPAddress>(

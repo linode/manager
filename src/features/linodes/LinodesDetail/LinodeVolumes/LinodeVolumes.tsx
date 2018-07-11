@@ -1,7 +1,8 @@
 import { compose, equals, pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { Subscription } from 'rxjs/Rx';
+import 'rxjs/add/operator/filter';
+import { Subscription } from 'rxjs/Subscription';
 
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
@@ -27,9 +28,11 @@ import { events$, resetEventsPolling } from 'src/events';
 import { getLinodeConfigs, getLinodeVolumes } from 'src/services/linodes';
 import { attachVolume, cloneVolume, createVolume, deleteVolume, detachVolume, getVolumes, resizeVolume, updateVolume } from 'src/services/volumes';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+
 import { withLinode, withVolumes } from '../context';
 import ActionMenu from './LinodeVolumesActionMenu';
 import VolumeDrawer, { Modes, Props as VolumeDrawerProps } from './VolumeDrawer';
+
 
 type ClassNames = 'title';
 

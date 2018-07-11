@@ -1,17 +1,15 @@
+import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
 
-import { compose, lensPath, set } from 'ramda';
-
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-
-import { updateLinode } from 'src/services/linodes';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
-
+import { updateLinode } from 'src/services/linodes';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+
 import AlertSection from './AlertSection';
 
 type ClassNames = 'root';

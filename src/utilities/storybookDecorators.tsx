@@ -1,10 +1,8 @@
-import * as React from 'react';
 import 'font-logos/assets/font-logos.css';
+import * as React from 'react';
 
-import {
-  MuiThemeProvider,
-  createMuiTheme,
-} from '@material-ui/core/styles';
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
+
 import LinodeThemeLight from 'src/theme';
 
 const theme = createMuiTheme(LinodeThemeLight as Linode.TodoAny);

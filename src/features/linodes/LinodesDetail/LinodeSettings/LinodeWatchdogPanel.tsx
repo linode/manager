@@ -1,22 +1,17 @@
-import * as React from 'react';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { compose, lensPath, set } from 'ramda';
+import * as React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
-import { updateLinode } from 'src/services/linodes';
 import ExpansionPanel from 'src/components/ExpansionPanel';
-import Toggle from 'src/components/Toggle';
 import Grid from 'src/components/Grid';
-import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import Notice from 'src/components/Notice';
+import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
+import Toggle from 'src/components/Toggle';
+import { updateLinode } from 'src/services/linodes';
 
 type ClassNames = 'root' | 'shutDownWatchdog';
 

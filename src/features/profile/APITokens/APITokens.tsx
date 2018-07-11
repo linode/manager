@@ -1,31 +1,15 @@
-import * as React from 'react';
-
 import * as moment from 'moment';
-
 import { compose, filter, path, pathOr, sort } from 'ramda';
-
-import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
+import * as React from 'react';
 
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
+import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
-
-import {
-  createPersonalAccessToken,
-  deleteAppToken,
-  deletePersonalAccessToken,
-  getAppTokens,
-  getPersonalAccessTokens,
-  updatePersonalAccessToken,
-}
-  from 'src/services/profile';
-
-import isPast from 'src/utilities/isPast';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
@@ -34,6 +18,9 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import Table from 'src/components/Table';
+import { createPersonalAccessToken, deleteAppToken, deletePersonalAccessToken, getAppTokens, getPersonalAccessTokens, updatePersonalAccessToken } from 'src/services/profile';
+import isPast from 'src/utilities/isPast';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import APITokenDrawer, { DrawerMode, genExpiryTups } from './APITokenDrawer';
 import APITokenMenu from './APITokenMenu';

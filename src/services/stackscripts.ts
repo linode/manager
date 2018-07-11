@@ -1,10 +1,6 @@
 import { API_ROOT } from 'src/constants';
-import Request, {
-  setMethod,
-  setParams,
-  setURL,
-  setXFilter,
-} from './index';
+
+import Request, { setMethod, setParams, setURL, setXFilter } from './index';
 
 type Page<T> = Linode.ResourcePage<T>;
 type StackScript = Linode.StackScript.Response;

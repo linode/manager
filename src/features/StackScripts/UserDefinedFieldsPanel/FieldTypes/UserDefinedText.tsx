@@ -1,11 +1,6 @@
 import * as React from 'react';
 
-import {
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-  withStyles,
-} from '@material-ui/core/styles';
+import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 
 import RenderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';

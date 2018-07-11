@@ -1,11 +1,9 @@
 import * as React from 'react';
 
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import IconButton from '@material-ui/core/IconButton';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
-
-import { HelpOutline } from '@material-ui/icons';
+import HelpOutline from '@material-ui/icons/HelpOutline';
 
 interface Props {
   text: string;
@@ -57,12 +55,12 @@ class HelpIcon extends React.Component<CombinedProps, State> {
     const { text } = this.props;
     return (
       <React.Fragment>
-        <Tooltip 
+        <Tooltip
           title={text}
           data-qa-help-tooltip
           enterTouchDelay={0}
           leaveTouchDelay={5000}
-        > 
+        >
           <IconButton data-qa-help-button>
             <HelpOutline />
           </IconButton>

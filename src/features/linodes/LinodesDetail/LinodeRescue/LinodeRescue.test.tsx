@@ -1,12 +1,13 @@
-import * as React from 'react';
 import { shallow } from 'enzyme';
-import { LinodeRescue } from './LinodeRescue';
-import { ExtendedVolume } from './DeviceSelection';
-import { createPromiseLoaderResponse } from 'src/utilities/testHelpers';
-import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
+import * as React from 'react';
 
 import { disks } from 'src/__data__/disks';
 import { volumes } from 'src/__data__/volumes';
+import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
+import { createPromiseLoaderResponse } from 'src/utilities/testHelpers';
+
+import { ExtendedVolume } from './DeviceSelection';
+import { LinodeRescue } from './LinodeRescue';
 
 describe('LinodeRescue', () => {
   describe('volumes', () => {

@@ -1,54 +1,37 @@
-import * as React from 'react';
 import * as Joi from 'joi';
-import {
-  append,
-  clone,
-  compose,
-  defaultTo,
-  lensPath,
-  map,
-  omit,
-  over,
-  path,
-  pathOr,
-  set,
-  view,
-} from 'ramda';
+import { append, clone, compose, defaultTo, lensPath, map, omit, over, path, pathOr, set, view } from 'ramda';
+import * as React from 'react';
 import { connect } from 'react-redux';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { StickyContainer, Sticky, StickyProps } from 'react-sticky';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { Sticky, StickyContainer, StickyProps } from 'react-sticky';
 
-import { withStyles, WithStyles, Theme, StyleRules } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
+import { StyleRules, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
-import Button from 'src/components/Button';
-import {
-  createNodeBalancer,
-  createNodeBalancerSchema,
-} from 'src/services/nodebalancers';
-import { dcDisplayNames } from 'src/constants';
-import Grid from 'src/components/Grid';
 import ActionsPanel from 'src/components/ActionsPanel';
-import PromiseLoader from 'src/components/PromiseLoader';
+import Button from 'src/components/Button';
 import CheckoutBar from 'src/components/CheckoutBar';
-import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import NodeBalancerConfigPanel from './NodeBalancerConfigPanel';
+import Grid from 'src/components/Grid';
+import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
-
-import {
-  NodeBalancerConfigFields,
-  transformConfigsForRequest,
-  createNewNodeBalancerConfig,
-  createNewNodeBalancerConfigNode,
-  clampNumericString,
-} from './utils';
+import PromiseLoader from 'src/components/PromiseLoader';
+import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
+import { dcDisplayNames } from 'src/constants';
+import { getLinodes } from 'src/services/linodes';
+import { createNodeBalancer, createNodeBalancerSchema } from 'src/services/nodebalancers';
+import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-import { getLinodes } from 'src/services/linodes';
+import NodeBalancerConfigPanel from './NodeBalancerConfigPanel';
+import {
+  clampNumericString,
+  createNewNodeBalancerConfig,
+  createNewNodeBalancerConfigNode,
+  NodeBalancerConfigFields,
+  transformConfigsForRequest
+} from './utils';
 
 type Styles =
   'root'

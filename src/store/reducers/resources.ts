@@ -1,5 +1,5 @@
+import { assocPath, compose, ifElse, when } from 'ramda';
 import { Action } from 'redux';
-import { compose, ifElse, assocPath, when } from 'ramda';
 
 export const REQUEST = '@@manager/resources/REQUEST';
 export const RESPONSE = '@@manager/resources/RESPONSE';

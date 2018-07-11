@@ -1,13 +1,10 @@
 import * as React from 'react';
 
-import { withStyles, StyleRulesCallback, WithStyles, Theme } from '@material-ui/core/styles';
-
 import Paper from '@material-ui/core/Paper';
-// import Typography from '@material-ui/core/Typography';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-import PasswordInput from '../../../components/PasswordInput';
-import Notice from '../../../components/Notice';
-
+import Notice from 'src/components/Notice';
+import PasswordInput from 'src/components/PasswordInput';
 import RenderGuard from 'src/components/RenderGuard';
 
 type ClassNames = 'root' | 'inner' | 'panelBody';

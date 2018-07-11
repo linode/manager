@@ -1,10 +1,5 @@
-import {
-  filter,
-  isNil,
-  compose,
-  clamp,
-  toString,
-} from 'ramda';
+import { clamp, compose, filter, isNil, toString } from 'ramda';
+
 import defaultNumeric from 'src/utilities/defaultNumeric';
 
 export const clampNumericString = (low: number, hi: number) => compose(

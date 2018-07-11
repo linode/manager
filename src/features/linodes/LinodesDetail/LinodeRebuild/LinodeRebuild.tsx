@@ -1,32 +1,28 @@
+import { always, compose, cond, groupBy, pathOr, propOr } from 'ramda';
 import * as React from 'react';
-import { always, cond, compose, groupBy, propOr, pathOr } from 'ramda';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from 'src/components/MenuItem';
+import Paper from '@material-ui/core/Paper';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
+import ActionsPanel from 'src/components/ActionsPanel';
+import ErrorState from 'src/components/ErrorState';
+import MenuItem from 'src/components/MenuItem';
+import PasswordInput from 'src/components/PasswordInput';
+import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
+import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
+import Select from 'src/components/Select';
+import { resetEventsPolling } from 'src/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { getImages } from 'src/services/images';
 import { rebuildLinode } from 'src/services/linodes';
-import { resetEventsPolling } from 'src/events';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import Select from 'src/components/Select';
-import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
-import ActionsPanel from 'src/components/ActionsPanel';
-import ErrorState from 'src/components/ErrorState';
-import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
-import PasswordInput from 'src/components/PasswordInput';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+
 import { withLinode } from '../context';
 
 type ClassNames = 'root'

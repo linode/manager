@@ -1,7 +1,9 @@
 import { mount, ReactWrapper } from 'enzyme';
 import * as React from 'react';
+
 import { volumes } from 'src/__data__/volumes';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
+
 import VolumeDrawer from './VolumeDrawer';
 
 const getLabelField = (w: ReactWrapper): ReactWrapper => w.find('TextField[data-qa-volume-label]');

@@ -7,8 +7,8 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 import Typography from '@material-ui/core/Typography';
 
 import CopyTooltip from 'src/components/CopyTooltip';
-import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 import Grid from 'src/components/Grid';
+import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 
 type ClassNames = 'root'
   | 'title'

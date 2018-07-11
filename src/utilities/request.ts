@@ -1,6 +1,7 @@
-import Axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
-import store from 'src/store';
+import Axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+
 import { expire } from 'src/session';
+import store from 'src/store';
 
 Axios.interceptors.request.use((config: AxiosRequestConfig): AxiosRequestConfig => {
   const token = store.getState().authentication.token;

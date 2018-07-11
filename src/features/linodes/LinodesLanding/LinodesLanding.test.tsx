@@ -1,16 +1,13 @@
-import * as React from 'react';
 import { shallow } from 'enzyme';
+import * as React from 'react';
 import { StaticRouter, withRouter } from 'react-router-dom';
 
-import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
+import { images as mockImages, linodes as mockLinodes } from 'src/__data__';
 import { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
+import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
+import { clearDocs, setDocs } from 'src/store/reducers/documentation';
 
 import { ListLinodes } from './LinodesLanding';
-import {
-  linodes as mockLinodes,
-  images as mockImages,
-} from 'src/__data__';
-import { setDocs, clearDocs } from 'src/store/reducers/documentation';
 
 const RoutedListLinodes = withRouter(ListLinodes);
 

@@ -1,7 +1,9 @@
-import * as React from 'react';
 import { shallow } from 'enzyme';
-import { FromBackupsContent } from './FromBackupsContent';
+import * as React from 'react';
+
 import { LinodesWithBackups } from 'src/__data__/LinodesWithBackups';
+
+import { FromBackupsContent } from './FromBackupsContent';
 
 const mockProps = {
   linodes: [],

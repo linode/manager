@@ -1,9 +1,9 @@
-import * as React from 'react';
 import { shallow } from 'enzyme';
 import { isEmpty } from 'ramda';
+import * as React from 'react';
 
 import { OAuthCallbackPage } from 'src/layouts/OAuth';
-import { splitIntoTwo, parseQueryParams } from 'src/utilities/queryParams';
+import { parseQueryParams, splitIntoTwo } from 'src/utilities/queryParams';
 
 describe('layouts/OAuth', () => {
   const dispatch = jest.fn();

@@ -1,18 +1,18 @@
-import * as React from 'react';
 import * as classNames from 'classnames';
 import { cond, defaultTo, equals, lensPath, path, pathOr, pick, set } from 'ramda';
+import * as React from 'react';
 
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
 import Button, { ButtonProps } from '@material-ui/core/Button';
-import MenuItem from 'src/components/MenuItem';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-import { updateDomain, createDomainRecord, updateDomainRecord } from 'src/services/domains';
-import defaultNumeric from 'src/utilities/defaultNumeric';
-import Drawer from 'src/components/Drawer';
-import { default as _TextField, Props as TextFieldProps } from 'src/components/TextField';
 import ActionsPanel from 'src/components/ActionsPanel';
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import Drawer from 'src/components/Drawer';
+import MenuItem from 'src/components/MenuItem';
 import Notice from 'src/components/Notice';
+import { default as _TextField, Props as TextFieldProps } from 'src/components/TextField';
+import { createDomainRecord, updateDomain, updateDomainRecord } from 'src/services/domains';
+import defaultNumeric from 'src/utilities/defaultNumeric';
+import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 const TextField = (props: TextFieldProps) =>
