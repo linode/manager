@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import * as moment from 'moment';
 import {
   compose,
@@ -16,8 +17,8 @@ import {
   values,
 } from 'ramda';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import Grid from 'src/components/Grid';
@@ -57,6 +58,7 @@ interface Props {
   selectedImageID: string | null;
   handleSelection: (id: string) => void;
   hideMyImages?: boolean;
+  initTab?: number;
 }
 
 const sortByVendor = sortBy(prop('vendor'));
@@ -186,6 +188,7 @@ const CreateFromImage: React.StatelessComponent<CombinedProps> = (props) => {
           error={error}
           header="Select Image"
           tabs={renderTabs()}
+          initTab={props.initTab}
         />
         : <Paper className={props.classes.flatImagePanel} data-qa-tp="Select Image">
           <Typography variant="title" data-qa-tp="Select Image">
