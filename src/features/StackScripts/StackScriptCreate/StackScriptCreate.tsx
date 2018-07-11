@@ -44,6 +44,7 @@ type ClassNames = 'root'
   | 'titleWrapper'
   | 'createTitle'
   | 'labelField'
+  | 'gridWithTips'
   | 'tips'
   | 'warning';
 
@@ -69,6 +70,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   titleWrapper: {
     display: 'flex',
     marginTop: 5,
+  },
+  gridWithTips: {
+    maxWidth: '50%',
+    [theme.breakpoints.down('sm')]: {
+      maxWidth: '100%',
+    },
   },
   tips: {
     marginLeft: theme.spacing.unit * 4,
@@ -339,7 +346,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         </Grid>
         <Paper className={classes.root}>
           <Grid container>
-            <Grid item>
+            <Grid item className={classes.gridWithTips}>
               <TextField
                 InputProps={{
                   startAdornment: 
@@ -416,7 +423,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
                 )
               })}
             </Grid>
-            <Grid item>
+            <Grid item className={classes.gridWithTips}>
               <Notice 
                 className={classes.tips}
                 component="div"
