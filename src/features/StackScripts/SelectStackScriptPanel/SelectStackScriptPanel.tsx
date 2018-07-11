@@ -590,7 +590,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
           <Notice text={fieldError.reason} error />
         }
         {this.state.listOfStackScripts.length === 0
-        ? <div className={classes.emptyState}>
+        ? <div className={classes.emptyState} data-qa-stackscript-empty-msg>
           You do not have any StackScripts to select from. You must first
           <Link to="/stackscripts/create"> create one</Link>
         </div>
@@ -614,6 +614,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
                   type="secondary"
                   className={classes.sortButton}
                   onClick={this.handleClickStackScriptsTableHeader}
+                  data-qa-stackscript-table-header
                 >
                   StackScripts
                   {currentFilterType === 'label' &&
@@ -633,6 +634,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
                   type="secondary"
                   className={classes.sortButton}
                   onClick={this.handleClickDeploymentsTableHeader}
+                  data-qa-stackscript-active-deploy-header
                 >
                   Active Deploys
                   {currentFilterType !== 'label' && currentFilterType !== 'revision' &&
@@ -652,6 +654,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
                   type="secondary"
                   className={classes.sortButton}
                   onClick={this.handleClickRevisionsTableHeader}
+                  data-qa-stackscript-revision-header
                 >
                   Last Revision
                   {currentFilterType === 'revision' &&
@@ -659,7 +662,12 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
                   }
                 </Button>
               </TableCell>
-              <TableCell className={classes.tableHead}>Compatible Images</TableCell>
+              <TableCell
+                className={classes.tableHead}
+                data-qa-stackscript-compatible-images
+              >
+                Compatible Images
+              </TableCell>
               {!this.props.onSelect &&
                 <TableCell className={classNames({
                   [classes.tableHead]: true,

@@ -1,3 +1,6 @@
+const crypto = require('crypto');
+const { constants } = require('../constants');
+
 import Page from './page';
 
 class ConfigureLinode extends Page {
@@ -5,15 +8,38 @@ class ConfigureLinode extends Page {
     get createFromImage() { return $('[data-qa-create-from="Create from Image"]'); }
     get createFromBackup() { return $('[data-qa-create-from="Create from Backup"]'); }
     get createFromExisting() { return $('[data-qa-create-from="Clone from Existing"]'); }
-    
-    // get selectLinodePanel() {}
+    get createFromStackscript() { return $('[data-qa-create-from="Create from StackScript"]'); }
 
     get selectLinodeHeader() { return $('[data-qa-select-linode-header]'); }
     get selectImageHeader() { return $('[data-qa-tp="Select Image"]'); }
     get imageTabs() { return  $$('[data-qa-tp="Select Image"] [data-qa-tab]'); }
     get images() { return $$('[data-qa-tp="Select Image"] [data-qa-selection-card]'); }
     get imageNames() { return $$('[data-qa-tp="Select Image"] [data-qa-select-card-heading]'); }
+    get noCompatibleImages() { return $('[data-qa-no-compatible-images]'); }
+
     get showOlderImages() { return $('[data-qa-show-more-expanded]'); }
+
+    get selectStackScriptHeader() { return $('[data-qa-tp="Select StackScript"]'); }
+    get myStackScriptTab() { return $('[data-qa-tab="My StackScripts"]'); }
+    get linodeStackScriptTab() { return $('[data-qa-tab="Linode StackScripts"]'); }
+    get communityStackScriptTab() { return $('[data-qa-tab="Community StackScripts"]'); }
+
+    get stackScriptTableHeader() { return $('[data-qa-stackscript-table-header]'); }
+    get stackScriptDeploysHeader() { return $('[data-qa-stackscript-active-deploy-header]'); }
+    get stackScriptRevisionsHeader() { return $('[data-qa-stackscript-revision-header]'); }
+    get stackScriptCompatibleImagesHeader() { return $('[data-qa-stackscript-compatible-images]'); }
+
+    get stackScriptRow() { return $('[data-qa-table-row]'); }
+    get stackScriptRows() { return $$('[data-qa-table-row]'); }
+    get stackScriptTitle() { return $('[data-qa-stackscript-title]'); }
+    get stackScriptDeploys() { return $('[data-qa-stackscript-deploys]'); }
+    get stackScriptRevision() { return $('[data-qa-stackscript-revision]'); }
+    get stackScriptEmptyMsg() { return $('[data-qa-stackscript-empty-msg]'); }
+
+    get userDefinedFieldsHeader() { return $('[data-qa-user-defined-field-header]'); }
+    // User defined text field
+    // user defined boolean
+
     
     get selectRegionHeader() { return $('[data-qa-tp="Region"]'); }
     get regionTabs() { return $$('[data-qa-tp="Region"] [data-qa-tab]'); }
@@ -53,8 +79,56 @@ class ConfigureLinode extends Page {
         expect(this.deploy.isVisible()).toBe(true);
     }
 
+    stackScriptsBaseElemsDisplay() {
+        this.selectStackScriptHeader.waitForVisible(constants.wait.normal);
+        expect(this.myStackScriptTab.isVisible()).toBe(true);
+        expect(this.myStackScriptTab.getAttribute('aria-selected')).toBe('true');
+        expect(this.linodeStackScriptTab.isVisible()).toBe(true);
+        expect(this.communityStackScriptTab.isVisible()).toBe(true);
+
+        expect(this.noCompatibleImages.getText()).toBe('No Compatible Images Available');
+        expect(this.regionTabs.length).toBeGreaterThan(0);
+        expect(this.regions.length).toBeGreaterThan(0);
+        expect(this.selectRegionHeader.isVisible()).toBe(true);
+
+        expect(this.planHeader.isVisible()).toBe(true);
+        expect(this.planTabs.length).toBe(3);
+        expect(this.plans.length).toBeGreaterThan(0);
+        
+        expect(this.label.isVisible()).toBe(true);
+        expect(this.labelHeader.isVisible()).toBe(true);
+
+        expect(this.passwordHeader.isVisible()).toBe(true);
+        expect(this.password.isVisible()).toBe(true);
+
+        expect(this.addonsHeader.isVisible()).toBe(true);
+        expect(this.addons.length).toBe(2);
+    }
+
+    stackScriptTableDisplay() {
+        this.stackScriptTableHeader.waitForVisible();
+        expect(this.stackScriptTableHeader.getText()).toBe('StackScripts');
+        expect(this.stackScriptDeploysHeader.getText()).toBe('Active Deploys');
+        expect(this.stackScriptRevisionsHeader.getText()).toBe('Last Revision');
+        expect(this.stackScriptCompatibleImagesHeader.getText()).toBe('Compatible Images');
+    }
+
+    stackScriptMetadataDisplay() {
+        this.stackScriptRows.forEach(r => {
+            expect(r.$(this.stackScriptTitle.selector).getText()).toMatch(/./g);
+            expect(r.$(this.stackScriptDeploys.selector).getText()).toMatch(/./g);
+            expect(r.$(this.stackScriptRevision.selector).getText()).toMatch(/./g);
+        });
+    }
+
     baseDisplay() {
         expect(this.createHeader.waitForVisible()).toBe(true);
+
+        expect(this.createFromImage.isVisible()).toBe(true);
+        expect(this.createFromBackup.isVisible()).toBe(true);
+        expect(this.createFromExisting.isVisible()).toBe(true);
+        expect(this.createFromStackscript.isVisible()).toBe(true);
+
 
         expect(this.selectImageHeader.isVisible()).toBe(true);
         this.imageTabs.forEach(tab => expect(tab.isVisible()).toBe(true));
@@ -161,6 +235,18 @@ class ConfigureLinode extends Page {
             browser.waitForVisible('[data-qa-tp="Linode Plan"]');
             browser.waitForVisible('[data-qa-label-header]');
         }
+    }
+
+    createFrom(source) {
+        const sourceSelector = `[data-qa-create-from="Create from ${source}"]`;
+        browser.click(sourceSelector);
+        browser.waitUntil(function() {
+            return browser.getAttribute(sourceSelector, 'aria-selected').includes('true');
+        }, constants.wait.normal, 'Failed to change tab of linode create source');
+    }
+
+    randomPassword() {
+        this.password.setValue(crypto.randomBytes(20).toString('hex'));
     }
 }
 export default new ConfigureLinode();
