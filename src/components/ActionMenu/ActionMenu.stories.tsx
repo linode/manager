@@ -87,7 +87,7 @@ class StoryActionMenuWithOneAction extends React.Component<CombinedProps> {
   createActions = () => (closeMenu: Function): Action[] => {
     return [
       {
-        title: 'First Action',
+        title: 'Single Action',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           e.preventDefault();
         },
@@ -111,7 +111,7 @@ storiesOf('Action Menu', module)
       <StoryActionMenuWithTooltip />
     </div>
   ))
-  .add('Action Menu with one action', () => (
+  .add('Action Menu with one menu item', () => (
       <div style={{ float: 'left' }}>
         <StoryActionMenuWithOneAction />
       </div>
