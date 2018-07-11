@@ -191,7 +191,7 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
         <TableCell>
           <Typography variant="subheading" data-qa-stackscript-revision>{updated}</Typography>
         </TableCell>
-        <TableCell className={classes.stackScriptCell}>
+        <TableCell className={classes.stackScriptCell} data-qa-stackscript-images>
           {
             displayTagsAndShowMore(images)
           }
