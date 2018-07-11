@@ -12,8 +12,7 @@ describe('StackScripts - List Suite', () => {
         ListStackScripts.baseElementsDisplay();
     });
 
-    it('should display my stackscripts preselected and empty message', () => {
-        expect(ListStackScripts.emptyMsg.isVisible()).toBe(true);
+    it('should display my stackscripts preselected', () => {
         expect(ListStackScripts.myStackScriptTab.getAttribute('aria-selected')).toBe('true');
     });
 
