@@ -58,6 +58,7 @@ interface State {
   privateIP: boolean;
   password: string | null;
   isMakingRequest: boolean;
+  initTab?: number;
 }
 
 export type TypeInfo = {
@@ -80,7 +81,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 export class FromImageContent extends React.Component<CombinedProps, State> {
   state: State = {
-    selectedImageID: null,
+    selectedImageID: pathOr(null, ['history', 'location', 'state', 'selectedImageId'], this.props),
     selectedTypeID: null,
     selectedRegionID: null,
     password: '',
@@ -88,6 +89,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
     backups: false,
     privateIP: false,
     isMakingRequest: false,
+    initTab: pathOr(null, ['history', 'location', 'state', 'initTab'], this.props),
   };
 
   mounted: boolean = false;
@@ -151,7 +153,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
       booted: true,
     })
       .then((linode) => {
-        if (privateIP) allocatePrivateIP(linode.id);
+        if (privateIP) { allocatePrivateIP(linode.id); }
         resetEventsPolling();
         history.push('/linodes');
       })
@@ -181,7 +183,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
 
   render() {
     const { errors, backups, privateIP, label, selectedImageID,
-      selectedRegionID, selectedTypeID, password, isMakingRequest } = this.state;
+      selectedRegionID, selectedTypeID, password, isMakingRequest, initTab } = this.state;
 
     const { classes, notice, types, regions, images, getBackupsMonthlyPrice,
       getRegionName, getTypeInfo } = this.props;
@@ -214,6 +216,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
             handleSelection={this.handleSelectImage}
             selectedImageID={selectedImageID}
             updateFor={[selectedImageID]}
+            initTab={initTab}
           />
           <SelectRegionPanel
             error={hasErrorFor('region')}

@@ -102,7 +102,7 @@ const formatLinodeSubheading = (typeInfo: string, imageInfo: string) => {
 
 export class LinodeCreate extends React.Component<CombinedProps, State> {
   state: State = {
-    selectedTab: 0,
+    selectedTab: pathOr(0, ['history', 'location', 'state', 'selectedTab'], this.props),
     selectedLinodeIDFromQueryString: undefined,
     selectedBackupIDFromQueryString: undefined,
     selectedStackScriptIDFromQueryString: undefined,
@@ -231,7 +231,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
             notice={{
               level: 'warning',
               text: `This newly created Linode wil be created with
-                            the same password as the original Linode`,
+                      the same password as the original Linode`,
             }}
             getBackupsMonthlyPrice={this.getBackupsMonthlyPrice}
             regions={this.props.regions}

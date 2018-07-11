@@ -1,18 +1,18 @@
 import * as invariant from 'invariant';
 import { compose, isEmpty, lensIndex, map, over, splitAt, unless } from 'ramda';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 
-import Button from 'src/components/Button';
+
 import Radio from 'src/components/Radio';
 import RenderGuard from 'src/components/RenderGuard';
 import ShowMore from 'src/components/ShowMore';
 import Tag from 'src/components/Tag';
+import StackScriptsActionMenu from 'src/features/StackScripts/SelectStackScriptPanel/StackScriptActionMenu';
 
 type ClassNames = 'root'
   | 'respPadding'
@@ -108,8 +108,10 @@ export interface Props {
   onSelect?: (e: React.ChangeEvent<HTMLElement>, value: boolean) => void;
   checked?: boolean;
   showDeployLink?: boolean;
-  stackScriptID?: number;
-  stackScriptUsername?: string;
+  stackScriptID: number;
+  stackScriptUsername: string;
+  triggerDelete?: (id: number, label: string) => void;
+  canDelete: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -127,6 +129,8 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
     showDeployLink,
     stackScriptID,
     stackScriptUsername,
+    triggerDelete,
+    canDelete,
   } = props;
 
   /** onSelect and showDeployLink should not be used simultaneously */
@@ -135,53 +139,67 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
     'onSelect and showDeployLink are mutually exclusive.',
   );
 
+  const renderLabel = () => {
+    return (
+      <Typography variant="subheading">
+        {stackScriptUsername &&
+          <label
+            htmlFor={`${stackScriptID}`}
+            className={`${classes.libRadioLabel} ${classes.stackScriptUsername}`}>
+            {stackScriptUsername} /&nbsp;
+    </label>
+        }
+        <label
+          htmlFor={`${stackScriptID}`}
+          className={classes.libRadioLabel}>
+          {label}
+        </label>
+      </Typography>
+    )
+  }
+
   return (
     <React.Fragment>
-      <TableRow>
+      <TableRow data-qa-table-row={label}>
         {onSelect &&
           <TableCell>
             <Radio checked={checked} onChange={onSelect} id={`${stackScriptID}`} />
           </TableCell>
         }
-        <TableCell className={classes.stackScriptCell}>
-          <Typography variant="subheading">
-          {stackScriptUsername &&
-                <label
-                  htmlFor={`${stackScriptID}`}
-                  className={`${classes.libRadioLabel} ${classes.stackScriptUsername}`}>
-                  {stackScriptUsername} /&nbsp;
-            </label>
-              }
-              <label
-                htmlFor={`${stackScriptID}`}
-                className={classes.libRadioLabel}>
-                 {label}
-              </label>
-          </Typography>
+        <TableCell className={classes.stackScriptCell} data-qa-stackscript-title>
+          {!showDeployLink
+            ? renderLabel()
+            : <a target="_blank" href={`https://www.linode.com/stackscripts/view/${stackScriptID}`}>
+              {renderLabel()}
+            </a>
+          }
           <Typography>{description}</Typography>
         </TableCell>
         <TableCell>
-          <Typography variant="subheading">{deploymentsActive}</Typography>
+          <Typography
+            variant="subheading"
+            data-qa-stackscript-deploys
+          >
+            {deploymentsActive}
+          </Typography>
         </TableCell>
         <TableCell>
-          <Typography variant="subheading">{updated}</Typography>
+          <Typography variant="subheading" data-qa-stackscript-revision>{updated}</Typography>
         </TableCell>
-        <TableCell className={classes.stackScriptCell}>
+        <TableCell className={classes.stackScriptCell} data-qa-stackscript-images>
           {
             displayTagsAndShowMore(images)
           }
         </TableCell>
         {showDeployLink &&
           <TableCell>
-          <Link to={`/linodes/create?type=fromStackScript` +
-            `&stackScriptID=${stackScriptID}&stackScriptUsername=${stackScriptUsername}`}>
-            <Button
-              type="secondary"
-              className={classes.deployButton}
-            >
-              Deploy New Linode
-            </Button>
-          </Link>
+          <StackScriptsActionMenu
+            stackScriptID={stackScriptID}
+            stackScriptUsername={stackScriptUsername}
+            stackScriptLabel={label}
+            triggerDelete={triggerDelete!}
+            canDelete={canDelete}
+          />
           </TableCell>
         }
       </TableRow>

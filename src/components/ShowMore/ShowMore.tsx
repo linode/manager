@@ -75,6 +75,7 @@ class ShowMore<T> extends React.Component<Props<T> & WithStyles<CSSClasses> > {
           classes={{ label: classes.label }}
           onClick={this.handleClick}
           {...chipProps}
+          data-qa-show-more-chip
         />
         <Popover
           classes={{ paper: classes.popover }}
