@@ -126,6 +126,7 @@ const LinodeTheme: Linode.Theme = {
       label: {
         paddingLeft: 4,
         paddingRight: 4,
+        fontSize: '.9rem',
       },
       deleteIcon: {
         color: '#aaa',
