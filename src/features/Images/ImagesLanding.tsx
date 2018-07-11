@@ -51,7 +51,7 @@ interface State {
   error?: Error;
   imageDrawer: {
     open: boolean,
-    mode: 'edit' | 'create' | 'delete' | 'deploy',
+    mode: 'edit' | 'create' | 'restore',
     imageID?: string,
     label?: string,
     description?: string,
@@ -178,6 +178,16 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
     })
   }
 
+  openForRestore = (imageID: string) => {
+    this.setState({
+      imageDrawer: {
+        open: true,
+        mode: 'restore',
+        imageID,
+      }
+    })
+  }
+
   deployNewLinode = (imageID: string) => {
     const { history } = this.props;
     history.push({
@@ -248,7 +258,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
   }
 
   closeImageDrawer = () => {
-    this.setState({ imageDrawer: { open: false, mode: 'create', label: '', description: '' }});
+    this.setState({ imageDrawer: { ...this.state.imageDrawer, open: false, }});
   }
 
   renderImageDrawer = () => {
@@ -331,7 +341,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
               {images.map((image, idx) =>
                 <ImageRow key={idx}
                           image={image}
-                          onRestore={() => null}
+                          onRestore={this.openForRestore}
                           onDeploy={this.deployNewLinode}
                           onEdit={this.openForEdit}
                           onDelete={this.openRemoveDialog}
