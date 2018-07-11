@@ -652,11 +652,15 @@ const LinodeTheme: Linode.Theme = {
         color: '#666',
         visibility: 'hidden',
         textAlign: 'left',
+        width: 0,
+        height: 0,
         [breakpoints.up('sm')]: {
           padding: '12px  16px',
           fontSize: '.9rem',
         },
         '&$open': {
+          width: 'auto',
+          height: 'auto',
           opacity: 1,
           visibility: 'visible',
         },
