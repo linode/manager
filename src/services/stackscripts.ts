@@ -1,10 +1,6 @@
 import { API_ROOT } from 'src/constants';
-import Request, {
-  setMethod,
-  setParams,
-  setURL,
-  setXFilter,
-} from './index';
+
+import Request, { setMethod, setParams, setURL, setXFilter } from './index';
 
 type Page<T> = Linode.ResourcePage<T>;
 type StackScript = Linode.StackScript.Response;
@@ -51,3 +47,10 @@ export const getCommunityStackscripts = (currentUser: string, params?: any, filt
       data: withoutOwnAndLinode,
     };
   });
+
+export const deleteStackScript = (id: number) =>
+  Request(
+    setURL(`${API_ROOT}/linode/stackscripts/${id}`),
+    setMethod('DELETE'),
+  )
+    .then(response => response.data);

@@ -1,12 +1,9 @@
+import * as classNames from 'classnames';
+import * as copy from 'copy-to-clipboard';
 import * as React from 'react';
 
-import * as classNames from 'classnames';
-
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-
-import * as copy from 'copy-to-clipboard';
-
-import { ContentCopy } from '@material-ui/icons';
+import ContentCopy from '@material-ui/icons/ContentCopy';
 
 interface Props {
   text: string;

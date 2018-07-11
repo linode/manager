@@ -1,19 +1,13 @@
 import * as React from 'react';
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from '@material-ui/core/styles';
 
 import Paper from '@material-ui/core/Paper';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import SelectionCard from 'src/components/SelectionCard';
-
 import RenderGuard from 'src/components/RenderGuard';
+import SelectionCard from 'src/components/SelectionCard';
 
 export interface ExtendedLinode extends Linode.Linode {
   heading: string;

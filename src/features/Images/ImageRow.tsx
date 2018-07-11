@@ -22,13 +22,13 @@ interface Props {
   onEdit: (label: string, description: string, imageID: string) => void;
   onDelete: (image: string, imageID: string) => void;
   onRestore: () => void;
-  onDeploy: () => void;
+  onDeploy: (imageID: string) => void;
   image: Linode.Image;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const ImageRow: React.StatelessComponent<CombinedProps> = (props) => {    
+const ImageRow: React.StatelessComponent<CombinedProps> = (props) => {
     const { classes, image, ...rest } = props;
     return (
         <TableRow key={image.id} data-qa-image-cell={image.id}>

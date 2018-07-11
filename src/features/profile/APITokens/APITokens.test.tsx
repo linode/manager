@@ -1,13 +1,12 @@
-import * as React from 'react';
 import { mount } from 'enzyme';
 import * as moment from 'moment';
-
-import { createPromiseLoaderResponse } from 'src/utilities/testHelpers';
-
-import { APITokens } from './APITokens';
+import * as React from 'react';
 
 import { appTokens } from 'src/__data__/appTokens';
 import { personalAccessTokens } from 'src/__data__/personalAccessTokens';
+import { createPromiseLoaderResponse } from 'src/utilities/testHelpers';
+
+import { APITokens } from './APITokens';
 
 const patsAsPromise = createPromiseLoaderResponse(personalAccessTokens);
 const appTokensAsPromise = createPromiseLoaderResponse(appTokens);

@@ -1,22 +1,18 @@
-import * as React from 'react';
-import { Link } from 'react-router-dom';
-
 import * as invariant from 'invariant';
-
 import { compose, isEmpty, lensIndex, map, over, splitAt, unless } from 'ramda';
+import * as React from 'react';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
+import Typography from '@material-ui/core/Typography';
 
-import Button from 'src/components/Button';
+
 import Radio from 'src/components/Radio';
 import RenderGuard from 'src/components/RenderGuard';
 import ShowMore from 'src/components/ShowMore';
 import Tag from 'src/components/Tag';
-
-import Typography from '@material-ui/core/Typography';
+import StackScriptsActionMenu from 'src/features/StackScripts/SelectStackScriptPanel/StackScriptActionMenu';
 
 type ClassNames = 'root'
   | 'respPadding'
@@ -112,8 +108,10 @@ export interface Props {
   onSelect?: (e: React.ChangeEvent<HTMLElement>, value: boolean) => void;
   checked?: boolean;
   showDeployLink?: boolean;
-  stackScriptID?: number;
-  stackScriptUsername?: string;
+  stackScriptID: number;
+  stackScriptUsername: string;
+  triggerDelete?: (id: number, label: string) => void;
+  canDelete: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -131,6 +129,8 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
     showDeployLink,
     stackScriptID,
     stackScriptUsername,
+    triggerDelete,
+    canDelete,
   } = props;
 
   /** onSelect and showDeployLink should not be used simultaneously */
@@ -192,16 +192,14 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
           }
         </TableCell>
         {showDeployLink &&
-          <TableCell data-qa-stackscript-deploy>
-          <Link to={`/linodes/create?type=fromStackScript` +
-            `&stackScriptID=${stackScriptID}&stackScriptUsername=${stackScriptUsername}`}>
-            <Button
-              type="secondary"
-              className={classes.deployButton}
-            >
-              Deploy New Linode
-            </Button>
-          </Link>
+          <TableCell>
+          <StackScriptsActionMenu
+            stackScriptID={stackScriptID}
+            stackScriptUsername={stackScriptUsername}
+            stackScriptLabel={label}
+            triggerDelete={triggerDelete!}
+            canDelete={canDelete}
+          />
           </TableCell>
         }
       </TableRow>

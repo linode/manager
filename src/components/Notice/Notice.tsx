@@ -1,11 +1,11 @@
-import * as React from 'react';
 import * as classNames from 'classnames';
+import * as React from 'react';
 
-import { withStyles, StyleRulesCallback, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography, { TypographyProps } from '@material-ui/core/Typography';
-import Grid, { GridProps } from 'src/components/Grid';
 
 import Flag from 'src/assets/icons/flag.svg';
+import Grid, { GridProps } from 'src/components/Grid';
 
 type ClassNames = 'root'
   | 'inner'

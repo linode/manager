@@ -5,7 +5,7 @@ import * as React from 'react';
 /* This is react-vnc-display from the following repo with minimal modifications
  * Ported here because the published node module included the `class` keyword,
  * which could not be minified by our build system.
- * https://github.com/mozilla-frontend-infra/react-vnc-display 
+ * https://github.com/mozilla-frontend-infra/react-vnc-display
  */
 
 interface Props {

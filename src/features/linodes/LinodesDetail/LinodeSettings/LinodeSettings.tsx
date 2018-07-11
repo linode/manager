@@ -1,16 +1,15 @@
 import * as React from 'react';
 
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
+import { ConfigsConsumer, DisksConsumer, LinodeConsumer } from '../context';
+import LinodeConfigsPanel from './LinodeConfigsPanel';
 import LinodeSettingsAlertsPanel from './LinodeSettingsAlertsPanel';
 import LinodeSettingsDeletePanel from './LinodeSettingsDeletePanel';
-
 import LinodeSettingsLabelPanel from './LinodeSettingsLabelPanel';
 import LinodeSettingsPasswordPanel from './LinodeSettingsPasswordPanel';
-import LinodeConfigsPanel from './LinodeConfigsPanel';
 import LinodeWatchdogPanel from './LinodeWatchdogPanel';
-import { LinodeConsumer, DisksConsumer, ConfigsConsumer } from '../context';
 
 type ClassNames = 'root' | 'title';
 

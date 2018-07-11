@@ -1,11 +1,8 @@
+import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 
-import { storiesOf } from '@storybook/react';
-
 import ThemeDecorator from '../../utilities/storybookDecorators';
-
 import EditableText from './EditableText';
-
 
 class InteractiveEditableText extends React.Component {
   mounted: boolean = false;

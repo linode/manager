@@ -1,6 +1,5 @@
-import * as React from 'react';
-
 import * as classNames from 'classnames';
+import * as React from 'react';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableCell, { TableCellProps } from '@material-ui/core/TableCell';
@@ -53,7 +52,7 @@ class WrappedTableCell extends React.Component<CombinedProps> {
               [classes.root]: true,
               [classes.noWrap]: noWrap,
               [classes.sortable]: sortable,
-            })} 
+            })}
           {...rest
         }>
           {this.props.children}

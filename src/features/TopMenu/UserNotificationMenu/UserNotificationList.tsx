@@ -1,12 +1,13 @@
-import * as React from 'react';
 import * as moment from 'moment';
 import * as Raven from 'raven-js';
+import * as React from 'react';
 
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+
 import eventMessageGenerator from 'src/eventMessageGenerator';
-import UserNotificationListItem, {
-  UserNotificationListItemProps,
-} from './UserNotificationListItem';
+
+import UserNotificationListItem, { UserNotificationListItemProps } from './UserNotificationListItem';
+
 
 const reportUnfoundEvent = (event: Linode.Event) =>
   process.env.NODE_ENV === 'production'

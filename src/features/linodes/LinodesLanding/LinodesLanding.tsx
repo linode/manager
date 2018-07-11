@@ -1,50 +1,36 @@
-import * as React from 'react';
-
-import { withRouter, RouteComponentProps } from 'react-router-dom';
 import * as moment from 'moment';
-import {
-  allPass,
-  clone,
-  compose,
-  filter,
-  gte,
-  has,
-  ifElse,
-  isEmpty,
-  pathEq,
-  path,
-  pathOr,
-  prop,
-  propEq,
-  uniqBy,
-} from 'ramda';
-import { Observable, Subscription } from 'rxjs/Rx';
+import { allPass, clone, compose, filter, gte, has, ifElse, isEmpty, path, pathEq, pathOr, prop, propEq, uniqBy } from 'ramda';
+import * as React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/filter';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Hidden from '@material-ui/core/Hidden';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
-import { events$ } from 'src/events';
-import { getImages } from 'src/services/images';
-import { getLinodes, getLinode } from 'src/services/linodes';
-import { newLinodeEvents } from 'src/features/linodes/events';
 import ActionsPanel from 'src/components/ActionsPanel';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
-import LinodeConfigSelectionDrawer, { LinodeConfigSelectionDrawerCallback }
-  from 'src/features/LinodeConfigSelectionDrawer';
-import notifications$ from 'src/notifications';
 import PaginationFooter from 'src/components/PaginationFooter';
 import ProductNotification from 'src/components/ProductNotification';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
-import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
+import { events$ } from 'src/events';
+import LinodeConfigSelectionDrawer, { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
+import { newLinodeEvents } from 'src/features/linodes/events';
+import notifications$ from 'src/notifications';
+import { getImages } from 'src/services/images';
+import { getLinode, getLinodes } from 'src/services/linodes';
 
-import { rebootLinode, powerOffLinode } from './powerActions';
-import LinodesListView from './LinodesListView';
 import LinodesGridView from './LinodesGridView';
+import LinodesListView from './LinodesListView';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
+import { powerOffLinode, rebootLinode } from './powerActions';
 import ToggleBox from './ToggleBox';
 
 type ClassNames = 'root' | 'title';

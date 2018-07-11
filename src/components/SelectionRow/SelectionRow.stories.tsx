@@ -1,9 +1,10 @@
-import * as React from 'react';
 import { storiesOf } from '@storybook/react';
+import * as React from 'react';
 import { StaticRouter } from 'react-router-dom';
 
-import ThemeDecorator from '../../utilities/storybookDecorators';
 import SelectionRow, { SelectionRowProps } from 'src/components/SelectionRow';
+
+import ThemeDecorator from '../../utilities/storybookDecorators';
 
 interface State {
   selected: number;
@@ -30,6 +31,9 @@ class InteractiveExample extends React.Component<{}, State> {
       images: ['Journey', 'Ubuntu'],
       deploymentsActive: 999,
       updated: '2013/09/13',
+      stackScriptID: 1000,
+      stackScriptUsername: 'mmckenna',
+      canDelete: false,
     },
     {
       checked: this.state.selected === 1,
@@ -45,6 +49,9 @@ class InteractiveExample extends React.Component<{}, State> {
       images: [`Poison`, 'Slackware', 'Debian 8', 'Debian 7'],
       deploymentsActive: 999,
       updated: '2013/09/13',
+      stackScriptID: 1001,
+      stackScriptUsername: 'mmckenna',
+      canDelete: false,
     },
     {
       checked: this.state.selected === 2,
@@ -60,6 +67,9 @@ class InteractiveExample extends React.Component<{}, State> {
       images: [`Europe`, 'CentOS'],
       deploymentsActive: 999,
       updated: '2013/09/13',
+      stackScriptID: 1002,
+      stackScriptUsername: 'mmckenna',
+      canDelete: false,
     },
     {
       label: 'Livin\' on a Prayer',
@@ -72,6 +82,9 @@ class InteractiveExample extends React.Component<{}, State> {
       deploymentsActive: 999,
       updated: '2013/09/13',
       showDeployLink: true,
+      stackScriptID: 1003,
+      stackScriptUsername: 'mmckenna',
+      canDelete: false,
     },
     {
       label: 'Sweet Child O\' Mine',
@@ -87,6 +100,9 @@ class InteractiveExample extends React.Component<{}, State> {
       deploymentsActive: 999,
       updated: '2013/09/13',
       showDeployLink: true,
+      stackScriptID: 1004,
+      stackScriptUsername: 'mmckenna',
+      canDelete: false,
     },
     {
       label: 'Africa',
@@ -101,6 +117,9 @@ class InteractiveExample extends React.Component<{}, State> {
       deploymentsActive: 999,
       updated: '2013/09/13',
       showDeployLink: true,
+      stackScriptID: 1005,
+      stackScriptUsername: 'mmckenna',
+      canDelete: false,
     },
   ]
 

@@ -1,5 +1,6 @@
-import * as React from 'react';
 import { equals } from 'ramda';
+import * as React from 'react';
+
 import TextField, { TextFieldProps } from '@material-ui/core/TextField';
 
 export interface Props extends TextFieldProps {
