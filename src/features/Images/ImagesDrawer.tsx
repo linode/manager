@@ -135,25 +135,25 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
           return;
         }
       
-      updateImage(imageID, label, safeDescription)
-        .then(() => {
-          onSuccess();
-          this.close();
-        })
-        .catch((errorResponse) => {
-          if (this.mounted) {
-            this.setState({
-              errors: [{ field: 'label', reason: 'Label cannot be blank.' }],
-            });
-            return;
-          }
-        });
+        updateImage(imageID, label, safeDescription)
+          .then(() => {
+            onSuccess();
+            this.close();
+          })
+          .catch((errorResponse) => {
+            if (this.mounted) {
+              this.setState({
+                errors: [{ field: 'label', reason: 'Label cannot be blank.' }],
+              });
+              return;
+            }
+          });
         return;
 
       case modes.CREATING:
         if (!selectedDisk) { errors.push({ field: 'disk_id', reason: 'Choose a disk.' }); }
         if (!label)   { errors.push({ field: 'label', reason: 'Label cannot be blank.' }); }
-        if (errors) { 
+        if (errors.length > 0) { 
           this.setState({ errors }) 
           return;
         };
@@ -203,8 +203,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
     // When creating an image, disable the submit button until a Linode,
     // disk, and label are selected. When editing, only a label is required.
     // When restoring to an existing Linode, the Linode select is the only field.
-    const { mode, } = this.props;
-    const { label, selectedDisk, selectedLinode } = this.state;
+    const { mode, label, selectedDisk, selectedLinode} = this.props;
     switch(mode) {
       case 'create':
         return !(selectedDisk && selectedLinode && label);
