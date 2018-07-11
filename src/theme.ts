@@ -330,6 +330,7 @@ const LinodeTheme: Linode.Theme = {
       inputMultiline: {
         minHeight: 125,
         padding: '5px 12px',
+        lineHeight: 1.4,
       },
       focused: {
         borderColor: '#999',
