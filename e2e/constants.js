@@ -3,11 +3,11 @@ exports.constants = {
 
 	},
 	wait: {
-		short: 5000,
-		normal: 12000,
-		long: 30000,
-		minute: 60000,
-		custom: (milliseconds) => milliseconds,
+		short: process.env.DOCKER ? 10000 : 5000,
+		normal: process.env.DOCKER ? 24000 : 12000,
+		long: process.env.DOCKER ?  60000 : 30000,
+		minute: process.env.DOCKER ? 90000 : 60000,
+		custom: (milliseconds) => process.env.DOCKER ? milliseconds*1.5 : milliseconds,
 	},
 	routes: {
 		storybook: '/',

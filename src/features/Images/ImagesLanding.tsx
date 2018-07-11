@@ -55,7 +55,9 @@ interface State {
     mode: 'edit' | 'create' | 'restore' | 'deploy',
     imageID?: string,
     label?: string,
-    description?: string, 
+    description?: string,
+    selectedLinode?: string,
+    selectedDisk?: string,
   };
   removeDialog: {
     open: boolean,
@@ -214,6 +216,22 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
       })
   }
 
+  changeSelectedLinode = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ imageDrawer: { ...this.state.imageDrawer, selectedLinode: e.target.value }});
+  }
+
+  changeSelectedDisk = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ imageDrawer: { ...this.state.imageDrawer, selectedDisk: e.target.value }});
+  }
+
+  setLabel = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ imageDrawer: { ...this.state.imageDrawer, label: e.target.value }});
+  }
+  
+  setDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ imageDrawer: { ...this.state.imageDrawer, description: e.target.value }});
+  }
+
   getActions = () => {
     return (
       <ActionsPanel>
@@ -245,12 +263,19 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
   }
 
   renderImageDrawer = () => {
+    const { imageDrawer } = this.state;
     return <ImagesDrawer
-      open={this.state.imageDrawer.open}
-      mode={this.state.imageDrawer.mode}
-      label={this.state.imageDrawer.label}
-      description={this.state.imageDrawer.description}
-      imageID={this.state.imageDrawer.imageID}
+      open={imageDrawer.open}
+      mode={imageDrawer.mode}
+      label={imageDrawer.label}
+      description={imageDrawer.description}
+      selectedDisk={imageDrawer.selectedDisk}
+      selectedLinode={imageDrawer.selectedLinode}
+      imageID={imageDrawer.imageID}
+      changeDisk={this.changeSelectedDisk}
+      changeLinode={this.changeSelectedLinode}
+      changeLabel={this.setLabel}
+      changeDescription={this.setDescription}
       onClose={this.closeImageDrawer}
       onSuccess={this.refreshImages}
     />
@@ -279,7 +304,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
               children: 'Add an Image',
             }}
           />
-          {this.state.imageDrawer.open && this.renderImageDrawer()}
+          {this.renderImageDrawer()}
         </React.Fragment>
       );
     }
@@ -326,7 +351,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
             </TableBody>
           </Table>
         </Paper>
-        {this.state.imageDrawer.open && this.renderImageDrawer()}
+        {this.renderImageDrawer()}
         <ConfirmationDialog
           open={this.state.removeDialog.open}
           title={`Remove ${this.state.removeDialog.image}`}

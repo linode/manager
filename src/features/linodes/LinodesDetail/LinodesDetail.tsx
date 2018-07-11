@@ -19,7 +19,7 @@ import ProductNotification from 'src/components/ProductNotification';
 import { events$ } from 'src/events';
 import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawer';
 import { newLinodeEvents } from 'src/features/linodes/events';
-import { weblishLaunch } from 'src/features/Weblish';
+import { lishLaunch } from 'src/features/Lish';
 import notifications$ from 'src/notifications';
 import { getImage } from 'src/services/images';
 import { getLinode, getLinodeConfigs, getLinodeDisks, getLinodeVolumes, renameLinode } from 'src/services/linodes';
@@ -207,6 +207,14 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               );
             });
         },
+        update: (updater) => {
+          const { data: configs } = this.state.context.configs;
+          if (!configs) { return }
+
+          this.composeState(
+            set(L.configs.data, updater(configs)),
+          );
+        },
       },
       disks: {
         lastUpdated: 0,
@@ -229,6 +237,14 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                 set(L.disks.errors, [{ field: 'none', reason: 'Could not load Linode disks for some reason.' }])
               );
             });
+        },
+        update: (updater) => {
+          const { data: disks } = this.state.context.disks;
+          if (!disks) { return }
+
+          this.composeState(
+            set(L.disks.data, updater(disks)),
+          );
         },
       },
       image: {
@@ -264,6 +280,14 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               );
             });
         },
+        update: (updater) => {
+          const { data: image } = this.state.context.image;
+          if (!image) { return }
+
+          this.composeState(
+            set(L.image.data, updater(image)),
+          );
+        },
       },
       linode: {
         lastUpdated: 0,
@@ -288,11 +312,11 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               );
             });
         },
-        update: (fn) => {
+        update: (updater) => {
           const { data: linode } = this.state.context.linode;
           if (!linode) { return }
 
-          const updatedLinode = fn(linode);
+          const updatedLinode = updater(linode);
 
           this.composeState(
             set(L.linode.data, updatedLinode),
@@ -321,6 +345,14 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                 set(L.volumes.errors, [{ field: 'none', reason: 'Could not load Linode for some reason.' }])
               );
             });
+        },
+        update: (updater) => {
+          const { data: volumes } = this.state.context.volumes;
+          if (!volumes) { return }
+
+          this.composeState(
+            set(L.volumes.data, updater(volumes)),
+          );
         },
       },
     },
@@ -492,6 +524,11 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     this.setState({ labelInput: { label: linode.label, errorText: '' } });
     this.forceUpdate();
   }
+  
+  launchLish = () => {
+    const { data: linode } = this.state.context.linode;
+    lishLaunch(`${linode!.id}`);
+  }
 
   render() {
 
@@ -597,12 +634,12 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                     </Grid>
                     <Grid item className={classes.cta}>
                       <Button
-                        onClick={this.launchWeblish(`${linode.id}`)}
+                        onClick={this.launchLish}
                         className={classes.launchButton}
                         data-qa-launch-console
                       >
                         Launch Console
-            </Button>
+                      </Button>
                       <LinodePowerControl
                         status={linode.status}
                         recentEvent={linode.recentEvent}
@@ -659,7 +696,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     );
   }
 
-  launchWeblish = (id: string) => () => weblishLaunch(id);
 }
 
 const styled = withStyles(styles, { withTheme: true });

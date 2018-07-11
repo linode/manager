@@ -47,9 +47,10 @@ describe('Linode - Volumes - Attach, Detach, Delete Suite', () => {
     it('should detach the volume', () => {
         VolumeDetail.detachConfirm(testVolume.id);
         if (VolumeDetail.placeholderText.isVisible()) {
-            const placeholderMsg = VolumeDetail.placeholderText.getText();
-            const expectedMsg = 'No volumes attached';
-            expect(placeholderMsg).toBe(expectedMsg);
+            browser.waitUntil(function() {
+                const placeholderMsg = VolumeDetail.placeholderText.getText();
+                return placeholderMsg.includes('No volumes attached');
+            }, constants.wait.normal);
         }
     });
 

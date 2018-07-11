@@ -34,8 +34,8 @@ import './events';
 // import { whyDidYouUpdate } from 'why-did-you-update';
 // whyDidYouUpdate(React);
 
-const Weblish = DefaultLoader({
-  loader: () => import('src/features/Weblish'),
+const Lish = DefaultLoader({
+  loader: () => import('src/features/Lish'),
 });
 
 /*
@@ -68,7 +68,11 @@ ReactDOM.render(
         <Route render={() =>
           <AuthenticationWrapper>
             <Switch>
-              <Route exact path="/linodes/:linodeId/weblish" component={Weblish} />
+              <Route path="/linodes/:linodeId/lish" render={() =>
+                <LinodeThemeWrapper>
+                  <Lish />
+                </LinodeThemeWrapper>
+              }/>
               <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
               {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
               <Route exact path="/nullauth" render={() => <span>null auth route</span>} />

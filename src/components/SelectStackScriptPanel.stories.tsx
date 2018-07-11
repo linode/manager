@@ -5,7 +5,8 @@ import ThemeDecorator from '../utilities/storybookDecorators';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel';
 import { StaticRouter } from 'react-router';
 
-import {images} from 'src/__data__/images';
+import { images } from 'src/__data__/images';
+import { stackScripts } from 'src/__data__/stackScripts';
 
 interface State {
   selectedId: number | null;
@@ -20,9 +21,10 @@ class InteractiveExample extends React.Component<{}, State> {
     return (
       <StaticRouter>
         <SelectStackScriptPanel
-          images={images}
+          publicImages={images}
           selectedId={this.state.selectedId}
           onSelect={(id: number) => this.setState({ selectedId: id })}
+          data={stackScripts}
         />
       </StaticRouter>
     );

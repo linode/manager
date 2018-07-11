@@ -53,7 +53,7 @@ describe('FromImageContent', () => {
   });
 
   it('should render SelectStackScript panel', () => {
-    expect(component.find('WithStyles(WithRenderGuard(SelectStackScriptPanel))')).toHaveLength(1);
+    expect(component.find('Connect(WithRenderGuard(WithStyles(SelectStackScriptPanel)))')).toHaveLength(1);
   });
 
   it('should render UserDefinedFields panel', () => {
