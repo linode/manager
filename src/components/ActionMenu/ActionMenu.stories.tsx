@@ -1,8 +1,8 @@
-import * as React from 'react';
 import { storiesOf } from '@storybook/react';
+import * as React from 'react';
 
-import ActionMenu, { Action } from './ActionMenu';
 import ThemeDecorator from '../../utilities/storybookDecorators';
+import ActionMenu, { Action } from './ActionMenu';
 
 interface Props {
   style?: any;

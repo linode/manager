@@ -1,12 +1,9 @@
-import * as React from 'react';
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from '@material-ui/core/styles';
-import { Line } from 'react-chartjs-2';
 import { clone } from 'ramda';
+import * as React from 'react';
+import { Line } from 'react-chartjs-2';
+
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+
 import { setUpCharts } from 'src/utilities/charts';
 
 setUpCharts();

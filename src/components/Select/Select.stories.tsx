@@ -1,14 +1,14 @@
-import * as React from 'react';
 import { storiesOf } from '@storybook/react';
+import * as React from 'react';
 
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from 'src/components/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
+import InputLabel from '@material-ui/core/InputLabel';
+
 import Grid from 'src/components/Grid';
+import MenuItem from 'src/components/MenuItem';
 
 import ThemeDecorator from '../../utilities/storybookDecorators';
-
 import Select from './Select';
 
 interface State {

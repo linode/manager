@@ -1,35 +1,26 @@
+import 'font-logos/assets/font-logos.css';
+import createBrowserHistory from 'history/createBrowserHistory';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import 'font-logos/assets/font-logos.css';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-import createBrowserHistory from 'history/createBrowserHistory';
-
-import isPathOneOf from 'src/utilities/routing/isPathOneOf';
-import store from 'src/store';
-import { isProduction, GA_ID } from 'src/constants';
 import analytics from 'src/analytics';
-
-import 'src/exceptionReporting';
-
 import AuthenticationWrapper from 'src/components/AuthenticationWrapper';
-import OAuthCallbackPage from 'src/layouts/OAuth';
-import Logout from 'src/layouts/Logout';
-import {
-  initialize as sessionInitialize,
-  refreshOAuthToken,
-  refreshOAuthOnUserInteraction,
-} from './session';
-
-import 'src/utilities/request';
 import DefaultLoader from 'src/components/DefaultLoader';
+import { GA_ID, isProduction } from 'src/constants';
+import 'src/exceptionReporting';
+import Logout from 'src/layouts/Logout';
+import OAuthCallbackPage from 'src/layouts/OAuth';
+import store from 'src/store';
+import 'src/utilities/request';
+import isPathOneOf from 'src/utilities/routing/isPathOneOf';
 
 import App from './App';
-import LinodeThemeWrapper from './LinodeThemeWrapper';
-import './index.css';
-
 import './events';
+import './index.css';
+import LinodeThemeWrapper from './LinodeThemeWrapper';
+import { initialize as sessionInitialize, refreshOAuthOnUserInteraction, refreshOAuthToken } from './session';
 
 // import { whyDidYouUpdate } from 'why-did-you-update';
 // whyDidYouUpdate(React);

@@ -1,4 +1,4 @@
-import { curry, compose, defaultTo, isEmpty, not, when } from 'ramda';
+import { compose, curry, defaultTo, isEmpty, not, when } from 'ramda';
 
 export default curry((defaultValue: number, v?: null | string | number) =>
   compose<

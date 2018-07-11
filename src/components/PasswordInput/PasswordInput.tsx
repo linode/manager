@@ -1,13 +1,12 @@
-import * as React from 'react';
-
-import * as zxcvbn from 'zxcvbn';
-
 import { isEmpty } from 'ramda';
+import * as React from 'react';
+import * as zxcvbn from 'zxcvbn';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import Grid from 'src/components/Grid';
 import { Props as TextFieldProps } from 'src/components/TextField';
+
 import StrengthIndicator from '../PasswordInput/StrengthIndicator';
 import HideShowText from './HideShowText';
 

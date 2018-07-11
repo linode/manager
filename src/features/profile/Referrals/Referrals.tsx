@@ -1,9 +1,11 @@
-import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 import { compose } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
+
+import Paper from '@material-ui/core/Paper';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+
 import Grid from 'src/components/Grid';
 import CopyableTextField from 'src/features/Volumes/CopyableTextField';
 

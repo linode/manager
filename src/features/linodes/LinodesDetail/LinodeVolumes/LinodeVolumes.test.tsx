@@ -1,12 +1,15 @@
 import { mount, ReactWrapper, shallow } from 'enzyme';
 import * as React from 'react';
 import { StaticRouter } from 'react-router';
+
+import { linodeConfigs } from 'src/__data__/linodeConfigs';
+import { reactRouterProps } from 'src/__data__/reactRouterProps';
+import { volumes } from 'src/__data__/volumes';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 import { createPromiseLoaderResponse } from 'src/utilities/testHelpers';
-import { linodeConfigs } from 'src/__data__/linodeConfigs';
-import { volumes } from 'src/__data__/volumes';
+
 import { LinodeVolumes } from './LinodeVolumes';
-import { reactRouterProps } from 'src/__data__/reactRouterProps';
+
 describe('Linode Volumes', () => {
   const linodeConfigsAsPromiseResponse = createPromiseLoaderResponse(linodeConfigs);
   const volumesAsPromiseResponse = createPromiseLoaderResponse(volumes);

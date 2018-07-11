@@ -1,37 +1,24 @@
-import * as React from 'react';
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from '@material-ui/core/styles';
-
 import { pathOr } from 'ramda';
-
+import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
 
-import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
-import AddonsPanel from '../AddonsPanel';
-import SelectLinodePanel, { ExtendedLinode } from '../SelectLinodePanel';
-
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-
-import Notice from 'src/components/Notice';
-import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
-import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
-import Grid from 'src/components/Grid';
-import CheckoutBar from 'src/components/CheckoutBar';
-import Placeholder from 'src/components/Placeholder';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
-
-import {
-  allocatePrivateIP,
-  cloneLinode,
-} from 'src/services/linodes';
-
+import CheckoutBar from 'src/components/CheckoutBar';
+import Grid from 'src/components/Grid';
+import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
+import Notice from 'src/components/Notice';
+import Placeholder from 'src/components/Placeholder';
+import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
 import { resetEventsPolling } from 'src/events';
+import { allocatePrivateIP, cloneLinode } from 'src/services/linodes';
+import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+
+import AddonsPanel from '../AddonsPanel';
+import SelectLinodePanel, { ExtendedLinode } from '../SelectLinodePanel';
+import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
 
 type ClassNames = 'root' | 'main' | 'sidebar';
 
@@ -205,7 +192,7 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
       <React.Fragment>
         {
           (linodes && linodes.length === 0)
-            ? <Grid item className={`${classes.main} mlMain`}> 
+            ? <Grid item className={`${classes.main} mlMain`}>
                 <Placeholder
                   icon={VolumeIcon}
                   copy="You do not have any existing Linodes to clone from.

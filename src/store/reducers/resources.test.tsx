@@ -1,11 +1,4 @@
-import reducer, {
-  // Utilities
-  oneOfType,
-
-  // Action Creators
-  request,
-  response,
-} from './resources';
+import reducer, { oneOfType, request, response } from './resources';
 
 describe('oneOfType', () => {
   it('should returns true', () => {

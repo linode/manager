@@ -1,10 +1,10 @@
 import * as React from 'react';
 
-import { withStyles, WithStyles, StyleRules } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
-import { Menu as MenuIcon }  from '@material-ui/icons';
+import { StyleRules, withStyles, WithStyles } from '@material-ui/core/styles';
+import Toolbar from '@material-ui/core/Toolbar';
+import MenuIcon from '@material-ui/icons/Menu';
 
 import AddNewMenu from './AddNewMenu';
 import SearchBar from './SearchBar';

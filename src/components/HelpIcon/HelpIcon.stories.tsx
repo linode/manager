@@ -1,10 +1,9 @@
-import * as React from 'react';
 import { storiesOf } from '@storybook/react';
+import * as React from 'react';
 
 import Grid from 'src/components/Grid';
 
 import ThemeDecorator from '../../utilities/storybookDecorators';
-
 import HelpIcon from './HelpIcon';
 
 storiesOf('HelpIcon', module)

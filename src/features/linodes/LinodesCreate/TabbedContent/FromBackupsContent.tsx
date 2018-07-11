@@ -1,41 +1,26 @@
-import * as React from 'react';
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from '@material-ui/core/styles';
-
+import * as Promise from 'bluebird';
 import { compose, pathOr } from 'ramda';
-
+import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
 
-import SelectLinodePanel, { ExtendedLinode } from '../SelectLinodePanel';
-import SelectBackupPanel from '../SelectBackupPanel';
-import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
-import AddonsPanel from '../AddonsPanel';
-
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-
-import Notice from 'src/components/Notice';
-import Grid from 'src/components/Grid';
-import CheckoutBar from 'src/components/CheckoutBar';
-import CircleProgress from 'src/components/CircleProgress';
-import Placeholder from 'src/components/Placeholder';
-import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
-
-import {
-  allocatePrivateIP,
-  createLinode,
-  getLinodeBackups,
-} from 'src/services/linodes';
-
+import CheckoutBar from 'src/components/CheckoutBar';
+import CircleProgress from 'src/components/CircleProgress';
+import Grid from 'src/components/Grid';
+import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
+import Notice from 'src/components/Notice';
+import Placeholder from 'src/components/Placeholder';
 import { resetEventsPolling } from 'src/events';
-
-import * as Promise from 'bluebird';
+import { allocatePrivateIP, createLinode, getLinodeBackups } from 'src/services/linodes';
+import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+
+import AddonsPanel from '../AddonsPanel';
+import SelectBackupPanel from '../SelectBackupPanel';
+import SelectLinodePanel, { ExtendedLinode } from '../SelectLinodePanel';
+import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
 
 type ClassNames = 'root' | 'main' | 'sidebar';
 
