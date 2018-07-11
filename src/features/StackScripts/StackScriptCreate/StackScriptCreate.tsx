@@ -83,8 +83,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   tips: {
     marginLeft: theme.spacing.unit * 4,
     marginTop: theme.spacing.unit * 4,
-    paddingLeft: theme.spacing.unit * 4,
-    borderLeft: `5px solid ${theme.palette.divider}`,
+    padding: theme.spacing.unit * 4,
+    backgroundColor: theme.palette.divider,
     [theme.breakpoints.down('lg')]: {
       marginLeft: 0,
     },
