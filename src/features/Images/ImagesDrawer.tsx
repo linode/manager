@@ -39,19 +39,20 @@ export interface Props {
   description?: string;
   imageID?: string;
   label?: string;
+  selectedDisk?: string;
+  selectedLinode?: string;
   onClose: () => void;
   onSuccess: () => void;
+  changeLinode: (e:any) => void;
+  changeDisk: (e:any) => void;
+  changeLabel: (e:any) => void;
+  changeDescription: (e:any) => void;
 }
 
 interface State {
-  label: string;
-  description: string;
   disks: Linode.Disk[];
   linodes: string[][];
   notice?: string;
-  selectedLinode?: string;
-  selectedDisk?: string;
-  imageID?: string;
   errors?: Linode.ApiFieldError[];
 }
 
@@ -77,14 +78,10 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
   eventsSub: Subscription;
   state = { 
-    description: this.props.description ? this.props.description : ' ',
     disks: [],
-    label: this.props.label ? this.props.label : '',
     linodes: [],
     errors: undefined,
     notice: undefined,
-    selectedDisk: undefined,
-    selectedLinode: undefined,
   };
 
   componentDidMount() {
@@ -97,12 +94,12 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
   }
 
   componentDidUpdate(prevProps: CombinedProps, prevState: State) {
-    if (this.state.selectedLinode && this.state.selectedLinode !== prevState.selectedLinode) {
-      getLinodeDisks(Number(this.state.selectedLinode))
+    if (this.props.selectedLinode && this.props.selectedLinode !== prevProps.selectedLinode) {
+      getLinodeDisks(Number(this.props.selectedLinode))
       .then((response) => {
         const filteredDisks = response.data.filter((disk) => disk.filesystem !== 'swap')
         if (!equals(this.state.disks, filteredDisks)) {
-          this.setState({ disks: filteredDisks, selectedDisk: undefined })
+          this.setState({ disks: filteredDisks })
         }
       })
       .catch((error) => {
@@ -115,23 +112,16 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
     }
   }
 
-  changeSelectedLinode = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ selectedLinode: e.target.value });
-  }
-
-  changeSelectedDisk = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ selectedDisk: e.target.value });
-  }
 
   close = () => {
-    this.setState({ description: '', label: '', errors: undefined, });
+    this.setState({ errors: undefined, notice: undefined, });
     this.props.onClose();
   }
 
   
   onSubmit = () => {
-    const { mode, imageID, onSuccess } = this.props;
-    const { label, description, selectedDisk } = this.state;
+    const { mode, imageID, onSuccess, label, description, selectedDisk } = this.props;
+    const safeDescription = description ? description : ' ';
     
     if (!label) {
       this.setState({
@@ -146,7 +136,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
         return;
       }
       
-      updateImage(imageID, label, description)
+      updateImage(imageID, label, safeDescription)
       .then(() => {
         onSuccess();
         this.close();
@@ -166,7 +156,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
         });
         return;
       }
-      createImage(Number(selectedDisk), label, description)
+      createImage(Number(selectedDisk), label, safeDescription)
       .then((response) => {
         resetEventsPolling();
         this.setState({
@@ -184,14 +174,6 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
     }
   }
   
-  setLabel = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ label: e.target.value });
-  }
-  
-  setDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ description: e.target.value });
-  }
-  
   updateLinodes() {
     getLinodes({ page: 1 })
       .then((response) => {
@@ -203,8 +185,16 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { mode, } = this.props;
-    const { disks, label, linodes, description, notice, selectedDisk, selectedLinode } = this.state;
+    const { label, 
+            description, 
+            selectedDisk, 
+            selectedLinode, 
+            mode,
+            changeDisk,
+            changeLinode,
+            changeLabel,
+            changeDescription, } = this.props;
+    const { disks, linodes, notice,} = this.state;
     const { errors } = this.state;
     // When creating an image, disable the submit button until a Linode,
     // disk, and label are selected. When editing, only a label is required.
@@ -252,7 +242,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
           linodes={linodes}
           selectedLinode={selectedLinode || 'none'}
           linodeError={linodeError}
-          handleChange={this.changeSelectedLinode}
+          handleChange={changeLinode}
         />
         }
 
@@ -261,7 +251,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
           selectedDisk={selectedDisk || 'none'}
           disks={disks}
           diskError={diskError}
-          handleChange={this.changeSelectedDisk}
+          handleChange={changeDisk}
         />
        }
 
@@ -269,7 +259,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
           label="Label"
           required
           value={label}
-          onChange={this.setLabel}
+          onChange={changeLabel}
           error={Boolean(labelError)}
           errorText={labelError}
           data-qa-volume-label
@@ -280,7 +270,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
           multiline
           rows={4}
           value={description}
-          onChange={this.setDescription}
+          onChange={changeDescription}
           error={Boolean(descriptionError)}
           errorText={descriptionError}
           data-qa-size
