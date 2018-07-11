@@ -111,7 +111,8 @@ class ActionMenu extends React.Component<CombinedProps, State> {
           href="#"
           key={idx}
           onClick={e => a.onClick(e)}
-          className={classes.actionSingleLink}>
+          className={classes.actionSingleLink}
+          data-qa-action-menu-link>
             {a.title}
         </a>)
       : (<div className={classes.root}>
