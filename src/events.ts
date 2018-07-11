@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import { assoc, compose, ifElse, isEmpty, isNil, lensPath, map, not, over, path, view, when } from 'ramda';
+import { assoc, compose, either, ifElse, isEmpty, isNil, lensPath, map, not, over, path, view, when } from 'ramda';
 import { Subject } from 'rxjs/Subject';
 
 import { getEvents } from 'src/services/account';
@@ -69,7 +69,7 @@ export const setInitialEvents = when(
             () => false,
             compose(not, isPasttheBeginningOfTime),
           ),
-          path(['created', '+gt']),
+          either(path(['created', '+gt']) as any, path(['+or', 0, 'created', '+gt']) as any),
           when(compose(not, isEmpty), v => JSON.parse(v)),
           path(['config', 'headers', 'X-Filter']),
         ),
