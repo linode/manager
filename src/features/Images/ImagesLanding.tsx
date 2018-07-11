@@ -1,7 +1,8 @@
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { Subscription } from 'rxjs/Rx';
+import 'rxjs/add/operator/filter';
+import { Subscription } from 'rxjs/Subscription';
 
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
@@ -331,13 +332,8 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
                 <ImageRow key={idx}
                           image={image}
                           onRestore={() => null}
-<<<<<<< HEAD
-                          onDeploy={() => null}
-                          onEdit={this.openForEdit}
-=======
                           onDeploy={this.deployNewLinode}
                           onEdit={this.openForEdit}
->>>>>>> develop
                           onDelete={this.openRemoveDialog}
                           updateFor={[image]} />
               )}

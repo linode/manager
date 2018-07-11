@@ -1,6 +1,5 @@
 import { compose, equals, pathOr } from 'ramda';
 import * as React from 'react';
-import { Subscription } from 'rxjs/Rx';
 
 import Button from '@material-ui/core/Button';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
@@ -75,7 +74,6 @@ const titleMap = {
 
 class ImageDrawer extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
-  eventsSub: Subscription;
   state = {
     disks: [],
     linodes: [],
