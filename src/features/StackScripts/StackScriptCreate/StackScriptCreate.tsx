@@ -103,7 +103,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-interface Props { 
+interface Props {
   profile: Linode.Profile;
 }
 
@@ -123,7 +123,7 @@ interface State {
   isSubmitting: boolean;
   errors?: Linode.ApiFieldError[];
   dialogOpen: boolean;
- }
+}
 
 type CombinedProps = Props
   & SetDocsProps
@@ -164,7 +164,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       body: `Create Custom Instances and Automate Deployment with StackScripts.`,
     },
   ];
-  
+
   mounted: boolean = false;
 
   componentDidMount() {
@@ -174,7 +174,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
   componentWillUnmount() {
     this.mounted = false;
   }
-  
+
   /*
   * Gets images by two types: deprecated and non-deprecated
   */
@@ -183,7 +183,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
   }
 
   handleLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({labelText: e.target.value});
+    this.setState({ labelText: e.target.value });
   }
 
   handleDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -199,9 +199,24 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
   }
 
   handleRemoveImage = (indexToRemove: any) => {
+    /*
+    * remove selected image from the selected list
+    */
     const selectedImagesCopy = this.state.selectedImages;
-    selectedImagesCopy.splice(indexToRemove, 1);
-    this.setState({ selectedImages: selectedImagesCopy });
+    const removedImage = selectedImagesCopy.splice(indexToRemove, 1);
+
+    /*
+    * add the remvoed image back to the selection list
+    */
+    const availableImagesCopy = this.state.availableImages;
+    const imageToBeReAdded = this.props.images.response.find(image =>
+      image.id === removedImage[0]);
+    availableImagesCopy.unshift(imageToBeReAdded!);
+
+    this.setState({
+      selectedImages: selectedImagesCopy,
+      availableImages: availableImagesCopy,
+    });
   }
 
   handleChooseImage = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -323,7 +338,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
   render() {
     const { classes, profile } = this.props;
     const { selectedImages, script,
-    labelText, descriptionText, revisionNote, errors } = this.state;
+      labelText, descriptionText, revisionNote, errors } = this.state;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
@@ -355,7 +370,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
             <Grid item className={classes.gridWithTips}>
               <TextField
                 InputProps={{
-                  startAdornment: 
+                  startAdornment:
                     <InputAdornment position="end">
                       {profile.username} /
                     </InputAdornment>,
@@ -433,11 +448,11 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
               </div>
             </Grid>
             <Grid item className={classes.gridWithTips}>
-              <Notice 
+              <Notice
                 className={classes.tips}
                 component="div"
               >
-              <Typography variant="title">Tips</Typography>
+                <Typography variant="title">Tips</Typography>
                 <Typography>There are four default environment variables provided to you:</Typography>
                 <ul>
                   <li>LINODE_ID</li>
@@ -455,6 +470,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
             placeholder={`#!/bin/bash \n\n# Your script goes here`}
             onChange={this.handleChangeScript}
             value={script}
+            errorText={hasErrorFor('script')}
             required
           />
           <TextField
@@ -468,13 +484,13 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
           <Notice
             component="div"
             warning
-            flag 
+            flag
             className={classes.warning}
           >
             <Typography variant="title">Woah, just a word of caution...</Typography>
             <Typography>
-                Making this StackScript public cannot be undone. Once made public, your StackScript will
-                be available to all Linode users and can be used to provision new Linodes.
+              Making this StackScript public cannot be undone. Once made public, your StackScript will
+              be available to all Linode users and can be used to provision new Linodes.
             </Typography>
           </Notice>
           <FormControlLabel
@@ -486,8 +502,8 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
                 checked={this.state.is_public}
               />
             }
-              label="Publish this StackScript to the Public Library"
-            />
+            label="Publish this StackScript to the Public Library"
+          />
           <ActionsPanel style={{ paddingBottom: 0 }}>
             <Button
               data-qa-confirm-cancel
