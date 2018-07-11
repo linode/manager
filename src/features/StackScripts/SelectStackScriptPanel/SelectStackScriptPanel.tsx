@@ -336,7 +336,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
         const newDataWithoutDeprecatedDistros =
           newData.filter(stackScript => this.hasNonDeprecatedImages(stackScript.images));
 
-        if (newDataWithoutDeprecatedDistros.length === 0) {
+        if (isSorting && newDataWithoutDeprecatedDistros.length === 0) {
           this.getNext();
           return;
         }
