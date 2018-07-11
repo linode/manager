@@ -3,7 +3,8 @@ import { compose } from 'redux';
 
 import Button from '@material-ui/core/Button';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import { ViewList, ViewModule } from '@material-ui/icons';
+import ViewList from '@material-ui/icons/ViewList';
+import ViewModule from '@material-ui/icons/ViewModule';
 
 type CSSClasses =
   'root'

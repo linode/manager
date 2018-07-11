@@ -3,7 +3,7 @@ import * as React from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
-import { HelpOutline } from '@material-ui/icons';
+import HelpOutline from '@material-ui/icons/HelpOutline';
 
 interface Props {
   text: string;

@@ -6,7 +6,8 @@ import { bindActionCreators, compose } from 'redux';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import { KeyboardArrowDown, KeyboardArrowUp } from '@material-ui/icons';
+import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
 
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import NodebalancerIcon from 'src/assets/addnewmenu/nodebalancer.svg';

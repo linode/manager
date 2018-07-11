@@ -4,7 +4,7 @@ import * as React from 'react';
 import Divider from '@material-ui/core/Divider';
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import { Delete } from '@material-ui/icons';
+import Delete from '@material-ui/icons/Delete';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';

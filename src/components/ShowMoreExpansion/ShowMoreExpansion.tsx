@@ -3,7 +3,7 @@ import * as React from 'react';
 import Collapse from '@material-ui/core/Collapse';
 import ListItem from '@material-ui/core/ListItem';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import { KeyboardArrowRight } from '@material-ui/icons';
+import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 
 type CSSClasses = 'root' | 'header' | 'caret';
 

@@ -9,7 +9,8 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
 import { StyleRules, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import { Close, Search } from '@material-ui/icons';
+import Close from '@material-ui/icons/Close';
+import Search from '@material-ui/icons/Search';
 
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';

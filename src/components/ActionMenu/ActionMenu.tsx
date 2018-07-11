@@ -3,7 +3,7 @@ import * as React from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import { MoreHoriz } from '@material-ui/icons';
+import MoreHoriz from '@material-ui/icons/MoreHoriz';
 
 import MenuItem from 'src/components/MenuItem';
 

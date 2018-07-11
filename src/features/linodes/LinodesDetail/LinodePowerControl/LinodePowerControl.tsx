@@ -3,7 +3,8 @@ import * as React from 'react';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import { KeyboardArrowDown, KeyboardArrowUp } from '@material-ui/icons';
+import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
 
 import PowerOn from 'src/assets/icons/powerOn.svg';
 import Reload from 'src/assets/icons/reload.svg';

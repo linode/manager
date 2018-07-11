@@ -2,7 +2,8 @@ import * as classnames from 'classnames';
 import * as React from 'react';
 
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import { KeyboardArrowLeft, KeyboardArrowRight } from '@material-ui/icons';
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
+import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 
 import Button from 'src/components/Button';
 

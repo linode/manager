@@ -6,7 +6,9 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import { TextFieldProps } from '@material-ui/core/TextField';
 import Typography, { TypographyProps } from '@material-ui/core/Typography';
-import { Check, Close, ModeEdit } from '@material-ui/icons';
+import Check from '@material-ui/icons/Check';
+import Close from '@material-ui/icons/Close';
+import ModeEdit from '@material-ui/icons/ModeEdit';
 
 import TextField from '../TextField';
 

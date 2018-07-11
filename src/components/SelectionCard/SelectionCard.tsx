@@ -4,7 +4,7 @@ import * as React from 'react';
 import Fade from '@material-ui/core/Fade';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
-import { Check } from '@material-ui/icons';
+import Check from '@material-ui/icons/Check';
 
 import Grid from 'src/components/Grid';
 

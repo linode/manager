@@ -3,7 +3,7 @@ import * as React from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import MenuItem, { MenuItemProps } from '@material-ui/core/MenuItem';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import { HelpOutline } from '@material-ui/icons';
+import HelpOutline from '@material-ui/icons/HelpOutline';
 
 type CSSClasses = 'root'
   | 'toolTip'

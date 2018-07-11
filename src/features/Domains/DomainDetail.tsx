@@ -7,7 +7,7 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
-import { KeyboardArrowLeft } from '@material-ui/icons';
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 
 import { matchPath, Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 import setDocs from 'src/components/DocsSidebar/setDocs';

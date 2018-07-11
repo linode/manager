@@ -8,7 +8,7 @@ import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import { Close } from '@material-ui/icons';
+import Close from '@material-ui/icons/Close';
 
 import Grid from 'src/components/Grid';
 

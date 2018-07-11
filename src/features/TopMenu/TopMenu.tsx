@@ -4,7 +4,7 @@ import AppBar from '@material-ui/core/AppBar';
 import IconButton from '@material-ui/core/IconButton';
 import { StyleRules, withStyles, WithStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
-import { Menu as MenuIcon } from '@material-ui/icons';
+import MenuIcon from '@material-ui/icons/Menu';
 
 import AddNewMenu from './AddNewMenu';
 import SearchBar from './SearchBar';

@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import Chip, { ChipProps } from '@material-ui/core/Chip';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import { Close } from '@material-ui/icons';
+import Close from '@material-ui/icons/Close';
 
 type Variants =
   'white'
