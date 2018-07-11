@@ -1,10 +1,10 @@
-import * as React from 'react';
 import { shallow } from 'enzyme';
-import { LinodeCreate } from './LinodesCreate';
+import * as React from 'react';
 
-import { images, ExtendedType, LinodesWithBackups } from 'src/__data__/index';
-
+import { ExtendedType, images, LinodesWithBackups } from 'src/__data__/index';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
+
+import { LinodeCreate } from './LinodesCreate';
 
 const dummyProps = {
   types: ExtendedType,

@@ -1,9 +1,9 @@
 import { Component } from 'react';
 import { connect, Dispatch } from 'react-redux';
 
-import { logout } from 'src/store/reducers/authentication';
 import { LOGIN_ROOT } from 'src/constants';
 import * as session from 'src/session';
+import { logout } from 'src/store/reducers/authentication';
 
 interface Props {
   dispatch: Dispatch<Linode.AppState>;

@@ -1,4 +1,4 @@
-import { Subject } from 'rxjs/Rx';
+import { Subject } from 'rxjs/Subject';
 
 export interface Toast {
   id: number;

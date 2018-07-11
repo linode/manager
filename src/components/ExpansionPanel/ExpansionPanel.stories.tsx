@@ -1,11 +1,11 @@
-import * as React from 'react';
 import { storiesOf } from '@storybook/react';
+import * as React from 'react';
 
 import Button from '@material-ui/core/Button';
 
 import ThemeDecorator from '../../utilities/storybookDecorators';
-import ExpansionPanel from './ExpansionPanel';
 import ActionsPanel from '../ActionsPanel';
+import ExpansionPanel from './ExpansionPanel';
 
 storiesOf('ExpansionPanel', module)
 .addDecorator(ThemeDecorator)

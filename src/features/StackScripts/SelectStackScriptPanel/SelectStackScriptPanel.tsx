@@ -1,25 +1,13 @@
-import * as React from 'react';
-
 import * as classNames from 'classnames';
-
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-
+import { compose, pathOr } from 'ramda';
+import * as React from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { connect } from 'react-redux';
-
-import { compose, pathOr } from 'ramda';
-
-import {
-  deleteStackScript,
-  getCommunityStackscripts, getStackScript, getStackScriptsByUser
-}
-  from 'src/services/stackscripts';
-
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
-
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
 
@@ -33,6 +21,7 @@ import RenderGuard from 'src/components/RenderGuard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
+import { deleteStackScript, getCommunityStackscripts, getStackScript, getStackScriptsByUser } from 'src/services/stackscripts';
 
 import StackScriptsSection from './StackScriptsSection';
 
@@ -571,7 +560,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
     const { currentFilterType, isSorting, fieldError, error } = this.state;
 
     if(error) {
-      return <ErrorState 
+      return <ErrorState
         errorText="There was an error loading your StackScripts. Please try again later."
       />
     }

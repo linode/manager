@@ -1,15 +1,11 @@
-import * as React from 'react';
-import {
-  withStyles,
-  Theme,
-  WithStyles,
-  StyleRulesCallback,
-} from '@material-ui/core/styles';
 import * as copy from 'copy-to-clipboard';
 import { tail } from 'ramda';
+import * as React from 'react';
 
-import ShowMore from 'src/components/ShowMore';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+
 import CopyTooltip from 'src/components/CopyTooltip';
+import ShowMore from 'src/components/ShowMore';
 
 type CSSClasses =  'root'
 | 'left'

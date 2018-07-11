@@ -1,12 +1,7 @@
-import * as React from 'react';
 import { pathOr } from 'ramda';
+import * as React from 'react';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from '@material-ui/core/styles';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import Notice from 'src/components/Notice';
 

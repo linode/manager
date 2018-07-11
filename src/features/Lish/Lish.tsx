@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { matchPath, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';;
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 
@@ -45,7 +45,7 @@ class Lish extends React.Component<CombinedProps, State> {
   state: State = {
     loading: true,
   };
-  
+
   mounted: boolean;
 
   componentDidMount() {
@@ -65,7 +65,7 @@ class Lish extends React.Component<CombinedProps, State> {
       .then((response) => {
         const { data: linode } = response;
         if (!this.mounted) { return; }
-        this.setState({ 
+        this.setState({
           linode,
           loading: false,
         });
@@ -94,7 +94,7 @@ class Lish extends React.Component<CombinedProps, State> {
       .then((response) => {
         const { data: { lish_token: token } } = response;
         if (!this.mounted) { return; }
-        this.setState({ 
+        this.setState({
           token,
           loading: false,
         });
@@ -104,13 +104,13 @@ class Lish extends React.Component<CombinedProps, State> {
         this.setState({ loading: false });
       });
   }
-  
+
   handleTabChange = (event: React.ChangeEvent<HTMLDivElement>, value: number) => {
     const { history } = this.props;
     const routeName = this.tabs[value].routeName;
     history.push(`${routeName}`);
   }
-  
+
   tabs = [
     /* NB: These must correspond to the routes inside the Switch */
     { routeName: `${this.props.match.url}/weblish`, title: 'Weblish' },
@@ -126,7 +126,7 @@ class Lish extends React.Component<CombinedProps, State> {
     }
     return null;
   }
-  
+
   renderGlish = () => {
     const { linode, token } = this.state;
     if (linode && token) {
@@ -151,7 +151,7 @@ class Lish extends React.Component<CombinedProps, State> {
           scrollButtons="off"
         >
           {this.tabs.map(tab =>
-            <Tab 
+            <Tab
               classes={{
                 root: classes.tabRoot,
               }}

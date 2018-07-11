@@ -1,13 +1,11 @@
-import * as React from 'react';
-
 import { compose, find, lensPath, map, pathOr, prop, propEq, set } from 'ramda';
+import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { StickyContainer } from 'react-sticky';
 
-import { StyleRules, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import AppBar from '@material-ui/core/AppBar';
+import { StyleRules, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';

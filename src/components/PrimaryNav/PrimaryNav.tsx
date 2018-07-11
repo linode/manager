@@ -1,22 +1,18 @@
+import * as classNames from 'classnames';
 import * as React from 'react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'redux';
 
-import * as classNames from 'classnames';
-
-import { StyleRules, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import Collapse from '@material-ui/core/Collapse';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import { StyleRules, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 
-import isPathOneOf from 'src/utilities/routing/isPathOneOf';
-
+import Logo from 'src/assets/logo/logo-text.svg';
 import Grid from 'src/components/Grid';
 import Toggle from 'src/components/Toggle';
-
-import Logo from 'src/assets/logo/logo-text.svg';
+import isPathOneOf from 'src/utilities/routing/isPathOneOf';
 
 type PrimaryLink = {
   display: string,
@@ -264,7 +260,7 @@ class PrimaryNav extends React.Component<Props, State> {
 
           {primaryLinks.map(primaryLink => this.renderPrimaryLink(primaryLink))}
 
-          <ListItem 
+          <ListItem
             data-menu-name="account"
             focusRipple={true}
             button
@@ -278,7 +274,7 @@ class PrimaryNav extends React.Component<Props, State> {
               disableTypography={true}
               className={classNames({
                 [classes.linkItem]: true,
-                [classes.activeLink]: 
+                [classes.activeLink]:
                   expandedMenus.account
                   || this.linkIsActive('/billing') === true
                   || this.linkIsActive('/users') === true,
@@ -288,11 +284,11 @@ class PrimaryNav extends React.Component<Props, State> {
               Account
             </ListItemText>
           </ListItem>
-          <Collapse 
+          <Collapse
             in={expandedMenus.account
                 || (this.linkIsActive('/billing') === true)
                 || (this.linkIsActive('/users') === true)}
-            timeout="auto" 
+            timeout="auto"
             unmountOnExit
             className={classes.sublinkPanel}
           >
@@ -341,10 +337,10 @@ class PrimaryNav extends React.Component<Props, State> {
               Support
             </ListItemText>
           </ListItem>
-          <Collapse 
-            in={expandedMenus.support 
+          <Collapse
+            in={expandedMenus.support
                 || this.linkIsActive('/support') === true}
-            timeout="auto" 
+            timeout="auto"
             unmountOnExit
             className={classes.sublinkPanel}
           >

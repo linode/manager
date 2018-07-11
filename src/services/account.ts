@@ -1,5 +1,5 @@
 import { API_ROOT } from 'src/constants';
-import Request, { setMethod, setURL, setXFilter, setData } from 'src/services';
+import Request, { setData, setMethod, setURL, setXFilter } from 'src/services';
 
 type Page<T> = Linode.ResourcePage<T>;
 type Event = Linode.Event;

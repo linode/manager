@@ -1,23 +1,18 @@
+import * as invariant from 'invariant';
+import { compose, isEmpty, lensIndex, map, over, splitAt, unless } from 'ramda';
 import * as React from 'react';
 
-import * as invariant from 'invariant';
-
-import { compose, isEmpty, lensIndex, map, over, splitAt, unless } from 'ramda';
-
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
+import Typography from '@material-ui/core/Typography';
+
 
 import Radio from 'src/components/Radio';
 import RenderGuard from 'src/components/RenderGuard';
 import ShowMore from 'src/components/ShowMore';
 import Tag from 'src/components/Tag';
-
-import Typography from '@material-ui/core/Typography';
-
-import StackScriptsActionMenu
-  from 'src/features/StackScripts/SelectStackScriptPanel/StackScriptActionMenu';
+import StackScriptsActionMenu from 'src/features/StackScripts/SelectStackScriptPanel/StackScriptActionMenu';
 
 type ClassNames = 'root'
   | 'respPadding'
@@ -204,7 +199,7 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
             stackScriptLabel={label}
             triggerDelete={triggerDelete!}
             canDelete={canDelete}
-          /> 
+          />
           </TableCell>
         }
       </TableRow>

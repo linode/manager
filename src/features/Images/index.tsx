@@ -1,10 +1,6 @@
 import * as React from 'react';
-import {
-    Route,
-    RouteComponentProps,
-    Switch,
-    withRouter,
-} from 'react-router-dom';
+import { Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
+
 import DefaultLoader from 'src/components/DefaultLoader';
 
 const ImagesLanding = DefaultLoader({

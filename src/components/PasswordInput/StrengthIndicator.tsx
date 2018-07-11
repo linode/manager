@@ -1,13 +1,9 @@
-import * as React from 'react';
 import * as classNames from 'classnames';
 import { isNil } from 'ramda';
+import * as React from 'react';
 
-import  {
-  withStyles,
-  WithStyles,
-  StyleRulesCallback,
-  Theme,
-} from '@material-ui/core/styles';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+
 import Grid from 'src/components/Grid';
 
 interface Props {

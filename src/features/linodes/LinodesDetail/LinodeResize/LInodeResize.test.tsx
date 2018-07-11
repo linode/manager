@@ -1,13 +1,11 @@
+import { mount, shallow } from 'enzyme';
 import * as React from 'react';
 
-import { mount, shallow } from 'enzyme';
-
 import { types } from 'src/__data__/types';
-
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
-import { LinodeResize } from './LinodeResize';
-
 import { createPromiseLoaderResponse } from 'src/utilities/testHelpers';
+
+import { LinodeResize } from './LinodeResize';
 
 describe('LinodeResize', () => {
   const mockTypes = createPromiseLoaderResponse(

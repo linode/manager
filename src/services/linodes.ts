@@ -1,6 +1,8 @@
 import { omit } from 'ramda';
+
 import { API_ROOT } from 'src/constants';
-import Request, { setData, setURL, setMethod, setXFilter, setParams } from '.';
+
+import Request, { setData, setMethod, setParams, setURL, setXFilter } from '.';
 
 type Page<T> = Linode.ResourcePage<T>;
 type Linode = Linode.Linode;
