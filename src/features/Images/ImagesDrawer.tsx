@@ -43,10 +43,10 @@ export interface Props {
   selectedLinode?: string;
   onClose: () => void;
   onSuccess: () => void;
-  changeLinode: (e:any) => void;
-  changeDisk: (e:any) => void;
-  changeLabel: (e:any) => void;
-  changeDescription: (e:any) => void;
+  changeLinode: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  changeDisk: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  changeLabel: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  changeDescription: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 interface State {
