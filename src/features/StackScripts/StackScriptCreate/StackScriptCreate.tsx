@@ -44,7 +44,8 @@ type ClassNames = 'root'
   | 'titleWrapper'
   | 'createTitle'
   | 'labelField'
-  | 'tips';
+  | 'tips'
+  | 'warning';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -70,7 +71,19 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     marginTop: 5,
   },
   tips: {
-    backgroundColor: theme.bg.main,
+    marginLeft: theme.spacing.unit * 4,
+    marginTop: theme.spacing.unit * 4,
+    paddingLeft: theme.spacing.unit * 4,
+    borderLeft: `5px solid ${theme.palette.divider}`,
+    [theme.breakpoints.down('lg')]: {
+      marginLeft: 0,
+    },
+    [theme.breakpoints.down('md')]: {
+      paddingLeft: theme.spacing.unit * 2,
+    },
+  },
+  warning: {
+    marginTop: theme.spacing.unit * 2,
   }
 });
 
@@ -255,28 +268,6 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     this.setState({ dialogOpen: false })
   }
 
-  renderNoticeHTML = () => {
-    return (
-      `<h3>Woah, just a word of caution...</h3>
-        <p>Making this StackScript public cannot be undone. Once made public, your StackScript will
-          be available to all Linode users and can be used to provision new Linodes.
-      </p>`
-    )
-  }
-
-  renderTipsHTML = () => {
-    return (
-      `<h3>Tips</h3>
-      <p>There are four default environment variables provided to you:</p>
-      <ul>
-        <li>LINODE_ID</li>
-        <li>LINODE_LISTUSERNAME</li>
-        <li>LINODE_RAM</li>
-        <li>LINODE_DATACENTERID</li>
-      </ul>`
-    )
-  }
-
   renderDialogActions = () => {
     return (
       <React.Fragment>
@@ -343,86 +334,104 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
             </Link>
             <Typography className={classes.createTitle} variant="headline">
               Create New StackScript
-      </Typography>
+            </Typography>
           </Grid>
         </Grid>
         <Paper className={classes.root}>
-          <TextField
-            InputProps={{
-              startAdornment: 
-                <InputAdornment position="end">
-                  {profile.username} /
-                </InputAdornment>,
-            }}
-            label='StackScript Label'
-            required
-            onChange={this.handleLabelChange}
-            placeholder='Enter a label'
-            value={labelText}
-            errorText={hasErrorFor('label')}
-            tooltipText="Select a StackScript Label"
-            className={classes.labelField}
-          />
-          <TextField
-            multiline
-            rows={1}
-            label="Description"
-            placeholder="Enter a description"
-            onChange={this.handleDescriptionChange}
-            value={descriptionText}
-            tooltipText="Give your StackScript a description"
-          />
-          <FormControl fullWidth>
-            <InputLabel
-              htmlFor="image"
-              disableAnimation
-              shrink={true}
-              required
-            >
-              Target Images
-          </InputLabel>
-            <Select
-              open={this.state.imageSelectOpen}
-              onOpen={this.handleOpenSelect}
-              onClose={this.handleCloseSelect}
-              value='none'
-              onChange={this.handleChooseImage}
-              inputProps={{ name: 'image', id: 'image' }}
-              helpText='Select which images are compatible with this StackScript'
-              error={Boolean(hasErrorFor('images'))}
-              errorText={hasErrorFor('images')}
-            >
-              <MenuItem disabled key="none" value="none">Select Compatible Images</MenuItem>,
-            {this.getImagesByDeprecationStatus(false).map(image =>
-                <MenuItem
-                  key={image.id}
-                  value={image.id}
-                >
-                  {image.label}
-                </MenuItem>,
-              )}
-              <MenuItem disabled key="deprecated" value="deprecated">Older Images</MenuItem>,
-            {this.getImagesByDeprecationStatus(true).map(image =>
-                <MenuItem
-                  key={image.id}
-                  value={image.id}
-                >
-                  {image.label}
-                </MenuItem>,
-              )}
-            </Select>
-          </FormControl>
-          {selectedImages && selectedImages.map((selectedImage, index) => {
-            return (
-              <Tag
-                key={selectedImage}
-                label={selectedImage}
-                variant='lightBlue'
-                onDelete={() => this.handleRemoveImage(index)}
+          <Grid container>
+            <Grid item>
+              <TextField
+                InputProps={{
+                  startAdornment: 
+                    <InputAdornment position="end">
+                      {profile.username} /
+                    </InputAdornment>,
+                }}
+                label='StackScript Label'
+                required
+                onChange={this.handleLabelChange}
+                placeholder='Enter a label'
+                value={labelText}
+                errorText={hasErrorFor('label')}
+                tooltipText="Select a StackScript Label"
+                className={classes.labelField}
               />
-            )
-          })}
-          <Notice className={classes.tips} html={this.renderTipsHTML()} />
+              <TextField
+                multiline
+                rows={1}
+                label="Description"
+                placeholder="Enter a description"
+                onChange={this.handleDescriptionChange}
+                value={descriptionText}
+                tooltipText="Give your StackScript a description"
+              />
+              <FormControl fullWidth>
+                <InputLabel
+                  htmlFor="image"
+                  disableAnimation
+                  shrink={true}
+                  required
+                >
+                  Target Images
+              </InputLabel>
+                <Select
+                  open={this.state.imageSelectOpen}
+                  onOpen={this.handleOpenSelect}
+                  onClose={this.handleCloseSelect}
+                  value='none'
+                  onChange={this.handleChooseImage}
+                  inputProps={{ name: 'image', id: 'image' }}
+                  helpText='Select which images are compatible with this StackScript'
+                  error={Boolean(hasErrorFor('images'))}
+                  errorText={hasErrorFor('images')}
+                >
+                  <MenuItem disabled key="none" value="none">Select Compatible Images</MenuItem>,
+                {this.getImagesByDeprecationStatus(false).map(image =>
+                    <MenuItem
+                      key={image.id}
+                      value={image.id}
+                    >
+                      {image.label}
+                    </MenuItem>,
+                  )}
+                  <MenuItem disabled key="deprecated" value="deprecated">Older Images</MenuItem>,
+                {this.getImagesByDeprecationStatus(true).map(image =>
+                    <MenuItem
+                      key={image.id}
+                      value={image.id}
+                    >
+                      {image.label}
+                    </MenuItem>,
+                  )}
+                </Select>
+              </FormControl>
+              {selectedImages && selectedImages.map((selectedImage, index) => {
+                return (
+                  <Tag
+                    key={selectedImage}
+                    label={selectedImage}
+                    variant='lightBlue'
+                    onDelete={() => this.handleRemoveImage(index)}
+                  />
+                )
+              })}
+            </Grid>
+            <Grid item>
+              <Notice 
+                className={classes.tips}
+                component="div"
+              >
+              <Typography variant="title">Tips</Typography>
+                <Typography>There are four default environment variables provided to you:</Typography>
+                <ul>
+                  <li>LINODE_ID</li>
+                  <li>LINODE_LISTUSERNAME</li>
+                  <li>LINODE_RAM</li>
+                  <li>LINODE_DATACENTERID</li>
+                </ul>
+              </Notice>
+            </Grid>
+          </Grid>
           <TextField
             multiline
             rows={1}
@@ -440,7 +449,18 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
             onChange={this.handleChangeRevisionNote}
             value={revisionNote}
           />
-          <Notice warning flag html={this.renderNoticeHTML()} />
+          <Notice
+            component="div"
+            warning
+            flag 
+            className={classes.warning}
+          >
+            <Typography variant="title">Woah, just a word of caution...</Typography>
+            <Typography>
+                Making this StackScript public cannot be undone. Once made public, your StackScript will
+                be available to all Linode users and can be used to provision new Linodes.
+            </Typography>
+          </Notice>
           <InputLabel
             htmlFor="make_public"
             disableAnimation

@@ -650,6 +650,7 @@ const LinodeTheme: Linode.Theme = {
         backgroundColor: 'white',
         boxShadow: '0 0 5px #bbb',
         color: '#666',
+        visibility: 'hidden',
         textAlign: 'left',
         [breakpoints.up('sm')]: {
           padding: '12px  16px',
@@ -657,6 +658,7 @@ const LinodeTheme: Linode.Theme = {
         },
         '&$open': {
           opacity: 1,
+          visibility: 'visible',
         },
       },
     },
