@@ -1,16 +1,46 @@
-import { equals } from 'ramda';
 import * as React from 'react';
 
+import { equals } from 'ramda';
+
+import * as classNames from 'classnames';
+
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+
 import TextField, { TextFieldProps } from '@material-ui/core/TextField';
+
+import HelpIcon from 'src/components/HelpIcon';
+
+type ClassNames = 'root'
+  | 'helpWrapper'
+  | 'helpWrapperTextField';
+
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+  root: {},
+  helpWrapper: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    alignItems: 'flex-end',
+  },
+  helpWrapperTextField: {
+    width: 380,
+    [theme.breakpoints.down('xs')]: {
+      width: 240,
+    },
+  },
+});
 
 export interface Props extends TextFieldProps {
   errorText?: string;
   errorGroup?: string;
   affirmative?: Boolean;
+  tooltipText?: string;
+  className?: any;
   [index: string]: any;
 }
 
-class LinodeTextField extends React.Component<Props> {
+type CombinedProps = Props & WithStyles<ClassNames>;
+
+class LinodeTextField extends React.Component<CombinedProps> {
   shouldComponentUpdate(nextProps: Props) {
     return nextProps.value !== this.props.value
       || nextProps.error !== this.props.error
@@ -28,8 +58,12 @@ class LinodeTextField extends React.Component<Props> {
       errorText,
       errorGroup,
       affirmative,
+      classes,
       fullWidth,
       children,
+      tooltipText,
+      theme,
+      className,
       ...textFieldProps
     } = this.props;
 
@@ -57,30 +91,43 @@ class LinodeTextField extends React.Component<Props> {
       : true;
 
     return (
-      <TextField
-        {...finalProps}
-        InputLabelProps={{
-          ...finalProps.InputLabelProps,
-          shrink: true,
-        }}
-        InputProps={{
-          ...finalProps.InputProps,
-          disableUnderline: true,
-        }}
-        SelectProps={{
-          MenuProps: {
-            getContentAnchorEl: undefined,
-            anchorOrigin: { vertical: 'bottom', horizontal: 'left' },
-            transformOrigin: { vertical: 'top', horizontal: 'left' },
-            MenuListProps: { className: 'selectMenuList' },
-            PaperProps: { className: 'selectMenuDropdown' },
-          },
-        }}
+      <div className={classNames({
+        [classes.helpWrapper]: Boolean(tooltipText),
+      })}
       >
-        {this.props.children}
-      </TextField>
+        <TextField
+          {...finalProps}
+          InputLabelProps={{
+            ...finalProps.InputLabelProps,
+            shrink: true,
+          }}
+          InputProps={{
+            ...finalProps.InputProps,
+            disableUnderline: true,
+          }}
+          SelectProps={{
+            MenuProps: {
+              getContentAnchorEl: undefined,
+              anchorOrigin: { vertical: 'bottom', horizontal: 'left' },
+              transformOrigin: { vertical: 'top', horizontal: 'left' },
+              MenuListProps: { className: 'selectMenuList' },
+              PaperProps: { className: 'selectMenuDropdown' },
+            },
+          }}
+          className={classNames({
+            [classes.helpWrapperTextField]: Boolean(tooltipText),
+          },
+          className,
+          )}
+        >
+          {this.props.children}
+        </TextField>
+        {tooltipText && <HelpIcon text={tooltipText} />}
+      </div>
     );
   }
 }
 
-export default LinodeTextField;
+const styled = withStyles(styles, { withTheme: true });
+
+export default styled<CombinedProps>(LinodeTextField);

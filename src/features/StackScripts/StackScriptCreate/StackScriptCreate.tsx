@@ -13,6 +13,7 @@ import {
 
 import FormControl from '@material-ui/core/FormControl';
 import IconButton from '@material-ui/core/IconButton';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
@@ -24,7 +25,6 @@ import Button from 'src/components/Button';
 import Checkbox from 'src/components/CheckBox';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Grid from 'src/components/Grid';
-import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 import PromiseLoader from 'src/components/PromiseLoader';
 import Select from 'src/components/Select';
@@ -43,7 +43,7 @@ type ClassNames = 'root'
   | 'backButton'
   | 'titleWrapper'
   | 'createTitle'
-  | 'adornment'
+  | 'labelField'
   | 'tips';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
@@ -60,14 +60,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   createTitle: {
     lineHeight: '2.25em'
   },
+  labelField: {
+    '& input': {
+      paddingLeft: 0,
+    },
+  },
   titleWrapper: {
     display: 'flex',
     marginTop: 5,
-  },
-  adornment: {
-    fontSize: '.9rem',
-    marginLeft: 5,
-    color: theme.color.grey1
   },
   tips: {
     backgroundColor: theme.bg.main,
@@ -349,8 +349,10 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         <Paper className={classes.root}>
           <TextField
             InputProps={{
-              startAdornment: <span className={classes.adornment}>
-                {profile.username} /</span>,
+              startAdornment: 
+                <InputAdornment position="end">
+                  {profile.username} /
+                </InputAdornment>,
             }}
             label='StackScript Label'
             required
@@ -358,8 +360,9 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
             placeholder='Enter a label'
             value={labelText}
             errorText={hasErrorFor('label')}
+            tooltipText="Select a StackScript Label"
+            className={classes.labelField}
           />
-          <HelpIcon text="Select a StackScript Label" />
           <TextField
             multiline
             rows={1}
@@ -367,8 +370,8 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
             placeholder="Enter a description"
             onChange={this.handleDescriptionChange}
             value={descriptionText}
+            tooltipText="Give your StackScript a description"
           />
-          <HelpIcon text="Give your StackScript a description" />
           <FormControl fullWidth>
             <InputLabel
               htmlFor="image"

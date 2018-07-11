@@ -357,6 +357,9 @@ const LinodeTheme: Linode.Theme = {
     },
     MuiInputAdornment: {
       root: {
+        fontSize: '.9rem',
+        color: '#666',
+        whiteSpace: 'nowrap',
         '& p': {
           fontSize: '.9rem',
         },
