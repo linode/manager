@@ -51,3 +51,10 @@ export const getCommunityStackscripts = (currentUser: string, params?: any, filt
       data: withoutOwnAndLinode,
     };
   });
+
+export const deleteStackScript = (id: number) =>
+  Request(
+    setURL(`${API_ROOT}/linode/stackscripts/${id}`),
+    setMethod('DELETE'),
+  )
+    .then(response => response.data);
