@@ -69,7 +69,7 @@ class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
         return 'Add Disk';
 
       case 'rename':
-        return 'Edit Disk';
+        return 'Rename Disk';
 
       case 'resize':
         return 'Resize Disk';
