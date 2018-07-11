@@ -51,7 +51,7 @@ class Settings extends Page {
     remove() {
         const linodeLabel = browser.getText('[data-qa-label]');
         const confirmTitle = 'Confirm Deletion';
-        const confirmContent = 'Deleting a Linode will result in permenant data loss. Are you sure?';
+        const confirmContent = 'Deleting a Linode will result in permanent data loss. Are you sure?';
         this.delete.click();
         this.deleteDialogTitle.waitForText();
         this.deleteDialogContent.waitForText();

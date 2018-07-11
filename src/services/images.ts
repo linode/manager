@@ -59,7 +59,7 @@ const getSafeDescription = (description: string) => {
   // Blank descriptions are represented as ' ' in the API;
   // API will return an error if passed the empty string.
   const trimmed = description.trim();
-  return trimmed === ''
-         ? ' '
-         : trimmed;
+  return trimmed
+         ? trimmed
+         : ' ';
 }
