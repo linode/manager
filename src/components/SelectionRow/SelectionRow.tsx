@@ -95,10 +95,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     color: theme.color.grey1,
   },
   deployButton: {
-    marginLeft: -26,
+    // marginLeft: -26,
+    // width: '100%',
+    // justifyContent: 'flex-start',
+    whiteSpace: 'nowrap',
     border: 0,
-    width: '100%',
-    justifyContent: 'flex-start',
   },
 });
 
@@ -138,6 +139,25 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
     'onSelect and showDeployLink are mutually exclusive.',
   );
 
+  const renderLabel = () => {
+    return (
+      <Typography variant="subheading">
+        {stackScriptUsername &&
+          <label
+            htmlFor={`${stackScriptID}`}
+            className={`${classes.libRadioLabel} ${classes.stackScriptUsername}`}>
+            {stackScriptUsername} /&nbsp;
+    </label>
+        }
+        <label
+          htmlFor={`${stackScriptID}`}
+          className={classes.libRadioLabel}>
+          {label}
+        </label>
+      </Typography>
+    )
+  }
+
   return (
     <React.Fragment>
       <TableRow data-qa-table-row={label}>
@@ -146,21 +166,13 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
             <Radio checked={checked} onChange={onSelect} id={`${stackScriptID}`} />
           </TableCell>
         }
-        <TableCell className={classes.stackScriptCell}>
-          <Typography variant="subheading" data-qa-stackscript-title>
-          {stackScriptUsername &&
-                <label
-                  htmlFor={`${stackScriptID}`}
-                  className={`${classes.libRadioLabel} ${classes.stackScriptUsername}`}>
-                  {stackScriptUsername} /&nbsp;
-            </label>
-              }
-              <label
-                htmlFor={`${stackScriptID}`}
-                className={classes.libRadioLabel}>
-                 {label}
-              </label>
-          </Typography>
+        <TableCell className={classes.stackScriptCell} data-qa-stackscript-title>
+          {!showDeployLink
+            ? renderLabel()
+            : <a target="_blank" href={`https://www.linode.com/stackscripts/view/${stackScriptID}`}>
+              {renderLabel()}
+            </a>
+          }
           <Typography>{description}</Typography>
         </TableCell>
         <TableCell>

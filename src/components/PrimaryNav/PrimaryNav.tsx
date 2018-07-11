@@ -241,7 +241,7 @@ class PrimaryNav extends React.Component<Props, State> {
   }
 
   render() {
-    const { classes, toggleTheme, toggleMenu } = this.props;
+    const { classes, toggleTheme } = this.props;
     const { expandedMenus } = this.state;
     const themeName = (this.props.theme as any).name;
 
@@ -299,7 +299,6 @@ class PrimaryNav extends React.Component<Props, State> {
             <Link
               to="/billing"
               role="menuitem"
-              onClick={toggleMenu}
               className={classNames({
                 [classes.sublink]: true,
                 [classes.sublinkActive]: this.linkIsActive('/billing') === true,
@@ -310,7 +309,6 @@ class PrimaryNav extends React.Component<Props, State> {
             <Link
               to="/users"
               role="menuitem"
-              onClick={toggleMenu}
               className={classNames({
                 [classes.sublink]: true,
                 [classes.sublinkActive]: this.linkIsActive('/users') === true,
@@ -369,7 +367,6 @@ class PrimaryNav extends React.Component<Props, State> {
             <Link
               to="/support"
               role="menuitem"
-              onClick={toggleMenu}
               className={classNames({
                 [classes.sublink]: true,
                 [classes.sublinkActive]: this.linkIsActive('/support') === true,
