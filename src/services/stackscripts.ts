@@ -35,25 +35,13 @@ export const getStackScriptsByUser = (username: string, params?: any, filter?: a
     ...filter,
   });
 
-// API does not currently support this
-// export const getCommunityStackscripts = (currentUser: string, params?: any, filter?: any) =>
-//   getStackscripts(params, {
-//     '+and': [
-//       { username: { '+not': 'linode' } },
-//       { username: { '+not': currentUser } },
-//       ...filter,
-//     ],
-//   });
-
 export const getCommunityStackscripts = (currentUser: string, params?: any, filter?: any) =>
-  getStackscripts(params, filter).then((response) => {
-    const withoutOwnAndLinode = response.data.filter((stackScript) => {
-      return stackScript.username !== 'linode' && stackScript.username !== currentUser;
-    });
-    return {
-      ...response,
-      data: withoutOwnAndLinode,
-    };
+  getStackscripts(params, {
+    '+and': [
+      { username: { '+neq': 'linode' } },
+      { username: { '+neq': currentUser } },
+    ],
+    ...filter
   });
 
 export const deleteStackScript = (id: number) =>
