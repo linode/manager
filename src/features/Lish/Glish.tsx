@@ -176,6 +176,10 @@ class Glish extends React.Component<CombinedProps, State> {
     });
   }
 
+  canvasResize = (width: number, height: number) => {
+    resizeViewPort(width + 40, height + 70);
+  }
+
   render() {
     const { classes, linode, token } = this.props;
     const { activeVnc, initialConnect, powered } = this.state;
@@ -201,6 +205,7 @@ class Glish extends React.Component<CombinedProps, State> {
             <VncDisplay
               url={`${getLishSchemeAndHostname(region)}:8080/${token}`}
               onUpdateState={this.onUpdateVNCState}
+              onResize={this.canvasResize}
             />
           </div>
         }
