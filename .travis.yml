@@ -10,7 +10,7 @@ cache: yarn
 before_install: sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++ google-chrome-stable
 
 install:
-    - yarn
+    - yarn --frozen-lockfile
 
 before_script:
   - yarn storybook &
@@ -19,6 +19,7 @@ script:
       - yarn build
       - yarn test --coverage --maxWorkers=2
       - yarn storybook:e2e
+      - yarn storyshots
       - "pkill -f selenium-standalone || :"
       - pkill -f storybook
       - cat ./coverage/lcov.info | ./node_modules/.bin/coveralls
