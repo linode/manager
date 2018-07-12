@@ -126,6 +126,7 @@ const LinodeTheme: Linode.Theme = {
       label: {
         paddingLeft: 4,
         paddingRight: 4,
+        fontSize: '.9rem',
       },
       deleteIcon: {
         color: '#aaa',
@@ -329,6 +330,7 @@ const LinodeTheme: Linode.Theme = {
       inputMultiline: {
         minHeight: 125,
         padding: '5px 12px',
+        lineHeight: 1.4,
       },
       focused: {
         borderColor: '#999',
@@ -357,6 +359,9 @@ const LinodeTheme: Linode.Theme = {
     },
     MuiInputAdornment: {
       root: {
+        fontSize: '.9rem',
+        color: '#666',
+        whiteSpace: 'nowrap',
         '& p': {
           fontSize: '.9rem',
         },
@@ -647,13 +652,19 @@ const LinodeTheme: Linode.Theme = {
         backgroundColor: 'white',
         boxShadow: '0 0 5px #bbb',
         color: '#666',
+        visibility: 'hidden',
         textAlign: 'left',
+        width: 0,
+        height: 0,
         [breakpoints.up('sm')]: {
           padding: '12px  16px',
           fontSize: '.9rem',
         },
         '&$open': {
+          width: 'auto',
+          height: 'auto',
           opacity: 1,
+          visibility: 'visible',
         },
       },
     },

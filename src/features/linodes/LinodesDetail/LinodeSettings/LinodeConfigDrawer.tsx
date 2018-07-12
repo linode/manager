@@ -125,7 +125,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               label="Label"
               required
               value={label}
-              onChange={e => onChange('label', e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange('label', e.target.value)}
               errorText={errorFor('label')}
               errorGroup="linode-config-drawer"
             />
@@ -133,7 +133,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             <TextField
               label="Comments"
               value={comments}
-              onChange={e => onChange('comments', e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange('comments', e.target.value)}
               multiline={true}
               rows={3}
               errorText={errorFor('comments')}
@@ -172,7 +172,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               label="Kernel"
               select={true}
               value={kernel}
-              onChange={e => onChange('kernel', e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange('kernel', e.target.value)}
               errorText={errorFor('kernel')}
               errorGroup="linode-config-drawer"
             >
@@ -213,7 +213,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               type="number"
               label="Memory Limit"
               value={memory_limit}
-              onChange={e => onChange('memory_limit', clamp(0, maxMemory, +e.target.value))}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange('memory_limit', clamp(0, maxMemory, +e.target.value))}
               helperText={`Max: ${maxMemory}`}
             />
           </Grid>
@@ -244,7 +244,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               <TextField
                 label={`${useCustomRoot ? 'Custom ' : ''}Root Device`}
                 value={root_device}
-                onChange={e => onChange('root_device', e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange('root_device', e.target.value)}
                 inputProps={{ name: 'root_device', id: 'root_device' }}
                 select={!useCustomRoot}
                 fullWidth

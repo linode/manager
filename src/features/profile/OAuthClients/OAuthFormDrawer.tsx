@@ -57,14 +57,14 @@ const OAuthCreationDrawer: React.StatelessComponent<CombinedProps> = (props) => 
         value={label || ''}
         errorText={hasErrorFor('label')}
         label="Label"
-        onChange={e => onChange('label', e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange('label', e.target.value)}
         data-qa-add-label
       />
       <TextField
         value={redirect_uri || ''}
         label="Callback URL"
         errorText={hasErrorFor('redirect_uri')}
-        onChange={e => onChange('redirect_uri', e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange('redirect_uri', e.target.value)}
         data-qa-callback
       />
       <FormControl>
