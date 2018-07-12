@@ -39,15 +39,19 @@ import { createStackScript } from 'src/services/stackscripts';
 
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { Divider } from '../../../../node_modules/@material-ui/core';
 
 type ClassNames = 'root'
   | 'backButton'
   | 'titleWrapper'
   | 'createTitle'
   | 'labelField'
+  | 'divider'
   | 'gridWithTips'
   | 'tips'
   | 'chipsContainer'
+  | 'scriptTextarea'
+  | 'revisionTextarea'
   | 'warning'
   | 'targetTag';
 
@@ -64,6 +68,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   createTitle: {
     lineHeight: '2.25em'
+  },
+  divider: {
+    margin: `0 0 ${theme.spacing.unit * 2}px 0`,
+    height: 0,
   },
   labelField: {
     '& input': {
@@ -96,10 +104,20 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     maxWidth: 415,
   },
   warning: {
-    marginTop: theme.spacing.unit * 2,
+    marginTop: theme.spacing.unit * 4,
   },
   targetTag: {
     margin: `${theme.spacing.unit}px ${theme.spacing.unit}px 0 0`,
+  },
+  scriptTextarea: {
+    maxWidth: '100%',
+    height: 400,
+    '& textarea': {
+      height: '100%',
+    }
+  },
+  revisionTextarea: {
+    maxWidth: '100%',
   },
 });
 
@@ -463,6 +481,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
               </Notice>
             </Grid>
           </Grid>
+          <Divider className={classes.divider} />
           <TextField
             multiline
             rows={1}
@@ -472,6 +491,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
             value={script}
             errorText={hasErrorFor('script')}
             required
+            InputProps={{ className: classes.scriptTextarea }}
           />
           <TextField
             multiline
@@ -480,6 +500,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
             placeholder='Enter a revision note'
             onChange={this.handleChangeRevisionNote}
             value={revisionNote}
+            InputProps={{ className: classes.revisionTextarea }}
           />
           <Notice
             component="div"
