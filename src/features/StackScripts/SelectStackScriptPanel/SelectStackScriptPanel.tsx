@@ -217,8 +217,6 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
   getInitTab = () => {
     const { profile, onSelect, selectedUsername } = this.props;
 
-    if (!this.mounted) { return; }
-
     if (profile.username === selectedUsername) {
       return this.myTabIndex;
     }

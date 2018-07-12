@@ -155,6 +155,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
 
   resetStackScriptSelection = () => {
     // reset stackscript selection to unselected
+    if (!this.mounted) { return; }
     this.setState({
       selectedStackScriptID: undefined,
       selectedStackScriptLabel: '',
