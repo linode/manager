@@ -1,6 +1,7 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 
+import FormHelperText from '@material-ui/core/FormHelperText';
 import Input, { InputProps } from '@material-ui/core/Input';
 import { MenuProps } from '@material-ui/core/Menu';
 import Select, { SelectProps } from '@material-ui/core/Select';
@@ -9,7 +10,10 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 import HelpIcon from 'src/components/HelpIcon';
 
 type ClassNames = 'inputSucess'
-  | 'inputError';
+  | 'inputError'
+  | 'textError'
+  | 'helpWrapper'
+  | 'helpWrapperSelectField';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   inputError: {
@@ -17,6 +21,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     '&[class*="focused"]': {
       borderColor: theme.color.red,
     },
+  },
+  textError: {
+    marginTop: theme.spacing.unit,
+    color: theme.color.red,
+    fontSize: '0.8571428571428571rem',
+    minHeight: '1em',
+    lineHeight: '1em',
   },
   inputSucess: {
     borderColor: theme.color.green,
@@ -27,11 +38,24 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       color: theme.color.green,
     },
   },
+  helpWrapper: {
+    display: 'flex',
+    alignItems: 'flex-end',
+  },
+  helpWrapperSelectField: {
+    width: 380,
+    [theme.breakpoints.down('xs')]: {
+      width: 240,
+    },
+  },
 });
 
 interface Props extends SelectProps {
   helpText?: string;
   success?: boolean;
+  open?: boolean;
+  errorText?: string;
+  errorGroup?: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -42,8 +66,14 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
   success,
   error,
   helpText,
+  errorText,
+  errorGroup,
   ...props
 }) => {
+
+  const errorScrollClassName = errorGroup
+    ? `error-for-scroll-${errorGroup}`
+    : `error-for-scroll`;
 
   const menuProps: Partial<MenuProps> = {
     getContentAnchorEl: undefined,
@@ -63,20 +93,28 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
   const c = classNames({
     [classes.inputSucess]: success === true,
     [classes.inputError]: error === true,
+    [errorScrollClassName]: !!errorScrollClassName,
+    [classes.helpWrapperSelectField]: Boolean(helpText),
   });
 
   return (
     <React.Fragment>
-      <Select
-        className={c}
-        MenuProps={menuProps}
-        input={<Input {...inputProps} />}
-        {...props}
-        data-qa-select
-      >
-        {children}
-      </Select>
-      {helpText && <HelpIcon text={helpText} />}
+      <div className={classNames({
+        [classes.helpWrapper]: Boolean(helpText),
+      })}>
+        <Select
+          open={props.open}
+          className={c}
+          MenuProps={menuProps}
+          input={<Input {...inputProps} />}
+          {...props}
+          data-qa-select
+        >
+          {children}
+        </Select>
+        {helpText && <HelpIcon text={helpText} />}
+      </div>
+      {errorText && <FormHelperText className={classes.textError}>{errorText}</FormHelperText>}
     </React.Fragment>
   );
 };

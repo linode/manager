@@ -284,7 +284,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
             errorText={errorFor('label')}
             value={label || ''}
             label="Label"
-            onChange={e => onChange('label', e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange('label', e.target.value)}
             data-qa-add-label
           />
         }

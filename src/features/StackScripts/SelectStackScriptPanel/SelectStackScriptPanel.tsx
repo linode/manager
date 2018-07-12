@@ -129,6 +129,16 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
     shouldPreSelectStackScript: true,
   }
 
+  mounted: boolean = false;
+
+  componentDidMount() {
+    this.mounted = true;
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
+  }
+
   tabs = [
     {
       title: 'My StackScripts',
@@ -185,6 +195,8 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
   */
   getInitTab = () => {
     const { profile, onSelect, selectedUsername } = this.props;
+
+    if (!this.mounted) { return; }
 
     if (profile.username === selectedUsername) {
       return this.myTabIndex;
@@ -329,6 +341,22 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
         const newData = (isSorting) ? response.data : [...this.state.listOfStackScripts, ...response.data];
 
         /*
+        * BEGIN @TODO: deprecate this once compound filtering becomes available in the API
+        * basically, if the result set after filtering out StackScripts with
+        * deprecated distos is 0, request the next page with the same filter.
+        */
+        const newDataWithoutDeprecatedDistros =
+          newData.filter(stackScript => this.hasNonDeprecatedImages(stackScript.images));
+
+        if (isSorting && newDataWithoutDeprecatedDistros.length === 0) {
+          this.getNext();
+          return;
+        }
+        /*
+        * END @TODO
+        */
+
+        /*
         * We need to further clean up the data because when we are preselecting
         * a stackscript based on the URL query string, it's possible for the
         * stackscript to appear again on the first page or any subsequent page
@@ -336,20 +364,20 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
         * the duplicate key error
         */
         const cleanedData = (!!selectedStackScriptIDFromQuery)
-        ? newData.filter((stackScript, index) => {
-          if(index !== 0) {
-            return stackScript.id !== selectedStackScriptIDFromQuery;
-          }
-          return stackScript;
-        })
-        : newData;
+          ? newDataWithoutDeprecatedDistros.filter((stackScript, index) => {
+            if (index !== 0) {
+              return stackScript.id !== selectedStackScriptIDFromQuery;
+            }
+            return stackScript;
+          })
+          : newDataWithoutDeprecatedDistros;
         this.setState({
           listOfStackScripts: cleanedData,
           gettingMoreStackScripts: false,
           loading: false,
           isSorting: false,
         });
-        return newData;
+        return cleanedData;
       })
       .catch((e: any) => {
         if (!this.mounted) { return; }
@@ -359,7 +387,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
 
   componentDidMount() {
     const { selectedStackScriptIDFromQuery, shouldPreSelectStackScript,
-    onSelect } = this.props;
+      onSelect } = this.props;
     this.mounted = true;
     /*
     * if the user is coming to the StackScripts panel from a query string
@@ -385,7 +413,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
         .catch(e => {
           if (!this.mounted) { return; }
           this.props.resetStackScriptSelection();
-          this.setState({error: e.response});
+          this.setState({ error: e.response });
         });
     }
     return this.getDataAtPage(0);
@@ -559,7 +587,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
     const { classes, publicImages, currentUser } = this.props;
     const { currentFilterType, isSorting, fieldError, error } = this.state;
 
-    if(error) {
+    if (error) {
       return <ErrorState
         errorText="There was an error loading your StackScripts. Please try again later."
       />
@@ -579,102 +607,102 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
           <Notice text={fieldError.reason} error />
         }
         {this.state.listOfStackScripts.length === 0
-        ? <div className={classes.emptyState} data-qa-stackscript-empty-msg>
-          You do not have any StackScripts to select from. You must first
+          ? <div className={classes.emptyState} data-qa-stackscript-empty-msg>
+            You do not have any StackScripts to select from. You must first
           <Link to="/stackscripts/create"> create one</Link>
-        </div>
-        : <Table noOverflow={true} tableClass={classes.table}>
-          <TableHead>
-            <TableRow className={classes.tr}>
-              {!!this.props.onSelect &&
-                <TableCell className={classNames({
-                  [classes.tableHead]: true,
-                  [classes.stackscriptLabel]: true,
-                })} />
-              }
-              <TableCell
-                className={classNames({
-                  [classes.tableHead]: true,
-                  [classes.stackscriptTitles]: true,
-                })}
-                sortable
-              >
-                <Button
-                  type="secondary"
-                  className={classes.sortButton}
-                  onClick={this.handleClickStackScriptsTableHeader}
-                  data-qa-stackscript-table-header
+          </div>
+          : <Table noOverflow={true} tableClass={classes.table}>
+            <TableHead>
+              <TableRow className={classes.tr}>
+                {!!this.props.onSelect &&
+                  <TableCell className={classNames({
+                    [classes.tableHead]: true,
+                    [classes.stackscriptLabel]: true,
+                  })} />
+                }
+                <TableCell
+                  className={classNames({
+                    [classes.tableHead]: true,
+                    [classes.stackscriptTitles]: true,
+                  })}
+                  sortable
                 >
-                  StackScripts
+                  <Button
+                    type="secondary"
+                    className={classes.sortButton}
+                    onClick={this.handleClickStackScriptsTableHeader}
+                    data-qa-stackscript-table-header
+                  >
+                    StackScripts
                   {currentFilterType === 'label' &&
-                    this.renderIcon()
-                  }
-                </Button>
-              </TableCell>
-              <TableCell
-                className={classNames({
-                  [classes.tableHead]: true,
-                  [classes.deploys]: true,
-                })}
-                noWrap
-                sortable
-              >
-                <Button
-                  type="secondary"
-                  className={classes.sortButton}
-                  onClick={this.handleClickDeploymentsTableHeader}
-                  data-qa-stackscript-active-deploy-header
+                      this.renderIcon()
+                    }
+                  </Button>
+                </TableCell>
+                <TableCell
+                  className={classNames({
+                    [classes.tableHead]: true,
+                    [classes.deploys]: true,
+                  })}
+                  noWrap
+                  sortable
                 >
-                  Active Deploys
+                  <Button
+                    type="secondary"
+                    className={classes.sortButton}
+                    onClick={this.handleClickDeploymentsTableHeader}
+                    data-qa-stackscript-active-deploy-header
+                  >
+                    Active Deploys
                   {currentFilterType !== 'label' && currentFilterType !== 'revision' &&
-                    this.renderIcon()
-                  }
-                </Button>
-              </TableCell>
-              <TableCell
-                className={classNames({
-                  [classes.tableHead]: true,
-                  [classes.revisions]: true,
-                })}
-                noWrap
-                sortable
-              >
-                <Button
-                  type="secondary"
-                  className={classes.sortButton}
-                  onClick={this.handleClickRevisionsTableHeader}
-                  data-qa-stackscript-revision-header
+                      this.renderIcon()
+                    }
+                  </Button>
+                </TableCell>
+                <TableCell
+                  className={classNames({
+                    [classes.tableHead]: true,
+                    [classes.revisions]: true,
+                  })}
+                  noWrap
+                  sortable
                 >
-                  Last Revision
+                  <Button
+                    type="secondary"
+                    className={classes.sortButton}
+                    onClick={this.handleClickRevisionsTableHeader}
+                    data-qa-stackscript-revision-header
+                  >
+                    Last Revision
                   {currentFilterType === 'revision' &&
-                    this.renderIcon()
-                  }
-                </Button>
+                      this.renderIcon()
+                    }
+                  </Button>
+                </TableCell>
+                <TableCell
+                  className={classes.tableHead}
+                  data-qa-stackscript-compatible-images
+                >
+                  Compatible Images
               </TableCell>
-              <TableCell
-                className={classes.tableHead}
-                data-qa-stackscript-compatible-images
-              >
-                Compatible Images
-              </TableCell>
-              {!this.props.onSelect &&
-                <TableCell className={classNames({
-                  [classes.tableHead]: true,
-                  [classes.stackscriptLabel]: true,
-                })} />
-              }
-            </TableRow>
-          </TableHead>
-          <StackScriptsSection
-            isSorting={isSorting}
-            selectedId={this.state.selected}
-            data={this.state.listOfStackScripts}
-            publicImages={publicImages}
-            triggerDelete={this.handleOpenDialog}
-            currentUser={currentUser}
-            {...selectProps}
-          />
-        </Table>
+                {!this.props.onSelect &&
+                  <TableCell className={classNames({
+                    [classes.tableHead]: true,
+                    [classes.stackscriptLabel]: true,
+                  })} />
+                }
+              </TableRow>
+            </TableHead>
+            <StackScriptsSection
+              isSorting={isSorting}
+              selectedId={this.state.selected}
+              data={this.state.listOfStackScripts}
+              publicImages={publicImages}
+              triggerDelete={this.handleOpenDialog}
+              currentUser={currentUser}
+              {...selectProps}
+            />
+          </Table>
         }
         {this.state.showMoreButtonVisible && !isSorting &&
           <Button

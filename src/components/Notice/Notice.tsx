@@ -86,7 +86,7 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
       <Typography {...typeProps} dangerouslySetInnerHTML={{ __html: html }} />
     )
     : (
-      <Typography {...typeProps}>
+      <Typography {...typeProps} component="div">
         {text && text}
         {children && children}
       </Typography>

@@ -1,6 +1,14 @@
-import { API_ROOT } from 'src/constants';
+import * as Joi from 'joi';
 
-import Request, { setMethod, setParams, setURL, setXFilter } from './index';
+import { API_ROOT } from 'src/constants';
+import Request, {
+  setData,
+  setMethod,
+  setParams,
+  setURL,
+  setXFilter,
+  validateRequestData,
+} from './index';
 
 type Page<T> = Linode.ResourcePage<T>;
 type StackScript = Linode.StackScript.Response;
@@ -10,7 +18,7 @@ export const getStackScript = (id: number) =>
     setURL(`${API_ROOT}/linode/stackscripts/${id}`),
     setMethod('GET'),
   )
-  .then(response => response.data);
+    .then(response => response.data);
 
 export const getStackscripts = (params?: any, filter?: any) =>
   Request<Page<StackScript>>(
@@ -54,3 +62,28 @@ export const deleteStackScript = (id: number) =>
     setMethod('DELETE'),
   )
     .then(response => response.data);
+interface CreatePayload {
+  script: string;
+  label: string;
+  images: string[];
+  description?: string;
+  is_public?: boolean;
+  rev_note?: string;
+}
+
+const createStackScriptSchema = Joi.object({
+  script: Joi.string().required(),
+  label: Joi.string().required(),
+  images: Joi.array().items(Joi.string()).required(),
+  description: Joi.string().allow(""),
+  is_public: Joi.boolean(),
+  rev_note: Joi.string().allow(""),
+});
+
+export const createStackScript = (payload: CreatePayload) =>
+  Request(
+    validateRequestData(payload, createStackScriptSchema),
+    setURL(`${API_ROOT}/linode/stackscripts`),
+    setMethod('POST'),
+    setData(payload)
+  )

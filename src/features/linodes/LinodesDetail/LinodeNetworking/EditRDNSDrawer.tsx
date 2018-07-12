@@ -85,7 +85,7 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
             placeholder="Enter a domain name"
             value={rdns || ''}
             errorText={hasErrorFor('rdns')}
-            onChange={e => this.setState({ rdns: e.target.value })}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => this.setState({ rdns: e.target.value })}
             data-qa-domain-name
           />
           <Typography variant="caption">
