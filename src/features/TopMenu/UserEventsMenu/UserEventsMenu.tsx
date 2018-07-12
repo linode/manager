@@ -127,7 +127,7 @@ class UserEventsMenu extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { anchorEl, events, unseenCount, notifications } = this.state;
+    const { anchorEl, events, unseenCount } = this.state;
     const { classes } = this.props;
 
     return (

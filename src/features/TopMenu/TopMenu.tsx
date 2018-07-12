@@ -1,5 +1,4 @@
 import * as React from 'react';
-import AccountNotification from 'src/components/AccountNotifications';
 
 import AppBar from '@material-ui/core/AppBar';
 import IconButton from '@material-ui/core/IconButton';
@@ -11,6 +10,7 @@ import AddNewMenu from './AddNewMenu';
 import SearchBar from './SearchBar';
 import UserEventsMenu from './UserEventsMenu';
 import UserMenu from './UserMenu';
+import AccountNotification from './UserNotificationsMenu';
 
 type ClassNames = 'appBar'
   | 'navIconHide'

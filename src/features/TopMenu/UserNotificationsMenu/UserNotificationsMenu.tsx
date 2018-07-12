@@ -4,10 +4,10 @@ import { Subscription } from 'rxjs/Subscription';
 import Menu from '@material-ui/core/Menu';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-import AccountLevelNotifications from 'src/features/AccountLevelNotifications';
 import notifications$ from 'src/notifications';
 
-import UserNotificationButton from './AccountNotificationsButton';
+import UserNotificationButton from './UserNotificationsButton';
+import UserNotificationsList from './UserNotificationsList';
 
 type ClassNames = 'root' | 'dropDown';
 
@@ -55,7 +55,7 @@ const IMPORTANT: Linode.NotificationType[] = [
   'notice',
 ];
 
-class AccountNotificationMenu extends React.Component<CombinedProps, State> {
+class UserNotificationsMenu extends React.Component<CombinedProps, State> {
   subscription: Subscription;
 
   state: State = {
@@ -100,7 +100,7 @@ class AccountNotificationMenu extends React.Component<CombinedProps, State> {
           className={classes.root}
           PaperProps={{ className: classes.dropDown }}
         >
-          <AccountLevelNotifications />
+          <UserNotificationsList />
         </Menu>
       </React.Fragment>
     );
@@ -109,4 +109,4 @@ class AccountNotificationMenu extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(AccountNotificationMenu);
+export default styled<Props>(UserNotificationsMenu);

@@ -37,14 +37,7 @@ interface State {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const filterNotifications: (v: Linode.Notification[]) => Linode.Notification[] =
-  compose<Linode.Notification[], Linode.Notification[]>(
-    filter<Linode.Notification>(
-      propSatisfies(v => contains(v, AccountLevelNotifications.displayedEvents), 'type'),
-    ),
-  );
-
-class AccountLevelNotifications extends React.Component<CombinedProps, State> {
+class UserNotificationsList extends React.Component<CombinedProps, State> {
   state: State = {};
 
   subscription: Subscription;
@@ -87,6 +80,13 @@ class AccountLevelNotifications extends React.Component<CombinedProps, State> {
   }
 }
 
+const filterNotifications: (v: Linode.Notification[]) => Linode.Notification[] =
+  compose<Linode.Notification[], Linode.Notification[]>(
+    filter<Linode.Notification>(
+      propSatisfies(v => contains(v, UserNotificationsList.displayedEvents), 'type'),
+    ),
+  );
+
 const severityMap = {
   minor: 'success',
   major: 'warning',
@@ -95,4 +95,4 @@ const severityMap = {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(AccountLevelNotifications);
+export default styled(UserNotificationsList);
