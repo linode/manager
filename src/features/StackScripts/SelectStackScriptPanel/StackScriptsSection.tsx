@@ -115,13 +115,21 @@ const listStackScript: (
   );
 };
 
+/*
+* Truncate description of stackscript on the select panel
+* only if the description exceeds 140 characters (s/o Twitter)
+*/
 const truncateDescription = (desc: string) => {
-  if (desc.length > 200) { // 200 characters
-    return `${desc.split(' ').splice(0, 30).join(' ')} [...]`; // truncate to 30 words
+  if (desc.length > 140) {
+    return `${desc.split(' ').splice(0, 10).join(' ')} [...]`;
   }
   return desc;
 };
 
+/*
+* @TODO Deprecate once we have a reliable way of mapping
+* the slug to the display name
+*/
 const stripImageName = (images: string[]) => {
   return images.map((image: string) => {
     return image.replace('linode/', '');
