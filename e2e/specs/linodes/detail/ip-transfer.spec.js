@@ -5,7 +5,7 @@ import LinodeDetail from '../../../pageobjects/linode-detail/linode-detail.page'
 import Networking from '../../../pageobjects/linode-detail/linode-detail-networking.page';
 
 describe('Linode Detail - Ip Transfer Suite', () => {
-	let linodeA, linodeB;
+	let linodeA, linodeB, singlePublicIpError;
 
 	beforeAll(() => {
 		linodeA = apiCreateLinode(false, true);
@@ -35,16 +35,16 @@ describe('Linode Detail - Ip Transfer Suite', () => {
 	});
 
 	it('should display an error on move to linode', () => {
-		const errorMsg = `${linodeA.id} must have at least one public IP after assignment`;
+		singlePublicIpError = `${linodeA.id} must have at least one public IP after assignment`;
 		Networking.moveIpButton.click();
 		Networking.moveIpButton.waitForVisible(constants.wait.short, true);
 		Networking.ipTransferSave.click();
-		Networking.waitForNotice(errorMsg);
+		Networking.waitForNotice(singlePublicIpError);
 	});
 
 	it('should dismiss error on cancel', () => {
 		Networking.ipTransferCancel.click();
-		browser.waitForVisible('[data-qa-notice]', constants.wait.short, true);
+		Networking.waitForNotice(singlePublicIpError, constants.wait.short, true);
 	});
 
 	it('should display swap ip action elements', () => {
