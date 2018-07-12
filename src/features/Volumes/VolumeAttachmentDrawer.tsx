@@ -53,11 +53,11 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
 
   state: State = this.defaultState;
 
-  reset() {
+  reset = () => {
     this.setState({ ...this.defaultState });
   }
 
-  updateLinodes(linodeRegion: string) {
+  updateLinodes = (linodeRegion: string) => {
     /*
      * @todo: We're only getting page 1 here, what if the account has over 100
      * Linodes?
@@ -113,7 +113,7 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
     this.setState({ configs: [] });
   }
 
-  attachToLinode() {
+  attachToLinode = () => {
     const { volumeID, onClose } = this.props;
     const { selectedLinode } = this.state;
     if (!selectedLinode || selectedLinode === 'none') {
