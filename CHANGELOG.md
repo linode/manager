@@ -4,6 +4,97 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.28.0] - 2018-07-02
+### Added:
+- Networking
+  - Default DNS resolvers for both IPv4 and IPv6, SSH access, and Lish via SSH are now all available on the Linode Networking feature.
+  - Users can now add a private IP to their Linode via the Linode Networking feature.
+  - Transfer or move an IP to another Linode.
+- Display a progress bar during back-up snapshot generation.
+- Linode Watchdog settings; Enable to automatically restart a Linode.
+- Added help text to the volume creation drawer.
+- Display the remaining space on a Linode during disk creation.
+### Changed:
+- Linode
+  - Page scrolls to top upon switching pages on Linode landing view
+  - Disable current plan in list of target plans for LinodeResize view
+  - Disable Linode Resize submit btn if no plan is selected
+  - Rebooting a Linode is disabled while provisioning.
+  - Display "Unknown Image" on Linode cards when using a non-standard image.
+  - Corrected sort order of available images in dropdown during Linode rebuild.
+  - Users will now see a 404 when attempting to access a nonexistent Linode.
+  - Simplified the password change form in the Linode settings feature.
+  - When changing Linode alert thresholds, we no longer hide the input field.
+  - Users without any Linodes, who are attempting to create a Linode by cloning, will now see a placeholder.
+  - The backup window selection is now displayed in the timezone the user has selected in their profile.
+  - Linodes without backups are no longer displayed in the Create Linode from Backup feature.
+- Node Balancer
+  - NodeBalancer creation, including configurations and nodes, is now made with a single request.
+  - Updated changes to interval text on and view features.
+  - "Client Connection Throttle" is no longer displayed on creation (Still available during editing).
+  - "Session Stickiness" is now defaulted to "table" during creation.
+  - "Mode" option is now available during editing (but not creation) of a Node Balancer Node.
+- StackScripts
+  - StackScripts which only apply to deprecated images are no longer displayed during creation of a Linode from StackScript.
+  - StackScripts can now be sorted by label, revision date, and active deploys in the create Linode from StackScript form
+  - Title of required fields updated to reflect the StackScript's name.
+  - Changed the color of image tags during creation from Linode.
+  - Use a Github style naming convention for StackScripts. (username/Title)
+  - Corrected "active deploy" to "active deploys".
+  - Update dates to use ISO-8601.
+### Fixed:
+- Users are now correctly scrolled to the top of the list when using pagination.
+- Users are now correctly scrolled to the first error in a form on submission.
+- Fix an issue where users could issue a resize command without selecting a plan or their current plan.
+- Removed several duplicate form labels.
+- During StackScript creation Linode StackScripts will no longer appear under the "community" category.
+- Corrected an issue preventing the search bar from displaying results.
+
+## [0.27.1] - 2018-06-15
+### Added:
+- NodeBalancer Management
+    - List NodeBalancers
+    - Create NodeBalancer from action menu
+        - Configure protocol and TLS
+        - Configure stickiness
+        - Configure health checks
+        - Client-side validation
+        - Create, update, delete backend Nodes
+    - NodeBalancer Details Page
+    - NodeBalancer Summary
+    - NodeBalancer Performance Charts
+    - Create, update, delete NodeBalancer Configurations
+    - NodeBalancer Settings
+- Create Linode From StackScript
+    - Select StackScripts Panel
+    - StackScript Detail Row
+    - User Defined Fields dynamic form inputs
+    - Select Image based on selected StackScript
+- AddNewLink component
+- Documentation links on Volumes landing page
+- Documentation links on Linodes detail page
+- Documentation links on NodeBalancers detail page
+### Changed:
+- Prevent changing root password on disks if Linode is not offline
+- Force active status when updating domain
+- Domain records, "Edit" changed to "Save"
+- Rename "Master Record" to "Edit SOA Record"
+- Edit-in-place component now displays errors locally
+### Fixed:
+- List Domains, cancel button fails to dismiss confirmation modal
+- Page crash when editing SOA record
+- Disable ineligible plans in the clone Linode creation flow
+- Don't allow create from backup without selecting a backup
+- Update Linode Volume count on create/delete on Linodes Detail page
+- Display newly created Linodes in the global create Volume drawer
+- Reset password strength indicator after submitting a new password
+- External Links open in a new tab
+- Edit SOA Record, Remove "edit mode" from Domain Status
+- Index the formatted IPs array from public to private
+- Close button on delete domain modal crashing page
+- On hover and focus destructive/cancel button background color
+- Typo in volume drawer
+
 ## [0.25.3] - 2018-05-23
 ### Fixed:
 - Fixed an issue causing the search bar to crash.

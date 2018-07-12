@@ -1,11 +1,11 @@
-import * as React from 'react';
 import { storiesOf } from '@storybook/react';
+import * as React from 'react';
+
+import { default as MDivider } from '@material-ui/core/Divider';
+import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
 
 import Button from 'src/components/Button';
-
-import { default as MDivider } from 'material-ui/Divider';
-import KeyboardArrowDown from 'material-ui-icons/KeyboardArrowDown';
-import KeyboardArrowUp from 'material-ui-icons/KeyboardArrowUp';
 
 import ThemeDecorator from '../../utilities/storybookDecorators';
 

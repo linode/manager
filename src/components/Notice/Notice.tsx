@@ -1,12 +1,11 @@
-import * as React from 'react';
 import * as classNames from 'classnames';
+import * as React from 'react';
 
-import { withStyles, StyleRulesCallback, WithStyles } from 'material-ui';
-import Typography, { TypographyProps } from 'material-ui/Typography';
-import { GridProps } from 'material-ui/Grid';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography, { TypographyProps } from '@material-ui/core/Typography';
 
-import Grid from 'src/components/Grid';
 import Flag from 'src/assets/icons/flag.svg';
+import Grid, { GridProps } from 'src/components/Grid';
 
 type ClassNames = 'root'
   | 'inner'
@@ -30,6 +29,9 @@ const styles: StyleRulesCallback = (theme: Linode.Theme) => {
       alignItems: 'center',
       '& p': {
         wordWrap: 'break-word',
+      },
+      '& + .notice': {
+        marginTop: `${theme.spacing.unit}px !important`,
       },
     },
     inner: {
@@ -69,6 +71,7 @@ interface Props extends GridProps {
   text?: string;
   html?: string;
   error?: boolean;
+  errorGroup?: string;
   warning?: boolean;
   success?: boolean;
   typeProps?: TypographyProps;
@@ -85,6 +88,7 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
     className,
     text,
     error,
+    errorGroup,
     warning,
     success,
     typeProps,
@@ -105,17 +109,20 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
       </Typography>
     );
 
+  const errorScrollClassName = errorGroup ? `error-for-scroll-${errorGroup}` : `error-for-scroll`;
+
   return (
     <Grid
       item
       className={classNames({
-        [classes.error]: error && !notificationList,
-        [classes.warning]: warning && !notificationList,
-        [classes.success]: success && !notificationList,
-        [classes.errorList]: error && notificationList,
-        [classes.warningList]: warning && notificationList,
-        [classes.successList]: success && notificationList,
         [classes.root]: true,
+        [errorScrollClassName]: error,
+        [classes.error]: error && !notificationList,
+        [classes.errorList]: error && notificationList,
+        [classes.success]: success && !notificationList,
+        [classes.successList]: success && notificationList,
+        [classes.warning]: warning && !notificationList,
+        [classes.warningList]: warning && notificationList,
         notice: true,
         ...(className && { [className]: true }),
       })}

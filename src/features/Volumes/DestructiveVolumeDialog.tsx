@@ -1,14 +1,10 @@
 import * as React from 'react';
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
 
-import Typography from 'material-ui/Typography';
-import Button from 'material-ui/Button';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+
 import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 
 type ClassNames = 'root';
@@ -46,9 +42,8 @@ const DestructiveVolumeDialog: React.StatelessComponent<CombinedProps> = (props)
       actions={() =>
         <ActionsPanel style={{ padding: 0 }}>
           <Button
-            variant="raised"
-            color="secondary"
-            className="destructive"
+            type="secondary"
+            destructive
             onClick={method}
             data-qa-confirm
           >
@@ -56,9 +51,7 @@ const DestructiveVolumeDialog: React.StatelessComponent<CombinedProps> = (props)
           </Button>
           <Button
             onClick={props.onClose}
-            variant="raised"
-            color="secondary"
-            className="cancel"
+            type="cancel"
             data-qa-cancel
           >
             Cancel

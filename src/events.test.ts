@@ -1,14 +1,15 @@
 import Axios from 'axios';
 
 import {
-  eventRequestDeadline,
   currentPollIntervalMultiplier,
-  resetEventsPolling,
+  eventRequestDeadline,
   generateInFilter,
   generatePollingFilter,
   requestEvents,
-  setInitialEvents,
+  resetEventsPolling,
+  setInitialEvents
 } from 'src/events';
+
 
 Date.now = jest.fn(() => 1234567890);
 
@@ -181,4 +182,3 @@ describe('events module', () => {
     });
   });
 });
-

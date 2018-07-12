@@ -1,36 +1,29 @@
-import * as React from 'react';
 import * as moment from 'moment';
 import { compose, filter, path, pathOr, sort } from 'ramda';
+import * as React from 'react';
 
-import { withStyles, Theme, WithStyles, StyleRulesCallback } from 'material-ui/styles';
-import Button from 'material-ui/Button';
-import Paper from 'material-ui/Paper';
-import Typography from 'material-ui/Typography';
-import TableBody from 'material-ui/Table/TableBody';
-import TableCell from 'material-ui/Table/TableCell';
-import TableHead from 'material-ui/Table/TableHead';
-import TableRow from 'material-ui/Table/TableRow';
+import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
+import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Typography from '@material-ui/core/Typography';
 
-import {
-  createPersonalAccessToken,
-  getAppTokens,
-  deletePersonalAccessToken,
-  getPersonalAccessTokens,
-  deleteAppToken,
-  updatePersonalAccessToken,
-}
-  from 'src/services/profile';
-import isPast from 'src/utilities/isPast';
+import ActionsPanel from 'src/components/ActionsPanel';
+import AddNewLink from 'src/components/AddNewLink';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import Table from 'src/components/Table';
-import Grid from 'src/components/Grid';
-import IconTextLink from 'src/components/IconTextLink';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import Notice from 'src/components/Notice';
+import { createPersonalAccessToken, deleteAppToken, deletePersonalAccessToken, getAppTokens, getPersonalAccessTokens, updatePersonalAccessToken } from 'src/services/profile';
+import isPast from 'src/utilities/isPast';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-import APITokenMenu from './APITokenMenu';
 import APITokenDrawer, { DrawerMode, genExpiryTups } from './APITokenDrawer';
-import PlusSquare from 'src/assets/icons/plus-square.svg';
+import APITokenMenu from './APITokenMenu';
 
 type ClassNames = 'headline'
   | 'paper'
@@ -158,12 +151,9 @@ export class APITokens extends React.Component<CombinedProps, State> {
           </Grid>
           <Grid item>
             {type === 'Personal Access Token' &&
-              <IconTextLink
-                SideIcon={PlusSquare}
+              <AddNewLink
                 onClick={() => this.openCreateDrawer()}
-                text="Add a Personal Access Token"
-                title="Add a Personal Access Token"
-                data-qa-token-create
+                label="Add a Personal Access Token"
               />
             }
           </Grid>
@@ -338,6 +328,8 @@ export class APITokens extends React.Component<CombinedProps, State> {
             { reason: 'You must select some permissions', field: 'scopes' },
           ],
         },
+      }, () => {
+        scrollErrorIntoView();
       });
       return;
     }
@@ -349,6 +341,8 @@ export class APITokens extends React.Component<CombinedProps, State> {
             { reason: 'You must give your token a label.', field: 'label' },
           ],
         },
+      }, () => {
+        scrollErrorIntoView();
       });
       return;
     }
@@ -363,6 +357,8 @@ export class APITokens extends React.Component<CombinedProps, State> {
                 ...form,
                 errors: [{ field: 'none', reason: 'API did not return a token.' }],
               },
+            }, () => {
+              scrollErrorIntoView();
             });
           }
           this.closeDrawer();
@@ -377,6 +373,8 @@ export class APITokens extends React.Component<CombinedProps, State> {
               ...form,
               errors: path(['response', 'data', 'errors'], errResponse),
             },
+          }, () => {
+            scrollErrorIntoView();
           });
         });
     });
@@ -395,6 +393,8 @@ export class APITokens extends React.Component<CombinedProps, State> {
             { reason: 'You must give your token a label.', field: 'label' },
           ],
         },
+      }, () => {
+        scrollErrorIntoView();
       });
       return;
     }
@@ -410,6 +410,8 @@ export class APITokens extends React.Component<CombinedProps, State> {
             ...this.state.form,
             errors: path(['response', 'data', 'errors'], errResponse),
           },
+        }, () => {
+          scrollErrorIntoView();
         });
       });
     return;
@@ -433,8 +435,7 @@ export class APITokens extends React.Component<CombinedProps, State> {
       Linode.Token[],
       Linode.Token[],
       Linode.Token[],
-      Linode.Token[]
-      >(
+      Linode.Token[]>(
         this.formatDates,
         sortCreatedDateAscending,
         filter<Linode.Token>(t => isPastNow(t.expiry)),
@@ -446,8 +447,7 @@ export class APITokens extends React.Component<CombinedProps, State> {
       Linode.Token[],
       Linode.Token[],
       Linode.Token[],
-      Linode.Token[]
-      >(
+      Linode.Token[]>(
         this.formatDates,
         sortCreatedDateAscending,
         filter<Linode.Token>(t => isPastNow(t.expiry)),
@@ -488,27 +488,29 @@ export class APITokens extends React.Component<CombinedProps, State> {
           actions={() => {
             return (
               <React.Fragment>
-                <Button
-                  variant="raised"
-                  color="secondary"
-                  className="destructive"
-                  onClick={() => {
-                    this.closeRevokeDialog();
-                    (dialog.type === 'OAuth Client Token')
-                      ? this.revokeAppToken()
-                      : this.revokePersonalAccessToken();
-                  }}
-                  data-qa-button-confirm>
-                  Yes
-                </Button>
-                <Button
-                  variant="raised"
-                  color="secondary"
-                  className="cancel"
-                  onClick={() => this.closeRevokeDialog()} data-qa-button-cancel
-                >
-                  No
-                </Button>
+                <ActionsPanel>
+                  <Button
+                    variant="raised"
+                    color="secondary"
+                    className="destructive"
+                    onClick={() => {
+                      this.closeRevokeDialog();
+                      (dialog.type === 'OAuth Client Token')
+                        ? this.revokeAppToken()
+                        : this.revokePersonalAccessToken();
+                    }}
+                    data-qa-button-confirm>
+                    Yes
+                  </Button>
+                  <Button
+                    variant="raised"
+                    color="secondary"
+                    className="cancel"
+                    onClick={() => this.closeRevokeDialog()} data-qa-button-cancel
+                  >
+                    No
+                  </Button>
+                </ActionsPanel>
               </React.Fragment>
             );
           }}

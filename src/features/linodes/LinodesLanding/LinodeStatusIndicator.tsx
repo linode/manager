@@ -1,27 +1,35 @@
 import * as React from 'react';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  WithStyles,
-} from 'material-ui';
-import Cached from 'material-ui-icons/Cached';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Cached from '@material-ui/icons/Cached';
 
-import transitionStatus from '../linodeTransitionStatus';
+import { linodeInTransition } from 'src/features/linodes/transitions';
 
 interface Props {
   status: Linode.LinodeStatus;
+  recentEvent?: Linode.Event;
 }
 
 type CSSClasses = 'dot' | 'green' | 'red' | 'transition';
 
-const styles: StyleRulesCallback<CSSClasses> = theme => ({
+const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
+  '@keyframes rotate': {
+    from: {
+      transform: 'rotate(0deg)',
+    },
+    to: {
+      transform: 'rotate(360deg)',
+    },
+  },
   dot: {
     fontSize: '1.5rem',
     userSelect: 'none',
   },
   transition: {
     marginLeft: -1,
+    '& svg': {
+      animation: 'rotate 2s linear infinite',
+    },
   },
   green: {
     color: '#01b159',
@@ -50,7 +58,7 @@ const LinodeStatusIndicator = (props: Props & WithStyles<CSSClasses>) => {
           &#x25CF;
         </span>
       }
-      {transitionStatus.includes(props.status) &&
+      {linodeInTransition(props.status, props.recentEvent) &&
         <span
           className={`${props.classes.transition}`}
           data-qa-status={props.status}

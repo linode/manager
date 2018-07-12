@@ -1,28 +1,24 @@
-import * as React from 'react';
 import * as classNames from 'classnames';
+import * as React from 'react';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  WithStyles,
-} from 'material-ui';
-
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 type ClassNames = 'root'
   | 'title'
   | 'content'
-  | 'warning'
-  | 'success'
-  | 'error';
+  | 'unread';
 
-
-const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => {
   const { palette: { status } } = theme;
 
   return {
     root: {
       ...theme.notificationList,
       borderLeft: '5px solid transparent',
+      padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px`,
+      borderBottom: `1px solid ${theme.palette.divider}`,
+      opacity: .7,
+      transition: theme.transitions.create(['border-color', 'opacity']),
     },
     title: {
       ...theme.typography.subheading,
@@ -30,8 +26,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
     content: {
       ...theme.typography.caption,
     },
-    error: {
-      borderLeftColor: status.errorDark,
+    unread: {
+      backgroundColor: theme.bg.offWhite,
+      opacity: 1,
     },
     warning: {
       borderLeftColor: status.warningDark,
@@ -57,9 +54,7 @@ const UserNotificationListItem: React.StatelessComponent<CombinedProps> = (props
   return (
   <div className={classNames({
     [classes.root]: true,
-    [classes.error]: error,
-    [classes.warning]: warning,
-    [classes.success]: success,
+    [classes.unread]: error || warning || success,
   })}>
     <div className={classes.title}>{title}</div>
     { content && <div className={classes.content}>{content}</div> }

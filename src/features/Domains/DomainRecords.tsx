@@ -1,35 +1,24 @@
+import { compose, equals, filter, flatten, isEmpty, lensPath, over, path, pathOr, prepend, propEq } from 'ramda';
 import * as React from 'react';
-import {
-  compose,
-  equals,
-  filter,
-  flatten,
-  isEmpty,
-  lensPath,
-  over,
-  path,
-  pathOr,
-  prepend,
-  propEq,
-} from 'ramda';
 import { Subscription } from 'rxjs/Subscription';
 
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
-import Button from 'material-ui/Button';
-import Paper from 'material-ui/Paper';
-import Grid from 'material-ui/Grid';
-import TableBody from 'material-ui/Table/TableBody';
-import TableCell from 'material-ui/Table/TableCell';
-import TableHead from 'material-ui/Table/TableHead';
-import TableRow from 'material-ui/Table/TableRow';
+import Paper from '@material-ui/core/Paper';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 
-import { deleteDomainRecord } from 'src/services/domains';
-import PlusSquare from 'src/assets/icons/plus-square.svg';
-import IconTextLink from 'src/components/IconTextLink';
-import Table from 'src/components/Table';
-import ExpansionPanel from 'src/components/ExpansionPanel';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import ActionsPanel from 'src/components/ActionsPanel';
+import AddNewLink from 'src/components/AddNewLink';
+import Button from 'src/components/Button';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import ExpansionPanel from 'src/components/ExpansionPanel';
+import Grid from 'src/components/Grid';
+import Table from 'src/components/Table';
+import { deleteDomainRecord } from 'src/services/domains';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+
 import ActionMenu from './DomainRecordActionMenu';
 import Drawer from './DomainRecordDrawer';
 
@@ -78,12 +67,8 @@ interface IType {
   link?: () => null | JSX.Element;
 }
 
-const createLink = (title: string, handler: () => void) => <IconTextLink
-  SideIcon={PlusSquare}
-  onClick={handler}
-  text={title}
-  title={title}
-/>;
+const createLink = (title: string, handler: () => void) =>
+  <AddNewLink onClick={handler} label={title} />;
 
 class DomainRecords extends React.Component<CombinedProps, State> {
   eventsSubscription$: Subscription;
@@ -98,7 +83,9 @@ class DomainRecords extends React.Component<CombinedProps, State> {
     this.setState(over(lensPath(['drawer']), fn))
 
   updateConfirmDialog = (fn: (d: ConfirmationState) => ConfirmationState) =>
-    this.setState(over(lensPath(['confirmDialog']), fn))
+    this.setState(over(lensPath(['confirmDialog']), fn), () => {
+      scrollErrorIntoView();
+    })
 
   resetDrawer = () => this.updateDrawer(() => DomainRecords.defaultDrawerState);
 
@@ -230,14 +217,17 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         },
         {
           title: '',
-          render: (d: Linode.Domain) =>
-            <ActionMenu
-              onEdit={() => {
-                d.type === 'master'
-                  ? this.openForEditMasterDomain(d)
-                  : this.openForEditSlaveDomain(d);
-              }}
-            />,
+          render: (d: Linode.Domain) => {
+            return d.type === 'master'
+              ? <ActionMenu
+                onEdit={() => {
+                  d.type === 'master'
+                    ? this.openForEditMasterDomain(d)
+                    : this.openForEditSlaveDomain(d);
+                }}
+              />
+              : <React.Fragment />;
+          },
         },
       ],
     },
@@ -476,12 +466,18 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                       {
                         type.data.map((data, idx) => {
                           return (
-                            <TableRow key={idx}>
-                              {type.columns.length > 0 && type.columns.map(({ render }, idx) => {
-                                return (
-                                  <TableCell key={idx}>{render(data)}</TableCell>
-                                );
-                              })}
+                            <TableRow key={idx} data-qa-record-row>
+                              {type.columns.length > 0
+                                && type.columns.map(({ title, render }, idx) => {
+                                  return (
+                                    <TableCell
+                                      key={idx}
+                                      data-qa-column={title}
+                                    >
+                                      {render(data)}
+                                    </TableCell>
+                                  );
+                                })}
                             </TableRow>
                           );
                         })
@@ -502,14 +498,18 @@ class DomainRecords extends React.Component<CombinedProps, State> {
           title="Confirm Deletion"
           actions={({ onClose }) =>
             <ActionsPanel>
-              <Button onClick={onClose}>Cancel</Button>
               <Button
-                variant="raised"
-                color="secondary"
-                className="destructive"
+                type="secondary"
+                destructive
                 onClick={() => this.deleteDomainRecord()}
               >
                 Delete
+              </Button>
+              <Button
+                type="cancel"
+                onClick={onClose}
+              >
+                Cancel
               </Button>
             </ActionsPanel>
           }

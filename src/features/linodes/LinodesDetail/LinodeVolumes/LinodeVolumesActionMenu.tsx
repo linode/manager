@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
@@ -14,7 +14,7 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
-class LinodeActionMenu extends React.Component<CombinedProps> {
+class LinodeVolumeActionMenu extends React.Component<CombinedProps> {
   createLinodeActions = () => {
     const {
       onDetach,
@@ -27,7 +27,7 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
     return function (closeMenu: Function): Action[] {
       const actions = [
         {
-          title: 'Edit',
+          title: 'Rename',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             onEdit();
             closeMenu();
@@ -78,4 +78,4 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
   }
 }
 
-export default withRouter(LinodeActionMenu);
+export default withRouter(LinodeVolumeActionMenu);

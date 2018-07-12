@@ -1,3 +1,5 @@
+const { constants } = require('../constants');
+
 import Page from './page';
 
 export const dialogMap = {
@@ -27,7 +29,7 @@ export class OauthCreateDrawer {
             } catch (err) {
                 return false;
             }
-        }, 15000);
+        }, constants.wait.normal);
     }
 }
 
@@ -146,13 +148,15 @@ export class Profile extends Page {
 
     create(type) {
         if (type === 'oauth') {
+            this.oauthCreate.waitForVisible();
             this.oauthCreate.click();
         }
         if (type === 'token') {
+            this.tokenCreate.waitForVisible();
             this.tokenCreate.click();
         }
-        browser.waitForVisible('[data-qa-add-label]');
-        browser.waitForText('[data-qa-drawer-title]');
+        browser.waitForVisible('[data-qa-add-label]', constants.wait.normal);
+        browser.waitForText('[data-qa-drawer-title]', constants.wait.normal );
     }
     
     selectActionMenu(row, item) {
@@ -169,7 +173,7 @@ export class Profile extends Page {
             const deleteButton = $(dialogMap.confirm);
             deleteButton.click();
 
-            browser.waitForVisible(`[data-qa-table-row="${row}"]`, 10000, true);
+            browser.waitForVisible(`[data-qa-table-row="${row}"]`, constants.wait.normal, true);
         }
 
         if (type == 'token') {

@@ -1,20 +1,18 @@
+import { isEmpty } from 'ramda';
 import * as React from 'react';
 import * as zxcvbn from 'zxcvbn';
-import { isEmpty } from 'ramda';
 
-import {
-  withStyles,
-  WithStyles,
-  StyleRulesCallback,
-  Theme,
-} from 'material-ui';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import Grid from 'src/components/Grid';
-import StrengthIndicator from '../PasswordInput/StrengthIndicator';
 import { Props as TextFieldProps } from 'src/components/TextField';
+
+import StrengthIndicator from '../PasswordInput/StrengthIndicator';
 import HideShowText from './HideShowText';
 
 interface Props extends TextFieldProps {
+  value?: string;
+  required?: boolean;
 }
 
 interface State {
@@ -33,34 +31,44 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     position: 'absolute',
     width: '100%',
     bottom: 0,
+    [theme.breakpoints.down('xs')]: {
+      maxWidth: 240 + theme.spacing.unit * 2,
+    },
   },
 });
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class PasswordInput extends React.Component<CombinedProps, State> {
-  state = { strength: null };
+  state: State = {
+    strength: maybeStrength(this.props.value),
+  };
+
+  componentWillReceiveProps(nextProps: CombinedProps) {
+    const { value } = nextProps;
+    this.setState({ strength: maybeStrength(value) });
+  }
 
   onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.props.onChange && this.props.onChange(e);
+    const value: string = e.currentTarget.value;
 
-    const value = e.currentTarget.value;
-    this.setState({
-      strength: isEmpty(value) ? null : zxcvbn(value).score,
-    });
+    this.props.onChange && this.props.onChange(e);
+    this.setState({ strength: maybeStrength(value) });
   }
 
   render() {
     const { strength } = this.state;
-    const { classes, ...rest } = this.props;
+    const { classes, value, required, ...rest } = this.props;
 
     return (
       <Grid container className={classes.container}>
         <Grid item xs={12}>
           <HideShowText
+            value={value}
             {...rest}
             onChange={this.onChange}
             fullWidth
+            required={required}
           />
         </Grid>
         {
@@ -73,5 +81,9 @@ class PasswordInput extends React.Component<CombinedProps, State> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })<Props>(PasswordInput);
+const maybeStrength = (value?: string) =>
+  !value || isEmpty(value)
+    ? null
+    : zxcvbn(value).score;
 
+export default withStyles(styles, { withTheme: true })<Props>(PasswordInput);

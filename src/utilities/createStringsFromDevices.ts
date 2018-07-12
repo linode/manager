@@ -1,4 +1,5 @@
-import { compose, toPairs, reduce } from 'ramda';
+import { compose, reduce, toPairs } from 'ramda';
+
 import { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
 
 const rdx = (
@@ -27,4 +28,3 @@ export default compose(
   reduce(rdx, {}),
   toPairs,
 );
-

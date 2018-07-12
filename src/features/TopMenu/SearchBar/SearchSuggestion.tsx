@@ -1,11 +1,7 @@
-import * as React from 'react';
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
 import * as H from 'history';
+import * as React from 'react';
+
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 type ClassNames = 'root'
  | 'highlight'

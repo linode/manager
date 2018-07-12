@@ -1,13 +1,23 @@
-import * as React from 'react';
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
-import { Subscription, Observable } from 'rxjs/Rx';
-import { assoc, compose, sort, take, values } from 'ramda';
 import * as moment from 'moment';
+import { assoc, compose, sort, take, values } from 'ramda';
+import * as React from 'react';
+import 'rxjs/add/observable/combineLatest';
+import 'rxjs/add/observable/fromEvent'
+import 'rxjs/add/observable/interval';
+import 'rxjs/add/operator/debounce';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/scan';
+import 'rxjs/add/operator/withLatestFrom';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
-import Menu from 'material-ui/Menu';
+import Menu from '@material-ui/core/Menu';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import { events$, init } from 'src/events';
 import { markEventsSeen } from 'src/services/account';
+
 import UserNotificationButton from './UserNotificationButton';
 import UserNotificationList from './UserNotificationList';
 
@@ -39,7 +49,8 @@ interface Props {
 interface State {
   anchorEl?: HTMLElement;
   events: Linode.Event[];
-  hasNew?: boolean;
+  unseenCount?: number;
+  notifications: Linode.Notification[];
 }
 
 type CombinedProps = {} & WithStyles<ClassNames>;
@@ -53,7 +64,7 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
     events: [],
     notifications: [],
     anchorEl: undefined,
-    hasNew: false,
+    unseenCount: 0,
   };
 
   subscription: Subscription;
@@ -61,7 +72,7 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
 
   static defaultProps = {
-    hasNew: false,
+    unseenCount: 0,
   };
 
   componentDidMount() {
@@ -83,8 +94,8 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
         (events: Linode.Event[]) => {
           if (!this.mounted) { return; }
           this.setState({
+            unseenCount: getNumUnseenEvents(events),
             events,
-            hasNew: hasUnseenEvent(events),
           });
         },
         () => null,
@@ -116,7 +127,7 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { anchorEl, hasNew, events, notifications } = this.state;
+    const { anchorEl, events, unseenCount, notifications } = this.state;
     const { classes } = this.props;
 
     return (
@@ -124,8 +135,8 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
         <UserNotificationButton
           onClick={e => this.setState({ anchorEl: e.currentTarget })}
           getRef={this.setRef}
-          hasNew={hasNew}
-          disabled={notifications.length + events.length === 0}
+          notificationCount={unseenCount}
+          disabled={events.length === 0}
           className={anchorEl ? 'active' : ''}
         />
         <Menu
@@ -153,18 +164,19 @@ const extractAndSortByCreated = compose(
   values,
 );
 
-const hasUnseenEvent = (events: Linode.Event[]) => {
+const getNumUnseenEvents = (events: Linode.Event[]) => {
   const len = events.length;
+  let unseenCount = 0;
   let idx = 0;
   while (idx < len) {
     if (!events[idx].seen) {
-      return true;
+      unseenCount += 1;
     }
 
     idx += 1;
   }
 
-  return false;
+  return unseenCount;
 };
 
 export default styled<Props>(UserNotificationMenu);

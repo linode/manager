@@ -1,16 +1,16 @@
 import * as React from 'react';
 
-import {
-  withStyles, WithStyles, StyleRulesCallback, Theme,
-} from 'material-ui';
-import IconButton from 'material-ui/IconButton';
-import Menu from 'material-ui/Menu';
-import MenuItem from 'material-ui/Menu/MenuItem';
-import MoreHoriz from 'material-ui-icons/MoreHoriz';
+import IconButton from '@material-ui/core/IconButton';
+import Menu from '@material-ui/core/Menu';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import MoreHoriz from '@material-ui/icons/MoreHoriz';
+
+import MenuItem from 'src/components/MenuItem';
 
 export interface Action {
   title: string;
   disabled?: boolean;
+  tooltip?: string;
   onClick: (e: React.MouseEvent<HTMLAnchorElement>) => void;
 }
 
@@ -48,6 +48,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   },
   actionSingleLink: {
     marginRight: theme.spacing.unit,
+    whiteSpace: 'nowrap',
     float: 'right',
     fontWeight: 700,
   },
@@ -110,7 +111,8 @@ class ActionMenu extends React.Component<CombinedProps, State> {
           href="#"
           key={idx}
           onClick={e => a.onClick(e)}
-          className={classes.actionSingleLink}>
+          className={classes.actionSingleLink}
+          data-qa-action-menu-link>
             {a.title}
         </a>)
       : (<div className={classes.root}>
@@ -140,7 +142,10 @@ class ActionMenu extends React.Component<CombinedProps, State> {
               className={classes.item}
               data-qa-action-menu-item={a.title}
               disabled={a.disabled}
-            >{a.title}</MenuItem>,
+              tooltip={a.tooltip}
+            >
+              {a.title}
+            </MenuItem>,
           )}
         </Menu>
       </div >);

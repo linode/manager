@@ -1,55 +1,37 @@
-import * as React from 'react';
-
-import { withRouter, RouteComponentProps } from 'react-router-dom';
 import * as moment from 'moment';
-import {
-  allPass,
-  clone,
-  compose,
-  filter,
-  gte,
-  has,
-  ifElse,
-  isEmpty,
-  pathEq,
-  path,
-  pathOr,
-  prop,
-  propEq,
-  uniqBy,
-} from 'ramda';
+import { allPass, clone, compose, filter, gte, has, ifElse, isEmpty, path, pathEq, pathOr, prop, propEq, uniqBy } from 'ramda';
+import * as React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/filter';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
-import { Observable, Subscription } from 'rxjs/Rx';
+import Button from '@material-ui/core/Button';
+import Hidden from '@material-ui/core/Hidden';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
-import { withStyles, StyleRulesCallback, Theme } from 'material-ui/styles';
-import Hidden from 'material-ui/Hidden';
-
-import { getImages } from 'src/services/images';
-import { getLinodes, getLinode } from 'src/services/linodes';
-import { events$ } from 'src/events';
-import notifications$ from 'src/notifications';
-import { rebootLinode, powerOffLinode } from './powerActions';
-
-import { newLinodeEvents } from 'src/features/linodes/events';
-import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
+import ActionsPanel from 'src/components/ActionsPanel';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import PaginationFooter from 'src/components/PaginationFooter';
-import LinodeConfigSelectionDrawer, {
-  LinodeConfigSelectionDrawerCallback,
-} from 'src/features/LinodeConfigSelectionDrawer';
-import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import ProductNotification from 'src/components/ProductNotification';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'material-ui/Button';
+import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
+import { events$ } from 'src/events';
+import LinodeConfigSelectionDrawer, { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
+import { newLinodeEvents } from 'src/features/linodes/events';
+import notifications$ from 'src/notifications';
+import { getImages } from 'src/services/images';
+import { getLinode, getLinodes } from 'src/services/linodes';
 
-import LinodesListView from './LinodesListView';
 import LinodesGridView from './LinodesGridView';
+import LinodesListView from './LinodesListView';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
+import { powerOffLinode, rebootLinode } from './powerActions';
 import ToggleBox from './ToggleBox';
-
-import { Typography, WithStyles } from 'material-ui';
 
 type ClassNames = 'root' | 'title';
 
@@ -277,7 +259,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       page: Math.min(lastPage, page),
       page_size: pageSize,
     })
-      .then(response => response.data)
       .then((response) => {
         if (!this.mounted) { return; }
 
@@ -285,18 +266,27 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           ...prevResults,
           linodes: pathOr([], ['data'], response),
           page: pathOr(0, ['page'], response),
+          pageSize,
           pages: pathOr(0, ['pages'], response),
           results: pathOr(0, ['results'], response),
-          pageSize,
         }));
       });
   }
 
+  scrollToTop = () => {
+    window.scroll({
+      behavior: 'smooth',
+      left: 0,
+      top: 0,
+    });
+  }
+
   handlePageSelection = (page: number) => {
+    this.scrollToTop();
     this.getLinodes(Math.min(page), this.state.pageSize);
   }
 
-  handlePageSizeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  handlePageSizeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     this.getLinodes(this.state.page, parseInt(event.target.value, 0));
   }
 
@@ -358,7 +348,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       );
     }
 
-
     const displayGrid: 'grid' | 'list' = getDisplayFormat({ hash, length: linodes.length });
 
     return (
@@ -415,7 +404,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           />
         </Grid>
         <ConfirmationDialog
-          title={(bootOption === 'reboot') ? 'Confirm Reboot' : 'Powering Down'}
+          title={(bootOption === 'reboot') ? 'Confirm Reboot' : 'Powering Off'}
           actions={() =>
             <ActionsPanel style={{ padding: 0 }}>
               <Button
@@ -427,7 +416,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
               >
                 {(bootOption === 'reboot')
                   ? 'Reboot'
-                  : 'Power Down'}
+                  : 'Power Off'}
               </Button>
               <Button
                 onClick={() => this.setState({ powerAlertOpen: false })}

@@ -1,14 +1,14 @@
-import * as React from 'react';
 import { storiesOf } from '@storybook/react';
+import * as React from 'react';
 
-import InputLabel from 'material-ui/Input/InputLabel';
-import MenuItem from 'material-ui/Menu/MenuItem';
-import FormControl from 'material-ui/Form/FormControl';
-import FormHelperText from 'material-ui/Form/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import InputLabel from '@material-ui/core/InputLabel';
+
 import Grid from 'src/components/Grid';
+import MenuItem from 'src/components/MenuItem';
 
 import ThemeDecorator from '../../utilities/storybookDecorators';
-
 import Select from './Select';
 
 interface State {
@@ -24,7 +24,7 @@ class Example extends React.Component<any, State> {
     success: Boolean(this.props.success),
   };
 
-  handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = Number(e.target.value);
     this.setState({
       selected: value,

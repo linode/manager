@@ -1,4 +1,5 @@
 const { constants} = require('../../constants');
+
 import { Profile, TokenCreateDrawer, dialogMap } from '../../pageobjects/profile';
 
 const profile = new Profile();
@@ -72,18 +73,19 @@ describe('View - Personal Access Tokens', () => {
             browser.click('[data-qa-action-menu-item="View Token Scopes"]');
 
             browser.waitForVisible('[data-qa-row="Account"]');
+            browser.waitForVisible('[data-qa-close-drawer]');
 
             const accountPermission = $('[data-qa-row="Account"] [data-qa-perm-rw-radio]');
             const domainPermission = $('[data-qa-row="Domains"] [data-qa-perm-none-radio]');
             const eventsPermission = $('[data-qa-row="Events"] [data-qa-perm-rw-radio]');
             const imagesPermission = $('[data-qa-row="Images"] [data-qa-perm-rw-radio]');
 
-            expect(accountPermission.getAttribute('class').includes('checked')).toBe(true);
-            expect(domainPermission.getAttribute('class').includes('checked')).toBe(true);
-            expect(eventsPermission.getAttribute('class').includes('checked')).toBe(true);
-            expect(imagesPermission.getAttribute('class').includes('checked')).toBe(true);
+            expect(accountPermission.getAttribute('data-qa-perm-rw-radio')).toBe('true');
+            expect(domainPermission.getAttribute('data-qa-perm-none-radio')).toBe('true');
+            expect(eventsPermission.getAttribute('data-qa-perm-rw-radio')).toBe('true');
+            expect(imagesPermission.getAttribute('data-qa-perm-rw-radio')).toBe('true');
             browser.click('[data-qa-close-drawer]');
-            browser.waitForVisible('[data-qa-close-drawer]', 5000, true);
+            browser.waitForVisible('[data-qa-close-drawer]', constants.wait.normal, true);
         });
 
         describe('Edit - Personal Access Tokens', () => {
@@ -108,7 +110,7 @@ describe('View - Personal Access Tokens', () => {
                     } catch (err) {
                         return false;
                     }
-                }, 15000);
+                }, constants.wait.normal);
                 tokenCreateDrawer.submit.click();
 
                 browser.waitForVisible(updatedSelector);
@@ -118,8 +120,9 @@ describe('View - Personal Access Tokens', () => {
 
             it('should close on close icon click', () => {
                 profile.create('token');
+                tokenCreateDrawer.cancel.waitForVisible();
                 tokenCreateDrawer.cancel.click();
-                browser.waitForVisible('[data-qa-drawer-title]', 10000, true);
+                browser.waitForVisible('[data-qa-drawer-title]', constants.wait.normal, true);
             });
         });
 
@@ -141,7 +144,9 @@ describe('View - Personal Access Tokens', () => {
 
             it('should revoke on remove', () => {
                 browser.click(dialogConfirm);
-                browser.waitForVisible(updatedSelector, 10000, true);
+                browser.refresh();
+                browser.waitForVisible('[data-qa-table-row]', constants.wait.normal);
+                browser.waitForVisible(updatedSelector, constants.wait.normal, true);
             });
         });
     });

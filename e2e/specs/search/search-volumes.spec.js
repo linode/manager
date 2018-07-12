@@ -1,9 +1,10 @@
 const { constants } = require('../../constants');
 
+import { apiCreateLinode, apiDeleteAllLinodes } from '../../utils/common';
 import SearchBar from '../../pageobjects/search.page';
 import ListLinodes from '../../pageobjects/list-linodes';
-import LinodeDetail from '../../pageobjects/linode-detail.page';
-import VolumeDetail from '../../pageobjects/linode-detail-volume.page';
+import LinodeDetail from '../../pageobjects/linode-detail/linode-detail.page';
+import VolumeDetail from '../../pageobjects/linode-detail/linode-detail-volume.page';
 
 describe('Header - Search - Volumes Suite', () => {
     const testVolume = {
@@ -18,7 +19,7 @@ describe('Header - Search - Volumes Suite', () => {
         }
 
         browser.waitForVisible(`[data-qa-linode="${label}"]`);
-        browser.click(`[data-qa-linode="${label}"] [data-qa-label]`);
+        browser.click(`[data-qa-linode="${label}"] a`);
         LinodeDetail
             .landingElemsDisplay()
             .changeTab('Volumes');
@@ -31,23 +32,29 @@ describe('Header - Search - Volumes Suite', () => {
         }
     }
 
-    beforeAll(() => {
+    afterAll(() => {
+        apiDeleteAllLinodes();
+    });
+
+    it('should setup the spec', () => {
         browser.url(constants.routes.linodes);
         
+        apiCreateLinode();
+
         ListLinodes.linodesDisplay();
         linodeName = ListLinodes.linode[0].$(ListLinodes.linodeLabel.selector).getText();
 
         ListLinodes.shutdownIfRunning(ListLinodes.linode[0]);
         
         navigateToVolumes(linodeName);
-        const volumeCount = !VolumeDetail.placeholderText.isVisible() ? VolumeDetail.volumeCell.length : 0;
+        const volumeCount = VolumeDetail.volumeCellElem.isVisible() ? VolumeDetail.volumeCell.length : 0;
         
         VolumeDetail.createVolume(testVolume);
 
         // Wait until the volume is created before searching for it
         browser.waitUntil(function() {
             return VolumeDetail.volumeCell.length === volumeCount + 1;
-        }, 25000);
+        }, constants.wait.long, 'Volume failed to be created');
 
         testVolume['id'] = VolumeDetail.getVolumeId(testVolume.label);
     });
@@ -56,7 +63,7 @@ describe('Header - Search - Volumes Suite', () => {
         browser.url(constants.routes.linodes);
         SearchBar.assertSearchDisplays();
         SearchBar.executeSearch(testVolume.label);
-        browser.waitForVisible('[data-qa-suggestion]', 5000);
+        browser.waitForVisible('[data-qa-suggestion]', constants.wait.short);
     });
 
     it('should navigate to linode detail volume page', () => {
@@ -72,6 +79,6 @@ describe('Header - Search - Volumes Suite', () => {
 
     it('should not display suggestion after removal', () => {
         SearchBar.executeSearch(testVolume.label);
-        browser.waitForVisible('[data-qa-suggestion]', 5000, true);
+        browser.waitForVisible('[data-qa-suggestion]', constants.wait.short, true);
     });
 });

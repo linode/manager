@@ -1,18 +1,14 @@
-import * as React from 'react';
 import { defaultTo } from 'ramda';
+import * as React from 'react';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
-import InputLabel from 'material-ui/Input/InputLabel';
-import MenuItem from 'material-ui/Menu/MenuItem';
-import FormControl from 'material-ui/Form/FormControl';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
+import MenuItem from 'src/components/MenuItem';
 import Select from 'src/components/Select';
 import { titlecase } from 'src/features/linodes/presentation';
+
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({

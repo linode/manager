@@ -1,22 +1,14 @@
 import * as React from 'react';
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
 
-import Paper from 'material-ui/Paper';
-import Typography from 'material-ui/Typography';
+import Paper from '@material-ui/core/Paper';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
+import RenderGuard from 'src/components/RenderGuard';
 import SelectionCard from 'src/components/SelectionCard';
-
-import {
-  aggregateBackups,
-  formatBackupDate,
-} from 'src/features/linodes/LinodesDetail/LinodeBackup';
+import { aggregateBackups, formatBackupDate } from 'src/features/linodes/LinodesDetail/LinodeBackup';
 
 type ClassNames =
 'root'
@@ -44,13 +36,18 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
+interface BackupInfo {
+  title: string;
+  details: string;
+}
+
 interface Props {
   selectedLinodeID?: number;
   selectedBackupID?: number;
-  handleSelection: (key: string) =>
-    (event: React.SyntheticEvent<HTMLElement>, value: any) => void;
   error?: string;
   backups: Linode.LinodeWithBackups[];
+  handleChangeBackup: (id: number) => void;
+  handleChangeBackupInfo: (info: BackupInfo) => void;
 }
 
 interface State {
@@ -66,9 +63,6 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
   state: State = {
     backups: [],
   };
-
-  handleBackupSelection = this.props.handleSelection('selectedBackupID');
-  handleBackupInfoSelection = this.props.handleSelection('selectedBackupInfo');
 
   componentDidMount() {
     const { backups } = this.props;
@@ -100,10 +94,10 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
     if (selectedBackup) {
       const backupInfo_ = this.getBackupInfo(selectedBackup);
       const backupInfo = {
-        name: backupInfo_.infoName,
+        title: backupInfo_.infoName,
         details: backupInfo_.subheading,
       };
-      this.handleBackupInfoSelection(undefined as any, backupInfo);
+      this.props.handleChangeBackupInfo(backupInfo);
     }
   }
 
@@ -129,11 +123,11 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
         checked={backup.id === Number(selectedBackupID)}
         onClick={(e) => {
           const backupInfo = {
-            name: backupInfo_.infoName,
+            title: backupInfo_.infoName,
             details: backupInfo_.subheading,
           };
-          this.handleBackupSelection(e, `${backup.id}`);
-          this.handleBackupInfoSelection(e, backupInfo);
+          this.props.handleChangeBackup(backup.id);
+          this.props.handleChangeBackupInfo(backupInfo);
         }}
         heading={backupInfo_.heading}
         subheadings={[backupInfo_.subheading]}
@@ -183,4 +177,4 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(SelectBackupPanel);
+export default styled(RenderGuard<CombinedProps>(SelectBackupPanel));

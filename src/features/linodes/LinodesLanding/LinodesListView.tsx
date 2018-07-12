@@ -1,15 +1,16 @@
 import * as React from 'react';
 
-import Grid from 'src/components/Grid';
-import Paper from 'material-ui/Paper';
-import TableBody from 'material-ui/Table/TableBody';
-import TableCell from 'material-ui/Table/TableCell';
-import TableHead from 'material-ui/Table/TableHead';
-import TableRow from 'material-ui/Table/TableRow';
+import Paper from '@material-ui/core/Paper';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 
+import Grid from 'src/components/Grid';
 import Table from 'src/components/Table';
-import LinodeRow from './LinodeRow';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
+
+import LinodeRow from './LinodeRow';
 
 interface Props {
   linodes: Linode.EnhancedLinode[];

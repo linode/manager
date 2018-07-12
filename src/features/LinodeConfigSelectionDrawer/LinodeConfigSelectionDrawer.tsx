@@ -1,15 +1,11 @@
 import * as React from 'react';
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
-import Button from 'material-ui/Button';
 
-import Grid from 'src/components/Grid';
+import Button from '@material-ui/core/Button';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import Drawer from 'src/components/Drawer';
+import Grid from 'src/components/Grid';
 import SelectionCard from 'src/components/SelectionCard';
 
 type ClassNames = 'root';

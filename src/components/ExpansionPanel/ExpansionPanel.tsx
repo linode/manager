@@ -1,25 +1,19 @@
 import * as React from 'react';
-// import * as classNames from 'classnames';
 
-import { withStyles, StyleRulesCallback, WithStyles } from 'material-ui';
+import ExpansionPanel, { ExpansionPanelProps } from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelDetails, { ExpansionPanelDetailsProps } from '@material-ui/core/ExpansionPanelDetails';
+import ExpansionPanelSummary, { ExpansionPanelSummaryProps } from '@material-ui/core/ExpansionPanelSummary';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography, { TypographyProps } from '@material-ui/core/Typography';
 
-import ExpansionPanel, {
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
-  ExpansionPanelProps,
-  ExpansionPanelSummaryProps,
-  ExpansionPanelDetailsProps,
-} from 'material-ui/ExpansionPanel';
-import Typography, { TypographyProps } from 'material-ui/Typography';
+import Minus from 'src/assets/icons/minus-square.svg';
+import Plus from 'src/assets/icons/plus-square.svg';
 import Grid from 'src/components/Grid';
-
-import Plus from '../../assets/icons/plus-square.svg';
-import Minus from '../../assets/icons/minus-square.svg';
+import RenderGuard from 'src/components/RenderGuard';
 
 import Notice from '../Notice';
 
 type ClassNames = 'root'
-  | 'heading'
   | 'success'
   | 'warning'
   | 'error';
@@ -31,9 +25,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
       '& .notice': {
         margin: 0,
       },
-    },
-    heading: {
-      transition: theme.transitions.create(['color']),
     },
     success: {
       backgroundColor: status.success,
@@ -89,7 +80,7 @@ export interface Props extends ExpansionPanelProps {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class EExpansionPanel extends React.Component<CombinedProps> {
-  state = { open: false };
+  state = { open: this.props.defaultExpanded };
 
   handleClick = (e: React.MouseEvent<any>) => {
     this.setState({ open: !this.state.open });
@@ -103,7 +94,7 @@ class EExpansionPanel extends React.Component<CombinedProps> {
       headingProps,
       actions,
       success, warning, error, loading,
-      ...expansionPanelProps,
+      ...expansionPanelProps
     } = this.props;
 
     const notice = success || warning || error || null;
@@ -116,12 +107,12 @@ class EExpansionPanel extends React.Component<CombinedProps> {
       >
         <ExpansionPanelSummary
           onClick={this.handleClick}
-          expandIcon={this.state.open ? <Plus /> : <Minus />}
+          expandIcon={this.state.open ? <Minus /> : <Plus />}
           {...summaryProps}
           data-qa-panel-summary
         >
           <Typography
-            className={classes.heading} {...headingProps}
+            {...headingProps}
             variant="subheading"
             data-qa-panel-subheading
           >
@@ -151,4 +142,4 @@ class EExpansionPanel extends React.Component<CombinedProps> {
 }
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(EExpansionPanel);
+export default RenderGuard<Props>(styled<Props>(EExpansionPanel));

@@ -1,30 +1,34 @@
-import * as React from 'react';
 import { compose, pathOr } from 'ramda';
+import * as React from 'react';
 
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
-import Paper from 'material-ui/Paper';
-import Typography from 'material-ui/Typography';
-import Button from 'material-ui/Button';
+import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
-import SelectionCard from 'src/components/SelectionCard';
-import SelectPlanPanel, { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
-import { typeLabelDetails } from 'src/features/linodes/presentation';
-import PromiseLoader from 'src/components/PromiseLoader';
 import ActionsPanel from 'src/components/ActionsPanel';
-import { resizeLinode, getLinodeTypes } from 'src/services/linodes';
+import PromiseLoader from 'src/components/PromiseLoader';
+import SelectionCard from 'src/components/SelectionCard';
 import { resetEventsPolling } from 'src/events';
+import SelectPlanPanel, { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
+import { withLinode } from 'src/features/linodes/LinodesDetail/context';
+import { typeLabelDetails } from 'src/features/linodes/presentation';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
+import { getLinodeTypes, resizeLinode } from 'src/services/linodes';
 
 type ClassNames = 'root'
   | 'title'
   | 'subTitle'
-  | 'currentPlanContainer'
-  | 'actionPanel';
+  | 'currentPlanContainer';
 
 interface Props {
+  /** Preloaded Props */
+  types: { response: ExtendedType[] };
+}
+
+interface ContextProps {
   linodeId: number;
   linodeType: null | string;
-  types: { response: ExtendedType[] };
 }
 
 interface State {
@@ -32,7 +36,7 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & ContextProps & WithStyles<ClassNames>;
 
 export class LinodeResize extends React.Component<CombinedProps, State> {
   state: State = {
@@ -64,12 +68,18 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
     resizeLinode(linodeId, selectedId)
       .then((response) => {
         sendToast('Linode resize started.');
+        this.setState({ selectedId: '' });
         resetEventsPolling();
       })
       .catch((errorResponse) => {
         pathOr([], ['response', 'data', 'errors'], errorResponse)
           .forEach((err: Linode.ApiFieldError) => sendToast(err.reason, 'error'));
+        this.setState({ selectedId: '' });
       });
+  }
+
+  handleSelectPlan = (id: string) => {
+    this.setState({ selectedId: id });
   }
 
   render() {
@@ -104,7 +114,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
           <Typography data-qa-description>
             If you're expecting a temporary burst of traffic to your website,
             or if you're not using your Linode as much as you thought,
-            you can temporarily or permenantly resize your Linode
+            you can temporarily or permanently resize your Linode
             to a different plan.
           </Typography>
           <div className={classes.currentPlanContainer} data-qa-current-container>
@@ -118,19 +128,20 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
             {<SelectionCard
               data-qa-current-plan
               checked={false}
-              onClick={e => null}
               heading={currentPlanHeading}
               subheadings={currentPlanSubHeadings}
             />}
           </div>
         </Paper>
         <SelectPlanPanel
+          currentPlanHeading={currentPlanHeading}
           types={this.props.types.response}
-          onSelect={(id: string) => this.setState({ selectedId: id })}
+          onSelect={this.handleSelectPlan}
           selectedID={this.state.selectedId}
         />
-        <ActionsPanel className={classes.actionPanel}>
+        <ActionsPanel>
           <Button
+            disabled={!this.state.selectedId}
             variant="raised"
             color="primary"
             onClick={this.onSubmit}
@@ -157,17 +168,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   currentPlanContainer: {
     '& .selectionCard': {
-      padding: 0,
+      padding: `0 ${theme.spacing.unit}px 0 0`,
       cursor: 'not-allowed',
       '& > div, &:focus > div': {
         backgroundColor: theme.bg.main,
         borderColor: theme.color.border2,
       },
     },
-  },
-  actionPanel: {
-    padding: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit * 3,
   },
 });
 
@@ -180,7 +187,13 @@ const preloaded = PromiseLoader<CombinedProps>({
     }),
 });
 
-export default compose<any, any, any>(
+const linodeContext = withLinode((context) => ({
+  linodeId: context.data!.id,
+  linodeType: context.data!.type,
+}));
+
+export default compose<any, any, any, any>(
+  linodeContext,
   preloaded,
   styled,
 )(LinodeResize);

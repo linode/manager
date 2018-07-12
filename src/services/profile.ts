@@ -1,5 +1,6 @@
 import { API_ROOT } from 'src/constants';
-import Request, { setURL, setMethod, setData } from '.';
+
+import Request, { setData, setMethod, setURL } from '.';
 
 type Page<T> = Linode.ResourcePage<T>;
 type Token = Linode.Token;
@@ -8,6 +9,15 @@ export const getProfile = () => Request<Linode.Profile>(
   setURL(`${API_ROOT}/profile`),
   setMethod('GET'),
 );
+
+export const updateProfile = (data: any) => Request<Linode.Profile>(
+  setURL(`${API_ROOT}/profile`),
+  setMethod('PUT'),
+  /** @todo */
+  // validateRequestData(data, ProfileUpdateSchema)
+  setData(data),
+)
+  .then(response => response.data);
 
 /** App Tokens */
 export const createAppToken = (data: any) =>
@@ -45,7 +55,6 @@ export const getAppTokens = () =>
     setURL(`${API_ROOT}/profile/apps`),
   )
     .then(response => response.data);
-
 
 /** Personal Access Tokens */
 export const createPersonalAccessToken = (data: any) =>

@@ -2,16 +2,11 @@ import * as moment from 'moment';
 import { pathOr } from 'ramda';
 
 import { events$, resetEventsPolling } from 'src/events';
-
-import { dateFormat } from 'src/time';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
-import {
-  getLinodeConfigs,
-  linodeBoot,
-  linodeShutdown,
-  linodeReboot,
-} from 'src/services/linodes';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
+import { getLinodeConfigs, linodeBoot, linodeReboot, linodeShutdown } from 'src/services/linodes';
+import { dateFormat } from 'src/time';
+
 
 export const genEvent = (
   action: string,

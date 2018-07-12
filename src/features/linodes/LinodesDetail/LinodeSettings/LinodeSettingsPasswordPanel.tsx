@@ -1,31 +1,24 @@
+import { compose, lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 
-import {
-  compose,
-  lensPath,
-  pathOr,
-  set,
-} from 'ramda';
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
-import InputLabel from 'material-ui/Input/InputLabel';
-import MenuItem from 'material-ui/Menu/MenuItem';
-import FormControl from 'material-ui/Form/FormControl';
-import FormHelperText from 'material-ui/Form/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import InputLabel from '@material-ui/core/InputLabel';
+import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 
+import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/Button';
+import ExpansionPanel from 'src/components/ExpansionPanel';
+import HelpIcon from 'src/components/HelpIcon';
+import MenuItem from 'src/components/MenuItem';
+import Notice from 'src/components/Notice';
+import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
+import PasswordInput from 'src/components/PasswordInput';
+import Select from 'src/components/Select';
 import { changeLinodeDiskPassword } from 'src/services/linodes';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-import Button from 'src/components/Button';
-import PasswordInput from 'src/components/PasswordInput';
-import ExpansionPanel from 'src/components/ExpansionPanel';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Select from 'src/components/Select';
-import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
@@ -36,6 +29,7 @@ interface Props {
   linodeId: number;
   linodeLabel: string;
   linodeDisks: Linode.Disk[];
+  linodeStatus: string;
 }
 
 interface State {
@@ -50,18 +44,28 @@ interface State {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> {
-  state: State = {
-    linodeDisks: this.props.linodeDisks
-      .filter((disk: Linode.Disk) => disk.filesystem !== 'swap'),
-    value: '',
-    diskId: pathOr('', ['disks', 'response', 0, 'id'], this.props),
-    submitting: false,
+  constructor(props: CombinedProps) {
+    super(props);
+    const linodeDisks = this.props.linodeDisks
+    .filter((disk: Linode.Disk) => disk.filesystem !== 'swap');
+    const diskId = linodeDisks.length === 1 ?
+                   linodeDisks[0].id :
+                   pathOr('', ['disks', 'response', 0, 'id'], this.props);
+
+    this.state = {
+      diskId,
+      linodeDisks,
+      submitting: false,
+      value: '',
+    }
   };
 
   changeDiskPassword = () => {
-    this.setState(set(lensPath(['submitting']), true));
-    this.setState(set(lensPath(['success']), undefined));
-    this.setState(set(lensPath(['errors']), undefined));
+    this.setState(compose(
+      set(lensPath(['submitting']), true),
+      set(lensPath(['success']), undefined),
+      set(lensPath(['errors']), undefined),
+    ));
 
     changeLinodeDiskPassword(
       this.props.linodeId,
@@ -77,36 +81,61 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
         ));
       })
       .catch((error) => {
-        this.setState(set(lensPath(['errors']), error.response.data.errors));
+        this.setState(compose(
+          set(lensPath(['errors']), error.response.data.errors),
+          set(lensPath(['submitting']), false),
+        ), () => {
+          scrollErrorIntoView('linode-settings-password');
+        });
       });
+  }
+
+  handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState(set(lensPath(['value']), e.target.value))
+  }
+
+  handleDiskChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    this.setState(set(lensPath(['diskId']), Number(e.target.value)))
+  }
+
+  renderExpansionActions = () => {
+    const { submitting } = this.state;
+    const { linodeStatus } = this.props;
+
+    return <ActionsPanel>
+              <Button
+                type="primary"
+                onClick={this.changeDiskPassword}
+                loading={submitting}
+                disabled={linodeStatus !== 'offline' || submitting}
+                data-qa-password-save
+              >
+                Save
+              </Button>
+              {linodeStatus !== 'offline' &&
+              <HelpIcon
+                text="Your Linode must be fully powered down
+                in order to change your root password"
+              />}
+            </ActionsPanel>
   }
 
   render() {
     const hasErrorFor = getAPIErrorFor({}, this.state.errors);
     const passwordError = hasErrorFor('password');
     const diskIdError = hasErrorFor('diskId');
-    const { submitting } = this.state;
+    const generalError = hasErrorFor('none');
+    const singleDisk = this.state.linodeDisks.length === 1;
+
 
     return (
       <ExpansionPanel
         defaultExpanded
         heading="Reset Root Password"
         success={this.state.success}
-        actions={() =>
-          <ActionsPanel>
-            <Button
-              variant="raised"
-              color="primary"
-              onClick={this.changeDiskPassword}
-              loading={submitting && !passwordError}
-              disabled={submitting && !passwordError}
-              data-qa-password-save
-            >
-              Save
-            </Button>
-          </ActionsPanel>
-        }
+        actions={this.renderExpansionActions}
       >
+        {generalError && <Notice text={generalError} error />}
         <FormControl fullWidth>
           <InputLabel
             htmlFor="disk"
@@ -116,25 +145,30 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
           >
             Disk
           </InputLabel>
-          <Select
+          <div>
+            <Select
             value={this.state.diskId}
-            onChange={e =>
-              this.setState(set(lensPath(['diskId']), Number(e.target.value)))}
+            disabled={singleDisk}
+            onChange={this.handleDiskChange}
             inputProps={{ name: 'disk', id: 'disk' }}
             error={Boolean(diskIdError)}
-            data-qa-select-disk
-          >
-            {
-              this.state.linodeDisks.map(disk =>
-                <MenuItem
-                  key={disk.id}
-                  value={disk.id}
-                  data-qa-disk={disk.label}
-                >
-                  {disk.label}
-                </MenuItem>)
-            }
-          </Select>
+            data-qa-select-disk={singleDisk}
+            >
+              {
+                this.state.linodeDisks.map(disk =>
+                  <MenuItem
+                    key={disk.id}
+                    value={disk.id}
+                    data-qa-disk={disk.label}
+                  >
+                    {disk.label}
+                  </MenuItem>)
+              }
+            </Select>
+            {singleDisk && <HelpIcon
+                text="This option is available for Linodes with multiple disks."
+            />}
+          </div>
           {
             diskIdError &&
             <FormHelperText error={Boolean(diskIdError)}>{diskIdError}</FormHelperText>
@@ -143,9 +177,9 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
         <PasswordInput
           label="Password"
           value={this.state.value}
-          onChange={e =>
-            this.setState(set(lensPath(['value']), e.target.value))}
+          onChange={this.handlePasswordChange}
           errorText={passwordError}
+          errorGroup="linode-settings-password"
           error={Boolean(passwordError)}
         />
       </ExpansionPanel>

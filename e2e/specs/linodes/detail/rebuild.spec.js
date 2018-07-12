@@ -1,15 +1,17 @@
 const { constants } = require('../../../constants');
 
-import Rebuild from '../../../pageobjects/linode-detail-rebuild.page';
+import { apiCreateLinode, apiDeleteAllLinodes } from '../../../utils/common';
+import Rebuild from '../../../pageobjects/linode-detail/linode-detail-rebuild.page';
 import ListLinodes from '../../../pageobjects/list-linodes';
-import LinodeDetail from '../../../pageobjects/linode-detail.page';
+import LinodeDetail from '../../../pageobjects/linode-detail/linode-detail.page';
 
 describe('Linode Detail - Rebuild Suite', () => {
     beforeAll(() => {
         browser.url(constants.routes.linodes);
+        apiCreateLinode();
 
         ListLinodes.linodeElem.waitForVisible();
-        ListLinodes.linode[0].$(ListLinodes.linodeLabel.selector).click();
+        ListLinodes.navigateToDetail();
 
         LinodeDetail.landingElemsDisplay();
         LinodeDetail.changeTab('Rebuild');
@@ -20,12 +22,16 @@ describe('Linode Detail - Rebuild Suite', () => {
         Rebuild.title.waitForText();
     });
 
+    afterAll(() => {
+        apiDeleteAllLinodes();
+    });
+
     it('should display rebuild base elements', () => {
         Rebuild.assertElemsDisplay();
     });
 
     it('should display a help icon with tooltip on click', () => {
-        Rebuild.help.click();
+        Rebuild.help.moveToObject();
         Rebuild.popoverMsg.waitForVisible();
 
         expect(Rebuild.popoverMsg.getText()).toBe('Choosing a 64-bit distro is recommended.');
@@ -39,7 +45,7 @@ describe('Linode Detail - Rebuild Suite', () => {
     });
 
     it('should display error on create an image without selecting an image', () => {
-        browser.waitForVisible('[data-qa-image-option]', 10000, true);
+        browser.waitForVisible('[data-qa-image-option]', constants.wait.normal, true);
         
         Rebuild.submit.click();
 
@@ -51,14 +57,14 @@ describe('Linode Detail - Rebuild Suite', () => {
 
     it('should display error on create image without setting a password', () => {
         Rebuild.selectImage();
-        Rebuild.imageOptions.forEach(opt => opt.waitForVisible(5000, true));
+        Rebuild.imageOptions.forEach(opt => opt.waitForVisible(constants.wait.short, true));
         Rebuild.submit.click();
     });
 
     it('should rebuild linode on valid image and password', () => {
         const testPassword = '~/4gNgmV$_J3vREN'
         Rebuild.selectImage();
-        Rebuild.imageOptions.forEach(opt => opt.waitForVisible(5000, true));
+        Rebuild.imageOptions.forEach(opt => opt.waitForVisible(constants.wait.short, true));
         Rebuild.password.setValue(testPassword);
         Rebuild.rebuild();
     });

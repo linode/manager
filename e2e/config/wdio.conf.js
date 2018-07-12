@@ -1,27 +1,25 @@
 require('dotenv').config();
 
+const { readFileSync } = require('fs');
 const { argv } = require('yargs');
-const {
-    login,
-    readToken,
-} = require('../utils/config-utils');
-const { removeAllLinodes } = require('../setup/setup');
+const { login } = require('../utils/config-utils');
 const { browserCommands } = require('./custom-commands');
 const { browserConf } = require('./browser-config');
-const selectedBrowser = argv.b ? browserConf[argv.b] : browserConf['chrome'];
+const { constants } = require('../constants');
+const selectedBrowser = argv.browser ? browserConf[argv.browser] : browserConf['chrome'];
 const username = process.env.MANAGER_USER;
 const password = process.env.MANAGER_PASS;
 
-
 const specsToRun = () => {
     if (argv.file) {
-        return ['./e2e/setup/setup.spec.js', argv.file];
+        return [argv.file];
     }
     if (argv.dir || argv.d) {
         return ['./e2e/setup/setup.spec.js', `./e2e/specs/${argv.dir || argv.d}/**/*.spec.js`]
     }
     return ['./e2e/setup/setup.spec.js', './e2e/specs/**/*.js'];
 }
+
 const selectedReporters = ['dot'];
 
 if (argv.log) {
@@ -30,7 +28,7 @@ if (argv.log) {
 
 exports.config = {
     // Selenium Host/Port
-    host: process.env.DOCKER ? 'selenium-hub' : 'localhost',
+    host: process.env.DOCKER ? 'selenium-standalone' : 'localhost',
     port: 4444,
     //
     // ==================
@@ -101,10 +99,10 @@ exports.config = {
     // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
     // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
     // gets prepended directly.
-    baseUrl: process.env.DOCKER ? 'https://manager-local:3000' : 'http://localhost:3000',
+    baseUrl: process.env.DOCKER ? 'https://manager-local:3000' : process.env.REACT_APP_APP_ROOT,
     //
     // Default timeout for all waitFor* commands.
-    waitforTimeout: 10000,
+    waitforTimeout: process.env.DOCKER ? 20000 : 10000,
     //
     // Default timeout in milliseconds for request
     // if Selenium Grid doesn't send response
@@ -168,6 +166,16 @@ exports.config = {
             // do something
         }
     },
+
+    mountebankConfig: {
+        proxyConfig: {
+            imposterPort: '8088',
+            imposterProtocol: 'https',
+            imposterName: 'Linode-API',
+            proxyHost: 'https://api.linode.com/v4',
+            mutualAuth: true,
+        }
+    },
     
     //
     // =====
@@ -204,7 +212,24 @@ exports.config = {
         require('babel-register');
 
         browserCommands();
-        browser.timeouts('page load', 20000);
+
+        // Timecount needed to generate unqiue timestamp values for mocks
+        global.timeCount = 0;
+
+        if (argv.record) {
+            browser.loadProxyImposter(browser.options.mountebankConfig.proxyConfig);
+        }
+
+        if (argv.replay) {
+            const file = specs[0].replace('.js', '-stub.json');
+            const imposter = JSON.parse(readFileSync(file));
+            browser.loadImposter(imposter);
+        }
+
+        if (browser.options.desiredCapabilities.browserName.includes('chrome')) {
+            browser.timeouts('page load', 20000);
+        }
+
         login(username, password);
     },
     /**
@@ -271,8 +296,17 @@ exports.config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      * @param {Array.<String>} specs List of spec file paths that ran
      */
-    // after: function (result, capabilities, specs) {
-    // },
+    after: function (result, capabilities, specs) {
+        if (argv.record) {
+            const recordingFile = specs[0].replace('.js', '-stub.json');
+            browser.getImposters(true, recordingFile);
+            browser.deleteImposters();
+        }
+
+        if (argv.replay) {
+            browser.deleteImposters();
+        }
+    },
     /**
      * Gets executed right after terminating the webdriver session.
      * @param {Object} config wdio configuration object
@@ -287,14 +321,6 @@ exports.config = {
      * @param {Object} config wdio configuration object
      * @param {Array.<Object>} capabilities list of capabilities details
      */
-    onComplete: function(exitCode, config, capabilities) {
-        const token = readToken();
-        return removeAllLinodes(token)
-            .then(() => {
-                resolve();
-            })
-            .catch(err => {
-                console.log(err);
-            });
-    }
+    // onComplete: function(exitCode, config, capabilities) {
+    // }
 }

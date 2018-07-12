@@ -1,9 +1,10 @@
-import * as React from 'react';
 import { storiesOf } from '@storybook/react';
+import * as React from 'react';
+
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import ThemeDecorator from '../../utilities/storybookDecorators';
 import Toggle from './Toggle';
-import FormControlLabel from 'material-ui/Form/FormControlLabel';
 
 class Example extends React.Component<{}, { value?: string }> {
   state = { value: undefined };

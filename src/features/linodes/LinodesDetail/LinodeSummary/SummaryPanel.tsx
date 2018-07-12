@@ -1,20 +1,15 @@
-import * as React from 'react';
-import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
 import { compose, pathOr } from 'ramda';
+import * as React from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
-import Paper from 'material-ui/Paper';
-import Typography from 'material-ui/Typography';
+import Paper from '@material-ui/core/Paper';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
 import Grid from 'src/components/Grid';
-import { typeLabelLong, formatRegion, displayType } from 'src/features/linodes/presentation';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
+import { displayType, formatRegion, typeLabelLong } from 'src/features/linodes/presentation';
 
 type ClassNames = 'root'
   | 'title'

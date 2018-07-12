@@ -1,14 +1,14 @@
 import * as React from 'react';
 
-import { withStyles, StyleRulesCallback, WithStyles, Theme } from 'material-ui';
-
-import Paper from 'material-ui/Paper';
-import Typography from 'material-ui/Typography';
-import Grid from 'src/components/Grid';
-import Divider from 'material-ui/Divider';
+import Divider from '@material-ui/core/Divider';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Paper from '@material-ui/core/Paper';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
 import CheckBox from 'src/components/CheckBox';
-import { FormControlLabel } from 'material-ui/Form';
+import Grid from 'src/components/Grid';
+import RenderGuard from 'src/components/RenderGuard';
 
 type ClassNames = 'root'
   | 'flex'
@@ -76,30 +76,27 @@ interface Props {
   backups: boolean;
   backupsMonthly: number | null;
   privateIP: boolean;
-  handleChange: (key: string) =>
-    (e: React.ChangeEvent<Linode.TodoAny>, value: any) =>
-      void;
+  changeBackups: () => void;
+  changePrivateIP: () => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class AddonsPanel extends React.Component<CombinedProps> {
   renderBackupsPrice() {
-    const { classes } = this.props;
+    const { classes, backupsMonthly } = this.props;
 
-    return this.props.backupsMonthly && (
+    return backupsMonthly && (
       <Grid item className={classes.subLabel}>
         <Typography variant="caption">
-          {`$${this.props.backupsMonthly.toFixed(2)}`} per month
+          {`$${backupsMonthly.toFixed(2)}`} per month
         </Typography>
       </Grid>
     );
   }
 
   render() {
-    const { classes, handleChange } = this.props;
-    const setBackups = handleChange('backups');
-    const setPrivateIP = handleChange('privateIP');
+    const { classes, changeBackups, changePrivateIP } = this.props;
 
     return (
       <Paper className={classes.root} data-qa-add-ons>
@@ -112,7 +109,7 @@ class AddonsPanel extends React.Component<CombinedProps> {
                 control={
                   <CheckBox
                     checked={this.props.backups}
-                    onChange={e => setBackups(e, !this.props.backups)}
+                    onChange={() => changeBackups()}
                   />
                 }
                 label="Backups"
@@ -120,7 +117,7 @@ class AddonsPanel extends React.Component<CombinedProps> {
               {this.renderBackupsPrice()}
               <Typography variant="caption" className={classes.caption}>
                 Three backup slots are executed and rotated automatically: a daily backup, a 2-7
-                day old backup, and an 8-14 day old backup. Plans are priced according to you
+                day old backup, and an 8-14 day old backup. Plans are priced according to the
                 Linode plan selected above.
               </Typography>
             </Grid>
@@ -137,7 +134,7 @@ class AddonsPanel extends React.Component<CombinedProps> {
                 control={
                   <CheckBox
                     checked={this.props.privateIP}
-                    onChange={e => setPrivateIP(e, !this.props.privateIP)}
+                    onChange={() => changePrivateIP()}
                   />
                 }
                 label="Private IP (Free!)"
@@ -150,4 +147,4 @@ class AddonsPanel extends React.Component<CombinedProps> {
   }
 }
 
-export default styled<Props>(AddonsPanel);
+export default styled(RenderGuard<CombinedProps>(AddonsPanel));

@@ -1,13 +1,8 @@
 
-import { setToken } from 'src/store/reducers/authentication';
 import store from 'src/store';
+import { setToken } from 'src/store/reducers/authentication';
 
-import {
-  start, refresh, expire,
-  AUTH_TOKEN,
-  AUTH_SCOPES,
-  AUTH_EXPIRE_DATETIME,
-} from './session';
+import { AUTH_EXPIRE_DATETIME, AUTH_SCOPES, AUTH_TOKEN, expire, refresh, start } from './session';
 
 const testToken1 = '06daa2107c487107f4125d55790f59e1e41ed8e705ea005ee43495c23c1de76b';
 const testToken2 = '9e1e41ed8e705ea005ee43495c23c1de76b06daa2107c487107f4125d55790f5';

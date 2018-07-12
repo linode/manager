@@ -1,43 +1,40 @@
+import { always, compose, cond, groupBy, pathOr, propOr } from 'ramda';
 import * as React from 'react';
-import { always, cond, compose, groupBy, propOr, pathOr } from 'ramda';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
-import Paper from 'material-ui/Paper';
-import Typography from 'material-ui/Typography';
-import Button from 'material-ui/Button';
-import FormControl from 'material-ui/Form/FormControl';
-import FormHelperText from 'material-ui/Form/FormHelperText';
-import InputLabel from 'material-ui/Input/InputLabel';
-import MenuItem from 'material-ui/Menu/MenuItem';
+import Button from '@material-ui/core/Button';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import InputLabel from '@material-ui/core/InputLabel';
+import Paper from '@material-ui/core/Paper';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
+import ActionsPanel from 'src/components/ActionsPanel';
+import ErrorState from 'src/components/ErrorState';
+import MenuItem from 'src/components/MenuItem';
+import PasswordInput from 'src/components/PasswordInput';
+import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
+import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
+import Select from 'src/components/Select';
+import { resetEventsPolling } from 'src/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { getImages } from 'src/services/images';
 import { rebuildLinode } from 'src/services/linodes';
-import { resetEventsPolling } from 'src/events';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import Select from 'src/components/Select';
-import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
-import ActionsPanel from 'src/components/ActionsPanel';
-import ErrorState from 'src/components/ErrorState';
-import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
-import PasswordInput from 'src/components/PasswordInput';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+
+import { withLinode } from '../context';
 
 type ClassNames = 'root'
  | 'title'
  | 'intro'
  | 'imageControl'
- | 'image'
- | 'actionPanel';
+ | 'image';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     padding: theme.spacing.unit * 3,
-    paddingBottom: theme.spacing.unit * 1,
+    paddingBottom: theme.spacing.unit * 3,
   },
   title: {
     marginBottom: theme.spacing.unit * 2,
@@ -52,13 +49,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     display: 'flex',
     flexWrap: 'wrap',
   },
-  actionPanel: {
-    padding: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit * 3,
-  },
 });
 
-interface Props {
+interface Props { }
+
+interface ContextProps {
   linodeId: number;
 }
 
@@ -73,13 +68,14 @@ interface State {
   password?: string;
 }
 
-type CombinedProps = Props & PromiseLoaderProps & WithStyles<ClassNames>;
+type CombinedProps = Props & PromiseLoaderProps & ContextProps &  WithStyles<ClassNames>;
 
 class LinodeRebuild extends React.Component<CombinedProps, State> {
   constructor(props: CombinedProps) {
     super(props);
     this.state = {
       images: groupImages(props.images.response),
+      selected: pathOr(undefined, ['history', 'location', 'state', 'selectedImageId'], props)
     };
   }
 
@@ -101,7 +97,9 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
 
     if (!selected || !password) {
       /** I hate that I have to do it this way, but TS is complaining.  */
-      this.setState({ errors });
+      this.setState({ errors }, () => {
+        scrollErrorIntoView();
+      });
       return;
     }
 
@@ -120,6 +118,24 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
   onImageChange = (value: string) => this.setState({ selected: value });
 
   onPasswordChange = (value: string) => this.setState({ password: value });
+
+  renderImagesMenuItems = (category: string) => {
+    if (this.state.images[category]) {
+      return [
+        <MenuItem key={category} disabled className="selectHeader" data-qa-select-header>
+          {getDisplayNameForGroup(category)}
+        </MenuItem>,
+        ...this.state.images[category].map(
+          ({ id, label }: Linode.Image) => (
+            <MenuItem key={id} value={id} data-qa-image-option>
+              {label}
+            </MenuItem>
+          )
+        )
+      ]
+    }
+    return [];
+  }
 
   render() {
     const { images: { error: imagesError }, classes } = this.props;
@@ -153,7 +169,7 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
             <InputLabel htmlFor="image-select" disableAnimation shrink={true}>
               Image
             </InputLabel>
-            <div className={classes.image}>
+            <div>
               <Select
                 helpText="Choosing a 64-bit distro is recommended."
                 error={Boolean(imageError)}
@@ -166,15 +182,9 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
                   Select an Image
                 </MenuItem>
                 {
-                  Object
-                    .entries(this.state.images)
-                    .map(([group, images]) => [
-                      <MenuItem disabled className="selectHeader" data-qa-select-header>
-                        {getDisplayNameForGroup(group)
-                      }</MenuItem>,
-                      ...images.map(({ id, label }: Linode.Image) =>
-                        <MenuItem key={id} value={id} data-qa-image-option>{label}</MenuItem>),
-                    ])
+                  ['recommended', 'older', 'images', 'deleted'].map((category) => [
+                    ...this.renderImagesMenuItems(category),
+                  ])
                 }
               </Select>
               {imageError &&
@@ -189,7 +199,7 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
             value={this.state.password || ''}
           />
         </Paper>
-        <ActionsPanel className={classes.actionPanel}>
+        <ActionsPanel>
           <Button
             variant="raised"
             color="secondary"
@@ -213,7 +223,12 @@ const preloaded = PromiseLoader({
     .then(response => response.data),
 });
 
-export default compose<any, any, any, any>(
+const linodeContext = withLinode((context) => ({
+  linodeId: context.data!.id,
+}));
+
+export default compose<any, any, any, any, any>(
+  linodeContext,
   preloaded,
   SectionErrorBoundary,
   styled,

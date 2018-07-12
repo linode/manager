@@ -1,18 +1,23 @@
-import * as React from 'react';
 import * as moment from 'moment';
 import * as Raven from 'raven-js';
+import * as React from 'react';
 
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+
 import eventMessageGenerator from 'src/eventMessageGenerator';
-import UserNotificationListItem, {
-  UserNotificationListItemProps,
-} from './UserNotificationListItem';
+
+import UserNotificationListItem, { UserNotificationListItemProps } from './UserNotificationListItem';
+
 
 const reportUnfoundEvent = (event: Linode.Event) =>
-  Raven.captureException('Unknown API event received.', { extra: { event } });
+  process.env.NODE_ENV === 'production'
+    ? Raven.captureException
+    : console.log('Unknown API event received.', { extra: { event } }); /* tslint:disable-line */
 
 const reportEventError = (e: Linode.Event, err: Error) =>
-  Raven.captureException(err);
+  process.env.NODE_ENV === 'production'
+    ? Raven.captureException(err)
+    : console.log('Event Error', err); /* tslint:disable-line */
 
 type ClassNames = 'root';
 

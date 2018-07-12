@@ -1,26 +1,22 @@
-import * as React from 'react';
 import { path } from 'ramda';
+import * as React from 'react';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
-import Button from 'material-ui/Button';
-import InputLabel from 'material-ui/Input/InputLabel';
-import MenuItem from 'material-ui/Menu/MenuItem';
-import FormControl from 'material-ui/Form/FormControl';
-import FormHelperText from 'material-ui/Form/FormHelperText';
-import { FormControlLabel } from 'material-ui/Form';
+import Button from '@material-ui/core/Button';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import InputLabel from '@material-ui/core/InputLabel';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-import Notice from 'src/components/Notice';
-import { getLinodes, restoreBackup } from 'src/services/linodes';
-import Select from 'src/components/Select';
-import Drawer from 'src/components/Drawer';
 import ActionsPanel from 'src/components/ActionsPanel';
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import CheckBox from 'src/components/CheckBox';
+import Drawer from 'src/components/Drawer';
+import MenuItem from 'src/components/MenuItem';
+import Notice from 'src/components/Notice';
+import Select from 'src/components/Select';
+import { getLinodes, restoreBackup } from 'src/services/linodes';
+import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root';
 
@@ -55,16 +51,21 @@ class RestoreToLinodeDrawer extends React.Component<CombinedProps, State> {
     errors: [],
   };
 
+  mounted: boolean = false;
+
   state: State = this.defaultState;
 
   reset() {
+    if (!this.mounted) { return; }
     this.setState({ ...this.defaultState });
   }
 
   componentDidMount() {
+    this.mounted = true;
     const { linodeRegion } = this.props;
     getLinodes({ page: 1 }, { region: linodeRegion })
       .then((response) => {
+        if (!this.mounted) { return; }
         const linodeChoices = response.data.map((linode) => {
           return [`${linode.id}`, linode.label];
         });
@@ -72,14 +73,23 @@ class RestoreToLinodeDrawer extends React.Component<CombinedProps, State> {
       });
   }
 
+  componentWillUnmount() {
+    this.mounted = false;
+  }
+
   restoreToLinode() {
     const { onSubmit, linodeID, backupID } = this.props;
     const { selectedLinode, overwrite } = this.state;
+    if (!this.mounted) { return; }
     if (!selectedLinode || selectedLinode === 'none') {
-      this.setState({ errors: [
-        ...(this.state.errors || []),
-        { field: 'linode_id', reason: 'You must select a Linode' },
-      ]});
+      this.setState({
+        errors: [
+          ...(this.state.errors || []),
+          { field: 'linode_id', reason: 'You must select a Linode' },
+        ]
+      }, () => {
+        scrollErrorIntoView();
+      });
       return;
     }
     restoreBackup(linodeID, Number(backupID), Number(selectedLinode), overwrite)
@@ -88,8 +98,24 @@ class RestoreToLinodeDrawer extends React.Component<CombinedProps, State> {
         onSubmit();
       })
       .catch((errResponse) => {
-        this.setState({ errors: path(['response', 'data', 'errors'], errResponse) });
+        if (!this.mounted) { return; }
+        this.setState({ errors: path(['response', 'data', 'errors'], errResponse) }, () => {
+          scrollErrorIntoView();
+        });
       });
+  }
+
+  handleSelectLinode = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    this.setState({ selectedLinode: e.target.value });
+  }
+
+  handleToggleOverwrite = () => {
+    this.setState({ overwrite: !this.state.overwrite });
+  }
+
+  handleCloseDrawer = () => {
+    this.reset();
+    this.props.onClose();
   }
 
   errorResources = {
@@ -98,7 +124,7 @@ class RestoreToLinodeDrawer extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { open, backupCreated, onClose } = this.props;
+    const { open, backupCreated } = this.props;
     const { linodes, selectedLinode, overwrite, errors } = this.state;
 
     const hasErrorFor = getAPIErrorsFor(this.errorResources, errors);
@@ -109,7 +135,7 @@ class RestoreToLinodeDrawer extends React.Component<CombinedProps, State> {
     return (
       <Drawer
         open={open}
-        onClose={() => { this.reset(); onClose(); }}
+        onClose={this.handleCloseDrawer}
         title={`Restore Backup from ${backupCreated}`}
       >
         <FormControl fullWidth>
@@ -123,7 +149,7 @@ class RestoreToLinodeDrawer extends React.Component<CombinedProps, State> {
           </InputLabel>
           <Select
             value={selectedLinode || ''}
-            onChange={e => this.setState({ selectedLinode: e.target.value })}
+            onChange={this.handleSelectLinode}
             inputProps={{ name: 'linode', id: 'linode' }}
             error={Boolean(linodeError)}
           >
@@ -134,31 +160,31 @@ class RestoreToLinodeDrawer extends React.Component<CombinedProps, State> {
               })
             }
           </Select>
-          { Boolean(linodeError) && <FormHelperText error>{ linodeError }</FormHelperText> }
+          {Boolean(linodeError) && <FormHelperText error>{linodeError}</FormHelperText>}
         </FormControl>
         <FormControlLabel
           control={
             <CheckBox
               checked={overwrite}
-              onChange={e => this.setState({ overwrite: !overwrite })}
+              onChange={this.handleToggleOverwrite}
             />
           }
           label="Overwrite Linode"
         />
         {overwrite &&
-          <Notice warning text="This will delete all disks and configs on this Linode"/>
+          <Notice warning text="This will delete all disks and configs on this Linode" />
         }
-        { Boolean(overwriteError) && <FormHelperText error>{ overwriteError }</FormHelperText> }
-        { Boolean(generalError) && <FormHelperText error>{ generalError }</FormHelperText> }
+        {Boolean(overwriteError) && <FormHelperText error>{overwriteError}</FormHelperText>}
+        {Boolean(generalError) && <FormHelperText error>{generalError}</FormHelperText>}
         <ActionsPanel>
           <Button
             variant="raised"
             color="primary"
-            onClick={() => this.restoreToLinode()}
+            onClick={this.restoreToLinode}
           >
             Restore
           </Button>
-          <Button onClick={() => { this.reset(); onClose(); }}>Cancel</Button>
+          <Button onClick={this.handleCloseDrawer}>Cancel</Button>
         </ActionsPanel>
       </Drawer>
     );

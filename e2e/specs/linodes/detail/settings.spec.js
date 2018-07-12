@@ -1,18 +1,22 @@
 const crypto = require('crypto');
 const { constants } = require('../../../constants');
-const { createGenericLinode, createLinodeIfNone } = require('../../../utils/common');
+import { apiCreateLinode, apiDeleteAllLinodes } from '../../../utils/common';
 
 import ListLinodes from '../../../pageobjects/list-linodes';
-import LinodeDetail from '../../../pageobjects/linode-detail.page';
-import Settings from '../../../pageobjects/linode-detail-settings.page';
+import LinodeDetail from '../../../pageobjects/linode-detail/linode-detail.page';
+import Settings from '../../../pageobjects/linode-detail/linode-detail-settings.page';
 
 describe('Linode Detail - Settings Suite', () =>{
     beforeAll(() => {
-        createLinodeIfNone();
+        apiCreateLinode();
         ListLinodes.linodesDisplay();
-        ListLinodes.navigateToDetail(ListLinodes.linodeElem);
+        ListLinodes.navigateToDetail();
         LinodeDetail.landingElemsDisplay();
         LinodeDetail.changeTab('Settings');
+    });
+
+    afterAll(() => {
+        apiDeleteAllLinodes();
     });
 
     describe('Label Suite', () => {
@@ -27,6 +31,10 @@ describe('Linode Detail - Settings Suite', () =>{
     });
 
     describe('Reset Root Password Suite', () => {
+        it('should powerdown linode', () => {
+            LinodeDetail.setPower('powerOff');
+        });
+
         it('should display a disk in the select, password field and save button', () => {
             Settings.selectDisk.waitForVisible();
             Settings.password.waitForVisible();
@@ -35,8 +43,7 @@ describe('Linode Detail - Settings Suite', () =>{
 
         it('should successfully change root password', () => {
             const newPassword = crypto.randomBytes(20).toString('hex');
-            const disks = Settings.getDiskLabels();
-            Settings.resetPassword(newPassword, disks[0]);
+            Settings.resetPassword(newPassword);
         });
     });
 

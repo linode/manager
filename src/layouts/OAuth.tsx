@@ -1,12 +1,11 @@
 import { Component } from 'react';
-import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import { compose } from 'redux';
 
 import * as session from 'src/session';
 import { getStorage, setStorage } from 'src/storage';
 import { parseQueryParams, splitIntoTwo } from 'src/utilities/queryParams';
-
 
 export class OAuthCallbackPage extends Component<Linode.TodoAny> {
   checkNonce(nonce: string) {

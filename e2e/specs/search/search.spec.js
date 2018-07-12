@@ -1,5 +1,6 @@
 import SearchBar from '../../pageobjects/search.page';
 import ListLinodes from '../../pageobjects/list-linodes';
+import { apiCreateLinode, apiDeleteAllLinodes } from '../../utils/common';
 
 const { constants } = require('../../constants');
 
@@ -8,8 +9,13 @@ describe('Header - Search Suite', () => {
 
     beforeAll(() => {
         browser.url(constants.routes.linodes);
+        apiCreateLinode();
         ListLinodes.linodesDisplay();
         testLinode = ListLinodes.linode[0].$(ListLinodes.linodeLabel.selector).getText();
+    });
+
+    afterAll(() => {
+        apiDeleteAllLinodes();
     });
 
     describe('Search Displays Suite', () => {
@@ -34,7 +40,7 @@ describe('Header - Search Suite', () => {
 
     it('should not display suggestions when no matching results found', () => {
         SearchBar.executeSearch('blahlblahblah');
-        browser.waitForVisible('[data-qa-suggestion]', 5000, true);
+        browser.waitForVisible('[data-qa-suggestion]', constants.wait.short, true);
     });
 
     it('should display search suggestions on a legitmate search', () => {
@@ -47,12 +53,16 @@ describe('Header - Search Suite', () => {
     });
 
     it('should navigate to result on enter', () => {
-        SearchBar.searchInput.setValue('\uE006');
+        if (browser.options.desiredCapabilities.browserName.includes('chrome')) {
+            SearchBar.searchInput.setValue('\uE006');
+        } else {
+            browser.keys('Enter');
+        }
         const currentUrl = browser.getUrl();
         
         browser.waitUntil(function() {
             return browser.getUrl() !== currentUrl;
-        }, 10000);
+        }, constants.wait.normal);
     });
 
     it('should navigate to result on click', () => {
@@ -66,6 +76,6 @@ describe('Header - Search Suite', () => {
 
         browser.waitUntil(function() {
             return browser.getUrl() !== currentUrl;
-        }, 10000);
+        }, constants.wait.normal);
     });
 });

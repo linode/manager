@@ -1,46 +1,37 @@
+import { lensPath, path, set, view } from 'ramda';
 import * as React from 'react';
-import * as Rx from 'rxjs/Rx';
-import { path } from 'ramda';
-import { compose, bindActionCreators } from 'redux';
 import { connect, Dispatch } from 'react-redux';
+import { bindActionCreators, compose } from 'redux';
+import 'rxjs/add/operator/filter';
+import { Subscription } from 'rxjs/Subscription';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
-import Button from 'material-ui/Button';
-import { InputLabel } from 'material-ui/Input';
-import { MenuItem } from 'material-ui/Menu';
-import { FormControl, FormHelperText } from 'material-ui/Form';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-import TextField from 'src/components/TextField';
-import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
-import Drawer from 'src/components/Drawer';
-import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Select from 'src/components/Select';
+import Button from 'src/components/Button';
+import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
-import { updateVolumes$ } from 'src/features/Volumes/Volumes';
+import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
+import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
+import Select from 'src/components/Select';
+import TextField from 'src/components/TextField';
 import { dcDisplayNames } from 'src/constants';
 import { events$, resetEventsPolling } from 'src/events';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
+import { updateVolumes$ } from 'src/features/Volumes/Volumes';
+import { getLinodeConfigs, getLinodes } from 'src/services/linodes';
+import { cloneVolume, createVolume, resizeVolume, updateVolume, VolumeRequestPayload } from 'src/services/volumes';
 import { close } from 'src/store/reducers/volumeDrawer';
-import {
-  create,
-  resize,
-  update,
-  clone,
-  VolumeRequestPayload,
-} from 'src/services/volumes';
-import { getLinodes, getLinodeConfigs } from 'src/services/linodes';
-import { getRegions } from 'src/services/misc';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root'
-|  'suffix'
-|  'actionPanel';
+  | 'suffix'
+  | 'actionPanel';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
@@ -54,7 +45,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 });
 
 export interface Props {
-  regions: PromiseLoaderResponse<Linode.ResourcePage<Linode.Volume>>;
+  regions: Linode.Volume[];
   linodes: PromiseLoaderResponse<Linode.ResourcePage<Linode.Linode>>;
   cloneLabel?: string;
 }
@@ -78,10 +69,13 @@ interface State {
   label: string;
   size: number;
   region: string;
+  linodes: Linode.Linode[];
   linodeId: number;
   configs: string[][];
   selectedConfig?: string;
   errors?: Linode.ApiFieldError[];
+  submitting: boolean;
+  success?: string;
 }
 
 type CombinedProps = Props & ReduxProps & ActionCreatorProps & WithStyles<ClassNames>;
@@ -102,18 +96,45 @@ const titleMap = {
   [modes.EDITING]: 'Rename a Volume',
 };
 
+const L = {
+  cloneLabel: lensPath(['cloneLabel']),
+  configs: lensPath(['configs']),
+  errors: lensPath(['errors']),
+  label: lensPath(['label']),
+  linodeId: lensPath(['linodeId']),
+  linodes: lensPath(['linodes']),
+  region: lensPath(['region']),
+  selectedConfig: lensPath(['selectedConfig']),
+  size: lensPath(['size']),
+  submitting: lensPath(['submitting']),
+  success: lensPath(['success']),
+};
+
 class VolumeDrawer extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
-  eventsSub: Rx.Subscription;
+  eventsSub: Subscription;
 
   state: State = {
+    submitting: false,
     cloneLabel: this.props.cloneLabel,
     label: this.props.label,
     size: this.props.size,
     region: this.props.region,
+    linodes: path(['response', 'data'], this.props.linodes) || [],
     linodeId: this.props.linodeId,
     configs: [],
   };
+
+  handleAPIErrorResponse = (errorResponse: any) => this.composeState([
+    set(L.errors, path(['response', 'data', 'errors'], errorResponse)),
+    set(L.submitting, false)
+  ], () => scrollErrorIntoView());
+
+  composeState = (fns: ((s: State) => State)[], callback?: () => void) =>
+    this.mounted && this.setState(
+      state => fns.reverse().reduce((result, current) => current(result), state),
+      () => { if (callback) { callback() } }
+    );
 
   componentDidMount() {
     this.mounted = true;
@@ -123,12 +144,32 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
         !event._initial
         && [
           'volume_detach',
+          'volume_create',
+          'volume_delete',
         ].includes(event.action)
       ))
       .subscribe((event) => {
-        if (event.action === 'volume_detach'
-            && event.status === 'finished') {
+        if (event.action === 'volume_detach' && event.status === 'finished') {
           sendToast(`Volume ${event.entity && event.entity.label} finished detaching`);
+        }
+        /**
+         * If a volume is created, but not attached, the event is volume_create with a status of notification.
+         * If a volume is created and attached, the event is volume_create with status of scheduled, started, failed, finished.
+         */
+        if (event.action === 'volume_create' && event.status === 'scheduled') {
+          sendToast(`Volume ${event.entity && event.entity.label} queued for creation.`);
+        }
+
+        if (event.action === 'volume_create' && (event.status === 'notification' || event.status === 'finished')) {
+          sendToast(`Volume ${event.entity && event.entity.label} created successfully.`);
+        }
+
+        if (event.action === 'volume_create' && event.status === 'failed') {
+          sendToast(`There was an error attaching volume ${event.entity && event.entity.label}.`, 'error');
+        }
+
+        if (event.action === 'volume_delete' && event.status === 'notification') {
+          sendToast(`Volume ${event.entity && event.entity.label} has been deleted.`);
         }
       });
   }
@@ -138,15 +179,25 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
   }
 
   componentWillReceiveProps(nextProps: CombinedProps) {
-    if (this.mounted) {
-      this.setState({
-        cloneLabel: nextProps.cloneLabel || '',
-        label: nextProps.label,
-        size: nextProps.size,
-        region: nextProps.region,
-        linodeId: nextProps.linodeId,
-        errors: undefined,
-      });
+    this.composeState([
+      set(L.cloneLabel, nextProps.cloneLabel || ''),
+      set(L.label, nextProps.label),
+      set(L.size, nextProps.size),
+      set(L.region, nextProps.region),
+      set(L.linodeId, nextProps.linodeId),
+      set(L.errors, undefined),
+    ]);
+
+    /* If the drawer is opening */
+    if ((this.props.mode === modes.CLOSED) && !(nextProps.mode === modes.CLOSED)) {
+      /* re-request the list of Linodes */
+      getLinodes()
+        .then((response) => {
+          this.setState({ linodes: response.data });
+        })
+        .catch(() => {
+          /* keep the existing list of Linodes in the case that this call fails */
+        });
     }
   }
 
@@ -157,9 +208,11 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           return [`${config.id}`, config.label];
         });
         this.setState({ configs: configChoices });
-        configChoices.length > 1 && this.setState({
+        if (configChoices.length > 1) {
+          this.setState({
           selectedConfig: configChoices[0][0],
         });
+        }
       })
       .catch(() => {
         /*
@@ -170,7 +223,20 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
       });
   }
 
+  reset = () => this.composeState([
+    set(L.cloneLabel, ''),
+    set(L.errors, undefined),
+    set(L.label, ''),
+    set(L.linodeId, 0),
+    set(L.region, 'none'),
+    set(L.submitting, false),
+    set(L.success, undefined),
+    set(L.configs, []),
+    set(L.selectedConfig, undefined),
+  ]);
+
   onClose = () => {
+    this.reset();
     this.props.close();
   }
 
@@ -180,6 +246,12 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
 
     switch (mode) {
       case modes.CREATING:
+
+      this.composeState([
+        set(L.submitting, true),
+        set(L.errors, undefined),
+      ]);
+
         const payload: VolumeRequestPayload = {
           label,
           size,
@@ -187,18 +259,21 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           linode_id: linodeId === 0 ? undefined : linodeId,
         };
 
-        create(payload)
+        createVolume(payload)
           .then(() => {
             resetEventsPolling();
-            close();
+            this.composeState([
+              set(L.success, 'Volume queued for creation.'),
+              set(L.submitting, false),
+            ])
+
+            setTimeout(() => {
+              this.composeState([
+                set(L.success, undefined),
+              ], close)
+            }, 4000);;
           })
-          .catch((errorResponse) => {
-            if (this.mounted) {
-              this.setState({
-                errors: path(['response', 'data', 'errors'], errorResponse),
-              });
-            }
-          });
+          .catch(this.handleAPIErrorResponse);
         return;
       case modes.EDITING:
         if (!volumeID) {
@@ -206,26 +281,19 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
         }
 
         if (!label) {
-          if (this.mounted) {
-            this.setState({
-              errors: [{ field: 'label', reason: 'Label cannot be blank.' }],
-            });
-          }
+          this.composeState([
+            set(L.errors, [{ field: 'label', reason: 'Label cannot be blank.' }])
+          ], () => scrollErrorIntoView());
+
           return;
         }
 
-        update(volumeID, label)
+        updateVolume(volumeID, label)
           .then(() => {
             updateVolumes$.next(true);
             close();
           })
-          .catch((errorResponse) => {
-            if (this.mounted) {
-              this.setState({
-                errors: path(['response', 'data', 'errors'], errorResponse),
-              });
-            }
-          });
+          .catch(this.handleAPIErrorResponse);
         return;
       case modes.RESIZING:
         if (!volumeID) {
@@ -236,23 +304,19 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           if (this.mounted) {
             this.setState({
               errors: [{ field: 'size', reason: 'Size cannot be blank.' }],
+            }, () => {
+              scrollErrorIntoView();
             });
           }
           return;
         }
 
-        resize(volumeID, Number(size))
+        resizeVolume(volumeID, Number(size))
           .then(() => {
             resetEventsPolling();
             close();
           })
-          .catch((errorResponse) => {
-            if (this.mounted) {
-              this.setState({
-                errors: path(['response', 'data', 'errors'], errorResponse),
-              });
-            }
-          });
+          .catch(this.handleAPIErrorResponse);
         return;
       case modes.CLONING:
         if (!volumeID) {
@@ -263,33 +327,66 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           if (this.mounted) {
             this.setState({
               errors: [{ field: 'label', reason: 'Label cannot be blank.' }],
+            }, () => {
+              scrollErrorIntoView();
             });
           }
           return;
         }
 
-        clone(volumeID, cloneLabel)
+        cloneVolume(volumeID, cloneLabel)
           .then(() => {
             resetEventsPolling();
             close();
           })
-          .catch((errorResponse) => {
-            if (this.mounted) {
-              this.setState({
-                errors: path(['response', 'data', 'errors'], errorResponse),
-              });
-            }
-          });
+          .catch(this.handleAPIErrorResponse);
         return;
       default:
         return;
     }
   }
 
+  setCloneLabel = (e: any) => {
+    if (this.mounted) { this.setState({ cloneLabel: (e.target.value) }); }
+  }
+
+  setLabel = (e: any) => {
+    if (this.mounted) { this.setState({ label: (e.target.value) }); }
+  }
+
+  setSelectedConfig = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    this.setState({ selectedConfig: e.target.value });
+  }
+
+  setSelectedLinode = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    if (this.mounted) { this.setState({ linodeId: +(e.target.value) }); }
+    /**
+     * linodeId of 0 indicates user has selected the "Select a Linode" option, and we
+     * dont need to get configs for it.
+     */
+    if (e.target.value && +e.target.value !== 0) {
+      this.updateConfigs(+e.target.value);
+    }
+  }
+
+  setSelectedRegion = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    if (this.mounted) {
+      this.setState({
+        region: (e.target.value),
+        linodeId: 0,
+        configs: [],
+      });
+    }
+  }
+
+  setSize = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (this.mounted) { this.setState({ size: +(e.target.value) || 0 }); }
+  }
+
   render() {
     const { mode, classes } = this.props;
-    const regions = path(['response', 'data'], this.props.regions) as Linode.Region[];
-    const linodes = path(['response', 'data'], this.props.linodes) as Linode.Linode[];
+    const { linodes } = this.state;
+    const regions = this.props.regions;
     const linodeLabel = this.props.linodeLabel || '';
 
     const {
@@ -310,6 +407,8 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
       size: 'Size',
       label: 'Label',
     }, errors);
+    const success = view<State, string>(L.success, this.state);
+    const submitting = view<State, boolean>(L.submitting, this.state);
     const labelError = hasErrorFor('label');
     const sizeError = hasErrorFor('size');
     const regionError = hasErrorFor('region');
@@ -320,9 +419,16 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     return (
       <Drawer
         open={mode !== modes.CLOSED}
-        onClose={() => this.onClose()}
+        onClose={this.onClose}
         title={titleMap[mode]}
       >
+        {success &&
+          <Notice
+            success
+            text={success}
+          />
+        }
+
         {generalError &&
           <Notice
             error
@@ -335,7 +441,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           <TextField
             label="Cloned Label"
             value={cloneLabel}
-            onChange={e => this.mounted && this.setState({ cloneLabel: (e.target.value) })}
+            onChange={this.setCloneLabel}
             error={Boolean(labelError)}
             errorText={labelError}
             data-qa-clone-from
@@ -346,7 +452,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           label="Label"
           required
           value={label}
-          onChange={e => this.mounted && this.setState({ label: (e.target.value) })}
+          onChange={this.setLabel}
           error={Boolean(labelError)}
           errorText={labelError}
           disabled={mode === modes.RESIZING || mode === modes.CLONING}
@@ -357,7 +463,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           label="Size"
           required
           value={size}
-          onChange={e => this.mounted && this.setState({ size: +(e.target.value) || 0 })}
+          onChange={this.setSize}
           error={Boolean(sizeError)}
           errorText={sizeError}
           disabled={mode === modes.CLONING || mode === modes.EDITING}
@@ -383,13 +489,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
               || mode === modes.EDITING
               || mode === modes.RESIZING
             }
-            onChange={(e) => {
-              this.mounted && this.setState({
-                region: (e.target.value),
-                linodeId: 0,
-                configs: [],
-              });
-            }}
+            onChange={this.setSelectedRegion}
             inputProps={{ name: 'region', id: 'region' }}
             error={Boolean(regionError)}
             data-qa-select-region
@@ -430,12 +530,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
                 mode === modes.EDITING
                 || mode === modes.RESIZING
               }
-              onChange={(e) => {
-                this.mounted && this.setState({ linodeId: +(e.target.value) });
-                if (e.target.value) {
-                  this.updateConfigs(+e.target.value);
-                }
-              }}
+              onChange={this.setSelectedLinode}
               inputProps={{ name: 'linode', id: 'linode' }}
               error={Boolean(linodeError)}
               data-qa-select-linode
@@ -480,6 +575,11 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
                 {linodeError}
               </FormHelperText>
             }
+            {region !== 'none' &&
+              <FormHelperText>
+                Only Linodes in the selected region are displayed.
+              </FormHelperText>
+            }
           </FormControl>
         }
 
@@ -495,7 +595,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
             </InputLabel>
             <Select
               value={selectedConfig || ''}
-              onChange={(e) => { this.setState({ selectedConfig: e.target.value }); }}
+              onChange={this.setSelectedConfig}
               inputProps={{ name: 'config', id: 'config' }}
               error={Boolean(configError)}
             >
@@ -505,24 +605,22 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
                 })
               }
             </Select>
-            { Boolean(configError) && <FormHelperText error>{ configError }</FormHelperText> }
+            {Boolean(configError) && <FormHelperText error>{configError}</FormHelperText>}
           </FormControl>
         }
 
         <ActionsPanel style={{ marginTop: 16 }}>
           <Button
-            onClick={() => this.onSubmit()}
-            variant="raised"
-            color="primary"
+            onClick={this.onSubmit}
+            type="primary"
+            loading={submitting}
             data-qa-submit
           >
             Submit
           </Button>
           <Button
-            onClick={() => this.onClose()}
-            variant="raised"
-            color="secondary"
-            className="cancel"
+            onClick={this.onClose}
+            type="cancel"
             data-qa-cancel
           >
             Cancel
@@ -546,10 +644,10 @@ const mapStateToProps = (state: Linode.AppState) => ({
   region: path(['volumeDrawer', 'region'], state),
   linodeLabel: path(['volumeDrawer', 'linodeLabel'], state),
   linodeId: path(['volumeDrawer', 'linodeId'], state),
+  regions: path(['resources', 'regions', 'data', 'data'], state),
 });
 
 const preloaded = PromiseLoader<CombinedProps>({
-  regions: () => getRegions(),
   linodes: () => getLinodes(),
 });
 

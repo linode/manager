@@ -1,3 +1,5 @@
+const { constants } = require('../constants');
+
 import Page from './page';
 
 class SearchBar extends Page {
@@ -11,7 +13,7 @@ class SearchBar extends Page {
     executeSearch(query) {
         this.searchElem.waitForVisible();
         this.searchElem.click();
-        this.searchInput.setValue(query);
+        browser.trySetValue('[data-qa-search] input', query);
     }
 
     assertSearchDisplays() {
@@ -40,13 +42,19 @@ class SearchBar extends Page {
         browser.waitForVisible('[data-qa-suggestion]');
 
         suggestion.click();
-        browser.waitForVisible('[data-qa-circle-progress]', 15000, true);
+        browser.waitForVisible('[data-qa-circle-progress]', constants.wait.normal, true);
     }
 
     selectByKeyDown() {
-        this.searchInput.setValue('\uE015');
-        const selected = this.suggestions[0].getAttribute('class').includes('selected');
-        expect(selected).toBe(true);
+        if (browser.options.desiredCapabilities.browserName.includes('chrome')) {
+            this.searchInput.setValue('\uE015');
+        } else {
+            browser.keys('ArrowDown');
+        }
+        browser.waitForVisible('[data-qa-suggestion]');
+        // key down and enter fails to work on firefox
+        const selected = this.suggestions[0].getAttribute('data-qa-selected');
+        expect(selected).toBe('true');
     }
 }
 

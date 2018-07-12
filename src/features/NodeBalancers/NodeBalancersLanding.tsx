@@ -1,40 +1,46 @@
-import * as React from 'react';
-import { compose } from 'ramda';
 import * as Promise from 'bluebird';
+import { compose, path } from 'ramda';
+import * as React from 'react';
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-  Typography,
-} from 'material-ui';
-import Paper from 'material-ui/Paper';
-import TableBody from 'material-ui/Table/TableBody';
-import TableCell from 'material-ui/Table/TableCell';
-import TableHead from 'material-ui/Table/TableHead';
-import TableRow from 'material-ui/Table/TableRow';
+import Paper from '@material-ui/core/Paper';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Typography from '@material-ui/core/Typography';
 
-import { getNodeBalancers, getNodeBalancerConfigs } from 'src/services/nodebalancers';
-import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
-import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
-import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
-import Grid from 'src/components/Grid';
-import Table from 'src/components/Table';
+import NodeBalancer from 'src/assets/addnewmenu/nodebalancer.svg';
+import ActionsPanel from 'src/components/ActionsPanel';
+import AddNewLink from 'src/components/AddNewLink';
+import Button from 'src/components/Button';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
-import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
-import NodeBalancerActionMenu from './NodeBalancerActionMenu';
 import ErrorState from 'src/components/ErrorState';
+import Grid from 'src/components/Grid';
 import Placeholder from 'src/components/Placeholder';
+import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
+import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
+import Table from 'src/components/Table';
+import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
+import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
+import { deleteNodeBalancer, getNodeBalancerConfigs, getNodeBalancers } from 'src/services/nodebalancers';
+import { convertMegabytesTo } from 'src/utilities/convertMegabytesTo';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
+import NodeBalancerActionMenu from './NodeBalancerActionMenu';
 
-type ClassNames = 'root' | 'title';
+type ClassNames = 'root' | 'title' | 'NBStatus';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
   title: {
     marginBottom: theme.spacing.unit * 2,
   },
+  NBStatus: {
+    whiteSpace: 'nowrap',
+  }
 });
 
 const preloaded = PromiseLoader<Props>({
@@ -78,73 +84,122 @@ interface PreloadedProps {
   nodeBalancers: PromiseLoaderResponse<Linode.ExtendedNodeBalancer[]>;
 }
 
+interface DeleteConfirmDialogState {
+  open: boolean;
+  submitting: boolean;
+  errors?: Linode.ApiFieldError[];
+}
+
 interface State {
-  deleteConfirmAlertOpen: boolean;
+  deleteConfirmDialog: DeleteConfirmDialogState;
+  selectedNodeBalancerId?: number;
+  nodeBalancers: Linode.ExtendedNodeBalancer[];
+  errors?: Error;
 }
 
 type CombinedProps = Props
   & WithStyles<ClassNames>
+  & RouteComponentProps<{}>
   & SetDocsProps
   & PreloadedProps;
 
 export class NodeBalancersLanding extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
 
+  static defaultDeleteConfirmDialogState = {
+    submitting: false,
+    open: false,
+    errors: undefined,
+  };
+
   state: State = {
-    deleteConfirmAlertOpen: false,
+    deleteConfirmDialog: NodeBalancersLanding.defaultDeleteConfirmDialogState,
+    nodeBalancers: this.props.nodeBalancers.response || [],
+    errors: this.props.nodeBalancers.error || undefined,
   };
 
   static docs = [
     {
-      title: 'How to use NodeBalancers',
+      title: 'Getting Started with NodeBalancers',
       src: 'https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers/',
-      body: `Nearly all applications that are built using Linodes can benefit from load balancing,
-       and load balancing itself is the key to expanding an application to larger numbers of users.
-        Linode now provides NodeBalancers, which can ease the deployment
-         and administration of a load balancer.`,
+      body: `Using a NodeBalancer to begin managing a simple web application`,
     },
     {
       title: 'NodeBalancer Reference Guide',
       src: 'https://www.linode.com/docs/platform/nodebalancer/nodebalancer-reference-guide/',
-      body: `Check out the NodeBalacner reference guide for tips on how to successfully configure
-      a NodeBalancer and get the most out of the service.`,
+      body: `NodeBalancer Reference Guide`,
     },
   ];
-
-  formatTransferData = (transferTotal: number) => {
-    // API v4 always returns nodebalancer transfer in MB, so we want to clean it up if it's too
-    // big or too small
-    const gb = 1073741824;
-    const mb = 1048576;
-    const kb = 1024;
-    const totalToBytes = transferTotal * 1024 * 1024; // convert the MB to Bytes
-    if (totalToBytes >= gb) { // convert bytes to GB
-      return `${Math.max(Math.ceil(totalToBytes / gb)).toFixed(2)} GB`;
-    }
-    if (totalToBytes >= mb) { // convert bytes to MB
-      return `${Math.max(Math.ceil(totalToBytes / mb * 100) / 100).toFixed(2)} MB`;
-    }
-    if (totalToBytes >= kb) { // convert bytes to KB
-      return `${Math.max(Math.ceil(totalToBytes / kb * 100) / 100).toFixed(2)} KB`;
-    }
-    return `${totalToBytes} bytes`;
-  }
 
   renderEmptyState = () => {
     return <Placeholder />;
   }
 
+  toggleDialog = (nodeBalancerId: number) => {
+    this.setState({
+      selectedNodeBalancerId: nodeBalancerId,
+      deleteConfirmDialog: {
+        ...this.state.deleteConfirmDialog,
+        open: !this.state.deleteConfirmDialog.open,
+      },
+    });
+  }
+
+  deleteNodeBalancer = () => {
+    const { selectedNodeBalancerId } = this.state;
+    this.setState({
+      deleteConfirmDialog: {
+        ...this.state.deleteConfirmDialog,
+        errors: undefined,
+        submitting: true,
+      },
+    });
+
+    deleteNodeBalancer(selectedNodeBalancerId!)
+      .then((response) => {
+        getNodeBalancersWithConfigs()
+          .then((response: Linode.ExtendedNodeBalancer[]) => {
+            this.setState({
+              nodeBalancers: response,
+              deleteConfirmDialog: {
+                open: false,
+                submitting: false,
+              },
+            });
+          });
+      })
+      .catch((err) => {
+        const apiError = path<Linode.ApiFieldError[]>(['response', 'data', 'error'], err);
+
+        return this.setState({
+          deleteConfirmDialog: {
+            ...this.state.deleteConfirmDialog,
+            errors: apiError
+              ? apiError
+              : [{ field: 'none', reason: 'Unable to complete your request at this time.' }],
+          },
+        }, () => {
+          scrollErrorIntoView();
+        });
+      });
+  }
+
   render() {
     const {
       classes,
-      nodeBalancers: {
-        error: nodeBalancerError,
-        response: nodeBalancers,
-      },
+      history,
     } = this.props;
 
+    const {
+      nodeBalancers,
+      errors,
+      deleteConfirmDialog: {
+        open: deleteConfirmAlertOpen,
+      },
+    } = this.state;
+
     /** Error State */
-    if (nodeBalancerError) {
+    if (errors) {
       return <ErrorState
         errorText="There was an error loading your NodeBalancers. Please try again later."
       />;
@@ -155,8 +210,9 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
       return <Placeholder
         title="Add a NodeBalancer"
         copy="Adding a NodeBalancer is easy. Click below to add a NodeBalancer."
+        icon={NodeBalancer}
         buttonProps={{
-          onClick: () => null,
+          onClick: () => history.push('/nodebalancers/create'),
           children: 'Add a NodeBalancer',
         }}
       />;
@@ -165,10 +221,20 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
     return (
       <React.Fragment>
         <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
-          <Grid item xs={12}>
+          <Grid item>
             <Typography variant="headline" className={classes.title} data-qa-title >
               NodeBalancers
             </Typography>
+          </Grid>
+          <Grid item>
+            <Grid container alignItems="flex-end">
+              <Grid item>
+                <AddNewLink
+                  onClick={() => history.push('/nodebalancers/create')}
+                  label="Add a NodeBalancer"
+                />
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
         <Paper>
@@ -187,29 +253,34 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
             <TableBody>
               {nodeBalancers.map((nodeBalancer) => {
                 return (
-                  <TableRow key={nodeBalancer.id}>
-                    <TableCell>{nodeBalancer.label}</TableCell>
-                    <TableCell>{`${nodeBalancer.up} up, ${nodeBalancer.down} down`}</TableCell>
-                    <TableCell>
-                      {this.formatTransferData(nodeBalancer.transfer.total)}
+                  <TableRow key={nodeBalancer.id} data-qa-nodebalancer-cell>
+                    <TableCell data-qa-nodebalancer-label>
+                      <Link to={`/nodebalancers/${nodeBalancer.id}`}>
+                        {nodeBalancer.label}
+                      </Link>
                     </TableCell>
-                    <TableCell>{nodeBalancer.ports.map((port, index, ports) => {
-                      // we want a comma after the port number as long as the ports array
-                      // has multiple values and the current index isn't the last
-                      // element in the array
-                      return (ports.length > 1 && index + 1 !== ports.length) ? `${port}, ` : port;
-                    })}
+                    <TableCell data-qa-node-status>
+                    <span className={classes.NBStatus}>{nodeBalancer.up} up</span> <br />
+                    <span className={classes.NBStatus}>{nodeBalancer.down} down</span>
                     </TableCell>
-                    <TableCell>
+                    <TableCell data-qa-transferred>
+                      {convertMegabytesTo(nodeBalancer.transfer.total)}
+                    </TableCell>
+                    <TableCell data-qa-ports>
+                      {nodeBalancer.ports.length === 0 && 'None'}
+                      {nodeBalancer.ports.join(', ')}
+                    </TableCell>
+                    <TableCell data-qa-nodebalancer-ips>
                       <IPAddress ips={[nodeBalancer.ipv4]} copyRight />
                       {nodeBalancer.ipv6 && <IPAddress ips={[nodeBalancer.ipv6]} copyRight />}
                     </TableCell>
-                    <TableCell>
+                    <TableCell data-qa-region>
                       <RegionIndicator region={nodeBalancer.region} />
                     </TableCell>
                     <TableCell>
                       <NodeBalancerActionMenu
                         nodeBalancerId={nodeBalancer.id}
+                        toggleDialog={this.toggleDialog}
                       />
                     </TableCell>
                   </TableRow>
@@ -218,6 +289,36 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
             </TableBody>
           </Table>
         </Paper>
+        <ConfirmationDialog
+          onClose={() => this.setState({
+            deleteConfirmDialog: NodeBalancersLanding.defaultDeleteConfirmDialogState,
+          })}
+          title="Confirm Deletion"
+          error={(this.state.deleteConfirmDialog.errors || []).map(e => e.reason).join(',')}
+          actions={({ onClose }) =>
+            <ActionsPanel style={{ padding: 0 }}>
+              <Button
+                data-qa-confirm-cancel
+                onClick={this.deleteNodeBalancer}
+                type="secondary"
+                destructive
+                loading={this.state.deleteConfirmDialog.submitting}
+              >
+                Delete
+              </Button>
+              <Button
+                onClick={() => onClose()}
+                type="cancel"
+                data-qa-cancel-cancel
+              >
+                Cancel
+            </Button>
+            </ActionsPanel>
+          }
+          open={deleteConfirmAlertOpen}
+        >
+          <Typography>Are you sure you want to delete your NodeBalancer</Typography>
+        </ConfirmationDialog>
       </React.Fragment>
     );
   }
@@ -228,6 +329,7 @@ const styled = withStyles(styles, { withTheme: true });
 export const enhanced = compose(
   styled,
   preloaded,
+  withRouter,
   SectionErrorBoundary,
   setDocs(NodeBalancersLanding.docs),
 );

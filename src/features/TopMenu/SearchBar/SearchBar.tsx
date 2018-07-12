@@ -1,33 +1,27 @@
+import Downshift, { DownshiftState, StateChangeOptions } from 'downshift';
+import * as moment from 'moment';
+import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import * as moment from 'moment';
-import Downshift, { DownshiftState, StateChangeOptions } from 'downshift';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { compose, pathOr } from 'ramda';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 
-import {
-  withStyles,
-  WithStyles,
-  Theme,
-  StyleRules,
-} from 'material-ui/styles';
-import Paper from 'material-ui/Paper';
-import { MenuItem } from 'material-ui/Menu';
-import IconButton from 'material-ui/IconButton';
-import Close from 'material-ui-icons/Close';
-import Search from 'material-ui-icons/Search';
+import IconButton from '@material-ui/core/IconButton';
+import MenuItem from '@material-ui/core/MenuItem';
+import Paper from '@material-ui/core/Paper';
+import { StyleRules, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Close from '@material-ui/icons/Close';
+import Search from '@material-ui/icons/Search';
 
-import { typeLabelLong, displayType } from 'src/features/linodes/presentation';
-import { getLinodesPage } from 'src/services/linodes';
-import { getVolumesPage } from 'src/services/volumes';
-import { getNodeBalancersPage } from 'src/services/nodebalancers';
+import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
+import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
+import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
+import TextField from 'src/components/TextField';
+import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
 import { getDomainsPage } from 'src/services/domains';
 import { getImagesPage } from 'src/services/images';
-import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
-import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
-import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
-
-import TextField from 'src/components/TextField';
+import { getLinodesPage } from 'src/services/linodes';
+import { getNodeBalancersPage } from 'src/services/nodebalancers';
+import { getVolumesPage } from 'src/services/volumes';
 
 import SearchSuggestion, { SearchSuggestionT } from './SearchSuggestion';
 
@@ -59,7 +53,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
       backgroundColor: 'white',
       position: 'absolute',
       width: 'calc(100% - 118px)',
-      zIndex: '2',
+      zIndex: 2,
       left: 0,
       visibility: 'hidden',
       opacity: 0,
@@ -106,6 +100,9 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     margin: 0,
     flex: 1,
     minHeight: 'initial',
+    '& input:focus': {
+      outline: '1px dotted #666',
+    },
   },
   input: {
     maxWidth: '100%',
@@ -260,7 +257,7 @@ class SearchBar extends React.Component<FinalProps, State> {
           linode.specs.memory,
           linode.specs.disk,
           linode.specs.vcpus,
-          linode.image,
+          linode.image!,
         ),
         Icon: LinodeIcon,
         path: `/linodes/${linode.id}`,
@@ -360,6 +357,7 @@ class SearchBar extends React.Component<FinalProps, State> {
         className={classes.item}
         classes={{ selected: classes.selectedMenuItem }}
         data-qa-suggestion={suggestion.title}
+        data-qa-selected={isHighlighted}
       >
         <SearchSuggestion
           Icon={suggestion.Icon}

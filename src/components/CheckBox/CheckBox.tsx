@@ -1,17 +1,11 @@
-import * as React from 'react';
 import * as classNames from 'classnames';
+import * as React from 'react';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  WithStyles,
-  Theme,
-} from 'material-ui';
-import Checkbox, { CheckboxProps } from 'material-ui/Checkbox';
-import CheckboxIcon from '../../assets/icons/checkbox.svg';
-import CheckboxCheckedIcon from '../../assets/icons/checkboxChecked.svg';
+import Checkbox, { CheckboxProps } from '@material-ui/core/Checkbox';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-
+import CheckboxIcon from 'src/assets/icons/checkbox.svg';
+import CheckboxCheckedIcon from 'src/assets/icons/checkboxChecked.svg';
 
 type CSSClasses =
   'root'
@@ -49,11 +43,17 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     '& .defaultFill': {
       fill: theme.palette.status.warning,
     },
+    '&$checked': {
+      color: theme.palette.status.warningDark,
+    },
   },
   error: {
     color: theme.palette.status.errorDark,
     '& .defaultFill': {
       fill: theme.palette.status.error,
+    },
+    '&$checked': {
+      color: theme.palette.status.errorDark,
     },
   },
   disabled: {
@@ -85,13 +85,13 @@ const LinodeCheckBox: React.StatelessComponent<FinalProps> = (props) => {
 
   return (
     <Checkbox
+      color="primary"
       className={classnames}
       icon={<CheckboxIcon />}
       checkedIcon={<CheckboxCheckedIcon />}
       data-qa-checked={props.checked}
       { ...rest }
-    >
-    </Checkbox>
+    />
   );
 };
 

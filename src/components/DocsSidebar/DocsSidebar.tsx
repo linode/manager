@@ -1,14 +1,9 @@
 import * as React from 'react';
 
-import {
-  withStyles,
-  WithStyles,
-  Theme,
-  StyleRulesCallback,
-} from 'material-ui/styles';
-import Grid from 'src/components/Grid';
-import Typography from 'material-ui/Typography';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
+import Grid from 'src/components/Grid';
 
 import DocComponent, { Doc } from './DocComponent';
 

@@ -1,5 +1,8 @@
+import * as Joi from 'joi';
+
 import { API_ROOT } from 'src/constants';
-import Request, { setURL, setMethod, setParams, setData } from './index';
+
+import Request, { setData, setMethod, setParams, setURL, validateRequestData } from './index';
 
 type Page<T> = Linode.ResourcePage<T>;
 type Domain = Linode.Domain;
@@ -56,7 +59,7 @@ export const createDomain = (data: Partial<Linode.Domain>) =>
   setData(data),
   setURL(`${API_ROOT}/domains`),
   setMethod('POST'),
-);
+  );
 
 export const updateDomain = (
   domainId: number,
@@ -64,7 +67,7 @@ export const updateDomain = (
 ) => Request<Domain>(
   setURL(`${API_ROOT}/domains/${domainId}`),
   setMethod('PUT'),
-  setData(data),
+  setData({ status: 'active', ...data }), // remove ability for user to change status
   );
 
 export const deleteDomain = (domainID: number) =>
@@ -79,3 +82,16 @@ export const cloneDomain = (domainID: number, cloneName: string) =>
   setURL(`${API_ROOT}/domains/${domainID}/clone`),
   setMethod('POST'),
 );
+
+const importZoneSchema = Joi.object({
+  domain: Joi.string().required(),
+  remote_nameserver: Joi.string().required(),
+});
+
+export const importZone = (domain?: string, remote_nameserver?: string) =>
+  Request(
+    validateRequestData({ domain, remote_nameserver }, importZoneSchema),
+    setData({ domain, remote_nameserver }),
+    setURL(`${API_ROOT}/domains/import`),
+    setMethod('POST'),
+  );

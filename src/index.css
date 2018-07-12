@@ -16,6 +16,14 @@ body {
   font-family: "Lato", sans-serif;
 }
 
+@media screen and (min-width: 960px) {
+  body {
+    /* fix for scrollbar compoensation */
+    width: 100vw;
+    overflow-x: hidden;
+  }
+}
+
 @media print {
   body {
     background-color: #fff;
@@ -38,6 +46,11 @@ a {
   text-decoration: none;
   color: #3B85D9;
 }
+
+:focus {
+  outline: 1px dotted #999;
+}
+
 /* Scrollbars (webkit only) */
 /* ::-webkit-scrollbar {
   width: 6px;

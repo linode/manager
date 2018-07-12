@@ -1,4 +1,4 @@
-import createBreakpoints from 'material-ui/styles/createBreakpoints';
+import createBreakpoints from '@material-ui/core/styles/createBreakpoints';
 
 const breakpoints = createBreakpoints({});
 
@@ -23,6 +23,7 @@ const LinodeTheme: Linode.Theme = {
     white: '#32363C',
     black: '#fff',
     boxShadow: '#222',
+    focusBorder: '#999',
   },
   notificationList: {
     padding: '16px 32px 16px 23px',

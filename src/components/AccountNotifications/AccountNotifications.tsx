@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { Subscription } from 'rxjs/Subscription';
 
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
-import Menu from 'material-ui/Menu';
+import Menu from '@material-ui/core/Menu';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import AccountLevelNotifications from 'src/features/AccountLevelNotifications';
-import UserNotificationButton from './AccountNotificationsButton';
 import notifications$ from 'src/notifications';
+
+import UserNotificationButton from './AccountNotificationsButton';
 
 type ClassNames = 'root' | 'dropDown';
 

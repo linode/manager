@@ -1,16 +1,12 @@
 import * as React from 'react';
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
 
-import Paper from 'material-ui/Paper';
-import Typography from 'material-ui/Typography';
+import Paper from '@material-ui/core/Paper';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
+import RenderGuard from 'src/components/RenderGuard';
 import SelectionCard from 'src/components/SelectionCard';
 
 export interface ExtendedLinode extends Linode.Linode {
@@ -52,7 +48,6 @@ type CombinedProps = StyledProps;
 
 class SelectLinodePanel extends React.Component<CombinedProps> {
 
-
   renderCard(linode: ExtendedLinode) {
     const { selectedLinodeID, handleSelection } = this.props;
     return (
@@ -70,10 +65,10 @@ class SelectLinodePanel extends React.Component<CombinedProps> {
     const { error, classes, linodes, header } = this.props;
 
     return (
-      <Paper className={`${classes.root}`}>
+      <Paper className={`${classes.root}`} data-qa-select-linode-panel>
         <div className={classes.inner}>
           {error && <Notice text={error} error />}
-          <Typography variant="title">
+          <Typography variant="title" data-qa-select-linode-header>
             {(!!header) ? header : 'Select Linode'}
           </Typography>
           <Typography component="div" className={classes.panelBody}>
@@ -93,4 +88,4 @@ class SelectLinodePanel extends React.Component<CombinedProps> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(SelectLinodePanel);
+export default styled(RenderGuard<CombinedProps>(SelectLinodePanel));

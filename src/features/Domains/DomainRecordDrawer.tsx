@@ -1,18 +1,19 @@
-import * as React from 'react';
 import * as classNames from 'classnames';
 import { cond, defaultTo, equals, lensPath, path, pathOr, pick, set } from 'ramda';
+import * as React from 'react';
 
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
-import Button, { ButtonProps } from 'material-ui/Button';
-import MenuItem from 'material-ui/Menu/MenuItem';
+import Button, { ButtonProps } from '@material-ui/core/Button';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-import { updateDomain, createDomainRecord, updateDomainRecord } from 'src/services/domains';
-import defaultNumeric from 'src/utilities/defaultNumeric';
-import Drawer from 'src/components/Drawer';
-import { default as _TextField, Props as TextFieldProps } from 'src/components/TextField';
 import ActionsPanel from 'src/components/ActionsPanel';
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import Drawer from 'src/components/Drawer';
+import MenuItem from 'src/components/MenuItem';
 import Notice from 'src/components/Notice';
+import { default as _TextField, Props as TextFieldProps } from 'src/components/TextField';
+import { createDomainRecord, updateDomain, updateDomainRecord } from 'src/services/domains';
+import defaultNumeric from 'src/utilities/defaultNumeric';
+import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 const TextField = (props: TextFieldProps) =>
   <_TextField {...props} />;
@@ -63,7 +64,6 @@ interface EditableDomainFields extends EditableSharedFields {
   refresh_sec?: number;
   retry_sec?: number;
   soa_email?: string;
-  status?: Linode.DomainStatus;
   ttl_sec?: number;
   zonefile?: Linode.ZoneFile;
 }
@@ -75,7 +75,6 @@ interface State {
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
-
 
 interface _TextFieldProps {
   label: string;
@@ -104,7 +103,6 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     weight: pathOr(5, ['weight'], props),
     domain: pathOr(undefined, ['domain'], props),
     soa_email: pathOr(undefined, ['soa_email'], props),
-    status: pathOr('active', ['status'], props),
     axfr_ips: pathOr(0, ['axfr_ips'], props),
     refresh_sec: pathOr(0, ['refresh_sec'], props),
     retry_sec: pathOr(0, ['retry_sec'], props),
@@ -127,7 +125,6 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
   setRefreshSec = this.updateField('refresh_sec');
   setRetrySec = this.updateField('retry_sec');
   setExpireSec = this.updateField('expire_sec');
-  setStatus = this.updateField('status');
 
   static errorFields = {
     name: 'name',
@@ -142,7 +139,6 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     weight: 'weight',
     domain: 'domain',
     soa_email: 'SOA email address',
-    status: 'status',
     axfr_ips: 'domain transfers',
     refresh_sec: 'refresh rate',
     retry_sec: 'retry rate',
@@ -160,6 +156,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       }
       value={defaultTo('', this.state.fields[field])}
       onChange={e => this.updateField(field)(e.target.value)}
+      data-qa-target={label}
     />
 
   NumberField = ({ label, field, defaultValue = 0 }: NumberFieldProps) =>
@@ -203,18 +200,6 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
   RetryRateField = () =>
     <this.MSSelect label="Retry Rate" field="retry_sec" fn={this.setRetrySec} />
 
-  DomainStatusField = () =>
-    <TextField
-      label="DomainStatus"
-      select
-      value={defaultTo('active', (this.state.fields as EditableDomainFields).status)}
-      onChange={e => this.setStatus(e.target.value)}
-    >
-      <MenuItem value="active">Active</MenuItem>
-      <MenuItem value="disabled">Disabled</MenuItem>
-      <MenuItem value="edit_mode">Edit Mode</MenuItem>
-    </TextField>
-
   ExpireField = () =>
     <TextField
       label="Expire Rate"
@@ -242,6 +227,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       select
       value={defaultTo(0, this.state.fields[field])}
       onChange={e => fn(+e.target.value)}
+      data-qa-ns-select={label}
     >
       <MenuItem value={0}>Default</MenuItem>
       <MenuItem value={300}>5 minutes</MenuItem>
@@ -257,7 +243,6 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       <MenuItem value={1209600}>2 weeks</MenuItem>
       <MenuItem value={2419200}>4 weeks</MenuItem>
     </TextField>
-
 
   ProtocolField = () =>
     <TextField
@@ -303,13 +288,17 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
   handleSubmissionErrors = (errorResponse: any) => {
     const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'])(errorResponse);
     if (errors) {
-      this.setState({ errors, submitting: false });
+      this.setState({ errors, submitting: false }, () => {
+        scrollErrorIntoView();
+      });
       return;
     }
 
     this.setState({
       submitting: false,
       errors: [{ reason: 'An unknown error has occured.', field: '_unknown' }],
+    }, () => {
+      scrollErrorIntoView();
     });
   }
 
@@ -382,7 +371,6 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         'retry_sec',
         'expire_sec',
         'ttl_sec',
-        'status',
         'axfr_ips',
       ], fields),
     ],
@@ -431,7 +419,6 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       fields: [
         (idx: number) => <this.TextField field="domain" label="Domain" key={idx} />,
         (idx: number) => <this.TextField field="soa_email" label="SOA Email" key={idx} />,
-        (idx: number) => <this.DomainStatusField key={idx} />,
         (idx: number) => <this.DomainTrainsferField key={idx} />,
         (idx: number) => <this.DefaultTTLField key={idx} />,
         (idx: number) => <this.RefreshRateField key={idx} />,
@@ -532,7 +519,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         : isCreating
           ? this.onRecordCreate
           : this.onRecordEdit,
-      children: isCreating ? 'Add' : 'Edit',
+      children: 'Save',
     };
 
     const otherErrors = [
@@ -549,12 +536,13 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         {otherErrors.length > 0 && otherErrors.map(err => <Notice error text={err} />)}
         {fields.map((field: any, idx: number) => field(idx))}
         <ActionsPanel>
-          <Button {...buttonProps} />
+          <Button {...buttonProps} data-qa-record-save />
           <Button
             variant="raised"
             color="secondary"
             className="cancel"
             onClick={this.onClose}
+            data-qa-record-cancel
           >
             Cancel
           </Button>
@@ -570,8 +558,8 @@ const modeMap = {
 };
 
 const typeMap = {
-  master: 'Master',
-  slave: 'Slave',
+  master: 'SOA',
+  slave: 'SOA',
   A: 'A',
   AAAA: 'AAAA',
   CAA: 'CAA',

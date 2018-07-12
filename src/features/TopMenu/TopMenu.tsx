@@ -1,19 +1,15 @@
 import * as React from 'react';
+import AccountNotification from 'src/components/AccountNotifications';
 
-import {
-  withStyles,
-  WithStyles,
-  StyleRules,
-} from 'material-ui/styles';
-import AppBar from 'material-ui/AppBar';
-import Toolbar from 'material-ui/Toolbar';
-import IconButton from 'material-ui/IconButton';
-import MenuIcon from 'material-ui-icons/Menu';
+import AppBar from '@material-ui/core/AppBar';
+import IconButton from '@material-ui/core/IconButton';
+import { StyleRules, withStyles, WithStyles } from '@material-ui/core/styles';
+import Toolbar from '@material-ui/core/Toolbar';
+import MenuIcon from '@material-ui/icons/Menu';
 
 import AddNewMenu from './AddNewMenu';
 import SearchBar from './SearchBar';
 import UserMenu from './UserMenu';
-import AccountNotification from 'src/components/AccountNotifications';
 import UserNotificationMenu from './UserNotificationMenu';
 
 type ClassNames = 'appBar'

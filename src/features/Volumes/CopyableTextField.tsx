@@ -1,14 +1,10 @@
-import * as React from 'react';
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
 import * as copy from 'copy-to-clipboard';
+import * as React from 'react';
 
-import TextField, { Props as TextFieldProps } from 'src/components/TextField';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+
 import CopyTooltip from 'src/components/CopyTooltip';
+import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 
 type ClassNames = 'root'
 | 'input'
@@ -24,11 +20,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-interface Props {
+interface Props extends TextFieldProps {
   className: string;
 }
 
-type CombinedProps = Props & TextFieldProps & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 class CopyableTextField extends React.Component<CombinedProps> {
   clickIcon = (value: string) => {
@@ -40,13 +36,14 @@ class CopyableTextField extends React.Component<CombinedProps> {
   }
 
   render() {
-    const { value, restProps, classes, className } = this.props;
+    const { value, classes, className, ...restProps } = this.props;
 
     return (
       <TextField
         value={value}
         {...restProps}
         className={`${className} ${'copy'}`}
+        data-qa-copy-tooltip
         InputProps={{
           endAdornment: (
             <CopyTooltip

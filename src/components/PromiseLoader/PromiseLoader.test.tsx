@@ -1,5 +1,6 @@
-import * as React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
+import * as React from 'react';
+
 import PromiseLoader from './PromiseLoader';
 
 const mockAxiosResponse = (
@@ -13,7 +14,6 @@ describe('PromiseLoaderSpec', () => {
   const preloaded = PromiseLoader({ resource: () => Promise.resolve(data) });
   const LoadedComponent = preloaded(Component);
   let wrapper: ShallowWrapper;
-
 
   describe('before resolution', () => {
     beforeEach(async () => {

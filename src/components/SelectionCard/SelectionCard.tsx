@@ -1,17 +1,12 @@
-import * as React from 'react';
 import * as classNames from 'classnames';
+import * as React from 'react';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
-import Check from 'material-ui-icons/Check';
-import Tooltip from 'material-ui/Tooltip';
+import Fade from '@material-ui/core/Fade';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Tooltip from '@material-ui/core/Tooltip';
+import Check from '@material-ui/icons/Check';
+
 import Grid from 'src/components/Grid';
-import Fade from 'material-ui/transitions/Fade';
-
 
 type CSSClasses =
 'root'
@@ -48,8 +43,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
       },
     },
     '&:focus $innerGrid': {
-      borderColor: theme.palette.primary.main,
-      backgroundColor: theme.bg.main,
+      outline: `1px dotted ${theme.color.focusBorder}`,
     },
     '& .w100': {
       width: '100%',
@@ -124,7 +118,6 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
 });
 
 const styled = withStyles(styles, { withTheme: true });
-
 
 export interface Props {
   onClick?: (e: React.SyntheticEvent<HTMLElement>) => void;
@@ -208,7 +201,11 @@ const SelectionCard: React.StatelessComponent<CombinedProps> = (props) => {
 
               {checked &&
               <Fade in={checked}>
-                <Grid item className={`${classes.icon} ${classes.checked}`}>
+                <Grid
+                  item
+                  className={`${classes.icon} ${classes.checked}`}
+                  data-qa-checked={checked}
+                >
                   <Check />
                 </Grid>
               </Fade>

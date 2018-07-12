@@ -1,16 +1,11 @@
-import * as React from 'react';
 import * as classNames from 'classnames';
+import * as React from 'react';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  WithStyles,
-} from 'material-ui';
-import Typography from 'material-ui/Typography';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import ErrorOutline from '@material-ui/icons/ErrorOutline';
+
 import Grid from 'src/components/Grid';
-
-import ErrorOutline from 'material-ui-icons/ErrorOutline';
-
 
 interface Props {
   errorText: string;

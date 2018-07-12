@@ -1,4 +1,23 @@
-const { deleteAll } = require('../setup/setup');
+const {
+    deleteAll,
+    removeAllLinodes,
+    createLinode,
+    removeAllVolumes,
+    allocatePrivateIp,
+    getNodebalancers,
+    removeNodebalancer,
+    getDomains,
+    removeDomain,
+} = require('../setup/setup');
+
+const {
+    loadProxyImposter,
+    getImposters,
+    deleteImposters,
+    loadImposter,
+} = require('../utils/mb-utils');
+
+const { readToken } = require('../utils/config-utils');
 
 exports.browserCommands = () => {
     /* Overwrite the native getText function
@@ -18,6 +37,76 @@ exports.browserCommands = () => {
             return text;
         }
     }
+
+    browser.addCommand('loadProxyImposter', function async(proxyConfig) {
+        return loadProxyImposter(proxyConfig)
+            .then(res => res)
+            .catch(error => console.error(error));
+    });
+
+    browser.addCommand('getImposters', function async(removeProxies, file) {
+        return getImposters(removeProxies, file)
+            .then(res => res)
+            .catch(error => console.error(error));
+    });
+
+    browser.addCommand('loadImposter', function async(imposter) {
+        return loadImposter(imposter)
+            .then(res => res)
+            .catch(error => console.error(error));
+    });
+
+    browser.addCommand('deleteImposters', function async() {
+        return deleteImposters()
+            .then(res => res)
+            .catch(error => console.error(error));
+    });
+
+    browser.addCommand('readToken', function() {
+        const token = readToken();
+        return token;
+    });
+
+    browser.addCommand('createLinode', function async(token, password, linodeLabel=false) {
+        return createLinode(token, password, linodeLabel)
+            .then(res => res)
+            .catch(err => err);
+    });
+
+    browser.addCommand('removeAllLinodes', function async(token) {
+        return removeAllLinodes(token)
+            .then(res => res.length > 0);
+    });
+
+    browser.addCommand('removeAllVolumes', function async(token) {
+        return removeAllVolumes(token)
+            .then(res => res);
+    });
+
+    browser.addCommand('getDomains', function async(token) {
+        return getDomains(token)
+            .then(res => res);
+    });
+
+    browser.addCommand('removeDomain', function async(token, domainId) {
+        return removeDomain(token, domainId)
+            .then(res => res);
+    });
+
+    browser.addCommand('allocatePrivateIp', function async(token, linodeId) {
+        return allocatePrivateIp(token, linodeId)
+            .then(res => res);
+    });
+
+    browser.addCommand('getNodeBalancers', function async(token) {
+        return getNodebalancers(token)
+            .then(res => res);
+    });
+
+    browser.addCommand('removeNodeBalancer', function async(token, nodeBalancerId) {
+        return removeNodebalancer(token, nodeBalancerId)
+            .then(res => res);
+    });
 
     /*
     * Executes a Javascript Click event via the browser console. 

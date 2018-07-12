@@ -1,5 +1,5 @@
+import { assocPath, compose, ifElse, when } from 'ramda';
 import { Action } from 'redux';
-import { compose, ifElse, assocPath, when } from 'ramda';
 
 export const REQUEST = '@@manager/resources/REQUEST';
 export const RESPONSE = '@@manager/resources/RESPONSE';
@@ -32,7 +32,32 @@ export function oneOfType(action: { type: string }, list: string[]): action is A
   return false;
 }
 
-export const defaultState = {};
+export const defaultState: Linode.ResourcesState = {
+  types: { loading: false, data: { data: [], results: 0, pages: 1, page: 0 }, },
+  kernels: { loading: false, data: [], },
+  profile: {
+    loading: false, data: {
+      uid: 1,
+      username: '',
+      email: '',
+      timezone: '',
+      email_notifications: false,
+      referrals: {
+        code: '',
+        url: '',
+        total: 0,
+        completed: 0,
+        pending: 0,
+        credit: 0,
+      },
+      ip_whitelist_enabled: false,
+      lish_auth_method: 'password_keys',
+      authorized_keys: [],
+      two_factor_auth: false,
+      restricted: false,
+    },
+  }
+}
 
 export default (
   state: Linode.ResourcesState = defaultState,

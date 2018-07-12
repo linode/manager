@@ -1,26 +1,27 @@
+import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { compose, pathOr } from 'ramda';
 import { Link } from 'react-router-dom';
 
-import { withStyles, Theme, WithStyles, StyleRulesCallback } from 'material-ui/styles';
-import Grid from 'src/components/Grid';
-import Typography from 'material-ui/Typography';
-import TableRow from 'material-ui/Table/TableRow';
-import TableCell from 'material-ui/Table/TableCell';
-import Tooltip from 'material-ui/Tooltip';
+import Button from '@material-ui/core/Button';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
+import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
 
-import { displayType } from 'src/features/linodes/presentation';
-import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import Flag from 'src/assets/icons/flag.svg';
-import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
+import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
+import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
+import { displayType } from 'src/features/linodes/presentation';
+import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
+import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 
-import LinodeStatusIndicator from './LinodeStatusIndicator';
-import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';
 import LinodeActionMenu from './LinodeActionMenu';
-import transitionStatus from '../linodeTransitionStatus';
+import LinodeStatusIndicator from './LinodeStatusIndicator';
+import RegionIndicator from './RegionIndicator';
 
 type ClassNames = 'bodyRow'
   | 'linodeCell'
@@ -30,7 +31,9 @@ type ClassNames = 'bodyRow'
   | 'actionCell'
   | 'actionInner'
   | 'flag'
-  | 'status';
+  | 'status'
+  | 'link'
+  | 'linkButton';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
   return ({
@@ -39,6 +42,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
     },
     linodeCell: {
       width: '30%',
+      '& h3': {
+        transition: theme.transitions.create(['color']),
+      },
     },
     tagsCell: {
       width: '15%',
@@ -73,6 +79,20 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
       marginBottom: theme.spacing.unit,
       color: '#555',
       fontSize: '.92rem',
+    },
+    link: {
+      display: 'block',
+    },
+    linkButton: {
+      padding: 0,
+      width: '100%',
+      textAlign: 'left',
+      '&:hover': {
+        backgroundColor: 'transparent',
+        '& h3': {
+          color: theme.palette.primary.main,
+        },
+      },
     },
   });
 };
@@ -120,19 +140,23 @@ class LinodeRow extends React.Component<PropsWithStyles> {
 
     return (
       <TableCell className={classes.linodeCell}>
-        <Grid container alignItems="center">
-          <Grid item className="py0">
-            <LinodeStatusIndicator status={linodeStatus} />
-          </Grid>
-          <Grid item className="py0">
-            <Link to={`/linodes/${linodeId}`}>
-              <Typography variant="subheading" data-qa-label>
-                {linodeLabel}
-              </Typography>
-            </Link>
-            {typeLabel}
-          </Grid>
-        </Grid>
+        <Link to={`/linodes/${linodeId}`} className={classes.link} tabIndex={-1}>
+          <Button className={classes.linkButton}>
+            <Grid container alignItems="center">
+              <Grid item className="py0">
+                <LinodeStatusIndicator status={linodeStatus} />
+              </Grid>
+              <Grid item className="py0">
+                <Typography variant="subheading" data-qa-label>
+                  {linodeLabel}
+                </Typography>
+                <Typography>
+                  {typeLabel}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Button>
+        </Link>
       </TableCell>
     );
   }
@@ -145,7 +169,9 @@ class LinodeRow extends React.Component<PropsWithStyles> {
         {this.headCell()}
         <TableCell colSpan={4}>
           {typeof value === 'number' &&
-            <div className={classes.status}>{linodeStatus.replace('_', ' ')}: {value}%</div>
+            <div className={classes.status}>
+              {transitionText(linodeStatus, linodeRecentEvent)}: {value}%
+            </div>
           }
           <LinearProgress value={value} />
         </TableCell>
@@ -196,7 +222,7 @@ class LinodeRow extends React.Component<PropsWithStyles> {
   }
 
   render() {
-    const loading = transitionStatus.includes(this.props.linodeStatus);
+    const loading = linodeInTransition(this.props.linodeStatus, this.props.linodeRecentEvent);
 
     return loading
       ? this.loadingState()

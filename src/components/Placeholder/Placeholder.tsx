@@ -1,14 +1,11 @@
 import * as React from 'react';
-import {
-  withStyles,
-  StyleRulesCallback,
-  WithStyles,
-} from 'material-ui';
-import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
-import Typography from 'material-ui/Typography';
-import Button, { ButtonProps } from 'material-ui/Button';
-import Grid from 'src/components/Grid';
 
+import Button, { ButtonProps } from '@material-ui/core/Button';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+
+import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
+import Grid from 'src/components/Grid';
 
 type ClassNames = 'root'
   | 'title'
@@ -44,9 +41,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => ({
     maxWidth: 350,
   },
   icon: {
-    animation: 'scaleIn .5s ease-in-out',
-    width: 225,
-    height: 225,
+    '&.animate' : {
+      animation: 'scaleIn .5s ease-in-out',
+    },
+    width: '225px !important',
+    height: '225px !important',
     '& .outerCircle': {
       fill: 'white',
       stroke: theme.bg.offWhite,
@@ -66,15 +65,17 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => ({
 
 export interface Props {
   icon?: React.ComponentType<any>;
+  animate?: boolean;
   copy?: string;
   title?: string;
   buttonProps?: ButtonProps;
+  className?: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const Placeholder: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, copy, title, icon: Icon, buttonProps } = props;
+  const { animate, classes, copy, title, icon: Icon, buttonProps } = props;
   return (
     <Grid
       container
@@ -82,11 +83,11 @@ const Placeholder: React.StatelessComponent<CombinedProps> = (props) => {
       alignItems="center"
       direction="column"
       justify="center"
-      className={classes.root}
+      className={`${classes.root} ${props.className}`}
     >
       <Grid item xs={12}>
         {Icon &&
-          <Icon className={classes.icon} />
+          <Icon className={`${classes.icon} ${animate && 'animate'}`} />
         }
       </Grid>
       <Grid item xs={12}>
@@ -116,6 +117,7 @@ Placeholder.defaultProps = {
   icon: LinodeIcon,
   copy: 'The feature you are looking for is currently in development. Please check back soon.',
   title: 'Feature in Progress',
+  animate: true,
 };
 
 const styled = withStyles(styles, { withTheme: true });

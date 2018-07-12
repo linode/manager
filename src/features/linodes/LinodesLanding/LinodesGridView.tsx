@@ -1,9 +1,9 @@
 import * as React from 'react';
 
 import Grid from 'src/components/Grid';
+import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 
 import LinodeCard from './LinodeCard';
-import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 
 interface Props {
   linodes: Linode.EnhancedLinode[];
@@ -12,6 +12,14 @@ interface Props {
   toggleConfirmation: (bootOption: Linode.BootAction,
      linodeId: number, linodeLabel: string) => void;
 }
+
+const safeGetImageLabel = (images: Linode.Image[], slug: string | null): string => {
+  if (!slug) {
+    return 'No Image'
+  }
+  const iv = images.find((i) => i.id === slug);
+  return iv ? iv.label : 'Unknown Image';
+};
 
 const LinodesGridView: React.StatelessComponent<Props> = (props) => {
   const { linodes, images, openConfigDrawer, toggleConfirmation } = props;
@@ -30,7 +38,7 @@ const LinodesGridView: React.StatelessComponent<Props> = (props) => {
           linodeNotification={linode.notification}
           linodeLabel={linode.label}
           linodeRecentEvent={linode.recentEvent}
-          image={images.find(image => linode.image === image.id)}
+          imageLabel={safeGetImageLabel(images, linode.image)}
           openConfigDrawer={openConfigDrawer}
           linodeSpecDisk={linode.specs.disk}
           linodeSpecMemory={linode.specs.memory}

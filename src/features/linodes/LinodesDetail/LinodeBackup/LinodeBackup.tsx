@@ -1,47 +1,41 @@
-import * as React from 'react';
 import * as moment from 'moment-timezone';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { path, sortBy, pathOr } from 'ramda';
-import { Subscription } from 'rxjs/Rx';
+import { compose, path, pathOr, sortBy } from 'ramda';
+import * as React from 'react';
+import { connect } from 'react-redux';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+import 'rxjs/add/operator/filter';
+import { Subscription } from 'rxjs/Subscription';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
-import Button from 'material-ui/Button';
-import { FormControl, FormHelperText } from 'material-ui/Form';
-import { InputLabel } from 'material-ui/Input';
-import { MenuItem } from 'material-ui/Menu';
-import Paper from 'material-ui/Paper';
-import TableHead from 'material-ui/Table/TableHead';
-import TableBody from 'material-ui/Table/TableBody';
-import TableRow from 'material-ui/Table/TableRow';
-import TableCell from 'material-ui/Table/TableCell';
-import Typography from 'material-ui/Typography';
+import Button from '@material-ui/core/Button';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import Paper from '@material-ui/core/Paper';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
 
-import {
-  getLinodeBackups,
-  enableBackups,
-  takeSnapshot,
-  updateBackupsWindow,
-  cancelBackups,
-  getType,
-} from 'src/services/linodes';
-
-import Table from 'src/components/Table';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
-import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
-import Placeholder from 'src/components/Placeholder';
-import TextField from 'src/components/TextField';
-import Select from 'src/components/Select';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import { events$, resetEventsPolling } from 'src/events';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import ActionsPanel from 'src/components/ActionsPanel';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import Placeholder from 'src/components/Placeholder';
+import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
+import Select from 'src/components/Select';
+import Table from 'src/components/Table';
+import TextField from 'src/components/TextField';
+import { events$, resetEventsPolling } from 'src/events';
+import { linodeInTransition } from 'src/features/linodes/transitions';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
+import { cancelBackups, enableBackups, getLinodeBackups, getType, takeSnapshot, updateBackupsWindow } from 'src/services/linodes';
+import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
+import { withLinode } from '../context';
 import LinodeBackupActionMenu from './LinodeBackupActionMenu';
 import RestoreToLinodeDrawer from './RestoreToLinodeDrawer';
 
@@ -96,12 +90,20 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props {
+interface Props { }
+
+interface ContextProps {
   linodeID: number;
   linodeRegion: string;
   linodeType: null | string;
   backupsEnabled: boolean;
   backupsSchedule: Linode.LinodeBackupSchedule;
+  linodeInTransition: boolean;
+}
+
+
+interface ConnectedProps {
+  timezone: string;
 }
 
 interface PreloadedProps {
@@ -128,7 +130,12 @@ interface State {
   cancelBackupsAlertOpen: boolean;
 }
 
-type CombinedProps = Props & PreloadedProps & WithStyles<ClassNames> & RouteComponentProps<{}>;
+type CombinedProps = Props
+  & PreloadedProps
+  & WithStyles<ClassNames>
+  & RouteComponentProps<{}>
+  & ContextProps
+  & ConnectedProps;
 
 const typeMap = {
   auto: 'Automatic',
@@ -144,7 +151,7 @@ export const aggregateBackups = (backups: Linode.LinodeBackupsResponse): Linode.
   const manualSnapshot = path(['status'], backups.snapshot.in_progress) === 'needsPostProcessing'
     ? backups.snapshot.in_progress
     : backups.snapshot.current;
-  return backups && [...backups.automatic, manualSnapshot].filter(b => Boolean(b));
+  return backups && [...backups.automatic!, manualSnapshot!].filter(b => Boolean(b));
 };
 
 export function formatBackupDate(backupDate: string) {
@@ -173,7 +180,10 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
 
   eventSubscription: Subscription;
 
+  mounted: boolean = false;
+
   componentDidMount() {
+    this.mounted = true;
     this.eventSubscription = events$
       .filter(e => [
         'linode_snapshot',
@@ -194,19 +204,14 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
   }
 
   componentWillUnmount() {
+    this.mounted = false;
     this.eventSubscription.unsubscribe();
   }
 
   initWindows(timezone: string) {
     let windows = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22].map((hour) => {
-      const start = moment.utc({ hour })
-        .add(moment.duration({ hours: 1 }))
-        .tz(timezone);
-
-      const finish = moment.utc({ hour })
-        .add(moment.duration({ hours: 3 }))
-        .tz(timezone);
-
+      const start = moment.utc({ hour }).tz(timezone);
+      const finish = moment.utc({ hour }).add(moment.duration({ hours: 2 })).tz(timezone);
       return [
         `${start.format('HH:mm')} - ${finish.format('HH:mm')}`,
         `W${evenize(+moment.utc({ hour }).format('H'))}`,
@@ -224,7 +229,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     super(props);
 
     /* TODO: use the timezone from the user's profile */
-    this.windows = this.initWindows(moment.tz.guess());
+    this.windows = this.initWindows(this.props.timezone);
 
     this.days = [
       ['Choose a day', 'Scheduling'],
@@ -237,7 +242,6 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
       ['Saturday', 'Saturday'],
     ];
   }
-
 
   enableBackups() {
     const { linodeID } = this.props;
@@ -262,9 +266,9 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         pathOr([], ['response', 'data', 'errors'], errorResponse)
           .forEach((err: Linode.ApiFieldError) => sendToast(err.reason, 'error'));
       });
+    if (!this.mounted) { return; }
     this.setState({ cancelBackupsAlertOpen: false });
   }
-
 
   takeSnapshot = () => {
     const { linodeID } = this.props;
@@ -294,6 +298,8 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
             ...settingsForm,
             errors: path(['response', 'data', 'errors'], err),
           },
+        }, () => {
+          scrollErrorIntoView();
         });
       });
   }
@@ -307,6 +313,32 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
 
   closeRestoreDrawer = () => {
     this.setState({ restoreDrawer: { open: false, backupID: undefined, backupCreated: '' } });
+  }
+
+  handleSelectBackupWindow = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    this.setState({
+      settingsForm:
+        { ...this.state.settingsForm, window: e.target.value },
+    })
+  }
+
+  handleSelectBackupTime = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    this.setState({
+      settingsForm:
+        { ...this.state.settingsForm, day: e.target.value },
+    })
+  }
+
+  handleSnapshotNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ snapshotForm: { label: e.target.value } });
+  }
+
+  handleCloseBackupsAlert = () => {
+    this.setState({ cancelBackupsAlertOpen: false });
+  }
+
+  handleOpenBackupsAlert = () => {
+    this.setState({ cancelBackupsAlertOpen: true });
   }
 
   Placeholder = (): JSX.Element | null => {
@@ -401,7 +433,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
   }
 
   SnapshotForm = (): JSX.Element | null => {
-    const { classes } = this.props;
+    const { classes, linodeInTransition } = this.props;
     const { snapshotForm } = this.state;
     const getErrorFor = getAPIErrorFor({ label: 'Label' }, snapshotForm.errors);
 
@@ -426,18 +458,26 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
               errorText={getErrorFor('label')}
               label="Name Snapshot"
               value={snapshotForm.label || ''}
-              onChange={e => this.setState({ snapshotForm: { label: e.target.value } })}
+              onChange={this.handleSnapshotNameChange}
               data-qa-manual-name
             />
-            <Button
-              variant="raised"
-              color="primary"
-              onClick={this.takeSnapshot}
-              className={classes.snapshotAction}
-              data-qa-snapshot-button
-            >
-              Take Snapshot
-            </Button>
+            <Tooltip title={linodeInTransition
+              ? 'This Linode is busy'
+              : ''
+            }>
+              <div>
+                <Button
+                  variant="raised"
+                  color="primary"
+                  onClick={this.takeSnapshot}
+                  className={classes.snapshotAction}
+                  data-qa-snapshot-button
+                  disabled={linodeInTransition}
+                >
+                  Take Snapshot
+                </Button>
+              </div>
+            </Tooltip>
             {getErrorFor('none') &&
               <FormHelperText error>{getErrorFor('none')}</FormHelperText>
             }
@@ -475,10 +515,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
             </InputLabel>
             <Select
               value={settingsForm.window}
-              onChange={e => this.setState({
-                settingsForm:
-                  { ...settingsForm, window: e.target.value },
-              })}
+              onChange={this.handleSelectBackupWindow}
               inputProps={{ name: 'window', id: 'window' }}
               data-qa-time-select
             >
@@ -488,6 +525,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
                 </MenuItem>
               ))}
             </Select>
+            <FormHelperText>Windows displayed in {this.props.timezone}</FormHelperText>
           </FormControl>
 
           <FormControl>
@@ -496,10 +534,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
             </InputLabel>
             <Select
               value={settingsForm.day}
-              onChange={e => this.setState({
-                settingsForm:
-                  { ...settingsForm, day: e.target.value },
-              })}
+              onChange={this.handleSelectBackupTime}
               inputProps={{ name: 'day', id: 'day' }}
               data-qa-weekday-select
             >
@@ -557,7 +592,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
             ${classes.cancelButton}
             destructive
           `}
-          onClick={() => this.setState({ cancelBackupsAlertOpen: true })}
+          onClick={this.handleOpenBackupsAlert}
           data-qa-cancel
         >
           Cancel Backups
@@ -595,7 +630,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
                 Cancel Backups
               </Button>
               <Button
-                onClick={() => this.setState({ cancelBackupsAlertOpen: false })}
+                onClick={this.handleCloseBackupsAlert}
                 variant="raised"
                 color="secondary"
                 className="cancel"
@@ -628,9 +663,9 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
   }
 }
 
-const preloaded = PromiseLoader<Props>({
-  backups: (props: Props) => getLinodeBackups(props.linodeID),
-  types: ({ linodeType }: Props) => {
+const preloaded = PromiseLoader<Props & ContextProps>({
+  backups: (props) => getLinodeBackups(props.linodeID),
+  types: ({ linodeType }) => {
     if (!linodeType) {
       return Promise.resolve(undefined);
     }
@@ -641,4 +676,23 @@ const preloaded = PromiseLoader<Props>({
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default preloaded(styled(withRouter(LinodeBackup)));
+const connected = connect((state) => ({
+  timezone: pathOr(moment.tz.guess(), ['resources', 'profile', 'data', 'timezone'], state),
+}));
+
+const linodeContext = withLinode((context) => ({
+  backupsEnabled: context.data!.backups.enabled,
+  backupsSchedule: context.data!.backups.schedule,
+  linodeID: context.data!.id,
+  linodeInTransition: linodeInTransition(context.data!.status),
+  linodeRegion: context.data!.region,
+  linodeType: context.data!.type,
+}));
+
+export default compose(
+  linodeContext,
+  preloaded,
+  styled as any,
+  withRouter,
+  connected,
+)(LinodeBackup);

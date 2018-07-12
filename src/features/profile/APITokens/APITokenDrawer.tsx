@@ -1,35 +1,28 @@
-import * as React from 'react';
 import * as moment from 'moment';
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
-import Drawer from 'src/components/Drawer';
-import TableBody from 'material-ui/Table/TableBody';
-import TableCell from 'material-ui/Table/TableCell';
-import TableHead from 'material-ui/Table/TableHead';
-import TableRow from 'material-ui/Table/TableRow';
-import Typography from 'material-ui/Typography';
-import Button from 'material-ui/Button';
-import { InputLabel } from 'material-ui/Input';
-import { MenuItem } from 'material-ui/Menu';
-import { FormControl, FormHelperText } from 'material-ui/Form';
+import * as React from 'react';
 
-import Table from 'src/components/Table';
-import Radio from 'src/components/Radio';
+import Button from '@material-ui/core/Button';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Typography from '@material-ui/core/Typography';
+
 import ActionsPanel from 'src/components/ActionsPanel';
-import TextField from 'src/components/TextField';
+import Drawer from 'src/components/Drawer';
+import Radio from 'src/components/Radio';
 import Select from 'src/components/Select';
+import Table from 'src/components/Table';
+import TextField from 'src/components/TextField';
 import { dateFormat } from 'src/time';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
-import {
-  Permission,
-  scopeStringToPermTuples,
-  permTuplesToScopeString,
-} from './utils';
+import { Permission, permTuplesToScopeString, scopeStringToPermTuples } from './utils';
 
 type Expiry = [string, string];
 
@@ -43,14 +36,20 @@ export const genExpiryTups = (): Expiry[] => {
 };
 
 type ClassNames = 'permsTable'
+  | 'selectCell'
   | 'accessCell'
   | 'noneCell'
   | 'readOnlyCell'
   | 'readWritecell';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   permsTable: {
-    margin: `${theme.spacing.unit * 3}px 0`,
+    marginTop: theme.spacing.unit * 3,
+  },
+  selectCell: {
+    fontWeight: 700,
+    textTransform: 'uppercase',
+    fontSize: '.9rem',
   },
   accessCell: {
     width: '31%',
@@ -114,7 +113,6 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
     }
   }
 
-
   handleScopeChange = (e: React.SyntheticEvent<RadioButton>): void => {
     const scopeTups = this.state.scopes;
     const targetIndex = scopeTups.findIndex(
@@ -171,10 +169,10 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
         </TableHead>
         <TableBody>
           {mode === 'create' &&
-            <TableRow data-qa-row="Select All">
-              <TableCell padding="checkbox" className={classes.accessCell}>
+            <TableRow data-qa-row="Select All" className={classes.selectCell}>
+              <TableCell padding="checkbox">
                 Select All
-            </TableCell>
+              </TableCell>
               <TableCell padding="checkbox" className={classes.noneCell}>
                 <Radio
                   name="Select All"

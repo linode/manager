@@ -1,8 +1,9 @@
 const { constants } = require('../../../constants');
 
-import { createGenericLinode, deleteLinode } from '../../../utils/common';
-import LinodeDetail from '../../../pageobjects/linode-detail.page';
-import Resize from '../../../pageobjects/linode-detail-resize.page';
+import { apiCreateLinode, apiDeleteAllLinodes } from '../../../utils/common';
+import LinodeDetail from '../../../pageobjects/linode-detail/linode-detail.page';
+import ListLinodes from '../../../pageobjects/list-linodes';
+import Resize from '../../../pageobjects/linode-detail/linode-detail-resize.page';
 
 describe('Linode Detail - Resize Suite', () => {
     const linodeName = `Test-${new Date().getTime()}`;
@@ -10,8 +11,8 @@ describe('Linode Detail - Resize Suite', () => {
     beforeAll(() => {
         browser.url(constants.routes.linodes);
         browser.waitForVisible('[data-qa-add-new-menu-button]');
-        createGenericLinode(linodeName);
-        browser.click(`[data-qa-linode="${linodeName}"] [data-qa-label]`);
+        apiCreateLinode(linodeName);
+        ListLinodes.navigateToDetail();
         LinodeDetail
             .landingElemsDisplay()
             .changeTab('Resize');
@@ -19,7 +20,7 @@ describe('Linode Detail - Resize Suite', () => {
     });
 
     afterAll(() => {
-        deleteLinode(linodeName);
+        apiDeleteAllLinodes();
     });
 
     it('should display resize base elements', () => {
@@ -27,11 +28,11 @@ describe('Linode Detail - Resize Suite', () => {
     });
 
     it('should fail to resize on the same plan selection', () => {
-        const toastMsg = 'Linode is already running this service plan.';
+        // const toastMsg = 'Linode is already running this service plan.';
         
         Resize.planCards[0].click();
-        Resize.submit.click();
-        Resize.toastDisplays(toastMsg);
+        browser.waitForVisible('[role="tooltip"]');
+        expect($('[role="tooltip"]').getText()).toBe('This is your current plan. Please select another to resize.');
     });
 
     it('should display toast message on resize', () => {

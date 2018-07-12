@@ -1,26 +1,25 @@
+import { compose, pathOr } from 'ramda';
 import * as React from 'react';
-import * as Rx from 'rxjs/Rx';
-import { bindActionCreators } from 'redux';
 import { connect, Dispatch } from 'react-redux';
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
-import { pathOr, compose } from 'ramda';
+import { bindActionCreators } from 'redux';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/merge';
+import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
+
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import VolumesIcon from 'src/assets/addnewmenu/volume.svg';
 import Placeholder from 'src/components/Placeholder';
-import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
+import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import { events$ } from 'src/events';
-import { openForCreating } from 'src/store/reducers/volumeDrawer';
 import { getVolumes } from 'src/services/volumes';
+import { openForCreating } from 'src/store/reducers/volumeDrawer';
 
 import VolumesLanding from './VolumesLanding';
 
-export const updateVolumes$ = new Rx.Subject<boolean>();
+export const updateVolumes$ = new Subject<boolean>();
 
 type ClassNames = 'root';
 
@@ -40,7 +39,7 @@ interface State {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class Volumes extends React.Component<CombinedProps, State> {
-  eventsSub: Rx.Subscription;
+  eventsSub: Subscription;
   mounted: boolean = false;
 
   state = {
@@ -49,6 +48,12 @@ class Volumes extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     this.mounted = true;
+
+    const maybeAddEvent = (e: boolean | Linode.Event, volume: Linode.Volume) => {
+      if (typeof e === 'boolean') { return {} };
+      if (!e.entity || e.entity.id !== volume.id) { return {} }
+      return { recentEvent: e };
+    };
 
     this.eventsSub = events$
       .filter(event => (
@@ -63,10 +68,15 @@ class Volumes extends React.Component<CombinedProps, State> {
         ].includes(event.action)
       ))
       .merge(updateVolumes$)
-      .subscribe(() => {
+      .subscribe((event) => {
         getVolumes()
           .then((volumes) => {
-            this.setState({ volumes: volumes.data });
+            this.setState({
+              volumes: volumes.data.map((v) => ({
+                ...v,
+                ...maybeAddEvent(event, v),
+              })),
+            });
           })
           .catch(() => {
             /* @todo: how do we want to display this error? */
@@ -88,17 +98,17 @@ class Volumes extends React.Component<CombinedProps, State> {
       <React.Fragment>
         {volumes.length
           ? <VolumesLanding
-              volumes={volumes}
-            />
+            volumes={volumes}
+          />
           : <Placeholder
-              title="Create a Volume"
-              copy="Add storage to your Linodes using the resilient Volumes service"
-              icon={VolumesIcon}
-              buttonProps={{
-                onClick: () => this.openVolumesDrawer(),
-                children: 'Create a Volume',
-              }}
-            />
+            title="Create a Volume"
+            copy="Add storage to your Linodes using the resilient Volumes service"
+            icon={VolumesIcon}
+            buttonProps={{
+              onClick: () => this.openVolumesDrawer(),
+              children: 'Create a Volume',
+            }}
+          />
         }
       </React.Fragment>
     );

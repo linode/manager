@@ -1,29 +1,17 @@
-import * as React from 'react';
 import * as classNames from 'classnames';
+import * as React from 'react';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
-import Select, { SelectProps } from 'material-ui/Select';
-import Input, { InputProps } from 'material-ui/Input';
-import { MenuProps } from 'material-ui/Menu';
-
+import Input, { InputProps } from '@material-ui/core/Input';
+import { MenuProps } from '@material-ui/core/Menu';
+import Select, { SelectProps } from '@material-ui/core/Select';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import HelpIcon from 'src/components/HelpIcon';
 
-type ClassNames = 'root'
-  | 'inputSucess'
+type ClassNames = 'inputSucess'
   | 'inputError';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
-  root: {
-    '&[class*="focused"]': {
-      borderColor: '#666',
-    },
-  },
   inputError: {
     borderColor: theme.color.red,
     '&[class*="focused"]': {
@@ -54,7 +42,7 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
   success,
   error,
   helpText,
-  ...props,
+  ...props
 }) => {
 
   const menuProps: Partial<MenuProps> = {
@@ -63,6 +51,8 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
     transformOrigin: { vertical: 'top', horizontal: 'left' },
     MenuListProps: { className: 'selectMenuList' },
     PaperProps: { className: 'selectMenuDropdown' },
+    /** @todo Had to disable transition. */
+    // transition: Fade,
   };
 
   const inputProps: InputProps = {
@@ -71,7 +61,6 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
   };
 
   const c = classNames({
-    [classes.root]: true,
     [classes.inputSucess]: success === true,
     [classes.inputError]: error === true,
   });
@@ -94,5 +83,4 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(SSelect);
-
+export default styled<CombinedProps>(SSelect);

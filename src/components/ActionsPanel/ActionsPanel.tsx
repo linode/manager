@@ -1,35 +1,41 @@
+import * as classNames from 'classnames';
 import * as React from 'react';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
-
-import {
-  ExpansionPanelActions,
-  ExpansionPanelActionsProps,
-} from 'material-ui/ExpansionPanel';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {},
+  root: {
+    paddingTop: 16,
+    paddingBottom: 16,
+    '& > :not(:first-child)': {
+      marginLeft: 8,
+    },
+  },
 });
 
-interface Props extends ExpansionPanelActionsProps {}
+interface Props {
+  className?: string;
+  style?: any;
+}
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const ActionPanel: React.StatelessComponent<CombinedProps> = (props) => {
+  const { classes, className, style } = props;
+
   return (
-    <ExpansionPanelActions
-      className={`${props.classes.root} actionPanel`}
-      {...props}
+    <div
+      className={classNames({
+        [classes.root]: true,
+        ...(className && { [className]: true }),
+        actionPanel: true,
+      })}
+      style={style}
     >
       { props.children }
-    </ExpansionPanelActions>
+    </div>
   );
 };
 

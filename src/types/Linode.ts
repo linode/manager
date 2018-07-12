@@ -5,7 +5,7 @@ namespace Linode {
     backups: LinodeBackups;
     created: string;
     region: string;
-    image: string;
+    image: string | null;
     group?: string;
     ipv4: string[];
     ipv6: string;
@@ -15,6 +15,8 @@ namespace Linode {
     updated: string;
     hypervisor: Hypervisor;
     specs: LinodeSpecs;
+    watchdog_enabled: boolean;
+    recentEvent?: Linode.Event;
   }
 
   export interface EnhancedLinode extends Linode.Linode {
@@ -38,15 +40,15 @@ namespace Linode {
   }
 
   export interface LinodeBackupSchedule {
-    window: string;
-    day: string;
+    window: string | null;
+    day: string | null;
   }
 
   export interface LinodeBackupsResponse {
     automatic: LinodeBackup[];
     snapshot: {
-      current: LinodeBackup,
-      in_progress: LinodeBackup,
+      current: LinodeBackup | null,
+      in_progress: LinodeBackup | null,
     };
   }
 
@@ -54,9 +56,15 @@ namespace Linode {
     currentBackups: LinodeBackupsResponse;
   }
 
+  export interface LinodeBackupDisk {
+    size: number;
+    label: string;
+    filesystem: string;
+  }
+
   export interface LinodeBackup {
     id: number;
-    label: string;
+    label: string | null;
     status: LinodeBackupStatus;
     type: LinodeBackupType;
     region: string;
@@ -64,16 +72,16 @@ namespace Linode {
     updated: string;
     finished: string;
     configs: string[];
-    disks: Disk[];
+    disks: LinodeBackupDisk[];
     /**
      * @todo Waiting on API to clarify as this is documented as an ENUM.
      */
-    availability: string;
+    availability?: string;
   }
 
-  type LinodeBackupType = 'auto' | 'snapshot';
+  export type LinodeBackupType = 'auto' | 'snapshot';
 
-  type LinodeBackupStatus =
+  export type LinodeBackupStatus =
     'pending'
     | 'running'
     | 'needsPostProcessing'
@@ -127,13 +135,15 @@ namespace Linode {
     kernel: string;
     comments: string;
     memory_limit: number;
-    root_device_ro: boolean;
     root_device: string;
     run_level: 'default' | 'single' | 'binbash';
     virt_mode: 'paravirt' | 'fullvirt';
     helpers: any;
     label: any;
     devices: Devices;
+    created: string;
+    updated: string;
+    initrd: string | null;
   }
 
   export interface DiskDevice {

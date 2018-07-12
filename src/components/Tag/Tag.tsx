@@ -1,14 +1,9 @@
+import * as classNames from 'classnames';
 import * as React from 'react';
 
-import {
-  withStyles,
-  Theme,
-  WithStyles,
-  StyleRulesCallback,
-} from 'material-ui/styles';
-import Chip from 'material-ui/Chip';
-import Close from 'material-ui-icons/Close';
-
+import Chip, { ChipProps } from '@material-ui/core/Chip';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Close from '@material-ui/icons/Close';
 
 type Variants =
   'white'
@@ -25,12 +20,8 @@ type CSSClasses = 'label' | 'root' | Variants;
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => {
   return ({
-    label: {
-
-    },
-    root: {
-
-    },
+    label: {},
+    root: {},
     white: {
       backgroundColor: 'white',
     },
@@ -65,7 +56,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   });
 };
 
-interface Props {
+interface Props extends ChipProps {
   label: string;
   variant?: Variants;
   onDelete?: () => void;
@@ -74,19 +65,29 @@ interface Props {
 type PropsWithStyles = Props & WithStyles<CSSClasses>;
 
 const Tag: React.SFC<PropsWithStyles> = (props) => {
-  const { variant, classes, theme, ...rest } = props;
-  const classNames = [
-    props.classes[props.variant!],
-    props.classes.root,
-  ].join(' ');
+  const {
+    variant,
+    classes,
+    theme,
+    className,
+    ...chipProps
+  } = props;
 
   return <Chip
-    className={classNames}
+    className={classNames({
+      ...(className && { [className]: true }),
+      [classes[props.variant!]]: true,
+      [classes.root]: true,
+    })}
     deleteIcon={<Close />}
     classes={{ label: props.classes.label }}
     data-qa-tag
-    {...rest}
+    {...chipProps}
   />;
+};
+
+Tag.defaultProps = {
+  variant: 'gray',
 };
 
 export default withStyles(styles, { withTheme: true })<Props>(Tag);

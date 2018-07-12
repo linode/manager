@@ -1,8 +1,13 @@
 const { constants } = require('../../../constants');
 
-import VolumeDetail from '../../../pageobjects/linode-detail-volume.page';
+import {
+    apiCreateLinode,
+    apiDeleteAllLinodes,
+    apiDeleteAllVolumes,
+} from '../../../utils/common';
+import VolumeDetail from '../../../pageobjects/linode-detail/linode-detail-volume.page';
 import ListLinodes from '../../../pageobjects/list-linodes';
-import LinodeDetail from '../../../pageobjects/linode-detail.page';
+import LinodeDetail from '../../../pageobjects/linode-detail/linode-detail.page';
 
 describe('Linode - Volumes - Attach, Detach, Delete Suite', () => {
     let linodeName;
@@ -14,14 +19,21 @@ describe('Linode - Volumes - Attach, Detach, Delete Suite', () => {
 
     beforeAll(() => {
         browser.url(constants.routes.linodes);
+        apiCreateLinode();
         ListLinodes.linodeElem.waitForVisible();
         linodeName = ListLinodes.linode[0].$(ListLinodes.linodeLabel.selector).getText();
-        ListLinodes.linode[0].$(ListLinodes.linodeLabel.selector).click();
+        ListLinodes.powerOff(ListLinodes.linode[0]);
+        ListLinodes.navigateToDetail();
         LinodeDetail.landingElemsDisplay();
         LinodeDetail.changeTab('Volumes');
         
         VolumeDetail.createVolume(testVolume);
-        browser.waitForVisible('[data-qa-volume-cell]', 25000);
+        browser.waitForVisible('[data-qa-volume-cell]', constants.wait.long);
+    });
+
+    afterAll(() => {
+        apiDeleteAllLinodes();
+        apiDeleteAllVolumes();
     });
 
     it('should display detach linode dialog', () => {
@@ -34,11 +46,11 @@ describe('Linode - Volumes - Attach, Detach, Delete Suite', () => {
 
     it('should detach the volume', () => {
         VolumeDetail.detachConfirm(testVolume.id);
-
         if (VolumeDetail.placeholderText.isVisible()) {
-            const placeholderMsg = VolumeDetail.placeholderText.getText();
-            const expectedMsg = 'No volumes attached';
-            expect(placeholderMsg).toBe(expectedMsg);
+            browser.waitUntil(function() {
+                const placeholderMsg = VolumeDetail.placeholderText.getText();
+                return placeholderMsg.includes('No volumes attached');
+            }, constants.wait.normal);
         }
     });
 

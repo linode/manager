@@ -1,15 +1,29 @@
+import { mount, shallow } from 'enzyme';
 import * as React from 'react';
-import { mount } from 'enzyme';
 
 import { types } from 'src/__data__/types';
+import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
+import { createPromiseLoaderResponse } from 'src/utilities/testHelpers';
 
 import { LinodeResize } from './LinodeResize';
-import { createPromiseLoaderResponse } from 'src/utilities/testHelpers';
-import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 
 describe('LinodeResize', () => {
   const mockTypes = createPromiseLoaderResponse(
     types.map(LinodeResize.extendType),
+  );
+
+  const component = shallow(
+    <LinodeResize
+      classes={{
+        root: '',
+        title: '',
+        subTitle: '',
+        currentPlanContainer: '',
+      }}
+      linodeId={12}
+      linodeType={null}
+      types={mockTypes}
+    />,
   );
 
   it('should render the currently selected plan as a card', () => {
@@ -21,7 +35,6 @@ describe('LinodeResize', () => {
             title: '',
             subTitle: '',
             currentPlanContainer: '',
-            actionPanel: '',
           }}
           linodeId={12}
           linodeType={null}
@@ -48,7 +61,6 @@ describe('LinodeResize', () => {
                 title: '',
                 subTitle: '',
                 currentPlanContainer: '',
-                actionPanel: '',
               }}
               linodeId={12}
               linodeType={null}
@@ -77,7 +89,6 @@ describe('LinodeResize', () => {
                 title: '',
                 subTitle: '',
                 currentPlanContainer: '',
-                actionPanel: '',
               }}
               linodeId={12}
               linodeType={'_something_unexpected_'}
@@ -94,4 +105,17 @@ describe('LinodeResize', () => {
       });
     });
   });
+
+  it('submit button should be enabled if a plan is selected', () => {
+    component.setState({ selectedId: 'selected' });
+    const submitBtn = component.find('WithStyles(Button)');
+    expect(submitBtn.prop('disabled')).toBeFalsy();
+  })
+
+  it('submit button should be disabled if no plan is selected', () => {
+    component.setState({ selectedId: '' });
+    const submitBtn = component.find('WithStyles(Button)');
+    expect(submitBtn.prop('disabled')).toBeTruthy();
+  })
+
 });

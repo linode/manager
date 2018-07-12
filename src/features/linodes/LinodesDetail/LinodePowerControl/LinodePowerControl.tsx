@@ -1,23 +1,18 @@
 import * as React from 'react';
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui/styles';
 
-import Button from 'material-ui/Button';
-import Menu from 'material-ui/Menu';
-import MenuItem from 'material-ui/Menu/MenuItem';
-import KeyboardArrowDown from 'material-ui-icons/KeyboardArrowDown';
-import KeyboardArrowUp from 'material-ui-icons/KeyboardArrowUp';
+import Button from '@material-ui/core/Button';
+import Menu from '@material-ui/core/Menu';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
 
-import {
-  powerOffLinode,
-  powerOnLinode,
-  rebootLinode,
-} from 'src/features/linodes/LinodesLanding/powerActions';
-
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import PowerOn from 'src/assets/icons/powerOn.svg';
+import Reload from 'src/assets/icons/reload.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
-
-import PowerOn from '../../../../assets/icons/powerOn.svg';
-import Reload from '../../../../assets/icons/reload.svg';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import MenuItem from 'src/components/MenuItem';
+import { powerOffLinode, powerOnLinode, rebootLinode } from 'src/features/linodes/LinodesLanding/powerActions';
+import { linodeInTransition } from 'src/features/linodes/transitions';
 
 type ClassNames = 'root'
   | 'button'
@@ -110,7 +105,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 interface Props {
   id: number;
   label: string;
-  status: 'running' | 'offline' | string;
+  status: Linode.LinodeStatus;
+  recentEvent?: Linode.Event;
   openConfigDrawer: (config: Linode.Config[], action: (id: number) => void) => void;
 }
 
@@ -169,17 +165,17 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { status, classes } = this.props;
+    const { status, classes, recentEvent } = this.props;
     const { menu: { anchorEl }, bootOption, powerAlertOpen } = this.state;
 
-    const isRunning = status === 'running';
-    const isOffline = status === 'offline';
-    const isBusy = !isRunning && !isOffline;
+    const isBusy = linodeInTransition(status, recentEvent);
+    const isRunning = !isBusy && status === 'running';
+    const isOffline = !isBusy && status === 'offline';
 
     return (
       <React.Fragment>
         <Button
-          disabled={!['running', 'offline'].includes(status)}
+          disabled={isBusy}
           onClick={e => this.openMenu(e.currentTarget)}
           aria-owns={anchorEl ? 'power' : undefined}
           aria-haspopup="true"
@@ -250,7 +246,7 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
           }
         </Menu>
         <ConfirmationDialog
-          title={(bootOption === 'reboot') ? 'Confirm Reboot' : 'Powering Down'}
+          title={(bootOption === 'reboot') ? 'Confirm Reboot' : 'Powering Off'}
           actions={() =>
             <ActionsPanel style={{ padding: 0 }}>
               <Button
@@ -262,7 +258,7 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
               >
                 {(bootOption === 'reboot')
                   ? 'Reboot'
-                  : 'Power Down'}
+                  : 'Power Off'}
               </Button>
               <Button
                 onClick={() => this.setState({ powerAlertOpen: false })}

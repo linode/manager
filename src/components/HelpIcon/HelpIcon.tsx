@@ -1,14 +1,9 @@
 import * as React from 'react';
-import {
-  withStyles,
-  WithStyles,
-  StyleRulesCallback,
-} from 'material-ui';
-import IconButton from 'material-ui/IconButton';
-import Typography from 'material-ui/Typography';
-import Popover from 'material-ui/Popover';
-import HelpOutline from 'material-ui-icons/HelpOutline';
 
+import IconButton from '@material-ui/core/IconButton';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import Tooltip from '@material-ui/core/Tooltip';
+import HelpOutline from '@material-ui/icons/HelpOutline';
 
 interface Props {
   text: string;
@@ -20,22 +15,10 @@ interface State {
   anchorReference: string;
 }
 
-type ClassNames = 'root' | 'helpIcon';
+type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => ({
-  root: {
-    '& .helpPaper': {
-      padding: theme.spacing.unit * 2,
-      backgroundColor: theme.bg.offWhite,
-      '&::after': {
-        content: 'poo',
-        display: 'block',
-      },
-    },
-  },
-  helpIcon: {
-    color: theme.palette.primary.main,
-  },
+  root: {},
 });
 
 const styled = withStyles(styles, { withTheme: true });
@@ -61,7 +44,7 @@ class HelpIcon extends React.Component<CombinedProps, State> {
     });
   }
 
-  handleClickButton = (e: React.MouseEvent<HTMLElement>) => {
+  handleOpen = (e: React.MouseEvent<HTMLElement>) => {
     this.setState({
       open: true,
       anchorEl: e.currentTarget,
@@ -69,23 +52,19 @@ class HelpIcon extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, text } = this.props;
+    const { text } = this.props;
     return (
       <React.Fragment>
-        <IconButton onClick={this.handleClickButton} data-qa-help-button>
-          <HelpOutline className={classes.helpIcon} />
-        </IconButton>
-        <Popover
-          open={this.state.open}
-          anchorEl={this.state.anchorEl}
-          onClose={this.handleClose}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-          className={classes.root}
-          classes={{ paper: 'helpPaper' }}
+        <Tooltip
+          title={text}
+          data-qa-help-tooltip
+          enterTouchDelay={0}
+          leaveTouchDelay={5000}
         >
-          <Typography data-qa-popover-text>{ text }</Typography>
-        </Popover>
+          <IconButton data-qa-help-button>
+            <HelpOutline />
+          </IconButton>
+        </Tooltip>
       </React.Fragment>
     );
   }

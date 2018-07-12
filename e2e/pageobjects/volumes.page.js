@@ -1,11 +1,26 @@
+const { constants } = require('../constants');
+
 import Page from './page';
 
 class Volumes extends Page {
     get placeholderText() { return $('[data-qa-placeholder-title]'); }
+    get configDrawerClose() { return $('[data-qa-cancel]'); }
     get volumeCell() { return $$('[data-qa-volume-cell]'); }
     get volumeCellElem() { return $('[data-qa-volume-cell]'); }
     get volumeCellLabel() { return $('[data-qa-volume-cell-label]') }
     get volumeAttachment() { return $('[data-qa-volume-cell-attachment]'); }
+    get copyToolTip() { return $('[data-qa-copy-tooltip]'); }
+    get configHelpMessages() { $$('[data-qa-config-help-msg]'); }
+
+    baseElemsDisplay(initial) {
+        if (initial) {
+            this.placeholderText.waitForVisible();
+        } else {
+            this.sidebarTitle.waitForVisible();
+            expect(this.volumeCell.isVisible()).toBe(true);
+            expect(this.volumeCellElem.isVisible()).toBe(true);
+        }
+    }
 
     getVolumeId(label) {
         const volumesWithLabel = this.volumeCell.filter(v => v.$(this.volumeCellLabel.selector).getText() === label);
@@ -42,7 +57,7 @@ class Volumes extends Page {
 
         browser.waitUntil(function(volumeElement) {
             return $$('[data-qa-volume-cell]').length === (numberOfVolumes-1)
-        }, 30000);
+        }, constants.wait.long);
     }
 
     isAttached(volumeElement) {

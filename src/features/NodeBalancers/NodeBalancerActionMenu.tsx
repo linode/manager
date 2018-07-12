@@ -1,23 +1,41 @@
 import * as React from 'react';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   nodeBalancerId: number;
+  toggleDialog: (nodeBalancerId: number) => void;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
 class NodeBalancerActionMenu extends React.Component<CombinedProps> {
   createLinodeActions = () => {
-    // const { nodeBalancerId } = this.props;
+    const { nodeBalancerId, history, toggleDialog } = this.props;
 
     return function (closeMenu: Function): Action[] {
       const actions = [
         {
+          title: 'Summary',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            history.push(`/nodebalancers/${nodeBalancerId}/summary`);
+            e.preventDefault();
+            closeMenu();
+          },
+        },
+        {
           title: 'Configurations',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
+            history.push(`/nodebalancers/${nodeBalancerId}/configurations`);
+            e.preventDefault();
+            closeMenu();
+          },
+        },
+        {
+          title: 'Settings',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            history.push(`/nodebalancers/${nodeBalancerId}/settings`);
             e.preventDefault();
             closeMenu();
           },
@@ -26,6 +44,7 @@ class NodeBalancerActionMenu extends React.Component<CombinedProps> {
           title: 'Delete',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             e.preventDefault();
+            toggleDialog(nodeBalancerId);
             closeMenu();
           },
         },

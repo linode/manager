@@ -1,13 +1,10 @@
-import * as React from 'react';
 import * as classNames from 'classnames';
-import { cond, propEq, always } from 'ramda';
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
-import Button, { ButtonProps } from 'material-ui/Button';
+import { always, cond, propEq } from 'ramda';
+import * as React from 'react';
+
+import Button, { ButtonProps } from '@material-ui/core/Button';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+
 import Reload from 'src/assets/icons/reload.svg';
 
 type ClassNames = 'root'
@@ -19,9 +16,18 @@ interface Props extends ButtonProps {
   loading?: boolean;
   destructive?: boolean;
   type?: 'primary' | 'secondary' | 'cancel';
+  className?: string;
 }
 
 const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
+  '@keyframes rotate': {
+    from: {
+      transform: 'rotate(0deg)',
+    },
+    to: {
+      transform: 'rotate(360deg)',
+    },
+  },
   root: {
     '&.cancel': {
       border: `1px solid transparent`,
@@ -93,12 +99,14 @@ const WrappedButton: React.StatelessComponent<CombinedProps> = (props) => {
     loading,
     destructive,
     type,
-    ...rest,
+    className,
+    ...rest
   } = props;
 
   return React.createElement(
     Button,
     {
+      ...rest,
       variant: getVariant(props),
       disabled: props.disabled || loading,
       color: getColor(props),
@@ -108,8 +116,9 @@ const WrappedButton: React.StatelessComponent<CombinedProps> = (props) => {
           [classes.root]: true,
           [classes.loading]: loading,
           [classes.destructive]: destructive,
-        }),
-      ...rest,
+        },
+        className,
+      ),
     },
     loading ? <Reload /> : props.children);
 };

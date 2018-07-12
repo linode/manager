@@ -1,7 +1,12 @@
 const { constants } = require('../../constants');
 
+import {
+    apiCreateLinode,
+    apiDeleteAllLinodes,
+    apiDeleteAllVolumes,
+} from '../../utils/common';
 import ListLinodes from '../../pageobjects/list-linodes';
-import VolumeDetail from '../../pageobjects/linode-detail-volume.page';
+import VolumeDetail from '../../pageobjects/linode-detail/linode-detail-volume.page';
 
 describe('Create - Volume Suite', () => {
     let linodeLabel;
@@ -12,13 +17,14 @@ describe('Create - Volume Suite', () => {
 
     beforeAll(() => {
         browser.url(constants.routes.linodes);
+        apiCreateLinode();
         ListLinodes.linodesDisplay();
         linodeLabel = ListLinodes.linode[0].$(ListLinodes.linodeLabel.selector).getText();
     });
 
     it('should display create volumes option in global create menu', () => {
         ListLinodes.globalCreate.click();
-        ListLinodes.addVolumeMenu.waitForVisible();
+        ListLinodes.addVolumeMenu.waitForVisible(constants.wait.normal);
     });
 
     it('should display global volume create drawer', () => {
@@ -30,14 +36,14 @@ describe('Create - Volume Suite', () => {
 
     it('should display form error on create without a label', () => {
         VolumeDetail.createVolume(testVolume, true);
-        VolumeDetail.label.$('p').waitForText();
+        VolumeDetail.label.$('p').waitForText(constants.wait.normal);
         VolumeDetail.closeVolumeDrawer();
     });
 
     it('should display a error notice on create without region', () => {
         testVolume['label'] = `ASD${new Date().getTime()}`;
         VolumeDetail.createVolume(testVolume, true);
-        VolumeDetail.notice.waitForVisible();
+        VolumeDetail.notice.waitForVisible(constants.wait.normal);
         VolumeDetail.closeVolumeDrawer();
     });
 
@@ -51,6 +57,9 @@ describe('Create - Volume Suite', () => {
         browser.waitUntil(function() {
             return VolumeDetail.getVolumeId(testVolume.label).length > 0;
         }, 10000);
+
+        VolumeDetail.volumeCellElem.waitForVisible(constants.wait.normal);
+        VolumeDetail.removeAllVolumes();
     });
 
     it('should create attached to a linode', () => {
@@ -58,11 +67,18 @@ describe('Create - Volume Suite', () => {
         testVolume['attachedLinode'] = linodeLabel;
 
         VolumeDetail.createVolume(testVolume, true);
+
+        VolumeDetail.volumeCellElem.waitForVisible(constants.wait.normal);
+        VolumeDetail.removeAllVolumes();
     });
 
-    it('should remove all volumes', () => {
-        browser.url(constants.routes.volumes);
-        VolumeDetail.volumeCellElem.waitForVisible();
-        VolumeDetail.removeAllVolumes();
+    afterAll(() => {
+        apiDeleteAllLinodes();
+        // try {
+            // attempt to remove all volumes, in case the ui failed
+            // apiDeleteAllVolumes();
+        // } catch (err) {
+            // do nothing
+        // }
     });
 });

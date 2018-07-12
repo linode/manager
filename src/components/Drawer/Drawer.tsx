@@ -1,10 +1,12 @@
 import * as React from 'react';
 
-import { Typography, withStyles, WithStyles, Theme, StyleRulesCallback } from 'material-ui';
-import Drawer, { DrawerProps } from 'material-ui/Drawer';
+import Button from '@material-ui/core/Button';
+import Drawer, { DrawerProps } from '@material-ui/core/Drawer';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import Close from '@material-ui/icons/Close';
+
 import Grid from 'src/components/Grid';
-import Button from 'material-ui/Button';
-import Close from 'material-ui-icons/Close';
 
 interface Props extends DrawerProps {
   title: string;
@@ -24,9 +26,6 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
       width: 480,
     },
     '& .actionPanel': {
-      paddingLeft: 0,
-      paddingRight: 0,
-      marginLeft: -theme.spacing.unit,
       marginTop: theme.spacing.unit * 2,
     },
     '& .selectionCard': {
@@ -77,7 +76,8 @@ const DDrawer: React.StatelessComponent<CombinedProps> = (props) => {
         container
         justify="space-between"
         alignItems="center"
-        className={classes.drawerHeader}>
+        className={classes.drawerHeader}
+        updateFor={[title]}>
         <Grid item>
           <Typography variant="title" data-qa-drawer-title>
             {title}

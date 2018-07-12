@@ -1,24 +1,16 @@
-import * as React from 'react';
 import * as classNames from 'classnames';
-import { Subscription } from 'rxjs/Rx';
-import {
-  lensPath,
-  over,
-  set,
-  tail,
-} from 'ramda';
+import { lensPath, over, set, tail } from 'ramda';
+import * as React from 'react';
+import 'rxjs/add/operator/bufferTime';
+import { Subscription } from 'rxjs/Subscription';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  WithStyles,
-} from 'material-ui';
+import Button from '@material-ui/core/Button';
+import Snackbar from '@material-ui/core/Snackbar';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import Close from '@material-ui/icons/Close';
 
-import Snackbar from 'material-ui/Snackbar';
-import Button from 'material-ui/Button';
 import Grid from 'src/components/Grid';
-import Close from 'material-ui-icons/Close';
-import Typography from 'material-ui/Typography';
 
 import toasts$, { Toast } from './toasts';
 
@@ -180,6 +172,11 @@ class Notifier extends React.Component<CombinedProps, State> {
     this.subscription.unsubscribe();
   }
 
+  onExited = () => this.setState(
+    { toasts: removeFirstToast(this.state.toasts) },
+    () => this.setState(({ toasts: openFirstToast(this.state.toasts) })),
+  );
+
   render() {
     const { classes } = this.props;
     const { toasts } = this.state;
@@ -196,14 +193,8 @@ class Notifier extends React.Component<CombinedProps, State> {
           open={Boolean(toast.open)}
           autoHideDuration={6000}
           onClose={this.onClose}
-          onExited={() => {
-            this.setState({ toasts: removeFirstToast(this.state.toasts) },
-              () => {
-                this.setState(({ toasts: openFirstToast(this.state.toasts) }));
-              },
-            );
-          }}
-          SnackbarContentProps={{
+          onExited={this.onExited}
+          ContentProps={{
             className:
               classNames({
                 [classes.error]: toast.level === 'error',

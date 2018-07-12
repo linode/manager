@@ -1,17 +1,11 @@
-import * as React from 'react';
 import * as classNames from 'classnames';
+import * as React from 'react';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  WithStyles,
-  Theme,
-} from 'material-ui';
-import Radio, { RadioProps } from 'material-ui/Radio';
+import Radio, { RadioProps } from '@material-ui/core/Radio';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+
 import RadioIcon from '../../assets/icons/radio.svg';
 import RadioIconRadioed from '../../assets/icons/radioRadioed.svg';
-
-
 
 type CSSClasses =
   'root'
@@ -43,20 +37,23 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   },
   checked: {
     color: theme.palette.primary.main,
-    '&:hover': {
-      fill: '#3683dc',
-    },
   },
   warning: {
     color: theme.palette.status.warningDark,
     '& .defaultFill': {
       fill: theme.palette.status.warning,
     },
+    '&$checked': {
+      color: theme.palette.status.warningDark,
+    },
   },
   error: {
     color: theme.palette.status.errorDark,
     '& .defaultFill': {
       fill: theme.palette.status.error,
+    },
+    '&$checked': {
+      color: theme.palette.status.errorDark,
     },
   },
   disabled: {
@@ -88,6 +85,7 @@ const LinodeRadioControl: React.StatelessComponent<FinalProps> = (props) => {
 
   return (
     <Radio
+      color="primary"
       className={classnames}
       {...rest}
       icon={<RadioIcon />}

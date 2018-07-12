@@ -1,28 +1,23 @@
-import * as React from 'react';
 import { compose, pathOr } from 'ramda';
-import {
-  matchPath,
-  Redirect,
-  Route,
-  RouteComponentProps,
-  Switch,
-} from 'react-router-dom';
+import * as React from 'react';
 
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
-import AppBar from 'material-ui/AppBar';
-import Tabs, { Tab } from 'material-ui/Tabs';
-import Typography from 'material-ui/Typography';
-import IconButton from 'material-ui/IconButton';
-import KeyboardArrowLeft from 'material-ui-icons/KeyboardArrowLeft';
+import AppBar from '@material-ui/core/AppBar';
+import IconButton from '@material-ui/core/IconButton';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
+import Typography from '@material-ui/core/Typography';
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 
-import { getDomain, getDomainRecords } from 'src/services/domains';
-import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
+import { matchPath, Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
+import setDocs from 'src/components/DocsSidebar/setDocs';
+import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
-import ErrorState from 'src/components/ErrorState';
-import setDocs from 'src/components/DocsSidebar/setDocs';
-import DomainRecords from './DomainRecords';
+import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
+import { getDomain, getDomainRecords } from 'src/services/domains';
 
+import DomainRecords from './DomainRecords';
 
 interface State {
   error?: Error;
@@ -152,12 +147,12 @@ class DomainDetail extends React.Component<CombinedProps, State> {
         <Grid container justify="space-between">
           <Grid item className={classes.titleWrapper}>
             <IconButton
-              onClick={() => history.goBack()}
+              onClick={() => history.push('/domains')}
               className={classes.backButton}
             >
               <KeyboardArrowLeft />
             </IconButton>
-            <Typography variant="headline">{domain.domain}</Typography>
+            <Typography variant="headline" data-qa-domain-title>{domain.domain}</Typography>
           </Grid>
         </Grid>
         <AppBar position="static" color="default">
@@ -206,7 +201,7 @@ const reloaded = reloadableWithRouter<PreloadedProps, { domainId?: number }>(
   },
 );
 
-export default compose(
+export default compose<any, any, any, any, any>(
   setDocs(DomainDetail.docs),
   reloaded,
   styled,

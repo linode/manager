@@ -1,13 +1,7 @@
 import * as React from 'react';
-import {
-  withStyles,
-  WithStyles,
-  StyleRulesCallback,
-  Theme,
-} from 'material-ui';
 
-import Typography from 'material-ui/Typography';
-
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
 export interface Doc {
   title: string;

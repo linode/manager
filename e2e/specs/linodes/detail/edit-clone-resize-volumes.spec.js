@@ -1,8 +1,13 @@
 const { constants } = require('../../../constants');
 
-import VolumeDetail from '../../../pageobjects/linode-detail-volume.page';
+import {
+    apiCreateLinode,
+    apiDeleteAllLinodes,
+    apiDeleteAllVolumes,
+} from '../../../utils/common';
+import VolumeDetail from '../../../pageobjects/linode-detail/linode-detail-volume.page';
 import ListLinodes from '../../../pageobjects/list-linodes';
-import LinodeDetail from '../../../pageobjects/linode-detail.page';
+import LinodeDetail from '../../../pageobjects/linode-detail/linode-detail.page';
 
 describe('Edit - Clone - Resize Volumes Suite', () => {
     let volume;
@@ -14,6 +19,8 @@ describe('Edit - Clone - Resize Volumes Suite', () => {
 
     beforeAll(() => {
         browser.url(constants.routes.linodes);
+        apiCreateLinode();
+
         ListLinodes.linodeElem.waitForVisible();
         
         if (ListLinodes.getStatus(ListLinodes.linode[0]) !== 'offline') {
@@ -25,12 +32,12 @@ describe('Edit - Clone - Resize Volumes Suite', () => {
         browser.url(constants.routes.linodes);
         ListLinodes.linodeElem.waitForVisible();
 
-        ListLinodes.linode[0].$(ListLinodes.linodeLabel.selector).click();
+        ListLinodes.navigateToDetail();
         LinodeDetail.landingElemsDisplay();
         LinodeDetail.changeTab('Volumes');
         
         VolumeDetail.createVolume(testVolume);
-        browser.waitForVisible('[data-qa-volume-cell]', 25000);
+        browser.waitForVisible('[data-qa-volume-cell]', constants.wait.long);
 
         testVolume['id'] = VolumeDetail.volumeCell[0].getAttribute('data-qa-volume-cell');
         volume = $(`[data-qa-volume-cell="${testVolume.id}"]`);
@@ -42,10 +49,17 @@ describe('Edit - Clone - Resize Volumes Suite', () => {
     });
 
     afterAll(() => {
-        browser.url(constants.routes.linodes);
+        browser.url(constants.routes.volumes);
+        browser.waitForVisible('[data-qa-volume-cell]');
+        VolumeDetail.removeAllVolumes();
 
-        ListLinodes.linodeElem.waitForVisible();
-        ListLinodes.powerOn(ListLinodes.linode[0]);
+        apiDeleteAllLinodes();
+        try {
+            // API remove all volumes, in case the UI fails to
+            apiDeleteAllVolumes();
+        } catch (err) {
+            // do nothing
+        }
     });
 
     it('should edit the volume label', () => {
@@ -59,18 +73,17 @@ describe('Edit - Clone - Resize Volumes Suite', () => {
 
         VolumeDetail.size.$('input').setValue(newSize);
         VolumeDetail.submit.click();
-        VolumeDetail.drawerTitle.waitForVisible(10000, true);
+        VolumeDetail.drawerTitle.waitForVisible(constants.wait.normal, true);
         
         browser.waitUntil(function() {
             return browser.getText(`[data-qa-volume-cell="${testVolume.id}"] [data-qa-volume-size]`).includes(newSize);
-        }, 10000);
+        }, constants.wait.long);
     });
 
     it('should clone the volume', () => {
         const getPath = /linodes\/\d.*/
         const currentUrl = browser.getUrl();
         const linodeId = currentUrl.match(getPath)[0].match(/\d/g).join('');
-        const numberOfVolumes = VolumeDetail.volumeCell.length;
 
         browser.waitForVisible(`[data-qa-volume-cell="${testVolume.id}"] [data-qa-action-menu]`);
         VolumeDetail.selectActionMenuItem(volume, 'Clone');
@@ -82,6 +95,7 @@ describe('Edit - Clone - Resize Volumes Suite', () => {
         browser.trySetValue('[data-qa-clone-from] input', 'new-clone');
 
         VolumeDetail.submit.click();
-        VolumeDetail.drawerTitle.waitForVisible(10000, true);
+        VolumeDetail.drawerTitle.waitForVisible(constants.wait.normal, true);
+        browser.waitForVisible('[data-qa-icon-text-link="Attach Existing Volume"]', constants.wait.long);
     });
 });

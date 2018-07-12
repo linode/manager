@@ -1,7 +1,8 @@
-import { createStore, combineReducers } from 'redux';
-import resources, { defaultState as resourcesState } from './reducers/resources';
+import { combineReducers, createStore } from 'redux';
+
 import authentication, { defaultState as authenticationState } from './reducers/authentication';
 import documentation, { defaultState as documentationState } from './reducers/documentation';
+import resources, { defaultState as resourcesState } from './reducers/resources';
 import volumeDrawer, { defaultState as volumeDrawerState } from './reducers/volumeDrawer';
 
 const defaultState: Linode.AppState = {

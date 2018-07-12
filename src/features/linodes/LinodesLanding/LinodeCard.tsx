@@ -1,29 +1,31 @@
-import * as React from 'react';
-import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
 import { compose, pathOr } from 'ramda';
+import * as React from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
-import { withStyles, Theme, WithStyles, StyleRulesCallback } from 'material-ui/styles';
-import Button from 'material-ui/Button';
-import Card, { CardHeader, CardContent, CardActions } from 'material-ui/Card';
-import Divider from 'material-ui/Divider';
-import Typography from 'material-ui/Typography';
-import Tooltip from 'material-ui/Tooltip';
-
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardHeader from '@material-ui/core/CardHeader';
+import Divider from '@material-ui/core/Divider';
+import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
+import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
 
 import Flag from 'src/assets/icons/flag.svg';
-import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
-import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
-import { weblishLaunch } from 'src/features/Weblish';
-import Grid from 'src/components/Grid';
 import CircleProgress from 'src/components/CircleProgress';
+import Grid from 'src/components/Grid';
+import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
+import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
+import { lishLaunch } from 'src/features/Lish';
+import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 
-import RegionIndicator from './RegionIndicator';
+import { displayType, typeLabelDetails } from '../presentation';
 import IPAddress from './IPAddress';
 import LinodeActionMenu from './LinodeActionMenu';
-import { typeLabelDetails, displayType } from '../presentation';
-import transitionStatus from '../linodeTransitionStatus';
 import LinodeStatusIndicator from './LinodeStatusIndicator';
+import RegionIndicator from './RegionIndicator';
 
 type CSSClasses =
   'customeMQ'
@@ -33,12 +35,14 @@ type CSSClasses =
   | 'cardContent'
   | 'distroIcon'
   | 'rightMargin'
+  | 'actionMenu'
   | 'cardActions'
   | 'button'
   | 'consoleButton'
   | 'rebootButton'
   | 'loadingStatusText'
-  | 'flag';
+  | 'flag'
+  | 'link';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   customeMQ: {
@@ -63,11 +67,19 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
+    position: 'relative',
+    '& .title': {
+      height: 48,
+      padding: `0 ${theme.spacing.unit * 3}px`,
+    },
   },
   cardHeader: {
     fontWeight: 700,
     color: 'black',
     flex: 1,
+    '& h3': {
+      transition: theme.transitions.create(['color']),
+    },
   },
   cardContent: {
     flex: 1,
@@ -82,6 +94,13 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   rightMargin: {
     marginRight: theme.spacing.unit,
   },
+  actionMenu: {
+    position: 'relative',
+    top: 9,
+    '& button': {
+      height: 48,
+    },
+  },
   cardActions: {
     backgroundColor: theme.bg.offWhite,
     padding: 0,
@@ -94,9 +113,12 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     fontWeight: 400,
     fontSize: '.9rem',
     transition: theme.transitions.create(['background-color', 'color']),
-    '&:hover, &:focus': {
+    '&:hover': {
       backgroundColor: theme.palette.primary.main,
       color: 'white',
+    },
+    '&:focus': {
+      outline: '1px dotted #999',
     },
   },
   consoleButton: {
@@ -121,6 +143,19 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
       opacity: .75,
     },
   },
+  link: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    height: 48,
+    width: '100%',
+    '&:hover': {
+      backgroundColor: 'transparent',
+      '& + .title h3': {
+        color: theme.palette.primary.main,
+      },
+    },
+  },
 });
 
 interface Props {
@@ -137,7 +172,7 @@ interface Props {
   linodeSpecMemory: number;
   linodeSpecVcpus: number;
   linodeSpecTransfer: number;
-  image?: Linode.Image;
+  imageLabel: string;
   openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
   toggleConfirmation: (bootOption: Linode.BootAction,
     linodeId: number, linodeLabel: string) => void;
@@ -151,7 +186,7 @@ type CombinedProps = Props & ConnectedProps & WithStyles<CSSClasses>;
 
 class LinodeCard extends React.Component<CombinedProps> {
   renderTitle() {
-    const { classes, linodeStatus, linodeId, linodeLabel, linodeNotification } = this.props;
+    const { classes, linodeStatus, linodeLabel, linodeNotification } = this.props;
 
     return (
       <Grid container alignItems="center">
@@ -159,11 +194,9 @@ class LinodeCard extends React.Component<CombinedProps> {
           <LinodeStatusIndicator status={linodeStatus} />
         </Grid>
         <Grid item className={classes.cardHeader + ' py0'}>
-          <Link to={`/linodes/${linodeId}`}>
-            <Typography variant="subheading" data-qa-label>
-              {linodeLabel}
-            </Typography>
-          </Link>
+          <Typography variant="subheading" data-qa-label>
+            {linodeLabel}
+          </Typography>
         </Grid>
         {linodeNotification &&
           <Grid item className="py0">
@@ -174,6 +207,15 @@ class LinodeCard extends React.Component<CombinedProps> {
     );
   }
 
+  handleConsoleButtonClick = () => {
+    const { linodeId } = this.props;
+    lishLaunch(`${linodeId}`);
+  }
+
+  handleRebootButtonClick = () => {
+    const { linodeId, linodeLabel, toggleConfirmation} = this.props;
+    toggleConfirmation('reboot', linodeId, linodeLabel);
+  }
 
   loadingState = () => {
     const { classes, linodeRecentEvent, linodeStatus } = this.props;
@@ -183,11 +225,11 @@ class LinodeCard extends React.Component<CombinedProps> {
       <CardContent className={classes.cardContent}>
         <Grid container>
           <Grid item xs={12}>
-            <CircleProgress value={value} />
+            <CircleProgress value={value} noTopMargin />
           </Grid>
           <Grid item xs={12}>
             <Typography align="center" className={classes.loadingStatusText}>
-              {linodeStatus.replace('_', ' ')}
+              {transitionText(linodeStatus, linodeRecentEvent)}
             </Typography>
           </Grid>
         </Grid>
@@ -198,7 +240,7 @@ class LinodeCard extends React.Component<CombinedProps> {
   loadedState = () => {
     const {
       classes,
-      image,
+      imageLabel,
       linodeIpv4,
       linodeIpv6,
       linodeRegion,
@@ -222,11 +264,9 @@ class LinodeCard extends React.Component<CombinedProps> {
             <IPAddress ips={linodeIpv4} copyRight />
             <IPAddress ips={[linodeIpv6]} copyRight />
           </div>
-          {image &&
-            <div className={classes.cardSection} data-qa-image>
-              {image.label}
-            </div>
-          }
+          <div className={classes.cardSection} data-qa-image>
+            {imageLabel}
+          </div>
         </div>
       </CardContent>
     );
@@ -249,17 +289,21 @@ class LinodeCard extends React.Component<CombinedProps> {
   }
 
   render() {
-    const { classes, openConfigDrawer, linodeId, linodeLabel,
+    const { classes, openConfigDrawer, linodeId, linodeLabel, linodeRecentEvent,
        linodeStatus, toggleConfirmation } = this.props;
-    const loading = transitionStatus.includes(linodeStatus);
+    const loading = linodeInTransition(linodeStatus, linodeRecentEvent)
 
     return (
       <Grid item xs={12} sm={6} lg={4} xl={3} data-qa-linode={linodeLabel}>
         <Card className={classes.flexContainer}>
+          {/* Give Button a child of ' ', because the component requires children */}
+          <Link to={`/linodes/${linodeId}`}>
+            <Button className={classes.link}> </Button>
+          </Link>
           <CardHeader
             subheader={this.renderTitle()}
             action={
-              <div style={{ position: 'relative', top: 6 }}>
+              <div className={classes.actionMenu}>
                 <LinodeActionMenu
                   linodeId={linodeId}
                   linodeLabel={linodeLabel}
@@ -269,14 +313,14 @@ class LinodeCard extends React.Component<CombinedProps> {
                 />
               </div>
             }
-            className={classes.customeMQ}
+            className={`${classes.customeMQ} ${'title'}`}
           />
-          {<Divider />}
+          <Divider />
           {loading ? this.loadingState() : this.loadedState()}
           <CardActions className={classes.cardActions}>
             <Button
               className={`${classes.button} ${classes.consoleButton}`}
-              onClick={() => weblishLaunch(`${linodeId}`)}
+              onClick={this.handleConsoleButtonClick}
               data-qa-console
             >
               Launch Console
@@ -284,7 +328,7 @@ class LinodeCard extends React.Component<CombinedProps> {
             <Button
               className={`${classes.button}
               ${classes.rebootButton}`}
-              onClick={() => toggleConfirmation('reboot', linodeId, linodeLabel)}
+              onClick={this.handleRebootButtonClick}
               data-qa-reboot
             >
               Reboot

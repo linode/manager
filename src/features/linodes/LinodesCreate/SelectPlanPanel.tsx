@@ -1,13 +1,13 @@
-import * as React from 'react';
 import { isEmpty } from 'ramda';
+import * as React from 'react';
 
-import { withStyles, StyleRulesCallback, WithStyles, Theme } from 'material-ui';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import Grid from 'src/components/Grid';
-
-import TabbedPanel from '../../../components/TabbedPanel';
-import { Tab } from '../../../components/TabbedPanel/TabbedPanel';
-import SelectionCard from '../../../components/SelectionCard';
+import RenderGuard from 'src/components/RenderGuard';
+import SelectionCard from 'src/components/SelectionCard';
+import TabbedPanel from 'src/components/TabbedPanel';
+import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
 
 export interface ExtendedType extends Linode.LinodeType {
   heading: string;
@@ -28,6 +28,7 @@ interface Props {
   onSelect: (key: string) => void;
   selectedID: string | null;
   selectedDiskSize?: number;
+  currentPlanHeading?: string;
 }
 
 const getNanodes = (types: ExtendedType[]) =>
@@ -39,18 +40,32 @@ const getStandard = (types: ExtendedType[]) =>
 const getHighMem = (types: ExtendedType[]) =>
   types.filter(t => /highmem/.test(t.class));
 
+export class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNames>> {
+  onSelect = (id: string) => () => this.props.onSelect(id);
 
-class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNames>> {
   renderCard = (type: ExtendedType) => {
-    const { selectedID, onSelect } = this.props;
+    const { selectedID, currentPlanHeading } = this.props;
     const selectedDiskSize = (this.props.selectedDiskSize) ? this.props.selectedDiskSize : 0;
+    let tooltip;
+    const planToSmall = selectedDiskSize > type.disk
+    const isSamePlan = type.heading === currentPlanHeading;
+
+    if(planToSmall){
+      tooltip = `This plan is too small for the selected image.`;
+    }
+
+    if(isSamePlan){
+      tooltip = `This is your current plan. Please select another to resize.`;
+    }
+
     return <SelectionCard
       key={type.id}
       checked={type.id === String(selectedID)}
-      onClick={e => onSelect(type.id)}
+      onClick={this.onSelect(type.id)}
       heading={type.heading}
       subheadings={type.subHeadings}
-      disabled={selectedDiskSize > type.disk}
+      disabled={planToSmall || isSamePlan}
+      tooltip={tooltip}
     />;
   }
 
@@ -63,7 +78,6 @@ class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNames>> {
 
     if (!isEmpty(nanodes)) {
       tabs.push({
-        title: 'Nanode',
         render: () => {
 
           return (
@@ -72,12 +86,12 @@ class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNames>> {
             </Grid>
           );
         },
+        title: 'Nanode',
       });
     }
 
     if (!isEmpty(standards)) {
       tabs.push({
-        title: 'Standard',
         render: () => {
           return (
             <Grid container spacing={16}>
@@ -85,12 +99,12 @@ class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNames>> {
             </Grid>
           );
         },
+        title: 'Standard',
       });
     }
 
     if (!isEmpty(highmem)) {
       tabs.push({
-        title: 'High Memory',
         render: () => {
           return (
             <Grid container spacing={16}>
@@ -98,6 +112,7 @@ class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNames>> {
             </Grid>
           );
         },
+        title: 'High Memory',
       });
     }
 
@@ -119,4 +134,4 @@ class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNames>> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(SelectPlanPanel);
+export default styled(RenderGuard<Props & WithStyles<ClassNames>>(SelectPlanPanel));

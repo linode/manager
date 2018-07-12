@@ -1,18 +1,19 @@
 import * as React from 'react';
 
-import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui/styles';
-import AppBar from 'material-ui/AppBar';
-import Tabs, { Tab } from 'material-ui/Tabs';
-import Typography from 'material-ui/Typography';
-import Paper from 'material-ui/Paper';
+import AppBar from '@material-ui/core/AppBar';
+import Paper from '@material-ui/core/Paper';
+import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
+import Typography from '@material-ui/core/Typography';
 
 import Notice from '../Notice';
 
 type ClassNames = 'root'
-| 'inner'
-| 'copy'
-| 'tabs'
-| 'panelBody';
+  | 'inner'
+  | 'copy'
+  | 'tabs'
+  | 'panelBody';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -37,7 +38,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 
 export interface Tab {
   title: string;
-  render: (props: any) => JSX.Element;
+  render: (props: any) => JSX.Element | null;
 }
 interface Props {
   header: string;
@@ -47,6 +48,8 @@ interface Props {
   tabs: Tab[];
   [index: string]: any;
   initTab?: number;
+  shrinkTabContent?: string;
+  handleTabChange?: () => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -55,20 +58,23 @@ class TabbedPanel extends React.Component<CombinedProps> {
   state = { value: this.props.initTab || 0 };
 
   handleChange = (event: React.ChangeEvent<HTMLDivElement>, value: number) => {
+    if (this.props.handleTabChange) {
+      this.props.handleTabChange();
+    }
     this.setState({ value });
   }
 
   render() {
-    const { classes, header, tabs, copy, error, rootClass, ...rest } = this.props;
+    const { classes, header, tabs, shrinkTabContent, copy, error, rootClass, ...rest } = this.props;
     const { value } = this.state;
     const render = tabs[value].render;
 
     return (
       <Paper className={`${classes.root} ${rootClass}`} data-qa-tp={header}>
-        <div className={classes.inner}>
-          { error && <Notice text={error} error /> }
+        <div className={`${classes.inner}`}>
+          {error && <Notice text={error} error />}
           <Typography variant="title" data-qa-tp-title>{header}</Typography>
-            {copy && <Typography component="div" className={classes.copy}
+          {copy && <Typography component="div" className={classes.copy}
             data-qa-tp-copy>{copy}</Typography>}
           <AppBar position="static" color="default">
             <Tabs
@@ -76,13 +82,14 @@ class TabbedPanel extends React.Component<CombinedProps> {
               onChange={this.handleChange}
               indicatorColor="primary"
               textColor="primary"
-              className={classes.tabs}
+              className={`${classes.tabs}`}
             >
-            { tabs.map((tab, idx) => <Tab key={idx} label={tab.title} data-qa-tab={tab.title} />) }
+              {tabs.map((tab, idx) => <Tab key={idx} label={tab.title} data-qa-tab={tab.title} />)}
             </Tabs>
           </AppBar>
-          <Typography component="div" className={classes.panelBody} data-qa-tab-body>
-              { render(rest) }
+          <Typography component="div" className={`${classes.panelBody} ${shrinkTabContent}`}
+            data-qa-tab-body>
+            {render(rest)}
           </Typography>
         </div>
       </Paper>
@@ -90,4 +97,4 @@ class TabbedPanel extends React.Component<CombinedProps> {
   }
 }
 
-export default withStyles(styles)(TabbedPanel);
+export default withStyles(styles, { withTheme: true })(TabbedPanel) as React.ComponentType<Props>;

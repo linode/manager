@@ -1,10 +1,11 @@
-import * as React from 'react';
 import * as classnames from 'classnames';
-import { withStyles, StyleRulesCallback, WithStyles, Button } from 'material-ui';
+import * as React from 'react';
 
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
+import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 
-import KeyboardArrowLeft from 'material-ui-icons/KeyboardArrowLeft';
-import KeyboardArrowRight from 'material-ui-icons/KeyboardArrowRight';
+import Button from 'src/components/Button';
 
 type CSSClasses = 'root' | 'first' | 'last'| 'active';
 
@@ -39,7 +40,7 @@ interface Props {
   page?: number;
   first?: boolean;
   last?: boolean;
-  onClick: () => void;
+  onClick: (page?: number) => void;
   disabled?: boolean;
 }
 
@@ -60,12 +61,21 @@ const PageButton: React.StatelessComponent<Props & WithStyles<CSSClasses>> = ((p
     active: active === true,
   });
 
+  const handlePageChange = () => {
+    const isCurrentPage = props.active;
+    if (!isCurrentPage) { // only want to allow clicking if we're clicking a different page
+      onClick(props.page);
+    }
+  }
+
   if (first) {
     return (
     <Button
-      className={`${rootClasses}
-      ${classes.first}` }
-      onClick={onClick}
+      className={`
+        ${rootClasses}
+        ${classes.first}
+      `}
+      onClick={handlePageChange}
       disabled={disabled}
       data-qa-previous-page
     >
@@ -77,9 +87,11 @@ const PageButton: React.StatelessComponent<Props & WithStyles<CSSClasses>> = ((p
   if (last) {
     return (
     <Button
-      className={`${rootClasses}
-      ${classes.last}` }
-      onClick={onClick}
+      className={`
+        ${rootClasses}
+        ${classes.last}
+      `}
+      onClick={handlePageChange}
       disabled={disabled}
       data-qa-next-page
     >
@@ -89,7 +101,12 @@ const PageButton: React.StatelessComponent<Props & WithStyles<CSSClasses>> = ((p
   }
 
   return (
-    <Button className={rootClasses} onClick={onClick} data-qa-page-to={page}>{page}</Button>
+    <Button
+      className={rootClasses}
+      onClick={handlePageChange}
+      data-qa-page-to={page}>
+      {page}
+    </Button>
   );
 });
 

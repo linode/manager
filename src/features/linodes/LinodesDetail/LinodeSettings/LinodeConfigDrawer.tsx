@@ -1,33 +1,27 @@
-import * as React from 'react';
 import { clamp, pathOr } from 'ramda';
+import * as React from 'react';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-  Divider,
-} from 'material-ui';
-import Typography from 'material-ui/Typography';
-import RadioGroup from 'material-ui/Radio/RadioGroup';
-import FormControlLabel from 'material-ui/Form/FormControlLabel';
-import MenuItem from 'material-ui/Menu/MenuItem';
-import FormControl from 'material-ui/Form/FormControl';
-import FormLabel from 'material-ui/Form/FormLabel';
-import FormGroup from 'material-ui/Form/FormGroup';
-import Button from 'material-ui/Button';
+import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormLabel from '@material-ui/core/FormLabel';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-import { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
-import DeviceSelection, { ExtendedDisk, ExtendedVolume }
-  from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
-import Grid from 'src/components/Grid';
-import Drawer from 'src/components/Drawer';
-import TextField from 'src/components/TextField';
-import Radio from 'src/components/Radio';
-import Toggle from 'src/components/Toggle';
 import ActionsPanel from 'src/components/ActionsPanel';
+import Drawer from 'src/components/Drawer';
+import Grid from 'src/components/Grid';
+import MenuItem from 'src/components/MenuItem';
 import Notice from 'src/components/Notice';
+import Radio from 'src/components/Radio';
+import TextField from 'src/components/TextField';
+import Toggle from 'src/components/Toggle';
+import DeviceSelection, { ExtendedDisk, ExtendedVolume } from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
+import { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
+import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
 type ClassNames = 'root'
   | 'section'
@@ -124,7 +118,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
         onClose={onClose}
       >
         <Grid container direction="row">
-          {generalError && <Notice error text={generalError} />}
+          {generalError && <Notice error errorGroup="linode-config-drawer" text={generalError} />}
           <Grid item xs={12} className={classes.section}>
             <Typography variant="subheading">Label and Comments</Typography>
             <TextField
@@ -133,6 +127,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               value={label}
               onChange={e => onChange('label', e.target.value)}
               errorText={errorFor('label')}
+              errorGroup="linode-config-drawer"
             />
 
             <TextField
@@ -142,6 +137,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               multiline={true}
               rows={3}
               errorText={errorFor('comments')}
+              errorGroup="linode-config-drawer"
             />
           </Grid>
 
@@ -178,6 +174,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               value={kernel}
               onChange={e => onChange('kernel', e.target.value)}
               errorText={errorFor('kernel')}
+              errorGroup="linode-config-drawer"
             >
               <MenuItem value="none" disabled><em>Select a Kernel</em></MenuItem>
               {
@@ -253,6 +250,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
                 fullWidth
                 autoFocus={useCustomRoot && true}
                 errorText={errorFor('root_device')}
+                errorGroup="linode-config-drawer"
               >
                 {
                   !useCustomRoot &&
@@ -330,7 +328,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               </FormGroup>
             </FormControl>
           </Grid>
-          <Grid item className={classes.section}>
+          <Grid item>
             <ActionsPanel>
               <Button onClick={onSubmit} variant="raised" color="primary">Submit</Button>
               <Button

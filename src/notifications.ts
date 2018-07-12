@@ -1,5 +1,6 @@
-import { getNotifications } from 'src/services/account';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
+
+import { getNotifications } from 'src/services/account';
 
 getNotifications()
   .then(response => notifications$.next(response.data))

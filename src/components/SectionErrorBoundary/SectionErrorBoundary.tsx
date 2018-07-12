@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import ErrorState from 'src/components/ErrorState';
 
 interface State {
@@ -24,7 +25,6 @@ const wrapper = <T extends {}>(Component: React.ComponentType) => {
       return <Component {...this.props} />;
     }
   }
-
 
   return SectionErrorBoundary;
 };

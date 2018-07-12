@@ -1,16 +1,15 @@
-import * as React from 'react';
 import * as classNames from 'classnames';
+import * as React from 'react';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  WithStyles,
-  Theme,
-} from 'material-ui';
-import Button from 'material-ui/Button';
-import SvgIcon from 'material-ui/SvgIcon';
+import Button from '@material-ui/core/Button';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import SvgIcon from '@material-ui/core/SvgIcon';
 
-type CSSClasses = 'root' | 'active' | 'disabled' | 'icon';
+type CSSClasses = 'root'
+| 'active'
+| 'disabled'
+| 'icon'
+| 'left';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -22,7 +21,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     transition: theme.transitions.create(['color']),
     margin: '0 -12px 6px 0',
     minHeight: 'auto',
-    '&:hover, &:focus': {
+    '&:hover': {
       color: theme.palette.primary.light,
       backgroundColor: 'transparent',
       '& $icon': {
@@ -54,6 +53,9 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
       transition: theme.transitions.create(['color']),
     },
   },
+  left: {
+    left: -12,
+  },
 });
 
 export interface Props {
@@ -63,6 +65,8 @@ export interface Props {
   active?: Boolean;
   disabled?: Boolean;
   title: string;
+  left?: boolean;
+  className?: any;
 }
 
 type FinalProps = Props & WithStyles<CSSClasses>;
@@ -76,6 +80,8 @@ const IconTextLink: React.StatelessComponent<FinalProps> = (props) => {
     active,
     disabled,
     title,
+    left,
+    className,
   } = props;
 
   return (
@@ -85,8 +91,11 @@ const IconTextLink: React.StatelessComponent<FinalProps> = (props) => {
           [classes.root]: true,
           [classes.disabled]: disabled === true,
           [classes.active]: active === true,
+          [classes.left]: left === true,
           iconTextLink: true,
-        })
+        },
+        className
+      )
       }
       title={title}
       onClick={onClick}

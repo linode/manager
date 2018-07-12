@@ -1,48 +1,33 @@
+import { assoc, clamp, compose, map, path, pathOr, prop } from 'ramda';
 import * as React from 'react';
-import {
-  assoc,
-  clamp,
-  compose,
-  map,
-  path,
-  pathOr,
-  prop,
-} from 'ramda';
-import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
-import Paper from 'material-ui/Paper';
-import Typography from 'material-ui/Typography';
-import Button from 'material-ui/Button';
-import {
-  rescueLinode,
-  getLinodeDisks,
-} from 'src/services/linodes';
-import { getVolumes } from 'src/services/volumes';
-import { resetEventsPolling } from 'src/events';
-import PlusSquare from 'src/assets/icons/plus-square.svg';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
-import IconTextLink from 'src/components/IconTextLink';
-import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
+import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+
 import ActionsPanel from 'src/components/ActionsPanel';
+import AddNewLink from 'src/components/AddNewLink';
 import ErrorState from 'src/components/ErrorState';
-import DeviceSelection, { ExtendedDisk, ExtendedVolume } from './DeviceSelection';
+import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
+import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
+import { resetEventsPolling } from 'src/events';
+import { withLinode } from 'src/features/linodes/LinodesDetail/context';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
+import { getLinodeDisks, rescueLinode } from 'src/services/linodes';
+import { getVolumes } from 'src/services/volumes';
 import createDevicesFromStrings, { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
+
+import DeviceSelection, { ExtendedDisk, ExtendedVolume } from './DeviceSelection';
 
 type ClassNames = 'root'
   | 'title'
-  | 'intro'
-  | 'actionPanel';
+  | 'intro';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     padding: theme.spacing.unit * 3,
-    paddingBottom: theme.spacing.unit * 1,
+    paddingBottom: theme.spacing.unit * 3,
     '& .iconTextLink': {
       display: 'inline-flex',
       margin: `${theme.spacing.unit * 3}px 0 0 0`,
@@ -54,13 +39,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   intro: {
     marginBottom: theme.spacing.unit * 2,
   },
-  actionPanel: {
-    padding: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit * 3,
-  },
 });
 
-interface Props {
+interface Props { }
+
+interface ContextProps {
   linodeId: number;
   linodeRegion?: string;
 }
@@ -81,9 +64,7 @@ interface State {
   counter: number;
 }
 
-type CombinedProps = Props & PromiseLoaderProps & WithStyles<ClassNames>;
-
-
+type CombinedProps = Props & PromiseLoaderProps & ContextProps & WithStyles<ClassNames>;
 
 export class LinodeRescue extends React.Component<CombinedProps, State> {
   constructor(props: CombinedProps) {
@@ -193,16 +174,14 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
             counter={this.state.counter}
             rescue
           />
-          <IconTextLink
-            SideIcon={PlusSquare}
+          <AddNewLink
             onClick={() => this.incrementCounter()}
-            text="Add Disk"
-            title="Add Disk"
-            data-qa-oauth-create
+            label="Add Disk"
             disabled={this.state.counter >= 6}
+            left
           />
         </Paper>
-        <ActionsPanel className={classes.actionPanel}>
+        <ActionsPanel>
           <Button onClick={this.onSubmit} variant="raised" color="primary">Submit</Button>
         </ActionsPanel>
       </React.Fragment>
@@ -228,17 +207,21 @@ export const preloaded = PromiseLoader({
       compose<
         Linode.ResourcePage<Linode.Volume>,
         Linode.Volume[],
-        ExtendedVolume[]
-        >(
+        ExtendedVolume[]>(
           map(volume => assoc('_id', `volume-${volume.id}`, volume)),
           prop('data'),
       ),
   ),
 });
 
-export default compose<any, any, any, any>(
+const linodeContext = withLinode((context) => ({
+  linodeId: context.data!.id,
+  linodeRegion: context.data!.region,
+}));
+
+export default compose<any, any, any, any, any>(
+  linodeContext,
   preloaded,
   SectionErrorBoundary,
   styled,
 )(LinodeRescue);
-

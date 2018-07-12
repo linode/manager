@@ -1,29 +1,32 @@
-import * as React from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
-import { connect, Dispatch } from 'react-redux';
-import { compose, bindActionCreators } from 'redux';
-import { append, pathOr, range, flatten } from 'ramda';
 import * as Promise from 'bluebird';
 import { shim } from 'promise.prototype.finally';
-shim(); // allows for .finally() usage
-
-import { withStyles, WithStyles, StyleRulesCallback, Theme } from 'material-ui/styles';
+import { append, flatten, pathOr, range } from 'ramda';
+import * as React from 'react';
+import { connect, Dispatch } from 'react-redux';
+import { Route, Switch } from 'react-router-dom';
+import { bindActionCreators, compose } from 'redux';
 import 'typeface-lato';
 
-import { getLinodeTypes, getLinodeKernels } from 'src/services/linodes';
-import { getProfile } from 'src/services/profile';
-import TopMenu from 'src/features/TopMenu';
-import Grid from 'src/components/Grid';
-import SideMenu from 'src/components/SideMenu';
-import DefaultLoader from 'src/components/DefaultLoader';
-import { request, response } from 'src/store/reducers/resources';
-import Footer from 'src/features/Footer';
-import Placeholder from 'src/components/Placeholder';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-import ToastNotifications from 'src/features/ToastNotifications';
-import BetaNotification from './BetaNotification';
+import DefaultLoader from 'src/components/DefaultLoader';
 import DocsSidebar from 'src/components/DocsSidebar';
+import Grid from 'src/components/Grid';
+import NotFound from 'src/components/NotFound';
+import Placeholder from 'src/components/Placeholder';
+import SideMenu from 'src/components/SideMenu';
+import Footer from 'src/features/Footer';
+import ToastNotifications from 'src/features/ToastNotifications';
+import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
+import { getLinodeKernels, getLinodeTypes } from 'src/services/linodes';
+import { getRegions } from 'src/services/misc';
+import { getProfile } from 'src/services/profile';
+import { request, response } from 'src/store/reducers/resources';
+
+import BetaNotification from './BetaNotification';
+
+shim(); // allows for .finally() usage
 
 const LinodesRoutes = DefaultLoader({
   loader: () => import('src/features/linodes'),
@@ -37,12 +40,20 @@ const Domains = DefaultLoader({
   loader: () => import('src/features/Domains'),
 });
 
+const Images = DefaultLoader({
+  loader: () => import('src/features/Images'),
+})
+
 const Profile = DefaultLoader({
   loader: () => import('src/features/profile'),
 });
 
 const NodeBalancers = DefaultLoader({
   loader: () => import('src/features/NodeBalancers'),
+});
+
+const StackScripts = DefaultLoader({
+  loader: () => import('src/features/StackScripts'),
 });
 
 type ClassNames = 'appFrame'
@@ -85,11 +96,15 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     flex: 1,
     maxWidth: '100%',
     position: 'relative',
+    '&.mlMain': {
+      [theme.breakpoints.up('lg')]: {
+        maxWidth: '78.8%',
+      },
+    },
   },
 });
 
-interface Props {
-  toggleTheme: () => void;
+interface Props { toggleTheme: () => void;
   longLivedLoaded: boolean;
 }
 
@@ -121,6 +136,12 @@ export class App extends React.Component<CombinedProps, State> {
     }
 
     const promises = [
+      new Promise(() => {
+        request(['regions']);
+        return getRegions()
+          .then(({ data }) => response(['regions', 'data'], data))
+          .catch(error => response(['regions'], error));
+      }),
       new Promise(() => {
         request(['types']);
         return getLinodeTypes()
@@ -168,7 +189,6 @@ export class App extends React.Component<CombinedProps, State> {
       });
   }
 
-
   toggleMenu = () => {
     this.setState({
       menuOpen: !this.state.menuOpen,
@@ -183,6 +203,7 @@ export class App extends React.Component<CombinedProps, State> {
   render() {
     const { menuOpen } = this.state;
     const { classes, longLivedLoaded, documentation, toggleTheme } = this.props;
+    const hasDoc = documentation.length > 0;
 
     return (
       <React.Fragment>
@@ -194,7 +215,7 @@ export class App extends React.Component<CombinedProps, State> {
                 <TopMenu toggleSideMenu={this.toggleMenu} />
                 <div className={classes.wrapper}>
                   <Grid container spacing={0} className={classes.grid}>
-                    <Grid item className={classes.switchWrapper}>
+                    <Grid item className={`${classes.switchWrapper} ${hasDoc ? 'mlMain' : ''}`}>
                       <Switch>
                         <Route exact path="/dashboard" render={() =>
                           <Placeholder title="Dashboard" />} />
@@ -206,10 +227,8 @@ export class App extends React.Component<CombinedProps, State> {
                           <Placeholder title="Managed" />} />
                         <Route exact path="/longview" render={() =>
                           <Placeholder title="Longview" />} />
-                        <Route exact path="/stackscripts" render={() =>
-                          <Placeholder title="StackScripts" />} />
-                        <Route exact path="/images" render={() =>
-                          <Placeholder title="Images" />} />
+                        <Route path="/images" component={Images} />
+                        <Route path="/stackscripts" component={StackScripts} />
                         <Route exact path="/billing" render={() =>
                           <Placeholder title="Billing" />} />
                         <Route exact path="/users" render={() =>
@@ -217,7 +236,9 @@ export class App extends React.Component<CombinedProps, State> {
                         <Route exact path="/support" render={() =>
                           <Placeholder title="Support" />} />
                         <Route path="/profile" component={Profile} />
-                        <Redirect to="/linodes" />
+                        {/* Update to Dashboard when complete */}
+                        <Route exact path="/" component={LinodesRoutes} />
+                        <Route component={NotFound} />
                       </Switch>
                     </Grid>
                     <DocsSidebar docs={documentation} />
@@ -248,7 +269,8 @@ const mapStateToProps = (state: Linode.AppState) => ({
   longLivedLoaded:
     Boolean(pathOr(false, ['resources', 'types', 'data', 'data'], state))
     && Boolean(pathOr(false, ['resources', 'kernels', 'data'], state))
-    && Boolean(pathOr(false, ['resources', 'profile', 'data'], state)),
+    && Boolean(pathOr(false, ['resources', 'profile', 'data'], state))
+    && Boolean(pathOr(false, ['resources', 'regions', 'data'], state)),
   documentation: state.documentation,
 });
 

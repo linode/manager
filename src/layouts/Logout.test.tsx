@@ -1,9 +1,10 @@
-import * as React from 'react';
 import { shallow } from 'enzyme';
+import * as React from 'react';
+
+import { expire } from 'src/session';
+import { logout } from 'src/store/reducers/authentication';
 
 import { Logout } from './Logout';
-import { logout } from 'src/store/reducers/authentication';
-import { expire } from 'src/session';
 
 jest.mock('src/session', () => ({
   expire: jest.fn(),

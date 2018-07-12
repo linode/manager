@@ -1,19 +1,15 @@
 import * as React from 'react';
-import {
-  withStyles,
-  Theme,
-  WithStyles,
-  StyleRulesCallback,
-} from 'material-ui/styles';
-import Chip from 'material-ui/Chip';
-import Popover from 'material-ui/Popover';
 
-
+import Chip, { ChipProps } from '@material-ui/core/Chip';
+import Popover from '@material-ui/core/Popover';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 type CSSClasses =  'chip' | 'label' | 'popover';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   chip: {
+    position: 'relative',
+    top: -1,
     height: 20,
     marginLeft: theme.spacing.unit / 2,
     backgroundColor: theme.bg.lightBlue,
@@ -25,6 +21,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     },
     '&:focus': {
       backgroundColor: theme.bg.lightBlue,
+      outline: '1px dotted #999',
     },
   },
   label: {
@@ -33,15 +30,20 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     fontSize: '.75rem',
   },
   popover: {
-    minWidth: 175,
+    minWidth: 'auto',
+    maxWidth: 400,
     overflow: 'visible',
     padding: theme.spacing.unit * 2,
+    [theme.breakpoints.down('xs')]: {
+      maxWidth: 285,
+    },
   },
 });
 
 interface Props<T> {
   items: T[];
   render: (items: T[]) => any;
+  chipProps?: ChipProps;
 }
 
 class ShowMore<T> extends React.Component<Props<T> & WithStyles<CSSClasses> > {
@@ -62,7 +64,7 @@ class ShowMore<T> extends React.Component<Props<T> & WithStyles<CSSClasses> > {
   }
 
   render() {
-    const { classes, render, items } = this.props;
+    const { classes, render, items, chipProps } = this.props;
     const { anchorEl } = this.state;
 
     return (
@@ -72,6 +74,8 @@ class ShowMore<T> extends React.Component<Props<T> & WithStyles<CSSClasses> > {
           label={`+${items.length}`}
           classes={{ label: classes.label }}
           onClick={this.handleClick}
+          {...chipProps}
+          data-qa-show-more-chip
         />
         <Popover
           classes={{ paper: classes.popover }}
