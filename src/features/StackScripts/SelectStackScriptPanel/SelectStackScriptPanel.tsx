@@ -692,10 +692,12 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
             <Table noOverflow={true} tableClass={classes.table}>
               <TableHead>
                 <TableRow className={classes.tr}>
-                  <TableCell className={classNames({
-                    [classes.tableHead]: true,
-                    [classes.stackscriptLabel]: true,
-                  })} />
+                  {!!this.props.onSelect &&
+                    <TableCell className={classNames({
+                      [classes.tableHead]: true,
+                      [classes.stackscriptLabel]: true,
+                    })} />
+                  }
                   <TableCell
                     className={classNames({
                       [classes.tableHead]: true,
