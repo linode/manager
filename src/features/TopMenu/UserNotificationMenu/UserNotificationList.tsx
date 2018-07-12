@@ -11,13 +11,13 @@ import UserNotificationListItem, { UserNotificationListItemProps } from './UserN
 
 const reportUnfoundEvent = (event: Linode.Event) =>
   process.env.NODE_ENV === 'production'
-    ? Raven.captureException
-    : console.log('Unknown API event received.', { extra: { event } }); /* tslint:disable-line */
+    ? Raven.captureException('Unknown API event received', { extra : { event } })
+    : console.error('Unknown API event received.', { extra: { event } }); /* tslint:disable-line */
 
-const reportEventError = (e: Linode.Event, err: Error) =>
+const reportEventError = (event: Linode.Event, err: Error) =>
   process.env.NODE_ENV === 'production'
-    ? Raven.captureException(err)
-    : console.log('Event Error', err); /* tslint:disable-line */
+    ? Raven.captureException(err, { extra: { event} })
+    : console.error('Event Error', err, event); /* tslint:disable-line */
 
 type ClassNames = 'root';
 
