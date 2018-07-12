@@ -11,6 +11,7 @@ import {
   WithStyles,
 } from '@material-ui/core/styles';
 
+import Divider from '@material-ui/core/Divider';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import IconButton from '@material-ui/core/IconButton';
@@ -39,7 +40,6 @@ import { createStackScript } from 'src/services/stackscripts';
 
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { Divider } from '../../../../node_modules/@material-ui/core';
 
 type ClassNames = 'root'
   | 'backButton'
