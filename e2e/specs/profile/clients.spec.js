@@ -47,7 +47,9 @@ describe('Profile - OAuth Clients Suite', () => {
 
             createDrawer.submit.click();
             browser.waitForVisible(dialogTitle);
-            const secret = $(dialogContent).$('span').getText();
+            profile.waitForNotice(/\w\d/);
+
+            const secret = $(dialogContent).$('[data-qa-notice]').getText();
             expect(secret).not.toBe(null);
 
             browser.click(dialogClose);

@@ -90,8 +90,8 @@ export default class Page {
     }
 
     toastDisplays(expectedMessage) {
-        this.toast.waitForVisible();
-        this.toastMsg.waitForVisible();
+        this.toast.waitForVisible(constants.wait.normal);
+        this.toastMsg.waitForVisible(constants.wait.normal);
         
         const displayedMsg = browser.getText('[data-qa-toast-message]');
         expect(displayedMsg).toBe(expectedMessage);
