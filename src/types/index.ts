@@ -77,12 +77,14 @@ namespace Linode {
     'ticket_abuse' |
     'notice';
 
+  export type NotificationSeverity = 'minor' | 'major' | 'critical';
+
   export interface Notification {
     entity: null | Entity;
     label: string;
     message: string;
     type: NotificationType;
-    severity: 'minor' | 'major' | 'critical';
+    severity: NotificationSeverity;
     when: null | string;
     until: null | string;
   }

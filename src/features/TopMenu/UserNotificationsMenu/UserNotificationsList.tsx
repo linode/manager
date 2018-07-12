@@ -1,12 +1,10 @@
-import { compose, contains, filter, pathOr, propSatisfies } from 'ramda';
+import { pathOr } from 'ramda';
 import * as React from 'react';
-import 'rxjs/add/operator/map';
-import { Subscription } from 'rxjs/Subscription';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import Notice from 'src/components/Notice';
-import notifications$ from 'src/notifications';
+import { Typography } from '../../../../node_modules/@material-ui/core';
 
 type ClassNames = 'root';
 
@@ -29,47 +27,29 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props {}
-
-interface State {
-  notifications?: Linode.Notification[];
+interface Props {
+  notifications: Linode.Notification[];
 }
+
+interface State { }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class UserNotificationsList extends React.Component<CombinedProps, State> {
   state: State = {};
 
-  subscription: Subscription;
+   render() {
+    const { classes, notifications } = this.props;
 
-  static displayedEvents = [
-    'outage',
-    'payment_due',
-    'ticket_important',
-    'ticket_abuse',
-    'notice',
-  ];
-
-  componentDidMount() {
-    this.subscription = notifications$
-      .map(filterNotifications)
-      .subscribe(notifications => this.setState({ notifications }));
-  }
-
-  componentWillUnmount() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
+    if(notifications.length === 0){
+      return <Typography>You have no notifications.</Typography>
     }
-  }
 
-  render() {
-    const { classes } = this.props;
-
-    return (this.state.notifications || []).map((n) => {
+    return (notifications || []).map((n, idx) => {
       const level = pathOr('warning', [n.severity], severityMap);
 
       return React.createElement(Notice, {
-        key: n.type,
+        key: idx,
         html: n.message,
         className: `${classes.root} ${'notification'}`,
         [level]: true,
@@ -79,13 +59,6 @@ class UserNotificationsList extends React.Component<CombinedProps, State> {
     });
   }
 }
-
-const filterNotifications: (v: Linode.Notification[]) => Linode.Notification[] =
-  compose<Linode.Notification[], Linode.Notification[]>(
-    filter<Linode.Notification>(
-      propSatisfies(v => contains(v, UserNotificationsList.displayedEvents), 'type'),
-    ),
-  );
 
 const severityMap = {
   minor: 'success',

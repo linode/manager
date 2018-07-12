@@ -10,7 +10,7 @@ import AddNewMenu from './AddNewMenu';
 import SearchBar from './SearchBar';
 import UserEventsMenu from './UserEventsMenu';
 import UserMenu from './UserMenu';
-import AccountNotification from './UserNotificationsMenu';
+import UserNotificationsMenu from './UserNotificationsMenu';
 
 type ClassNames = 'appBar'
   | 'navIconHide'
@@ -79,7 +79,7 @@ class TopMenu extends React.Component<PropsWithStyles> {
           <AddNewMenu />
           <SearchBar />
           <UserMenu />
-          <AccountNotification />
+          <UserNotificationsMenu />
           <UserEventsMenu />
         </Toolbar>
       </AppBar>

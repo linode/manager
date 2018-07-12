@@ -1,11 +1,10 @@
-import * as React from 'react';
-import { Subscription } from 'rxjs/Subscription';
-
 import Menu from '@material-ui/core/Menu';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-
+import { compose, contains, filter, propSatisfies } from 'ramda';
+import * as React from 'react';
+import 'rxjs/add/operator/map';
+import { Subscription } from 'rxjs/Subscription';
 import notifications$ from 'src/notifications';
-
 import UserNotificationButton from './UserNotificationsButton';
 import UserNotificationsList from './UserNotificationsList';
 
@@ -41,54 +40,56 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 interface Props { }
 
 interface State {
+  read: boolean;
   anchorEl?: HTMLElement;
   notifications: Linode.Notification[];
 }
 
 type CombinedProps = {} & WithStyles<ClassNames>;
 
-const IMPORTANT: Linode.NotificationType[] = [
-  'outage',
-  'payment_due',
-  'ticket_important',
-  'ticket_abuse',
-  'notice',
-];
 
 class UserNotificationsMenu extends React.Component<CombinedProps, State> {
+  static displayedEvents: Linode.NotificationType[] = [
+    'outage',
+    'payment_due',
+    'ticket_important',
+    'ticket_abuse',
+    'notice',
+  ];
+
   subscription: Subscription;
 
   state: State = {
+    read: false,
     notifications: [],
     anchorEl: undefined,
   };
 
   componentDidMount() {
-    this.subscription =
-      notifications$
-        .subscribe(notifications => this.setState({ notifications }));
+    this.subscription = notifications$
+      .map(filterNotifications)
+      .subscribe(notifications => this.setState({ notifications }));
   }
 
   componentWillUnmount() {
-    this.subscription.unsubscribe();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   render() {
-    const { anchorEl, notifications } = this.state;
+    const { anchorEl, notifications, read } = this.state;
     const { classes } = this.props;
-
-    if (notifications.length === 0) {
-      return null;
-    }
+    const severity = notifications.reduce(reduceSeverity, null);
 
     return (
       <React.Fragment>
         <UserNotificationButton
-          onClick={e => this.setState({ anchorEl: e.currentTarget })}
+          onClick={this.openMenu}
           className={anchorEl ? 'active' : ''}
-          isImportant={notifications.reduce((prev, current) =>
-            prev || IMPORTANT.includes(current.type), false)}
-          // allRead
+          severity={severity}
+          allRead={read}
+
         />
         <Menu
           anchorEl={anchorEl}
@@ -96,15 +97,36 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           transformOrigin={{ vertical: 'top', horizontal: 'right' }}
           open={Boolean(anchorEl)}
-          onClose={() => this.setState({ anchorEl: undefined })}
+          onClose={this.closeMenu}
           className={classes.root}
           PaperProps={{ className: classes.dropDown }}
         >
-          <UserNotificationsList />
+          <UserNotificationsList notifications={notifications} />
         </Menu>
       </React.Fragment>
     );
   }
+
+  openMenu = (e: React.MouseEvent<HTMLElement>) =>
+    this.setState({ anchorEl: e.currentTarget, read: true });
+
+  closeMenu = (e: React.MouseEvent<HTMLElement>) =>
+    this.setState({ anchorEl: undefined })
+}
+
+const filterNotifications: (v: Linode.Notification[]) => Linode.Notification[] =
+  compose<Linode.Notification[], Linode.Notification[]>(
+    filter<Linode.Notification>(
+      propSatisfies(v => contains(v, UserNotificationsMenu.displayedEvents), 'type'),
+    ),
+  );
+
+const reduceSeverity = (result: Linode.NotificationSeverity | null, { severity }: Linode.Notification) => {
+  if (result === 'critical' || severity === 'critical') { return 'critical'; }
+  if (result === 'major' || severity === 'major') { return 'major'; }
+  if (result === 'minor' || severity === 'minor') { return 'minor'; }
+
+  return result;
 }
 
 const styled = withStyles(styles, { withTheme: true });

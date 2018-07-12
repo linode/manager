@@ -1,3 +1,4 @@
+import * as classNames from 'classnames';
 import * as React from 'react';
 
 import IconButton from '@material-ui/core/IconButton';
@@ -6,9 +7,12 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 import Alert from 'src/assets/icons/alerts.svg';
 
 type ClassNames = 'root'
-| 'icon'
-| 'isImportant'
-| 'allRead';
+  | 'icon'
+  | 'hasNoNotifications'
+  | 'isMinor'
+  | 'isMajor'
+  | 'isCritical'
+  | 'allRead';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -20,10 +24,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     '&:hover, &.active': {
       '& $icon': {
         fill: theme.palette.primary.light,
-      },
-      '& $isImportant': {
-        fill: theme.palette.status.errorDark,
-        opacity: .7,
       },
     },
   },
@@ -48,8 +48,17 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       strokeWidth: 3,
     },
   },
-  isImportant: {
-    color: theme.palette.status.errorDark,
+  isCritical: {
+    color: 'red',
+  },
+  isMajor: {
+    color: 'yellow',
+  },
+  isMinor: {
+    color: 'blue',
+  },
+  hasNoNotifications: {
+    color: 'darkgray',
   },
   allRead: {
     '& .circle': {
@@ -66,7 +75,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 interface Props {
   onClick: (e: React.MouseEvent<HTMLElement>) => void;
   className?: string;
-  isImportant?: boolean;
+  severity: null | Linode.NotificationSeverity;
   allRead?: boolean;
 }
 
@@ -74,23 +83,25 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 const UserNotificationButton: React.StatelessComponent<CombinedProps> = ({
   classes,
-  isImportant,
   allRead,
   onClick,
   className,
+  severity
 }) => {
-
   return (
     <IconButton
       onClick={onClick}
       className={`${classes.root} ${className}`}
-      disabled={allRead}
     >
-      <Alert className={`
-        ${classes.icon}
-        ${isImportant ? classes.isImportant : ''}
-        ${allRead ? classes.allRead : ''}
-      `} />
+      <Alert className={
+        classNames({
+          [classes.icon]: true,
+          [classes.allRead]: allRead,
+          [classes.hasNoNotifications]: severity === null,
+          [classes.isMinor]: severity === 'minor',
+          [classes.isMajor]: severity === 'major',
+          [classes.isCritical]: severity === 'critical',
+        })} />
     </IconButton>
   );
 };
