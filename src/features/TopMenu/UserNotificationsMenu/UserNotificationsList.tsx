@@ -38,27 +38,34 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 class UserNotificationsList extends React.Component<CombinedProps, State> {
   state: State = {};
 
-   render() {
+  render() {
     const { classes, notifications } = this.props;
 
-    if(notifications.length === 0){
+
+    if (notifications.length === 0) {
       return <Typography>You have no notifications.</Typography>
     }
 
-    return (notifications || []).map((n, idx) => {
-      const level = pathOr('warning', [n.severity], severityMap);
+    return (notifications || []).map((notification, idx) => {
+      const level = pathOr('warning', [notification.severity], severityMap);
+      const onClick = createClickHandlerForNotification(notification);
 
       return React.createElement(Notice, {
         key: idx,
-        html: n.message,
+        children: notification.message,
         className: `${classes.root} ${'notification'}`,
         [level]: true,
-        children: undefined,
         notificationList: true,
+        onClick
       });
     });
   }
 }
+
+const createClickHandlerForNotification =
+  (n: Linode.Notification) => (e: React.MouseEvent<HTMLElement>): void => {
+
+  };
 
 const severityMap = {
   minor: 'success',
