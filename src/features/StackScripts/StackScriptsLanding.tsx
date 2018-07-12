@@ -10,7 +10,7 @@ import AddNewLink from 'src/components/AddNewLink';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import Grid from 'src/components/Grid';
 import PromiseLoader from 'src/components/PromiseLoader';
-import { getImages } from 'src/services/images';
+import { getLinodeImages } from 'src/services/images';
 
 import SelectStackScriptPanel from './SelectStackScriptPanel';
 
@@ -39,7 +39,7 @@ type CombinedProps = Props
   & RouteComponentProps<{}>;
 
   const preloaded = PromiseLoader<Props>({
-    images: () => getImages()
+    images: () => getLinodeImages()
       .then(response => response.data || []),
   });
 
@@ -54,14 +54,6 @@ export class StackScriptsLanding extends React.Component<CombinedProps, State> {
       body: `Create Custom Instances and Automate Deployment with StackScripts.`,
     },
   ];
-
-  filterPublicImages = (images: Linode.Image[]) => {
-    // get images and preloaded and give us just the public ones
-    // to pass to selectstackscriptpanel
-    // we dont' want to display the deprecated ones because
-    // they're useless.
-    return images.filter((image: Linode.Image) => image.is_public)
-  }
 
   goToCreateStackScript = () => {
     const { history } = this.props;
@@ -94,7 +86,7 @@ export class StackScriptsLanding extends React.Component<CombinedProps, State> {
         </Grid>
         <Grid container>
           <SelectStackScriptPanel
-            publicImages={this.filterPublicImages(images.response)}
+            publicImages={images.response}
             noHeader={true}
           />
         </Grid>

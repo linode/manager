@@ -200,6 +200,14 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     return this.state.availableImages.filter(image => image.deprecated === deprecated);
   }
 
+  /*
+  * @TODO Deprecate once we have a reliable way of mapping
+  * the slug to the display name
+  */
+  stripImageName = (image: string) => {
+    return image.replace('linode/', '');
+  };
+
   handleLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ labelText: e.target.value });
   }
@@ -456,7 +464,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
                   return (
                     <Tag
                       key={selectedImage}
-                      label={selectedImage}
+                      label={this.stripImageName(selectedImage)}
                       variant='lightBlue'
                       onDelete={() => this.handleRemoveImage(index)}
                       className={classes.targetTag}
