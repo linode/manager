@@ -39,7 +39,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   };
 };
 
-export interface UserNotificationListItemProps {
+export interface UserEventsListItemProps {
   title: string;
   content?: string;
   success?: boolean;
@@ -47,9 +47,9 @@ export interface UserNotificationListItemProps {
   error?: boolean;
 }
 
-type CombinedProps = UserNotificationListItemProps & WithStyles<ClassNames>;
+type CombinedProps = UserEventsListItemProps & WithStyles<ClassNames>;
 
-const UserNotificationListItem: React.StatelessComponent<CombinedProps> = (props) => {
+const UserEventsListItem: React.StatelessComponent<CombinedProps> = (props) => {
   const { classes, title, content, warning, success, error } = props;
   return (
   <div className={classNames({
@@ -64,4 +64,4 @@ const UserNotificationListItem: React.StatelessComponent<CombinedProps> = (props
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<UserNotificationListItemProps>(UserNotificationListItem);
+export default styled<UserEventsListItemProps>(UserEventsListItem);

@@ -18,8 +18,8 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 import { events$, init } from 'src/events';
 import { markEventsSeen } from 'src/services/account';
 
-import UserNotificationButton from './UserNotificationButton';
-import UserNotificationList from './UserNotificationList';
+import UserEventsButton from './UserEventsButton';
+import UserEventsList from './UserEventsList';
 
 type ClassNames = 'root' | 'dropDown';
 
@@ -59,7 +59,7 @@ interface EventsMap {
   [index: string]: Linode.Event;
 }
 
-class UserNotificationMenu extends React.Component<CombinedProps, State> {
+class UserEventsMenu extends React.Component<CombinedProps, State> {
   state = {
     events: [],
     notifications: [],
@@ -132,10 +132,10 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <UserNotificationButton
+        <UserEventsButton
           onClick={e => this.setState({ anchorEl: e.currentTarget })}
           getRef={this.setRef}
-          notificationCount={unseenCount}
+          count={unseenCount}
           disabled={events.length === 0}
           className={anchorEl ? 'active' : ''}
         />
@@ -149,7 +149,7 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
           className={classes.root}
           PaperProps={{ className: classes.dropDown }}
         >
-          <UserNotificationList notifications={notifications} events={events} />
+          <UserEventsList events={events} />
         </Menu>
       </React.Fragment>
     );
@@ -179,4 +179,4 @@ const getNumUnseenEvents = (events: Linode.Event[]) => {
   return unseenCount;
 };
 
-export default styled<Props>(UserNotificationMenu);
+export default styled<Props>(UserEventsMenu);

@@ -2,6 +2,7 @@ import * as moment from 'moment';
 import { allPass, clone, compose, filter, gte, has, ifElse, isEmpty, path, pathEq, pathOr, prop, propEq, uniqBy } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/filter';
 import { Observable } from 'rxjs/Observable';
