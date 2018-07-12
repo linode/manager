@@ -464,6 +464,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     required={protocol === 'https'}
                     errorText={hasErrorFor('ssl_cert')}
                     errorGroup={forEdit ? `${configIdx}`: undefined}
+                    data-qa-cert-field
                   />
                 </Grid>
                 <Grid item xs={12} md={6}>
@@ -476,6 +477,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     required={protocol === 'https'}
                     errorText={hasErrorFor('ssl_key')}
                     errorGroup={forEdit ? `${configIdx}`: undefined}
+                    data-qa-private-key-field
                   />
                 </Grid>
               </Grid>
