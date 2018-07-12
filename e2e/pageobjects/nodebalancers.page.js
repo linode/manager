@@ -26,6 +26,9 @@ class NodeBalancers extends Page {
     get algorithmHeader() { return $('[data-qa-algorithm-header]'); }
     get algorithmSelect() { return $('[data-qa-algorithm-select]'); }
 
+    get certTextField() { return $('[data-qa-cert-field]'); }
+    get privateKeyTextField() { return $('[data-qa-private-key-field]'); }
+
     get sessionStickinessHeader() { return $('[data-qa-session-stickiness-header]'); }
     get sessionStickiness() { return $('[data-qa-session-stickiness-select]'); }
     
