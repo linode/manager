@@ -111,7 +111,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     left: 10,
   },
   searchWrapper: {
-    position: 'sticky', 
+    position: 'sticky',
     width: '100%',
     top: 0,
     zIndex: 11,
@@ -602,7 +602,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
     const filteredUser = (isLinodeStackScripts) ? 'linode' : currentUser;
 
     this.setState({ isSearching: true, didSearch: true });
-    
+
     const filter = {
       ["+or"]: [
         {
@@ -651,7 +651,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
     if(error) {
       return (
         <div style={{ overflow: 'hidden' }}>
-          <ErrorState 
+          <ErrorState
             errorText="There was an error loading your StackScripts. Please try again later."
           />
         </div>
@@ -711,7 +711,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
                       onClick={this.handleClickStackScriptsTableHeader}
                       data-qa-stackscript-table-header
                     >
-                      StackScripts
+                      StackScript
                   {currentFilterType === 'label' &&
                         this.renderIcon()
                       }
