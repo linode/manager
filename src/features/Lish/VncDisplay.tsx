@@ -21,6 +21,7 @@ interface Props {
   scale?: number;
   width?: number;
   height?: number;
+  onResize?: (width: number, height: number) => void;
 }
 
 class VncDisplay extends React.PureComponent<Props> {
@@ -40,13 +41,30 @@ class VncDisplay extends React.PureComponent<Props> {
 
   rfb: any;
   canvas: HTMLCanvasElement;
+  sizeInterval: number;
 
   componentDidMount() {
+    const { onResize } = this.props;
     this.connect();
+
+    let lastWidth = 0;
+    let lastHeight = 0;
+    if (onResize) {
+      this.sizeInterval = window.setInterval(() => {
+        const width = +(this.canvas.getAttribute('width') || 1024);
+        const height = +(this.canvas.getAttribute('height') || 768);
+        if (onResize && ((width !== lastWidth) || (height !== lastHeight))) {
+          lastWidth = width;
+          lastHeight = height;
+          onResize(width, height);
+        }
+      }, 1000);
+    }
   }
 
   componentWillUnmount() {
     this.disconnect();
+    window.clearInterval(this.sizeInterval);
   }
 
   componentWillReceiveProps(nextProps: Props) {
