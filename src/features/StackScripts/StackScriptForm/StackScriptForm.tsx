@@ -8,7 +8,6 @@ import {
 } from '@material-ui/core/styles';
 
 import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -17,7 +16,6 @@ import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import Checkbox from 'src/components/CheckBox';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import Select from 'src/components/Select';
@@ -115,11 +113,6 @@ interface TextFieldHandler {
   handler: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-interface ToggleFieldHandler {
-  checked: boolean;
-  handler: () => void;
-}
-
 interface SelectFieldHandler {
   open: boolean;
   onOpen: () => void;
@@ -143,7 +136,6 @@ interface Props {
   description: TextFieldHandler;
   script: TextFieldHandler;
   selectImages: SelectFieldHandler;
-  isPublic: ToggleFieldHandler;
   errors?: Linode.ApiFieldError[];
   onSubmit: () => void;
   onCancel: () => void;
@@ -166,7 +158,7 @@ export class StackScriptForm extends React.Component<CombinedProps> {
   render() {
 
     const { currentUser, classes, label, revision, description,
-      script, selectImages, isPublic, errors, onSubmit, onCancel,
+      script, selectImages, errors, onSubmit, onCancel,
       isSubmitting, images } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
@@ -292,7 +284,7 @@ export class StackScriptForm extends React.Component<CombinedProps> {
             value={revision.value}
             InputProps={{ className: classes.revisionTextarea }}
           />
-          {this.props.shouldShowMakePublicToggle &&
+          {/* {this.props.shouldShowMakePublicToggle &&
             <React.Fragment>
               <Notice
                 component="div"
@@ -318,7 +310,7 @@ export class StackScriptForm extends React.Component<CombinedProps> {
                 label="Publish this StackScript to the Public Library"
               />
             </React.Fragment>
-          }
+          } */}
           <ActionsPanel style={{ paddingBottom: 0 }}>
             <Button
               data-qa-confirm-cancel

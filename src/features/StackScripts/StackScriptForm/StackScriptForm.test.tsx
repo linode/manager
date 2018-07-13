@@ -51,10 +51,6 @@ describe('StackScriptCreate', () => {
         onClose: jest.fn(),
         onChange: jest.fn()
       }}
-      isPublic={{
-        checked: false,
-        handler: jest.fn()
-      }}
       errors={[]}
       onSubmit={jest.fn()}
       onCancel={jest.fn()}
@@ -73,9 +69,5 @@ describe('StackScriptCreate', () => {
 
   it('should render a code text field', () => {
     // not done yet!!
-  });
-
-  it('should render a checkbox', () => {
-    expect(component.find('WithStyles(FormControlLabel)')).toHaveLength(1);
   });
 });

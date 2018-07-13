@@ -184,10 +184,6 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     this.setState({ revisionNote: e.target.value });
   }
 
-  handleToggleIsPublic = () => {
-    this.setState({ is_public: !this.state.is_public });
-  }
-
   resetAllFields = () => {
     this.handleCloseDialog();
     this.setState({
@@ -283,7 +279,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
   render() {
     const { classes, profile } = this.props;
     const { availableImages, selectedImages, script,
-      labelText, descriptionText, revisionNote, errors, is_public,
+      labelText, descriptionText, revisionNote, errors,
     isSubmitting } = this.state;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
@@ -339,10 +335,6 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
             onOpen: this.handleOpenSelect,
             onClose: this.handleCloseSelect,
             onChange: this.handleChooseImage
-          }}
-          isPublic={{
-            checked: is_public,
-            handler: this.handleToggleIsPublic
           }}
           errors={errors}
           onSubmit={this.handleCreateStackScript}
