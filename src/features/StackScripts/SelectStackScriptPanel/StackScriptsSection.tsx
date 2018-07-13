@@ -64,6 +64,7 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => 
       updateFor={[selectedId === s.id]}
       stackScriptID={s.id}
       canDelete={false}
+      canEdit={false}
     />
   )
 
@@ -86,6 +87,7 @@ const listStackScript: (
       stackScriptID={s.id}
       triggerDelete={triggerDelete}
       canDelete={canDelete(s.username, s.is_public)}
+      canEdit={canEdit(s.username)}
     />
   )
 
@@ -95,6 +97,17 @@ const listStackScript: (
   */
   const canDelete = (stackScriptUser: string, stackScriptIsPublic: boolean) => {
     if (stackScriptUser === currentUser && !stackScriptIsPublic) {
+      return true;
+    }
+    return false;
+  }
+
+  /*
+  * We can only delete a stackscript if it's ours
+  * and it's not publicly available
+  */
+  const canEdit = (stackScriptUser: string) => {
+    if (stackScriptUser === currentUser) {
       return true;
     }
     return false;
