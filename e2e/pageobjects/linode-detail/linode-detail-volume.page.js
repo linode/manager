@@ -96,23 +96,19 @@ export class VolumeDetail extends Page {
         browser.trySetValue('[data-qa-volume-label] input', volume.label);
         this.size.$('input').setValue(volume.size);
 
-        if (volume.hasOwnProperty('regionIndex')) {
+        if (volume.hasOwnProperty('region')) {
             this.region.waitForVisible();
             this.region.click(); 
             browser.waitForVisible('[data-qa-attach-to-region]');
-            const selectedRegion = this.attachRegions[volume.regionIndex].getText();
-            this.attachRegions[volume.regionIndex].click();
+            browser.click(`[data-qa-attach-to-region="${volume.region}"]`);
             
             browser.waitForVisible('[data-qa-attach-to-region]', constants.wait.short, true);
-            
-            browser.waitUntil(function() {
-                return $('[data-qa-select-region]').getText() === selectedRegion;
-            }, constants.wait.short);
+            browser.waitForValue('[data-qa-select-region] input', constants.wait.normal);
         }
 
         if (volume.hasOwnProperty('attachedLinode')) {
             this.attachToLinode.click();
-            browser.waitForVisible('[data-qa-attached-linode]');
+            browser.waitForVisible('[data-qa-attached-linode]', constants.wait.normal);
             const linodeToAttach = this.volumeAttachedLinodes.filter(v => v.getText() === volume.attachedLinode);
             linodeToAttach[0].click();
             browser.waitForVisible('[data-qa-attached-linode]', constants.wait.short, true);
@@ -129,7 +125,7 @@ export class VolumeDetail extends Page {
             }, constants.wait.normal, 'Volume failed to attach');
         }
 
-        if (volume.hasOwnProperty('regionIndex')) {
+        if (volume.hasOwnProperty('region')) {
             browser.waitForExist('[data-qa-drawer]', constants.wait.normal, true);
         }
     }
@@ -192,8 +188,8 @@ export class VolumeDetail extends Page {
 
         // Wait for progress bars to not display on volume detail pages
         if (!browser.getUrl().includes('/linodes')) {
-            browser.waitForVisible('[data-qa-volume-loading]', constants.wait.long);
-            browser.waitForVisible('[data-qa-volume-loading]', constants.wait.long, true);
+            // browser.waitForVisible('[data-qa-volume-loading]', constants.wait.long);
+            // browser.waitForVisible('[data-qa-volume-loading]', constants.wait.long, true);
         }
     }
 

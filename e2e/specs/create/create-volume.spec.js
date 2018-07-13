@@ -49,7 +49,7 @@ describe('Create - Volume Suite', () => {
 
     it('should create without attaching to a linode', () => {
         testVolume['label'] = `ASD${new Date().getTime()}`;
-        testVolume['regionIndex'] = 0;
+        testVolume['region'] = 'us-east';
         
         VolumeDetail.createVolume(testVolume, true);
         browser.url(constants.routes.volumes);
