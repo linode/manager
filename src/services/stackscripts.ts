@@ -50,7 +50,7 @@ export const deleteStackScript = (id: number) =>
     setMethod('DELETE'),
   )
     .then(response => response.data);
-interface CreatePayload {
+interface StackScriptPayload {
   script: string;
   label: string;
   images: string[];
@@ -59,7 +59,7 @@ interface CreatePayload {
   rev_note?: string;
 }
 
-const createStackScriptSchema = Joi.object({
+const stackScriptSchema = Joi.object({
   script: Joi.string().required(),
   label: Joi.string().required(),
   images: Joi.array().items(Joi.string()).required(),
@@ -68,10 +68,18 @@ const createStackScriptSchema = Joi.object({
   rev_note: Joi.string().allow(""),
 });
 
-export const createStackScript = (payload: CreatePayload) =>
+export const createStackScript = (payload: StackScriptPayload) =>
   Request(
-    validateRequestData(payload, createStackScriptSchema),
+    validateRequestData(payload, stackScriptSchema),
     setURL(`${API_ROOT}/linode/stackscripts`),
     setMethod('POST'),
+    setData(payload)
+  )
+
+export const updateStackScript = (id: number, payload: StackScriptPayload) =>
+  Request(
+    validateRequestData(payload, stackScriptSchema),
+    setURL(`${API_ROOT}/linode/stackscripts/${id}`),
+    setMethod('PUT'),
     setData(payload)
   )

@@ -28,25 +28,25 @@ const StackScriptActionMenu: React.StatelessComponent<CombinedProps> = (props) =
             e.preventDefault();
           },
         },
+        {
+          title: 'Edit',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            history.push(`/stackscripts/${stackScriptID}/edit`);
+            e.preventDefault();
+          },
+        }
       ];
 
-      if (false) {
-        actions.push({
-          title: 'Edit',
-          onClick: (e) => {
-            console.log('edit');
-          },
-        });
-      }
-
       if (canDelete) {
-        actions.push({
-          title: 'Delete',
-          onClick: (e) => {
-            closeMenu();
-            triggerDelete(stackScriptID, stackScriptLabel);
+        actions.push(
+          {
+            title: 'Delete',
+            onClick: (e) => {
+              closeMenu();
+              triggerDelete(stackScriptID, stackScriptLabel);
+            },
           },
-        });
+        );
       }
 
       return actions;
