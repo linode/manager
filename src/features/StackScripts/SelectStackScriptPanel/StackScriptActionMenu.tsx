@@ -51,6 +51,14 @@ const StackScriptActionMenu: React.StatelessComponent<CombinedProps> = (props) =
               history.push(`/stackscripts/${stackScriptID}/edit`);
               e.preventDefault();
             },
+          },
+          {
+            title: 'Make StackScript Public',
+            onClick: (e: React.MouseEvent<HTMLElement>) => {
+              // open a modal here as well
+              closeMenu();
+              e.preventDefault();
+            },
           }
         );
       }
