@@ -1,11 +1,11 @@
-import { shallow } from 'enzyme';
-import * as React from 'react';
+// import { shallow } from 'enzyme';
+// import * as React from 'react';
 
-import { StackScriptUpdate } from './StackScriptUpdate';
+// import { StackScriptUpdate } from './StackScriptUpdate';
 
-import { reactRouterProps } from 'src/__data__/reactRouterProps';
+// import { reactRouterProps } from 'src/__data__/reactRouterProps';
 
-import { images } from 'src/__data__/images';
+// import { images } from 'src/__data__/images';
 
 describe('StackScriptUpdate', () => {
   // const component = shallow(

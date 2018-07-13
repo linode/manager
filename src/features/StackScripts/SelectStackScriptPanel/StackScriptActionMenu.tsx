@@ -9,13 +9,14 @@ interface Props {
   stackScriptLabel: string;
   triggerDelete: (id: number, label: string) => void;
   canDelete: boolean;
+  canEdit: boolean;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
 const StackScriptActionMenu: React.StatelessComponent<CombinedProps> = (props) => {
   const { stackScriptID, stackScriptUsername,
-     history, triggerDelete, stackScriptLabel, canDelete } = props;
+     history, triggerDelete, stackScriptLabel, canDelete, canEdit } = props;
 
   const createActions = () => {
     return (closeMenu: Function): Action[] => {
@@ -28,13 +29,6 @@ const StackScriptActionMenu: React.StatelessComponent<CombinedProps> = (props) =
             e.preventDefault();
           },
         },
-        {
-          title: 'Edit',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            history.push(`/stackscripts/${stackScriptID}/edit`);
-            e.preventDefault();
-          },
-        }
       ];
 
       if (canDelete) {
@@ -46,6 +40,18 @@ const StackScriptActionMenu: React.StatelessComponent<CombinedProps> = (props) =
               triggerDelete(stackScriptID, stackScriptLabel);
             },
           },
+        );
+      }
+
+      if (canEdit) {
+        actions.push(
+          {
+            title: 'Edit',
+            onClick: (e: React.MouseEvent<HTMLElement>) => {
+              history.push(`/stackscripts/${stackScriptID}/edit`);
+              e.preventDefault();
+            },
+          }
         );
       }
 
