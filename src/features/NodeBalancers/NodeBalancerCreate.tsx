@@ -390,12 +390,6 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
           return linode.ipv4.some(ipv4 => !!ipv4.match(privateIPRegex)); // does it have a private IP address
         });
         this.setState({ linodesWithPrivateIPs });
-        this.setState(
-          set(lensPath(['nodeBalancerFields', 'configs', 0, 'nodes', 0, 'address']), ' '),
-          () => this.setState(
-            set(lensPath(['nodeBalancerFields', 'configs', 0, 'nodes', 0, 'address']), ''),
-          )
-        )
       })
       // we don't really need to do anything here because if the request fails
       // the user won't be presented with any suggestions when typing in the

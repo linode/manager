@@ -81,7 +81,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 const styled = withStyles(styles, { withTheme: true });
 
 interface Props {
-  linodesWithPrivateIPs: Linode.Linode[];
+  linodesWithPrivateIPs?: Linode.Linode[] | null;
   errors?: Linode.ApiFieldError[];
   nodeMessage?: string;
   configIdx?: number;
@@ -144,7 +144,6 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 interface State {
   currentNodeAddressIndex: number | null;
-  hasBeenFocusedAddressInput: boolean;
 }
 
 class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
@@ -152,7 +151,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
 
   state: State = {
     currentNodeAddressIndex: null,
-    hasBeenFocusedAddressInput: false,
   }
 
   static defaultProps: Partial<Props> = {
@@ -282,14 +280,12 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
 
   handleSelectSuggestion = (selection: string) => {
     const { currentNodeAddressIndex } = this.state;
-    this.props.onNodeAddressChange(
-      +currentNodeAddressIndex!, // converting null to number === 0
-      selection,
-    );
-  }
-
-  handleFocusInput = () => {
-    this.setState({ hasBeenFocusedAddressInput: true });
+    if (currentNodeAddressIndex) {
+      this.props.onNodeAddressChange(
+        +currentNodeAddressIndex,
+        selection,
+      );
+    }
   }
 
   renderSearchSuggestion = (
@@ -323,21 +319,16 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
   }
 
   downshiftStateReducer = (state: DownshiftState, changes: StateChangeOptions) => {
-    let shouldBeOpen = true;
-    if (this.state.hasBeenFocusedAddressInput) {
-      shouldBeOpen = false;
-    }
     switch (changes.type) {
       // basically, don't clear the field value when we leave the field
       case Downshift.stateChangeTypes.blurInput:
       case Downshift.stateChangeTypes.mouseUp:
         return {
           ...changes,
-          isOpen: shouldBeOpen,
           inputValue: state.inputValue || '',
         }
-      default:
-        return changes;
+        default:
+          return changes;
     }
   }
 
@@ -873,8 +864,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                           <Downshift
                             onSelect={this.handleSelectSuggestion}
                             stateReducer={this.downshiftStateReducer}
-                            defaultIsOpen
-                            // isOpen={this.state.currentlyFocused}
                           >
                             {
                               ({
@@ -890,33 +879,24 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                       {...getInputProps({
                                         onChange: this.onNodeAddressChange,
                                         placeholder: 'Enter IP Address',
-                                        value: node.address,
+                                        value: node.address
                                       })}
                                       label="IP Address"
-                                      inputProps={{
-                                         'data-node-idx': idx,
-                                         onFocus: this.handleFocusInput,
-                                        }}
+                                      inputProps={{ 'data-node-idx': idx }}
                                       errorText={hasErrorFor('address')}
                                       errorGroup={`${configIdx}`}
                                       data-qa-backend-ip-address
                                     />
-                                    {isOpen &&
+                                    {isOpen && !!inputValue &&
                                       <Paper className={classes.suggestions}>
                                         {linodesWithPrivateIPs && linodesWithPrivateIPs
                                         // filter out the linodes that don't match what we're typing
                                         // filter by private ip and label
                                           .filter((linode: Linode.Linode) => {
-                                            if (inputValue && node.address) {
-                                              const privateIPRegex = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/;
-                                              const privateIP = linode.ipv4.find(ipv4 => !!ipv4.match(privateIPRegex));
-                                              return linode.label.toLowerCase().includes(inputValue.toLowerCase())
-                                                || privateIP!.includes(inputValue.toLowerCase())
-                                            }
-                                            if (idx === 0 && configIdx === 0) {
-                                              return true;
-                                            }
-                                            return false;
+                                            const privateIPRegex = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/;
+                                            const privateIP = linode.ipv4.find(ipv4 => !!ipv4.match(privateIPRegex));
+                                            return linode.label.toLowerCase().includes(inputValue.toLowerCase())
+                                              || privateIP!.includes(inputValue.toLowerCase())
                                           })
                                           // limit the results to 5. we don't want too
                                           // many in the suggestions
