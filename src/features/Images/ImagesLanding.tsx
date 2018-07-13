@@ -23,7 +23,7 @@ import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import Table from 'src/components/Table';
-import { events$ } from 'src/events';
+import { events$, init } from 'src/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { deleteImage, getUserImages } from 'src/services/images';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -106,6 +106,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     this.mounted = true;
+    init();
 
     this.eventsSub = events$
       .filter(event => (
