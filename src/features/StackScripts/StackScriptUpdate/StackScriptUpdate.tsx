@@ -124,9 +124,11 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
     * Filter out already selected images in the available images dropdown
     */
     const availableImages = this.props.images.response.filter(image => {
-      for (const compatibleImage of this.defaultStackScriptValues.selectedImages) {
-        if (compatibleImage === image.id) {
-          return false;
+      if (this.defaultStackScriptValues.selectedImages) {
+        for (const compatibleImage of this.defaultStackScriptValues.selectedImages) {
+          if (compatibleImage === image.id) {
+            return false;
+          }
         }
       }
       return true;
