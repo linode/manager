@@ -1,7 +1,5 @@
 sudo: required
-
 language: node_js
-
 node_js:
   - "8.11.2"
 
@@ -10,16 +8,18 @@ cache: yarn
 before_install: sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++ google-chrome-stable
 
 install:
-    - yarn --frozen-lockfile
-
+- yarn --frozen-lockfile
 before_script:
-  - yarn storybook &
-
+- yarn storybook &
 script:
-      - yarn build
-      - yarn test --coverage --maxWorkers=2
-      - yarn storybook:e2e
-      - yarn storyshots
-      - "pkill -f selenium-standalone || :"
-      - pkill -f storybook
-      - cat ./coverage/lcov.info | ./node_modules/.bin/coveralls
+- yarn build
+- yarn test --coverage --maxWorkers=2
+- yarn storybook:e2e
+- yarn storyshots
+- curl -s -F "uid=$WSEND" -F "filehandle=@/home/travis/build/linode/manager/src/components/__image_snapshots__/__diff_output__/storyshots-test-tsx-image-storyshots-selection-row-interactive-example-1-diff.png" https://wsend.net/upload_cli
+- 'pkill -f selenium-standalone || :'
+- pkill -f storybook
+- cat ./coverage/lcov.info | ./node_modules/.bin/coveralls
+env:
+  global:
+    secure: "nwijqcSnBVi1Hb9DMAqrA+t1Ye02sqItqAmC6BEIiwwMneltxARkCzluBs1gZ3RMS4Mjmhqcq8L0aUAMTMjY/a91EjVl2T6v9NqoESRF6q+y7Y/wQTcdjkxrHkk078nyosXvRJMCj9vWg+HaEh9p8BXlm6hsW7PjkPk40u0q7AvhhFHCdQRKUBpJeorfMzYh2sbBosCdT42WZN9pFi3KsSfJ3UWBB2oFxlU/Jg5bqDffr7e3msB4Po9WYk8CAITVss698hTbYCWsVjcWR6nzDMHi3I1KWfadxt80w9TywIgVyGa6GJpbdqw0SBjOS7I9VLDqdqhVJ8fM7o1RkwesyAWrb5jhJyGshONm6OJf0ytExg97C1w231psWSuY9GAxuQeI4+eX8fI45J0v+zIPUCPaXV7Nmtk9STyf5KK96rs8A6fPjueGTsG3kjhPHwJ2HEJL5JKXsD6smH29I96xRrW7kohO0ufqxZw9WVeCsuJl3GxK9Uq7G3E7ZqoSORaVz9O+KgbdiwVZSvK1WyamCi8uKtShGjdQd5ScPOl5eeRBzCGMsC3Wj3nmNZyjiXZl394a2nfcCKJrsU4gXzg2Y1ELTywm97tKIbpplpcK6CxkaUhbKTASafRjQSD38w/zeQII/IUBzFhQVVEb2YvKk9Kmr/Gfug8oWLuVS6lTLqY="
