@@ -217,7 +217,9 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
   }
 
   changeSelectedLinode = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ imageDrawer: { ...this.state.imageDrawer, selectedLinode: e.target.value }});
+    if (this.state.imageDrawer.selectedLinode !== e.target.value) {
+      this.setState({ imageDrawer: { ...this.state.imageDrawer, selectedDisk: 'none', selectedLinode: e.target.value }});
+    }
   }
 
   changeSelectedDisk = (e: React.ChangeEvent<HTMLInputElement>) => {
