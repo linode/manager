@@ -4,6 +4,47 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.29.3] - 2018-07-13
+### Added:
+- StackScripts
+  - List StackScripts
+  - Search StackScripts by label
+  - Create StackScript
+  - Delete private StackScripts
+- NodeBalancers
+  - Search Node IPs by label or IP
+- Linodes Networking
+  - IP Sharing
+- Domains
+  - Create Slave Domains
+  - Zone Import
+- Images
+  - View Image Details
+  - Delete Image
+  - Rebuild Linode from Image
+  - Create Image from Linode Disk
+- Disks
+  - Edit the size of a Disk
+- Account
+  - Referral codes and completed referrals shown
+  - Disable/enable e-mail notifications
+  - Add SSH Keys for Lish, choose authentication method
+- Glish
+  - Switch quickly between Weblish and Glish
+  - Auto re-connect on power status change
+### Changed:
+- Disabled plans during deployment have a tooltip explaining why
+- Successful volume creation shows a message in the drawer
+- Show progress bar for
+  - Volume Attach/Detatch
+  - Disk Creation
+  - Snapshot Creation
+- Create a Volume drawer is now "Add a Volume" drawer, which allows both creation and adding of existing volumes
+- Remove "Status" from Domains List
+### Fixed:
+- Linode Detail Progress Bar on all types of in-progress events
+- IP Transfer Actions Disabled if there are no IPs to Transfer
+
 ## [0.28.0] - 2018-07-02
 ### Added:
 - Networking
