@@ -26,6 +26,7 @@ export interface Props {
   isSorting: boolean;
   publicImages: Linode.Image[];
   triggerDelete: (id: number, label: string) => void;
+  triggerMakePublic: (id: number, label: string) => void;
   currentUser: string;
 }
 
@@ -40,6 +41,7 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => 
     classes,
     triggerDelete,
     currentUser,
+    triggerMakePublic
   } = props;
 
   const renderStackScriptTable = () => {
@@ -56,6 +58,7 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => 
       label={s.label}
       stackScriptUsername={s.username}
       description={truncateDescription(s.description)}
+      isPublic={s.is_public}
       images={stripImageName(s.images)}
       deploymentsActive={s.deployments_active}
       updated={formatDate(s.updated, false)}
@@ -80,12 +83,14 @@ const listStackScript: (
       label={s.label}
       stackScriptUsername={s.username}
       description={truncateDescription(s.description)}
+      isPublic={s.is_public}
       images={stripImageName(s.images)}
       deploymentsActive={s.deployments_active}
       updated={formatDate(s.updated, false)}
       showDeployLink={showDeployLink}
       stackScriptID={s.id}
       triggerDelete={triggerDelete}
+      triggerMakePublic={triggerMakePublic}
       canDelete={canDelete(s.username, s.is_public)}
       canEdit={canEdit(s.username)}
     />

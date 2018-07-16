@@ -55,7 +55,6 @@ describe('StackScriptCreate', () => {
       onSubmit={jest.fn()}
       onCancel={jest.fn()}
       isSubmitting={false}
-      shouldShowMakePublicToggle={true}
     />
   );
 

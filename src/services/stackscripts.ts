@@ -83,3 +83,12 @@ export const updateStackScript = (id: number, payload: StackScriptPayload) =>
     setMethod('PUT'),
     setData(payload)
   )
+
+export const makeStackScriptPublic = (id: number) =>
+  Request(
+    setURL(`${API_ROOT}/linode/stackscripts/${id}`),
+    setMethod('PUT'),
+    setData({
+      is_public: true,
+    })
+  )

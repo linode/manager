@@ -242,7 +242,6 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
       label: labelText,
       images: selectedImages,
       description: descriptionText,
-      is_public: false,
       rev_note: revisionNote,
     }
 

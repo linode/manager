@@ -283,33 +283,6 @@ export class StackScriptForm extends React.Component<CombinedProps> {
             value={revision.value}
             InputProps={{ className: classes.revisionTextarea }}
           />
-          {/* {this.props.shouldShowMakePublicToggle &&
-            <React.Fragment>
-              <Notice
-                component="div"
-                warning
-                flag
-                className={classes.warning}
-              >
-                <Typography variant="title">Woah, just a word of caution...</Typography>
-                <Typography>
-                  Making this StackScript public cannot be undone. Once made public, your StackScript will
-                  be available to all Linode users and can be used to provision new Linodes.
-            </Typography>
-              </Notice>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    name='make_public'
-                    variant='warning'
-                    onChange={isPublic.handler}
-                    checked={isPublic.checked}
-                  />
-                }
-                label="Publish this StackScript to the Public Library"
-              />
-            </React.Fragment>
-          } */}
           <ActionsPanel style={{ paddingBottom: 0 }}>
             <Button
               data-qa-confirm-cancel
