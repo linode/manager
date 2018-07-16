@@ -29,6 +29,10 @@ import BetaNotification from './BetaNotification';
 
 shim(); // allows for .finally() usage
 
+const Account = DefaultLoader({
+  loader: () => import('src/features/Account'),
+});
+
 const LinodesRoutes = DefaultLoader({
   loader: () => import('src/features/linodes'),
 });
@@ -235,9 +239,8 @@ export class App extends React.Component<CombinedProps, State> {
                           <Placeholder title="Longview" />} />
                         <Route path="/images" component={Images} />
                         <Route path="/stackscripts" component={StackScripts} />
-                        <Route exact path="/billing" render={() =>
-                          <Placeholder title="Billing" />} />
                         <Route exact path="/users" component={Users} />
+                        <Route exact path="/billing" component={Account} />
                         <Route exact path="/support" render={() =>
                           <Placeholder title="Support" />} />
                         <Route path="/profile" component={Profile} />
