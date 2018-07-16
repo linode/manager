@@ -43,7 +43,7 @@ export const createLinodeIfNone = () => {
     }
 }
 
-export const apiCreateLinode = (linodeLabel=false) => {
+export const apiCreateLinode = (linodeLabel=false, privateIp=false) => {
     const token = readToken();
     const newLinodePass = crypto.randomBytes(20).toString('hex');
     const linode = browser.createLinode(token, newLinodePass, linodeLabel);
@@ -55,6 +55,10 @@ export const apiCreateLinode = (linodeLabel=false) => {
         browser.waitForVisible(`[data-qa-linode="${linodeLabel}"]`);
     } else {
         browser.waitForVisible('[data-qa-linode]', constants.wait.long);
+    }
+
+    if (privateIp) {
+        linode['privateIp'] = browser.allocatePrivateIp(token, linode.id).address;
     }
     browser.waitForVisible('[data-qa-status="running"]', constants.wait.minute * 3);
     return linode;

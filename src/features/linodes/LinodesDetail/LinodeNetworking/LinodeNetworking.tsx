@@ -359,6 +359,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
             <Typography
               variant="title"
               className={classes.netActionsTitle}
+              data-qa-network-actions-title
             >
               Networking Actions
             </Typography>
