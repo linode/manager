@@ -7,6 +7,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
 
 import APITokens from './APITokens';
+import DisplaySettings from './DisplaySettings';
 import LishSettings from './LishSettings';
 import OAuthClients from './OAuthClients';
 import Referrals from './Referrals';
@@ -23,6 +24,7 @@ class Profile extends React.Component<Props> {
 
   tabs = [
     /* NB: These must correspond to the routes inside the Switch */
+    { title: 'Display', routeName: `${this.props.match.url}/display` },
     { title: 'Settings', routeName: `${this.props.match.url}/settings` },
     { title: 'API Tokens', routeName: `${this.props.match.url}/tokens` },
     { title: 'OAuth Clients', routeName: `${this.props.match.url}/clients` },
@@ -54,11 +56,12 @@ class Profile extends React.Component<Props> {
           </Tabs>
         </AppBar>
         <Switch>
+          <Route exact path={`${url}/settings`} component={Settings} />
           <Route exact path={`${url}/tokens`} component={APITokens} />
           <Route exact path={`${url}/clients`} component={OAuthClients} />
           <Route exact path={`${url}/lish`} component={LishSettings} />
           <Route exact path={`${url}/referrals`} component={Referrals} />
-          <Route path={`${url}`} component={Settings} />
+          <Route path={`${url}`} component={DisplaySettings} />
         </Switch>
       </React.Fragment>
     );
