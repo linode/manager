@@ -8,15 +8,26 @@ interface Props {
   stackScriptUsername: string;
   stackScriptLabel: string;
   triggerDelete: (id: number, label: string) => void;
+  triggerMakePublic: (id: number, label: string) => void;
   canDelete: boolean;
   canEdit: boolean;
+  isPublic: boolean;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
 const StackScriptActionMenu: React.StatelessComponent<CombinedProps> = (props) => {
-  const { stackScriptID, stackScriptUsername,
-     history, triggerDelete, stackScriptLabel, canDelete, canEdit } = props;
+  const {
+    stackScriptID,
+    stackScriptUsername,
+    history,
+    triggerDelete,
+    triggerMakePublic,
+    stackScriptLabel,
+    canDelete,
+    canEdit,
+    isPublic,
+  } = props;
 
   const createActions = () => {
     return (closeMenu: Function): Action[] => {
@@ -52,12 +63,17 @@ const StackScriptActionMenu: React.StatelessComponent<CombinedProps> = (props) =
               e.preventDefault();
             },
           },
+        );
+      }
+
+      if (canEdit && !isPublic) {
+        actions.push(
           {
             title: 'Make StackScript Public',
             onClick: (e: React.MouseEvent<HTMLElement>) => {
               // open a modal here as well
               closeMenu();
-              e.preventDefault();
+              triggerMakePublic(stackScriptID, stackScriptLabel)
             },
           }
         );
