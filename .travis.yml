@@ -16,7 +16,6 @@ script:
 - yarn test --coverage --maxWorkers=2
 - yarn storybook:e2e
 - yarn storyshots
-- echo $TRAVIS_BRANCH
 - curl -s -F "uid=$WSEND" -F "filehandle=@/home/travis/build/linode/manager/src/components/__image_snapshots__/__diff_output__/storyshots-test-tsx-image-storyshots-selection-row-interactive-example-1-diff.png" https://wsend.net/upload_cli
 - 'pkill -f selenium-standalone || :'
 - pkill -f storybook
