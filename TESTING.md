@@ -111,6 +111,18 @@ live in `src/components/ComponentName/ComponentName.spec.js`. The WDIO config li
 
      yarn storybook:e2e  # Executes specs matching src/components/**/*.spec.js
 
+#### Run a Single Test
+
+    yarn storybook:e2e --story StoryName # Executes spec matching src/components/StoryName/StoryName.spec.js
+
+#### Run a Test in Non-Headless Chrome
+
+    yarn selenium
+
+    ## New Shell
+
+    yarn storybook:e2e --debug --story StoryName # The --debug flag spawns a visible chrome session
+
 #### Run Suite in Docker Environment
 
 ##### Dependencies
