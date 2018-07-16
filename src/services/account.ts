@@ -71,3 +71,10 @@ export const getOAuthClients = () =>
     setMethod('GET'),
   )
     .then(response => response.data);
+
+export const getUsers = () =>
+  Request<Page<Linode.User>>(
+    setURL(`${API_ROOT}/account/users`),
+    setMethod('GET'),
+  )
+    .then(response => response.data);
