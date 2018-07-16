@@ -20,6 +20,3 @@ script:
 - 'pkill -f selenium-standalone || :'
 - pkill -f storybook
 - cat ./coverage/lcov.info | ./node_modules/.bin/coveralls
-env:
-  global:
-    secure: sbFzz9z0zY9/rhoHAs04Bd//LGb2t55ftVOxWErrB8jQfDz0y86gstVS8/XSUw+CUvXaXntmXDcBT4S4luUWD9pN7kF77ATzFXNUuwpnWZCT57DJAed+usQNr/MkbwIMKKn1/1HPBQHpQBPhXWoWycFI+Sb7ciq8XkLbrWMLdhMj2xpfVEiCv6UXi2HiX1wXlnqMZ1WlQRNi6aA74k/dIHATg1gDw833j0pP8LWk+R6ictfdraEcLC1/JzNqWqSArKEoUYMCMbp3y2A/N9u/wav2RETh1Hi0FDLqn5kkPe3V49zSDGMFpjZ7OGLKf3bq+uUXSJvrpdENsJbg5EtBKOJCNUZitFfQ61hiW9EjSmk0zVfSwyqwh09lbv3dPmUDRcf+QI4+WUvuMWoE3UQQYazIzjVFFja8A9EzHbHKzlI9fEfmzNUoAoHjZJts6U9mXMxEH56IVA4GtaV4bQWVq6cEkdCtzl54O6y7/RMg31/paVfiqydYww2jDV4L5FJA6n0srp/pnUKf42o8UgrQIe/f8ZGdklwQw9kmjduq9JCnGYr+5U5VoRBEoowrR5EwKFit++3BuksEVBgwMmuFu3L3pLPmkelYX3aUl7x6ykXqSGPbnzV9YDdJ34jmk/XCbAtmZWz1wvryhMAkpauvxluKCHTDEncMAGN6LcKmaRo=
