@@ -157,6 +157,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
         // the value is declared here.
         createImage(Number(selectedDisk), label!, safeDescription)
         .then((response) => {
+          resetEventsPolling();
           this.setState({
             notice: "Image queued for creation.",
           });
@@ -167,9 +168,6 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
             errors: pathOr('There was an error creating the image.', ['response', 'data', 'errors'], errorResponse),
           });
         })
-        .finally(() => {
-          resetEventsPolling();
-        });
         return;
       case modes.RESTORING:
         if (!selectedLinode) {
