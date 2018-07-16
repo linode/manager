@@ -18,5 +18,5 @@ const beforeScreenshot = (page, {context : {kind, story}, url}) => {
 
 initStoryshots({
     suite: 'Image storyshots',
-    test: imageSnapshot({storybookUrl: 'http://localhost:6006', getMatchOptions, beforeScreenshot})
+    test: imageSnapshot({storybookUrl: 'http://manager-storybook:80', getMatchOptions, beforeScreenshot})
 });

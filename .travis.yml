@@ -1,22 +1,27 @@
 sudo: required
+
 language: node_js
+
 node_js:
-  - "8.11.2"
+  - 8.11.2
 
-cache: yarn
+services:
+  - docker
 
-before_install: sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++ google-chrome-stable
+before_install: sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev
+  build-essential g++ google-chrome-stable curl
 
 install:
 - yarn --frozen-lockfile
+
 before_script:
 - yarn storybook &
+
 script:
 - yarn build
 - yarn test --coverage --maxWorkers=2
 - yarn storybook:e2e
-- yarn storyshots
-- curl -s -F "uid=$WSEND" -F "filehandle=@/home/travis/build/linode/manager/src/components/__image_snapshots__/__diff_output__/storyshots-test-tsx-image-storyshots-selection-row-interactive-example-1-diff.png" https://wsend.net/upload_cli
+- docker-compose -f storyshots.yml up --build --exit-code-from manager-storyshots
 - 'pkill -f selenium-standalone || :'
 - pkill -f storybook
 - cat ./coverage/lcov.info | ./node_modules/.bin/coveralls
