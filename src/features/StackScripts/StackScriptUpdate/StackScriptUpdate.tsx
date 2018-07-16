@@ -76,7 +76,6 @@ interface State {
   availableImages: Linode.Image[];
   script: string;
   revisionNote: string;
-  is_public: boolean;
   isSubmitting: boolean;
   errors?: Linode.ApiFieldError[];
   dialogOpen: boolean;
@@ -114,7 +113,6 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
     selectedImages: pathOr(undefined, ['response', 'images'], this.props.stackScript),
     script: pathOr(undefined, ['response', 'script'], this.props.stackScript),
     revisionNote: pathOr(undefined, ['response', 'rev_note'], this.props.stackScript),
-    is_public: pathOr(undefined, ['response', 'is_public'], this.props.stackScript),
   }
 
   constructor(props: CombinedProps) {
@@ -145,7 +143,6 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
       availableImages,
       script: this.defaultStackScriptValues.script,
       revisionNote: this.defaultStackScriptValues.revisionNote,
-      is_public: this.defaultStackScriptValues.is_public,
       isSubmitting: false,
       dialogOpen: false,
     }
@@ -234,8 +231,7 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
   }
 
   handleUpdateStackScript = () => {
-    const { script, labelText, selectedImages, descriptionText,
-      is_public, revisionNote } = this.state;
+    const { script, labelText, selectedImages, descriptionText, revisionNote } = this.state;
 
     const { stackScript } = this.props;
 
@@ -246,7 +242,7 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
       label: labelText,
       images: selectedImages,
       description: descriptionText,
-      is_public,
+      is_public: false,
       rev_note: revisionNote,
     }
 
@@ -379,10 +375,6 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
           onSubmit={this.handleUpdateStackScript}
           onCancel={this.handleOpenDialog}
           isSubmitting={isSubmitting}
-          // if the stackscript is public by already, don't give the user
-          // the option to make this selection beacuse you can't
-          // make a stackscript private when it's already been made public
-          shouldShowMakePublicToggle={!this.defaultStackScriptValues.is_public}
         />
         {this.renderCancelStackScriptDialog()}
       </React.Fragment>

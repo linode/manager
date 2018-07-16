@@ -140,7 +140,6 @@ interface Props {
   onSubmit: () => void;
   onCancel: () => void;
   isSubmitting: boolean;
-  shouldShowMakePublicToggle: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
