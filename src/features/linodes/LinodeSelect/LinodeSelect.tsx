@@ -1,3 +1,4 @@
+import { compose } from 'ramda';
 import * as React from 'react';
 
 import {
@@ -63,4 +64,7 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = (props) => {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(RenderGuard<CombinedProps & WithStyles<ClassNames>>(LinodeSelect));
+export default compose<any, any, any>(
+    styled,
+    RenderGuard
+    )(LinodeSelect);
