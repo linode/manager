@@ -71,7 +71,6 @@ interface State {
   availableImages: Linode.Image[];
   script: string;
   revisionNote: string;
-  is_public: boolean;
   isSubmitting: boolean;
   errors?: Linode.ApiFieldError[];
   dialogOpen: boolean;
@@ -104,7 +103,6 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     availableImages: this.props.images.response,
     script: '',
     revisionNote: '',
-    is_public: false,
     isSubmitting: false,
     dialogOpen: false,
   };
@@ -191,14 +189,12 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       labelText: '',
       selectedImages: [],
       descriptionText: '',
-      is_public: false,
       revisionNote: '',
     })
   }
 
   handleCreateStackScript = () => {
-    const { script, labelText, selectedImages, descriptionText,
-      is_public, revisionNote } = this.state;
+    const { script, labelText, selectedImages, descriptionText, revisionNote } = this.state;
 
     const { history } = this.props;
 
@@ -207,7 +203,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       label: labelText,
       images: selectedImages,
       description: descriptionText,
-      is_public,
+      is_public: false,
       rev_note: revisionNote,
     }
 
@@ -340,7 +336,6 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
           onSubmit={this.handleCreateStackScript}
           onCancel={this.handleOpenDialog}
           isSubmitting={isSubmitting}
-          shouldShowMakePublicToggle={true}
         />
         {this.renderCancelStackScriptDialog()}
       </React.Fragment>
