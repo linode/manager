@@ -4,6 +4,7 @@ import * as React from 'react';
 import Divider from '@material-ui/core/Divider';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
@@ -23,7 +24,6 @@ import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 type ClassNames = 'root'
   | 'inner'
   | 'divider'
-  | 'suffix'
   | 'backendIPAction'
   | 'suggestionsParent'
   | 'suggestions'
@@ -37,9 +37,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   divider: {
     marginTop: theme.spacing.unit * 2,
     marginBottom: theme.spacing.unit * 2,
-  },
-  suffix: {
-    marginRight: theme.spacing.unit * 2,
   },
   backendIPAction: {
     paddingLeft: theme.spacing.unit * 2,
@@ -632,12 +629,10 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       label="Interval"
                       InputProps={{
                         'aria-label': 'Active Health Check Interval',
-                        endAdornment: <Typography
-                          variant="caption"
-                          component="span"
-                          className={classes.suffix}>
+                        endAdornment:
+                        <InputAdornment position="end">
                           seconds
-                        </Typography>,
+                        </InputAdornment>,
                       }}
                       value={healthCheckInterval}
                       onChange={this.onHealthCheckIntervalChange}
@@ -661,12 +656,10 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       label="Timeout"
                       InputProps={{
                         'aria-label': 'Active Health Check Timeout',
-                        endAdornment: <Typography
-                          variant="caption"
-                          component="span"
-                          className={classes.suffix}>
+                        endAdornment: 
+                        <InputAdornment position="end">
                           seconds
-                        </Typography>,
+                        </InputAdornment>,
                       }}
                       value={healthCheckTimeout}
                       onChange={this.onHealthCheckTimeoutChange}

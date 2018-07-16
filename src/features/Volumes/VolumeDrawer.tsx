@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
@@ -29,15 +30,10 @@ import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root'
-  | 'suffix'
   | 'actionPanel';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
-  suffix: {
-    fontSize: '.9rem',
-    marginRight: theme.spacing.unit,
-  },
   actionPanel: {
     marginTop: theme.spacing.unit * 2,
   },
@@ -382,7 +378,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { mode, classes } = this.props;
+    const { mode } = this.props;
     const { linodes } = this.state;
     const regions = this.props.regions;
     const linodeLabel = this.props.linodeLabel || '';
@@ -466,7 +462,10 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           errorText={sizeError}
           disabled={mode === modes.CLONING || mode === modes.EDITING}
           InputProps={{
-            endAdornment: <span className={classes.suffix}>GB</span>,
+            endAdornment: 
+              <InputAdornment position="end">
+                GB
+              </InputAdornment>,
           }}
           data-qa-size
         />

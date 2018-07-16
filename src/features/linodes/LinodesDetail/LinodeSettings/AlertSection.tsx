@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { Divider, StyleRulesCallback, Theme, Typography, WithStyles, withStyles } from '@material-ui/core';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import InputAdornment from '@material-ui/core/InputAdornment';
 
 import Grid from 'src/components/Grid';
 import RenderGuard from 'src/components/RenderGuard';
@@ -12,7 +13,6 @@ type ClassNames = 'root'
   | 'switch'
   | 'copy'
   | 'usage'
-  | 'percentage';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   '@keyframes fadeIn': {
@@ -58,10 +58,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     marginTop: 0,
     width: 200,
   },
-  percentage: {
-    fontSize: '.9rem',
-    marginRight: 10,
-  },
 });
 
 interface Props {
@@ -94,25 +90,27 @@ class AlertSection extends React.Component<CombinedProps> {
             data-qa-alerts-panel
             >
             <Grid item className={classes.switch}>
-                <FormControlLabel
+              <FormControlLabel
                 className="toggleLabel"
                 control={<Toggle checked={this.props.state} onChange={this.props.onStateChange} />}
                 label={this.props.title}
                 data-qa-alert={this.props.title}
-                />
+              />
             </Grid>
             <Grid item className={classes.copy}>
                 <Typography>{this.props.copy}</Typography>
             </Grid>
             <Grid item>
-                <TextField
+              <TextField
                 label={this.props.textTitle}
                 type="number"
                 value={this.props.value}
                 disabled={!this.props.state}
                 InputProps={{
-                  endAdornment: <span className={classes.percentage}>
-                  {this.props.endAdornment}</span>,
+                  endAdornment: 
+                  <InputAdornment position="end">
+                    {this.props.endAdornment}
+                  </InputAdornment>,
                 }}
                 error={Boolean(this.props.error)}
                 errorText={this.props.error}
@@ -125,7 +123,7 @@ class AlertSection extends React.Component<CombinedProps> {
                 }}
                 onChange={this.props.onValueChange}
                 className={classes.usage}
-                />
+              />
             </Grid>
             </Grid>
             <Divider />

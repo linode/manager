@@ -130,7 +130,9 @@ class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
         errorGroup="linode-disk-drawer"
         InputProps={{
           endAdornment:
-            <InputAdornment position="end"> MB </InputAdornment>,
+            <InputAdornment position="end">
+              MB
+            </InputAdornment>,
         }}
       />
       <FormHelperText style={{ marginTop: 8 }}>
