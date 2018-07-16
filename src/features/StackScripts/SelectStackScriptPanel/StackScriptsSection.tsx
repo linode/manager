@@ -108,8 +108,8 @@ const listStackScript: (
   }
 
   /*
-  * We can only delete a stackscript if it's ours
-  * and it's not publicly available
+  * We can only edit a stackscript if it's ours
+  * it doesn't matter if it's public or not
   */
   const canEdit = (stackScriptUser: string) => {
     if (stackScriptUser === currentUser) {
