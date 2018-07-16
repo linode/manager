@@ -3,4 +3,4 @@
 yarn storybook-static
 cd .out
 echo "Starting Http server"
-python -m SimpleHTTPServer 80
+python -m SimpleHTTPServer 6006
