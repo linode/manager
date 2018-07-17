@@ -91,6 +91,7 @@ class Profile extends React.Component<CombinedProps> {
 
   handleTabChange = (event: React.ChangeEvent<HTMLDivElement>, value: number) => {
     const { history } = this.props;
+    if (value === -1) { return; }
     const routeName = this.tabs[value].routeName;
     history.push(`${routeName}`);
   }
@@ -133,12 +134,18 @@ class Profile extends React.Component<CombinedProps> {
     />
   }
 
+  matches = (p: string) => {
+    return Boolean(matchPath(p, { path: this.props.location.pathname }));
+  };
+
+  clampTabChoice = () => {
+    const tabChoice = this.tabs.findIndex(tab => this.matches(tab.routeName))
+    return tabChoice < 0 ? 0 : tabChoice;
+  }
+
   render() {
     const { classes, match: { url, params: { username } } } = this.props;
     const { error, gravatarUrl } = this.state;
-    const matches = (p: string) => {
-      return Boolean(matchPath(p, { path: this.props.location.pathname }));
-    };
 
     if (error) {
       return (
@@ -166,7 +173,7 @@ class Profile extends React.Component<CombinedProps> {
         </Grid>
         <AppBar position="static" color="default">
           <Tabs
-            value={this.tabs.findIndex(tab => matches(tab.routeName))}
+            value={this.clampTabChoice()}
             onChange={this.handleTabChange}
             indicatorColor="primary"
             textColor="primary"
