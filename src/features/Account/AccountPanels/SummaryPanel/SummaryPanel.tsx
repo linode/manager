@@ -13,8 +13,9 @@ import { isCreditCardExpired } from 'src/utilities/isCreditCardExpired';
 import { withAccount } from '../../context';
 
 type ClassNames = 'root'
-| 'expired'
-| 'item';
+  | 'expired'
+  | 'item'
+  | 'address2';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -26,6 +27,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   item: {
     marginBottom: theme.spacing.unit,
   },
+  address2: {
+    paddingLeft: theme.spacing.unit * 7.5,
+  }
 });
 
 interface Props { }
@@ -131,12 +135,14 @@ export class SummaryPanel extends React.Component<CombinedProps, State> {
                   {!(first_name || last_name) && 'None'}
                   {`${first_name} ${last_name}`}
               </Typography>
-                <Typography variant="caption" className={classes.item}>
-                  <strong>Address: </strong>
-                  {!(address_1 || address_2 || city || state || zip) && 'None'}
-                  <span>{address_1}</span>
-                  <span>{address_2}</span>
-                  <div>{`${city} ${city && state && ', '} ${state} ${zip}`}</div>
+              <Typography variant="caption" className={classes.item}>
+                <strong>Address: </strong>
+                {!(address_1 || address_2 || city || state || zip) && 'None'}
+                <span>{address_1}</span>
+                <span>{address_2}</span>
+                <div className={classes.address2}>
+                  {`${city} ${city && state && ', '} ${state} ${zip}`}
+                </div>
               </Typography>
             </Grid>
             <Grid item xs={6}>
