@@ -146,7 +146,7 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
                 InputProps={{
                   endAdornment:
                   <InputAdornment position="end">
-                    seconds
+                    / second
                   </InputAdornment>,
                 }}
                 errorText={hasErrorFor('client_conn_throttle')}
