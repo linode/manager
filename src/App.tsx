@@ -57,6 +57,10 @@ const StackScripts = DefaultLoader({
   loader: () => import('src/features/StackScripts'),
 });
 
+const Users = DefaultLoader({
+  loader: () => import('src/features/Users'),
+});
+
 type ClassNames = 'appFrame'
   | 'content'
   | 'wrapper'
@@ -233,8 +237,7 @@ export class App extends React.Component<CombinedProps, State> {
                         <Route path="/stackscripts" component={StackScripts} />
                         <Route exact path="/billing" render={() =>
                           <Placeholder title="Billing" />} />
-                        <Route exact path="/users" render={() =>
-                          <Placeholder title="Users" />} />
+                        <Route exact path="/users" component={Users} />
                         <Route exact path="/support" render={() =>
                           <Placeholder title="Support" />} />
                         <Route path="/profile" component={Profile} />
