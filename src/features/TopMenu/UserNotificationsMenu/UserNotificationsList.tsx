@@ -8,7 +8,9 @@ import Typography from '@material-ui/core/Typography';
 
 import Notice from 'src/components/Notice';
 
-type ClassNames = 'root' | 'pointer';
+type ClassNames = 'root' 
+| 'pointer'
+| 'emptyText';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
@@ -27,8 +29,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   pointer: {
     cursor: 'pointer',
   },
-  list: {
-
+  list: {},
+  emptyText: {
+    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px`,
+    fontWeight: 700,
   },
 });
 
@@ -49,7 +53,7 @@ class UserNotificationsList extends React.Component<CombinedProps, State> {
 
 
     if (notifications.length === 0) {
-      return <Typography>You have no notifications.</Typography>
+      return <Typography className={classes.emptyText}>You have no notifications.</Typography>
     }
 
     return (notifications || []).map((notification, idx) => {
