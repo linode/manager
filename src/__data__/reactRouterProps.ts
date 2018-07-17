@@ -1,7 +1,7 @@
 const mockLocation = {
   pathname: '/',
   search: '',
-  state: undefined,
+  state: {},
   hash: '',
 }
 

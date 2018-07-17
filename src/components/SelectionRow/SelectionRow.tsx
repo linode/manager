@@ -111,7 +111,10 @@ export interface Props {
   stackScriptID: number;
   stackScriptUsername: string;
   triggerDelete?: (id: number, label: string) => void;
+  triggerMakePublic?: (id: number, label: string) => void;
   canDelete: boolean;
+  canEdit: boolean;
+  isPublic: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -130,7 +133,10 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
     stackScriptID,
     stackScriptUsername,
     triggerDelete,
+    triggerMakePublic,
     canDelete,
+    canEdit,
+    isPublic,
   } = props;
 
   /** onSelect and showDeployLink should not be used simultaneously */
@@ -198,7 +204,10 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
             stackScriptUsername={stackScriptUsername}
             stackScriptLabel={label}
             triggerDelete={triggerDelete!}
+            triggerMakePublic={triggerMakePublic!}
             canDelete={canDelete}
+            canEdit={canEdit}
+            isPublic={isPublic}
           />
           </TableCell>
         }
