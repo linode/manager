@@ -62,7 +62,7 @@ class LinodeSettingsDeletPanel extends React.Component<CombinedProps, State> {
             Delete
           </Button>
           <Typography variant="caption">
-            Deleting a Linode will result in permenant data loss.
+            Deleting a Linode will result in permanent data loss.
           </Typography>
         </ExpansionPanel>
         <ConfirmationDialog
@@ -91,7 +91,7 @@ class LinodeSettingsDeletPanel extends React.Component<CombinedProps, State> {
           }
           open={this.state.open}
         >
-          Deleting a Linode will result in permenant data loss. Are you sure?
+          Deleting a Linode will result in permanent data loss. Are you sure?
         </ConfirmationDialog>
       </React.Fragment>
     );
