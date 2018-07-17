@@ -132,7 +132,11 @@ class UsersLanding extends React.Component<CombinedProps, State> {
         <TableCell className={classes.avatarColumn}>
           <div className={classes.avatarWrapper}>
             {user.gravatarUrl !== 'not found'
-              ? <img src={user.gravatarUrl} className={classes.avatar} />
+              ? <img
+                alt={`user ${user.username}'s avatar`}
+                src={user.gravatarUrl}
+                className={classes.avatar}
+              />
               : <UserIcon className={classes.avatar} />
             }
           </div>
