@@ -1,3 +1,4 @@
+import { compose } from 'ramda';
 import * as React from 'react';
 
 import {
@@ -11,6 +12,7 @@ import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from 'src/components/MenuItem';
+import RenderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
 
 type ClassNames = 'root';
@@ -62,4 +64,7 @@ const DiskSelect: React.StatelessComponent<CombinedProps> = (props) => {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(DiskSelect);
+export default compose<any, any, any>(
+  styled,
+  RenderGuard
+  )(DiskSelect);

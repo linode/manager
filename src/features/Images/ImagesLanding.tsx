@@ -216,7 +216,9 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
   }
 
   changeSelectedLinode = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ imageDrawer: { ...this.state.imageDrawer, selectedLinode: e.target.value }});
+    if (this.state.imageDrawer.selectedLinode !== e.target.value) {
+      this.setState({ imageDrawer: { ...this.state.imageDrawer, selectedDisk: 'none', selectedLinode: e.target.value }});
+    }
   }
 
   changeSelectedDisk = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -310,7 +312,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }} >
+        <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }} updateFor={[]}>
           <Grid item>
             <Typography variant="headline" data-qa-title className={classes.title}>
               Images
