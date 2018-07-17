@@ -118,7 +118,6 @@ export class EmailChangeForm extends React.Component<CombinedProps, State> {
                     onChange={this.handleEmailChange}
                     errorText={emailError}
                     errorGroup="display-settings-email"
-                    error={Boolean(emailError)}
                     data-qa-email
                 />
                 <ActionsPanel>
