@@ -147,12 +147,13 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
           </InputLabel>
           <div>
             <Select
-            value={this.state.diskId}
-            disabled={singleDisk}
-            onChange={this.handleDiskChange}
-            inputProps={{ name: 'disk', id: 'disk' }}
-            error={Boolean(diskIdError)}
-            data-qa-select-disk={singleDisk}
+              value={this.state.diskId}
+              disabled={singleDisk}
+              onChange={this.handleDiskChange}
+              inputProps={{ name: 'disk', id: 'disk' }}
+              error={Boolean(diskIdError)}
+              data-qa-select-disk={singleDisk}
+              tooltipText={singleDisk ? 'This option is available for Linodes with multiple disks.' : ''}
             >
               {
                 this.state.linodeDisks.map(disk =>
@@ -165,9 +166,6 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
                   </MenuItem>)
               }
             </Select>
-            {singleDisk && <HelpIcon
-                text="This option is available for Linodes with multiple disks."
-            />}
           </div>
           {
             diskIdError &&
