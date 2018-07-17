@@ -12,6 +12,8 @@ services:
       - backend
   manager-storyshots:
     container_name: manager_storyshots
+    environment:
+      - UPDATE=${UPDATE}
     build:
         context: .
         dockerfile: Dockerfile-storyshots

@@ -21,7 +21,7 @@ script:
 - yarn build
 - yarn test --coverage --maxWorkers=2
 - yarn storybook:e2e
-- docker-compose -f storyshots.yml up --build --exit-code-from manager-storyshots
+- yarn storyshots
 - 'pkill -f selenium-standalone || :'
 - pkill -f storybook
 - cat ./coverage/lcov.info | ./node_modules/.bin/coveralls
