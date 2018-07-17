@@ -1,5 +1,3 @@
-import Axios from 'axios';
-import * as md5 from 'md5';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -12,6 +10,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { StyleRules, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import UserIcon from 'src/assets/icons/user.svg';
+import { getGravatarUrl } from 'src/utilities/gravatar';
 
 type MenuLink = {
   display: string,
@@ -113,7 +112,9 @@ export class UserMenu extends React.Component<PropsWithStylesAndRoutes, State> {
 
   constructor(props: PropsWithStylesAndRoutes) {
     super(props);
-    props.profile && this.getGravatarUrl(props.profile);
+    if (props.profile && props.profile.email) {
+      this.setGravatarUrl(props.profile.email);
+    }
   }
 
   mounted: boolean = false;
@@ -146,29 +147,17 @@ export class UserMenu extends React.Component<PropsWithStylesAndRoutes, State> {
     );
   }
 
-  getEmailHash(email: string) {
-    return email && md5(email.trim().toLowerCase());
-  }
-
-  getGravatarUrl(profile: Linode.Profile) {
-    if (!profile.email) { return; }
-    const url = `https://gravatar.com/avatar/${this.getEmailHash(profile.email)}?d=404`;
-    const instance = Axios.create();
-    return instance.get(url)
-      .then((response) => {
-        if (!this.mounted) { return; }
-
-        this.setState({ gravatarUrl: response.config.url });
-      })
-      .catch((error) => {
-        if (!this.mounted) { return; }
-
-        this.setState({ gravatarUrl: 'not found' });
+  setGravatarUrl(email: string) {
+    getGravatarUrl(email)
+      .then((url) => {
+        this.setState({ gravatarUrl: url });
       });
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    nextProps.profile && this.getGravatarUrl(nextProps.profile);
+    if (nextProps.profile && nextProps.profile.email) {
+      this.setGravatarUrl(nextProps.profile.email);
+    }
   }
 
   renderAvatar() {
