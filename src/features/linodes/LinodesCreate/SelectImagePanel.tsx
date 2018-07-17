@@ -7,6 +7,7 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 import Typography from '@material-ui/core/Typography';
 
 import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 import RenderGuard from 'src/components/RenderGuard';
 import SelectionCard from 'src/components/SelectionCard';
 import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
@@ -176,6 +177,7 @@ const CreateFromImage: React.StatelessComponent<CombinedProps> = (props) => {
           initTab={props.initTab}
         />
         : <Paper className={props.classes.flatImagePanel} data-qa-tp="Select Image">
+          {error && <Notice text={error} error />}
           <Typography variant="title" data-qa-tp="Select Image">
             Select Image
           </Typography>
