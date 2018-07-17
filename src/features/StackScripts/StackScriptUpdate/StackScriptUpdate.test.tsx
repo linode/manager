@@ -1,15 +1,16 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
 
-import { StackScriptCreate } from './StackScriptCreate';
+import { StackScriptUpdate } from './StackScriptUpdate';
 
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 
 import { images } from 'src/__data__/images';
 
-describe('StackScriptCreate', () => {
+describe('StackScriptUpdate', () => {
+  
   const component = shallow(
-    <StackScriptCreate
+    <StackScriptUpdate
       {...reactRouterProps}
       classes={{
         titleWrapper: '',
@@ -21,9 +22,10 @@ describe('StackScriptCreate', () => {
       images={{ response: images }}
     />
   )
-  it('should render a title that reads "Create New StackScript', () => {
+
+  it('should render a title that reads "Edit StackScript', () => {
     const titleText = component.find('WithStyles(Typography)').first().children().text();
-    expect(titleText).toBe('Create New StackScript');
+    expect(titleText).toBe('Edit StackScript');
   });
 
   it(`should render a confirmation dialog with the

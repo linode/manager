@@ -34,6 +34,8 @@ class InteractiveExample extends React.Component<{}, State> {
       stackScriptID: 1000,
       stackScriptUsername: 'mmckenna',
       canDelete: false,
+      canEdit: false,
+      isPublic: false,
     },
     {
       checked: this.state.selected === 1,
@@ -52,6 +54,8 @@ class InteractiveExample extends React.Component<{}, State> {
       stackScriptID: 1001,
       stackScriptUsername: 'mmckenna',
       canDelete: false,
+      canEdit: false,
+      isPublic: false,
     },
     {
       checked: this.state.selected === 2,
@@ -70,6 +74,8 @@ class InteractiveExample extends React.Component<{}, State> {
       stackScriptID: 1002,
       stackScriptUsername: 'mmckenna',
       canDelete: false,
+      canEdit: false,
+      isPublic: false,
     },
     {
       label: 'Livin\' on a Prayer',
@@ -85,6 +91,8 @@ class InteractiveExample extends React.Component<{}, State> {
       stackScriptID: 1003,
       stackScriptUsername: 'mmckenna',
       canDelete: false,
+      canEdit: false,
+      isPublic: false,
     },
     {
       label: 'Sweet Child O\' Mine',
@@ -103,6 +111,8 @@ class InteractiveExample extends React.Component<{}, State> {
       stackScriptID: 1004,
       stackScriptUsername: 'mmckenna',
       canDelete: false,
+      canEdit: false,
+      isPublic: false,
     },
     {
       label: 'Africa',
@@ -120,6 +130,8 @@ class InteractiveExample extends React.Component<{}, State> {
       stackScriptID: 1005,
       stackScriptUsername: 'mmckenna',
       canDelete: false,
+      canEdit: false,
+      isPublic: false,
     },
   ]
 

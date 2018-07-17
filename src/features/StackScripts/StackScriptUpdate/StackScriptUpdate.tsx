@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
+import { Link, RouteComponentProps } from 'react-router-dom';
 
 import { compose, pathOr } from 'ramda';
 
@@ -25,12 +25,14 @@ import PromiseLoader from 'src/components/PromiseLoader';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 
 import { getLinodeImages } from 'src/services/images';
-import { createStackScript } from 'src/services/stackscripts';
+import { getStackScript, updateStackScript } from 'src/services/stackscripts';
 
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import ScriptForm from 'src/features/StackScripts/StackScriptForm';
+
+import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 
 type ClassNames = 'root'
   | 'backButton'
@@ -61,9 +63,12 @@ interface Props {
 
 interface PreloadedProps {
   images: { response: Linode.Image[] }
+  stackScript: { response: Linode.StackScript.Response }
 }
 
 interface State {
+  stackScript: Linode.StackScript.Response;
+  retrievalError?: Error; // error retrieving the stackscript
   labelText: string;
   descriptionText: string;
   imageSelectOpen: boolean;
@@ -80,11 +85,18 @@ type CombinedProps = Props
   & SetDocsProps
   & WithStyles<ClassNames>
   & PreloadedProps
-  & RouteComponentProps<{}>;
+  & RouteComponentProps<{ stackScriptID?: number }>;
 
-const preloaded = PromiseLoader<Props>({
+const preloaded = PromiseLoader<CombinedProps>({
   images: () => getLinodeImages()
-    .then(response => response.data || [])
+    .then(response => response.data || []),
+  stackScript: ({ match: { params: { stackScriptID } } }) => {
+    if (!stackScriptID) {
+      return Promise.reject(new Error('stackScriptID param not set.'));
+    }
+    return getStackScript(stackScriptID)
+      .then(response => response || [])
+  }
 })
 
 const errorResources = {
@@ -93,19 +105,48 @@ const errorResources = {
   script: 'A script'
 };
 
-export class StackScriptCreate extends React.Component<CombinedProps, State> {
-  state: State = {
-    labelText: '',
-    descriptionText: '',
-    imageSelectOpen: false,
-    selectedImages: [],
-    /* available images to select from in the dropdown */
-    availableImages: this.props.images.response,
-    script: '',
-    revisionNote: '',
-    isSubmitting: false,
-    dialogOpen: false,
-  };
+export class StackScriptUpdate extends React.Component<CombinedProps, State> {
+
+  defaultStackScriptValues = {
+    labelText: pathOr(undefined, ['response', 'label'], this.props.stackScript),
+    descriptionText: pathOr(undefined, ['response', 'description'], this.props.stackScript),
+    selectedImages: pathOr(undefined, ['response', 'images'], this.props.stackScript),
+    script: pathOr(undefined, ['response', 'script'], this.props.stackScript),
+    revisionNote: pathOr(undefined, ['response', 'rev_note'], this.props.stackScript),
+  }
+
+  constructor(props: CombinedProps) {
+    super(props);
+
+    /*
+    * Filter out already selected images in the available images dropdown
+    */
+    const availableImages = this.props.images.response.filter(image => {
+      if (this.defaultStackScriptValues.selectedImages) {
+        for (const compatibleImage of this.defaultStackScriptValues.selectedImages) {
+          if (compatibleImage === image.id) {
+            return false;
+          }
+        }
+      }
+      return true;
+    })
+
+    this.state = {
+      stackScript: pathOr(undefined, ['response'], this.props.stackScript),
+      retrievalError: pathOr(undefined, ['error'], this.props.stackScript),
+      labelText: this.defaultStackScriptValues.labelText,
+      descriptionText: this.defaultStackScriptValues.descriptionText,
+      imageSelectOpen: false,
+      selectedImages: this.defaultStackScriptValues.selectedImages,
+      /* available images to select from in the dropdown */
+      availableImages,
+      script: this.defaultStackScriptValues.script,
+      revisionNote: this.defaultStackScriptValues.revisionNote,
+      isSubmitting: false,
+      dialogOpen: false,
+    }
+  }
 
   static docs = [
     {
@@ -185,16 +226,14 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
   resetAllFields = () => {
     this.handleCloseDialog();
     this.setState({
-      script: '',
-      labelText: '',
-      selectedImages: [],
-      descriptionText: '',
-      revisionNote: '',
+      ...this.defaultStackScriptValues
     })
   }
 
-  handleCreateStackScript = () => {
+  handleUpdateStackScript = () => {
     const { script, labelText, selectedImages, descriptionText, revisionNote } = this.state;
+
+    const { stackScript } = this.props;
 
     const { history } = this.props;
 
@@ -203,23 +242,22 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       label: labelText,
       images: selectedImages,
       description: descriptionText,
-      is_public: false,
       rev_note: revisionNote,
     }
 
     if (!this.mounted) { return; }
     this.setState({ isSubmitting: true });
 
-    createStackScript(payload)
+    updateStackScript(stackScript.response.id, payload)
       .then((stackScript: Linode.StackScript.Response) => {
         if (!this.mounted) { return; }
         this.setState({ isSubmitting: false });
         history.push(
           '/stackscripts',
-          { successMessage: `${stackScript.label} successfully created` }
+          { successMessage: `${stackScript.label} successfully updated` }
         );
       })
-      .catch(error => {
+      .catch((error: Linode.TodoAny) => {
         if (!this.mounted) { return; }
 
         this.setState(() => ({
@@ -279,7 +317,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     const { classes, profile } = this.props;
     const { availableImages, selectedImages, script,
       labelText, descriptionText, revisionNote, errors,
-    isSubmitting } = this.state;
+      isSubmitting } = this.state;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
@@ -302,7 +340,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
               </IconButton>
             </Link>
             <Typography className={classes.createTitle} variant="headline">
-              Create New StackScript
+              Edit StackScript
             </Typography>
           </Grid>
         </Grid>
@@ -336,7 +374,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
             onChange: this.handleChooseImage
           }}
           errors={errors}
-          onSubmit={this.handleCreateStackScript}
+          onSubmit={this.handleUpdateStackScript}
           onCancel={this.handleOpenDialog}
           isSubmitting={isSubmitting}
         />
@@ -352,10 +390,16 @@ const mapStateToProps = (state: Linode.AppState) => ({
 
 const styled = withStyles(styles, { withTheme: true });
 
+const reloaded = reloadableWithRouter<PreloadedProps, { stackScriptID?: number }>(
+  (routePropsOld, routePropsNew) => {
+    return routePropsOld.match.params.stackScriptID !== routePropsNew.match.params.stackScriptID;
+  },
+);
+
 export default compose(
-  setDocs(StackScriptCreate.docs),
+  setDocs(StackScriptUpdate.docs),
   styled,
-  withRouter,
+  reloaded,
   connect(mapStateToProps),
   preloaded,
-)(StackScriptCreate)
+)(StackScriptUpdate)
