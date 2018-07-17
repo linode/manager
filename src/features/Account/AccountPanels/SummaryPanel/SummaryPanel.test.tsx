@@ -21,7 +21,7 @@ describe('SummaryPanel', () => {
     balance: 0,
   };
 
-  const mockClasses = { root: '', expired: '' };
+  const mockClasses = { root: '', expired: '', item: '' };
 
   const componentExpiredCC = shallow(
     <SummaryPanel
@@ -42,7 +42,7 @@ describe('SummaryPanel', () => {
   );
 
   it('should first render a headline of "Summary"', () => {
-    expect(componentExpiredCC.find('WithStyles(Typography)[variant="headline"]')
+    expect(componentExpiredCC.find('WithStyles(Typography)[variant="title"]')
       .first().children().text()).toBe('Summary');
   });
 

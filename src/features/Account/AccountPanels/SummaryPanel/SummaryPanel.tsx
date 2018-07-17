@@ -13,13 +13,19 @@ import { isCreditCardExpired } from 'src/utilities/isCreditCardExpired';
 import { withAccount } from '../../context';
 
 type ClassNames = 'root'
-  | 'expired';
+| 'expired'
+| 'item';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
-  root: {},
+  root: {
+    padding: theme.spacing.unit * 3,
+  },
   expired: {
     color: theme.color.red,
-  }
+  },
+  item: {
+    marginBottom: theme.spacing.unit,
+  },
 });
 
 interface Props { }
@@ -39,7 +45,7 @@ export class SummaryPanel extends React.Component<CombinedProps, State> {
   state: State = {};
 
   render() {
-    const { data, loading, errors, lastUpdated } = this.props;
+    const { classes, data, loading, errors, lastUpdated } = this.props;
 
     if (lastUpdated === 0 && loading) {
       return this.loading();
@@ -52,12 +58,12 @@ export class SummaryPanel extends React.Component<CombinedProps, State> {
     if (!data) { return null; }
 
     return (
-      <Paper>
+      <Paper className={classes.root}>
         <Grid container>
           <Grid item xs={12}>
-            <Typography variant="headline">
+            <Typography variant="title">
               Summary
-          </Typography>
+            </Typography>
           </Grid>
           <Grid item xs={12}>
             <Grid container>
