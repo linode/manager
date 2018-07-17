@@ -72,7 +72,8 @@ export class AccountLanding extends React.Component<CombinedProps, State> {
         <Typography variant="headline" className={classes.title}>Billing</Typography>
         <SummaryPanel
           email={account.email}
-          name={`${account.first_name} ${account.last_name}`}
+          first_name={account.first_name}
+          last_name={account.last_name}
           phone={account.phone}
           company={account.company}
           address1={account.address_1}
