@@ -126,6 +126,8 @@ class UserEventsMenu extends React.Component<CombinedProps, State> {
     this.buttonRef = element;
   }
 
+  closeMenu = () => this.setState({ anchorEl: undefined });
+
   render() {
     const { anchorEl, events, unseenCount } = this.state;
     const { classes } = this.props;
@@ -145,11 +147,14 @@ class UserEventsMenu extends React.Component<CombinedProps, State> {
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           transformOrigin={{ vertical: 'top', horizontal: 'right' }}
           open={Boolean(anchorEl)}
-          onClose={() => this.setState({ anchorEl: undefined })}
+          onClose={this.closeMenu}
           className={classes.root}
           PaperProps={{ className: classes.dropDown }}
         >
-          <UserEventsList events={events} />
+          <UserEventsList
+            events={events}
+            closeMenu={this.closeMenu}
+          />
         </Menu>
       </React.Fragment>
     );

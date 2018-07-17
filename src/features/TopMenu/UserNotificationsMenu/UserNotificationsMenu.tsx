@@ -101,7 +101,7 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
           className={classes.root}
           PaperProps={{ className: classes.dropDown }}
         >
-          <UserNotificationsList notifications={notifications} />
+          <UserNotificationsList notifications={notifications} closeMenu={this.closeMenu} />
         </Menu>
       </React.Fragment>
     );

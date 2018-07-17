@@ -6,7 +6,8 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 type ClassNames = 'root'
   | 'title'
   | 'content'
-  | 'unread';
+  | 'unread'
+  | 'pointer';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => {
   const { palette: { status } } = theme;
@@ -36,6 +37,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     success: {
       borderLeftColor: status.successDark,
     },
+    pointer: {
+      cursor: 'pointer',
+    },
   };
 };
 
@@ -45,20 +49,24 @@ export interface UserEventsListItemProps {
   success?: boolean;
   warning?: boolean;
   error?: boolean;
+  onClick?: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
 type CombinedProps = UserEventsListItemProps & WithStyles<ClassNames>;
 
 const UserEventsListItem: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, title, content, warning, success, error } = props;
+  const { classes, title, content, warning, success, error, onClick } = props;
   return (
-  <div className={classNames({
-    [classes.root]: true,
-    [classes.unread]: error || warning || success,
-  })}>
-    <div className={classes.title}>{title}</div>
-    { content && <div className={classes.content}>{content}</div> }
-  </div>
+    <div className={classNames({
+      [classes.root]: true,
+      [classes.unread]: error || warning || success,
+      [classes.pointer]: Boolean(onClick),
+    })}
+      onClick={onClick}
+    >
+      <div className={classes.title}>{title}</div>
+      {content && <div className={classes.content}>{content}</div>}
+    </div>
   );
 };
 

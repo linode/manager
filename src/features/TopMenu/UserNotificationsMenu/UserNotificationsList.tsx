@@ -1,12 +1,14 @@
-import { pathOr } from 'ramda';
+import * as classNames from 'classnames';
+import { compose, path, pathOr } from 'ramda';
 import * as React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
 import Notice from 'src/components/Notice';
-import { Typography } from '../../../../node_modules/@material-ui/core';
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'pointer';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
@@ -22,6 +24,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
       color: '#333',
     },
   },
+  pointer: {
+    cursor: 'pointer',
+  },
   list: {
 
   },
@@ -29,17 +34,18 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 interface Props {
   notifications: Linode.Notification[];
+  closeMenu: () => void;
 }
 
 interface State { }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & RouteComponentProps<void> & WithStyles<ClassNames>;
 
 class UserNotificationsList extends React.Component<CombinedProps, State> {
   state: State = {};
 
   render() {
-    const { classes, notifications } = this.props;
+    const { classes, notifications, closeMenu, history: { push } } = this.props;
 
 
     if (notifications.length === 0) {
@@ -48,12 +54,20 @@ class UserNotificationsList extends React.Component<CombinedProps, State> {
 
     return (notifications || []).map((notification, idx) => {
       const level = pathOr('warning', [notification.severity], severityMap);
-      const onClick = createClickHandlerForNotification(notification);
-
+      const onClick = createClickHandlerForNotification(
+        notification.entity,
+        (path: string) => {
+          closeMenu();
+          push(path);
+        });
       return React.createElement(Notice, {
         key: idx,
         children: notification.message,
-        className: `${classes.root} ${'notification'}`,
+        className: classNames({
+          [classes.root]: true,
+          notifications: true,
+          [classes.pointer]: Boolean(onClick),
+        }),
         [level]: true,
         notificationList: true,
         onClick
@@ -63,7 +77,23 @@ class UserNotificationsList extends React.Component<CombinedProps, State> {
 }
 
 const createClickHandlerForNotification =
-  (n: Linode.Notification) => (e: React.MouseEvent<HTMLElement>): void => {
+  (entity: null | Linode.Entity, onClick: (path: string) => void) => {
+    const type = path<string>(['type'], entity);
+    const id = path<number>(['id'], entity);
+
+    if (!type || !id) { return; }
+
+
+    switch (type) {
+      case 'linode':
+        return (e: React.MouseEvent<HTMLElement>) => onClick(`/linodes/${id}`);
+
+      case 'ticket':
+        return (e: React.MouseEvent<HTMLElement>) => onClick(`/support/ticket/${id}`);
+
+      default:
+        return;
+    }
 
   };
 
@@ -75,4 +105,6 @@ const severityMap = {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(UserNotificationsList);
+const enhanced = compose<any, any, any>(styled, withRouter);
+
+export default enhanced(UserNotificationsList);

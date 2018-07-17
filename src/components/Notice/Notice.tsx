@@ -78,6 +78,7 @@ interface Props extends GridProps {
   className?: string;
   flag?: boolean;
   notificationList?: boolean;
+  onClick?: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -96,6 +97,7 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
     flag,
     html,
     notificationList,
+    onClick,
   } = props;
 
   const c = html
@@ -103,7 +105,7 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
       <Typography {...typeProps} dangerouslySetInnerHTML={{ __html: html }} />
     )
     : (
-      <Typography {...typeProps}>
+      <Typography {...typeProps} onClick={onClick}>
         {text && text}
         {children && children}
       </Typography>
