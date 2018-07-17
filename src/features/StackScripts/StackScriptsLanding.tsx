@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import AddNewLink from 'src/components/AddNewLink';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 import PromiseLoader from 'src/components/PromiseLoader';
 import { getLinodeImages } from 'src/services/images';
 
@@ -62,10 +63,13 @@ export class StackScriptsLanding extends React.Component<CombinedProps, State> {
 
   render() {
 
-    const { images, classes } = this.props;
+    const { images, classes, history } = this.props;
 
     return (
       <React.Fragment>
+        {!!history.location.state.successMessage &&
+          <Notice success text={history.location.state.successMessage} />
+        }
         <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
           <Grid item>
             <Typography variant="headline" className={classes.title} data-qa-title >
