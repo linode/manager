@@ -1,2 +1,1 @@
-import AccountLanding from './AccountLanding';
-export default AccountLanding;
+export {default} from './AccountDetail';
