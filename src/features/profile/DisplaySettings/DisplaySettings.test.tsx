@@ -22,4 +22,10 @@ describe('Email change form', () => {
   it('should render', () => {
     expect(component).toHaveLength(1);
   });
+
+  it('should not render the email form when loading', () => {
+    expect(component.find('[data-qa-email-change]')).toHaveLength(1);
+    component.setProps({ loading: true });
+    expect(component.find('[data-qa-email-change]')).toHaveLength(0);
+  });
 });

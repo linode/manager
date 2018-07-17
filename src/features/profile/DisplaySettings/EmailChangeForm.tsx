@@ -2,7 +2,6 @@ import { lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 
 import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 
 import {
     StyleRulesCallback,
@@ -34,7 +33,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 interface Props {
   username: string;
   email: string;
-  loading: boolean;
   updateProfile: (v: Linode.Profile) => void;
 }
 
@@ -54,7 +52,6 @@ export class EmailChangeForm extends React.Component<CombinedProps, State> {
         success: undefined,
         submitting: false,
     }
-
 
     handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         this.setState(set(lensPath(['updatedEmail']), e.target.value))
@@ -78,7 +75,7 @@ export class EmailChangeForm extends React.Component<CombinedProps, State> {
                 this.props.updateProfile(response);
                 this.setState({
                     submitting: false,
-                    success: 'Account information updated.',
+                    success: 'Email address updated.',
                 })
             })
             .catch((error) => {
@@ -94,11 +91,7 @@ export class EmailChangeForm extends React.Component<CombinedProps, State> {
     };
 
     render() {
-        const { 
-            classes,
-            loading,
-            username, } = this.props;
-
+        const { classes, username, } = this.props;
         const { errors, success, submitting, updatedEmail } = this.state;
         const hasErrorFor = getAPIErrorFor({
             email: 'email',
@@ -109,57 +102,43 @@ export class EmailChangeForm extends React.Component<CombinedProps, State> {
         return (
             <React.Fragment>
                 <Paper className={classes.root}>
-                <Typography
-                    variant="title"
-                    className={classes.title}
-                    data-qa-title
-                >
-                    Email Address
-                </Typography>
                 {success && <Notice success text={success} />}
                 {generalError && <Notice error text={generalError} />}
-                {loading
-                    ? null
-                    : (
-                        <React.Fragment>
-                            <TextField
-                                disabled
-                                label="Username"
-                                value={username}
-                                errorGroup="display-settings-email"
-                                data-qa-username
-                            />
-                            <TextField
-                                label="Email"
-                                type="email"
-                                value={updatedEmail}
-                                onChange={this.handleEmailChange}
-                                errorText={emailError}
-                                errorGroup="display-settings-email"
-                                error={Boolean(emailError)}
-                                data-qa-email
-                            />
-                            <ActionsPanel>
-                            <Button
-                                type="primary"
-                                onClick={this.onSubmit}
-                                loading={submitting}
-                                data-qa-submit
-                            >
-                                Save
-                            </Button>
-                            <Button
-                                type="cancel"
-                                onClick={this.onCancel}
-                                data-qa-cancel
-                            >
-                                Cancel
-                            </Button>
-                            </ActionsPanel>
-                        </ React.Fragment>
-                        )
-                    }
-                </Paper>
+                <TextField
+                    disabled
+                    label="Username"
+                    value={username}
+                    errorGroup="display-settings-email"
+                    data-qa-username
+                />
+                <TextField
+                    label="Email"
+                    type="email"
+                    value={updatedEmail}
+                    onChange={this.handleEmailChange}
+                    errorText={emailError}
+                    errorGroup="display-settings-email"
+                    error={Boolean(emailError)}
+                    data-qa-email
+                />
+                <ActionsPanel>
+                    <Button
+                        type="primary"
+                        onClick={this.onSubmit}
+                        loading={submitting}
+                        data-qa-submit
+                    >
+                        Save
+                    </Button>
+                    <Button
+                        type="cancel"
+                        onClick={this.onCancel}
+                        data-qa-cancel
+                    >
+                        Cancel
+                    </Button>
+                </ActionsPanel>
+            </Paper>
             </React.Fragment>
         )
     }
