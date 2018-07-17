@@ -23,6 +23,7 @@ interface Props {
   email: string;
   submitting: boolean;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
+  onCancel: () => void;
   onSubmit: () => void;
 }
 
@@ -32,6 +33,7 @@ const EmailChangeForm: React.StatelessComponent<CombinedProps> = (props) => {
     const { email,
             error, 
             handleChange,
+            onCancel,
             onSubmit,
             submitting,
             username, } = props;
@@ -61,6 +63,13 @@ const EmailChangeForm: React.StatelessComponent<CombinedProps> = (props) => {
                 data-qa-submit
             >
                 Save
+            </Button>
+            <Button
+                type="cancel"
+                onClick={onCancel}
+                data-qa-cancel
+            >
+                Cancel
             </Button>
             </ActionsPanel>
         </ React.Fragment>
