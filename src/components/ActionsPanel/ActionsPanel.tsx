@@ -1,4 +1,5 @@
 import * as classNames from 'classnames';
+import { compose } from 'ramda';
 import * as React from 'react';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
@@ -43,4 +44,7 @@ const ActionPanel: React.StatelessComponent<CombinedProps> = (props) => {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(RenderGuard<Props& WithStyles<ClassNames>>(ActionPanel));
+export default compose<any, any, any>(
+  styled,
+  RenderGuard
+  )(ActionPanel);
