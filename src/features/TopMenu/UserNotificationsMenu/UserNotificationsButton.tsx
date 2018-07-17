@@ -22,8 +22,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       marginLeft: theme.spacing.unit * 2,
     },
     '&:hover, &.active': {
+      color: theme.palette.primary.light,
       '& $icon': {
-        fill: theme.palette.primary.light,
+        color: theme.palette.primary.light,
       },
     },
   },
@@ -58,7 +59,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     color: 'blue',
   },
   hasNoNotifications: {
-    color: 'darkgray',
+    color: theme.color.grey3,
   },
   allRead: {
     '& .circle': {
@@ -81,7 +82,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const UserNotificationButton: React.StatelessComponent<CombinedProps> = ({
+const userNotificationButton: React.StatelessComponent<CombinedProps> = ({
   classes,
   allRead,
   onClick,
@@ -108,4 +109,4 @@ const UserNotificationButton: React.StatelessComponent<CombinedProps> = ({
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(UserNotificationButton);
+export default styled<Props>(userNotificationButton);
