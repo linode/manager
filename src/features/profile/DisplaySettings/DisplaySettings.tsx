@@ -50,10 +50,21 @@ export class DisplaySettings extends React.Component<CombinedProps, State> {
   state: State = {
     submitting: false,
     updatedEmail: this.props.email || '',
-  };
+    errors: undefined,
+    success: undefined,
+  }
 
   handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState(set(lensPath(['updatedEmail']), e.target.value))
+  }
+
+  onCancel = () => {
+    this.setState({
+      submitting: false,
+      updatedEmail: this.props.email || '',
+      errors: undefined,
+      success: undefined,
+    });
   }
 
   onSubmit = () => {
@@ -111,6 +122,7 @@ export class DisplaySettings extends React.Component<CombinedProps, State> {
                   username={username}
                   submitting={submitting}
                   handleChange={this.handleEmailChange}
+                  onCancel={this.onCancel}
                   onSubmit={this.onSubmit}
                   data-qa-email-change
                 />

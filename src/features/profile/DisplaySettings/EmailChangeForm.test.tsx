@@ -6,6 +6,7 @@ import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 import EmailChangeForm from './EmailChangeForm';
 
 describe('Email change form', () => {
+  const onCancel = jest.fn();
   const onSubmit = jest.fn();
   const onChange = jest.fn();
   
@@ -17,6 +18,7 @@ describe('Email change form', () => {
         username='ThisUser'
         submitting={false}
         handleChange={onChange}
+        onCancel={onCancel}
         onSubmit={onSubmit}
       />
     </LinodeThemeWrapper>,
