@@ -1,7 +1,7 @@
 export const isCreditCardExpired = (expDate: string) => {
   // MM/DDDD format
   const pattern = /^((0[1-9])|(1[0-2]))\/(\d{4})$/i;
-  if (!expDate.match(pattern)) {
+  if (!expDate || !expDate.match(pattern)) {
     throw new Error('exp date does not match MM/YYYY pattern');
   }
   const month = +expDate.substr(0, 2);
