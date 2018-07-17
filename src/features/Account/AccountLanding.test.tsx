@@ -7,16 +7,17 @@ import { account } from 'src/__data__/account';
 
 describe('Account Landing', () => {
   const component = shallow(
-    <AccountLanding
-      classes={{
-        root: '',
-      }}
-      setDocs={jest.fn()}
-      clearDocs={jest.fn()}
-      account={{
-        response: account
-      }}
-    />
+      <AccountLanding
+        classes={{
+          root: '',
+          heading: '',
+        }}
+        setDocs={jest.fn()}
+        clearDocs={jest.fn()}
+        account={{
+          response: account
+        }}
+      />
   );
 
   it('should render a headline of "Billing"', () => {
