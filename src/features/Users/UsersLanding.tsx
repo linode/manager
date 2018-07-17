@@ -1,4 +1,4 @@
-import { compose } from 'ramda';
+import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
 
 import Paper from '@material-ui/core/Paper';
@@ -9,20 +9,41 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 
+import UserIcon from 'src/assets/icons/user.svg';
 import AddNewLink from 'src/components/AddNewLink';
 import CircleProgress from 'src/components/CircleProgress';
 import setDocs from 'src/components/DocsSidebar/setDocs';
+import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Table from 'src/components/Table';
 import { getUsers } from 'src/services/account';
+import { getGravatarUrl } from 'src/utilities/gravatar';
 
 import ActionMenu from './UsersActionMenu';
 
-type ClassNames = 'title';
+type ClassNames = 'title' | 'avatarColumn' | 'avatarWrapper' | 'avatar';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   title: {
     marginBottom: theme.spacing.unit * 2,
+  },
+  avatarColumn: {
+    width: '1%',
+  },
+  avatarWrapper: {
+    borderRadius: '50%',
+    width: '46px',
+    height: '46px',
+    [theme.breakpoints.down('sm')]: {
+      margin: 0,
+      width: '40px',
+      height: '40px',
+    }
+  },
+  avatar: {
+    borderRadius: '50%',
+    width: '100%',
+    height: '100%',
   },
 });
 
@@ -30,6 +51,7 @@ interface Props {}
 
 interface State {
   users?: Linode.User[];
+  error?: Error;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -66,8 +88,25 @@ class UsersLanding extends React.Component<CombinedProps, State> {
       .then(({ data: users }) => {
         this.setState({
           users,
-        });
+        }, this.setUserAvatars);
       })
+      .catch((errResponse) => {
+        this.setState({
+          error: new Error('Error when fetching user list'),
+        })
+      })
+  }
+
+  setUserAvatars = () => {
+    if (!this.state.users) { return; }
+    this.state.users.map((user, idx) => {
+      if (!user.gravatarUrl) {
+        getGravatarUrl(user.email)
+          .then((url) => {
+            this.setState(set(lensPath(['users', idx, 'gravatarUrl']), url));
+          })
+      }
+    })
   }
 
   openForCreate = () => {
@@ -87,9 +126,20 @@ class UsersLanding extends React.Component<CombinedProps, State> {
   }
 
   renderUserRow = (user: Linode.User) => {
+    const { classes } = this.props;
     return (
       <TableRow key={user.username}>
-        <TableCell>{user.username}</TableCell>
+        <TableCell className={classes.avatarColumn}>
+          <div className={classes.avatarWrapper}>
+            {user.gravatarUrl !== 'not found'
+              ? <img src={user.gravatarUrl} className={classes.avatar} />
+              : <UserIcon className={classes.avatar} />
+            }
+          </div>
+        </TableCell>
+        <TableCell>
+          {user.username}
+        </TableCell>
         <TableCell>{user.email}</TableCell>
         <TableCell>{user.restricted ? 'Restricted' : 'Unrestricted'}</TableCell>
         <TableCell>
@@ -105,7 +155,15 @@ class UsersLanding extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes } = this.props;
-    const { users } = this.state;
+    const { users, error } = this.state;
+
+    if (error) {
+      return (
+        <ErrorState
+          errorText="There was an error retrieving the user list. Please reload and try again."
+        />
+      );
+    }
 
     return (
       <React.Fragment>
@@ -133,6 +191,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
                 <Table>
                   <TableHead>
                     <TableRow>
+                      <TableCell></TableCell>
                       <TableCell>Username</TableCell>
                       <TableCell>Email Address</TableCell>
                       <TableCell>Restricted</TableCell>

@@ -35,6 +35,7 @@ class UsersActionMenu extends React.Component<CombinedProps> {
           title: 'User Permissions',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             onPermissions();
+            closeMenu();
             e.preventDefault();
           },
         },

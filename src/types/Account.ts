@@ -3,5 +3,6 @@ namespace Linode {
     username: string;
     email: string;
     restricted: boolean;
+    gravatarUrl?: string;
   }
 }
