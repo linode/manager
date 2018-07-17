@@ -33,6 +33,24 @@ describe('NodeBalancer - Configurations Suite', () => {
         NodeBalancers.configSave();
     });
 
+    it('should display certificate and private key fields on set protocol to https', () => {
+        NodeBalancers.selectMenuOption(NodeBalancers.protocolSelect, 'https');
+        NodeBalancers.certTextField.waitForVisible();
+        NodeBalancers.privateKeyTextField.waitForVisible();
+    });
+
+    it('should display error on save configuration without a cert and private key', () => {
+        NodeBalancers.saveButton.click();
+
+        expect(NodeBalancers.certTextField.$('p').getText()).toBe('"SSL certificate" is required');
+        expect(NodeBalancers.privateKeyTextField.$('p').getText()).toBe('"SSL private key" is required');
+
+        // Revert choice to HTTP
+        NodeBalancers.selectMenuOption(NodeBalancers.protocolSelect, 'http');
+        NodeBalancers.certTextField.waitForVisible(constants.wait.short, true);
+        NodeBalancers.privateKeyTextField.waitForVisible(constants.wait.short, true);
+    });
+
     it('should display attached node', () => {
         const attachedNodes = NodeBalancers.nodes
             .filter(n => n.$('[data-qa-backend-ip-label] input').getValue() !== '');

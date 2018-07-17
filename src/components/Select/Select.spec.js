@@ -20,8 +20,8 @@ describe('Select Suite', () => {
         selectBoxes = $$(select);
         selectBoxes.forEach(s => {
             expect(s.isVisible()).toBe(true);
-            expect(s.$('..').$('label').isVisible()).toBe(true);
-            expect(s.$('..').$('p').isVisible()).toBe(true);
+            expect(s.$('..').$('..').$('label').isVisible()).toBe(true);
+            expect(s.$('..').$('..').$('p').isVisible()).toBe(true);
             expect(s.$('svg').isVisible()).toBe(true);
         });
     });
@@ -42,7 +42,7 @@ describe('Select Suite', () => {
     });
 
     it('should display options on click', () => {
-        const selectTitle = enabledSelects[0].$('..').$('label').getText().toLowerCase();
+        const selectTitle = enabledSelects[0].$('..').$('..').$('label').getText().toLowerCase();
         enabledSelects[0].click();
         
         selectOptions = $(`#menu-${selectTitle}`).$$('li');

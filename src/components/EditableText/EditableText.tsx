@@ -192,7 +192,7 @@ class EditableText extends React.Component<FinalProps, State> {
                   className={classes.textField}
                   type="text"
                   onChange={this.onChange}
-                  onKeyDown={(e) => {
+                  onKeyDown={(e: any) => {
                     if (e.key === 'Enter') { this.finishEditing(text); }
                     if (e.key === 'Escape' || e.key === 'Esc') { this.cancelEditing(); }
                   }}

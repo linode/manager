@@ -53,11 +53,16 @@ export default class Page {
         browser.waitForVisible('[data-qa-add-new-menu]', constants.wait.normal, true);
     }
 
-    waitForNotice(noticeMsg, timeout=10000) {
+    waitForNotice(noticeMsg, timeout=10000, opposite=false) {
         return browser.waitUntil(function() {
             const noticeRegex = new RegExp(noticeMsg, 'ig');
             const noticeMsgDisplays = $$('[data-qa-notice]')
                 .filter(n => !!n.getText().match(noticeRegex));
+
+            if (opposite) {
+                return noticeMsgDisplays.length === 0;
+            }
+
             return noticeMsgDisplays.length > 0;
         }, timeout, `${noticeMsg} failed to display`);
     }

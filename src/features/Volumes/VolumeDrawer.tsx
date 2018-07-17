@@ -15,7 +15,6 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
-import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import Select from 'src/components/Select';
 import TextField from 'src/components/TextField';
@@ -46,7 +45,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 export interface Props {
   regions: Linode.Volume[];
-  linodes: PromiseLoaderResponse<Linode.ResourcePage<Linode.Linode>>;
   cloneLabel?: string;
 }
 
@@ -120,7 +118,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     label: this.props.label,
     size: this.props.size,
     region: this.props.region,
-    linodes: path(['response', 'data'], this.props.linodes) || [],
+    linodes: [],
     linodeId: this.props.linodeId,
     configs: [],
   };
@@ -647,16 +645,11 @@ const mapStateToProps = (state: Linode.AppState) => ({
   regions: path(['resources', 'regions', 'data', 'data'], state),
 });
 
-const preloaded = PromiseLoader<CombinedProps>({
-  linodes: () => getLinodes(),
-});
-
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default compose<any, any, any, any, any>(
-  preloaded,
+export default compose<any, any, any, any>(
   connected,
   styled,
   SectionErrorBoundary,
