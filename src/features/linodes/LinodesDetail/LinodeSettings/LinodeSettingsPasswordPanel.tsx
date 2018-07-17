@@ -9,7 +9,6 @@ import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ExpansionPanel from 'src/components/ExpansionPanel';
-import HelpIcon from 'src/components/HelpIcon';
 import MenuItem from 'src/components/MenuItem';
 import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
@@ -109,14 +108,15 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
                 loading={submitting}
                 disabled={linodeStatus !== 'offline' || submitting}
                 data-qa-password-save
+                tooltipText={
+                  linodeStatus !== 'offline'
+                  ?
+                    'Your Linode must be fully powered down in order to change your root password'
+                  : ''
+                }
               >
                 Save
               </Button>
-              {linodeStatus !== 'offline' &&
-              <HelpIcon
-                text="Your Linode must be fully powered down
-                in order to change your root password"
-              />}
             </ActionsPanel>
   }
 
