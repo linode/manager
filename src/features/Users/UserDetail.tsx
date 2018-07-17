@@ -47,6 +47,11 @@ type Props = WithStyles<ClassNames> & RouteComponentProps<{ username: string }>;
 interface State {
   gravatarUrl: string;
   error?: Error,
+  originalUsername?: string;
+  username?: string;
+  originalEmail?: string;
+  email?: string;
+  restricted?: boolean;
 }
 
 class Profile extends React.Component<Props> {
@@ -68,6 +73,11 @@ class Profile extends React.Component<Props> {
           .then((url) => {
             this.setState({
               gravatarUrl: url,
+              originalUsername: user.username,
+              username: user.username,
+              originalEmail: user.email,
+              email: user.email,
+              restricted: user.restricted,
             })
           })
       })
@@ -77,7 +87,7 @@ class Profile extends React.Component<Props> {
         })
       })
   }
-  
+
   handleTabChange = (event: React.ChangeEvent<HTMLDivElement>, value: number) => {
     const { history } = this.props;
     const routeName = this.tabs[value].routeName;
@@ -89,8 +99,43 @@ class Profile extends React.Component<Props> {
     history.push('/users');
   }
 
+  onChangeUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({
+      username: e.target.value,
+    });
+  }
+
+  onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({
+      email: e.target.value,
+    });
+  }
+
+  onReset = () => {
+    this.setState({
+      username: this.state.originalUsername,
+      email: this.state.originalEmail,
+    })
+  }
+
+  onSave = () => {
+    return;
+  }
+
+  renderUserProfile = () => {
+    const { username, email } = this.state;
+    return <UserProfile
+      username={username}
+      email={email}
+      changeUsername={this.onChangeUsername}
+      changeEmail={this.onChangeEmail}
+      save={this.onSave}
+      reset={this.onReset}
+    />
+  }
+
   render() {
-    const { classes, match: { url, params: { username } }, history } = this.props;
+    const { classes, match: { url, params: { username } } } = this.props;
     const { error, gravatarUrl } = this.state;
     const matches = (p: string) => {
       return Boolean(matchPath(p, { path: this.props.location.pathname }));
@@ -99,7 +144,7 @@ class Profile extends React.Component<Props> {
     if (error) {
       return (
         <ErrorState
-          errorText="There was an error retrieving the user list. Please reload and try again."
+          errorText="There was an error retrieving the user data. Please reload and try again."
         />
       );
     }
@@ -115,7 +160,7 @@ class Profile extends React.Component<Props> {
               ? <img src={gravatarUrl} className={classes.avatar} />
               : <UserIcon className={classes.avatar} />
             }
-            <Typography variant="headline" data-qa-profile-header>
+            <Typography variant="headline">
               {username}
             </Typography>
           </Grid>
@@ -134,7 +179,7 @@ class Profile extends React.Component<Props> {
         </AppBar>
         <Switch>
           <Route exact path={`${url}/permissions`} component={UserPermissions} />
-          <Route path={`${url}`} component={UserProfile} />
+          <Route path={`${url}`} render={this.renderUserProfile} />
         </Switch>
       </React.Fragment>
     );
