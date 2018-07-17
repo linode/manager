@@ -30,7 +30,6 @@ interface Props {
   username?: string;
   email?: string;
   changeUsername: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  changeEmail: (e: React.ChangeEvent<HTMLInputElement>) => void;
   save: () => void;
   reset: () => void;
 }
@@ -39,7 +38,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 class UserProfile extends React.Component<CombinedProps> {
   render() {
-    const { classes, username, email, changeUsername, changeEmail, save, reset } = this.props;
+    const { classes, username, email, changeUsername, save, reset } = this.props;
 
     return (
       <React.Fragment>
@@ -56,10 +55,10 @@ class UserProfile extends React.Component<CombinedProps> {
                  onChange={changeUsername}
                />
                <TextField
+                 disabled /* API doesn't allow changing user email address */
                  className={classes.field}
                  label="Email Address"
                  value={email}
-                 onChange={changeEmail}
                />
               <ActionsPanel style={{ marginTop: 16 }}>
                 <Button

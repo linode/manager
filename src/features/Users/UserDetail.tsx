@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { matchPath, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
-
+import { matchPath, Route, RouteComponentProps, Switch } from 'react-router-dom';
 
 import AppBar from '@material-ui/core/AppBar';
 import IconButton from '@material-ui/core/IconButton';
@@ -13,7 +12,8 @@ import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import UserIcon from 'src/assets/icons/user.svg';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
-import { getUser } from 'src/services/account';
+import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
+import { getUser, updateUser } from 'src/services/account';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 
 import UserPermissions from './UserPermissions';
@@ -42,19 +42,21 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-type Props = WithStyles<ClassNames> & RouteComponentProps<{ username: string }>;
+interface MatchProps { username: string };
+type CombinedProps = WithStyles<ClassNames> & RouteComponentProps<MatchProps>;
 
 interface State {
   gravatarUrl: string;
   error?: Error,
   originalUsername?: string;
   username?: string;
-  originalEmail?: string;
   email?: string;
   restricted?: boolean;
+  profileErrors?: Linode.ApiFieldError[];
+  success?: boolean;
 }
 
-class Profile extends React.Component<Props> {
+class Profile extends React.Component<CombinedProps> {
   state: State = {
     gravatarUrl: 'not found',
   };
@@ -75,7 +77,6 @@ class Profile extends React.Component<Props> {
               gravatarUrl: url,
               originalUsername: user.username,
               username: user.username,
-              originalEmail: user.email,
               email: user.email,
               restricted: user.restricted,
             })
@@ -105,21 +106,20 @@ class Profile extends React.Component<Props> {
     });
   }
 
-  onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({
-      email: e.target.value,
-    });
-  }
-
   onReset = () => {
     this.setState({
       username: this.state.originalUsername,
-      email: this.state.originalEmail,
     })
   }
 
   onSave = () => {
-    return;
+    const { history, match: { path } } = this.props;
+    const { originalUsername, username, restricted } = this.state;
+    if (!originalUsername) { return; }
+    updateUser(originalUsername, { username, restricted })
+      .then((user) => {
+        history.push(path.replace(':username', user.username));
+      })
   }
 
   renderUserProfile = () => {
@@ -128,7 +128,6 @@ class Profile extends React.Component<Props> {
       username={username}
       email={email}
       changeUsername={this.onChangeUsername}
-      changeEmail={this.onChangeEmail}
       save={this.onSave}
       reset={this.onReset}
     />
@@ -186,6 +185,10 @@ class Profile extends React.Component<Props> {
   }
 }
 
+const reloadable = reloadableWithRouter<CombinedProps, MatchProps>((routePropsOld, routePropsNew) => {
+  return routePropsOld.match.params.username !== routePropsNew.match.params.username;
+})
+
 const styled = withStyles(styles, { withTheme: true });
 
-export default withRouter(styled(Profile));
+export default styled(reloadable(Profile));

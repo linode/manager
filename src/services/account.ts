@@ -92,3 +92,11 @@ export const getUser = (username: string) =>
     setMethod('GET'),
   )
     .then(response => response.data);
+
+export const updateUser = (username: string, data: Partial<Linode.User>) =>
+  Request<Linode.User>(
+    setURL(`${API_ROOT}/account/users/${username}`),
+    setMethod('PUT'),
+    setData(data),
+  )
+    .then(response => response.data);
