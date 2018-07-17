@@ -51,13 +51,13 @@ export class DisplaySettings extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
+        {!loading &&
         <EmailChangeForm
           email={email} 
           username={username}
-          loading={loading}
           updateProfile={updateProfile}
           data-qa-email-change
-        />
+        />}
       </React.Fragment>
     );
   }

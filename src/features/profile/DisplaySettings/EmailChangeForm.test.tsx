@@ -16,37 +16,35 @@ describe('Email change form', () => {
           root: '',
           title: '',
         }}
-        email='example@example.com'
-        loading={false}
         username='ThisUser'
+        email='thisuser@example.com'
         updateProfile={updateProfile}
       />
     </LinodeThemeWrapper>,
   );
 
-  xit('should render textfields for username and email.', () => {
+  it('should render textfields for username and email.', () => {
     expect(component.find('TextField')).toHaveLength(2);
   });
 
-  xit('the username field should be disabled.', () => {
+  it('the username field should be disabled.', () => {
     expect(component.find('TextField[data-qa-username]').props().disabled).toBeTruthy();
   });
+
+  // This is an active-ish issue on Github (https://github.com/airbnb/enzyme/issues/1188)
+  // These tests should work, but currently enzyme doesn't handle conditional rendering.
 
   xit('should display a notice on success.', () => {
     const success = 'Account information updated.';
     component.setState({ success });
+    component.update();
     expect(component.containsMatchingElement(<Notice success text={success} />)).toBeTruthy();
   });
 
   xit('should display a notice for a general error', () => {
     const errors = [{'reason': 'Something bad'}];
     component.setState({ errors });
+    component.update();
     expect(component.containsMatchingElement(<Notice error text={'Something bad'} />)).toBeTruthy();
-  });
-
-  xit('should not render the email form when loading', () => {
-    expect(component.find('[data-qa-email-change]')).toHaveLength(1);
-    component.setProps({ loading: true });
-    expect(component.find('[data-qa-email-change]')).toHaveLength(0);
   });
 });
