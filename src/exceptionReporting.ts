@@ -10,3 +10,11 @@ if (SENTRY_URL) {
     .config(SENTRY_URL)
     .install();
 }
+
+export const reportException = (error: string | Error, extra?: any) => {
+  if (process.env.NODE_ENV === 'PRODUCTION' && SENTRY_URL) {
+    Raven.captureException(error, { extra })
+  } else {
+    console.log(error, extra);
+  }
+};

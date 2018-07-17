@@ -1,7 +1,8 @@
 import * as Axios from 'axios';
 import { Schema, validate } from 'joi';
 import { compose, isEmpty, isNil, lensPath, lensProp, not, omit, path, pathOr, set, tap, when } from 'ramda';
-import * as Raven from 'raven-js';
+
+import { reportException } from 'src/exceptionReporting';
 
 const errorsMap: { [index: string]: string } = {
   region_any_required: 'A region is required.',
@@ -16,12 +17,7 @@ const getErrorReason = compose(
       return;
     }
 
-    if (process.env.NODE_ENV !== 'production') {
-      /* tslint:disable-next-line */
-      return console.warn(`Unhandled validation error for ${key}.`);
-    }
-
-    Raven.captureException('Unhandled validation error', { extra: { key } });
+    reportException('Unhandled validation error', key);
   }),
 
   (obj: { key: string }) => set(lensProp('result'), path([obj.key], errorsMap), obj),
