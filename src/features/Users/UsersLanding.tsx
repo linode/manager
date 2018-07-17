@@ -1,5 +1,6 @@
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
@@ -21,7 +22,7 @@ import { getGravatarUrl } from 'src/utilities/gravatar';
 
 import ActionMenu from './UsersActionMenu';
 
-type ClassNames = 'title' | 'avatarColumn' | 'avatarWrapper' | 'avatar';
+type ClassNames = 'title' | 'avatarColumn' | 'avatarWrapper' | 'avatar' | 'grey';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   title: {
@@ -31,6 +32,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     width: '1%',
   },
   avatarWrapper: {
+    color: '#666',
     borderRadius: '50%',
     width: '46px',
     height: '46px',
@@ -45,6 +47,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     width: '100%',
     height: '100%',
   },
+  grey: {
+    color: '#666',
+  }
 });
 
 interface Props {}
@@ -130,19 +135,23 @@ class UsersLanding extends React.Component<CombinedProps, State> {
     return (
       <TableRow key={user.username}>
         <TableCell className={classes.avatarColumn}>
-          <div className={classes.avatarWrapper}>
-            {user.gravatarUrl !== 'not found'
-              ? <img
-                alt={`user ${user.username}'s avatar`}
-                src={user.gravatarUrl}
-                className={classes.avatar}
-              />
-              : <UserIcon className={classes.avatar} />
-            }
-          </div>
+          <Link to={`/users/${user.username}`} className={classes.grey} >
+            <div className={classes.avatarWrapper}>
+              {user.gravatarUrl !== 'not found'
+                ? <img
+                  alt={`user ${user.username}'s avatar`}
+                  src={user.gravatarUrl}
+                  className={classes.avatar}
+                />
+                : <UserIcon className={classes.avatar} />
+              }
+            </div>
+          </Link>
         </TableCell>
         <TableCell>
-          {user.username}
+          <Link to={`/users/${user.username}`} className={classes.grey} >
+            {user.username}
+          </Link>
         </TableCell>
         <TableCell>{user.email}</TableCell>
         <TableCell>{user.restricted ? 'Restricted' : 'Unrestricted'}</TableCell>
@@ -195,7 +204,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <TableCell></TableCell>
+                      <TableCell />
                       <TableCell>Username</TableCell>
                       <TableCell>Email Address</TableCell>
                       <TableCell>Restricted</TableCell>

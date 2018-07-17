@@ -1,3 +1,4 @@
+import { equals, pathOr } from 'ramda';
 import * as React from 'react';
 import { matchPath, Route, RouteComponentProps, Switch } from 'react-router-dom';
 
@@ -52,13 +53,15 @@ interface State {
   username?: string;
   email?: string;
   restricted?: boolean;
+  profileSaving: boolean;
   profileErrors?: Linode.ApiFieldError[];
-  success?: boolean;
+  profileSuccess?: boolean;
 }
 
 class Profile extends React.Component<CombinedProps> {
   state: State = {
     gravatarUrl: 'not found',
+    profileSaving: false,
   };
 
   tabs = [
@@ -69,6 +72,7 @@ class Profile extends React.Component<CombinedProps> {
 
   componentDidMount() {
     const { match: { params: { username } } } = this.props;
+    const { location: { state: locationState } } = this.props;
     getUser(username)
       .then((user) => {
         getGravatarUrl(user.email)
@@ -87,11 +91,31 @@ class Profile extends React.Component<CombinedProps> {
           error: new Error("Error fetching User data"),
         })
       })
+
+    if (locationState) {
+      this.setState({
+        profileSuccess: locationState.success,
+      });
+    }
+  }
+
+  componentDidUpdate(prevProps: CombinedProps) {
+    const { location: { state: locationState } } = this.props;
+    if (!equals(locationState, prevProps.location.state)) {
+      if (locationState) {
+        this.setState({
+          profileSuccess: locationState.success,
+        });
+      } else {
+        this.setState({
+          profileSuccess: false,
+        });
+      }
+    }
   }
 
   handleTabChange = (event: React.ChangeEvent<HTMLDivElement>, value: number) => {
     const { history } = this.props;
-    if (value === -1) { return; }
     const routeName = this.tabs[value].routeName;
     history.push(`${routeName}`);
   }
@@ -110,6 +134,8 @@ class Profile extends React.Component<CombinedProps> {
   onReset = () => {
     this.setState({
       username: this.state.originalUsername,
+      profileErrors: [],
+      profileSuccess: false,
     })
   }
 
@@ -117,20 +143,40 @@ class Profile extends React.Component<CombinedProps> {
     const { history, match: { path } } = this.props;
     const { originalUsername, username, restricted } = this.state;
     if (!originalUsername) { return; }
+    this.setState({
+      profileSuccess: false,
+      profileSaving: true,
+      profileErrors: [],
+    })
     updateUser(originalUsername, { username, restricted })
       .then((user) => {
-        history.push(path.replace(':username', user.username));
+        this.setState({
+          originalUsername: user.username,
+          username: user.username,
+          profileSaving: false,
+        })
+        history.push(path.replace(':username', user.username), { success: true });
       })
+      .catch((errResponse) => {
+        const errors = pathOr([], ['response', 'data', 'errors'], errResponse);
+        this.setState({
+          profileErrors: errors,
+          profileSaving: false,
+        });
+      });
   }
 
   renderUserProfile = () => {
-    const { username, email } = this.state;
+    const { username, email, profileSaving, profileSuccess, profileErrors } = this.state;
     return <UserProfile
       username={username}
       email={email}
       changeUsername={this.onChangeUsername}
       save={this.onSave}
       reset={this.onReset}
+      saving={profileSaving}
+      success={profileSuccess || false}
+      errors={profileErrors}
     />
   }
 
