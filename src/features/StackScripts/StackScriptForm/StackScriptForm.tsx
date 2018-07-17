@@ -208,7 +208,7 @@ export class StackScriptForm extends React.Component<CombinedProps> {
                   value='none'
                   onChange={selectImages.onChange}
                   inputProps={{ name: 'image', id: 'image' }}
-                  helpText='Select which images are compatible with this StackScript'
+                  tooltipText='Select which images are compatible with this StackScript'
                   error={Boolean(hasErrorFor('images'))}
                   errorText={hasErrorFor('images')}
                 >
