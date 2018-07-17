@@ -218,7 +218,6 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
         //   this.setState({ statsLoadError: 'error' });
         // }
 
-        // Raven.captureException(errorResponse);
       });
   }
 

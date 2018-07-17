@@ -1,7 +1,7 @@
-import * as Raven from 'raven-js';
 import * as React from 'react';
-
 import ErrorState from 'src/components/ErrorState';
+import { reportException } from 'src/exceptionReporting';
+
 
 interface State {
   error?: Error;
@@ -14,8 +14,7 @@ export default <T extends {}>(Component: React.ComponentType) => {
 
     componentDidCatch(error: Error, info: any) {
       this.setState({ error, info });
-
-      Raven.captureException(error, { extra: info });
+      reportException(error, info);
     }
 
     render() {
