@@ -21,12 +21,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     [theme.breakpoints.up('md')]: {
       marginLeft: theme.spacing.unit * 2,
     },
-    '&:hover, &.active': {
-      color: theme.palette.primary.light,
-      '& $icon': {
-        color: theme.palette.primary.light,
-      },
-    },
   },
   icon: {
     position: 'relative',
@@ -36,9 +30,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     transition: theme.transitions.create(['color', 'opacity']),
     color: theme.palette.primary.main,
     '& .circle': {
+      transition: theme.transitions.create(['fill', 'stroke']),
       fill: 'currentColor',
+      strokeWidth: 2,
+      stroke: 'currentColor',
     },
     '& .line, & .dot': {
+      transition: theme.transitions.create(['fill', 'stroke']),
       fill: '#fff',
       stroke: '#fff',
     },
@@ -50,26 +48,59 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     },
   },
   isCritical: {
-    color: 'red',
+    color: theme.palette.status.errorDark,
+    '&:hover, &.active': {
+      color: 'white',
+      '& .circle': {
+        stroke: theme.palette.status.errorDark,
+      },
+      '& .line, & .dot': {
+        fill: theme.palette.status.errorDark,
+        stroke: theme.palette.status.errorDark,
+      },
+    },
   },
   isMajor: {
-    color: 'yellow',
+    color: theme.palette.status.warningDark,
+    '&:hover, &.active': {
+      color: 'white',
+      '& .circle': {
+        stroke: theme.palette.status.warningDark,
+      },
+      '& .line, & .dot': {
+        fill: theme.palette.status.warningDark,
+        stroke: theme.palette.status.warningDark,
+      },
+    },
   },
   isMinor: {
-    color: 'blue',
+    color: theme.palette.primary.main,
+    '&:hover, &.active': {
+      color: 'white',
+      '& .circle': {
+        stroke: theme.palette.primary.main,
+      },
+      '& .line, & .dot': {
+        fill: theme.palette.primary.main,
+        stroke: theme.palette.primary.main,
+      },
+    },
   },
   hasNoNotifications: {
     color: theme.color.grey3,
+    '&:hover, &.active': {
+      color: 'white',
+      '& .circle': {
+        stroke: theme.color.grey3,
+      },
+      '& .line, & .dot': {
+        fill: theme.color.grey3,
+        stroke: theme.color.grey3,
+      },
+    },
   },
   allRead: {
-    '& .circle': {
-      fill: 'none',
-      stroke: theme.palette.text.primary,
-    },
-    '& .dot, & .line': {
-      fill: theme.palette.text.primary,
-      stroke: theme.palette.text.primary,
-    },
+    opacity: .5,
   },
 });
 
