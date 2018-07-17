@@ -118,10 +118,10 @@ export class SummaryPanel extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <Grid item xs={6}>
+        <Grid item md={7}>
           <Grid container>
             <Grid item xs={12}>
-              <Typography variant="title">
+              <Typography variant="subheading">
                 Contact Information
               </Typography>
               </Grid>
@@ -145,7 +145,7 @@ export class SummaryPanel extends React.Component<CombinedProps, State> {
                 </div>
               </Typography>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item sm={6}>
               <Typography variant="caption">
                 <strong>Email: </strong>
                 {email}
@@ -158,22 +158,34 @@ export class SummaryPanel extends React.Component<CombinedProps, State> {
           </Grid>
         </Grid>
 
-        <Grid item xs={6}>
+        <Grid item md={5}>
           <Grid item xs={12}>
-            <Typography variant="title">
-              Billing Information
-              </Typography>
-            <Typography variant="caption">
-              <strong>Credit Card: </strong>
-              {`xxxx-xxxx-xxxx-${last_four}`}
-            </Typography>
-            <Typography variant="caption">
-              <strong>Expiration Date: </strong>
-              {`${expiry} `}
-              {isCreditCardExpired(expiry) &&
-                <span className={classes.expired}>Expired</span>
-              }
-            </Typography>
+            <Grid container>
+              <Grid item xs={12}>
+                <Typography variant="subheading">
+                  Billing Information
+                  </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="caption" className={classes.item}>
+                  <strong>Credit Card: </strong>
+                  {(last_four)
+                    ? `xxxx-xxxx-xxxx-${last_four}`
+                    : 'None'
+                  }
+                </Typography>
+                <Typography variant="caption" className={classes.item}>
+                  <strong>Expiration Date: </strong>
+                  {(expiry)
+                    ? `${expiry} `
+                    : 'None'
+                  }
+                  {expiry && isCreditCardExpired(expiry) &&
+                    <span className={classes.expired}>Expired</span>
+                  }
+                </Typography>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       </React.Fragment>

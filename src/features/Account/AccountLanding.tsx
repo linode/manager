@@ -65,25 +65,11 @@ export class AccountLanding extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes } = this.props;
-    const { response: account } = this.props.account;
 
     return (
       <React.Fragment>
         <Typography variant="headline" className={classes.title}>Billing</Typography>
-        <SummaryPanel
-          email={account.email}
-          first_name={account.first_name}
-          last_name={account.last_name}
-          phone={account.phone}
-          company={account.company}
-          address1={account.address_1}
-          address2={account.address_2}
-          cc_exp={account.credit_card.expiry}
-          cc_lastfour={account.credit_card.last_four}
-          city={account.city}
-          state={account.state}
-          zip={account.zip}
-        />
+        <SummaryPanel />
 
         <Typography variant="title" className={classes.heading}>Billing Account</Typography>
         <UpdateContactInformationPanel />

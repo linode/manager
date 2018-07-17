@@ -21,7 +21,7 @@ describe('SummaryPanel', () => {
     balance: 0,
   };
 
-  const mockClasses = { root: '', expired: '', item: '' };
+  const mockClasses = { root: '', expired: '', item: '', address2: '' };
 
   const componentExpiredCC = shallow(
     <SummaryPanel
