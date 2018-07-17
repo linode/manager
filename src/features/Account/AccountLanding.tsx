@@ -1,27 +1,27 @@
+import { compose } from 'ramda';
 import * as React from 'react';
 
-import { compose } from 'ramda';
-
-import {
-  StyleRulesCallback,
-  Theme,
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
-
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import PromiseLoader from 'src/components/PromiseLoader';
-
-import SummaryPanel from './AccountPanels/SummaryPanel';
-
 import { getAccountInfo } from 'src/services/account';
 
-type ClassNames = 'root';
+import MakeAPaymentPanel from './AccountPanels/MakeAPaymentPanel';
+import RecentBillingActivityPanel from './AccountPanels/RecentBillingActivityPanel';
+import SummaryPanel from './AccountPanels/SummaryPanel';
+import UpdateContactInformationPanel from './AccountPanels/UpdateContactInformationPanel';
+import UpdateCreditCardPanel from './AccountPanels/UpdateCreditCardPanel';
+
+type ClassNames = 'root' | 'heading';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
+  heading: {
+    marginTop: theme.spacing.unit * 4,
+    marginBottom: theme.spacing.unit * 2,
+  },
 });
 
 const preloaded = PromiseLoader<Props>({
@@ -59,13 +59,12 @@ export class AccountLanding extends React.Component<CombinedProps, State> {
   ];
 
   render() {
+    const { classes } = this.props;
     const { response: account } = this.props.account;
-    
+
     return (
       <React.Fragment>
-        <Typography variant="headline">
-          Billing
-        </Typography>
+        <Typography variant="headline" className={classes.heading}>Billing</Typography>
         <SummaryPanel
           email={account.email}
           name={`${account.first_name} ${account.last_name}`}
@@ -79,6 +78,14 @@ export class AccountLanding extends React.Component<CombinedProps, State> {
           state={account.state}
           zip={account.zip}
         />
+
+        <Typography variant="title" className={classes.heading}>Billing Account</Typography>
+        <UpdateContactInformationPanel />
+
+        <Typography variant="title" className={classes.heading}>Billing Information</Typography>
+        <UpdateCreditCardPanel />
+        <MakeAPaymentPanel />
+        <RecentBillingActivityPanel />
       </React.Fragment>
     );
   }
