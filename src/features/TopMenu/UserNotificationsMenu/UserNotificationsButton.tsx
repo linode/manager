@@ -86,7 +86,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       },
     },
   },
-  hasNoNotifications: {
+  allRead: {
     color: theme.color.grey3,
     '&:hover, &.active': {
       color: 'white',
@@ -99,8 +99,15 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       },
     },
   },
-  allRead: {
-    opacity: .5,
+  hasNoNotifications: {
+    color: 'white',
+    '& .circle': {
+      stroke: theme.color.grey3,
+    },
+    '& .line, & .dot': {
+      fill: theme.color.grey3,
+      stroke: theme.color.grey3,
+    },
   },
 });
 

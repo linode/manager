@@ -14,16 +14,15 @@ type ClassNames = 'root'
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    marginBottom: theme.spacing.unit,
+    margin: 0,
     justifyContent: 'center',
-    padding: theme.spacing.unit,
-    '&:first-child': {
-      marginTop: theme.spacing.unit,
-    },
+    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px`,
+    borderBottom: `1px solid ${theme.palette.divider}`,
     '& p': {
       color: '#333',
+    },
+    '& + .notice': {
+      marginTop: '0 !important',
     },
   },
   pointer: {
