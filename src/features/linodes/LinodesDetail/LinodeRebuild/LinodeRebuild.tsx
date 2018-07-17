@@ -171,7 +171,7 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
             </InputLabel>
             <div>
               <Select
-                helpText="Choosing a 64-bit distro is recommended."
+                tooltipText="Choosing a 64-bit distro is recommended."
                 error={Boolean(imageError)}
                 value={selected || 'select'}
                 onChange={e => this.onImageChange(e.target.value)}
