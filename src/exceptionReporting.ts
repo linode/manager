@@ -12,9 +12,9 @@ if (SENTRY_URL) {
 }
 
 export const reportException = (error: string | Error, extra?: any) => {
-  if (process.env.NODE_ENV === 'PRODUCTION' && SENTRY_URL) {
+  if (process.env.NODE_ENV === 'production' && SENTRY_URL) {
     Raven.captureException(error, { extra })
   } else {
-    console.log(error, extra);
+    console.error(error, extra);
   }
 };
