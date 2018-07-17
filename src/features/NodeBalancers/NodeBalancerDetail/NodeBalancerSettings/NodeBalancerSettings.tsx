@@ -1,6 +1,7 @@
 import { clamp, compose, defaultTo } from 'ramda';
 import * as React from 'react';
 
+import InputAdornment from '@material-ui/core/InputAdornment';
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -17,7 +18,6 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root'
 | 'title'
-| 'adornment'
 | 'inner'
 | 'expPanelButton';
 
@@ -26,10 +26,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   title: {
     marginTop: theme.spacing.unit,
     marginBottom: theme.spacing.unit * 2,
-  },
-  adornment: {
-    fontSize: '.9rem',
-    marginRight: 10,
   },
   inner: {
     paddingBottom: theme.spacing.unit * 3,
@@ -148,8 +144,10 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
             <TextField
                 data-qa-connection-throttle
                 InputProps={{
-                  endAdornment: <span className={classes.adornment}>
-                  / second</span>,
+                  endAdornment:
+                  <InputAdornment position="end">
+                    / second
+                  </InputAdornment>,
                 }}
                 errorText={hasErrorFor('client_conn_throttle')}
                 label='Client Connection Throttle'
