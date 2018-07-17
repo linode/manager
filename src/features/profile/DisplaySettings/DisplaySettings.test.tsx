@@ -10,7 +10,8 @@ describe('Email change form', () => {
     <DisplaySettings 
       loading={false} 
       username="exampleuser" 
-      email="me@this.com" 
+      email="me@this.com"
+      timezone='Europe/San_Marino'
       updateProfile={update}
       classes={{
         root: '',

@@ -10,6 +10,7 @@ import setDocs from 'src/components/DocsSidebar/setDocs';
 import { response } from 'src/store/reducers/resources';
 
 import EmailChangeForm from './EmailChangeForm';
+import TimezoneForm from './TimezoneForm';
 
 type ClassNames = 'root' | 'title';
 
@@ -17,6 +18,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     padding: theme.spacing.unit * 3,
     paddingBottom: theme.spacing.unit * 3,
+    marginBottom: theme.spacing.unit * 3,
   },
   title: {
     marginBottom: theme.spacing.unit * 2,
@@ -29,11 +31,11 @@ interface ConnectedProps {
   loading: boolean;
   username: string;
   email: string;
+  timezone: string;
   updateProfile: (v: Linode.Profile) => void;
 }
 
 interface State {
-
 }
 
 type CombinedProps = Props & ConnectedProps & WithStyles<ClassNames>;
@@ -42,22 +44,30 @@ export class DisplaySettings extends React.Component<CombinedProps, State> {
   state: State = {
     submitting: false,
     updatedEmail: this.props.email || '',
+    updatedTimezone: this.props.timezone || '',
     errors: undefined,
     success: undefined,
   }
 
   render() {
-    const { email, loading, updateProfile, username } = this.props;
+    const { email, loading, timezone, updateProfile, username } = this.props;
 
     return (
       <React.Fragment>
         {!loading &&
-        <EmailChangeForm
-          email={email} 
-          username={username}
-          updateProfile={updateProfile}
-          data-qa-email-change
-        />}
+          <React.Fragment>
+            <EmailChangeForm
+              email={email} 
+              username={username}
+              updateProfile={updateProfile}
+              data-qa-email-change
+            />
+            <TimezoneForm
+              timezone={timezone}
+              updateProfile={updateProfile}
+            />
+          </React.Fragment>
+        }
       </React.Fragment>
     );
   }
@@ -83,6 +93,7 @@ const mapStateToProps = (state: Linode.AppState) => {
     loading: false,
     username: data.username,
     email: data.email,
+    timezone: data.timezone,
   };
 };
 

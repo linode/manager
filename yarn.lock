@@ -899,6 +899,10 @@
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/@types/promise.prototype.finally/-/promise.prototype.finally-2.0.2.tgz#68fefb8f0e23f21893a33740c931c79f44be3499"
 
+"@types/prop-types@*":
+  version "15.5.3"
+  resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.5.3.tgz#bef071852dca2a2dbb65fecdb7bfb30cedae2de2"
+
 "@types/ramda@^0.25.18":
   version "0.25.33"
   resolved "https://registry.yarnpkg.com/@types/ramda/-/ramda-0.25.33.tgz#a134fde6da3be303a1bdefd9155d8365bb7b14ec"
@@ -939,6 +943,12 @@
     "@types/history" "*"
     "@types/react" "*"
 
+"@types/react-select@*":
+  version "1.2.10"
+  resolved "https://registry.yarnpkg.com/@types/react-select/-/react-select-1.2.10.tgz#3f261c819fd82850a020de4ed0e823306820e0fa"
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-sticky@^5.0.6":
   version "5.0.6"
   resolved "https://registry.yarnpkg.com/@types/react-sticky/-/react-sticky-5.0.6.tgz#eb65a40a0f3f46cd02ea21983c9816e99d84e754"
@@ -949,6 +959,21 @@
   version "2.0.11"
   resolved "https://registry.yarnpkg.com/@types/react-transition-group/-/react-transition-group-2.0.11.tgz#feb274676a39383fffaa0dff710958d2251abefb"
   dependencies:
+    "@types/react" "*"
+
+"@types/react-virtualized-select@^3.0.5":
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/@types/react-virtualized-select/-/react-virtualized-select-3.0.5.tgz#d0313eb6e84a4e982b29b2a529094e7f2905b415"
+  dependencies:
+    "@types/react" "*"
+    "@types/react-select" "*"
+    "@types/react-virtualized" "*"
+
+"@types/react-virtualized@*":
+  version "9.18.4"
+  resolved "https://registry.yarnpkg.com/@types/react-virtualized/-/react-virtualized-9.18.4.tgz#467907cc6fd7a94fc2eeded3e8c67903a5d19643"
+  dependencies:
+    "@types/prop-types" "*"
     "@types/react" "*"
 
 "@types/react@*", "@types/react@^16.4.0":
@@ -3016,7 +3041,7 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
-classnames@^2.2.5:
+classnames@^2.2.3, classnames@^2.2.4, classnames@^2.2.5:
   version "2.2.6"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
 
@@ -3933,7 +3958,7 @@ dom-converter@~0.1:
   dependencies:
     utila "~0.3"
 
-dom-helpers@^3.2.1, dom-helpers@^3.3.1:
+"dom-helpers@^2.4.0 || ^3.0.0", dom-helpers@^3.2.1, dom-helpers@^3.3.1:
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/dom-helpers/-/dom-helpers-3.3.1.tgz#fc1a4e15ffdf60ddde03a480a9c0fece821dd4a6"
 
@@ -6391,6 +6416,10 @@ js-tokens@^3.0.0, js-tokens@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-3.0.2.tgz#9866df395102130e38f7f996bceb65443209c25b"
 
+"js-tokens@^3.0.0 || ^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"
+
 js-yaml@^3.4.3, js-yaml@^3.6.1, js-yaml@^3.7.0, js-yaml@^3.9.0, js-yaml@^3.9.1:
   version "3.12.0"
   resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.12.0.tgz#eaed656ec8344f10f527c6bfa1b6e2244de167d1"
@@ -6888,6 +6917,12 @@ loose-envify@^1.0.0, loose-envify@^1.1.0, loose-envify@^1.2.0, loose-envify@^1.3
   resolved "https://registry.yarnpkg.com/loose-envify/-/loose-envify-1.3.1.tgz#d1a8ad33fa9ce0e713d65fdd0ac8b748d478c848"
   dependencies:
     js-tokens "^3.0.0"
+
+loose-envify@^1.3.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/loose-envify/-/loose-envify-1.4.0.tgz#71ee51fa7be4caec1a63839f7e682d8132d30caf"
+  dependencies:
+    js-tokens "^3.0.0 || ^4.0.0"
 
 loud-rejection@^1.0.0:
   version "1.6.0"
@@ -8669,6 +8704,12 @@ react-icons@^2.2.7:
   dependencies:
     react-icon-base "2.1.0"
 
+react-input-autosize@^2.1.2:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/react-input-autosize/-/react-input-autosize-2.2.1.tgz#ec428fa15b1592994fb5f9aa15bb1eb6baf420f8"
+  dependencies:
+    prop-types "^15.5.8"
+
 react-inspector@^2.2.2:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/react-inspector/-/react-inspector-2.3.0.tgz#fc9c1d38ab687fc0d190dcaf133ae40158968fc8"
@@ -8690,7 +8731,7 @@ react-jss@^8.1.0:
     prop-types "^15.6.0"
     theming "^1.3.0"
 
-react-lifecycles-compat@^3.0.0, react-lifecycles-compat@^3.0.2:
+react-lifecycles-compat@^3.0.0, react-lifecycles-compat@^3.0.2, react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
 
@@ -8763,6 +8804,14 @@ react-router@^4.2.0, react-router@^4.3.1:
     prop-types "^15.6.1"
     warning "^4.0.1"
 
+react-select@^1.0.0-rc.2:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/react-select/-/react-select-1.2.1.tgz#a2fe58a569eb14dcaa6543816260b97e538120d1"
+  dependencies:
+    classnames "^2.2.4"
+    prop-types "^15.5.8"
+    react-input-autosize "^2.1.2"
+
 react-split-pane@^0.1.77:
   version "0.1.77"
   resolved "https://registry.yarnpkg.com/react-split-pane/-/react-split-pane-0.1.77.tgz#f0c8cd18d076bbac900248dcf6dbcec02d5340db"
@@ -8811,6 +8860,26 @@ react-treebeard@^2.1.0:
     radium "^0.19.0"
     shallowequal "^0.2.2"
     velocity-react "^1.3.1"
+
+react-virtualized-select@^3.1.3:
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/react-virtualized-select/-/react-virtualized-select-3.1.3.tgz#e5c1fed5e493e3e5a628e53100e83d27cfd8c0ac"
+  dependencies:
+    babel-runtime "^6.11.6"
+    prop-types "^15.5.8"
+    react-select "^1.0.0-rc.2"
+    react-virtualized "^9.0.0"
+
+react-virtualized@^9.0.0:
+  version "9.20.1"
+  resolved "https://registry.yarnpkg.com/react-virtualized/-/react-virtualized-9.20.1.tgz#02dc08fe9070386b8c48e2ac56bce7af0208d22d"
+  dependencies:
+    babel-runtime "^6.26.0"
+    classnames "^2.2.3"
+    dom-helpers "^2.4.0 || ^3.0.0"
+    loose-envify "^1.3.0"
+    prop-types "^15.6.0"
+    react-lifecycles-compat "^3.0.4"
 
 react@^16.4.1:
   version "16.4.1"
