@@ -211,10 +211,13 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     this.setState({ isSubmitting: true });
 
     createStackScript(payload)
-      .then(stackScript => {
+      .then((stackScript: Linode.StackScript.Response) => {
         if (!this.mounted) { return; }
         this.setState({ isSubmitting: false });
-        history.push('/stackscripts');
+        history.push(
+          '/stackscripts',
+          { successMessage: `${stackScript.label} successfully created` }
+        );
       })
       .catch(error => {
         if (!this.mounted) { return; }

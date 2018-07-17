@@ -75,6 +75,7 @@ export const createStackScript = (payload: StackScriptPayload) =>
     setMethod('POST'),
     setData(payload)
   )
+  .then(response => response.data);
 
 export const updateStackScript = (id: number, payload: StackScriptPayload) =>
   Request(
@@ -83,6 +84,7 @@ export const updateStackScript = (id: number, payload: StackScriptPayload) =>
     setMethod('PUT'),
     setData(payload)
   )
+  .then(response => response.data);
 
 export const makeStackScriptPublic = (id: number) =>
   Request(
