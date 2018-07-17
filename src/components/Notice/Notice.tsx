@@ -1,7 +1,7 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography, { TypographyProps } from '@material-ui/core/Typography';
 
 import Flag from 'src/assets/icons/flag.svg';
@@ -9,6 +9,7 @@ import Grid, { GridProps } from 'src/components/Grid';
 
 type ClassNames = 'root'
   | 'inner'
+  | 'noticeText'
   | 'error'
   | 'errorList'
   | 'warning'
@@ -17,7 +18,7 @@ type ClassNames = 'root'
   | 'successList'
   | 'flag';
 
-const styles: StyleRulesCallback = (theme: Linode.Theme) => {
+const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => {
   const { palette: { status } } = theme;
 
   return {
@@ -37,12 +38,13 @@ const styles: StyleRulesCallback = (theme: Linode.Theme) => {
     inner: {
       width: '100%',
     },
+    noticeText: {
+      color: theme.palette.text.primary,
+      fontWeight: 700,
+    },
     error: {
       backgroundColor: status.error,
       borderLeft: `5px solid ${status.errorDark}`,
-      '& p': {
-        color: status.errorDark,
-      },
     },
     errorList: {
       borderLeft: `5px solid ${status.errorDark}`,
@@ -105,7 +107,7 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
       <Typography {...typeProps} dangerouslySetInnerHTML={{ __html: html }} />
     )
     : (
-      <Typography {...typeProps} component="div"onClick={onClick}>
+      <Typography {...typeProps} component="div" onClick={onClick} className={classes.noticeText}>
         {text && text}
         {children && children}
       </Typography>
