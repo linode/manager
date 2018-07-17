@@ -4,34 +4,40 @@ import * as React from 'react';
 import { SummaryPanel } from './SummaryPanel';
 
 describe('SummaryPanel', () => {
-  const dummyProps = {
-    classes: {
-      root: '',
-      expired: '',
-    },
+  const account: Linode.Account = {
     company: '',
-    name: '',
+    first_name: '',
+    last_name: '',
     email: '',
-    address1: '',
-    address2: '',
-    cc_lastfour: '',
+    address_1: '',
+    address_2: '',
     phone: '',
     city: '',
     state: '',
     zip: '',
-  }
+    credit_card: { expiry: '02/2012', last_four: '1234' },
+    tax_id: '',
+    country: '',
+    balance: 0,
+  };
+
+  const mockClasses = { root: '', expired: '' };
 
   const componentExpiredCC = shallow(
     <SummaryPanel
-      {...dummyProps}
-      cc_exp='02/2012'
+      loading={false}
+      lastUpdated={1}
+      classes={mockClasses}
+      data={{ ...account, credit_card: { ...account.credit_card, expiry: '02/2012' } }}
     />
   );
 
   const componentValidCC = shallow(
     <SummaryPanel
-      {...dummyProps}
-      cc_exp='02/2020'
+      loading={false}
+      lastUpdated={1}
+      classes={mockClasses}
+      data={{ ...account, credit_card: { ...account.credit_card, expiry: '02/2020' } }}
     />
   );
 

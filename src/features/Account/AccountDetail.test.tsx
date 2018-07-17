@@ -26,6 +26,6 @@ describe('Account Landing', () => {
   });
 
   it('should render Summary Panel', () => {
-    expect(component.find('WithStyles(SummaryPanel)')).toHaveLength(1);
+    expect(component.find('WithStyles(WithConfigs(SummaryPanel))')).toHaveLength(1);
   });
 });

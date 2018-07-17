@@ -1,11 +1,11 @@
-import { compose } from 'ramda';
+import { compose, lensPath, set, view } from 'ramda';
 import * as React from 'react';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
-import PromiseLoader from 'src/components/PromiseLoader';
+import { Requestable } from 'src/requestableContext';
 import { getAccountInfo } from 'src/services/account';
 
 import MakeAPaymentPanel from './AccountPanels/MakeAPaymentPanel';
@@ -13,6 +13,7 @@ import RecentBillingActivityPanel from './AccountPanels/RecentBillingActivityPan
 import SummaryPanel from './AccountPanels/SummaryPanel';
 import UpdateContactInformationPanel from './AccountPanels/UpdateContactInformationPanel';
 import UpdateCreditCardPanel from './AccountPanels/UpdateCreditCardPanel';
+import { AccountProvider } from './context';
 
 type ClassNames = 'root' | 'heading';
 
@@ -24,10 +25,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-const preloaded = PromiseLoader<Props>({
-  account: () => getAccountInfo()
-    .then(response => response || null),
-});
+type Map<S> = (s: S) => S;
 
 interface PreloadedProps {
   account: { response: Linode.Account };
@@ -35,16 +33,27 @@ interface PreloadedProps {
 
 interface Props { }
 
-interface State { }
+interface State {
+  account: Requestable<Linode.Account>,
+}
 
 type CombinedProps = Props
   & SetDocsProps
   & PreloadedProps
   & WithStyles<ClassNames>;
 
-export class AccountDetail extends React.Component<CombinedProps, State> {
-  state: State = {};
+const account = (path: string) => lensPath(['account', path]);
 
+const L = {
+  account: {
+    data: account('data'),
+    errors: account('errors'),
+    lastUpdated: account('lastUpdated'),
+    loading: account('loading'),
+  },
+};
+
+export class AccountDetail extends React.Component<CombinedProps, State> {
   static docs = [
     {
       title: 'Billing and Payments',
@@ -58,34 +67,87 @@ export class AccountDetail extends React.Component<CombinedProps, State> {
     },
   ];
 
+  composeState = (
+    fns: Map<State>[] = [],
+    callback: () => void = () => null,
+  ) => {
+
+    if (!this.mounted) { return; }
+
+    return this.setState(
+      (state) => fns.reverse().reduce((result, fn) => fn(result), state),
+      () => callback(),
+    )
+  };
+
+  getAccount = () => {
+    this.composeState([
+      set(L.account.loading, true),
+      set(L.account.errors, undefined),
+    ])
+
+    return getAccountInfo()
+      .then((data) => {
+        this.composeState([
+          set(L.account.data, data),
+          set(L.account.lastUpdated, Date.now()),
+          set(L.account.loading, false),
+        ]);
+      })
+      .catch((errors) => {
+        this.composeState([
+          set(L.account.loading, false),
+          set(L.account.lastUpdated, Date.now()),
+          set(L.account.errors, [{ reason: 'Unable to load account details.' }]),
+        ]);
+      });
+  }
+
+  state: State = {
+    account: {
+      lastUpdated: 0,
+      loading: true,
+      request: this.getAccount,
+      update: (updater: (s: Linode.Account) => Linode.Account) => {
+        const data = view<State, Linode.Account>(L.account.data, this.state);
+
+        if (!data) { return; }
+
+        this.composeState([
+          set(L.account.data, updater(data)),
+        ]);
+      },
+    },
+  };
+
+  mounted: boolean = false;
+
+  componentDidMount() {
+    this.mounted = true;
+    this.getAccount();
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
+  }
+
   render() {
     const { classes } = this.props;
-    const { response: account } = this.props.account;
 
     return (
       <React.Fragment>
-        <Typography variant="headline" className={classes.heading}>Billing</Typography>
-        <SummaryPanel
-          email={account.email}
-          name={`${account.first_name} ${account.last_name}`}
-          phone={account.phone}
-          company={account.company}
-          address1={account.address_1}
-          address2={account.address_2}
-          cc_exp={account.credit_card.expiry}
-          cc_lastfour={account.credit_card.last_four}
-          city={account.city}
-          state={account.state}
-          zip={account.zip}
-        />
+        <AccountProvider value={this.state.account}>
+          <Typography variant="headline" className={classes.heading}>Billing</Typography>
+          <SummaryPanel />
 
-        <Typography variant="title" className={classes.heading}>Billing Account</Typography>
-        <UpdateContactInformationPanel />
+          <Typography variant="title" className={classes.heading}>Billing Account</Typography>
+          <UpdateContactInformationPanel />
 
-        <Typography variant="title" className={classes.heading}>Billing Information</Typography>
-        <UpdateCreditCardPanel />
-        <MakeAPaymentPanel />
-        <RecentBillingActivityPanel />
+          <Typography variant="title" className={classes.heading}>Billing Information</Typography>
+          <UpdateCreditCardPanel />
+          <MakeAPaymentPanel />
+          <RecentBillingActivityPanel />
+        </AccountProvider >
       </React.Fragment>
     );
   }
@@ -95,6 +157,5 @@ const styled = withStyles(styles, { withTheme: true });
 
 export default compose(
   styled,
-  preloaded,
   setDocs(AccountDetail.docs),
 )(AccountDetail);
