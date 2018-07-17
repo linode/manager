@@ -120,21 +120,23 @@ export class SummaryPanel extends React.Component<CombinedProps, State> {
               <Typography variant="title">
                 Contact Information
               </Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Typography variant="caption">
-                <strong>Company Name: </strong>
-                {company}
+              </Grid>
+              <Grid item sm={6}>
+                <Typography variant="caption" className={classes.item}>
+                  <strong>Company Name: </strong>
+                  {company ? company : 'None'}
               </Typography>
-              <Typography variant="caption">
-                <strong>Name: </strong>
-                {`${first_name} ${last_name}`}
+                <Typography variant="caption" className={classes.item}>
+                  <strong>Name: </strong>
+                  {!(first_name || last_name) && 'None'}
+                  {`${first_name} ${last_name}`}
               </Typography>
-              <Typography variant="caption">
-                <strong>Address: </strong>
-                <span>{address_1}</span>
-                <span>{address_2}</span>
-                <div>{`${city}, ${state} ${zip}`}</div>
+                <Typography variant="caption" className={classes.item}>
+                  <strong>Address: </strong>
+                  {!(address_1 || address_2 || city || state || zip) && 'None'}
+                  <span>{address_1}</span>
+                  <span>{address_2}</span>
+                  <div>{`${city} ${city && state && ', '} ${state} ${zip}`}</div>
               </Typography>
             </Grid>
             <Grid item xs={6}>
@@ -142,9 +144,9 @@ export class SummaryPanel extends React.Component<CombinedProps, State> {
                 <strong>Email: </strong>
                 {email}
               </Typography>
-              <Typography variant="caption">
-                <strong>Phone Number: </strong>
-                {phone}
+                <Typography variant="caption" className={classes.item}>
+                  <strong>Phone Number: </strong>
+                  {phone ? phone : 'None'}
               </Typography>
             </Grid>
           </Grid>
