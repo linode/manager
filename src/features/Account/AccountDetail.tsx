@@ -42,7 +42,7 @@ type CombinedProps = Props
   & PreloadedProps
   & WithStyles<ClassNames>;
 
-export class AccountLanding extends React.Component<CombinedProps, State> {
+export class AccountDetail extends React.Component<CombinedProps, State> {
   state: State = {};
 
   static docs = [
@@ -96,5 +96,5 @@ const styled = withStyles(styles, { withTheme: true });
 export default compose(
   styled,
   preloaded,
-  setDocs(AccountLanding.docs),
-)(AccountLanding);
+  setDocs(AccountDetail.docs),
+)(AccountDetail);
