@@ -1,4 +1,4 @@
-import { compose, lensPath, pathOr, set } from 'ramda';
+import { compose } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
