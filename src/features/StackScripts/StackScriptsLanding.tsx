@@ -67,7 +67,7 @@ export class StackScriptsLanding extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        {!!history.location.state.successMessage &&
+        {!!history.location.state && !!history.location.state.successMessage &&
           <Notice success text={history.location.state.successMessage} />
         }
         <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
