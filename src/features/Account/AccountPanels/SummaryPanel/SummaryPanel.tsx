@@ -12,10 +12,16 @@ import Typography from '@material-ui/core/Typography';
 
 import Grid from 'src/components/Grid';
 
-type ClassNames = 'root';
+import { isCreditCardExpired } from 'src/utilities/isCreditCardExpired';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+type ClassNames = 'root'
+| 'expired';
+
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {},
+  expired: {
+    color: theme.color.red,
+  }
 });
 
 interface Props {
@@ -27,6 +33,9 @@ interface Props {
   phone: string;
   cc_exp: string;
   cc_lastfour: string;
+  city: string;
+  state: string;
+  zip: string;
 }
 
 interface State { }
@@ -38,6 +47,7 @@ export class SummaryPanel extends React.Component<CombinedProps, State> {
 
   render() {
     const {
+      classes,
       company,
       name,
       address1,
@@ -45,7 +55,10 @@ export class SummaryPanel extends React.Component<CombinedProps, State> {
       email,
       phone,
       cc_exp,
-      cc_lastfour
+      cc_lastfour,
+      city,
+      state,
+      zip
     } = this.props;
 
     return (
@@ -77,6 +90,7 @@ export class SummaryPanel extends React.Component<CombinedProps, State> {
                   <strong>Address: </strong>
                   <span>{address1}</span>
                   <span>{address2}</span>
+                  <div>{`${city}, ${state} ${zip}`}</div>
               </Typography>
               </Grid>
               <Grid item xs={6}>
@@ -103,7 +117,10 @@ export class SummaryPanel extends React.Component<CombinedProps, State> {
               </Typography>
               <Typography variant="caption">
                 <strong>Expiration Date: </strong>
-                {cc_exp}
+                {`${cc_exp} `}
+                {isCreditCardExpired(cc_exp) &&
+                  <span className={classes.expired}>Expired</span>
+                }
               </Typography>
             </Grid>
           </Grid>

@@ -75,6 +75,9 @@ export class AccountLanding extends React.Component<CombinedProps, State> {
           address2={account.address_2}
           cc_exp={account.credit_card.expiry}
           cc_lastfour={account.credit_card.last_four}
+          city={account.city}
+          state={account.state}
+          zip={account.zip}
         />
       </React.Fragment>
     );
