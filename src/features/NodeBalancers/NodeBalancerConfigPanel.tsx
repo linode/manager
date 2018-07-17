@@ -218,9 +218,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
 
   onNodeAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const nodeIdx = e.currentTarget.getAttribute('data-node-idx');
-    // this is necesssary because when we select a suggested
-    // ip address, it needs to know what index we're looking at.
-    this.setState({ currentNodeAddressIndex: nodeIdx });
     if (nodeIdx) {
       this.props.onNodeAddressChange(
         +nodeIdx,
@@ -285,6 +282,13 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
     }
   }
 
+  handleFocusAddressField = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const nodeIdx = e.currentTarget.getAttribute('data-node-idx');
+    // this is necesssary because when we select a suggested
+    // ip address, it needs to know what index we're looking at.
+    this.setState({ currentNodeAddressIndex: nodeIdx });
+  }
+
   renderSearchSuggestion = (
     linode: Linode.Linode,
     index: number,
@@ -308,7 +312,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       >
         {
           <React.Fragment>
-            <strong>{linode.label}</strong>&nbsp;{privateIP}
+            <strong>{privateIP}</strong>&nbsp;{linode.label}
           </React.Fragment>
         }
       </MenuItem>
@@ -323,6 +327,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
         return {
           ...changes,
           inputValue: state.inputValue || '',
+          isOpen: false,
         }
         default:
           return changes;
@@ -343,7 +348,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       healthCheckInterval,
       healthCheckTimeout,
       healthCheckType,
-      linodesWithPrivateIPs,
       nodes,
       nodeMessage,
       port,
@@ -865,6 +869,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                 isOpen,
                                 inputValue,
                                 highlightedIndex,
+                                openMenu
                               }) => {
                                 return (
                                   <div className={classes.suggestionsParent}>
@@ -872,7 +877,11 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                       {...getInputProps({
                                         onChange: this.onNodeAddressChange,
                                         placeholder: 'Enter IP Address',
-                                        value: node.address
+                                        value: node.address,
+                                        onFocus: e => {
+                                          openMenu();
+                                          this.handleFocusAddressField(e)
+                                        },
                                       })}
                                       label="IP Address"
                                       inputProps={{ 'data-node-idx': idx }}
@@ -880,12 +889,25 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                       errorGroup={`${configIdx}`}
                                       data-qa-backend-ip-address
                                     />
-                                    {isOpen && !!inputValue &&
+                                    {isOpen &&
                                       <Paper className={classes.suggestions}>
-                                        {linodesWithPrivateIPs && linodesWithPrivateIPs
+                                      {/*
+                                      * Do not change from this.props.linodesWithPrivateIPS
+                                      * For some reason, referencing the destructured element
+                                      * was returning an empty array, while this.props
+                                      * is returning what we want
+                                      */}
+                                      {this.props.linodesWithPrivateIPs
+                                        && this.props.linodesWithPrivateIPs
                                         // filter out the linodes that don't match what we're typing
                                         // filter by private ip and label
                                           .filter((linode: Linode.Linode) => {
+                                            /*
+                                            * Show all results if we have nothing entered
+                                            */
+                                            if (!inputValue) {
+                                              return true;
+                                            }
                                             const privateIPRegex = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/;
                                             const privateIP = linode.ipv4.find(ipv4 => !!ipv4.match(privateIPRegex));
                                             return linode.label.toLowerCase().includes(inputValue.toLowerCase())
