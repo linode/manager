@@ -3,16 +3,11 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 
-import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 
 import setDocs from 'src/components/DocsSidebar/setDocs';
-import Notice from 'src/components/Notice';
-import { updateProfile } from 'src/services/profile';
+
 import { response } from 'src/store/reducers/resources';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import EmailChangeForm from './EmailChangeForm';
 
@@ -38,10 +33,7 @@ interface ConnectedProps {
 }
 
 interface State {
-  submitting: boolean;
-  updatedEmail: string;
-  errors?: Linode.ApiFieldError[];
-  success?: string;
+
 }
 
 type CombinedProps = Props & ConnectedProps & WithStyles<ClassNames>;
@@ -54,83 +46,19 @@ export class DisplaySettings extends React.Component<CombinedProps, State> {
     success: undefined,
   }
 
-  handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState(set(lensPath(['updatedEmail']), e.target.value))
-  }
-
-  onCancel = () => {
-    this.setState({
-      submitting: false,
-      updatedEmail: this.props.email || '',
-      errors: undefined,
-      success: undefined,
-    });
-  }
-
-  onSubmit = () => {
-    const { updatedEmail } = this.state;
-    this.setState({ errors: undefined, submitting: true });
-
-    updateProfile({ email: updatedEmail, })
-      .then((response) => {
-        this.props.updateProfile(response);
-        this.setState({
-          submitting: false,
-          success: 'Account information updated.',
-        })
-      })
-      .catch((error) => {
-        const fallbackError = [{ reason: 'An unexpected error has occured.' }];
-        this.setState({
-          submitting: false,
-          errors: pathOr(fallbackError, ['response', 'data', 'errors'], error),
-          success: undefined,
-        }, () => {
-          scrollErrorIntoView();
-        })
-      });
-  };
-
   render() {
-    const { classes, loading, username } = this.props;
-    const { updatedEmail, success, errors, submitting } = this.state;
-    const hasErrorFor = getAPIErrorFor({
-      username: 'username',
-      email: 'email',
-    }, errors);
-    const generalError = hasErrorFor('none');
-    const emailError = hasErrorFor('email');
+    const { email, loading, updateProfile, username } = this.props;
+
     return (
       <React.Fragment>
-        <Paper className={classes.root}>
-          <Typography
-            variant="title"
-            className={classes.title}
-            data-qa-title
-          >
-            Email Address
-          </Typography>
-          {success && <Notice success text={success} />}
-          {generalError && <Notice error text={generalError} />}
-          {
-            loading
-              ? null
-              : (
-                <EmailChangeForm
-                  email={updatedEmail}  
-                  error={emailError}
-                  username={username}
-                  submitting={submitting}
-                  handleChange={this.handleEmailChange}
-                  onCancel={this.onCancel}
-                  onSubmit={this.onSubmit}
-                  data-qa-email-change
-                />
-                )
-        }
-        </Paper>
+        <EmailChangeForm
+          email={email} 
+          username={username}
+          loading={loading}
+          updateProfile={updateProfile}
+          data-qa-email-change
+        />
       </React.Fragment>
-
     );
   }
 
