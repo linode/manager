@@ -78,3 +78,10 @@ export const getUsers = () =>
     setMethod('GET'),
   )
     .then(response => response.data);
+
+export const getAccountInfo = () =>
+  Request<Linode.Account>(
+    setURL(`${API_ROOT}/account`),
+    setMethod('GET'),
+  )
+    .then(response => response.data);
