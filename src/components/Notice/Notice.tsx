@@ -47,7 +47,6 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => {
       borderLeft: `5px solid ${status.errorDark}`,
     },
     errorList: {
-      backgroundColor: status.error,
       borderLeft: `5px solid ${status.errorDark}`,
     },
     warning: {
@@ -55,7 +54,6 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => {
       borderLeft: `5px solid ${status.warningDark}`,
     },
     warningList: {
-      backgroundColor: status.warning,
       borderLeft: `5px solid ${status.warningDark}`,
     },
     success: {

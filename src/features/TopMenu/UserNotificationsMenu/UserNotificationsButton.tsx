@@ -12,7 +12,6 @@ type ClassNames = 'root'
   | 'isMinor'
   | 'isMajor'
   | 'isCritical'
-  | 'allRead';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -86,19 +85,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       },
     },
   },
-  allRead: {
-    color: theme.color.grey3,
-    '&:hover, &.active': {
-      color: 'white',
-      '& .circle': {
-        stroke: theme.color.grey3,
-      },
-      '& .line, & .dot': {
-        fill: theme.color.grey3,
-        stroke: theme.color.grey3,
-      },
-    },
-  },
   hasNoNotifications: {
     color: 'white',
     '& .circle': {
@@ -115,14 +101,12 @@ interface Props {
   onClick: (e: React.MouseEvent<HTMLElement>) => void;
   className?: string;
   severity: null | Linode.NotificationSeverity;
-  allRead?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const userNotificationButton: React.StatelessComponent<CombinedProps> = ({
   classes,
-  allRead,
   onClick,
   className,
   severity
@@ -135,7 +119,6 @@ const userNotificationButton: React.StatelessComponent<CombinedProps> = ({
       <Alert className={
         classNames({
           [classes.icon]: true,
-          [classes.allRead]: allRead,
           [classes.hasNoNotifications]: severity === null,
           [classes.isMinor]: severity === 'minor',
           [classes.isMajor]: severity === 'major',

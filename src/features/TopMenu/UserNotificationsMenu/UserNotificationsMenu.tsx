@@ -40,7 +40,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 interface Props { }
 
 interface State {
-  read: boolean;
   anchorEl?: HTMLElement;
   notifications: Linode.Notification[];
 }
@@ -78,7 +77,7 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { anchorEl, notifications, read } = this.state;
+    const { anchorEl, notifications } = this.state;
     const { classes } = this.props;
     const severity = notifications.reduce(reduceSeverity, null);
 
@@ -88,7 +87,6 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
           onClick={this.openMenu}
           className={anchorEl ? 'active' : ''}
           severity={severity}
-          allRead={read}
 
         />
         <Menu
@@ -108,7 +106,7 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
   }
 
   openMenu = (e: React.MouseEvent<HTMLElement>) =>
-    this.setState({ anchorEl: e.currentTarget, read: true });
+    this.setState({ anchorEl: e.currentTarget });
 
   closeMenu = (e: React.MouseEvent<HTMLElement>) =>
     this.setState({ anchorEl: undefined })
