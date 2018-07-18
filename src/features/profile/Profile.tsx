@@ -7,6 +7,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
 
 import APITokens from './APITokens';
+import AuthenticationSettings from './AuthenticationSettings';
 import DisplaySettings from './DisplaySettings';
 import LishSettings from './LishSettings';
 import OAuthClients from './OAuthClients';
@@ -25,6 +26,7 @@ class Profile extends React.Component<Props> {
   tabs = [
     /* NB: These must correspond to the routes inside the Switch */
     { title: 'Display', routeName: `${this.props.match.url}/display` },
+    { title: 'Password & Authentication', routeName: `${this.props.match.url}/password` },
     { title: 'Settings', routeName: `${this.props.match.url}/settings` },
     { title: 'API Tokens', routeName: `${this.props.match.url}/tokens` },
     { title: 'OAuth Clients', routeName: `${this.props.match.url}/clients` },
@@ -57,6 +59,7 @@ class Profile extends React.Component<Props> {
         </AppBar>
         <Switch>
           <Route exact path={`${url}/settings`} component={Settings} />
+          <Route exact path={`${url}/password`} component={AuthenticationSettings} />
           <Route exact path={`${url}/tokens`} component={APITokens} />
           <Route exact path={`${url}/clients`} component={OAuthClients} />
           <Route exact path={`${url}/lish`} component={LishSettings} />
