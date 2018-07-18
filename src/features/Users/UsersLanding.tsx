@@ -21,6 +21,7 @@ import Table from 'src/components/Table';
 import { getUsers } from 'src/services/account';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 
+import CreateUserDrawer from './CreateUserDrawer';
 import ActionMenu from './UsersActionMenu';
 
 type ClassNames = 'title' | 'avatar' | 'userButton';
@@ -51,12 +52,15 @@ interface Props {}
 interface State {
   users?: Linode.User[];
   error?: Error;
+  createDrawerOpen: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class UsersLanding extends React.Component<CombinedProps, State> {
-  state: State = { };
+  state: State = {
+    createDrawerOpen: false,
+  };
 
   static docs: Linode.Doc[] = [
     {
@@ -96,6 +100,15 @@ class UsersLanding extends React.Component<CombinedProps, State> {
       })
   }
 
+  addUser = (user: Linode.User) => {
+    if (this.state.users) {
+      this.setState({
+        users: [...this.state.users, user],
+      });
+      this.setUserAvatars();
+    }
+  }
+
   setUserAvatars = () => {
     if (!this.state.users) { return; }
     this.state.users.map((user, idx) => {
@@ -109,11 +122,9 @@ class UsersLanding extends React.Component<CombinedProps, State> {
   }
 
   openForCreate = () => {
-    return;
-  }
-
-  onProfile = () => {
-    return;
+    this.setState({
+      createDrawerOpen: true,
+    })
   }
 
   onPermissions = () => {
@@ -124,6 +135,16 @@ class UsersLanding extends React.Component<CombinedProps, State> {
     return;
   }
 
+  userCreateOnSubmit = () => {
+    return;
+  }
+
+  userCreateOnClose = () => {
+    this.setState({
+      createDrawerOpen: false,
+    })
+  }
+
   renderUserRow = (user: Linode.User) => {
     const { classes } = this.props;
     return (
@@ -131,7 +152,8 @@ class UsersLanding extends React.Component<CombinedProps, State> {
         <TableCell>
           <Link to={`/users/${user.username}`} title={user.username}>
             <Button className={classes.userButton} tabIndex={-1}>
-              {user.gravatarUrl !== 'not found'
+              {(user.gravatarUrl !== 'not found'
+                && user.gravatarUrl !== undefined)
                   ? <img
                     alt={`user ${user.username}'s avatar`}
                     src={user.gravatarUrl}
@@ -148,7 +170,6 @@ class UsersLanding extends React.Component<CombinedProps, State> {
         <TableCell>
           <ActionMenu
             username={user.username}
-            onProfile={this.onProfile}
             onPermissions={this.onPermissions}
             onDelete={this.onDelete}
           />
@@ -159,7 +180,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes } = this.props;
-    const { users, error } = this.state;
+    const { users, error, createDrawerOpen } = this.state;
 
     if (error) {
       return (
@@ -183,7 +204,6 @@ class UsersLanding extends React.Component<CombinedProps, State> {
                   <Grid container alignItems="flex-end">
                     <Grid item>
                       <AddNewLink
-                        disabled
                         onClick={this.openForCreate}
                         label="Add a User"
                       />
@@ -209,6 +229,11 @@ class UsersLanding extends React.Component<CombinedProps, State> {
             </React.Fragment>
           : <CircleProgress />
         }
+        <CreateUserDrawer
+          open={createDrawerOpen}
+          onClose={this.userCreateOnClose}
+          addUser={this.addUser}
+        />
       </React.Fragment>
     );
   }

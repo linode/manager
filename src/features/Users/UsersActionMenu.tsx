@@ -5,7 +5,6 @@ import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   username: string;
-  onProfile: () => void;
   onPermissions: () => void;
   onDelete: () => void;
 }
@@ -15,7 +14,6 @@ type CombinedProps = Props & RouteComponentProps<{}>;
 class UsersActionMenu extends React.Component<CombinedProps> {
   createActions = () => {
     const {
-      onProfile,
       onPermissions,
       onDelete,
       username,
@@ -27,7 +25,6 @@ class UsersActionMenu extends React.Component<CombinedProps> {
         {
           title: 'User Profile',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            onProfile();
             closeMenu();
             push(`/users/${username}`)
             e.preventDefault();
