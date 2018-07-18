@@ -151,11 +151,11 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
          * If a volume is created and attached, the event is volume_create with status of scheduled, started, failed, finished.
          */
         if (event.action === 'volume_create' && event.status === 'scheduled') {
-          sendToast(`Volume ${event.entity && event.entity.label} queued for creation.`);
+          sendToast(`Volume ${event.entity && event.entity.label} scheduled for creation.`);
         }
 
         if (event.action === 'volume_create' && (event.status === 'notification' || event.status === 'finished')) {
-          sendToast(`Volume ${event.entity && event.entity.label} created successfully.`);
+          sendToast(`Volume ${event.entity && event.entity.label} has been created successfully.`);
         }
 
         if (event.action === 'volume_create' && event.status === 'failed') {
@@ -257,7 +257,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           .then(() => {
             resetEventsPolling();
             this.composeState([
-              set(L.success, 'Volume queued for creation.'),
+              set(L.success, 'Volume has been scheduled for creation.'),
               set(L.submitting, false),
             ])
 
