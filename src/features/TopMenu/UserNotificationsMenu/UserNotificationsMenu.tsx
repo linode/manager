@@ -87,7 +87,7 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
           onClick={this.openMenu}
           className={anchorEl ? 'active' : ''}
           severity={severity}
-
+          notifications={notifications}
         />
         <Menu
           anchorEl={anchorEl}

@@ -4,14 +4,13 @@ import * as React from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-import Alert from 'src/assets/icons/alerts.svg';
-
 type ClassNames = 'root'
   | 'icon'
   | 'hasNoNotifications'
   | 'isMinor'
   | 'isMajor'
   | 'isCritical'
+  | 'smaller';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -20,80 +19,41 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     [theme.breakpoints.up('md')]: {
       marginLeft: theme.spacing.unit * 2,
     },
+    '&.active $icon': {
+      backgroundColor: theme.palette.text.primary,
+    },
   },
   icon: {
     position: 'relative',
     top: 1,
-    width: 28,
-    height: 28,
-    transition: theme.transitions.create(['color', 'opacity']),
-    color: theme.palette.primary.main,
-    '& .circle': {
-      transition: theme.transitions.create(['fill', 'stroke']),
-      fill: 'currentColor',
-      strokeWidth: 2,
-      stroke: 'currentColor',
-    },
-    '& .line, & .dot': {
-      transition: theme.transitions.create(['fill', 'stroke']),
-      fill: '#fff',
-      stroke: '#fff',
-    },
-    '& .line': {
-      strokeWidth: 4,
-    },
-    '& .dot': {
-      strokeWidth: 3,
+    width: 27,
+    height: 27,
+    transition: theme.transitions.create(['background-color']),
+    color: 'white',
+    borderRadius: '50%',
+    backgroundColor: theme.color.grey3,
+    fontSize: 16,
+    fontWeight: 700,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    '&:hover': {
+      backgroundColor: theme.palette.text.primary,
     },
   },
   isCritical: {
-    color: theme.palette.status.errorDark,
-    '&:hover, &.active': {
-      color: 'white',
-      '& .circle': {
-        stroke: theme.palette.status.errorDark,
-      },
-      '& .line, & .dot': {
-        fill: theme.palette.status.errorDark,
-        stroke: theme.palette.status.errorDark,
-      },
-    },
+    backgroundColor: theme.palette.status.errorDark,
   },
   isMajor: {
-    color: theme.palette.status.warningDark,
-    '&:hover, &.active': {
-      color: 'white',
-      '& .circle': {
-        stroke: theme.palette.status.warningDark,
-      },
-      '& .line, & .dot': {
-        fill: theme.palette.status.warningDark,
-        stroke: theme.palette.status.warningDark,
-      },
-    },
+    backgroundColor: theme.palette.status.warningDark,
   },
   isMinor: {
-    color: theme.palette.primary.main,
-    '&:hover, &.active': {
-      color: 'white',
-      '& .circle': {
-        stroke: theme.palette.primary.main,
-      },
-      '& .line, & .dot': {
-        fill: theme.palette.primary.main,
-        stroke: theme.palette.primary.main,
-      },
-    },
+    backgroundColor: theme.palette.primary.main,
+  },
+  smaller: {
+    fontSize: 15,
   },
   hasNoNotifications: {
-    color: 'white',
-    '& .circle': {
-      stroke: theme.color.grey3,
-    },
-    '& .line, & .dot': {
-      fill: theme.color.grey3,
-      stroke: theme.color.grey3,
-    },
   },
 });
 
@@ -101,6 +61,7 @@ interface Props {
   onClick: (e: React.MouseEvent<HTMLElement>) => void;
   className?: string;
   severity: null | Linode.NotificationSeverity;
+  notifications: any;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -109,21 +70,25 @@ const userNotificationButton: React.StatelessComponent<CombinedProps> = ({
   classes,
   onClick,
   className,
-  severity
+  severity,
+  notifications,
 }) => {
   return (
     <IconButton
       onClick={onClick}
       className={`${classes.root} ${className}`}
     >
-      <Alert className={
+      <div className={
         classNames({
           [classes.icon]: true,
           [classes.hasNoNotifications]: severity === null,
           [classes.isMinor]: severity === 'minor',
           [classes.isMajor]: severity === 'major',
           [classes.isCritical]: severity === 'critical',
-        })} />
+          [classes.smaller]: notifications.length > 9,
+        })}>
+        {notifications.length <= 9 ? notifications.length : '9+'}
+      </div>
     </IconButton>
   );
 };
