@@ -2,6 +2,25 @@ const https = require('https');
 const axios = require('axios');
 const API_ROOT = process.env.REACT_APP_API_ROOT;
 
+const getAxiosInstance = function(token) {
+  let axiosInstance;
+  return function(token) {
+    if (token && axiosInstance === undefined) {
+      axiosInstance = axios.create({
+        httpsAgent: new https.Agent({
+            rejectUnauthorized: false
+        }),
+        baseURL: API_ROOT,
+        timeout: 5000,
+        headers: { 'Authorization': `Bearer ${token}`},
+      });
+    } else if (!token && axiosInstance === undefined) {
+       throw new Error("getting axiosInstance without having initialized it");
+    }
+    return axiosInstance;
+  }
+}()
+
 exports.deleteAll = (token) => {
     return new Promise((resolve, reject) => {
         const linodesEndpoint = '/linode/instances';
@@ -12,17 +31,8 @@ exports.deleteAll = (token) => {
             '/images',
         ];
 
-        const instance = axios.create({
-            httpsAgent: new https.Agent({
-                rejectUnauthorized: false
-            }),
-            baseURL: API_ROOT,
-            timeout: 5000,
-            headers: { 'Authorization': `Bearer ${token}`},
-        });
-
         const getEndpoint = (endpoint) => {
-            return instance.get(`${API_ROOT}${endpoint}`)
+            return getAxiosInstance(token).get(`${API_ROOT}${endpoint}`)
                 .then(res => {
                     if (endpoint.includes('images')) {
                         privateImages = res.data.data.filter(i => i['is_public'] === false);
@@ -38,7 +48,7 @@ exports.deleteAll = (token) => {
         }
 
         const removeInstance = (res, endpoint) => {
-            return instance.delete(`${endpoint}/${res.id}`)
+            return getAxiosInstance(token).delete(`${endpoint}/${res.id}`)
                 .then(res => {
                     return res;
                 })
@@ -85,22 +95,11 @@ exports.deleteAll = (token) => {
     });
 }
 
-
 exports.removeAllLinodes = token => {
     return new Promise((resolve, reject) => {
         const linodesEndpoint = '/linode/instances';
-
-        const instance = axios.create({
-            httpsAgent: new https.Agent({
-                rejectUnauthorized: false
-            }),
-            baseURL: API_ROOT,
-            timeout: 5000,
-            headers: { 'Authorization': `Bearer ${token}`},
-        });
-
         const removeInstance = (res, endpoint) => {
-            return instance.delete(`${endpoint}/${res.id}`)
+            return getAxiosInstance(token).delete(`${endpoint}/${res.id}`)
                 .then(res => res)
                 .catch((error) => {
                     console.error('Error', error);
@@ -108,7 +107,7 @@ exports.removeAllLinodes = token => {
                 });
         }
 
-        return instance.get(linodesEndpoint)
+        return getAxiosInstance(token).get(linodesEndpoint)
             .then(res => {
                 const promiseArray = 
                     res.data.data.map(l => removeInstance(l, linodesEndpoint));
@@ -140,16 +139,7 @@ exports.createLinode = (token, password, linodeLabel) => {
             linodeConfig['label'] = linodeLabel;
         }
 
-        const instance = axios.create({
-            httpsAgent: new https.Agent({
-                rejectUnauthorized: false
-            }),
-            baseURL: API_ROOT,
-            timeout: 5000,
-            headers: { 'Authorization': `Bearer ${token}`},
-        });
-
-        return instance.post(linodesEndpoint, linodeConfig)
+        return getAxiosInstance(token).post(linodesEndpoint, linodeConfig)
             .then(response => {
                 resolve(response.data);
             })
@@ -163,21 +153,12 @@ exports.createLinode = (token, password, linodeLabel) => {
 exports.allocatePrivateIp = (token, linodeId) => {
     return new Promise((resolve, reject) => {
         const ipsEndpoint = `/linode/instances/${linodeId}/ips`;
-        const instance = axios.create({
-            httpsAgent: new https.Agent({
-                rejectUnauthorized: false
-            }),
-            baseURL: API_ROOT,
-            timeout: 5000,
-            headers: { 'Authorization': `Bearer ${token}`},
-        });
-
         const requestPrivate = {
             public: false,
             type: 'ipv4',
         }
 
-        return instance.post(ipsEndpoint, requestPrivate)
+        return getAxiosInstance(token).post(ipsEndpoint, requestPrivate)
             .then(response => resolve(response.data))
             .catch(error => {
                 console.error('Error', error);
@@ -189,16 +170,8 @@ exports.allocatePrivateIp = (token, linodeId) => {
 exports.getNodebalancers = token => {
     return new Promise((resolve, reject) => {
         const endpoint = '/nodebalancers';
-        const instance = axios.create({
-            httpsAgent: new https.Agent({
-                rejectUnauthorized: false
-            }),
-            baseURL: API_ROOT,
-            timeout: 5000,
-            headers: { 'Authorization': `Bearer ${token}`},
-        });
 
-        return instance.get(endpoint)
+        return getAxiosInstance(token).get(endpoint)
             .then(response => resolve(response.data))
             .catch(error => {
                 console.error('Error', error);
@@ -210,16 +183,8 @@ exports.getNodebalancers = token => {
 exports.removeNodebalancer = (token, nodeBalancerId) => {
     return new Promise((resolve, reject) => {
         const endpoint = `/nodebalancers/${nodeBalancerId}`;
-        const instance = axios.create({
-            httpsAgent: new https.Agent({
-                rejectUnauthorized: false
-            }),
-            baseURL: API_ROOT,
-            timeout: 5000,
-            headers: { 'Authorization': `Bearer ${token}`},
-        });
 
-        return instance.delete(endpoint)
+        return getAxiosInstance(token).delete(endpoint)
             .then(response => resolve(response.data))
             .catch(error => {
                 console.error('Error', error);
@@ -233,7 +198,7 @@ exports.removeAllVolumes = token => {
         const endpoint = '/volumes';
 
         const removeVolume = (res, endpoint) => {
-            return instance.delete(`${endpoint}/${res.id}`)
+            return getAxiosInstance(token).delete(`${endpoint}/${res.id}`)
                 .then(response => response.status)
                 .catch(error => {
                     console.error('Error', error);
@@ -241,16 +206,7 @@ exports.removeAllVolumes = token => {
                 });
         }
 
-        const instance = axios.create({
-            httpsAgent: new https.Agent({
-                rejectUnauthorized: false
-            }),
-            baseURL: API_ROOT,
-            timeout: 5000,
-            headers: { 'Authorization': `Bearer ${token}`}, 
-        });
-
-        return instance.get(endpoint).then(res => {
+        return getAxiosInstance(token).get(endpoint).then(res => {
             const removeVolumesArray = 
                 res.data.data.map(v => removeVolume(v, endpoint));
 
@@ -267,16 +223,8 @@ exports.removeAllVolumes = token => {
 exports.getDomains = token => {
     return new Promise((resolve, reject) => {
         const endpoint = '/domains';
-        const instance = axios.create({
-            httpsAgent: new https.Agent({
-                rejectUnauthorized: false
-            }),
-            baseURL: API_ROOT,
-            timeout: 5000,
-            headers: { 'Authorization': `Bearer ${token}`},
-        });
 
-        return instance.get(endpoint)
+        return getAxiosInstance(token).get(endpoint)
             .then(response => resolve(response.data))
             .catch(error => {
                 console.error('Error', error);
@@ -288,16 +236,8 @@ exports.getDomains = token => {
 exports.removeDomain = (token, domainId) => {
     return new Promise((resolve, reject) => {
         const endpoint = `/domains/${domainId}`;
-        const instance = axios.create({
-            httpsAgent: new https.Agent({
-                rejectUnauthorized: false
-            }),
-            baseURL: API_ROOT,
-            timeout: 5000,
-            headers: { 'Authorization': `Bearer ${token}`},
-        });
 
-        instance.delete(endpoint)
+        getAxiosInstance(token).delete(endpoint)
             .then(response => resolve(response.data))
             .catch(error => {
                 console.error(error);
@@ -309,42 +249,26 @@ exports.removeDomain = (token, domainId) => {
 exports.getMyStackScripts = token => {
     return new Promise((resolve, reject) => {
         const endpoint = '/linode/stackscripts';
-        const instance = axios.create({
-            httpsAgent: new https.Agent({
-                rejectUnauthorized: false
-            }),
-            baseURL: API_ROOT,
-            timeout: 5000,
+
+        getAxiosInstance(token).get(endpoint, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'X-Filter': `{"username":"${process.env.MANAGER_USER}","+order_by":"deployments_total","+order":"desc"}`
-            },
+            }
+        })
+        .then(response => resolve(response.data))
+        .catch(error => {
+            console.error('Error', error);
+            reject(error);
         });
-
-        instance.get(endpoint)
-            .then(response => resolve(response.data))
-            .catch(error => {
-                console.error('Error', error);
-                reject(error);
-            });
     });
 }
 
 exports.removeStackScript = (token, id) => {
     return new Promise((resolve, reject) => {
         const endpoint = `/linode/stackscripts/${id}`;
-        const instance = axios.create({
-            httpsAgent: new https.Agent({
-                rejectUnauthorized: false
-            }),
-            baseURL: API_ROOT,
-            timeout: 5000,
-            headers: {
-                'Authorization': `Bearer ${token}`,
-            },
-        });
 
-        instance.delete(endpoint)
+        getAxiosInstance(token).delete(endpoint)
             .then(response => resolve(response.data))
             .catch(error => {
                 console.error('Error', error);
