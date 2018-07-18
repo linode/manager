@@ -30,12 +30,13 @@ import { newLinodeEvents } from 'src/features/linodes/events';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 import { lishLaunch } from 'src/features/Lish';
 import notifications$ from 'src/notifications';
+import { Requestable } from 'src/requestableContext';
 import { getImage } from 'src/services/images';
 import { getLinode, getLinodeConfigs, getLinodeDisks, getLinodeVolumes, renameLinode } from 'src/services/linodes';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-import { ConfigsProvider, DisksProvider, ImageProvider, LinodeProvider, Requestable, VolumesProvider } from './context';
+import { ConfigsProvider, DisksProvider, ImageProvider, LinodeProvider, VolumesProvider } from './context';
 import LinodeBackup from './LinodeBackup';
 import LinodeDetailErrorBoundary from './LinodeDetailErrorBoundary';
 import LinodeNetworking from './LinodeNetworking';

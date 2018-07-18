@@ -5,4 +5,24 @@ namespace Linode {
     restricted: boolean;
     gravatarUrl?: string;
   }
+  export interface Account {
+    address_2: string;
+    email: string;
+    first_name: string;
+    tax_id: string;
+    credit_card: CreditCard;
+    state: string;
+    zip: string;
+    address_1: string;
+    country: string;
+    last_name: string;
+    balance: number;
+    city: string;
+    phone: string;
+    company: string;
+  }
+  interface CreditCard {
+    expiry: string;
+    last_four: string;
+  }
 }
