@@ -5,6 +5,8 @@ language: node_js
 node_js:
   - "8.11.2"
 
+cache: yarn
+
 before_install: sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++ google-chrome-stable
 
 install:
