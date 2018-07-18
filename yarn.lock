@@ -899,10 +899,6 @@
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/@types/promise.prototype.finally/-/promise.prototype.finally-2.0.2.tgz#68fefb8f0e23f21893a33740c931c79f44be3499"
 
-"@types/prop-types@*":
-  version "15.5.3"
-  resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.5.3.tgz#bef071852dca2a2dbb65fecdb7bfb30cedae2de2"
-
 "@types/ramda@^0.25.18":
   version "0.25.33"
   resolved "https://registry.yarnpkg.com/@types/ramda/-/ramda-0.25.33.tgz#a134fde6da3be303a1bdefd9155d8365bb7b14ec"
@@ -943,12 +939,6 @@
     "@types/history" "*"
     "@types/react" "*"
 
-"@types/react-select@*":
-  version "1.2.10"
-  resolved "https://registry.yarnpkg.com/@types/react-select/-/react-select-1.2.10.tgz#3f261c819fd82850a020de4ed0e823306820e0fa"
-  dependencies:
-    "@types/react" "*"
-
 "@types/react-sticky@^5.0.6":
   version "5.0.6"
   resolved "https://registry.yarnpkg.com/@types/react-sticky/-/react-sticky-5.0.6.tgz#eb65a40a0f3f46cd02ea21983c9816e99d84e754"
@@ -959,21 +949,6 @@
   version "2.0.11"
   resolved "https://registry.yarnpkg.com/@types/react-transition-group/-/react-transition-group-2.0.11.tgz#feb274676a39383fffaa0dff710958d2251abefb"
   dependencies:
-    "@types/react" "*"
-
-"@types/react-virtualized-select@^3.0.5":
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/@types/react-virtualized-select/-/react-virtualized-select-3.0.5.tgz#d0313eb6e84a4e982b29b2a529094e7f2905b415"
-  dependencies:
-    "@types/react" "*"
-    "@types/react-select" "*"
-    "@types/react-virtualized" "*"
-
-"@types/react-virtualized@*":
-  version "9.18.4"
-  resolved "https://registry.yarnpkg.com/@types/react-virtualized/-/react-virtualized-9.18.4.tgz#467907cc6fd7a94fc2eeded3e8c67903a5d19643"
-  dependencies:
-    "@types/prop-types" "*"
     "@types/react" "*"
 
 "@types/react@*", "@types/react@^16.4.0":
