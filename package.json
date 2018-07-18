@@ -18,7 +18,6 @@
   "dependencies": {
     "@material-ui/core": "^1.2.2",
     "@material-ui/icons": "^1.1.0",
-    "@types/react-virtualized-select": "^3.0.5",
     "@types/throttle-debounce": "^1.0.0",
     "autoprefixer": "7.1.6",
     "axios": "^0.18.0",
