@@ -51,16 +51,6 @@ export class SummaryPanel extends React.Component<CombinedProps, State> {
   render() {
     const { classes, data, loading, errors, lastUpdated } = this.props;
 
-    if (lastUpdated === 0 && loading) {
-      return this.loading();
-    }
-
-    if (errors) {
-      return this.error();
-    }
-
-    if (!data) { return null; }
-
     return (
       <Paper className={classes.root}>
         <Grid container>
@@ -72,7 +62,13 @@ export class SummaryPanel extends React.Component<CombinedProps, State> {
           <Grid item xs={12}>
             <Grid container>
               {
-                loading ? this.loading() : errors ? this.error() : this.info()
+                loading && lastUpdated === 0
+                ? this.loading()
+                : errors
+                  ? this.error()
+                  : data
+                    ? this.info()
+                    : null
               }
             </Grid>
           </Grid>
