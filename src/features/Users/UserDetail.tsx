@@ -209,7 +209,11 @@ class Profile extends React.Component<CombinedProps> {
               <KeyboardArrowLeft />
             </IconButton>
             {gravatarUrl !== 'not found'
-              ? <img src={gravatarUrl} className={classes.avatar} />
+              ? <img
+                alt={`user ${username}'s avatar`}
+                src={gravatarUrl}
+                className={classes.avatar}
+              />
               : <UserIcon className={classes.avatar} />
             }
             <Typography variant="headline">

@@ -157,6 +157,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
         <TableCell>{user.restricted ? 'Restricted' : 'Unrestricted'}</TableCell>
         <TableCell>
           <ActionMenu
+            username={user.username}
             onProfile={this.onProfile}
             onPermissions={this.onPermissions}
             onDelete={this.onDelete}
