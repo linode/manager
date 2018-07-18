@@ -59,7 +59,6 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
   subscription: Subscription;
 
   state: State = {
-    read: false,
     notifications: [],
     anchorEl: undefined,
   };
