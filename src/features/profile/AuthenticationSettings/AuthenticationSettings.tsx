@@ -1,4 +1,4 @@
-import { compose } from 'ramda';
+import { compose, lensPath, set, } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
@@ -6,10 +6,10 @@ import { bindActionCreators, Dispatch } from 'redux';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import setDocs from 'src/components/DocsSidebar/setDocs';
-
+import Notice from 'src/components/Notice';
 import { response } from 'src/store/reducers/resources';
 
-import EmailChangeForm from './EmailChangeForm';
+import SecuritySettings from './SecuritySettings';
 
 type ClassNames = 'root' | 'title';
 
@@ -17,6 +17,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     padding: theme.spacing.unit * 3,
     paddingBottom: theme.spacing.unit * 3,
+    marginBottom: theme.spacing.unit * 3,
   },
   title: {
     marginBottom: theme.spacing.unit * 2,
@@ -27,37 +28,43 @@ interface Props { }
 
 interface ConnectedProps {
   loading: boolean;
-  username: string;
-  email: string;
+  ipWhitelisting: boolean;
   updateProfile: (v: Linode.Profile) => void;
 }
 
 interface State {
-
+    success?: string;
 }
 
 type CombinedProps = Props & ConnectedProps & WithStyles<ClassNames>;
 
-export class DisplaySettings extends React.Component<CombinedProps, State> {
+export class AuthenticationSettings extends React.Component<CombinedProps, State> {
   state: State = {
-    submitting: false,
-    updatedEmail: this.props.email || '',
-    errors: undefined,
     success: undefined,
   }
 
+  onWhitelistingDisable = () => {
+    this.setState(set(lensPath(['success']), 'IP whitelisting disabled. This feature cannot be re-enabled.' ));
+  }
+
   render() {
-    const { email, loading, updateProfile, username } = this.props;
+    const { loading, ipWhitelisting, updateProfile } = this.props;
+    const { success } = this.state;
 
     return (
       <React.Fragment>
+        {success && <Notice success text={success} />}
         {!loading &&
-        <EmailChangeForm
-          email={email} 
-          username={username}
-          updateProfile={updateProfile}
-          data-qa-email-change
-        />}
+          <React.Fragment>
+            {ipWhitelisting && 
+                <SecuritySettings 
+                    updateProfile={updateProfile}
+                    onSuccess={this.onWhitelistingDisable}
+                    data-qa-whitelisting-form
+                />
+            }
+          </React.Fragment>
+        }
       </React.Fragment>
     );
   }
@@ -80,9 +87,7 @@ const mapStateToProps = (state: Linode.AppState) => {
   }
 
   return {
-    loading: false,
-    username: data.username,
-    email: data.email,
+    ipWhitelisting: data.ip_whitelist_enabled,
   };
 };
 
@@ -98,7 +103,7 @@ const connected = connect(mapStateToProps, mapDispatchToProps);
 const enhanced = compose(
   styled,
   connected,
-  setDocs(DisplaySettings.docs),
+  setDocs(AuthenticationSettings.docs),
 );
 
-export default enhanced(DisplaySettings);
+export default enhanced(AuthenticationSettings);
