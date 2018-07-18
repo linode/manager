@@ -305,3 +305,50 @@ exports.removeDomain = (token, domainId) => {
             });
     });
 }
+
+exports.getMyStackScripts = token => {
+    return new Promise((resolve, reject) => {
+        const endpoint = '/linode/stackscripts';
+        const instance = axios.create({
+            httpsAgent: new https.Agent({
+                rejectUnauthorized: false
+            }),
+            baseURL: API_ROOT,
+            timeout: 5000,
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'X-Filter': `{"username":"${process.env.MANAGER_USER}","+order_by":"deployments_total","+order":"desc"}`
+            },
+        });
+
+        instance.get(endpoint)
+            .then(response => resolve(response.data))
+            .catch(error => {
+                console.error('Error', error);
+                reject(error);
+            });
+    });
+}
+
+exports.removeStackScript = (token, id) => {
+    return new Promise((resolve, reject) => {
+        const endpoint = `/linode/stackscripts/${id}`;
+        const instance = axios.create({
+            httpsAgent: new https.Agent({
+                rejectUnauthorized: false
+            }),
+            baseURL: API_ROOT,
+            timeout: 5000,
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+
+        instance.delete(endpoint)
+            .then(response => resolve(response.data))
+            .catch(error => {
+                console.error('Error', error);
+                reject(error);
+            });
+    });
+}

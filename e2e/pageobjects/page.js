@@ -45,6 +45,21 @@ export default class Page {
         }, constants.wait.normal, 'Failed to redirect to login page on log out');
     }
 
+    chooseSelectOption(selectElement, selectOption) {
+        selectElement.click();
+        browser.waitForVisible('[data-value]');
+
+        if (Number.isInteger(selectOption)) {
+            const optionElement = $$('[data-value]')[selectOption];
+            optionElement.click();
+            optionElement.waitForVisible(constants.wait.normal, true);
+            return;
+        }
+
+        $(`[data-value="${selectOption}"]`).click();
+        browser.waitForVisible(`[data-value="${selectOption}"]`, constants.wait.normal, true);
+    }
+
     selectGlobalCreateItem(menuItem) {
         this.globalCreate.waitForVisible();
         this.globalCreate.click();
@@ -94,6 +109,7 @@ export default class Page {
             return true;
         }, constants.wait.normal);
     }
+
 
     selectActionMenuItem(tableCell, item) {
         tableCell.$(this.actionMenu.selector).click();
