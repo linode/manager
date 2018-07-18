@@ -5,7 +5,6 @@ import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   username: string;
-  onPermissions: () => void;
   onDelete: () => void;
 }
 
@@ -14,7 +13,6 @@ type CombinedProps = Props & RouteComponentProps<{}>;
 class UsersActionMenu extends React.Component<CombinedProps> {
   createActions = () => {
     const {
-      onPermissions,
       onDelete,
       username,
       history: { push },
@@ -33,7 +31,6 @@ class UsersActionMenu extends React.Component<CombinedProps> {
         {
           title: 'User Permissions',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            onPermissions();
             closeMenu();
             push(`/users/${username}/permissions`)
             e.preventDefault();

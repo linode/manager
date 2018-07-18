@@ -127,22 +127,14 @@ class UsersLanding extends React.Component<CombinedProps, State> {
     })
   }
 
-  onPermissions = () => {
-    return;
-  }
-
-  onDelete = () => {
-    return;
-  }
-
-  userCreateOnSubmit = () => {
-    return;
-  }
-
   userCreateOnClose = () => {
     this.setState({
       createDrawerOpen: false,
     })
+  }
+
+  onDelete = () => {
+    return;
   }
 
   renderUserRow = (user: Linode.User) => {
@@ -170,7 +162,6 @@ class UsersLanding extends React.Component<CombinedProps, State> {
         <TableCell>
           <ActionMenu
             username={user.username}
-            onPermissions={this.onPermissions}
             onDelete={this.onDelete}
           />
         </TableCell>
