@@ -33,7 +33,7 @@ interface ConnectedProps {
 }
 
 interface State {
-    success?: string;
+  success?: string;
 }
 
 type CombinedProps = Props & ConnectedProps & WithStyles<ClassNames>;
@@ -57,11 +57,11 @@ export class AuthenticationSettings extends React.Component<CombinedProps, State
         {!loading &&
           <React.Fragment>
             {ipWhitelisting && 
-                <SecuritySettings 
-                    updateProfile={updateProfile}
-                    onSuccess={this.onWhitelistingDisable}
-                    data-qa-whitelisting-form
-                />
+              <SecuritySettings 
+                updateProfile={updateProfile}
+                onSuccess={this.onWhitelistingDisable}
+                data-qa-whitelisting-form
+              />
             }
           </React.Fragment>
         }
