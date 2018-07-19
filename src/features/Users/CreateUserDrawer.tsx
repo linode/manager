@@ -11,7 +11,6 @@ import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { createUser } from 'src/services/account';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
@@ -46,6 +45,18 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
     submitting: false,
   };
 
+  componentDidUpdate(prevProps: CombinedProps) {
+    if (this.props.open === true && prevProps.open === false) {
+      this.setState({
+        username: '',
+        email: '',
+        restricted: false,
+        errors: [],
+        submitting: false,
+      })
+    }
+  }
+
   onSubmit = () => {
     const { addUser, onClose, history: { push } } = this.props;
     const { username, email, restricted } = this.state;
@@ -54,15 +65,16 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
       .then((user: Linode.User) => {
         this.setState({ submitting: false });
         onClose();
-        sendToast(`User ${user.username} created successfully`);
         if (!user.restricted) {
           addUser(user);
         } else {
-          push(`/users/${username}/permissions`);
+          push(`/users/${username}/permissions`, { newUsername: user.username });
         }
       })
       .catch((errResponse) => {
-        const errors = pathOr([], ['response', 'data', 'errors'], errResponse);
+        const errors = pathOr([
+            { reason: 'An unexpected error occured while creating the user.'}
+          ], ['response', 'data', 'errors'], errResponse);
         this.setState({ errors, submitting: false });
       })
   }
@@ -112,6 +124,7 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
         />
         <TextField
           label="Email"
+          type="email"
           value={email}
           required
           onChange={this.onChangeEmail}

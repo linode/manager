@@ -1,6 +1,6 @@
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
@@ -17,6 +17,7 @@ import CircleProgress from 'src/components/CircleProgress';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 import Table from 'src/components/Table';
 import { getUsers } from 'src/services/account';
 import { getGravatarUrl } from 'src/utilities/gravatar';
@@ -53,9 +54,10 @@ interface State {
   users?: Linode.User[];
   error?: Error;
   createDrawerOpen: boolean;
+  newUsername?: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
 
 class UsersLanding extends React.Component<CombinedProps, State> {
   state: State = {
@@ -104,6 +106,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
     if (this.state.users) {
       this.setState({
         users: [...this.state.users, user],
+        newUsername: user.username,
       });
       this.setUserAvatars();
     }
@@ -171,7 +174,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes } = this.props;
-    const { users, error, createDrawerOpen } = this.state;
+    const { users, error, createDrawerOpen, newUsername } = this.state;
 
     if (error) {
       return (
@@ -202,6 +205,9 @@ class UsersLanding extends React.Component<CombinedProps, State> {
                   </Grid>
                 </Grid>
               </Grid>
+              {newUsername &&
+                <Notice success text={`User ${newUsername} created successfully`} /> 
+              }
               <Paper>
                 <Table>
                   <TableHead>
@@ -233,6 +239,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles, { withTheme: true });
 
 export default compose(
+  withRouter,
   setDocs(UsersLanding.docs),
   styled,
 )(UsersLanding);
