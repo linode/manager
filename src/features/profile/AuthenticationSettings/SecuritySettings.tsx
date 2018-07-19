@@ -35,7 +35,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 interface Props {
   onSuccess: () => void;
-  updateProfile: (v: Linode.Profile) => void;
+  updateProfile: (v: Partial<Linode.Profile>) => void;
 }
 
 interface State {
@@ -101,54 +101,54 @@ export class SecuritySettings extends React.Component<CombinedProps, State> {
   };
 
   render() {
-      const { classes, } = this.props;
-      const { errors, ipWhitelistingToggle, submitting } = this.state;
-      const hasErrorFor = getAPIErrorFor({}, errors);
-      const generalError = hasErrorFor('none');
+    const { classes, } = this.props;
+    const { errors, ipWhitelistingToggle, submitting } = this.state;
+    const hasErrorFor = getAPIErrorFor({}, errors);
+    const generalError = hasErrorFor('none');
 
-      return (
-          <React.Fragment>
-              <Paper className={classes.root}>
-                  <Typography
-                      variant="title"
-                      className={classes.title}
-                      data-qa-title
-                  >
-                      Account Security
-                  </Typography>
-                  <Typography
-                      variant="body1"
-                      data-qa-copy
-                  >
-                      Logins for your user will only be allowed from whitelisted IPs. This setting is currently deprecated, and cannot be enabled.
-                      If you disable this setting, you will not be able to re-enable it.
-                  </Typography>
-                  {generalError && <Notice error text={generalError} />}
-                  <FormControl fullWidth>
-                      <FormControlLabel
-                          label={ipWhitelistingToggle ? "Enabled" : "Disabled"}
-                          control={
-                          <Toggle
-                              checked={ipWhitelistingToggle}
-                              onChange={this.toggleIpWhitelisting}
-                          />
-                          }
-                      />
-                  </FormControl>
-                  <ActionsPanel>
-                      <Button
-                          type="primary"
-                          disabled={ipWhitelistingToggle}
-                          onClick={this.onSubmit}
-                          loading={submitting}
-                          data-qa-confirm
-                      >
-                          Confirm
-                      </Button>
-                  </ActionsPanel>
-              </Paper>
-          </React.Fragment>
-      )
+    return (
+      <React.Fragment>
+        <Paper className={classes.root}>
+          <Typography
+              variant="title"
+              className={classes.title}
+              data-qa-title
+          >
+              Account Security
+          </Typography>
+          <Typography
+              variant="body1"
+              data-qa-copy
+          >
+              Logins for your user will only be allowed from whitelisted IPs. This setting is currently deprecated, and cannot be enabled.
+              If you disable this setting, you will not be able to re-enable it.
+          </Typography>
+          {generalError && <Notice error text={generalError} />}
+          <FormControl fullWidth>
+              <FormControlLabel
+                  label={ipWhitelistingToggle ? "Enabled" : "Disabled"}
+                  control={
+                  <Toggle
+                      checked={ipWhitelistingToggle}
+                      onChange={this.toggleIpWhitelisting}
+                  />
+                  }
+              />
+          </FormControl>
+          <ActionsPanel>
+            <Button
+              type="primary"
+              disabled={ipWhitelistingToggle}
+              onClick={this.onSubmit}
+              loading={submitting}
+              data-qa-confirm
+            >
+              Confirm
+            </Button>
+          </ActionsPanel>
+        </Paper>
+      </React.Fragment>
+    )
   }
 }
 
