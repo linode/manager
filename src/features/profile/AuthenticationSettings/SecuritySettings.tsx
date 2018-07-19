@@ -12,8 +12,6 @@ import {
 } from '@material-ui/core/styles';  
 import Typography from '@material-ui/core/Typography';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
 import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';
 import { updateProfile } from 'src/services/profile';
@@ -40,7 +38,6 @@ interface Props {
 
 interface State {
   errors?: Linode.ApiFieldError[];
-  submitting: boolean;
   ipWhitelistingToggle: boolean;
 }
 
@@ -54,7 +51,6 @@ export class SecuritySettings extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
   state: State = {
     errors: undefined,
-    submitting: false,
     ipWhitelistingToggle: true,
   }
 
@@ -67,14 +63,14 @@ export class SecuritySettings extends React.Component<CombinedProps, State> {
   }
 
   toggleIpWhitelisting = () => {
-    this.setState(set(L.ipWhitelistingToggle, !this.state.ipWhitelistingToggle))
+    this.setState(set(L.ipWhitelistingToggle, !this.state.ipWhitelistingToggle), this.onSubmit);
   }
 
   onSubmit = () => {
     const { ipWhitelistingToggle } = this.state;
     const { onSuccess } = this.props;
     if (ipWhitelistingToggle) { return; }
-    this.setState({ errors: undefined, submitting: true });
+    this.setState({ errors: undefined, });
 
     // This feature can only be disabled.
     updateProfile({ ip_whitelist_enabled: false, })
@@ -82,27 +78,23 @@ export class SecuritySettings extends React.Component<CombinedProps, State> {
         onSuccess();
         this.props.updateProfile(response);
         if (this.mounted) {
-            this.setState({
-              submitting: false,
-              errors: undefined,
-            })
+            this.setState({ errors: undefined, })
         }
       })
       .catch((error) => {
         if (!this.mounted) { return; }
         const fallbackError = [{ reason: 'An unexpected error occured.' }];
         this.setState({
-            submitting: false,
-            errors: pathOr(fallbackError, ['response', 'data', 'errors'], error),
+          errors: pathOr(fallbackError, ['response', 'data', 'errors'], error),
         }, () => {
-            scrollErrorIntoView();
+          scrollErrorIntoView();
         })
       });
   };
 
   render() {
     const { classes, } = this.props;
-    const { errors, ipWhitelistingToggle, submitting } = this.state;
+    const { errors, ipWhitelistingToggle } = this.state;
     const hasErrorFor = getAPIErrorFor({}, errors);
     const generalError = hasErrorFor('none');
 
@@ -110,42 +102,31 @@ export class SecuritySettings extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <Paper className={classes.root}>
           <Typography
-              variant="title"
-              className={classes.title}
-              data-qa-title
+            variant="title"
+            className={classes.title}
+            data-qa-title
           >
-              Account Security
+            Account Security
           </Typography>
           <Typography
-              variant="body1"
-              data-qa-copy
+            variant="body1"
+            data-qa-copy
           >
-              Logins for your user will only be allowed from whitelisted IPs. This setting is currently deprecated, and cannot be enabled.
-              If you disable this setting, you will not be able to re-enable it.
+            Logins for your user will only be allowed from whitelisted IPs. This setting is currently deprecated, and cannot be enabled.
+            If you disable this setting, you will not be able to re-enable it.
           </Typography>
           {generalError && <Notice error text={generalError} />}
           <FormControl fullWidth>
-              <FormControlLabel
-                  label={ipWhitelistingToggle ? "Enabled" : "Disabled"}
-                  control={
-                  <Toggle
-                      checked={ipWhitelistingToggle}
-                      onChange={this.toggleIpWhitelisting}
-                  />
-                  }
-              />
+            <FormControlLabel
+              label={ipWhitelistingToggle ? "Enabled" : "Disabled"}
+              control={
+                <Toggle
+                  checked={ipWhitelistingToggle}
+                  onChange={this.toggleIpWhitelisting}
+                />
+              }
+            />
           </FormControl>
-          <ActionsPanel>
-            <Button
-              type="primary"
-              disabled={ipWhitelistingToggle}
-              onClick={this.onSubmit}
-              loading={submitting}
-              data-qa-confirm
-            >
-              Confirm
-            </Button>
-          </ActionsPanel>
         </Paper>
       </React.Fragment>
     )

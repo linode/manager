@@ -21,14 +21,4 @@ describe('Security settings (IP whitelisting) form', () => {
   it('should render', () => {
     expect(component).toHaveLength(1);
   });
-
-  it('the confirm button should be disabled', () => {
-    expect(component.find('[data-qa-confirm]').props().disabled).toBeTruthy();
-  });
-
-  it('the confirm button should be enabled when the toggle is set to "Disabled"', () => {
-    component.setState({ ipWhitelistingToggle: false });
-    component.update();
-    expect(component.find('[data-qa-confirm]').props().disabled).toBeFalsy();
-  });
 });
