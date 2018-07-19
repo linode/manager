@@ -1,2 +1,4 @@
-import Button from './Button';
-export default Button;
+export {
+  default,
+  Props as ButtonProps,
+} from './Button';

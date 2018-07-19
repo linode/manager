@@ -19,23 +19,23 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
 };
 
 interface Props {
+  count: number;
+  page: number;
+  pageSize: number;
   handlePageChange: (page: number) => void;
   handleSizeChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
-  pageSize: number;
-  pages: number | number[];
-  page: number;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const PaginationFooter: React.StatelessComponent<CombinedProps> = (props) => {
   const {
+    classes,
+    count,
+    page,
+    pageSize,
     handlePageChange,
     handleSizeChange,
-    pageSize,
-    pages,
-    page,
-    classes,
   } = props;
 
   return (
@@ -47,9 +47,9 @@ const PaginationFooter: React.StatelessComponent<CombinedProps> = (props) => {
       <Grid item>
         <PaginationControls
           onClickHandler={handlePageChange}
-          pages={pages}
-          currentPage={page}
-          range={5}
+          page={page}
+          count={count}
+          pageSize={pageSize}
         />
       </Grid>
       <Grid item>
