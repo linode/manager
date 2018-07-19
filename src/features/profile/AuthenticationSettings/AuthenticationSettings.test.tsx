@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { AuthenticationSettings } from './AuthenticationSettings';
 
-describe('Email change form', () => {
+describe('Authentication settings profile tab', () => {
   const update = jest.fn();
 
   const component = shallow(

@@ -1,17 +1,15 @@
 import { lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Paper from '@material-ui/core/Paper';
 import {
     StyleRulesCallback,
     Theme,
     WithStyles,
     withStyles,
 } from '@material-ui/core/styles';  
-
-
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -41,112 +39,117 @@ interface Props {
 }
 
 interface State {
-    errors?: Linode.ApiFieldError[];
-    submitting: boolean;
-    ipWhitelistingToggle: boolean;
+  errors?: Linode.ApiFieldError[];
+  submitting: boolean;
+  ipWhitelistingToggle: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
+const L = {
+  ipWhitelistingToggle: lensPath(['ipWhitelistingToggle']),
+};
+
 export class SecuritySettings extends React.Component<CombinedProps, State> {
-    mounted: boolean = false;
-    state: State = {
-        errors: undefined,
-        submitting: false,
-        ipWhitelistingToggle: true,
-    }
+  mounted: boolean = false;
+  state: State = {
+    errors: undefined,
+    submitting: false,
+    ipWhitelistingToggle: true,
+  }
 
-    componentDidMount () {
-        this.mounted = true;
-    }
+  componentDidMount () {
+    this.mounted = true;
+  }
 
-    componentWillUnmount () {
-        this.mounted = false;
-    }
+  componentWillUnmount () {
+    this.mounted = false;
+  }
 
-    toggleIpWhitelisting = () => {
-        this.setState(set(lensPath(['ipWhitelistingToggle']), !this.state.ipWhitelistingToggle))
-    }
+  toggleIpWhitelisting = () => {
+    this.setState(set(L.ipWhitelistingToggle, !this.state.ipWhitelistingToggle))
+  }
 
-    onSubmit = () => {
-        const { ipWhitelistingToggle } = this.state;
-        const { onSuccess } = this.props;
-        if (ipWhitelistingToggle) { return; }
-        this.setState({ errors: undefined, submitting: true });
+  onSubmit = () => {
+    const { ipWhitelistingToggle } = this.state;
+    const { onSuccess } = this.props;
+    if (ipWhitelistingToggle) { return; }
+    this.setState({ errors: undefined, submitting: true });
 
-        // This feature can only be disabled.
-        updateProfile({ ip_whitelist_enabled: false, })
-            .then((response) => {
-                onSuccess();
-                this.props.updateProfile(response);
-                if (this.mounted) {
-                    this.setState({
-                        submitting: false,
-                        errors: undefined,
-                    })
-                }
+    // This feature can only be disabled.
+    updateProfile({ ip_whitelist_enabled: false, })
+      .then((response) => {
+        onSuccess();
+        this.props.updateProfile(response);
+        if (this.mounted) {
+            this.setState({
+              submitting: false,
+              errors: undefined,
             })
-            .catch((error) => {
-                const fallbackError = [{ reason: 'An unexpected error occured.' }];
-                this.setState({
-                    submitting: false,
-                    errors: pathOr(fallbackError, ['response', 'data', 'errors'], error),
-                }, () => {
-                    scrollErrorIntoView();
-                })
-            });
-    };
+        }
+      })
+      .catch((error) => {
+        if (!this.mounted) { return; }
+        const fallbackError = [{ reason: 'An unexpected error occured.' }];
+        this.setState({
+            submitting: false,
+            errors: pathOr(fallbackError, ['response', 'data', 'errors'], error),
+        }, () => {
+            scrollErrorIntoView();
+        })
+      });
+  };
 
-    render() {
-        const { classes, } = this.props;
-        const { errors, ipWhitelistingToggle, submitting } = this.state;
-        const hasErrorFor = getAPIErrorFor({}, errors);
-        const generalError = hasErrorFor('none');
+  render() {
+      const { classes, } = this.props;
+      const { errors, ipWhitelistingToggle, submitting } = this.state;
+      const hasErrorFor = getAPIErrorFor({}, errors);
+      const generalError = hasErrorFor('none');
 
-        return (
-            <React.Fragment>
-                <Paper className={classes.root}>
-                    <Typography
-                        variant="title"
-                        className={classes.title}
-                        data-qa-title
-                    >
-                        Account Security
-                    </Typography>
-                    <Typography
-                        variant="body1"
-                        data-qa-copy
-                    >
-                        Logins for your user will only be allowed from whitelisted IPs. This setting is currently deprecated, and cannot be enabled.
-                        If you disable this setting, you will not be able to re-enable it.
-                    </Typography>
-                    {generalError && <Notice error text={generalError} />}
-                    <FormControl fullWidth>
-                        <FormControlLabel
-                            label={ipWhitelistingToggle ? "Enabled" : "Disabled"}
-                            control={
-                            <Toggle
-                                checked={ipWhitelistingToggle}
-                                onChange={this.toggleIpWhitelisting}
-                            />
-                            }
-                        />
-                    </FormControl>
-                    <ActionsPanel>
-                        <Button
-                            type="primary"
-                            disabled={ipWhitelistingToggle}
-                            onClick={this.onSubmit}
-                            loading={submitting}
-                            data-qa-confirm
-                        >
-                            Confirm
-                        </Button>
-                    </ActionsPanel>
-                </Paper>
-            </React.Fragment>
-        )
-    }
+      return (
+          <React.Fragment>
+              <Paper className={classes.root}>
+                  <Typography
+                      variant="title"
+                      className={classes.title}
+                      data-qa-title
+                  >
+                      Account Security
+                  </Typography>
+                  <Typography
+                      variant="body1"
+                      data-qa-copy
+                  >
+                      Logins for your user will only be allowed from whitelisted IPs. This setting is currently deprecated, and cannot be enabled.
+                      If you disable this setting, you will not be able to re-enable it.
+                  </Typography>
+                  {generalError && <Notice error text={generalError} />}
+                  <FormControl fullWidth>
+                      <FormControlLabel
+                          label={ipWhitelistingToggle ? "Enabled" : "Disabled"}
+                          control={
+                          <Toggle
+                              checked={ipWhitelistingToggle}
+                              onChange={this.toggleIpWhitelisting}
+                          />
+                          }
+                      />
+                  </FormControl>
+                  <ActionsPanel>
+                      <Button
+                          type="primary"
+                          disabled={ipWhitelistingToggle}
+                          onClick={this.onSubmit}
+                          loading={submitting}
+                          data-qa-confirm
+                      >
+                          Confirm
+                      </Button>
+                  </ActionsPanel>
+              </Paper>
+          </React.Fragment>
+      )
+  }
 }
 
 const styled = withStyles(styles, { withTheme: true });
