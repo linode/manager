@@ -33,7 +33,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 interface Props {
   username: string;
   email: string;
-  updateProfile: (v: Linode.Profile) => void;
+  updateProfile: (v: Partial<Linode.Profile>) => void;
 }
 
 interface State {

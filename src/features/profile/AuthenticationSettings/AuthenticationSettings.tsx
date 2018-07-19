@@ -29,7 +29,7 @@ interface Props { }
 interface ConnectedProps {
   loading: boolean;
   ipWhitelisting: boolean;
-  updateProfile: (v: Linode.Profile) => void;
+  updateProfile: (v: Partial<Linode.Profile>) => void;
 }
 
 interface State {
