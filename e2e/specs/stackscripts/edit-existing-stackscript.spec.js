@@ -63,6 +63,10 @@ describe('StackScript - Edit Existing', () => {
         assertOriginalDisplays();
     });
 
+    it('should remove all compatible images', () => {
+        ConfigureStackScripts.removeImage(stackConfig.images[0]);
+    });
+
     it('should update the config fields of the stackscript with new configuration', () => {
         ConfigureStackScripts.configure(newConfig);
     });

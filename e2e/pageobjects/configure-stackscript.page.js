@@ -117,6 +117,16 @@ class ConfigureStackScript extends Page {
         expect(myStackscript[0].$(ListStackScripts.stackScriptActionMenu.selector).isVisible()).toBe(true);
         ListStackScripts.waitForNotice(`${config.label} successfully ${update ? 'updated' : 'created'}`);
     }
+
+    removeImage(imageName) {
+        this.imageTags
+            .filter(i => i.getText().includes(imageName))
+            .forEach(i => {
+                i.$('svg').click();
+                i.waitForVisible(constants.wait.normal, true);
+            });
+
+    }
 }
     
 export default new ConfigureStackScript();
