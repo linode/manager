@@ -86,6 +86,7 @@ export class SecuritySettings extends React.Component<CombinedProps, State> {
         const fallbackError = [{ reason: 'An unexpected error occured.' }];
         this.setState({
           errors: pathOr(fallbackError, ['response', 'data', 'errors'], error),
+          ipWhitelistingToggle: true,
         }, () => {
           scrollErrorIntoView();
         })
@@ -108,6 +109,7 @@ export class SecuritySettings extends React.Component<CombinedProps, State> {
           >
             Account Security
           </Typography>
+          {generalError && <Notice error text={generalError} />}
           <Typography
             variant="body1"
             data-qa-copy
@@ -115,7 +117,6 @@ export class SecuritySettings extends React.Component<CombinedProps, State> {
             Logins for your user will only be allowed from whitelisted IPs. This setting is currently deprecated, and cannot be enabled.
             If you disable this setting, you will not be able to re-enable it.
           </Typography>
-          {generalError && <Notice error text={generalError} />}
           <FormControl fullWidth>
             <FormControlLabel
               label={ipWhitelistingToggle ? "Enabled" : "Disabled"}
