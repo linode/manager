@@ -1,5 +1,6 @@
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
@@ -11,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 
 import UserIcon from 'src/assets/icons/user.svg';
 import AddNewLink from 'src/components/AddNewLink';
+import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
@@ -21,29 +23,26 @@ import { getGravatarUrl } from 'src/utilities/gravatar';
 
 import ActionMenu from './UsersActionMenu';
 
-type ClassNames = 'title' | 'avatarColumn' | 'avatarWrapper' | 'avatar';
+type ClassNames = 'title' | 'avatar' | 'userButton';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   title: {
     marginBottom: theme.spacing.unit * 2,
   },
-  avatarColumn: {
-    width: '1%',
-  },
-  avatarWrapper: {
-    borderRadius: '50%',
-    width: '46px',
-    height: '46px',
-    [theme.breakpoints.down('sm')]: {
-      margin: 0,
-      width: '40px',
-      height: '40px',
-    }
+  userButton: {
+    padding: 8,
+    borderRadius: 30,
+    fontWeight: 400,
+    color: theme.palette.text.primary,
+    '&:hover': {
+      color: theme.palette.primary.main,
+    },
   },
   avatar: {
     borderRadius: '50%',
-    width: '100%',
-    height: '100%',
+    width: 50,
+    height: 50,
+    marginRight: theme.spacing.unit * 2,
   },
 });
 
@@ -129,25 +128,26 @@ class UsersLanding extends React.Component<CombinedProps, State> {
     const { classes } = this.props;
     return (
       <TableRow key={user.username}>
-        <TableCell className={classes.avatarColumn}>
-          <div className={classes.avatarWrapper}>
-            {user.gravatarUrl !== 'not found'
-              ? <img
-                alt={`user ${user.username}'s avatar`}
-                src={user.gravatarUrl}
-                className={classes.avatar}
-              />
-              : <UserIcon className={classes.avatar} />
-            }
-          </div>
-        </TableCell>
         <TableCell>
-          {user.username}
+          <Link to={`/users/${user.username}`} title={user.username}>
+            <Button className={classes.userButton} tabIndex={-1}>
+              {user.gravatarUrl !== 'not found'
+                  ? <img
+                    alt={`user ${user.username}'s avatar`}
+                    src={user.gravatarUrl}
+                    className={classes.avatar}
+                  />
+                  : <UserIcon className={classes.avatar} />
+                }
+              {user.username}
+            </Button>
+          </Link>
         </TableCell>
         <TableCell>{user.email}</TableCell>
         <TableCell>{user.restricted ? 'Restricted' : 'Unrestricted'}</TableCell>
         <TableCell>
           <ActionMenu
+            username={user.username}
             onProfile={this.onProfile}
             onPermissions={this.onPermissions}
             onDelete={this.onDelete}
@@ -195,7 +195,6 @@ class UsersLanding extends React.Component<CombinedProps, State> {
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <TableCell></TableCell>
                       <TableCell>Username</TableCell>
                       <TableCell>Email Address</TableCell>
                       <TableCell>Restricted</TableCell>
