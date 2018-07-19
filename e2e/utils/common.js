@@ -82,6 +82,12 @@ export const apiDeleteAllDomains = () => {
     domains.data.forEach(domain => browser.removeDomain(token, domain.id));
 }
 
+export const apiDeleteMyStackScripts = () => {
+    const token = readToken();
+    const stackScripts = browser.getMyStackScripts(token);
+    stackScripts.data.forEach(script => browser.removeStackScript(token, script.id));
+}
+
 export const createNodeBalancer = () => {
     const token = readToken();
     const linode = apiCreateLinode();

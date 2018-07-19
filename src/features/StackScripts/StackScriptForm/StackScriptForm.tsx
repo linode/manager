@@ -182,6 +182,7 @@ export class StackScriptForm extends React.Component<CombinedProps> {
                 errorText={hasErrorFor('label')}
                 tooltipText="Select a StackScript Label"
                 className={classes.labelField}
+                data-qa-stackscript-label
               />
               <TextField
                 multiline
@@ -191,6 +192,7 @@ export class StackScriptForm extends React.Component<CombinedProps> {
                 onChange={description.handler}
                 value={description.value}
                 tooltipText="Give your StackScript a description"
+                data-qa-stackscript-description
               />
               <FormControl fullWidth>
                 <InputLabel
@@ -211,12 +213,14 @@ export class StackScriptForm extends React.Component<CombinedProps> {
                   tooltipText='Select which images are compatible with this StackScript'
                   error={Boolean(hasErrorFor('images'))}
                   errorText={hasErrorFor('images')}
+                  data-qa-stackscript-target-select
                 >
                   <MenuItem disabled key="none" value="none">Select Compatible Images</MenuItem>,
                 {filterImagesByDeprecationStatus(images.available, false).map(image =>
                     <MenuItem
                       key={image.id}
                       value={image.id}
+                      data-qa-stackscript-image={image.id}
                     >
                       {image.label}
                     </MenuItem>,
@@ -273,6 +277,7 @@ export class StackScriptForm extends React.Component<CombinedProps> {
             errorText={hasErrorFor('script')}
             required
             InputProps={{ className: classes.scriptTextarea }}
+            data-qa-stackscript-script
           />
           <TextField
             multiline
@@ -282,13 +287,14 @@ export class StackScriptForm extends React.Component<CombinedProps> {
             onChange={revision.handler}
             value={revision.value}
             InputProps={{ className: classes.revisionTextarea }}
+            data-qa-stackscript-revision
           />
           <ActionsPanel style={{ paddingBottom: 0 }}>
             <Button
-              data-qa-confirm-cancel
               onClick={onSubmit}
               type="primary"
               loading={isSubmitting}
+              data-qa-save
             >
               Save
             </Button>
@@ -296,7 +302,7 @@ export class StackScriptForm extends React.Component<CombinedProps> {
               onClick={onCancel}
               type="secondary"
               className="cancel"
-              data-qa-cancel-cancel
+              data-qa-cancel
             >
               Cancel
             </Button>

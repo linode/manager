@@ -19,6 +19,7 @@ exports.constants = {
 		managed: '/managed',
 		longview: '/longview',
 		stackscripts: '/stackscripts',
+		createStackScript: '/stackscripts/create',
 		images: '/images',
 		account: {
 			billing: '/billing',

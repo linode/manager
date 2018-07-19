@@ -8,6 +8,8 @@ const {
     removeNodebalancer,
     getDomains,
     removeDomain,
+    getMyStackScripts,
+    removeStackScript,
 } = require('../setup/setup');
 
 const {
@@ -105,6 +107,16 @@ exports.browserCommands = () => {
 
     browser.addCommand('removeNodeBalancer', function async(token, nodeBalancerId) {
         return removeNodebalancer(token, nodeBalancerId)
+            .then(res => res);
+    });
+
+    browser.addCommand('getMyStackScripts', function async(token) {
+        return getMyStackScripts(token)
+            .then(res => res);
+    });
+
+    browser.addCommand('removeStackScript', function async(token, id) {
+        return removeStackScript(token, id)
             .then(res => res);
     });
 

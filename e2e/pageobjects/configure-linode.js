@@ -107,7 +107,7 @@ class ConfigureLinode extends Page {
 
     stackScriptTableDisplay() {
         this.stackScriptTableHeader.waitForVisible();
-        expect(this.stackScriptTableHeader.getText()).toBe('StackScripts');
+        expect(this.stackScriptTableHeader.getText()).toBe('StackScript');
         expect(this.stackScriptDeploysHeader.getText()).toBe('Active Deploys');
         expect(this.stackScriptRevisionsHeader.getText()).toBe('Last Revision');
         expect(this.stackScriptCompatibleImagesHeader.getText()).toBe('Compatible Images');
