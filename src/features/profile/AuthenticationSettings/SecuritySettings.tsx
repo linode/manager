@@ -5,10 +5,10 @@ import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Paper from '@material-ui/core/Paper';
 import {
-    StyleRulesCallback,
-    Theme,
-    WithStyles,
-    withStyles,
+  StyleRulesCallback,
+  Theme,
+  WithStyles,
+  withStyles,
 } from '@material-ui/core/styles';  
 import Typography from '@material-ui/core/Typography';
 
@@ -78,7 +78,7 @@ export class SecuritySettings extends React.Component<CombinedProps, State> {
         onSuccess();
         this.props.updateProfile(response);
         if (this.mounted) {
-            this.setState({ errors: undefined, })
+          this.setState({ errors: undefined, })
         }
       })
       .catch((error) => {
