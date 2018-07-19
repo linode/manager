@@ -239,8 +239,8 @@ export class App extends React.Component<CombinedProps, State> {
                           <Placeholder title="Longview" />} />
                         <Route path="/images" component={Images} />
                         <Route path="/stackscripts" component={StackScripts} />
-                        <Route exact path="/users" component={Users} />
                         <Route exact path="/billing" component={Account} />
+                        <Route path="/users" component={Users} />
                         <Route exact path="/support" render={() =>
                           <Placeholder title="Support" />} />
                         <Route path="/profile" component={Profile} />
