@@ -31,6 +31,7 @@ interface ConnectedProps {
   loading: boolean;
   ipWhitelisting: boolean;
   twoFactor: boolean;
+  username: string;
   updateProfile: (v: Partial<Linode.Profile>) => void;
 }
 
@@ -50,7 +51,7 @@ export class AuthenticationSettings extends React.Component<CombinedProps, State
   }
 
   render() {
-    const { loading, ipWhitelisting, twoFactor, updateProfile } = this.props;
+    const { loading, ipWhitelisting, twoFactor, username, updateProfile } = this.props;
     const { success } = this.state;
 
     return (
@@ -60,7 +61,7 @@ export class AuthenticationSettings extends React.Component<CombinedProps, State
           <React.Fragment>
             <TwoFactor
               twoFactor={twoFactor}
-              updateProfile={updateProfile}
+              username={username}
             />
             {ipWhitelisting && 
               <SecuritySettings 
@@ -95,6 +96,7 @@ const mapStateToProps = (state: Linode.AppState) => {
   return {
     ipWhitelisting: data.ip_whitelist_enabled,
     twoFactor: data.two_factor_auth,
+    username: data.username,
   };
 };
 

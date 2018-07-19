@@ -10,6 +10,8 @@ describe('Authentication settings profile tab', () => {
     <AuthenticationSettings 
       loading={false} 
       ipWhitelisting={true}
+      twoFactor={true}
+      username={'username'}
       updateProfile={update}
       classes={{
         root: '',
