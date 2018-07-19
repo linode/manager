@@ -226,7 +226,6 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
   }
 
   resetAllFields = () => {
-    console.log(this.state.selectedImages);
     this.handleCloseDialog();
     this.setState({
       ...this.defaultStackScriptValues,
