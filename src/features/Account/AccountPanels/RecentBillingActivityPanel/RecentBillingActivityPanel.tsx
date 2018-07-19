@@ -10,6 +10,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import ExpansionPanel from 'src/components/ExpansionPanel';
+import PaginationFooter from 'src/components/PaginationFooter';
 import { getInvoices, getPayments } from 'src/services/account';
 
 type BillingItem = Linode.Invoice | Linode.Payment;
@@ -50,22 +51,51 @@ interface ConnectedProps {
 }
 
 interface State {
-  items: BillingItemWithDate[];
-  errors?: Linode.ApiFieldError[];
-  loading: boolean;
+  invoices: {
+    errors?: Linode.ApiFieldError[];
+    loading: boolean;
+    data?: BillingItemWithDate[],
+    page: number;
+    pages: number;
+    results: number;
+    perPage: number;
+  },
+
+  payments: {
+    errors?: Linode.ApiFieldError[];
+    loading: boolean;
+    data?: BillingItemWithDate[],
+    page: number;
+    pages: number;
+    results: number;
+    perPage: number;
+  },
+
 }
 
 type CombinedProps = Props & ConnectedProps & WithStyles<ClassNames>;
 
 class RecentBillingActivityPanel extends React.Component<CombinedProps, State> {
   state: State = {
-    loading: true,
-    items: [],
+    invoices: {
+      loading: true,
+      page: 1,
+      pages: 1,
+      results: 1,
+      perPage: 25,
+    },
+    payments: {
+      loading: true,
+      page: 1,
+      pages: 1,
+      results: 1,
+      perPage: 25,
+    },
   };
 
   mounted: boolean = false;
 
-  addToItems: (incoming: BillingItem[]) => State['items'] =
+  addToItems: (incoming: BillingItem[]) => BillingItemWithDate[] =
     compose(
 
       /** Sort in descending/revers chronological order. */
@@ -85,49 +115,78 @@ class RecentBillingActivityPanel extends React.Component<CombinedProps, State> {
       }),
     );
 
-  requestInvoices = (initial: boolean) =>
-    getInvoices()
-      .then(response => response.data)
-      .catch((response) => {
-        const fallbackError = [{ reason: 'Unable to retrieve invoices.' }];
-        this.setState({
-          errors: [...this.state.errors || [], pathOr(fallbackError, ['response', 'data', 'errors'], response)],
-        })
-      })
+  requestInvoices = (page: number = 1) => {
+    this.setState({
+      invoices: {
+        ...this.state.invoices,
+        loading: true,
+        errors: undefined,
+      },
+    });
 
-  requestPayments = (initial: boolean) =>
-    getPayments()
-      .then(response => response.data)
-      .catch((response) => {
-        const fallbackError = [{ reason: 'Unable to retrieve payments.' }];
+    return getInvoices({ page_size: this.state.invoices.perPage, page })
+      .then(({ data, page, pages, results }) => {
         this.setState({
-          errors: [...this.state.errors || [], pathOr(fallbackError, ['response', 'data', 'errors'], response)],
-        })
-      })
-
-  requestBilling = (initial: boolean) => {
-    this.setState({ loading: true, errors: undefined });
-    Promise.all([
-      this.requestInvoices(initial),
-      this.requestPayments(initial),
-    ])
-      .then(([invoices, payments]) => {
-        this.setState({
-          items: this.addToItems([
-            ...(invoices || []),
-            ...(payments || []),
-          ]),
-          loading: false,
+          invoices: {
+            ...this.state.invoices,
+            loading: false,
+            page,
+            pages,
+            results,
+            data: this.addToItems(data),
+          },
         });
       })
       .catch((response) => {
-        this.setState({ loading: false });
+        const fallbackError = [{ reason: 'Unable to retrieve invoices.' }];
+
+        this.setState({
+          invoices: {
+            ...this.state.invoices,
+            errors: pathOr(fallbackError, ['response', 'data', 'errors'], response),
+          },
+        })
+      });
+  }
+
+  requestPayments = (page: number = 1) => {
+    this.setState({
+      payments: {
+        ...this.state.payments,
+        loading: true,
+        errors: undefined,
+      },
+    });
+
+    return getPayments({ page_size: this.state.payments.perPage, page })
+      .then(({ data, page, pages, results }) => {
+        this.setState({
+          payments: {
+            ...this.state.payments,
+            loading: false,
+            page,
+            pages,
+            results,
+            data: this.addToItems(data),
+          },
+        });
       })
+      .catch((response) => {
+        const fallbackError = [{ reason: 'Unable to retrieve payments.' }];
+
+        this.setState({
+          payments: {
+            ...this.state.payments,
+            errors: pathOr(fallbackError, ['response', 'data', 'errors'], response),
+          },
+        })
+      });
   }
 
   componentDidMount() {
     this.mounted = true;
-    this.requestBilling(true);
+    this.requestInvoices();
+    this.requestPayments();
   }
 
   componentWillUnmount() {
@@ -135,10 +194,23 @@ class RecentBillingActivityPanel extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { items } = this.state;
+    const {
+      payments: {
+        data: paymentsData,
+        page: paymentsPage,
+        results: paymentsResults,
+        perPage: paymentsPerPage,
+      },
+      invoices: {
+        data: invoicesData,
+        page: invoicesPage,
+        results: invoicesResults,
+        perPage: invoicesPerPage,
+      },
+    } = this.state;
 
-    return (
-      <ExpansionPanel defaultExpanded heading="Recent Billing Activity">
+    return [
+      <ExpansionPanel defaultExpanded heading="Recent Payments" key="payments">
         <Table>
           <TableHead>
             <TableRow>
@@ -149,25 +221,61 @@ class RecentBillingActivityPanel extends React.Component<CombinedProps, State> {
           </TableHead>
           <TableBody>
             {
-              items.length === 0
-                ? this.renderEmptyState()
-                : this.renderItems(items)
+              paymentsData && paymentsData.length > 0
+                ? this.renderItems(paymentsData)
+                : this.renderEmptyState()
             }
           </TableBody>
         </Table>
+        {paymentsData && paymentsData.length > 0 &&
+          <PaginationFooter
+            count={paymentsResults}
+            page={paymentsPage}
+            pageSize={paymentsPerPage}
+            handlePageChange={this.handlePaymentsPageChange}
+            handleSizeChange={this.updatePaymentsPerPage}
+          />
+        }
+      </ExpansionPanel>,
+      <ExpansionPanel defaultExpanded heading="Recent Invoices" key="invoices">
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Date Created</TableCell>
+              <TableCell>Description</TableCell>
+              <TableCell>Amount</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {
+              invoicesData && invoicesData.length > 0
+                ? this.renderItems(invoicesData)
+                : this.renderEmptyState()
+            }
+          </TableBody>
+        </Table>
+        {invoicesData && invoicesData.length > 0 &&
+          <PaginationFooter
+            count={invoicesResults}
+            page={invoicesPage}
+            pageSize={invoicesPerPage}
+            handlePageChange={this.handleInvoicesPageChange}
+            handleSizeChange={this.updateInvoicesPerPage}
+          />
+        }
       </ExpansionPanel>
-    );
+    ];
   }
 
   renderEmptyState = () => (
     <React.Fragment>
       <TableRow>
-        <TableCell colSpan={3} style={{ textAlign: 'center' }}>No billing history to display.</TableCell>
+        <TableCell colSpan={3} style={{ textAlign: 'center' }}>No items to display.</TableCell>
       </TableRow>
     </React.Fragment>
   );
 
-  renderItems = (items: State['items']) => items.map(this.renderRow);
+  renderItems = (items: BillingItemWithDate[]) => items.map(this.renderRow);
 
   renderRow = (item: BillingItemWithDate) => {
     if (isInvoice(item)) {
@@ -192,6 +300,25 @@ class RecentBillingActivityPanel extends React.Component<CombinedProps, State> {
 
     return null;
   };
+
+  handlePaymentsPageChange = (page: number) => this.requestPayments(page);
+
+  updatePaymentsPerPage = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    this.setState(
+      { payments: { ...this.state.payments, perPage: +e.target.value } },
+      () => { this.requestPayments() },
+    );
+  }
+
+
+  handleInvoicesPageChange = (page: number) => this.requestInvoices(page);
+
+  updateInvoicesPerPage = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    this.setState(
+      { invoices: { ...this.state.invoices, perPage: +e.target.value } },
+      () => { this.requestInvoices() },
+    );
+  }
 }
 
 const isInvoice = (item: BillingItemWithDate): item is InvoiceWithDate => {
@@ -214,3 +341,4 @@ const enhanced = compose(
 );
 
 export default enhanced(RecentBillingActivityPanel);
+

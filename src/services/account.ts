@@ -1,5 +1,5 @@
 import { API_ROOT } from 'src/constants';
-import Request, { setData, setMethod, setURL, setXFilter } from 'src/services';
+import Request, { setData, setMethod, setParams, setURL, setXFilter } from 'src/services';
 
 type Page<T> = Linode.ResourcePage<T>;
 type Event = Linode.Event;
@@ -86,16 +86,20 @@ export const getAccountInfo = () =>
   )
     .then(response => response.data);
 
-export const getPayments = () =>
+
+
+export const getPayments = (pagination: Linode.PaginationOptions = {}) =>
   Request<Page<Linode.Payment>>(
     setURL(`${API_ROOT}/account/payments`),
     setMethod('GET'),
+    setParams(pagination),
   )
     .then(response => response.data);
 
-export const getInvoices = () =>
+export const getInvoices = (pagination: Linode.PaginationOptions = {}) =>
   Request<Page<Linode.Invoice>>(
     setURL(`${API_ROOT}/account/invoices`),
     setMethod('GET'),
+    setParams(pagination),
   )
     .then(response => response.data);
