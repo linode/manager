@@ -25,4 +25,18 @@ namespace Linode {
     expiry: string;
     last_four: string;
   }
+
+  export interface Invoice {
+    id: number;
+    date: string;
+    label: string;
+    total: string | number;
+  }
+
+  export interface Payment {
+    id: number;
+    date: string;
+    usd: string | number;
+  }
+
 }

@@ -85,3 +85,17 @@ export const getAccountInfo = () =>
     setMethod('GET'),
   )
     .then(response => response.data);
+
+export const getPayments = () =>
+  Request<Page<Linode.Payment>>(
+    setURL(`${API_ROOT}/account/payments`),
+    setMethod('GET'),
+  )
+    .then(response => response.data);
+
+export const getInvoices = () =>
+  Request<Page<Linode.Invoice>>(
+    setURL(`${API_ROOT}/account/invoices`),
+    setMethod('GET'),
+  )
+    .then(response => response.data);
