@@ -10,6 +10,7 @@ import Notice from 'src/components/Notice';
 import { response } from 'src/store/reducers/resources';
 
 import SecuritySettings from './SecuritySettings';
+import TwoFactor from './TwoFactor';
 
 type ClassNames = 'root' | 'title';
 
@@ -29,6 +30,7 @@ interface Props { }
 interface ConnectedProps {
   loading: boolean;
   ipWhitelisting: boolean;
+  twoFactor: boolean;
   updateProfile: (v: Partial<Linode.Profile>) => void;
 }
 
@@ -48,7 +50,7 @@ export class AuthenticationSettings extends React.Component<CombinedProps, State
   }
 
   render() {
-    const { loading, ipWhitelisting, updateProfile } = this.props;
+    const { loading, ipWhitelisting, twoFactor, updateProfile } = this.props;
     const { success } = this.state;
 
     return (
@@ -56,6 +58,10 @@ export class AuthenticationSettings extends React.Component<CombinedProps, State
         {success && <Notice success text={success} />}
         {!loading &&
           <React.Fragment>
+            <TwoFactor
+              twoFactor={twoFactor}
+              updateProfile={updateProfile}
+            />
             {ipWhitelisting && 
               <SecuritySettings 
                 updateProfile={updateProfile}
@@ -88,12 +94,13 @@ const mapStateToProps = (state: Linode.AppState) => {
 
   return {
     ipWhitelisting: data.ip_whitelist_enabled,
+    twoFactor: data.two_factor_auth,
   };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
   {
-    updateProfile: (v: Linode.Profile) => response(['profile'], v),
+    updateProfile: (v: Partial<Linode.Profile>) => response(['profile'], v),
   },
   dispatch,
 );
