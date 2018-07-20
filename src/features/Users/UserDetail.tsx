@@ -69,7 +69,7 @@ interface State {
   profileSuccess?: boolean;
 }
 
-class Profile extends React.Component<CombinedProps> {
+class UserDetail extends React.Component<CombinedProps> {
   state: State = {
     gravatarUrl: 'not found',
     profileSaving: false,
@@ -292,4 +292,4 @@ const styled = withStyles(styles, { withTheme: true });
 
 export const connected = connect(mapStateToProps, mapDispatchToProps);
 
-export default connected(styled(reloadable(Profile)));
+export default connected(styled(reloadable(UserDetail)));
