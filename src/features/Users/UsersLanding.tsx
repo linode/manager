@@ -1,6 +1,6 @@
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
@@ -17,10 +17,12 @@ import CircleProgress from 'src/components/CircleProgress';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 import Table from 'src/components/Table';
 import { getUsers } from 'src/services/account';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 
+import CreateUserDrawer from './CreateUserDrawer';
 import ActionMenu from './UsersActionMenu';
 
 type ClassNames = 'title' | 'avatar' | 'userButton';
@@ -51,12 +53,16 @@ interface Props {}
 interface State {
   users?: Linode.User[];
   error?: Error;
+  createDrawerOpen: boolean;
+  newUsername?: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
 
 class UsersLanding extends React.Component<CombinedProps, State> {
-  state: State = { };
+  state: State = {
+    createDrawerOpen: false,
+  };
 
   static docs: Linode.Doc[] = [
     {
@@ -96,6 +102,16 @@ class UsersLanding extends React.Component<CombinedProps, State> {
       })
   }
 
+  addUser = (user: Linode.User) => {
+    if (this.state.users) {
+      this.setState({
+        users: [...this.state.users, user],
+        newUsername: user.username,
+      });
+      this.setUserAvatars();
+    }
+  }
+
   setUserAvatars = () => {
     if (!this.state.users) { return; }
     this.state.users.map((user, idx) => {
@@ -109,15 +125,15 @@ class UsersLanding extends React.Component<CombinedProps, State> {
   }
 
   openForCreate = () => {
-    return;
+    this.setState({
+      createDrawerOpen: true,
+    })
   }
 
-  onProfile = () => {
-    return;
-  }
-
-  onPermissions = () => {
-    return;
+  userCreateOnClose = () => {
+    this.setState({
+      createDrawerOpen: false,
+    })
   }
 
   onDelete = () => {
@@ -131,7 +147,8 @@ class UsersLanding extends React.Component<CombinedProps, State> {
         <TableCell>
           <Link to={`/users/${user.username}`} title={user.username}>
             <Button className={classes.userButton} tabIndex={-1}>
-              {user.gravatarUrl !== 'not found'
+              {(user.gravatarUrl !== 'not found'
+                && user.gravatarUrl !== undefined)
                   ? <img
                     alt={`user ${user.username}'s avatar`}
                     src={user.gravatarUrl}
@@ -148,8 +165,6 @@ class UsersLanding extends React.Component<CombinedProps, State> {
         <TableCell>
           <ActionMenu
             username={user.username}
-            onProfile={this.onProfile}
-            onPermissions={this.onPermissions}
             onDelete={this.onDelete}
           />
         </TableCell>
@@ -159,7 +174,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes } = this.props;
-    const { users, error } = this.state;
+    const { users, error, createDrawerOpen, newUsername } = this.state;
 
     if (error) {
       return (
@@ -183,7 +198,6 @@ class UsersLanding extends React.Component<CombinedProps, State> {
                   <Grid container alignItems="flex-end">
                     <Grid item>
                       <AddNewLink
-                        disabled
                         onClick={this.openForCreate}
                         label="Add a User"
                       />
@@ -191,6 +205,9 @@ class UsersLanding extends React.Component<CombinedProps, State> {
                   </Grid>
                 </Grid>
               </Grid>
+              {newUsername &&
+                <Notice success text={`User ${newUsername} created successfully`} /> 
+              }
               <Paper>
                 <Table>
                   <TableHead>
@@ -209,6 +226,11 @@ class UsersLanding extends React.Component<CombinedProps, State> {
             </React.Fragment>
           : <CircleProgress />
         }
+        <CreateUserDrawer
+          open={createDrawerOpen}
+          onClose={this.userCreateOnClose}
+          addUser={this.addUser}
+        />
       </React.Fragment>
     );
   }
@@ -217,6 +239,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles, { withTheme: true });
 
 export default compose(
+  withRouter,
   setDocs(UsersLanding.docs),
   styled,
 )(UsersLanding);

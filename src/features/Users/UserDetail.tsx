@@ -13,6 +13,7 @@ import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import UserIcon from 'src/assets/icons/user.svg';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import { getUser, updateUser } from 'src/services/account';
 import { getGravatarUrl } from 'src/utilities/gravatar';
@@ -158,7 +159,9 @@ class Profile extends React.Component<CombinedProps> {
         history.push(path.replace(':username', user.username), { success: true });
       })
       .catch((errResponse) => {
-        const errors = pathOr([], ['response', 'data', 'errors'], errResponse);
+        const errors = pathOr([
+          { reason: 'An unexpected error occured while saving' }
+        ], ['response', 'data', 'errors'], errResponse);
         this.setState({
           profileErrors: errors,
           profileSaving: false,
@@ -190,7 +193,11 @@ class Profile extends React.Component<CombinedProps> {
   }
 
   render() {
-    const { classes, match: { url, params: { username } } } = this.props;
+    const {
+      classes,
+      match: { url, params: { username } },
+      location: { state: locationState },
+    } = this.props;
     const { error, gravatarUrl } = this.state;
 
     if (error) {
@@ -233,6 +240,9 @@ class Profile extends React.Component<CombinedProps> {
             />)}
           </Tabs>
         </AppBar>
+        {locationState && locationState.newUsername &&
+          <Notice success text={`User ${locationState.newUsername} created successfully`} /> 
+        }
         <Switch>
           <Route exact path={`${url}/permissions`} component={UserPermissions} />
           <Route path={`${url}`} render={this.renderUserProfile} />
