@@ -17,10 +17,16 @@ import composeState from 'src/utilities/composeState';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-type ClassNames = 'root';
+type ClassNames = 'root'
+  | 'stateZip';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
+  stateZip: {
+    [theme.breakpoints.up('md')]: {
+      maxWidth: `calc(415px + ${theme.spacing.unit * 2}px)`,
+    },
+  },
 });
 
 interface Props { }
@@ -105,6 +111,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
   renderErrors = (e: Linode.ApiFieldError[]) => null;
 
   renderForm = (account: Linode.Account) => {
+    const { classes } = this.props;
     const { fields, submissionErrors, success } = this.state;
 
     const hasErrorFor = getAPIErrorFor({
@@ -130,15 +137,19 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
         {success && <Grid item xs={12}><Notice success text={success} /></Grid>}
 
         <Grid item xs={12}>
-          <TextField
-            label="Company"
-            value={defaultTo(account.company, fields.company)}
-            errorText={hasErrorFor('company')}
-            onChange={this.updateCompany}
-          />
+          <Grid container>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Company Name"
+                value={defaultTo(account.company, fields.company)}
+                errorText={hasErrorFor('company')}
+                onChange={this.updateCompany}
+              />
+            </Grid>
+          </Grid>
         </Grid>
 
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
           <TextField
             label="Email"
             type="email"
@@ -148,7 +159,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
           />
         </Grid>
 
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
           <TextField
             label="Phone Number"
             type="tel"
@@ -158,7 +169,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
           />
         </Grid>
 
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
           <TextField
             label="First Name"
             value={defaultTo(account.first_name, fields.first_name)}
@@ -167,7 +178,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
           />
         </Grid>
 
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
           <TextField
             label="Last Name"
             value={defaultTo(account.last_name, fields.last_name)}
@@ -176,7 +187,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
           />
         </Grid>
 
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
           <TextField
             label="Address"
             value={defaultTo(account.address_1, fields.address_1)}
@@ -185,7 +196,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
           />
         </Grid>
 
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
           <TextField
             label="Address 2"
             value={defaultTo(account.address_2, fields.address_2)}
@@ -194,7 +205,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
           />
         </Grid>
 
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
           <TextField
             label="City"
             value={defaultTo(account.city, fields.city)}
@@ -203,16 +214,28 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
           />
         </Grid>
 
-        <Grid item xs={6}>
-          <TextField
-            label="State / Province"
-            value={defaultTo(account.state, fields.state)}
-            errorText={hasErrorFor('state')}
-            onChange={this.updateState}
-          />
+        <Grid item xs={12} sm={6}>
+          <Grid container className={classes.stateZip}>
+            <Grid item xs={7}>
+              <TextField
+                label="State / Province"
+                value={defaultTo(account.state, fields.state)}
+                errorText={hasErrorFor('state')}
+                onChange={this.updateState}
+              />
+            </Grid>
+            <Grid item xs={5}>
+              <TextField
+                label="Zip / Postal Code"
+                value={defaultTo(account.zip, fields.zip)}
+                errorText={hasErrorFor('zip')}
+                onChange={this.updateZip}
+              />
+            </Grid>
+          </Grid>
         </Grid>
 
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
           <TextField
             label="Country"
             value={defaultTo(account.country, fields.country)}
@@ -224,16 +247,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
           </TextField>
         </Grid>
 
-        <Grid item xs={6}>
-          <TextField
-            label="Zip / Postal Code"
-            value={defaultTo(account.zip, fields.zip)}
-            errorText={hasErrorFor('zip')}
-            onChange={this.updateZip}
-          />
-        </Grid>
-
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
           <TextField
             label="Tax ID"
             value={defaultTo(account.tax_id, fields.tax_id)}
