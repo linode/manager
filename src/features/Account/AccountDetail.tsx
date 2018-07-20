@@ -26,8 +26,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-type Map<S> = (s: S) => S;
-
 interface PreloadedProps {
   account: { response: Linode.Account };
 }
