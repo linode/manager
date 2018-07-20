@@ -5,13 +5,12 @@ import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 
 import PaginationControls from './PaginationControls';
 
-const getPageButton = (value: string) => (wrapper: ReactWrapper) => wrapper.find(`WithStyles(PageButton)[data-qa-button="${value}"]`);
-const getFirstPageButton = getPageButton('first');
-const getNextPageButton = getPageButton('next');
-const getPreviousPageButton = getPageButton('previous');
-const getLastPageButton = getPageButton('last');
+const getFirstPageButton = (wrapper: ReactWrapper) => wrapper.find(`WithStyles(PageButton)[data-qa-page-first]`);
+const getPreviousPageButton = (wrapper: ReactWrapper) => wrapper.find(`WithStyles(PageButton)[data-qa-page-previous]`);
+const getNextPageButton = (wrapper: ReactWrapper) => wrapper.find(`WithStyles(PageButton)[data-qa-page-next]`);
+const getLastPageButton = (wrapper: ReactWrapper) => wrapper.find(`WithStyles(PageButton)[data-qa-page-last]`);
 const getNumberPageButton = (page: string, wrapper: ReactWrapper) =>
-  wrapper.find(`WithStyles(PageButton)[data-qa-button=${page}]`);
+  wrapper.find(`WithStyles(PageButton)[data-qa-page-to=${page}]`);
 
 
 describe('PaginationControls', () => {

@@ -91,25 +91,25 @@ export class PaginationControls extends React.Component<Props, State> {
 
     return (
       <div>
-        <PageButton data-qa-button="first" onClick={this.handleFirstPageClick} disabled={disableHead} aria-label="First Page" >
+        <PageButton data-qa-page-first onClick={this.handleFirstPageClick} disabled={disableHead} aria-label="First Page" >
           <FirstPage />
         </PageButton>
 
-        <PageButton data-qa-button="previous" onClick={this.handlePreviousPageClick} disabled={disableHead} aria-label="Previous Page" >
+        <PageButton data-qa-page-previous onClick={this.handlePreviousPageClick} disabled={disableHead} aria-label="Previous Page" >
           <KeyboardArrowLeft />
         </PageButton>
         {
           this.state.pages.map((page) => (
-            <PageButton data-qa-button={page.number} key={page.number} onClick={page.onClick} disabled={page.disabled} aria-label="Next Page" >
+            <PageButton data-qa-page-to={page.number} key={page.number} onClick={page.onClick} disabled={page.disabled} aria-label="Next Page" >
               {page.number}
             </PageButton>
           ))
         }
-        <PageButton data-qa-button="next" onClick={this.handleNextPageClick} disabled={disableTail} aria-label="Next Page" >
+        <PageButton data-qa-page-next onClick={this.handleNextPageClick} disabled={disableTail} aria-label="Next Page" >
           <KeyboardArrowRight />
         </PageButton>
 
-        <PageButton data-qa-button="last" onClick={this.handleLastPageClick} disabled={disableTail} aria-label="Last Page" >
+        <PageButton data-qa-page-last onClick={this.handleLastPageClick} disabled={disableTail} aria-label="Last Page" >
           <LastPage />
         </PageButton>
       </div >
@@ -117,18 +117,5 @@ export class PaginationControls extends React.Component<Props, State> {
   }
 
 };
-
-// function createArrayWindow<T>(
-//   range: number,
-//   position: number,
-//   list: T[],
-// ): T[] {
-//   const pivot = Math.floor(range / 2);
-//   const start = (position + pivot) >= list.length
-//     ? list.length - range
-//     : Math.max(position - pivot, 0);
-
-//   return slice(start, start + range, list);
-// }
 
 export default PaginationControls;

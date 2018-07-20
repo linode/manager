@@ -31,6 +31,6 @@ export default Example;
 
 storiesOf('Pagination Controls', module)
   .addDecorator(ThemeDecorator)
-  .add('Basic usage.', () => (
+  .add('Interactive example', () => (
     <Example />
   ))

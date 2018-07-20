@@ -10,7 +10,7 @@ describe('Pagination Controls Suite', () => {
     const jumpToPage = page => `[data-qa-page-to="${page}"]`;
     const next = '[data-qa-next-page]';
 
-    it('should display pagination controls in each story', () => {
+    it.skip('should display pagination controls in each story', () => {
         executeInAllStories(component, childStories, () => {
             browser.waitForVisible(next);
 
@@ -24,7 +24,7 @@ describe('Pagination Controls Suite', () => {
         });
     });
 
-    it('should default to page one', () => {
+    it.skip('should default to page one', () => {
         executeInAllStories(component, childStories, () => {
             browser.waitForVisible(next);
             const activePage = $$('[data-qa-page-to]').filter(e => e.getAttribute('class').includes('active'));
@@ -34,7 +34,7 @@ describe('Pagination Controls Suite', () => {
         });
     });
 
-    it('should page forward through all', () => {
+    it.skip('should page forward through all', () => {
         executeInAllStories(component, childStories, () => {
             browser.waitForVisible(next);
             let currentPage = 1;
@@ -42,9 +42,9 @@ describe('Pagination Controls Suite', () => {
             const canPage = (nextOrPrevious) => {
                 return !browser.getAttribute(nextOrPrevious, 'class').includes('disabled');
             }
-            
+
             while(canPage(next)) {
-                browser.click(next);                
+                browser.click(next);
                 const activePages = $$('[data-qa-page-to]').filter(e => e.getAttribute('class').includes('active'));
                 const newPageNumber = parseInt(activePages[0].getAttribute('data-qa-page-to'));
 
@@ -52,16 +52,16 @@ describe('Pagination Controls Suite', () => {
                 currentPage++;
             }
         });
-        
+
     });
-    
-    it('should page enable previous button after paging forward', () => {
+
+    it.skip('should page enable previous button after paging forward', () => {
         executeInAllStories(component, childStories, () => {
             browser.waitForVisible(next);
 
             let previousDisabled = browser.getAttribute(previous, 'class').includes('disabled');
             expect(previousDisabled).toBe(true);
-        
+
             browser.click(next);
 
             previousDisabled = browser.getAttribute(previous, 'class').includes('disabled');
@@ -69,7 +69,7 @@ describe('Pagination Controls Suite', () => {
         });
     });
 
-    it('should page backward', () => {
+    it.skip('should page backward', () => {
         const currentPage = $$('[data-qa-page-to]').filter(e => e.getAttribute('class').includes('active'))[0].getAttribute('data-qa-page-to');
         browser.click(previous);
 
