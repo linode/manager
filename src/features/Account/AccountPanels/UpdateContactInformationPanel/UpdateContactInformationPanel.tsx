@@ -18,10 +18,14 @@ import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root'
+  | 'mainFormContainer'
   | 'stateZip';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
+  mainFormContainer: {
+    maxWidth: 860,
+  },
   stateZip: {
     [theme.breakpoints.up('md')]: {
       maxWidth: `calc(415px + ${theme.spacing.unit * 2}px)`,
@@ -132,7 +136,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
     const generalError = hasErrorFor('none');
 
     return (
-      <Grid container>
+      <Grid container className={classes.mainFormContainer}>
         {generalError && <Grid item xs={12}><Notice error text={generalError} /></Grid>}
         {success && <Grid item xs={12}><Notice success text={success} /></Grid>}
 
