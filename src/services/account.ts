@@ -100,3 +100,11 @@ export const updateUser = (username: string, data: Partial<Linode.User>) =>
     setData(data),
   )
     .then(response => response.data);
+
+export const createUser = (data: Partial<Linode.User>) =>
+  Request<Linode.User>(
+    setURL(`${API_ROOT}/account/users`),
+    setMethod('POST'),
+    setData(data),
+  )
+    .then(response => response.data);

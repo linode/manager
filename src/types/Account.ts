@@ -5,6 +5,7 @@ namespace Linode {
     restricted: boolean;
     gravatarUrl?: string;
   }
+
   export interface Account {
     address_2: string;
     email: string;
