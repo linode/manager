@@ -13,6 +13,7 @@ import TextField from 'src/components/TextField';
 import { withAccount } from 'src/features/Account/context';
 import { Requestable } from 'src/requestableContext';
 import { updateAccountInfo } from 'src/services/account';
+import composeState from 'src/utilities/composeState';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -21,8 +22,6 @@ type ClassNames = 'root';
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
 });
-
-type MapFn<T> = (t: T) => T;
 
 interface Props { }
 
@@ -75,15 +74,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
     fields: {},
   };
 
-  composeState = (
-    fns: MapFn<State>[],
-    callback: () => void = () => null,
-  ) => {
-    this.setState(
-      fns.reverse().reduce((result, fn) => fn(result), this.state),
-      () => callback(),
-    )
-  };
+  composeState = composeState;
 
   render() {
     return (
