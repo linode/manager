@@ -86,25 +86,27 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
   };
 
   render() {
+    return (
+      <ExpansionPanel heading="Update Contact Information" actions={this.renderFormActions}>
+        {this.renderContent()}
+      </ExpansionPanel>
+    );
+  }
+
+  renderContent = () => {
     const {
       loading, errors, data, lastUpdated,
     } = this.props;
-    return (
-      <ExpansionPanel
-        heading="Update Contact Information"
-        actions={this.renderFormActions}
-      >
-        {
-          loading && lastUpdated === 0
-            ? this.renderLoading()
-            : errors
-              ? this.renderErrors(errors)
-              : data
-                ? this.renderForm(data)
-                : this.renderEmpty()
-        }
-      </ExpansionPanel>
-    );
+
+    if (loading && lastUpdated === 0) {
+      return this.renderLoading();
+    };
+
+    if (errors) {
+      return this.renderErrors(errors);
+    }
+
+    return data ? this.renderForm(data) : this.renderEmpty();
   }
 
   renderLoading = () => null;
