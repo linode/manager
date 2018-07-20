@@ -202,9 +202,14 @@ class Profile extends React.Component<CombinedProps> {
 
     if (error) {
       return (
-        <ErrorState
-          errorText="There was an error retrieving the user data. Please reload and try again."
-        />
+        <React.Fragment>
+          <IconButton onClick={this.visitUsers} className={classes.backButton}>
+            <KeyboardArrowLeft />
+          </IconButton>
+          <ErrorState
+            errorText="There was an error retrieving the user data. Please reload and try again."
+          />
+        </React.Fragment>
       );
     }
 

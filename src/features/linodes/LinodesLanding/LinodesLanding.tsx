@@ -26,6 +26,7 @@ import { newLinodeEvents } from 'src/features/linodes/events';
 import notifications$ from 'src/notifications';
 import { getImages } from 'src/services/images';
 import { getLinode, getLinodes } from 'src/services/linodes';
+import scrollToTop from 'src/utilities/scrollToTop';
 
 import LinodesGridView from './LinodesGridView';
 import LinodesListView from './LinodesListView';
@@ -273,16 +274,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       });
   }
 
-  scrollToTop = () => {
-    window.scroll({
-      behavior: 'smooth',
-      left: 0,
-      top: 0,
-    });
-  }
-
   handlePageSelection = (page: number) => {
-    this.scrollToTop();
+    scrollToTop();
     this.getLinodes(Math.min(page), this.state.pageSize);
   }
 

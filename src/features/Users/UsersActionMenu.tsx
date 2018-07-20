@@ -5,7 +5,7 @@ import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   username: string;
-  onDelete: () => void;
+  onDelete: (username: string) => void;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}>;
@@ -37,10 +37,9 @@ class UsersActionMenu extends React.Component<CombinedProps> {
           },
         },
         {
-          disabled: true,
           title: 'Delete',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            onDelete();
+            onDelete(username);
             closeMenu();
             e.preventDefault();
           },

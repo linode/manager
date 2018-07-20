@@ -1,4 +1,4 @@
-import { compose, lensPath, set } from 'ramda';
+import { clone, compose, lensPath, set } from 'ramda';
 import * as React from 'react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 
@@ -19,10 +19,13 @@ import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import Table from 'src/components/Table';
-import { getUsers } from 'src/services/account';
+import { deleteUser, getUsers } from 'src/services/account';
 import { getGravatarUrl } from 'src/utilities/gravatar';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import scrollToTop from 'src/utilities/scrollToTop';
 
 import CreateUserDrawer from './CreateUserDrawer';
+import UserDeleteConfirmationDialog from './UserDeleteConfirmationDialog';
 import ActionMenu from './UsersActionMenu';
 
 type ClassNames = 'title' | 'avatar' | 'userButton';
@@ -55,6 +58,10 @@ interface State {
   error?: Error;
   createDrawerOpen: boolean;
   newUsername?: string;
+  deleteConfirmDialogOpen: boolean;
+  toDeleteUsername?: string;
+  deletedUsername?: string;
+  userDeleteError?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
@@ -62,6 +69,7 @@ type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
 class UsersLanding extends React.Component<CombinedProps, State> {
   state: State = {
     createDrawerOpen: false,
+    deleteConfirmDialogOpen: false,
   };
 
   static docs: Linode.Doc[] = [
@@ -89,6 +97,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
   ];
 
   componentDidMount() {
+    const { location: { state: locationState } } = this.props;
     getUsers()
       .then(({ data: users }) => {
         this.setState({
@@ -100,6 +109,11 @@ class UsersLanding extends React.Component<CombinedProps, State> {
           error: new Error('Error when fetching user list'),
         })
       })
+    if (locationState && locationState.deletedUsername) {
+      this.setState({
+        deletedUsername: locationState.deletedUsername,
+      })
+    }
   }
 
   addUser = (user: Linode.User) => {
@@ -136,8 +150,53 @@ class UsersLanding extends React.Component<CombinedProps, State> {
     })
   }
 
-  onDelete = () => {
-    return;
+  onDeleteConfirm = (username: string) => {
+    this.setState({
+      newUsername: undefined,
+      deletedUsername: undefined,
+      userDeleteError: false,
+      deleteConfirmDialogOpen: false,
+    });
+    deleteUser(username)
+      .then(() => {
+        if (this.state.users) {
+          const deletedUserIdx = this.state.users.findIndex(user => user.username === username);
+          const newUsers = clone(this.state.users);
+          newUsers.splice(deletedUserIdx, 1);
+          this.setState({
+            users: newUsers,
+            deletedUsername: username,
+            toDeleteUsername: '',
+          })
+        } else {
+          this.setState({
+            deletedUsername: username,
+            toDeleteUsername: '',
+          })
+        }
+        scrollToTop();
+      })
+      .catch(() => {
+        this.setState({
+          userDeleteError: true,
+          toDeleteUsername: '',
+        })
+        scrollErrorIntoView();
+      });
+  }
+
+  onDeleteCancel = () => {
+    this.setState({
+      toDeleteUsername: '',
+      deleteConfirmDialogOpen: false,
+    });
+  }
+
+  onDelete = (username: string) => {
+    this.setState({
+      deleteConfirmDialogOpen: true,
+      toDeleteUsername: username,
+    })
   }
 
   renderUserRow = (user: Linode.User) => {
@@ -174,7 +233,16 @@ class UsersLanding extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes } = this.props;
-    const { users, error, createDrawerOpen, newUsername } = this.state;
+    const {
+      users,
+      error,
+      createDrawerOpen,
+      newUsername,
+      toDeleteUsername,
+      deleteConfirmDialogOpen,
+      deletedUsername,
+      userDeleteError
+    } = this.state;
 
     if (error) {
       return (
@@ -208,6 +276,20 @@ class UsersLanding extends React.Component<CombinedProps, State> {
               {newUsername &&
                 <Notice success text={`User ${newUsername} created successfully`} /> 
               }
+              {deletedUsername &&
+                <Notice
+                  style={{ marginTop: newUsername ? 16 : 0 }}
+                  success
+                  text={`User ${deletedUsername} deleted successfully`}
+                />
+              }
+              {userDeleteError &&
+                <Notice
+                  style={{ marginTop: (newUsername || deletedUsername) ? 16 : 0 }}
+                  error
+                  text={`Error when deleting user, please try again later`}
+                />
+              }
               <Paper>
                 <Table>
                   <TableHead>
@@ -230,6 +312,12 @@ class UsersLanding extends React.Component<CombinedProps, State> {
           open={createDrawerOpen}
           onClose={this.userCreateOnClose}
           addUser={this.addUser}
+        />
+        <UserDeleteConfirmationDialog
+          username={toDeleteUsername || ''}
+          open={deleteConfirmDialogOpen}
+          onDelete={this.onDeleteConfirm}
+          onCancel={this.onDeleteCancel}
         />
       </React.Fragment>
     );
