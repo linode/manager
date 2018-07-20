@@ -37,7 +37,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     },
   },
   icon: {
-    transition: theme.transitions.create['fill'],
+    transition: theme.transitions.create(['fill']),
     fill: '#999',
   },
   new: {
