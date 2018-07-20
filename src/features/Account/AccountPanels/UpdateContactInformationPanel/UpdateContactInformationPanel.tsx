@@ -545,10 +545,9 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
   };
 
   updateCountry = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log('updateCountry');
     this.composeState([
       set(L.fields.country, e.target.value),
-    ], () => console.log(this.state.fields.country))
+    ])
   };
 
   updateEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
