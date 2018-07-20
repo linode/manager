@@ -206,7 +206,7 @@ class UserProfile extends React.Component<CombinedProps> {
 
     return (
       <React.Fragment>
-        {username 
+        {username !== undefined
           ? (
             <React.Fragment>
               {this.renderProfileSection()}
