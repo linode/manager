@@ -150,6 +150,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
         <Grid item xs={6}>
           <TextField
             label="Email"
+            type="email"
             value={defaultTo(account.email, fields.email)}
             errorText={hasErrorFor('email')}
             onChange={this.updateEmail}
@@ -159,6 +160,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
         <Grid item xs={6}>
           <TextField
             label="Phone Number"
+            type="tel"
             value={defaultTo(account.phone, fields.phone)}
             errorText={hasErrorFor('phone')}
             onChange={this.updatePhone}
