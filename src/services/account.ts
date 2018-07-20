@@ -86,8 +86,6 @@ export const getAccountInfo = () =>
   )
     .then(response => response.data);
 
-
-
 export const getPayments = (pagination: Linode.PaginationOptions = {}) =>
   Request<Page<Linode.Payment>>(
     setURL(`${API_ROOT}/account/payments`),
@@ -101,5 +99,20 @@ export const getInvoices = (pagination: Linode.PaginationOptions = {}) =>
     setURL(`${API_ROOT}/account/invoices`),
     setMethod('GET'),
     setParams(pagination),
+  )
+    .then(response => response.data);
+
+export const getUser = (username: string) =>
+  Request<Linode.User>(
+    setURL(`${API_ROOT}/account/users/${username}`),
+    setMethod('GET'),
+  )
+    .then(response => response.data);
+
+export const updateUser = (username: string, data: Partial<Linode.User>) =>
+  Request<Linode.User>(
+    setURL(`${API_ROOT}/account/users/${username}`),
+    setMethod('PUT'),
+    setData(data),
   )
     .then(response => response.data);

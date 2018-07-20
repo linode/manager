@@ -246,12 +246,15 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
           <Button
             type="secondary"
             destructive
-            onClick={this.resetAllFields}>
+            onClick={this.resetAllFields}
+            data-qa-confirm-cancel
+            >
             Yes
           </Button>
           <Button
             type="cancel"
             onClick={this.handleCloseDialog}
+            data-qa-cancel-cancel
           >
             No
           </Button>
@@ -301,7 +304,11 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
                 <KeyboardArrowLeft />
               </IconButton>
             </Link>
-            <Typography className={classes.createTitle} variant="headline">
+            <Typography
+              className={classes.createTitle}
+              variant="headline"
+              data-qa-create-header
+            >
               Create New StackScript
             </Typography>
           </Grid>
