@@ -29,7 +29,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Linode.Theme) => ({
 
 const styled = withStyles<CSSClasses>(styles, { withTheme: true });
 
-interface Props extends ButtonProps { }
+export interface Props extends ButtonProps { }
 
 const PageButton: React.StatelessComponent<Props & WithStyles<CSSClasses>> = ((props) => {
   const { classes, children, ...rest } = props;

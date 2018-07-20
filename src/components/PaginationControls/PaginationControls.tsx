@@ -5,7 +5,7 @@ import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPage from '@material-ui/icons/LastPage';
 
-import PageButton from 'src/components/PaginationControls/PageButton';
+import PageButton, { Props as PageButtonProps } from 'src/components/PaginationControls/PageButton';
 
 interface Props {
   count: number;
@@ -15,7 +15,6 @@ interface Props {
 }
 
 interface PageObject {
-  onClick: () => void;
   disabled: boolean;
   number: number;
 }
@@ -24,21 +23,32 @@ interface State {
   pages: PageObject[];
 };
 
+const calPages = (count: number, pageSize: number) => Math.ceil(count / pageSize);
+
+const createPagesArray = (count: number, pageSize: number) => Array.from(Array(calPages(count, pageSize)));
+
+const createPageObject = (handler: (n: number) => void, page: number) => (v: void, idx: number) => {
+  const number = idx + 1;
+  return ({
+    disabled: page === number,
+    number,
+  });
+};
+
+const createPages = (
+  count: number,
+  onClickHandler: (n: number) => void,
+  page: number,
+  pageSize: number,
+) => createPagesArray(count, pageSize).map(createPageObject(onClickHandler, page));
+
 export class PaginationControls extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    const { count, pageSize } = props;
+    const { count, pageSize, onClickHandler, page } = props;
 
     this.state = {
-      pages: Array.from(Array(Math.ceil(count / pageSize))).map((v, idx) => {
-        const number = idx + 1;
-
-        return ({
-          onClick: () => this.props.onClickHandler(number),
-          disabled: this.props.page === number,
-          number,
-        });
-      }),
+      pages: createPages(count, onClickHandler, page, pageSize),
     }
   }
 
@@ -51,16 +61,10 @@ export class PaginationControls extends React.Component<Props, State> {
       return;
     }
 
-    this.setState({
-      pages: Array.from(Array(Math.ceil(this.props.count / this.props.pageSize))).map((v, idx) => {
-        const number = idx + 1;
+    const { count, onClickHandler, page, pageSize } = this.props;
 
-        return ({
-          onClick: () => this.props.onClickHandler(number),
-          disabled: this.props.page === number,
-          number,
-        });
-      }),
+    this.setState({
+      pages: createPages(count, onClickHandler, page, pageSize),
     });
   }
 
@@ -82,6 +86,10 @@ export class PaginationControls extends React.Component<Props, State> {
     );
   };
 
+  handlePageClick = (page: number) => {
+    this.props.onClickHandler(page);
+  }
+
   render() {
     /** API paging starts at 1. Don't they know arrays starts at 0? */
     const { count, page, pageSize, } = this.props;
@@ -99,10 +107,17 @@ export class PaginationControls extends React.Component<Props, State> {
           <KeyboardArrowLeft />
         </PageButton>
         {
-          this.state.pages.map((page) => (
-            <PageButton data-qa-page-to={page.number} key={page.number} onClick={page.onClick} disabled={page.disabled} aria-label="Next Page" >
-              {page.number}
-            </PageButton>
+          this.state.pages.map(({ number, disabled}) => (
+            <PageNumber
+              number={number}
+              handlePageClick={this.handlePageClick}
+              data-qa-page-to={number}
+              key={number}
+              disabled={disabled}
+              arial-label={`Page ${number}`}
+            >
+              {number}
+            </PageNumber>
           ))
         }
         <PageButton data-qa-page-next onClick={this.handleNextPageClick} disabled={disableTail} aria-label="Next Page" >
@@ -119,3 +134,22 @@ export class PaginationControls extends React.Component<Props, State> {
 };
 
 export default PaginationControls;
+
+
+interface PageNumberProps extends PageButtonProps {
+  number: number;
+  handlePageClick: (n: number) => void;
+}
+
+class PageNumber extends React.PureComponent<PageNumberProps> {
+  onClick = () => this.props.handlePageClick(this.props.number);
+
+  render() {
+    const { onClick, children, ...rest} = this.props;
+
+    return (
+      <PageButton {...rest} onClick={this.onClick}>
+        {children}
+      </PageButton>);
+  }
+};
