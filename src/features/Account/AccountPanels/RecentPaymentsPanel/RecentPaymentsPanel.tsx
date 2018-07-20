@@ -135,15 +135,7 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
             </TableRow>
           </TableHead>
           <TableBody>
-            {
-              loading
-                ? <TableRowLoading colSpan={3} />
-                : errors
-                  ? <TableRowError colSpan={3} message="We were unable to load your payments." />
-                  : data && data.length > 0
-                    ? this.renderItems(data)
-                    : <TableRowEmptyState colSpan={3} />
-            }
+            {this.renderContent()}
           </TableBody>
         </Table>
         {data && data.length > 0 &&
@@ -158,6 +150,20 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
       </ExpansionPanel>
     );
   }
+
+  renderContent = () => {
+    const { data, errors, loading } = this.state;
+
+    if (loading) {
+      return <TableRowLoading colSpan={3} />
+    }
+
+    if (errors) {
+      return <TableRowError colSpan={3} message="We were unable to load your payments." />
+    }
+
+    return data ? this.renderItems(data) : <TableRowEmptyState colSpan={3} />
+  };
 
   renderItems = (items: PaymentWithDate[]) => items.map(this.renderRow);
 

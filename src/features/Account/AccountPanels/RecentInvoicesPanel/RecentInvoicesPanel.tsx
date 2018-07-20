@@ -117,8 +117,6 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
   render() {
     const {
       data,
-      errors,
-      loading,
       page,
       perPage,
       results,
@@ -138,15 +136,7 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
             </TableRow>
           </TableHead>
           <TableBody>
-            {
-              loading
-                ? <TableRowLoading colSpan={3} />
-                : errors
-                  ? <TableRowError colSpan={3} message="We were unable to load your invoices." />
-                  : data && data.length > 0
-                    ? this.renderItems(data)
-                    : <TableRowEmptyState colSpan={3} />
-            }
+            { this.renderContent() }
           </TableBody>
         </Table>
         {data && data.length > 0 &&
@@ -161,6 +151,20 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
       </ExpansionPanel>
     );
   }
+
+  renderContent = () => {
+    const { data, errors, loading } = this.state;
+
+    if (loading) {
+      return <TableRowLoading colSpan={3} />
+    }
+
+    if (errors) {
+      return <TableRowError colSpan={3} message="We were unable to load your invoices." />
+    }
+
+    return data ? this.renderItems(data) : <TableRowEmptyState colSpan={3} />
+  };
 
   handleExpansion = (e: any, expanded: boolean) => {
     if (expanded && !this.state.data) {
