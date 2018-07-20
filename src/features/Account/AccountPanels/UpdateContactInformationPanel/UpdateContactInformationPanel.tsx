@@ -22,7 +22,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
 });
 
-type Map<T> = (t: T) => T;
+type MapFn<T> = (t: T) => T;
 
 interface Props { }
 
@@ -76,7 +76,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
   };
 
   composeState = (
-    fns: Map<State>[],
+    fns: MapFn<State>[],
     callback: () => void = () => null,
   ) => {
     this.setState(
