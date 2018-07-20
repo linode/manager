@@ -1,7 +1,6 @@
 import * as moment from 'moment-timezone';
 import { compose, map, pathOr, sort } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
@@ -11,6 +10,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
+import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import PaginationFooter from 'src/components/PaginationFooter';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
@@ -18,7 +18,7 @@ import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import { getPayments } from 'src/services/account';
 
-interface PaymentWithDate extends Linode.Payment { displayDate: string, moment: moment.Moment };
+interface PaymentWithDate extends Linode.Payment { moment: moment.Moment };
 
 type ClassNames = 'root';
 
@@ -27,10 +27,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 });
 
 interface Props { }
-
-interface ConnectedProps {
-  timezone: string;
-}
 
 interface State {
   errors?: Linode.ApiFieldError[];
@@ -42,7 +38,7 @@ interface State {
   perPage: number;
 }
 
-type CombinedProps = Props & ConnectedProps & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
   state: State = {
@@ -70,7 +66,6 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
         return {
           ...item,
           moment: m,
-          displayDate: m.clone().tz(this.props.timezone).format('Y-DD-MM'),
         };
       }),
     );
@@ -117,8 +112,6 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
   render() {
     const {
       data,
-      errors,
-      loading,
       page,
       perPage,
       results,
@@ -170,7 +163,7 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
   renderRow = (item: PaymentWithDate) => {
     return (
       <TableRow key={`payment-${item.id}`}>
-        <TableCell>{item.displayDate}</TableCell>
+        <TableCell><DateTimeDisplay value={item.date} /></TableCell>
         <TableCell><Link to="">Payment #{item.id}</Link></TableCell>
         <TableCell>${item.usd}</TableCell>
       </TableRow>
@@ -197,13 +190,8 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const connected = connect<ConnectedProps>((state: Linode.AppState) => ({
-  timezone: pathOr('GMT', ['resources', 'profile', 'data', 'timezone'], state),
-}));
-
 const enhanced = compose(
   styled,
-  connected,
 );
 
 export default enhanced(RecentPaymentsPanel);
