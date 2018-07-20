@@ -18,7 +18,7 @@ type ClassNames = 'root' | 'instructions' | 'qrcode';
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
   instructions: {
-    fontSize: '1.3em',
+    marginTop: theme.spacing.unit * 2,
   },
   qrcode: {
     margin: `${theme.spacing.unit * 2}px 0`,
@@ -37,7 +37,7 @@ const QRCodeForm: React.StatelessComponent<CombinedProps> = (props) => {
   return (
     <React.Fragment>
       <Typography
-        variant="body1"
+        variant="subheading"
         data-qa-copy
         className={classes.instructions}
       >
@@ -50,7 +50,7 @@ const QRCodeForm: React.StatelessComponent<CombinedProps> = (props) => {
         className={classes.qrcode}
       />
       <Typography
-          variant="body1"
+          variant="subheading"
           data-qa-copy
           className={classes.instructions}
       >

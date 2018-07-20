@@ -25,7 +25,11 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import EnableTwoFactorForm from './EnableTwoFactorForm';
 
-type ClassNames = 'root' | 'container' | 'title' | 'visibility';
+type ClassNames = 'root'
+  | 'container'
+  | 'title'
+  | 'visibility'
+  | 'showHideText';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     root: {
@@ -38,16 +42,22 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
       flexFlow: 'row nowrap',
       alignItems: 'center',
       justifyContent: 'left',
-      marginBottom: theme.spacing.unit * 2,
-      marginTop: theme.spacing.unit * 2,
+      marginTop: theme.spacing.unit * 3,
+      marginBottom: theme.spacing.unit * 3,
     },
     title: {
-      marginBottom: theme.spacing.unit * 2,
+      marginBottom: theme.spacing.unit,
     },
     visibility: {
-      color: '#3B85D9',
-      marginRight: theme.spacing.unit * 2,
-    }
+      color: theme.palette.primary.main,
+      padding: 0,
+      border: 0,
+    },
+    showHideText: {
+      fontSize: '1rem',
+      marginLeft: theme.spacing.unit * 2,
+      color: theme.palette.text.primary,
+    },
   });
 
 interface Props {
@@ -228,14 +238,6 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
           >
               Two-Factor Authentication
           </Typography>
-          <Typography
-              variant="body1"
-              data-qa-copy
-          >
-            Two-factor authentication increases the security of your Linode account by requiring two different
-            forms of authentication to log in: your account password and a security token. You can set up a
-            third party app such as Authy or Google Authenticator to generate these tokens for you.
-          </Typography>
           <FormControl fullWidth>
             <FormControlLabel
               label={twoFactorEnabled ? "Enabled" : "Disabled"}
@@ -247,15 +249,34 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
               }
             />
           </FormControl>
+          <Typography
+              variant="body1"
+              data-qa-copy
+          >
+            Two-factor authentication increases the security of your Linode account by requiring two different
+            forms of authentication to log in: your account password and a security token. You can set up a
+            third party app such as Authy or Google Authenticator to generate these tokens for you.
+          </Typography>
           {twoFactorEnabled &&
             <div className={classes.container}>
               {showQRCode
-                ? <Visibility className={classes.visibility} onClick={this.toggleHidden} />
-                : <VisibilityOff className={classes.visibility} onClick={this.toggleHidden} />
+                ? <Button
+                    type="secondary"
+                    className={classes.visibility}
+                    onClick={this.toggleHidden}
+                  >
+                    <VisibilityOff />
+                    <span className={classes.showHideText}>Hide QR Code</span>
+                  </Button>
+                : <Button
+                    type="secondary"
+                    className={classes.visibility}
+                    onClick={this.toggleHidden}
+                  >
+                    <Visibility/>
+                    <span className={classes.showHideText}>Show QR Code</span>
+                  </Button>
               }
-              <span>
-              {showQRCode ? "Hide" : "Show" } QR Code
-              </span>
             </div>
           }
           {twoFactorEnabled && showQRCode &&
