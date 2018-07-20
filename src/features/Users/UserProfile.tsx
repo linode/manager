@@ -1,4 +1,6 @@
+import { pathOr } from 'ramda';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import Paper from '@material-ui/core/Paper';
@@ -8,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
+import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { deleteUser } from 'src/services/account';
@@ -53,13 +56,17 @@ interface Props {
   errors?: Linode.ApiFieldError[];
 }
 
+interface ConnectedProps {
+  profileUsername: string;
+}
+
 interface State {
   deleteConfirmDialogOpen: boolean;
   toDeleteUsername: string;
   userDeleteError: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
+type CombinedProps = Props & ConnectedProps & WithStyles<ClassNames> & RouteComponentProps<{}>;
 
 class UserProfile extends React.Component<CombinedProps> {
   state: State = {
@@ -67,6 +74,14 @@ class UserProfile extends React.Component<CombinedProps> {
     toDeleteUsername: '',
     userDeleteError: false,
   };
+
+  componentDidUpdate(prevProps: CombinedProps) {
+    if (this.props.username && !prevProps.username) {
+      this.setState({
+        toDeleteUsername: this.props.username,
+      })
+    }
+  }
 
   renderProfileSection = () => {
     const {
@@ -137,38 +152,31 @@ class UserProfile extends React.Component<CombinedProps> {
     });
     deleteUser(username)
       .then(() => {
-        this.setState({
-          toDeleteUsername: '',
-        });
         push(`/users`, { deletedUsername: username });
       })
       .catch(() => {
         this.setState({
           userDeleteError: true,
-          toDeleteUsername: '',
         })
         scrollErrorIntoView();
       });
   }
 
   onDelete = () => {
-    const { username } = this.props;
     this.setState({
       deleteConfirmDialogOpen: true,
-      toDeleteUsername: username,
     })
   }
 
   onDeleteCancel = () => {
     this.setState({
-      toDeleteUsername: '',
       deleteConfirmDialogOpen: false,
     });
   }
 
   renderDeleteSection() {
-    const { classes } = this.props;
-    const { userDeleteError } = this.state;
+    const { classes, profileUsername } = this.props;
+    const { userDeleteError, toDeleteUsername } = this.state;
     return (
       <Paper className={classes.deleteRoot}>
         <div className={classes.inner}>
@@ -183,6 +191,7 @@ class UserProfile extends React.Component<CombinedProps> {
             />
           }
           <Button
+            disabled={profileUsername === toDeleteUsername}
             className={classes.topMargin}
             variant="raised"
             type="secondary"
@@ -192,6 +201,12 @@ class UserProfile extends React.Component<CombinedProps> {
           >
             Delete
           </Button>
+          {profileUsername === toDeleteUsername &&
+            <HelpIcon
+              className={classes.topMargin}
+              text="You can't delete the currently active user"
+            />
+          }
           <Typography className={classes.topMargin} variant="caption">
             The user will be deleted permanently.
           </Typography>
@@ -226,6 +241,12 @@ class UserProfile extends React.Component<CombinedProps> {
   }
 }
 
+const mapStateToProps = (state: Linode.AppState) => ({
+  profileUsername: pathOr('', ['resources', 'profile', 'data', 'username'], state),
+});
+
+export const connected = connect(mapStateToProps);
+
 const styled = withStyles(styles, { withTheme: true });
 
-export default withRouter(styled(UserProfile));
+export default withRouter(connected(styled(UserProfile)));
