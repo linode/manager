@@ -1,6 +1,8 @@
 import { equals, pathOr } from 'ramda';
 import * as React from 'react';
+import { connect, Dispatch } from 'react-redux';
 import { matchPath, Route, RouteComponentProps, Switch } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
 
 import AppBar from '@material-ui/core/AppBar';
 import IconButton from '@material-ui/core/IconButton';
@@ -16,6 +18,8 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import { getUser, updateUser } from 'src/services/account';
+import { getProfile } from 'src/services/profile';
+import { request, response } from 'src/store/reducers/resources';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 
 import UserPermissions from './UserPermissions';
@@ -44,8 +48,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
+interface ConnectedProps {
+  request: typeof request;
+  response: typeof response;
+  profileUsername: string;
+}
+
 interface MatchProps { username: string };
-type CombinedProps = WithStyles<ClassNames> & RouteComponentProps<MatchProps>;
+type CombinedProps = WithStyles<ClassNames> & RouteComponentProps<MatchProps> & ConnectedProps;
 
 interface State {
   gravatarUrl: string;
@@ -141,7 +151,7 @@ class Profile extends React.Component<CombinedProps> {
   }
 
   onSave = () => {
-    const { history, match: { path } } = this.props;
+    const { history, match: { path }, profileUsername, request, response } = this.props;
     const { originalUsername, username, restricted } = this.state;
     if (!originalUsername) { return; }
     this.setState({
@@ -156,6 +166,14 @@ class Profile extends React.Component<CombinedProps> {
           username: user.username,
           profileSaving: false,
         })
+        if (profileUsername === originalUsername) {
+          request(['profile']);
+          getProfile()
+            .then(({ data }) => {
+              response(['profile'], data);
+            })
+            .catch(error => response(['profile'], error));
+        }
         history.push(path.replace(':username', user.username), { success: true });
       })
       .catch((errResponse) => {
@@ -257,10 +275,21 @@ class Profile extends React.Component<CombinedProps> {
   }
 }
 
+const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
+  { request, response },
+  dispatch,
+);
+
+const mapStateToProps = (state: Linode.AppState) => ({
+  profileUsername: pathOr('', ['resources', 'profile', 'data', 'username'], state),
+});
+
 const reloadable = reloadableWithRouter<CombinedProps, MatchProps>((routePropsOld, routePropsNew) => {
   return routePropsOld.match.params.username !== routePropsNew.match.params.username;
 })
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(reloadable(Profile));
+export const connected = connect(mapStateToProps, mapDispatchToProps);
+
+export default connected(styled(reloadable(Profile)));
