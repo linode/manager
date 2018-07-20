@@ -5,6 +5,7 @@ import Typography from '@material-ui/core/Typography';
 
 import Grid from 'src/components/Grid';
 import Toggle from 'src/components/Toggle';
+import { getGrants } from 'src/services/account';
 
 type ClassNames = 'titleWrapper' | 'topGrid';
 
@@ -18,10 +19,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props {}
+interface Props {
+  username?: string;
+}
 
 interface State {
-  restricted: boolean,
+  grants?: Linode.Grants;
+  restricted: boolean;
+  errors?: Linode.ApiFieldError[];
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -30,6 +35,31 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   state: State = {
     restricted: true,
   };
+
+  getUserGrants = () => {
+    const { username } = this.props;
+    if (username) {
+      getGrants(username)
+        .then((grants) => {
+          this.setState({
+            grants,
+          })
+          console.log(grants);
+        })
+        .catch((errResponse) => {
+          this.setState({
+            errors: [{ reason: 
+              'Unknown error occured while fetching user permissions. Try again later.'}]
+          })
+        });
+    }
+  }
+
+  componentDidUpdate(prevProps: CombinedProps) {
+    if (prevProps.username !== this.props.username) {
+      this.getUserGrants();
+}
+  }
 
   onChangeRestricted = () => {
     this.setState({

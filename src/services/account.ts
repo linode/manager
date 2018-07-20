@@ -118,6 +118,13 @@ export const getUser = (username: string) =>
   )
     .then(response => response.data);
 
+export const getGrants = (username: string) =>
+  Request<Linode.Grants>(
+    setURL(`${API_ROOT}/account/users/${username}/grants`),
+    setMethod('GET'),
+  )
+    .then(response => response.data);
+
 export const updateUser = (username: string, data: Partial<Linode.User>) =>
   Request<Linode.User>(
     setURL(`${API_ROOT}/account/users/${username}`),

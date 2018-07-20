@@ -200,6 +200,13 @@ class UserDetail extends React.Component<CombinedProps> {
       errors={profileErrors}
     />
   }
+  
+  renderUserPermissions = () => {
+    const { username } = this.state;
+    return <UserPermissions
+      username={username}
+    />
+  }
 
   matches = (p: string) => {
     return Boolean(matchPath(p, { path: this.props.location.pathname }));
@@ -267,7 +274,7 @@ class UserDetail extends React.Component<CombinedProps> {
           <Notice success text={`User ${locationState.newUsername} created successfully`} /> 
         }
         <Switch>
-          <Route exact path={`${url}/permissions`} component={UserPermissions} />
+          <Route exact path={`${url}/permissions`} component={this.renderUserPermissions} />
           <Route path={`${url}`} render={this.renderUserProfile} />
         </Switch>
       </React.Fragment>

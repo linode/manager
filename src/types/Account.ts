@@ -40,4 +40,13 @@ namespace Linode {
     usd: string | number;
   }
 
+  export interface Grant {
+
+  }
+
+  export interface Grants {
+    global: {
+      [key: string]: bool,
+    };
+  }
 }
