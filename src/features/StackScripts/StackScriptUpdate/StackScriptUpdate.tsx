@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 
-import { compose, pathOr } from 'ramda';
+import { clone, compose, pathOr } from 'ramda';
 
 import {
   StyleRulesCallback,
@@ -118,20 +118,6 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
   constructor(props: CombinedProps) {
     super(props);
 
-    /*
-    * Filter out already selected images in the available images dropdown
-    */
-    const availableImages = this.props.images.response.filter(image => {
-      if (this.defaultStackScriptValues.selectedImages) {
-        for (const compatibleImage of this.defaultStackScriptValues.selectedImages) {
-          if (compatibleImage === image.id) {
-            return false;
-          }
-        }
-      }
-      return true;
-    })
-
     this.state = {
       stackScript: pathOr(undefined, ['response'], this.props.stackScript),
       retrievalError: pathOr(undefined, ['error'], this.props.stackScript),
@@ -140,7 +126,7 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
       imageSelectOpen: false,
       selectedImages: this.defaultStackScriptValues.selectedImages,
       /* available images to select from in the dropdown */
-      availableImages,
+      availableImages: this.availableImages,
       script: this.defaultStackScriptValues.script,
       revisionNote: this.defaultStackScriptValues.revisionNote,
       isSubmitting: false,
@@ -166,6 +152,22 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
     this.mounted = false;
   }
 
+  /*
+  * Filter out already selected images in the available images dropdown
+  */
+  availableImages = this.props.images.response.filter(image => {
+    if (this.defaultStackScriptValues.selectedImages) {
+      for (const compatibleImage of this.defaultStackScriptValues.selectedImages) {
+        // if the stackscript already has the image attached to it
+        // do not render it in the dropdown
+        if (compatibleImage === image.id) {
+          return false;
+        }
+      }
+    }
+    return true;
+  })
+
   handleLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ labelText: e.target.value });
   }
@@ -186,13 +188,13 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
     /*
     * remove selected image from the selected list
     */
-    const selectedImagesCopy = this.state.selectedImages;
+    const selectedImagesCopy = clone(this.state.selectedImages);
     const removedImage = selectedImagesCopy.splice(indexToRemove, 1);
 
     /*
     * add the remvoed image back to the selection list
     */
-    const availableImagesCopy = this.state.availableImages;
+    const availableImagesCopy = clone(this.state.availableImages);
     const imageToBeReAdded = this.props.images.response.find(image =>
       image.id === removedImage[0]);
     availableImagesCopy.unshift(imageToBeReAdded!);
@@ -226,7 +228,8 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
   resetAllFields = () => {
     this.handleCloseDialog();
     this.setState({
-      ...this.defaultStackScriptValues
+      ...this.defaultStackScriptValues,
+      availableImages: this.availableImages,
     })
   }
 
