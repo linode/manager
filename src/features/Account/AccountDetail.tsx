@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { Requestable } from 'src/requestableContext';
 import { getAccountInfo } from 'src/services/account';
+import composeState from 'src/utilities/composeState';
 
 import MakeAPaymentPanel from './AccountPanels/MakeAPaymentPanel';
 import RecentInvoicesPanel from './AccountPanels/RecentInvoicesPanel';
@@ -25,8 +26,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     marginBottom: theme.spacing.unit * 2,
   },
 });
-
-type Map<S> = (s: S) => S;
 
 interface PreloadedProps {
   account: { response: Linode.Account };
@@ -68,18 +67,7 @@ export class AccountDetail extends React.Component<CombinedProps, State> {
     },
   ];
 
-  composeState = (
-    fns: Map<State>[] = [],
-    callback: () => void = () => null,
-  ) => {
-
-    if (!this.mounted) { return; }
-
-    return this.setState(
-      (state) => fns.reverse().reduce((result, fn) => fn(result), state),
-      () => callback(),
-    )
-  };
+  composeState = composeState;
 
   getAccount = () => {
     this.composeState([

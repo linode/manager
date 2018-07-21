@@ -117,3 +117,13 @@ const createError = (message: string, response: Axios.AxiosResponse) => {
   error.response = response;
   return error;
 };
+/**
+ *
+ * Helper method to easily generate APIFieldError[] for a number of fields and a general error.
+ */
+export const mockAPIFieldErrors = (fields: string[]): Linode.ApiFieldError[] => {
+  return fields.reduce(
+    (result, field) => [ ...result, {field, reason: `${field} is incorrect.`, } ],
+    [{ reason: 'A general error has occured.' }],
+  );
+};
