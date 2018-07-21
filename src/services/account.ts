@@ -86,6 +86,14 @@ export const getAccountInfo = () =>
   )
     .then(response => response.data);
 
+export const updateAccountInfo = (data: Partial<Linode.Account>) =>
+  Request<Linode.Account>(
+    setURL(`${API_ROOT}/account`),
+    setMethod('PUT'),
+    setData(data),
+  )
+    .then(response => response.data);
+
 export const getUser = (username: string) =>
   Request<Linode.User>(
     setURL(`${API_ROOT}/account/users/${username}`),
