@@ -145,7 +145,7 @@ class PageNumber extends React.PureComponent<PageNumberProps> {
   onClick = () => this.props.handlePageClick(this.props.number);
 
   render() {
-    const { onClick, children, ...rest} = this.props;
+    const { onClick, children, handlePageClick, ...rest} = this.props;
 
     return (
       <PageButton {...rest} onClick={this.onClick}>
