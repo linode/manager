@@ -10,7 +10,8 @@ import { getAccountInfo } from 'src/services/account';
 import composeState from 'src/utilities/composeState';
 
 import MakeAPaymentPanel from './AccountPanels/MakeAPaymentPanel';
-import RecentBillingActivityPanel from './AccountPanels/RecentBillingActivityPanel';
+import RecentInvoicesPanel from './AccountPanels/RecentInvoicesPanel';
+import RecentPaymentsPanel from './AccountPanels/RecentPaymentsPanel';
 import SummaryPanel from './AccountPanels/SummaryPanel';
 import UpdateContactInformationPanel from './AccountPanels/UpdateContactInformationPanel';
 import UpdateCreditCardPanel from './AccountPanels/UpdateCreditCardPanel';
@@ -134,7 +135,8 @@ export class AccountDetail extends React.Component<CombinedProps, State> {
           <Typography variant="title" className={classes.heading}>Billing Information</Typography>
           <UpdateCreditCardPanel />
           <MakeAPaymentPanel />
-          <RecentBillingActivityPanel />
+          <RecentInvoicesPanel />
+          <RecentPaymentsPanel />
         </AccountProvider >
       </React.Fragment>
     );

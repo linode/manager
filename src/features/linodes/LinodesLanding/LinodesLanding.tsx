@@ -386,10 +386,10 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           {
             this.state.results > 25 &&
             <PaginationFooter
+              count={this.state.results}
               handlePageChange={this.handlePageSelection}
               handleSizeChange={this.handlePageSizeChange}
               pageSize={this.state.pageSize}
-              pages={this.state.pages}
               page={this.state.page}
             />
           }
