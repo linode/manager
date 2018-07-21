@@ -14,7 +14,7 @@ type ClassNames = 'root'
   | 'destructive'
   | 'cancel';
 
-interface Props extends ButtonProps {
+export interface Props extends ButtonProps {
   loading?: boolean;
   destructive?: boolean;
   type?: 'primary' | 'secondary' | 'cancel';

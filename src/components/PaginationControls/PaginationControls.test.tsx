@@ -5,110 +5,143 @@ import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 
 import PaginationControls from './PaginationControls';
 
-const getFirstPageButton = (wrapper: ReactWrapper) => wrapper.find('PageButton[first]');
+const getFirstPageButton = (wrapper: ReactWrapper) => wrapper.find(`WithStyles(PageButton)[data-qa-page-first]`);
+const getPreviousPageButton = (wrapper: ReactWrapper) => wrapper.find(`WithStyles(PageButton)[data-qa-page-previous]`);
+const getNextPageButton = (wrapper: ReactWrapper) => wrapper.find(`WithStyles(PageButton)[data-qa-page-next]`);
+const getLastPageButton = (wrapper: ReactWrapper) => wrapper.find(`WithStyles(PageButton)[data-qa-page-last]`);
+const getNumberPageButton = (page: string, wrapper: ReactWrapper) =>
+  wrapper.find(`WithStyles(PageButton)[data-qa-page-to=${page}]`);
 
-const getLastPageButton = (wrapper: ReactWrapper) => wrapper.find('PageButton[last]');
 
 describe('PaginationControls', () => {
-
-  const mockPages = Array.from(Array(7), (x, idx) => idx + 1);
-
-  it('should render a left and right arrow', () => {
+  it('should have a first page button.', () => {
     const wrapper = mount(
       <LinodeThemeWrapper>
         <PaginationControls
           onClickHandler={jest.fn()}
-          pages={mockPages}
-          currentPage={3}
-          range={10}
+          count={100}
+          page={1}
+          pageSize={25}
         />
-       </LinodeThemeWrapper>,
+      </LinodeThemeWrapper>,
     );
-
-    const prevPage = getFirstPageButton(wrapper);
-    const nextPage = getLastPageButton(wrapper);
-
-    expect(prevPage.exists()).toBeTruthy();
-    expect(nextPage.exists()).toBeTruthy();
+    const first = getFirstPageButton(wrapper);
+    expect(first).toHaveLength(1);
   });
 
-  it('should render a disabled previous button when at first page.', () => {
+  it('should have a previous page button.', () => {
     const wrapper = mount(
       <LinodeThemeWrapper>
         <PaginationControls
           onClickHandler={jest.fn()}
-          pages={mockPages}
-          currentPage={1}
-          range={10}
+          count={100}
+          page={1}
+          pageSize={25}
         />
       </LinodeThemeWrapper>,
     );
-
-    const prevPage = getFirstPageButton(wrapper);
-    expect(prevPage.prop('disabled')).toBeTruthy();
+    const previous = getPreviousPageButton(wrapper);
+    expect(previous).toHaveLength(1);
   });
 
-  it('should render a disabled next button when at last page.', () => {
+  it('should have a next page button.', () => {
     const wrapper = mount(
       <LinodeThemeWrapper>
         <PaginationControls
           onClickHandler={jest.fn()}
-          pages={mockPages}
-          currentPage={7}
-          range={10}
+          count={100}
+          page={1}
+          pageSize={25}
         />
       </LinodeThemeWrapper>,
     );
-
-    const nextPage = getLastPageButton(wrapper);
-    expect(nextPage.prop('disabled')).toBeTruthy();
+    const next = getNextPageButton(wrapper);
+    expect(next).toHaveLength(1);
   });
 
-  it('should invoke onClickHandler when clicked', () => {
-    const mockClickHandler = jest.fn();
-
+  it('should have a last page button.', () => {
     const wrapper = mount(
       <LinodeThemeWrapper>
         <PaginationControls
-          onClickHandler={mockClickHandler}
-          pages={mockPages}
-          currentPage={7}
-          range={10}
+          onClickHandler={jest.fn()}
+          count={100}
+          page={1}
+          pageSize={25}
         />
       </LinodeThemeWrapper>,
     );
-
-    wrapper.find('PageButton').first().find('button').simulate('click');
-
-    expect(mockClickHandler).toHaveBeenCalled();
+    const last = getLastPageButton(wrapper);
+    expect(last).toHaveLength(1);
   });
 
-  it('render buttons within range', () => {
-    const mockClickHandler = jest.fn();
-    const pages = Array.from(Array(20), (x, i) => i + 1);
-
+  it('first page and previous page button should be disabled when on first page', () => {
     const wrapper = mount(
       <LinodeThemeWrapper>
         <PaginationControls
-          onClickHandler={mockClickHandler}
-          pages={pages}
-          currentPage={1}
-          range={10}
+          onClickHandler={jest.fn()}
+          count={100}
+          page={1}
+          pageSize={25}
         />
       </LinodeThemeWrapper>,
     );
 
-    const pageButtons = wrapper
-      .find('PageButton')
-      .not('[first]')
-      .not('[last]');
+    const first = getFirstPageButton(wrapper);
+    const previous = getPreviousPageButton(wrapper);
 
-    // Should
-    pageButtons.forEach((e, idx) => {
-      expect(e.text()).toEqual(String(idx + 1));
-    });
+    expect(first.prop('disabled')).toBeTruthy();
+    expect(previous.prop('disabled')).toBeTruthy();
+  });
 
-    // Should have ten page buttons.
-    expect(pageButtons).toHaveLength(10);
+  it('next page and last page button should be disabled when on last page', () => {
+    const wrapper = mount(
+      <LinodeThemeWrapper>
+        <PaginationControls
+          onClickHandler={jest.fn()}
+          count={100}
+          page={4}
+          pageSize={25}
+        />
+      </LinodeThemeWrapper>,
+    );
+
+    const last = getLastPageButton(wrapper);
+    const next = getNextPageButton(wrapper);
+
+    expect(last.prop('disabled')).toBeTruthy();
+    expect(next.prop('disabled')).toBeTruthy();
+  });
+
+  it('should render a button for each page', () => {
+    const wrapper = mount(
+      <LinodeThemeWrapper>
+        <PaginationControls
+          onClickHandler={jest.fn()}
+          count={100}
+          page={1}
+          pageSize={25}
+        />
+      </LinodeThemeWrapper>,
+    );
+
+    expect(getNumberPageButton('1', wrapper)).toHaveLength(1);
+    expect(getNumberPageButton('2', wrapper)).toHaveLength(1);
+    expect(getNumberPageButton('3', wrapper)).toHaveLength(1);
+    expect(getNumberPageButton('4', wrapper)).toHaveLength(1);
+  });
+
+  it('should render a button for each page', () => {
+    const wrapper = mount(
+      <LinodeThemeWrapper>
+        <PaginationControls
+          onClickHandler={jest.fn()}
+          count={100}
+          page={2}
+          pageSize={25}
+        />
+      </LinodeThemeWrapper>,
+    );
+
+    expect(getNumberPageButton('2', wrapper).prop('disabled')).toBeTruthy();
   });
 });
