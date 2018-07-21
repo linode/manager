@@ -142,7 +142,7 @@ export class SummaryPanel extends React.Component<CombinedProps, State> {
               </Typography>
             </Grid>
             <Grid item sm={6}>
-              <Typography variant="caption">
+              <Typography variant="caption" className={classes.item}>
                 <strong>Email: </strong>
                 {email}
               </Typography>

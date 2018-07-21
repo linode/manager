@@ -26,6 +26,7 @@ import { updateVolumes$ } from 'src/features/Volumes/Volumes';
 import { getLinodeConfigs, getLinodes } from 'src/services/linodes';
 import { cloneVolume, createVolume, resizeVolume, updateVolume, VolumeRequestPayload } from 'src/services/volumes';
 import { close } from 'src/store/reducers/volumeDrawer';
+import composeState from 'src/utilities/composeState';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -124,11 +125,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     set(L.submitting, false)
   ], () => scrollErrorIntoView());
 
-  composeState = (fns: ((s: State) => State)[], callback?: () => void) =>
-    this.mounted && this.setState(
-      state => fns.reverse().reduce((result, current) => current(result), state),
-      () => { if (callback) { callback() } }
-    );
+  composeState = composeState;
 
   componentDidMount() {
     this.mounted = true;
@@ -462,7 +459,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           errorText={sizeError}
           disabled={mode === modes.CLONING || mode === modes.EDITING}
           InputProps={{
-            endAdornment: 
+            endAdornment:
               <InputAdornment position="end">
                 GB
               </InputAdornment>,

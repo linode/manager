@@ -71,7 +71,7 @@ export interface Props extends ExpansionPanelProps {
   warning?: string;
   success?: string;
   loading?: boolean;
-  actions?: (props: ExpansionPanelProps) => JSX.Element;
+  actions?: (props: ExpansionPanelProps) => null | JSX.Element;
   summaryProps?: ExpansionPanelSummaryProps;
   headingProps?: TypographyProps;
   detailProps?: ExpansionPanelDetailsProps;
