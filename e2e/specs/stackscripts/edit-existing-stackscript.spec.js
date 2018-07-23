@@ -12,7 +12,7 @@ describe('StackScript - Edit Existing', () => {
         description: 'test stackscript example',
         revisionNote: new Date().getTime(),
         script: '#!/bin/bash',
-        images: ['arch'],
+        images: ['debian9'],
     }
 
     const newConfig = {
@@ -37,7 +37,7 @@ describe('StackScript - Edit Existing', () => {
     }
 
 
-    beforeAll(() => {
+    it('should setup spec', () => {
         browser.url(constants.routes.stackscripts);
         ListStackScripts.baseElementsDisplay();
         ListStackScripts.create.click();

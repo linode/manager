@@ -82,7 +82,7 @@ class ConfigureStackScript extends Page {
                 const imageElement = $(`[data-value="linode/${i}"]`);
                 const imageName = imageElement.getAttribute('data-value');
                 
-                imageElement.click();
+                browser.jsClick(`[data-value="linode/${i}"]`);
                 browser.waitForVisible(`[data-value="linode/${imageName}"]`, constants.wait.normal, true);
             });
         } else {
