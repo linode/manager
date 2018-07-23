@@ -49,7 +49,7 @@ describe('View - Personal Access Tokens', () => {
             browser.waitForVisible(dialogTitle);
             const title = $(dialogTitle).getText();
             const content = $(dialogContent);
-            const secret = content.$('span').getText();
+            const secret = content.$('[data-qa-notice]').getText();
             expect(title).toBe('Personal Access Token');
             expect(secret).not.toBe(null);
         });
