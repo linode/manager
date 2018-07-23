@@ -249,7 +249,6 @@ exports.removeDomain = (token, domainId) => {
 exports.getMyStackScripts = token => {
     return new Promise((resolve, reject) => {
         const endpoint = '/linode/stackscripts';
-
         getAxiosInstance(token).get(endpoint, {
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -267,7 +266,6 @@ exports.getMyStackScripts = token => {
 exports.removeStackScript = (token, id) => {
     return new Promise((resolve, reject) => {
         const endpoint = `/linode/stackscripts/${id}`;
-
         getAxiosInstance(token).delete(endpoint)
             .then(response => resolve(response.data))
             .catch(error => {
