@@ -1,20 +1,27 @@
+import { pathOr } from 'ramda';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   username: string;
-  onDelete: () => void;
+  onDelete: (username: string) => void;
 }
 
-type CombinedProps = Props & RouteComponentProps<{}>;
+interface ConnectedProps {
+  profileUsername: string;
+}
+
+type CombinedProps = Props & RouteComponentProps<{}> & ConnectedProps;
 
 class UsersActionMenu extends React.Component<CombinedProps> {
   createActions = () => {
     const {
       onDelete,
       username,
+      profileUsername,
       history: { push },
     } = this.props;
 
@@ -37,10 +44,10 @@ class UsersActionMenu extends React.Component<CombinedProps> {
           },
         },
         {
-          disabled: true,
+          disabled: username === profileUsername,
           title: 'Delete',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            onDelete();
+            onDelete(username);
             closeMenu();
             e.preventDefault();
           },
@@ -58,4 +65,10 @@ class UsersActionMenu extends React.Component<CombinedProps> {
   }
 }
 
-export default withRouter(UsersActionMenu);
+const mapStateToProps = (state: Linode.AppState) => ({
+  profileUsername: pathOr('', ['resources', 'profile', 'data', 'username'], state),
+});
+
+export const connected = connect(mapStateToProps);
+
+export default withRouter(connected(UsersActionMenu));
