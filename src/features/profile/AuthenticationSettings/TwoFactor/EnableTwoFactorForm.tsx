@@ -83,7 +83,8 @@ export class EnableTwoFactorForm extends React.Component<CombinedProps, State> {
       const fallbackError = [{ field: 'tfa_code', reason: 'Could not confirm code.' }];
       let APIErrors = pathOr(fallbackError, ['response', 'data', 'errors'], error);
       APIErrors = APIErrors.filter((error:Linode.ApiFieldError) => {
-        return error.field === 'tfa_code';
+        // Filter potentially confusing API error
+        return error.reason === 'Invalid token. Two-factor auth not enabled. Please try again.';
       })
 
       this.setState({
