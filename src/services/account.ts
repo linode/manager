@@ -125,6 +125,14 @@ export const getGrants = (username: string) =>
   )
     .then(response => response.data);
 
+export const updateGrants = (username: string, data: Partial<Linode.Grants>) =>
+  Request<Linode.Grants>(
+    setURL(`${API_ROOT}/account/users/${username}/grants`),
+    setMethod('PUT'),
+    setData(data),
+  )
+    .then(response => response.data);
+
 export const updateUser = (username: string, data: Partial<Linode.User>) =>
   Request<Linode.User>(
     setURL(`${API_ROOT}/account/users/${username}`),
