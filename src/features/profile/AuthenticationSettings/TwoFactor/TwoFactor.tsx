@@ -79,6 +79,7 @@ interface State {
   showQRCode: boolean;
   success?: string;
   twoFactorEnabled: boolean;
+  twoFactorConfirmed: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -92,6 +93,7 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
     showQRCode: false,
     success: undefined,
     twoFactorEnabled: this.props.twoFactor || false,
+    twoFactorConfirmed: this.props.twoFactor || false,
     disableDialog: {
       open: false,
       error: undefined,
@@ -118,7 +120,7 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
   }
 
   confirmToken = () => {
-    this.setState({ success: "Two-factor authentication has been enabled.", twoFactorEnabled: true, })
+    this.setState({ success: "Two-factor authentication has been enabled.", twoFactorEnabled: true, twoFactorConfirmed: true,})
   }
 
   disableTFA = () => {
@@ -200,7 +202,7 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
 
   toggleTwoFactorEnabled = () => {
     this.setState({ errors: undefined, success: undefined });
-    const { twoFactorEnabled } = this.state;
+    const { twoFactorEnabled, twoFactorConfirmed } = this.state;
     const toggle = !twoFactorEnabled;
     if (toggle) { 
       // Enable TFA. Ask the API for a TFA secret.
@@ -209,7 +211,7 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
     } else {
       // If TFA isn't active on the account,
       // there's nothing to do here; just flip the toggle.
-      if (!this.props.twoFactor) { 
+      if (!twoFactorConfirmed) { 
         this.setState({ twoFactorEnabled: false })
         return; 
       }

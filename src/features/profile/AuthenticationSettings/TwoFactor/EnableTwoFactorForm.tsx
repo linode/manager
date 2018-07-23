@@ -75,14 +75,19 @@ export class EnableTwoFactorForm extends React.Component<CombinedProps, State> {
     this.setState({ submitting: true });
     confirmTwoFactor(safeToken)
     .then((response) => {
+      this.setState({ errors: undefined, });
       this.props.onSuccess();
     })
     .catch((error) => {
       if (!this.mounted) { return; }
       const fallbackError = [{ field: 'tfa_code', reason: 'Could not confirm code.' }];
+      let APIErrors = pathOr(fallbackError, ['response', 'data', 'errors'], error);
+      APIErrors = APIErrors.filter((error:Linode.ApiFieldError) => {
+        return error.field === 'tfa_code';
+      })
 
       this.setState({
-          errors: pathOr(fallbackError, ['response', 'data', 'errors'], error),
+          errors: fallbackError
         }, () => {
         scrollErrorIntoView();
       });
@@ -121,7 +126,7 @@ export class EnableTwoFactorForm extends React.Component<CombinedProps, State> {
         }
         <Divider className={classes.divider} />
         <ConfirmToken
-          error={tokenError || generalError} 
+          error={tokenError} 
           token={token}
           submitting={submitting}
           handleChange={this.handleTokenInputChange}
