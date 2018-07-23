@@ -27,7 +27,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     root: {
       padding: theme.spacing.unit * 3,
       paddingBottom: theme.spacing.unit * 3,
-      marginBottom: theme.spacing.unit * 3,
+      marginTop: theme.spacing.unit * 3,
     },
     select: {
       maxWidth: '30%',  
