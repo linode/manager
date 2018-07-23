@@ -23,6 +23,8 @@ import TopMenu from 'src/features/TopMenu';
 import { getLinodeTypes } from 'src/services/linodes';
 import { getRegions } from 'src/services/misc';
 import { getProfile } from 'src/services/profile';
+
+import { addEvent, removeEvent } from 'src/store/reducers/events';
 import { request, response } from 'src/store/reducers/resources';
 import composeState from 'src/utilities/composeState';
 
@@ -152,7 +154,10 @@ interface Props {
 interface ConnectedProps {
   request: typeof request;
   response: typeof response;
+  addEvent: typeof addEvent;
+  removeEvent: typeof removeEvent;
   documentation: Linode.Doc[];
+  events: Linode.Event[];
 }
 
 interface State {
@@ -253,7 +258,7 @@ export class App extends React.Component<CombinedProps, State> {
   }
 
   componentDidMount() {
-    const { request, response } = this.props;
+    const { request, response, addEvent } = this.props;
 
     getToken()
       .then((data: any) => {
@@ -265,7 +270,16 @@ export class App extends React.Component<CombinedProps, State> {
 
         this.socket.onmessage = (e: any) => {
           console.log('new message');
-          console.log(e);
+          const data = JSON.parse(e.data);
+          /*
+          * check if body is an object because the inital connection will
+          * send a message that is just a string and there's no need to add
+          * that to redux state
+          */
+          if (typeof data.body === 'object') {
+            addEvent(data.body);
+          }
+          console.log(this.props.events);
           this.setState({ socketMessages: e });
         }
 
@@ -369,13 +383,14 @@ export class App extends React.Component<CombinedProps, State> {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
-  { request, response },
+  { request, response, removeEvent, addEvent },
   dispatch,
 );
 
 const mapStateToProps = (state: Linode.AppState) => ({
   longLivedLoaded: Boolean(pathOr(false, ['resources', 'profile', 'data'], state)),
   documentation: state.documentation,
+  events: state.events,
 });
 
 export const connected = connect(mapStateToProps, mapDispatchToProps);

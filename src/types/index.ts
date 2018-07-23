@@ -52,6 +52,7 @@ namespace Linode {
     resources: ResourcesState;
     documentation: DocumentationState;
     volumeDrawer: VolumeDrawerState;
+    events: Partial<Linode.Event>[];
   }
 
   export interface LinodeSpecs {
