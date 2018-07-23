@@ -132,3 +132,10 @@ export const createUser = (data: Partial<Linode.User>) =>
     setData(data),
   )
     .then(response => response.data);
+
+export const deleteUser = (username: string) =>
+  Request<{}>(
+    setURL(`${API_ROOT}/account/users/${username}`),
+    setMethod('DELETE'),
+  )
+    .then(response => response.data);
