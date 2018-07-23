@@ -8,14 +8,14 @@ describe('Volume Configuration Panel', () => {
     const testVolume = {
         label: `V${new Date().getTime()}`,
         size: '10',
-        regionIndex: 0,
+        region: 'us-east',
     }
 
     afterAll(() => {
         apiDeleteAllVolumes();
     });
 
-    it('should setup the spec', () => {
+    beforeAll(() => {
         browser.url(constants.routes.volumes);
         Volumes.baseElemsDisplay(true);
         VolumeDetail.createVolume(testVolume);

@@ -94,7 +94,7 @@ export class VolumeDetail extends Page {
         this.drawerTitle.waitForVisible();
 
         browser.trySetValue('[data-qa-volume-label] input', volume.label);
-        this.size.$('input').setValue(volume.size);
+        browser.trySetValue('[data-qa-size] input', volume.size);
 
         if (volume.hasOwnProperty('region')) {
             this.region.waitForVisible();
@@ -207,15 +207,16 @@ export class VolumeDetail extends Page {
             browser.waitForVisible('[data-qa-dialog-title]', constants.wait.normal, true);
 
             // Wait for progress bars to not display on volume detail pages
-            if (!browser.getUrl().includes('/linodes')) {
-                browser.waitForVisible('[data-qa-volume-loading]', constants.wait.long);
-                browser.waitForVisible('[data-qa-volume-loading]', constants.wait.long, true);
-            }
+            browser.waitForVisible('[data-qa-volume-loading]', constants.wait.long, true);
+
+            browser.waitUntil(function() {
+                return volumeElement.$('[data-qa-volume-cell-attachment]').getText() === '';
+            }, constants.wait.normal);
         }
         const numberOfVolumes = this.volumeCell.length;
         volumeElement.$('[data-qa-action-menu]').click();
 
-        browser.waitForVisible('[data-qa-action-menu-item="Delete"]');
+        browser.waitForVisible('[data-qa-action-menu-item="Delete"]', constants.wait.normal);
         browser.jsClick('[data-qa-action-menu-item="Delete"]');
 
         browser.waitForVisible('[data-qa-dialog-title]');
