@@ -313,6 +313,7 @@ interface ContainerState {
   sortOrder: SortOrder;
   currentFilterType: CurrentFilter | null;
   currentFilter: any; // @TODO type correctly
+  currentSearchFilter: any;
   isSorting: boolean;
   error?: Error;
   fieldError: Linode.ApiFieldError | undefined;
@@ -335,6 +336,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
     sortOrder: 'asc',
     currentFilterType: null,
     currentFilter: { ['+order_by']: 'deployments_total', ['+order']: 'desc' },
+    currentSearchFilter: {},
     isSorting: false,
     error: undefined,
     fieldError: undefined,
@@ -370,6 +372,9 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
       .then((response: Linode.ResourcePage<Linode.StackScript.Response>) => {
         if (!this.mounted) { return; }
 
+        /*
+        * if we have no results at all or if we've loaded all available results
+        */
         if (!response.data.length || response.data.length === response.results) {
           this.setState({ showMoreButtonVisible: false });
         }
@@ -500,9 +505,17 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
   }
 
   handleClickStackScriptsTableHeader = () => {
-    const { sortOrder } = this.state;
+    const { currentSearchFilter, sortOrder } = this.state;
     const nextSortOrder = (sortOrder === 'asc') ? 'desc' : 'asc';
-    this.getDataAtPage(1, { ['+order_by']: 'label', ['+order']: sortOrder }, true);
+    /*
+    * If a search filter is applied, persist the search terms
+    * when we sort the table results
+    */
+    const filterWithSearch = (!!Object.keys(currentSearchFilter).length)
+      ? { ['+order_by']: 'label', ['+order']: sortOrder, ...currentSearchFilter }
+      : { ['+order_by']: 'label', ['+order']: sortOrder }
+
+    this.getDataAtPage(1, filterWithSearch, true);
     this.setState({
       sortOrder: nextSortOrder,
       currentFilterType: 'label',
@@ -511,9 +524,17 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
   }
 
   handleClickDeploymentsTableHeader = () => {
-    const { sortOrder } = this.state;
+    const { currentSearchFilter, sortOrder } = this.state;
     const nextSortOrder = (sortOrder === 'asc') ? 'desc' : 'asc';
-    this.getDataAtPage(1, { ['+order_by']: 'deployments_active', ['+order']: sortOrder }, true);
+    /*
+    * If a search filter is applied, persist the search terms
+    * when we sort the table results
+    */
+    const filterWithSearch = (!!Object.keys(currentSearchFilter).length)
+      ? { ['+order_by']: 'deployments_active', ['+order']: sortOrder, ...currentSearchFilter }
+      : { ['+order_by']: 'deployments_active', ['+order']: sortOrder }
+
+    this.getDataAtPage(1, filterWithSearch, true);
     this.setState({
       sortOrder: nextSortOrder,
       currentFilterType: 'deploys',
@@ -522,9 +543,17 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
   }
 
   handleClickRevisionsTableHeader = () => {
-    const { sortOrder } = this.state;
+    const { currentSearchFilter, sortOrder } = this.state;
     const nextSortOrder = (sortOrder === 'asc') ? 'desc' : 'asc';
-    this.getDataAtPage(1, { ['+order_by']: 'updated', ['+order']: sortOrder }, true);
+    /*
+    * If a search filter is applied, persist the search terms
+    * when we sort the table results
+    */
+    const filterWithSearch = (!!Object.keys(currentSearchFilter).length)
+      ? { ['+order_by']: 'updated', ['+order']: sortOrder, ...currentSearchFilter }
+      : { ['+order_by']: 'updated', ['+order']: sortOrder }
+
+    this.getDataAtPage(1, filterWithSearch, true);
     this.setState({
       sortOrder: nextSortOrder,
       currentFilterType: 'revision',
@@ -719,8 +748,6 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
     const { currentFilter } = this.state;
     const filteredUser = (isLinodeStackScripts) ? 'linode' : currentUser;
 
-    this.setState({ isSearching: true, didSearch: true });
-
     const filter = {
       ["+or"]: [
         {
@@ -734,7 +761,12 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
           },
         },
       ],
-    }
+    };
+
+    this.setState({
+      isSearching: true, // wether to show the loading spinner in search bar
+      didSearch: true, // table will show default empty state unless didSearch is true
+    });
 
     request(
       filteredUser,
@@ -744,6 +776,21 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
       .then((response) => {
         if (!this.mounted) { return; }
         this.setState({ listOfStackScripts: response.data, isSearching: false });
+        /*
+        * If we're searching for search result, prevent the user
+        * from loading more stackscripts
+        */
+        if (value) {
+          this.setState({ 
+            showMoreButtonVisible: false,
+            currentSearchFilter: filter,
+           });
+        } else {
+          this.setState({
+            showMoreButtonVisible: true,
+            currentSearchFilter: [],
+          });
+        }
       })
       .catch(e => {
         if (!this.mounted) { return; }
