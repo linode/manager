@@ -35,7 +35,7 @@ const events = (state = defaultState, action: ActionTypes) => {
         {
           id: action.id,
           action: action.action,
-          entitiy: action.entity,
+          entity: action.entity,
         }
       ]
     case REMOVE_EVENT:

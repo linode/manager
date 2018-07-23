@@ -2,6 +2,10 @@
 // import { clone, compose, defaultTo, lensPath, map, over, path, pathEq, pathOr } from 'ramda';
 import { compose, lensPath, pathOr } from 'ramda';
 import * as React from 'react';
+import { connect, Dispatch } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/observable/of';
@@ -27,7 +31,7 @@ import LinodeConfigSelectionDrawer, { LinodeConfigSelectionDrawerCallback } from
 // import { newLinodeEvents } from 'src/features/linodes/events';
 // import notifications$ from 'src/notifications';
 import { getImages } from 'src/services/images';
-import { getLinodes } from 'src/services/linodes';
+import { getLinode, getLinodes } from 'src/services/linodes';
 import scrollToTop from 'src/utilities/scrollToTop';
 
 import LinodesGridView from './LinodesGridView';
@@ -35,6 +39,8 @@ import LinodesListView from './LinodesListView';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
 // import { powerOffLinode, rebootLinode } from './powerActions';
 import ToggleBox from './ToggleBox';
+
+import { removeEvent } from 'src/store/reducers/events';
 
 type ClassNames = 'root' | 'title';
 
@@ -50,6 +56,10 @@ interface Props { }
 interface PreloadedProps {
   linodes: PromiseLoaderResponse<Linode.ResourcePage<Linode.EnhancedLinode>>;
   images: PromiseLoaderResponse<Linode.ResourcePage<Linode.Image>>;
+}
+
+interface ConnectedProps {
+  events: Partial<Linode.Event>[];
 }
 
 interface ConfigDrawerState {
@@ -91,7 +101,8 @@ type CombinedProps = Props
   & PreloadedProps
   & RouteComponentProps<{}>
   & WithStyles<ClassNames>
-  & SetDocsProps;
+  & SetDocsProps
+  & ConnectedProps;
 
 const L = {
   response: {
@@ -141,6 +152,13 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
   ];
 
+  isRelevantEvent = (status: string) => {
+    if (status === 'linode_boot') {
+      return true;
+    }
+    return false;
+  } 
+
   componentDidMount() {
     this.mounted = true;
     // const mountTime = moment().subtract(5, 'seconds');
@@ -150,6 +168,50 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     if (typesLastUpdated === 0 && !typesLoading) {
       typesRequest();
     }
+
+    /*
+    * we only want to update Linodes if we have a Linode that's
+    * in the process of booting
+    */
+    const linodesToUpdate = this.props.events.filter(event => {
+      return this.isRelevantEvent(event.action!);
+    });
+
+    /*
+    * Now that we have our linodes that we know need to be updated,
+    * we need to run getLinode for that linode
+    */
+    const getEachLinode = () => {
+      return !!linodesToUpdate.length && Promise.all(linodesToUpdate.map(linodeToUpdate => {
+        return new Promise(() => {
+          return getLinode(linodeToUpdate.entity!.id)
+            .then((response: any) => {
+              this.setState({
+                linodes: [
+                  ...this.state.linodes.filter(linode => linode.id !== response.data.id),
+                  ...response.data,
+                ]
+              })
+              return response;
+            })
+            .catch(e => e)
+        })
+      }))
+        .then((response: any) => response)
+        .catch(e => e)
+    }
+    // const promises = linodesToUpdate.map(linodeToUpdate => {
+    //   return new Promise(() => {
+    //     return getLinode(linodeToUpdate.entity!.id)
+    //       .then(data => data)
+    //       .catch(e => e)
+    //   })
+    // });
+
+    setInterval(
+      () => getEachLinode(),
+      4000
+    )
 
     // this.eventsSub = events$
     //   .filter(newLinodeEvents(mountTime))
@@ -471,8 +533,20 @@ const typesContext = withTypes(({
   typesLastUpdated,
 }));
 
+const mapStateToProps = (state: Linode.AppState) => ({
+  events: state.events,
+});
+
+const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
+  { removeEvent },
+  dispatch
+);
+
+const connected = connect(mapStateToProps, mapDispatchToProps);
+
 export const enhanced = compose(
   withRouter,
+  connected,
   typesContext,
   styled,
   preloaded,
