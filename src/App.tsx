@@ -17,9 +17,9 @@ import SideMenu from 'src/components/SideMenu';
 import { RegionsProvider, WithRegionsContext } from 'src/context/regions';
 import { TypesProvider, WithTypesContext } from 'src/context/types';
 import Footer from 'src/features/Footer';
-import ToastNotifications from 'src/features/ToastNotifications';
+// import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
-import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
+// import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import { getLinodeTypes } from 'src/services/linodes';
 import { getRegions } from 'src/services/misc';
 import { getProfile } from 'src/services/profile';
@@ -248,26 +248,33 @@ export class App extends React.Component<CombinedProps, State> {
 
   socket: WebSocket;
 
+  componentWillUnmount() {
+    this.socket.close();
+  }
+
   componentDidMount() {
     const { request, response } = this.props;
 
     getToken()
       .then((data: any) => {
-        console.log(data);
         this.socket = new WebSocket(`ws://events.lindev.local:7443/${data.data.token}`);
 
         this.socket.onopen = () => {
-          console.log('opened');
+          console.log('connection opened!');
         }
 
         this.socket.onmessage = (e: any) => {
-          console.log('message recieved!');
-          console.log(e)
+          console.log('new message');
+          console.log(e);
           this.setState({ socketMessages: e });
         }
 
         this.socket.onclose = () => {
-          console.log('closed');
+          console.log('connection closed');
+        }
+
+        this.socket.onerror = () => {
+          console.log('error: connection closed');
         }
       })
 
@@ -305,8 +312,6 @@ export class App extends React.Component<CombinedProps, State> {
     const { menuOpen } = this.state;
     const { classes, longLivedLoaded, documentation, toggleTheme } = this.props;
     const hasDoc = documentation.length > 0;
-
-    console.log(this.state.socketMessages);
 
     return (
       <React.Fragment>
@@ -351,8 +356,8 @@ export class App extends React.Component<CombinedProps, State> {
                     open={this.state.betaNotification}
                     onClose={this.closeBetaNotice}
                     data-qa-beta-notice />
-                  <ToastNotifications />
-                  <VolumeDrawer />
+                  {/* <ToastNotifications />
+                  <VolumeDrawer /> */}
                 </div>
               </RegionsProvider>
             </TypesProvider>

@@ -9,7 +9,7 @@ import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
 import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
-import { resetEventsPolling } from 'src/events';
+// import { resetEventsPolling } from 'src/events';
 import { Info } from 'src/features/linodes/LinodesCreate/LinodesCreate';
 import { allocatePrivateIP, createLinode } from 'src/services/linodes';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
@@ -154,7 +154,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
     })
       .then((linode) => {
         if (privateIP) { allocatePrivateIP(linode.id); }
-        resetEventsPolling();
+        // resetEventsPolling();
         history.push('/linodes');
       })
       .catch((error) => {

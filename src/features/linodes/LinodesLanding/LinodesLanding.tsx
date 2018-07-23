@@ -1,11 +1,12 @@
-import * as moment from 'moment';
-import { clone, compose, defaultTo, lensPath, map, over, path, pathEq, pathOr } from 'ramda';
+// import * as moment from 'moment';
+// import { clone, compose, defaultTo, lensPath, map, over, path, pathEq, pathOr } from 'ramda';
+import { compose, lensPath, pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/filter';
-import { Observable } from 'rxjs/Observable';
+// import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import Hidden from '@material-ui/core/Hidden';
@@ -21,18 +22,18 @@ import Grid from 'src/components/Grid';
 import PaginationFooter from 'src/components/PaginationFooter';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import { withTypes } from 'src/context/types';
-import { events$ } from 'src/events';
+// import { events$ } from 'src/events';
 import LinodeConfigSelectionDrawer, { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
-import { newLinodeEvents } from 'src/features/linodes/events';
-import notifications$ from 'src/notifications';
+// import { newLinodeEvents } from 'src/features/linodes/events';
+// import notifications$ from 'src/notifications';
 import { getImages } from 'src/services/images';
-import { getLinode, getLinodes } from 'src/services/linodes';
+import { getLinodes } from 'src/services/linodes';
 import scrollToTop from 'src/utilities/scrollToTop';
 
 import LinodesGridView from './LinodesGridView';
 import LinodesListView from './LinodesListView';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
-import { powerOffLinode, rebootLinode } from './powerActions';
+// import { powerOffLinode, rebootLinode } from './powerActions';
 import ToggleBox from './ToggleBox';
 
 type ClassNames = 'root' | 'title';
@@ -142,7 +143,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     this.mounted = true;
-    const mountTime = moment().subtract(5, 'seconds');
+    // const mountTime = moment().subtract(5, 'seconds');
 
     const { typesLastUpdated, typesLoading, typesRequest } = this.props;
 
@@ -150,54 +151,54 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       typesRequest();
     }
 
-    this.eventsSub = events$
-      .filter(newLinodeEvents(mountTime))
-      .filter(e => !e._initial)
-      .subscribe((linodeEvent) => {
-        const linodeId = path<number>(['entity', 'id'], linodeEvent);
-        if (!linodeId) { return; }
+    // this.eventsSub = events$
+    //   .filter(newLinodeEvents(mountTime))
+    //   .filter(e => !e._initial)
+    //   .subscribe((linodeEvent) => {
+    //     const linodeId = path<number>(['entity', 'id'], linodeEvent);
+    //     if (!linodeId) { return; }
 
-        getLinode(linodeId)
-          .then(response => response.data)
-          .then((linode) => {
-            if (!this.mounted) { return; }
+    //     getLinode(linodeId)
+    //       .then(response => response.data)
+    //       .then((linode) => {
+    //         if (!this.mounted) { return; }
 
-            return this.setState((prevState) => {
-              const targetIndex = prevState.linodes.findIndex(
-                _linode => _linode.id === (linodeEvent.entity as Linode.Entity).id);
-              const updatedLinodes = clone(prevState.linodes);
-              updatedLinodes[targetIndex] = linode;
-              updatedLinodes[targetIndex].recentEvent = linodeEvent;
-              return { linodes: updatedLinodes };
-            });
-          });
-      });
+    //         return this.setState((prevState) => {
+    //           const targetIndex = prevState.linodes.findIndex(
+    //             _linode => _linode.id === (linodeEvent.entity as Linode.Entity).id);
+    //           const updatedLinodes = clone(prevState.linodes);
+    //           updatedLinodes[targetIndex] = linode;
+    //           updatedLinodes[targetIndex].recentEvent = linodeEvent;
+    //           return { linodes: updatedLinodes };
+    //         });
+    //       });
+    //   });
 
-    this.notificationSub = Observable
-      .combineLatest(
-        notifications$
-          .map(notifications => notifications.filter(pathEq(['entity', 'type'], 'linode'))),
-        Observable.of(this.props.linodes),
-    )
-      .map(([notifications, linodes]) => over(
-        L.response.data,
-        compose(
-          map(addNotificationToLinode(notifications)),
-          defaultTo([]),
-        ),
-        linodes,
-      ))
-      .subscribe((response) => {
-        if (!this.mounted) { return; }
+    // this.notificationSub = Observable
+    //   .combineLatest(
+    //     notifications$
+    //       .map(notifications => notifications.filter(pathEq(['entity', 'type'], 'linode'))),
+    //     Observable.of(this.props.linodes),
+    // )
+    //   .map(([notifications, linodes]) => over(
+    //     L.response.data,
+    //     compose(
+    //       map(addNotificationToLinode(notifications)),
+    //       defaultTo([]),
+    //     ),
+    //     linodes,
+    //   ))
+    //   .subscribe((response) => {
+    //     if (!this.mounted) { return; }
 
-        return this.setState({ linodes: response.response.data });
-      });
+    //     return this.setState({ linodes: response.response.data });
+    //   });
   }
 
   componentWillUnmount() {
     this.mounted = false;
-    this.eventsSub.unsubscribe();
-    this.notificationSub.unsubscribe();
+    // this.eventsSub.unsubscribe();
+    // this.notificationSub.unsubscribe();
   }
 
   openConfigDrawer = (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => {
@@ -313,15 +314,15 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     });
   }
 
-  rebootOrPowerLinode = () => {
-    const { bootOption, selectedLinodeId, selectedLinodeLabel } = this.state;
-    if (bootOption === 'reboot') {
-      rebootLinode(this.openConfigDrawer, selectedLinodeId!, selectedLinodeLabel);
-    } else {
-      powerOffLinode(selectedLinodeId!, selectedLinodeLabel);
-    }
-    this.setState({ powerAlertOpen: false });
-  }
+  // rebootOrPowerLinode = () => {
+  //   const { bootOption, selectedLinodeId, selectedLinodeLabel } = this.state;
+  //   if (bootOption === 'reboot') {
+  //     rebootLinode(this.openConfigDrawer, selectedLinodeId!, selectedLinodeLabel);
+  //   } else {
+  //     powerOffLinode(selectedLinodeId!, selectedLinodeLabel);
+  //   }
+  //   this.setState({ powerAlertOpen: false });
+  // }
 
   render() {
     const { location: { hash } } = this.props;
@@ -421,7 +422,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
         </Button>
         <Button
           type="secondary"
-          onClick={this.rebootOrPowerLinode}
+          // onClick={this.rebootOrPowerLinode}
           data-qa-confirm-cancel
         >
           {bootOption === 'reboot' ? 'Reboot' : 'Power Off'}
