@@ -1,4 +1,4 @@
-import { lensPath, pathOr, set } from 'ramda';
+import { compose, lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 
 import Divider from '@material-ui/core/Divider';
@@ -12,17 +12,18 @@ import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
+import SelectionCard from 'src/components/SelectionCard';
 import Toggle from 'src/components/Toggle';
 import { getGrants, updateGrants, updateUser } from 'src/services/account';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames =
   'titleWrapper'
   | 'topGrid'
   | 'unrestrictedRoot'
   | 'globalSection'
-  | 'section'
-  | 'actionsPanel';
+  | 'section';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   topGrid: {
@@ -43,9 +44,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   section: {
     marginTop: theme.spacing.unit * 2,
   },
-  actionsPanel: {
-    marginTop: theme.spacing.unit * 3,
-  }
 });
 
 interface Props {
@@ -57,6 +55,10 @@ interface State {
   grants?: Linode.Grants;
   restricted?: boolean;
   errors?: Linode.ApiFieldError[];
+  success?: {
+    global: string,
+    specific: string,
+  }
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -101,7 +103,8 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           this.setState({
             errors: [{ reason: 
               'Unknown error occured while fetching user permissions. Try again later.'}]
-          })
+          });
+          scrollErrorIntoView();
         });
     }
   }
@@ -183,20 +186,25 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     }
 
     if (type === 'global') {
+      this.setState(set(lensPath(['success', 'global']), ''));
       updateGrants(username, { global: grants.global } as Partial<Linode.Grants>)
         .then((grantsResponse) => {
-          this.setState({
-            grants: grantsResponse,
-          })
+          this.setState(compose(
+            set(lensPath(['grants', 'global']), grantsResponse.global),
+            set(lensPath(['success', 'global']),
+              'Successfully updated global permissions'),
+          ));
         })
         .catch((errResponse) => {
           this.setState({
             errors: pathOr(
-              [{ reason: 'Error while updating global permissions for this user. Try again later'}],
+              [{ reason: 
+                'Error while updating global permissions for this user. Try again later'}],
               ['response', 'data', 'errors'],
               errResponse,
             ),
           })
+          scrollErrorIntoView();
         });
     }
   }
@@ -208,7 +216,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   ) => () => {
     const { classes } = this.props;
     return (
-      <ActionsPanel className={classes.actionsPanel}>
+      <ActionsPanel className={classes.section}>
         <Button
           type="primary"
           loading={loading}
@@ -225,21 +233,67 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       </ActionsPanel>
     );
   }
+  
+  billingPermOnClick = (value: string | null) => () => {
+    const lp = lensPath(['grants', 'global', 'account_access']);
+    this.setState(set(lp, value));
+  }
+
+  renderBillingPerm = () => {
+    const { classes } = this.props;
+    const { grants } = this.state;
+    if (!(grants && grants.global)) { return null; }
+    return (
+      <div className={classes.section}>
+        <Grid container className={classes.section}>
+          <Grid item>
+            <Typography variant="subheading">
+              Billing Access
+            </Typography>
+          </Grid>
+        </Grid>
+        <Grid container className={classes.section}>
+          <SelectionCard
+            heading="None"
+            subheadings={['The user cannot view any billing information.']}
+            checked={grants.global.account_access === null}
+            onClick={this.billingPermOnClick(null)}
+          />
+          <SelectionCard
+            heading="Read Only"
+            subheadings={['Read Only']}
+            checked={grants.global.account_access === 'read_only'}
+            onClick={this.billingPermOnClick('read_only')}
+          />
+          <SelectionCard
+            heading="Read-Write"
+            subheadings={['Read-Write']}
+            checked={grants.global.account_access === 'read_write'}
+            onClick={this.billingPermOnClick('read_write')}
+          />
+        </Grid>
+      </div>
+    );
+  }
 
   renderGlobalPerms = () => {
     const { classes } = this.props;
-    const { grants } = this.state;
+    const { grants, success } = this.state;
     return (
       <Paper className={classes.globalSection}>
         <Typography variant="title">
           Global Permissions
         </Typography>
+        {success && success.global &&
+          <Notice success text={success.global} className={classes.section}/>
+        }
         <div className={classes.section}>
           {grants && grants.global &&
             this.globalBooleanPerms
               .map((perm) => this.renderGlobalPerm(perm, grants.global[perm] as boolean))
           }
         </div>
+        {this.renderBillingPerm()}
         {this.renderActions(
           this.savePermsType('global'),
           () => null,
