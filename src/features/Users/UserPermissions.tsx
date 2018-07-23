@@ -1,13 +1,17 @@
 import * as React from 'react';
 
+import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
+import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';
-import { getGrants } from 'src/services/account';
+import { getGrants, updateUser } from 'src/services/account';
+import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
-type ClassNames = 'titleWrapper' | 'topGrid';
+type ClassNames = 'titleWrapper' | 'topGrid' | 'unrestrictedRoot'
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   topGrid: {
@@ -17,6 +21,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
   },
+  unrestrictedRoot: {
+    marginTop: theme.spacing.unit * 2,
+    padding: theme.spacing.unit * 3,
+  }
 });
 
 interface Props {
@@ -24,8 +32,9 @@ interface Props {
 }
 
 interface State {
+  loading: boolean;
   grants?: Linode.Grants;
-  restricted: boolean;
+  restricted?: boolean;
   errors?: Linode.ApiFieldError[];
 }
 
@@ -33,7 +42,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 class UserPermissions extends React.Component<CombinedProps, State> {
   state: State = {
-    restricted: true,
+    loading: true,
   };
 
   getUserGrants = () => {
@@ -41,10 +50,19 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     if (username) {
       getGrants(username)
         .then((grants) => {
-          this.setState({
-            grants,
-          })
-          console.log(grants);
+          if (grants.global) {
+            this.setState({
+              grants,
+              loading: false,
+              restricted: true,
+            })
+          } else {
+            this.setState({
+              grants,
+              loading: false,
+              restricted: false,
+            })
+          }
         })
         .catch((errResponse) => {
           this.setState({
@@ -55,24 +73,67 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     }
   }
 
+  componentDidMount() {
+    this.getUserGrants();
+  }
+
   componentDidUpdate(prevProps: CombinedProps) {
     if (prevProps.username !== this.props.username) {
       this.getUserGrants();
-}
+    }
   }
 
   onChangeRestricted = () => {
+    const { username } = this.props;
     this.setState({
-      restricted: !this.state.restricted,
+      errors: [],
     })
+    if (username) {
+      updateUser(username, { restricted: !this.state.restricted })
+        .then((user) => {
+          this.setState({
+            restricted: user.restricted,
+          })
+        })
+        .catch((errResponse) => {
+          this.setState({
+            errors: [{
+              reason: 'Error when updating user restricted status. Please try again later.'
+            }],
+          })
+        })
+    }
   }
 
-  render() {
+  renderPermissions = () => {
+    return (
+      <div>Permissions</div>
+    )
+  }
+
+  renderUnrestricted = () => {
     const { classes } = this.props;
-    const { restricted } = this.state;
+    /* TODO: render all permissions disabled with this message above */
+    return (
+      <Paper className={classes.unrestrictedRoot}>
+        <Typography>
+          This user has unrestricted access to the account.
+        </Typography>
+      </Paper>
+    );
+  }
+
+  renderBody = () => {
+    const { classes } = this.props;
+    const { restricted, errors } = this.state;
+    const hasErrorFor = getAPIErrorsFor({ restricted: "Restricted" }, errors,)
+    const generalError = hasErrorFor('none');
 
     return (
       <React.Fragment>
+        {generalError &&
+          <Notice error text={generalError} />
+        }
         <Grid container className={classes.topGrid} justify="space-between">
           <Grid item className={classes.titleWrapper}>
             <Typography variant="title">
@@ -103,6 +164,22 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             </Grid>
           </Grid>
         </Grid>
+        {restricted
+          ? this.renderPermissions()
+          : this.renderUnrestricted()
+        }
+      </React.Fragment>
+    );
+  }
+
+  render() {
+    const { loading } = this.state;
+    return (
+      <React.Fragment>
+        {loading
+          ? <CircleProgress />
+          : this.renderBody()
+        }
       </React.Fragment>
     )
   }

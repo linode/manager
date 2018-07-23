@@ -41,12 +41,18 @@ namespace Linode {
   }
 
   export interface Grant {
-
+    id: number;
+    permissions: null | 'read_only' | 'read_write';
+    label: string;
   }
 
-  export interface Grants {
+  export interface GlobalGrants {
     global: {
-      [key: string]: bool,
+      [key: string]: boolean | null | 'read_only' | 'read_write'
     };
+  }
+
+  export type Grants = GlobalGrants & {
+    [key: string]: Grant[];
   }
 }
