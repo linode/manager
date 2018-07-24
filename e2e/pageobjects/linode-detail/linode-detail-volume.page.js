@@ -117,12 +117,7 @@ export class VolumeDetail extends Page {
         this.submit.click();
 
         if (volume.hasOwnProperty('attachedLinode')) {
-            browser.waitUntil(function() {
-                browser.waitForVisible('[data-qa-volume-cell-attachment]', constants.wait.long);
-                const volsAttachedToLinode = $$('[data-qa-volume-cell-attachment]')
-                    .filter(v => v.getText() === volume.attachedLinode);
-                return volsAttachedToLinode.length > 0;
-            }, constants.wait.normal, 'Volume failed to attach');
+            browser.waitForVisible(`[data-qa-volume-cell-attachment="${volume.attachedLinode}"]`, constants.wait.long);
         }
 
         if (volume.hasOwnProperty('region')) {
@@ -211,7 +206,7 @@ export class VolumeDetail extends Page {
 
             browser.waitUntil(function() {
                 return volumeElement.$('[data-qa-volume-cell-attachment]').getText() === '';
-            }, constants.wait.normal);
+            }, constants.wait.long, 'Remove Volume: Failed to detach volume');
         }
         const numberOfVolumes = this.volumeCell.length;
         volumeElement.$('[data-qa-action-menu]').click();
@@ -219,7 +214,7 @@ export class VolumeDetail extends Page {
         browser.waitForVisible('[data-qa-action-menu-item="Delete"]', constants.wait.normal);
         browser.jsClick('[data-qa-action-menu-item="Delete"]');
 
-        browser.waitForVisible('[data-qa-dialog-title]');
+        browser.waitForVisible('[data-qa-dialog-title]', constants.wait.normal);
 
         const dialogTitle = $('[data-qa-dialog-title]');
         const dialogConfirm = $('[data-qa-confirm]');

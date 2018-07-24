@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { compose, equals, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
@@ -236,7 +237,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
                   : (
                     <TableRow key={volume.id} data-qa-volume-cell={volume.id}>
                       <TableCell data-qa-volume-cell-label>{label}</TableCell>
-                      <TableCell data-qa-volume-cell-attachment>
+                      <TableCell data-qa-volume-cell-attachment={linodeLabel}>
                         {linodeLabel &&
                           <Link to={`/linodes/${volume.linode_id}`}>
                             {linodeLabel}
@@ -478,3 +479,4 @@ export default compose<Linode.TodoAny, Linode.TodoAny, Linode.TodoAny, Linode.To
   connected,
   styled,
 )(VolumesLanding);
+
