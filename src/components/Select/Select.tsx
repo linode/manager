@@ -43,7 +43,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     alignItems: 'flex-end',
   },
   helpWrapperSelectField: {
-    width: 380,
+    width: 415,
     [theme.breakpoints.down('xs')]: {
       width: 240,
     },
@@ -51,7 +51,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 });
 
 interface Props extends SelectProps {
-  helpText?: string;
+  tooltipText?: string;
   success?: boolean;
   open?: boolean;
   errorText?: string;
@@ -65,7 +65,7 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
   classes,
   success,
   error,
-  helpText,
+  tooltipText,
   errorText,
   errorGroup,
   ...props
@@ -94,13 +94,13 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
     [classes.inputSucess]: success === true,
     [classes.inputError]: error === true,
     [errorScrollClassName]: !!errorScrollClassName,
-    [classes.helpWrapperSelectField]: Boolean(helpText),
+    [classes.helpWrapperSelectField]: Boolean(tooltipText),
   });
 
   return (
     <React.Fragment>
       <div className={classNames({
-        [classes.helpWrapper]: Boolean(helpText),
+        [classes.helpWrapper]: Boolean(tooltipText),
       })}>
         <Select
           open={props.open}
@@ -112,7 +112,7 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
         >
           {children}
         </Select>
-        {helpText && <HelpIcon text={helpText} />}
+        {tooltipText && <HelpIcon text={tooltipText} />}
       </div>
       {errorText && <FormHelperText className={classes.textError}>{errorText}</FormHelperText>}
     </React.Fragment>

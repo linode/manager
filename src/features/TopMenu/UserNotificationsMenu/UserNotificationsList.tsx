@@ -1,34 +1,15 @@
-import * as classNames from 'classnames';
-import { compose, path, pathOr } from 'ramda';
+import { compose, path } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
-import Notice from 'src/components/Notice';
+import UserNotificationListItem from './UserNotificationListItem';
 
-type ClassNames = 'root' 
-| 'pointer'
-| 'emptyText';
+type ClassNames = 'emptyText';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {
-    margin: 0,
-    justifyContent: 'center',
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px`,
-    borderBottom: `1px solid ${theme.palette.divider}`,
-    '& p': {
-      color: '#333',
-    },
-    '& + .notice': {
-      marginTop: '0 !important',
-    },
-  },
-  pointer: {
-    cursor: 'pointer',
-  },
-  list: {},
   emptyText: {
     padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px`,
     fontWeight: 700,
@@ -56,24 +37,18 @@ class UserNotificationsList extends React.Component<CombinedProps, State> {
     }
 
     return (notifications || []).map((notification, idx) => {
-      const level = pathOr('warning', [notification.severity], severityMap);
       const onClick = createClickHandlerForNotification(
         notification,
         (path: string) => {
           closeMenu();
           push(path);
         });
-      return React.createElement(Notice, {
+      return React.createElement(UserNotificationListItem, {
         key: idx,
-        children: notification.message,
-        className: classNames({
-          [classes.root]: true,
-          notifications: true,
-          [classes.pointer]: Boolean(onClick),
-        }),
-        [level]: true,
-        notificationList: true,
-        onClick
+        label: notification.label,
+        message: notification.message,
+        severity: notification.severity,
+        onClick,
       });
     });
   }
@@ -81,13 +56,13 @@ class UserNotificationsList extends React.Component<CombinedProps, State> {
 
 const createClickHandlerForNotification =
   (notification: null | Linode.Notification, onClick: (path: string) => void) => {
-    if(!notification){ return; }
+    if (!notification) { return; }
 
     /**
      * Privacy poliicy changes can only be made in CF manager for now, so we have to
      * link externally.
      */
-    if(notification.type === 'notice' && notification.label === `We've updated our policies.`){
+    if (notification.type === 'notice' && notification.label === `We've updated our policies.`) {
       return (e: React.MouseEvent<HTMLElement>) => {
         window.location.href = `https://manager.linode.com/account/policy`;
       };
@@ -105,18 +80,12 @@ const createClickHandlerForNotification =
 
       case 'ticket':
         return (e: React.MouseEvent<HTMLElement>) => onClick(`/support/ticket/${id}`);
-      
+
       default:
         return;
     }
 
   };
-
-const severityMap = {
-  minor: 'success',
-  major: 'warning',
-  critical: 'error',
-};
 
 const styled = withStyles(styles, { withTheme: true });
 

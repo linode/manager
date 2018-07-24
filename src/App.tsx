@@ -28,6 +28,10 @@ import BetaNotification from './BetaNotification';
 
 shim(); // allows for .finally() usage
 
+const Account = DefaultLoader({
+  loader: () => import('src/features/Account'),
+});
+
 const LinodesRoutes = DefaultLoader({
   loader: () => import('src/features/linodes'),
 });
@@ -54,6 +58,10 @@ const NodeBalancers = DefaultLoader({
 
 const StackScripts = DefaultLoader({
   loader: () => import('src/features/StackScripts'),
+});
+
+const Users = DefaultLoader({
+  loader: () => import('src/features/Users'),
 });
 
 type ClassNames = 'appFrame'
@@ -229,10 +237,8 @@ export class App extends React.Component<CombinedProps, State> {
                           <Placeholder title="Longview" />} />
                         <Route path="/images" component={Images} />
                         <Route path="/stackscripts" component={StackScripts} />
-                        <Route exact path="/billing" render={() =>
-                          <Placeholder title="Billing" />} />
-                        <Route exact path="/users" render={() =>
-                          <Placeholder title="Users" />} />
+                        <Route exact path="/billing" component={Account} />
+                        <Route path="/users" component={Users} />
                         <Route exact path="/support" render={() =>
                           <Placeholder title="Support" />} />
                         <Route path="/profile" component={Profile} />

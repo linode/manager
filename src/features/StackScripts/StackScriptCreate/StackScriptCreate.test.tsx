@@ -26,25 +26,27 @@ describe('StackScriptCreate', () => {
     expect(titleText).toBe('Create New StackScript');
   });
 
-  it('should render three text fields', () => {
-    expect(component.find('WithStyles(LinodeTextField)')).toHaveLength(4);
-  });
-
-  it('should render a select field', () => {
-    expect(component.find('WithStyles(SSelect)')).toHaveLength(1);
-  });
-
-  it('should render a code text field', () => {
-    // not done yet!!
-  });
-
-  it('should render a checkbox', () => {
-    expect(component.find('WithStyles(FormControlLabel)')).toHaveLength(1);
-  });
-
   it(`should render a confirmation dialog with the
   title "Clear StackScript Configuration?"`, () => {
       const modalTitle = component.find('WithStyles(ConfirmationDialog)').prop('title');
       expect(modalTitle).toBe('Clear StackScript Configuration?');
+    });
+
+    it('should render StackScript Form',() => {
+      expect(component.find('WithStyles(StackScriptForm)')).toHaveLength(1);
+    });
+
+    describe('Back Arrow Icon Button', () => {
+
+      it('should render back array icon button', () => {
+        const backIcon = component.find('WithStyles(IconButton)').first();
+        expect(backIcon.find('pure(KeyboardArrowLeft)')).toHaveLength(1);
+      });
+
+      it('back arrow icon should link back to stackscripts landing', () => {
+        const backIcon = component.find('WithStyles(IconButton)').first();
+        const parentLink = backIcon.closest('Link');
+        expect(parentLink.prop('to')).toBe('/stackscripts');
+      });
     });
 });

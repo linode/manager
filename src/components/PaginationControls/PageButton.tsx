@@ -1,13 +1,10 @@
-import * as classnames from 'classnames';
 import * as React from 'react';
 
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
-import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 
-import Button from 'src/components/Button';
+import Button, { ButtonProps } from 'src/components/Button';
 
-type CSSClasses = 'root' | 'first' | 'last'| 'active';
+type CSSClasses = 'root';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Linode.Theme) => ({
   root: {
@@ -28,84 +25,18 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Linode.Theme) => ({
       borderRight: '1px solid ' + `${theme.color.grey3}`,
     },
   },
-  active: {},
-  first: {},
-  last: {},
 });
 
 const styled = withStyles<CSSClasses>(styles, { withTheme: true });
 
-interface Props {
-  active?: boolean;
-  page?: number;
-  first?: boolean;
-  last?: boolean;
-  onClick: (page?: number) => void;
-  disabled?: boolean;
-}
+export interface Props extends ButtonProps { }
 
 const PageButton: React.StatelessComponent<Props & WithStyles<CSSClasses>> = ((props) => {
-  const {
-    active,
-    classes,
-    page,
-    first,
-    last,
-    onClick,
-    disabled,
-  } = props;
-
-  const rootClasses = classnames({
-    [classes.root]: true,
-    // TSLint and the typedefs for classnames are preventing me from using shorthand here.
-    active: active === true,
-  });
-
-  const handlePageChange = () => {
-    const isCurrentPage = props.active;
-    if (!isCurrentPage) { // only want to allow clicking if we're clicking a different page
-      onClick(props.page);
-    }
-  }
-
-  if (first) {
-    return (
-    <Button
-      className={`
-        ${rootClasses}
-        ${classes.first}
-      `}
-      onClick={handlePageChange}
-      disabled={disabled}
-      data-qa-previous-page
-    >
-      <KeyboardArrowLeft />
-    </Button>
-    );
-  }
-
-  if (last) {
-    return (
-    <Button
-      className={`
-        ${rootClasses}
-        ${classes.last}
-      `}
-      onClick={handlePageChange}
-      disabled={disabled}
-      data-qa-next-page
-    >
-      <KeyboardArrowRight />
-    </Button>
-    );
-  }
+  const { classes, children, ...rest } = props;
 
   return (
-    <Button
-      className={rootClasses}
-      onClick={handlePageChange}
-      data-qa-page-to={page}>
-      {page}
+    <Button className={classes.root} {...rest}>
+      {children}
     </Button>
   );
 });

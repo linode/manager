@@ -145,7 +145,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
                   </FormControl>
                   {
                     Array.from(Array(authorizedKeysCount)).map((value, idx) => (
-                      <div className={classes.sshWrap}>
+                      <div className={classes.sshWrap} key={idx} >
                         <TextField
                           key={idx}
                           label="SSH Public Key"

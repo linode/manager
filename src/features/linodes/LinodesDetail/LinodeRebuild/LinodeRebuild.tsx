@@ -160,9 +160,9 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
             Rebuild
           </Typography>
           <Typography className={classes.intro} data-qa-rebuild-desc>
-            If you can't rescue an exiting disk, it's time to rebuild your Linode.
-            There are a couple of different ways you can do this,
-            from a backup or start over with a fresh Linux
+            If you can't rescue an existing disk, it's time to rebuild your Linode.
+            There are a couple of different ways you can do this:
+            either restore from a backup or start over with a fresh Linux
             distribution. Rebuilding will destroy all data.
           </Typography>
           <FormControl className={classes.imageControl}>
@@ -171,7 +171,7 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
             </InputLabel>
             <div>
               <Select
-                helpText="Choosing a 64-bit distro is recommended."
+                tooltipText="Choosing a 64-bit distro is recommended."
                 error={Boolean(imageError)}
                 value={selected || 'select'}
                 onChange={e => this.onImageChange(e.target.value)}

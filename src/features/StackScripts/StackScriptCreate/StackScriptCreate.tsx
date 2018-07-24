@@ -11,27 +11,16 @@ import {
   WithStyles,
 } from '@material-ui/core/styles';
 
-import Divider from '@material-ui/core/Divider';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import IconButton from '@material-ui/core/IconButton';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import { KeyboardArrowLeft } from '@material-ui/icons';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import Checkbox from 'src/components/CheckBox';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import PromiseLoader from 'src/components/PromiseLoader';
-import Select from 'src/components/Select';
-import Tag from 'src/components/Tag';
-import TextField from 'src/components/TextField';
 
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 
@@ -41,24 +30,15 @@ import { createStackScript } from 'src/services/stackscripts';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
+import ScriptForm from 'src/features/StackScripts/StackScriptForm';
+
 type ClassNames = 'root'
   | 'backButton'
   | 'titleWrapper'
-  | 'createTitle'
-  | 'labelField'
-  | 'divider'
-  | 'gridWithTips'
-  | 'tips'
-  | 'chipsContainer'
-  | 'scriptTextarea'
-  | 'revisionTextarea'
-  | 'warning'
-  | 'targetTag';
+  | 'createTitle';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
-  root: {
-    padding: theme.spacing.unit * 2,
-  },
+  root: {},
   backButton: {
     margin: '5px 0 0 -16px',
     '& svg': {
@@ -69,55 +49,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   createTitle: {
     lineHeight: '2.25em'
   },
-  divider: {
-    margin: `0 0 ${theme.spacing.unit * 2}px 0`,
-    height: 0,
-  },
-  labelField: {
-    '& input': {
-      paddingLeft: 0,
-    },
-  },
   titleWrapper: {
     display: 'flex',
     marginTop: 5,
-  },
-  gridWithTips: {
-    maxWidth: '50%',
-    [theme.breakpoints.down('sm')]: {
-      maxWidth: '100%',
-    },
-  },
-  tips: {
-    marginLeft: theme.spacing.unit * 4,
-    marginTop: theme.spacing.unit * 4,
-    padding: theme.spacing.unit * 4,
-    backgroundColor: theme.palette.divider,
-    [theme.breakpoints.down('lg')]: {
-      marginLeft: 0,
-    },
-    [theme.breakpoints.down('md')]: {
-      paddingLeft: theme.spacing.unit * 2,
-    },
-  },
-  chipsContainer: {
-    maxWidth: 415,
-  },
-  warning: {
-    marginTop: theme.spacing.unit * 4,
-  },
-  targetTag: {
-    margin: `${theme.spacing.unit}px ${theme.spacing.unit}px 0 0`,
-  },
-  scriptTextarea: {
-    maxWidth: '100%',
-    height: 400,
-    '& textarea': {
-      height: '100%',
-    }
-  },
-  revisionTextarea: {
-    maxWidth: '100%',
   },
 });
 
@@ -137,7 +71,6 @@ interface State {
   availableImages: Linode.Image[];
   script: string;
   revisionNote: string;
-  is_public: boolean;
   isSubmitting: boolean;
   errors?: Linode.ApiFieldError[];
   dialogOpen: boolean;
@@ -170,7 +103,6 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     availableImages: this.props.images.response,
     script: '',
     revisionNote: '',
-    is_public: false,
     isSubmitting: false,
     dialogOpen: false,
   };
@@ -192,21 +124,6 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
   componentWillUnmount() {
     this.mounted = false;
   }
-
-  /*
-  * Gets images by two types: deprecated and non-deprecated
-  */
-  getImagesByDeprecationStatus = (deprecated: boolean) => {
-    return this.state.availableImages.filter(image => image.deprecated === deprecated);
-  }
-
-  /*
-  * @TODO Deprecate once we have a reliable way of mapping
-  * the slug to the display name
-  */
-  stripImageName = (image: string) => {
-    return image.replace('linode/', '');
-  };
 
   handleLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ labelText: e.target.value });
@@ -265,10 +182,6 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     this.setState({ revisionNote: e.target.value });
   }
 
-  handleToggleIsPublic = () => {
-    this.setState({ is_public: !this.state.is_public });
-  }
-
   resetAllFields = () => {
     this.handleCloseDialog();
     this.setState({
@@ -276,14 +189,12 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       labelText: '',
       selectedImages: [],
       descriptionText: '',
-      is_public: false,
       revisionNote: '',
     })
   }
 
   handleCreateStackScript = () => {
-    const { script, labelText, selectedImages, descriptionText,
-      is_public, revisionNote } = this.state;
+    const { script, labelText, selectedImages, descriptionText, revisionNote } = this.state;
 
     const { history } = this.props;
 
@@ -292,7 +203,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       label: labelText,
       images: selectedImages,
       description: descriptionText,
-      is_public,
+      is_public: false,
       rev_note: revisionNote,
     }
 
@@ -300,10 +211,13 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     this.setState({ isSubmitting: true });
 
     createStackScript(payload)
-      .then(stackScript => {
+      .then((stackScript: Linode.StackScript.Response) => {
         if (!this.mounted) { return; }
         this.setState({ isSubmitting: false });
-        history.push('/stackscripts');
+        history.push(
+          '/stackscripts',
+          { successMessage: `${stackScript.label} successfully created` }
+        );
       })
       .catch(error => {
         if (!this.mounted) { return; }
@@ -332,12 +246,15 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
           <Button
             type="secondary"
             destructive
-            onClick={this.resetAllFields}>
+            onClick={this.resetAllFields}
+            data-qa-confirm-cancel
+            >
             Yes
           </Button>
           <Button
             type="cancel"
             onClick={this.handleCloseDialog}
+            data-qa-cancel-cancel
           >
             No
           </Button>
@@ -363,8 +280,9 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes, profile } = this.props;
-    const { selectedImages, script,
-      labelText, descriptionText, revisionNote, errors } = this.state;
+    const { availableImages, selectedImages, script,
+      labelText, descriptionText, revisionNote, errors,
+    isSubmitting } = this.state;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
@@ -386,172 +304,49 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
                 <KeyboardArrowLeft />
               </IconButton>
             </Link>
-            <Typography className={classes.createTitle} variant="headline">
+            <Typography
+              className={classes.createTitle}
+              variant="headline"
+              data-qa-create-header
+            >
               Create New StackScript
             </Typography>
           </Grid>
         </Grid>
-        <Paper className={classes.root}>
-          <Grid container>
-            <Grid item className={classes.gridWithTips}>
-              <TextField
-                InputProps={{
-                  startAdornment:
-                    <InputAdornment position="end">
-                      {profile.username} /
-                    </InputAdornment>,
-                }}
-                label='StackScript Label'
-                required
-                onChange={this.handleLabelChange}
-                placeholder='Enter a label'
-                value={labelText}
-                errorText={hasErrorFor('label')}
-                tooltipText="Select a StackScript Label"
-                className={classes.labelField}
-              />
-              <TextField
-                multiline
-                rows={1}
-                label="Description"
-                placeholder="Enter a description"
-                onChange={this.handleDescriptionChange}
-                value={descriptionText}
-                tooltipText="Give your StackScript a description"
-              />
-              <FormControl fullWidth>
-                <InputLabel
-                  htmlFor="image"
-                  disableAnimation
-                  shrink={true}
-                  required
-                >
-                  Target Images
-              </InputLabel>
-                <Select
-                  open={this.state.imageSelectOpen}
-                  onOpen={this.handleOpenSelect}
-                  onClose={this.handleCloseSelect}
-                  value='none'
-                  onChange={this.handleChooseImage}
-                  inputProps={{ name: 'image', id: 'image' }}
-                  helpText='Select which images are compatible with this StackScript'
-                  error={Boolean(hasErrorFor('images'))}
-                  errorText={hasErrorFor('images')}
-                >
-                  <MenuItem disabled key="none" value="none">Select Compatible Images</MenuItem>,
-                {this.getImagesByDeprecationStatus(false).map(image =>
-                    <MenuItem
-                      key={image.id}
-                      value={image.id}
-                    >
-                      {image.label}
-                    </MenuItem>,
-                  )}
-                  <MenuItem disabled key="deprecated" value="deprecated">Older Images</MenuItem>,
-                {this.getImagesByDeprecationStatus(true).map(image =>
-                    <MenuItem
-                      key={image.id}
-                      value={image.id}
-                    >
-                      {image.label}
-                    </MenuItem>,
-                  )}
-                </Select>
-              </FormControl>
-              <div className={classes.chipsContainer}>
-                {selectedImages && selectedImages.map((selectedImage, index) => {
-                  return (
-                    <Tag
-                      key={selectedImage}
-                      label={this.stripImageName(selectedImage)}
-                      variant='lightBlue'
-                      onDelete={() => this.handleRemoveImage(index)}
-                      className={classes.targetTag}
-                    />
-                  )
-                })}
-              </div>
-            </Grid>
-            <Grid item className={classes.gridWithTips}>
-              <Notice
-                className={classes.tips}
-                component="div"
-              >
-                <Typography variant="title">Tips</Typography>
-                <Typography>There are four default environment variables provided to you:</Typography>
-                <ul>
-                  <li>LINODE_ID</li>
-                  <li>LINODE_LISTUSERNAME</li>
-                  <li>LINODE_RAM</li>
-                  <li>LINODE_DATACENTERID</li>
-                </ul>
-              </Notice>
-            </Grid>
-          </Grid>
-          <Divider className={classes.divider} />
-          <TextField
-            multiline
-            rows={1}
-            label="Script"
-            placeholder={`#!/bin/bash \n\n# Your script goes here`}
-            onChange={this.handleChangeScript}
-            value={script}
-            errorText={hasErrorFor('script')}
-            required
-            InputProps={{ className: classes.scriptTextarea }}
-          />
-          <TextField
-            multiline
-            rows={1}
-            label="Revision Note"
-            placeholder='Enter a revision note'
-            onChange={this.handleChangeRevisionNote}
-            value={revisionNote}
-            InputProps={{ className: classes.revisionTextarea }}
-          />
-          <Notice
-            component="div"
-            warning
-            flag
-            className={classes.warning}
-          >
-            <Typography variant="title">Woah, just a word of caution...</Typography>
-            <Typography>
-              Making this StackScript public cannot be undone. Once made public, your StackScript will
-              be available to all Linode users and can be used to provision new Linodes.
-            </Typography>
-          </Notice>
-          <FormControlLabel
-            control={
-              <Checkbox
-                name='make_public'
-                variant='warning'
-                onChange={this.handleToggleIsPublic}
-                checked={this.state.is_public}
-              />
-            }
-            label="Publish this StackScript to the Public Library"
-          />
-          <ActionsPanel style={{ paddingBottom: 0 }}>
-            <Button
-              data-qa-confirm-cancel
-              onClick={this.handleCreateStackScript}
-              type="primary"
-              loading={this.state.isSubmitting}
-            >
-              Save
-            </Button>
-            <Button
-              onClick={this.handleOpenDialog}
-              type="secondary"
-              className="cancel"
-              data-qa-cancel-cancel
-            >
-              Cancel
-            </Button>
-          </ActionsPanel>
-        </Paper>
+        <ScriptForm
+          currentUser={profile.username}
+          images={{
+            available: availableImages,
+            selected: selectedImages,
+            handleRemove: this.handleRemoveImage
+          }}
+          label={{
+            value: labelText,
+            handler: this.handleLabelChange
+          }}
+          description={{
+            value: descriptionText,
+            handler: this.handleDescriptionChange
+          }}
+          revision={{
+            value: revisionNote,
+            handler: this.handleChangeRevisionNote
+          }}
+          script={{
+            value: script,
+            handler: this.handleChangeScript
+          }}
+          selectImages={{
+            open: this.state.imageSelectOpen, // idk
+            onOpen: this.handleOpenSelect,
+            onClose: this.handleCloseSelect,
+            onChange: this.handleChooseImage
+          }}
+          errors={errors}
+          onSubmit={this.handleCreateStackScript}
+          onCancel={this.handleOpenDialog}
+          isSubmitting={isSubmitting}
+        />
         {this.renderCancelStackScriptDialog()}
       </React.Fragment>
     );

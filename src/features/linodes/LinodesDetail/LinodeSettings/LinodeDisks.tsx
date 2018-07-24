@@ -320,7 +320,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     resizeLinodeDisk(linodeId, diskId, size)
       .then(({ data }) => {
         this.setDrawer(LinodeDisks.defaultDrawerState);
-        sendToast(`Disk queued for resizing.`);
+        sendToast(`Disk scheduled for resizing.`);
         resetEventsPolling();
         disksUpdate((disks) => disks.map((disk) => disk.id === data.id ? data : disk));
       })

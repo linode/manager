@@ -1,4 +1,4 @@
-import { compose, contains, filter, propSatisfies } from 'ramda';
+import { contains, filter, propSatisfies } from 'ramda';
 import * as React from 'react';
 import 'rxjs/add/operator/map';
 import { Subscription } from 'rxjs/Subscription';
@@ -59,6 +59,8 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
     'ticket_important',
     'ticket_abuse',
     'notice',
+    'migration_pending',
+    'migration_scheduled',
   ];
 
   subscription: Subscription;
@@ -72,13 +74,28 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
   componentDidMount() {
     this.subscription = notifications$
       .map(filterNotifications)
+      .map((notifications) => notifications
+        .reduce((result: Linode.Notification[], notification) => {
+          /** Filter out any notifications that do not meet our expectations. */
+          if (!notification.message || !notification.label || !notification.type || !notification.severity) {
+            return result;
+          }
 
-      /** Update the language of the privacy policy update for usagea in the UNM. */
-      .map((notifications) => notifications.map((n) => {
-        return isPrivacyPolicityNotification(n)
-        ? { ...n, message: `We've updated our policies. Click here to view the updated policies.`, }
-        : n;
-      }))
+          /** Update the language of the privacy policy update for usagea in the UNM. */
+          if (isPrivacyPolicityNotification(notification)) {
+            return [...result, { ...notification, message: `Click here to view the updated policies.`, }];
+          }
+
+          /** Remove the label from the message and trim the leading space. */
+          return [
+            ...result,
+            {
+              ...notification,
+              message: notification.message.replace(notification.label, '').trimLeft(),
+            },
+          ];
+        }, [])
+      )
       .subscribe(notifications => {
         const updatedPrivacyPolicyNotification = notifications.find(isPrivacyPolicityNotification);
 
@@ -135,10 +152,8 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
 }
 
 const filterNotifications: (v: Linode.Notification[]) => Linode.Notification[] =
-  compose<Linode.Notification[], Linode.Notification[]>(
-    filter<Linode.Notification>(
-      propSatisfies(v => contains(v, UserNotificationsMenu.displayedEvents), 'type'),
-    ),
+  filter<Linode.Notification>(
+    propSatisfies(v => contains(v, UserNotificationsMenu.displayedEvents), 'type'),
   );
 
 const isPrivacyPolicityNotification = (n: Linode.Notification) =>

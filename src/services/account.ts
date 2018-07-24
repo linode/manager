@@ -72,3 +72,71 @@ export const getOAuthClients = () =>
     setMethod('GET'),
   )
     .then(response => response.data);
+
+export const getUsers = () =>
+  Request<Page<Linode.User>>(
+    setURL(`${API_ROOT}/account/users`),
+    setMethod('GET'),
+  )
+    .then(response => response.data);
+
+export const getAccountInfo = () =>
+  Request<Linode.Account>(
+    setURL(`${API_ROOT}/account`),
+    setMethod('GET'),
+  )
+    .then(response => response.data);
+
+export const getPayments = (pagination: Linode.PaginationOptions = {}) =>
+  Request<Page<Linode.Payment>>(
+    setURL(`${API_ROOT}/account/payments`),
+    setMethod('GET'),
+    setParams(pagination),
+  )
+    .then(response => response.data);
+
+export const getInvoices = (pagination: Linode.PaginationOptions = {}) =>
+  Request<Page<Linode.Invoice>>(
+    setURL(`${API_ROOT}/account/invoices`),
+    setMethod('GET'),
+    setParams(pagination),
+  )
+  .then(response => response.data);
+
+export const updateAccountInfo = (data: Partial<Linode.Account>) =>
+  Request<Linode.Account>(
+    setURL(`${API_ROOT}/account`),
+    setMethod('PUT'),
+    setData(data),
+  )
+    .then(response => response.data);
+
+export const getUser = (username: string) =>
+  Request<Linode.User>(
+    setURL(`${API_ROOT}/account/users/${username}`),
+    setMethod('GET'),
+  )
+    .then(response => response.data);
+
+export const updateUser = (username: string, data: Partial<Linode.User>) =>
+  Request<Linode.User>(
+    setURL(`${API_ROOT}/account/users/${username}`),
+    setMethod('PUT'),
+    setData(data),
+  )
+    .then(response => response.data);
+
+export const createUser = (data: Partial<Linode.User>) =>
+  Request<Linode.User>(
+    setURL(`${API_ROOT}/account/users`),
+    setMethod('POST'),
+    setData(data),
+  )
+    .then(response => response.data);
+
+export const deleteUser = (username: string) =>
+  Request<{}>(
+    setURL(`${API_ROOT}/account/users/${username}`),
+    setMethod('DELETE'),
+  )
+    .then(response => response.data);
