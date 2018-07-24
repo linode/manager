@@ -60,6 +60,8 @@ interface Props {
 
 interface State {
   loading: boolean;
+  /* need this separated so we can show just the restricted toggle when it's in use */
+  loadingGrants: boolean;
   grants?: Linode.Grants;
   restricted?: boolean;
   errors?: Linode.ApiFieldError[];
@@ -75,6 +77,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 class UserPermissions extends React.Component<CombinedProps, State> {
   state: State = {
+    loadingGrants: false,
     loading: true,
     setAllPerm: 'null',
   };
@@ -110,12 +113,14 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             this.setState({
               grants,
               loading: false,
+              loadingGrants: false,
               restricted: true,
             })
           } else {
             this.setState({
               grants,
               loading: false,
+              loadingGrants: false,
               restricted: false,
             })
           }
@@ -220,6 +225,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     const { username } = this.props;
     this.setState({
       errors: [],
+      loadingGrants: true,
     })
     if (username) {
       updateUser(username, { restricted: !this.state.restricted })
@@ -227,6 +233,10 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           this.setState({
             restricted: user.restricted,
           })
+        })
+        .then(() => {
+          /* unconditionally sets this.state.loadingGrants to false */
+          this.getUserGrants()
         })
         .catch((errResponse) => {
           this.setState({
@@ -556,12 +566,17 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   }
 
   renderPermissions = () => {
-    return (
-      <React.Fragment>
-        {this.renderGlobalPerms()}
-        {this.renderSpecificPerms()}
-      </React.Fragment>
-    )
+    const { loadingGrants } = this.state;
+    if (loadingGrants) {
+      return <CircleProgress />;
+    } else {
+      return (
+        <React.Fragment>
+          {this.renderGlobalPerms()}
+          {this.renderSpecificPerms()}
+        </React.Fragment>
+      )
+    }
   }
 
   renderUnrestricted = () => {
