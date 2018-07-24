@@ -41,4 +41,9 @@ namespace Linode {
     public: boolean;
     status: 'disabled' | 'active' | 'suspended';
   }
+
+  export type Secret = {
+    secret: string;
+    expiry: Date;
+  }
 }

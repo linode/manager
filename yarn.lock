@@ -899,6 +899,12 @@
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/@types/promise.prototype.finally/-/promise.prototype.finally-2.0.2.tgz#68fefb8f0e23f21893a33740c931c79f44be3499"
 
+"@types/qrcode.react@^0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@types/qrcode.react/-/qrcode.react-0.8.0.tgz#90b95d7dfba380f2a67ffd68e9c02b6eea4ea0be"
+  dependencies:
+    "@types/react" "*"
+
 "@types/ramda@^0.25.18":
   version "0.25.33"
   resolved "https://registry.yarnpkg.com/@types/ramda/-/ramda-0.25.33.tgz#a134fde6da3be303a1bdefd9155d8365bb7b14ec"
@@ -8431,6 +8437,17 @@ punycode@^1.2.4, punycode@^1.4.1:
 q@^1.1.2, q@~1.5.0, q@~1.5.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/q/-/q-1.5.1.tgz#7e32f75b41381291d04611f1bf14109ac00651d7"
+
+qr.js@0.0.0:
+  version "0.0.0"
+  resolved "https://registry.yarnpkg.com/qr.js/-/qr.js-0.0.0.tgz#cace86386f59a0db8050fa90d9b6b0e88a1e364f"
+
+qrcode.react@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/qrcode.react/-/qrcode.react-0.8.0.tgz#413b31cc3b62910e39513f7bead945e01c4c34fb"
+  dependencies:
+    prop-types "^15.6.0"
+    qr.js "0.0.0"
 
 qs@6.5.1:
   version "6.5.1"
