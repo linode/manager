@@ -10887,9 +10887,9 @@ wdio-dot-reporter@0.0.9, wdio-dot-reporter@~0.0.8:
   version "0.0.9"
   resolved "https://registry.yarnpkg.com/wdio-dot-reporter/-/wdio-dot-reporter-0.0.9.tgz#929b2adafd49d6b0534fda068e87319b47e38fe5"
 
-wdio-jasmine-framework@0.3.4:
-  version "0.3.4"
-  resolved "https://registry.yarnpkg.com/wdio-jasmine-framework/-/wdio-jasmine-framework-0.3.4.tgz#99fa06fc679e089c829a08088039d9574b6fdf45"
+wdio-jasmine-framework@0.3.5:
+  version "0.3.5"
+  resolved "https://registry.yarnpkg.com/wdio-jasmine-framework/-/wdio-jasmine-framework-0.3.5.tgz#ea4729e74a4e4891e923a03d6f5b7ed3bc23bcbb"
   dependencies:
     babel-runtime "6.26.0"
     jasmine "^3.0.0"
