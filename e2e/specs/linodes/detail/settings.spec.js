@@ -69,6 +69,23 @@ describe('Linode Detail - Settings Suite', () =>{
         });
     });
 
+    describe('Watchdog Suite', () => {
+        it('should display watchdog enabled by default', () => {
+            expect(Settings.watchdogPanel.isVisible()).toBe(true);
+            expect(Settings.watchdogDesc.isVisible()).toBe(true);
+            const watchdogEnabled = Settings.watchdogToggle.getAttribute('data-qa-watchdog-toggle');
+            expect(watchdogEnabled).toBe('true');
+        });
+
+        it('should disable watchdog', () => {
+            Settings.toggleWatchdog('off');
+        });
+
+        it('should enable watchdog', () => {
+            Settings.toggleWatchdog('on');
+        });
+    });
+
     describe('Advanced Configurations Suite', () => {
         xit('should add a configuration', () => {
             

@@ -24,6 +24,9 @@ class Settings extends Page {
     get alertSave() { return $('[data-qa-alerts-save]'); }
     get linodeConfigs() { return $$('[data-qa-config]'); }
     get actionMenu() { return $('[data-qa-action-menu]'); }
+    get watchdogPanel() { return $('[data-qa-watchdog-panel]'); }
+    get watchdogToggle() { return $('[data-qa-watchdog-toggle]'); }
+    get watchdogDesc() { return $('[data-qa-watchdog-desc]'); }
 
     getConfigLabels() {
         return this.linodeConfigs.map(c => c.getAttribute('data-qa-config'));
@@ -58,7 +61,6 @@ class Settings extends Page {
         this.confirm.waitForVisible();
         this.cancel.waitForVisible();
 
-        expect(this.confirm.getAttribute('class')).toContain('destructive');
         expect(this.deleteDialogTitle.getText()).toBe(confirmTitle);
         expect(this.deleteDialogContent.getText()).toBe(confirmContent);
 
@@ -125,6 +127,16 @@ class Settings extends Page {
         this.alertSave.click();
         this.waitForNotice(successMsg);
     }
+
+    toggleWatchdog(powerState) {
+        const originalState = this.watchdogToggle.getAttribute('data-qa-watchdog-toggle');
+        expect(originalState).toBe(powerState === 'on' ? 'false' : 'true');
+        this.watchdogToggle.click();
+        this.waitForNotice(`Watchdog succesfully ${powerState === 'on' ? 'enabled' : 'disabled'}`);
+        const afterClick = this.watchdogToggle.getAttribute('data-qa-watchdog-toggle');
+        expect(afterClick).toBe(powerState === 'on' ? 'true' : 'false');
+    }
+
 
 }
 
