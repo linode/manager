@@ -1,10 +1,15 @@
-import { compose, lensPath, pathOr, set } from 'ramda';
+import { compose, lensPath, omit, pathOr, set } from 'ramda';
 import * as React from 'react';
 
 import Divider from '@material-ui/core/Divider';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -12,7 +17,10 @@ import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
+import Radio from 'src/components/Radio';
+import Select from 'src/components/Select';
 import SelectionCard from 'src/components/SelectionCard';
+import Table from 'src/components/Table';
 import Toggle from 'src/components/Toggle';
 import { getGrants, updateGrants, updateUser } from 'src/services/account';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
@@ -59,6 +67,8 @@ interface State {
     global: string,
     specific: string,
   }
+  /* null needs to be a string here because it's a Select value */
+  setAllPerm: 'null' | 'read_only' | 'read_write';
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -66,6 +76,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 class UserPermissions extends React.Component<CombinedProps, State> {
   state: State = {
     loading: true,
+    setAllPerm: 'null',
   };
   
   globalBooleanPerms = [
@@ -161,6 +172,48 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           scrollErrorIntoView();
         });
     }
+
+    /* This is where individual entity saving could be implemented */
+  }
+
+  saveSpecificGrants = () => {
+    const { username } = this.props;
+    const { grants } = this.state;
+    if (!username || !(grants)) {
+      return this.setState({
+        errors: [
+          { reason: `Can\'t set Entity-Specific Grants at this time. Please try again later` }
+        ]
+      })
+    }
+
+    this.setState(set(lensPath(['success', 'specific']), ''));
+    const requestPayload = omit(['global'], grants);
+    updateGrants(username, requestPayload as Partial<Linode.Grants>)
+      .then((grantsResponse) => {
+        /* build array of update fns */
+        const updateFns = this.entityPerms.map((entity) => {
+          const lens = lensPath(['grants', entity]);
+          return set(lens, grantsResponse[entity]);
+        })
+        /* apply all of them at once */
+        this.setState((compose as any)(...updateFns));
+        this.setState(
+          set(lensPath(['success', 'specific']),
+            'Successfully updated Entity-Specific Grants'),
+        );
+      })
+      .catch((errResponse) => {
+        this.setState({
+          errors: pathOr(
+            [{ reason: 
+              'Error while updating Entity-Specific Grants for this user. Try again later'}],
+            ['response', 'data', 'errors'],
+            errResponse,
+          ),
+        })
+        scrollErrorIntoView();
+      });
   }
 
   onChangeRestricted = () => {
@@ -313,6 +366,35 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     )
   }
 
+  entityIsAll = (entity: string, value: Linode.GrantLevel): boolean => {
+    const { grants } = this.state;
+    if (!(grants && grants[entity])) { return false; }
+    return grants[entity].reduce((acc: boolean, grant: Linode.Grant) => {
+      return acc && grant.permissions === value;
+    }, true);
+  }
+
+  entitySetAllTo = (entity: string, value: Linode.GrantLevel) => () => {
+    const { grants } = this.state;
+    if (!(grants && grants[entity])) { return false; }
+    /* map entities to an array of state update functions */
+    const updateFns = grants[entity].map((grant, idx) => {
+      const lens = lensPath(['grants', entity, idx, 'permissions'])
+      return set(lens, value);
+    });
+    /* compose all of the update functions and setState */
+    this.setState((compose as any)(...updateFns));
+  }
+
+  setGrantTo = (entity: string, idx: number, value: Linode.GrantLevel) => () => {
+    const { grants } = this.state;
+    if (!(grants && grants[entity])) { return; }
+    this.setState(set(
+      lensPath(['grants', entity, idx, 'permissions']),
+      value
+    ));
+  }
+
   renderEntitySection = (entity: string) => {
     const { classes } = this.props;
     const { grants } = this.state;
@@ -328,29 +410,132 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       domain: 'Domains',
       longview: 'Longview Clients',
     };
+
     return (
       <div className={classes.section}>
         <Typography variant="subheading">
           {entityNameMap[entity]}
         </Typography>
-        {entityGrants.map((grant) => {
-          return <div key={grant.id}>{grant.label} {grant.permissions}</div>
-        })}
+        <Table>
+          <TableHead data-qa-table-head>
+            <TableRow>
+              <TableCell>
+                Label
+              </TableCell>
+              <TableCell>
+                None
+                <Radio
+                  name={`${entity}-select-all`}
+                  checked={this.entityIsAll(entity, null)}
+                  value="null"
+                  onChange={this.entitySetAllTo(entity, null)}
+                />
+              </TableCell>
+              <TableCell>
+                Read Only
+                <Radio
+                  name={`${entity}-select-all`}
+                  checked={this.entityIsAll(entity, 'read_only')}
+                  value="read_only"
+                  onChange={this.entitySetAllTo(entity, 'read_only')}
+                />
+              </TableCell>
+              <TableCell>
+                Read-Write
+                <Radio
+                  name={`${entity}-select-all`}
+                  checked={this.entityIsAll(entity, 'read_write')}
+                  value="read_write"
+                  onChange={this.entitySetAllTo(entity, 'read_write')}
+                />
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {entityGrants.map((grant, idx) => {
+              return (
+                <TableRow key={grant.label}>
+                  <TableCell>
+                    {grant.label}
+                  </TableCell>
+                  <TableCell>
+                    <Radio
+                      name={`${grant.id}-perms`}
+                      checked={grant.permissions === null}
+                      value="null"
+                      onChange={this.setGrantTo(entity, idx, null)}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Radio
+                      name={`${grant.id}-perms`}
+                      checked={grant.permissions === 'read_only'}
+                      value="read_only"
+                      onChange={this.setGrantTo(entity, idx, 'read_only')}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Radio
+                      name={`${grant.id}-perms`}
+                      checked={grant.permissions === 'read_write'}
+                      value="read_write"
+                      onChange={this.setGrantTo(entity, idx, 'read_write')}
+                    />
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
       </div>
     )
+  }
+
+  setAllEntitiesTo = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value === 'null' ? null : e.target.value;
+    this.entityPerms.map(entity =>
+      this.entitySetAllTo(entity, value as Linode.GrantLevel)());
+    this.setState({
+      setAllPerm: e.target.value as 'null' | 'read_only' | 'read_write',
+    })
   }
   
   renderSpecificPerms = () => {
     const { classes } = this.props;
-    const { grants, success } = this.state;
+    const { grants, success, setAllPerm } = this.state;
     return (
       <Paper className={classes.globalSection}>
-        <Typography variant="title">
-          Specific Permissions
-        </Typography>
-        {success && success.specific &&
-          <Notice success text={success.specific} className={classes.section}/>
-        }
+        <Grid container justify="space-between">
+          <Grid item>
+            <Typography variant="title">
+              Specific Grants
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Grid container justify="flex-end">
+              <Grid item>
+                Set all Grants to:
+              </Grid>
+              <Grid item>
+                <Select
+                  value={setAllPerm}
+                  onChange={this.setAllEntitiesTo}
+                  inputProps={{ name: 'setall', id: 'setall' }}
+                >
+                  <MenuItem value="null">
+                    None
+                  </MenuItem>
+                  <MenuItem value="read_only">
+                    Read Only
+                  </MenuItem>
+                  <MenuItem value="read_write">
+                    Read Write
+                  </MenuItem>
+                </Select>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
         <div className={classes.section}>
           {grants &&
             this.entityPerms.map((entity) => {
@@ -358,8 +543,11 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             })
           }
         </div>
+        {success && success.specific &&
+          <Notice success text={success.specific} className={classes.section}/>
+        }
         {this.renderActions(
-          this.savePermsType('specific'),
+          this.saveSpecificGrants,
           () => null, /* TODO: implement cancel */
           false /* TODO: implement saving state */
         )}

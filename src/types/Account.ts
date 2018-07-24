@@ -40,15 +40,17 @@ namespace Linode {
     usd: string | number;
   }
 
+  export type GrantLevel = null | 'read_only' | 'read_write';
+
   export interface Grant {
     id: number;
-    permissions: null | 'read_only' | 'read_write';
+    permissions: GrantLevel;
     label: string;
   }
 
   export interface GlobalGrants {
     global: {
-      [key: string]: boolean | null | 'read_only' | 'read_write'
+      [key: string]: boolean | GrantLevel,
     };
   }
 
