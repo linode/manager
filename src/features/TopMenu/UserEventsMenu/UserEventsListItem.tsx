@@ -20,9 +20,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       borderBottom: `1px solid ${theme.palette.divider}`,
       opacity: .7,
       transition: theme.transitions.create(['border-color', 'opacity']),
+      '&:hover': {
+        backgroundColor: 'white',
+      },
     },
     title: {
       ...theme.typography.subheading,
+      marginBottom: theme.spacing.unit / 2,
     },
     content: {
       ...theme.typography.caption,
@@ -69,7 +73,7 @@ const userEventsListItem: React.StatelessComponent<CombinedProps> = (props) => {
       [classes.pointer]: Boolean(onClick),
     })}
       onClick={onClick}
-      tabIndex={onClick && 1}
+      tabIndex={1}
     >
       <div className={classes.title}>{title}</div>
       {content && <div className={classes.content}>{content}</div>}
