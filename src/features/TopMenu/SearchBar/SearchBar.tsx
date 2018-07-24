@@ -337,6 +337,18 @@ class SearchBar extends React.Component<FinalProps, State> {
     });
   }
 
+  handleSubmit = (e: any) => {
+    const { history } = this.props;
+    const { searchText } = this.state;
+    /*
+    * If we hit the enter key and something
+    * has been typed into the search bar
+    */
+    if (e.keyCode === 13 && searchText) {
+      history.push(`/search?value=${searchText}`);
+    }
+  }
+
   toggleSearch = () => {
     this.setState({
       searchActive: !this.state.searchActive,
@@ -436,6 +448,7 @@ class SearchBar extends React.Component<FinalProps, State> {
                         placeholder: 'Go to Linodes, Volumes, NodeBalancers, Domains...',
                         id: 'searchbar-simple',
                         onChange: this.handleSearchChange,
+                        onKeyDown: this.handleSubmit,
                       }),
                     }}
                     data-qa-search
