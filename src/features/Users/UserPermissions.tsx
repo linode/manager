@@ -28,18 +28,25 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames =
   'titleWrapper'
+  | 'toggle'
   | 'topGrid'
   | 'unrestrictedRoot'
   | 'globalSection'
+  | 'globalRow'
   | 'section';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   topGrid: {
-    marginTop: -(theme.spacing.unit * 2),
+    marginTop: theme.spacing.unit,
   },
   titleWrapper: {
+    marginTop: 0,
+    padding: 0,
     display: 'flex',
     alignItems: 'center',
+  },
+  toggle: {
+    marginRight: 3,
   },
   unrestrictedRoot: {
     marginTop: theme.spacing.unit * 2,
@@ -49,8 +56,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     marginTop: theme.spacing.unit * 2,
     padding: theme.spacing.unit * 3,
   },
+  globalRow: {
+    padding: `${theme.spacing.unit}px 0`,
+  },
   section: {
     marginTop: theme.spacing.unit * 2,
+    paddingBottom: 0,
   },
 });
 
@@ -304,6 +315,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   }
 
   renderGlobalPerm = (perm: string, checked: boolean) => {
+    const { classes } = this.props;
     const permDescriptionMap = {
       add_linodes: 'Can add Linodes to this Account ($)',
       add_nodebalancers: 'Can add NodeBalancers to this Account ($)',
@@ -318,7 +330,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment key={perm}>
         <FormControlLabel
-          style={{ marginTop: 8 }}
+          className={classes.globalRow}
           label={permDescriptionMap[perm]}
           control={
             <Toggle
@@ -664,13 +676,13 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         {generalError &&
           <Notice error text={generalError} />
         }
-        <Grid container className={classes.topGrid} justify="space-between">
+        <Grid container className={`${classes.topGrid} ${'py0'}`} justify="space-between" alignItems="center">
           <Grid item className={classes.titleWrapper}>
             <Typography variant="title">
               Update User Permissions
             </Typography>
           </Grid>
-          <Grid item>
+          <Grid item className={`${classes.accessWrapper} ${'p0'}`}>
             <Grid container alignItems="center">
               <Grid item>
                 <Typography variant="title">
@@ -689,6 +701,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                 <Toggle
                   checked={restricted}
                   onChange={this.onChangeRestricted}
+                  className={classes.toggle}
                 />
               </Grid>
             </Grid>
