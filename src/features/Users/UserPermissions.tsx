@@ -62,6 +62,9 @@ interface State {
   loading: boolean;
   /* need this separated so we can show just the restricted toggle when it's in use */
   loadingGrants: boolean;
+  saving: {
+    [key: string]: boolean;
+  },
   grants?: Linode.Grants;
   originalGrants?: Linode.Grants; /* used to implement cancel functionality */
   restricted?: boolean;
@@ -81,6 +84,10 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     loadingGrants: false,
     loading: true,
     setAllPerm: 'null',
+    saving: {
+      global: false,
+      entity: false,
+    }
   };
   
   globalBooleanPerms = [
@@ -158,7 +165,10 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     }
 
     if (type === 'global') {
-      this.setState(set(lensPath(['success', 'global']), ''));
+      this.setState(compose(
+        set(lensPath(['success', 'global']), ''),
+        set(lensPath(['saving', 'global']), true),
+      ));
       updateGrants(username, { global: grants.global } as Partial<Linode.Grants>)
         .then((grantsResponse) => {
           this.setState(compose(
@@ -166,6 +176,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             set(lensPath(['originalGrants', 'global']), grantsResponse.global),
             set(lensPath(['success', 'global']),
               'Successfully updated global permissions'),
+            set(lensPath(['saving', 'global']), false),
           ));
         })
         .catch((errResponse) => {
@@ -177,12 +188,63 @@ class UserPermissions extends React.Component<CombinedProps, State> {
               errResponse,
             ),
           })
+          this.setState(set(lensPath(['saving', 'global']), false))
           scrollErrorIntoView();
         });
       return;
     }
 
     /* This is where individual entity saving could be implemented */
+  }
+
+  saveSpecificGrants = () => {
+    const { username } = this.props;
+    const { grants } = this.state;
+    if (!username || !(grants)) {
+      return this.setState({
+        errors: [
+          { reason: `Can\'t set Entity-Specific Grants at this time. Please try again later` }
+        ]
+      })
+    }
+
+    this.setState(compose(
+      set(lensPath(['success', 'specific']), ''),
+      set(lensPath(['saving', 'entity']), true),
+    ));
+    const requestPayload = omit(['global'], grants);
+    updateGrants(username, requestPayload as Partial<Linode.Grants>)
+      .then((grantsResponse) => {
+        /* build array of update fns */
+        let updateFns = this.entityPerms.map((entity) => {
+          const lens = lensPath(['grants', entity]);
+          const lensOrig = lensPath(['originalGrants', entity]);
+          return [
+            set(lens, grantsResponse[entity]),
+            set(lensOrig, grantsResponse[entity]),
+          ];
+        })
+        updateFns = flatten(updateFns);
+        /* apply all of them at once */
+        this.setState((compose as any)(...updateFns));
+        this.setState(compose(
+          set(lensPath(['success', 'specific']),
+            'Successfully updated Entity-Specific Grants'),
+          set(lensPath(['saving', 'entity']), false),
+        ));
+      })
+      .catch((errResponse) => {
+        this.setState({
+          errors: pathOr(
+            [{ reason: 
+              'Error while updating Entity-Specific Grants for this user. Try again later'}],
+            ['response', 'data', 'errors'],
+            errResponse,
+          ),
+        })
+        this.setState(set(lensPath(['saving', 'entity']), false));
+        scrollErrorIntoView();
+      });
   }
 
   cancelPermsType = (type: string) => () => {
@@ -204,51 +266,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       this.setState((compose as any)(...updateFns));
       return;
     }
-  }
-
-  saveSpecificGrants = () => {
-    const { username } = this.props;
-    const { grants } = this.state;
-    if (!username || !(grants)) {
-      return this.setState({
-        errors: [
-          { reason: `Can\'t set Entity-Specific Grants at this time. Please try again later` }
-        ]
-      })
-    }
-
-    this.setState(set(lensPath(['success', 'specific']), ''));
-    const requestPayload = omit(['global'], grants);
-    updateGrants(username, requestPayload as Partial<Linode.Grants>)
-      .then((grantsResponse) => {
-        /* build array of update fns */
-        let updateFns = this.entityPerms.map((entity) => {
-          const lens = lensPath(['grants', entity]);
-          const lensOrig = lensPath(['originalGrants', entity]);
-          return [
-            set(lens, grantsResponse[entity]),
-            set(lensOrig, grantsResponse[entity]),
-          ];
-        })
-        updateFns = flatten(updateFns);
-        /* apply all of them at once */
-        this.setState((compose as any)(...updateFns));
-        this.setState(
-          set(lensPath(['success', 'specific']),
-            'Successfully updated Entity-Specific Grants'),
-        );
-      })
-      .catch((errResponse) => {
-        this.setState({
-          errors: pathOr(
-            [{ reason: 
-              'Error while updating Entity-Specific Grants for this user. Try again later'}],
-            ['response', 'data', 'errors'],
-            errResponse,
-          ),
-        })
-        scrollErrorIntoView();
-      });
   }
 
   onChangeRestricted = () => {
@@ -381,7 +398,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
 
   renderGlobalPerms = () => {
     const { classes } = this.props;
-    const { grants, success } = this.state;
+    const { grants, success, saving } = this.state;
     return (
       <Paper className={classes.globalSection}>
         <Typography variant="title">
@@ -400,7 +417,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         {this.renderActions(
           this.savePermsType('global'),
           this.cancelPermsType('global'),
-          false /* TODO: implement saving state */
+          saving.global
         )}
       </Paper>
     )
@@ -542,7 +559,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   
   renderSpecificPerms = () => {
     const { classes } = this.props;
-    const { grants, success, setAllPerm } = this.state;
+    const { grants, success, setAllPerm, saving } = this.state;
     return (
       <Paper className={classes.globalSection}>
         <Grid container justify="space-between">
@@ -589,7 +606,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         {this.renderActions(
           this.saveSpecificGrants,
           this.cancelPermsType('entity'),
-          false /* TODO: implement saving state */
+          saving.entity
         )}
       </Paper>
     )
