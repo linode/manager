@@ -1,10 +1,14 @@
-import Menu from '@material-ui/core/Menu';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import { compose, contains, filter, propSatisfies } from 'ramda';
 import * as React from 'react';
 import 'rxjs/add/operator/map';
 import { Subscription } from 'rxjs/Subscription';
+
+import Menu from '@material-ui/core/Menu';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+
+import GDPRNotification from 'src/GDPRNotification';
 import notifications$ from 'src/notifications';
+
 import UserNotificationButton from './UserNotificationsButton';
 import UserNotificationsList from './UserNotificationsList';
 
@@ -42,6 +46,7 @@ interface Props { }
 interface State {
   anchorEl?: HTMLElement;
   notifications: Linode.Notification[];
+  privacyPolicyModalOpen: boolean;
 }
 
 type CombinedProps = {} & WithStyles<ClassNames>;
@@ -61,12 +66,27 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
   state: State = {
     notifications: [],
     anchorEl: undefined,
+    privacyPolicyModalOpen: false,
   };
 
   componentDidMount() {
     this.subscription = notifications$
       .map(filterNotifications)
-      .subscribe(notifications => this.setState({ notifications }));
+
+      /** Update the language of the privacy policy update for usagea in the UNM. */
+      .map((notifications) => notifications.map((n) => {
+        return isPrivacyPolicityNotification(n)
+        ? { ...n, message: `We've updated our policies. Click here to view the updated policies.`, }
+        : n;
+      }))
+      .subscribe(notifications => {
+        const updatedPrivacyPolicyNotification = notifications.find(isPrivacyPolicityNotification);
+
+        this.setState({
+          notifications,
+          privacyPolicyModalOpen: Boolean(updatedPrivacyPolicyNotification),
+        });
+      });
   }
 
   componentWillUnmount() {
@@ -74,6 +94,8 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
       this.subscription.unsubscribe();
     }
   }
+
+  closePrivacyPolicyModal = () => this.setState({ privacyPolicyModalOpen: false })
 
   render() {
     const { anchorEl, notifications } = this.state;
@@ -100,6 +122,7 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
         >
           <UserNotificationsList notifications={notifications} closeMenu={this.closeMenu} />
         </Menu>
+        <GDPRNotification open={this.state.privacyPolicyModalOpen} onClose={this.closePrivacyPolicyModal} />
       </React.Fragment>
     );
   }
@@ -117,6 +140,9 @@ const filterNotifications: (v: Linode.Notification[]) => Linode.Notification[] =
       propSatisfies(v => contains(v, UserNotificationsMenu.displayedEvents), 'type'),
     ),
   );
+
+const isPrivacyPolicityNotification = (n: Linode.Notification) =>
+  n.type === `notice` && n.label === `We've updated our policies.`;
 
 const reduceSeverity = (result: Linode.NotificationSeverity | null, { severity }: Linode.Notification) => {
   if (result === 'critical' || severity === 'critical') { return 'critical'; }
