@@ -59,6 +59,8 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
     'ticket_important',
     'ticket_abuse',
     'notice',
+    'migration_pending',
+    'migration_scheduled',
   ];
 
   subscription: Subscription;
