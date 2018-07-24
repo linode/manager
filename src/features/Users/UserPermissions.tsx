@@ -1,4 +1,4 @@
-import { compose, lensPath, omit, pathOr, set } from 'ramda';
+import { compose, flatten, lensPath, omit, pathOr, set } from 'ramda';
 import * as React from 'react';
 
 import Divider from '@material-ui/core/Divider';
@@ -63,6 +63,7 @@ interface State {
   /* need this separated so we can show just the restricted toggle when it's in use */
   loadingGrants: boolean;
   grants?: Linode.Grants;
+  originalGrants?: Linode.Grants; /* used to implement cancel functionality */
   restricted?: boolean;
   errors?: Linode.ApiFieldError[];
   success?: {
@@ -112,6 +113,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           if (grants.global) {
             this.setState({
               grants,
+              originalGrants: grants,
               loading: false,
               loadingGrants: false,
               restricted: true,
@@ -161,6 +163,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         .then((grantsResponse) => {
           this.setState(compose(
             set(lensPath(['grants', 'global']), grantsResponse.global),
+            set(lensPath(['originalGrants', 'global']), grantsResponse.global),
             set(lensPath(['success', 'global']),
               'Successfully updated global permissions'),
           ));
@@ -176,9 +179,31 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           })
           scrollErrorIntoView();
         });
+      return;
     }
 
     /* This is where individual entity saving could be implemented */
+  }
+
+  cancelPermsType = (type: string) => () => {
+    const { grants, originalGrants } = this.state;
+    if (!grants || !originalGrants) { return; }
+
+    if (type === 'global') {
+      this.setState(set(lensPath(['grants', 'global']), originalGrants.global));
+      return;
+    }
+
+    if (type === 'entity') {
+      /* build array of update fns */
+      const updateFns = this.entityPerms.map((entity) => {
+        const lens = lensPath(['grants', entity]);
+        return set(lens, originalGrants[entity]);
+      })
+      /* apply all of them at once */
+      this.setState((compose as any)(...updateFns));
+      return;
+    }
   }
 
   saveSpecificGrants = () => {
@@ -197,10 +222,15 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     updateGrants(username, requestPayload as Partial<Linode.Grants>)
       .then((grantsResponse) => {
         /* build array of update fns */
-        const updateFns = this.entityPerms.map((entity) => {
+        let updateFns = this.entityPerms.map((entity) => {
           const lens = lensPath(['grants', entity]);
-          return set(lens, grantsResponse[entity]);
+          const lensOrig = lensPath(['originalGrants', entity]);
+          return [
+            set(lens, grantsResponse[entity]),
+            set(lensOrig, grantsResponse[entity]),
+          ];
         })
+        updateFns = flatten(updateFns);
         /* apply all of them at once */
         this.setState((compose as any)(...updateFns));
         this.setState(
@@ -369,7 +399,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         {this.renderBillingPerm()}
         {this.renderActions(
           this.savePermsType('global'),
-          () => null, /* TODO: implement cancel */
+          this.cancelPermsType('global'),
           false /* TODO: implement saving state */
         )}
       </Paper>
@@ -558,7 +588,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         }
         {this.renderActions(
           this.saveSpecificGrants,
-          () => null, /* TODO: implement cancel */
+          this.cancelPermsType('entity'),
           false /* TODO: implement saving state */
         )}
       </Paper>
