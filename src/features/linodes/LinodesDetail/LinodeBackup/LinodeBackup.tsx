@@ -44,7 +44,6 @@ type ClassNames =
   | 'title'
   | 'subTitle'
   | 'snapshotFormControl'
-  | 'snapshotAction'
   | 'scheduleAction'
   | 'chooseTime'
   | 'cancelButton';
@@ -70,10 +69,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
       width: 'auto',
       marginRight: theme.spacing.unit * 2,
     },
-  },
-  snapshotAction: {
-    height: 44,
-    paddingTop: 11,
   },
   scheduleAction: {
     padding: 0,
@@ -470,7 +465,6 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
                   variant="raised"
                   color="primary"
                   onClick={this.takeSnapshot}
-                  className={classes.snapshotAction}
                   data-qa-snapshot-button
                   disabled={linodeInTransition}
                 >
