@@ -80,6 +80,16 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     'cancel_account'
   ];
 
+  entityPerms = [
+    'linode',
+    'stackscript',
+    'image',
+    'volume',
+    'nodebalancer',
+    'domain',
+    'longview',
+  ]
+
   getUserGrants = () => {
     const { username } = this.props;
     if (username) {
@@ -116,6 +126,40 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   componentDidUpdate(prevProps: CombinedProps) {
     if (prevProps.username !== this.props.username) {
       this.getUserGrants();
+    }
+  }
+  
+  savePermsType = (type: string) => () => {
+    const { username } = this.props;
+    const { grants } = this.state;
+    if (!username || !(grants && grants[type])) {
+      return this.setState({
+        errors: [
+          { reason: `Can\'t set ${type} grants at this time. Please try again later`}]
+      })
+    }
+
+    if (type === 'global') {
+      this.setState(set(lensPath(['success', 'global']), ''));
+      updateGrants(username, { global: grants.global } as Partial<Linode.Grants>)
+        .then((grantsResponse) => {
+          this.setState(compose(
+            set(lensPath(['grants', 'global']), grantsResponse.global),
+            set(lensPath(['success', 'global']),
+              'Successfully updated global permissions'),
+          ));
+        })
+        .catch((errResponse) => {
+          this.setState({
+            errors: pathOr(
+              [{ reason: 
+                'Error while updating global permissions for this user. Try again later'}],
+              ['response', 'data', 'errors'],
+              errResponse,
+            ),
+          })
+          scrollErrorIntoView();
+        });
     }
   }
 
@@ -175,65 +219,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     );
   }
 
-  savePermsType = (type: string) => () => {
-    const { username } = this.props;
-    const { grants } = this.state;
-    if (!username || !(grants && grants[type])) {
-      return this.setState({
-        errors: [
-          { reason: `Can\'t set ${type} grants at this time. Please try again later`}]
-      })
-    }
-
-    if (type === 'global') {
-      this.setState(set(lensPath(['success', 'global']), ''));
-      updateGrants(username, { global: grants.global } as Partial<Linode.Grants>)
-        .then((grantsResponse) => {
-          this.setState(compose(
-            set(lensPath(['grants', 'global']), grantsResponse.global),
-            set(lensPath(['success', 'global']),
-              'Successfully updated global permissions'),
-          ));
-        })
-        .catch((errResponse) => {
-          this.setState({
-            errors: pathOr(
-              [{ reason: 
-                'Error while updating global permissions for this user. Try again later'}],
-              ['response', 'data', 'errors'],
-              errResponse,
-            ),
-          })
-          scrollErrorIntoView();
-        });
-    }
-  }
-
-  renderActions = (
-    onConfirm: () => void,
-    onCancel: () => void,
-    loading: boolean,
-  ) => () => {
-    const { classes } = this.props;
-    return (
-      <ActionsPanel className={classes.section}>
-        <Button
-          type="primary"
-          loading={loading}
-          onClick={onConfirm}
-        >
-          Save
-        </Button>
-        <Button
-          type="cancel"
-          onClick={onCancel}
-        >
-          Cancel
-        </Button>
-      </ActionsPanel>
-    );
-  }
-  
   billingPermOnClick = (value: string | null) => () => {
     const lp = lensPath(['grants', 'global', 'account_access']);
     this.setState(set(lp, value));
@@ -275,6 +260,31 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       </div>
     );
   }
+  
+  renderActions = (
+    onConfirm: () => void,
+    onCancel: () => void,
+    loading: boolean,
+  ) => {
+    const { classes } = this.props;
+    return (
+      <ActionsPanel className={classes.section}>
+        <Button
+          type="primary"
+          loading={loading}
+          onClick={onConfirm}
+        >
+          Save
+        </Button>
+        <Button
+          type="cancel"
+          onClick={onCancel}
+        >
+          Cancel
+        </Button>
+      </ActionsPanel>
+    );
+  }
 
   renderGlobalPerms = () => {
     const { classes } = this.props;
@@ -296,9 +306,63 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         {this.renderBillingPerm()}
         {this.renderActions(
           this.savePermsType('global'),
-          () => null,
-          false)()
+          () => null, /* TODO: implement cancel */
+          false /* TODO: implement saving state */
+        )}
+      </Paper>
+    )
+  }
+
+  renderEntitySection = (entity: string) => {
+    const { classes } = this.props;
+    const { grants } = this.state;
+    if (!(grants && grants[entity])) { return null; }
+    const entityGrants = grants[entity];
+
+    const entityNameMap = {
+      linode: 'Linodes',
+      stackscript: 'StackScripts',
+      image: 'Images',
+      volume: 'Volumes',
+      nodebalancer: 'NodeBalancers',
+      domain: 'Domains',
+      longview: 'Longview Clients',
+    };
+    return (
+      <div className={classes.section}>
+        <Typography variant="subheading">
+          {entityNameMap[entity]}
+        </Typography>
+        {entityGrants.map((grant) => {
+          return <div key={grant.id}>{grant.label} {grant.permissions}</div>
+        })}
+      </div>
+    )
+  }
+  
+  renderSpecificPerms = () => {
+    const { classes } = this.props;
+    const { grants, success } = this.state;
+    return (
+      <Paper className={classes.globalSection}>
+        <Typography variant="title">
+          Specific Permissions
+        </Typography>
+        {success && success.specific &&
+          <Notice success text={success.specific} className={classes.section}/>
         }
+        <div className={classes.section}>
+          {grants &&
+            this.entityPerms.map((entity) => {
+              return this.renderEntitySection(entity);
+            })
+          }
+        </div>
+        {this.renderActions(
+          this.savePermsType('specific'),
+          () => null, /* TODO: implement cancel */
+          false /* TODO: implement saving state */
+        )}
       </Paper>
     )
   }
@@ -307,6 +371,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         {this.renderGlobalPerms()}
+        {this.renderSpecificPerms()}
       </React.Fragment>
     )
   }
