@@ -433,7 +433,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
 
   entitySetAllTo = (entity: string, value: Linode.GrantLevel) => () => {
     const { grants } = this.state;
-    if (!(grants && grants[entity])) { return false; }
+    if (!(grants && grants[entity])) { return; }
     /* map entities to an array of state update functions */
     const updateFns = grants[entity].map((grant, idx) => {
       const lens = lensPath(['grants', entity, idx, 'permissions'])
