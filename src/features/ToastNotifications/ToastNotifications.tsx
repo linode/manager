@@ -166,6 +166,7 @@ class Notifier extends React.Component<CombinedProps, State> {
           autoHideDuration={6000}
           onClose={this.onClose}
           onExited={this.onExited}
+          aria-live="assertive"
           ContentProps={{
             className:
               classNames({

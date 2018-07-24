@@ -7,11 +7,12 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 type ClassNames = 'root'
   | 'destructive'
 
-interface Props {
+interface Props extends IconButtonProps {
   destructive?: boolean;
   style?: any;
   onClick?: (e: React.SyntheticEvent<HTMLElement>) => void;
   className?: any;
+  disabled?: boolean;
 }
 
 const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
@@ -30,7 +31,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   },
 });
 
-type CombinedProps = IconButtonProps & Props & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 const IconButtonWrapper: React.StatelessComponent<CombinedProps> = (props) => {
   const { classes, destructive, style, className, ...rest } = props;

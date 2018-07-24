@@ -159,4 +159,9 @@ namespace Linode {
     field?: string;
     reason: string;
   }
+
+  export interface PaginationOptions {
+    page?: number,
+    page_size?: number,
+  }
 }

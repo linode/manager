@@ -4,6 +4,7 @@ import Request, { setData, setMethod, setURL } from '.';
 
 type Page<T> = Linode.ResourcePage<T>;
 type Token = Linode.Token;
+type Secret = Linode.Secret;
 
 export const getProfile = () => Request<Linode.Profile>(
   setURL(`${API_ROOT}/profile`),
@@ -18,6 +19,26 @@ export const updateProfile = (data: any) => Request<Linode.Profile>(
   setData(data),
 )
   .then(response => response.data);
+
+/** Two-factor authentication */
+export const getTFAToken = () =>
+  Request<Secret>(
+    setMethod('POST'),
+    setURL(`${API_ROOT}/profile/tfa-enable`)
+  )
+
+export const disableTwoFactor = () =>
+  Request<{}>(
+    setMethod('POST'),
+    setURL(`${API_ROOT}/profile/tfa-disable`)
+  )
+
+export const confirmTwoFactor = (code:string) =>
+  Request<{}>(
+    setMethod('POST'),
+    setURL(`${API_ROOT}/profile/tfa-enable-confirm`),
+    setData({ tfa_code: code })
+  )
 
 /** App Tokens */
 export const createAppToken = (data: any) =>

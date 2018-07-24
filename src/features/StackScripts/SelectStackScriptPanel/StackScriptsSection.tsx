@@ -26,6 +26,7 @@ export interface Props {
   isSorting: boolean;
   publicImages: Linode.Image[];
   triggerDelete: (id: number, label: string) => void;
+  triggerMakePublic: (id: number, label: string) => void;
   currentUser: string;
 }
 
@@ -40,6 +41,7 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => 
     classes,
     triggerDelete,
     currentUser,
+    triggerMakePublic
   } = props;
 
   const renderStackScriptTable = () => {
@@ -56,6 +58,7 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => 
       label={s.label}
       stackScriptUsername={s.username}
       description={truncateDescription(s.description)}
+      isPublic={s.is_public}
       images={stripImageName(s.images)}
       deploymentsActive={s.deployments_active}
       updated={formatDate(s.updated, false)}
@@ -64,6 +67,7 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => 
       updateFor={[selectedId === s.id]}
       stackScriptID={s.id}
       canDelete={false}
+      canEdit={false}
     />
   )
 
@@ -79,13 +83,16 @@ const listStackScript: (
       label={s.label}
       stackScriptUsername={s.username}
       description={truncateDescription(s.description)}
+      isPublic={s.is_public}
       images={stripImageName(s.images)}
       deploymentsActive={s.deployments_active}
       updated={formatDate(s.updated, false)}
       showDeployLink={showDeployLink}
       stackScriptID={s.id}
       triggerDelete={triggerDelete}
+      triggerMakePublic={triggerMakePublic}
       canDelete={canDelete(s.username, s.is_public)}
+      canEdit={canEdit(s.username)}
     />
   )
 
@@ -95,6 +102,17 @@ const listStackScript: (
   */
   const canDelete = (stackScriptUser: string, stackScriptIsPublic: boolean) => {
     if (stackScriptUser === currentUser && !stackScriptIsPublic) {
+      return true;
+    }
+    return false;
+  }
+
+  /*
+  * We can only edit a stackscript if it's ours
+  * it doesn't matter if it's public or not
+  */
+  const canEdit = (stackScriptUser: string) => {
+    if (stackScriptUser === currentUser) {
       return true;
     }
     return false;

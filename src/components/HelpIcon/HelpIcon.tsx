@@ -7,6 +7,7 @@ import HelpOutline from '@material-ui/icons/HelpOutline';
 
 interface Props {
   text: string;
+  className?: string;
 }
 
 interface State {
@@ -52,7 +53,7 @@ class HelpIcon extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { text } = this.props;
+    const { text, className } = this.props;
     return (
       <React.Fragment>
         <Tooltip
@@ -61,7 +62,10 @@ class HelpIcon extends React.Component<CombinedProps, State> {
           enterTouchDelay={0}
           leaveTouchDelay={5000}
         >
-          <IconButton data-qa-help-button>
+          <IconButton
+            className={className}
+            data-qa-help-button
+          >
             <HelpOutline />
           </IconButton>
         </Tooltip>

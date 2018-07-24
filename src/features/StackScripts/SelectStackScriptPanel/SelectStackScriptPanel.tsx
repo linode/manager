@@ -15,17 +15,23 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import DebouncedSearch from 'src/components/DebouncedSearch';
 import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import RenderGuard from 'src/components/RenderGuard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
-import { deleteStackScript, getCommunityStackscripts, getStackScript, getStackScriptsByUser } from 'src/services/stackscripts';
+
+import {
+  deleteStackScript,
+  getCommunityStackscripts,
+  getStackScript,
+  getStackScriptsByUser,
+  makeStackScriptPublic
+} from 'src/services/stackscripts';
 
 import StackScriptsSection from './StackScriptsSection';
-
-import DebouncedSearch from 'src/components/DebouncedSearch';
 
 export interface ExtendedLinode extends Linode.Linode {
   heading: string;
@@ -287,8 +293,12 @@ interface ContainerProps {
 
 type CurrentFilter = 'label' | 'deploys' | 'revision';
 
-interface Dialog {
+interface DialogVariantProps {
   open: boolean;
+}
+interface Dialog {
+  makePublic: DialogVariantProps,
+  delete: DialogVariantProps,
   stackScriptID: number | undefined;
   stackScriptLabel: string;
 }
@@ -303,12 +313,14 @@ interface ContainerState {
   sortOrder: SortOrder;
   currentFilterType: CurrentFilter | null;
   currentFilter: any; // @TODO type correctly
+  currentSearchFilter: any;
   isSorting: boolean;
   error?: Error;
   fieldError: Linode.ApiFieldError | undefined;
   dialog: Dialog;
   isSearching: boolean;
   didSearch: boolean;
+  successMessage: string;
 }
 
 type ContainerCombinedProps = ContainerProps & WithStyles<ClassNames>;
@@ -324,16 +336,23 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
     sortOrder: 'asc',
     currentFilterType: null,
     currentFilter: { ['+order_by']: 'deployments_total', ['+order']: 'desc' },
+    currentSearchFilter: {},
     isSorting: false,
     error: undefined,
     fieldError: undefined,
     dialog: {
-      open: false,
+      makePublic: {
+        open: false,
+      },
+      delete: {
+        open: false,
+      },
       stackScriptID: undefined,
       stackScriptLabel: '',
     },
     isSearching: false,
     didSearch: false,
+    successMessage: '',
   };
 
   mounted: boolean = false;
@@ -353,6 +372,9 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
       .then((response: Linode.ResourcePage<Linode.StackScript.Response>) => {
         if (!this.mounted) { return; }
 
+        /*
+        * if we have no results at all or if we've loaded all available results
+        */
         if (!response.data.length || response.data.length === response.results) {
           this.setState({ showMoreButtonVisible: false });
         }
@@ -371,7 +393,11 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
         const newDataWithoutDeprecatedDistros =
           newData.filter(stackScript => this.hasNonDeprecatedImages(stackScript.images));
 
-        if (isSorting && newDataWithoutDeprecatedDistros.length === 0) {
+        // we have to make sure both the original data set
+        // AND the filtered data set is 0 before we request the next page automatically
+        if (isSorting
+          && (newData.length !== 0
+            && newDataWithoutDeprecatedDistros.length === 0)) {
           this.getNext();
           return;
         }
@@ -404,7 +430,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
       })
       .catch((e: any) => {
         if (!this.mounted) { return; }
-        this.setState({ error: e.response });
+        this.setState({ error: e.response, loading: false, });
       });
   }
 
@@ -479,9 +505,17 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
   }
 
   handleClickStackScriptsTableHeader = () => {
-    const { sortOrder } = this.state;
+    const { currentSearchFilter, sortOrder } = this.state;
     const nextSortOrder = (sortOrder === 'asc') ? 'desc' : 'asc';
-    this.getDataAtPage(1, { ['+order_by']: 'label', ['+order']: sortOrder }, true);
+    /*
+    * If a search filter is applied, persist the search terms
+    * when we sort the table results
+    */
+    const filterWithSearch = (!!Object.keys(currentSearchFilter).length)
+      ? { ['+order_by']: 'label', ['+order']: sortOrder, ...currentSearchFilter }
+      : { ['+order_by']: 'label', ['+order']: sortOrder }
+
+    this.getDataAtPage(1, filterWithSearch, true);
     this.setState({
       sortOrder: nextSortOrder,
       currentFilterType: 'label',
@@ -490,9 +524,17 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
   }
 
   handleClickDeploymentsTableHeader = () => {
-    const { sortOrder } = this.state;
+    const { currentSearchFilter, sortOrder } = this.state;
     const nextSortOrder = (sortOrder === 'asc') ? 'desc' : 'asc';
-    this.getDataAtPage(1, { ['+order_by']: 'deployments_active', ['+order']: sortOrder }, true);
+    /*
+    * If a search filter is applied, persist the search terms
+    * when we sort the table results
+    */
+    const filterWithSearch = (!!Object.keys(currentSearchFilter).length)
+      ? { ['+order_by']: 'deployments_active', ['+order']: sortOrder, ...currentSearchFilter }
+      : { ['+order_by']: 'deployments_active', ['+order']: sortOrder }
+
+    this.getDataAtPage(1, filterWithSearch, true);
     this.setState({
       sortOrder: nextSortOrder,
       currentFilterType: 'deploys',
@@ -501,9 +543,17 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
   }
 
   handleClickRevisionsTableHeader = () => {
-    const { sortOrder } = this.state;
+    const { currentSearchFilter, sortOrder } = this.state;
     const nextSortOrder = (sortOrder === 'asc') ? 'desc' : 'asc';
-    this.getDataAtPage(1, { ['+order_by']: 'updated', ['+order']: sortOrder }, true);
+    /*
+    * If a search filter is applied, persist the search terms
+    * when we sort the table results
+    */
+    const filterWithSearch = (!!Object.keys(currentSearchFilter).length)
+      ? { ['+order_by']: 'updated', ['+order']: sortOrder, ...currentSearchFilter }
+      : { ['+order_by']: 'updated', ['+order']: sortOrder }
+
+    this.getDataAtPage(1, filterWithSearch, true);
     this.setState({
       sortOrder: nextSortOrder,
       currentFilterType: 'revision',
@@ -511,10 +561,30 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
     });
   }
 
-  handleOpenDialog = (id: number, label: string) => {
+  handleOpenDeleteDialog = (id: number, label: string) => {
     this.setState({
       dialog: {
-        open: true,
+        delete: {
+          open: true,
+        },
+        makePublic: {
+          open: false,
+        },
+        stackScriptID: id,
+        stackScriptLabel: label,
+      }
+    })
+  }
+
+  handleOpenMakePublicDialog = (id: number, label: string) => {
+    this.setState({
+      dialog: {
+        delete: {
+          open: false,
+        },
+        makePublic: {
+          open: true,
+        },
         stackScriptID: id,
         stackScriptLabel: label,
       }
@@ -524,7 +594,12 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
   handleCloseDialog = () => {
     this.setState({
       dialog: {
-        open: false,
+        delete: {
+          open: false,
+        },
+        makePublic: {
+          open: false,
+        },
         stackScriptID: undefined,
         stackScriptLabel: '',
       }
@@ -536,7 +611,12 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
       .then(response => {
         this.setState({
           dialog: {
-            open: false,
+            delete: {
+              open: false,
+            },
+            makePublic: {
+              open: false,
+            },
             stackScriptID: undefined,
             stackScriptLabel: '',
           }
@@ -546,7 +626,12 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
       .catch(e => {
         this.setState({
           dialog: {
-            open: false,
+            delete: {
+              open: false,
+            },
+            makePublic: {
+              open: false,
+            },
             stackScriptID: undefined,
             stackScriptLabel: '',
           },
@@ -557,7 +642,52 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
       });
   }
 
+  handleMakePublic = () => {
+    const { dialog, currentFilter } = this.state;
+    
+    makeStackScriptPublic(dialog.stackScriptID!)
+      .then(response => {
+        if (!this.mounted) { return; }
+        this.setState({
+          successMessage: `${dialog.stackScriptLabel} successfully published to the public library`,
+          dialog: {
+            delete: {
+              open: false,
+            },
+            makePublic: {
+              open: false,
+            },
+            stackScriptID: undefined,
+            stackScriptLabel: '',
+          }
+        });
+        this.getDataAtPage(1, currentFilter, true);
+      })
+      .catch(e => {
+        this.setState({
+          dialog: {
+            delete: {
+              open: false,
+            },
+            makePublic: {
+              open: false,
+            },
+            stackScriptID: undefined,
+            stackScriptLabel: '',
+          },
+          fieldError: {
+            reason: 'Unable to complete your request at this time'
+          }
+        })
+      });
+  }
+
+  
   renderDialogActions = () => {
+    const onClick = (this.state.dialog.delete.open)
+      ? this.handleDeleteStackScript
+      : this.handleMakePublic;
+
     return (
       <React.Fragment>
         <ActionsPanel>
@@ -565,7 +695,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
             variant="raised"
             type="secondary"
             destructive
-            onClick={this.handleDeleteStackScript}>
+            onClick={onClick}>
             Yes
           </Button>
           <Button
@@ -587,7 +717,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
     return (
       <ConfirmationDialog
         title={`Delete ${dialog.stackScriptLabel}?`}
-        open={dialog.open}
+        open={dialog.delete.open}
         actions={this.renderDialogActions}
         onClose={this.handleCloseDialog}
       >
@@ -596,12 +726,27 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
     )
   }
 
+  renderMakePublicDialog = () => {
+    const { dialog } = this.state;
+
+    return (
+      <ConfirmationDialog
+        title={`Woah, just a word of caution...`}
+        open={dialog.makePublic.open}
+        actions={this.renderDialogActions}
+        onClose={this.handleCloseDialog}
+      >
+        <Typography>Are you sure you want to make {dialog.stackScriptLabel} public?
+        This action cannot be undone, nor will you be able to delete the StackScript once
+        made available to the public.</Typography>
+      </ConfirmationDialog>
+    )
+  }
+
   handleSearch = (value: string) => {
     const { request, currentUser, isLinodeStackScripts } = this.props;
     const { currentFilter } = this.state;
     const filteredUser = (isLinodeStackScripts) ? 'linode' : currentUser;
-
-    this.setState({ isSearching: true, didSearch: true });
 
     const filter = {
       ["+or"]: [
@@ -616,7 +761,12 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
           },
         },
       ],
-    }
+    };
+
+    this.setState({
+      isSearching: true, // wether to show the loading spinner in search bar
+      didSearch: true, // table will show default empty state unless didSearch is true
+    });
 
     request(
       filteredUser,
@@ -626,6 +776,21 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
       .then((response) => {
         if (!this.mounted) { return; }
         this.setState({ listOfStackScripts: response.data, isSearching: false });
+        /*
+        * If we're searching for search result, prevent the user
+        * from loading more stackscripts
+        */
+        if (value) {
+          this.setState({ 
+            showMoreButtonVisible: false,
+            currentSearchFilter: filter,
+           });
+        } else {
+          this.setState({
+            showMoreButtonVisible: true,
+            currentSearchFilter: [],
+          });
+        }
       })
       .catch(e => {
         if (!this.mounted) { return; }
@@ -645,8 +810,16 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
 
   render() {
     const { classes, publicImages, currentUser } = this.props;
-    const { currentFilterType, isSorting, error, fieldError,
-      isSearching, listOfStackScripts, didSearch } = this.state;
+    const {
+      currentFilterType,
+      isSorting,
+      error,
+      fieldError,
+      isSearching,
+      listOfStackScripts,
+      didSearch,
+      successMessage,
+    } = this.state;
 
     if(error) {
       return (
@@ -670,6 +843,9 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
       <React.Fragment>
         {fieldError && fieldError.reason &&
           <Notice text={fieldError.reason} error />
+        }
+        {successMessage &&
+          <Notice text={successMessage} success />
         }
         {/*
         * We only want to show this empty state on the initial GET StackScripts request
@@ -776,7 +952,8 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
                 selectedId={this.state.selected}
                 data={this.state.listOfStackScripts}
                 publicImages={publicImages}
-                triggerDelete={this.handleOpenDialog}
+                triggerDelete={this.handleOpenDeleteDialog}
+                triggerMakePublic={this.handleOpenMakePublicDialog}
                 currentUser={currentUser}
                 {...selectProps}
               />
@@ -798,6 +975,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
           </Button>
         }
         {this.renderDeleteStackScriptDialog()}
+        {this.renderMakePublicDialog()}
       </React.Fragment>
     );
   }

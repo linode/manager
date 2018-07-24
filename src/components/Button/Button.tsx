@@ -5,6 +5,8 @@ import * as React from 'react';
 import Button, { ButtonProps } from '@material-ui/core/Button';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
+import HelpIcon from 'src/components/HelpIcon';
+
 import Reload from 'src/assets/icons/reload.svg';
 
 type ClassNames = 'root'
@@ -12,11 +14,12 @@ type ClassNames = 'root'
   | 'destructive'
   | 'cancel';
 
-interface Props extends ButtonProps {
+export interface Props extends ButtonProps {
   loading?: boolean;
   destructive?: boolean;
   type?: 'primary' | 'secondary' | 'cancel';
   className?: string;
+  tooltipText?: string;
 }
 
 const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
@@ -92,37 +95,42 @@ const getColor = cond([
 // Add invariant warning if loading destructive cancel
 // Add invariant warning if destructive cancel
 
-const WrappedButton: React.StatelessComponent<CombinedProps> = (props) => {
+const wrappedButton: React.StatelessComponent<CombinedProps> = (props) => {
   const {
     theme,
     classes,
     loading,
     destructive,
+    tooltipText,
     type,
     className,
     ...rest
   } = props;
 
-  return React.createElement(
-    Button,
-    {
-      ...rest,
-      variant: getVariant(props),
-      disabled: props.disabled || loading,
-      color: getColor(props),
-      className: classNames(
-        type,
-        {
-          [classes.root]: true,
-          [classes.loading]: loading,
-          [classes.destructive]: destructive,
-        },
-        className,
-      ),
-    },
-    loading ? <Reload /> : props.children);
+  return (
+    <React.Fragment>
+      <Button
+        {...rest}
+        variant={getVariant(props)}
+        disabled={props.disabled || loading}
+        color={getColor(props)}
+        className={classNames(
+          type,
+          {
+            [classes.root]: true,
+            [classes.loading]: loading,
+            [classes.destructive]: destructive,
+          },
+          className,
+        )}
+      >
+        {loading ? <Reload /> : props.children}
+      </Button>
+      {tooltipText && <HelpIcon text={tooltipText} />}
+    </React.Fragment>
+  );
 };
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(WrappedButton);
+export default styled<Props>(wrappedButton);

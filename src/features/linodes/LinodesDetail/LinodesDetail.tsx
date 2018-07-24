@@ -19,21 +19,24 @@ import { KeyboardArrowLeft } from '@material-ui/icons';
 
 import CircleProgress from 'src/components/CircleProgress';
 import EditableText from 'src/components/EditableText';
+import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import ProductNotification from 'src/components/ProductNotification';
 import { events$ } from 'src/events';
+import { reportException } from 'src/exceptionReporting';
 import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawer';
 import { newLinodeEvents } from 'src/features/linodes/events';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 import { lishLaunch } from 'src/features/Lish';
 import notifications$ from 'src/notifications';
+import { Requestable } from 'src/requestableContext';
 import { getImage } from 'src/services/images';
 import { getLinode, getLinodeConfigs, getLinodeDisks, getLinodeVolumes, renameLinode } from 'src/services/linodes';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-import { ConfigsProvider, DisksProvider, ImageProvider, LinodeProvider, Requestable, VolumesProvider } from './context';
+import { ConfigsProvider, DisksProvider, ImageProvider, LinodeProvider, VolumesProvider } from './context';
 import LinodeBackup from './LinodeBackup';
 import LinodeDetailErrorBoundary from './LinodeDetailErrorBoundary';
 import LinodeNetworking from './LinodeNetworking';
@@ -594,7 +597,11 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     }
 
     if (linodeErrors) {
-      throw Error('Error while loading Linode.')
+      reportException(
+        Error('Error while loading Linode.'),
+        linodeErrors,
+      )
+      return <ErrorState errorText="Error while loading Linode." />;
     }
 
     if (!volumes) {
@@ -602,7 +609,11 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     }
 
     if (volumesErrors) {
-      throw Error('Error loading volumes data.')
+      reportException(
+        Error('Error loading volumes data.'),
+        volumesErrors,
+      )
+      return <ErrorState errorText="Error while loading volumes." />;
     }
 
     if (!configs) {
@@ -610,7 +621,11 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     }
 
     if (configsErrors) {
-      throw Error('Error loading configs data.')
+      reportException(
+        Error('Error loading configs data.'),
+        configsErrors,
+      )
+      return <ErrorState errorText="Error while loading configurations." />;
     }
 
     if (!disks) {
@@ -618,7 +633,11 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     }
 
     if (disksErrors) {
-      throw Error('Error loading disks data.')
+      reportException(
+        Error('Error loading disks data.'),
+        disksErrors,
+      )
+      return <ErrorState errorText="Error while loading disks." />;
     }
 
     return (
