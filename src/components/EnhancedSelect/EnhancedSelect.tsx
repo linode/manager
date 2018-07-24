@@ -34,7 +34,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   },
   suggestion: {
     borderBottom: `1px solid ${theme.palette.divider}`,
-    '&:hover, &:focus': {
+    '&:hover, &:focus, &.selected': {
       backgroundColor: `${theme.palette.primary.main} !important`,
       color: `${theme.color.white} !important`,
     },
@@ -154,7 +154,7 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
     return (
       <MenuItem 
         key={index} 
-        className={isHighlighted ? `${classes.selected} ${classes.suggestion}` : classes.suggestion} 
+        className={isHighlighted ? `${classes.suggestion} ${'selected'}` : classes.suggestion} 
         {...itemProps} 
       >
         {item.label}
