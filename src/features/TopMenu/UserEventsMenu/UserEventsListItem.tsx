@@ -20,15 +20,19 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       borderBottom: `1px solid ${theme.palette.divider}`,
       opacity: .7,
       transition: theme.transitions.create(['border-color', 'opacity']),
+      '&:hover': {
+        backgroundColor: 'white',
+      },
     },
     title: {
       ...theme.typography.subheading,
+      marginBottom: theme.spacing.unit / 2,
     },
     content: {
       ...theme.typography.caption,
     },
     unread: {
-      backgroundColor: theme.bg.offWhite,
+      backgroundColor: theme.bg.main,
       opacity: 1,
     },
     warning: {
@@ -39,6 +43,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     },
     pointer: {
       cursor: 'pointer',
+      border: 'none',
+      outline: 0,
+      '&:hover, &:focus': {
+        backgroundColor: theme.bg.main,
+        opacity: 1,
+      },
     },
   };
 };
@@ -54,7 +64,7 @@ export interface UserEventsListItemProps {
 
 type CombinedProps = UserEventsListItemProps & WithStyles<ClassNames>;
 
-const UserEventsListItem: React.StatelessComponent<CombinedProps> = (props) => {
+const userEventsListItem: React.StatelessComponent<CombinedProps> = (props) => {
   const { classes, title, content, warning, success, error, onClick } = props;
   return (
     <div className={classNames({
@@ -63,6 +73,7 @@ const UserEventsListItem: React.StatelessComponent<CombinedProps> = (props) => {
       [classes.pointer]: Boolean(onClick),
     })}
       onClick={onClick}
+      tabIndex={1}
     >
       <div className={classes.title}>{title}</div>
       {content && <div className={classes.content}>{content}</div>}
@@ -72,4 +83,4 @@ const UserEventsListItem: React.StatelessComponent<CombinedProps> = (props) => {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<UserEventsListItemProps>(UserEventsListItem);
+export default styled<UserEventsListItemProps>(userEventsListItem);

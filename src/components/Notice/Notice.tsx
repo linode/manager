@@ -24,7 +24,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => {
   return {
     root: {
       marginBottom: theme.spacing.unit * 2,
-      padding: theme.spacing.unit * 2,
+      padding: '4px 16px',
       maxWidth: '100%',
       display: 'flex',
       alignItems: 'center',
@@ -43,22 +43,28 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => {
       fontWeight: 700,
     },
     error: {
-      backgroundColor: status.error,
       borderLeft: `5px solid ${status.errorDark}`,
+      '& $noticeText': {
+        color: status.errorDark,
+      },
     },
     errorList: {
       borderLeft: `5px solid ${status.errorDark}`,
     },
     warning: {
-      backgroundColor: status.warning,
       borderLeft: `5px solid ${status.warningDark}`,
+      '& $noticeText': {
+        color: status.warningDark,
+      },
     },
     warningList: {
       borderLeft: `5px solid ${status.warningDark}`,
     },
     success: {
-      backgroundColor: status.success,
-      border: `5px solid ${status.successDark}`,
+      borderLeft: `5px solid ${status.successDark}`,
+      '& $noticeText': {
+        color: status.successDark,
+      },
     },
     successList: {
       borderLeft: `5px solid ${status.successDark}`,

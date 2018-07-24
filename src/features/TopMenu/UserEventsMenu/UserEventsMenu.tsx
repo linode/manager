@@ -13,6 +13,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import { events$, init } from 'src/events';
@@ -21,7 +22,9 @@ import { markEventsSeen } from 'src/services/account';
 import UserEventsButton from './UserEventsButton';
 import UserEventsList from './UserEventsList';
 
-type ClassNames = 'root' | 'dropDown';
+type ClassNames = 'root'
+  | 'dropDown'
+  | 'hidden';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -39,6 +42,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     [theme.breakpoints.up('sm')]: {
       width: 380,
     },
+  },
+  hidden: {
+    height: 0,
+    padding: 0,
   },
 });
 
@@ -151,6 +158,7 @@ class UserEventsMenu extends React.Component<CombinedProps, State> {
           className={classes.root}
           PaperProps={{ className: classes.dropDown }}
         >
+          <MenuItem key="placeholder" className={classes.hidden} />
           <UserEventsList
             events={events}
             closeMenu={this.closeMenu}
