@@ -24,7 +24,8 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     overflowY: 'auto',
   },
   selected: {
-    backgroundColor: theme.bg.lightBlue,
+    color: 'white',
+    backgroundColor: theme.palette.primary.main,
   },
   suggestion: {
     height: 50,

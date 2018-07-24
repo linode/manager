@@ -7,16 +7,16 @@ import EnhancedSelect from './EnhancedSelect';
 
 const data = [
   {
-    value: 'newyork',
-    label: 'New York'
+    value: 'apple',
+    label: 'Apple'
   },
   {
-    value: 'beijing',
-    label: 'China Standard Time'
+    value: 'pear',
+    label: 'Pear'
   },
   {
-    value: 'LA',
-    label: 'Los Angeles'
+    value: 'orange',
+    label: 'Orange'
   }
 ]
 
