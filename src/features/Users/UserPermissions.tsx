@@ -458,7 +458,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   renderEntitySection = (entity: string) => {
     const { classes } = this.props;
     const { grants } = this.state;
-    if (!(grants && grants[entity])) { return null; }
+    if (!(grants && grants[entity] && grants[entity].length)) { return null; }
     const entityGrants = grants[entity];
 
     const entityNameMap = {
@@ -472,7 +472,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     };
 
     return (
-      <div className={classes.section}>
+      <div key={entity} className={classes.section}>
         <Typography variant="subheading">
           {entityNameMap[entity]}
         </Typography>
@@ -514,7 +514,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           <TableBody>
             {entityGrants.map((grant, idx) => {
               return (
-                <TableRow key={grant.label}>
+                <TableRow key={grant.id}>
                   <TableCell>
                     {grant.label}
                   </TableCell>
