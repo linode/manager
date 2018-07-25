@@ -51,7 +51,6 @@ interface State {
 
 interface Timezone {
   label: string;
-  offset: number;
   name: string;
 }
 
