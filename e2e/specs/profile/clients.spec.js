@@ -1,4 +1,4 @@
-const { constants} = require('../../constants');
+const { constants } = require('../../constants');
 import { Profile, OauthCreateDrawer, dialogMap} from '../../pageobjects/profile';
 
 const profile = new Profile();
@@ -29,7 +29,7 @@ describe('Profile - OAuth Clients Suite', () => {
 
     describe('OAuth Clients - Create Client Suite', () => {
         it('should display create drawer', () => {
-            profile.oauthCreate.waitForVisible();
+            profile.oauthCreate.waitForVisible(constants.wait.normal);
             profile.create('oauth');
         });
 

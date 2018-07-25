@@ -84,14 +84,16 @@ describe('View - Personal Access Tokens', () => {
             expect(domainPermission.getAttribute('data-qa-perm-none-radio')).toBe('true');
             expect(eventsPermission.getAttribute('data-qa-perm-rw-radio')).toBe('true');
             expect(imagesPermission.getAttribute('data-qa-perm-rw-radio')).toBe('true');
+            
             browser.click('[data-qa-close-drawer]');
+            
             browser.waitForVisible('[data-qa-close-drawer]', constants.wait.normal, true);
+            browser.waitForExist('[data-qa-drawer]', constants.wait.normal, true);
         });
 
         describe('Edit - Personal Access Tokens', () => {
             it('should display edit drawer', () => {
-                browser.jsClick(`${newToken} [data-qa-action-menu]`);
-                browser.click('[data-qa-action-menu-item="Edit"]');
+                profile.selectActionMenuItem($(newToken), 'Edit')
                 
                 expect(tokenCreateDrawer.label.waitForVisible()).toBe(true);
                 expect(tokenCreateDrawer.title.getText()).toBe('Edit this Personal Access Token');
@@ -100,17 +102,7 @@ describe('View - Personal Access Tokens', () => {
             });
 
             it('should update label on edit', () => {
-                // Hack needed to edit a label
-                browser.waitUntil(function() {
-                    try {
-                        tokenCreateDrawer.label.click();
-                        tokenCreateDrawer.label.clearElement();
-                        tokenCreateDrawer.label.setValue(updatedMsg);
-                        return tokenCreateDrawer.label.getValue() === updatedMsg;
-                    } catch (err) {
-                        return false;
-                    }
-                }, constants.wait.normal);
+                browser.trySetValue('[data-qa-add-label] input', updatedMsg);
                 tokenCreateDrawer.submit.click();
 
                 browser.waitForVisible(updatedSelector);

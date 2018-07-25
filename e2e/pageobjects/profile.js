@@ -148,15 +148,15 @@ export class Profile extends Page {
 
     create(type) {
         if (type === 'oauth') {
-            this.oauthCreate.waitForVisible();
+            this.oauthCreate.waitForVisible(constants.wait.normal);
             this.oauthCreate.click();
         }
         if (type === 'token') {
-            this.tokenCreate.waitForVisible();
+            this.tokenCreate.waitForVisible(constants.wait.normal);
             this.tokenCreate.click();
         }
-        browser.waitForVisible('[data-qa-add-label]', constants.wait.normal);
         browser.waitForText('[data-qa-drawer-title]', constants.wait.normal );
+        browser.waitForVisible('[data-qa-add-label]', constants.wait.normal);
     }
     
     selectActionMenu(row, item) {

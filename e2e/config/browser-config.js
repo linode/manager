@@ -5,6 +5,10 @@ exports.browserConf = {
         acceptSslCerts: true,
         acceptInsecureCerts: true,
         chromeOptions: {
+            args: [
+            '--no-sandbox',
+            '--disable-dev-shm-usage',
+            ]
         }
     },
     headlessChrome: {

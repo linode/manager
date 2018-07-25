@@ -43,9 +43,23 @@ exports.readToken = () => {
 exports.login = (username, password) => {
     browser.url(constants.routes.dashboard);
     browser.waitForVisible('#username');
+    browser.waitForVisible('#password');
     browser.trySetValue('#username', username);
     browser.trySetValue('#password', password);
     browser.click('.btn-primary');
+
+    try {
+        browser.waitUntil(function() {
+            return browser.isExisting('[data-qa-add-new-menu-button]') || browser.getUrl().includes('oauth/authorize');
+        }, constants.wait.normal);
+    } catch (err) {
+        console.log('failed to login!');
+        if (browser.getText('.alert').includes('This field is required.')) {
+            browser.trySetValue('#password', password);
+            browser.click('.btn-primary');
+        }
+    }
+    
     if (browser.isExisting('.Modal')) {
         browser.click('.btn-primary');
     }
