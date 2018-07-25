@@ -181,11 +181,11 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
 
   handlePageChange = (page: number) => this.requestInvoices(page);
 
-  handlePerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  handlePerPageChange = (perPage: number) => {
     if (!this.mounted) { return; }
 
     this.setState(
-      { perPage: +e.target.value },
+      { perPage },
       () => { this.requestInvoices() },
     );
   }
