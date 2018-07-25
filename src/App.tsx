@@ -2,7 +2,7 @@ import { shim } from 'promise.prototype.finally';
 import { lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
-import { Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import { bindActionCreators, compose } from 'redux';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/throttleTime';
@@ -84,6 +84,10 @@ const Longview = DefaultLoader({
 
 const Managed = DefaultLoader({
   loader: () => import('src/features/Managed'),
+});
+
+const Dashboard = DefaultLoader({
+  loader: () => import('src/features/Dashboard'),
 });
 
 type ClassNames = 'appFrame'
@@ -277,6 +281,8 @@ export class App extends React.Component<CombinedProps, State> {
 
   Dashboard = () => <Placeholder title="Dashboard" />;
 
+  Managed = () => <Placeholder title="Managed" />;
+
   Support = () => <Placeholder title="Support" />;
 
   render() {
@@ -298,7 +304,6 @@ export class App extends React.Component<CombinedProps, State> {
                       <Grid container spacing={0} className={classes.grid}>
                         <Grid item className={`${classes.switchWrapper} ${hasDoc ? 'mlMain' : ''}`}>
                           <Switch>
-                            <Route exact path="/dashboard" render={this.Dashboard} />
                             <Route path="/linodes" component={LinodesRoutes} />
                             <Route path="/volumes" component={Volumes} />
                             <Route path="/nodebalancers" component={NodeBalancers} />
@@ -313,8 +318,8 @@ export class App extends React.Component<CombinedProps, State> {
                             <Route exact path="/support" render={this.Support} />
                             <Route path="/support/tickets" component={SupportTickets} />
                             <Route path="/profile" component={Profile} />
-                            {/* Update to Dashboard when complete */}
-                            <Route exact path="/" component={LinodesRoutes} />
+                            <Route path="/dashboard" component={Dashboard} />
+                            <Redirect exact from="/" to="/dashboard" />
                             <Route component={NotFound} />
                           </Switch>
                         </Grid>

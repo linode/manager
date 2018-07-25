@@ -67,4 +67,10 @@ namespace Linode {
   export type Grants = GlobalGrants & {
     [key: string]: Grant[];
   }
+
+  export interface NetworkUtilization {
+   billable: number;
+   used: number;
+   quota: number;
+  }
 }

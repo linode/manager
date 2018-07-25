@@ -1,0 +1,49 @@
+import * as React from 'react';
+
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+
+import Grid from 'src/components/Grid';
+
+import BlogDashboardCard from './BlogDashboardCard';
+import DomainsDashboardCard from './DomainsDashboardCard';
+import LinodesDashboardCard from './LinodesDashboardCard';
+import NodeBalancersDashboardCard from './NodeBalancersDashboardCard';
+import TransferDashboardCard from './TransferDashboardCard';
+import VolumesDashboardCard from './VolumesDashboardCard';
+
+type ClassNames = 'root';
+
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+  root: {},
+});
+
+interface Props { }
+
+interface State { }
+
+type CombinedProps = Props & WithStyles<ClassNames>;
+
+class Dashboard extends React.Component<CombinedProps, State> {
+  state: State = {};
+
+  render() {
+    return (
+      <Grid container>
+        <Grid item xs={7}>
+          <LinodesDashboardCard />
+          <VolumesDashboardCard />
+          <NodeBalancersDashboardCard />
+          <DomainsDashboardCard />
+        </Grid>
+        <Grid item xs={5}>
+          <TransferDashboardCard />
+          <BlogDashboardCard />
+        </Grid>
+      </Grid>
+    );
+  }
+}
+
+const styled = withStyles(styles, { withTheme: true });
+
+export default styled(Dashboard);
