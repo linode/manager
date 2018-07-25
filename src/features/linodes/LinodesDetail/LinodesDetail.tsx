@@ -533,7 +533,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       .then((linodeResponse) => {
         this.composeState(
           set(L.linode.data, linodeResponse),
-          set(L.labelInput.label, linodeResponse.label), 
+          set(L.labelInput.label, linodeResponse.label),
           set(L.labelInput.errorText, undefined),
         );
       })
