@@ -25,6 +25,11 @@ const LinodeTheme: Linode.Theme = {
     boxShadow: '#222',
     focusBorder: '#999',
   },
+  notificationList: {
+    padding: '16px 32px 16px 23px',
+    borderBottom: '1px solid #f4f4f4',
+    transition: 'border-color 225ms ease-in-out',
+  },
   palette: {
     divider: '#222',
     primary: {

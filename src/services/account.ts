@@ -6,11 +6,12 @@ type Event = Linode.Event;
 type OAuthClient = Linode.OAuthClient;
 type Notification = Linode.Notification;
 
-export const getEvents = (xFilter: any) =>
+export const getEvents = (params: any = {}, xFilter: any = {}) =>
   Request<Page<Event>>(
     setURL(`${API_ROOT}/account/events`),
     setMethod('GET'),
     setXFilter(xFilter),
+    setParams(params),
   );
 
 export const markEventsSeen = (id: number) =>

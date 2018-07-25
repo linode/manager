@@ -1,7 +1,8 @@
 import * as moment from 'moment';
-import { allPass, clone, compose, filter, gte, has, ifElse, isEmpty, path, pathEq, pathOr, prop, propEq, uniqBy } from 'ramda';
+import { clone, compose, gte, ifElse, isEmpty, path, pathEq, pathOr, prop, propEq } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/filter';
 import { Observable } from 'rxjs/Observable';
@@ -18,7 +19,6 @@ import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import PaginationFooter from 'src/components/PaginationFooter';
-import ProductNotification from 'src/components/ProductNotification';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import { events$ } from 'src/events';
 import LinodeConfigSelectionDrawer, { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
@@ -87,7 +87,6 @@ type CombinedProps = Props
 export class ListLinodes extends React.Component<CombinedProps, State> {
   eventsSub: Subscription;
   notificationSub: Subscription;
-  notificationsSubscription: Subscription;
   mounted: boolean = false;
 
   state: State = {
@@ -179,17 +178,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
         return this.setState({ linodes: response.response.data });
       });
-
-    this.notificationsSubscription = notifications$
-      .map(compose(
-        uniqBy(prop('type')),
-        filter(allPass([
-          pathEq(['entity', 'type'], 'linode'),
-          has('message'),
-        ])),
-      ))
-      .subscribe((notifications: Linode.Notification[]) =>
-        this.setState({ notifications }));
   }
 
   componentWillUnmount() {
@@ -361,10 +349,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           </Hidden>
         </Grid>
         <Grid item xs={12}>
-          {
-            (this.state.notifications || []).map(n =>
-              <ProductNotification key={n.type} severity={n.severity} text={n.message} />)
-          }
           <Hidden mdUp>
             {this.renderGridView(linodes, images)}
           </Hidden>

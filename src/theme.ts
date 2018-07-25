@@ -148,7 +148,6 @@ const LinodeTheme: Linode.Theme = {
     MuiDialog: {
       paper: {
         boxShadow: '0 0 5px #bbb',
-        maxWidth: '768px !important',
       },
     },
     MuiDialogActions: {
@@ -513,7 +512,6 @@ const LinodeTheme: Linode.Theme = {
         backgroundColor: 'transparent',
         [breakpoints.up('md')]: {
           margin: 0,
-          padding: 24,
         },
       },
       message: {
@@ -752,6 +750,14 @@ const LinodeTheme: Linode.Theme = {
     navy: '#32363C',
     lightBlue: '#D7E3EF',
     white: '#fff',
+  },
+  notificationList: {
+    padding: '16px 32px 16px 23px',
+    borderBottom: '1px solid #fbfbfb',
+    transition: 'background-color 225ms ease-in-out',
+    '&:hover': {
+      backgroundColor: '#f4f4f4',
+    },
   },
 };
 
