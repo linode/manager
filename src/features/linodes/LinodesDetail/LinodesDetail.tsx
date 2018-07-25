@@ -425,7 +425,9 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
         disks.request();
         volumes.request();
         linode.request(linodeEvent)
-          .then((l) => image.request(l.image))
+          .then((l) => {
+            if (l) { image.request(l.image) }
+          })
           .catch(console.error);
       });
 
@@ -456,7 +458,9 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     disks.request();
     volumes.request();
     linode.request()
-      .then((l) => image.request(l.image))
+      .then((l) => { 
+        if (l) { image.request(l.image) }
+      })
       .catch(console.error);
   }
 
@@ -529,7 +533,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       .then((linodeResponse) => {
         this.composeState(
           set(L.linode.data, linodeResponse),
-          set(L.labelInput.label, linodeResponse.label),
+          set(L.labelInput.label, linodeResponse.label), 
           set(L.labelInput.errorText, undefined),
         );
       })
