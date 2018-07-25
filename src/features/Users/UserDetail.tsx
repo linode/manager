@@ -1,4 +1,4 @@
-import { clone, equals, pathOr } from 'ramda';
+import { clone, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { matchPath, Route, RouteComponentProps, Switch } from 'react-router-dom';
