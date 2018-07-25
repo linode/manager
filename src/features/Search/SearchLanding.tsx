@@ -255,12 +255,6 @@ class SearchLanding extends React.Component<CombinedProps, State> {
           defaultExpanded={!!iterable.data.data.length}
         >
           <Table>
-            {/* <TableHead>
-              <TableRow>
-                <TableCell />
-                <TableCell>{iterable.label}</TableCell>
-              </TableRow>
-            </TableHead> */}
             <TableBody>
               {iterable.data.data.map((eachEntity: any) =>
                 this.renderPanelRow(iterable.label, eachEntity))}
