@@ -45,6 +45,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
       fontSize: '.9rem',
       border: 0,
       color: '#C44742',
+      padding: '14px 26px 14px',
       transition: theme.transitions.create(['color', 'border-color']),
       '&:hover, &:focus': {
         color: '#DF6560',
