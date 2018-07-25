@@ -125,7 +125,8 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
   render() {
     const { classes, timezone } = this.props;
     const { errors, submitting, success, updatedTimezone } = this.state;
-    const timezoneLabel = this.getTimezone(timezone).label;
+    const tz = this.getTimezone(timezone);
+    const timezoneLabel = (tz && tz.label) ? tz.label : 'not set';
 
     const hasErrorFor = getAPIErrorFor({
         timezone: 'timezone',
