@@ -9,13 +9,11 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Delete from '@material-ui/icons/Delete';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import Grid from 'src/components/Grid';
-import IconButton from 'src/components/IconButton';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
@@ -41,7 +39,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   backendIPAction: {
     paddingLeft: theme.spacing.unit * 2,
     marginLeft: -theme.spacing.unit,
-    marginTop: theme.spacing.unit * 3,
+    marginTop: theme.spacing.unit * 2,
+    [theme.breakpoints.down('xs')]: {
+      marginLeft: -32,
+    },
   },
   suggestionsParent: {
     position: 'relative',
@@ -843,10 +844,10 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       >
                         {idx !== 0 &&
                           <Grid item xs={12}>
-                            <Divider style={{ marginTop: 24 }} />
+                            <Divider style={{ marginTop: forEdit ? 8 : 24 }} />
                           </Grid>
                         }
-                        <Grid item xs={11} lg={forEdit ? 2 : 3}>
+                        <Grid item xs={11} sm={forEdit ? 4 : 3} xl={2} className="py0">
                           <TextField
                             label="Label"
                             value={node.label}
@@ -857,7 +858,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             data-qa-backend-ip-label
                           />
                         </Grid>
-                        <Grid item xs={11} lg={4} xl={3}>
+                        <Grid item xs={11} sm={forEdit ? 4 : 3} xl={2} className="py0">
                           <Downshift
                             onSelect={this.handleSelectSuggestion}
                             stateReducer={this.downshiftStateReducer}
@@ -934,7 +935,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             }
                           </Downshift>
                         </Grid>
-                        <Grid item xs={11} lg={2}>
+                        <Grid item xs={11} sm={forEdit ? 4 : 2} xl={2} className="py0">
                           <TextField
                             type="number"
                             label="Port"
@@ -944,9 +945,10 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             errorText={hasErrorFor('port')}
                             errorGroup={forEdit ? `${configIdx}`: undefined}
                             data-qa-backend-ip-port
+                            style={{ minWidth: 'auto' }}
                           />
                         </Grid>
-                        <Grid item xs={11} lg={2}>
+                        <Grid item xs={11} sm={forEdit ? 4 : 2} xl={2} className="py0">
                           <TextField
                             type="number"
                             label="Weight"
@@ -956,10 +958,11 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             errorText={hasErrorFor('weight')}
                             errorGroup={forEdit ? `${configIdx}`: undefined}
                             data-qa-backend-ip-weight
+                            style={{ minWidth: 'auto' }}
                           />
                         </Grid>
                         {forEdit &&
-                          <Grid item xs={12} lg={3} xl={2}>
+                          <Grid item xs={12} sm={4} xl={2} className="py0">
                             <TextField
                               label="Mode"
                               value={node.mode}
@@ -992,15 +995,12 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                         }
                         <ActionsPanel className={classes.backendIPAction}>
                           {(forEdit || idx !== 0) &&
-                            <IconButton
+                            <Button
+                              type="remove"
                               data-node-idx={idx}
                               onClick={this.removeNode}
-                              destructive
                               data-qa-remove-node
-                              style={{  width: 'auto' }}
-                            >
-                              <Delete />
-                            </IconButton>
+                            />
                           }
                         </ActionsPanel>
                       </Grid>
@@ -1013,8 +1013,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   updateFor={[]}
                   // is the Save/Delete ActionsPanel showing?
                   style={(forEdit || configIdx !== 0) ?
-                    { marginTop: 24, marginBottom: -24 } :
-                    { marginTop: 24 }
+                    { marginTop: 16, marginBottom: -24 } :
+                    { marginTop: 16 }
                   }
                 >
                   <AddNewLink
