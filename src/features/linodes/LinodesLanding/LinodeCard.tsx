@@ -304,7 +304,7 @@ class LinodeCard extends React.Component<CombinedProps> {
         <Card className={classes.flexContainer}>
           {/* Give Button a child of ' ', because the component requires children */}
           <Link to={`/linodes/${linodeId}`}>
-            <Button className={classes.link}/>
+            <Button className={classes.link}> </Button>
           </Link>
           <CardHeader
             subheader={this.renderTitle()}
