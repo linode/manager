@@ -145,8 +145,7 @@ class Notifier extends React.Component<CombinedProps, State> {
     this.subscription = toasts$
       .merge(
         events$
-          .filter((e) => !e._initial)
-          .filter((e) => e.status === 'failed')
+          .filter((e) => !e._initial && e.status === 'failed')
           .map(event => {
             if (event.action === 'disk_imagize') {
               return createToast('There was an error creating an image.', 'error');
