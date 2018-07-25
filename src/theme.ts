@@ -148,7 +148,6 @@ const LinodeTheme: Linode.Theme = {
     MuiDialog: {
       paper: {
         boxShadow: '0 0 5px #bbb',
-        maxWidth: '768px !important',
       },
     },
     MuiDialogActions: {

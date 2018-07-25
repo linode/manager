@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
@@ -36,7 +37,8 @@ class GDPRNotification extends React.Component<CombinedProps, State> {
         onClose={this.props.onClose}
         title="Privacy Policy Update"
       >
-        We've updated our policies. See <a href='https://manager.linode.com/account/policy'>https://manager.linode.com/account/policy</a> for more information.
+        <Typography style={{ marginBottom: 8 }}><strong>We've updated our policies.</strong></Typography>
+        <Typography>You must agree to the terms at <a href='https://manager.linode.com/account/policy'>https://manager.linode.com/account/policy</a> to permanently dismiss this window.</Typography>
       </ConfirmationDialog>
     );
   }

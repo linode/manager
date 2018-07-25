@@ -41,6 +41,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => {
     noticeText: {
       color: theme.palette.text.primary,
       fontWeight: 700,
+      lineHeight: 1.2,
     },
     error: {
       borderLeft: `5px solid ${status.errorDark}`,
