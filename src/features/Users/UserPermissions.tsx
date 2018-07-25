@@ -482,7 +482,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
               <TableCell>
                 Label
               </TableCell>
-              <TableCell>
+              <TableCell
+                padding="checkbox"
+              >
                 None
                 <Radio
                   name={`${entity}-select-all`}
@@ -491,7 +493,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                   onChange={this.entitySetAllTo(entity, null)}
                 />
               </TableCell>
-              <TableCell>
+              <TableCell
+                padding="checkbox"
+              >
                 Read Only
                 <Radio
                   name={`${entity}-select-all`}
@@ -500,7 +504,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                   onChange={this.entitySetAllTo(entity, 'read_only')}
                 />
               </TableCell>
-              <TableCell>
+              <TableCell
+                padding="checkbox"
+              >
                 Read-Write
                 <Radio
                   name={`${entity}-select-all`}
@@ -518,7 +524,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                   <TableCell>
                     {grant.label}
                   </TableCell>
-                  <TableCell>
+                  <TableCell
+                    padding="checkbox"
+                  >
                     <Radio
                       name={`${grant.id}-perms`}
                       checked={grant.permissions === null}
@@ -526,7 +534,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                       onChange={this.setGrantTo(entity, idx, null)}
                     />
                   </TableCell>
-                  <TableCell>
+                  <TableCell
+                    padding="checkbox"
+                  >
                     <Radio
                       name={`${grant.id}-perms`}
                       checked={grant.permissions === 'read_only'}
@@ -534,7 +544,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                       onChange={this.setGrantTo(entity, idx, 'read_only')}
                     />
                   </TableCell>
-                  <TableCell>
+                  <TableCell
+                    padding="checkbox"
+                  >
                     <Radio
                       name={`${grant.id}-perms`}
                       checked={grant.permissions === 'read_write'}
