@@ -43,7 +43,7 @@ interface Props { }
 
 type CombinedProps = Props & WithStyles<CSSClasses>;
 
-const Footer: React.StatelessComponent<CombinedProps> = ({ classes }) => {
+const footer: React.StatelessComponent<CombinedProps> = ({ classes }) => {
   return (
     <Grid container spacing={32} className={classes.container}>
       <Grid item xs={12} className={classes.navWrapper}>
@@ -65,4 +65,4 @@ const Footer: React.StatelessComponent<CombinedProps> = ({ classes }) => {
   );
 };
 
-export default styled(Footer);
+export default styled(footer);
