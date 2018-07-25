@@ -39,6 +39,7 @@ interface Props {
   onSubmit?: () => void;
   errorText?: string;
   label?: string;
+  placeholder?: string;
 }
 
 interface State {}
@@ -98,14 +99,15 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
       selectedItem,
     } = downshift;
 
-    const { classes, errorText, label } = this.props;
+    const { classes, errorText, label, placeholder } = this.props;
     const selectedIndex = this.getIndex(selectedItem);
+    const placeholderText = placeholder ? placeholder : "Enter a value"
 
     return (
       <div className={classes.root}>
         <TextField
           {...getInputProps({
-            placeholder: "Enter a value",
+            placeholder: placeholderText,
             errorText,
             label,
             onKeyPress: (e:React.KeyboardEvent<KeyboardEvent>) => {

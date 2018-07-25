@@ -155,6 +155,7 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
               label='Timezone'
               onSubmit={this.onSubmit}
               value={updatedTimezone}
+              placeholder={"Choose a timezone."}
               handleSelect={this.handleTimezoneChange}
               data-qa-tz-select
             />
