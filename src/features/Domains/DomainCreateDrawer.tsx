@@ -143,7 +143,6 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
                   value={viewMasterIP(idx, this.state) || ''}
                   onChange={this.updateMasterIPAddress(idx)}
                   data-qa-master-ip={idx}
-                  style={{ marginBottom: 16 }}
                 />
               ))
             }
