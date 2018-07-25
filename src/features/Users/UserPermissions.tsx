@@ -240,7 +240,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         })
         updateFns = flatten(updateFns);
         /* apply all of them at once */
-        this.setState((compose as any)(...updateFns));
+        if (updateFns.length) {
+          this.setState((compose as any)(...updateFns));
+        }
         this.setState(compose(
           set(lensPath(['success', 'specific']),
             'Successfully updated Entity-Specific Grants'),
@@ -277,7 +279,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         return set(lens, originalGrants[entity]);
       })
       /* apply all of them at once */
-      this.setState((compose as any)(...updateFns));
+      if (updateFns.length) {
+        this.setState((compose as any)(...updateFns));
+      }
       return;
     }
   }
@@ -455,7 +459,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       return set(lens, value);
     });
     /* compose all of the update functions and setState */
-    this.setState((compose as any)(...updateFns));
+    if (updateFns.length) {
+      this.setState((compose as any)(...updateFns));
+    }
   }
 
   setGrantTo = (entity: string, idx: number, value: Linode.GrantLevel) => () => {
