@@ -28,21 +28,18 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
   return {
     root: {
       background: 'white',
-      border: `2px solid ${theme.palette.primary.main}`,
-      width: 300,
+      borderLeft: `5px solid ${theme.palette.primary.main}`,
+      [theme.breakpoints.up('sm')]: {
+        maxWidth: 300,
+      },
       [theme.breakpoints.up('md')]: {
         width: 500,
+        maxWidth: 500,
       },
     },
     content: {
       color: '#333',
       lineHeight: 1.4,
-      '& a': {
-        color: '#000',
-        '&:hover': {
-          textDecoration: 'underline',
-        },
-      },
     },
     actions: {
       display: 'flex',
@@ -52,53 +49,28 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
       minWidth: 'auto',
       minHeight: 'auto',
       padding: 0,
+      border: 0,
+      color: theme.palette.text.primary,
+      borderRadius: '50%',
       '& > span': {
         padding: 2,
       },
       '& svg': {
-        width: 16,
-        height: 16,
+        width: 24,
+        height: 24,
       },
       '&:hover, &:focus': {
-        color: 'white',
-        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.primary.main,
       },
     },
     error: {
-      backgroundColor: status.error,
-      border: `2px solid ${status.errorDark}`,
-      '& button': {
-        color: status.errorDark,
-        borderColor: status.errorDark,
-        '&:hover, &:focus': {
-          backgroundColor: status.errorDark,
-          borderColor: status.errorDark,
-        },
-      },
+      borderLeftColor: status.errorDark,
     },
     warning: {
-      backgroundColor: status.warning,
-      border: `2px solid ${status.warningDark}`,
-      '& button': {
-        color: status.warningDark,
-        borderColor: status.warningDark,
-        '&:hover, &:focus': {
-          backgroundColor: status.warningDark,
-          borderColor: status.warningDark,
-        },
-      },
+      borderLeftColor: status.warningDark,
     },
     success: {
-      backgroundColor: status.success,
-      border: `2px solid ${status.successDark}`,
-      '& button': {
-        color: status.successDark,
-        borderColor: status.successDark,
-        '&:hover, &:focus': {
-          backgroundColor: status.successDark,
-          borderColor: status.successDark,
-        },
-      },
+      borderLeftColor: status.successDark,
     },
   };
 };

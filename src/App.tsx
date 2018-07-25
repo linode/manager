@@ -15,7 +15,6 @@ import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import Placeholder from 'src/components/Placeholder';
 import SideMenu from 'src/components/SideMenu';
-import AccountLevelNotifications from 'src/features/AccountLevelNotifications';
 import Footer from 'src/features/Footer';
 import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
@@ -221,7 +220,6 @@ export class App extends React.Component<CombinedProps, State> {
             <div className={classes.appFrame}>
               <SideMenu open={menuOpen} toggle={this.toggleMenu} toggleTheme={toggleTheme} />
               <main className={classes.content}>
-                <AccountLevelNotifications />
                 <TopMenu toggleSideMenu={this.toggleMenu} />
                 <div className={classes.wrapper}>
                   <Grid container spacing={0} className={classes.grid}>

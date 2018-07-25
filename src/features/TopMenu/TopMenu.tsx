@@ -8,8 +8,9 @@ import MenuIcon from '@material-ui/icons/Menu';
 
 import AddNewMenu from './AddNewMenu';
 import SearchBar from './SearchBar';
+import UserEventsMenu from './UserEventsMenu';
 import UserMenu from './UserMenu';
-import UserNotificationMenu from './UserNotificationMenu';
+import UserNotificationsMenu from './UserNotificationsMenu';
 
 type ClassNames = 'appBar'
   | 'navIconHide'
@@ -78,7 +79,8 @@ class TopMenu extends React.Component<PropsWithStyles> {
           <AddNewMenu />
           <SearchBar />
           <UserMenu />
-          <UserNotificationMenu />
+          <UserNotificationsMenu />
+          <UserEventsMenu />
         </Toolbar>
       </AppBar>
     );

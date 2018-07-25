@@ -13,7 +13,7 @@ type ClassNames = 'root'
   | 'actions'
   | 'button';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
     backgroundColor: 'white',
     padding: 12,
@@ -39,16 +39,17 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     minWidth: 'auto',
     minHeight: 'auto',
     padding: 0,
+    border: 0,
+    color: theme.color.headline,
     '& > span': {
       padding: 2,
     },
     '& svg': {
-      width: 18,
-      height: 18,
+      width: 22,
+      height: 22,
     },
     '&:hover, &:focus': {
-      color: 'white',
-      backgroundColor: theme.palette.primary.main,
+      color: theme.palette.primary.main,
     },
   },
 });
@@ -81,15 +82,15 @@ const BetaNotification: React.StatelessComponent<CombinedProps> = (props) => {
         </Grid>
         { onClose &&
         <Grid item className={classes.actions} xs={3} lg={2}>
-            <Button
-              onClick={e => onClose(e, '')}
-              color="secondary"
-              variant="raised"
-              className={classes.button}
-            >
-              <Close />
-            </Button>
-          </Grid>
+          <Button
+            onClick={e => onClose(e, '')}
+            color="secondary"
+            variant="raised"
+            className={classes.button}
+          >
+            <Close />
+          </Button>
+        </Grid>
         }
       </Grid>}
   />);

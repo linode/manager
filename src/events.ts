@@ -84,6 +84,7 @@ export const setInitialEvents = when(
 
 export function requestEvents() {
   getEvents(
+    { page_size: 25 },
     generatePollingFilter(filterDatestamp, Object.keys(pollIDs)),
   )
     .then(setInitialEvents)

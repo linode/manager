@@ -1,7 +1,7 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography, { TypographyProps } from '@material-ui/core/Typography';
 
 import Flag from 'src/assets/icons/flag.svg';
@@ -9,18 +9,22 @@ import Grid, { GridProps } from 'src/components/Grid';
 
 type ClassNames = 'root'
   | 'inner'
+  | 'noticeText'
   | 'error'
+  | 'errorList'
   | 'warning'
+  | 'warningList'
   | 'success'
+  | 'successList'
   | 'flag';
 
-const styles: StyleRulesCallback = (theme: Linode.Theme) => {
+const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => {
   const { palette: { status } } = theme;
 
   return {
     root: {
       marginBottom: theme.spacing.unit * 2,
-      padding: theme.spacing.unit * 2,
+      padding: '4px 16px',
       maxWidth: '100%',
       display: 'flex',
       alignItems: 'center',
@@ -34,17 +38,37 @@ const styles: StyleRulesCallback = (theme: Linode.Theme) => {
     inner: {
       width: '100%',
     },
+    noticeText: {
+      color: theme.palette.text.primary,
+      fontWeight: 700,
+      lineHeight: 1.2,
+    },
     error: {
-      backgroundColor: status.error,
-      border: `1px solid ${status.errorDark}`,
+      borderLeft: `5px solid ${status.errorDark}`,
+      '& $noticeText': {
+        color: status.errorDark,
+      },
+    },
+    errorList: {
+      borderLeft: `5px solid ${status.errorDark}`,
     },
     warning: {
-      backgroundColor: status.warning,
-      border: `1px solid ${status.warningDark}`,
+      borderLeft: `5px solid ${status.warningDark}`,
+      '& $noticeText': {
+        color: status.warningDark,
+      },
+    },
+    warningList: {
+      borderLeft: `5px solid ${status.warningDark}`,
     },
     success: {
-      backgroundColor: status.success,
-      border: `1px solid ${status.successDark}`,
+      borderLeft: `5px solid ${status.successDark}`,
+      '& $noticeText': {
+        color: status.successDark,
+      },
+    },
+    successList: {
+      borderLeft: `5px solid ${status.successDark}`,
     },
     flag: {
       marginRight: theme.spacing.unit * 2,
@@ -62,6 +86,8 @@ interface Props extends GridProps {
   typeProps?: TypographyProps;
   className?: string;
   flag?: boolean;
+  notificationList?: boolean;
+  onClick?: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -79,6 +105,8 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
     children,
     flag,
     html,
+    notificationList,
+    onClick,
   } = props;
 
   const c = html
@@ -86,7 +114,7 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
       <Typography {...typeProps} dangerouslySetInnerHTML={{ __html: html }} />
     )
     : (
-      <Typography {...typeProps} component="div">
+      <Typography {...typeProps} component="div" onClick={onClick} className={classes.noticeText}>
         {text && text}
         {children && children}
       </Typography>
@@ -98,11 +126,14 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
     <Grid
       item
       className={classNames({
-        [classes.error]: error,
-        [errorScrollClassName]: error,
-        [classes.warning]: warning,
-        [classes.success]: success,
         [classes.root]: true,
+        [errorScrollClassName]: error,
+        [classes.error]: error && !notificationList,
+        [classes.errorList]: error && notificationList,
+        [classes.success]: success && !notificationList,
+        [classes.successList]: success && notificationList,
+        [classes.warning]: warning && !notificationList,
+        [classes.warningList]: warning && notificationList,
         notice: true,
         ...(className && { [className]: true }),
       })}
