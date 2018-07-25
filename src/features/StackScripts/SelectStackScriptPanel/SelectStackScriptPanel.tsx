@@ -72,6 +72,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     minHeight: '400px',
     maxHeight: '1000px',
     overflowX: 'auto',
+    overflowY: 'scroll',
     paddingTop: 0,
     marginTop: theme.spacing.unit * 2,
   },
@@ -83,12 +84,15 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   stackscriptTitles: {
     width: '30%',
+    minWidth: 200,
   },
   deploys: {
     width: '20%',
+    minWidth: 200,
   },
   revisions: {
     width: '20%',
+    minWidth: 200,
   },
   tr: {
     height: 48,
