@@ -206,7 +206,7 @@ export class VolumeDetail extends Page {
 
             browser.waitUntil(function() {
                 return volumeElement.$('[data-qa-volume-cell-attachment]').getText() === '';
-            }, constants.wait.long, 'Remove Volume: Failed to detach volume');
+            }, constants.wait.minute, 'Remove Volume: Failed to detach volume');
         }
         const numberOfVolumes = this.volumeCell.length;
         volumeElement.$('[data-qa-action-menu]').click();
