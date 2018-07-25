@@ -24,6 +24,8 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     top: '100%',
     padding: 0,
     boxShadow: `0 0 5px ${theme.color.boxShadow}`,
+    borderRadius: 0,
+    border: '1px solid #999',
     maxHeight: 150,
     overflowY: 'auto',
     width: '100%',
