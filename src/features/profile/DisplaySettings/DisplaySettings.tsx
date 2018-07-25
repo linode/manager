@@ -10,6 +10,7 @@ import setDocs from 'src/components/DocsSidebar/setDocs';
 import { response } from 'src/store/reducers/resources';
 
 import EmailChangeForm from './EmailChangeForm';
+import TimezoneForm from './TimezoneForm';
 
 type ClassNames = 'root' | 'title';
 
@@ -29,6 +30,7 @@ interface ConnectedProps {
   loading: boolean;
   username: string;
   email: string;
+  timezone: string;
   updateProfile: (v: Linode.Profile) => void;
 }
 
@@ -47,17 +49,24 @@ export class DisplaySettings extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { email, loading, updateProfile, username } = this.props;
+    const { email, loading, timezone, updateProfile, username } = this.props;
 
     return (
       <React.Fragment>
         {!loading &&
-        <EmailChangeForm
-          email={email} 
-          username={username}
-          updateProfile={updateProfile}
-          data-qa-email-change
-        />}
+          <React.Fragment>
+            <EmailChangeForm
+              email={email} 
+              username={username}
+              updateProfile={updateProfile}
+              data-qa-email-change
+            />
+            <TimezoneForm
+              timezone={timezone}
+              updateProfile={updateProfile}
+            />
+          </React.Fragment>
+        }
       </React.Fragment>
     );
   }
@@ -83,6 +92,7 @@ const mapStateToProps = (state: Linode.AppState) => {
     loading: false,
     username: data.username,
     email: data.email,
+    timezone: data.timezone,
   };
 };
 
