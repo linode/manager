@@ -25,7 +25,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     padding: 0,
     borderRadius: 0,
     border: '1px solid #999',
-    maxHeight: 150,
+    maxHeight: 192,
     overflowY: 'auto',
     width: '100%',
     maxWidth: 415,
