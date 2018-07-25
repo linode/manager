@@ -685,6 +685,9 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                       />
                     </Grid>
                   </Grid>
+                  {linodeInTransition(linode.status, linode.recentEvent) &&
+                    <LinodeBusyStatus status={linode.status} recentEvent={linode.recentEvent} />
+                  }
                   <AppBar position="static" color="default">
                     <Tabs
                       value={this.tabs.findIndex(tab => matches(tab.routeName))}
@@ -701,9 +704,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                   {
                     (this.state.notifications || []).map((n, idx) =>
                       <ProductNotification key={idx} severity={n.severity} text={n.message} />)
-                  }
-                  {linodeInTransition(linode.status, linode.recentEvent) &&
-                    <LinodeBusyStatus status={linode.status} recentEvent={linode.recentEvent} />
                   }
                   <Switch>
                     <Route exact path={`${url}/summary`} component={LinodeSummary} />
