@@ -43,8 +43,8 @@ exports.readToken = () => {
 exports.login = (username, password) => {
     browser.url(constants.routes.dashboard);
     browser.waitForVisible('#username');
-    browser.setValue('#username', username);
-    browser.setValue('#password', password);
+    browser.trySetValue('#username', username);
+    browser.trySetValue('#password', password);
     browser.click('.btn-primary');
     if (browser.isExisting('.Modal')) {
         browser.click('.btn-primary');
