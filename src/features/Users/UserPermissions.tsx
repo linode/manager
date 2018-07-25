@@ -56,6 +56,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 interface Props {
   username?: string;
+  clearNewUser: () => void;
 }
 
 interface State {
@@ -155,7 +156,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   }
   
   savePermsType = (type: string) => () => {
-    const { username } = this.props;
+    const { username, clearNewUser } = this.props;
     const { grants } = this.state;
     if (!username || !(grants && grants[type])) {
       return this.setState({
@@ -163,6 +164,8 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           { reason: `Can\'t set ${type} grants at this time. Please try again later`}]
       })
     }
+
+    clearNewUser();
 
     if (type === 'global') {
       this.setState(compose(

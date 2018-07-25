@@ -124,6 +124,8 @@ class UserDetail extends React.Component<CombinedProps> {
     history.push(`${routeName}`);
   }
 
+  clearNewUser = () => { this.setState({ createdUsername: undefined }); }
+
   visitUsers = () => {
     const { history } = this.props;
     history.push('/users');
@@ -198,6 +200,7 @@ class UserDetail extends React.Component<CombinedProps> {
     const { username } = this.state;
     return <UserPermissions
       username={username}
+      clearNewUser={this.clearNewUser}
     />
   }
 
