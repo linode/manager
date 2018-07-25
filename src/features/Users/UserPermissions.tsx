@@ -682,7 +682,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
               Update User Permissions
             </Typography>
           </Grid>
-          <Grid item className={`${classes.accessWrapper} ${'p0'}`}>
+          <Grid item className="p0">
             <Grid container alignItems="center">
               <Grid item>
                 <Typography variant="title">
