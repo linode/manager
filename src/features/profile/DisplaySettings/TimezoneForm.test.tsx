@@ -7,15 +7,15 @@ describe('Timezone change form', () => {
   const updateProfile = jest.fn();
   
   const component = shallow(
-      <TimezoneForm
-        classes={{
-          root: '',
-          select: '',
-          title: '',
-        }}
-        timezone={'Europe/San_Marino'}
-        updateProfile={updateProfile}
-      />,
+    <TimezoneForm
+      classes={{
+        root: '',
+        select: '',
+        title: '',
+      }}
+      timezone={'Pacific/Niue'}
+      updateProfile={updateProfile}
+    />,
   );
 
   it('should render .', () => {

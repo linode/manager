@@ -11,9 +11,7 @@ import TextField from 'src/components/TextField';
 import './EnhancedSelect.css';
 
 type ClassNames = 'root'
-  | 'searchSuggestions'
-  | 'selected'
-  | 'suggestion';
+  | 'searchSuggestions';
 
 const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -31,16 +29,6 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     width: '100%',
     maxWidth: 415,
     zIndex: 2,
-  },
-  suggestion: {
-    borderBottom: `1px solid ${theme.palette.divider}`,
-    '&:hover, &:focus, &.selected': {
-      backgroundColor: `${theme.palette.primary.main} !important`,
-      color: `${theme.color.white} !important`,
-    },
-    '&:last-item': {
-      border: 0,
-    },
   },
 })
 

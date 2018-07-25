@@ -24,18 +24,18 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 type ClassNames = 'root' | 'select' | 'title';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-    root: {
-      padding: theme.spacing.unit * 3,
-      paddingBottom: theme.spacing.unit * 3,
-      marginTop: theme.spacing.unit * 3,
-    },
-    select: {
-      maxWidth: '30%',  
-    },
-    title: {
-      marginBottom: theme.spacing.unit * 2,
-    },
-  });
+  root: {
+    padding: theme.spacing.unit * 3,
+    paddingBottom: theme.spacing.unit * 3,
+    marginTop: theme.spacing.unit * 3,
+  },
+  select: {
+    maxWidth: '30%',  
+  },
+  title: {
+    marginBottom: theme.spacing.unit * 2,
+  },
+});
 
 interface Props {
   timezone: string;
@@ -72,104 +72,113 @@ const renderTimeZonesList = () => {
 const timezoneList = renderTimeZonesList();
 
 export class TimezoneForm extends React.Component<CombinedProps, State> {
-    state: State = {
-      updatedTimezone: this.props.timezone || '',
-      errors: undefined,
+  state: State = {
+    updatedTimezone: '',
+    errors: undefined,
+    submitting: false,
+    success: undefined,
+  }
+
+  getTimezone = (timezoneValue:string) => {
+    const idx = timezoneList.findIndex((el) => {
+      return el.value === timezoneValue;
+    });
+    return timezoneList[idx];
+  }
+
+  handleTimezoneChange = (timezone: Item) => {
+    if (timezone) { this.setState(set(lensPath(['updatedTimezone']), timezone.value)); }
+  }
+
+  onCancel = () => {
+    this.setState({
       submitting: false,
+      errors: undefined,
       success: undefined,
-    }
+      updatedTimezone: this.props.timezone || '',
+    })
+  }
 
-    handleTimezoneChange = (timezone: Item) => {
-      if (timezone) { this.setState(set(lensPath(['updatedTimezone']), timezone.value)); }
-    }
+  onSubmit = () => {
+    const { updatedTimezone } = this.state;
+    this.setState({ errors: undefined, submitting: true });
 
-    onCancel = () => {
+    updateProfile({ timezone: updatedTimezone, })
+      .then((response) => {
+        this.props.updateProfile(response);
         this.setState({
           submitting: false,
-          errors: undefined,
-          success: undefined,
-          updatedTimezone: this.props.timezone || '',
+          success: 'Account timezone updated.',
         })
-      }
+      })
+      .catch((error) => {
+        const fallbackError = [{ reason: 'An unexpected error has occured.' }];
+        this.setState({
+          submitting: false,
+          errors: pathOr(fallbackError, ['response', 'data', 'errors'], error),
+          success: undefined,
+        }, () => {
+          scrollErrorIntoView();
+        })
+      });
+  };
 
-    onSubmit = () => {
-        const { updatedTimezone } = this.state;
-        this.setState({ errors: undefined, submitting: true });
-    
-        updateProfile({ timezone: updatedTimezone, })
-          .then((response) => {
-            this.props.updateProfile(response);
-            this.setState({
-              submitting: false,
-              success: 'Account timezone updated.',
-            })
-          })
-          .catch((error) => {
-            const fallbackError = [{ reason: 'An unexpected error has occured.' }];
-            this.setState({
-              submitting: false,
-              errors: pathOr(fallbackError, ['response', 'data', 'errors'], error),
-              success: undefined,
-            }, () => {
-              scrollErrorIntoView();
-            })
-          });
-      };
+  render() {
+    const { classes, timezone } = this.props;
+    const { errors, submitting, success, updatedTimezone } = this.state;
+    const timezoneLabel = this.getTimezone(timezone).label;
 
-    render() {
-        const { classes, timezone } = this.props;
-        const { errors, submitting, success, updatedTimezone } = this.state;
+    const hasErrorFor = getAPIErrorFor({
+        timezone: 'timezone',
+      }, errors);
+      const generalError = hasErrorFor('none');
+      const timezoneError = hasErrorFor('timezone');
 
-        const hasErrorFor = getAPIErrorFor({
-            timezone: 'timezone',
-          }, errors);
-          const generalError = hasErrorFor('none');
-          const timezoneError = hasErrorFor('timezone');
-
-        return (
-            <React.Fragment>
-                <Paper className={classes.root}>
-                    {success && <Notice success text={success} />}
-                    {generalError && <Notice error text={generalError} />}
-                    <Typography
-                        variant="body1"
-                        data-qa-copy
-                    >
-                        {`This setting converts the dates and times displayed in the Linode Manager
-                        to a timezone of your choice. Your current timezone is: ${timezone}.`}
-                    </Typography>
-                    <React.Fragment>
-                      <EnhancedSelect
-                          className={classes.select}
-                          options={timezoneList}
-                          errorText={timezoneError}
-                          label='Timezone'
-                          onSubmit={this.onSubmit}
-                          value={updatedTimezone}
-                          handleSelect={this.handleTimezoneChange}
-                          data-qa-tz-select
-                      />
-                      <ActionsPanel>
-                        <Button
-                            type="primary"
-                            onClick={this.onSubmit}
-                            loading={submitting}
-                            data-qa-tz-submit
-                        >
-                            Save
-                        </Button>
-                        <Button
-                            type="cancel"
-                            onClick={this.onCancel}
-                            data-qa-tz-cancel
-                        >
-                            Cancel
-                        </Button>
-                      </ActionsPanel>
-                    </React.Fragment>
-                </Paper>
-            </React.Fragment>)
-        }
+    return (
+      <React.Fragment>
+        <Paper className={classes.root}>
+          {success && <Notice success text={success} />}
+          {generalError && <Notice error text={generalError} />}
+          <Typography
+            variant="body1"
+            data-qa-copy
+          >
+            This setting converts the dates and times displayed in the Linode Manager
+            to a timezone of your choice.
+            Your current timezone is: <strong>{timezoneLabel}</strong>.
+          </Typography>
+          <React.Fragment>
+            <EnhancedSelect
+              className={classes.select}
+              options={timezoneList}
+              errorText={timezoneError}
+              label='Timezone'
+              onSubmit={this.onSubmit}
+              value={updatedTimezone}
+              handleSelect={this.handleTimezoneChange}
+              data-qa-tz-select
+            />
+            <ActionsPanel>
+              <Button
+                type="primary"
+                onClick={this.onSubmit}
+                loading={submitting}
+                data-qa-tz-submit
+              >
+                Save
+              </Button>
+              <Button
+                type="cancel"
+                onClick={this.onCancel}
+                data-qa-tz-cancel
+              >
+                Cancel
+              </Button>
+            </ActionsPanel>
+          </React.Fragment>
+        </Paper>
+      </React.Fragment>)
+    }
 }
 
 const styled = withStyles(styles, { withTheme: true });
