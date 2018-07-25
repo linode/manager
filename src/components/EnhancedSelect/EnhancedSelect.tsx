@@ -2,13 +2,13 @@ import Downshift, { DownshiftState, StateChangeOptions } from 'downshift';
 import { compose } from 'ramda';
 import * as React from 'react';
 
-import MenuItem from '@material-ui/core/MenuItem';
-import MenuList from '@material-ui/core/MenuList';
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import RenderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
+
+import './EnhancedSelect.css';
 
 type ClassNames = 'root'
   | 'searchSuggestions'
@@ -75,6 +75,12 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
     return (item && item.label) ? item.label : '';
   }
 
+  getIndex = (item:Item) => {
+    return this.props.options.findIndex((element) => {
+      return element === item;
+    });
+  }
+
   getSearchSuggestions = (inputText:string) => {
     const { options } = this.props;
     const text = inputText.toLowerCase();
@@ -101,9 +107,11 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
       inputValue,
       highlightedIndex,
       openMenu,
+      selectedItem,
     } = downshift;
 
     const { classes, errorText, label } = this.props;
+    const selectedIndex = this.getIndex(selectedItem);
 
     return (
       <div className={classes.root}>
@@ -126,16 +134,15 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
         />
         {isOpen &&
           <Paper className={classes.searchSuggestions}>
-            <MenuList>
-              {this.getSearchSuggestions(inputValue).map((suggestion:Item, index:number) => {
-                return this.renderSuggestion(
-                  suggestion,
-                  index,
-                  highlightedIndex,
-                  getItemProps({ item: suggestion }),
-                );
-              })}
-            </MenuList>
+            {this.getSearchSuggestions(inputValue).map((suggestion:Item, index:number) => {
+              return this.renderSuggestion(
+                suggestion,
+                index,
+                highlightedIndex,
+                selectedIndex,
+                getItemProps({ item: suggestion }),
+              );
+            })}
           </Paper>
         }
       </div>
@@ -146,19 +153,22 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
     item:Item,
     index:number,
     highlightedIndex:number | null,
+    selectedIndex: number | null,
     itemProps:any,
   ) => {
-    const { classes } = this.props;
     const isHighlighted = highlightedIndex === index;
+    const isSelected = selectedIndex === index;
+    let classes = "enhancedSelect-menu-item"
+    if ( isHighlighted ) { classes += " enhancedSelect-menu-item-highlighted"; }
+    if ( isSelected )    { classes += " enhancedSelect-menu-item-selected"; }
 
     return (
-      <MenuItem 
+      <div className={classes}
         key={index} 
-        className={isHighlighted ? `${classes.suggestion} ${'selected'}` : classes.suggestion} 
         {...itemProps} 
       >
         {item.label}
-      </MenuItem>
+      </div>
     )
   }
   
