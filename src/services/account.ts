@@ -101,7 +101,7 @@ export const getInvoices = (pagination: Linode.PaginationOptions = {}) =>
     setMethod('GET'),
     setParams(pagination),
   )
-  .then(response => response.data);
+    .then(response => response.data);
 
 export const updateAccountInfo = (data: Partial<Linode.Account>) =>
   Request<Linode.Account>(
@@ -155,3 +155,11 @@ export const deleteUser = (username: string) =>
     setMethod('DELETE'),
   )
     .then(response => response.data);
+
+export const makePayment = (data: { usd: string, ccv: string }) =>
+  Request<Linode.Payment>(
+    setURL(`${API_ROOT}/account/payments`),
+    setMethod('POST'),
+    setData(data),
+  )
+    .then(response => response.data)
