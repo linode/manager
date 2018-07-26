@@ -2,14 +2,17 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'redux';
 
-import Button from '@material-ui/core/Button';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import LinodeSvg from 'src/assets/addnewmenu/linode.svg';
+import Button from 'src/components/Button';
 import Grid from 'src/components/Grid';
 
-type CSSClasses = 'root' | 'copy' | 'button' | 'icon' | 'title';
+type CSSClasses = 'root'
+  | 'copy'
+  | 'icon' 
+  | 'title';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   '@keyframes scaleIn': {
@@ -56,10 +59,6 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   title: {
     fontWeight: 700,
   },
-  button: {
-    borderRadius: '4px',
-  },
-
 });
 
 interface Props { }
@@ -91,9 +90,7 @@ class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
         </Grid>
         <Grid item xs={12} lg={10} className={classes.copy}>
           <Button
-            variant="raised"
-            color="primary"
-            className={classes.button}
+            type="primary"
             onClick={() => this.props.history.push('/linodes/create')}
           >
             Add New Linode
