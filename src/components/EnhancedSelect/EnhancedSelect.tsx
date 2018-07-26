@@ -30,6 +30,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     width: '100%',
     maxWidth: 415,
     zIndex: 2,
+    marginTop: -2,
   },
 })
 

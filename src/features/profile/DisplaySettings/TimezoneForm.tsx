@@ -125,7 +125,7 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
   render() {
     const { classes, timezone } = this.props;
     const { errors, submitting, success, updatedTimezone } = this.state;
-    const timezoneLabel = this.getTimezone(timezone).label;
+    const timezoneDisplay = pathOr(timezone, ['label'], this.getTimezone(timezone));
 
     const hasErrorFor = getAPIErrorFor({
         timezone: 'timezone',
@@ -144,7 +144,7 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
           >
             This setting converts the dates and times displayed in the Linode Manager
             to a timezone of your choice.
-            Your current timezone is: <strong>{timezoneLabel}</strong>.
+            Your current timezone is: <strong>{timezoneDisplay}</strong>.
           </Typography>
           <React.Fragment>
             <EnhancedSelect
