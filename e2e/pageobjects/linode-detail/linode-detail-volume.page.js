@@ -251,7 +251,7 @@ export class VolumeDetail extends Page {
 
     assertActionMenuItems() {
         const menuItems = [
-            '[data-qa-action-menu-item="Edit"]',
+            '[data-qa-action-menu-item="Rename"]',
             '[data-qa-action-menu-item="Resize"]',
             '[data-qa-action-menu-item="Clone"]',
             '[data-qa-action-menu-item="Detach"]',

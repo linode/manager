@@ -6,6 +6,9 @@ services:
       - /dev/shm:/dev/shm #Mitigates the Chromium issue described at https://code.google.com/p/chromium/issues/detail?id=519952
     networks:
       - backend
+    environment:
+      - SCREEN_HEIGHT=1080
+      - SCREEN_WIDTH=1600
   manager-local:
     container_name: manager_local
     environment:

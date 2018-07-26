@@ -42,8 +42,8 @@ exports.readToken = () => {
 */
 exports.login = (username, password) => {
     browser.url(constants.routes.dashboard);
-    browser.waitForVisible('#username');
-    browser.waitForVisible('#password');
+    browser.waitForVisible('#username', constants.wait.long);
+    browser.waitForVisible('#password', constants.wait.long);
     browser.trySetValue('#username', username);
     browser.trySetValue('#password', password);
     browser.click('.btn-primary');
@@ -63,8 +63,8 @@ exports.login = (username, password) => {
     if (browser.isExisting('.Modal')) {
         browser.click('.btn-primary');
     }
-    browser.waitForVisible('[data-qa-add-new-menu-button]', 20000);
-    browser.waitForVisible('[data-qa-circle-progress]', 20000, true);
+    browser.waitForVisible('[data-qa-add-new-menu-button]', constants.wait.long);
+    browser.waitForVisible('[data-qa-circle-progress]', constants.wait.long, true);
 
     exports.saveTokenIfNeeded(username, password);
 }

@@ -8,6 +8,7 @@ exports.browserConf = {
             args: [
             '--no-sandbox',
             '--disable-dev-shm-usage',
+            '--window-size=1600,1080',
             ]
         }
     },
@@ -18,8 +19,8 @@ exports.browserConf = {
         acceptInsecureCerts: true,
         chromeOptions: {
             args: [
-                'headless','no-sandbox','disable-gpu',
-                'window-size=1920x1080','--allow-running-insecure-content',
+                '--headless','--no-sandbox','--disable-gpu',
+                'window-size=1920,1080','--allow-running-insecure-content',
                 '--ignore-certificate-errors',
             ]
         }
