@@ -185,6 +185,10 @@ const LinodeTheme: Linode.Theme = {
           paddingLeft: 16,
           paddingRight: 16,
         },
+        '& table': {
+          border: '1px solid #f4f4f4',
+          borderBottom: 0,
+        },
       },
     },
     MuiExpansionPanelDetails: {
