@@ -25,15 +25,30 @@ import { getGravatarUrl } from 'src/utilities/gravatar';
 import UserPermissions from './UserPermissions';
 import UserProfile from './UserProfile';
 
-type ClassNames = 'titleWrapper' | 'avatar' | 'backButton';
+type ClassNames = 'titleWrapper' | 'avatar' | 'backButton' | 'emptyImage';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+  '@keyframes fadeIn': {
+    from: {
+      opacity: 0,
+    },
+    to: {
+      opacity: 1,
+    },
+  },
   avatar: {
     margin: '0 8px 0 -4px',
     color: '#666',
     borderRadius: '50%',
     width: '46px',
     height: '46px',
+    animation: 'fadeIn 150ms linear forwards',
+  },
+  emptyImage: {
+    margin: '0 8px 0 -4px',
+    display: 'inline',
+    width: 46,
+    height: 46,
   },
   titleWrapper: {
     display: 'flex',
@@ -58,7 +73,7 @@ interface MatchProps { username: string };
 type CombinedProps = WithStyles<ClassNames> & RouteComponentProps<MatchProps> & ConnectedProps;
 
 interface State {
-  gravatarUrl: string;
+  gravatarUrl?: string;
   error?: Error,
   originalUsername?: string;
   username?: string;
@@ -72,7 +87,6 @@ interface State {
 
 class UserDetail extends React.Component<CombinedProps> {
   state: State = {
-    gravatarUrl: 'not found',
     profileSaving: false,
   };
 
@@ -237,13 +251,15 @@ class UserDetail extends React.Component<CombinedProps> {
             <IconButton onClick={this.visitUsers} className={classes.backButton}>
               <KeyboardArrowLeft />
             </IconButton>
-            {gravatarUrl !== 'not found'
-              ? <img
-                alt={`user ${username}'s avatar`}
-                src={gravatarUrl}
-                className={classes.avatar}
-              />
-              : <UserIcon className={classes.avatar} />
+            {gravatarUrl === undefined
+              ? <div className={classes.emptyImage} />
+              : gravatarUrl === 'not found'
+                ? <UserIcon className={classes.avatar} />
+                : <img
+                  alt={`user ${username}'s avatar`}
+                  src={gravatarUrl}
+                  className={classes.avatar}
+                />
             }
             <Typography variant="headline">
               {username}
