@@ -11,7 +11,7 @@ const getAxiosInstance = function(token) {
             rejectUnauthorized: false
         }),
         baseURL: API_ROOT,
-        timeout: 5000,
+        timeout: 10000,
         headers: { 'Authorization': `Bearer ${token}`},
       });
     } else if (!token && axiosInstance === undefined) {
