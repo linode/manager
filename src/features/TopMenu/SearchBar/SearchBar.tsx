@@ -17,7 +17,7 @@ import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import TextField from 'src/components/TextField';
 import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
-import { getDomainsPage } from 'src/services/domains';
+import { getDomains } from 'src/services/domains';
 import { getImagesPage } from 'src/services/images';
 import { getLinodesPage } from 'src/services/linodes';
 import { getNodeBalancersPage } from 'src/services/nodebalancers';
@@ -234,12 +234,13 @@ class SearchBar extends React.Component<FinalProps, State> {
   }
 
   getVolumesPage = (page: number) => getVolumes({ page })
+  getDomainsPage = (page: number) => getDomains({ page })
 
   updateData() {
     this.getAllPagesFor('linodes', getLinodesPage);
     this.getAllPagesFor('volumes', this.getVolumesPage);
     this.getAllPagesFor('nodebalancers', getNodeBalancersPage);
-    this.getAllPagesFor('domains', getDomainsPage);
+    this.getAllPagesFor('domains', this.getDomainsPage);
     this.getAllPagesFor('images', getImagesPage);
   }
 

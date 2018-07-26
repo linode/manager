@@ -18,12 +18,12 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import PaginationFooter from 'src/components/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
-import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import Table from 'src/components/Table';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { deleteDomain, getDomains } from 'src/services/domains';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import scrollToTop from 'src/utilities/scrollToTop';
 
 import ActionMenu from './DomainActionMenu';
 import DomainCreateDrawer from './DomainCreateDrawer';
@@ -43,13 +43,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 interface Props { }
 
-interface PromiseLoaderProps {
-  domains: PromiseLoaderResponse<Linode.Domain>;
-}
-
 interface State {
   domains: Linode.Domain[];
-  error?: Error;
+  page: number;
+  count: number;
+  perPage: number;
+  loading: boolean;
+  errors?: Error;
   importDrawer: {
     open: boolean,
     submitting: boolean,
@@ -70,12 +70,15 @@ interface State {
   };
 }
 
-type CombinedProps = Props & PromiseLoaderProps & WithStyles<ClassNames> & RouteComponentProps<{}>;
+type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
 
 class DomainsLanding extends React.Component<CombinedProps, State> {
   state: State = {
-    domains: pathOr([], ['response', 'data'], this.props.domains),
-    error: pathOr(undefined, ['error'], this.props.domains),
+    domains: [],
+    page: 1,
+    count: 0,
+    perPage: 25,
+    loading: true,
     importDrawer: {
       open: false,
       submitting: false,
@@ -88,6 +91,8 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
       open: false,
     },
   };
+
+  mounted: boolean = false;
 
   static docs: Linode.Doc[] = [
     {
@@ -102,26 +107,65 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
     },
   ];
 
-  refreshDomains = () => {
-    getDomains()
+  getDomains = (
+    page: number = this.state.page,
+    pageSize: number = this.state.perPage,
+    initial: boolean = false,
+  ) => {
+    if (!this.mounted) { return; }
+    this.setState({ loading: initial });
+
+    getDomains({ page, page_size: pageSize })
       .then((response) => {
-        this.setState({ domains: response.data });
+        if (!this.mounted) { return; }
+
+        this.setState({
+          count: response.results,
+          domains: response.data,
+          loading: false,
+          page: response.page,
+        });
+      })
+      .catch((error) => {
+        if (!this.mounted) { return; }
+        this.setState({
+          errors: pathOr([{ reason: 'Unable to load domains.' }], ['response', 'data', 'errors'], error),
+          loading: false,
+        })
       });
   }
 
-  componentDidCatch(error: Error) {
-    this.setState({ error }, () => { scrollErrorIntoView(); });
+  handlePageChange = (page: number) => {
+    this.setState({ page });
+    this.getDomains(page);
+    scrollToTop();
+  };
+
+  handlePageSizeChange = (perPage: number) => {
+    this.setState({ perPage });
+    this.getDomains(undefined, perPage);
+  };
+
+  componentDidMount() {
+    this.mounted = true;
+    this.getDomains(undefined, undefined, true);
   }
 
-  openImportZoneDrawer = () => this.setState({ importDrawer: { ...this.state.importDrawer, open: true }});
+  componentWillUnmount() {
+    this.mounted = false
+  }
 
-  closeImportZoneDrawer = () => this.setState({ importDrawer: {
-    open: false,
-    submitting: false,
-    remote_nameserver: undefined,
-    domain: undefined,
-    errors: undefined,
-  }});
+  openImportZoneDrawer = () => this.setState({ importDrawer: { ...this.state.importDrawer, open: true } });
+
+  closeImportZoneDrawer = () => this.setState({
+    importDrawer: {
+      open: false,
+      submitting: false,
+      remote_nameserver: undefined,
+      domain: undefined,
+      errors: undefined,
+    }
+  });
 
   openCreateDrawer = () => {
     this.setState({
@@ -171,14 +215,13 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
     )
   }
 
-
   removeDomain = () => {
     const { removeDialog: { domainID } } = this.state;
     if (domainID) {
       deleteDomain(domainID)
         .then(() => {
           this.closeRemoveDialog();
-          this.refreshDomains();
+          this.getDomains();
         })
         .catch(() => {
           this.closeRemoveDialog();
@@ -202,44 +245,64 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
     });
   }
 
-  DomainCreateDrawer = () => (
-    <DomainCreateDrawer
-      open={this.state.createDrawer.open}
-      onClose={(domain: Partial<Linode.Domain>) => this.closeCreateDrawer(domain)}
-      mode={this.state.createDrawer.mode}
-      domain={this.state.createDrawer.domain}
-      cloneID={this.state.createDrawer.cloneID}
-    />
-  )
+  domainCreateDrawer = () => {
+    return (
+      <DomainCreateDrawer
+        open={this.state.createDrawer.open}
+        onClose={(domain: Partial<Linode.Domain>) => this.closeCreateDrawer(domain)}
+        mode={this.state.createDrawer.mode}
+        domain={this.state.createDrawer.domain}
+        cloneID={this.state.createDrawer.cloneID}
+      />
+    );
+  }
 
   render() {
-    const { classes, history } = this.props;
-    const { error, domains } = this.state;
+    const { loading, errors, count, domains } = this.state;
 
-    /** Error State */
-    if (error) {
-      return <ErrorState
+    if (loading) {
+      return this.renderLoading();
+    }
+    if (errors) {
+      return this.renderLoading();
+    }
+
+    if (count > 0) {
+      return this.renderData(domains);
+    }
+
+    return this.renderEmpty();
+  }
+
+  renderLoading = () => null;
+
+  renderErrors = () => {
+    return (
+      <ErrorState
         errorText="There was an error retrieving your domains. Please reload and try again."
-      />;
-    }
+      />
+    );
+  }
 
-    /** Empty State */
-    if (domains.length === 0) {
-      return (
-        <React.Fragment>
-          <Placeholder
-            title="Add a Domain"
-            copy="Adding a new domain is easy. Click below to add a domain."
-            icon={DomainIcon}
-            buttonProps={{
-              onClick: () => this.openCreateDrawer(),
-              children: 'Add a Domain',
-            }}
-          />
-          <this.DomainCreateDrawer />
-        </React.Fragment>
-      );
-    }
+  renderEmpty = () => {
+    return (
+      <React.Fragment>
+        <Placeholder
+          title="Add a Domain"
+          copy="Adding a new domain is easy. Click below to add a domain."
+          icon={DomainIcon}
+          buttonProps={{
+            onClick: () => this.openCreateDrawer(),
+            children: 'Add a Domain',
+          }}
+        />
+        <this.domainCreateDrawer />
+      </React.Fragment>
+    );
+  }
+
+  renderData = (domains: Linode.Domain[]) => {
+    const { classes, history } = this.props;
 
     return (
       <React.Fragment>
@@ -302,11 +365,18 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
             </TableBody>
           </Table>
         </Paper>
-        <this.DomainCreateDrawer />
+        <PaginationFooter
+          count={this.state.count}
+          page={this.state.page}
+          pageSize={this.state.perPage}
+          handlePageChange={this.handlePageChange}
+          handleSizeChange={this.handlePageSizeChange}
+        />
+        <this.domainCreateDrawer />
         <DomainZoneImportDrawer
           open={this.state.importDrawer.open}
           onClose={this.closeImportZoneDrawer}
-          onSuccess={this.refreshDomains}
+          onSuccess={this.getDomains}
         />
         <ConfirmationDialog
           open={this.state.removeDialog.open}
@@ -323,13 +393,8 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const loaded = PromiseLoader<Props>({
-  domains: props => getDomains(),
-});
-
 export default compose(
   setDocs(DomainsLanding.docs),
   withRouter,
-  loaded,
   styled,
 )(DomainsLanding);
