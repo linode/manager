@@ -347,7 +347,12 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
     return null;
   };
 
-  renderLoading = () => <TableRowLoading colSpan={3} />;
+  renderLoading = () => {
+    return (
+      null
+      // <TableRowLoading colSpan={3} />
+    );
+  };
 
   renderErrors = () => {
     return (
