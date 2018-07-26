@@ -21,7 +21,6 @@ import Grid from 'src/components/Grid';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
-import TableRowLoading from 'src/components/TableRowLoading';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { deleteDomain, getDomains } from 'src/services/domains';
 import scrollToTop from 'src/utilities/scrollToTop';
