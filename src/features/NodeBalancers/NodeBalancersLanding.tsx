@@ -1,5 +1,5 @@
 import * as Promise from 'bluebird';
-import { compose, path } from 'ramda';
+import { compose, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 
@@ -17,12 +17,13 @@ import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
-import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import PaginationFooter from 'src/components/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
-import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import Table from 'src/components/Table';
+import TableRowError from 'src/components/TableRowError';
+import TableRowLoading from 'src/components/TableRowLoading';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
 import { deleteNodeBalancer, getNodeBalancerConfigs, getNodeBalancers } from 'src/services/nodebalancers';
@@ -43,46 +44,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   }
 });
 
-const preloaded = PromiseLoader<Props>({
-  nodeBalancers: () => getNodeBalancersWithConfigs(),
-});
-
-// this is pretty tricky. we need to make a call to get the configs for each nodebalancer
-// because the up and down time data lives in the configs along with the ports
-//
-// after we get that data, we have to add each config's up time together
-// and each down time together
-const getNodeBalancersWithConfigs = () => {
-  return getNodeBalancers().then((response) => {
-    return Promise.map(response, (nodeBalancer) => {
-      return getNodeBalancerConfigs(nodeBalancer.id)
-        .then(({ data: configs }) => {
-          return {
-            ...nodeBalancer,
-            down: configs
-              .reduce((acc: number, config) => {
-                return acc + config.nodes_status.down;
-              }, 0), // add the downtime for each config together
-            up: configs
-              .reduce((acc: number, config) => {
-                return acc + config.nodes_status.up;
-              }, 0), // add the uptime for each config together
-            ports: configs
-              .reduce((acc: [number], config) => {
-                return [...acc, config.port];
-              }, []),
-          };
-        })
-        .catch(e => []);
-    });
-  });
-};
-
 interface Props { }
-
-interface PreloadedProps {
-  nodeBalancers: PromiseLoaderResponse<Linode.ExtendedNodeBalancer[]>;
-}
 
 interface DeleteConfirmDialogState {
   open: boolean;
@@ -91,17 +53,20 @@ interface DeleteConfirmDialogState {
 }
 
 interface State {
+  count: number;
   deleteConfirmDialog: DeleteConfirmDialogState;
-  selectedNodeBalancerId?: number;
+  errors?: Linode.ApiFieldError[];
+  loading: boolean;
   nodeBalancers: Linode.ExtendedNodeBalancer[];
-  errors?: Error;
+  page: number;
+  pageSize: number;
+  selectedNodeBalancerId?: number;
 }
 
 type CombinedProps = Props
   & WithStyles<ClassNames>
   & RouteComponentProps<{}>
-  & SetDocsProps
-  & PreloadedProps;
+  & SetDocsProps;
 
 export class NodeBalancersLanding extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
@@ -113,9 +78,12 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
   };
 
   state: State = {
+    count: 0,
     deleteConfirmDialog: NodeBalancersLanding.defaultDeleteConfirmDialogState,
-    nodeBalancers: this.props.nodeBalancers.response || [],
-    errors: this.props.nodeBalancers.error || undefined,
+    loading: true,
+    nodeBalancers: [],
+    page: 1,
+    pageSize: 25,
   };
 
   static docs = [
@@ -131,8 +99,68 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
     },
   ];
 
-  renderEmptyState = () => {
-    return <Placeholder />;
+  componentDidMount() {
+    this.mounted = true;
+    this.requestNodeBalancers(undefined, undefined, true);
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
+  }
+
+  requestNodeBalancers = (
+    page: number = this.state.page,
+    pageSize: number = this.state.pageSize,
+    initial: boolean = false,
+  ) => {
+
+    this.setState({ loading: initial });
+    // this is pretty tricky. we need to make a call to get the configs for each nodebalancer
+    // because the up and down time data lives in the configs along with the ports
+    //
+    // after we get that data, we have to add each config's up time together
+    // and each down time together
+    return getNodeBalancers({ page, page_size: pageSize })
+      .then((response) => {
+        return new Promise((resolve, reject) => {
+          Promise.map(response.data, (nodeBalancer) => getNodeBalancerConfigs(nodeBalancer.id)
+            .then(({ data: configs }) => ({
+              ...nodeBalancer,
+              // add the downtime for each config together
+              down: configs.reduce((acc: number, config) => acc + config.nodes_status.down, 0),
+              // add the uptime for each config together
+              up: configs.reduce((acc: number, config) => acc + config.nodes_status.up, 0),
+              // generate a list of ports.
+              ports: configs.reduce((acc: [number], config) => [...acc, config.port], []),
+            })))
+            .then((data) => resolve({ ...response, data }))
+            .catch((error) => reject(error));
+        });
+      })
+      .then((response: Linode.ResourcePage<Linode.ExtendedNodeBalancer>) => {
+        this.setState({
+          nodeBalancers: response.data,
+          count: response.results,
+          page: response.page,
+          loading: false
+        });
+      })
+      .catch((error) => {
+        this.setState({
+          loading: false,
+          errors: pathOr([{ reason: 'Unable to load NodeBalancer data.' }], ['response', 'data', 'errors'], error),
+        })
+      });
+  };
+
+  handlePageChange = (page: number) => {
+    this.setState({ page });
+    this.requestNodeBalancers(page);
+  }
+
+  handlePageSizeChange = (pageSize: number) => {
+    this.setState({ pageSize });
+    this.requestNodeBalancers(this.state.page, pageSize);
   }
 
   toggleDialog = (nodeBalancerId: number) => {
@@ -157,16 +185,13 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
 
     deleteNodeBalancer(selectedNodeBalancerId!)
       .then((response) => {
-        getNodeBalancersWithConfigs()
-          .then((response: Linode.ExtendedNodeBalancer[]) => {
-            this.setState({
-              nodeBalancers: response,
-              deleteConfirmDialog: {
-                open: false,
-                submitting: false,
-              },
-            });
-          });
+        this.setState({
+          nodeBalancers: this.state.nodeBalancers.filter((nodebalancer) => nodebalancer.id === selectedNodeBalancerId),
+          deleteConfirmDialog: {
+            open: false,
+            submitting: false,
+          },
+        });
       })
       .catch((err) => {
         const apiError = path<Linode.ApiFieldError[]>(['response', 'data', 'error'], err);
@@ -185,37 +210,20 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
   }
 
   render() {
-    const {
-      classes,
-      history,
-    } = this.props;
+    const { classes, history } = this.props;
 
     const {
-      nodeBalancers,
-      errors,
+      count,
       deleteConfirmDialog: {
         open: deleteConfirmAlertOpen,
       },
+      loading,
+      page,
+      pageSize,
     } = this.state;
 
-    /** Error State */
-    if (errors) {
-      return <ErrorState
-        errorText="There was an error loading your NodeBalancers. Please try again later."
-      />;
-    }
-
-    /** Empty State */
-    if (nodeBalancers.length === 0) {
-      return <Placeholder
-        title="Add a NodeBalancer"
-        copy="Adding a NodeBalancer is easy. Click below to add a NodeBalancer."
-        icon={NodeBalancer}
-        buttonProps={{
-          onClick: () => history.push('/nodebalancers/create'),
-          children: 'Add a NodeBalancer',
-        }}
-      />;
+    if (!loading && count === 0) {
+      return this.renderEmpty()
     }
 
     return (
@@ -247,48 +255,21 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
                 <TableCell>Ports</TableCell>
                 <TableCell>IP Addresses</TableCell>
                 <TableCell>Region</TableCell>
-                <TableCell></TableCell>
+                <TableCell />
               </TableRow>
             </TableHead>
             <TableBody>
-              {nodeBalancers.map((nodeBalancer) => {
-                return (
-                  <TableRow key={nodeBalancer.id} data-qa-nodebalancer-cell>
-                    <TableCell data-qa-nodebalancer-label>
-                      <Link to={`/nodebalancers/${nodeBalancer.id}`}>
-                        {nodeBalancer.label}
-                      </Link>
-                    </TableCell>
-                    <TableCell data-qa-node-status>
-                    <span className={classes.NBStatus}>{nodeBalancer.up} up</span> <br />
-                    <span className={classes.NBStatus}>{nodeBalancer.down} down</span>
-                    </TableCell>
-                    <TableCell data-qa-transferred>
-                      {convertMegabytesTo(nodeBalancer.transfer.total)}
-                    </TableCell>
-                    <TableCell data-qa-ports>
-                      {nodeBalancer.ports.length === 0 && 'None'}
-                      {nodeBalancer.ports.join(', ')}
-                    </TableCell>
-                    <TableCell data-qa-nodebalancer-ips>
-                      <IPAddress ips={[nodeBalancer.ipv4]} copyRight />
-                      {nodeBalancer.ipv6 && <IPAddress ips={[nodeBalancer.ipv6]} copyRight />}
-                    </TableCell>
-                    <TableCell data-qa-region>
-                      <RegionIndicator region={nodeBalancer.region} />
-                    </TableCell>
-                    <TableCell>
-                      <NodeBalancerActionMenu
-                        nodeBalancerId={nodeBalancer.id}
-                        toggleDialog={this.toggleDialog}
-                      />
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
+              {this.renderContent()}
             </TableBody>
           </Table>
         </Paper>
+        <PaginationFooter
+          count={count}
+          page={page}
+          pageSize={pageSize}
+          handlePageChange={this.handlePageChange}
+          handleSizeChange={this.handlePageSizeChange}
+        />
         <ConfirmationDialog
           onClose={() => this.setState({
             deleteConfirmDialog: NodeBalancersLanding.defaultDeleteConfirmDialogState,
@@ -322,13 +303,95 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
       </React.Fragment>
     );
   }
-}
+
+  renderContent = () => {
+    const {
+      count,
+      errors,
+      loading,
+      nodeBalancers,
+    } = this.state;
+
+    if (loading) {
+      return this.renderLoading();
+    }
+
+    if (errors) {
+      return this.renderErrors(errors);
+    }
+
+    if (nodeBalancers && count > 0) {
+      return this.renderData(nodeBalancers);
+    }
+
+    return null;
+  };
+
+  renderLoading = () => <TableRowLoading colSpan={7} />;
+
+  renderErrors = (errors: Linode.ApiFieldError[]) => {
+    return <TableRowError message="There was an error loading your NodeBalancers. Please try again later." colSpan={7} />;
+  };
+
+  renderEmpty = () => {
+    return (
+      <Placeholder
+        title="Add a NodeBalancer"
+        copy="Adding a NodeBalancer is easy. Click below to add a NodeBalancer."
+        icon={NodeBalancer}
+        buttonProps={{
+          onClick: () => this.props.history.push('/nodebalancers/create'),
+          children: 'Add a NodeBalancer',
+        }}
+      />
+    );
+  };
+
+  renderData = (nodeBalancers: Linode.ExtendedNodeBalancer[]) => {
+    const { classes } = this.props;
+
+    return nodeBalancers.map((nodeBalancer) => {
+      return (
+        <TableRow key={nodeBalancer.id} data-qa-nodebalancer-cell>
+          <TableCell data-qa-nodebalancer-label>
+            <Link to={`/nodebalancers/${nodeBalancer.id}`}>
+              {nodeBalancer.label}
+            </Link>
+          </TableCell>
+          <TableCell data-qa-node-status>
+            <span className={classes.NBStatus}>{nodeBalancer.up} up</span> <br />
+            <span className={classes.NBStatus}>{nodeBalancer.down} down</span>
+          </TableCell>
+          <TableCell data-qa-transferred>
+            {convertMegabytesTo(nodeBalancer.transfer.total)}
+          </TableCell>
+          <TableCell data-qa-ports>
+            {nodeBalancer.ports.length === 0 && 'None'}
+            {nodeBalancer.ports.join(', ')}
+          </TableCell>
+          <TableCell data-qa-nodebalancer-ips>
+            <IPAddress ips={[nodeBalancer.ipv4]} copyRight />
+            {nodeBalancer.ipv6 && <IPAddress ips={[nodeBalancer.ipv6]} copyRight />}
+          </TableCell>
+          <TableCell data-qa-region>
+            <RegionIndicator region={nodeBalancer.region} />
+          </TableCell>
+          <TableCell>
+            <NodeBalancerActionMenu
+              nodeBalancerId={nodeBalancer.id}
+              toggleDialog={this.toggleDialog}
+            />
+          </TableCell>
+        </TableRow>
+      );
+    })
+  }
+};
 
 const styled = withStyles(styles, { withTheme: true });
 
 export const enhanced = compose(
   styled,
-  preloaded,
   withRouter,
   SectionErrorBoundary,
   setDocs(NodeBalancersLanding.docs),

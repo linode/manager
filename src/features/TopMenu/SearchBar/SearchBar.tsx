@@ -20,7 +20,7 @@ import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
 import { getDomains } from 'src/services/domains';
 import { getImagesPage } from 'src/services/images';
 import { getLinodesPage } from 'src/services/linodes';
-import { getNodeBalancersPage } from 'src/services/nodebalancers';
+import { getNodeBalancers } from 'src/services/nodebalancers';
 import { getVolumes } from 'src/services/volumes';
 
 import SearchSuggestion, { SearchSuggestionT } from './SearchSuggestion';
@@ -235,11 +235,12 @@ class SearchBar extends React.Component<FinalProps, State> {
 
   getVolumesPage = (page: number) => getVolumes({ page })
   getDomainsPage = (page: number) => getDomains({ page })
+  getNodeBalancersPage = (page: number) => getNodeBalancers({ page })
 
   updateData() {
     this.getAllPagesFor('linodes', getLinodesPage);
     this.getAllPagesFor('volumes', this.getVolumesPage);
-    this.getAllPagesFor('nodebalancers', getNodeBalancersPage);
+    this.getAllPagesFor('nodebalancers', this.getNodeBalancersPage);
     this.getAllPagesFor('domains', this.getDomainsPage);
     this.getAllPagesFor('images', getImagesPage);
   }
