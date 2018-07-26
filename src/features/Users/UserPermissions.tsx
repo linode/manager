@@ -33,7 +33,10 @@ type ClassNames =
   | 'unrestrictedRoot'
   | 'globalSection'
   | 'globalRow'
-  | 'section';
+  | 'section'
+  | 'grantTable'
+  | 'selectAll'
+  | 'tableSubheading';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   topGrid: {
@@ -62,6 +65,19 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   section: {
     marginTop: theme.spacing.unit * 2,
     paddingBottom: 0,
+  },
+  grantTable: {
+    '& th': {
+      width: '25%',
+      minWidth: 150,
+    },
+  },
+  tableSubheading: {
+    marginTop: theme.spacing.unit * 3,
+    marginBottom: theme.spacing.unit * 2,
+  },
+  selectAll: {
+    cursor: 'pointer',
   },
 });
 
@@ -491,10 +507,10 @@ class UserPermissions extends React.Component<CombinedProps, State> {
 
     return (
       <div key={entity} className={classes.section}>
-        <Typography variant="subheading">
+        <Typography variant="subheading" className={classes.tableSubheading}>
           {entityNameMap[entity]}
         </Typography>
-        <Table>
+        <Table className={classes.grantTable}>
           <TableHead data-qa-table-head>
             <TableRow>
               <TableCell>
@@ -503,35 +519,41 @@ class UserPermissions extends React.Component<CombinedProps, State> {
               <TableCell
                 padding="checkbox"
               >
-                None
-                <Radio
-                  name={`${entity}-select-all`}
-                  checked={this.entityIsAll(entity, null)}
-                  value="null"
-                  onChange={this.entitySetAllTo(entity, null)}
-                />
+                <label className={classes.selectAll} style={{ marginLeft: -35 }}>
+                  None
+                  <Radio
+                    name={`${entity}-select-all`}
+                    checked={this.entityIsAll(entity, null)}
+                    value="null"
+                    onChange={this.entitySetAllTo(entity, null)}
+                  />
+                </label>
               </TableCell>
               <TableCell
                 padding="checkbox"
               >
-                Read Only
-                <Radio
-                  name={`${entity}-select-all`}
-                  checked={this.entityIsAll(entity, 'read_only')}
-                  value="read_only"
-                  onChange={this.entitySetAllTo(entity, 'read_only')}
-                />
+                <label className={classes.selectAll} style={{ marginLeft: -65 }}>
+                  Read Only
+                  <Radio
+                    name={`${entity}-select-all`}
+                    checked={this.entityIsAll(entity, 'read_only')}
+                    value="read_only"
+                    onChange={this.entitySetAllTo(entity, 'read_only')}
+                  />
+                </label>
               </TableCell>
               <TableCell
                 padding="checkbox"
               >
-                Read-Write
-                <Radio
-                  name={`${entity}-select-all`}
-                  checked={this.entityIsAll(entity, 'read_write')}
-                  value="read_write"
-                  onChange={this.entitySetAllTo(entity, 'read_write')}
-                />
+                <label className={classes.selectAll} style={{ marginLeft: -73 }}>
+                  Read-Write
+                  <Radio
+                    name={`${entity}-select-all`}
+                    checked={this.entityIsAll(entity, 'read_write')}
+                    value="read_write"
+                    onChange={this.entitySetAllTo(entity, 'read_write')}
+                  />
+                </label>
               </TableCell>
             </TableRow>
           </TableHead>
@@ -602,7 +624,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             </Typography>
           </Grid>
           <Grid item>
-            <Grid container justify="flex-end">
+            <Grid container justify="flex-end" alignItems="center">
               <Grid item>
                 Set all Grants to:
               </Grid>
