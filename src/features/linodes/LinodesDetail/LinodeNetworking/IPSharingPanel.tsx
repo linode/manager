@@ -4,14 +4,12 @@ import * as React from 'react';
 import Divider from '@material-ui/core/Divider';
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Delete from '@material-ui/icons/Delete';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
-import IconButton from 'src/components/IconButton';
 import LinearProgress from 'src/components/LinearProgress';
 import MenuItem from 'src/components/MenuItem';
 import Select from 'src/components/Select';
@@ -26,7 +24,9 @@ type ClassNames =
   | 'ipField'
   | 'addNewButton'
   | 'noIPsMessage'
-  | 'networkActionText';
+  | 'networkActionText'
+  | 'removeCont'
+  | 'remove';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   addNewButton: {
@@ -52,6 +52,16 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   networkActionText: {
     marginBottom: theme.spacing.unit * 2,
+  },
+  removeCont: {
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+    },
+  },
+  remove: {
+    [theme.breakpoints.down('xs')]: {
+      margin: '-16px 0 0 -26px',
+    },
   },
 });
 
@@ -208,13 +218,12 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
             }
           </Select>
         </Grid>
-        <Grid item>
-          <IconButton
+        <Grid item className={classes.removeCont}>
+          <Button
+            type="remove"
             onClick={this.onIPDelete(idx)}
-            destructive
-          >
-            <Delete />
-          </IconButton>
+            className={classes.remove}
+          />
         </Grid>
       </Grid>
     );

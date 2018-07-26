@@ -21,6 +21,8 @@ storiesOf('Button', module)
       <Divider />
       <Button type="cancel" data-qa-button="cancel">Cancel</Button>
       <Divider />
+      <Button type="remove" data-qa-button="remove"/>
+      <Divider />
     </React.Fragment>
   ))
   .add('Disabled', () => (

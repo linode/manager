@@ -9,13 +9,11 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Delete from '@material-ui/icons/Delete';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import setDocs from 'src/components/DocsSidebar/setDocs';
-import IconButton from 'src/components/IconButton';
 import MenuItem from 'src/components/MenuItem';
 import Notice from 'src/components/Notice';
 import Select from 'src/components/Select';
@@ -30,9 +28,10 @@ type ClassNames = 'root'
   | 'intro'
   | 'modeControl'
   | 'sshWrap'
+  | 'keyTextarea'
   | 'image'
   | 'addNew'
-  | 'deleteIcon';
+  | 'remove';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
@@ -57,13 +56,21 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
   sshWrap: {
     margin: `${theme.spacing.unit}px 0`,
-    position: 'relative',
-    maxWidth: 415,
+    [theme.breakpoints.up('md')]: {
+      display: 'flex',
+      alignItems: 'flex-end',
+    },
   },
-  deleteIcon: {
-    position: 'absolute',
-    left: -9,
-    bottom: 14,
+  keyTextarea: {
+    [theme.breakpoints.up('md')]: {
+      minWidth: 415,
+    },
+  },
+  remove: {
+    margin: '8px 0 0 -26px',
+    [theme.breakpoints.up('md')]: {
+      margin: `0 0 ${theme.spacing.unit / 2}px 0`,
+    },
   },
 });
 
@@ -154,15 +161,13 @@ class LishSettings extends React.Component<CombinedProps, State> {
                           helperText="Place your SSH public keys here for use with Lish console access."
                           multiline
                           rows="4"
-                          // fullWidth={false}
+                          className={classes.keyTextarea}
                         />
-                        <IconButton
+                        <Button
+                          type="remove"
                           onClick={this.onPublicKeyRemove(idx)}
-                          destructive
-                          className={classes.deleteIcon}
-                        >
-                          <Delete />
-                        </IconButton>
+                          className={classes.remove}
+                        />
                       </div>
                     ))
                   }
