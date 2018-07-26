@@ -21,6 +21,7 @@ import Grid from 'src/components/Grid';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
+import TableRowLoading from 'src/components/TableRowLoading';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { deleteDomain, getDomains } from 'src/services/domains';
 import scrollToTop from 'src/utilities/scrollToTop';
@@ -258,51 +259,12 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { loading, errors, count, domains } = this.state;
+    const { classes } = this.props;
+    const { count, loading } = this.state;
 
-    if (loading) {
-      return this.renderLoading();
+    if (!loading && count === 0) {
+      return this.renderEmpty();
     }
-    if (errors) {
-      return this.renderLoading();
-    }
-
-    if (count > 0) {
-      return this.renderData(domains);
-    }
-
-    return this.renderEmpty();
-  }
-
-  renderLoading = () => null;
-
-  renderErrors = () => {
-    return (
-      <ErrorState
-        errorText="There was an error retrieving your domains. Please reload and try again."
-      />
-    );
-  }
-
-  renderEmpty = () => {
-    return (
-      <React.Fragment>
-        <Placeholder
-          title="Add a Domain"
-          copy="Adding a new domain is easy. Click below to add a domain."
-          icon={DomainIcon}
-          buttonProps={{
-            onClick: () => this.openCreateDrawer(),
-            children: 'Add a Domain',
-          }}
-        />
-        <this.domainCreateDrawer />
-      </React.Fragment>
-    );
-  }
-
-  renderData = (domains: Linode.Domain[]) => {
-    const { classes, history } = this.props;
 
     return (
       <React.Fragment>
@@ -339,29 +301,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
               </TableRow>
             </TableHead>
             <TableBody>
-              {domains.map(domain =>
-                <TableRow key={domain.id} data-qa-domain-cell={domain.id}>
-                  <TableCell className={classes.domain} data-qa-domain-label>
-                    <Link to={`/domains/${domain.id}`}>
-                      {domain.domain}
-                    </Link>
-                  </TableCell>
-                  <TableCell data-qa-domain-type>{domain.type}</TableCell>
-                  <TableCell>
-                    <ActionMenu
-                      onEditRecords={() => {
-                        history.push(`/domains/${domain.id}`);
-                      }}
-                      onRemove={() => {
-                        this.openRemoveDialog(domain.domain, domain.id);
-                      }}
-                      onClone={() => {
-                        this.openCloneDrawer(domain.domain, domain.id);
-                      }}
-                    />
-                  </TableCell>
-                </TableRow>,
-              )}
+              {this.renderContent()}
             </TableBody>
           </Table>
         </Paper>
@@ -387,6 +327,80 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
           <Typography>Are you sure you want to remove this domain?</Typography>
         </ConfirmationDialog>
       </React.Fragment>
+    );
+  }
+
+  renderContent = () => {
+    const { loading, errors, count, domains } = this.state;
+
+    if (loading) {
+      return this.renderLoading();
+    }
+    if (errors) {
+      return this.renderLoading();
+    }
+
+    if (count > 0) {
+      return this.renderData(domains);
+    }
+
+    return null;
+  };
+
+  renderLoading = () => <TableRowLoading colSpan={3} />;
+
+  renderErrors = () => {
+    return (
+      <ErrorState
+        errorText="There was an error retrieving your domains. Please reload and try again."
+      />
+    );
+  }
+
+  renderEmpty = () => {
+    return (
+      <React.Fragment>
+        <Placeholder
+          title="Add a Domain"
+          copy="Adding a new domain is easy. Click below to add a domain."
+          icon={DomainIcon}
+          buttonProps={{
+            onClick: () => this.openCreateDrawer(),
+            children: 'Add a Domain',
+          }}
+        />
+        <this.domainCreateDrawer />
+      </React.Fragment>
+    );
+  }
+
+  renderData = (domains: Linode.Domain[]) => {
+    const { classes, history } = this.props;
+
+    return (
+      domains.map(domain =>
+        <TableRow key={domain.id} data-qa-domain-cell={domain.id}>
+          <TableCell className={classes.domain} data-qa-domain-label>
+            <Link to={`/domains/${domain.id}`}>
+              {domain.domain}
+            </Link>
+          </TableCell>
+          <TableCell data-qa-domain-type>{domain.type}</TableCell>
+          <TableCell>
+            <ActionMenu
+              onEditRecords={() => {
+                history.push(`/domains/${domain.id}`);
+              }}
+              onRemove={() => {
+                this.openRemoveDialog(domain.domain, domain.id);
+              }}
+              onClone={() => {
+                this.openCloneDrawer(domain.domain, domain.id);
+              }}
+            />
+          </TableCell>
+        </TableRow>,
+      )
     );
   }
 }
