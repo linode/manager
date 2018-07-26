@@ -212,6 +212,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   changeViewStyle = (style: string) => {
     const { history } = this.props;
     history.push(`#${style}`);
+    localStorage.setItem('linodesViewStyle', style);
   }
 
   renderListView = (
@@ -289,7 +290,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   }
 
   toggleDialog = (bootOption: Linode.BootAction,
-     selectedLinodeId: number, selectedLinodeLabel: string) => {
+    selectedLinodeId: number, selectedLinodeLabel: string) => {
     this.setState({
       powerAlertOpen: !this.state.powerAlertOpen,
       selectedLinodeId,
@@ -417,21 +418,19 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   }
 }
 
-const getDisplayFormat = ifElse(
-  compose(isEmpty, prop('hash')),
-  /* is empty */
-  ifElse(
-    compose(gte(3), prop('length')),
-    () => 'grid',
-    () => 'list',
-  ),
-  /* is not empty */
-  ifElse(
-    propEq('hash', '#grid'),
-    () => 'grid',
-    () => 'list',
-  ),
-);
+const getDisplayFormat = ({ hash, length }: { hash?: string, length: number }) => {
+  const local = localStorage.getItem('linodesViewStyle');
+
+  if (local) {
+    return local;
+  }
+
+  if (!hash) {
+    return hash === '#grid' ? 'grid' : 'list';
+  }
+
+  return (length >= 3) ? 'list' : 'grid';
+};
 
 export const styled = withStyles(styles, { withTheme: true });
 
