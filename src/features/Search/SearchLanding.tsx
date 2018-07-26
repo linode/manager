@@ -12,9 +12,7 @@ import {
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
-
 import CircularProgress from 'src/components/CircleProgress';
 import ErrorState from 'src/components/ErrorState';
 import ExpansionPanel from 'src/components/ExpansionPanel';
@@ -34,10 +32,21 @@ import NodeBalancerIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 import StackScriptIcon from 'src/assets/addnewmenu/stackscripts.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 
-type ClassNames = 'root' | 'noResultsText';
+import ClickableRow from './ClickableRow';
+
+type ClassNames = 'root' | 'icon' | 'row' | 'noResultsText';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
+  icon: {
+    width: 100,
+  },
+  row: {
+    backgroundColor: 'blue',
+    '&:hover': {
+      backgroundColor: `${theme.palette.grey}`,
+    }
+  },
   noResultsText: {
     textAlign: "center",
     marginTop: theme.spacing.unit * 10
@@ -179,7 +188,7 @@ class SearchLanding extends React.Component<CombinedProps, State> {
         this.setState({
           isLoading: false,
           error: new Error(`There was an issue retrieving your search results.
-          Pleas try again later.`)
+          Please try again later.`)
         })
       });
   }
@@ -207,6 +216,30 @@ class SearchLanding extends React.Component<CombinedProps, State> {
   
   handleChangePageSize = (newPageSize: number) => {
     this.setState({ pageSize: +newPageSize })
+  }
+
+  getResultUrl = (type:string, id: string) => {
+    switch (type) {
+      case 'Linodes':
+        return `linodes/${id}`
+      case 'Volumes':
+        return `volumes/${id}`
+      case 'StackScripts':
+        // Need temporary landing page for stackscript
+        return `stackscripts/${id}`
+      case 'Domains':
+        return `domains/${id}`
+      case 'NodeBalancers':
+        return `nodebalancers/${id}`;
+      default:
+        return '';
+    }
+  }
+
+  handleItemRowClick = (id: string, type: string) => {
+    const url:string = this.getResultUrl(type, id);
+    if (!url) { return; }
+    this.props.history.push(url);
   }
 
   handlePageChange = (newPage: number) => {
@@ -247,7 +280,6 @@ class SearchLanding extends React.Component<CombinedProps, State> {
 
     return iterables.map((iterable: Iterable) => {
       if (!iterable.data.data.length) { return; }
-      
       return (
         <ExpansionPanel
           heading={iterable.label}
@@ -282,11 +314,18 @@ class SearchLanding extends React.Component<CombinedProps, State> {
       ? data.label
       : data.domain
 
+    const { classes } = this.props;
+
     return (
-      <TableRow key={data.id}>
-        <TableCell>{this.getRelevantIcon(type)}</TableCell>
+      <ClickableRow
+        type={type}
+        id={data.id}
+        key={data.id}
+        handleClick={this.handleItemRowClick}
+      >
+        <TableCell className={classes.icon}>{this.getRelevantIcon(type)}</TableCell>
         <TableCell>{title}</TableCell>
-      </TableRow>
+      </ClickableRow>
     )
   }
 
