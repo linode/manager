@@ -12,12 +12,13 @@ import Reload from 'src/assets/icons/reload.svg';
 type ClassNames = 'root'
   | 'loading'
   | 'destructive'
-  | 'cancel';
+  | 'cancel'
+  | 'remove';
 
 export interface Props extends ButtonProps {
   loading?: boolean;
   destructive?: boolean;
-  type?: 'primary' | 'secondary' | 'cancel';
+  type?: 'primary' | 'secondary' | 'cancel' | 'remove';
   className?: string;
   tooltipText?: string;
 }
@@ -38,6 +39,16 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
       '&:hover, &:focus': {
         color: theme.palette.primary.light,
         borderColor: theme.palette.primary.light,
+      },
+    },
+    '&.remove': {
+      fontSize: '.9rem',
+      border: 0,
+      color: '#C44742',
+      padding: '14px 26px 14px',
+      transition: theme.transitions.create(['color', 'border-color']),
+      '&:hover, &:focus': {
+        color: '#DF6560',
       },
     },
   },
@@ -83,12 +94,14 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 const getVariant = cond([
   [propEq('type', 'primary'), always('raised')],
   [propEq('type', 'secondary'), always('raised')],
+  [propEq('type', 'remove'), always('raised')],
   [() => true, always(undefined)],
 ]);
 
 const getColor = cond([
   [propEq('type', 'primary'), always('primary')],
   [propEq('type', 'secondary'), always('secondary')],
+  [propEq('type', 'remove'), always('secondary')],
   [() => true, always(undefined)],
 ]);
 
@@ -125,6 +138,7 @@ const wrappedButton: React.StatelessComponent<CombinedProps> = (props) => {
         )}
       >
         {loading ? <Reload /> : props.children}
+        {type === 'remove' && 'Remove'}
       </Button>
       {tooltipText && <HelpIcon text={tooltipText} />}
     </React.Fragment>
