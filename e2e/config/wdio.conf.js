@@ -227,7 +227,7 @@ exports.config = {
         }
 
         if (browser.options.desiredCapabilities.browserName.includes('chrome')) {
-            browser.timeouts('page load', 20000);
+            browser.timeouts('page load', process.env.DOCKER ? 30000 : 20000);
         }
 
         login(username, password);
