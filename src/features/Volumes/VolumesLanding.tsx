@@ -22,6 +22,7 @@ import PaginationFooter from 'src/components/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
 import TableRowError from 'src/components/TableRowError';
+import TableRowLoading from 'src/components/TableRowLoading';
 import { dcDisplayNames } from 'src/constants';
 import { events$, generateInFilter, resetEventsPolling } from 'src/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
@@ -35,6 +36,7 @@ import DestructiveVolumeDialog from './DestructiveVolumeDialog';
 import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
 import VolumeConfigDrawer from './VolumeConfigDrawer';
 import VolumesActionMenu from './VolumesActionMenu';
+
 
 type ClassNames = 'root'
   | 'title'
@@ -281,10 +283,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   };
 
   renderLoading = () => {
-    return (
-      null
-      // <TableRowLoading colSpan={5} />
-    );
+    return (<TableRowLoading colSpan={6} />);
   };
 
   renderErrors = (errors: Linode.ApiFieldError[]) => {
