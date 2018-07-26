@@ -15,14 +15,14 @@ import Typography from '@material-ui/core/Typography';
 
 import VolumesIcon from 'src/assets/addnewmenu/volume.svg';
 import AddNewLink from 'src/components/AddNewLink';
-import CircleProgress from 'src/components/CircleProgress';
 import setDocs from 'src/components/DocsSidebar/setDocs';
-import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
+import TableRowError from 'src/components/TableRowError';
+import TableRowLoading from 'src/components/TableRowLoading';
 import { dcDisplayNames } from 'src/constants';
 import { events$, generateInFilter, resetEventsPolling } from 'src/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
@@ -114,6 +114,31 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     },
   };
 
+  eventsSub: Subscription;
+
+  mounted: boolean = false;
+
+  static docs: Linode.Doc[] = [
+    {
+      title: 'How to Use Block Storage with Your Linode',
+      /* tslint:disable-next-line */
+      src: `https://www.linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode`,
+      body: `Linode’s Block Storage service allows you to attach additional storage volumes to your
+      Linode. A single volume can range from 10 GiB to 10,000 GiB in size and costs $0.10/GiB per
+      month. They can be partitioned however you like and can accommodate any filesystem type you
+      choose. Up to eight volumes can be attached to a single Linode, be it new or already
+      existing, so you do not need to recreate your server to add a Block Storage Volume.`,
+    },
+    {
+      title: 'Boot a Linode from a Block Storage Volume',
+      src: `https://www.linode.com/docs/platform/block-storage/boot-from-block-storage-volume/`,
+      body: `Linode’s Block Storage service allows you to attach additional storage volumes to your
+      Linode. In addition to storing files and media, you can also use a Block Storage Volume as a
+      boot disk. This can provide a low-cost way to maintain an image that can be quickly attached
+      to a new Linode and booted up when needed.`,
+    },
+  ];
+
   componentDidMount() {
     this.mounted = true;
 
@@ -163,29 +188,11 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, openForEdit, openForResize, openForClone } = this.props;
-    const { loading, errors, volumes, count, linodeLabels, linodeStatuses } = this.state;
+    const { classes } = this.props;
+    const { count, loading } = this.state;
 
-    if (errors) {
-      return <ErrorState errorText="An error occured while loading Volumes." />
-    }
-
-    if (loading) {
-      return <CircleProgress />
-    }
-
-    if (count === 0) {
-      return (
-        <Placeholder
-          title="Create a Volume"
-          copy="Add storage to your Linodes using the resilient Volumes service"
-          icon={VolumesIcon}
-          buttonProps={{
-            onClick: this.props.openForCreating,
-            children: 'Create a Volume',
-          }}
-        />
-      );
+    if (!loading && count === 0) {
+      return this.renderEmpty();
     }
 
     return (
@@ -220,102 +227,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
               </TableRow>
             </TableHead>
             <TableBody>
-              {volumes.map((volume) => {
-                const label = pathOr('', ['label'], volume);
-                const linodeLabel = volume.linode_id ? linodeLabels[volume.linode_id] : '';
-                const linodeStatus = volume.linode_id ? linodeStatuses[volume.linode_id] : '';
-                const size = pathOr('', ['size'], volume);
-                const filesystem_path = pathOr(
-                  /** @todo Remove path default when API releases filesystem_path. */
-                  `/dev/disk/by-id/scsi-0Linode_Volume_${label}`,
-                  ['filesystem_path'],
-                  volume,
-                );
-                const regionID = pathOr('', ['region'], volume);
-                const region = dcDisplayNames[regionID];
-
-                return isVolumeUpdating(volume.recentEvent)
-                  ? (
-                    <TableRow key={volume.id} data-qa-volume-loading>
-                      <TableCell data-qa-volume-cell-label>{label}</TableCell>
-                      <TableCell colSpan={5}>
-                        <LinearProgress value={progressFromEvent(volume.recentEvent)} />
-                      </TableCell>
-                    </TableRow>
-                  )
-                  : (
-                    <TableRow key={volume.id} data-qa-volume-cell={volume.id}>
-                      <TableCell data-qa-volume-cell-label>{label}</TableCell>
-                      <TableCell data-qa-volume-cell-attachment>{linodeLabel}</TableCell>
-                      <TableCell data-qa-volume-size>{size} GB</TableCell>
-                      <TableCell data-qa-fs-path>{filesystem_path}</TableCell>
-                      <TableCell data-qa-volume-region>{region}</TableCell>
-                      <TableCell>
-                        <VolumesActionMenu
-                          onShowConfig={() => {
-                            this.setState({
-                              configDrawer: {
-                                open: true,
-                                volumePath: filesystem_path,
-                                volumeLabel: label,
-                              },
-                            });
-                          }}
-                          onEdit={() => openForEdit(
-                            volume.id,
-                            label,
-                            size,
-                            regionID,
-                            linodeLabel,
-                          )}
-                          onResize={() => openForResize(
-                            volume.id,
-                            label,
-                            size,
-                            regionID,
-                            linodeLabel,
-                          )}
-                          onClone={() => openForClone(
-                            volume.id,
-                            label,
-                            size,
-                            regionID,
-                          )}
-                          attached={Boolean(linodeLabel)}
-                          onAttach={() => {
-                            this.setState({
-                              attachmentDrawer: {
-                                open: true,
-                                volumeID: volume.id,
-                                volumeLabel: label,
-                                linodeRegion: regionID,
-                              },
-                            });
-                          }}
-                          onDetach={() => {
-                            this.setState({
-                              destructiveDialog: {
-                                open: true,
-                                mode: 'detach',
-                                volumeID: volume.id,
-                              },
-                            });
-                          }}
-                          poweredOff={linodeStatus === 'offline'}
-                          onDelete={() => {
-                            this.setState({
-                              destructiveDialog: {
-                                open: true,
-                                mode: 'delete',
-                                volumeID: volume.id,
-                              },
-                            });
-                          }}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  );
-              })}
+              {this.renderContent()}
             </TableBody>
           </Table>
         </Paper>
@@ -350,30 +262,150 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     );
   }
 
-  eventsSub: Subscription;
+  renderContent = () => {
+    const { loading, errors, volumes, count, linodeLabels, linodeStatuses } = this.state;
 
-  mounted: boolean = false;
+    if (loading) {
+      return this.renderLoading();
+    }
 
-  static docs: Linode.Doc[] = [
-    {
-      title: 'How to Use Block Storage with Your Linode',
-      /* tslint:disable-next-line */
-      src: `https://www.linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode`,
-      body: `Linode’s Block Storage service allows you to attach additional storage volumes to your
-      Linode. A single volume can range from 10 GiB to 10,000 GiB in size and costs $0.10/GiB per
-      month. They can be partitioned however you like and can accommodate any filesystem type you
-      choose. Up to eight volumes can be attached to a single Linode, be it new or already
-      existing, so you do not need to recreate your server to add a Block Storage Volume.`,
-    },
-    {
-      title: 'Boot a Linode from a Block Storage Volume',
-      src: `https://www.linode.com/docs/platform/block-storage/boot-from-block-storage-volume/`,
-      body: `Linode’s Block Storage service allows you to attach additional storage volumes to your
-      Linode. In addition to storing files and media, you can also use a Block Storage Volume as a
-      boot disk. This can provide a low-cost way to maintain an image that can be quickly attached
-      to a new Linode and booted up when needed.`,
-    },
-  ];
+    if (errors) {
+      return this.renderErrors(errors);
+    }
+
+
+    if (volumes && count > 0) {
+      return this.renderData(volumes, linodeLabels, linodeStatuses);
+    }
+
+    return null;
+  };
+
+  renderLoading = () => {
+    return (
+      null
+      // <TableRowLoading colSpan={5} />
+    );
+  };
+
+  renderErrors = (errors: Linode.ApiFieldError[]) => {
+    return (
+      <TableRowError colSpan={5} message="There was an error loading your volumes." />
+    );
+  };
+
+  renderEmpty = () => {
+    return (
+      <Placeholder
+        title="Create a Volume"
+        copy="Add storage to your Linodes using the resilient Volumes service"
+        icon={VolumesIcon}
+        buttonProps={{
+          onClick: this.props.openForCreating,
+          children: 'Create a Volume',
+        }}
+      />
+    );
+  };
+
+  renderData = (volumes: Linode.Volume[], linodeLabels: any, linodeStatuses: any) => {
+    return volumes.map((volume) => {
+      const label = pathOr('', ['label'], volume);
+      const linodeLabel = volume.linode_id ? linodeLabels[volume.linode_id] : '';
+      const linodeStatus = volume.linode_id ? linodeStatuses[volume.linode_id] : '';
+      const size = pathOr('', ['size'], volume);
+      const filesystem_path = pathOr(
+        /** @todo Remove path default when API releases filesystem_path. */
+        `/dev/disk/by-id/scsi-0Linode_Volume_${label}`,
+        ['filesystem_path'],
+        volume,
+      );
+      const regionID = pathOr('', ['region'], volume);
+      const region = dcDisplayNames[regionID];
+
+      return isVolumeUpdating(volume.recentEvent)
+        ? (
+          <TableRow key={volume.id} data-qa-volume-loading>
+            <TableCell data-qa-volume-cell-label>{label}</TableCell>
+            <TableCell colSpan={5}>
+              <LinearProgress value={progressFromEvent(volume.recentEvent)} />
+            </TableCell>
+          </TableRow>
+        )
+        : (
+          <TableRow key={volume.id} data-qa-volume-cell={volume.id}>
+            <TableCell data-qa-volume-cell-label>{label}</TableCell>
+            <TableCell data-qa-volume-cell-attachment>{linodeLabel}</TableCell>
+            <TableCell data-qa-volume-size>{size} GB</TableCell>
+            <TableCell data-qa-fs-path>{filesystem_path}</TableCell>
+            <TableCell data-qa-volume-region>{region}</TableCell>
+            <TableCell>
+              <VolumesActionMenu
+                onShowConfig={() => {
+                  this.setState({
+                    configDrawer: {
+                      open: true,
+                      volumePath: filesystem_path,
+                      volumeLabel: label,
+                    },
+                  });
+                }}
+                onEdit={() => openForEdit(
+                  volume.id,
+                  label,
+                  size,
+                  regionID,
+                  linodeLabel,
+                )}
+                onResize={() => openForResize(
+                  volume.id,
+                  label,
+                  size,
+                  regionID,
+                  linodeLabel,
+                )}
+                onClone={() => openForClone(
+                  volume.id,
+                  label,
+                  size,
+                  regionID,
+                )}
+                attached={Boolean(linodeLabel)}
+                onAttach={() => {
+                  this.setState({
+                    attachmentDrawer: {
+                      open: true,
+                      volumeID: volume.id,
+                      volumeLabel: label,
+                      linodeRegion: regionID,
+                    },
+                  });
+                }}
+                onDetach={() => {
+                  this.setState({
+                    destructiveDialog: {
+                      open: true,
+                      mode: 'detach',
+                      volumeID: volume.id,
+                    },
+                  });
+                }}
+                poweredOff={linodeStatus === 'offline'}
+                onDelete={() => {
+                  this.setState({
+                    destructiveDialog: {
+                      open: true,
+                      mode: 'delete',
+                      volumeID: volume.id,
+                    },
+                  });
+                }}
+              />
+            </TableCell>
+          </TableRow>
+        );
+    });
+  };
 
   getVolumes = (
     page: number = this.state.page,
