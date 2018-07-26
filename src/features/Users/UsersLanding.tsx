@@ -28,7 +28,7 @@ import CreateUserDrawer from './CreateUserDrawer';
 import UserDeleteConfirmationDialog from './UserDeleteConfirmationDialog';
 import ActionMenu from './UsersActionMenu';
 
-type ClassNames = 'title' | 'avatar' | 'userButton';
+type ClassNames = 'title' | 'avatar' | 'userButton' | 'emptyImage';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   title: {
@@ -49,6 +49,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     height: 50,
     marginRight: theme.spacing.unit * 2,
   },
+  emptyImage: {
+    display: 'inline',
+    width: 50,
+    height: 50,
+    marginRight: theme.spacing.unit * 2,
+  }
 });
 
 interface Props {}
@@ -206,15 +212,16 @@ class UsersLanding extends React.Component<CombinedProps, State> {
         <TableCell>
           <Link to={`/users/${user.username}`} title={user.username}>
             <Button className={classes.userButton} tabIndex={-1}>
-              {(user.gravatarUrl !== 'not found'
-                && user.gravatarUrl !== undefined)
-                  ? <img
+              {user.gravatarUrl === undefined
+                ? <div className={classes.emptyImage} />
+                : user.gravatarUrl === 'not found'
+                  ? <UserIcon className={classes.avatar} />
+                  : <img
                     alt={`user ${user.username}'s avatar`}
                     src={user.gravatarUrl}
                     className={classes.avatar}
                   />
-                  : <UserIcon className={classes.avatar} />
-                }
+               }
               {user.username}
             </Button>
           </Link>
