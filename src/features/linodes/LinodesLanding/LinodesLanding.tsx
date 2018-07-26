@@ -309,7 +309,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { location: { hash } } = this.props;
+    const { location: { hash }, results } = this.props;
     const { linodes, configDrawer, bootOption, powerAlertOpen } = this.state;
     const images = pathOr([], ['response', 'data'], this.props.images);
 
@@ -329,7 +329,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       );
     }
 
-    const displayGrid: 'grid' | 'list' = getDisplayFormat({ hash, length: linodes.length });
+    const displayGrid: 'grid' | 'list' = getDisplayFormat({ hash, length: results });
 
     return (
       <Grid container>
