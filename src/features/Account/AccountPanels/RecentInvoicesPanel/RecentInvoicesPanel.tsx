@@ -12,7 +12,7 @@ import TableRow from '@material-ui/core/TableRow';
 
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import ExpansionPanel from 'src/components/ExpansionPanel';
-import PaginationFooter from 'src/components/PaginationFooter';
+import PaginationFooter, { PaginationProps } from 'src/components/PaginationFooter';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
@@ -28,14 +28,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 interface Props { }
 
-interface State {
+interface State extends PaginationProps {
   errors?: Linode.ApiFieldError[];
   loading: boolean;
   data?: InvoiceWithDate[],
-  page: number;
-  pages: number;
-  results: number;
-  perPage: number;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -44,9 +40,8 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
   state: State = {
     loading: true,
     page: 1,
-    pages: 1,
-    results: 1,
-    perPage: 25,
+    count: 0,
+    pageSize: 25,
   };
 
   mounted: boolean = false;
@@ -79,15 +74,14 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
       errors: undefined,
     });
 
-    return getInvoices({ page_size: this.state.perPage, page })
+    return getInvoices({ page_size: this.state.pageSize, page })
       .then(({ data, page, pages, results }) => {
         if (!this.mounted) { return; }
 
         this.setState({
           loading: false,
           page,
-          pages,
-          results,
+          count: results,
           data: this.addToItems(data),
         });
       })
@@ -113,8 +107,8 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
     const {
       data,
       page,
-      perPage,
-      results,
+      pageSize,
+      count,
     } = this.state;
 
     return (
@@ -136,11 +130,11 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
         </Table>
         {data && data.length > 0 &&
           <PaginationFooter
-            count={results}
+            count={count}
             page={page}
-            pageSize={perPage}
+            pageSize={pageSize}
             handlePageChange={this.handlePageChange}
-            handleSizeChange={this.handlePerPageChange}
+            handleSizeChange={this.handlePageSizeChange}
           />
         }
       </ExpansionPanel>
@@ -181,11 +175,11 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
 
   handlePageChange = (page: number) => this.requestInvoices(page);
 
-  handlePerPageChange = (perPage: number) => {
+  handlePageSizeChange = (pageSize: number) => {
     if (!this.mounted) { return; }
 
     this.setState(
-      { perPage },
+      { pageSize },
       () => { this.requestInvoices() },
     );
   }

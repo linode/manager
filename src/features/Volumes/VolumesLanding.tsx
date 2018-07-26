@@ -18,7 +18,7 @@ import AddNewLink from 'src/components/AddNewLink';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
-import PaginationFooter from 'src/components/PaginationFooter';
+import PaginationFooter, { PaginationProps } from 'src/components/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
 import TableRowError from 'src/components/TableRowError';
@@ -63,14 +63,10 @@ interface Props {
   openForCreating: typeof openForCreating;
 }
 
-interface State {
+interface State extends PaginationProps {
   loading: boolean;
   errors?: Linode.ApiFieldError[];
   volumes: Linode.Volume[];
-  count: number;
-  page: number;
-  pages: number;
-  perPage: number;
   linodeLabels: { [id: number]: string };
   linodeStatuses: { [id: number]: string };
   configDrawer: {
@@ -98,8 +94,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     volumes: [],
     count: 0,
     page: 1,
-    pages: 1,
-    perPage: 25,
+    pageSize: 25,
     loading: true,
     linodeLabels: {},
     linodeStatuses: {},
@@ -235,7 +230,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
         <PaginationFooter
           count={this.state.count}
           page={this.state.page}
-          pageSize={this.state.perPage}
+          pageSize={this.state.pageSize}
           handlePageChange={this.handlePageChange}
           handleSizeChange={this.handlePageSizeChange}
         />
@@ -407,7 +402,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
 
   getVolumes = (
     page: number = this.state.page,
-    pageSize: number = this.state.perPage,
+    pageSize: number = this.state.pageSize,
     initial: boolean = false,
   ) => {
     this.setState({ loading: initial });
@@ -419,7 +414,6 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
         this.setState({
           count: response.results,
           page: response.page,
-          pages: response.pages,
           loading: false,
           volumes: response.data,
         });
@@ -432,9 +426,9 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       }));
   };
 
-  handlePageSizeChange = (perPage: number) => {
-    this.setState({ perPage });
-    this.getVolumes(undefined, perPage);
+  handlePageSizeChange = (pageSize: number) => {
+    this.setState({ pageSize });
+    this.getVolumes(undefined, pageSize);
   }
 
   handlePageChange = (page: number) => {

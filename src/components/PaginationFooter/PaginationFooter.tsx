@@ -18,10 +18,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
   });
 };
 
-interface Props {
+export interface PaginationProps {
   count: number;
   page: number;
   pageSize: number;
+}
+
+interface Props extends PaginationProps{
   handlePageChange: (page: number) => void;
   handleSizeChange: (pageSize: number) => void;
 }

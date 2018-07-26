@@ -18,7 +18,7 @@ import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import Grid from 'src/components/Grid';
-import PaginationFooter from 'src/components/PaginationFooter';
+import PaginationFooter, { PaginationProps } from 'src/components/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import Table from 'src/components/Table';
@@ -29,6 +29,7 @@ import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator
 import { deleteNodeBalancer, getNodeBalancerConfigs, getNodeBalancers } from 'src/services/nodebalancers';
 import { convertMegabytesTo } from 'src/utilities/convertMegabytesTo';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import scrollToTop from 'src/utilities/scrollToTop';
 
 import NodeBalancerActionMenu from './NodeBalancerActionMenu';
 
@@ -52,14 +53,11 @@ interface DeleteConfirmDialogState {
   errors?: Linode.ApiFieldError[];
 }
 
-interface State {
-  count: number;
+interface State extends PaginationProps {
   deleteConfirmDialog: DeleteConfirmDialogState;
   errors?: Linode.ApiFieldError[];
   loading: boolean;
   nodeBalancers: Linode.ExtendedNodeBalancer[];
-  page: number;
-  pageSize: number;
   selectedNodeBalancerId?: number;
 }
 
@@ -156,11 +154,13 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
   handlePageChange = (page: number) => {
     this.setState({ page });
     this.requestNodeBalancers(page);
+    scrollToTop();
   }
 
   handlePageSizeChange = (pageSize: number) => {
     this.setState({ pageSize });
     this.requestNodeBalancers(this.state.page, pageSize);
+    scrollToTop();
   }
 
   toggleDialog = (nodeBalancerId: number) => {

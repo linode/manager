@@ -18,7 +18,7 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
-import PaginationFooter from 'src/components/PaginationFooter';
+import PaginationFooter, { PaginationProps } from 'src/components/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
 import TableRowLoading from 'src/components/TableRowLoading';
@@ -44,11 +44,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 interface Props { }
 
-interface State {
+interface State extends PaginationProps {
   domains: Linode.Domain[];
-  page: number;
-  count: number;
-  perPage: number;
   loading: boolean;
   errors?: Error;
   importDrawer: {
@@ -78,7 +75,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
     domains: [],
     page: 1,
     count: 0,
-    perPage: 25,
+    pageSize: 25,
     loading: true,
     importDrawer: {
       open: false,
@@ -110,7 +107,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
 
   getDomains = (
     page: number = this.state.page,
-    pageSize: number = this.state.perPage,
+    pageSize: number = this.state.pageSize,
     initial: boolean = false,
   ) => {
     if (!this.mounted) { return; }
@@ -142,9 +139,9 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
     scrollToTop();
   };
 
-  handlePageSizeChange = (perPage: number) => {
-    this.setState({ perPage });
-    this.getDomains(undefined, perPage);
+  handlePageSizeChange = (pageSize: number) => {
+    this.setState({ pageSize });
+    this.getDomains(undefined, pageSize);
   };
 
   componentDidMount() {
@@ -308,7 +305,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
         <PaginationFooter
           count={this.state.count}
           page={this.state.page}
-          pageSize={this.state.perPage}
+          pageSize={this.state.pageSize}
           handlePageChange={this.handlePageChange}
           handleSizeChange={this.handlePageSizeChange}
         />
