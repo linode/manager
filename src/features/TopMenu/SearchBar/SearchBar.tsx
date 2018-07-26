@@ -21,7 +21,7 @@ import { getDomainsPage } from 'src/services/domains';
 import { getImagesPage } from 'src/services/images';
 import { getLinodesPage } from 'src/services/linodes';
 import { getNodeBalancersPage } from 'src/services/nodebalancers';
-import { getVolumesPage } from 'src/services/volumes';
+import { getVolumes } from 'src/services/volumes';
 
 import SearchSuggestion, { SearchSuggestionT } from './SearchSuggestion';
 
@@ -233,9 +233,11 @@ class SearchBar extends React.Component<FinalProps, State> {
       });
   }
 
+  getVolumesPage = (page: number) => getVolumes({ page })
+
   updateData() {
     this.getAllPagesFor('linodes', getLinodesPage);
-    this.getAllPagesFor('volumes', getVolumesPage);
+    this.getAllPagesFor('volumes', this.getVolumesPage);
     this.getAllPagesFor('nodebalancers', getNodeBalancersPage);
     this.getAllPagesFor('domains', getDomainsPage);
     this.getAllPagesFor('images', getImagesPage);

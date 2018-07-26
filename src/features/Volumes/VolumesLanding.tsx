@@ -20,6 +20,7 @@ import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
+import PaginationFooter from 'src/components/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
 import { dcDisplayNames } from 'src/constants';
@@ -29,6 +30,8 @@ import { updateVolumes$ } from 'src/features/Volumes/Volumes.tsx';
 import { getLinodes } from 'src/services/linodes';
 import { deleteVolume, detachVolume, getVolumes } from 'src/services/volumes';
 import { openForClone, openForCreating, openForEdit, openForResize } from 'src/store/reducers/volumeDrawer';
+import scrollToTop from 'src/utilities/scrollToTop';
+
 import DestructiveVolumeDialog from './DestructiveVolumeDialog';
 import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
 import VolumeConfigDrawer from './VolumeConfigDrawer';
@@ -63,6 +66,10 @@ interface State {
   loading: boolean;
   errors?: Linode.ApiFieldError[];
   volumes: Linode.Volume[];
+  count: number;
+  page: number;
+  pages: number;
+  perPage: number;
   linodeLabels: { [id: number]: string };
   linodeStatuses: { [id: number]: string };
   configDrawer: {
@@ -88,6 +95,10 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 class VolumesLanding extends React.Component<CombinedProps, State> {
   state: State = {
     volumes: [],
+    count: 0,
+    page: 1,
+    pages: 1,
+    perPage: 25,
     loading: true,
     linodeLabels: {},
     linodeStatuses: {},
@@ -106,7 +117,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   componentDidMount() {
     this.mounted = true;
 
-    this.getVolumes();
+    this.getVolumes(undefined, undefined, true);
 
     this.getLinodeLabels();
 
@@ -124,16 +135,16 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       ))
       .merge(updateVolumes$)
       .subscribe((event) => {
-        getVolumes()
+        this.getVolumes()
           .then((volumes) => {
-            if (this.mounted) {
-              this.setState({
-                volumes: volumes.data.map((v) => ({
-                  ...v,
-                  ...maybeAddEvent(event, v),
-                })),
-              });
-            }
+            if (!volumes || !this.mounted) { return; }
+
+            this.setState({
+              volumes: volumes.map((v) => ({
+                ...v,
+                ...maybeAddEvent(event, v),
+              })),
+            });
           })
           .catch(() => {
             /* @todo: how do we want to display this error? */
@@ -153,7 +164,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes, openForEdit, openForResize, openForClone } = this.props;
-    const { loading, errors, volumes, linodeLabels, linodeStatuses } = this.state;
+    const { loading, errors, volumes, count, linodeLabels, linodeStatuses } = this.state;
 
     if (errors) {
       return <ErrorState errorText="An error occured while loading Volumes." />
@@ -163,7 +174,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       return <CircleProgress />
     }
 
-    if (volumes.length === 0) {
+    if (count === 0) {
       return (
         <Placeholder
           title="Create a Volume"
@@ -308,6 +319,13 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
             </TableBody>
           </Table>
         </Paper>
+        <PaginationFooter
+          count={this.state.count}
+          page={this.state.page}
+          pageSize={this.state.perPage}
+          handlePageChange={this.handlePageChange}
+          handleSizeChange={this.handlePageSizeChange}
+        />
         <VolumeConfigDrawer
           open={this.state.configDrawer.open}
           onClose={() => { this.setState({ configDrawer: { open: false } }); }}
@@ -357,18 +375,43 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     },
   ];
 
+  getVolumes = (
+    page: number = this.state.page,
+    pageSize: number = this.state.perPage,
+    initial: boolean = false,
+  ) => {
+    this.setState({ loading: initial });
 
-  getVolumes = () => {
-    getVolumes()
-      .then((response) => this.mounted && this.setState({
-        loading: false,
-        volumes: response.data,
-      }))
+    return getVolumes({ page, page_size: pageSize })
+      .then((response) => {
+        if (!this.mounted) { return response.data; }
+
+        this.setState({
+          count: response.results,
+          page: response.page,
+          pages: response.pages,
+          loading: false,
+          volumes: response.data,
+        });
+
+        return response.data;
+      })
       .catch((err) => this.mounted && this.setState({
         loading: false,
         errors: pathOr([{ reason: 'Unable to load Volumes.' }], ['response', 'data', 'errors'], err),
       }));
   };
+
+  handlePageSizeChange = (perPage: number) => {
+    this.setState({ perPage });
+    this.getVolumes(undefined, perPage);
+  }
+
+  handlePageChange = (page: number) => {
+    this.setState({ page });
+    this.getVolumes(page);
+    scrollToTop();
+  }
 
   getLinodeLabels() {
     const linodeIDs = this.state.volumes.map(volume => volume.linode_id).filter(Boolean);
