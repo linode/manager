@@ -1,4 +1,4 @@
-import { equals, pathOr } from 'ramda';
+import { clone, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { matchPath, Route, RouteComponentProps, Switch } from 'react-router-dom';
@@ -62,6 +62,7 @@ interface State {
   error?: Error,
   originalUsername?: string;
   username?: string;
+  createdUsername?: string;
   email?: string;
   restricted?: boolean;
   profileSaving: boolean;
@@ -69,7 +70,7 @@ interface State {
   profileSuccess?: boolean;
 }
 
-class Profile extends React.Component<CombinedProps> {
+class UserDetail extends React.Component<CombinedProps> {
   state: State = {
     gravatarUrl: 'not found',
     profileSaving: false,
@@ -83,7 +84,8 @@ class Profile extends React.Component<CombinedProps> {
 
   componentDidMount() {
     const { match: { params: { username } } } = this.props;
-    const { location: { state: locationState } } = this.props;
+    const { history, location: { state: locationState } } = this.props;
+
     getUser(username)
       .then((user) => {
         getGravatarUrl(user.email)
@@ -105,23 +107,14 @@ class Profile extends React.Component<CombinedProps> {
 
     if (locationState) {
       this.setState({
-        profileSuccess: locationState.success,
+        profileSuccess: clone(locationState.success),
+        createdUsername: clone(locationState.newUsername),
       });
-    }
-  }
-
-  componentDidUpdate(prevProps: CombinedProps) {
-    const { location: { state: locationState } } = this.props;
-    if (!equals(locationState, prevProps.location.state)) {
-      if (locationState) {
-        this.setState({
-          profileSuccess: locationState.success,
-        });
-      } else {
-        this.setState({
-          profileSuccess: false,
-        });
-      }
+      /* don't show the success message again on refresh */
+      history.replace({
+        pathname: history.location.pathname,
+        state: {}
+      });
     }
   }
 
@@ -130,6 +123,8 @@ class Profile extends React.Component<CombinedProps> {
     const routeName = this.tabs[value].routeName;
     history.push(`${routeName}`);
   }
+
+  clearNewUser = () => { this.setState({ createdUsername: undefined }); }
 
   visitUsers = () => {
     const { history } = this.props;
@@ -200,6 +195,14 @@ class Profile extends React.Component<CombinedProps> {
       errors={profileErrors}
     />
   }
+  
+  renderUserPermissions = () => {
+    const { username } = this.state;
+    return <UserPermissions
+      username={username}
+      clearNewUser={this.clearNewUser}
+    />
+  }
 
   matches = (p: string) => {
     return Boolean(matchPath(p, { path: this.props.location.pathname }));
@@ -211,12 +214,8 @@ class Profile extends React.Component<CombinedProps> {
   }
 
   render() {
-    const {
-      classes,
-      match: { url, params: { username } },
-      location: { state: locationState },
-    } = this.props;
-    const { error, gravatarUrl } = this.state;
+    const { classes, match: { url, params: { username } } } = this.props;
+    const { error, gravatarUrl, createdUsername } = this.state;
 
     if (error) {
       return (
@@ -263,11 +262,11 @@ class Profile extends React.Component<CombinedProps> {
             />)}
           </Tabs>
         </AppBar>
-        {locationState && locationState.newUsername &&
-          <Notice success text={`User ${locationState.newUsername} created successfully`} /> 
+        {createdUsername &&
+          <Notice success text={`User ${createdUsername} created successfully`} /> 
         }
         <Switch>
-          <Route exact path={`${url}/permissions`} component={UserPermissions} />
+          <Route exact path={`${url}/permissions`} component={this.renderUserPermissions} />
           <Route path={`${url}`} render={this.renderUserProfile} />
         </Switch>
       </React.Fragment>
@@ -292,4 +291,4 @@ const styled = withStyles(styles, { withTheme: true });
 
 export const connected = connect(mapStateToProps, mapDispatchToProps);
 
-export default connected(styled(reloadable(Profile)));
+export default connected(styled(reloadable(UserDetail)));
