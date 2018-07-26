@@ -313,7 +313,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         .then((user) => {
           this.setState({
             restricted: user.restricted,
-            success: { global: false, specific: false },
+            success: undefined,
           })
         })
         .then(() => {
