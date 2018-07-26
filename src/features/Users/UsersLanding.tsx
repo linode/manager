@@ -31,6 +31,14 @@ import ActionMenu from './UsersActionMenu';
 type ClassNames = 'title' | 'avatar' | 'userButton' | 'emptyImage';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+  '@keyframes fadeIn': {
+    from: {
+      opacity: 0,
+    },
+    to: {
+      opacity: 1,
+    },
+  },
   title: {
     marginBottom: theme.spacing.unit * 2,
   },
@@ -48,6 +56,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     width: 50,
     height: 50,
     marginRight: theme.spacing.unit * 2,
+    animation: 'fadeIn 150ms linear forwards',
   },
   emptyImage: {
     display: 'inline',

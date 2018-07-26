@@ -28,12 +28,21 @@ import UserProfile from './UserProfile';
 type ClassNames = 'titleWrapper' | 'avatar' | 'backButton' | 'emptyImage';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+  '@keyframes fadeIn': {
+    from: {
+      opacity: 0,
+    },
+    to: {
+      opacity: 1,
+    },
+  },
   avatar: {
     margin: '0 8px 0 -4px',
     color: '#666',
     borderRadius: '50%',
     width: '46px',
     height: '46px',
+    animation: 'fadeIn 150ms linear forwards',
   },
   emptyImage: {
     margin: '0 8px 0 -4px',
