@@ -123,21 +123,21 @@ class UserProfile extends React.Component<CombinedProps> {
             value={email}
           />
           <ActionsPanel style={{ marginTop: 16 }}>
-          <Button
-            type="primary"
-            loading={saving}
-            onClick={save}
-            data-qa-submit
-          >
-            Save
-          </Button>
-          <Button
-            type="cancel"
-            onClick={reset}
-            data-qa-cancel
-          >
-            Cancel
-          </Button>
+            <Button
+              type="primary"
+              loading={saving}
+              onClick={save}
+              data-qa-submit
+            >
+              Save
+            </Button>
+            <Button
+              type="cancel"
+              onClick={reset}
+              data-qa-cancel
+            >
+              Cancel
+            </Button>
           </ActionsPanel>
         </div>
       </Paper>
