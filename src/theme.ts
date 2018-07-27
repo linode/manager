@@ -343,7 +343,7 @@ const LinodeTheme: Linode.Theme = {
       },
       disabled: {
         borderColor: '#ccc',
-        color: '#666',
+        color: '#606469',
         opacity: .5,
       },
       input: {
@@ -363,7 +363,7 @@ const LinodeTheme: Linode.Theme = {
     MuiInputAdornment: {
       root: {
         fontSize: '.9rem',
-        color: '#666',
+        color: '#606469',
         whiteSpace: 'nowrap',
         '& p': {
           fontSize: '.9rem',
@@ -421,7 +421,7 @@ const LinodeTheme: Linode.Theme = {
           overflowX: 'hidden',
           boxSizing: 'content-box',
           '& li': {
-            color: '#666',
+            color: '#606469',
             '&:hover, &:focus': {
               color: 'white',
             },
@@ -473,7 +473,7 @@ const LinodeTheme: Linode.Theme = {
       root: {},
       selectMenu: {
         padding: '5px 32px 5px 16px',
-        color: '#666',
+        color: '#606469',
         backgroundColor: '#fff',
         lineHeight: 2.3,
         minHeight: 46,
@@ -488,7 +488,7 @@ const LinodeTheme: Linode.Theme = {
       select: {
         '&[aria-pressed="true"]': {
           '&+ input + $icon': {
-            stroke: '#666',
+            stroke: '#606469',
           },
         },
       },
@@ -510,7 +510,7 @@ const LinodeTheme: Linode.Theme = {
     MuiSnackbarContent: {
       root: {
         boxShadow: '0 0 5px #ddd',
-        color: '#666',
+        color: '#606469',
         padding: 16,
         margin: 16,
         backgroundColor: 'transparent',
@@ -539,7 +539,7 @@ const LinodeTheme: Linode.Theme = {
         },
         '&:hover, &:focus, & [class*="MuiButtonBase-keyboardFocused"]': {
           '& $bar, & + $bar': {
-            borderColor: '#666',
+            borderColor: '#606469',
           },
           '& .square': {
             fill: '#aaa',
@@ -653,7 +653,7 @@ const LinodeTheme: Linode.Theme = {
         maxWidth: 200,
         backgroundColor: 'white',
         boxShadow: '0 0 5px #bbb',
-        color: '#666',
+        color: '#606469',
         visibility: 'hidden',
         textAlign: 'left',
         width: 0,
@@ -688,7 +688,7 @@ const LinodeTheme: Linode.Theme = {
       dark: '#3566AE',
     },
     text: {
-      primary: '#666',
+      primary: '#606469',
     },
     divider: '#f4f4f4',
     status: {
@@ -704,7 +704,7 @@ const LinodeTheme: Linode.Theme = {
     fontFamily: '"Lato", sans-serif',
     fontSize: 16,
     headline: {
-      color: '#333',
+      color: '#32363C',
       fontSize: '1.5rem',
       fontWeight: 700,
     },
@@ -715,7 +715,7 @@ const LinodeTheme: Linode.Theme = {
       lineHeight: '1.35417em',
     },
     subheading: {
-      color: '#333',
+      color: '#32363C',
       fontSize: '1rem',
       fontWeight: 700,
       lineHeight: '1.2em',
