@@ -6,24 +6,30 @@ import {
     Theme,
     WithStyles,
     withStyles,
-  } from '@material-ui/core/styles';  
+  } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import Notice from 'src/components/Notice';
 import RenderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'warning';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
+  warning: {
+    marginTop: theme.spacing.unit * 2,
+    marginLeft: '0 !important',
+  },
 });
 
 interface Props {
   token: string;
   submitting: boolean;
   error?: string;
+  twoFactorConfirmed: boolean;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onCancel: () => void;
   onSubmit: () => void;
@@ -32,7 +38,15 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const ConfirmToken: React.StatelessComponent<CombinedProps> = (props) => {
-  const { token, error, handleChange, onSubmit, submitting, onCancel } = props;
+  const { 
+    classes,
+    token,
+    error,
+    handleChange,
+    onSubmit,
+    submitting,
+    twoFactorConfirmed,
+    onCancel } = props;
   
   return (
     <React.Fragment>
@@ -65,6 +79,13 @@ const ConfirmToken: React.StatelessComponent<CombinedProps> = (props) => {
         >
           Cancel
         </Button>
+        {twoFactorConfirmed &&
+          <Notice 
+            warning
+            className={classes.warning}
+            text={"Confirming a new key will invalidate codes generated from any previous key."}
+          />
+        }
       </ActionsPanel>
     </React.Fragment>
   );
