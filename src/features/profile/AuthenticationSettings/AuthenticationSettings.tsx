@@ -74,6 +74,7 @@ export class AuthenticationSettings extends React.Component<CombinedProps, State
               twoFactor={twoFactor}
               username={username}
               clearState={this.clearState}
+              updateProfile={updateProfile}
             />
             {ipWhitelisting && 
               <SecuritySettings 

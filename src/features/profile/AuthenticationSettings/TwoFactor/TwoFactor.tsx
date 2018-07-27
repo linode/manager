@@ -19,7 +19,7 @@ import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';
-import { disableTwoFactor, getTFAToken,  } from 'src/services/profile';
+import { disableTwoFactor, getTFAToken, } from 'src/services/profile';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -64,6 +64,7 @@ interface Props {
   twoFactor: boolean;
   username: string;
   clearState: () => void;
+  updateProfile: (v: Partial<Linode.Profile>) => void;
 }
 
 interface ConfirmDisable {
@@ -93,17 +94,13 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
     secret: '',
     showQRCode: false,
     success: undefined,
-    twoFactorEnabled: this.props.twoFactor || false,
-    twoFactorConfirmed: this.props.twoFactor || false,
+    twoFactorEnabled: this.props.twoFactor,
+    twoFactorConfirmed: this.props.twoFactor,
     disableDialog: {
       open: false,
       error: undefined,
       submitting: false,
     }
-  }
-
-  componentDidMount () {
-    this.getToken();
   }
 
   /* 
@@ -113,6 +110,9 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
   componentDidUpdate (prevProps:CombinedProps, prevState:State) {
     if (prevState.twoFactorEnabled !== this.state.twoFactorEnabled) {
       this.props.clearState();
+    }
+    if (prevProps.twoFactor !== this.props.twoFactor) {
+      this.setState({ twoFactorConfirmed: this.props.twoFactor });
     }
   }
 
@@ -131,6 +131,9 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
   }
 
   confirmToken = () => {
+    this.props.updateProfile({
+      two_factor_auth: true,
+    });
     this.setState({ 
       success: "Two-factor authentication has been enabled.",
       showQRCode: false,
@@ -142,9 +145,13 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
   disableTFA = () => {
     disableTwoFactor()
     .then((response) => {
+      this.props.updateProfile({
+        two_factor_auth: false,
+      });
       this.setState({
         success: "Two-factor authentication has been disabled.", 
-        twoFactorEnabled: false, 
+        twoFactorEnabled: false,
+        twoFactorConfirmed: false,
         disableDialog: { 
           error: undefined, 
           open: false, 

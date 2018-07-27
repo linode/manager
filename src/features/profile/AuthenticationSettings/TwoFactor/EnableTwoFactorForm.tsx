@@ -75,30 +75,30 @@ export class EnableTwoFactorForm extends React.Component<CombinedProps, State> {
     const safeToken = token.replace(/ /g,'');
     this.setState({ submitting: true });
     confirmTwoFactor(safeToken)
-    .then((response) => {
-      if (!this.mounted) { return; }
-      this.setState({ errors: undefined, });
-      this.props.onSuccess();
-    })
-    .catch((error) => {
-      if (!this.mounted) { return; }
-      const fallbackError = [{ field: 'tfa_code', reason: 'Could not confirm code.' }];
-      let APIErrors = pathOr(fallbackError, ['response', 'data', 'errors'], error);
-      APIErrors = APIErrors.filter((error:Linode.ApiFieldError) => {
-        // Filter potentially confusing API error
-        return error.reason === 'Invalid token. Two-factor auth not enabled. Please try again.';
+      .then((response) => {
+        if (!this.mounted) { return; }
+        this.setState({ errors: undefined, });
+        this.props.onSuccess();
       })
+      .catch((error) => {
+        if (!this.mounted) { return; }
+        const fallbackError = [{ field: 'tfa_code', reason: 'Could not confirm code.' }];
+        let APIErrors = pathOr(fallbackError, ['response', 'data', 'errors'], error);
+        APIErrors = APIErrors.filter((err:Linode.ApiFieldError) => {
+          // Filter potentially confusing API error
+          return err.reason !== 'Invalid token. Two-factor auth not enabled. Please try again.';
+        })
 
-      this.setState({
-          errors: fallbackError
-        }, () => {
-        scrollErrorIntoView();
+        this.setState({
+            errors: APIErrors,
+          }, () => {
+          scrollErrorIntoView();
+        });
+      })
+      .finally(() => {
+        if (!this.mounted) { return; }
+        this.setState({ submitting: false, token: '' })
       });
-    })
-    .finally(() => {
-      if (!this.mounted) { return; }
-      this.setState({ submitting: false, token: '' })
-    });
   }
 
   onCancel = () => {
