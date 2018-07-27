@@ -44,7 +44,7 @@ const LinodeTheme: Linode.Theme = {
       },
       raisedPrimary: {
         '&:hover, &:focus': {
-          backgroundColor: '#5F99EA',
+          backgroundColor: '#4D99F1',
         },
         '&:active': {
           backgroundColor: '#2466B3',
@@ -66,8 +66,8 @@ const LinodeTheme: Linode.Theme = {
         transition: 'border 225ms ease-in-out, color 225ms ease-in-out',
         '&:hover, &:focus': {
           backgroundColor: 'transparent',
-          color: '#5F99EA',
-          borderColor: '#5F99EA',
+          color: '#4D99F1',
+          borderColor: '#4D99F1',
         },
         '&:active': {
           backgroundColor: 'transparent',
@@ -82,7 +82,7 @@ const LinodeTheme: Linode.Theme = {
         '&.cancel': {
           borderColor: 'transparent',
           '&:hover, &:focus': {
-            borderColor: '#5F99EA',
+            borderColor: '#4D99F1',
             backgroundColor: 'transparent',
           },
         },
@@ -210,11 +210,11 @@ const LinodeTheme: Linode.Theme = {
         },
         '&:hover': {
           '& h3': {
-            color: '#5F99EA',
+            color: '#4D99F1',
           },
           '& $expandIcon': {
             '& svg': {
-              fill: '#5F99EA',
+              fill: '#4D99F1',
               stroke: 'white',
             },
           },
@@ -254,7 +254,7 @@ const LinodeTheme: Linode.Theme = {
           height: 22,
         },
         '& .border': {
-          stroke: '#5F99EA !important',
+          stroke: '#4D99F1 !important',
         },
         '&$expanded': {
           transform: 'none',
@@ -303,7 +303,7 @@ const LinodeTheme: Linode.Theme = {
       root: {
         color: '#3B85D9',
         '&:hover': {
-          color: '#5F99EA',
+          color: '#4D99F1',
           backgroundColor: 'transparent',
         },
       },
