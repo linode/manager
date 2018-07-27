@@ -20,7 +20,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     },
   },
   root: {
-    marginRight: - theme.spacing.unit,
+    marginRight: 6,
     position: 'relative',
     opacity: 1,
     transition: theme.transitions.create(['opacity']),
