@@ -101,7 +101,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     flex: 1,
     minHeight: 'initial',
     '& input:focus': {
-      outline: '1px dotted #666',
+      outline: '1px dotted #606469',
     },
   },
   input: {
