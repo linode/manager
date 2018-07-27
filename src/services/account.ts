@@ -101,7 +101,7 @@ export const getInvoices = (pagination: Linode.PaginationOptions = {}) =>
     setMethod('GET'),
     setParams(pagination),
   )
-  .then(response => response.data);
+    .then(response => response.data);
 
 export const updateAccountInfo = (data: Partial<Linode.Account>) =>
   Request<Linode.Account>(
@@ -153,5 +153,21 @@ export const deleteUser = (username: string) =>
   Request<{}>(
     setURL(`${API_ROOT}/account/users/${username}`),
     setMethod('DELETE'),
+  )
+    .then(response => response.data);
+
+export const getInvoice = (invoiceId: number) =>
+  Request<Linode.Invoice>(
+    setURL(`${API_ROOT}/account/invoices/${invoiceId}`),
+    setMethod('GET'),
+  )
+    .then(response => response.data);
+
+export const getInvoiceItems = (invoiceId: number, params: any = {}, filters: any = {}) =>
+  Request<Page<Linode.InvoiceItem>>(
+    setURL(`${API_ROOT}/account/invoices/${invoiceId}/items`),
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filters),
   )
     .then(response => response.data);
