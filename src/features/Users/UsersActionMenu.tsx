@@ -51,6 +51,9 @@ class UsersActionMenu extends React.Component<CombinedProps> {
             closeMenu();
             e.preventDefault();
           },
+          tooltip: username === profileUsername
+            ? 'You can\'t delete the currently active user.'
+            : undefined,
         },
       ];
 
