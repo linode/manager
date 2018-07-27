@@ -79,7 +79,7 @@ const chartOptions: any = {
   tooltips: {
     cornerRadius: 0,
     backgroundColor: '#fbfbfb',
-    bodyFontColor: '#333',
+    bodyFontColor: '#32363C',
     displayColors: false,
     titleFontColor: '#666',
     xPadding: 16,
