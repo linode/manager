@@ -686,8 +686,8 @@ const LinodeTheme: Linode.Theme = {
   },
   palette: {
     primary: {
-      main: '#3B85D9',
-      light: '#5F99EA',
+      main: '#3683DC',
+      light: '#4D99F1',
       dark: '#2466B3',
     },
     text: {
