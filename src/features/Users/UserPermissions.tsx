@@ -392,13 +392,13 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           />
           <SelectionCard
             heading="Read Only"
-            subheadings={['Read Only']}
+            subheadings={['Can view invoices, view billing info, and will receive copies of all invoices and payment emails.']}
             checked={grants.global.account_access === 'read_only'}
             onClick={this.billingPermOnClick('read_only')}
           />
           <SelectionCard
             heading="Read-Write"
-            subheadings={['Read-Write']}
+            subheadings={['Can make payments, update contact and billing info, and will receive copies of all invoices and payment emails']}
             checked={grants.global.account_access === 'read_write'}
             onClick={this.billingPermOnClick('read_write')}
           />
