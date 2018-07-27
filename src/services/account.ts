@@ -101,7 +101,7 @@ export const getInvoices = (pagination: Linode.PaginationOptions = {}) =>
     setMethod('GET'),
     setParams(pagination),
   )
-  .then(response => response.data);
+    .then(response => response.data);
 
 export const updateAccountInfo = (data: Partial<Linode.Account>) =>
   Request<Linode.Account>(
@@ -155,3 +155,16 @@ export const deleteUser = (username: string) =>
     setMethod('DELETE'),
   )
     .then(response => response.data);
+
+interface SaveCreditCardData {
+  card_number: string,
+  expiry_year: number,
+  expiry_month: number
+}
+
+export const saveCreditCard = (data: SaveCreditCardData) => Request<{}>(
+  setURL(`${API_ROOT}/account/credit-card`),
+  setMethod('POST'),
+  setData(data),
+)
+  .then(response => response.data);
