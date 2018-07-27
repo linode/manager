@@ -1,7 +1,6 @@
 import * as moment from 'moment-timezone';
 import { compose, map, pathOr, sort } from 'ramda';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -164,7 +163,7 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
     return (
       <TableRow key={`payment-${item.id}`}>
         <TableCell><DateTimeDisplay value={item.date} /></TableCell>
-        <TableCell><Link to="">Payment #{item.id}</Link></TableCell>
+        <TableCell>Payment #{item.id}</TableCell>
         <TableCell>${item.usd}</TableCell>
       </TableRow>
     );
@@ -190,9 +189,7 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const enhanced = compose(
-  styled,
-);
+const enhanced = compose(styled);
 
 export default enhanced(RecentPaymentsPanel);
 
