@@ -220,6 +220,10 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
   }
 
   toggleHidden = () => {
+    const { showQRCode } = this.state;
+    if (!showQRCode) {
+      this.getToken();
+    }
     this.setState({ showQRCode: !this.state.showQRCode });
   }
 
