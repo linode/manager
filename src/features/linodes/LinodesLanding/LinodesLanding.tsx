@@ -425,7 +425,7 @@ const getDisplayFormat = ({ hash, length }: { hash?: string, length: number }) =
     return local;
   }
 
-  if (!hash) {
+  if (hash) {
     return hash === '#grid' ? 'grid' : 'list';
   }
 
