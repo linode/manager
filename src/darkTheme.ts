@@ -301,13 +301,13 @@ const LinodeTheme: Linode.Theme = {
         padding: '5px 12px',
       },
       focused: {
-        borderColor: '#666',
+        borderColor: '#606469',
       },
       error: {
         borderColor: '#CA0813',
       },
       disabled: {
-        borderColor: '#666',
+        borderColor: '#606469',
         opacity: .3,
         color: 'white',
       },
@@ -390,7 +390,7 @@ const LinodeTheme: Linode.Theme = {
           boxShadow: 'none',
           position: 'absolute',
           boxSizing: 'content-box',
-          border: '1px solid #666',
+          border: '1px solid #606469',
           margin: '0 0 0 -1px',
           outline: 0,
         },
@@ -457,7 +457,7 @@ const LinodeTheme: Linode.Theme = {
         '&[aria-pressed="true"]': {
           '&+ input + $icon': {
             transform: 'scale(1.25)',
-            stroke: '#666',
+            stroke: '#606469',
           },
         },
       },
@@ -479,7 +479,7 @@ const LinodeTheme: Linode.Theme = {
     MuiSnackbarContent: {
       root: {
         boxShadow: '0 0 5px #222',
-        color: '#666',
+        color: '#606469',
         padding: 16,
         margin: 16,
         backgroundColor: 'transparent',
@@ -509,7 +509,7 @@ const LinodeTheme: Linode.Theme = {
         },
         '&:hover, &:focus, & [class*="MuiButtonBase-keyboardFocused"]': {
           '& $bar, & + $bar': {
-            borderColor: '#666',
+            borderColor: '#606469',
           },
           '& .square': {
             fill: '#aaa',
