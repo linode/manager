@@ -42,7 +42,12 @@ exports.readToken = () => {
 */
 exports.login = (username, password) => {
     browser.url(constants.routes.dashboard);
-    browser.waitForVisible('#username', constants.wait.long);
+    try {
+        browser.waitForVisible('#username', constants.wait.long);
+    } catch (err) {
+        console.log(browser.getSource());
+
+    }
     browser.waitForVisible('#password', constants.wait.long);
     browser.trySetValue('#username', username);
     browser.trySetValue('#password', password);
