@@ -38,13 +38,16 @@ const LinodeTheme: Linode.Theme = {
         '&:focus': {
           backgroundColor: 'transparent',
         },
+        '&[aria-expanded="true"]': {
+          backgroundColor: '#2466B3',
+        },
       },
       raisedPrimary: {
         '&:hover, &:focus': {
           backgroundColor: '#5F99EA',
         },
         '&:active': {
-          backgroundColor: '#3566AE',
+          backgroundColor: '#2466B3',
         },
         '&$disabled': {
           color: 'white',
@@ -68,8 +71,8 @@ const LinodeTheme: Linode.Theme = {
         },
         '&:active': {
           backgroundColor: 'transparent',
-          color: '#3566AE',
-          borderColor: '#3566AE',
+          color: '#2466B3',
+          borderColor: '#2466B3',
         },
         '&$disabled': {
           borderColor: '#C9CACB',
@@ -685,7 +688,7 @@ const LinodeTheme: Linode.Theme = {
     primary: {
       main: '#3B85D9',
       light: '#5F99EA',
-      dark: '#3566AE',
+      dark: '#2466B3',
     },
     text: {
       primary: '#606469',

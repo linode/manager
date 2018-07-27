@@ -35,7 +35,7 @@ const LinodeTheme: Linode.Theme = {
     primary: {
       main: '#3683DC',
       light: '#4D99F1',
-      dark: '#3566AE',
+      dark: '#2466B3',
     },
     status: {
       success: '#d7e3EF',
@@ -111,7 +111,7 @@ const LinodeTheme: Linode.Theme = {
           backgroundColor: '#4D99F1',
         },
         '&:active': {
-          backgroundColor: '#3566AE',
+          backgroundColor: '#2466B3',
         },
         '&$disabled': {
           color: 'white',
@@ -130,8 +130,8 @@ const LinodeTheme: Linode.Theme = {
         },
         '&:active': {
           backgroundColor: 'transparent',
-          color: '#3566AE',
-          borderColor: '#3566AE',
+          color: '#2466B3',
+          borderColor: '#2466B3',
         },
         '&$disabled': {
           borderColor: '#C9CACB',
