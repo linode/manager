@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.30.1] - 2018-07-26
+### Fixed:
+- Notification icon position
+- Description of billing permission levels
+- Tooltip for user delete action
+
 ## [0.30.0] - 2018-07-26
 ### Added:
 - My Profile
