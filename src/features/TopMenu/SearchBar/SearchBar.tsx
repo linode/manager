@@ -345,7 +345,11 @@ class SearchBar extends React.Component<FinalProps, State> {
     * has been typed into the search bar
     */
     if (e.keyCode === 13 && searchText) {
-      history.push(`/search?value=${searchText}`);
+      const location = history.location.pathname;
+      history.push(`/search?query=${searchText}`);
+      if (location === '/search') {
+        history.go(0);
+      }
     }
   }
 

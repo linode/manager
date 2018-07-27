@@ -34,18 +34,12 @@ import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 
 import ClickableRow from './ClickableRow';
 
-type ClassNames = 'root' | 'icon' | 'row' | 'noResultsText';
+type ClassNames = 'root' | 'icon' | 'noResultsText';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
   icon: {
     width: 100,
-  },
-  row: {
-    backgroundColor: 'blue',
-    '&:hover': {
-      backgroundColor: `${theme.palette.grey}`,
-    }
   },
   noResultsText: {
     textAlign: "center",
@@ -164,7 +158,6 @@ class SearchLanding extends React.Component<CombinedProps, State> {
       )
     ])
       .then(response => {
-        console.log(response);
         const linodeData = response[0];
         const volumesData = response[1];
         const domainsData = response[2];
@@ -225,8 +218,9 @@ class SearchLanding extends React.Component<CombinedProps, State> {
       case 'Volumes':
         return `volumes/${id}`
       case 'StackScripts':
-        // Need temporary landing page for stackscript
-        return `stackscripts/${id}`
+        // @todo update to SS detail page/modal
+        // This is an unfortunate hack in the meantime.
+        window.location.href = `https://www.linode.com/stackscripts/view/${id}`
       case 'Domains':
         return `domains/${id}`
       case 'NodeBalancers':
