@@ -1,5 +1,5 @@
 /* tslint:disable */
-function ga(i: any, s: any, o: any, g: any, r: any, a: any, m: any) {
+function gaInit(i: any, s: any, o: any, g: any, r: any, a: any, m: any) {
   const currdate: any = new Date();
   i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
     (i[r].q = i[r].q || []).push(arguments)
@@ -17,7 +17,8 @@ export default function init(gaId?: string, production: boolean = false) {
     ? 'https://www.google-analytics.com/analytics.js'
     : 'https://www.google-analytics.com/analytics_debug.js';
 
-  ga(window, document, 'script', url, 'ga', {}, {});
+  gaInit(window, document, 'script', url, 'ga', {}, {});
 
+  (window as any).ga('create', gaId, 'auto');
   (window as any).ga('send', 'pageview');
 }
