@@ -47,8 +47,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     marginTop: theme.spacing.unit * 3,
   },
   selectCell: {
-    fontWeight: 700,
-    textTransform: 'uppercase',
+    fontWeight: 800,
     fontSize: '.9rem',
   },
   accessCell: {
@@ -169,8 +168,8 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
         </TableHead>
         <TableBody>
           {mode === 'create' &&
-            <TableRow data-qa-row="Select All" className={classes.selectCell}>
-              <TableCell padding="checkbox">
+            <TableRow data-qa-row="Select All">
+              <TableCell padding="checkbox" className={classes.selectCell}>
                 Select All
               </TableCell>
               <TableCell padding="checkbox" className={classes.noneCell}>
