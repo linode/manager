@@ -23,10 +23,11 @@ import { getInvoice, getInvoiceItems } from 'src/services/account';
 type ClassNames = 'root' | 'backButton' | 'titleWrapper';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {},
+  root: {
+    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px`,
+  },
   titleWrapper: {
     display: 'flex',
-    marginTop: 5,
   },
   backButton: {
     margin: '5px 0 0 -16px',
@@ -90,11 +91,11 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
     const { invoice } = this.state;
 
     return (
-      <Paper>
+      <Paper className={classes.root}>
         <Grid container>
           <Grid item xs={12}>
             <Grid container justify="space-between">
-              <Grid item className={classes.titleWrapper}>
+              <Grid item className={classes.titleWrapper} alignItems="center">
                 <Link to={`/billing`}>
                   <IconButton className={classes.backButton}>
                     <KeyboardArrowLeft />
@@ -102,13 +103,13 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
                 </Link>
                 {invoice && <Typography variant="title">Invoice #{invoice.id}</Typography>}
               </Grid>
-              <Grid item className={classes.titleWrapper}>
+              <Grid item className={classes.titleWrapper} alignItems="center">
                 {invoice && <Typography variant="title">Total ${Number(invoice.total).toFixed(2)}</Typography>}
               </Grid>
             </Grid>
           </Grid>
           <Grid item xs={12}>
-            <Table>
+            <Table border>
               <TableHead>
                 <TableRow>
                   <TableCell>Description</TableCell>
