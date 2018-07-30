@@ -147,13 +147,13 @@ export class App extends React.Component<CombinedProps, State> {
       new Promise(() => {
         request(['regions']);
         return getRegions()
-          .then(({ data }) => response(['regions'], data))
+          .then(({ data }) => response(['regions', 'data'], data))
           .catch(error => response(['regions'], error));
       }),
       new Promise(() => {
         request(['types']);
         return getLinodeTypes()
-          .then(({ data }) => response(['types'], data))
+          .then(({ data }) => response(['types', 'data'], data))
           .catch(error => response(['types'], error));
       }),
       new Promise(() => {
@@ -273,7 +273,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
 
 const mapStateToProps = (state: Linode.AppState) => ({
   longLivedLoaded:
-    Boolean(pathOr(false, ['resources', 'types', 'data'], state))
+    Boolean(pathOr(false, ['resources', 'types', 'data', 'data'], state))
     && Boolean(pathOr(false, ['resources', 'kernels', 'data'], state))
     && Boolean(pathOr(false, ['resources', 'profile', 'data'], state))
     && Boolean(pathOr(false, ['resources', 'regions', 'data'], state)),

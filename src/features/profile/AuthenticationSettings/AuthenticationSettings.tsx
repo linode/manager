@@ -42,7 +42,7 @@ interface State {
 type CombinedProps = Props & ConnectedProps & WithStyles<ClassNames>;
 
 export class AuthenticationSettings extends React.Component<CombinedProps, State> {
-  /* 
+  /*
   * @todo This logic can be removed when IP Whitelisting (legacy)
   * has been fully deprecated.
   */
@@ -76,8 +76,8 @@ export class AuthenticationSettings extends React.Component<CombinedProps, State
               clearState={this.clearState}
               updateProfile={updateProfile}
             />
-            {ipWhitelisting && 
-              <SecuritySettings 
+            {ipWhitelisting &&
+              <SecuritySettings
                 updateProfile={updateProfile}
                 onSuccess={this.onWhitelistingDisable}
                 data-qa-whitelisting-form

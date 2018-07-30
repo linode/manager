@@ -7,7 +7,7 @@ import {
     Theme,
     WithStyles,
     withStyles,
-} from '@material-ui/core/styles';  
+} from '@material-ui/core/styles';
 
 import CircleProgress from 'src/components/CircleProgress';
 import Notice from 'src/components/Notice';
@@ -64,7 +64,7 @@ export class EnableTwoFactorForm extends React.Component<CombinedProps, State> {
   getSecretLink = () => {
     const { secret, username } = this.props;
     return `otpauth://totp/LinodeManager%3A${username}?secret=${secret}`;
-  } 
+  }
 
   handleTokenInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ token: e.target.value });
@@ -77,7 +77,11 @@ export class EnableTwoFactorForm extends React.Component<CombinedProps, State> {
     confirmTwoFactor(safeToken)
       .then((response) => {
         if (!this.mounted) { return; }
-        this.setState({ errors: undefined, });
+        this.setState({
+          errors: undefined,
+          submitting: false,
+          token: '',
+        });
         this.props.onSuccess();
       })
       .catch((error) => {
@@ -91,14 +95,12 @@ export class EnableTwoFactorForm extends React.Component<CombinedProps, State> {
 
         this.setState({
             errors: APIErrors,
+            submitting: false,
+            token: '',
           }, () => {
           scrollErrorIntoView();
         });
       })
-      .finally(() => {
-        if (!this.mounted) { return; }
-        this.setState({ submitting: false, token: '' })
-      });
   }
 
   onCancel = () => {
@@ -120,17 +122,17 @@ export class EnableTwoFactorForm extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         {generalError && <Notice error text={generalError} />}
-        { loading 
+        { loading
           ? <CircleProgress noTopMargin />
-          : <QRCodeForm 
+          : <QRCodeForm
               secret={secret}
               secretLink={secretLink}
               updateFor={[secret, secretLink]}
-            />  
+            />
         }
         <Divider className={classes.divider} />
         <ConfirmToken
-          error={tokenError} 
+          error={tokenError}
           token={token}
           submitting={submitting}
           twoFactorConfirmed={twoFactorConfirmed}
