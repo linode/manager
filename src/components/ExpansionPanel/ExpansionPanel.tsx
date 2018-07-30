@@ -16,7 +16,8 @@ import Notice from '../Notice';
 type ClassNames = 'root'
   | 'success'
   | 'warning'
-  | 'error';
+  | 'error'
+  | 'detailsNoPadding';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
   const { palette: { status } } = theme;
@@ -62,6 +63,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
         color: theme.palette.text.primary,
       },
     },
+    detailsNoPadding: {
+      padding: 0,
+    },
   };
 };
 
@@ -75,6 +79,7 @@ export interface Props extends ExpansionPanelProps {
   summaryProps?: ExpansionPanelSummaryProps;
   headingProps?: TypographyProps;
   detailProps?: ExpansionPanelDetailsProps;
+  noPadding?: boolean; 
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -93,6 +98,7 @@ class EExpansionPanel extends React.Component<CombinedProps> {
       detailProps,
       headingProps,
       actions,
+      noPadding,
       success, warning, error, loading,
       ...expansionPanelProps
     } = this.props;
@@ -119,7 +125,11 @@ class EExpansionPanel extends React.Component<CombinedProps> {
             {this.props.heading}
           </Typography>
         </ExpansionPanelSummary>
-        <ExpansionPanelDetails {...detailProps} data-qa-panel-details>
+        <ExpansionPanelDetails
+          {...detailProps}
+          data-qa-panel-details
+          className={noPadding ? classes.detailsNoPadding : ''}
+        >
           <Grid container>
             {
               notice &&

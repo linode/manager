@@ -1,15 +1,13 @@
 import * as H from 'history';
 import * as React from 'react';
 
+import List from '@material-ui/core/List';
 import {
   StyleRulesCallback,
   Theme,
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import PaginationFooter from 'src/components/PaginationFooter';
 
@@ -26,7 +24,14 @@ type ClassNames = 'root' | 'icon';
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
   icon: {
-    width: 100,
+    width: 40,
+    height: 40,
+    display: 'flex',
+    alignItems: 'center',
+    marginRight: theme.spacing.unit * 2,
+    '& svg': {
+      width: '100%',
+    },
   },
 });
 
@@ -111,8 +116,8 @@ class SearchResultsPanel extends React.Component<CombinedProps, State> {
         key={data.id}
         handleClick={this.handleItemRowClick}
       >
-        <TableCell className={classes.icon}>{this.getRelevantIcon(type)}</TableCell>
-        <TableCell>{title}</TableCell>
+        <div className={classes.icon}>{this.getRelevantIcon(type)}</div>
+        <div>{title}</div>
       </ClickableRow>
     )
   }
@@ -131,13 +136,12 @@ class SearchResultsPanel extends React.Component<CombinedProps, State> {
         heading={label}
         key={label}
         defaultExpanded={!!data.data.length}
+        noPadding
       >
-        <Table>
-          <TableBody>
-            {data.data.map((eachEntity: any) =>
-              this.renderPanelRow(label, eachEntity))}
-          </TableBody>
-        </Table>
+        <List>
+          {data.data.map((eachEntity: any) =>
+            this.renderPanelRow(label, eachEntity))}
+        </List>
         {data.results > 25 &&
           <PaginationFooter
             count={data.results}

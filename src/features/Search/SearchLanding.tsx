@@ -24,14 +24,19 @@ import { getVolumes } from 'src/services/volumes';
 
 import SearchResultsPanel from './SearchResultsPanel';
 
-type ClassNames = 'root' | 'noResultsText';
+type ClassNames = 'root' 
+  | 'noResultsText'
+  | 'title';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
+  title: {
+    marginBottom: theme.spacing.unit * 2,
+  },
   noResultsText: {
     textAlign: "center",
     marginTop: theme.spacing.unit * 10
-  }
+  },
 });
 
 interface Props {}
@@ -284,7 +289,7 @@ class SearchLanding extends React.Component<CombinedProps, State> {
     if (this.state.isLoading) { return <CircularProgress /> }
     return (
       <React.Fragment>
-        <Typography variant="headline">
+        <Typography variant="headline" className={classes.title}>
           {`Search Results for ${this.state.query.query}`}
         </Typography>
         {(this.state.numberOfResults === 0)

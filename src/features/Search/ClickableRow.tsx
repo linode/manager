@@ -1,23 +1,48 @@
 import { compose } from 'ramda';
 import * as React from 'react';
 
+import ListItem from '@material-ui/core/ListItem';
 import {
   StyleRules,
   Theme,
   WithStyles,
   withStyles,
 } from '@material-ui/core/styles';
-import TableRow from '@material-ui/core/TableRow';
 
 import RenderGuard from 'src/components/RenderGuard';
+
 
 type ClassNames = 'root';
 
 const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   root: {
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    paddingLeft: theme.spacing.unit * 2,
+    paddingRight: theme.spacing.unit * 2,
+    '&:last-child': {
+      border: 0,
+    },
+    '& svg > g': {
+      fill: 'transparent',
+      transition: theme.transitions.create('fill'),
+    },
+    '& svg .outerCircle': {
+      transition: theme.transitions.create('stroke'),
+    },
+    '& svg .insidePath *': {
+      transition: theme.transitions.create('stroke'),
+    },
     '&:hover': {
-      backgroundColor: `${theme.bg.offWhite} !important`,
-    }
+      '& svg > g': {
+        fill: theme.palette.primary.main,
+      },
+      '& svg .insidePath *': {
+        stroke: 'white',
+      },
+      '& svg .outerCircle': {
+        stroke: theme.palette.primary.dark,
+      },
+    },
   }
 });
 
@@ -30,19 +55,23 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const ClickableRow: React.StatelessComponent<CombinedProps> = (props) => {
+const clickableRow: React.StatelessComponent<CombinedProps> = (props) => {
+  const { classes } = props;
+
   const onClick = () => {
     const { id, type, handleClick } = props;
     handleClick(id, type);
   }
 
   return (
-    <TableRow 
-      className={props.classes.root}
+    <ListItem
+      className={classes.root}
       onClick={onClick}
+      button
+      component="li"
     >
       {props.children}
-    </TableRow>
+    </ListItem>
   )
 }
 
@@ -51,4 +80,4 @@ const styled = withStyles(styles, { withTheme: true });
 export default compose<any, any, any>(
     styled,
     RenderGuard
-    )(ClickableRow);
+    )(clickableRow);
