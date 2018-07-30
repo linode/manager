@@ -290,7 +290,7 @@ class SearchLanding extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <Typography variant="headline" className={classes.title}>
-          {`Search Results for ${this.state.query.query}`}
+          {`Search Results for "${this.state.query.query}"`}
         </Typography>
         {(this.state.numberOfResults === 0)
           ? <Typography className={classes.noResultsText} variant="subheading">
