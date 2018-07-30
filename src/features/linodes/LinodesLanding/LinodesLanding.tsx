@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import { clone, compose, gte, ifElse, isEmpty, path, pathEq, pathOr, prop, propEq } from 'ramda';
+import { clone, compose, path, pathEq, pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import 'rxjs/add/observable/combineLatest';
