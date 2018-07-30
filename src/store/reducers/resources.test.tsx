@@ -66,7 +66,7 @@ describe('ResourcesReducer', () => {
       expect(result.types).toHaveProperty('loading', false);
     });
 
-    xit('should set path.data to the payload', () => {
+    it('should set path.data to the payload', () => {
       expect(result.types).toHaveProperty('data', data);
     });
 
@@ -79,7 +79,7 @@ describe('ResourcesReducer', () => {
         expect(result.types).toHaveProperty('loading', false);
       });
 
-      xit(`should set path.data to error`, () => {
+      it(`should set path.data to error`, () => {
         expect(result.types).toHaveProperty('data', err);
       });
 

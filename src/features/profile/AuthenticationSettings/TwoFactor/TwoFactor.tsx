@@ -1,15 +1,11 @@
-import { pathOr } from 'ramda';
+import { compose, pathOr } from 'ramda';
 import * as React from 'react';
+import { connect } from 'react-redux';
 
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Paper from '@material-ui/core/Paper';
-import {
-    StyleRulesCallback,
-    Theme,
-    WithStyles,
-    withStyles,
-} from '@material-ui/core/styles';  
+import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import SettingsBackupRestore from '@material-ui/icons/SettingsBackupRestore';
 
@@ -18,7 +14,7 @@ import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';
-import { disableTwoFactor, getTFAToken, } from 'src/services/profile';
+import { disableTwoFactor, getTFAToken } from 'src/services/profile';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -65,6 +61,11 @@ interface Props {
   clearState: () => void;
   updateProfile: (v: Partial<Linode.Profile>) => void;
 }
+interface ConnectedProps {
+  profile: {
+    data: Linode.Profile
+  };
+}
 
 interface ConfirmDisable {
   open: boolean;
@@ -83,7 +84,7 @@ interface State {
   twoFactorConfirmed: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & ConnectedProps & WithStyles<ClassNames>;
 
 export class TwoFactor extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
@@ -102,7 +103,7 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
     }
   }
 
-  /* 
+  /*
   * @todo This logic can be removed when IP Whitelisting (legacy)
   * has been fully deprecated.
   */
@@ -122,7 +123,7 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
   closeDisableDialog = () => {
     this.setState({
       // If cancelling a disable action, TFA must still be enabled
-      twoFactorEnabled: true, 
+      twoFactorEnabled: true,
       disableDialog: {
         error: undefined,
         open: false,
@@ -131,9 +132,10 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
 
   confirmToken = () => {
     this.props.updateProfile({
+      ...this.props.profile.data,
       two_factor_auth: true,
     });
-    this.setState({ 
+    this.setState({
       success: "Two-factor authentication has been enabled.",
       showQRCode: false,
       twoFactorEnabled: true,
@@ -145,18 +147,19 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
     disableTwoFactor()
     .then((response) => {
       this.props.updateProfile({
+          ...this.props.profile.data,
         two_factor_auth: false,
       });
       this.setState({
-        success: "Two-factor authentication has been disabled.", 
+        success: "Two-factor authentication has been disabled.",
         twoFactorEnabled: false,
         twoFactorConfirmed: false,
-        disableDialog: { 
-          error: undefined, 
-          open: false, 
-          success: undefined, 
+        disableDialog: {
+          error: undefined,
+          open: false,
+          success: undefined,
           submitting: false,
-        } 
+        }
       });
     })
     .catch((error) => {
@@ -230,16 +233,16 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
     this.setState({ errors: undefined, success: undefined });
     const { twoFactorEnabled, twoFactorConfirmed } = this.state;
     const toggle = !twoFactorEnabled;
-    if (toggle) { 
+    if (toggle) {
       // Enable TFA. Ask the API for a TFA secret.
       this.setState({ twoFactorEnabled: true, loading: true, showQRCode: true, });
       this.getToken();
     } else {
       // If TFA isn't active on the account,
       // there's nothing to do here; just flip the toggle.
-      if (!twoFactorConfirmed) { 
+      if (!twoFactorConfirmed) {
         this.setState({ twoFactorEnabled: false })
-        return; 
+        return;
       }
       // Deactivate TFA.
       // This is destructive (sort of), so
@@ -336,4 +339,10 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(TwoFactor);
+const connected = connect((state: Linode.AppState) => ({
+  profile: state.resources.profile,
+}));
+
+const enhanced = compose<any, any, any>(styled, connected);
+
+export default enhanced(TwoFactor);
