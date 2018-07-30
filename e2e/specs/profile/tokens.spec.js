@@ -122,14 +122,14 @@ describe('View - Personal Access Tokens', () => {
             const revokeMenu = '[data-qa-action-menu-item="Revoke"]';
 
             it('should display revoke action menu item', () => {
-                browser.waitForVisible('[data-qa-action-menu]');
+                browser.waitForVisible(`${updatedSelector} [data-qa-action-menu]`, constants.wait.normal);
                 browser.click(`${updatedSelector} [data-qa-action-menu]`);
                 expect($(revokeMenu).isVisible()).toBe(true);
             });
 
             it('should display revoke dialog', () => {
                 browser.click(revokeMenu);
-                browser.waitForVisible(dialogTitle);
+                browser.waitForVisible(dialogTitle, constants.wait.normal);
 
                 expect($(dialogTitle).getText()).toBe(`Revoking ${updatedMsg}`);
             });
@@ -137,8 +137,8 @@ describe('View - Personal Access Tokens', () => {
             it('should revoke on remove', () => {
                 browser.click(dialogConfirm);
                 browser.refresh();
-                browser.waitForVisible('[data-qa-table-row]', constants.wait.normal);
-                browser.waitForVisible(updatedSelector, constants.wait.normal, true);
+                profile.tokenBaseElems();
+                browser.waitForVisible(updatedSelector, constants.wait.long, true);
             });
         });
     });

@@ -21,7 +21,7 @@ exports.browserConf = {
             args: [
                 '--headless','--no-sandbox','--disable-gpu',
                 'window-size=1920,1080','--allow-running-insecure-content',
-                '--ignore-certificate-errors',
+                '--ignore-certificate-errors','--disable-dev-shm-usage',
             ]
         }
     },
