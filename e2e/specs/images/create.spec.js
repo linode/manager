@@ -34,6 +34,5 @@ describe('Images - Create Suite', () => {
         ConfigureImage.create();
         const token = browser.readToken();
         const privateImages = getImages(token);
-        console.log(privateImages);
     });
 });
