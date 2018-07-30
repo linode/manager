@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
-import {compose} from 'ramda';
+import { compose } from 'ramda';
 
 import {
   StyleRulesCallback,
@@ -9,14 +9,10 @@ import {
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
+
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from 'src/components/CircleProgress';
 import ErrorState from 'src/components/ErrorState';
-import ExpansionPanel from 'src/components/ExpansionPanel';
-import PaginationFooter from 'src/components/PaginationFooter';
 
 import { parseQueryParams } from 'src/utilities/queryParams';
 
@@ -26,21 +22,12 @@ import { getNodeBalancers } from 'src/services/nodebalancers';
 import { getStackscripts } from 'src/services/stackscripts';
 import { getVolumes } from 'src/services/volumes';
 
-import DomainIcon from 'src/assets/addnewmenu/domain.svg';
-import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
-import NodeBalancerIcon from 'src/assets/addnewmenu/nodebalancer.svg';
-import StackScriptIcon from 'src/assets/addnewmenu/stackscripts.svg';
-import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
+import SearchResultsPanel from './SearchResultsPanel';
 
-import ClickableRow from './ClickableRow';
-
-type ClassNames = 'root' | 'icon' | 'noResultsText';
+type ClassNames = 'root' | 'noResultsText';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
-  icon: {
-    width: 100,
-  },
   noResultsText: {
     textAlign: "center",
     marginTop: theme.spacing.unit * 10
@@ -82,6 +69,48 @@ interface Iterable {
   data: MultipleEntity,
 }
 
+type RequestType = 'linode'
+| 'volume'
+| 'domain'
+| 'stackscript'
+| 'nodebalancer';
+
+const getFilter = (whichRequest: RequestType, filterTerm: string) => {
+  switch (whichRequest) {
+    case 'linode':
+    case 'volume':
+    case 'nodebalancer':
+      return {
+        "label": {
+          ["+contains"]: filterTerm
+        },
+      }
+    case 'stackscript':
+      return {
+        ["+or"]: [{
+          "label": {
+            ["+contains"]: filterTerm
+          },
+          "description": {
+            ["+contains"]: filterTerm
+          }
+        }]
+      }
+    case 'domain':
+      return {
+        "domain": {
+          ["+contains"]: filterTerm
+        },
+      }
+    default:
+      return {
+        "label": {
+          ["+contains"]: filterTerm
+        },
+      }
+  }
+}
+
 class SearchLanding extends React.Component<CombinedProps, State> {
   constructor(props: CombinedProps) {
     super(props);
@@ -89,7 +118,7 @@ class SearchLanding extends React.Component<CombinedProps, State> {
     /*
     * Will look like this: { query: 'hello world' }
     */
-    const query = parseQueryParams(props.location.search.replace('?', '')) as Query;
+    const query = parseQueryParams(this.props.location.search.replace('?', '')) as Query;
 
     const defaultData = {
       data: [],
@@ -116,20 +145,14 @@ class SearchLanding extends React.Component<CombinedProps, State> {
   componentDidMount() {
     const { query: { query } } = this.state;
 
-    const filter = {
-      "label": {
-        ["+contains"]: query
-      },
-    }
-
     Promise.all([
       getLinodes(
         { page: 1, page_size: 25 },
-        filter
+        getFilter('linode', query)
       ),
       getVolumes(
         { page: 1, page_size: 25 },
-        filter
+        getFilter('volume', query)
       ),
       getDomains(
         { page: 1, page_size: 25 },
@@ -141,20 +164,11 @@ class SearchLanding extends React.Component<CombinedProps, State> {
       ),
       getNodeBalancers(
         { page: 1, page_size: 25 },
-        filter
+        getFilter('nodebalancer', query)
       ),
       getStackscripts(
         { page: 1, page_size: 25 },
-        {
-          ["+or"]: [{
-            "label": {
-              ["+contains"]: query
-            },
-            "description": {
-              ["+contains"]: query
-            }
-          }]
-        }
+        getFilter('stackscript', query)
       )
     ])
       .then(response => {
@@ -185,55 +199,9 @@ class SearchLanding extends React.Component<CombinedProps, State> {
         })
       });
   }
-
-  /**
-   * @param type string - correlates with the 'label' prop
-   * on each of the iterables objects
-   */
-  getRelevantIcon = (type: string) => {
-    switch (type) {
-      case 'Linodes':
-        return <LinodeIcon />
-      case 'Volumes':
-        return <VolumeIcon />
-      case 'StackScripts':
-        return <StackScriptIcon />
-      case 'Domains':
-        return <DomainIcon />
-      case 'NodeBalancers':
-        return <NodeBalancerIcon />
-      default:
-        return <LinodeIcon />
-    }
-  }
   
   handleChangePageSize = (newPageSize: number) => {
     this.setState({ pageSize: +newPageSize })
-  }
-
-  getResultUrl = (type:string, id: string) => {
-    switch (type) {
-      case 'Linodes':
-        return `linodes/${id}`
-      case 'Volumes':
-        return `volumes/${id}`
-      case 'StackScripts':
-        // @todo update to SS detail page/modal
-        // This is an unfortunate hack in the meantime.
-        window.location.href = `https://www.linode.com/stackscripts/view/${id}`
-      case 'Domains':
-        return `domains/${id}`
-      case 'NodeBalancers':
-        return `nodebalancers/${id}`;
-      default:
-        return '';
-    }
-  }
-
-  handleItemRowClick = (id: string, type: string) => {
-    const url:string = this.getResultUrl(type, id);
-    if (!url) { return; }
-    this.props.history.push(url);
   }
 
   handlePageChange = (newPage: number) => {
@@ -247,80 +215,67 @@ class SearchLanding extends React.Component<CombinedProps, State> {
       nodeBalancers,
       stackScripts,
       volumes,
-     } = this.state;
+      query: { query },
+    } = this.state;
 
     const iterables = [
       {
         label: 'Linodes',
         data: linodes,
+        requestInfo: {
+          request: getLinodes,
+          filter: getFilter('linode', query)
+        }
       },
       {
         label: 'Volumes',
         data: volumes,
+        requestInfo: {
+          request: getVolumes,
+          filter: getFilter('volume', query)
+        }
       },
       {
         label: 'Domains',
         data: domains,
+        requestInfo: {
+          request: getDomains,
+          filter: getFilter('domain', query)
+        }
       },
       {
         label: 'NodeBalancers',
         data: nodeBalancers,
+        requestInfo: {
+          request: getNodeBalancers,
+          filter: getFilter('nodebalancer', query)
+        }
       },
       {
         label: 'StackScripts',
         data: stackScripts,
+        requestInfo: {
+          request: getStackscripts,
+          filter: getFilter('stackscript', query)
+        }
       },
     ];
 
     return iterables.map((iterable: Iterable) => {
       if (!iterable.data.data.length) { return; }
       return (
-        <ExpansionPanel
-          heading={iterable.label}
+        <SearchResultsPanel
           key={iterable.label}
-          defaultExpanded={!!iterable.data.data.length}
-        >
-          <Table>
-            <TableBody>
-              {iterable.data.data.map((eachEntity: any) =>
-                this.renderPanelRow(iterable.label, eachEntity))}
-            </TableBody>
-          </Table>
-          {iterable.data.results > 25 &&
-            <PaginationFooter
-              count={iterable.data.results}
-              page={this.state.currentPage}
-              pageSize={this.state.pageSize}
-              handlePageChange={this.handlePageChange}
-              handleSizeChange={this.handleChangePageSize}
-            />
-          }
-        </ExpansionPanel>
+          data={iterable.data}
+          label={iterable.label}
+          handlePageChange={this.handlePageChange}
+          handleSizeChange={this.handleChangePageSize}
+          currentPage={this.state.currentPage}
+          pageSize={this.state.pageSize}
+          history={this.props.history}
+        />
       )
     })
-  }
-
-  renderPanelRow = (type: string, data: any) => {
-    /*
-    * Domains don't have labels
-    */
-    const title = (!!data.label)
-      ? data.label
-      : data.domain
-
-    const { classes } = this.props;
-
-    return (
-      <ClickableRow
-        type={type}
-        id={data.id}
-        key={data.id}
-        handleClick={this.handleItemRowClick}
-      >
-        <TableCell className={classes.icon}>{this.getRelevantIcon(type)}</TableCell>
-        <TableCell>{title}</TableCell>
-      </ClickableRow>
-    )
   }
 
   render() {
@@ -347,5 +302,5 @@ const styled = withStyles(styles, { withTheme: true });
 
 export default compose(
   withRouter,
-  styled,
+  styled
 )(SearchLanding);
