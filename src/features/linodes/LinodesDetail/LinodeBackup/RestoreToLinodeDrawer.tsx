@@ -55,7 +55,7 @@ class RestoreToLinodeDrawer extends React.Component<CombinedProps, State> {
 
   state: State = this.defaultState;
 
-  reset() {
+  reset = () => {
     if (!this.mounted) { return; }
     this.setState({ ...this.defaultState });
   }
@@ -77,7 +77,7 @@ class RestoreToLinodeDrawer extends React.Component<CombinedProps, State> {
     this.mounted = false;
   }
 
-  restoreToLinode() {
+  restoreToLinode = () => {
     const { onSubmit, linodeID, backupID } = this.props;
     const { selectedLinode, overwrite } = this.state;
     if (!this.mounted) { return; }
