@@ -19,7 +19,9 @@ import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 
 import ClickableRow from './ClickableRow';
 
-type ClassNames = 'root' | 'icon';
+type ClassNames = 'root'
+  | 'icon'
+  | 'paginationWrapper';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
@@ -32,6 +34,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     '& svg': {
       width: '100%',
     },
+  },
+  paginationWrapper: {
+    padding: theme.spacing.unit * 3,
   },
 });
 
@@ -129,7 +134,8 @@ class SearchResultsPanel extends React.Component<CombinedProps, State> {
       currentPage,
       pageSize,
       handlePageChange,
-      handleSizeChange
+      handleSizeChange,
+      classes
     } = this.props;
     return (
       <ExpansionPanel
@@ -143,13 +149,15 @@ class SearchResultsPanel extends React.Component<CombinedProps, State> {
             this.renderPanelRow(label, eachEntity))}
         </List>
         {data.results > 25 &&
-          <PaginationFooter
-            count={data.results}
-            page={currentPage}
-            pageSize={pageSize}
-            handlePageChange={handlePageChange}
-            handleSizeChange={handleSizeChange}
-          />
+         <div className={classes.paginationWrapper}>
+            <PaginationFooter
+              count={data.results}
+              page={currentPage}
+              pageSize={pageSize}
+              handlePageChange={handlePageChange}
+              handleSizeChange={handleSizeChange}
+            />
+          </div>
         }
       </ExpansionPanel>
     );
