@@ -60,6 +60,10 @@ const StackScripts = DefaultLoader({
   loader: () => import('src/features/StackScripts'),
 });
 
+const SupportTickets = DefaultLoader({
+  loader: () => import('src/features/Support/SupportTickets'),
+});
+
 const Users = DefaultLoader({
   loader: () => import('src/features/Users'),
 });
@@ -251,7 +255,8 @@ export class App extends React.Component<CombinedProps, State> {
                         <Route exact path="/billing" component={Account} />
                         <Route exact path="/billing/invoices/:invoiceId" component={InvoiceDetail} />
                         <Route path="/users" component={Users} />
-                        <Route exact path="/support" render={this.Support} />
+                        <Route exact path="/support" component={Support} />
+                        <Route path="/support/tickets" component={SupportTickets} />
                         <Route path="/profile" component={Profile} />
                         {/* Update to Dashboard when complete */}
                         <Route exact path="/" component={LinodesRoutes} />
