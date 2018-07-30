@@ -77,7 +77,11 @@ export class EnableTwoFactorForm extends React.Component<CombinedProps, State> {
     confirmTwoFactor(safeToken)
       .then((response) => {
         if (!this.mounted) { return; }
-        this.setState({ errors: undefined, });
+        this.setState({ 
+          errors: undefined,
+          submitting: false,
+          token: '',
+        });
         this.props.onSuccess();
       })
       .catch((error) => {
@@ -91,14 +95,12 @@ export class EnableTwoFactorForm extends React.Component<CombinedProps, State> {
 
         this.setState({
             errors: APIErrors,
+            submitting: false,
+            token: '',
           }, () => {
           scrollErrorIntoView();
         });
       })
-      .finally(() => {
-        if (!this.mounted) { return; }
-        this.setState({ submitting: false, token: '' })
-      });
   }
 
   onCancel = () => {

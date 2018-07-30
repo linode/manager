@@ -11,8 +11,7 @@ import {
     withStyles,
 } from '@material-ui/core/styles';  
 import Typography from '@material-ui/core/Typography';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import SettingsBackupRestore from '@material-ui/icons/SettingsBackupRestore';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -164,13 +163,13 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
       const fallbackError = [{ reason: 'There was an error disabling TFA.' }];
       const disableError = pathOr(fallbackError, ['response', 'data', 'errors'], error);
       this.setState({
-          twoFactorEnabled: true,
-          disableDialog: {
-            error: disableError[0].reason,
-            submitting: false,
-            open: true,
-            success: undefined,
-          }
+        twoFactorEnabled: true,
+        disableDialog: {
+          error: disableError[0].reason,
+          submitting: false,
+          open: true,
+          success: undefined,
+        }
       });
     })
   }
@@ -293,8 +292,9 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
                     type="secondary"
                     className={classes.visibility}
                     onClick={this.toggleHidden}
+                    destructive
                   >
-                    <VisibilityOff />
+                    <SettingsBackupRestore />
                     <span className={classes.showHideText}>Hide QR Code</span>
                   </Button>
                 : <Button
@@ -302,8 +302,8 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
                     className={classes.visibility}
                     onClick={this.toggleHidden}
                   >
-                    <Visibility/>
-                    <span className={classes.showHideText}>Reset two-factor authentication</span>
+                    <SettingsBackupRestore />
+                    <span className={classes.showHideText}>{twoFactorConfirmed ? "Reset two-factor authentication" : "Show QR Code"}</span>
                   </Button>
               }
             </div>
