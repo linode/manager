@@ -57,6 +57,7 @@ const PaginationFooter: React.StatelessComponent<CombinedProps> = (props) => {
           value={pageSize}
           onChange={handleSizeChange}
           disableUnderline
+          pagination
         >
           <MenuItem value={25}>Show 25</MenuItem>
           <MenuItem value={50}>Show 50</MenuItem>
