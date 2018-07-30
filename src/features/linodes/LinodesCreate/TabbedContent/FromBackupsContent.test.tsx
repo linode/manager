@@ -32,14 +32,14 @@ const mockPropsWithNotice = {
 describe('FromBackupsContent', () => {
   const component = shallow(
     <FromBackupsContent
-      classes={{ root: '', main: '', sidebar: '' }}
+      classes={{ root: '', main: '', sidebar: '', paperNotice: '' }}
       {...mockProps}
     />,
   );
 
   const componentWithNotice = shallow(
     <FromBackupsContent
-      classes={{ root: '', main: '', sidebar: '' }}
+      classes={{ root: '', main: '', sidebar: '', paperNotice: '' }}
       {...mockPropsWithNotice}
     />,
   );
