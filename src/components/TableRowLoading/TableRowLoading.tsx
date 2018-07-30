@@ -17,7 +17,7 @@ export interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const TableRowLoading: React.StatelessComponent<CombinedProps> = (props) => {
+const tableRowLoading: React.StatelessComponent<CombinedProps> = (props) => {
   return (
     <TableRow>
       <TableCell colSpan={props.colSpan}>
@@ -29,4 +29,4 @@ const TableRowLoading: React.StatelessComponent<CombinedProps> = (props) => {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(TableRowLoading);
+export default styled<Props>(tableRowLoading);
