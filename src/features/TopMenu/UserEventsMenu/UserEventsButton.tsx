@@ -27,9 +27,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     [theme.breakpoints.up('md')]: {
       marginLeft: theme.spacing.unit * 2,
     },
-    '&:hover, &.active': {
+    '&:hover': {
       '& $icon': {
         fill: theme.palette.primary.main,
+      },
+    },
+    '&.active': {
+      '& $icon': {
+        fill: theme.palette.primary.dark,
       },
     },
     '&[disabled]': {
