@@ -22,6 +22,11 @@ export const getOpenTicketsPage = (page: number = 0) =>
       { status: 'new' },
     ],
   })
+
+export const getClosedTicketsPage = (page: number = 0) =>
+  getTicketsPage(page, {
+    status: 'closed',
+  })
 // export const getVolumesPage = (page: number = 0) =>
 //   Request<Page<Volume>>(
 //     setURL(`${API_ROOT}/volumes`),
