@@ -3,7 +3,11 @@ const { getImages } = require('../../setup/setup');
 
 import ConfigureImage from '../../pageobjects/configure-image.page';
 
-import { apiCreateLinode, apiDeleteAllLinodes } from '../../utils/common';
+import {
+    apiCreateLinode,
+    apiDeleteAllLinodes,
+    apiDeletePrivateImages,
+} from '../../utils/common';
 
 describe('Images - Create Suite', () => {
     beforeAll(() => {
@@ -13,7 +17,8 @@ describe('Images - Create Suite', () => {
 
     afterAll(() => {
         apiDeleteAllLinodes();
-    })
+        apiDeletePrivateImages(browser.readToken());
+    });
 
     it('should display create image drawer', () => {
         ConfigureImage.placeholderMsg.waitForVisible(constants.wait.normal);
@@ -32,7 +37,5 @@ describe('Images - Create Suite', () => {
 
     it('should schedule the image for creation', () => {
         ConfigureImage.create();
-        const token = browser.readToken();
-        const privateImages = getImages(token);
     });
 });

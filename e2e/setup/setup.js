@@ -276,7 +276,7 @@ exports.removeStackScript = (token, id) => {
 }
 
 
-exports.getImages = token => {
+exports.getPrivateImages = token => {
     return browser.call(function() {
         return new Promise((resolve, reject) => {
             const endpoint = '/images?page=1';
@@ -297,7 +297,7 @@ exports.getImages = token => {
 }
 
 exports.removeImage = (token, id) => {
-    return browser.call(function () {
+    return browser.call(function() {
         return new Promise((resolve, reject) => {
             const endpoint = `/images/${id}`;
 
