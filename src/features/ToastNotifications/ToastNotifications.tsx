@@ -38,7 +38,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
       },
     },
     content: {
-      color: '#333',
+      color: '#32363C',
       lineHeight: 1.4,
     },
     actions: {
