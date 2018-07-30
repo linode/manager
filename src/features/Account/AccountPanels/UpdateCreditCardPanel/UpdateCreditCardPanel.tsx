@@ -17,14 +17,24 @@ import { saveCreditCard } from 'src/services/account';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import { isCreditCardExpired } from 'src/utilities/isCreditCardExpired';
 
-type ClassNames = 'root' | 'item' | 'expired';
+type ClassNames = 'root'
+  | 'expired'
+  | 'currentCCTitle'
+  | 'currentccContainer'
+  | 'newccContainer';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {},
   expired: {
     color: theme.color.red,
   },
-  item: {
+  currentccContainer: {
+    padding: `${theme.spacing.unit * 2}px 0 ${theme.spacing.unit * 4}px`,
+  },
+  newccContainer: {
+    padding: `${theme.spacing.unit}px 0 0`,
+  },
+  currentCCTitle: {
     marginBottom: theme.spacing.unit,
   },
 });
@@ -127,57 +137,75 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
       >
         <Grid container>
           <Grid item xs={12}>
-            <Typography variant="headline">Current Credit Card</Typography>
-            <Typography style={{ display: 'inline', marginRight: '8px' }} variant="subheading" className={classes.item}>
-              {(last_four)
-                ? `xxxx-xxxx-xxxx-${last_four}`
-                : 'None'
-              }
-            </Typography>
-            <Typography style={{ display: 'inline' }} variant="subheading" className={classes.item}>
-              <strong>Exp Date: </strong>
-              {(expiry)
-                ? `${expiry} `
-                : 'None'
-              }
-              {expiry && isCreditCardExpired(expiry) &&
-                <span className={classes.expired}>Expired</span>
-              }
-            </Typography>
+            <div className={classes.currentccContainer}>
+              <Typography variant="title" className={classes.currentCCTitle}>Current Credit Card</Typography>
+              <Grid container>
+                <Grid item>
+                  <Typography style={{ marginRight: 8 }}>
+                    {(last_four)
+                      ? `xxxx-xxxx-xxxx-${last_four}`
+                      : 'None'
+                    }
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography>
+                    Exp Date:&nbsp;
+                    {(expiry)
+                      ? `${expiry} `
+                      : 'None'
+                    }
+                    {expiry && isCreditCardExpired(expiry) &&
+                      <span className={classes.expired}>Expired</span>
+                    }
+                  </Typography>
+                </Grid>
+              </Grid>
+            </div>
             <Divider />
           </Grid>
           <Grid item xs={12}>
-            <Typography variant="headline">New Credit Card</Typography>
-            {generalError && <Notice error>{generalError}</Notice>}
-            {success && <Notice success>Credit card successfully updated.</Notice>}
-            <TextField
-              required
-              type="number"
-              label='New Card Number'
-              value={this.state.card_number}
-              onChange={this.handleCardNumberChange}
-              errorText={hasErrorFor('card_number')}
-            />
-            <TextField
-              required
-              select
-              label='Month'
-              value={this.state.expiry_month}
-              onChange={this.handleExpiryMonthChange}
-              errorText={hasErrorFor('expiry_month')}
-            >
-              {UpdateCreditCardPanel.monthMenuItems}
-            </TextField>
-            <TextField
-              required
-              select
-              label='Year'
-              value={this.state.expiry_year}
-              onChange={this.handleExpiryYearChange}
-              errorText={hasErrorFor('expiry_year')}
-            >
-              {UpdateCreditCardPanel.yearMenuItems}
-            </TextField>
+            <div className={classes.newccContainer}>
+              <Typography variant="title">New Credit Card</Typography>
+              {generalError && <Notice error>{generalError}</Notice>}
+              {success && <Notice success>Credit card successfully updated.</Notice>}
+              <Grid container>
+                <Grid item>
+                  <TextField
+                    required
+                    type="number"
+                    label='New Card Number'
+                    value={this.state.card_number}
+                    onChange={this.handleCardNumberChange}
+                    errorText={hasErrorFor('card_number')}
+                  />
+                </Grid>
+                <Grid item>
+                  <TextField
+                    required
+                    select
+                    label='Month'
+                    value={this.state.expiry_month}
+                    onChange={this.handleExpiryMonthChange}
+                    errorText={hasErrorFor('expiry_month')}
+                  >
+                    {UpdateCreditCardPanel.monthMenuItems}
+                  </TextField>
+                </Grid>
+                <Grid item>
+                  <TextField
+                    required
+                    select
+                    label='Year'
+                    value={this.state.expiry_year}
+                    onChange={this.handleExpiryYearChange}
+                    errorText={hasErrorFor('expiry_year')}
+                  >
+                    {UpdateCreditCardPanel.yearMenuItems}
+                  </TextField>
+                </Grid>
+              </Grid>
+            </div>
           </Grid>
         </Grid>
       </ExpansionPanel>
