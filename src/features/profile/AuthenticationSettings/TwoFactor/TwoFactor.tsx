@@ -19,7 +19,7 @@ import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';
-import { disableTwoFactor, getTFAToken,  } from 'src/services/profile';
+import { disableTwoFactor, getTFAToken, } from 'src/services/profile';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -63,6 +63,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 interface Props {
   twoFactor: boolean;
   username: string;
+  clearState: () => void;
+  updateProfile: (v: Partial<Linode.Profile>) => void;
 }
 
 interface ConfirmDisable {
@@ -92,8 +94,8 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
     secret: '',
     showQRCode: false,
     success: undefined,
-    twoFactorEnabled: this.props.twoFactor || false,
-    twoFactorConfirmed: this.props.twoFactor || false,
+    twoFactorEnabled: this.props.twoFactor,
+    twoFactorConfirmed: this.props.twoFactor,
     disableDialog: {
       open: false,
       error: undefined,
@@ -101,8 +103,17 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
     }
   }
 
-  componentDidMount () {
-    this.getToken();
+  /* 
+  * @todo This logic can be removed when IP Whitelisting (legacy)
+  * has been fully deprecated.
+  */
+  componentDidUpdate (prevProps:CombinedProps, prevState:State) {
+    if (prevState.twoFactorEnabled !== this.state.twoFactorEnabled) {
+      this.props.clearState();
+    }
+    if (prevProps.twoFactor !== this.props.twoFactor) {
+      this.setState({ twoFactorConfirmed: this.props.twoFactor });
+    }
   }
 
   openDisableDialog = () => {
@@ -120,15 +131,27 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
   }
 
   confirmToken = () => {
-    this.setState({ success: "Two-factor authentication has been enabled.", twoFactorEnabled: true, twoFactorConfirmed: true,})
+    this.props.updateProfile({
+      two_factor_auth: true,
+    });
+    this.setState({ 
+      success: "Two-factor authentication has been enabled.",
+      showQRCode: false,
+      twoFactorEnabled: true,
+      twoFactorConfirmed: true,
+    })
   }
 
   disableTFA = () => {
     disableTwoFactor()
     .then((response) => {
+      this.props.updateProfile({
+        two_factor_auth: false,
+      });
       this.setState({
         success: "Two-factor authentication has been disabled.", 
-        twoFactorEnabled: false, 
+        twoFactorEnabled: false,
+        twoFactorConfirmed: false,
         disableDialog: { 
           error: undefined, 
           open: false, 
@@ -197,6 +220,10 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
   }
 
   toggleHidden = () => {
+    const { showQRCode } = this.state;
+    if (!showQRCode) {
+      this.getToken();
+    }
     this.setState({ showQRCode: !this.state.showQRCode });
   }
 
@@ -224,7 +251,7 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes, username } = this.props;
-    const { errors, loading, secret, showQRCode, success, twoFactorEnabled } = this.state;
+    const { errors, loading, secret, showQRCode, success, twoFactorEnabled, twoFactorConfirmed } = this.state;
     const hasErrorFor = getAPIErrorFor({}, errors);
     const generalError = hasErrorFor('none');
 
@@ -238,7 +265,7 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
               className={classes.title}
               data-qa-title
           >
-              Two-Factor Authentication
+              Two-Factor Authentication (TFA)
           </Typography>
           <FormControl fullWidth>
             <FormControlLabel
@@ -276,7 +303,7 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
                     onClick={this.toggleHidden}
                   >
                     <Visibility/>
-                    <span className={classes.showHideText}>Show QR Code</span>
+                    <span className={classes.showHideText}>Reset two-factor authentication</span>
                   </Button>
               }
             </div>
@@ -287,6 +314,7 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
               username={username}
               loading={loading}
               onSuccess={this.confirmToken}
+              twoFactorConfirmed={twoFactorConfirmed}
             />
           }
         </Paper>

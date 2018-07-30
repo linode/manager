@@ -1,4 +1,4 @@
-import { assocPath, compose, ifElse, when } from 'ramda';
+import { assocPath, compose, ifElse, merge, path, when } from 'ramda';
 import { Action } from 'redux';
 
 export const REQUEST = '@@manager/resources/REQUEST';
@@ -33,6 +33,7 @@ export function oneOfType(action: { type: string }, list: string[]): action is A
 }
 
 export const defaultState: Linode.ResourcesState = {
+  regions: { loading: false, data: [], },
   types: { loading: false, data: { data: [], results: 0, pages: 1, page: 0 }, },
   kernels: { loading: false, data: [], },
   profile: {
@@ -65,10 +66,10 @@ export default (
 ): Linode.ResourcesState => when(
   () => oneOfType(action, [REQUEST, RESPONSE]),
   (state) => {
-    const path = (action as Actions).meta.path;
-    const setLoading = assocPath([...path, 'loading']);
-    const setData = assocPath([...path, 'data']);
-    const setError = assocPath([...path, 'error']);
+    const _path = (action as Actions).meta.path;
+    const setLoading = assocPath([..._path, 'loading']);
+    const setData = assocPath([..._path, 'data']);
+    const setError = assocPath([..._path, 'error']);
 
     return compose(
       ifElse(
@@ -80,7 +81,10 @@ export default (
       when(
         () => action.type === RESPONSE,
         compose(
-          setData((action as ResponseAction).payload),
+          setData(merge(
+            path([..._path, 'data'], state),
+            (action as ResponseAction).payload, 
+          )),
           when(() => (action as ResponseAction).error, setError(true)),
         ),
       ),
