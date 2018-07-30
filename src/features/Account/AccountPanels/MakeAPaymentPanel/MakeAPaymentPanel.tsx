@@ -108,16 +108,23 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
 
           {/* Current Balance */}
           <Grid item xs={12}>
-            <Typography style={{ display: 'inline' }} component={'span'} variant="title">Current Balance:</Typography>&nbsp;
-            <Typography
-              style={{ display: 'inline' }}
-              component={'span'}
-              variant="title"
-              className={classNames({
-                [classes.positive]: balance >= 0,
-                [classes.negative]: balance < 0,
-              })}
-            >{balanceDisplay}</Typography>
+            <Grid container>
+              <Grid item>
+                <Typography component={'span'} variant="title">Current Balance:</Typography>
+              </Grid>
+              <Grid item>
+                <Typography
+                  component={'span'}
+                  variant="title"
+                  className={classNames({
+                    [classes.positive]: balance >= 0,
+                    [classes.negative]: balance < 0,
+                  })}
+                >
+                  {balanceDisplay}
+                </Typography>
+              </Grid>
+            </Grid>
           </Grid>
 
           {/* Payment */}
@@ -129,7 +136,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
               name="type"
               value={this.state.type}
               onChange={this.handleTypeChange}
-              style={{ display: 'flex', flexDirection: 'row' }}
+              row
             >
               <FormControlLabel value="CREDIT_CARD" label="Credit Card" control={<Radio disabled />} />
               <FormControlLabel value="PAYPAL" label="Paypal" control={<Radio disabled />} />
