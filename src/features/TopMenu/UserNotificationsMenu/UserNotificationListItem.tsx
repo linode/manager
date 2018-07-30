@@ -29,7 +29,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => {
       padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px`,
       borderBottom: `1px solid ${theme.palette.divider}`,
       '& p': {
-        color: '#333',
+        color: '#32363C',
       },
       '& + .notice': {
         marginTop: '0 !important',

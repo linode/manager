@@ -14,7 +14,7 @@ import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';
-import { disableTwoFactor, getTFAToken } from 'src/services/profile';
+import { disableTwoFactor, getTFAToken, } from 'src/services/profile';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -61,6 +61,7 @@ interface Props {
   clearState: () => void;
   updateProfile: (v: Partial<Linode.Profile>) => void;
 }
+
 interface ConnectedProps {
   profile: {
     data: Linode.Profile

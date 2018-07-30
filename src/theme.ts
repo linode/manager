@@ -38,13 +38,16 @@ const LinodeTheme: Linode.Theme = {
         '&:focus': {
           backgroundColor: 'transparent',
         },
+        '&[aria-expanded="true"]': {
+          backgroundColor: '#2466B3',
+        },
       },
       raisedPrimary: {
         '&:hover, &:focus': {
-          backgroundColor: '#5F99EA',
+          backgroundColor: '#4D99F1',
         },
         '&:active': {
-          backgroundColor: '#3566AE',
+          backgroundColor: '#2466B3',
         },
         '&$disabled': {
           color: 'white',
@@ -63,13 +66,13 @@ const LinodeTheme: Linode.Theme = {
         transition: 'border 225ms ease-in-out, color 225ms ease-in-out',
         '&:hover, &:focus': {
           backgroundColor: 'transparent',
-          color: '#5F99EA',
-          borderColor: '#5F99EA',
+          color: '#4D99F1',
+          borderColor: '#4D99F1',
         },
         '&:active': {
           backgroundColor: 'transparent',
-          color: '#3566AE',
-          borderColor: '#3566AE',
+          color: '#2466B3',
+          borderColor: '#2466B3',
         },
         '&$disabled': {
           borderColor: '#C9CACB',
@@ -79,7 +82,7 @@ const LinodeTheme: Linode.Theme = {
         '&.cancel': {
           borderColor: 'transparent',
           '&:hover, &:focus': {
-            borderColor: '#5F99EA',
+            borderColor: '#4D99F1',
             backgroundColor: 'transparent',
           },
         },
@@ -207,11 +210,11 @@ const LinodeTheme: Linode.Theme = {
         },
         '&:hover': {
           '& h3': {
-            color: '#5F99EA',
+            color: '#4D99F1',
           },
           '& $expandIcon': {
             '& svg': {
-              fill: '#5F99EA',
+              fill: '#4D99F1',
               stroke: 'white',
             },
           },
@@ -251,7 +254,7 @@ const LinodeTheme: Linode.Theme = {
           height: 22,
         },
         '& .border': {
-          stroke: '#5F99EA !important',
+          stroke: '#4D99F1 !important',
         },
         '&$expanded': {
           transform: 'none',
@@ -300,7 +303,7 @@ const LinodeTheme: Linode.Theme = {
       root: {
         color: '#3B85D9',
         '&:hover': {
-          color: '#5F99EA',
+          color: '#4D99F1',
           backgroundColor: 'transparent',
         },
       },
@@ -343,7 +346,7 @@ const LinodeTheme: Linode.Theme = {
       },
       disabled: {
         borderColor: '#ccc',
-        color: '#666',
+        color: '#606469',
         opacity: .5,
       },
       input: {
@@ -363,7 +366,7 @@ const LinodeTheme: Linode.Theme = {
     MuiInputAdornment: {
       root: {
         fontSize: '.9rem',
-        color: '#666',
+        color: '#606469',
         whiteSpace: 'nowrap',
         '& p': {
           fontSize: '.9rem',
@@ -421,7 +424,7 @@ const LinodeTheme: Linode.Theme = {
           overflowX: 'hidden',
           boxSizing: 'content-box',
           '& li': {
-            color: '#666',
+            color: '#606469',
             '&:hover, &:focus': {
               color: 'white',
             },
@@ -473,7 +476,7 @@ const LinodeTheme: Linode.Theme = {
       root: {},
       selectMenu: {
         padding: '5px 32px 5px 16px',
-        color: '#666',
+        color: '#606469',
         backgroundColor: '#fff',
         lineHeight: 2.3,
         minHeight: 46,
@@ -488,7 +491,7 @@ const LinodeTheme: Linode.Theme = {
       select: {
         '&[aria-pressed="true"]': {
           '&+ input + $icon': {
-            stroke: '#666',
+            stroke: '#606469',
           },
         },
       },
@@ -510,7 +513,7 @@ const LinodeTheme: Linode.Theme = {
     MuiSnackbarContent: {
       root: {
         boxShadow: '0 0 5px #ddd',
-        color: '#666',
+        color: '#606469',
         padding: 16,
         margin: 16,
         backgroundColor: 'transparent',
@@ -539,7 +542,7 @@ const LinodeTheme: Linode.Theme = {
         },
         '&:hover, &:focus, & [class*="MuiButtonBase-keyboardFocused"]': {
           '& $bar, & + $bar': {
-            borderColor: '#666',
+            borderColor: '#606469',
           },
           '& .square': {
             fill: '#aaa',
@@ -653,7 +656,7 @@ const LinodeTheme: Linode.Theme = {
         maxWidth: 200,
         backgroundColor: 'white',
         boxShadow: '0 0 5px #bbb',
-        color: '#666',
+        color: '#606469',
         visibility: 'hidden',
         textAlign: 'left',
         width: 0,
@@ -683,12 +686,12 @@ const LinodeTheme: Linode.Theme = {
   },
   palette: {
     primary: {
-      main: '#3B85D9',
-      light: '#5F99EA',
-      dark: '#3566AE',
+      main: '#3683DC',
+      light: '#4D99F1',
+      dark: '#2466B3',
     },
     text: {
-      primary: '#666',
+      primary: '#606469',
     },
     divider: '#f4f4f4',
     status: {
@@ -704,7 +707,7 @@ const LinodeTheme: Linode.Theme = {
     fontFamily: '"Lato", sans-serif',
     fontSize: 16,
     headline: {
-      color: '#333',
+      color: '#32363C',
       fontSize: '1.5rem',
       fontWeight: 700,
     },
@@ -715,7 +718,7 @@ const LinodeTheme: Linode.Theme = {
       lineHeight: '1.35417em',
     },
     subheading: {
-      color: '#333',
+      color: '#32363C',
       fontSize: '1rem',
       fontWeight: 700,
       lineHeight: '1.2em',

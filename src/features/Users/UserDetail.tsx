@@ -38,7 +38,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
   avatar: {
     margin: '0 8px 0 -4px',
-    color: '#666',
+    color: '#606469',
     borderRadius: '50%',
     width: '46px',
     height: '46px',
