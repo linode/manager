@@ -221,6 +221,7 @@ const LinodeTheme: Linode.Theme = {
         },
         '&:focus': {
           outline: '1px dotted #999',
+          backgroundColor: 'transparent',
           zIndex: 2,
         },
         '&$expanded': {
