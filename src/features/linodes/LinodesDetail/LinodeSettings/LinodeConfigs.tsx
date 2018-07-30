@@ -436,9 +436,13 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const mapStateToProps = (state: Linode.AppState) => ({
-  kernels: state.resources.kernels && state.resources.kernels.data || [],
-});
+const mapStateToProps = (state: Linode.AppState) => {
+  const kernels = state.resources.kernels && state.resources.kernels.data || [];
+  console.log(kernels);
+  return {
+    kernels,
+  };
+};
 
 const connected = connect<ConnectedProps>(mapStateToProps);
 

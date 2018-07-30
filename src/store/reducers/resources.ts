@@ -1,4 +1,4 @@
-import { assocPath, compose, ifElse, merge, path, when } from 'ramda';
+import { assocPath, compose, ifElse, is, lensPath, merge, over, when } from 'ramda';
 import { Action } from 'redux';
 
 export const REQUEST = '@@manager/resources/REQUEST';
@@ -68,7 +68,6 @@ export default (
   (state) => {
     const _path = (action as Actions).meta.path;
     const setLoading = assocPath([..._path, 'loading']);
-    const setData = assocPath([..._path, 'data']);
     const setError = assocPath([..._path, 'error']);
 
     return compose(
@@ -81,10 +80,11 @@ export default (
       when(
         () => action.type === RESPONSE,
         compose(
-          setData(merge(
-            path([..._path, 'data'], state),
-            (action as ResponseAction).payload, 
-          )),
+          over(lensPath([..._path, 'data']), (prevValue) => {
+            return is(Object, prevValue) && !is(Array, prevValue)
+              ? merge(prevValue, (action as ResponseAction).payload)
+              : (action as ResponseAction).payload;
+          }),
           when(() => (action as ResponseAction).error, setError(true)),
         ),
       ),
