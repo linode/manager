@@ -54,14 +54,14 @@ describe('Action Menu Suite', () => {
         expect($(tooltip).getText()).toBe('An explanation as to why this item is disabled');
     });
 
-    it('should display menu item as a link when only one menu item', () => {
-        navigateToStory(component, singleItemStory);
-        browser.waitForVisible(actionMenuSingleItem);
+    // it('should display menu item as a link when only one menu item', () => {
+    //     navigateToStory(component, singleItemStory);
+    //     browser.waitForVisible(actionMenuSingleItem);
 
-        const tagType = browser.getTagName(actionMenuSingleItem);
-        const linkUrl = browser.getAttribute(actionMenuSingleItem, 'href');
+    //     const tagType = browser.getTagName(actionMenuSingleItem);
+    //     const linkUrl = browser.getAttribute(actionMenuSingleItem, 'href');
 
-        expect(linkUrl).toContain('iframe.html?selectedKind=Action%20Menu&selectedStory=Action%20Menu%20with%20one%20menu%20item#');
-        expect(tagType).toBe('a');
-    });
+    //     expect(linkUrl).toContain('iframe.html?selectedKind=Action%20Menu&selectedStory=Action%20Menu%20with%20one%20menu%20item#');
+    //     expect(tagType).toBe('a');
+    // });
 });
