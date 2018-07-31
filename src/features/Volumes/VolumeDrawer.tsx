@@ -155,10 +155,6 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           sendToast(`Volume ${event.entity && event.entity.label} has been created successfully.`);
         }
 
-        if (event.action === 'volume_create' && event.status === 'failed') {
-          sendToast(`There was an error attaching volume ${event.entity && event.entity.label}.`, 'error');
-        }
-
         if (event.action === 'volume_delete' && event.status === 'notification') {
           sendToast(`Volume ${event.entity && event.entity.label} has been deleted.`);
         }
