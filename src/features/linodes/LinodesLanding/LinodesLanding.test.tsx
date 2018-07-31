@@ -46,6 +46,9 @@ describe('ListLinodes', () => {
             classes={{ root: '', title: '' }}
             setDocs={setDocs}
             clearDocs={clearDocs}
+            typesRequest={jest.fn}
+            typesLoading={false}
+            typesLastUpdated={1}
           />
         </StaticRouter>
       </LinodeThemeWrapper>,
@@ -63,6 +66,9 @@ describe('ListLinodes', () => {
             classes={{ root: '', title: '' }}
             setDocs={setDocs}
             clearDocs={clearDocs}
+            typesRequest={jest.fn}
+            typesLoading={false}
+            typesLastUpdated={1}
           />
         </StaticRouter>
       </LinodeThemeWrapper>,
@@ -84,6 +90,9 @@ describe('ListLinodes', () => {
             classes={{ root: '', title: '' }}
             setDocs={setDocs}
             clearDocs={clearDocs}
+            typesRequest={jest.fn}
+            typesLoading={false}
+            typesLastUpdated={1}
           />
         </StaticRouter>
       </LinodeThemeWrapper>,

@@ -1,6 +1,5 @@
 import { compose, find, lensPath, map, pathOr, prop, propEq, set } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { StickyContainer } from 'react-sticky';
 
@@ -14,6 +13,8 @@ import Grid from 'src/components/Grid';
 import PromiseLoader from 'src/components/PromiseLoader';
 import { ExtendedRegion } from 'src/components/SelectRegionPanel';
 import { dcDisplayNames } from 'src/constants';
+import { withRegions } from 'src/context/regions';
+import { withTypes } from 'src/context/types';
 import { getImages } from 'src/services/images';
 import { getLinodes } from 'src/services/linodes';
 import { parseQueryParams } from 'src/utilities/queryParams';
@@ -25,8 +26,6 @@ import FromBackupsContent from './TabbedContent/FromBackupsContent';
 import FromImageContent from './TabbedContent/FromImageContent';
 import FromLinodeContent from './TabbedContent/FromLinodeContent';
 import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
-
-import { withTypes } from 'src/context/types';
 
 type Info = { title: string, details?: string } | undefined;
 
@@ -51,12 +50,15 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
 interface Props {
 }
 
-interface ConnectedProps {
-  regions: ExtendedRegion[];
-}
-
 interface TypesContextProps {
   typesData: ExtendedType[];
+}
+
+interface RegionsContextProps {
+  regionsLastUpdated: 0;
+  regionsLoading: boolean;
+  regionsRequest: () => void;
+  regionsData: ExtendedRegion[];
 }
 
 interface PreloadedProps {
@@ -65,8 +67,8 @@ interface PreloadedProps {
 }
 
 type CombinedProps = Props
-  & ConnectedProps
   & TypesContextProps
+  & RegionsContextProps
   & WithStyles<Styles>
   & PreloadedProps
   & RouteComponentProps<{}>;
@@ -119,6 +121,15 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     this.mounted = true;
+
+    /** I chose to not check for types and request as the SearchBar loads them higher up in the DOM. */
+
+    /** If regions havent been requested, and arent requesting, request them! */
+    const { regionsLastUpdated, regionsLoading, regionsRequest } = this.props;
+    if(regionsLastUpdated === 0 && !regionsLoading){
+      regionsRequest();
+    }
+
     this.updateStateFromQuerystring();
   }
 
@@ -196,7 +207,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
         return (
           <FromImageContent
             getBackupsMonthlyPrice={this.getBackupsMonthlyPrice}
-            regions={this.props.regions}
+            regions={this.props.regionsData}
             images={this.props.images.response}
             types={this.props.typesData}
             getTypeInfo={this.getTypeInfo}
@@ -240,7 +251,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
                       the same password as the original Linode`,
             }}
             getBackupsMonthlyPrice={this.getBackupsMonthlyPrice}
-            regions={this.props.regions}
+            regions={this.props.regionsData}
             types={this.props.typesData}
             linodes={this.props.linodes.response}
             extendLinodes={this.extendLinodes}
@@ -257,7 +268,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
         return (
           <FromStackScriptContent
             getBackupsMonthlyPrice={this.getBackupsMonthlyPrice}
-            regions={this.props.regions}
+            regions={this.props.regionsData}
             images={this.props.images.response}
             types={this.props.typesData}
             getTypeInfo={this.getTypeInfo}
@@ -304,7 +315,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
   }
 
   getRegionName = (selectedRegionID: string | null): string | undefined => {
-    const selectedRegion = this.props.regions.find(
+    const selectedRegion = this.props.regionsData.find(
       region => region.id === selectedRegionID);
 
     return selectedRegion && selectedRegion.display;
@@ -313,9 +324,12 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
   render() {
     const { selectedTab } = this.state;
 
-    const { classes } = this.props;
+    const { classes, regionsLoading } = this.props;
 
     const tabRender = this.tabs[selectedTab].render;
+
+    /** @todo This could be better? Maybe? Regions is cached and loads uber quick. */
+    if(regionsLoading){ return null; }
 
     return (
       <StickyContainer>
@@ -349,16 +363,6 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
   }
 }
 
-const connected = connect((state: Linode.AppState) => ({
-  regions: compose(
-    map((region: Linode.Region) => ({
-      ...region,
-      display: dcDisplayNames[region.id],
-    })),
-    pathOr([], ['resources', 'regions', 'data', 'data']),
-  )(state),
-}));
-
 const typesContext = withTypes(({ data }) => {
   return {
     typesData: compose(
@@ -377,11 +381,28 @@ const typesContext = withTypes(({ data }) => {
   };
 });
 
+const regionsContext = withRegions(({
+  data: regionsData,
+  lastUpdated: regionsLastUpdated,
+  loading: regionsLoading,
+  request: regionsRequest,
+}) => ({
+  regionsLastUpdated,
+  regionsLoading,
+  regionsRequest,
+  regionsData: compose(
+    map((region: Linode.Region) => ({
+      ...region,
+      display: dcDisplayNames[region.id],
+    })),
+  )(regionsData || [])
+}))
+
 const styled = withStyles(styles, { withTheme: true });
 
 export default compose(
-  connected,
   preloaded,
+  regionsContext,
   typesContext,
   styled,
   withRouter,

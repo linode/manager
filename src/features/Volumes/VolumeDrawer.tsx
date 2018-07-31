@@ -20,6 +20,7 @@ import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import Select from 'src/components/Select';
 import TextField from 'src/components/TextField';
 import { dcDisplayNames } from 'src/constants';
+import { withRegions } from 'src/context/regions';
 import { events$, resetEventsPolling } from 'src/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { updateVolumes$ } from 'src/features/Volumes/Volumes';
@@ -41,8 +42,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 });
 
 export interface Props {
-  regions: Linode.Volume[];
   cloneLabel?: string;
+}
+
+interface RegionsContextProps {
+  regionsData?: Linode.Region[];
+  regionsLoading: boolean;
+  regionsLastUpdated: number;
+  regionsRequest: () => void;
 }
 
 interface ActionCreatorProps {
@@ -73,7 +80,12 @@ interface State {
   success?: string;
 }
 
-type CombinedProps = Props & ReduxProps & ActionCreatorProps & WithStyles<ClassNames>;
+type CombinedProps =
+  Props &
+  ReduxProps &
+  RegionsContextProps &
+  ActionCreatorProps &
+  WithStyles<ClassNames>;
 
 export const modes = {
   CLOSED: 'closed',
@@ -181,6 +193,12 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
 
     /* If the drawer is opening */
     if ((this.props.mode === modes.CLOSED) && !(nextProps.mode === modes.CLOSED)) {
+      /** If regions arent already loading, load em! */
+      const { regionsLastUpdated, regionsLoading, regionsRequest } = this.props;
+      if (regionsLastUpdated === 0 && !regionsLoading) {
+        regionsRequest();
+      }
+
       /* re-request the list of Linodes */
       getLinodes()
         .then((response) => {
@@ -377,7 +395,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
   render() {
     const { mode } = this.props;
     const { linodes } = this.state;
-    const regions = this.props.regions;
+    const regions = this.props.regionsData;
     const linodeLabel = this.props.linodeLabel || '';
 
     const {
@@ -638,15 +656,22 @@ const mapStateToProps = (state: Linode.AppState) => ({
   region: path(['volumeDrawer', 'region'], state),
   linodeLabel: path(['volumeDrawer', 'linodeLabel'], state),
   linodeId: path(['volumeDrawer', 'linodeId'], state),
-  regions: path(['resources', 'regions', 'data', 'data'], state),
 });
+
+const regionsContext = withRegions(({ data, loading, lastUpdated, request }) => ({
+  regionsData: data,
+  regionsLoading: loading,
+  regionsLastUpdated: lastUpdated,
+  regionsRequest: request,
+}))
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default compose<any, any, any, any>(
+export default compose<any, any, any, any, any>(
   connected,
+  regionsContext,
   styled,
   SectionErrorBoundary,
 )(VolumeDrawer);

@@ -33,7 +33,6 @@ export function oneOfType(action: { type: string }, list: string[]): action is A
 }
 
 export const defaultState: Linode.ResourcesState = {
-  regions: { loading: false, data: [], },
   kernels: { loading: false, data: [], },
   profile: {
     loading: false, data: {

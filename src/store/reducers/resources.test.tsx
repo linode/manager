@@ -18,7 +18,6 @@ describe('ResourcesReducer', () => {
   let result: Linode.ResourcesState;
 
   const resources: Linode.ResourcesState = {
-    regions: { loading: false, data: [], },
     kernels: { loading: false, data: [], },
     profile: {
       loading: false, data: {
@@ -51,39 +50,39 @@ describe('ResourcesReducer', () => {
 
   describe('when type === REQUEST', () => {
     it('should set loading to true.', () => {
-      result = reducer(resources, request(['regions']));
-      expect(result.regions).toHaveProperty('loading', true);
+      result = reducer(resources, request(['kernels']));
+      expect(result.kernels).toHaveProperty('loading', true);
     });
   });
 
   describe('when type === RESPONSE', () => {
     beforeEach(() => {
-      result = reducer(resources, response(['regions'], data));
+      result = reducer(resources, response(['kernels'], data));
     });
 
     it('should set loading to false', () => {
-      expect(result.regions).toHaveProperty('loading', false);
+      expect(result.kernels).toHaveProperty('loading', false);
     });
 
     it('should set path.data to the payload', () => {
-      expect(result.regions).toHaveProperty('data', data);
+      expect(result.kernels).toHaveProperty('data', data);
     });
 
     describe('and is error', () => {
       beforeEach(() => {
-        result = reducer(resources, response(['regions'], err));
+        result = reducer(resources, response(['kernels'], err));
       });
 
       it('should set loading to false', () => {
-        expect(result.regions).toHaveProperty('loading', false);
+        expect(result.kernels).toHaveProperty('loading', false);
       });
 
       it(`should set path.data to error`, () => {
-        expect(result.regions).toHaveProperty('data', err);
+        expect(result.kernels).toHaveProperty('data', err);
       });
 
       it(`should set path.error to true`, () => {
-        expect(result.regions).toHaveProperty('error', true);
+        expect(result.kernels).toHaveProperty('error', true);
       });
     });
   });
