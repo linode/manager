@@ -49,18 +49,19 @@ export const apiCreateLinode = (linodeLabel=false, privateIp=false) => {
     const linode = browser.createLinode(token, newLinodePass, linodeLabel);
 
     browser.url(constants.routes.linodes);
-    browser.waitForVisible('[data-qa-add-new-menu-button]');
+    browser.waitForVisible('[data-qa-add-new-menu-button]', constants.wait.normal);
     
     if (linodeLabel) {
-        browser.waitForVisible(`[data-qa-linode="${linodeLabel}"]`);
+        browser.waitForVisible(`[data-qa-linode="${linodeLabel}"]`, constants.wait.long);
+        browser.waitForVisible(`[data-qa-linode="${linodeLabel}"] [data-qa-status="running"]`, constants.wait.minute * 3);
     } else {
-        browser.waitForVisible('[data-qa-linode]', constants.wait.long);
+        browser.waitForVisible(`[data-qa-linode="${linode.label}"]`, constants.wait.long);
+        browser.waitForVisible(`[data-qa-linode="${linode.label}"] [data-qa-status="running"]`, constants.wait.minute * 3);
     }
 
     if (privateIp) {
         linode['privateIp'] = browser.allocatePrivateIp(token, linode.id).address;
     }
-    browser.waitForVisible('[data-qa-status="running"]', constants.wait.minute * 3);
     return linode;
 }
 

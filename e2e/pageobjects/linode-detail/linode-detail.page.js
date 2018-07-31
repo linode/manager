@@ -18,16 +18,16 @@ class LinodeDetail extends Page {
     get setPowerOff() { return $('[data-qa-set-power="powerOff"]'); }
     get setPowerOn() { return $('[data-qa-set-power="powerOn"]'); }
     get linodeLabel() { return $('[data-qa-label]'); }
-    get editLabel() { return $('[data-qa-label] button'); }
+    get editLabel() { return $('[data-qa-edit-button]'); }
 
     changeName(name) {
         this.linodeLabel.waitForVisible();
         this.editLabel.click();
-        browser.setValue('[data-qa-edit-field] input', name);
+        browser.setValue('[data-qa-label] input', name);
         browser.click('[data-qa-save-edit]');
         browser.waitUntil(function() {
             return this.linodeLabel.getText() === name;
-        }, constants.wait.short);
+        }, constants.wait.normal);
     }
 
     setPower(powerState) {

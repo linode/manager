@@ -19,7 +19,7 @@ describe('List Linodes Suite', () => {
         browser.url(constants.routes.linodes);
         apiCreateLinode();
 
-        browser.waitForVisible('[data-qa-linode]');
+        browser.waitForVisible('[data-qa-linode]', constants.wait.normal);
     });
 
     afterAll(() => {

@@ -236,7 +236,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
                   : (
                     <TableRow key={volume.id} data-qa-volume-cell={volume.id}>
                       <TableCell data-qa-volume-cell-label>{label}</TableCell>
-                      <TableCell data-qa-volume-cell-attachment>
+                      <TableCell data-qa-volume-cell-attachment={linodeLabel}>
                         {linodeLabel &&
                           <Link to={`/linodes/${volume.linode_id}`}>
                             {linodeLabel}

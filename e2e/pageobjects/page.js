@@ -90,8 +90,8 @@ export default class Page {
     }
 
     toastDisplays(expectedMessage) {
-        this.toast.waitForVisible();
-        this.toastMsg.waitForVisible();
+        this.toast.waitForVisible(constants.wait.normal);
+        this.toastMsg.waitForVisible(constants.wait.normal);
         
         const displayedMsg = browser.getText('[data-qa-toast-message]');
         expect(displayedMsg).toBe(expectedMessage);
@@ -126,7 +126,7 @@ export default class Page {
         browser.waitUntil(function() {
             return browser
                 .getAttribute(`[data-qa-tab="${tab}"]`, 'aria-selected').includes('true');
-        }, constants.wait.short, 'Failed to change tab');
+        }, constants.wait.normal, 'Failed to change tab');
         browser.waitForVisible('[data-qa-circle-progress]', constants.wait.normal, true);
         return this;
     }

@@ -23,7 +23,7 @@ class ListDomains extends Page {
     baseElemsDisplay(placeholder) {
         if (placeholder) {
             const placeholderTitle = 'Add a Domain';
-            this.placeholderText.waitForVisible();
+            this.placeholderText.waitForVisible(constants.wait.normal);
             
             expect(this.placeholderText.getText()).toBe(placeholderTitle);
             expect(this.createButton.getText()).toBe(placeholderTitle);
@@ -68,18 +68,18 @@ class ListDomains extends Page {
             this.createIconLink.click();
         }
 
-        this.drawerTitle.waitForVisible();
+        this.drawerTitle.waitForVisible(constants.wait.normal);
         this.createDrawerElemsDisplay();
         this.createDomainName.$('input').setValue(name);
         this.createSoaEmail.$('input').setValue(email);
         this.submit.click();
 
         if (placeholder) {
-            this.domainElem.waitForVisible();
+            this.domainElem.waitForVisible(constants.wait.normal);
         } else {
             browser.waitUntil(function() {
                 return $$('[data-qa-domain-cell]').length > existingDomainsCount;
-            }, constants.wait.normal);
+            }, constants.wait.normal, 'Domain failed to be created');
         }
     }
 
@@ -109,7 +109,7 @@ class ListDomains extends Page {
             const domainLabels = domains.map(d => d.getText());
 
             return domainLabels.includes(newDomainName);
-        }, constants.wait.normal);
+        }, constants.wait.normal, 'Failed to clone domain');
     }
 
     remove(domain, domainName) {

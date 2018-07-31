@@ -50,7 +50,7 @@ describe('Linode - Volumes - Attach, Detach, Delete Suite', () => {
             browser.waitUntil(function() {
                 const placeholderMsg = VolumeDetail.placeholderText.getText();
                 return placeholderMsg.includes('No volumes attached');
-            }, constants.wait.normal);
+            }, constants.wait.normal, `"No volumes attached" placeholder message failed to display`);
         }
     });
 

@@ -9,7 +9,7 @@ describe('Domains - List Suite', () => {
 
     beforeAll(() => {
         browser.url(constants.routes.domains);
-        ListDomains.globalCreate.waitForVisible();
+        ListDomains.globalCreate.waitForVisible(constants.wait.normal);
         ListDomains.progressBar.waitForVisible(constants.wait.normal, true);
     });
 
@@ -25,7 +25,7 @@ describe('Domains - List Suite', () => {
         try {
             ListDomains.create(initialDomain,'foo@bar.com');
         } catch (err) {
-            ListDomains.createDomainName.$('p').waitForVisible();
+            ListDomains.createDomainName.$('p').waitForVisible(constants.wait.normal);
             ListDomains.cancel.click();
             ListDomains.drawerTitle.waitForVisible(constants.wait.short, true);
         }
