@@ -201,7 +201,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
             <TableHead>
               <TableRow>
                 <TableCell className={classes.label}>Label</TableCell>
-                <TableCell className={classes.attachment}>Attachment</TableCell>
+                <TableCell className={classes.attachment}>Attached To</TableCell>
                 <TableCell>Size</TableCell>
                 <TableCell>File System Path</TableCell>
                 <TableCell>Region</TableCell>
