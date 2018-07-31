@@ -32,7 +32,6 @@ interface State extends PaginationProps {
 class TicketList extends React.Component<Props, State> {
   mounted: boolean = false;
   state: State = {
-    tickets: [],
     errors: undefined,
     loading: true,
     page: 1,
@@ -45,14 +44,14 @@ class TicketList extends React.Component<Props, State> {
     this.getTickets();
   }
 
-  componentWillUnmount() {
-    this.mounted = false;
-  }
-
   componentDidUpdate(prevProps:Props, prevState:State) {
     if (prevProps.filterStatus !== this.props.filterStatus) {
       this.getTickets();
     }
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   compareTickets = (a:Linode.SupportTicket, b:Linode.SupportTicket) => {
@@ -125,10 +124,10 @@ class TicketList extends React.Component<Props, State> {
     }
 
     if (errors) {
-      return <TableRowError colSpan={12} message="We were unable to load your support tickets." />
+      return <TableRowError colSpan={6} message="We were unable to load your support tickets." />
     }
-
-    return tickets && tickets.length > 0 ? this.renderTickets(tickets) : <TableRowEmptyState colSpan={12} />
+    
+    return tickets && tickets.length > 0 ? this.renderTickets(tickets) : <TableRowEmptyState colSpan={6} />
   };
 
   renderTickets = (tickets: Linode.SupportTicket[]) => tickets.map(this.renderRow);
