@@ -2,7 +2,6 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import * as React from 'react';
-// import CircleProgress from 'src/components/CircleProgress';
 import LinearProgress from 'src/components/LinearProgress';
 
 type ClassNames = 'root';
