@@ -1,15 +1,16 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 
+import ListItem from '@material-ui/core/ListItem';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-
-import Grid, { GridProps } from 'src/components/Grid';
 
 type ClassNames =
   | 'critical'
   | 'flag'
   | 'inner'
+  | 'innerLink'
+  | 'innerTitle'
   | 'major'
   | 'minor'
   | 'noticeText'
@@ -28,19 +29,33 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => {
       justifyContent: 'center',
       padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px`,
       borderBottom: `1px solid ${theme.palette.divider}`,
+      transition: theme.transitions.create('background-color'),
       '& p': {
         color: '#32363C',
       },
       '& + .notice': {
         marginTop: '0 !important',
       },
-      // marginBottom: the1`me.spacing.unit,
+      '&:hover, &:focus': {
+        backgroundColor: theme.bg.main,
+      },
       maxWidth: '100%',
       display: 'flex',
       alignItems: 'center',
+      outline: 0,
     },
     inner: {
       width: '100%',
+      display: 'block',
+    },
+    innerLink: {
+      '& > h3': {
+        lineHeight: '1.2',
+        textDecoration: 'underline',
+      },
+    },
+    innerTitle: {
+      marginBottom: theme.spacing.unit / 2,
     },
     noticeText: {
       color: theme.palette.text.primary,
@@ -61,7 +76,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => {
   };
 };
 
-interface Props extends GridProps {
+interface Props {
   label: string;
   message: string;
   severity: Linode.NotificationSeverity;
@@ -70,7 +85,7 @@ interface Props extends GridProps {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const UserNotificationListItem: React.StatelessComponent<CombinedProps> = (props) => {
+const userNotificationListItem: React.StatelessComponent<CombinedProps> = (props) => {
   const {
     classes,
     label,
@@ -80,8 +95,7 @@ const UserNotificationListItem: React.StatelessComponent<CombinedProps> = (props
   } = props;
 
   return (
-    <Grid
-      item
+    <ListItem
       className={classNames({
         [classes.root]: true,
         [classes[severity]]: true,
@@ -89,15 +103,24 @@ const UserNotificationListItem: React.StatelessComponent<CombinedProps> = (props
         notice: true,
       })}
       data-qa-notice
+      component="li"
+      tabIndex={1}
+      onClick={onClick}
+      button={Boolean(onClick)}
     >
-      <div className={classes.inner} onClick={onClick}>
-        <Typography>{label}</Typography>
+      <div className={classNames(
+        {
+          [classes.inner]: true,
+          [classes.innerLink]: Boolean(onClick),
+        }
+      )}>
+        <Typography variant="subheading" className={classes.innerTitle}>{label}</Typography>
         <Typography variant="caption">{message}</Typography>
       </div>
-    </Grid>
+    </ListItem>
   );
 };
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(UserNotificationListItem);
+export default styled<Props>(userNotificationListItem);
