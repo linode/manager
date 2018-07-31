@@ -1,6 +1,5 @@
-import * as Bluebird from 'bluebird';
 import { shim } from 'promise.prototype.finally';
-import { append, flatten, lensPath, pathOr, range, set } from 'ramda';
+import { lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
@@ -21,7 +20,7 @@ import Footer from 'src/features/Footer';
 import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
-import { getLinodeKernels, getLinodeTypes } from 'src/services/linodes';
+import { getLinodeTypes } from 'src/services/linodes';
 import { getRegions } from 'src/services/misc';
 import { getProfile } from 'src/services/profile';
 import { request, response } from 'src/store/reducers/resources';
@@ -229,26 +228,6 @@ export class App extends React.Component<CombinedProps, State> {
           })
           .catch(error => response(['profile'], error));
       }),
-      new Promise(() => {
-        request(['kernels']);
-        // Get first page of kernels.
-        return getLinodeKernels()
-          .then(({ data: firstPageData, page, pages }) => {
-            // If we only have one page, return it.
-            if (page === pages) { return firstPageData; }
-
-            // Create an iterable list of the remaining pages.
-            const remainingPages = range(page + 1, pages + 1);
-
-            return Bluebird.map(remainingPages, currentPage =>
-              getLinodeKernels(currentPage)
-                .then(response => response.data),
-            )
-              .then(compose(flatten, append(firstPageData)));
-          })
-          .then(data => response(['kernels'], data))
-          .catch(error => response(['kernels'], error));
-      }),
     ];
 
     Promise
@@ -341,8 +320,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
 );
 
 const mapStateToProps = (state: Linode.AppState) => ({
-  longLivedLoaded: Boolean(pathOr(false, ['resources', 'kernels', 'data'], state))
-    && Boolean(pathOr(false, ['resources', 'profile', 'data'], state)),
+  longLivedLoaded: Boolean(pathOr(false, ['resources', 'profile', 'data'], state)),
   documentation: state.documentation,
 });
 

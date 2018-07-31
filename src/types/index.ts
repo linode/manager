@@ -38,7 +38,6 @@ namespace Linode {
   }
 
   export interface ResourcesState {
-    kernels: { loading: boolean; data: Linode.Kernel[] };
     profile: { loading: boolean; data: Linode.Profile };
   }
 
