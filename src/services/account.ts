@@ -6,11 +6,12 @@ type Event = Linode.Event;
 type OAuthClient = Linode.OAuthClient;
 type Notification = Linode.Notification;
 
-export const getEvents = (xFilter: any) =>
+export const getEvents = (params: any = {}, xFilter: any = {}) =>
   Request<Page<Event>>(
     setURL(`${API_ROOT}/account/events`),
     setMethod('GET'),
     setXFilter(xFilter),
+    setParams(params),
   );
 
 export const markEventsSeen = (id: number) =>
@@ -100,7 +101,7 @@ export const getInvoices = (pagination: Linode.PaginationOptions = {}) =>
     setMethod('GET'),
     setParams(pagination),
   )
-  .then(response => response.data);
+    .then(response => response.data);
 
 export const updateAccountInfo = (data: Partial<Linode.Account>) =>
   Request<Linode.Account>(
@@ -114,6 +115,21 @@ export const getUser = (username: string) =>
   Request<Linode.User>(
     setURL(`${API_ROOT}/account/users/${username}`),
     setMethod('GET'),
+  )
+    .then(response => response.data);
+
+export const getGrants = (username: string) =>
+  Request<Linode.Grants>(
+    setURL(`${API_ROOT}/account/users/${username}/grants`),
+    setMethod('GET'),
+  )
+    .then(response => response.data);
+
+export const updateGrants = (username: string, data: Partial<Linode.Grants>) =>
+  Request<Linode.Grants>(
+    setURL(`${API_ROOT}/account/users/${username}/grants`),
+    setMethod('PUT'),
+    setData(data),
   )
     .then(response => response.data);
 
@@ -139,3 +155,11 @@ export const deleteUser = (username: string) =>
     setMethod('DELETE'),
   )
     .then(response => response.data);
+
+export const makePayment = (data: { usd: string, ccv: string }) =>
+  Request<Linode.Payment>(
+    setURL(`${API_ROOT}/account/payments`),
+    setMethod('POST'),
+    setData(data),
+  )
+    .then(response => response.data)

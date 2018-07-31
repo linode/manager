@@ -4,6 +4,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.30.1] - 2018-07-26
+### Fixed:
+- Notification icon position
+- Description of billing permission levels
+- Tooltip for user delete action
+
+## [0.30.0] - 2018-07-26
+### Added:
+- My Profile
+    - Toggle for disabling "Whitelist IPs" feature
+    - Update e-mail address
+    - Enable/disable two-factor authentication using QR code
+    - Update Timezone
+- User Management
+    - List users
+    - Add new users
+    - Edit user profile
+    - Edit user permissions, including entity-specific permissions
+    - Change user type restricted/unrestricted
+- Billing
+    - View recent billing activity: invoices and payments
+    - View contact information
+    - Update contact information
+- StackScripts
+    - Update StackScript
+### Changed:
+- "Notifications" (global and product level notices) are now displayed in a side-wide menu located in the top-right corner of the screen
+- "Events" (entity-specific notices) are shown in a different color when they have been marked as read
+- "Events" are clickable and direct the user to the page of the entity
+- Privacy Policy notice is now shown using a persistent modal dialog
+### Fixed:
+- When creating a Linode from StackScript, an error notice is now displayed when the user does not select an image
+
 ## [0.29.3] - 2018-07-13
 ### Added:
 - StackScripts

@@ -42,6 +42,7 @@ type CSSClasses =
   | 'rebootButton'
   | 'loadingStatusText'
   | 'flag'
+  | 'flagContainer'
   | 'link';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
@@ -56,12 +57,12 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     },
   },
   cardSection: {
+    ...theme.typography.caption,
     marginBottom: theme.spacing.unit,
     paddingTop: theme.spacing.unit,
     paddingLeft: 3,
     paddingRight: 3,
     color: theme.palette.text.primary,
-    ...theme.typography.caption,
   },
   flexContainer: {
     display: 'flex',
@@ -136,6 +137,11 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     position: 'relative',
     top: - theme.spacing.unit * 2,
   },
+  flagContainer: {
+    padding: 0,
+    position: 'relative',
+    zIndex: 5,
+  },
   flag: {
     transition: theme.transitions.create('opacity'),
     opaity: 1,
@@ -199,7 +205,7 @@ class LinodeCard extends React.Component<CombinedProps> {
           </Typography>
         </Grid>
         {linodeNotification &&
-          <Grid item className="py0">
+          <Grid item className={classes.flagContainer}>
             <Tooltip title={linodeNotification}><Flag className={classes.flag} /></Tooltip>
           </Grid>
         }

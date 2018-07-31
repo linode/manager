@@ -15,7 +15,7 @@ import IconButton from '@material-ui/core/IconButton';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
-import { KeyboardArrowLeft } from '@material-ui/icons';
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 
 import CircleProgress from 'src/components/CircleProgress';
 import EditableText from 'src/components/EditableText';
@@ -215,6 +215,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
             })
             .catch((r) => {
               this.composeState(
+                set(L.configs.lastUpdated, Date.now()),
                 set(L.configs.loading, false),
                 set(L.configs.errors, [{ field: 'none', reason: 'Could not load instance config for some reason.' }])
               );
@@ -246,6 +247,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
             })
             .catch((r) => {
               this.composeState(
+                set(L.disks.lastUpdated, Date.now()),
                 set(L.disks.loading, false),
                 set(L.disks.errors, [{ field: 'none', reason: 'Could not load Linode disks for some reason.' }])
               );
@@ -288,6 +290,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
             })
             .catch((r) => {
               this.composeState(
+                set(L.image.lastUpdated, Date.now()),
                 set(L.image.loading, false),
                 set(L.image.errors, [{ field: 'none', reason: 'Could not load Linode for some reason.' }])
               );
@@ -320,6 +323,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
             })
             .catch((r) => {
               this.composeState(
+                set(L.linode.lastUpdated, Date.now()),
                 set(L.linode.loading, false),
                 set(L.linode.errors, [{ field: 'none', reason: 'Could not load instance for some reason.' }])
               );
@@ -354,6 +358,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
             })
             .catch((r) => {
               this.composeState(
+                set(L.volumes.lastUpdated, Date.now()),
                 set(L.volumes.loading, false),
                 set(L.volumes.errors, [{ field: 'none', reason: 'Could not load Linode for some reason.' }])
               );
@@ -420,7 +425,9 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
         disks.request();
         volumes.request();
         linode.request(linodeEvent)
-          .then((l) => image.request(l.image))
+          .then((l) => {
+            if (l) { image.request(l.image) }
+          })
           .catch(console.error);
       });
 
@@ -451,7 +458,9 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     disks.request();
     volumes.request();
     linode.request()
-      .then((l) => image.request(l.image))
+      .then((l) => {
+        if (l) { image.request(l.image) }
+      })
       .catch(console.error);
   }
 
@@ -685,6 +694,9 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                       />
                     </Grid>
                   </Grid>
+                  {linodeInTransition(linode.status, linode.recentEvent) &&
+                    <LinodeBusyStatus status={linode.status} recentEvent={linode.recentEvent} />
+                  }
                   <AppBar position="static" color="default">
                     <Tabs
                       value={this.tabs.findIndex(tab => matches(tab.routeName))}
@@ -701,9 +713,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                   {
                     (this.state.notifications || []).map((n, idx) =>
                       <ProductNotification key={idx} severity={n.severity} text={n.message} />)
-                  }
-                  {linodeInTransition(linode.status, linode.recentEvent) &&
-                    <LinodeBusyStatus status={linode.status} recentEvent={linode.recentEvent} />
                   }
                   <Switch>
                     <Route exact path={`${url}/summary`} component={LinodeSummary} />

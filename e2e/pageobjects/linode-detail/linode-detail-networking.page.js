@@ -57,7 +57,7 @@ class Networking extends Page {
         expect(this.heading.getText()).toBe('Access');
         expect(this.ipv4Subheading.getText()).toBe('IPv4');
         expect(this.ipv6Subheading.getText()).toBe('IPv6');
-        expect(this.networkingActionsSubheading.getText()).toBe('Networking Actions');
+        expect(this.networkingActionsSubheading.getText()).toContain('IP Transfer');
         expect(this.ips.length).toBeGreaterThan(0);
 
         // IPv4 Elems display

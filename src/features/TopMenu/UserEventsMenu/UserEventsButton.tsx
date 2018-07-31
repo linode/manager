@@ -20,16 +20,21 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     },
   },
   root: {
-    marginRight: - theme.spacing.unit,
+    marginRight: 6,
     position: 'relative',
     opacity: 1,
     transition: theme.transitions.create(['opacity']),
     [theme.breakpoints.up('md')]: {
       marginLeft: theme.spacing.unit * 2,
     },
-    '&:hover, &.active': {
+    '&:hover': {
       '& $icon': {
         fill: theme.palette.primary.main,
+      },
+    },
+    '&.active': {
+      '& $icon': {
+        fill: theme.palette.primary.dark,
       },
     },
     '&[disabled]': {
@@ -67,16 +72,16 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 interface Props {
   onClick: (e: React.MouseEvent<HTMLElement>) => void;
   getRef: (e: HTMLElement) => void;
-  notificationCount?: number;
+  count?: number;
   disabled?: boolean;
   className?: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const UserNotificationButton: React.StatelessComponent<CombinedProps> = ({
+const UserEventsButton: React.StatelessComponent<CombinedProps> = ({
   classes,
-  notificationCount,
+  count,
   onClick,
   getRef,
   disabled,
@@ -91,9 +96,9 @@ const UserNotificationButton: React.StatelessComponent<CombinedProps> = ({
       disabled={disabled}
     >
       <NotificationIcon className={classes.icon} />
-      {notificationCount && notificationCount > 0
+      {count && count > 0
         ? <div className={classes.new}>
-            <span className={classes.count}>{notificationCount}</span>
+            <span className={classes.count}>{count}</span>
           </div>
         : ''
       }
@@ -101,10 +106,10 @@ const UserNotificationButton: React.StatelessComponent<CombinedProps> = ({
   );
 };
 
-UserNotificationButton.defaultProps = {
+UserEventsButton.defaultProps = {
   disabled: false,
 };
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(UserNotificationButton);
+export default styled<Props>(UserEventsButton);

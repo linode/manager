@@ -49,7 +49,7 @@ describe('Create - Volume Suite', () => {
 
     it('should create without attaching to a linode', () => {
         testVolume['label'] = `ASD${new Date().getTime()}`;
-        testVolume['regionIndex'] = 0;
+        testVolume['region'] = 'us-east';
         
         VolumeDetail.createVolume(testVolume, true);
         browser.url(constants.routes.volumes);
@@ -74,11 +74,11 @@ describe('Create - Volume Suite', () => {
 
     afterAll(() => {
         apiDeleteAllLinodes();
-        // try {
+        try {
             // attempt to remove all volumes, in case the ui failed
-            // apiDeleteAllVolumes();
-        // } catch (err) {
+            apiDeleteAllVolumes();
+        } catch (err) {
             // do nothing
-        // }
+        }
     });
 });

@@ -11,8 +11,9 @@ import Typography from '@material-ui/core/Typography';
 import Close from '@material-ui/icons/Close';
 
 import Grid from 'src/components/Grid';
+import { events$ } from 'src/events';
 
-import toasts$, { Toast } from './toasts';
+import toasts$, { createToast, Toast } from './toasts';
 
 type ClassNames = 'root'
   | 'content'
@@ -28,21 +29,18 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
   return {
     root: {
       background: 'white',
-      border: `2px solid ${theme.palette.primary.main}`,
-      width: 300,
+      borderLeft: `5px solid ${theme.palette.primary.main}`,
+      [theme.breakpoints.up('sm')]: {
+        maxWidth: 300,
+      },
       [theme.breakpoints.up('md')]: {
         width: 500,
+        maxWidth: 500,
       },
     },
     content: {
-      color: '#333',
+      color: '#32363C',
       lineHeight: 1.4,
-      '& a': {
-        color: '#000',
-        '&:hover': {
-          textDecoration: 'underline',
-        },
-      },
     },
     actions: {
       display: 'flex',
@@ -52,53 +50,28 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
       minWidth: 'auto',
       minHeight: 'auto',
       padding: 0,
+      border: 0,
+      color: theme.palette.text.primary,
+      borderRadius: '50%',
       '& > span': {
         padding: 2,
       },
       '& svg': {
-        width: 16,
-        height: 16,
+        width: 24,
+        height: 24,
       },
       '&:hover, &:focus': {
-        color: 'white',
-        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.primary.main,
       },
     },
     error: {
-      backgroundColor: status.error,
-      border: `2px solid ${status.errorDark}`,
-      '& button': {
-        color: status.errorDark,
-        borderColor: status.errorDark,
-        '&:hover, &:focus': {
-          backgroundColor: status.errorDark,
-          borderColor: status.errorDark,
-        },
-      },
+      borderLeftColor: status.errorDark,
     },
     warning: {
-      backgroundColor: status.warning,
-      border: `2px solid ${status.warningDark}`,
-      '& button': {
-        color: status.warningDark,
-        borderColor: status.warningDark,
-        '&:hover, &:focus': {
-          backgroundColor: status.warningDark,
-          borderColor: status.warningDark,
-        },
-      },
+      borderLeftColor: status.warningDark,
     },
     success: {
-      backgroundColor: status.success,
-      border: `2px solid ${status.successDark}`,
-      '& button': {
-        color: status.successDark,
-        borderColor: status.successDark,
-        '&:hover, &:focus': {
-          backgroundColor: status.successDark,
-          borderColor: status.successDark,
-        },
-      },
+      borderLeftColor: status.successDark,
     },
   };
 };
@@ -142,12 +115,28 @@ class Notifier extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     this.subscription = toasts$
+      .merge(
+        events$
+          .filter((e) => !e._initial && e.status === 'failed')
+          .map(event => {
+            if (event.action === 'disk_imagize') {
+              return createToast('There was an error creating an image.', 'error');
+            }
+
+            if (event.action === 'volume_create') {
+              return createToast(`There was an error attaching volume ${event.entity && event.entity.label}.`, 'error');
+            }
+
+            return;
+          })
+      )
       /**
        * In the somewhat unlikely scenario that we get a flood of events, we're
        * going to buffer for 1s to prevent data loss from React setState being unable
        * to keep up with the process.
        */
-      .bufferTime(1000)
+      .filter(Boolean)
+      .bufferTime(500)
       .subscribe((toasts) => {
         if (toasts.length === 0) {
           return;

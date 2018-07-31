@@ -21,6 +21,29 @@ type ClassNames = 'root'
   | 'subTitle'
   | 'currentPlanContainer';
 
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+  root: {
+    padding: theme.spacing.unit * 3,
+    paddingBottom: theme.spacing.unit * 2,
+  },
+  title: {
+    marginBottom: theme.spacing.unit * 2,
+  },
+  subTitle: {
+    margin: `${theme.spacing.unit * 3}px 0`,
+  },
+  currentPlanContainer: {
+    '& .selectionCard': {
+      padding: `0 ${theme.spacing.unit}px 0 0`,
+      cursor: 'not-allowed',
+      '& > div, &:focus > div': {
+        backgroundColor: theme.bg.main,
+        borderColor: theme.color.border2,
+      },
+    },
+  },
+});
+
 interface Props {
   /** Preloaded Props */
   types: { response: ExtendedType[] };
@@ -105,7 +128,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <Paper className={classes.root}>
           <Typography
-            variant="headline"
+            variant="title"
             className={classes.title}
             data-qa-title
           >
@@ -154,29 +177,6 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
     );
   }
 }
-
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
-  root: {
-    padding: theme.spacing.unit * 3,
-    paddingBottom: theme.spacing.unit * 1,
-  },
-  title: {
-    marginBottom: theme.spacing.unit * 2,
-  },
-  subTitle: {
-    margin: `${theme.spacing.unit * 3}px 0`,
-  },
-  currentPlanContainer: {
-    '& .selectionCard': {
-      padding: `0 ${theme.spacing.unit}px 0 0`,
-      cursor: 'not-allowed',
-      '& > div, &:focus > div': {
-        backgroundColor: theme.bg.main,
-        borderColor: theme.color.border2,
-      },
-    },
-  },
-});
 
 const styled = withStyles(styles, { withTheme: true });
 

@@ -7,7 +7,7 @@ import {
     Theme,
     WithStyles,
     withStyles,
-} from '@material-ui/core/styles';  
+} from '@material-ui/core/styles';
 
 import CircleProgress from 'src/components/CircleProgress';
 import Notice from 'src/components/Notice';
@@ -33,6 +33,7 @@ interface Props {
   loading: boolean;
   secret: string;
   username: string;
+  twoFactorConfirmed: boolean;
   onSuccess: () => void;
 }
 
@@ -63,7 +64,7 @@ export class EnableTwoFactorForm extends React.Component<CombinedProps, State> {
   getSecretLink = () => {
     const { secret, username } = this.props;
     return `otpauth://totp/LinodeManager%3A${username}?secret=${secret}`;
-  } 
+  }
 
   handleTokenInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ token: e.target.value });
@@ -74,28 +75,32 @@ export class EnableTwoFactorForm extends React.Component<CombinedProps, State> {
     const safeToken = token.replace(/ /g,'');
     this.setState({ submitting: true });
     confirmTwoFactor(safeToken)
-    .then((response) => {
-      this.setState({ errors: undefined, });
-      this.props.onSuccess();
-    })
-    .catch((error) => {
-      if (!this.mounted) { return; }
-      const fallbackError = [{ field: 'tfa_code', reason: 'Could not confirm code.' }];
-      let APIErrors = pathOr(fallbackError, ['response', 'data', 'errors'], error);
-      APIErrors = APIErrors.filter((error:Linode.ApiFieldError) => {
-        // Filter potentially confusing API error
-        return error.reason === 'Invalid token. Two-factor auth not enabled. Please try again.';
+      .then((response) => {
+        if (!this.mounted) { return; }
+        this.setState({
+          errors: undefined,
+          submitting: false,
+          token: '',
+        });
+        this.props.onSuccess();
       })
+      .catch((error) => {
+        if (!this.mounted) { return; }
+        const fallbackError = [{ field: 'tfa_code', reason: 'Could not confirm code.' }];
+        let APIErrors = pathOr(fallbackError, ['response', 'data', 'errors'], error);
+        APIErrors = APIErrors.filter((err:Linode.ApiFieldError) => {
+          // Filter potentially confusing API error
+          return err.reason !== 'Invalid token. Two-factor auth not enabled. Please try again.';
+        })
 
-      this.setState({
-          errors: fallbackError
-        }, () => {
-        scrollErrorIntoView();
-      });
-    })
-    .finally(() => {
-      this.setState({ submitting: false, token: '' })
-    });
+        this.setState({
+            errors: APIErrors,
+            submitting: false,
+            token: '',
+          }, () => {
+          scrollErrorIntoView();
+        });
+      })
   }
 
   onCancel = () => {
@@ -105,7 +110,7 @@ export class EnableTwoFactorForm extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, loading, secret } = this.props;
+    const { classes, loading, secret, twoFactorConfirmed } = this.props;
     const { errors, submitting, token } = this.state;
     const secretLink = this.getSecretLink();
     const hasErrorFor = getAPIErrorFor({
@@ -117,19 +122,20 @@ export class EnableTwoFactorForm extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         {generalError && <Notice error text={generalError} />}
-        { loading 
+        { loading
           ? <CircleProgress noTopMargin />
-          : <QRCodeForm 
+          : <QRCodeForm
               secret={secret}
               secretLink={secretLink}
               updateFor={[secret, secretLink]}
-            />  
+            />
         }
         <Divider className={classes.divider} />
         <ConfirmToken
-          error={tokenError} 
+          error={tokenError}
           token={token}
           submitting={submitting}
+          twoFactorConfirmed={twoFactorConfirmed}
           handleChange={this.handleTokenInputChange}
           onCancel={this.onCancel}
           onSubmit={this.onSubmit}

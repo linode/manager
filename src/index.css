@@ -44,7 +44,7 @@ body {
 
 a {
   text-decoration: none;
-  color: #3B85D9;
+  color: #3683DC;
 }
 
 :focus {
@@ -60,7 +60,7 @@ a {
   background: #ccc;
 }
 ::-webkit-scrollbar-thumb {
-  background: #3B85D9;
+  background: #3683DC;
 } */
 
 /* Reusable Classes */

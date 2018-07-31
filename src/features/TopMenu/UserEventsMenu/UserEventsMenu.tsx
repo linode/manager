@@ -12,17 +12,19 @@ import 'rxjs/add/operator/withLatestFrom';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
+import ListItem from '@material-ui/core/ListItem';
 import Menu from '@material-ui/core/Menu';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import { events$, init } from 'src/events';
-import notifications$ from 'src/notifications';
 import { markEventsSeen } from 'src/services/account';
 
-import UserNotificationButton from './UserNotificationButton';
-import UserNotificationList from './UserNotificationList';
+import UserEventsButton from './UserEventsButton';
+import UserEventsList from './UserEventsList';
 
-type ClassNames = 'root' | 'dropDown';
+type ClassNames = 'root'
+  | 'dropDown'
+  | 'hidden';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -40,6 +42,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     [theme.breakpoints.up('sm')]: {
       width: 380,
     },
+  },
+  hidden: {
+    height: 0,
+    padding: 0,
   },
 });
 
@@ -60,7 +66,7 @@ interface EventsMap {
   [index: string]: Linode.Event;
 }
 
-class UserNotificationMenu extends React.Component<CombinedProps, State> {
+class UserEventsMenu extends React.Component<CombinedProps, State> {
   state = {
     events: [],
     notifications: [],
@@ -78,35 +84,25 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     this.mounted = true;
-    this.subscription = Observable
-      .combineLatest(
-        notifications$,
-        events$
-          /** Filter the fuax event used to kick off the progress bars. */
-          .filter((event: Linode.Event) => event.id !== 1)
+    this.subscription = events$
+      /** Filter the fuax event used to kick off the progress bars. */
+      .filter((event: Linode.Event) => event.id !== 1)
 
-          /** Create a map of the Events using Event.ID as the key. */
-          .scan((events: EventsMap, event: Linode.Event) =>
-            assoc(String(event.id), event, events), {}),
-    )
+      /** Create a map of the Events using Event.ID as the key. */
+      .scan((events: EventsMap, event: Linode.Event) =>
+        assoc(String(event.id), event, events), {})
+
       /** Wait for the events to settle before calling setState. */
       .debounce(() => Observable.interval(250))
 
       /** Notifications are fine, but the events need to be extracts and sorted. */
-      .map(([notifications, events]) => {
-        return [
-          notifications,
-          extractAndSortByCreated(events),
-        ];
-      })
+      .map(extractAndSortByCreated)
       .subscribe(
-        ([notifications, events]: [Linode.Notification[], Linode.Event[]]) => {
+        (events: Linode.Event[]) => {
           if (!this.mounted) { return; }
-
           this.setState({
             unseenCount: getNumUnseenEvents(events),
             events,
-            notifications,
           });
         },
         () => null,
@@ -138,16 +134,16 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { anchorEl, events, unseenCount, notifications } = this.state;
+    const { anchorEl, events, unseenCount } = this.state;
     const { classes } = this.props;
 
     return (
       <React.Fragment>
-        <UserNotificationButton
-          onClick={e => this.setState({ anchorEl: e.currentTarget })}
+        <UserEventsButton
+          onClick={this.openMenu}
           getRef={this.setRef}
-          notificationCount={unseenCount}
-          disabled={notifications.length + events.length === 0}
+          count={unseenCount}
+          disabled={events.length === 0}
           className={anchorEl ? 'active' : ''}
         />
         <Menu
@@ -156,15 +152,25 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           transformOrigin={{ vertical: 'top', horizontal: 'right' }}
           open={Boolean(anchorEl)}
-          onClose={() => this.setState({ anchorEl: undefined })}
+          onClose={this.closeMenu}
           className={classes.root}
           PaperProps={{ className: classes.dropDown }}
         >
-          <UserNotificationList notifications={notifications} events={events} />
+          <ListItem key="placeholder" className={classes.hidden} tabIndex={1} />
+          <UserEventsList
+            events={events}
+            closeMenu={this.closeMenu}
+          />
         </Menu>
       </React.Fragment>
     );
   }
+
+  openMenu = (e: React.MouseEvent<HTMLElement>) =>
+    this.setState({ anchorEl: e.currentTarget });
+
+  closeMenu = (e: React.MouseEvent<HTMLElement>) =>
+    this.setState({ anchorEl: undefined })
 }
 
 const styled = withStyles(styles, { withTheme: true });
@@ -190,4 +196,4 @@ const getNumUnseenEvents = (events: Linode.Event[]) => {
   return unseenCount;
 };
 
-export default styled<Props>(UserNotificationMenu);
+export default styled<Props>(UserEventsMenu);

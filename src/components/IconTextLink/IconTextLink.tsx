@@ -19,7 +19,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     padding: 12,
     color: theme.palette.primary.main,
     transition: theme.transitions.create(['color']),
-    margin: '0 -12px 6px 0',
+    margin: '0 -12px 7px 0',
     minHeight: 'auto',
     '&:hover': {
       color: theme.palette.primary.light,
@@ -49,6 +49,8 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     fontSize: 18,
     marginRight: 5,
     color: theme.palette.primary.main,
+    position: 'relative',
+    top: 2,
     '& .border': {
       transition: theme.transitions.create(['color']),
     },

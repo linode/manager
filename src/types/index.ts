@@ -39,6 +39,7 @@ namespace Linode {
 
   export interface ResourcesState {
     types: { loading: boolean; data: ResourcePage<Linode.LinodeType>; };
+    regions: { loading: boolean; data: Linode.Region[] };
     kernels: { loading: boolean; data: Linode.Kernel[] };
     profile: { loading: boolean; data: Linode.Profile };
   }
@@ -77,12 +78,14 @@ namespace Linode {
     'ticket_abuse' |
     'notice';
 
+  export type NotificationSeverity = 'minor' | 'major' | 'critical';
+
   export interface Notification {
     entity: null | Entity;
     label: string;
     message: string;
     type: NotificationType;
-    severity: 'minor' | 'major' | 'critical';
+    severity: NotificationSeverity;
     when: null | string;
     until: null | string;
   }
@@ -95,34 +98,38 @@ namespace Linode {
   }
 
   export type EventAction =
-    'linode_boot' |
-    'linode_create' |
-    'linode_delete' |
-    'linode_shutdown' |
-    'linode_reboot' |
-    'linode_snapshot' |
-    'linode_addip' |
-    'linode_migrate' |
-    'linode_rebuild' |
-    'linode_clone' |
+    'backups_cancel' |
+    'backups_enable' |
+    'backups_restore' |
     'disk_create' |
     'disk_delete' |
     'disk_duplicate' |
-    'disk_resize' |
     'disk_imagize' |
-    'backups_enable' |
-    'backups_cancel' |
-    'backups_restore' |
-    'password_reset' |
+    'disk_resize' |
     'domain_create' |
     'domain_delete' |
     'domain_record_create' |
     'domain_record_delete' |
     'image_delete' |
+    'linode_addip' |
+    'linode_boot' |
+    'linode_clone' |
+    'linode_create' |
+    'linode_delete' |
+    'linode_migrate' |
+    'linode_reboot' |
+    'linode_rebuild' |
+    'linode_shutdown' |
+    'linode_snapshot' |
+    'nodebalancer_config_create' |
+    'nodebalancer_config_delete' |
+    'nodebalancer_create' |
+    'nodebalancer_delete' |
+    'password_reset' |
     'stackscript_create' |
+    'stackscript_delete' |
     'stackscript_publicize' |
     'stackscript_revise' |
-    'stackscript_delete' |
     'volume_create' |
     'volume_delete' |
     'volume_detach';

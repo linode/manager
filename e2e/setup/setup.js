@@ -11,7 +11,7 @@ const getAxiosInstance = function(token) {
             rejectUnauthorized: false
         }),
         baseURL: API_ROOT,
-        timeout: 5000,
+        timeout: 10000,
         headers: { 'Authorization': `Bearer ${token}`},
       });
     } else if (!token && axiosInstance === undefined) {
@@ -272,5 +272,41 @@ exports.removeStackScript = (token, id) => {
                 console.error('Error', error);
                 reject(error);
             });
+    });
+}
+
+
+exports.getPrivateImages = token => {
+    return browser.call(function() {
+        return new Promise((resolve, reject) => {
+            const endpoint = '/images?page=1';
+
+            return getAxiosInstance(token).get(endpoint, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'X-Filter': '{"is_public":false}'
+                }
+            })
+            .then(response => resolve(response.data))
+            .catch(error => {
+                console.error('Error', error);
+                reject(error);
+            });
+        });
+    });
+}
+
+exports.removeImage = (token, id) => {
+    return browser.call(function() {
+        return new Promise((resolve, reject) => {
+            const endpoint = `/images/${id}`;
+
+            return getAxiosInstance(token).delete(endpoint)
+                .then(response => resolve(response.data))
+                .catch(error => {
+                    console.error('Error', error);
+                    reject(error);
+                });
+        });
     });
 }
