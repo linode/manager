@@ -130,7 +130,6 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
 
     return (
       <ExpansionPanel
-        defaultExpanded
         heading="Reset Root Password"
         success={this.state.success}
         actions={this.renderExpansionActions}

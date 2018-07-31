@@ -24,7 +24,7 @@ class LinodeAdvancedConfigurationsPanel extends React.Component<CombinedProps, S
     return (
       <React.Fragment>
         {
-          <ExpansionPanel defaultExpanded heading="Advanced Configurations">
+          <ExpansionPanel heading="Advanced Configurations">
             <LinodeConfigs />
             <LinodeDisks />
           </ExpansionPanel>
