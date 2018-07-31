@@ -73,6 +73,7 @@ const errorResources = {
   region: 'A region selection',
   label: 'A label',
   root_pass: 'A root password',
+  image: 'Image',
 };
 
 type Info = { title: string, details?: string } | undefined;
@@ -215,8 +216,9 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
             images={images}
             handleSelection={this.handleSelectImage}
             selectedImageID={selectedImageID}
-            updateFor={[selectedImageID]}
+            updateFor={[selectedImageID, errors]}
             initTab={initTab}
+            error={hasErrorFor('image')}
           />
           <SelectRegionPanel
             error={hasErrorFor('region')}
