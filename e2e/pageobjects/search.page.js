@@ -11,19 +11,19 @@ class SearchBar extends Page {
     get suggestionDesc() { return $('[data-qa-suggestion-title]'); }
 
     executeSearch(query) {
-        this.searchElem.waitForVisible();
+        this.searchElem.waitForVisible(constants.wait.normal);
         this.searchElem.click();
         browser.trySetValue('[data-qa-search] input', query);
     }
 
     assertSearchDisplays() {
-        this.searchElem.waitForVisible();
-        this.searchInput.waitForVisible();
-        this.searchIcon.waitForVisible();
+        this.searchElem.waitForVisible(constants.wait.normal);
+        this.searchInput.waitForVisible(constants.wait.normal);
+        this.searchIcon.waitForVisible(constants.wait.normal);
     }
 
     assertSuggestions() {
-        browser.waitForVisible('[data-qa-suggestion]');
+        browser.waitForVisible('[data-qa-suggestion]', constants.wait.normal);
 
         // Assert suggestions display icons, titles, descriptions
         this.suggestions
@@ -39,7 +39,7 @@ class SearchBar extends Page {
     }
 
     navigateToSuggestion(suggestion) {
-        browser.waitForVisible('[data-qa-suggestion]');
+        browser.waitForVisible('[data-qa-suggestion]', constants.wait.normal);
 
         suggestion.click();
         browser.waitForVisible('[data-qa-circle-progress]', constants.wait.normal, true);
@@ -51,7 +51,7 @@ class SearchBar extends Page {
         } else {
             browser.keys('ArrowDown');
         }
-        browser.waitForVisible('[data-qa-suggestion]');
+        browser.waitForVisible('[data-qa-suggestion]', constants.wait.normal);
         // key down and enter fails to work on firefox
         const selected = this.suggestions[0].getAttribute('data-qa-selected');
         expect(selected).toBe('true');

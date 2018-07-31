@@ -171,3 +171,11 @@ export const getInvoiceItems = (invoiceId: number, params: any = {}, filters: an
     setXFilter(filters),
   )
     .then(response => response.data);
+
+export const makePayment = (data: { usd: string, ccv: string }) =>
+  Request<Linode.Payment>(
+    setURL(`${API_ROOT}/account/payments`),
+    setMethod('POST'),
+    setData(data),
+  )
+    .then(response => response.data)

@@ -26,7 +26,7 @@ class ListNodeBalancers extends Page {
             expect(nb.$(this.nodeStatus.selector).getText()).toMatch(/\d* up\s\d down/gm);
             expect(nb.$(this.transferred.selector).getText()).toMatch(/\d* bytes/ig);
             expect(nb.$(this.ports.selector).getText()).toMatch(/\d/);
-            expect(nb.$(this.ips.selector).getText()).toMatch(/\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.|$)){4}\b/g);
+            expect(nb.$(this.ips.selector).getText()).toMatch(/\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.|$)){4}\b/gm);
             expect(nb.$(this.region.selector).isVisible()).toBe(true);
             expect(nb.$(this.addNodeBalancer.selector).isVisible()).toBe(true);
         });

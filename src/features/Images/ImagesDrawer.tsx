@@ -280,6 +280,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
           diskError={diskError}
           handleChange={changeDisk}
           updateFor={[disks, selectedDisk, diskError]}
+          data-qa-disk-select
         />
        }
 
@@ -292,7 +293,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
               onChange={changeLabel}
               error={Boolean(labelError)}
               errorText={labelError}
-              data-qa-volume-label
+              data-qa-image-label
             />
 
             <TextField
@@ -303,7 +304,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
               onChange={changeDescription}
               error={Boolean(descriptionError)}
               errorText={descriptionError}
-              data-qa-size
+              data-qa-image-description
             />
           </React.Fragment>
         }

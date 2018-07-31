@@ -12,8 +12,8 @@ import 'rxjs/add/operator/withLatestFrom';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
+import ListItem from '@material-ui/core/ListItem';
 import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import { events$, init } from 'src/events';
@@ -133,8 +133,6 @@ class UserEventsMenu extends React.Component<CombinedProps, State> {
     this.buttonRef = element;
   }
 
-  closeMenu = () => this.setState({ anchorEl: undefined });
-
   render() {
     const { anchorEl, events, unseenCount } = this.state;
     const { classes } = this.props;
@@ -142,7 +140,7 @@ class UserEventsMenu extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <UserEventsButton
-          onClick={e => this.setState({ anchorEl: e.currentTarget })}
+          onClick={this.openMenu}
           getRef={this.setRef}
           count={unseenCount}
           disabled={events.length === 0}
@@ -158,7 +156,7 @@ class UserEventsMenu extends React.Component<CombinedProps, State> {
           className={classes.root}
           PaperProps={{ className: classes.dropDown }}
         >
-          <MenuItem key="placeholder" className={classes.hidden} />
+          <ListItem key="placeholder" className={classes.hidden} tabIndex={1} />
           <UserEventsList
             events={events}
             closeMenu={this.closeMenu}
@@ -167,6 +165,12 @@ class UserEventsMenu extends React.Component<CombinedProps, State> {
       </React.Fragment>
     );
   }
+
+  openMenu = (e: React.MouseEvent<HTMLElement>) =>
+    this.setState({ anchorEl: e.currentTarget });
+
+  closeMenu = (e: React.MouseEvent<HTMLElement>) =>
+    this.setState({ anchorEl: undefined })
 }
 
 const styled = withStyles(styles, { withTheme: true });

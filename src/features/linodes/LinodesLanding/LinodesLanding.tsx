@@ -267,8 +267,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     this.getLinodes(Math.min(page), this.state.pageSize);
   }
 
-  handlePageSizeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    this.getLinodes(this.state.page, parseInt(event.target.value, 0));
+  handlePageSizeChange = (pageSize: number) => {
+    this.getLinodes(this.state.page, pageSize);
   }
 
   selectConfig = (id: number) => {

@@ -112,6 +112,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
           variant="raised"
           color="primary"
           aria-owns={anchorEl ? 'add-new-menu' : undefined}
+          aria-expanded={anchorEl ? true : undefined}
           aria-haspopup="true"
           onClick={this.handleClick}
           className={classes.button}

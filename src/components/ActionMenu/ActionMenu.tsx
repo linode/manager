@@ -45,6 +45,9 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     '& svg': {
       fontSize: '28px',
     },
+    '&[aria-expanded="true"] .kebob': {
+      fill: theme.palette.primary.dark,
+    },
   },
   actionSingleLink: {
     marginRight: theme.spacing.unit,
@@ -105,25 +108,17 @@ class ActionMenu extends React.Component<CombinedProps, State> {
 
     if (typeof actions === 'undefined') { return null; }
 
-    return actions.length === 1
-      ? (actions as Action[]).map((a, idx) =>
-        <a
-          href="#"
-          key={idx}
-          onClick={e => a.onClick(e)}
-          className={classes.actionSingleLink}
-          data-qa-action-menu-link>
-            {a.title}
-        </a>)
-      : (<div className={classes.root}>
+    return (
+      <div className={classes.root}>
         <IconButton
           aria-owns={anchorEl ? 'action-menu' : undefined}
+          aria-expanded={anchorEl ? true : undefined}
           aria-haspopup="true"
           onClick={this.handleClick}
           className={classes.button}
           data-qa-action-menu
         >
-          <MoreHoriz color="primary" />
+          <MoreHoriz color="primary" className="kebob" />
         </IconButton >
         <Menu
           id="action-menu"
@@ -148,7 +143,8 @@ class ActionMenu extends React.Component<CombinedProps, State> {
             </MenuItem>,
           )}
         </Menu>
-      </div >);
+      </div >
+    );
   }
 }
 

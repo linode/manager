@@ -1,2 +1,2 @@
-import PaginationFooter from './PaginationFooter';
-export default PaginationFooter;
+
+export { default, PaginationProps } from './PaginationFooter';

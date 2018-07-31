@@ -33,7 +33,7 @@ class ListStackScripts extends Page {
     get docsHelperLink() { return $('[data-qa-doc]'); }
 
     baseElementsDisplay() {
-        this.header.waitForVisible();
+        this.header.waitForVisible(constants.wait.normal);
         expect(this.sidebarTitle.isVisible()).toBe(true);
         expect(this.stackScriptTable.isVisible()).toBe(true);
         expect(this.header.getText()).toBe('StackScripts');

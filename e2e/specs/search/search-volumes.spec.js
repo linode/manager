@@ -26,7 +26,7 @@ describe('Header - Search - Volumes Suite', () => {
         try {
             VolumeDetail.volumeCellElem.isVisible();
         } catch (err) {
-            if (!VolumeDetail.placeholderText.waitForVisible()) {
+            if (!VolumeDetail.placeholderText.waitForVisible(constants.wait.normal)) {
                 throw err;
             }
         }
@@ -63,12 +63,12 @@ describe('Header - Search - Volumes Suite', () => {
         browser.url(constants.routes.linodes);
         SearchBar.assertSearchDisplays();
         SearchBar.executeSearch(testVolume.label);
-        browser.waitForVisible('[data-qa-suggestion]', constants.wait.short);
+        browser.waitForVisible('[data-qa-suggestion]', constants.wait.normal);
     });
 
     it('should navigate to linode detail volume page', () => {
         browser.click('[data-qa-suggestion]');
-        VolumeDetail.volumeCellElem.waitForVisible();
+        VolumeDetail.volumeCellElem.waitForVisible(constants.wait.normal);
     });
 
     it('should remove the volume', () => {
@@ -79,6 +79,6 @@ describe('Header - Search - Volumes Suite', () => {
 
     it('should not display suggestion after removal', () => {
         SearchBar.executeSearch(testVolume.label);
-        browser.waitForVisible('[data-qa-suggestion]', constants.wait.short, true);
+        browser.waitForVisible('[data-qa-suggestion]', constants.wait.normal, true);
     });
 });
