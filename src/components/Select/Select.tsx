@@ -1,11 +1,13 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 
+import Fade from '@material-ui/core/Fade';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Input, { InputProps } from '@material-ui/core/Input';
 import { MenuProps } from '@material-ui/core/Menu';
 import Select, { SelectProps } from '@material-ui/core/Select';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 
 import HelpIcon from 'src/components/HelpIcon';
 
@@ -91,8 +93,7 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
     transformOrigin: { vertical: 'top', horizontal: 'left' },
     MenuListProps: { className: 'selectMenuList' },
     PaperProps: { className: 'selectMenuDropdown' },
-    /** @todo Had to disable transition. */
-    // transition: Fade,
+    TransitionComponent: Fade,
   };
 
   const inputProps: InputProps = {
@@ -119,6 +120,7 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
           MenuProps={menuProps}
           input={<Input {...inputProps} />}
           {...props}
+          IconComponent={KeyboardArrowDown}
           data-qa-select
         >
           {children}
