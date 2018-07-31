@@ -255,7 +255,7 @@ export class App extends React.Component<CombinedProps, State> {
                         <Route exact path="/billing" component={Account} />
                         <Route exact path="/billing/invoices/:invoiceId" component={InvoiceDetail} />
                         <Route path="/users" component={Users} />
-                        <Route exact path="/support" component={Support} />
+                        <Route exact path="/support" render={this.Support} />
                         <Route path="/support/tickets" component={SupportTickets} />
                         <Route path="/profile" component={Profile} />
                         {/* Update to Dashboard when complete */}
