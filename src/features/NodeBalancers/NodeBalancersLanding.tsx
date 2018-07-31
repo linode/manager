@@ -199,6 +199,7 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
         return this.setState({
           deleteConfirmDialog: {
             ...this.state.deleteConfirmDialog,
+            submitting: false,
             errors: apiError
               ? apiError
               : [{ field: 'none', reason: 'Unable to complete your request at this time.' }],
