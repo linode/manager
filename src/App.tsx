@@ -49,7 +49,7 @@ const Images = DefaultLoader({
 })
 
 const Profile = DefaultLoader({
-  loader: () => import('src/features/profile'),
+  loader: () => import('src/features/Profile'),
 });
 
 const NodeBalancers = DefaultLoader({
