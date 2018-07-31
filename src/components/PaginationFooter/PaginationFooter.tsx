@@ -24,7 +24,7 @@ export interface PaginationProps {
   pageSize: number;
 }
 
-interface Props extends PaginationProps{
+interface Props extends PaginationProps {
   handlePageChange: (page: number) => void;
   handleSizeChange: (pageSize: number) => void;
 }
@@ -37,6 +37,8 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
 
   render() {
     const { classes, count, page, pageSize, handlePageChange } = this.props;
+
+    if (count <= 25) { return null; }
 
     return (
       <Grid
