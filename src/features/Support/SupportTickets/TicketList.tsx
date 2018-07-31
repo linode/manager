@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 
 import Paper from '@material-ui/core/Paper';
 import TableBody from '@material-ui/core/TableBody';
@@ -24,21 +25,29 @@ interface State { // extends PaginationProps {
 }
 
 class TicketList extends React.Component<Props, State> {
+  mounted: boolean = false;
   state = {
     tickets: [],
     error: undefined,
   }
 
   componentDidMount() {
+    this.mounted = true;
     this.getTickets();
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   getTickets = () => {
     getOpenTicketsPage()
       .then((response) => {
-        this.setState({ tickets: response.data.data });
+        if (!this.mounted) { return; }
+        this.setState({ tickets: response.data.data, error: undefined });
       })
       .catch((error) => {
+        if (!this.mounted) { return; }
         this.setState({ error });
       })
   }
@@ -85,16 +94,19 @@ class TicketList extends React.Component<Props, State> {
               </TableRow>
             </TableHead>
             <TableBody>
-              {tickets.map((ticket: Linode.SupportTicket, idx:number) =>
-                <TableRow key={idx} >
-                  <TableCell data-qa-support-id-header>{ticket.id}</TableCell>
-                  <TableCell data-qa-support-topic-header>{capitalize(ticket.entity.type)}</TableCell>
-                  <TableCell data-qa-support-topic-header>{ticket.entity.label}</TableCell>
-                  <TableCell data-qa-support-subject-header>{ticket.summary}</TableCell>
-                  <TableCell data-qa-support-date-header>{formatDate(ticket.opened, true)}</TableCell>
-                  <TableCell data-qa-support-updated-header>{formatDate(ticket.updated, true)}</TableCell>
-                  <TableCell />
-                </TableRow>
+              {tickets.map((ticket: Linode.SupportTicket, idx:number) => {
+                const entityLink = `/${ticket.entity.type}s/${ticket.entity.id}`
+                return (
+                  <TableRow key={idx} >
+                    <TableCell data-qa-support-id-header><Link to="/support">{ticket.id}</Link></TableCell>
+                    <TableCell data-qa-support-topic-header>{capitalize(ticket.entity.type)}</TableCell>
+                    <TableCell data-qa-support-topic-header><Link to={entityLink} >{ticket.entity.label}</Link></TableCell>
+                    <TableCell data-qa-support-subject-header>{ticket.summary}</TableCell>
+                    <TableCell data-qa-support-date-header>{formatDate(ticket.opened, true)}</TableCell>
+                    <TableCell data-qa-support-updated-header>{formatDate(ticket.updated, true)}</TableCell>
+                    <TableCell />
+                  </TableRow>
+                )}
               )}
             </TableBody>
           </Table>
