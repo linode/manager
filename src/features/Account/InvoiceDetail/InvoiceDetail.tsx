@@ -125,6 +125,14 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
               </TableBody>
             </Table>
           </Grid>
+          <Grid item xs={12}>
+            <Grid container justify="space-between">
+              <Grid item className={classes.titleWrapper} alignItems="center"/>
+              <Grid item className={classes.titleWrapper} alignItems="center">
+                {invoice && <Typography variant="title">Total ${Number(invoice.total).toFixed(2)}</Typography>}
+              </Grid>
+            </Grid>
+          </Grid>
         </Grid>
       </Paper>
     );
