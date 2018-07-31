@@ -1,4 +1,4 @@
-import { compose, pathOr, range, takeLast } from 'ramda';
+import { compose, pathOr, range, take, takeLast } from 'ramda';
 import * as React from 'react';
 
 import Divider from '@material-ui/core/Divider';
@@ -69,7 +69,7 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
   };
 
   handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ card_number: e.target.value || '' });
+    this.setState({ card_number: e.target.value ? take(19, e.target.value) : '' });
   }
 
   handleExpiryMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -131,7 +131,6 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
 
     return (
       <ExpansionPanel
-        defaultExpanded
         heading="Update Credit Card"
         actions={this.renderActions}
       >
@@ -184,7 +183,7 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
                   <TextField
                     required
                     select
-                    label='Month'
+                    label='Expiration Month'
                     value={this.state.expiry_month}
                     onChange={this.handleExpiryMonthChange}
                     errorText={hasErrorFor('expiry_month')}
@@ -196,7 +195,7 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
                   <TextField
                     required
                     select
-                    label='Year'
+                    label='Expiration Year'
                     value={this.state.expiry_year}
                     onChange={this.handleExpiryYearChange}
                     errorText={hasErrorFor('expiry_year')}
@@ -221,11 +220,11 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
     );
   };
 
-  static genMenuItems = (r: number[]) => r.map((v) => <MenuItem key={v} value={v}>{v}</MenuItem>);
+  static yearMenuItems = range(2018, 2039)
+    .map((v: number) => <MenuItem key={v} value={v}>{v}</MenuItem>)
 
-  static monthMenuItems = UpdateCreditCardPanel.genMenuItems(range(1, 13))
-
-  static yearMenuItems = UpdateCreditCardPanel.genMenuItems(range(2018, 2039))
+  static monthMenuItems = range(1, 13)
+    .map((v: number) => <MenuItem key={v} value={v}>{String(v).padStart(2, '0')}</MenuItem>)
 }
 
 const styled = withStyles(styles, { withTheme: true });
