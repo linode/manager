@@ -1,3 +1,5 @@
+import * as moment from 'moment';
+import { compose, map, sort } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -7,10 +9,11 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
-import ErrorState from 'src/components/ErrorState';
-// import PaginationFooter, { PaginationProps } from 'src/components/PaginationFooter';
-import Placeholder from 'src/components/Placeholder';
+import PaginationFooter, { PaginationProps } from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
+import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import TableRowError from 'src/components/TableRowError';
+import TableRowLoading from 'src/components/TableRowLoading';
 import { getOpenTicketsPage } from 'src/services/support';
 import capitalize from 'src/utilities/capitalize';
 import { formatDate } from 'src/utilities/format-date-iso8601';
@@ -19,9 +22,13 @@ interface Props {
   filterStatus: 'open' | 'closed';
 }
 
-interface State { // extends PaginationProps {
+interface State extends PaginationProps {
   error?: Linode.ApiFieldError[];
   tickets: Linode.SupportTicket[];
+  loading: boolean;
+  page: number;
+  count: number;
+  pageSize: number;
 }
 
 class TicketList extends React.Component<Props, State> {
@@ -29,54 +36,107 @@ class TicketList extends React.Component<Props, State> {
   state = {
     tickets: [],
     error: undefined,
+    loading: true,
+    page: 1,
+    count: 1,
+    pageSize: 25,
   }
 
   componentDidMount() {
     this.mounted = true;
-    this.getTickets();
+    this.getTickets(0);
   }
 
   componentWillUnmount() {
     this.mounted = false;
   }
 
-  getTickets = () => {
-    getOpenTicketsPage()
+  compareTickets = (a:Linode.SupportTicket, b:Linode.SupportTicket) => {
+    return moment(b.updated).diff(moment(a.updated));
+  }
+
+  getSortedTickets = (incoming: Linode.SupportTicket[]) => {
+    // Sort by when each ticket was last updated
+    return sort(this.compareTickets,incoming);
+  }
+
+  getTickets = (page:number = 1) => {
+    const { tickets, pageSize } = this.state;
+    this.setState({ error: undefined, loading: tickets.length === 0});
+
+    getOpenTicketsPage({ page_size: pageSize, page })
       .then((response) => {
         if (!this.mounted) { return; }
-        this.setState({ tickets: response.data.data, error: undefined });
+        
+        this.setState({
+          loading: false,
+          tickets: this.getSortedTickets(response.data),
+          error: undefined,
+          count: response.results,
+          page: response.page,
+          });
       })
       .catch((error) => {
         if (!this.mounted) { return; }
-        this.setState({ error });
+        this.setState({ error, loading: false, });
       })
   }
 
-  render() {
-    const { error, tickets } = this.state;
+  handlePageChange = (page: number) => this.getTickets(page);
 
-    /** Error State */
+  handlePageSizeChange = (pageSize: number) => {
+    if (!this.mounted) { return; }
+
+    this.setState(
+      { pageSize },
+      () => { this.getTickets() }, // Check this
+    );
+  }
+
+  renderContent = () => {
+    const { tickets, error, loading } = this.state;
+
+    if (loading) {
+      return <TableRowLoading colSpan={12} />
+    }
+
     if (error) {
-      return <ErrorState
-        errorText="There was an error retrieving your support tickets. Please reload and try again."
-      />;
+      return <TableRowError colSpan={12} message="We were unable to load your support tickets." />
     }
 
-    /** Empty State */
-    if (tickets.length === 0) {
-      return (
-        <React.Fragment>
-          <Placeholder
-            title="No open tickets"
-            copy="There are no open support tickets on your account. Click below to open a new ticket."
-            buttonProps={{
-              onClick: () => null,
-              children: 'Open a Ticket',
-            }}
-          />
-        </React.Fragment>
-      );
-    }
+    return tickets && tickets.length > 0 ? this.renderTickets(tickets) : <TableRowEmptyState colSpan={12} />
+  };
+
+  renderTickets = (tickets: Linode.SupportTicket[]) => tickets.map(this.renderRow);
+
+  renderEntityLink = (ticket: Linode.SupportTicket) => {
+    return ticket.entity
+      ? <Link to={`/${ticket.entity.type}s/${ticket.entity.id}`} >{ticket.entity.label}</Link>
+      : null
+  }
+
+  renderTopic = (ticket: Linode.SupportTicket) => {
+    return ticket.entity
+      ? capitalize(ticket.entity.type)
+      : null;
+  }
+
+  renderRow = (ticket: Linode.SupportTicket) => {
+    return (
+      <TableRow key={`ticket-${ticket.id}`} >
+        <TableCell data-qa-support-id-header><Link to="/support">{ticket.id}</Link></TableCell>
+        <TableCell data-qa-support-topic-header>{this.renderTopic(ticket)}</TableCell>
+        <TableCell data-qa-support-entity-header>{this.renderEntityLink(ticket)}</TableCell>
+        <TableCell data-qa-support-subject-header>{ticket.summary}</TableCell>
+        <TableCell data-qa-support-date-header>{formatDate(ticket.opened, true)}</TableCell>
+        <TableCell data-qa-support-updated-header>{formatDate(ticket.updated, true)}</TableCell>
+        <TableCell />
+      </TableRow>
+    );
+  };
+
+  render() {
+    const { count, tickets, page, pageSize, } = this.state;
 
     return (
       <React.Fragment>
@@ -94,22 +154,18 @@ class TicketList extends React.Component<Props, State> {
               </TableRow>
             </TableHead>
             <TableBody>
-              {tickets.map((ticket: Linode.SupportTicket, idx:number) => {
-                const entityLink = `/${ticket.entity.type}s/${ticket.entity.id}`
-                return (
-                  <TableRow key={idx} >
-                    <TableCell data-qa-support-id-header><Link to="/support">{ticket.id}</Link></TableCell>
-                    <TableCell data-qa-support-topic-header>{capitalize(ticket.entity.type)}</TableCell>
-                    <TableCell data-qa-support-topic-header><Link to={entityLink} >{ticket.entity.label}</Link></TableCell>
-                    <TableCell data-qa-support-subject-header>{ticket.summary}</TableCell>
-                    <TableCell data-qa-support-date-header>{formatDate(ticket.opened, true)}</TableCell>
-                    <TableCell data-qa-support-updated-header>{formatDate(ticket.updated, true)}</TableCell>
-                    <TableCell />
-                  </TableRow>
-                )}
-              )}
+              {this.renderContent()}
             </TableBody>
           </Table>
+          {tickets && tickets.length > 0 &&
+            <PaginationFooter
+              count={count}
+              page={page}
+              pageSize={pageSize}
+              handlePageChange={this.handlePageChange}
+              handleSizeChange={this.handlePageSizeChange}
+            />
+          }
         </Paper>
       </React.Fragment>
     );

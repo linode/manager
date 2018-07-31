@@ -13,15 +13,15 @@ export const getTickets = (params?: any, filter?: any) =>
     setXFilter(filter),
   )
 
-export const getOpenTicketsPage = (page: number = 0) =>
-  getTickets(page, {
+export const getOpenTicketsPage = (pagination: Linode.PaginationOptions = {}) =>
+  getTickets(pagination, {
     '+or': [
       { status: 'open'},
       { status: 'new' },
     ],
-  })
+  }).then((response) => response.data);
 
-export const getClosedTicketsPage = (page: number = 0) =>
-  getTickets(page, {
+export const getClosedTicketsPage = (pagination: Linode.PaginationOptions = {}) =>
+  getTickets(pagination, {
     status: 'closed',
-  })
+  }).then((response) => response.data);
