@@ -21,21 +21,13 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
     const { linodeId, linodeLabel, linodeStatus,
        openConfigDrawer, toggleConfirmation, history: { push } } = this.props;
 
-    return function (closeMenu: Function): Action[] {
+    return (closeMenu: Function): Action[] => {
       const actions = [
         {
           title: 'Launch Console',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             push(`/linodes/${linodeId}/glish`);
             e.preventDefault();
-          },
-        },
-        {
-          title: 'Reboot',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            e.preventDefault();
-            toggleConfirmation('reboot', linodeId, linodeLabel);
-            closeMenu();
           },
         },
         {
@@ -79,13 +71,23 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
       }
 
       if (linodeStatus === 'running') {
-        actions.unshift({
-          title: 'Power Off',
-          onClick: (e) => {
-            toggleConfirmation('power_down', linodeId, linodeLabel);
-            closeMenu();
+        actions.unshift(
+          {
+            title: 'Reboot',
+            onClick: (e: React.MouseEvent<HTMLElement>) => {
+              e.preventDefault();
+              toggleConfirmation('reboot', linodeId, linodeLabel);
+              closeMenu();
+            },
           },
-        });
+          {
+            title: 'Power Off',
+            onClick: (e) => {
+              toggleConfirmation('power_down', linodeId, linodeLabel);
+              closeMenu();
+            },
+          }
+        );
       }
 
       return actions;
