@@ -618,14 +618,14 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     const { grants, success, setAllPerm, saving } = this.state;
     return (
       <Paper className={classes.globalSection}>
-        <Grid container justify="space-between">
+        <Grid container justify="space-between" alignItems="center">
           <Grid item>
             <Typography variant="title">
               Specific Grants
             </Typography>
           </Grid>
           <Grid item>
-            <Grid container justify="flex-end" alignItems="center">
+            <Grid container justify="flex-end" alignItems="center" style={{ width: 'auto' }}>
               <Grid item>
                 Set all Grants to:
               </Grid>
@@ -712,7 +712,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             </Typography>
           </Grid>
           <Grid item className="p0">
-            <Grid container alignItems="center">
+            <Grid container alignItems="center" style={{ width: 'auto' }}>
               <Grid item>
                 <Typography variant="title">
                   Restrict Access:
