@@ -49,7 +49,7 @@ class TicketList extends React.Component<Props, State> {
     /** Error State */
     if (error) {
       return <ErrorState
-        errorText="There was an error retrieving your images. Please reload and try again."
+        errorText="There was an error retrieving your support tickets. Please reload and try again."
       />;
     }
 
