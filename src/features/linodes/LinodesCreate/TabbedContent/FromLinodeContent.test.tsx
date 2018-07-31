@@ -19,7 +19,7 @@ const mockProps = {
 describe('FromImageContent', () => {
   const componentWithNotice = shallow(
     <FromLinodeContent
-      classes={{ root: '', main: '', sidebar: '', paperNotice: '' }}
+      classes={{ root: '', main: '', sidebar: '' }}
       {...mockProps}
       notice={{
         text: 'hello world',
@@ -30,7 +30,7 @@ describe('FromImageContent', () => {
 
   const component = shallow(
     <FromLinodeContent
-      classes={{ root: '', main: '', sidebar: '', paperNotice: '' }}
+      classes={{ root: '', main: '', sidebar: '' }}
       {...mockProps}
       linodes={[]}
     />,
@@ -38,7 +38,7 @@ describe('FromImageContent', () => {
 
   const componentWithLinodes = shallow(
     <FromLinodeContent
-      classes={{ root: '', main: '', sidebar: '', paperNotice: '' }}
+      classes={{ root: '', main: '', sidebar: '' }}
       {...mockProps}
     />,
   );
