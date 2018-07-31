@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { compose, equals, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
@@ -479,4 +478,3 @@ export default compose<Linode.TodoAny, Linode.TodoAny, Linode.TodoAny, Linode.To
   connected,
   styled,
 )(VolumesLanding);
-
