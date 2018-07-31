@@ -2,7 +2,7 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import * as React from 'react';
-import LinearProgress from 'src/components/LinearProgress';
+import SkeletonScreen from 'src/components/SkeletonScreen';
 
 type ClassNames = 'root';
 
@@ -20,7 +20,7 @@ const tableRowLoading: React.StatelessComponent<CombinedProps> = (props) => {
   return (
     <TableRow>
       <TableCell colSpan={props.colSpan}>
-        <LinearProgress />
+        <SkeletonScreen type="table" />
       </TableCell>
     </TableRow>
   );
