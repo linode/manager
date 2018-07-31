@@ -17,7 +17,7 @@ describe('Linode Detail - Backups Suite', () => {
         browser.waitForVisible('[data-qa-add-new-menu-button]');
         apiCreateLinode();
         ListLinodes.navigateToDetail();
-        LinodeDetail.launchConsole.waitForVisible();
+        LinodeDetail.launchConsole.waitForVisible(constants.wait.normal);
         LinodeDetail.changeTab('Backups');
     });
 
