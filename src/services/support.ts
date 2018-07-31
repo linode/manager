@@ -1,9 +1,18 @@
 import { API_ROOT } from 'src/constants';
 
-import Request, { setMethod, setParams, setURL, setXFilter } from './index';
+import Request, { mockAPIError, setData, setMethod, setParams, setURL, setXFilter } from './index';
 
 type Page<T> = Linode.ResourcePage<T>;
 type SupportTicket = Linode.SupportTicket;
+interface TicketRequest {
+  summary: string;
+  description: string;
+  domain_id?: number;
+  linode_id?: number;
+  longviewclient_id?: number;
+  nodebalancer_id?: number;
+  volume_id?: number;
+}
 
 export const getTickets = (params?: any, filter?: any) =>
   Request<Page<SupportTicket>>(
@@ -25,3 +34,10 @@ export const getTicketsPage = (pagination: Linode.PaginationOptions = {}, open?:
 
   return getTickets(pagination, filter).then((response) => response.data);
 }
+
+export const createSupportTicket = (data:TicketRequest) => // mockAPIError(502, 'whatever', { errors: [ { reason: 'Shenanigans' } ] })
+  Request<SupportTicket>(
+    setURL(`${API_ROOT}/support/tickets`),
+    setMethod('POST'),
+    setData(data),
+  )

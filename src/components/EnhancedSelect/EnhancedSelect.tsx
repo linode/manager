@@ -37,11 +37,15 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
 interface Props {
   options: Item[];
   value: string;
-  handleSelect: (selected:any) => void;
+  handleSelect: (selected:Item) => void;
   onSubmit?: () => void;
+  disabled?: boolean;
   errorText?: string;
+  helperText?: string;
   label?: string;
   placeholder?: string;
+  inputValue: string;
+  onInputValueChange: (input:string) => void;
 }
 
 interface State {}
@@ -76,17 +80,13 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
     const { options } = this.props;
     const text = inputText.toLowerCase();
     return options.filter((item:Item) => {
-      return item.label.toLowerCase().includes(text);
+      return item.label ? item.label.toLowerCase().includes(text) : false;
     })
   }
 
   onSubmit = () => {
     const { onSubmit } = this.props;
     if (onSubmit) { onSubmit() }
-  }
-
-  stateReducer = (state:DownshiftState, change:StateChangeOptions ) => {
-    return change;
   }
 
   renderDownshift = (downshift:any) => {
@@ -101,7 +101,7 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
       selectedItem,
     } = downshift;
 
-    const { classes, errorText, label, placeholder } = this.props;
+    const { classes, disabled, errorText, helperText, label, placeholder } = this.props;
     const selectedIndex = this.getIndex(selectedItem);
     const placeholderText = placeholder ? placeholder : "Enter a value"
 
@@ -111,6 +111,8 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
           {...getInputProps({
             placeholder: placeholderText,
             errorText,
+            disabled,
+            helperText,
             label,
             onKeyPress: (e:React.KeyboardEvent<KeyboardEvent>) => {
               if (e.key === 'Enter') {
@@ -165,14 +167,15 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
   }
   
   render() {
-    const { value, handleSelect } = this.props;
+    const { value, handleSelect, inputValue, onInputValueChange } = this.props;
     return (
       <Downshift
         selectedItem={this.optionsIdx[value]}
         onSelect={handleSelect}
         itemToString={this.itemToString}
         render={this.renderDownshift}
-        stateReducer={this.stateReducer}
+        inputValue={inputValue}
+        onInputValueChange={onInputValueChange}
       />
     )
   }
