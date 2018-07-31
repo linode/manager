@@ -56,6 +56,7 @@ interface State {
   isLoading: boolean;
   error?: Error;
   numberOfResults: number;
+  numberOfVisibleResults: number;
 }
 
 type CombinedProps = Props
@@ -122,7 +123,7 @@ const getFilter = (whichRequest: RequestType, filterTerm: string) => {
   }
 }
 
-class SearchLanding extends React.Component<CombinedProps, State> {
+export class SearchLanding extends React.Component<CombinedProps, State> {
   constructor(props: CombinedProps) {
     super(props);
 
@@ -147,6 +148,7 @@ class SearchLanding extends React.Component<CombinedProps, State> {
       nodeBalancers: defaultData,
       isLoading: true,
       error: undefined,
+      numberOfVisibleResults: 0,
       numberOfResults: 0,
     }
   }
@@ -197,7 +199,12 @@ class SearchLanding extends React.Component<CombinedProps, State> {
             + volumesData.results
             + domainsData.results
             + nodeBalancersData.results
-            + stackScriptsData.results
+            + stackScriptsData.results,
+          numberOfVisibleResults: linodeData.data.length
+            + volumesData.data.length
+            + domainsData.data.length
+            + nodeBalancersData.data.length
+            + stackScriptsData.data.length,
         })
       })
       .catch(e => {
@@ -209,25 +216,68 @@ class SearchLanding extends React.Component<CombinedProps, State> {
       });
   }
 
+  /*
+  * START get more update handlers
+  * 
+  * Basically, when a user changes the page size or requests the next
+  * page of search results, we need to both update the displayed data
+  * and update the actual number of results displayed, so that we can
+  * display to the user, "Showing 23 out of 100 results"
+  */
+
   handleGetMoreLinodes = (newData: Linode.ResourcePage<Linode.Linode>) => {
-    this.setState({ linodes: newData });
+    const { volumes, nodeBalancers, domains, stackScripts } = this.state;
+    const newNumberOfVisibleResults = newData.data.length
+      + volumes.data.length
+      + stackScripts.data.length
+      + nodeBalancers.data.length
+      + domains.data.length;
+    this.setState({ linodes: newData, numberOfVisibleResults: newNumberOfVisibleResults });
   }
 
   handleGetMoreVolumes = (newData: Linode.ResourcePage<Linode.Volume>) => {
-    this.setState({ volumes: newData });
+    const { domains, nodeBalancers, linodes, stackScripts } = this.state;
+    const newNumberOfVisibleResults = newData.data.length
+      + domains.data.length
+      + stackScripts.data.length
+      + nodeBalancers.data.length
+      + linodes.data.length;
+    this.setState({ volumes: newData, numberOfVisibleResults: newNumberOfVisibleResults });
   }
 
   handleGetMoreStackScripts = (newData: Linode.ResourcePage<Linode.StackScript.Response>) => {
-    this.setState({ stackScripts: newData });
+    const { volumes, nodeBalancers, linodes, domains } = this.state;
+    const newNumberOfVisibleResults = newData.data.length
+      + volumes.data.length
+      + domains.data.length
+      + nodeBalancers.data.length
+      + linodes.data.length;
+    this.setState({ stackScripts: newData, numberOfVisibleResults: newNumberOfVisibleResults });
   }
 
   handleGetMoreDomains = (newData: Linode.ResourcePage<Linode.Domain>) => {
-    this.setState({ domains: newData });
+    const { volumes, nodeBalancers, linodes, stackScripts } = this.state;
+    const newNumberOfVisibleResults = newData.data.length
+      + volumes.data.length
+      + stackScripts.data.length
+      + nodeBalancers.data.length
+      + linodes.data.length;
+    this.setState({ domains: newData, numberOfVisibleResults: newNumberOfVisibleResults });
   }
 
   handleGetMoreNodeBalancers = (newData: Linode.ResourcePage<Linode.NodeBalancer>) => {
-    this.setState({ nodeBalancers: newData });
+    const { volumes, domains, linodes, stackScripts } = this.state;
+    const newNumberOfVisibleResults = newData.data.length
+      + volumes.data.length
+      + stackScripts.data.length
+      + domains.data.length
+      + linodes.data.length;
+    this.setState({ nodeBalancers: newData, numberOfVisibleResults: newNumberOfVisibleResults });
   }
+
+  /*
+  * END get more update handlers
+  */
 
   renderPanels = () => {
     const {
@@ -307,6 +357,8 @@ class SearchLanding extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes } = this.props;
+    const { numberOfResults, numberOfVisibleResults } = this.state;
+
     if (!!this.state.error) { return <ErrorState errorText={this.state.error.message} /> }
     if (this.state.isLoading) { return <CircularProgress /> }
     return (
@@ -315,7 +367,7 @@ class SearchLanding extends React.Component<CombinedProps, State> {
           {`Search Results for "${this.state.query.query}"`}
         </Typography>
         <Typography variant="subheading" className={classes.title}>
-          {`Showing x Results out of ${this.state.numberOfResults}`}
+          {`Showing ${numberOfVisibleResults} Results out of ${numberOfResults}`}
         </Typography>
         {(this.state.numberOfResults === 0)
           ? <Typography className={classes.noResultsText} variant="subheading">

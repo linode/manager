@@ -8,7 +8,10 @@ import {
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
+
+import ErrorState from 'src/components/ErrorState';
 import ExpansionPanel from 'src/components/ExpansionPanel';
+import LinearProgress from 'src/components/LinearProgress';
 import PaginationFooter from 'src/components/PaginationFooter';
 
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
@@ -21,7 +24,8 @@ import ClickableRow from './ClickableRow';
 
 type ClassNames = 'root'
   | 'icon'
-  | 'paginationWrapper';
+  | 'paginationWrapper'
+  | 'loader';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
@@ -38,6 +42,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   paginationWrapper: {
     padding: theme.spacing.unit * 3,
   },
+  loader: {
+    margin: theme.spacing.unit * 2,
+  }
 });
 
 interface RequestInfo {
@@ -56,6 +63,8 @@ interface Props {
 interface State {
   pageSize: number;
   currentPage: number;
+  isLoadingMoreResults: boolean;
+  error?: string;
 }
 
 type CombinedProps = Props
@@ -65,29 +74,53 @@ class SearchResultsPanel extends React.Component<CombinedProps, State> {
   state: State = {
     pageSize: 25,
     currentPage: 1,
+    isLoadingMoreResults: false,
   };
 
     
   handleChangePageSize = (newPageSize: number) => {
     const { requestInfo } = this.props;
+    this.setState({
+      pageSize: +newPageSize,
+      currentPage: 1,
+      isLoadingMoreResults: true
+    })
     requestInfo.requestFn(
       { page: 1, page_size: newPageSize },
       requestInfo.filter)
       .then((data: Linode.ResourcePage<any>) => {
+        this.setState({ isLoadingMoreResults: false });
         return requestInfo.updateStateHandler(data);
+      })
+      .catch(e => {
+        this.setState({
+          isLoadingMoreResults: false,
+          error: "There was an error retrieving results. Please try again."
+        });
+        return e;
       });
-    this.setState({ pageSize: +newPageSize, currentPage: 1 })
   }
 
   handlePageChange = (newPage: number) => {
     const { requestInfo } = this.props;
+    this.setState({
+      currentPage: newPage,
+      isLoadingMoreResults: true
+    })
     requestInfo.requestFn(
       { page: newPage, page_size: this.state.pageSize },
       requestInfo.filter)
       .then((data: Linode.ResourcePage<any>) => {
+        this.setState({ isLoadingMoreResults: false });
         return requestInfo.updateStateHandler(data);
-      });
-    this.setState({ currentPage: newPage })
+      })
+      .catch(e => {
+        this.setState({
+          isLoadingMoreResults: false,
+          error: "There was an error retrieving results. Please try again."
+        });
+        return e;
+      })
   }
 
   getResultUrl = (type:string, id: string) => {
@@ -99,7 +132,8 @@ class SearchResultsPanel extends React.Component<CombinedProps, State> {
       case 'StackScripts':
         // @todo update to SS detail page/modal
         // This is an unfortunate hack in the meantime.
-        window.location.href = `https://www.linode.com/stackscripts/view/${id}`
+        window.open(`https://www.linode.com/stackscripts/view/${id}`, '_blank');
+        return '';
       case 'Domains':
         return `domains/${id}`
       case 'NodeBalancers':
@@ -159,27 +193,28 @@ class SearchResultsPanel extends React.Component<CombinedProps, State> {
     )
   }
 
-  render() {
+  renderContent = () => {
     const {
       data,
       label,
       classes
     } = this.props;
-    const { pageSize, currentPage } = this.state;
+
+    const {
+      pageSize,
+      currentPage,
+      isLoadingMoreResults,
+      error,
+    } = this.state;
+
+    if (!!error) { return <ErrorState errorText={error} /> }
+
+    if (isLoadingMoreResults) { return <LinearProgress className={classes.loader} /> }
 
     return (
-      <ExpansionPanel
-        heading={label}
-        key={label}
-        defaultExpanded={!!data.data.length}
-        noPadding
-      >
-        <List>
-          {data.data.map((eachEntity: any) =>
-            this.renderPanelRow(label, eachEntity))}
-        </List>
+      <React.Fragment>
         {data.results > 25 &&
-         <div className={classes.paginationWrapper}>
+          <div className={classes.paginationWrapper}>
             <PaginationFooter
               count={data.results}
               page={currentPage}
@@ -189,6 +224,39 @@ class SearchResultsPanel extends React.Component<CombinedProps, State> {
             />
           </div>
         }
+        <List>
+          {data.data.map((eachEntity: any) =>
+            this.renderPanelRow(label, eachEntity))}
+        </List>
+        {data.results > 25 &&
+          <div className={classes.paginationWrapper}>
+            <PaginationFooter
+              count={data.results}
+              page={currentPage}
+              pageSize={pageSize}
+              handlePageChange={this.handlePageChange}
+              handleSizeChange={this.handleChangePageSize}
+            />
+          </div>
+        }
+      </React.Fragment>
+    )
+  }
+
+  render() {
+    const {
+      data,
+      label,
+    } = this.props;
+
+    return (
+      <ExpansionPanel
+        heading={label}
+        key={label}
+        defaultExpanded={!!data.data.length}
+        noPadding
+      >
+        {this.renderContent()}
       </ExpansionPanel>
     );
   }

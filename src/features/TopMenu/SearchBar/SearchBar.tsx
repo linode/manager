@@ -344,7 +344,7 @@ class SearchBar extends React.Component<FinalProps, State> {
     * If we hit the enter key and something
     * has been typed into the search bar
     */
-    if (e.keyCode === 13 && searchText) {
+    if (e.keyCode === 13 && searchText && searchText.length >= 3) {
       const location = history.location.pathname;
       history.push(`/search?query=${searchText}`);
       if (location === '/search') {
