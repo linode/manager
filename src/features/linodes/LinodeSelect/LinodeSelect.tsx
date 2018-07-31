@@ -48,11 +48,12 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = (props) => {
             inputProps={{ name: 'linode', id: 'linode' }}
             error={Boolean(props.linodeError)}
             select
+            data-qa-linode-select
         >
         <MenuItem value="none" disabled>Select a Linode</MenuItem>
         {
             props.linodes && props.linodes.map((l) => {
-            return <MenuItem key={l[0]} value={l[0]}>{l[1]}</MenuItem>;
+            return <MenuItem key={l[0]} value={l[0]} data-qa-linode-menu-item={l[1]}>{l[1]}</MenuItem>;
             })
         }
         </TextField>

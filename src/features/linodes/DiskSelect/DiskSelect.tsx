@@ -48,11 +48,19 @@ const DiskSelect: React.StatelessComponent<CombinedProps> = (props) => {
           inputProps={{ name: 'linode', id: 'linode' }}
           error={Boolean(props.diskError)}
           select
+          data-qa-disk-select
         >
         <MenuItem value="none" disabled>Select a Disk</MenuItem>
         {
           props.disks && props.disks.map((disk) => {
-          return <MenuItem key={disk.id} value={disk.id}>{disk.label}</MenuItem>;
+          return (
+            <MenuItem
+              key={disk.id}
+              value={disk.id}
+              data-qa-disk-menu-item={disk.label}
+            >
+              {disk.label}
+            </MenuItem>);
           })
         }
         </TextField>
