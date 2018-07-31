@@ -27,7 +27,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 interface State {}
 
-class SupportTicketsLanding extends React.Component<CombinedProps, State> {
+export class SupportTicketsLanding extends React.Component<CombinedProps, State> {
   handleTabChange = (event: React.ChangeEvent<HTMLDivElement>, value: number) => {
     const { history } = this.props;
     const routeName = this.tabs[value].routeName;
@@ -69,6 +69,7 @@ class SupportTicketsLanding extends React.Component<CombinedProps, State> {
                   disabled
                   onClick={() => null}
                   label="Open New Ticket"
+                  data-qa-open-ticket-link
                 />
               </Grid>
             </Grid>

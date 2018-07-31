@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import { compose, map, sort } from 'ramda';
+import { sort } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -44,7 +44,7 @@ class TicketList extends React.Component<Props, State> {
 
   componentDidMount() {
     this.mounted = true;
-    this.getTickets(0);
+    this.getTickets();
   }
 
   componentWillUnmount() {
@@ -89,7 +89,7 @@ class TicketList extends React.Component<Props, State> {
 
     this.setState(
       { pageSize },
-      () => { this.getTickets() }, // Check this
+      () => { this.getTickets() },
     );
   }
 
