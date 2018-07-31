@@ -491,18 +491,17 @@ const LinodeTheme: Linode.Theme = {
       select: {
         '&[aria-pressed="true"]': {
           '&+ input + $icon': {
-            stroke: '#606469',
+            opacity: 1,
           },
         },
       },
       icon: {
-        marginTop: -5,
-        width: 32,
-        height: 32,
-        fill: 'none',
-        stroke: '#999',
-        clipPath: 'inset(45% 0 0 0)',
+        marginTop: -2,
+        width: 28,
+        height: 28,
         transition: 'color 225ms ease-in-out',
+        color: '#aaa !important',
+        opacity: .5,
       },
       disabled: {
         '&+ input + $icon': {
