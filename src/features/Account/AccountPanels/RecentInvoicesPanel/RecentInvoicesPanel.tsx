@@ -167,7 +167,7 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
     return (
       <TableRow key={`invoice-${item.id}`}>
         <TableCell><DateTimeDisplay value={item.date}/></TableCell>
-        <TableCell><Link to="">Invoice #{item.id}</Link></TableCell>
+        <TableCell><Link to={`billing/invoices/${item.id}`}>Invoice #{item.id}</Link></TableCell>
         <TableCell>${item.total}</TableCell>
       </TableRow>
     );

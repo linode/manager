@@ -14,7 +14,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 export interface Props {
   value: string;
   format?: string
-}
+  }
 
 interface ConnectedProps {
   timezone: string;
@@ -23,9 +23,9 @@ interface ConnectedProps {
 type CombinedProps = Props & ConnectedProps & WithStyles<ClassNames>;
 
 const DateTimeDisplay: React.StatelessComponent<CombinedProps> = (props) => {
-  return (
+    return (
     <React.Fragment>
-      { moment(props.value).tz(props.timezone).format(props.format || 'Y-DD-MM') }
+      { moment(props.value).tz(props.timezone).format(props.format || 'Y-MM-DD') }
     </React.Fragment>
   );
 };

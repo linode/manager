@@ -64,6 +64,10 @@ const Users = DefaultLoader({
   loader: () => import('src/features/Users'),
 });
 
+const InvoiceDetail = DefaultLoader({
+  loader: () => import('src/features/Account/InvoiceDetail'),
+});
+
 type ClassNames = 'appFrame'
   | 'content'
   | 'wrapper'
@@ -208,6 +212,14 @@ export class App extends React.Component<CombinedProps, State> {
     window.localStorage.setItem('BetaNotification', 'closed');
   }
 
+  Dashboard = () => <Placeholder title="Dashboard" />;
+
+  Managed = () => <Placeholder title="Managed" />;
+
+  Longview = () => <Placeholder title="Longview" />;
+
+  Support = () => <Placeholder title="Support" />;
+
   render() {
     const { menuOpen } = this.state;
     const { classes, longLivedLoaded, documentation, toggleTheme } = this.props;
@@ -225,22 +237,19 @@ export class App extends React.Component<CombinedProps, State> {
                   <Grid container spacing={0} className={classes.grid}>
                     <Grid item className={`${classes.switchWrapper} ${hasDoc ? 'mlMain' : ''}`}>
                       <Switch>
-                        <Route exact path="/dashboard" render={() =>
-                          <Placeholder title="Dashboard" />} />
+                        <Route exact path="/dashboard" render={this.Dashboard} />
                         <Route path="/linodes" component={LinodesRoutes} />
                         <Route path="/volumes" component={Volumes} />
                         <Route path="/nodebalancers" component={NodeBalancers} />
                         <Route path="/domains" component={Domains} />
-                        <Route exact path="/managed" render={() =>
-                          <Placeholder title="Managed" />} />
-                        <Route exact path="/longview" render={() =>
-                          <Placeholder title="Longview" />} />
+                        <Route exact path="/managed" render={this.Managed} />
+                        <Route exact path="/longview" render={this.Longview} />
                         <Route path="/images" component={Images} />
                         <Route path="/stackscripts" component={StackScripts} />
                         <Route exact path="/billing" component={Account} />
+                        <Route exact path="/billing/invoices/:invoiceId" component={InvoiceDetail} />
                         <Route path="/users" component={Users} />
-                        <Route exact path="/support" render={() =>
-                          <Placeholder title="Support" />} />
+                        <Route exact path="/support" render={this.Support} />
                         <Route path="/profile" component={Profile} />
                         {/* Update to Dashboard when complete */}
                         <Route exact path="/" component={LinodesRoutes} />
