@@ -1,6 +1,6 @@
-import * as Promise from 'bluebird';
+import * as Bluebird from 'bluebird';
 import { shim } from 'promise.prototype.finally';
-import { append, flatten, pathOr, range } from 'ramda';
+import { append, flatten, lensPath, pathOr, range, set } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
@@ -15,6 +15,7 @@ import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import Placeholder from 'src/components/Placeholder';
 import SideMenu from 'src/components/SideMenu';
+import { TypesProvider, WithTypesProps } from 'src/context/types';
 import Footer from 'src/features/Footer';
 import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
@@ -23,6 +24,7 @@ import { getLinodeKernels, getLinodeTypes } from 'src/services/linodes';
 import { getRegions } from 'src/services/misc';
 import { getProfile } from 'src/services/profile';
 import { request, response } from 'src/store/reducers/resources';
+import composeState from 'src/utilities/composeState';
 
 import BetaNotification from './BetaNotification';
 
@@ -112,7 +114,8 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   },
 });
 
-interface Props { toggleTheme: () => void;
+interface Props {
+  toggleTheme: () => void;
   longLivedLoaded: boolean;
 }
 
@@ -125,14 +128,55 @@ interface ConnectedProps {
 interface State {
   menuOpen: Boolean;
   betaNotification: Boolean;
+  typesContext: WithTypesProps;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames> & ConnectedProps;
+type CombinedProps =
+  Props &
+  WithStyles<ClassNames> &
+  ConnectedProps;
+
+const typesContext = (path: string[]) => lensPath(['typesContext', ...path]);
+
+const L = {
+  typesContext: {
+    data: typesContext(['data']),
+    errors: typesContext(['errors']),
+    lastUpdated: typesContext(['lastUpdated']),
+    loading: typesContext(['loading']),
+  },
+};
 
 export class App extends React.Component<CombinedProps, State> {
+  composeState = composeState;
+
   state = {
     menuOpen: false,
     betaNotification: false,
+    typesContext: {
+      lastUpdated: 0,
+      loading: false,
+      request: () => {
+        this.composeState([set(L.typesContext.loading, true)]);
+
+        return getLinodeTypes()
+          .then((response) => {
+            this.composeState([
+              set(L.typesContext.loading, false),
+              set(L.typesContext.lastUpdated, Date.now()),
+              set(L.typesContext.data, response.data),
+            ])
+          })
+          .catch((error) => {
+            this.composeState([
+              set(L.typesContext.loading, false),
+              set(L.typesContext.lastUpdated, Date.now()),
+              set(L.typesContext.errors, error),
+            ]);
+          });
+      },
+      update: () => null, /** @todo */
+    }
   };
 
   componentDidMount() {
@@ -149,12 +193,6 @@ export class App extends React.Component<CombinedProps, State> {
         return getRegions()
           .then(({ data }) => response(['regions', 'data'], data))
           .catch(error => response(['regions'], error));
-      }),
-      new Promise(() => {
-        request(['types']);
-        return getLinodeTypes()
-          .then(({ data }) => response(['types', 'data'], data))
-          .catch(error => response(['types'], error));
       }),
       new Promise(() => {
         request(['profile']);
@@ -175,7 +213,7 @@ export class App extends React.Component<CombinedProps, State> {
             // Create an iterable list of the remaining pages.
             const remainingPages = range(page + 1, pages + 1);
 
-            return Promise.map(remainingPages, currentPage =>
+            return Bluebird.map(remainingPages, currentPage =>
               getLinodeKernels(currentPage)
                 .then(response => response.data),
             )
@@ -217,42 +255,44 @@ export class App extends React.Component<CombinedProps, State> {
       <React.Fragment>
         {longLivedLoaded &&
           <React.Fragment>
-            <div className={classes.appFrame}>
-              <SideMenu open={menuOpen} toggle={this.toggleMenu} toggleTheme={toggleTheme} />
-              <main className={classes.content}>
-                <TopMenu toggleSideMenu={this.toggleMenu} />
-                <div className={classes.wrapper}>
-                  <Grid container spacing={0} className={classes.grid}>
-                    <Grid item className={`${classes.switchWrapper} ${hasDoc ? 'mlMain' : ''}`}>
-                      <Switch>
-                        <Route exact path="/dashboard" render={() =>
-                          <Placeholder title="Dashboard" />} />
-                        <Route path="/linodes" component={LinodesRoutes} />
-                        <Route path="/volumes" component={Volumes} />
-                        <Route path="/nodebalancers" component={NodeBalancers} />
-                        <Route path="/domains" component={Domains} />
-                        <Route exact path="/managed" render={() =>
-                          <Placeholder title="Managed" />} />
-                        <Route exact path="/longview" render={() =>
-                          <Placeholder title="Longview" />} />
-                        <Route path="/images" component={Images} />
-                        <Route path="/stackscripts" component={StackScripts} />
-                        <Route exact path="/billing" component={Account} />
-                        <Route path="/users" component={Users} />
-                        <Route exact path="/support" render={() =>
-                          <Placeholder title="Support" />} />
-                        <Route path="/profile" component={Profile} />
-                        {/* Update to Dashboard when complete */}
-                        <Route exact path="/" component={LinodesRoutes} />
-                        <Route component={NotFound} />
-                      </Switch>
+            <TypesProvider value={this.state.typesContext}>
+              <div className={classes.appFrame}>
+                <SideMenu open={menuOpen} toggle={this.toggleMenu} toggleTheme={toggleTheme} />
+                <main className={classes.content}>
+                  <TopMenu toggleSideMenu={this.toggleMenu} />
+                  <div className={classes.wrapper}>
+                    <Grid container spacing={0} className={classes.grid}>
+                      <Grid item className={`${classes.switchWrapper} ${hasDoc ? 'mlMain' : ''}`}>
+                        <Switch>
+                          <Route exact path="/dashboard" render={() =>
+                            <Placeholder title="Dashboard" />} />
+                          <Route path="/linodes" component={LinodesRoutes} />
+                          <Route path="/volumes" component={Volumes} />
+                          <Route path="/nodebalancers" component={NodeBalancers} />
+                          <Route path="/domains" component={Domains} />
+                          <Route exact path="/managed" render={() =>
+                            <Placeholder title="Managed" />} />
+                          <Route exact path="/longview" render={() =>
+                            <Placeholder title="Longview" />} />
+                          <Route path="/images" component={Images} />
+                          <Route path="/stackscripts" component={StackScripts} />
+                          <Route exact path="/billing" component={Account} />
+                          <Route path="/users" component={Users} />
+                          <Route exact path="/support" render={() =>
+                            <Placeholder title="Support" />} />
+                          <Route path="/profile" component={Profile} />
+                          {/* Update to Dashboard when complete */}
+                          <Route exact path="/" component={LinodesRoutes} />
+                          <Route component={NotFound} />
+                        </Switch>
+                      </Grid>
+                      <DocsSidebar docs={documentation} />
                     </Grid>
-                    <DocsSidebar docs={documentation} />
-                  </Grid>
-                </div>
-              </main>
-              <Footer />
-            </div>
+                  </div>
+                </main>
+                <Footer />
+              </div>
+            </TypesProvider>
             <BetaNotification
               open={this.state.betaNotification}
               onClose={this.closeBetaNotice}
@@ -272,9 +312,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
 );
 
 const mapStateToProps = (state: Linode.AppState) => ({
-  longLivedLoaded:
-    Boolean(pathOr(false, ['resources', 'types', 'data', 'data'], state))
-    && Boolean(pathOr(false, ['resources', 'kernels', 'data'], state))
+  longLivedLoaded: Boolean(pathOr(false, ['resources', 'kernels', 'data'], state))
     && Boolean(pathOr(false, ['resources', 'profile', 'data'], state))
     && Boolean(pathOr(false, ['resources', 'regions', 'data'], state)),
   documentation: state.documentation,

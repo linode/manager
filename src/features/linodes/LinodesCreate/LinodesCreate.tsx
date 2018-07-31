@@ -26,6 +26,8 @@ import FromImageContent from './TabbedContent/FromImageContent';
 import FromLinodeContent from './TabbedContent/FromLinodeContent';
 import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
 
+import { withTypes } from 'src/context/types';
+
 type Info = { title: string, details?: string } | undefined;
 
 export type TypeInfo = {
@@ -50,8 +52,11 @@ interface Props {
 }
 
 interface ConnectedProps {
-  types: ExtendedType[];
   regions: ExtendedRegion[];
+}
+
+interface TypesContextProps {
+  typesData: ExtendedType[];
 }
 
 interface PreloadedProps {
@@ -61,6 +66,7 @@ interface PreloadedProps {
 
 type CombinedProps = Props
   & ConnectedProps
+  & TypesContextProps
   & WithStyles<Styles>
   & PreloadedProps
   & RouteComponentProps<{}>;
@@ -158,7 +164,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
   }
 
   getBackupsMonthlyPrice = (selectedTypeID: string | null): number | null => {
-    if (!selectedTypeID || !this.props.types) { return null; }
+    if (!selectedTypeID || !this.props.typesData) { return null; }
     const type = this.getTypeInfo(selectedTypeID);
     if (!type) { return null; }
     return type.backupsMonthly;
@@ -166,7 +172,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
 
   extendLinodes = (linodes: Linode.Linode[]): ExtendedLinode[] => {
     const images = this.props.images.response || [];
-    const types = this.props.types || [];
+    const types = this.props.typesData || [];
     return linodes.map(linode =>
       compose<Linode.Linode, Partial<ExtendedLinode>, Partial<ExtendedLinode>>(
         set(lensPath(['heading']), linode.label),
@@ -192,7 +198,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
             getBackupsMonthlyPrice={this.getBackupsMonthlyPrice}
             regions={this.props.regions}
             images={this.props.images.response}
-            types={this.props.types}
+            types={this.props.typesData}
             getTypeInfo={this.getTypeInfo}
             getRegionName={this.getRegionName}
             history={this.props.history}
@@ -213,7 +219,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
             selectedBackupFromQuery={this.state.selectedBackupIDFromQueryString}
             selectedLinodeFromQuery={this.state.selectedLinodeIDFromQueryString}
             linodes={this.props.linodes.response}
-            types={this.props.types}
+            types={this.props.typesData}
             extendLinodes={this.extendLinodes}
             getBackupsMonthlyPrice={this.getBackupsMonthlyPrice}
             getTypeInfo={this.getTypeInfo}
@@ -235,7 +241,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
             }}
             getBackupsMonthlyPrice={this.getBackupsMonthlyPrice}
             regions={this.props.regions}
-            types={this.props.types}
+            types={this.props.typesData}
             linodes={this.props.linodes.response}
             extendLinodes={this.extendLinodes}
             getTypeInfo={this.getTypeInfo}
@@ -253,7 +259,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
             getBackupsMonthlyPrice={this.getBackupsMonthlyPrice}
             regions={this.props.regions}
             images={this.props.images.response}
-            types={this.props.types}
+            types={this.props.typesData}
             getTypeInfo={this.getTypeInfo}
             getRegionName={this.getRegionName}
             history={this.props.history}
@@ -282,7 +288,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
   }
 
   getTypeInfo = (selectedTypeID: string | null): TypeInfo => {
-    const typeInfo = this.reshapeTypeInfo(this.props.types.find(
+    const typeInfo = this.reshapeTypeInfo(this.props.typesData.find(
       type => type.id === selectedTypeID));
 
     return typeInfo;
@@ -342,21 +348,8 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
     );
   }
 }
+
 const connected = connect((state: Linode.AppState) => ({
-  types: compose(
-    map<Linode.LinodeType, ExtendedType>((type) => {
-      const { label, memory, vcpus, disk, price: { monthly, hourly } } = type;
-      return {
-        ...type,
-        heading: label,
-        subHeadings: [
-          `$${monthly}/mo ($${hourly}/hr)`,
-          typeLabelDetails(memory, disk, vcpus),
-        ],
-      };
-    }),
-    pathOr([], ['resources', 'types', 'data', 'data']),
-  )(state),
   regions: compose(
     map((region: Linode.Region) => ({
       ...region,
@@ -366,11 +359,30 @@ const connected = connect((state: Linode.AppState) => ({
   )(state),
 }));
 
+const typesContext = withTypes(({ data }) => {
+  return {
+    typesData: compose(
+      map<Linode.LinodeType, ExtendedType>((type) => {
+        const { label, memory, vcpus, disk, price: { monthly, hourly } } = type;
+        return {
+          ...type,
+          heading: label,
+          subHeadings: [
+            `$${monthly}/mo ($${hourly}/hr)`,
+            typeLabelDetails(memory, disk, vcpus),
+          ],
+        };
+      }),
+    )(data || [])
+  };
+});
+
 const styled = withStyles(styles, { withTheme: true });
 
 export default compose(
   connected,
   preloaded,
+  typesContext,
   styled,
   withRouter,
 )(LinodeCreate);

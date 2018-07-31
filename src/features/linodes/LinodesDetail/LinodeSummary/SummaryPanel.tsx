@@ -1,6 +1,5 @@
-import { compose, pathOr } from 'ramda';
+import { compose } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import Paper from '@material-ui/core/Paper';
@@ -9,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 
 import Grid from 'src/components/Grid';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
-import { displayType, formatRegion, typeLabelLong } from 'src/features/linodes/presentation';
+import { formatRegion } from 'src/features/linodes/presentation';
 
 type ClassNames = 'root'
   | 'title'
@@ -52,16 +51,13 @@ interface Props {
   linode: Linode.Linode;
   image?: Linode.Image;
   volumes: Linode.Volume[];
+  typesLongLabel: string;
 }
 
-interface ConnectedProps {
-  typeLabel: string;
-}
-
-type CombinedProps = Props & ConnectedProps & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 const SummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, linode, image, volumes, typeLabel } = props;
+  const { classes, linode, image, volumes, typesLongLabel } = props;
   return (
     <Paper className={classes.root}>
       <Grid container>
@@ -84,14 +80,9 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
             }
           </Typography>
           <Typography className={classes.section} variant="caption">
-            <span>
-              {typeLabelLong(
-                typeLabel,
-                linode.specs.memory,
-                linode.specs.disk,
-                linode.specs.vcpus,
-              )}
-            </span>
+            {<span>
+              {typesLongLabel}
+            </span>}
           </Typography>
         </Grid>
         <Grid item xs={12} sm={6} lg={4}>
@@ -110,7 +101,7 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
             className={classes.section}
             variant="caption"
             data-qa-volumes={volumes.length}
-          >
+        >
             Volumes: <Link
               className={classes.volumeLink}
               to={`/linodes/${linode.id}/volumes`}>{volumes.length}</Link>
@@ -123,11 +114,4 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const connected = connect((state: Linode.AppState, ownProps: Props) => ({
-  typeLabel: displayType(
-    ownProps.linode.type,
-    pathOr([], ['resources', 'types', 'data', 'data'], state),
-  ),
-}));
-
-export default compose(styled, connected)(SummaryPanel) as React.ComponentType<Props>;
+export default compose(styled)(SummaryPanel) as React.ComponentType<Props>;

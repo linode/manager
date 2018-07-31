@@ -20,6 +20,7 @@ import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import PaginationFooter from 'src/components/PaginationFooter';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
+import { withTypes } from 'src/context/types';
 import { events$ } from 'src/events';
 import LinodeConfigSelectionDrawer, { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { newLinodeEvents } from 'src/features/linodes/events';
@@ -78,7 +79,14 @@ const preloaded = PromiseLoader<Props>({
   images: () => getImages(),
 });
 
+interface TypesContextProps {
+  typesRequest: () => void;
+  typesLoading: boolean;
+  typesLastUpdated: number;
+}
+
 type CombinedProps = Props
+  & TypesContextProps
   & PreloadedProps
   & RouteComponentProps<{}>
   & WithStyles<ClassNames>
@@ -129,6 +137,12 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   componentDidMount() {
     this.mounted = true;
     const mountTime = moment().subtract(5, 'seconds');
+
+    const { typesLastUpdated, typesLoading, typesRequest } = this.props;
+
+    if (typesLastUpdated === 0 && !typesLoading) {
+      typesRequest();
+    }
 
     this.eventsSub = events$
       .filter(newLinodeEvents(mountTime))
@@ -289,7 +303,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   }
 
   toggleDialog = (bootOption: Linode.BootAction,
-     selectedLinodeId: number, selectedLinodeLabel: string) => {
+    selectedLinodeId: number, selectedLinodeLabel: string) => {
     this.setState({
       powerAlertOpen: !this.state.powerAlertOpen,
       selectedLinodeId,
@@ -435,8 +449,19 @@ const getDisplayFormat = ifElse(
 
 export const styled = withStyles(styles, { withTheme: true });
 
+const typesContext = withTypes(({
+  lastUpdated: typesLastUpdated,
+  loading: typesLoading,
+  request: typesRequest,
+}) => ({
+  typesRequest,
+  typesLoading,
+  typesLastUpdated,
+}));
+
 export const enhanced = compose(
   withRouter,
+  typesContext,
   styled,
   preloaded,
   setDocs(ListLinodes.docs),

@@ -19,7 +19,6 @@ describe('ResourcesReducer', () => {
 
   const resources: Linode.ResourcesState = {
     regions: { loading: false, data: [], },
-    types: { loading: false, data: { data: [], results: 0, pages: 1, page: 0 }, },
     kernels: { loading: false, data: [], },
     profile: {
       loading: false, data: {
@@ -52,39 +51,39 @@ describe('ResourcesReducer', () => {
 
   describe('when type === REQUEST', () => {
     it('should set loading to true.', () => {
-      result = reducer(resources, request(['types']));
-      expect(result.types).toHaveProperty('loading', true);
+      result = reducer(resources, request(['regions']));
+      expect(result.regions).toHaveProperty('loading', true);
     });
   });
 
   describe('when type === RESPONSE', () => {
     beforeEach(() => {
-      result = reducer(resources, response(['types'], data));
+      result = reducer(resources, response(['regions'], data));
     });
 
     it('should set loading to false', () => {
-      expect(result.types).toHaveProperty('loading', false);
+      expect(result.regions).toHaveProperty('loading', false);
     });
 
     it('should set path.data to the payload', () => {
-      expect(result.types).toHaveProperty('data', data);
+      expect(result.regions).toHaveProperty('data', data);
     });
 
     describe('and is error', () => {
       beforeEach(() => {
-        result = reducer(resources, response(['types'], err));
+        result = reducer(resources, response(['regions'], err));
       });
 
       it('should set loading to false', () => {
-        expect(result.types).toHaveProperty('loading', false);
+        expect(result.regions).toHaveProperty('loading', false);
       });
 
       it(`should set path.data to error`, () => {
-        expect(result.types).toHaveProperty('data', err);
+        expect(result.regions).toHaveProperty('data', err);
       });
 
       it(`should set path.error to true`, () => {
-        expect(result.types).toHaveProperty('error', true);
+        expect(result.regions).toHaveProperty('error', true);
       });
     });
   });
