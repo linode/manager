@@ -47,7 +47,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     marginTop: theme.spacing.unit * 3,
   },
   selectCell: {
-    fontWeight: 800,
+    fontWeight: 900,
     fontSize: '.9rem',
   },
   accessCell: {
