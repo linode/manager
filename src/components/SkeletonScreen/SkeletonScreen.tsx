@@ -3,17 +3,19 @@ import * as React from 'react';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 type ClassNames = 'root'
-  | 'col1'
-  | 'col2'
-  | 'line';
+  | 'tableCol1'
+  | 'tableCol2';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   '@keyframes shine': {
     '0%': {
-      backgroundPosition: '-100px',
+      backgroundPosition: -100,
     },
-    '50%, 100%': {
-      backgroundPosition: '150%',
+    '50%': {
+      backgroundPosition: 200,
+    },
+    '100%': {
+      backgroundPosition: -100,
     },
   },
   root: {
@@ -34,7 +36,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       animation: 'shine 2s infinite linear',
     },
   },
-  col1: {
+  tableCol1: {
     width: '30%',
     minWidth: 100,
     paddingRight: theme.spacing.unit * 3,
@@ -42,7 +44,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       height: 44,
     },
   },
-  col2: {
+  tableCol2: {
     width: '70%',
     minWidth: 200,
   },
@@ -56,19 +58,30 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 class SkeletonScreen extends React.Component<CombinedProps> {
 
-  render() {
-    const { classes } = this.props;
+  renderSkeleton = () => {
+    const { classes, type } = this.props;
+    switch (type) {
+      case 'table':
+        return (
+          <div className={classes.root}>
+            <div className={classes.tableCol1}>
+              <div className="line" />
+            </div>
+            <div className={classes.tableCol2}>
+              <div className="line" />
+              <div className="line" />
+            </div>
+          </div>
+        )
 
+      case 'card':
+        return false;
+    }
+  };
+
+  render() {    
     return (
-      <div className={classes.root}>
-        <div className={classes.col1}>
-          <div className="line" />
-        </div>
-        <div className={classes.col2}>
-          <div className="line" />
-          <div className="line" />
-        </div>
-      </div>
+      this.renderSkeleton()
     );
   }
 }
