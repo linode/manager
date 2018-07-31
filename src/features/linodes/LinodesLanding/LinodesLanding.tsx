@@ -310,8 +310,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { location: { hash }, results } = this.props;
-    const { linodes, configDrawer, bootOption, powerAlertOpen } = this.state;
+    const { location: { hash } } = this.props;
+    const { linodes, configDrawer, bootOption, powerAlertOpen, results } = this.state;
     const images = pathOr([], ['response', 'data'], this.props.images);
 
     if (linodes.length === 0) {
@@ -418,11 +418,11 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   }
 }
 
-const getDisplayFormat = ({ hash, length }: { hash?: string, length: number }) => {
+const getDisplayFormat = ({ hash, length }: { hash?: string, length: number }): 'grid' | 'list' => {
   const local = localStorage.getItem('linodesViewStyle');
 
   if (local) {
-    return local;
+    return local as 'grid' | 'list';
   }
 
   if (hash) {
