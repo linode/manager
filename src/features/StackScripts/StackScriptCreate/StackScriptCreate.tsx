@@ -13,7 +13,7 @@ import {
 
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import { KeyboardArrowLeft } from '@material-ui/icons';
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
