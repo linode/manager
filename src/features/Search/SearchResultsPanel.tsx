@@ -40,23 +40,55 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props {
-  data: any;
-  handlePageChange: (newPage: number) => void;
-  handleSizeChange: (newPageSize: number) => void;
-  currentPage: number;
-  pageSize: number;
-  label: string;
-  history: H.History;
+interface RequestInfo {
+  requestFn: (params?: any, filter?: any) => Promise<{}>;
+  filter: any;
+  updateStateHandler: (newData: Linode.ResourcePage<any>) => void;
 }
 
-interface State {}
+interface Props {
+  data: any;
+  label: string;
+  history: H.History;
+  requestInfo: RequestInfo;
+}
+
+interface State {
+  pageSize: number;
+  currentPage: number;
+}
 
 type CombinedProps = Props
   & WithStyles<ClassNames>;
 
 class SearchResultsPanel extends React.Component<CombinedProps, State> {
-  state: State = {};
+  state: State = {
+    pageSize: 25,
+    currentPage: 1,
+  };
+
+    
+  handleChangePageSize = (newPageSize: number) => {
+    const { requestInfo } = this.props;
+    requestInfo.requestFn(
+      { page: 1, page_size: newPageSize },
+      requestInfo.filter)
+      .then((data: Linode.ResourcePage<any>) => {
+        return requestInfo.updateStateHandler(data);
+      });
+    this.setState({ pageSize: +newPageSize, currentPage: 1 })
+  }
+
+  handlePageChange = (newPage: number) => {
+    const { requestInfo } = this.props;
+    requestInfo.requestFn(
+      { page: newPage, page_size: this.state.pageSize },
+      requestInfo.filter)
+      .then((data: Linode.ResourcePage<any>) => {
+        return requestInfo.updateStateHandler(data);
+      });
+    this.setState({ currentPage: newPage })
+  }
 
   getResultUrl = (type:string, id: string) => {
     switch (type) {
@@ -131,12 +163,10 @@ class SearchResultsPanel extends React.Component<CombinedProps, State> {
     const {
       data,
       label,
-      currentPage,
-      pageSize,
-      handlePageChange,
-      handleSizeChange,
       classes
     } = this.props;
+    const { pageSize, currentPage } = this.state;
+
     return (
       <ExpansionPanel
         heading={label}
@@ -154,8 +184,8 @@ class SearchResultsPanel extends React.Component<CombinedProps, State> {
               count={data.results}
               page={currentPage}
               pageSize={pageSize}
-              handlePageChange={handlePageChange}
-              handleSizeChange={handleSizeChange}
+              handlePageChange={this.handlePageChange}
+              handleSizeChange={this.handleChangePageSize}
             />
           </div>
         }

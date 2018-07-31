@@ -28,10 +28,11 @@ type ClassNames = 'root'
   | 'noResultsText'
   | 'title';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {},
   title: {
-    marginBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing.unit * 3,
+    color: theme.color.grey1,
   },
   noResultsText: {
     textAlign: "center",
@@ -54,8 +55,6 @@ interface State {
   nodeBalancers: Linode.ResourcePage<Linode.NodeBalancer>;
   isLoading: boolean;
   error?: Error;
-  pageSize: number;
-  currentPage: number;
   numberOfResults: number;
 }
 
@@ -69,9 +68,16 @@ type MultipleEntity = Linode.ResourcePage<(Linode.Linode
   | Linode.StackScript.Response
   | Linode.NodeBalancer)>;
 
+interface RequestInfo {
+  requestFn: () => Promise<{}>;
+  filter: any;
+  updateStateHandler: (newData: Linode.ResourcePage<any>) => void;
+ }
+
 interface Iterable {
   label: string,
   data: MultipleEntity,
+  requestInfo: RequestInfo
 }
 
 type RequestType = 'linode'
@@ -141,8 +147,6 @@ class SearchLanding extends React.Component<CombinedProps, State> {
       nodeBalancers: defaultData,
       isLoading: true,
       error: undefined,
-      pageSize: 25,
-      currentPage: 1,
       numberOfResults: 0,
     }
   }
@@ -204,13 +208,25 @@ class SearchLanding extends React.Component<CombinedProps, State> {
         })
       });
   }
-  
-  handleChangePageSize = (newPageSize: number) => {
-    this.setState({ pageSize: +newPageSize })
+
+  handleGetMoreLinodes = (newData: Linode.ResourcePage<Linode.Linode>) => {
+    this.setState({ linodes: newData });
   }
 
-  handlePageChange = (newPage: number) => {
-    this.setState({ currentPage: newPage })
+  handleGetMoreVolumes = (newData: Linode.ResourcePage<Linode.Volume>) => {
+    this.setState({ volumes: newData });
+  }
+
+  handleGetMoreStackScripts = (newData: Linode.ResourcePage<Linode.StackScript.Response>) => {
+    this.setState({ stackScripts: newData });
+  }
+
+  handleGetMoreDomains = (newData: Linode.ResourcePage<Linode.Domain>) => {
+    this.setState({ domains: newData });
+  }
+
+  handleGetMoreNodeBalancers = (newData: Linode.ResourcePage<Linode.NodeBalancer>) => {
+    this.setState({ nodeBalancers: newData });
   }
 
   renderPanels = () => {
@@ -228,40 +244,45 @@ class SearchLanding extends React.Component<CombinedProps, State> {
         label: 'Linodes',
         data: linodes,
         requestInfo: {
-          request: getLinodes,
-          filter: getFilter('linode', query)
+          requestFn: getLinodes,
+          filter: getFilter('linode', query),
+          updateStateHandler: this.handleGetMoreLinodes,
         }
       },
       {
         label: 'Volumes',
         data: volumes,
         requestInfo: {
-          request: getVolumes,
-          filter: getFilter('volume', query)
+          requestFn: getVolumes,
+          filter: getFilter('volume', query),
+          updateStateHandler: this.handleGetMoreVolumes,
         }
       },
       {
         label: 'Domains',
         data: domains,
         requestInfo: {
-          request: getDomains,
-          filter: getFilter('domain', query)
+          requestFn: getDomains,
+          filter: getFilter('domain', query),
+          updateStateHandler: this.handleGetMoreDomains,
         }
       },
       {
         label: 'NodeBalancers',
         data: nodeBalancers,
         requestInfo: {
-          request: getNodeBalancers,
-          filter: getFilter('nodebalancer', query)
+          requestFn: getNodeBalancers,
+          filter: getFilter('nodebalancer', query),
+          updateStateHandler: this.handleGetMoreNodeBalancers,
         }
       },
       {
         label: 'StackScripts',
         data: stackScripts,
         requestInfo: {
-          request: getStackscripts,
-          filter: getFilter('stackscript', query)
+          requestFn: getStackscripts,
+          filter: getFilter('stackscript', query),
+          updateStateHandler: this.handleGetMoreStackScripts,
         }
       },
     ];
@@ -273,11 +294,12 @@ class SearchLanding extends React.Component<CombinedProps, State> {
           key={iterable.label}
           data={iterable.data}
           label={iterable.label}
-          handlePageChange={this.handlePageChange}
-          handleSizeChange={this.handleChangePageSize}
-          currentPage={this.state.currentPage}
-          pageSize={this.state.pageSize}
           history={this.props.history}
+          requestInfo={{
+            requestFn: iterable.requestInfo.requestFn,
+            filter: iterable.requestInfo.filter,
+            updateStateHandler: iterable.requestInfo.updateStateHandler,
+          }}
         />
       )
     })
@@ -289,8 +311,11 @@ class SearchLanding extends React.Component<CombinedProps, State> {
     if (this.state.isLoading) { return <CircularProgress /> }
     return (
       <React.Fragment>
-        <Typography variant="headline" className={classes.title}>
+        <Typography variant="headline">
           {`Search Results for "${this.state.query.query}"`}
+        </Typography>
+        <Typography variant="subheading" className={classes.title}>
+          {`Showing x Results out of ${this.state.numberOfResults}`}
         </Typography>
         {(this.state.numberOfResults === 0)
           ? <Typography className={classes.noResultsText} variant="subheading">
