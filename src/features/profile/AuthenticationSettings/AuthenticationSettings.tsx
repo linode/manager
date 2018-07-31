@@ -42,10 +42,20 @@ interface State {
 type CombinedProps = Props & ConnectedProps & WithStyles<ClassNames>;
 
 export class AuthenticationSettings extends React.Component<CombinedProps, State> {
+  /*
+  * @todo This logic can be removed when IP Whitelisting (legacy)
+  * has been fully deprecated.
+  */
   state: State = {
     success: undefined,
   }
 
+  // See above
+  clearState = () => {
+    this.setState(set(lensPath(['success']), undefined ));
+  }
+
+  // See above
   onWhitelistingDisable = () => {
     this.setState(set(lensPath(['success']), 'IP whitelisting disabled. This feature cannot be re-enabled.' ));
   }
@@ -56,15 +66,18 @@ export class AuthenticationSettings extends React.Component<CombinedProps, State
 
     return (
       <React.Fragment>
+        {/* Remove when logic above is cleared */}
         {success && <Notice success text={success} />}
         {!loading &&
           <React.Fragment>
             <TwoFactor
               twoFactor={twoFactor}
               username={username}
+              clearState={this.clearState}
+              updateProfile={updateProfile}
             />
-            {ipWhitelisting && 
-              <SecuritySettings 
+            {ipWhitelisting &&
+              <SecuritySettings
                 updateProfile={updateProfile}
                 onSuccess={this.onWhitelistingDisable}
                 data-qa-whitelisting-form

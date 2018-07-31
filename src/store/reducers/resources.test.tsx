@@ -18,6 +18,7 @@ describe('ResourcesReducer', () => {
   let result: Linode.ResourcesState;
 
   const resources: Linode.ResourcesState = {
+    regions: { loading: false, data: [], },
     types: { loading: false, data: { data: [], results: 0, pages: 1, page: 0 }, },
     kernels: { loading: false, data: [], },
     profile: {

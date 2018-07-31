@@ -22,12 +22,12 @@
 }
 
 .enhancedSelect-menu-item-highlighted {
-  background-color:#3B85D9;
+  background-color:#3683DC;
   color: white;
 }
 
 .enhancedSelect-menu-item-selected {
-  color: #3B85D9 !important;
+  color: #3683DC !important;
 }
 
 .enhancedSelect-menu-item-selected.enhancedSelect-menu-item-highlighted {

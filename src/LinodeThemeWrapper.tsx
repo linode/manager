@@ -14,21 +14,24 @@ interface State {
   render: boolean;
 }
 
-const lightTheme = LinodeLightTheme;
-const darkTheme = {
+const lightTheme = createMuiTheme(LinodeLightTheme);
+const darkTheme = createMuiTheme({
   ...LinodeLightTheme,
   ...LinodeDarkTheme,
-};
+});
+
+const themes = {
+  light: lightTheme,
+  dark: darkTheme,
+}
+
+themes.light.shadows.fill('none');
+themes.dark.shadows.fill('none');
 
 class LinodeThemeWrapper extends React.Component<Props, State> {
   state: State = {
     themeChoice: 'light',
     render: true,
-  };
-
-  themes = {
-    light: createMuiTheme(lightTheme),
-    dark: createMuiTheme(darkTheme),
   };
 
   componentDidMount() {
@@ -38,8 +41,7 @@ class LinodeThemeWrapper extends React.Component<Props, State> {
       }
     });
 
-    this.themes.light.shadows.fill('none');
-    this.themes.dark.shadows.fill('none');
+    this.forceUpdate();
   }
 
   toggleTheme = () => {
@@ -64,7 +66,7 @@ class LinodeThemeWrapper extends React.Component<Props, State> {
 
   render() {
     const { themeChoice, render } = this.state;
-    const theme = this.themes[themeChoice];
+    const theme = themes[themeChoice];
     return (
       <React.Fragment>
         {render &&
