@@ -89,6 +89,7 @@ class SupportTicketsLanding extends React.Component<CombinedProps, State> {
         <Switch>
           <Route exact path={`${url}/open`} render={this.renderOpenTicketsList} />
           <Route exact path={`${url}/closed`} render={this.renderClosedTicketsList} />
+          <Route default render={this.renderOpenTicketsList} />
         </Switch>
       </React.Fragment>
     );
