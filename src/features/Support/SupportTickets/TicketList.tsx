@@ -42,7 +42,7 @@ class TicketList extends React.Component<Props, State> {
 
   componentDidMount() {
     this.mounted = true;
-    this.getTickets();
+    this.getTickets(0);
   }
 
   componentWillUnmount() {
