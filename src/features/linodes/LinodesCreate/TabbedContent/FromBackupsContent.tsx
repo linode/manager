@@ -3,7 +3,6 @@ import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
 
-import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
@@ -23,10 +22,7 @@ import SelectBackupPanel from '../SelectBackupPanel';
 import SelectLinodePanel, { ExtendedLinode } from '../SelectLinodePanel';
 import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
 
-type ClassNames = 'root'
-  | 'main'
-  | 'sidebar'
-  | 'paperNotice';
+type ClassNames = 'root' | 'main' | 'sidebar';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
@@ -34,16 +30,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   sidebar: {
     [theme.breakpoints.up('lg')]: {
       marginTop: -130,
-    },
-  },
-  paperNotice: {
-    padding: `
-      ${theme.spacing.unit * 2}px
-      ${theme.spacing.unit * 3}px
-    `,
-    marginBottom: theme.spacing.unit * 2,
-    '& .notice': {
-      marginBottom: 0,
     },
   },
 });
@@ -288,13 +274,11 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                 />
                 : <React.Fragment>
         {notice &&
-          <Paper className={classes.paperNotice}>
-            <Notice
-              text={notice.text}
-              error={(notice.level) === 'error'}
-              warning={(notice.level === 'warning')}
-            />
-          </Paper>
+          <Notice
+            text={notice.text}
+            error={(notice.level) === 'error'}
+            warning={(notice.level === 'warning')}
+          />
         }
         {generalError &&
           <Notice text={generalError} error={true} />
