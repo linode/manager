@@ -2,7 +2,7 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import * as React from 'react';
-import CircleProgress from 'src/components/CircleProgress';
+import SkeletonScreen from 'src/components/SkeletonScreen';
 
 type ClassNames = 'root';
 
@@ -16,11 +16,11 @@ export interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const TableRowLoading: React.StatelessComponent<CombinedProps> = (props) => {
+const tableRowLoading: React.StatelessComponent<CombinedProps> = (props) => {
   return (
     <TableRow>
       <TableCell colSpan={props.colSpan}>
-        <CircleProgress noTopMargin />
+        <SkeletonScreen type="table" />
       </TableCell>
     </TableRow>
   );
@@ -28,4 +28,4 @@ const TableRowLoading: React.StatelessComponent<CombinedProps> = (props) => {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(TableRowLoading);
+export default styled<Props>(tableRowLoading);

@@ -11,8 +11,9 @@ import Typography from '@material-ui/core/Typography';
 import Close from '@material-ui/icons/Close';
 
 import Grid from 'src/components/Grid';
+import { events$ } from 'src/events';
 
-import toasts$, { Toast } from './toasts';
+import toasts$, { createToast, Toast } from './toasts';
 
 type ClassNames = 'root'
   | 'content'
@@ -114,12 +115,28 @@ class Notifier extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     this.subscription = toasts$
+      .merge(
+        events$
+          .filter((e) => !e._initial && e.status === 'failed')
+          .map(event => {
+            if (event.action === 'disk_imagize') {
+              return createToast('There was an error creating an image.', 'error');
+            }
+
+            if (event.action === 'volume_create') {
+              return createToast(`There was an error attaching volume ${event.entity && event.entity.label}.`, 'error');
+            }
+
+            return;
+          })
+      )
       /**
        * In the somewhat unlikely scenario that we get a flood of events, we're
        * going to buffer for 1s to prevent data loss from React setState being unable
        * to keep up with the process.
        */
-      .bufferTime(1000)
+      .filter(Boolean)
+      .bufferTime(500)
       .subscribe((toasts) => {
         if (toasts.length === 0) {
           return;

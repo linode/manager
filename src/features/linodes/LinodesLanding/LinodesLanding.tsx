@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import { clone, compose, gte, ifElse, isEmpty, path, pathEq, pathOr, prop, propEq } from 'ramda';
+import { clone, compose, path, pathEq, pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import 'rxjs/add/observable/combineLatest';
@@ -226,6 +226,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   changeViewStyle = (style: string) => {
     const { history } = this.props;
     history.push(`#${style}`);
+    localStorage.setItem('linodesViewStyle', style);
   }
 
   renderListView = (
@@ -281,8 +282,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     this.getLinodes(Math.min(page), this.state.pageSize);
   }
 
-  handlePageSizeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    this.getLinodes(this.state.page, parseInt(event.target.value, 0));
+  handlePageSizeChange = (pageSize: number) => {
+    this.getLinodes(this.state.page, pageSize);
   }
 
   selectConfig = (id: number) => {
@@ -324,7 +325,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
   render() {
     const { location: { hash } } = this.props;
-    const { linodes, configDrawer, bootOption, powerAlertOpen } = this.state;
+    const { linodes, configDrawer, bootOption, powerAlertOpen, results } = this.state;
     const images = pathOr([], ['response', 'data'], this.props.images);
 
     if (linodes.length === 0) {
@@ -343,7 +344,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       );
     }
 
-    const displayGrid: 'grid' | 'list' = getDisplayFormat({ hash, length: linodes.length });
+    const displayGrid: 'grid' | 'list' = getDisplayFormat({ hash, length: results });
 
     return (
       <Grid container>
@@ -431,21 +432,19 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   }
 }
 
-const getDisplayFormat = ifElse(
-  compose(isEmpty, prop('hash')),
-  /* is empty */
-  ifElse(
-    compose(gte(3), prop('length')),
-    () => 'grid',
-    () => 'list',
-  ),
-  /* is not empty */
-  ifElse(
-    propEq('hash', '#grid'),
-    () => 'grid',
-    () => 'list',
-  ),
-);
+const getDisplayFormat = ({ hash, length }: { hash?: string, length: number }): 'grid' | 'list' => {
+  const local = localStorage.getItem('linodesViewStyle');
+
+  if (hash) {
+    return hash === '#grid' ? 'grid' : 'list';
+  }
+
+  if (local) {
+    return local as 'grid' | 'list';
+  }
+
+  return (length >= 3) ? 'list' : 'grid';
+};
 
 export const styled = withStyles(styles, { withTheme: true });
 
