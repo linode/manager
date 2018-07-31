@@ -173,7 +173,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
           loading={this.state.submitting}
           onClick={this.submitForm}
         >
-          Save
+          Confirm Payment
         </Button>
         <Button
           type="cancel"
