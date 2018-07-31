@@ -10,38 +10,41 @@ type ClassNames = 'root'
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   '@keyframes shine': {
     '0%': {
-      backgroundPosition: '-100%',
+      backgroundPosition: '-100px',
     },
-    '40%, 100%': {
-      backgroundPosition: '100%',
+    '50%, 100%': {
+      backgroundPosition: '150%',
     },
   },
   root: {
     display: 'flex',
     flexWrap: 'wrap',
+    '& .line': {
+      width: '100%',
+      height: 16,
+      marginTop: 12,
+      backgroundImage: `
+        linear-gradient(
+          90deg,
+          #ddd 0px,
+          #f5f5f5 40%,
+          #ddd 70%
+        )`,
+      backgroundSize: 600,
+      animation: 'shine 2s infinite linear',
+    },
   },
   col1: {
     width: '30%',
     minWidth: 100,
     paddingRight: theme.spacing.unit * 3,
+    '& .line': {
+      height: 44,
+    },
   },
   col2: {
     width: '70%',
     minWidth: 200,
-  },
-  line: {
-    width: '100%',
-    height: 16,
-    marginTop: 12,
-    backgroundImage: `
-      linear-gradient(
-        90deg,
-        #ddd 0px,
-        #e8e8e8 30%,
-        #ddd 70%
-      )`,
-    backgroundSize: '60%',
-    animation: 'shine 2s infinite linear',
   },
 });
 
@@ -58,12 +61,12 @@ class SkeletonScreen extends React.Component<CombinedProps> {
 
     return (
       <div className={classes.root}>
-        {/* <div className={classes.col1}>
-          <div className={classes.line} />
-        </div> */}
+        <div className={classes.col1}>
+          <div className="line" />
+        </div>
         <div className={classes.col2}>
-          <div className={classes.line} />
-          <div className={classes.line} />
+          <div className="line" />
+          <div className="line" />
         </div>
       </div>
     );
