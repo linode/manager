@@ -146,7 +146,7 @@ export class SearchLanding extends React.Component<CombinedProps, State> {
       domains: defaultData,
       stackScripts: defaultData,
       nodeBalancers: defaultData,
-      isLoading: true,
+      isLoading: false,
       error: undefined,
       numberOfVisibleResults: 0,
       numberOfResults: 0,
@@ -155,6 +155,8 @@ export class SearchLanding extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     const { query: { query } } = this.state;
+
+    this.setState({ isLoading: true });
 
     Promise.all([
       getLinodes(
