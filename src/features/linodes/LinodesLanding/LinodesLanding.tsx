@@ -421,12 +421,12 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 const getDisplayFormat = ({ hash, length }: { hash?: string, length: number }): 'grid' | 'list' => {
   const local = localStorage.getItem('linodesViewStyle');
 
-  if (local) {
-    return local as 'grid' | 'list';
-  }
-
   if (hash) {
     return hash === '#grid' ? 'grid' : 'list';
+  }
+
+  if (local) {
+    return local as 'grid' | 'list';
   }
 
   return (length >= 3) ? 'list' : 'grid';
