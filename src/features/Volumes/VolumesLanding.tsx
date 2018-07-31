@@ -1,6 +1,7 @@
 import { compose, equals, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import 'rxjs/add/operator/filter';
 import { Subscription } from 'rxjs/Subscription';
@@ -201,7 +202,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
             <TableHead>
               <TableRow>
                 <TableCell className={classes.label}>Label</TableCell>
-                <TableCell className={classes.attachment}>Attachment</TableCell>
+                <TableCell className={classes.attachment}>Attached To</TableCell>
                 <TableCell>Size</TableCell>
                 <TableCell>File System Path</TableCell>
                 <TableCell>Region</TableCell>
@@ -235,7 +236,13 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
                   : (
                     <TableRow key={volume.id} data-qa-volume-cell={volume.id}>
                       <TableCell data-qa-volume-cell-label>{label}</TableCell>
-                      <TableCell data-qa-volume-cell-attachment>{linodeLabel}</TableCell>
+                      <TableCell data-qa-volume-cell-attachment={linodeLabel}>
+                        {linodeLabel &&
+                          <Link to={`/linodes/${volume.linode_id}`}>
+                            {linodeLabel}
+                          </Link>
+                        }
+                      </TableCell>
                       <TableCell data-qa-volume-size>{size} GB</TableCell>
                       <TableCell data-qa-fs-path>{filesystem_path}</TableCell>
                       <TableCell data-qa-volume-region>{region}</TableCell>

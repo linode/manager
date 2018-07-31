@@ -124,21 +124,21 @@ export class Profile extends Page {
     get oauthCreate() { return $('[data-qa-icon-text-link="Create an OAuth Client"]'); }
 
     tokenBaseElems() {
-        browser.waitForVisible('[data-qa-profile-header]');
+        browser.waitForVisible('[data-qa-profile-header]', constants.wait.normal);
         expect(this.profileHeader.isVisible()).toBe(true);
         expect(this.apiTokensTab.isVisible()).toBe(true);
-        expect(this.tokenCreate.waitForVisible()).toBe(true);
+        expect(this.tokenCreate.waitForVisible(constants.wait.normal)).toBe(true);
         expect(this.tableHeader.length).toBe(2);
         expect(this.tableHead.length).toBe(2);
         this.tableHead.forEach(t => expect(t.$$('th').length).toBe(5));
     }
 
     oauthBaseElems() {
-        browser.waitForVisible('[data-qa-profile-header]');
+        browser.waitForVisible('[data-qa-profile-header]', constants.wait.normal);
         const oauthSelected = browser.getAttribute('[data-qa-tab="OAuth Clients"]', 'aria-selected').includes('true');
         expect(oauthSelected).toBe(true);
 
-        browser.waitForVisible('[data-qa-oauth-label]');
+        browser.waitForVisible('[data-qa-oauth-label]', constants.wait.normal);
         expect(this.oauthLabel.isVisible()).toBe(true);
         expect(this.oauthAccess.isVisible()).toBe(true);
         expect(this.oauthId.isVisible()).toBe(true);
@@ -148,27 +148,27 @@ export class Profile extends Page {
 
     create(type) {
         if (type === 'oauth') {
-            this.oauthCreate.waitForVisible();
+            this.oauthCreate.waitForVisible(constants.wait.normal);
             this.oauthCreate.click();
         }
         if (type === 'token') {
-            this.tokenCreate.waitForVisible();
+            this.tokenCreate.waitForVisible(constants.wait.normal);
             this.tokenCreate.click();
         }
+        browser.waitForText('[data-qa-drawer-title]', constants.wait.normal);
         browser.waitForVisible('[data-qa-add-label]', constants.wait.normal);
-        browser.waitForText('[data-qa-drawer-title]', constants.wait.normal );
     }
     
     selectActionMenu(row, item) {
         browser.click(`[data-qa-table-row="${row}"] [data-qa-action-menu]`);
-        browser.waitForVisible('[data-qa-action-menu-item]');
+        browser.waitForVisible('[data-qa-action-menu-item]', constants.wait.normal);
         browser.click(`[data-qa-action-menu-item="${item}"]`);
     }
 
     delete(type, row) {
         if (type === 'oauth') {
             this.selectActionMenu(row, 'Delete');
-            browser.waitForVisible(dialogMap.title);
+            browser.waitForVisible(dialogMap.title, constants.wait.normal);
 
             const deleteButton = $(dialogMap.confirm);
             deleteButton.click();

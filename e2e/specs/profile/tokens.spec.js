@@ -49,7 +49,7 @@ describe('View - Personal Access Tokens', () => {
             browser.waitForVisible(dialogTitle);
             const title = $(dialogTitle).getText();
             const content = $(dialogContent);
-            const secret = content.$('span').getText();
+            const secret = content.$('[data-qa-notice]').getText();
             expect(title).toBe('Personal Access Token');
             expect(secret).not.toBe(null);
         });
@@ -84,14 +84,16 @@ describe('View - Personal Access Tokens', () => {
             expect(domainPermission.getAttribute('data-qa-perm-none-radio')).toBe('true');
             expect(eventsPermission.getAttribute('data-qa-perm-rw-radio')).toBe('true');
             expect(imagesPermission.getAttribute('data-qa-perm-rw-radio')).toBe('true');
+            
             browser.click('[data-qa-close-drawer]');
+            
             browser.waitForVisible('[data-qa-close-drawer]', constants.wait.normal, true);
+            browser.waitForExist('[data-qa-drawer]', constants.wait.normal, true);
         });
 
         describe('Edit - Personal Access Tokens', () => {
             it('should display edit drawer', () => {
-                browser.jsClick(`${newToken} [data-qa-action-menu]`);
-                browser.click('[data-qa-action-menu-item="Edit"]');
+                profile.selectActionMenuItem($(newToken), 'Edit')
                 
                 expect(tokenCreateDrawer.label.waitForVisible()).toBe(true);
                 expect(tokenCreateDrawer.title.getText()).toBe('Edit this Personal Access Token');
@@ -100,17 +102,7 @@ describe('View - Personal Access Tokens', () => {
             });
 
             it('should update label on edit', () => {
-                // Hack needed to edit a label
-                browser.waitUntil(function() {
-                    try {
-                        tokenCreateDrawer.label.click();
-                        tokenCreateDrawer.label.clearElement();
-                        tokenCreateDrawer.label.setValue(updatedMsg);
-                        return tokenCreateDrawer.label.getValue() === updatedMsg;
-                    } catch (err) {
-                        return false;
-                    }
-                }, constants.wait.normal);
+                browser.trySetValue('[data-qa-add-label] input', updatedMsg);
                 tokenCreateDrawer.submit.click();
 
                 browser.waitForVisible(updatedSelector);
@@ -130,14 +122,14 @@ describe('View - Personal Access Tokens', () => {
             const revokeMenu = '[data-qa-action-menu-item="Revoke"]';
 
             it('should display revoke action menu item', () => {
-                browser.waitForVisible('[data-qa-action-menu]');
+                browser.waitForVisible(`${updatedSelector} [data-qa-action-menu]`, constants.wait.normal);
                 browser.click(`${updatedSelector} [data-qa-action-menu]`);
                 expect($(revokeMenu).isVisible()).toBe(true);
             });
 
             it('should display revoke dialog', () => {
                 browser.click(revokeMenu);
-                browser.waitForVisible(dialogTitle);
+                browser.waitForVisible(dialogTitle, constants.wait.normal);
 
                 expect($(dialogTitle).getText()).toBe(`Revoking ${updatedMsg}`);
             });
@@ -145,8 +137,8 @@ describe('View - Personal Access Tokens', () => {
             it('should revoke on remove', () => {
                 browser.click(dialogConfirm);
                 browser.refresh();
-                browser.waitForVisible('[data-qa-table-row]', constants.wait.normal);
-                browser.waitForVisible(updatedSelector, constants.wait.normal, true);
+                profile.tokenBaseElems();
+                browser.waitForVisible(updatedSelector, constants.wait.long, true);
             });
         });
     });
