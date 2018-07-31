@@ -28,6 +28,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
   titleWrapper: {
     display: 'flex',
+    alignItems: 'center',
   },
   backButton: {
     margin: '5px 0 0 -16px',
@@ -95,7 +96,7 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
         <Grid container>
           <Grid item xs={12}>
             <Grid container justify="space-between">
-              <Grid item className={classes.titleWrapper} alignItems="center">
+              <Grid item className={classes.titleWrapper}>
                 <Link to={`/billing`}>
                   <IconButton className={classes.backButton}>
                     <KeyboardArrowLeft />
@@ -103,7 +104,7 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
                 </Link>
                 {invoice && <Typography variant="title">Invoice #{invoice.id}</Typography>}
               </Grid>
-              <Grid item className={classes.titleWrapper} alignItems="center">
+              <Grid item className={classes.titleWrapper}>
                 {invoice && <Typography variant="title">Total ${Number(invoice.total).toFixed(2)}</Typography>}
               </Grid>
             </Grid>
@@ -116,7 +117,7 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
                   <TableCell>From</TableCell>
                   <TableCell>To</TableCell>
                   <TableCell>Quantity</TableCell>
-                  <TableCell>Unit Price</TableCell>
+                  <TableCell noWrap>Unit Price</TableCell>
                   <TableCell>Amount</TableCell>
                 </TableRow>
               </TableHead>
@@ -127,8 +128,8 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
           </Grid>
           <Grid item xs={12}>
             <Grid container justify="space-between">
-              <Grid item className={classes.titleWrapper} alignItems="center"/>
-              <Grid item className={classes.titleWrapper} alignItems="center">
+              <Grid item className={classes.titleWrapper} />
+              <Grid item className={classes.titleWrapper}>
                 {invoice && <Typography variant="title">Total ${Number(invoice.total).toFixed(2)}</Typography>}
               </Grid>
             </Grid>
