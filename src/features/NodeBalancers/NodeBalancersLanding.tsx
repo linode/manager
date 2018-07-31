@@ -186,7 +186,7 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
     deleteNodeBalancer(selectedNodeBalancerId!)
       .then((response) => {
         this.setState({
-          nodeBalancers: this.state.nodeBalancers.filter((nodebalancer) => nodebalancer.id === selectedNodeBalancerId),
+          nodeBalancers: this.state.nodeBalancers.filter((nodebalancer) => nodebalancer.id !== selectedNodeBalancerId),
           deleteConfirmDialog: {
             open: false,
             submitting: false,
