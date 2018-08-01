@@ -13,6 +13,7 @@ import { resetEventsPolling } from 'src/events';
 import SelectPlanPanel, { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { withLinode } from 'src/features/linodes/LinodesDetail/context';
 import { typeLabelDetails } from 'src/features/linodes/presentation';
+import { linodeInTransition } from 'src/features/linodes/transitions';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { getLinodeTypes, resizeLinode } from 'src/services/linodes';
 
@@ -50,8 +51,9 @@ interface Props {
 }
 
 interface ContextProps {
-  linodeId: number;
-  linodeType: null | string;
+  linodeId?: number;
+  linodeType?: null | string;
+  linodeStatus?: Linode.LinodeStatus;
 }
 
 interface State {
@@ -88,6 +90,9 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
   onSubmit = () => {
     const { linodeId } = this.props;
     const { selectedId } = this.state;
+
+    if (!linodeId) { return; }
+
     resizeLinode(linodeId, selectedId)
       .then((response) => {
         sendToast('Linode resize started.');
@@ -164,7 +169,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         />
         <ActionsPanel>
           <Button
-            disabled={!this.state.selectedId}
+            disabled={!this.state.selectedId || linodeInTransition(this.props.linodeStatus || '') }
             variant="raised"
             color="primary"
             onClick={this.onSubmit}
@@ -188,8 +193,9 @@ const preloaded = PromiseLoader<CombinedProps>({
 });
 
 const linodeContext = withLinode((context) => ({
-  linodeId: context.data!.id,
-  linodeType: context.data!.type,
+  linodeId: pathOr(undefined, ['data', 'id'], context),
+  linodeType: pathOr(undefined, ['data', 'type'], context),
+  linodeStatus: pathOr(undefined, ['data', 'status'], context),
 }));
 
 export default compose<any, any, any, any>(
