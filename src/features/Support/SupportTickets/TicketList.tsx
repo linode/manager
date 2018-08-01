@@ -27,9 +27,6 @@ interface State extends PaginationProps {
   errors?: Linode.ApiFieldError[];
   tickets: Linode.SupportTicket[];
   loading: boolean;
-  page: number;
-  count: number;
-  pageSize: number;
 }
 
 class TicketList extends React.Component<Props, State> {
@@ -92,7 +89,7 @@ class TicketList extends React.Component<Props, State> {
           errors: undefined,
           count: response.results,
           page: response.page,
-          });
+        });
       })
       .catch((errors) => {
         if (!this.mounted) { return; }

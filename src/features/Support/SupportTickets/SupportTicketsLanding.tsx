@@ -62,7 +62,7 @@ export class SupportTicketsLanding extends React.Component<CombinedProps, State>
               Customer Support
             </Typography>
           </Grid>
-        <Grid item>
+          <Grid item>
             <Grid container alignItems="flex-end">
               <Grid item>
                 <AddNewLink
