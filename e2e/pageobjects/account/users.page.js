@@ -14,7 +14,7 @@ class Users extends Page {
     get userRows() { return $$('[data-qa-user-row]'); }
     get username() { return $('[data-qa-username]'); }
     get userEmail() { return $('[data-qa-user-email]'); }
-    get userRestriction() { $('[data-qa-user-restrction]'); }
+    get userRestriction() { return $('[data-qa-user-restriction]'); }
     get userActionMenu() { return $('[data-qa-action-menu]'); }
     
     get createDrawerUsername() { return $('[data-qa-create-username] input'); }
@@ -23,6 +23,11 @@ class Users extends Page {
     get createDrawerSubmit() { return $('[data-qa-submit]'); }
     get createDrawerCancel() { return $('[data-qa-cancel]'); }
 
+    get userDetailHeader() { return $('[data-qa-user-detail-header]'); }
+    get userProfileTab() { return $('[data-qa-tab="User Profile"]'); }
+    get userPermissionsTab() { return $('[data-qa-tab="User Permissions"]'); }
+    get backButton() { return $('[data-qa-back-button]'); }
+
     
     baseElementsDisplay() {
         this.usersHeader.waitForVisible(constants.wait.normal);
@@ -30,8 +35,7 @@ class Users extends Page {
         expect(this.usernameColumn.isVisible()).toBe(true);
         expect(this.emailColumn.isVisible()).toBe(true);
         expect(this.restrictionColumn.isVisible()).toBe(true);
-        expect(this.userRows.length).toBeGreaterThanOrEqual(1);
-        expect(this.userRows[0].$(this.username.selector).getText()).toBe(process.env.MANAGER_USER);
+            
         expect(this.addUserButton.isVisible()).toBe(true);
     }
 
@@ -51,22 +55,23 @@ class Users extends Page {
 
         this.drawerTitle.waitForExist(constants.wait.normal, true);
         this.waitForNotice(`User ${userConfig.username} created successfully`);
-        this.userRow.waitForVisible(constants.wait.normal);
 
         if (!userConfig.hasOwnProperty('restricted')) {
+            browser.waitForVisible('[data-qa-user-row]', constants.wait.normal);
+
             browser.waitUntil(function() {
                 return $$('[data-qa-user-row]')
                     .filter(u => u.$('[data-qa-username]').getText() === userConfig.username).length > 0;
             }, constants.wait.normal, 'User failed to display in table');
+        } else {
+            this.userDetailHeader.waitForVisible(constants.wait.normal);
         }
     }
 
     delete(userConfig) {
-        const userToDelete =
-            this.userRows
-                .filter(user => user.$(this.username.selector).getText() === userConfig.username);
+        const user = this.userRow(userConfig.username);
         
-        this.selectActionMenuItem(userToDelete[0], 'Delete');
+        this.selectActionMenuItem(user, 'Delete');
 
         this.dialogTitle.waitForText(constants.wait.normal);
         this.dialogConfirmDelete.waitForVisible(constants.wait.normal);
@@ -81,6 +86,12 @@ class Users extends Page {
 
     viewProfile(userConfig) {
 
+    }
+
+    userRow(username) {
+        const user = this.userRows
+            .filter(user => user.$(this.username.selector).getText() === username);
+        return user[0];
     }
 }
 
