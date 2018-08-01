@@ -27,7 +27,7 @@ type ClassNames = 'root'
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     padding: theme.spacing.unit * 3,
-    paddingBottom: theme.spacing.unit * 3,
+    paddingBottom: theme.spacing.unit,
     '& .iconTextLink': {
       display: 'inline-flex',
       margin: `${theme.spacing.unit * 3}px 0 0 0`,
@@ -180,10 +180,10 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
             disabled={this.state.counter >= 6}
             left
           />
+          <ActionsPanel>
+            <Button onClick={this.onSubmit} variant="raised" color="primary">Submit</Button>
+          </ActionsPanel>
         </Paper>
-        <ActionsPanel>
-          <Button onClick={this.onSubmit} variant="raised" color="primary">Submit</Button>
-        </ActionsPanel>
       </React.Fragment>
     );
   }
