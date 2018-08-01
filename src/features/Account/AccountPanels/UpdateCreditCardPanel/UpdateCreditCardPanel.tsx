@@ -3,6 +3,7 @@ import * as React from 'react';
 import NumberFormat from 'react-number-format';
 
 import Divider from '@material-ui/core/Divider';
+import Hidden from '@material-ui/core/Hidden';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
@@ -124,7 +125,7 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
 
   creditCardField = (props: any) => {
     const { inputRef, onChange, ...other } = props;
-  
+
     return (
       <NumberFormat
         {...other}
@@ -136,9 +137,7 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
             },
           });
         }}
-        thousandSeparator
-        prefix="$"
-        format="#### #### #### ####"
+        format="#### #### #### #######"
       />
     );
   }
@@ -193,7 +192,7 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
               {generalError && <Notice error spacingTop={24} spacingBottom={8}>{generalError}</Notice>}
               {success && <Notice success spacingTop={24} spacingBottom={8}>Credit card successfully updated.</Notice>}
               <Grid container>
-                <Grid item>
+                <Grid item xs={12} md={6}>
                   <TextField
                     required
                     label='New Card Number'
@@ -205,7 +204,12 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
                     }}
                   />
                 </Grid>
-                <Grid item>
+
+                <Hidden xsDown>
+                  <Grid item md={6} />
+                </Hidden>
+
+                <Grid item xs={12} md={3}>
                   <TextField
                     required
                     select
@@ -217,7 +221,7 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
                     {UpdateCreditCardPanel.monthMenuItems}
                   </TextField>
                 </Grid>
-                <Grid item>
+                <Grid item xs={12} md={3}>
                   <TextField
                     required
                     select
