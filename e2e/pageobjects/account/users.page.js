@@ -80,12 +80,14 @@ class Users extends Page {
         this.waitForNotice(`User ${userConfig.username} deleted successfully`, constants.wait.normal);
     }
 
-    viewPermisions(userConfig) {
-
+    viewPermissions(username) {
+        const user = this.userRow(username);
+        this.selectActionMenuItem(user, 'User Permissions');
     }
 
-    viewProfile(userConfig) {
-
+    viewProfile(username) {
+        const user = this.userRow(username);
+        this.selectActionMenuItem(user, 'User Profile');
     }
 
     userRow(username) {
