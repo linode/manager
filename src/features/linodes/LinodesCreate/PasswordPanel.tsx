@@ -34,13 +34,22 @@ interface Props {
   label?: string;
   noPadding?: boolean;
   required?: boolean;
+  placeholder?: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class PasswordPanel extends React.Component<CombinedProps> {
   render() {
-    const { classes, handleChange, error, label, noPadding, required } = this.props;
+    const {
+      classes,
+      handleChange,
+      error,
+      label,
+      noPadding,
+      required,
+      placeholder,
+    } = this.props;
 
     return (
       <Paper className={classes.root}>
@@ -50,7 +59,7 @@ class PasswordPanel extends React.Component<CombinedProps> {
             required={required}
             value={this.props.password || ''}
             label={label || 'Root Password'}
-            placeholder="Enter a password."
+            placeholder={placeholder || "Enter a password."}
             onChange={e => handleChange(e.target.value)}
           />
         </div>
