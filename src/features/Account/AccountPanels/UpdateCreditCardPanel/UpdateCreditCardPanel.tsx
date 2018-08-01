@@ -23,7 +23,8 @@ type ClassNames = 'root'
   | 'expired'
   | 'currentCCTitle'
   | 'currentccContainer'
-  | 'newccContainer';
+  | 'newccContainer'
+  | 'cardNumber';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {},
@@ -38,6 +39,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   currentCCTitle: {
     marginBottom: theme.spacing.unit,
+  },
+  cardNumber: {
+    minWidth: 225,
   },
 });
 
@@ -192,24 +196,21 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
               {generalError && <Notice error spacingTop={24} spacingBottom={8}>{generalError}</Notice>}
               {success && <Notice success spacingTop={24} spacingBottom={8}>Credit card successfully updated.</Notice>}
               <Grid container>
-                <Grid item xs={12} md={6}>
+                <Grid item>
                   <TextField
                     required
                     label='New Card Number'
                     value={this.state.card_number}
                     onChange={this.handleCardNumberChange}
                     errorText={hasErrorFor('card_number')}
+                    className={classes.cardNumber}
                     InputProps={{
                       inputComponent: this.creditCardField
                     }}
                   />
                 </Grid>
 
-                <Hidden xsDown>
-                  <Grid item md={6} />
-                </Hidden>
-
-                <Grid item xs={12} md={3}>
+                <Grid item>
                   <TextField
                     required
                     select
@@ -221,7 +222,8 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
                     {UpdateCreditCardPanel.monthMenuItems}
                   </TextField>
                 </Grid>
-                <Grid item xs={12} md={3}>
+
+                <Grid item>
                   <TextField
                     required
                     select
