@@ -9,6 +9,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
+import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import PaginationFooter, { PaginationProps } from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
@@ -16,7 +17,7 @@ import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import { getOpenTicketsPage } from 'src/services/support';
 import capitalize from 'src/utilities/capitalize';
-import { formatDate } from 'src/utilities/format-date-iso8601';
+import { formatString } from 'src/utilities/format-date-iso8601';
 
 interface Props {
   filterStatus: 'open' | 'closed';
@@ -33,7 +34,7 @@ interface State extends PaginationProps {
 
 class TicketList extends React.Component<Props, State> {
   mounted: boolean = false;
-  state = {
+  state: State = {
     tickets: [],
     error: undefined,
     loading: true,
@@ -128,8 +129,8 @@ class TicketList extends React.Component<Props, State> {
         <TableCell data-qa-support-topic-header>{this.renderTopic(ticket)}</TableCell>
         <TableCell data-qa-support-entity-header>{this.renderEntityLink(ticket)}</TableCell>
         <TableCell data-qa-support-subject-header>{ticket.summary}</TableCell>
-        <TableCell data-qa-support-date-header>{formatDate(ticket.opened, true)}</TableCell>
-        <TableCell data-qa-support-updated-header>{formatDate(ticket.updated, true)}</TableCell>
+        <TableCell data-qa-support-date-header><DateTimeDisplay value={ticket.opened} format={formatString} /></TableCell>
+        <TableCell data-qa-support-updated-header><DateTimeDisplay value={ticket.opened} format={formatString} /></TableCell>
         <TableCell />
       </TableRow>
     );
@@ -137,7 +138,7 @@ class TicketList extends React.Component<Props, State> {
 
   render() {
     const { count, tickets, page, pageSize, } = this.state;
-
+    
     return (
       <React.Fragment>
         <Paper>
