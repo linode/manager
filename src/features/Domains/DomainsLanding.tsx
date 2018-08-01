@@ -272,7 +272,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
             </Typography>
           </Grid>
           <Grid item>
-            <Grid container alignItems="flex-end">
+            <Grid container alignItems="flex-end" style={{ width: 'auto' }}>
               <Grid item>
                 <AddNewLink
                   onClick={this.openImportZoneDrawer}
