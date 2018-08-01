@@ -208,7 +208,7 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
             >
               Rebuild
             </Button>
-        </ActionsPanel>
+          </ActionsPanel>
         </Paper>
       </React.Fragment>
     );
