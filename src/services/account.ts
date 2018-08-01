@@ -168,3 +168,27 @@ export const saveCreditCard = (data: SaveCreditCardData) => Request<{}>(
   setData(data),
 )
   .then(response => response.data);
+
+export const getInvoice = (invoiceId: number) =>
+  Request<Linode.Invoice>(
+    setURL(`${API_ROOT}/account/invoices/${invoiceId}`),
+    setMethod('GET'),
+  )
+    .then(response => response.data);
+
+export const getInvoiceItems = (invoiceId: number, params: any = {}, filters: any = {}) =>
+  Request<Page<Linode.InvoiceItem>>(
+    setURL(`${API_ROOT}/account/invoices/${invoiceId}/items`),
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filters),
+  )
+    .then(response => response.data);
+
+export const makePayment = (data: { usd: string, ccv: string }) =>
+  Request<Linode.Payment>(
+    setURL(`${API_ROOT}/account/payments`),
+    setMethod('POST'),
+    setData(data),
+  )
+    .then(response => response.data)

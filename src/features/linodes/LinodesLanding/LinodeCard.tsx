@@ -57,12 +57,12 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     },
   },
   cardSection: {
+    ...theme.typography.caption,
     marginBottom: theme.spacing.unit,
     paddingTop: theme.spacing.unit,
     paddingLeft: 3,
     paddingRight: 3,
     color: theme.palette.text.primary,
-    ...theme.typography.caption,
   },
   flexContainer: {
     display: 'flex',

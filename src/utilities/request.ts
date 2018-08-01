@@ -1,5 +1,6 @@
 import Axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 
+import { reportException } from 'src/exceptionReporting';
 import { expire } from 'src/session';
 import store from 'src/store';
 
@@ -31,10 +32,16 @@ Axios.interceptors.response.use(
     return response;
   },
   (error: AxiosError) => {
+    const { response } = error;
     if (!!error.config.headers['x-maintenance-mode']
-        || (error.response && error.response.status === 401)) {
+      || (error.response && error.response.status === 401)) {
       expire();
     }
+
+    if (response && response.status && ![401, 404].includes(response.status)) {
+      reportException(error);
+    }
+
     return Promise.reject(error);
   },
 );

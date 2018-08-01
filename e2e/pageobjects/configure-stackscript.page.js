@@ -23,8 +23,8 @@ class ConfigureStackScript extends Page {
     save() {
         this.saveButton.click();
         ListStackScripts.baseElementsDisplay();
-        browser.waitForVisible('[data-qa-notice]');
-        ListStackScripts.stackScriptRow.waitForVisible();
+        browser.waitForVisible('[data-qa-notice]', constants.wait.normal);
+        ListStackScripts.stackScriptRow.waitForVisible(constants.wait.normal);
     }
 
     cancel() {

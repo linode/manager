@@ -64,9 +64,11 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
   state: State = {
     card_number: '',
     expiry_month: 1,
-    expiry_year: 2018,
+    expiry_year: UpdateCreditCardPanel.currentYear,
     submitting: false,
   };
+
+  static currentYear = new Date().getFullYear();
 
   handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ card_number: e.target.value ? take(19, e.target.value) : '' });
@@ -98,7 +100,7 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
         this.setState({
           card_number: '',
           expiry_month: 1,
-          expiry_year: 2018,
+          expiry_year: UpdateCreditCardPanel.currentYear,
           submitting: false,
           success: true,
         })
@@ -115,7 +117,7 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
     card_number: '',
     errors: undefined,
     expiry_month: 1,
-    expiry_year: 2018,
+    expiry_year: UpdateCreditCardPanel.currentYear,
     success: undefined,
   });
 
@@ -220,7 +222,10 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
     );
   };
 
-  static yearMenuItems = range(2018, 2039)
+  static yearMenuItems = range(
+    UpdateCreditCardPanel.currentYear,
+    UpdateCreditCardPanel.currentYear + 20
+  )
     .map((v: number) => <MenuItem key={v} value={v}>{v}</MenuItem>)
 
   static monthMenuItems = range(1, 13)

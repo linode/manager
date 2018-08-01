@@ -2,22 +2,19 @@ import * as Joi from 'joi';
 
 import { API_ROOT } from 'src/constants';
 
-import Request, { setData, setMethod, setParams, setURL } from './index';
+import Request, { setData, setMethod, setParams, setURL, setXFilter } from './index';
 
 type Page<T> = Linode.ResourcePage<T>;
 type NodeBalancer = Linode.NodeBalancer;
 type Config = Linode.NodeBalancerConfig;
 
-export const getNodeBalancersPage = (page: number) =>
+export const getNodeBalancers = (params: any = {}, filters: any = {}) =>
   Request<Page<NodeBalancer>>(
     setURL(`${API_ROOT}/nodebalancers/`),
     setMethod('GET'),
-    setParams({ page }),
+    setParams(params),
+    setXFilter(filters),
   )
-    .then(response => response.data);
-
-export const getNodeBalancers = () =>
-  getNodeBalancersPage(1)
     .then(response => response.data);
 
 export const getNodeBalancerConfigs = (id: number) =>
