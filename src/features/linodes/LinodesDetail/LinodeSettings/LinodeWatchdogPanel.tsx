@@ -69,7 +69,10 @@ class LinodeWatchdogPanel extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <ExpansionPanel defaultExpanded heading="Shutdown Watchdog" data-qa-watchdog-panel>
+        <ExpansionPanel
+          heading="Shutdown Watchdog"
+          data-qa-watchdog-panel
+        >
           <Grid container alignItems="center" className={classes.shutDownWatchdog}>
             {
               (success || errors) &&
