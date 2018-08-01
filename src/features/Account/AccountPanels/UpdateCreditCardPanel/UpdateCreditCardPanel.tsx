@@ -1,5 +1,6 @@
 import { compose, pathOr, range, take, takeLast } from 'ramda';
 import * as React from 'react';
+import NumberFormat from 'react-number-format';
 
 import Divider from '@material-ui/core/Divider';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
@@ -121,6 +122,27 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
     success: undefined,
   });
 
+  creditCardField = (props: any) => {
+    const { inputRef, onChange, ...other } = props;
+  
+    return (
+      <NumberFormat
+        {...other}
+        ref={inputRef}
+        onValueChange={values => {
+          onChange({
+            target: {
+              value: values.value,
+            },
+          });
+        }}
+        thousandSeparator
+        prefix="$"
+        format="#### #### #### ####"
+      />
+    );
+  }
+
   render() {
     const { classes, last_four, expiry } = this.props;
     const { errors, success } = this.state;
@@ -168,17 +190,19 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
           <Grid item xs={12}>
             <div className={classes.newccContainer}>
               <Typography variant="title">New Credit Card</Typography>
-              {generalError && <Notice error>{generalError}</Notice>}
+              {generalError && <Notice error spacingTop={24} spacingBottom={8}>{generalError}</Notice>}
               {success && <Notice success spacingTop={24} spacingBottom={8}>Credit card successfully updated.</Notice>}
               <Grid container>
                 <Grid item>
                   <TextField
                     required
-                    type="number"
                     label='New Card Number'
                     value={this.state.card_number}
                     onChange={this.handleCardNumberChange}
                     errorText={hasErrorFor('card_number')}
+                    InputProps={{
+                      inputComponent: this.creditCardField
+                    }}
                   />
                 </Grid>
                 <Grid item>
