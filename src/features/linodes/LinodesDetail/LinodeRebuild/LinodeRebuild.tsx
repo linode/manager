@@ -34,7 +34,7 @@ type ClassNames = 'root'
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     padding: theme.spacing.unit * 3,
-    paddingBottom: theme.spacing.unit * 3,
+    paddingBottom: theme.spacing.unit,
   },
   title: {
     marginBottom: theme.spacing.unit * 2,
@@ -198,18 +198,18 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
             errorText={passwordError}
             value={this.state.password || ''}
           />
+          <ActionsPanel>
+            <Button
+              variant="raised"
+              color="secondary"
+              className="destructive"
+              onClick={this.onSubmit}
+              data-qa-rebuild
+            >
+              Rebuild
+            </Button>
+          </ActionsPanel>
         </Paper>
-        <ActionsPanel>
-          <Button
-            variant="raised"
-            color="secondary"
-            className="destructive"
-            onClick={this.onSubmit}
-            data-qa-rebuild
-          >
-            Rebuild
-          </Button>
-        </ActionsPanel>
       </React.Fragment>
     );
   }
