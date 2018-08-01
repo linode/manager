@@ -144,6 +144,7 @@ export class App extends React.Component<CombinedProps, State> {
   };
 
   componentDidMount() {
+    console.log(`process.env.VERSION ${process.env.VERSION}`)
     const { request, response } = this.props;
 
     const betaNotification = window.localStorage.getItem('BetaNotification');

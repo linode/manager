@@ -1,5 +1,5 @@
 import * as Raven from 'raven-js';
-import { SENTRY_URL, VERSION } from 'src/constants';
+import { SENTRY_URL } from 'src/constants';
 
 window.addEventListener('unhandledrejection', (err: PromiseRejectionEvent) => {
   Raven.captureException(err.reason);
@@ -8,7 +8,7 @@ window.addEventListener('unhandledrejection', (err: PromiseRejectionEvent) => {
 if (SENTRY_URL) {
   Raven
     .config(SENTRY_URL, {
-      release: VERSION,
+      release: process.env.VERSION,
     })
     .install();
 }
