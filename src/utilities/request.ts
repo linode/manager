@@ -32,14 +32,15 @@ Axios.interceptors.response.use(
     return response;
   },
   (error: AxiosError) => {
-    const { response } = error;
+    const { response, request } = error;
+
     if (!!error.config.headers['x-maintenance-mode']
       || (error.response && error.response.status === 401)) {
       expire();
     }
 
     if (response && response.status && ![401, 404].includes(response.status)) {
-      reportException(error);
+      reportException(error, { response, request });
     }
 
     return Promise.reject(error);
