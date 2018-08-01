@@ -1,4 +1,9 @@
+/* tslint:disable-next-line:no-var-requires */
+const pjson = require('../package.json');
+
 const PRODUCTION = 'production';
+
+export const VERSION = pjson.version || 'unversioned';
 
 export const GA_ID = process.env.REACT_APP_GA_ID;
 
