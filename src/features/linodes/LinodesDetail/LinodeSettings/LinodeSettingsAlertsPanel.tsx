@@ -240,7 +240,6 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
 
     return (
       <ExpansionPanel
-        defaultExpanded
         heading="Notification Thresholds"
         success={this.state.success}
         actions={this.renderExpansionActions}
