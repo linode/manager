@@ -239,7 +239,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
 
   closeRemoveDialog = () => {
     this.setState({
-      removeDialog: { open: false, domain: undefined, domainID: undefined },
+      removeDialog: { open: false },
     });
   }
 
