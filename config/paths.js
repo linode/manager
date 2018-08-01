@@ -11,6 +11,8 @@ const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
 
 const envPublicUrl = process.env.PUBLIC_URL;
 
+const envAppVersion = process.env.VERSION;
+
 function ensureSlash(path, needsSlash) {
   const hasSlash = path.endsWith('/');
   if (hasSlash && !needsSlash) {
@@ -24,6 +26,9 @@ function ensureSlash(path, needsSlash) {
 
 const getPublicUrl = appPackageJson =>
   envPublicUrl || require(appPackageJson).homepage;
+
+const getAppVersion = appPackageJson =>
+  envAppVersion || require(appPackageJson).version;
 
 // We use `PUBLIC_URL` environment variable or "homepage" field to infer
 // "public path" at which the app is served.
@@ -53,5 +58,6 @@ module.exports = {
   appTsConfig: resolveApp('tsconfig.json'),
   appTsLint: resolveApp('tslint.json'),
   publicUrl: getPublicUrl(resolveApp('package.json')),
+  appVersion: getAppVersion(resolveApp('package.json')),
   servedPath: getServedPath(resolveApp('package.json')),
 };
