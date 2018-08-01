@@ -167,7 +167,7 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
             <div className={classes.newccContainer}>
               <Typography variant="title">New Credit Card</Typography>
               {generalError && <Notice error>{generalError}</Notice>}
-              {success && <Notice success>Credit card successfully updated.</Notice>}
+              {success && <Notice success spacingTop={24} spacingBottom={8}>Credit card successfully updated.</Notice>}
               <Grid container>
                 <Grid item>
                   <TextField
