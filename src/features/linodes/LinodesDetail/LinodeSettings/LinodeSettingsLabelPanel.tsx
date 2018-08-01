@@ -76,7 +76,6 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
 
     return (
       <ExpansionPanel
-        defaultExpanded
         heading="Linode Label"
         success={this.state.success}
         actions={() =>

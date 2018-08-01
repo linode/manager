@@ -410,7 +410,6 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
 
     return (
       <ExpansionPanel
-        defaultExpanded
         heading="IP Transfer"
         actions={this.transferActions}
         data-qa-networking-actions-subheading

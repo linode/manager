@@ -50,7 +50,7 @@ class LinodeSettingsDeletPanel extends React.Component<CombinedProps, State> {
   render() {
     return (
       <React.Fragment>
-        <ExpansionPanel defaultExpanded heading="Delete Linode">
+        <ExpansionPanel heading="Delete Linode">
           <Button
             variant="raised"
             color="secondary"

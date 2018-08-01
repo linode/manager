@@ -298,7 +298,6 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
 
             <ExpansionPanel
               heading="CPU %"
-              defaultExpanded
             >
               <React.Fragment>
                 <div className={classes.chart}>
@@ -328,7 +327,6 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
 
             <ExpansionPanel
               heading="IPv4 Traffic"
-              defaultExpanded
             >
               <React.Fragment>
                 <div className={classes.chart}>
@@ -381,7 +379,6 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
 
             <ExpansionPanel
               heading="IPv6 Traffic"
-              defaultExpanded
             >
               <React.Fragment>
                 <div className={classes.chart}>
@@ -434,7 +431,6 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
 
             <ExpansionPanel
               heading="Disk I/O"
-              defaultExpanded
             >
               <React.Fragment>
                 <div className={classes.chart}>

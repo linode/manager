@@ -308,7 +308,6 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
 
     return (
       <ExpansionPanel
-        defaultExpanded
         heading="IP Sharing"
         error={generalError}
         success={successMessage}

@@ -70,6 +70,10 @@ const InvoiceDetail = DefaultLoader({
   loader: () => import('src/features/Account/InvoiceDetail'),
 });
 
+const Longview = DefaultLoader({
+  loader: () => import('src/features/Longview'),
+});
+
 type ClassNames = 'appFrame'
   | 'content'
   | 'wrapper'
@@ -260,8 +264,6 @@ export class App extends React.Component<CombinedProps, State> {
 
   Managed = () => <Placeholder title="Managed" />;
 
-  Longview = () => <Placeholder title="Longview" />;
-
   Support = () => <Placeholder title="Support" />;
 
   render() {
@@ -289,7 +291,7 @@ export class App extends React.Component<CombinedProps, State> {
                             <Route path="/nodebalancers" component={NodeBalancers} />
                             <Route path="/domains" component={Domains} />
                             <Route exact path="/managed" render={this.Managed} />
-                            <Route exact path="/longview" render={this.Longview} />
+                            <Route exact path="/longview" component={Longview} />
                             <Route path="/images" component={Images} />
                             <Route path="/stackscripts" component={StackScripts} />
                             <Route exact path="/billing" component={Account} />
