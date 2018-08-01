@@ -73,7 +73,6 @@ interface VolumeDrawer extends VolumeDrawerProps {
 
 interface State {
   attachedVolumes: Linode.Volume[];
-  attachableVolumes: Linode.Volume[];
   updateDialog: UpdateDialogState;
   volumeDrawer: VolumeDrawer;
 }
@@ -121,7 +120,6 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
 
     this.state = {
       attachedVolumes: [],
-      attachableVolumes: [],
       updateDialog: LinodeVolumes.updateDialogDefaultState,
       volumeDrawer: LinodeVolumes.volumeDrawerDefaultState,
     };
@@ -129,12 +127,10 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
 
   static getDerivedStateFromProps(props: CombinedProps, state: State) {
     const attachedVolumesUpdate = !equals(props.linodeVolumes, state.attachedVolumes);
-    const attachableVolumesUpdate = !equals(props.volumes.response, state.attachableVolumes);
 
-    if (attachedVolumesUpdate || attachableVolumesUpdate) {
+    if (attachedVolumesUpdate) {
       return {
         attachedVolumes: props.linodeVolumes,
-        attachableVolumes: props.volumes.response,
       };
     }
 
@@ -159,7 +155,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
       .filter(e => !e._initial)
       .subscribe((v) => {
         if (this.mounted) {
-          this.getAllVolumes();
+          this.getVolumes();
         }
       });
   }
@@ -169,24 +165,12 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
     this.eventSubscription.unsubscribe();
   }
 
-  getAllVolumes = () => {
-    const { linodeRegion } = this.props;
-    const getAttachedVolumes = getLinodeVolumes(this.props.linodeID)
-      .then(response => response.data);
-    const getAttachableVolumes = getVolumes()
-      .then(response => response
-        .data
-        .filter(volume => volume.region === linodeRegion && volume.linode_id === null));
+  getVolumes = () => {
 
-    Promise
-      .all([
-        getAttachedVolumes,
-        getAttachableVolumes,
-      ])
-      .then(([attachedVolumes, attachableVolumes]) => {
+    getLinodeVolumes(this.props.linodeID)
+      .then((response) => {
         this.setState({
-          attachedVolumes,
-          attachableVolumes,
+          attachedVolumes: response.data,
         });
       });
   }
@@ -367,7 +351,6 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
             region: linodeRegion,
             linodeId: linodeID,
             onClose: this.closeUpdatingDrawer,
-            attachableVolumes: this.state.attachableVolumes,
             onModeChange: (mode: Modes) => this.setState(prevState => ({
               volumeDrawer: {
                 ...prevState.volumeDrawer,
@@ -527,7 +510,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
     })
       .then(() => {
         this.closeUpdatingDrawer();
-        this.getAllVolumes();
+        this.getVolumes();
         resetEventsPolling();
       })
       .catch((errorResponse) => {
@@ -568,7 +551,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
     updateVolume(id, label)
       .then(() => {
         this.closeUpdatingDrawer();
-        this.getAllVolumes();
+        this.getVolumes();
       })
       .catch((errorResponse: any) => {
         this.setState({

@@ -6,6 +6,7 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import CircleProgress from 'src/components/CircleProgress';
 import Drawer from 'src/components/Drawer';
 import MenuItem from 'src/components/MenuItem';
 import Notice from 'src/components/Notice';
@@ -13,6 +14,7 @@ import Radio from 'src/components/Radio';
 import renderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
 import { dcDisplayNames } from 'src/constants';
+import { getVolumes } from 'src/services/volumes';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 type ClassNames = 'root' | 'suffix';
@@ -27,7 +29,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 export type Modes = 'create' | 'edit' | 'resize' | 'clone' | 'attach';
 
-export interface State { }
+export interface State {
+  attachableVolumes?: Linode.Volume[];
+  loading: boolean;
+}
 
 export interface Props {
   label: string;
@@ -40,7 +45,6 @@ export interface Props {
   onClose: () => void;
   onSubmit: () => void;
 
-  attachableVolumes?: Linode.Volume[];
   cloneLabel?: string;
   cloning?: boolean;
   errors?: Linode.ApiFieldError[];
@@ -67,7 +71,9 @@ interface DisableableProps {
 }
 
 class VolumeDrawer extends React.Component<CombinedProps, State> {
-  state: State = {};
+  state: State = {
+    loading: false,
+  };
 
   onLabelChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     this.props.onLabelChange && this.props.onLabelChange(e.target.value);
@@ -189,7 +195,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
       >
         <MenuItem value="none">Select a Volume</MenuItem>
         {
-          this.props.attachableVolumes && this.props.attachableVolumes.map((volume) => (
+          this.state.attachableVolumes && this.state.attachableVolumes.map((volume) => (
             <MenuItem key={volume.id} value={volume.id}>{volume.label}</MenuItem>
           ))
         }
@@ -224,8 +230,41 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     </ActionsPanel>
   ));
 
+  componentDidUpdate(prevProps: Props) {
+    if (
+      this.props.region &&
+      this.props.open === true && prevProps.open === false
+    ) {
+      this.setState({ loading: true });
+
+      getVolumes()
+        .then(({ data }) => {
+          this.setState({
+            loading: false,
+            attachableVolumes: data.filter((v) => v.region === this.props.region && v.linode_id === null),
+          });
+        })
+        .catch((error) => {
+          this.setState({
+            loading: false,
+          })
+        })
+
+    }
+  }
+
   render() {
-    const { attachableVolumes, mode, open, title, onClose, errors } = this.props;
+    const { open, title, onClose } = this.props;
+    return (
+      <Drawer open={open} onClose={onClose} title={title}>
+        {this.renderContent()}
+      </Drawer>
+    );
+  }
+
+  renderContent = () => {
+    const { attachableVolumes, loading } = this.state;
+    const { mode, errors } = this.props;
     const hasErrorFor = getAPIErrorFor(jawn, errors);
     const generalError = hasErrorFor('none');
     const configError = hasErrorFor('config_id');
@@ -236,8 +275,12 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     const displayModeSelection =
       attachableVolumes && attachableVolumes.length > 0 && ['create', 'attach'].includes(mode);
 
+    if (loading) {
+      return <CircleProgress noTopMargin />
+    }
+
     return (
-      <Drawer open={open} onClose={onClose} title={title}>
+      <React.Fragment>
         {displayModeSelection && <this.modeSelection updateFor={[mode]} />}
         {errorNotice}
         {mode === 'create' && this.createForm()}
@@ -245,11 +288,11 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
         {mode === 'resize' && this.resizeForm()}
         {mode === 'clone' && this.cloneForm()}
         {mode === 'attach' && this.attachForm()}
-
         <this.actions updateFor={[]} />
-      </Drawer>
+      </React.Fragment>
     );
-  }
+
+  };
 }
 
 const styled = withStyles(styles, { withTheme: true });
