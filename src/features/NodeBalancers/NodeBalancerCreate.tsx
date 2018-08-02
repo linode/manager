@@ -586,10 +586,9 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               {
                 (props: StickyProps) => {
                   const { region } = this.state.nodeBalancerFields;
-                  const { regionsData } = this.props;
                   let displaySections;
                   if (region) {
-                    const foundRegion = regionsData.find(r => r.id === region);
+                    const foundRegion = (regionsData || []).find(r => r.id === region);
                     if (foundRegion) {
                       displaySections = { title: foundRegion.display };
                     } else {
