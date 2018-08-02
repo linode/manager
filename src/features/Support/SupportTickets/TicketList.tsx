@@ -182,6 +182,7 @@ class TicketList extends React.Component<Props, State> {
               pageSize={pageSize}
               handlePageChange={this.handlePageChange}
               handleSizeChange={this.handlePageSizeChange}
+              padded
             />
           }
         </Paper>
