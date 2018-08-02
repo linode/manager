@@ -21,6 +21,7 @@ import { formatString } from 'src/utilities/format-date-iso8601';
 
 interface Props {
   filterStatus: 'open' | 'closed';
+  newTicket?: Linode.SupportTicket;
 }
 
 interface State extends PaginationProps {
@@ -46,6 +47,9 @@ class TicketList extends React.Component<Props, State> {
 
   componentDidUpdate(prevProps:Props, prevState:State) {
     if (prevProps.filterStatus !== this.props.filterStatus) {
+      this.getTickets();
+    }
+    if (prevProps.newTicket !== this.props.newTicket) {
       this.getTickets();
     }
   }

@@ -1,6 +1,5 @@
 import { compose, lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import Button from '@material-ui/core/Button';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
@@ -44,21 +43,21 @@ export interface Props {
 }
 
 interface State {
-  errors?: Linode.ApiFieldError[];
-  ticket: Ticket;
-  inputValue: string;
   data: Item[];
+  inputValue: string;
   loading: boolean;
+  ticket: Ticket;
+  errors?: Linode.ApiFieldError[];
 }
 
 interface Ticket {
-  summary: string;
   description: string;
-  entity_type: string;
   entity_id: string;
+  entity_type: string;
+  summary: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 const L = {
   open: lensPath(['ticket','open']),
@@ -71,7 +70,7 @@ const L = {
 };
 
 const entityMap = {
-  Linodes:'linode_id',
+  Linodes: 'linode_id',
   Volumes: 'volume_id',
   Domains: 'domain_id',
   NodeBalancers: 'nodebalancer_id',
@@ -99,11 +98,11 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
   }
 
   state: State = {
+    data: [],
     errors: undefined,
     inputValue: '',
-    ticket: this.defaultTicket,
-    data: [],
     loading: false,
+    ticket: this.defaultTicket,
   };
 
   componentDidMount() {
@@ -170,12 +169,8 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
     }
   }
 
-  resetTicket = () => {
-    if (this.mounted) { this.setState({ ticket: this.defaultTicket }); }
-  }
-
   resetDrawer = () => {
-    if (this.mounted) { this.setState({ errors: undefined, data: [], ticket: this.defaultTicket }); }
+    if (this.mounted) { this.setState({ errors: undefined, data: [], inputValue: '', ticket: this.defaultTicket }); }
   }
 
   handleSummaryInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -191,7 +186,7 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
       set(L.entity_type, e.target.value),
       set(L.entity_id, undefined),
       set(L.inputValue, ''),
-      set(L.data,[])
+      set(L.data, [])
     ]);
   }
 
@@ -201,9 +196,9 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
 
   getHasNoEntitiesMessage = () : string =>  {
     const { data, ticket, loading } = this.state;
-    if (ticket.entity_type === 'none' || loading) { return ''; }
+    if (['none','general'].includes(ticket.entity_type) || loading) { return ''; }
     else if (data.length === 0) {
-      // User has selected a product from the drop-down but the entity list is empty.
+      // User has selected a type from the drop-down but the entity list is empty.
       return `You don't have any ${entityIdtoNameMap[ticket.entity_type]}s on your account.`;
     } else {
       // Default case
@@ -213,8 +208,7 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
 
   close = () => {
     this.props.onClose();
-    if (!this.mounted) { return; }
-    this.setState({ errors: undefined, });
+    if (this.mounted) { this.resetDrawer(); }
   }
 
   onInputValueChange = (inputValue:string) => {
@@ -224,6 +218,11 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
   onSubmit = () => {
     const { description, entity_type, entity_id, summary } = this.state.ticket;
     const { onSuccess } = this.props;
+    if (entity_type && !entity_id) {
+      this.setState({ errors: [{ reason: `Please select a ${entityIdtoNameMap[entity_type]}.`}] });
+      return;
+    }
+    this.setState({ errors: undefined });
     createSupportTicket({
       description,
       summary,
@@ -240,7 +239,7 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
       })
       .catch((errors) => {
         if (!this.mounted) { return; }
-        const err: Linode.ApiFieldError[] = [{ field: 'none', reason: 'An unexpected error has ocurred.' }];
+        const err: Linode.ApiFieldError[] = [{ reason: 'An unexpected error has ocurred.' }];
         this.setState({
           errors: pathOr(err, ['response', 'data', 'errors'], errors)
         })
@@ -255,7 +254,6 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
 
   render() {
     const { data, errors, inputValue, ticket } = this.state;
-    
     const requirementsMet = (ticket.description.length > 0 && ticket.summary.length > 0);
 
     const hasErrorFor = getAPIErrorFor({
@@ -300,9 +298,10 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
         >
           <MenuItem key={'none'} value={'none'}>Choose a Product</MenuItem>
           {this.renderEntityTypes()}
+          <MenuItem key={'general'} value={'general'}>None/General</MenuItem>
         </TextField>
         
-        {ticket.entity_type !== 'none' &&
+        {!['none','general'].includes(ticket.entity_type) &&
           <EnhancedSelect
             options={data}
             value={ticket.entity_id}
@@ -365,8 +364,7 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default compose<any, any, any, any>(
+export default compose<any, any, any>(
   styled,
-  withRouter,
   SectionErrorBoundary,
 )(SupportTicketDrawer);

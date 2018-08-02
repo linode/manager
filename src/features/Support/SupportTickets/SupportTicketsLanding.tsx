@@ -30,6 +30,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 interface State {
   drawerOpen: boolean;
   notice?: string;
+  newTicket?: Linode.SupportTicket;
 }
 
 export class SupportTicketsLanding extends React.Component<CombinedProps, State> {
@@ -56,6 +57,7 @@ export class SupportTicketsLanding extends React.Component<CombinedProps, State>
     this.setState({
       drawerOpen: false,
       notice: "Ticket added successfully.",
+      newTicket: ticket,
     })
   }
 
@@ -66,11 +68,11 @@ export class SupportTicketsLanding extends React.Component<CombinedProps, State>
   ];
   
   renderOpenTicketsList = () => {
-    return <TicketList filterStatus={'open'} />
+    return <TicketList filterStatus={'open'} newTicket={this.state.newTicket} />
   }
 
   renderClosedTicketsList = () => {
-    return <TicketList filterStatus={'closed'} />
+    return <TicketList filterStatus={'closed'} newTicket={this.state.newTicket} />
   }
 
   renderTicketDrawer = () => {
