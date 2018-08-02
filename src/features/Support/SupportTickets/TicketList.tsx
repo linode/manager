@@ -5,13 +5,13 @@ import { Link } from 'react-router-dom';
 
 import Paper from '@material-ui/core/Paper';
 import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import PaginationFooter, { PaginationProps } from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
@@ -165,9 +165,9 @@ class TicketList extends React.Component<Props, State> {
                 <TableCell data-qa-support-id-header>Ticket ID</TableCell>
                 <TableCell data-qa-support-topic-header>Product</TableCell>
                 <TableCell data-qa-support-regarding-header>Regarding</TableCell>
-                <TableCell data-qa-support-subject-header>Subject</TableCell>
-                <TableCell data-qa-support-date-header>Date Created</TableCell>
-                <TableCell data-qa-support-updated-header>Last Updated</TableCell>
+                <TableCell data-qa-support-subject-header style={{ minWidth: 200 }}>Subject</TableCell>
+                <TableCell data-qa-support-date-header noWrap>Date Created</TableCell>
+                <TableCell data-qa-support-updated-header noWrap>Last Updated</TableCell>
                 <TableCell />
               </TableRow>
             </TableHead>
