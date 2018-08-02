@@ -35,7 +35,7 @@ import NodeBalancerActionMenu from './NodeBalancerActionMenu';
 
 type ClassNames = 'root'
   | 'title'
-  | 'NBStatus'
+  | 'nodeStatus'
   | 'nameCell'
   | 'nodeStatus'
   | 'transferred'
@@ -378,7 +378,6 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
   };
 
   renderData = (nodeBalancers: Linode.ExtendedNodeBalancer[]) => {
-    const { classes } = this.props;
 
     return nodeBalancers.map((nodeBalancer) => {
       return (
