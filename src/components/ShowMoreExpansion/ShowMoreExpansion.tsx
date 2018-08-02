@@ -1,34 +1,30 @@
 import * as React from 'react';
 
+import Button from '@material-ui/core/Button';
 import Collapse from '@material-ui/core/Collapse';
-import ListItem from '@material-ui/core/ListItem';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 
-type CSSClasses = 'root' | 'header' | 'caret';
+type CSSClasses = 'root' 
+| 'caret';
 
 const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   root: {
-    flexDirection: 'column',
-    alignItems: 'flex-start',
     paddingLeft: 0,
     paddingRight: 0,
-    backgroundColor: 'transparent',
-    '&:hover, &:focus': {
-      backgroundColor: 'transparent',
+    backgroundColor: 'transparent !important',
+    display: 'flex',
+    alignItems: 'center',
+    fontWeight: 700,
+    width: 'auto',
+    color: theme.color.headline,
+    transition: theme.transitions.create('color'),
+    '&:hover': {
+      color: theme.palette.primary.main,
       '& $caret, & $header': {
         color: theme.palette.primary.light,
       },
     },
-  },
-  header: {
-    cursor: 'pointer',
-    userSelect: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    fontWeight: 700,
-    color: theme.color.headline,
-    transition: 'color 225ms ease-in-out',
   },
   caret: {
     color: theme.palette.primary.main,
@@ -68,26 +64,22 @@ class ShowMoreExpansion extends React.Component<CombinedProps, State> {
     const { open } = this.state;
 
     return (
-      <ListItem
-        className={classes.root}
-        button
-        disableRipple
-        aria-haspopup="true"
-        aria-expanded={open ? 'true' : 'false'}
-        role="menu"
-        data-qa-show-more-expanded={open ? 'true' : 'false'}
-      >
-        <div
+      <React.Fragment>
+        <Button
+          className={classes.root}
+          aria-haspopup="true"
+          role="button"
+          aria-expanded={open ? 'true' : 'false'}
+          data-qa-show-more-expanded={open ? 'true' : 'false'}
           onClick={this.handleNameClick}
-          className={`${classes.header} ${open ? 'hOpen' : ''}`}
           data-qa-show-more-toggle
         >
           {open
             ? <KeyboardArrowRight className={classes.caret + ' rotate'} />
             : <KeyboardArrowRight className={classes.caret} />
           }
-          <span>{name}</span>
-        </div>
+          <div>{name}</div>
+        </Button>
         <Collapse in={open} className={open ? 'pOpen' : ''}>
           {open
             ? (
@@ -98,7 +90,7 @@ class ShowMoreExpansion extends React.Component<CombinedProps, State> {
             : null
           }
         </Collapse>
-      </ListItem>
+      </React.Fragment>
     );
   }
 }
