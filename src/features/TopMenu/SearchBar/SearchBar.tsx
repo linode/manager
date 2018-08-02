@@ -154,9 +154,6 @@ interface Props {
 }
 
 interface TypesContextProps {
-  typesLoading: boolean;
-  typesRequest: () => void;
-  typesLastUpdated: number;
   typesData?: Linode.LinodeType[];
 }
 
@@ -183,13 +180,6 @@ class SearchBar extends React.Component<CombinedProps, State> {
   };
 
   lastFetch = moment.utc('1970-01-01T00:00:00');
-
-  componentDidMount() {
-    const { typesLastUpdated, typesLoading, typesRequest } = this.props;
-    if (typesLastUpdated === 0 && !typesLoading) {
-      typesRequest();
-    }
-  }
 
   dataAvailable() {
     return (
@@ -485,14 +475,8 @@ class SearchBar extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles, { withTheme: true });
 
 const typesContext = withTypes(({
-  loading: typesLoading,
-  request: typesRequest,
-  lastUpdated: typesLastUpdated,
   data: typesData,
 }) => ({
-  typesLoading,
-  typesRequest,
-  typesLastUpdated,
   typesData,
 }));
 

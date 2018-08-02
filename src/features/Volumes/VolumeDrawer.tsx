@@ -47,9 +47,6 @@ export interface Props {
 
 interface RegionsContextProps {
   regionsData?: Linode.Region[];
-  regionsLoading: boolean;
-  regionsLastUpdated: number;
-  regionsRequest: () => void;
 }
 
 interface ActionCreatorProps {
@@ -189,12 +186,6 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
 
     /* If the drawer is opening */
     if ((this.props.mode === modes.CLOSED) && !(nextProps.mode === modes.CLOSED)) {
-      /** If regions arent already loading, load em! */
-      const { regionsLastUpdated, regionsLoading, regionsRequest } = this.props;
-      if (regionsLastUpdated === 0 && !regionsLoading) {
-        regionsRequest();
-      }
-
       /* re-request the list of Linodes */
       getLinodes()
         .then((response) => {
@@ -654,11 +645,8 @@ const mapStateToProps = (state: Linode.AppState) => ({
   linodeId: path(['volumeDrawer', 'linodeId'], state),
 });
 
-const regionsContext = withRegions(({ data, loading, lastUpdated, request }) => ({
+const regionsContext = withRegions(({ data }) => ({
   regionsData: data,
-  regionsLoading: loading,
-  regionsLastUpdated: lastUpdated,
-  regionsRequest: request,
 }))
 
 const connected = connect(mapStateToProps, mapDispatchToProps);

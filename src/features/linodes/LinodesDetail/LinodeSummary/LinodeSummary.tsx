@@ -112,9 +112,6 @@ interface Props {
 
 interface TypesContextProps {
   typesData?: Linode.LinodeType[];
-  typesLastUpdated: number;
-  typesLoading: boolean;
-  typesRequest: () => void;
 }
 
 interface LinodeContextProps {

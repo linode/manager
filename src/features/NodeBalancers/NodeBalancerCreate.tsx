@@ -51,9 +51,7 @@ interface Props {
 
 interface RegionsContextProps {
   regionsData: ExtendedRegion[];
-  regionsLastUpdated: number;
   regionsLoading: boolean;
-  regionsRequest: () => void;
 }
 
 type CombinedProps = Props
@@ -378,12 +376,6 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   )
 
   componentDidMount() {
-    /** If regions havent been updated and are not currently being requested, request them. */
-    const { regionsLastUpdated, regionsLoading, regionsRequest } = this.props;
-    if (regionsLastUpdated === 0 && !regionsLoading) {
-      regionsRequest();
-    }
-
     getLinodes()
       .then(result => {
         const privateIPRegex = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/;
@@ -627,9 +619,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
 const regionsContext = withRegions(({
   data: regionsData,
-  lastUpdated: regionsLastUpdated,
   loading: regionsLoading,
-  request: regionsRequest,
 }) => ({
   regionsData: compose(
     map((region: Linode.Region) => ({
@@ -637,9 +627,7 @@ const regionsContext = withRegions(({
       display: dcDisplayNames[region.id],
     })),
   )(regionsData || []),
-  regionsLastUpdated,
   regionsLoading,
-  regionsRequest,
 }))
 
 const styled = withStyles(styles, { withTheme: true });

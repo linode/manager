@@ -227,26 +227,15 @@ export class App extends React.Component<CombinedProps, State> {
       this.setState({ betaNotification: true });
     }
 
-    const promises = [
-      new Promise(() => {
-        request(['profile']);
-        return getProfile()
-          .then(({ data }) => {
-            response(['profile'], data);
-          })
-          .catch(error => response(['profile'], error));
-      }),
-    ];
+    request(['profile']);
+    getProfile()
+      .then(({ data }) => {
+        response(['profile'], data);
+      })
+      .catch(error => response(['profile'], error));
 
-    Promise
-      .all(promises)
-      .then((results) => {
-        /**
-         * We don't really need to do anything here. The Redux actions are dispatched
-         * by the individual promises, we have no concept of 'loading'. The consumer of these
-         * cached entities can check their individual status and do what they will with them.
-         */
-      });
+    this.state.regionsContext.request();
+    this.state.typesContext.request();
   }
 
   toggleMenu = () => {

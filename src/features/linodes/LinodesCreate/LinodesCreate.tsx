@@ -9,6 +9,7 @@ import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
 
+import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/Grid';
 import PromiseLoader from 'src/components/PromiseLoader';
 import { ExtendedRegion } from 'src/components/SelectRegionPanel';
@@ -52,13 +53,12 @@ interface Props {
 
 interface TypesContextProps {
   typesData: ExtendedType[];
+  typesLoading: boolean;
 }
 
 interface RegionsContextProps {
-  regionsLastUpdated: 0;
-  regionsLoading: boolean;
-  regionsRequest: () => void;
   regionsData: ExtendedRegion[];
+  regionsLoading: boolean;
 }
 
 interface PreloadedProps {
@@ -121,14 +121,6 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     this.mounted = true;
-
-    /** I chose to not check for types and request as the SearchBar loads them higher up in the DOM. */
-
-    /** If regions havent been requested, and arent requesting, request them! */
-    const { regionsLastUpdated, regionsLoading, regionsRequest } = this.props;
-    if(regionsLastUpdated === 0 && !regionsLoading){
-      regionsRequest();
-    }
 
     this.updateStateFromQuerystring();
   }
@@ -324,12 +316,11 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
   render() {
     const { selectedTab } = this.state;
 
-    const { classes, regionsLoading } = this.props;
+    const { classes, regionsLoading, typesLoading } = this.props;
 
     const tabRender = this.tabs[selectedTab].render;
 
-    /** @todo This could be better? Maybe? Regions is cached and loads uber quick. */
-    if(regionsLoading){ return null; }
+    if (regionsLoading || typesLoading) { return <CircleProgress />; }
 
     return (
       <StickyContainer>
@@ -363,7 +354,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
   }
 }
 
-const typesContext = withTypes(({ data }) => {
+const typesContext = withTypes(({ data, loading }) => {
   return {
     typesData: compose(
       map<Linode.LinodeType, ExtendedType>((type) => {
@@ -377,19 +368,16 @@ const typesContext = withTypes(({ data }) => {
           ],
         };
       }),
-    )(data || [])
+    )(data || []),
+    typesLoading: loading,
   };
 });
 
 const regionsContext = withRegions(({
   data: regionsData,
-  lastUpdated: regionsLastUpdated,
   loading: regionsLoading,
-  request: regionsRequest,
 }) => ({
-  regionsLastUpdated,
   regionsLoading,
-  regionsRequest,
   regionsData: compose(
     map((region: Linode.Region) => ({
       ...region,
