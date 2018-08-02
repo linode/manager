@@ -11,6 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CheckoutBar from 'src/components/CheckoutBar';
+import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
@@ -379,7 +380,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   componentDidMount() {
     /** If regions havent been updated and are not currently being requested, request them. */
     const { regionsLastUpdated, regionsLoading, regionsRequest } = this.props;
-    if(regionsLastUpdated === 0 && !regionsLoading){
+    if (regionsLastUpdated === 0 && !regionsLoading) {
       regionsRequest();
     }
 
@@ -403,11 +404,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     const hasErrorFor = getAPIErrorFor(errorResources, this.state.errors);
     const generalError = hasErrorFor('none');
 
-    /**
-     * @todo This could probably be better? It briefly displays a blank page while regions
-     * loads. Regions is cached and loads pretty quickly even on slower connections.
-     */
-    if(this.props.regionsLoading){ return null; }
+    if (this.props.regionsLoading) { return <CircleProgress /> }
 
     return (
       <StickyContainer>
