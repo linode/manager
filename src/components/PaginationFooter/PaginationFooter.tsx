@@ -68,6 +68,7 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
             value={pageSize}
             onChange={this.handleSizeChange}
             disableUnderline
+            pagination
           >
             <MenuItem value={25}>Show 25</MenuItem>
             <MenuItem value={50}>Show 50</MenuItem>
