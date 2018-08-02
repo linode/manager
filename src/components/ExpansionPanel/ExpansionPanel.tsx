@@ -21,11 +21,7 @@ type ClassNames = 'root'
 const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
   const { palette: { status } } = theme;
   return {
-    root: {
-      '& .notice': {
-        margin: 0,
-      },
-    },
+    root: {},
     success: {
       backgroundColor: status.success,
       '&:hover, &:focus': {
