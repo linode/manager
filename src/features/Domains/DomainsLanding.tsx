@@ -238,8 +238,9 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
   }
 
   closeRemoveDialog = () => {
+    const { removeDialog } = this.state;
     this.setState({
-      removeDialog: { open: false },
+      removeDialog: { ...removeDialog, open: false },
     });
   }
 
