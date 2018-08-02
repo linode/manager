@@ -14,8 +14,8 @@ import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import Placeholder from 'src/components/Placeholder';
 import SideMenu from 'src/components/SideMenu';
-import { RegionsProvider, WithRegionsProps } from 'src/context/regions';
-import { TypesProvider, WithTypesProps } from 'src/context/types';
+import { RegionsProvider, WithRegionsContext } from 'src/context/regions';
+import { TypesProvider, WithTypesContext } from 'src/context/types';
 import Footer from 'src/features/Footer';
 import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
@@ -136,8 +136,8 @@ interface ConnectedProps {
 interface State {
   menuOpen: Boolean;
   betaNotification: Boolean;
-  typesContext: WithTypesProps;
-  regionsContext: WithRegionsProps;
+  typesContext: WithTypesContext;
+  regionsContext: WithRegionsContext;
 }
 
 type CombinedProps =

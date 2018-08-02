@@ -1,17 +1,17 @@
 import * as React from 'react';
 import { createHOCForConsumer, Requestable } from 'src/requestableContext';
 
-export interface WithRegionsProps extends Requestable<Linode.Region[]> {
+export interface WithRegionsContext extends Requestable<Linode.Region[]> {
 }
 
-const initialState: WithRegionsProps = {
+const initialState: WithRegionsContext = {
   lastUpdated: 0,
   loading: false,
   request: () => Promise.resolve(),
   update: () => null,
 };
 
-const { Provider, Consumer } = React.createContext<WithRegionsProps >({ ...initialState });
+const { Provider, Consumer } = React.createContext<WithRegionsContext>({ ...initialState });
 
 export const withRegions = createHOCForConsumer<Linode.Region[]>(Consumer, 'WithRegions');
 

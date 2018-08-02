@@ -1,17 +1,17 @@
 import * as React from 'react';
 import { createHOCForConsumer, Requestable } from 'src/requestableContext';
 
-export interface WithTypesProps extends Requestable<Linode.LinodeType[]> {
+export interface WithTypesContext extends Requestable<Linode.LinodeType[]> {
 }
 
-const initialState: WithTypesProps = {
+const initialState: WithTypesContext = {
   lastUpdated: 0,
   loading: false,
   request: () => Promise.resolve(),
   update: () => null,
 };
 
-const typesContext = React.createContext<WithTypesProps>({ ...initialState });
+const typesContext = React.createContext<WithTypesContext>({ ...initialState });
 
 export const withTypes = createHOCForConsumer<Linode.LinodeType[]>(typesContext.Consumer, 'WithTypes');
 
