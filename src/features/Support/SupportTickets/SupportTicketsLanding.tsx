@@ -40,11 +40,12 @@ export class SupportTicketsLanding extends React.Component<CombinedProps, State>
   handleTabChange = (event: React.ChangeEvent<HTMLDivElement>, value: number) => {
     const { history } = this.props;
     const routeName = this.tabs[value].routeName;
+    this.setState({ notice: undefined });
     history.push(`${routeName}`);
   }
 
   closeDrawer = () => {
-    this.setState({ drawerOpen: false, notice: undefined, });
+    this.setState({ drawerOpen: false });
   }
 
   openDrawer = () => {
@@ -77,6 +78,7 @@ export class SupportTicketsLanding extends React.Component<CombinedProps, State>
     return <SupportTicketDrawer
       open={drawerOpen}
       onClose={this.closeDrawer}
+      onSuccess={this.handleAddTicketSuccess}
     />
   }
 

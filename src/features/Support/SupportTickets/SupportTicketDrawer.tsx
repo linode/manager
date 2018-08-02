@@ -224,12 +224,6 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
   onSubmit = () => {
     const { description, entity_type, entity_id, summary } = this.state.ticket;
     const { onSuccess } = this.props;
-    // const newTicket = {
-    //   description,
-    //   summary,
-    //   [entity_type]: entity_id
-    // }
-    // console.log(newTicket);
     createSupportTicket({
       description,
       summary,
@@ -242,6 +236,7 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
           errors: undefined,
           ticket: this.defaultTicket
         });
+        this.close();
       })
       .catch((errors) => {
         if (!this.mounted) { return; }
@@ -291,7 +286,7 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
           data-qa-support-ticket-helper-text
         >
           We love your tickets and we love helping our customers.
-          Please keep in mind that not all topics are within the scope.
+          Please keep in mind that not all topics are within the scope of our support.
           For overall system status, please see <a href="https://status.linode.com">status.linode.com</a>.
         </Typography>
 
