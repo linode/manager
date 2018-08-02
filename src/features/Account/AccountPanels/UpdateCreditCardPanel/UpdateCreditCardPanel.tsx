@@ -3,7 +3,6 @@ import * as React from 'react';
 import NumberFormat from 'react-number-format';
 
 import Divider from '@material-ui/core/Divider';
-import Hidden from '@material-ui/core/Hidden';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
