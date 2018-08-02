@@ -140,6 +140,21 @@ const WithTooltip: React.StatelessComponent<WithTooltipProps> = ({ title, render
   : render();
 
 class SelectionCard extends React.PureComponent<CombinedProps, {}> {
+  handleKeyPress = (e: React.KeyboardEvent<HTMLElement>) => {
+    const { onClick, disabled } = this.props;
+    if (onClick && !disabled) {
+      e.preventDefault();
+      onClick(e);
+    }
+  }
+
+  handleClick = (e: React.MouseEvent<HTMLElement>) => {
+    const { onClick, disabled } = this.props;
+    if (onClick && !disabled) {
+      onClick(e);
+    }
+  }
+
   content = () => {
     const { checked, classes, heading, renderIcon, subheadings } = this.props;
 
@@ -203,7 +218,8 @@ class SelectionCard extends React.PureComponent<CombinedProps, {}> {
             selectionCard: true,
           })
         }
-        {...((onClick && !disabled) && { onClick, onKeyPress: onClick })}
+        onClick={this.handleClick}
+        onKeyPress={this.handleKeyPress}
         data-qa-selection-card
       >
         <WithTooltip
