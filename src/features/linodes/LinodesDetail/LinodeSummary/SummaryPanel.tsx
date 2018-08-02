@@ -98,9 +98,12 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
           <Typography className={classes.section} variant="caption">
             <IPAddress ips={linode.ipv4} copyRight />
           </Typography>
-          <Typography className={classes.section} variant="caption">
-            <IPAddress ips={[linode.ipv6]} copyRight />
-          </Typography>
+          {
+            linode.ipv6 &&
+            <Typography className={classes.section} variant="caption">
+              <IPAddress ips={[linode.ipv6]} copyRight />
+            </Typography>
+          }
         </Grid>
         <Grid item xs={12} sm={6} lg={4} className={classes.region}>
           <Typography className={`${classes.section}`} variant="caption">
