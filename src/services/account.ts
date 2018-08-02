@@ -156,6 +156,19 @@ export const deleteUser = (username: string) =>
   )
     .then(response => response.data);
 
+interface SaveCreditCardData {
+  card_number: string,
+  expiry_year: number,
+  expiry_month: number
+}
+
+export const saveCreditCard = (data: SaveCreditCardData) => Request<{}>(
+  setURL(`${API_ROOT}/account/credit-card`),
+  setMethod('POST'),
+  setData(data),
+)
+  .then(response => response.data);
+
 export const getInvoice = (invoiceId: number) =>
   Request<Linode.Invoice>(
     setURL(`${API_ROOT}/account/invoices/${invoiceId}`),
