@@ -41,20 +41,32 @@ import VolumesActionMenu from './VolumesActionMenu';
 
 type ClassNames = 'root'
   | 'title'
-  | 'label'
-  | 'attachment';
+  | 'labelCol'
+  | 'attachmentCol'
+  | 'sizeCol'
+  | 'pathCol';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
   title: {
     marginBottom: theme.spacing.unit * 2,
   },
-  label: {
+  labelCol: {
     width: '15%',
+    minWidth: 150,
   },
-  attachment: {
+  attachmentCol: {
     width: '15%',
+    minWidth: 150,
   },
+  sizeCol: {
+    width: '10%',
+    minWidth: 75,
+  },
+  pathCol: {
+    width: '25%',
+    minWidth: 250,
+  }
 });
 
 interface Props {
@@ -215,10 +227,10 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell className={classes.label}>Label</TableCell>
-                <TableCell className={classes.attachment}>Attached To</TableCell>
-                <TableCell>Size</TableCell>
-                <TableCell>File System Path</TableCell>
+                <TableCell className={classes.labelCol}>Label</TableCell>
+                <TableCell className={classes.attachmentCol}>Attached To</TableCell>
+                <TableCell className={classes.sizeCol}>Size</TableCell>
+                <TableCell className={classes.pathCol}>File System Path</TableCell>
                 <TableCell>Region</TableCell>
                 <TableCell />
               </TableRow>
@@ -319,7 +331,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
 
       return isVolumeUpdating(volume.recentEvent)
         ? (
-          <TableRow key={volume.id} data-qa-volume-loading>
+          <TableRow key={volume.id} data-qa-volume-loading className="fade-in-table">
             <TableCell data-qa-volume-cell-label>{label}</TableCell>
             <TableCell colSpan={5}>
               <LinearProgress value={progressFromEvent(volume.recentEvent)} />
@@ -327,7 +339,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           </TableRow>
         )
         : (
-          <TableRow key={volume.id} data-qa-volume-cell={volume.id}>
+          <TableRow key={volume.id} data-qa-volume-cell={volume.id} className="fade-in-table">
             <TableCell data-qa-volume-cell-label>{volume.label}</TableCell>
             <TableCell data-qa-volume-cell-attachment>
               {linodeLabel &&

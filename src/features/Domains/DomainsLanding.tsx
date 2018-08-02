@@ -27,7 +27,10 @@ import ActionMenu from './DomainActionMenu';
 import DomainCreateDrawer from './DomainCreateDrawer';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 
-type ClassNames = 'root' | 'title' | 'domain';
+type ClassNames = 'root'
+  | 'title'
+  | 'domain'
+  | 'domainRow';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
@@ -36,6 +39,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
   domain: {
     width: '60%',
+  },
+  domainRow: {
+    height: 75,
   },
 });
 
@@ -358,8 +364,12 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
 
     return (
       domains.map(domain =>
-        <TableRow key={domain.id} data-qa-domain-cell={domain.id}>
-          <TableCell className={classes.domain} data-qa-domain-label>
+        <TableRow
+          key={domain.id}
+          data-qa-domain-cell={domain.id}
+          className={`${classes.domainRow} ${'fade-in-table'}`}
+        >
+          <TableCell data-qa-domain-label>
             <Link to={`/domains/${domain.id}`}>
               {domain.domain}
             </Link>

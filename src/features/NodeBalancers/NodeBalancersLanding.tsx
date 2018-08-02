@@ -6,7 +6,6 @@ import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
@@ -22,6 +21,7 @@ import PaginationFooter, { PaginationProps } from 'src/components/PaginationFoot
 import Placeholder from 'src/components/Placeholder';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
@@ -33,16 +33,40 @@ import scrollToTop from 'src/utilities/scrollToTop';
 
 import NodeBalancerActionMenu from './NodeBalancerActionMenu';
 
-type ClassNames = 'root' | 'title' | 'NBStatus';
+type ClassNames = 'root'
+  | 'title'
+  | 'NBStatus'
+  | 'nameCell'
+  | 'nodeStatus'
+  | 'transferred'
+  | 'ports'
+  | 'ip';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
   title: {
     marginBottom: theme.spacing.unit * 2,
   },
-  NBStatus: {
-    whiteSpace: 'nowrap',
-  }
+  nameCell: {
+    width: '15%',
+    minWidth: 150,
+  },
+  nodeStatus: {
+    width: '10%',
+    minWidth: 100,
+  },
+  transferred: {
+    width: '10%',
+    minWidth: 100,
+  },
+  ports: {
+    width: '5%',
+    minWidth: 50,
+  },
+  ip: {
+    width: '20%',
+    minWidth: 200,
+  },
 });
 
 interface Props { }
@@ -250,11 +274,11 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Node Status</TableCell>
-                <TableCell>Transferred</TableCell>
-                <TableCell>Ports</TableCell>
-                <TableCell>IP Addresses</TableCell>
+                <TableCell className={classes.nameCell}>Name</TableCell>
+                <TableCell className={classes.nodeStatus} noWrap>Node Status</TableCell>
+                <TableCell className={classes.transferred}>Transferred</TableCell>
+                <TableCell className={classes.ports}>Ports</TableCell>
+                <TableCell className={classes.ip} noWrap>IP Addresses</TableCell>
                 <TableCell>Region</TableCell>
                 <TableCell />
               </TableRow>
@@ -358,7 +382,7 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
 
     return nodeBalancers.map((nodeBalancer) => {
       return (
-        <TableRow key={nodeBalancer.id} data-qa-nodebalancer-cell>
+        <TableRow key={nodeBalancer.id} data-qa-nodebalancer-cell className="fade-in-table">
           <TableCell data-qa-nodebalancer-label>
             <Link to={`/nodebalancers/${nodeBalancer.id}`}>
               {nodeBalancer.label}

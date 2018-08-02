@@ -6,10 +6,15 @@ import TableRow from '@material-ui/core/TableRow';
 
 import CircleProgress from 'src/components/CircleProgress';
 
-type ClassNames = 'root';
+type ClassNames = 'root'
+  | 'tableCell';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
+  tableCell: {
+    padding: 17,
+    textAlign: 'center',
+  },
 });
 
 export interface Props {
@@ -19,9 +24,10 @@ export interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const tableRowLoading: React.StatelessComponent<CombinedProps> = (props) => {
+  const { classes } = props;
   return (
     <TableRow>
-      <TableCell colSpan={props.colSpan}>
+      <TableCell colSpan={props.colSpan} className={classes.tableCell}>
         <CircleProgress mini />
       </TableCell>
     </TableRow>
