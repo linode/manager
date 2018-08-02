@@ -14,7 +14,15 @@ describe('NodeBalancers', () => {
     <StaticRouter context={{}}>
       <LinodeThemeWrapper>
         <NodeBalancersLanding
-          classes={{ root: '', title: '', NBStatus: '' }}
+          classes={{ 
+            root: '',
+            title: '',
+            nameCell: '',
+            nodeStatus: '',
+            transferred: '',
+            ports: '',
+            ip: ''
+          }}
           setDocs={setDocs}
           clearDocs={clearDocs}
         />
