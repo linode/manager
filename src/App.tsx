@@ -20,7 +20,7 @@ import NotFound from 'src/components/NotFound';
 import Placeholder from 'src/components/Placeholder';
 import SideMenu from 'src/components/SideMenu';
 import Footer from 'src/features/Footer';
-import SupportTicketDetail from 'src/features/support/SupportTicketDetail';
+import SupportTicketDetail from 'src/features/Support/SupportTicketDetail';
 import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
@@ -276,7 +276,7 @@ export class App extends React.Component<CombinedProps, State> {
                         <Route path="/users" component={Users} />
                         <Route exact path="/support" render={this.Support} />
                         <Route path="/support/tickets" component={SupportTickets} />
-                        <Route path="support/tickets/:ticketID" component={SupportTicketDetail} />
+                        <Route path="support/ticket/:ticketID" component={SupportTicketDetail} />
                         <Route path="/profile" component={Profile} />
                         {/* Update to Dashboard when complete */}
                         <Route exact path="/" component={LinodesRoutes} />
