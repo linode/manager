@@ -92,3 +92,6 @@ localStorage.json
 e2e/drivers
 storybook-test-results/*.xml
 .tmp*.status
+
+# storybook static files
+.out
