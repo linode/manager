@@ -2,6 +2,7 @@ import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 
+import Chip from '@material-ui/core/Chip';
 import IconButton from '@material-ui/core/IconButton';
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -15,10 +16,20 @@ import { getTicket, getTicketRepliesPage } from 'src/services/support';
 
 import ExpandableTicketPanel from '../ExpandableTicketPanel';
 
-type ClassNames = 'root' | 'titleWrapper' | 'backButton' | 'listParent';
+type ClassNames = 'root' |
+  'title' |
+  'titleWrapper' |
+  'backButton' |
+  'listParent' |
+  'status';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
+  title: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   titleWrapper: {
     display: 'flex',
     alignItems: 'center',
@@ -31,16 +42,23 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     },
   },
   listParent: {
-    '&:nth-child(2)': {
-      
-    }
   },
+  status: {
+    height: 25,
+    width: 25,
+    marginLeft: theme.spacing.unit,
+    paddingLeft: theme.spacing.unit*2,
+    paddingRight: theme.spacing.unit*2,
+    paddingTop: theme.spacing.unit,
+    paddingBottom: theme.spacing.unit,
+    backgroundColor: 'yellow',
+  }, 
 });
 
 interface PreloadedProps {
-ticket: PromiseLoaderResponse<Linode.SupportTicket>;
-replies: PromiseLoaderResponse<Linode.SupportReply[]>;
-}
+  ticket: PromiseLoaderResponse<Linode.SupportTicket>;
+  replies: PromiseLoaderResponse<Linode.SupportReply[]>;
+  }
 
 type RouteProps = RouteComponentProps<{ ticketId?: number }>;
 
@@ -69,6 +87,14 @@ const preloaded = PromiseLoader<CombinedProps>({
   },
 });
 
+const scrollToBottom = () => {
+  window.scroll({
+    behavior: 'smooth',
+    left: 0,
+    top: document.body.scrollHeight,
+  });
+}
+
 export class SupportTicketDetail extends React.Component<CombinedProps,State> {
   state: State = {
     ticket: pathOr(undefined, ['response', 'data'], this.props.ticket),
@@ -83,6 +109,10 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
       Linode also offers a number of resources you can refer to when troubleshooting application and server configuration issues. These issues are generally outside the scope of Linode Support, and the other resources Linode provides can help you find solutions for your questions.`,
     },
   ];
+
+  componentDidMount() {
+    scrollToBottom();
+  }
 
   onBackButtonClick = () => {
     this.props.history.push('/support/tickets');
@@ -105,18 +135,17 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
       <React.Fragment>
         <ExpandableTicketPanel key={ticket.id} ticket={ticket} />
         {replies && replies.map((reply: Linode.SupportReply, idx:number) =>
-          <ExpandableTicketPanel key={idx} reply={reply} />
+          <ExpandableTicketPanel key={idx} reply={reply} open={idx === replies.length - 1} />
         )}
       </React.Fragment>
     )
-
-
   }
 
   render() {
     const { classes } = this.props;
     const { ticket } = this.state;
 
+    if (!ticket) { return null; }
     return (
       <React.Fragment>
         <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
@@ -127,7 +156,10 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
               >
                 <KeyboardArrowLeft />
               </IconButton>
-              <Typography variant="headline" data-qa-domain-title>{ticket ? `#${ticket.id}: ${ticket.summary}` : ""}</Typography>
+              <Typography variant="headline" className={classes.title} data-qa-domain-title>
+                {`#${ticket.id}: ${ticket.summary}`}
+                <Chip className={classes.status} label={ticket.status} />
+              </Typography>
             </Grid>
         </Grid>
         <Grid container direction="column" justify="center" alignItems="center" className={classes.listParent} >

@@ -1,4 +1,4 @@
-import { take } from 'ramda';
+import { pathOr, take } from 'ramda';
 import * as React from 'react';
 
 import Paper from '@material-ui/core/Paper';
@@ -65,6 +65,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 interface Props {
   reply?: Linode.SupportReply;
   ticket?: Linode.SupportTicket;
+  open?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -87,7 +88,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
   constructor(props:CombinedProps) {
     super(props);
     this.state = {
-      open: true,
+      open: pathOr(true, ['open'], this.props),
       gravatarUrl: '',
       data: this.getData(),
     }
