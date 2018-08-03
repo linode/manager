@@ -31,6 +31,7 @@ import { updateVolumes$ } from 'src/features/Volumes/Volumes.tsx';
 import { getLinodes } from 'src/services/linodes';
 import { deleteVolume, detachVolume, getVolumes } from 'src/services/volumes';
 import { openForClone, openForCreating, openForEdit, openForResize } from 'src/store/reducers/volumeDrawer';
+import { formatRegion } from 'src/utilities';
 import scrollToTop from 'src/utilities/scrollToTop';
 
 import DestructiveVolumeDialog from './DestructiveVolumeDialog';
@@ -315,7 +316,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
         volume,
       );
       const regionID = pathOr('', ['region'], volume);
-      const region = dcDisplayNames[regionID];
+      const region = formatRegion(regionID);
 
       return isVolumeUpdating(volume.recentEvent)
         ? (

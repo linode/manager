@@ -177,6 +177,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           {range.range}
         </TableCell>
         <TableCell />
+        <TableCell />
         <TableCell>
           {type}
         </TableCell>

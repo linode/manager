@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-import { formatRegion } from '../presentation';
+import { formatRegion } from 'src/utilities';
 
 type CSSClasses =  'regionIndicator';
 

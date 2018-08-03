@@ -13,8 +13,8 @@ import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import renderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
-import { dcDisplayNames } from 'src/constants';
 import { getVolumes } from 'src/services/volumes';
+import { formatRegion } from 'src/utilities';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 type ClassNames = 'root' | 'suffix';
@@ -140,7 +140,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
       errorText={getAPIErrorFor(jawn, this.props.errors)('region')}
       label="Region"
       onChange={this.onRegionChange}
-      value={this.props.region && dcDisplayNames[this.props.region]}
+      value={this.props.region && formatRegion(this.props.region)}
     />
   );
 

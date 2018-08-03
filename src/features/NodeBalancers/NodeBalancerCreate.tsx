@@ -18,7 +18,7 @@ import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
 import PromiseLoader from 'src/components/PromiseLoader';
 import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
-import { dcDisplayNames } from 'src/constants';
+import { dcDisplayCountry, dcDisplayNames } from 'src/constants';
 import { withRegions } from 'src/context/regions';
 import { getLinodes } from 'src/services/linodes';
 import { createNodeBalancer, createNodeBalancerSchema } from 'src/services/nodebalancers';
@@ -582,7 +582,10 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                   if (region) {
                     const foundRegion = (regionsData || []).find(r => r.id === region);
                     if (foundRegion) {
-                      displaySections = { title: foundRegion.display };
+                      displaySections = {
+                        title: dcDisplayCountry[foundRegion.id],
+                        details: foundRegion.display,
+                      };
                     } else {
                       displaySections = { title: 'Unknown Region' };
                     }
