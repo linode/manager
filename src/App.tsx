@@ -5,6 +5,7 @@ import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import { bindActionCreators, compose } from 'redux';
+import { Observable } from 'rxjs';
 import 'typeface-lato';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
@@ -147,8 +148,22 @@ export class App extends React.Component<CombinedProps, State> {
     betaNotification: false,
   };
 
+  /* Some browsers fire the resize event quite often so throttle it using an Observable */
+  private resizeObservable = Observable.fromEvent(window, 'resize').throttleTime(200);
+
   componentDidMount() {
     const { request, response } = this.props;
+
+    /*
+     * Hide the SideMenu on every window resize so that it doesn't seem to
+     * randomly appear at narrow breakpoints.
+     */
+    this.resizeObservable.
+      subscribe((event) => {
+        this.setState({
+          menuOpen: false,
+        })
+      });
 
     const betaNotification = window.localStorage.getItem('BetaNotification');
     if (betaNotification !== 'closed') {
