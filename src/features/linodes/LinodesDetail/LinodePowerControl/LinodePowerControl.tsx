@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
@@ -9,6 +8,7 @@ import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
 import PowerOn from 'src/assets/icons/powerOn.svg';
 import Reload from 'src/assets/icons/reload.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import MenuItem from 'src/components/MenuItem';
 import { powerOffLinode, powerOnLinode, rebootLinode } from 'src/features/linodes/LinodesLanding/powerActions';
@@ -131,8 +131,8 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
 
   _toggleMenu = (value?: HTMLElement) => this.setState({ menu: { anchorEl: value } });
 
-  openMenu = (element: HTMLElement) => {
-    this._toggleMenu(element);
+  openMenu = (e: React.MouseEvent<HTMLElement>) => {
+    this._toggleMenu(e.currentTarget);
   }
 
   closeMenu = () => {
@@ -176,7 +176,7 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <Button
           disabled={isBusy}
-          onClick={e => this.openMenu(e.currentTarget)}
+          onClick={this.openMenu}
           aria-owns={anchorEl ? 'power' : undefined}
           aria-haspopup="true"
           className={`${classes.button} ${anchorEl ? 'active' : ''}`}
@@ -202,8 +202,8 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
           }
           {
             anchorEl
-              ? <KeyboardArrowUp className={classes.caret}></KeyboardArrowUp>
-              : <KeyboardArrowDown className={classes.caret}></KeyboardArrowDown>
+              ? <KeyboardArrowUp className={classes.caret} />
+              : <KeyboardArrowDown className={classes.caret} />
           }
         </Button>
         <Menu
@@ -217,16 +217,16 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
         >
           <MenuItem key="placeholder" className={classes.hidden} />
           <MenuItem
-            onClick={() => this.toggleDialog('reboot')}
+            onClick={this.toggleRebootDialog}
             className={classes.menuItem}
             data-qa-set-power="reboot"
           >
             <Reload className={`${classes.icon}`} />
             Reboot
           </MenuItem>
-          { isRunning &&
+          {isRunning &&
             <MenuItem
-              onClick={() => this.toggleDialog('power_down')}
+              onClick={this.togglePowerDownDialog}
               className={classes.menuItem}
               data-qa-set-power="powerOff"
             >
@@ -234,7 +234,7 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
               Power Off
             </MenuItem>
           }
-          { isOffline &&
+          {isOffline &&
             <MenuItem
               onClick={this.powerOn}
               className={classes.menuItem}
@@ -247,30 +247,7 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
         </Menu>
         <ConfirmationDialog
           title={(bootOption === 'reboot') ? 'Confirm Reboot' : 'Powering Off'}
-          actions={() =>
-            <ActionsPanel style={{ padding: 0 }}>
-              <Button
-                variant="raised"
-                color="secondary"
-                className="destructive"
-                onClick={this.rebootOrPowerLinode}
-                data-qa-confirm-cancel
-              >
-                {(bootOption === 'reboot')
-                  ? 'Reboot'
-                  : 'Power Off'}
-              </Button>
-              <Button
-                onClick={() => this.setState({ powerAlertOpen: false })}
-                variant="raised"
-                color="secondary"
-                className="cancel"
-                data-qa-cancel-cancel
-              >
-                Cancel
-            </Button>
-            </ActionsPanel>
-          }
+          actions={this.renderActions}
           open={powerAlertOpen}
         >
           {bootOption === 'reboot'
@@ -280,6 +257,35 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
       </React.Fragment>
     );
   }
+
+  toggleRebootDialog = () => this.toggleDialog('reboot');
+
+  togglePowerDownDialog = () => this.toggleDialog('power_down');
+
+  closePowerAlert = () => this.setState({ powerAlertOpen: false });
+
+  renderActions = () => {
+    const { bootOption } = this.state;
+    return (
+      <ActionsPanel style={{ padding: 0 }}>
+        <Button
+          type="cancel"
+          onClick={this.closePowerAlert}
+          data-qa-cancel-cancel
+        >
+          Cancel
+        </Button>
+        <Button
+          type="secondary"
+          onClick={this.rebootOrPowerLinode}
+          data-qa-confirm-cancel
+        >
+          {(bootOption === 'reboot') ? 'Reboot' : 'Power Off'}
+        </Button>
+      </ActionsPanel>
+    );
+  };
+
 }
 
 const styled = withStyles(styles, { withTheme: true });

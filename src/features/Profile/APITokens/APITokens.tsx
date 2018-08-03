@@ -2,7 +2,6 @@ import * as moment from 'moment';
 import { compose, filter, path, pathOr, sort } from 'ramda';
 import * as React from 'react';
 
-import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
@@ -13,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
+import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -152,7 +152,7 @@ export class APITokens extends React.Component<CombinedProps, State> {
           <Grid item>
             {type === 'Personal Access Token' &&
               <AddNewLink
-                onClick={() => this.openCreateDrawer()}
+                onClick={this.openCreateDrawer}
                 label="Add a Personal Access Token"
               />
             }
@@ -166,7 +166,7 @@ export class APITokens extends React.Component<CombinedProps, State> {
                 <TableCell className={classes.typeCell}>Type</TableCell>
                 <TableCell className={classes.createdCell}>Created</TableCell>
                 <TableCell>Expires</TableCell>
-                <TableCell></TableCell>
+                <TableCell />
               </TableRow>
             </TableHead>
             <TableBody>
@@ -195,11 +195,9 @@ export class APITokens extends React.Component<CombinedProps, State> {
                   <TableCell>
                     <APITokenMenu
                       isAppTokenMenu={(title === 'Apps')}
-                      openViewDrawer={() => { this.openViewDrawer(token); }}
-                      openEditDrawer={() => { this.openEditDrawer(token); }}
-                      openRevokeDialog={() => {
-                        this.openRevokeDialog(token.label, token.id, type);
-                      }}
+                      openViewDrawer={() => this.openViewDrawer(token)}
+                      openEditDrawer={() => this.openEditDrawer(token)}
+                      openRevokeDialog={() => this.openRevokeDialog(token.label, token.id, type)}
                     />
                   </TableCell>
                 </TableRow>,
@@ -480,58 +478,22 @@ export class APITokens extends React.Component<CombinedProps, State> {
               { ...form, values: { ...form.values, [key]: value } },
           })}
           onCreate={(scopes: string) => this.createToken(scopes)}
-          onEdit={() => this.editToken()}
+          onEdit={this.editToken}
         />
         <ConfirmationDialog
           title={`Revoking ${dialog.label}`}
           open={dialog.open}
-          actions={() => {
-            return (
-              <React.Fragment>
-                <ActionsPanel>
-                  <Button
-                    variant="raised"
-                    color="secondary"
-                    className="destructive"
-                    onClick={() => {
-                      this.closeRevokeDialog();
-                      (dialog.type === 'OAuth Client Token')
-                        ? this.revokeAppToken()
-                        : this.revokePersonalAccessToken();
-                    }}
-                    data-qa-button-confirm>
-                    Yes
-                  </Button>
-                  <Button
-                    variant="raised"
-                    color="secondary"
-                    className="cancel"
-                    onClick={() => this.closeRevokeDialog()} data-qa-button-cancel
-                  >
-                    No
-                  </Button>
-                </ActionsPanel>
-              </React.Fragment>
-            );
-          }}
-          onClose={() => this.closeRevokeDialog()}
+          actions={this.renderRevokeConfirmationActions}
+          onClose={this.closeRevokeDialog}
         >
           <Typography>Are you sure you want to revoke this API Token?</Typography>
         </ConfirmationDialog>
 
         <ConfirmationDialog
           title="Personal Access Token"
-          actions={() =>
-            <Button
-              variant="raised"
-              color="primary"
-              onClick={() => this.closeTokenDialog()}
-              data-qa-close-dialog
-            >
-              OK
-            </Button>}
+          actions={this.renderPersonalAccessTokenDisplayACtions}
           open={this.state.token.open}
-          onClose={() => this.closeTokenDialog()}
+          onClose={this.closeTokenDialog}
         >
           <Typography variant="body1">
             {`Your personal access token has been created.
@@ -543,6 +505,48 @@ export class APITokens extends React.Component<CombinedProps, State> {
       </React.Fragment>
     );
   }
+
+  revokeAction = () => {
+    const { dialog: { type } } = this.state;
+
+    this.closeRevokeDialog();
+
+    type === 'OAuthx Client Token'
+      ? this.revokeAppToken()
+      : this.revokePersonalAccessToken();
+  }
+
+  renderRevokeConfirmationActions = () => {
+    return (
+      <React.Fragment>
+        <ActionsPanel>
+          <Button
+            type="cancel"
+            onClick={this.closeRevokeDialog}
+            data-qa-button-cancel
+          >
+            Cancel
+          </Button>
+          <Button
+            type="secondary"
+            destructive
+            onClick={this.revokeAction}
+            data-qa-button-confirm>
+            Revoke
+          </Button>
+        </ActionsPanel>
+      </React.Fragment>
+    );
+  };
+
+  renderPersonalAccessTokenDisplayACtions = () =>
+    <Button
+      type="secondary"
+      onClick={this.closeTokenDialog}
+      data-qa-close-dialog
+    >
+      OK
+  </Button>
 }
 
 const sortCreatedDateAscending = sort((a: Linode.Token, b: Linode.Token) => {

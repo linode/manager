@@ -1,8 +1,16 @@
 import * as React from 'react';
 
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+
+type ClassNames = 'root';
+
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+  root: {},
+});
 
 interface Props {
   username: string;
@@ -11,44 +19,53 @@ interface Props {
   onCancel: () => void;
 }
 
-const deleteUser = (props: Props) => () => {
-  props.onDelete(props.username);
-}
+interface State { }
 
-const renderActionsPanel = (props: Props) => () => {
-  return (
-    <ActionsPanel style={{ padding: 0 }}>
-      <Button
-        variant="raised"
-        type="secondary"
-        destructive
-        onClick={deleteUser(props)}
-        data-qa-confirm-delete
+type CombinedProps = Props & WithStyles<ClassNames>;
+
+class UserDeleteConfirmationDialo extends React.PureComponent<CombinedProps, State> {
+
+  deleteUser = () => this.props.onDelete(this.props.username);
+
+  render() {
+    return (
+      <ConfirmationDialog
+        title="Confirm Deletion"
+        onClose={this.props.onCancel}
+        actions={this.renderActionsPanel}
+        open={this.props.open}
       >
-        Delete
-      </Button>
-      <Button
-        variant="raised"
-        type="cancel"
-        onClick={props.onCancel}
-        data-qa-cancel-delete
-      >
-        Cancel
-      </Button>
-    </ActionsPanel>
-  )
+      {`User ${this.props.username} will be permanently deleted. Are you sure?`}
+      </ConfirmationDialog>
+    );
+  }
+
+  renderActionsPanel = () => {
+    return (
+      <ActionsPanel style={{ padding: 0 }}>
+        <Button
+          variant="raised"
+          type="cancel"
+          onClick={this.props.onCancel}
+          data-qa-cancel-delete
+        >
+          Cancel
+        </Button>
+        <Button
+          variant="raised"
+          type="secondary"
+          destructive
+          onClick={this.deleteUser}
+          data-qa-confirm-delete
+        >
+          Delete
+        </Button>
+      </ActionsPanel>
+    )
+  }
 }
 
-const userDeleteConfirmationDialog = (props: Props) => {
-  return (
-    <ConfirmationDialog
-      title="Confirm Deletion"
-      actions={renderActionsPanel(props)}
-      open={props.open}
-    >
-      {`User ${props.username} will be permanently deleted. Are you sure?`}
-    </ConfirmationDialog>
-  )
-}
+const styled = withStyles(styles, { withTheme: true });
 
-export default userDeleteConfirmationDialog;
+
+export default styled(UserDeleteConfirmationDialo);

@@ -598,14 +598,13 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
   handleCloseDialog = () => {
     this.setState({
       dialog: {
+        ...this.state.dialog,
         delete: {
           open: false,
         },
         makePublic: {
           open: false,
         },
-        stackScriptID: undefined,
-        stackScriptLabel: '',
       }
     })
   }
@@ -648,7 +647,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
 
   handleMakePublic = () => {
     const { dialog, currentFilter } = this.state;
-    
+
     makeStackScriptPublic(dialog.stackScriptID!)
       .then(response => {
         if (!this.mounted) { return; }
@@ -686,29 +685,43 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
       });
   }
 
-  
-  renderDialogActions = () => {
-    const onClick = (this.state.dialog.delete.open)
-      ? this.handleDeleteStackScript
-      : this.handleMakePublic;
 
+  renderConfirmMakePublicActions = () => {
     return (
       <React.Fragment>
         <ActionsPanel>
           <Button
-            variant="raised"
-            type="secondary"
-            destructive
-            onClick={onClick}>
-            Yes
-          </Button>
-          <Button
-            variant="raised"
-            type="secondary"
-            className="cancel"
+            type="cancel"
             onClick={this.handleCloseDialog}
           >
-            No
+            Cancel
+          </Button>
+          <Button
+            type="secondary"
+            destructive
+            onClick={this.handleMakePublic}>
+            Yes, make me a star!
+          </Button>
+        </ActionsPanel>
+      </React.Fragment>
+    )
+  }
+
+  renderConfirmDeleteActions = () => {
+    return (
+      <React.Fragment>
+        <ActionsPanel>
+          <Button
+            type="cancel"
+            onClick={this.handleCloseDialog}
+          >
+            Cancel
+          </Button>
+          <Button
+            type="secondary"
+            destructive
+            onClick={this.handleDeleteStackScript}>
+            Delete
           </Button>
         </ActionsPanel>
       </React.Fragment>
@@ -722,7 +735,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
       <ConfirmationDialog
         title={`Delete ${dialog.stackScriptLabel}?`}
         open={dialog.delete.open}
-        actions={this.renderDialogActions}
+        actions={this.renderConfirmDeleteActions}
         onClose={this.handleCloseDialog}
       >
         <Typography>Are you sure you want to delete this StackScript?</Typography>
@@ -737,12 +750,14 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
       <ConfirmationDialog
         title={`Woah, just a word of caution...`}
         open={dialog.makePublic.open}
-        actions={this.renderDialogActions}
+        actions={this.renderConfirmMakePublicActions}
         onClose={this.handleCloseDialog}
       >
-        <Typography>Are you sure you want to make {dialog.stackScriptLabel} public?
-        This action cannot be undone, nor will you be able to delete the StackScript once
-        made available to the public.</Typography>
+        <Typography>
+          Are you sure you want to make {dialog.stackScriptLabel} public?
+          This action cannot be undone, nor will you be able to delete the StackScript once
+          made available to the public.
+        </Typography>
       </ConfirmationDialog>
     )
   }
@@ -785,7 +800,7 @@ class Container extends React.Component<ContainerCombinedProps, ContainerState> 
         * from loading more stackscripts
         */
         if (value) {
-          this.setState({ 
+          this.setState({
             showMoreButtonVisible: false,
             currentSearchFilter: filter,
            });
