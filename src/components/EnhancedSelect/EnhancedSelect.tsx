@@ -1,4 +1,4 @@
-import Downshift, { DownshiftState, StateChangeOptions } from 'downshift';
+import Downshift from 'downshift';
 import { compose } from 'ramda';
 import * as React from 'react';
 
