@@ -6,6 +6,7 @@ export const transitionStatus = [
   'deleting',
   'migrating',
   'resizing',
+  'rebuilding',
 ];
 
 export const transitionAction = [
