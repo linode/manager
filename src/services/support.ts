@@ -1,6 +1,6 @@
 import { API_ROOT } from 'src/constants';
 
-import Request, { mockAPIError, setData, setMethod, setParams, setURL, setXFilter } from './index';
+import Request, { setData, setMethod, setParams, setURL, setXFilter } from './index';
 
 type Page<T> = Linode.ResourcePage<T>;
 type SupportTicket = Linode.SupportTicket;
@@ -35,7 +35,7 @@ export const getTicketsPage = (pagination: Linode.PaginationOptions = {}, open?:
   return getTickets(pagination, filter).then((response) => response.data);
 }
 
-export const createSupportTicket = (data:TicketRequest) => // mockAPIError(502, 'whatever', { errors: [ { reason: 'Shenanigans' } ] })
+export const createSupportTicket = (data:TicketRequest) =>
   Request<SupportTicket>(
     setURL(`${API_ROOT}/support/tickets`),
     setMethod('POST'),
