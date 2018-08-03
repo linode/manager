@@ -15,7 +15,7 @@ import TableCell from 'src/components/TableCell';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
-import { getOpenTicketsPage } from 'src/services/support';
+import { getTicketsPage } from 'src/services/support';
 import capitalize from 'src/utilities/capitalize';
 import { formatString } from 'src/utilities/format-date-iso8601';
 
@@ -25,7 +25,7 @@ interface Props {
 
 interface State extends PaginationProps {
   errors?: Linode.ApiFieldError[];
-  tickets: Linode.SupportTicket[];
+  tickets?: Linode.SupportTicket[];
   loading: boolean;
 }
 
@@ -47,6 +47,12 @@ class TicketList extends React.Component<Props, State> {
 
   componentWillUnmount() {
     this.mounted = false;
+  }
+
+  componentDidUpdate(prevProps:Props, prevState:State) {
+    if (prevProps.filterStatus !== this.props.filterStatus) {
+      this.getTickets();
+    }
   }
 
   compareTickets = (a:Linode.SupportTicket, b:Linode.SupportTicket) => {
@@ -77,9 +83,9 @@ class TicketList extends React.Component<Props, State> {
 
   getTickets = (page:number = this.state.page, pageSize:number = this.state.pageSize) => {
     const { tickets } = this.state;
-    this.setState({ errors: undefined, loading: tickets.length === 0});
+    this.setState({ errors: undefined, loading: tickets === undefined});
 
-    getOpenTicketsPage({ page_size: pageSize, page })
+    getTicketsPage({ page_size: pageSize, page }, this.props.filterStatus === 'open')
       .then((response) => {
         if (!this.mounted) { return; }
         
