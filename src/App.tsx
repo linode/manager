@@ -5,7 +5,10 @@ import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import { bindActionCreators, compose } from 'redux';
+import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/operator/throttleTime';
 import { Observable } from 'rxjs/Observable';
+
 import 'typeface-lato';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
