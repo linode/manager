@@ -1,4 +1,4 @@
-import { takeFrom } from 'ramda';
+import { take } from 'ramda';
 import * as React from 'react';
 
 import Paper from '@material-ui/core/Paper';
@@ -128,13 +128,10 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
     return data!;
   }
 
-  getTruncatedText = () => {
-    const { data, open } = this.state;
-    if (!data) { return ''; }
-    if (open) { return data.description; }
-    else { 
-
-    }
+  getTruncatedText = (str: string, len: number) => {
+    return str.length > len
+      ? `${take(len, str)}...`
+      : str
   }
 
   setGravatarUrl = (gravatarId:string) => {
@@ -163,7 +160,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
     const { data, open } = this.state;
     if (!data) { return };
 
-    const text = this.getTruncatedText(data.description);
+    const text = open ? data.description : this.getTruncatedText(data.description, 200);
 
     return (
       <Grid item className={classes.root}>
