@@ -108,16 +108,20 @@ namespace Linode {
   }
 
   export interface LinodeIPsResponse {
-    ipv4: {
-      public: IPAddress[];
-      private: IPAddress[];
-      shared: IPAddress[];
-    };
-    ipv6: {
-      link_local: IPAddress;
-      slaac: IPAddress;
-      global: IPRange[];
-    };
+    ipv4: LinodeIPsResponseIPV4;
+    ipv6?: LinodeIPsResponseIPV6;
+  }
+
+  export interface LinodeIPsResponseIPV4 {
+    public: IPAddress[];
+    private: IPAddress[];
+    shared: IPAddress[];
+  }
+
+  export interface LinodeIPsResponseIPV6 {
+    link_local: IPAddress;
+    slaac: IPAddress;
+    global: IPRange[];
   }
 
   export type LinodeStatus =
