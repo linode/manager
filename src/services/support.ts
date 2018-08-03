@@ -25,3 +25,11 @@ export const getTicketsPage = (pagination: Linode.PaginationOptions = {}, open?:
 
   return getTickets(pagination, filter).then((response) => response.data);
 }
+
+export const getTicket = (ticketID:number, params?: any, filter?: any) =>
+  Request<SupportTicket>(
+    setURL(`${API_ROOT}/support/tickets/${ticketID}`),
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filter),
+  )// .then((response) => response.data);

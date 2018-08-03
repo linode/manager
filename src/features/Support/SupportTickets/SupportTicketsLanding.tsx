@@ -1,12 +1,12 @@
 import { compose } from 'ramda';
 import * as React from 'react';
-import { matchPath, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
 
 import AppBar from '@material-ui/core/AppBar';
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
+
 
 import AddNewLink from 'src/components/AddNewLink';
 import Grid from 'src/components/Grid';
@@ -22,37 +22,25 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-type Props = RouteComponentProps<{}>;
+interface Props {}
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-interface State {}
+interface State {
+  value: number;
+}
 
 export class SupportTicketsLanding extends React.Component<CombinedProps, State> {
-  handleTabChange = (event: React.ChangeEvent<HTMLDivElement>, value: number) => {
-    const { history } = this.props;
-    const routeName = this.tabs[value].routeName;
-    history.push(`${routeName}`);
+  state: State = {
+    value: 0,
   }
 
-  tabs = [
-    /* These must correspond to the routes inside the Switch */
-    { title: 'Open Tickets', routeName: `${this.props.match.url}/open` },
-    { title: 'Closed Tickets', routeName: `${this.props.match.url}/closed` },
-  ];
-  
-  renderOpenTicketsList = () => {
-    return <TicketList filterStatus={'open'} />
-  }
-
-  renderClosedTicketsList = () => {
-    return <TicketList filterStatus={'closed'} />
+  handleChange = (event:React.ChangeEvent<HTMLDivElement>, value:number) => {
+    this.setState({ value });
   }
 
   render() {
-    const { classes, match: { url } } = this.props;
-    const matches = (p: string) => {
-      return Boolean(matchPath(p, { path: this.props.location.pathname }));
-    };
+    const { classes } = this.props;
+    const { value } = this.state;
 
     return (
       <React.Fragment>
@@ -77,21 +65,17 @@ export class SupportTicketsLanding extends React.Component<CombinedProps, State>
         </Grid>
         <AppBar position="static" color="default">
           <Tabs
-            value={this.tabs.findIndex(tab => matches(tab.routeName))}
-            onChange={this.handleTabChange}
+            value={value}
+            onChange={this.handleChange}
             indicatorColor="primary"
             textColor="primary"
+            className={classes.root}
           >
-            {this.tabs
-              .map(tab => <Tab key={tab.title} label={tab.title} data-qa-tab={tab.title}
-            />)}
+            <Tab key={0} label="Open Tickets"/>
+            <Tab key={1} label="Closed Tickets"/>
           </Tabs>
         </AppBar>
-        <Switch>
-          <Route exact path={`${url}/open`} render={this.renderOpenTicketsList} />
-          <Route exact path={`${url}/closed`} render={this.renderClosedTicketsList} />
-          <Route default render={this.renderOpenTicketsList} />
-        </Switch>
+        <TicketList filterStatus={value ? 'open' : 'closed'} />
       </React.Fragment>
     );
   }
@@ -101,5 +85,4 @@ const styled = withStyles(styles, { withTheme: true });
 
 export default compose(
   styled,
-  withRouter,
 )(SupportTicketsLanding);
