@@ -180,4 +180,13 @@ namespace Linode {
     updated: string;
     updated_by: string;
   }
+
+  export interface SupportReply {
+    created: string;
+    created_by: string;
+    gravatar_id: string;
+    description: string;
+    id: number;
+    from_linode: boolean;
+  }
 }

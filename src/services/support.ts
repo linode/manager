@@ -1,9 +1,10 @@
 import { API_ROOT } from 'src/constants';
 
-import Request, { setMethod, setParams, setURL, setXFilter } from './index';
+import Request, { setMethod, setParams, setURL, setXFilter } from 'src/services';
 
 type Page<T> = Linode.ResourcePage<T>;
 type SupportTicket = Linode.SupportTicket;
+type SupportReply = Linode.SupportReply;
 
 export const getTickets = (params?: any, filter?: any) =>
   Request<Page<SupportTicket>>(
@@ -32,4 +33,16 @@ export const getTicket = (ticketID:number, params?: any, filter?: any) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filter),
-  )// .then((response) => response.data);
+  )
+
+export const getTicketReplies = (ticketId:number, params?: any, filter?: any) =>
+  Request<Page<SupportReply>>(
+    setURL(`${API_ROOT}/support/tickets/${ticketId}/replies`),
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filter),
+  )
+
+export const getTicketRepliesPage = (ticketId:number, pagination: Linode.PaginationOptions = {}) => {
+  return getTicketReplies(ticketId, pagination).then((response) => response.data);
+}

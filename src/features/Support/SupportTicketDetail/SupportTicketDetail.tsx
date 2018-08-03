@@ -1,30 +1,52 @@
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
-import { Link, matchPath, Route, RouteComponentProps, withRouter } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 
+import IconButton from '@material-ui/core/IconButton';
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 
+import setDocs from 'src/components/DocsSidebar/setDocs';
 import Grid from 'src/components/Grid';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
-import { getTicket } from 'src/services/support';
+import { getTicket, getTicketRepliesPage } from 'src/services/support';
 
+import ExpandableTicketPanel from '../ExpandableTicketPanel';
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'titleWrapper' | 'backButton' | 'listParent';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
+  titleWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  backButton: {
+    margin: '2px 0 0 -16px',
+    '& svg': {
+      width: 34,
+      height: 34,
+    },
+  },
+  listParent: {
+    '&:nth-child(2)': {
+      
+    }
+  },
 });
 
 interface PreloadedProps {
-  ticket: PromiseLoaderResponse<Linode.SupportTicket>;
+ticket: PromiseLoaderResponse<Linode.SupportTicket>;
+replies: PromiseLoaderResponse<Linode.SupportReply[]>;
 }
 
 type RouteProps = RouteComponentProps<{ ticketId?: number }>;
 
 interface State {
   errors?: Linode.ApiFieldError[];
+  replies?: Linode.SupportReply[];
   ticket?: Linode.SupportTicket;
 }
 
@@ -38,14 +60,36 @@ const preloaded = PromiseLoader<CombinedProps>({
 
     return getTicket(ticketId);
   },
+  replies: ({ match: { params: { ticketId } } }) => {
+    if (!ticketId) {
+      return Promise.reject(new Error('ticketId param not set.'));
+    }
+
+    return getTicketRepliesPage(ticketId);
+  },
 });
 
 export class SupportTicketDetail extends React.Component<CombinedProps,State> {
   state: State = {
     ticket: pathOr(undefined, ['response', 'data'], this.props.ticket),
+    replies: pathOr(undefined, ['response','data'], this.props.replies)
   }
+
+  static docs: Linode.Doc[] = [
+    {
+      title: 'Linode Support',
+      src: 'https://linode.com/docs/platform/billing-and-support/support/',
+      body: `Linode provides live technical support services 24 hours a day, 7 days a week. Linode Support ensures network availability, verifies that you can access your Linode, resolves performance issues with hosts, and works to fix any service-related issues you may be experiencing.
+      Linode also offers a number of resources you can refer to when troubleshooting application and server configuration issues. These issues are generally outside the scope of Linode Support, and the other resources Linode provides can help you find solutions for your questions.`,
+    },
+  ];
+
+  onBackButtonClick = () => {
+    this.props.history.push('/support/tickets');
+  }
+
   renderContent = () => {
-    const { errors, ticket } = this.state;
+    const { errors, replies, ticket } = this.state;
 
     // Error state
     if (errors) {
@@ -58,7 +102,12 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
     }
 
     return (
-      <div>{ticket.id}</div>
+      <React.Fragment>
+        <ExpandableTicketPanel key={ticket.id} ticket={ticket} />
+        {replies && replies.map((reply: Linode.SupportReply, idx:number) =>
+          <ExpandableTicketPanel key={idx} reply={reply} />
+        )}
+      </React.Fragment>
     )
 
 
@@ -69,14 +118,22 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
     const { ticket } = this.state;
 
     return (
-      <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
-          <Grid item>
-            <Typography variant="headline" className={classes.root} data-qa-title >
-              {ticket ? `#${ticket.id}: ${ticket.summary}` : ""}
-            </Typography>
-          </Grid>
+      <React.Fragment>
+        <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
+            <Grid item className={classes.titleWrapper}>
+              <IconButton
+                onClick={this.onBackButtonClick}
+                className={classes.backButton}
+              >
+                <KeyboardArrowLeft />
+              </IconButton>
+              <Typography variant="headline" data-qa-domain-title>{ticket ? `#${ticket.id}: ${ticket.summary}` : ""}</Typography>
+            </Grid>
+        </Grid>
+        <Grid container direction="column" justify="center" alignItems="center" className={classes.listParent} >
           {this.renderContent()}
-      </Grid>
+        </Grid>
+      </React.Fragment>
     )
   }
 }
@@ -89,7 +146,8 @@ const reloaded = reloadableWithRouter<PreloadedProps, { ticketId?: number }>(
   },
 );
 
-export default compose<any,any,any,any>(
+export default compose<any,any,any,any,any>(
+  setDocs(SupportTicketDetail.docs),
   styled,
   reloaded,
   preloaded,
