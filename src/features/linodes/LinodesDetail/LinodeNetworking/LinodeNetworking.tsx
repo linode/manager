@@ -102,7 +102,7 @@ interface PreloadedProps {
 }
 
 interface State {
-  linodeIPs: Linode.LinodeIPsResponse;
+  linodeIPs?: Linode.LinodeIPsResponse;
   viewIPDrawer: {
     open: boolean;
     ip?: Linode.IPAddress;
@@ -139,7 +139,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     editRDNSDrawer: {
       open: false,
     },
-    linodeIPs: this.props.linodeIPs.response,
+    linodeIPs: path<Linode.LinodeIPsResponse>(['linodeIPs', 'response'], this.props),
     viewIPDrawer: {
       open: false,
     },
@@ -248,13 +248,15 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
   hasPrivateIPAddress() {
     const { linodeIPs } = this.state;
-    return Boolean(linodeIPs.ipv4.private.length);
+    const privateIPs = pathOr([], ['ipv4', 'private'], linodeIPs);
+    return privateIPs > 0;
   }
 
   render() {
-    const { classes, linodeID, linodeLabel, linodeRegion } = this.props;
+    const { linodeID, linodeLabel, linodeRegion } = this.props;
     const { linodeIPs } = this.state;
     const firstPublicIPAddress = getFirstPublicIPv4FromResponse(linodeIPs);
+
     return (
       <React.Fragment>
 
@@ -269,37 +271,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
         {this.renderIPv6()}
 
-        <Grid container>
-          <Grid item xs={12}>
-            <Typography
-              variant="title"
-              className={classes.netActionsTitle}
-              data-qa-network-actions-title
-            >
-              Networking Actions
-            </Typography>
-            <IPTransferPanel
-              linodeID={linodeID}
-              linodeRegion={linodeRegion}
-              refreshIPs={this.refreshIPs}
-              ipAddresses={[
-                ...linodeIPs.ipv4.public.map(i => i.address),
-                ...linodeIPs.ipv4.private.map(i => i.address),
-              ]}
-            />
-            <IPSharingPanel
-              linodeID={linodeID}
-              linodeIPs={[
-                ...linodeIPs.ipv4.public.map(i => i.address),
-              ]}
-              linodeSharedIPs={[
-                ...linodeIPs.ipv4.shared.map(i => i.address),
-              ]}
-              linodeRegion={linodeRegion}
-              refreshIPs={this.refreshIPs}
-            />
-          </Grid>
-        </Grid>
+        {this.renderNetworkActions()}
 
         <ViewIPDrawer
           open={this.state.viewIPDrawer.open}
@@ -449,6 +421,47 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         </Paper>
       </React.Fragment>
     )
+  }
+
+  renderNetworkActions = () => {
+    const { classes, linodeID, linodeRegion } = this.props;
+    const { linodeIPs } = this.state;
+
+    if (!linodeIPs) { return null; }
+
+    return (
+      <Grid container>
+        <Grid item xs={12}>
+          <Typography
+            variant="title"
+            className={classes.netActionsTitle}
+            data-qa-network-actions-title
+          >
+            Networking Actions
+        </Typography>
+          <IPTransferPanel
+            linodeID={linodeID}
+            linodeRegion={linodeRegion}
+            refreshIPs={this.refreshIPs}
+            ipAddresses={[
+              ...linodeIPs.ipv4.public.map(i => i.address),
+              ...linodeIPs.ipv4.private.map(i => i.address),
+            ]}
+          />
+          <IPSharingPanel
+            linodeID={linodeID}
+            linodeIPs={[
+              ...linodeIPs.ipv4.public.map(i => i.address),
+            ]}
+            linodeSharedIPs={[
+              ...linodeIPs.ipv4.shared.map(i => i.address),
+            ]}
+            linodeRegion={linodeRegion}
+            refreshIPs={this.refreshIPs}
+          />
+        </Grid>
+      </Grid>
+    );
   }
 }
 
