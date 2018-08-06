@@ -13,6 +13,8 @@ describe('Linode Detail - Settings Suite', () =>{
         ListLinodes.navigateToDetail();
         LinodeDetail.landingElemsDisplay();
         LinodeDetail.changeTab('Settings');
+        Settings.header.waitForVisible(constants.wait.normal);
+        Settings.expandPanels(6);
     });
 
     afterAll(() => {

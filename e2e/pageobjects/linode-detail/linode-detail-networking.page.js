@@ -73,15 +73,7 @@ class Networking extends Page {
         return this.ips.filter(ip => !!ip.getAttribute('data-qa-ip').match(regex[ipType]));
     }
 
-    viewConfiguration(ip, type) {
-        const tableElem = $(`[data-qa-ip="${ip}"]`);
-
-        if (type === 'Link Local') {
-            tableElem.$(this.viewButton.selector).click();
-            this.drawerTitle.waitForVisible();
-            return;
-        }
-
+    viewConfiguration(ip) {
         this.selectActionMenuItem(ip, 'View');
         this.drawerTitle.waitForVisible();
     }

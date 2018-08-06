@@ -22,6 +22,7 @@ export default class Page {
     get addNodeBalancerMenu() { return $('[data-qa-add-new-menu="NodeBalancer"]'); }
     get notice() { return $('[data-qa-notice]'); }
     get notices() { return $$('[data-qa-notice]'); }
+    get panels() { return $$('[data-qa-panel-summary]'); }
     get progressBar() { return $('[data-qa-circle-progress]'); }
     get actionMenu() { return $('[data-qa-action-menu]'); }
     get actionMenuItem() { return $('[data-qa-action-menu-item]'); }
@@ -60,6 +61,21 @@ export default class Page {
 
         $(`[data-value="${selectOption}"]`).click();
         browser.waitForVisible(`[data-value="${selectOption}"]`, constants.wait.normal, true);
+    }
+
+    expandPanels(numberOfPanels) {
+        browser.waitUntil(function() {
+            return $$('[data-qa-panel-summary]').length === numberOfPanels
+        }, constants.wait.normal);
+        
+        this.panels.forEach(panel => {
+            panel.click();
+            browser.waitUntil(function() {
+                console.log('clicking panel!');
+                return panel.getAttribute('aria-expanded').includes('true');
+            }, constants.wait.normal);
+        });
+
     }
 
     selectGlobalCreateItem(menuItem) {
