@@ -498,19 +498,8 @@ class DomainRecords extends React.Component<CombinedProps, State> {
           title="Confirm Deletion"
           actions={({ onClose }) =>
             <ActionsPanel>
-              <Button
-                type="secondary"
-                destructive
-                onClick={() => this.deleteDomainRecord()}
-              >
-                Delete
-              </Button>
-              <Button
-                type="cancel"
-                onClick={onClose}
-              >
-                Cancel
-              </Button>
+              <Button type="cancel" onClick={onClose} >Cancel</Button>
+              <Button type="secondary" destructive onClick={this.deleteDomainRecord}>Delete</Button>
             </ActionsPanel>
           }
         >

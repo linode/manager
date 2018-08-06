@@ -202,7 +202,6 @@ class UsersLanding extends React.Component<CombinedProps, State> {
 
   onDeleteCancel = () => {
     this.setState({
-      toDeleteUsername: '',
       deleteConfirmDialogOpen: false,
     });
   }
@@ -217,8 +216,8 @@ class UsersLanding extends React.Component<CombinedProps, State> {
   renderUserRow = (user: Linode.User) => {
     const { classes } = this.props;
     return (
-      <TableRow key={user.username}>
-        <TableCell>
+      <TableRow key={user.username} data-qa-user-row>
+        <TableCell data-qa-username>
           <Link to={`/users/${user.username}`} title={user.username}>
             <Button className={classes.userButton} tabIndex={-1}>
               {user.gravatarUrl === undefined
@@ -235,8 +234,10 @@ class UsersLanding extends React.Component<CombinedProps, State> {
             </Button>
           </Link>
         </TableCell>
-        <TableCell>{user.email}</TableCell>
-        <TableCell>{user.restricted ? 'Restricted' : 'Unrestricted'}</TableCell>
+        <TableCell data-qa-user-email>{user.email}</TableCell>
+        <TableCell data-qa-user-restriction>
+          {user.restricted ? 'Restricted' : 'Unrestricted'}
+        </TableCell>
         <TableCell>
           <ActionMenu
             username={user.username}
@@ -290,7 +291,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
                 </Grid>
               </Grid>
               {newUsername &&
-                <Notice success text={`User ${newUsername} created successfully`} /> 
+                <Notice success text={`User ${newUsername} created successfully`} />
               }
               {deletedUsername &&
                 <Notice
@@ -310,9 +311,9 @@ class UsersLanding extends React.Component<CombinedProps, State> {
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <TableCell>Username</TableCell>
-                      <TableCell>Email Address</TableCell>
-                      <TableCell>Restricted</TableCell>
+                      <TableCell data-qa-username-column>Username</TableCell>
+                      <TableCell data-qa-email-column>Email Address</TableCell>
+                      <TableCell data-qa-restriction-column>Restricted</TableCell>
                       <TableCell/>
                     </TableRow>
                   </TableHead>

@@ -1,4 +1,4 @@
-import { compose, equals, pathOr } from 'ramda';
+import { append, compose, equals, filter, lensPath, over, pathOr, set, when } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import 'rxjs/add/operator/filter';
@@ -27,12 +27,12 @@ import Table from 'src/components/Table';
 import { events$, resetEventsPolling } from 'src/events';
 import { getLinodeConfigs, getLinodeVolumes } from 'src/services/linodes';
 import { attachVolume, cloneVolume, createVolume, deleteVolume, detachVolume, getVolumes, resizeVolume, updateVolume } from 'src/services/volumes';
+import composeState from 'src/utilities/composeState';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import { withLinode, withVolumes } from '../context';
 import ActionMenu from './LinodeVolumesActionMenu';
 import VolumeDrawer, { Modes, Props as VolumeDrawerProps } from './VolumeDrawer';
-
 
 type ClassNames = 'title';
 
@@ -83,8 +83,19 @@ type CombinedProps = Props
   & RouteComponentProps<{}>
   & WithStyles<ClassNames>;
 
+const volumeDrawer = (path: (string | number)[]) => lensPath(['volumeDrawer', ...path])
+
+const L = {
+  volumeDrawer: {
+    errors: volumeDrawer(['errors']),
+    size: volumeDrawer(['size']),
+  }
+};
+
 export class LinodeVolumes extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
+
+  composeState = composeState;
 
   static defaultProps = {
     volumes: [],
@@ -273,7 +284,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
       });
   }
 
-  UpdateDialog = (): null | JSX.Element => {
+  updateDialog = (): null | JSX.Element => {
     const {
       updateDialog: {
         mode,
@@ -283,49 +294,60 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
 
     if (!mode) { return null; }
 
-    const method = (() => {
-      switch (mode) {
-        case 'detach': return this.detachVolume;
-        case 'delete': return this.deleteVolume;
-      }
-    })();
-
-    const title = (function () {
-      switch (mode) {
-        case 'detach': return 'Detach Volume';
-        case 'delete': return 'Delete Volume';
-      }
-    })();
-
     return (
       <ConfirmationDialog
         onClose={this.closeUpdateDialog}
-        actions={() => <div>
-          <ActionsPanel style={{ padding: 0 }}>
-            <Button
-              type="secondary"
-              destructive
-              onClick={method}
-              data-qa-confirm
-            >
-              Confirm
-            </Button>
-            <Button
-              onClick={this.closeUpdateDialog}
-              type="cancel"
-              data-qa-cancel
-            >
-              Cancel
-            </Button>
-          </ActionsPanel>
-        </div>}
         open={open}
-        title={title}
+        actions={mode === 'detach' ? this.renderDetachDialogActions : this.renderDeleteDialogActions}
+        title={mode === 'detach' ? 'Detach Volume' : 'Delete Volume'}
       >
         <Typography> Are you sure you want to {mode} this volume?</Typography>
       </ConfirmationDialog>
     );
   }
+
+  renderDetachDialogActions = () => {
+    return (
+      <ActionsPanel style={{ padding: 0 }}>
+        <Button
+          onClick={this.closeUpdateDialog}
+          type="cancel"
+          data-qa-cancel
+        >
+          Cancel
+        </Button>
+        <Button
+          type="secondary"
+          onClick={this.detachVolume}
+          data-qa-confirm
+        >
+          Detach
+      </Button>
+      </ActionsPanel>
+    );
+  };
+
+  renderDeleteDialogActions = () => {
+    return (
+      <ActionsPanel style={{ padding: 0 }}>
+        <Button
+          onClick={this.closeUpdateDialog}
+          type="cancel"
+          data-qa-cancel
+        >
+          Cancel
+        </Button>
+        <Button
+          type="secondary"
+          destructive
+          onClick={this.deleteVolume}
+          data-qa-confirm
+        >
+          Delete
+      </Button>
+      </ActionsPanel>
+    );
+  };
 
   /** Create / Edit / Resize / Cloning */
   openUpdatingDrawer = (
@@ -363,12 +385,17 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
                 label,
               },
             })),
-            onSizeChange: (size: string) => this.setState(prevState => ({
-              volumeDrawer: {
-                ...prevState.volumeDrawer,
-                size: Number(size),
-              },
-            })),
+            onSizeChange: (size: string) => this.composeState([
+              when<State, State>(
+                (prevState) => prevState.volumeDrawer.size <= 10240 && Boolean(prevState.volumeDrawer.errors),
+                over(L.volumeDrawer.errors, filter((e: Linode.ApiFieldError) => e.field !== 'size')),
+              ),
+              when<State, State>(
+                (prevState) => prevState.volumeDrawer.size > 10240,
+                over(L.volumeDrawer.errors, append({ field: 'size', reason: 'Size cannot be over 10240.' })),
+              ),
+              set(L.volumeDrawer.size, +size || ''),
+            ]),
             onVolumeChange: (selectedVolume: string) => this.setState(prevState => ({
               volumeDrawer: {
                 ...prevState.volumeDrawer,
@@ -628,9 +655,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
 
     cloneVolume(id, cloneLabel)
       .then(() => {
-        /**
-         * @todo Now what? Per CF parity the volume is not automagically attached.
-        */
+        /** @todo Now what? Per CF parity the volume is not automagically attached. */
         this.closeUpdatingDrawer();
         resetEventsPolling();
       })
@@ -654,7 +679,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
    *  - If user has no configs, show null.
    *  - Else "Create a Volume"
    */
-  IconTextLink = (): null | JSX.Element => {
+  iconTextLink = (): null | JSX.Element => {
     const { linodeConfigs: { response: configs } } = this.props;
 
     if (configs.length === 0) {
@@ -674,7 +699,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
    *    - If user has no configs, show "View Linode Config"
    *    - Else "Create a Volume"
    */
-  Placeholder = (): null | JSX.Element => {
+  placeholder = (): null | JSX.Element => {
     const { linodeConfigs: { response: configs } } = this.props;
     const { attachedVolumes } = this.state;
     let props: PlaceholderProps;
@@ -714,7 +739,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
    * - If Linode has no volumes, null.
    * - Else show rows of volumes.
    */
-  Table = renderGuard((): null | JSX.Element => {
+  table = renderGuard((): null | JSX.Element => {
     const { classes } = this.props;
     const { attachedVolumes } = this.state;
 
@@ -734,7 +759,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
             </Typography>
           </Grid>
           <Grid item>
-            <this.IconTextLink />
+            <this.iconTextLink />
           </Grid>
         </Grid>
         <Paper>
@@ -753,7 +778,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
                   /** @todo Remove path defaulting when API releases filesystem_path. */
                   const label = pathOr('', ['label'], volume);
                   const size = pathOr('', ['size'], volume);
-                  const filesystem_path = pathOr(
+                  const filesysPath = pathOr(
                     `/dev/disk/by-id/scsi-0Linode_Volume_${label}`,
                     ['filesystem_path'],
                     volume,
@@ -762,7 +787,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
                   return <TableRow key={volume.id} data-qa-volume-cell={volume.id}>
                     <TableCell data-qa-volume-cell-label>{label}</TableCell>
                     <TableCell data-qa-volume-size>{size} GiB</TableCell>
-                    <TableCell data-qa-fs-path>{filesystem_path}</TableCell>
+                    <TableCell data-qa-fs-path>{filesysPath}</TableCell>
                     <TableCell>
                       <ActionMenu
                         volumeId={volume.id}
@@ -819,10 +844,10 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <this.Placeholder />
-        <this.Table updateFor={[this.props.linodeVolumes]} />
+        <this.placeholder />
+        <this.table updateFor={[this.props.linodeVolumes]} />
         <VolumeDrawer {...volumeDrawer} />
-        <this.UpdateDialog />
+        <this.updateDialog />
       </React.Fragment>
     );
   }

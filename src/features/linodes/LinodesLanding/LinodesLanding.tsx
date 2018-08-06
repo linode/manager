@@ -8,12 +8,13 @@ import 'rxjs/add/operator/filter';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import Button from '@material-ui/core/Button';
+
 import Hidden from '@material-ui/core/Hidden';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
@@ -397,30 +398,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
         </Grid>
         <ConfirmationDialog
           title={(bootOption === 'reboot') ? 'Confirm Reboot' : 'Powering Off'}
-          actions={() =>
-            <ActionsPanel style={{ padding: 0 }}>
-              <Button
-                variant="raised"
-                color="secondary"
-                className="destructive"
-                onClick={this.rebootOrPowerLinode}
-                data-qa-confirm-cancel
-              >
-                {(bootOption === 'reboot')
-                  ? 'Reboot'
-                  : 'Power Off'}
-              </Button>
-              <Button
-                onClick={() => this.setState({ powerAlertOpen: false })}
-                variant="raised"
-                color="secondary"
-                className="cancel"
-                data-qa-cancel-cancel
-              >
-                Cancel
-            </Button>
-            </ActionsPanel>
-          }
+          actions={this.renderConfirmationActions}
           open={powerAlertOpen}
         >
           {bootOption === 'reboot'
@@ -430,6 +408,30 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       </Grid>
     );
   }
+
+  renderConfirmationActions = () => {
+    const { bootOption } = this.state;
+    return (
+      <ActionsPanel style={{ padding: 0 }}>
+        <Button
+          type="cancel"
+          onClick={this.closePowerAlert}
+          data-qa-cancel-cancel
+        >
+          Cancel
+        </Button>
+        <Button
+          type="secondary"
+          onClick={this.rebootOrPowerLinode}
+          data-qa-confirm-cancel
+        >
+          {bootOption === 'reboot' ? 'Reboot' : 'Power Off'}
+        </Button>
+      </ActionsPanel>
+    );
+  };
+
+  closePowerAlert = () => this.setState({ powerAlertOpen: false });
 }
 
 const getDisplayFormat = ({ hash, length }: { hash?: string, length: number }): 'grid' | 'list' => {

@@ -87,6 +87,8 @@ interface Props extends GridProps {
   className?: string;
   flag?: boolean;
   notificationList?: boolean;
+  spacingTop?: 8 | 16 | 24;
+  spacingBottom?: 8 | 16 | 24;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
@@ -137,6 +139,7 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
         notice: true,
         ...(className && { [className]: true }),
       })}
+      style={{ marginTop: 0 || props.spacingTop, marginBottom: 24 || props.spacingBottom }}
       data-qa-notice
     >
       {

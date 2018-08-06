@@ -182,23 +182,20 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
     return (
       <ActionsPanel>
         <Button
-          variant="raised"
+          onClick={this.closeDisableDialog}
+          type="cancel"
+          data-qa-cancel
+        >
+          Cancel
+        </Button>
+        <Button
           type="secondary"
-          destructive={true}
+          destructive
           loading={this.state.disableDialog.submitting}
           onClick={this.disableTFA}
           data-qa-submit
         >
-          Confirm
-        </Button>
-        <Button
-          onClick={this.closeDisableDialog}
-          variant="raised"
-          color="secondary"
-          className="cancel"
-          data-qa-cancel
-        >
-          Cancel
+          Disable Two-factor Authenitcation
         </Button>
       </ActionsPanel>
     )

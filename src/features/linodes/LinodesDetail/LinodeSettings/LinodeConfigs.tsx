@@ -1,3 +1,7 @@
+import { allPass, append, assoc, compose, defaultTo, filter, findIndex, lensPath, map, prop, propEq, set } from 'ramda';
+import * as React from 'react';
+import 'typeface-lato';
+
 import Button from '@material-ui/core/Button';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
@@ -5,8 +9,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
-import { allPass, append, assoc, compose, defaultTo, filter, findIndex, lensPath, map, prop, propEq, set } from 'ramda';
-import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
@@ -23,7 +26,7 @@ import { getVolumes } from 'src/services/volumes';
 import createDevicesFromStrings, { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
 import createStringsFromDevices from 'src/utilities/createStringsFromDevices';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import 'typeface-lato';
+
 import LinodeConfigActionMenu from './LinodeConfigActionMenu';
 import LinodeConfigDrawer from './LinodeConfigDrawer';
 
@@ -222,23 +225,11 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
 
   deleteConfigConfirmationActions = ({ onClose }: { onClose: () => void }) => (
     <ActionsPanel style={{ padding: 0 }}>
-      <Button
-        onClick={this.deleteConfig}
-        variant="raised"
-        color="secondary"
-        className="destructive"
-        data-qa-confirm-delete
-      >
-        Delete
-    </Button>
-      <Button
-        onClick={onClose}
-        variant="raised"
-        color="secondary"
-        className="cancel"
-        data-qa-cancel-delete
-      >
+      <Button onClick={onClose} type="cancel" data-qa-cancel-delete>
         Cancel
+      </Button>
+      <Button type="secondary" destructive onClick={this.deleteConfig} data-qa-confirm-delete>
+        Delete
     </Button>
     </ActionsPanel>
   );

@@ -4,6 +4,10 @@ import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import { bindActionCreators, compose } from 'redux';
+import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/operator/throttleTime';
+import { Observable } from 'rxjs/Observable';
+
 import 'typeface-lato';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
@@ -60,6 +64,10 @@ const NodeBalancers = DefaultLoader({
 
 const StackScripts = DefaultLoader({
   loader: () => import('src/features/StackScripts'),
+});
+
+const SupportTickets = DefaultLoader({
+  loader: () => import('src/features/Support/SupportTickets'),
 });
 
 const Users = DefaultLoader({
@@ -219,8 +227,22 @@ export class App extends React.Component<CombinedProps, State> {
     }
   };
 
+  /* Some browsers fire the resize event quite often so throttle it using an Observable */
+  private resizeObservable = Observable.fromEvent(window, 'resize').throttleTime(200);
+
   componentDidMount() {
     const { request, response } = this.props;
+
+    /*
+     * Hide the SideMenu on every window resize so that it doesn't seem to
+     * randomly appear at narrow breakpoints.
+     */
+    this.resizeObservable.
+      subscribe((event) => {
+        this.setState({
+          menuOpen: false,
+        })
+      });
 
     const betaNotification = window.localStorage.getItem('BetaNotification');
     if (betaNotification !== 'closed') {
@@ -287,6 +309,7 @@ export class App extends React.Component<CombinedProps, State> {
                             <Route exact path="/billing/invoices/:invoiceId" component={InvoiceDetail} />
                             <Route path="/users" component={Users} />
                             <Route exact path="/support" render={this.Support} />
+                            <Route path="/support/tickets" component={SupportTickets} />
                             <Route path="/profile" component={Profile} />
                             {/* Update to Dashboard when complete */}
                             <Route exact path="/" component={LinodesRoutes} />
@@ -298,13 +321,13 @@ export class App extends React.Component<CombinedProps, State> {
                     </div>
                   </main>
                   <Footer />
+                  <BetaNotification
+                    open={this.state.betaNotification}
+                    onClose={this.closeBetaNotice}
+                    data-qa-beta-notice />
+                  <ToastNotifications />
+                  <VolumeDrawer />
                 </div>
-                <BetaNotification
-                  open={this.state.betaNotification}
-                  onClose={this.closeBetaNotice}
-                  data-qa-beta-notice />
-                <ToastNotifications />
-                <VolumeDrawer />
               </RegionsProvider>
             </TypesProvider>
           </React.Fragment>

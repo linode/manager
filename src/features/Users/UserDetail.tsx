@@ -248,7 +248,7 @@ class UserDetail extends React.Component<CombinedProps> {
       <React.Fragment>
         <Grid container justify="space-between">
           <Grid item className={classes.titleWrapper}>
-            <IconButton onClick={this.visitUsers} className={classes.backButton}>
+            <IconButton onClick={this.visitUsers} className={classes.backButton} data-qa-back-button>
               <KeyboardArrowLeft />
             </IconButton>
             {gravatarUrl === undefined
@@ -261,7 +261,7 @@ class UserDetail extends React.Component<CombinedProps> {
                   className={classes.avatar}
                 />
             }
-            <Typography variant="headline">
+            <Typography variant="headline" data-qa-user-detail-header>
               {username}
             </Typography>
           </Grid>

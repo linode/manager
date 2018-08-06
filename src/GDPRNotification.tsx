@@ -23,10 +23,10 @@ interface State {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class GDPRNotification extends React.Component<CombinedProps, State> {
+class GDPRNotification extends React.PureComponent<CombinedProps, State> {
   state: State = {
   };
-  
+
   actions = () => <Button onClick={this.props.onClose} type="primary">Dismiss</Button>;
 
   render() {
