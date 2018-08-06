@@ -44,6 +44,7 @@ interface Props {
 
 interface State {
   updatedTimezone: string;
+  inputValue: string;
   errors?: Linode.ApiFieldError[];
   submitting: boolean;
   success?: string;
@@ -73,6 +74,7 @@ const timezoneList = renderTimeZonesList();
 export class TimezoneForm extends React.Component<CombinedProps, State> {
   state: State = {
     updatedTimezone: '',
+    inputValue: '',
     errors: undefined,
     submitting: false,
     success: undefined,
@@ -96,6 +98,10 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
       success: undefined,
       updatedTimezone: this.props.timezone || '',
     })
+  }
+
+  onInputValueChange = (inputValue:string) => {
+    this.setState({ inputValue });
   }
 
   onSubmit = () => {
@@ -124,7 +130,7 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes, timezone } = this.props;
-    const { errors, submitting, success, updatedTimezone } = this.state;
+    const { errors, inputValue, submitting, success, updatedTimezone } = this.state;
     const timezoneDisplay = pathOr(timezone, ['label'], this.getTimezone(timezone));
 
     const hasErrorFor = getAPIErrorFor({
@@ -156,6 +162,8 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
               value={updatedTimezone}
               placeholder={"Choose a timezone."}
               handleSelect={this.handleTimezoneChange}
+              inputValue={inputValue}
+              onInputValueChange={this.onInputValueChange}
               data-qa-tz-select
             />
             <ActionsPanel>
