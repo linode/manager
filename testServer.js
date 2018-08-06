@@ -12,36 +12,46 @@ const server = new Hapi.Server({
     cert: '-----BEGIN CERTIFICATE-----\nMIIDBjCCAe4CCQDvLNml6smHlTANBgkqhkiG9w0BAQUFADBFMQswCQYDVQQGEwJV\nUzETMBEGA1UECAwKU29tZS1TdGF0ZTEhMB8GA1UECgwYSW50ZXJuZXQgV2lkZ2l0\ncyBQdHkgTHRkMB4XDTE0MDEyNTIxMjIxOFoXDTE1MDEyNTIxMjIxOFowRTELMAkG\nA1UEBhMCVVMxEzARBgNVBAgMClNvbWUtU3RhdGUxITAfBgNVBAoMGEludGVybmV0\nIFdpZGdpdHMgUHR5IEx0ZDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB\nANFKslwwqlgyqaDUECv33a9DpBuIFug1Gn8Xbnx/RppF/86Cs4P0hS6z4qc0hiDS\nlrcjL6O5j416qlYBNdCwyN1RVfCEen5wEU/gBfAluRzATxrf7H0FuFuKbrwR5AcV\nkltRL23nIDRCEvYUxrx15Bc5uMSdnvQx6dsaFQI0RAu9weyWxYXOWRhnISsPghZg\nIjcrFNA5gYEHGnNHoNqVqE/mBpk3kI+rEVzuu59scv4QNQ7jegOFgSt8DNzuAZ0x\ntHTW1lBG3u8gG1eYBMquexoSSHmMUb73lQ2l/dC6AKjOHFB9Ouq3IjjdFGwx1diz\n/yWh+Y8wY1Mgpyiy6ObJ5W8CAwEAATANBgkqhkiG9w0BAQUFAAOCAQEAoSc6Skb4\ng1e0ZqPKXBV2qbx7hlqIyYpubCl1rDiEdVzqYYZEwmst36fJRRrVaFuAM/1DYAmT\nWMhU+yTfA+vCS4tql9b9zUhPw/IDHpBDWyR01spoZFBF/hE1MGNpCSXXsAbmCiVf\naxrIgR2DNketbDxkQx671KwF1+1JOMo9ffXp+OhuRo5NaGIxhTsZ+f/MA4y084Aj\nDI39av50sTRTWWShlN+J7PtdQVA5SZD97oYbeUeL7gI18kAJww9eUdmT0nEjcwKs\nxsQT1fyKbo7AlZBY4KSlUMuGnn0VnAsB9b+LxtXlDfnjyM8bVQx1uAfRo0DO8p/5\n3J5DTjAU55deBQ==\n-----END CERTIFICATE-----\n',
   },
   routes: {
-      files: {
-          relativeTo: path.join(__dirname, 'public')
-      }
-  }
+    files: {
+      relativeTo: path.join(__dirname, 'build')
+    },
+  },
+  router: {
+    stripTrailingSlash: true,
+  },
 });
 
 const provision = async () => {
 
   await server.register(Inert);
 
-  server.route({
-    method: '*',
-    path: '/{path*}',
-    handler: {
-      directory: {
-        path: path.join(__dirname, 'build')
-      },
+  server.ext('onPreResponse', (request, h) => {
+    const response = request.response
+    if (response.isBoom && response.output.statusCode >= 404) {
+      return h.file('index.html');
     }
+
+    return h.continue;
   });
+
   server.route({
     method: '*',
-    path: '/oauth/callback/{path*}',
+    path: '/{p*}',
+
     handler: {
       directory: {
-        path: path.join(__dirname, 'build')
-      },
+        path: path.join(__dirname, 'build'),
+        redirectToSlash: true,
+        index: true,
+      }
     }
   });
 
-  await server.start();
+  try {
+    await server.start();
+  } catch (error) {
+    console.error(`Unable to start server`, error);
+  }
 
   console.log(`Server running at ${server.info.uri}`)
 };
