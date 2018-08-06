@@ -7,15 +7,15 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
-import PromiseLoader from 'src/components/PromiseLoader';
 import SelectionCard from 'src/components/SelectionCard';
+import { withTypes } from 'src/context/types';
 import { resetEventsPolling } from 'src/events';
 import SelectPlanPanel, { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { withLinode } from 'src/features/linodes/LinodesDetail/context';
 import { typeLabelDetails } from 'src/features/linodes/presentation';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
-import { getLinodeTypes, resizeLinode } from 'src/services/linodes';
+import { resizeLinode } from 'src/services/linodes';
 
 type ClassNames = 'root'
   | 'title'
@@ -45,14 +45,15 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-interface Props {
-  /** Preloaded Props */
-  types: { response: ExtendedType[] };
+interface Props { }
+
+interface TypesContextProps {
+  typesData: ExtendedType[];
 }
 
-interface ContextProps {
-  linodeId?: number;
-  linodeType?: null | string;
+interface LinodeContextProps {
+  linodeId: number;
+  linodeType: null | string;
   linodeStatus?: Linode.LinodeStatus;
 }
 
@@ -61,7 +62,11 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = Props & ContextProps & WithStyles<ClassNames>;
+type CombinedProps =
+  Props &
+  TypesContextProps &
+  LinodeContextProps &
+  WithStyles<ClassNames>;
 
 export class LinodeResize extends React.Component<CombinedProps, State> {
   state: State = {
@@ -111,8 +116,8 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { types: { response: types }, linodeType, classes } = this.props;
-    const type = types.find(t => t.id === linodeType);
+    const { typesData, linodeType, classes } = this.props;
+    const type = typesData.find(t => t.id === linodeType);
 
     const currentPlanHeading = linodeType
       ? type
@@ -163,7 +168,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         </Paper>
         <SelectPlanPanel
           currentPlanHeading={currentPlanHeading}
-          types={this.props.types.response}
+          types={this.props.typesData}
           onSelect={this.handleSelectPlan}
           selectedID={this.state.selectedId}
         />
@@ -185,12 +190,9 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const preloaded = PromiseLoader<CombinedProps>({
-  types: () => getLinodeTypes()
-    .then((data) => {
-      return data.data.map(LinodeResize.extendType) || [];
-    }),
-});
+const typesContext = withTypes(({ data }) => ({
+  typesData: (data || []).map(LinodeResize.extendType),
+}));
 
 const linodeContext = withLinode((context) => ({
   linodeId: pathOr(undefined, ['data', 'id'], context),
@@ -200,6 +202,6 @@ const linodeContext = withLinode((context) => ({
 
 export default compose<any, any, any, any>(
   linodeContext,
-  preloaded,
+  typesContext,
   styled,
 )(LinodeResize);

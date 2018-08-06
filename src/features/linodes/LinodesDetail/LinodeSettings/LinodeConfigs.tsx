@@ -1,6 +1,6 @@
 import { allPass, append, assoc, compose, defaultTo, filter, findIndex, lensPath, map, prop, propEq, set } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
+import 'typeface-lato';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
@@ -8,7 +8,6 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
-
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
@@ -42,16 +41,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 interface Props { }
 
-interface ConnectedProps {
-  kernels: Linode.Kernel[];
-}
-
 interface PromiseLoaderProps {
   volumes: PromiseLoaderResponse<ExtendedVolume[]>;
 }
 
 type CombinedProps = Props
-  & ConnectedProps
   & PromiseLoaderProps
   & LinodeContext
   & DiskContext
@@ -171,15 +165,14 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
           </Grid>
         </Grid>
         <this.linodeConfigsTable />
-        <LinodeConfigDrawer
-          mode={'create'}
-          kernels={this.props.kernels}
-          availableDevices={this.state.devices}
-          {...configDrawer}
-          onChange={(key, value) => this.setConfigDrawer({ [key]: value })}
-          onClose={this.resetConfigDrawer}
-          onSubmit={this.onConfigSubmit}
-        />
+          <LinodeConfigDrawer
+            mode={'create'}
+            availableDevices={this.state.devices}
+            {...configDrawer}
+            onChange={(key, value) => this.setConfigDrawer({ [key]: value })}
+            onClose={this.resetConfigDrawer}
+            onSubmit={this.onConfigSubmit}
+          />
 
         <ConfirmationDialog
           title="Confirm Delete"
@@ -424,12 +417,6 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const mapStateToProps = (state: Linode.AppState) => ({
-  kernels: state.resources.kernels && state.resources.kernels.data || [],
-});
-
-const connected = connect<ConnectedProps>(mapStateToProps);
-
 const errorBoundary = PanelErrorBoundary({ heading: 'Advanced Configurations' });
 
 const preloaded = PromiseLoader<Props & LinodeContext>({
@@ -490,10 +477,9 @@ const contexts = compose<any, any, any, any>(
   configsContext,
 );
 
-const enhanced = compose<any, any, any, any, any, any>(
+const enhanced = compose<any, any, any, any, any>(
   errorBoundary,
   preloaded,
-  connected,
   styled,
   contexts,
 );

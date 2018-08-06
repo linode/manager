@@ -1,7 +1,6 @@
 import * as Joi from 'joi';
-import { append, clone, compose, defaultTo, lensPath, map, omit, over, path, pathOr, set, view } from 'ramda';
+import { append, clone, compose, defaultTo, lensPath, map, omit, over, path, set, view } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Sticky, StickyContainer, StickyProps } from 'react-sticky';
 
@@ -12,6 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CheckoutBar from 'src/components/CheckoutBar';
+import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
@@ -19,19 +19,14 @@ import Notice from 'src/components/Notice';
 import PromiseLoader from 'src/components/PromiseLoader';
 import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
 import { dcDisplayNames } from 'src/constants';
+import { withRegions } from 'src/context/regions';
 import { getLinodes } from 'src/services/linodes';
 import { createNodeBalancer, createNodeBalancerSchema } from 'src/services/nodebalancers';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import NodeBalancerConfigPanel from './NodeBalancerConfigPanel';
-import {
-  clampNumericString,
-  createNewNodeBalancerConfig,
-  createNewNodeBalancerConfigNode,
-  NodeBalancerConfigFields,
-  transformConfigsForRequest
-} from './utils';
+import { clampNumericString, createNewNodeBalancerConfig, createNewNodeBalancerConfigNode, NodeBalancerConfigFields, transformConfigsForRequest } from './utils';
 
 type Styles =
   'root'
@@ -54,17 +49,15 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
 interface Props {
 }
 
-interface ConnectedProps {
-  regions: ExtendedRegion[];
+interface RegionsContextProps {
+  regionsData: ExtendedRegion[];
+  regionsLoading: boolean;
 }
 
-interface PreloadedProps { }
-
 type CombinedProps = Props
-  & ConnectedProps
+  & RegionsContextProps
   & RouteComponentProps<{}>
-  & WithStyles<Styles>
-  & PreloadedProps;
+  & WithStyles<Styles>;
 
 interface NodeBalancerFieldsState {
   label?: string;
@@ -398,10 +391,12 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, regions } = this.props;
+    const { classes, regionsData } = this.props;
     const { nodeBalancerFields, linodesWithPrivateIPs } = this.state;
     const hasErrorFor = getAPIErrorFor(errorResources, this.state.errors);
     const generalError = hasErrorFor('none');
+
+    if (this.props.regionsLoading) { return <CircleProgress /> }
 
     return (
       <StickyContainer>
@@ -426,7 +421,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               }}
             />
             <SelectRegionPanel
-              regions={regions}
+              regions={regionsData || []}
               error={hasErrorFor('region')}
               selectedID={nodeBalancerFields.region || null}
               handleSelection={this.regionChange}
@@ -583,10 +578,9 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               {
                 (props: StickyProps) => {
                   const { region } = this.state.nodeBalancerFields;
-                  const { regions } = this.props;
                   let displaySections;
                   if (region) {
-                    const foundRegion = regions.find(r => r.id === region);
+                    const foundRegion = (regionsData || []).find(r => r.id === region);
                     if (foundRegion) {
                       displaySections = { title: foundRegion.display };
                     } else {
@@ -623,15 +617,18 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   }
 }
 
-const connected = connect((state: Linode.AppState) => ({
-  regions: compose(
+const regionsContext = withRegions(({
+  data: regionsData,
+  loading: regionsLoading,
+}) => ({
+  regionsData: compose(
     map((region: Linode.Region) => ({
       ...region,
       display: dcDisplayNames[region.id],
     })),
-    pathOr([], ['resources', 'regions', 'data', 'data']),
-  )(state),
-}));
+  )(regionsData || []),
+  regionsLoading,
+}))
 
 const styled = withStyles(styles, { withTheme: true });
 
@@ -782,7 +779,7 @@ export const validationErrorsToFieldErrors = (error: Joi.ValidationError) => {
 };
 
 export default compose(
-  connected,
+  regionsContext,
   preloaded,
   styled,
   withRouter,
