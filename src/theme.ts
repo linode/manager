@@ -575,6 +575,9 @@ const LinodeTheme: Linode.Theme = {
         border: '1px solid #999',
         boxSizing: 'content-box',
       },
+      switchBase: {
+        color: '#3B85D9',
+      },
     },
     MuiTab: {
       root: {
