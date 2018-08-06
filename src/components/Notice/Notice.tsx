@@ -22,6 +22,14 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => {
   const { palette: { status } } = theme;
 
   return {
+    '@keyframes fadeIn': {
+      from: {
+        opacity: 0,
+      },
+      to: {
+        opacity: 1,
+      },
+    },
     root: {
       marginBottom: theme.spacing.unit * 2,
       padding: '4px 16px',
@@ -45,27 +53,21 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => {
     },
     error: {
       borderLeft: `5px solid ${status.errorDark}`,
-      '& $noticeText': {
-        color: status.errorDark,
-      },
+      animation: 'fadeIn 225ms linear forwards',
     },
     errorList: {
       borderLeft: `5px solid ${status.errorDark}`,
     },
     warning: {
       borderLeft: `5px solid ${status.warningDark}`,
-      '& $noticeText': {
-        color: status.warningDark,
-      },
+      animation: 'fadeIn 225ms linear forwards',
     },
     warningList: {
       borderLeft: `5px solid ${status.warningDark}`,
     },
     success: {
       borderLeft: `5px solid ${status.successDark}`,
-      '& $noticeText': {
-        color: status.successDark,
-      },
+      animation: 'fadeIn 225ms linear forwards',
     },
     successList: {
       borderLeft: `5px solid ${status.successDark}`,
