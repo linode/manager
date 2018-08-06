@@ -30,7 +30,7 @@ export class ManagedLanding extends React.Component<CombinedProps, State> {
   static docs: Linode.Doc[] = [
     {
       title: 'Linode Managed',
-      src: 'https://www.linode.com/docs/platform/longview/longview/',
+      src: 'https://linode.com/docs/platform/linode-managed/',
       body: `How to configure service monitoring with Linode Managed.`,
     },
   ];
