@@ -126,6 +126,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
       label="Size"
       onChange={this.onSizeChange}
       value={this.props.size}
+      helperText={'Maximum: 10240'}
       InputProps={{
         endAdornment: <span className={this.props.classes.suffix}>GB</span>,
       }}

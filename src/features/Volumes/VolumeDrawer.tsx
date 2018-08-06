@@ -1,17 +1,15 @@
-import { lensPath, path, set, view } from 'ramda';
-import * as React from 'react';
-import { connect, Dispatch } from 'react-redux';
-import { bindActionCreators, compose } from 'redux';
-import 'rxjs/add/operator/filter';
-import { Subscription } from 'rxjs/Subscription';
-
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-
+import { append, filter, lensPath, over, path, set, view, when } from 'ramda';
+import * as React from 'react';
+import { connect, Dispatch } from 'react-redux';
+import { bindActionCreators, compose } from 'redux';
+import 'rxjs/add/operator/filter';
+import { Subscription } from 'rxjs/Subscription';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
@@ -197,8 +195,8 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
         this.setState({ configs: configChoices });
         if (configChoices.length > 1) {
           this.setState({
-          selectedConfig: configChoices[0][0],
-        });
+            selectedConfig: configChoices[0][0],
+          });
         }
       })
       .catch(() => {
@@ -234,10 +232,10 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     switch (mode) {
       case modes.CREATING:
 
-      this.composeState([
-        set(L.submitting, true),
-        set(L.errors, undefined),
-      ]);
+        this.composeState([
+          set(L.submitting, true),
+          set(L.errors, undefined),
+        ]);
 
         const payload: VolumeRequestPayload = {
           label,
@@ -367,7 +365,43 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
   }
 
   setSize = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (this.mounted) { this.setState({ size: +(e.target.value) || 0 }); }
+    this.composeState([
+      when<State, State>(
+        (prevState) => prevState.size <= 10240 && Boolean(prevState.errors),
+        over(L.errors, filter((e: Linode.ApiFieldError) => e.field !== 'size')),
+      ),
+
+      // (prevState: State) => {
+      //   const { size, errors } = prevState;
+      //   if (size <= 10240 && errors) {
+      //     return {
+      //       ...prevState,
+      //       errors: errors.filter(e => e.field !== 'size'),
+      //     };
+      //   }
+
+      //   return prevState;
+      // }
+
+      when<State, State>(
+        (prevState) => prevState.size > 10240,
+        over(L.errors, append({ field: 'size', reason: 'Size cannot be over 10240.' })),
+      ),
+
+      // (prevState: State) => {
+      //   const { size, errors } = prevState;
+      //   if (size > 10240) {
+      //     return {
+      //       ...prevState,
+      //       errors: (errors || []).push({ field: 'size', reason: 'Size cannot be over 10240.' }),
+      //     };
+      //   }
+
+      //   return prevState;
+      // }
+
+      set(L.size, +e.target.value || ''),
+    ]);
   }
 
   render() {
@@ -454,6 +488,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           error={Boolean(sizeError)}
           errorText={sizeError}
           disabled={mode === modes.CLONING || mode === modes.EDITING}
+          helperText={'Maximum: 10240 GB'}
           InputProps={{
             endAdornment:
               <InputAdornment position="end">

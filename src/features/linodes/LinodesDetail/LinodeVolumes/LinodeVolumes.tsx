@@ -1,4 +1,4 @@
-import { compose, equals, pathOr } from 'ramda';
+import { append, compose, equals, filter, lensPath, over, pathOr, set, when } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import 'rxjs/add/operator/filter';
@@ -27,12 +27,12 @@ import Table from 'src/components/Table';
 import { events$, resetEventsPolling } from 'src/events';
 import { getLinodeConfigs, getLinodeVolumes } from 'src/services/linodes';
 import { attachVolume, cloneVolume, createVolume, deleteVolume, detachVolume, getVolumes, resizeVolume, updateVolume } from 'src/services/volumes';
+import composeState from 'src/utilities/composeState';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import { withLinode, withVolumes } from '../context';
 import ActionMenu from './LinodeVolumesActionMenu';
 import VolumeDrawer, { Modes, Props as VolumeDrawerProps } from './VolumeDrawer';
-
 
 type ClassNames = 'title';
 
@@ -83,8 +83,19 @@ type CombinedProps = Props
   & RouteComponentProps<{}>
   & WithStyles<ClassNames>;
 
+const volumeDrawer = (path: (string | number)[]) => lensPath(['volumeDrawer', ...path])
+
+const L = {
+  volumeDrawer: {
+    errors: volumeDrawer(['errors']),
+    size: volumeDrawer(['size']),
+  }
+};
+
 export class LinodeVolumes extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
+
+  composeState = composeState;
 
   static defaultProps = {
     volumes: [],
@@ -363,12 +374,17 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
                 label,
               },
             })),
-            onSizeChange: (size: string) => this.setState(prevState => ({
-              volumeDrawer: {
-                ...prevState.volumeDrawer,
-                size: Number(size),
-              },
-            })),
+            onSizeChange: (size: string) => this.composeState([
+              when<State, State>(
+                (prevState) => prevState.volumeDrawer.size <= 10240 && Boolean(prevState.volumeDrawer.errors),
+                over(L.volumeDrawer.errors, filter((e: Linode.ApiFieldError) => e.field !== 'size')),
+              ),
+              when<State, State>(
+                (prevState) => prevState.volumeDrawer.size > 10240,
+                over(L.volumeDrawer.errors, append({ field: 'size', reason: 'Size cannot be over 10240.' })),
+              ),
+              set(L.volumeDrawer.size, +size || ''),
+            ]),
             onVolumeChange: (selectedVolume: string) => this.setState(prevState => ({
               volumeDrawer: {
                 ...prevState.volumeDrawer,
