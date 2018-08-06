@@ -29,6 +29,7 @@ type ClassNames = 'root'
   | 'paginationWrapper'
   | 'resultsHeading'
   | 'emptyState'
+  | 'entityDescription'
   | 'loader';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
@@ -41,6 +42,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   resultsHeading: {
     padding: theme.spacing.unit * 2,
     fontSize: '1.2em',
+  },
+  entityDescription: {
+    color: theme.color.grey1,
+    marginTop: theme.spacing.unit,
   },
   icon: {
     width: 40,
@@ -156,6 +161,26 @@ class SearchResultsPanel extends React.Component<CombinedProps, State> {
     }
   }
 
+  getRelevantDescription = (type: string, data: any) => {
+    switch (type) {
+      case 'Linodes':
+        return;
+      case 'Volumes':
+        return `${data.size} G`
+      case 'StackScripts':
+        if (data.description.length > 140) {
+          return `${data.description.split(' ').splice(0, 10).join(' ')} [...]`;
+        }
+        return data.description;
+      case 'Domains':
+        return data.description || data.status;
+      case 'NodeBalancers':
+        return data.hostname;
+      default:
+        return '';
+    }
+  }
+
   handleItemRowClick = (id: string, type: string) => {
     const url: string = this.getResultUrl(type, id);
     if (!url) { return; }
@@ -193,6 +218,8 @@ class SearchResultsPanel extends React.Component<CombinedProps, State> {
 
     const { classes } = this.props;
 
+    this.getRelevantDescription(type, data);
+
     return (
       <ClickableRow
         type={type}
@@ -201,7 +228,12 @@ class SearchResultsPanel extends React.Component<CombinedProps, State> {
         handleClick={this.handleItemRowClick}
       >
         <div className={classes.icon}>{this.getRelevantIcon(type)}</div>
-        <div>{title}</div>
+        <div>
+          <div>{title}</div>
+          <div className={classes.entityDescription}>
+            {this.getRelevantDescription(type, data)}
+          </div>
+        </div>
       </ClickableRow>
     )
   }
@@ -268,7 +300,7 @@ class SearchResultsPanel extends React.Component<CombinedProps, State> {
     * if we're loading a new page of results and the previous list
     * had 25 results, so we don't get page jumping behavior
     */
-    const shouldHaveMinHeight = (this.state.isLoadingMoreResults && data.data.length === 25);
+    const shouldHaveMinHeight = (this.state.isLoadingMoreResults && data.data.length >= 25);
 
     return (
       <Paper className={
