@@ -23,7 +23,7 @@ interface State { }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class UserDeleteConfirmationDialo extends React.PureComponent<CombinedProps, State> {
+class UserDeleteConfirmationDialog extends React.PureComponent<CombinedProps, State> {
 
   deleteUser = () => this.props.onDelete(this.props.username);
 
@@ -68,4 +68,4 @@ class UserDeleteConfirmationDialo extends React.PureComponent<CombinedProps, Sta
 const styled = withStyles(styles, { withTheme: true });
 
 
-export default styled(UserDeleteConfirmationDialo);
+export default styled(UserDeleteConfirmationDialog);
