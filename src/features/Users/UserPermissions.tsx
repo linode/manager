@@ -703,7 +703,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     /* TODO: render all permissions disabled with this message above */
     return (
       <Paper className={classes.unrestrictedRoot}>
-        <Typography>
+        <Typography data-qa-unrestricted-msg>
           This user has unrestricted access to the account.
         </Typography>
       </Paper>
@@ -723,14 +723,14 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         }
         <Grid container className={`${classes.topGrid} ${'py0'}`} justify="space-between" alignItems="center">
           <Grid item className={classes.titleWrapper}>
-            <Typography variant="title">
+            <Typography variant="title" data-qa-update-permissions-header>
               Update User Permissions
             </Typography>
           </Grid>
           <Grid item className="p0">
             <Grid container alignItems="center" style={{ width: 'auto' }}>
               <Grid item>
-                <Typography variant="title">
+                <Typography variant="title" data-qa-restrict-access={restricted}>
                   Restrict Access:
                 </Typography>
               </Grid>

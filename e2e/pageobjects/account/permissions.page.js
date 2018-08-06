@@ -3,17 +3,21 @@ const { constants } = require('../../constants');
 import Page from '../page';
 
 class Permissions extends Page {
+    get updatePermissionsHeader() { return $('[data-qa-update-permissions-header]'); }
     get globalPermissionsHeader() { return $('[data-qa-permissions-header="Global Permissions"]'); }
-    get billingAccessHeader() { return $('[data-qa-permissions-header="Billing Access"]'); }
+    get billingAccessHeader() { return $('[data-qa-permissions-header="billing"]'); }
     get specificGrantsHeader() { return $('[data-qa-permissions-header="Specifc Grants"]'); }
     
     // Global Toggles
+    get restrictAccessToggle() { return $('[data-qa-restrict-access]'); }
     get globalSection() { return $('[data-qa-global-section]'); }
+    get globalPermissions() { return $$('[data-qa-global-permission]'); }
     get addLinodesPermission() { return $('[data-qa-global-permission="add_linodes"]'); }
     get addNodeBalancersPermission() { return $('[data-qa-global-permission="add_nodebalancers"]'); }
 
 
     // Billing Permissions selection cards
+    get billingSection() { return $('[data-qa-billing-section]'); }
     get billingNoPermissions() { return $('[data-qa-select-card-heading="None"]'); }
     get billingReadPermissions() { return $('[data-qa-select-card-heading="Read Only"]'); }
     get billingWriteReadPermissions() { return $('[data-qa-select-card-heading="Read-Write"]'); }
@@ -35,10 +39,26 @@ class Permissions extends Page {
 
     get saveButton() { return $('[data-qa-submit]'); }
     get cancelButton() { return $('[data-qa-cancel]'); }
+    get unrestrictedMsg() { return $('[data-qa-unrestricted-msg'); }
 
-    baseElementsDisplay() {
-        // fill this in
-        return true;
+    baseElementsDisplay(restricted) {
+        this.updatePermissionsHeader.waitForVisible(constants.wait.normal);
+        if (restricted) {
+            expect(this.globalPermissionsHeader.isVisible()).toBe(true);
+            expect(this.billingAccessHeader.isVisible()).toBe(true);
+            expect(this.specificGrantsHeader.isVisible()).toBe(true);
+            expect(this.globalPermissions.length).toBeGreaterThan(1);
+            expect(this.billingPermissionNone.isVisible()).toBe(true);
+            expect(this.billingPermissionRead.isVisible()).toBe(true);
+            expect(this.billingPermissionWrite.isVisible()).toBe(true);
+            expect(this.restrictAccessToggle.isVisible()).toBe(true);
+            expect($$('[data-qa-submit]').length).toBe(2);
+            expect($$('[data-qa-cancel]').length).toBe(2);
+            expect(this.restrictAccessToggle.getAttribute('data-qa-restrict-access')).toBe('true');
+        } else {
+            expect(this.unrestrictedMsg.isVisible()).toBe(true);
+            expect(this.restrictAccessToggle.getAttribute('data-qa-restrict-access')).toBe('false');
+        }
     }
 
     toggleGlobalPermission(permissionId, permission) {

@@ -29,7 +29,7 @@ describe('Account - Restricted User - Permissions Suite', () => {
 
     it('should display permissions page', () => {
         expect(Users.userPermissionsTab.getAttribute('aria-selected')).toBe('true');
-        Permissions.baseElementsDisplay();
+        Permissions.baseElementsDisplay(true);
     });
 
     it('should update the add linodes global permission', () => {
