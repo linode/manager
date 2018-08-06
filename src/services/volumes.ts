@@ -1,6 +1,6 @@
 import { API_ROOT } from 'src/constants';
 
-import Request, { setData, setMethod, setParams, setURL } from './index';
+import Request, { setData, setMethod, setParams, setURL, setXFilter } from './index';
 
 /** Alises for short lines. */
 type Page<T> = Linode.ResourcePage<T>;
@@ -17,7 +17,7 @@ export const getVolumes = (params: Params = {}, filters: any = {}) =>
     setURL(`${API_ROOT}/volumes`),
     setMethod('GET'),
     setParams(params),
-    setParams(filters),
+    setXFilter(filters),
   )
     .then(response => response.data)
 

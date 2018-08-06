@@ -80,6 +80,10 @@ const Longview = DefaultLoader({
   loader: () => import('src/features/Longview'),
 });
 
+const Search = DefaultLoader({
+  loader: () => import('src/features/Search'),
+});
+
 type ClassNames = 'appFrame'
   | 'content'
   | 'wrapper'
@@ -276,6 +280,7 @@ export class App extends React.Component<CombinedProps, State> {
                         <Route exact path="/support" render={this.Support} />
                         <Route path="/support/tickets" component={SupportTickets} />
                         <Route path="/profile" component={Profile} />
+                        <Route path="/search" component={Search} />
                         {/* Update to Dashboard when complete */}
                         <Route exact path="/" component={LinodesRoutes} />
                         <Route component={NotFound} />

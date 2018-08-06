@@ -12,7 +12,7 @@
                             <use fill="#F4F4F4" fill-rule="evenodd" xlink:href="#path-1" class="circle"></use>
                             <circle stroke="#F4F4F4" stroke-width="2" cx="24" cy="24" r="23" class="outerCircle"></circle>
                         </g>
-                        <g id="Group-14" transform="translate(12.500000, 8.500000), scale(.9)" class="insidePath">
+                        <g id="Group-14" transform="translate(12.500000, 8.500000), scale(.9)" class="insidePath" stroke="#939598">
                             <polygon id="Stroke-8932" points="25.5208333 34.2708333 0.729166667 34.2708333 0.729166667 0.729166667 16.7708333 0.729166667 25.5208333 9.47916667"></polygon>
                             <polyline id="Stroke-8933" points="16.7708333 0.729166667 16.7708333 9.47916667 25.5208333 9.47916667"></polyline>
                             <polyline id="Stroke-8934" points="16.7708333 15.3125 22.6041667 21.1458333 16.7708333 26.9791667"></polyline>
