@@ -94,12 +94,6 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
     }
   }
 
-  componentDidUpdate() {
-    // const data = this.getData();
-    // this.setState({ data });
-    return;
-  }
-
   togglePanel = () => {
     this.setState({ open: !this.state.open });
   }
@@ -161,7 +155,8 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
     const { data, open } = this.state;
     if (!data) { return };
 
-    const text = open ? data.description : this.getTruncatedText(data.description, 200);
+    const truncatedText = this.getTruncatedText(data.description, 200);
+    const text = open ? data.description : truncatedText;
 
     return (
       <Grid item className={classes.root}>
@@ -170,17 +165,19 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
             <Grid item xs={1} >
               {this.renderAvatar()}
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={2}>
               <Typography variant="body1" >{data.username}</Typography>
               {data.from_linode && <Typography variant="body1">Linode Expert</Typography>}
-              <DateTimeDisplay value={data.date} format={'YYYY/MM/DD - h:ssa'}/>
+              <Typography variant="body1" ><DateTimeDisplay value={data.date} format={'YYYY/MM/DD - h:ssa'}/></Typography>
             </Grid>
-            <Grid item xs={7}>
+            <Grid item xs={8}>
               <Typography variant="body1">{text}</Typography>
             </Grid>
-            <Grid item xs={1} onClick={this.togglePanel} >
-              {open ? <Remove  className={classes.toggle} /> : <Add className={classes.toggle} />}
-            </Grid>
+            {truncatedText !== data.description &&
+              <Grid item xs={1} onClick={this.togglePanel} >
+                {open ? <Remove className={classes.toggle} /> : <Add className={classes.toggle} />}
+              </Grid>
+            }
           </Grid>
         </Paper>
       </Grid>

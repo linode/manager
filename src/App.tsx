@@ -21,7 +21,6 @@ import SideMenu from 'src/components/SideMenu';
 import { RegionsProvider, WithRegionsContext } from 'src/context/regions';
 import { TypesProvider, WithTypesContext } from 'src/context/types';
 import Footer from 'src/features/Footer';
-import SupportTicketDetail from 'src/features/Support/SupportTicketDetail';
 import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
@@ -70,6 +69,10 @@ const StackScripts = DefaultLoader({
 const SupportTickets = DefaultLoader({
   loader: () => import('src/features/Support/SupportTickets'),
 });
+
+const SupportTicketDetail = DefaultLoader({
+  loader: () => import('src/features/Support/SupportTicketDetail'),
+})
 
 const Users = DefaultLoader({
   loader: () => import('src/features/Users'),
@@ -310,7 +313,7 @@ export class App extends React.Component<CombinedProps, State> {
                             <Route exact path="/billing/invoices/:invoiceId" component={InvoiceDetail} />
                             <Route path="/users" component={Users} />
                             <Route exact path="/support" render={this.Support} />
-                            <Route path="/support/tickets" component={SupportTickets} />
+                            <Route exact path="/support/tickets" component={SupportTickets} />
                             <Route path="/support/tickets/:ticketId" component={SupportTicketDetail} />
                             <Route path="/profile" component={Profile} />
                             {/* Update to Dashboard when complete */}

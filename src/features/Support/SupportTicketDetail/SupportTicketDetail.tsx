@@ -8,6 +8,10 @@ import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/
 import Typography from '@material-ui/core/Typography';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 
+import DomainIcon from 'src/assets/addnewmenu/domain.svg';
+import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
+import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
+import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import CircleProgress from 'src/components/CircleProgress';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
@@ -44,13 +48,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   listParent: {
   },
   status: {
-    height: 25,
-    width: 25,
     marginLeft: theme.spacing.unit,
-    paddingLeft: theme.spacing.unit*2,
-    paddingRight: theme.spacing.unit*2,
-    paddingTop: theme.spacing.unit,
-    paddingBottom: theme.spacing.unit,
+    padding: theme.spacing.unit,
     backgroundColor: 'yellow',
   }, 
 });
@@ -93,14 +92,6 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
     this.loadReplies();
   }
 
-  handleThen = () => {
-
-  }
-
-  handleCatch = () => {
-
-  }
-
   loadTicket = () => {
     const ticketId = this.props.match.params.ticketId;
     if (!ticketId) { return; }
@@ -112,7 +103,8 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
         }, scrollToBottom)
       })
       .catch((errors) => {
-        const error = errors.response.data.status === 404
+        const status = pathOr(400, ['response','data','status'], errors);
+        const error = (status === 404)
           ? [{ reason: 'Ticket could not be found.' }]
           : [{ reason: 'There was an error retrieving your ticket.' }]
         this.setState({
@@ -132,7 +124,6 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
         }, scrollToBottom)
       })
       .catch((errors) => {
-
         this.setState({
           errors: pathOr([{ reason: 'There was an error retrieving your ticket.' }], ['response', 'data', 'errors'], errors),
           loading: false,
@@ -142,6 +133,36 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
 
   onBackButtonClick = () => {
     this.props.history.push('/support/tickets');
+  }
+
+  getEntityIcon = (type:string) => {
+    switch(type) {
+      case 'domain':
+        return <DomainIcon />
+      case 'linode':
+        return <LinodeIcon />
+      case 'nodebalancer':
+        return <NodebalIcon />
+      case 'volume':
+        return <VolumeIcon />
+      default:
+        return <LinodeIcon />
+    } 
+  }
+
+  renderEntityLabelWithIcon = () => {
+    const { label, type } = this.state.ticket!.entity;
+    const icon:JSX.Element = this.getEntityIcon(type);
+    return (
+      <Grid container alignItems="center" justify="flex-start">
+        <Grid item>
+          {icon}
+        </Grid>
+        <Grid item>
+          {label}
+        </Grid>
+      </Grid>
+    )
   }
 
   renderReplies = (replies:Linode.SupportReply[]) => {
@@ -195,6 +216,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
               </Typography>
             </Grid>
         </Grid>
+        {this.renderEntityLabelWithIcon()}
         <Grid container direction="column" justify="center" alignItems="center" className={classes.listParent} >
           <ExpandableTicketPanel key={ticket!.id} ticket={ticket} />
           {replies && this.renderReplies(replies)}
