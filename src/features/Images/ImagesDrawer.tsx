@@ -38,6 +38,7 @@ export interface Props {
   description?: string;
   imageID?: string;
   label?: string;
+  disks?: Linode.Disk[];
   selectedDisk?: string;
   selectedLinode?: string;
   onClose: () => void;
@@ -60,6 +61,7 @@ type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
 export const modes = {
   CLOSED: 'closed',
   CREATING: 'create',
+  IMAGIZING: 'imagize',
   RESTORING: 'restore',
   EDITING: 'edit',
 };
@@ -69,6 +71,7 @@ const titleMap = {
   [modes.CREATING]: 'Create an Image',
   [modes.RESTORING]: 'Restore from an Image',
   [modes.EDITING]: 'Edit an Image',
+  [modes.IMAGIZING]: 'Create an Image',
 };
 
 class ImageDrawer extends React.Component<CombinedProps, State> {
@@ -83,6 +86,10 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
   componentDidMount() {
     this.mounted = true;
     this.updateLinodes();
+    if (this.props.disks) {
+      // for the 'imagizing' mode
+      this.setState({ disks: this.props.disks });
+    }
   }
 
   componentWillUnmount() {
@@ -90,20 +97,25 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
   }
 
   componentDidUpdate(prevProps: CombinedProps, prevState: State) {
+    if (this.props.disks && !equals(this.props.disks, prevProps.disks)) {
+      // for the 'imagizing' mode
+      this.setState({ disks: this.props.disks });
+    }
+
     if (this.props.selectedLinode && this.props.selectedLinode !== prevProps.selectedLinode) {
       getLinodeDisks(Number(this.props.selectedLinode))
-      .then((response) => {
-        const filteredDisks = response.data.filter((disk) => disk.filesystem !== 'swap')
-        if (!equals(this.state.disks, filteredDisks)) {
-          this.setState({ disks: filteredDisks })
+        .then((response) => {
+          const filteredDisks = response.data.filter((disk) => disk.filesystem !== 'swap')
+          if (!equals(this.state.disks, filteredDisks)) {
+            this.setState({ disks: filteredDisks })
+          }
+        })
+        .catch((error) => {
+          if (this.mounted) {
+            this.setState({
+            errors: [{ field: 'disk', reason: 'Could not retrieve disks for this Linode.' }],
+          });
         }
-      })
-      .catch((error) => {
-        if (this.mounted) {
-          this.setState({
-          errors: [{ field: 'disk', reason: 'Could not retrieve disks for this Linode.' }],
-        });
-      }
      });
     }
   }
@@ -147,28 +159,35 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
         return;
 
       case modes.CREATING:
+      case modes.IMAGIZING:
         if (!selectedDisk) { errors.push({ field: 'disk_id', reason: 'Choose a disk.' }); }
         if (!label)   { errors.push({ field: 'label', reason: 'Label cannot be blank.' }); }
         if (errors.length > 0) { 
           this.setState({ errors }) 
           return;
         };
+
         // If no label it will return after error checking above, so we can be confident
         // the value is declared here.
         createImage(Number(selectedDisk), label!, safeDescription)
-        .then((response) => {
-          resetEventsPolling();
-          this.setState({
-            notice: "Image scheduled for creation.",
-          });
-          setTimeout(this.close, 4000);
-        })
-        .catch((errorResponse) => {
-          this.setState({
-            errors: pathOr('There was an error creating the image.', ['response', 'data', 'errors'], errorResponse),
-          });
-        })
+          .then((response) => {
+            resetEventsPolling();
+            this.setState({
+              notice: "Image scheduled for creation.",
+            });
+            setTimeout(this.close, 4000);
+          })
+          .catch((errorResponse) => {
+            this.setState({
+              errors: pathOr(
+                'There was an error creating the image.',
+                ['response', 'data', 'errors'],
+                errorResponse
+              ),
+            });
+          })
         return;
+
       case modes.RESTORING:
         if (!selectedLinode) {
           this.setState({
@@ -202,11 +221,13 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
     // When restoring to an existing Linode, the Linode select is the only field.
     const { mode, label, selectedDisk, selectedLinode} = this.props;
     switch(mode) {
-      case 'create':
+      case modes.CREATING:
         return !(selectedDisk && selectedLinode && label);
-      case 'edit':
+      case modes.IMAGIZING:
+        return !(selectedDisk && label);
+      case modes.EDITING:
         return !label;
-      case 'restore':
+      case modes.RESTORING:
         return !selectedLinode;
       default:
         return false;
@@ -215,14 +236,15 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
 
   render() {
     const { label,
-            description,
-            selectedDisk,
-            selectedLinode,
-            mode,
-            changeDisk,
-            changeLinode,
-            changeLabel,
-            changeDescription, } = this.props;
+      description,
+      selectedDisk,
+      selectedLinode,
+      mode,
+      changeDisk,
+      changeLinode,
+      changeLabel,
+      changeDescription,
+    } = this.props;
     const { disks, linodes, notice,} = this.state;
     const { errors } = this.state;
     
@@ -263,28 +285,29 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
           />
         }
 
-        {['create','restore'].includes(mode) &&
-        <LinodeSelect
-          linodes={linodes}
-          selectedLinode={selectedLinode || 'none'}
-          linodeError={linodeError}
-          handleChange={changeLinode}
-          updateFor={[linodes, selectedLinode, linodeError]}
-        />
+        {[modes.CREATING, modes.RESTORING].includes(mode) &&
+          <LinodeSelect
+            linodes={linodes}
+            selectedLinode={selectedLinode || 'none'}
+            linodeError={linodeError}
+            handleChange={changeLinode}
+            updateFor={[linodes, selectedLinode, linodeError]}
+          />
         }
 
-        {mode === 'create' &&
-        <DiskSelect
-          selectedDisk={selectedDisk || 'none'}
-          disks={disks}
-          diskError={diskError}
-          handleChange={changeDisk}
-          updateFor={[disks, selectedDisk, diskError]}
-          data-qa-disk-select
-        />
-       }
+        {[modes.CREATING, modes.IMAGIZING].includes(mode) &&
+          <DiskSelect
+            selectedDisk={selectedDisk || 'none'}
+            disks={disks}
+            diskError={diskError}
+            handleChange={changeDisk}
+            updateFor={[disks, selectedDisk, diskError]}
+            disabled={mode === modes.IMAGIZING}
+            data-qa-disk-select
+          />
+        }
 
-        {['create','edit'].includes(mode) &&
+        {[modes.CREATING, modes.EDITING, modes.IMAGIZING].includes(mode) &&
           <React.Fragment>
             <TextField
               label="Label"

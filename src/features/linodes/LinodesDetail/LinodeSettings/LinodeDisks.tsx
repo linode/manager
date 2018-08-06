@@ -18,6 +18,7 @@ import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import { resetEventsPolling } from 'src/events';
+import ImagesDrawer, { modes } from 'src/features/Images/ImagesDrawer';
 import { withDisks, withLinode } from 'src/features/linodes/LinodesDetail/context';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { createLinodeDisk, deleteLinodeDisk, resizeLinodeDisk, updateLinodeDisk } from 'src/services/linodes';
@@ -74,8 +75,16 @@ interface DrawerState {
   };
 }
 
+interface ImagizeDrawerState {
+  open: boolean;
+  description?: string;
+  label?: string;
+  disk?: Linode.Disk;
+}
+
 interface State {
   drawer: DrawerState,
+  imagizeDrawer: ImagizeDrawerState,
   confirmDelete: ConfirmDeleteState,
 }
 
@@ -97,6 +106,13 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     },
   };
 
+  static defaultImagizeDrawerState: ImagizeDrawerState = {
+    open: false,
+    description: '',
+    label: '',
+    disk: undefined,
+  };
+
   static defaultConfirmDeleteState: ConfirmDeleteState = {
     open: false,
     id: undefined,
@@ -106,6 +122,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
 
   state: State = {
     drawer: LinodeDisks.defaultDrawerState,
+    imagizeDrawer: LinodeDisks.defaultImagizeDrawerState,
     confirmDelete: LinodeDisks.defaultConfirmDeleteState,
   };
 
@@ -133,6 +150,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
         {disks.length === 0 ? <this.emptyState /> : <this.table />}
         <this.confirmationDialog />
         <this.drawer />
+        <this.imagizeDrawer />
       </React.Fragment>
     );
   }
@@ -164,6 +182,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
                     linodeStatus={linodeStatus}
                     onRename={this.openDrawerForRename(disk)}
                     onResize={this.openDrawerForResize(disk)}
+                    onImagize={this.openImagizeDrawer(disk)}
                     onDelete={this.openConfirmDelete(disk)}
                   />
                 </TableCell>
@@ -243,6 +262,57 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
   closeConfirmDelete = () => {
     this.setConfirmDelete({ open: false });
   };
+
+  /**
+   * Updates imagize drawer state
+   */
+  setImagizeDrawer = (obj: Partial<ImagizeDrawerState>, fn: () => void = () => null) => {
+    this.setState(
+      { imagizeDrawer: { ...this.state.imagizeDrawer, ...obj } },
+      () => { fn(); },
+    )
+  }
+
+  imagizeDrawer = () => {
+    const { open, description, label, disk } = this.state.imagizeDrawer;
+    return (
+      <ImagesDrawer
+        mode={modes.IMAGIZING}
+        open={open}
+        description={description}
+        label={label}
+        disks={disk ? [disk] : []}
+        selectedDisk={disk && ('' + disk.id)}
+        onClose={this.closeImagizeDrawer}
+        changeDescription={this.changeImageDescription}
+        changeLabel={this.changeImageLabel}
+      />
+    );
+  }
+
+  openImagizeDrawer = (disk: Linode.Disk) => () => {
+    this.setImagizeDrawer({
+      ...LinodeDisks.defaultImagizeDrawerState,
+      open: true,
+      disk,
+    });
+  }
+
+  closeImagizeDrawer = () => {
+    this.setImagizeDrawer({ open: false });
+  }
+
+  changeImageDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setImagizeDrawer({
+      description: e.target.value,
+    })
+  }
+
+  changeImageLabel = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setImagizeDrawer({
+      label: e.target.value,
+    })
+  }
 
   /**
    * Create/Rename/Resize Drawer
