@@ -130,18 +130,18 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
             <AddNewLink onClick={this.openDrawerForCreation} label="Add a Disk" />
           </Grid>
         </Grid>
-        {disks.length === 0 ? <this.EmptyState /> : <this.Table />}
-        <this.ConfirmationDialog />
-        <this.Drawer />
+        {disks.length === 0 ? <this.emptyState /> : <this.table />}
+        <this.confirmationDialog />
+        <this.drawer />
       </React.Fragment>
     );
   }
 
-  EmptyState = () => {
+  emptyState = () => {
     return <Typography>Linode has no disks.</Typography>;
   }
 
-  Table = () => {
+  table = () => {
     const { disks, linodeStatus } = this.props;
     return (
       <Table>
@@ -186,7 +186,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     )
   }
 
-  ConfirmationDialog = () => {
+  confirmationDialog = () => {
     const { open, label, errors } = this.state.confirmDelete;
 
     return (
@@ -211,20 +211,20 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     return (
       <ActionsPanel style={{ padding: 0 }}>
         <Button
-          onClick={this.deleteDisk}
-          type="secondary"
-          destructive
-          loading={submitting}
-          data-qa-confirm-delete
-        >
-          Delete
-        </Button>
-        <Button
+          type="cancel"
           onClick={onClose}
-          type="secondary"
           data-qa-cancel-delete
         >
           Cancel
+        </Button>
+        <Button
+          type="secondary"
+          destructive
+          loading={submitting}
+          onClick={this.deleteDisk}
+          data-qa-confirm-delete
+        >
+          Delete
         </Button>
       </ActionsPanel>
     );
@@ -254,7 +254,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     )
   }
 
-  Drawer = () => {
+  drawer = () => {
     const { linodeTotalDisk } = this.props;
     const {
       mode,

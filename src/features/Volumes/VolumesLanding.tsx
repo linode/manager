@@ -466,7 +466,10 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
 
   closeDestructiveDialog() {
     this.setState({
-      destructiveDialog: { open: false, mode: 'detach' },
+      destructiveDialog: {
+        ...this.state.destructiveDialog,
+        open: false,
+      },
     });
   }
 

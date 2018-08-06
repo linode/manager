@@ -21,49 +21,65 @@ interface Props {
   onDelete: () => void;
 }
 
+interface State {}
+
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const DestructiveVolumeDialog: React.StatelessComponent<CombinedProps> = (props) => {
-  const method = {
-    detach: props.onDetach,
-    delete: props.onDelete,
-  }[props.mode];
+class DestructiveVolumeDialog extends React.PureComponent<CombinedProps, State> {
+  state: State = {};
 
-  const title = {
-    detach: 'Detach Volume',
-    delete: 'Delete Volume',
-  }[props.mode];
+  renderActions = () => {
+    const method = {
+      detach: this.props.onDetach,
+      delete: this.props.onDelete,
+    }[this.props.mode];
 
-  return (
-    <ConfirmationDialog
-      open={props.open}
-      title={`${title}`}
-      onClose={props.onClose}
-      actions={() =>
-        <ActionsPanel style={{ padding: 0 }}>
-          <Button
-            type="secondary"
-            destructive
-            onClick={method}
-            data-qa-confirm
-          >
-            Confirm
-          </Button>
-          <Button
-            onClick={props.onClose}
-            type="cancel"
-            data-qa-cancel
-          >
-            Cancel
-          </Button>
-        </ActionsPanel>
-      }
-    >
-      <Typography>Are you sure you want to {props.mode} this volume?</Typography>
-    </ConfirmationDialog>
-  );
-};
+    const action = {
+      detach: 'Detach',
+      delete: 'Delete',
+    }[this.props.mode];
+
+    return (
+      <ActionsPanel style={{ padding: 0 }}>
+        <Button
+          type="cancel"
+          onClick={this.props.onClose}
+          data-qa-cancel
+        >
+          Cancel
+        </Button>
+        <Button
+          type="secondary"
+          destructive
+          onClick={method}
+          data-qa-confirm
+        >
+          {action}
+        </Button>
+    </ActionsPanel>
+    );
+  }
+
+  render() {
+
+    const title = {
+      detach: 'Detach Volume',
+      delete: 'Delete Volume',
+    }[this.props.mode];
+
+    return (
+      <ConfirmationDialog
+        open={this.props.open}
+        title={`${title}`}
+        onClose={this.props.onClose}
+        actions={this.renderActions}
+      >
+        <Typography>Are you sure you want to {this.props.mode} this volume?</Typography>
+      </ConfirmationDialog>
+    );
+  }
+}
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(DestructiveVolumeDialog);
+export default styled(DestructiveVolumeDialog);

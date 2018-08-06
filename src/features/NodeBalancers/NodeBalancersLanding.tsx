@@ -272,31 +272,10 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
           handleSizeChange={this.handlePageSizeChange}
         />
         <ConfirmationDialog
-          onClose={() => this.setState({
-            deleteConfirmDialog: NodeBalancersLanding.defaultDeleteConfirmDialogState,
-          })}
+          onClose={this.closeConfirmationDialog}
           title="Confirm Deletion"
           error={(this.state.deleteConfirmDialog.errors || []).map(e => e.reason).join(',')}
-          actions={({ onClose }) =>
-            <ActionsPanel style={{ padding: 0 }}>
-              <Button
-                data-qa-confirm-cancel
-                onClick={this.deleteNodeBalancer}
-                type="secondary"
-                destructive
-                loading={this.state.deleteConfirmDialog.submitting}
-              >
-                Delete
-              </Button>
-              <Button
-                onClick={() => onClose()}
-                type="cancel"
-                data-qa-cancel-cancel
-              >
-                Cancel
-            </Button>
-            </ActionsPanel>
-          }
+          actions={this.renderConfirmationDialogActions}
           open={deleteConfirmAlertOpen}
         >
           <Typography>Are you sure you want to delete your NodeBalancer</Typography>
@@ -305,6 +284,32 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
     );
   }
 
+  renderConfirmationDialogActions = () => {
+    return (
+      <ActionsPanel style={{ padding: 0 }}>
+        <Button
+          type="cancel"
+          onClick={this.closeConfirmationDialog}
+          data-qa-cancel-cancel
+        >
+          Cancel
+        </Button>
+        <Button
+          data-qa-confirm-cancel
+          onClick={this.deleteNodeBalancer}
+          type="secondary"
+          destructive
+          loading={this.state.deleteConfirmDialog.submitting}
+        >
+          Delete
+        </Button>
+      </ActionsPanel>
+    );
+  }
+
+  closeConfirmationDialog = () => this.setState({
+    deleteConfirmDialog: NodeBalancersLanding.defaultDeleteConfirmDialogState,
+  });
   renderContent = () => {
     const {
       count,

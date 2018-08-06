@@ -6,7 +6,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import 'rxjs/add/operator/filter';
 import { Subscription } from 'rxjs/Subscription';
 
-import Button from '@material-ui/core/Button';
+
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -22,6 +22,7 @@ import Typography from '@material-ui/core/Typography';
 
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Placeholder from 'src/components/Placeholder';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
@@ -251,8 +252,8 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
       });
   }
 
-  cancelBackups(linodeID: number) {
-    cancelBackups(linodeID)
+  cancelBackups() {
+    cancelBackups(this.props.linodeID)
       .then(() => {
         sendToast('Backups are being cancelled for this Linode');
         resetEventsPolling();
@@ -462,8 +463,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
             }>
               <div>
                 <Button
-                  variant="raised"
-                  color="primary"
+                  type="primary"
                   onClick={this.takeSnapshot}
                   data-qa-snapshot-button
                   disabled={linodeInTransition}
@@ -541,8 +541,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
           </FormControl>
           <ActionsPanel className={classes.scheduleAction}>
             <Button
-              variant="raised"
-              color="primary"
+              type="primary"
               onClick={this.saveSettings}
               data-qa-schedule
             >
@@ -580,12 +579,9 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         <this.SnapshotForm />
         <this.SettingsForm />
         <Button
-          variant="raised"
-          color="secondary"
-          className={`
-            ${classes.cancelButton}
-            destructive
-          `}
+          type="secondary"
+          destructive
+          className={classes.cancelButton}
           onClick={this.handleOpenBackupsAlert}
           data-qa-cancel
         >
@@ -612,28 +608,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         />
         <ConfirmationDialog
           title="Confirm Cancellation"
-          actions={() =>
-            <ActionsPanel style={{ padding: 0 }}>
-              <Button
-                variant="raised"
-                color="secondary"
-                className="destructive"
-                onClick={() => this.cancelBackups(linodeID)}
-                data-qa-confirm-cancel
-              >
-                Cancel Backups
-              </Button>
-              <Button
-                onClick={this.handleCloseBackupsAlert}
-                variant="raised"
-                color="secondary"
-                className="cancel"
-                data-qa-cancel-cancel
-              >
-                Close
-            </Button>
-            </ActionsPanel>
-          }
+          actions={this.renderConfirmCancellationActions}
           open={this.state.cancelBackupsAlertOpen}
         >
           Cancelling backups associated with this Linode will
@@ -642,6 +617,21 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
       </React.Fragment>
     );
   }
+
+
+  renderConfirmCancellationActions = () => {
+    return (
+      <ActionsPanel style={{ padding: 0 }}>
+        <Button type="cancel" onClick={this.handleCloseBackupsAlert} data-qa-cancel-cancel>
+          Close
+        </Button>
+        <Button type="secondary" destructive onClick={this.cancelBackups} data-qa-confirm-cancel>
+          Cancel Backups
+        </Button>
+      </ActionsPanel>
+    );
+  }
+
 
   render() {
     const { backupsEnabled } = this.props;

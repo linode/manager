@@ -231,24 +231,15 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
   getActions = () => {
     return (
       <ActionsPanel>
+        <Button type="cancel" onClick={this.closeRemoveDialog} data-qa-cancel>Cancel</Button>
         <Button
-          variant="raised"
           type="secondary"
-          destructive={true}
+          destructive
           loading={this.state.removeDialog.submitting}
           onClick={this.removeImage}
           data-qa-submit
         >
           Confirm
-        </Button>
-        <Button
-          onClick={this.closeRemoveDialog}
-          variant="raised"
-          color="secondary"
-          className="cancel"
-          data-qa-cancel
-        >
-          Cancel
         </Button>
       </ActionsPanel>
     )

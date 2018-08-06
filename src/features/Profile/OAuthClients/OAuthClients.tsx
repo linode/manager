@@ -1,7 +1,6 @@
 import { compose, path } from 'ramda';
 import * as React from 'react';
 
-import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
@@ -11,6 +10,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 
 import AddNewLink from 'src/components/AddNewLink';
+import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -124,13 +124,13 @@ class OAuthClients extends React.Component<CombinedProps, State> {
       });
   }
 
-  startEdit = (id: string, label: string, redirect_uri: string, isPublic: boolean) => {
+  startEdit = (id: string, label: string, redirectUri: string, isPublic: boolean) => {
     this.setState({
       form: {
         edit: true,
         open: true,
         id,
-        values: { label, redirect_uri, public: isPublic },
+        values: { label, redirect_uri: redirectUri, public: isPublic },
       },
     });
   }
@@ -218,6 +218,8 @@ class OAuthClients extends React.Component<CombinedProps, State> {
     this.mounted = false;
   }
 
+  openCreateDrawer = () => this.toggleCreateDrawer(true);
+
   render() {
     const { classes } = this.props;
 
@@ -235,7 +237,7 @@ class OAuthClients extends React.Component<CombinedProps, State> {
           </Grid>
           <Grid item>
             <AddNewLink
-              onClick={() => this.toggleCreateDrawer(true)}
+              onClick={this.openCreateDrawer}
               label="Create an OAuth Client"
               data-qa-oauth-create
             />
@@ -249,7 +251,7 @@ class OAuthClients extends React.Component<CombinedProps, State> {
                 <TableCell>Access</TableCell>
                 <TableCell>ID</TableCell>
                 <TableCell>Callback URL</TableCell>
-                <TableCell></TableCell>
+                <TableCell />
               </TableRow>
             </TableHead>
             <TableBody>
@@ -260,17 +262,9 @@ class OAuthClients extends React.Component<CombinedProps, State> {
 
         <ConfirmationDialog
           title="Client Secret"
-          actions={() =>
-            <Button
-              variant="raised"
-              color="primary"
-              onClick={() => this.reset()}
-              data-qa-close-dialog
-            >
-              OK
-            </Button>}
+          actions={this.renderClientSecretActions}
           open={this.state.secret.open}
-          onClose={() => this.reset()}
+          onClose={this.reset}
         >
           <Typography variant="body1">
             {`Here is your client secret! Store it securely, as it won't be shown again.`}
@@ -285,14 +279,22 @@ class OAuthClients extends React.Component<CombinedProps, State> {
           public={this.state.form.values.public}
           label={this.state.form.values.label}
           redirect_uri={this.state.form.values.redirect_uri}
-          onClose={() => { this.reset(); }}
-          onChange={(key, value) =>
-            this.setForm(form => ({ ...form, values: { ...form.values, [key]: value } }))}
-          onSubmit={() => this.state.form.edit ? this.editClient() : this.createClient()}
+          onClose={this.reset}
+          onChange={this.onChange}
+          onSubmit={this.state.form.edit ? this.editClient : this.createClient}
         />
       </React.Fragment>
     );
   }
+
+  onChange = (key: string, value: any) => this.setForm(form => ({
+    ...form,
+    values: { ...form.values, [key]: value },
+  }));
+
+  renderClientSecretActions = () => (
+    <Button type="primary" onClick={this.reset} data-qa-close-dialog>Got it!</Button>
+  );
 }
 
 const styled = withStyles(styles, { withTheme: true });

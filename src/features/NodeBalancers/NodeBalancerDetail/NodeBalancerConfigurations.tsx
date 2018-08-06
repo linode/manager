@@ -838,6 +838,14 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   renderConfigConfirmationActions = ({ onClose }: { onClose: () => void }) => (
     <ActionsPanel style={{ padding: 0 }}>
       <Button
+        onClick={onClose}
+        type="secondary"
+        className="cancel"
+        data-qa-cancel-cancel
+      >
+        Cancel
+      </Button>
+      <Button
         data-qa-confirm-cancel
         onClick={this.deleteConfig}
         type="secondary"
@@ -845,15 +853,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         loading={this.state.deleteConfigConfirmDialog.submitting}
       >
         Delete
-    </Button>
-      <Button
-        onClick={() => onClose()}
-        type="secondary"
-        className="cancel"
-        data-qa-cancel-cancel
-      >
-        Cancel
-    </Button>
+      </Button>
     </ActionsPanel>
   )
 

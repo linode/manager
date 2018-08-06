@@ -24,27 +24,31 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
   };
 
   toggleConfirmDelete = (v: Boolean) => this.setState({ confirmDeleteOpen: v });
+  openConfirmDelete = () => this.toggleConfirmDelete(true);
+  closeConfirmDelete = () => this.toggleConfirmDelete(false);
+
+  onDeleteConfirm = () => {
+    this.toggleConfirmDelete(false);
+    this.props.onDelete();
+  };
 
   deleteDialogActions = () => {
     return (
       <React.Fragment>
         <ActionsPanel>
           <Button
-            destructive
-            type="secondary"
-            onClick={() => {
-              this.toggleConfirmDelete(false);
-              this.props.onDelete();
-            }}
-            data-qa-button-confirm>
-            Yes
-          </Button>
-          <Button
-            onClick={() => this.toggleConfirmDelete(false)}
+            onClick={this.closeConfirmDelete}
             type="cancel"
             data-qa-button-cancel
           >
-            No
+            Cancel
+          </Button>
+          <Button
+            destructive
+            type="secondary"
+            onClick={this.onDeleteConfirm}
+            data-qa-button-confirm>
+            Delete
           </Button>
         </ActionsPanel>
       </React.Fragment>
@@ -52,27 +56,31 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
   }
 
   toggleConfirmReset = (v: Boolean) => this.setState({ confirmResetOpen: v });
+  openConfirmReset = () => this.toggleConfirmReset(true);
+  closeConfirmReset = () => this.toggleConfirmReset(false);
+
+  onResetConfirm = () => {
+    this.toggleConfirmReset(false);
+    this.props.onReset();
+  }
 
   resetDialogActions = () => {
     return (
       <React.Fragment>
         <ActionsPanel>
           <Button
-            destructive
-            type="secondary"
-            onClick={() => {
-              this.toggleConfirmReset(false);
-              this.props.onReset();
-            }}
-            data-qa-button-confirm>
-            Yes
-          </Button>
-          <Button
-            onClick={() => this.toggleConfirmReset(false)}
+            onClick={this.closeConfirmReset}
             type="cancel"
             data-qa-button-cancel
           >
-            No
+            Cancel
+          </Button>
+          <Button
+            destructive
+            type="secondary"
+            onClick={this.onResetConfirm}
+            data-qa-button-confirm>
+            Reset Secret
           </Button>
         </ActionsPanel>
       </React.Fragment>
@@ -118,19 +126,21 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
           title="Confirm Delete"
           open={this.state.confirmDeleteOpen}
           actions={this.deleteDialogActions}
-          onClose={() => this.toggleConfirmDelete(false)}
+          onClose={this.closeConfirmDelete}
         >
-        Are you sure you want to permanently delete this OAuth client?
+          <Typography>
+            Are you sure you want to permanently delete this OAuth client?
+          </Typography>
         </ConfirmationDialog>
         <ConfirmationDialog
           title="Confirm Reset"
           open={this.state.confirmResetOpen}
           actions={this.resetDialogActions}
-          onClose={() => this.toggleConfirmReset(false)}
+          onClose={this.closeConfirmReset}
         >
-        <Typography>
-          Are you sure you want to permanently reset the secret of this OAuth client?
-        </Typography>
+          <Typography>
+            Are you sure you want to permanently reset the secret of this OAuth client?
+          </Typography>
         </ConfirmationDialog>
       </React.Fragment>
     );
