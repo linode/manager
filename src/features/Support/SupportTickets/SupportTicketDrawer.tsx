@@ -182,6 +182,8 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
   }
 
   handleEntityTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    // Don't reset things if the type hasn't changed
+    if (this.state.ticket.entity_type === e.target.value) { return; }
     this.composeState([
       set(L.entity_type, e.target.value),
       set(L.entity_id, undefined),

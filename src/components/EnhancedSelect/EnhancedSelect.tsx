@@ -1,5 +1,5 @@
-import Downshift from 'downshift';
-import { compose } from 'ramda';
+import Downshift, { DownshiftState, StateChangeOptions } from 'downshift';
+import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 
 import Paper from '@material-ui/core/Paper';
@@ -61,8 +61,18 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
   optionsIdx: any = {};
 
   componentDidMount() {
-    this.props.options.forEach((tz:Item) => {
-      this.optionsIdx[tz.value] = tz;
+    this.createItemIndex();
+  }
+
+  componentDidUpdate(prevProps:CombinedProps, prevState:State) {
+    if (this.props.options !== prevProps.options) {
+      this.createItemIndex();
+    }
+  }
+
+  createItemIndex = () => {
+    this.props.options.forEach((item:Item) => {
+      this.optionsIdx[item.value] = item;
     })
   }
 
@@ -87,6 +97,23 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
   onSubmit = () => {
     const { onSubmit } = this.props;
     if (onSubmit) { onSubmit() }
+  }
+
+  downshiftStateReducer = (state: DownshiftState, changes: StateChangeOptions) => {
+    const { value } = this.props;
+
+    switch (changes.type) {
+      // Don't clear the field value when we leave the field
+      case Downshift.stateChangeTypes.blurInput:
+      case Downshift.stateChangeTypes.mouseUp:
+        return {
+          ...changes,
+          inputValue: pathOr('',['label'], this.optionsIdx[value]),
+          isOpen: false,
+        }
+        default:
+          return changes;
+    }
   }
 
   renderDownshift = (downshift:any) => {
@@ -176,6 +203,7 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
         render={this.renderDownshift}
         inputValue={inputValue}
         onInputValueChange={onInputValueChange}
+        stateReducer={this.downshiftStateReducer}
       />
     )
   }
