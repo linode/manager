@@ -8,11 +8,11 @@ import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/
 import Typography from '@material-ui/core/Typography';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 
+import CircleProgress from 'src/components/CircleProgress';
 import setDocs from 'src/components/DocsSidebar/setDocs';
+import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
-import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
-import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
-import { getTicket, getTicketRepliesPage } from 'src/services/support';
+import { getTicket, getTicketReplies } from 'src/services/support';
 
 import ExpandableTicketPanel from '../ExpandableTicketPanel';
 
@@ -55,37 +55,16 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   }, 
 });
 
-interface PreloadedProps {
-  ticket: PromiseLoaderResponse<Linode.SupportTicket>;
-  replies: PromiseLoaderResponse<Linode.SupportReply[]>;
-  }
-
 type RouteProps = RouteComponentProps<{ ticketId?: number }>;
 
 interface State {
+  loading: boolean;
   errors?: Linode.ApiFieldError[];
   replies?: Linode.SupportReply[];
   ticket?: Linode.SupportTicket;
 }
 
-type CombinedProps = RouteProps & PreloadedProps & WithStyles<ClassNames>;
-
-const preloaded = PromiseLoader<CombinedProps>({
-  ticket: ({ match: { params: { ticketId } } }) => {
-    if (!ticketId) {
-      return Promise.reject(new Error('ticketId param not set.'));
-    }
-
-    return getTicket(ticketId);
-  },
-  replies: ({ match: { params: { ticketId } } }) => {
-    if (!ticketId) {
-      return Promise.reject(new Error('ticketId param not set.'));
-    }
-
-    return getTicketRepliesPage(ticketId);
-  },
-});
+type CombinedProps = RouteProps & WithStyles<ClassNames>;
 
 const scrollToBottom = () => {
   window.scroll({
@@ -97,8 +76,7 @@ const scrollToBottom = () => {
 
 export class SupportTicketDetail extends React.Component<CombinedProps,State> {
   state: State = {
-    ticket: pathOr(undefined, ['response', 'data'], this.props.ticket),
-    replies: pathOr(undefined, ['response','data'], this.props.replies)
+    loading: true,
   }
 
   static docs: Linode.Doc[] = [
@@ -111,41 +89,96 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
   ];
 
   componentDidMount() {
-    scrollToBottom();
+    this.loadTicket();
+    this.loadReplies();
+  }
+
+  handleThen = () => {
+
+  }
+
+  handleCatch = () => {
+
+  }
+
+  loadTicket = () => {
+    const ticketId = this.props.match.params.ticketId;
+    if (!ticketId) { return; }
+    getTicket(ticketId)
+      .then((response) => {
+        this.setState({
+          ticket: response.data,
+          loading: false,
+        }, scrollToBottom)
+      })
+      .catch((errors) => {
+        const error = errors.response.data.status === 404
+          ? [{ reason: 'Ticket could not be found.' }]
+          : [{ reason: 'There was an error retrieving your ticket.' }]
+        this.setState({
+          errors: pathOr(error, ['response', 'data', 'errors'], errors),
+          loading: false,
+        })
+      })
+  }
+
+  loadReplies = () => {
+    const ticketId = this.props.match.params.ticketId;
+    if (!ticketId) { return; }
+    getTicketReplies(ticketId)
+      .then((response) => {
+        this.setState({
+          replies: response.data,
+        }, scrollToBottom)
+      })
+      .catch((errors) => {
+
+        this.setState({
+          errors: pathOr([{ reason: 'There was an error retrieving your ticket.' }], ['response', 'data', 'errors'], errors),
+          loading: false,
+        })
+      })
   }
 
   onBackButtonClick = () => {
     this.props.history.push('/support/tickets');
   }
 
-  renderContent = () => {
-    const { errors, replies, ticket } = this.state;
-
-    // Error state
-    if (errors) {
-      return <div>There was an error.</div>
-    }
-
-    // Empty state
-    if (!ticket) {
-      return <div>Ticket is not loaded.</div>
-    }
-
-    return (
-      <React.Fragment>
-        <ExpandableTicketPanel key={ticket.id} ticket={ticket} />
-        {replies && replies.map((reply: Linode.SupportReply, idx:number) =>
-          <ExpandableTicketPanel key={idx} reply={reply} open={idx === replies.length - 1} />
-        )}
-      </React.Fragment>
-    )
+  renderReplies = (replies:Linode.SupportReply[]) => {
+    return replies.map((reply:Linode.SupportReply, idx:number) => {
+      return <ExpandableTicketPanel key={idx} reply={reply} open={idx === replies.length - 1} />
+    });
   }
 
   render() {
     const { classes } = this.props;
-    const { ticket } = this.state;
+    const { errors, loading, replies, ticket } = this.state;
 
-    if (!ticket) { return null; }
+    /* 
+    * Including loading/error states here (rather than in a
+    * renderContent function) because the header
+    * depends on having a ticket object for its content.
+    */
+
+    // Loading
+    if (loading) {
+      return <CircleProgress />
+    }
+
+    // Error state
+    if (errors) {
+      return (
+        <ErrorState
+          errorText={errors[0].reason}
+        />
+      );
+    }
+
+    // Empty state
+    if (!ticket) {
+      return null;
+    }
+
     return (
       <React.Fragment>
         <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
@@ -163,7 +196,8 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
             </Grid>
         </Grid>
         <Grid container direction="column" justify="center" alignItems="center" className={classes.listParent} >
-          {this.renderContent()}
+          <ExpandableTicketPanel key={ticket!.id} ticket={ticket} />
+          {replies && this.renderReplies(replies)}
         </Grid>
       </React.Fragment>
     )
@@ -172,15 +206,9 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const reloaded = reloadableWithRouter<PreloadedProps, { ticketId?: number }>(
-  (routePropsOld, routePropsNew) => {
-    return routePropsOld.match.params.ticketId !== routePropsNew.match.params.ticketId;
-  },
-);
 
-export default compose<any,any,any,any,any>(
+
+export default compose<any,any,any>(
   setDocs(SupportTicketDetail.docs),
   styled,
-  reloaded,
-  preloaded,
 )(SupportTicketDetail)

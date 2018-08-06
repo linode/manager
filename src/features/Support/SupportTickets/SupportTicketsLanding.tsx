@@ -75,7 +75,8 @@ export class SupportTicketsLanding extends React.Component<CombinedProps, State>
             <Tab key={1} label="Closed Tickets"/>
           </Tabs>
         </AppBar>
-        <TicketList filterStatus={value ? 'open' : 'closed'} />
+        {/* NB: 0 is the index of the open tickets tab, which evaluates to false */}
+        <TicketList filterStatus={value ? 'closed' : 'open'} />
       </React.Fragment>
     );
   }

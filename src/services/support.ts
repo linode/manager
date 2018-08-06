@@ -41,7 +41,7 @@ export const getTicketReplies = (ticketId:number, params?: any, filter?: any) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filter),
-  )
+  ).then((response) => response.data);
 
 export const getTicketRepliesPage = (ticketId:number, pagination: Linode.PaginationOptions = {}) => {
   return getTicketReplies(ticketId, pagination).then((response) => response.data);
