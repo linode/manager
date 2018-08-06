@@ -3,14 +3,11 @@ import * as React from 'react';
 
 import { types } from 'src/__data__/types';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
-import { createPromiseLoaderResponse } from 'src/utilities/testHelpers';
 
 import { LinodeResize } from './LinodeResize';
 
 describe('LinodeResize', () => {
-  const mockTypes = createPromiseLoaderResponse(
-    types.map(LinodeResize.extendType),
-  );
+  const mockTypes = types.map(LinodeResize.extendType);
 
   const component = shallow(
     <LinodeResize
@@ -22,7 +19,7 @@ describe('LinodeResize', () => {
       }}
       linodeId={12}
       linodeType={null}
-      types={mockTypes}
+      typesData={mockTypes}
     />,
   );
 
@@ -38,7 +35,7 @@ describe('LinodeResize', () => {
           }}
           linodeId={12}
           linodeType={null}
-          types={mockTypes}
+          typesData={mockTypes}
         />
       </LinodeThemeWrapper>,
     );
@@ -64,7 +61,7 @@ describe('LinodeResize', () => {
               }}
               linodeId={12}
               linodeType={null}
-              types={mockTypes}
+              typesData={mockTypes}
             />
           </LinodeThemeWrapper>,
         );
@@ -92,7 +89,7 @@ describe('LinodeResize', () => {
               }}
               linodeId={12}
               linodeType={'_something_unexpected_'}
-              types={mockTypes}
+              typesData={mockTypes}
             />
           </LinodeThemeWrapper>,
         );

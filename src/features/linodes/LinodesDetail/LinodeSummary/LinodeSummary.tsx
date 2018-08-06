@@ -11,7 +11,9 @@ import Typography from '@material-ui/core/Typography';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import LineGraph from 'src/components/LineGraph';
 import Select from 'src/components/Select';
+import { withTypes } from 'src/context/types';
 import { withImage, withLinode, withVolumes } from 'src/features/linodes/LinodesDetail/context';
+import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
 import { getLinodeStats } from 'src/services/linodes';
 import { setUpCharts } from 'src/utilities/charts';
 
@@ -108,10 +110,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
 interface Props {
 }
 
-interface ContextProps {
+interface TypesContextProps {
+  typesData?: Linode.LinodeType[];
+}
+
+interface LinodeContextProps {
   linodeCreated: string;
   linodeId: number;
-
   linodeData: Linode.Linode;
   imageData: Linode.Image;
   volumesData: Linode.Volume[];
@@ -123,7 +128,10 @@ interface State {
   statsLoadError?: string;
 }
 
-type CombinedProps = Props & ContextProps & WithStyles<ClassNames>;
+type CombinedProps = Props &
+  LinodeContextProps &
+  TypesContextProps &
+  WithStyles<ClassNames>;
 
 const chartHeight = 300;
 
@@ -176,8 +184,8 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
       // same comment as above. Month needs to be prepended with a "0"
       // if it's only one digit to appease moment.js
       formattedTestDate = (testMonth.toString().length === 1)
-      ? `${testYear}-0${testMonth}-01`
-      : `${testYear}-${testMonth}-01`;
+        ? `${testYear}-0${testMonth}-01`
+        : `${testYear}-${testMonth}-01`;
     } while (moment(formattedTestDate).diff(creationFirstOfMonth) >= 0);
     (this.rangeSelectOptions as Linode.TodoAny) = options.map((option) => {
       return <MenuItem key={option[0]} value={option[0]}>{option[1]}</MenuItem>;
@@ -245,6 +253,7 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
       imageData: image,
       volumesData: volumes,
       classes,
+      typesData,
     } = this.props;
 
     const { stats, rangeSelection } = this.state;
@@ -253,9 +262,16 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
       return null;
     }
 
+    const longLabel = typeLabelLong(
+      displayType(linode.type, typesData || []),
+      linode.specs.memory,
+      linode.specs.disk,
+      linode.specs.vcpus,
+    );
+
     return (
       <React.Fragment>
-        <SummaryPanel linode={linode} image={image} volumes={volumes} />
+        <SummaryPanel linode={linode} image={image} volumes={volumes} typesLongLabel={longLabel} />
 
         {stats &&
           <React.Fragment>
@@ -469,8 +485,11 @@ const volumesContext = withVolumes((context) => ({
   volumesData: context.data!,
 }))
 
+const typesContext = withTypes(({ data: typesData }) => ({ typesData }))
+
 const enhanced = compose(
   styled,
+  typesContext,
   linodeContext,
   imageContext,
   volumesContext,

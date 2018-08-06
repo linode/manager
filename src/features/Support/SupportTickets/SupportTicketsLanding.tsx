@@ -1,4 +1,4 @@
-import { compose } from 'ramda';
+import { compose, } from 'ramda';
 import * as React from 'react';
 
 import AppBar from '@material-ui/core/AppBar';
@@ -10,7 +10,9 @@ import Typography from '@material-ui/core/Typography';
 
 import AddNewLink from 'src/components/AddNewLink';
 import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 
+import SupportTicketDrawer from './SupportTicketDrawer';
 import TicketList from './TicketList';
 
 type ClassNames = 'root' | 'title';
@@ -27,20 +29,50 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 interface State {
   value: number;
+  drawerOpen: boolean;
+  notice?: string;
+  newTicket?: Linode.SupportTicket;
 }
 
 export class SupportTicketsLanding extends React.Component<CombinedProps, State> {
   state: State = {
     value: 0,
+    drawerOpen: false,
   }
 
   handleChange = (event:React.ChangeEvent<HTMLDivElement>, value:number) => {
-    this.setState({ value });
+    this.setState({ value, notice: undefined });
+  }
+
+  closeDrawer = () => {
+    this.setState({ drawerOpen: false });
+  }
+
+  openDrawer = () => {
+    this.setState({ drawerOpen: true, notice: undefined, });
+  }
+
+  handleAddTicketSuccess = (ticket:Linode.SupportTicket) => {
+    this.setState({
+      drawerOpen: false,
+      notice: "Ticket added successfully.",
+      newTicket: ticket,
+    })
+  }
+
+  renderTicketDrawer = () => {
+    const { drawerOpen } = this.state;
+    return <SupportTicketDrawer
+      open={drawerOpen}
+      onClose={this.closeDrawer}
+      onSuccess={this.handleAddTicketSuccess}
+    />
   }
 
   render() {
     const { classes } = this.props;
-    const { value } = this.state;
+    const { notice, value } = this.state;
+
 
     return (
       <React.Fragment>
@@ -54,8 +86,7 @@ export class SupportTicketsLanding extends React.Component<CombinedProps, State>
             <Grid container alignItems="flex-end">
               <Grid item>
                 <AddNewLink
-                  disabled
-                  onClick={() => null}
+                  onClick={this.openDrawer}
                   label="Open New Ticket"
                   data-qa-open-ticket-link
                 />
@@ -63,6 +94,7 @@ export class SupportTicketsLanding extends React.Component<CombinedProps, State>
             </Grid>
           </Grid>
         </Grid>
+        {notice && <Notice success text={notice} />}
         <AppBar position="static" color="default">
           <Tabs
             value={value}
@@ -77,6 +109,7 @@ export class SupportTicketsLanding extends React.Component<CombinedProps, State>
         </AppBar>
         {/* NB: 0 is the index of the open tickets tab, which evaluates to false */}
         <TicketList filterStatus={value ? 'closed' : 'open'} />
+        {this.renderTicketDrawer()}
       </React.Fragment>
     );
   }

@@ -22,9 +22,6 @@ const flags = {
   de: () => <DE width="32" height="24" viewBox="0 0 720 480" />,
 };
 
-
-
-
 export interface ExtendedRegion extends Linode.Region {
   display: string;
 }

@@ -1,8 +1,7 @@
 import Downshift, { DownshiftState, StateChangeOptions } from 'downshift';
 import * as moment from 'moment';
-import { compose, pathOr } from 'ramda';
+import { compose } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import IconButton from '@material-ui/core/IconButton';
@@ -16,6 +15,7 @@ import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import TextField from 'src/components/TextField';
+import { withTypes } from 'src/context/types';
 import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
 import { getDomains } from 'src/services/domains';
 import { getImagesPage } from 'src/services/images';
@@ -153,8 +153,8 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
 interface Props {
 }
 
-interface ConnectedProps {
-  types: Linode.LinodeType[];
+interface TypesContextProps {
+  typesData?: Linode.LinodeType[];
 }
 
 interface State {
@@ -168,12 +168,12 @@ interface State {
   [resource: string]: any;
 }
 
-type FinalProps = Props
-  & ConnectedProps
+type CombinedProps = Props
+  & TypesContextProps
   & WithStyles<Styles>
   & RouteComponentProps<{}>;
 
-class SearchBar extends React.Component<FinalProps, State> {
+class SearchBar extends React.Component<CombinedProps, State> {
   state: State = {
     searchText: '',
     searchActive: false,
@@ -246,18 +246,19 @@ class SearchBar extends React.Component<FinalProps, State> {
   }
 
   getSearchSuggestions(query: string | null) {
+    const { typesData } = this.props;
     if (!this.dataAvailable() || !query) return [];
 
     const searchResults = [];
 
-    if (this.state.linodes) {
+    if (this.state.linodes && typesData) {
       const linodesByLabel = this.state.linodes.filter(
         linode => linode.label.toLowerCase().includes(query.toLowerCase()),
       );
       searchResults.push(...(linodesByLabel.map(linode => ({
         title: linode.label,
         description: this.linodeDescription(
-          displayType(linode.type, this.props.types),
+          displayType(linode.type, typesData),
           linode.specs.memory,
           linode.specs.disk,
           linode.specs.vcpus,
@@ -473,12 +474,14 @@ class SearchBar extends React.Component<FinalProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const connected = connect((state: Linode.AppState) => ({
-  types: pathOr([], ['resources', 'types', 'data', 'data'], state),
+const typesContext = withTypes(({
+  data: typesData,
+}) => ({
+  typesData,
 }));
 
 export default compose(
-  connected,
   styled,
+  typesContext,
   withRouter,
 )(SearchBar);

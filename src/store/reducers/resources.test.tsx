@@ -18,11 +18,9 @@ describe('ResourcesReducer', () => {
   let result: Linode.ResourcesState;
 
   const resources: Linode.ResourcesState = {
-    regions: { loading: false, data: [], },
-    types: { loading: false, data: { data: [], results: 0, pages: 1, page: 0 }, },
-    kernels: { loading: false, data: [], },
     profile: {
-      loading: false, data: {
+      loading: false,
+      data: {
         uid: 1,
         username: '',
         email: '',
@@ -52,39 +50,39 @@ describe('ResourcesReducer', () => {
 
   describe('when type === REQUEST', () => {
     it('should set loading to true.', () => {
-      result = reducer(resources, request(['types']));
-      expect(result.types).toHaveProperty('loading', true);
+      result = reducer(resources, request(['profile']));
+      expect(result.profile).toHaveProperty('loading', true);
     });
   });
 
   describe('when type === RESPONSE', () => {
     beforeEach(() => {
-      result = reducer(resources, response(['types'], data));
+      result = reducer(resources, response(['profile'], data));
     });
 
     it('should set loading to false', () => {
-      expect(result.types).toHaveProperty('loading', false);
+      expect(result.profile).toHaveProperty('loading', false);
     });
 
     it('should set path.data to the payload', () => {
-      expect(result.types).toHaveProperty('data', data);
+      expect(result.profile).toHaveProperty('data', data);
     });
 
     describe('and is error', () => {
       beforeEach(() => {
-        result = reducer(resources, response(['types'], err));
+        result = reducer(resources, response(['profile'], err));
       });
 
       it('should set loading to false', () => {
-        expect(result.types).toHaveProperty('loading', false);
+        expect(result.profile).toHaveProperty('loading', false);
       });
 
       it(`should set path.data to error`, () => {
-        expect(result.types).toHaveProperty('data', err);
+        expect(result.profile).toHaveProperty('data', err);
       });
 
       it(`should set path.error to true`, () => {
-        expect(result.types).toHaveProperty('error', true);
+        expect(result.profile).toHaveProperty('error', true);
       });
     });
   });

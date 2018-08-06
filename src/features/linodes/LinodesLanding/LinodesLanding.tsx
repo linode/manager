@@ -8,18 +8,20 @@ import 'rxjs/add/operator/filter';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import Button from '@material-ui/core/Button';
+
 import Hidden from '@material-ui/core/Hidden';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import PaginationFooter from 'src/components/PaginationFooter';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
+import { withTypes } from 'src/context/types';
 import { events$ } from 'src/events';
 import LinodeConfigSelectionDrawer, { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { newLinodeEvents } from 'src/features/linodes/events';
@@ -78,7 +80,14 @@ const preloaded = PromiseLoader<Props>({
   images: () => getImages(),
 });
 
+interface TypesContextProps {
+  typesRequest: () => void;
+  typesLoading: boolean;
+  typesLastUpdated: number;
+}
+
 type CombinedProps = Props
+  & TypesContextProps
   & PreloadedProps
   & RouteComponentProps<{}>
   & WithStyles<ClassNames>
@@ -129,6 +138,12 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   componentDidMount() {
     this.mounted = true;
     const mountTime = moment().subtract(5, 'seconds');
+
+    const { typesLastUpdated, typesLoading, typesRequest } = this.props;
+
+    if (typesLastUpdated === 0 && !typesLoading) {
+      typesRequest();
+    }
 
     this.eventsSub = events$
       .filter(newLinodeEvents(mountTime))
@@ -383,30 +398,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
         </Grid>
         <ConfirmationDialog
           title={(bootOption === 'reboot') ? 'Confirm Reboot' : 'Powering Off'}
-          actions={() =>
-            <ActionsPanel style={{ padding: 0 }}>
-              <Button
-                variant="raised"
-                color="secondary"
-                className="destructive"
-                onClick={this.rebootOrPowerLinode}
-                data-qa-confirm-cancel
-              >
-                {(bootOption === 'reboot')
-                  ? 'Reboot'
-                  : 'Power Off'}
-              </Button>
-              <Button
-                onClick={() => this.setState({ powerAlertOpen: false })}
-                variant="raised"
-                color="secondary"
-                className="cancel"
-                data-qa-cancel-cancel
-              >
-                Cancel
-            </Button>
-            </ActionsPanel>
-          }
+          actions={this.renderConfirmationActions}
           open={powerAlertOpen}
         >
           {bootOption === 'reboot'
@@ -416,6 +408,30 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       </Grid>
     );
   }
+
+  renderConfirmationActions = () => {
+    const { bootOption } = this.state;
+    return (
+      <ActionsPanel style={{ padding: 0 }}>
+        <Button
+          type="cancel"
+          onClick={this.closePowerAlert}
+          data-qa-cancel-cancel
+        >
+          Cancel
+        </Button>
+        <Button
+          type="secondary"
+          onClick={this.rebootOrPowerLinode}
+          data-qa-confirm-cancel
+        >
+          {bootOption === 'reboot' ? 'Reboot' : 'Power Off'}
+        </Button>
+      </ActionsPanel>
+    );
+  };
+
+  closePowerAlert = () => this.setState({ powerAlertOpen: false });
 }
 
 const getDisplayFormat = ({ hash, length }: { hash?: string, length: number }): 'grid' | 'list' => {
@@ -434,8 +450,19 @@ const getDisplayFormat = ({ hash, length }: { hash?: string, length: number }): 
 
 export const styled = withStyles(styles, { withTheme: true });
 
+const typesContext = withTypes(({
+  lastUpdated: typesLastUpdated,
+  loading: typesLoading,
+  request: typesRequest,
+}) => ({
+  typesRequest,
+  typesLoading,
+  typesLastUpdated,
+}));
+
 export const enhanced = compose(
   withRouter,
+  typesContext,
   styled,
   preloaded,
   setDocs(ListLinodes.docs),

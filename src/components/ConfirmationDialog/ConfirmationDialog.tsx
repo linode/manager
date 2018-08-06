@@ -7,13 +7,16 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-type ClassNames = 'root' | 'error';
+type ClassNames = 'root' | 'error' | 'actions';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
   error: {
     color: '#C44742',
     marginTop: theme.spacing.unit * 2,
+  },
+  actions: {
+    justifyContent: 'flex-end',
   },
 });
 
@@ -47,7 +50,7 @@ const ConfirmationDialog: React.StatelessComponent<CombinedProps> = (props) => {
         </DialogContentText>
       }
       </DialogContent>
-      <DialogActions>
+      <DialogActions className={classes.actions}>
         { actions(dialogProps) }
       </DialogActions>
     </Dialog>

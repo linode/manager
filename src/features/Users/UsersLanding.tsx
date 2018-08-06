@@ -202,7 +202,6 @@ class UsersLanding extends React.Component<CombinedProps, State> {
 
   onDeleteCancel = () => {
     this.setState({
-      toDeleteUsername: '',
       deleteConfirmDialogOpen: false,
     });
   }
@@ -292,7 +291,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
                 </Grid>
               </Grid>
               {newUsername &&
-                <Notice success text={`User ${newUsername} created successfully`} /> 
+                <Notice success text={`User ${newUsername} created successfully`} />
               }
               {deletedUsername &&
                 <Notice
