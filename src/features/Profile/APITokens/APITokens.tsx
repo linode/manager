@@ -511,7 +511,7 @@ export class APITokens extends React.Component<CombinedProps, State> {
 
     this.closeRevokeDialog();
 
-    type === 'OAuthx Client Token'
+    type === 'OAuth Client Token'
       ? this.revokeAppToken()
       : this.revokePersonalAccessToken();
   }
