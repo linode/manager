@@ -155,7 +155,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
     const { data, open } = this.state;
     if (!data) { return };
 
-    const truncatedText = this.getTruncatedText(data.description, 200);
+    const truncatedText = this.getTruncatedText(data.description, 175);
     const text = open ? data.description : truncatedText;
 
     return (
