@@ -1,16 +1,18 @@
+import * as classNames from 'classnames';
 import * as H from 'history';
 import * as React from 'react';
 
 import List from '@material-ui/core/List';
+import Paper from '@material-ui/core/Paper';
 import {
   StyleRulesCallback,
   Theme,
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
-import ErrorState from 'src/components/ErrorState';
-import ExpansionPanel from 'src/components/ExpansionPanel';
+import ErrorState from 'src/components/ErrorState'
 import LinearProgress from 'src/components/LinearProgress';
 import PaginationFooter from 'src/components/PaginationFooter';
 
@@ -25,10 +27,21 @@ import ClickableRow from './ClickableRow';
 type ClassNames = 'root'
   | 'icon'
   | 'paginationWrapper'
+  | 'resultsHeading'
+  | 'emptyState'
   | 'loader';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+  root: {
+    marginTop: theme.spacing.unit * 2,
+  },
+  emptyState: {
+    minHeight: '1250px',
+  },
+  resultsHeading: {
+    padding: theme.spacing.unit * 2,
+    fontSize: '1.2em',
+  },
   icon: {
     width: 40,
     height: 40,
@@ -245,19 +258,33 @@ class SearchResultsPanel extends React.Component<CombinedProps, State> {
 
   render() {
     const {
+      classes,
       data,
       label,
     } = this.props;
 
+    /*
+    * we should give a min height to the paper element
+    * if we're loading a new page of results and the previous list
+    * had 25 results, so we don't get page jumping behavior
+    */
+    const shouldHaveMinHeight = (this.state.isLoadingMoreResults && data.data.length === 25);
+
     return (
-      <ExpansionPanel
-        heading={label}
-        key={label}
-        defaultExpanded={!!data.data.length}
-        noPadding
-      >
+      <Paper className={
+        classNames({
+          [classes.root]: true,
+          ...(shouldHaveMinHeight && { [classes.emptyState]: true }),
+        })
+      }>
+        <Typography
+          className={classes.resultsHeading}
+          variant="subheading"
+        >
+          {label}
+        </Typography>
         {this.renderContent()}
-      </ExpansionPanel>
+      </Paper>
     );
   }
 }

@@ -1,5 +1,6 @@
+
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 
 import { compose } from 'ramda';
 
@@ -22,6 +23,7 @@ import { getNodeBalancers } from 'src/services/nodebalancers';
 import { getStackscripts } from 'src/services/stackscripts';
 import { getVolumes } from 'src/services/volumes';
 
+import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import SearchResultsPanel from './SearchResultsPanel';
 
 type ClassNames = 'root' 
@@ -94,30 +96,30 @@ const getFilter = (whichRequest: RequestType, filterTerm: string) => {
     case 'nodebalancer':
       return {
         "label": {
-          ["+contains"]: filterTerm
+          "+contains": filterTerm
         },
       }
     case 'stackscript':
       return {
-        ["+or"]: [{
+        "+or": [{
           "label": {
-            ["+contains"]: filterTerm
+            "+contains": filterTerm
           },
           "description": {
-            ["+contains"]: filterTerm
+            "+contains": filterTerm
           }
         }]
       }
     case 'domain':
       return {
         "domain": {
-          ["+contains"]: filterTerm
+          "+contains": filterTerm
         },
       }
     default:
       return {
         "label": {
-          ["+contains"]: filterTerm
+          "+contains": filterTerm
         },
       }
   }
@@ -384,7 +386,15 @@ export class SearchLanding extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
+const reloaded = reloadableWithRouter(
+  (routePropsOld, routePropsNew) => {
+    // reload if we're on the search landing
+    // and we enter a new term to search for
+    return routePropsOld.location.search !== routePropsNew.location.search;
+  },
+);
+
 export default compose(
-  withRouter,
-  styled
+  styled,
+  reloaded,
 )(SearchLanding);
