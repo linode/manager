@@ -203,20 +203,20 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
     return (
       <React.Fragment>
         <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
-            <Grid item className={classes.titleWrapper}>
-              <IconButton
-                onClick={this.onBackButtonClick}
-                className={classes.backButton}
-              >
-                <KeyboardArrowLeft />
-              </IconButton>
-              <Typography variant="headline" className={classes.title} data-qa-domain-title>
-                {`#${ticket.id}: ${ticket.summary}`}
-                <Chip className={classes.status} label={ticket.status} />
-              </Typography>
-            </Grid>
+          <Grid item className={classes.titleWrapper}>
+            <IconButton
+              onClick={this.onBackButtonClick}
+              className={classes.backButton}
+            >
+              <KeyboardArrowLeft />
+            </IconButton>
+            <Typography variant="headline" className={classes.title} data-qa-domain-title>
+              {`#${ticket.id}: ${ticket.summary}`}
+              <Chip className={classes.status} label={ticket.status} />
+            </Typography>
+          </Grid>
         </Grid>
-        {this.renderEntityLabelWithIcon()}
+        {ticket.entity && this.renderEntityLabelWithIcon()}
         <Grid container direction="column" justify="center" alignItems="center" className={classes.listParent} >
           <ExpandableTicketPanel key={ticket!.id} ticket={ticket} />
           {replies && this.renderReplies(replies)}
