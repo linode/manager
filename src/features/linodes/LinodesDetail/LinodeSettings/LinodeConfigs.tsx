@@ -2,7 +2,6 @@ import { allPass, append, assoc, compose, defaultTo, filter, findIndex, lensPath
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import Button from '@material-ui/core/Button';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -12,6 +11,7 @@ import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
+import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Grid from 'src/components/Grid';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
@@ -231,23 +231,11 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
 
   deleteConfigConfirmationActions = ({ onClose }: { onClose: () => void }) => (
     <ActionsPanel style={{ padding: 0 }}>
-      <Button
-        onClick={this.deleteConfig}
-        variant="raised"
-        color="secondary"
-        className="destructive"
-        data-qa-confirm-delete
-      >
-        Delete
-    </Button>
-      <Button
-        onClick={onClose}
-        variant="raised"
-        color="secondary"
-        className="cancel"
-        data-qa-cancel-delete
-      >
+      <Button onClick={onClose} type="cancel" data-qa-cancel-delete>
         Cancel
+      </Button>
+      <Button type="secondary" destructive onClick={this.deleteConfig} data-qa-confirm-delete>
+        Delete
     </Button>
     </ActionsPanel>
   );

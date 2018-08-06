@@ -2,7 +2,6 @@ import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 
-import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
@@ -14,6 +13,7 @@ import Typography from '@material-ui/core/Typography';
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
+import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
@@ -191,24 +191,8 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
   getActions = () => {
     return (
       <ActionsPanel>
-        <Button
-          variant="raised"
-          color="secondary"
-          className="destructive"
-          onClick={this.removeDomain}
-          data-qa-submit
-        >
-          Confirm
-        </Button>
-        <Button
-          onClick={this.closeRemoveDialog}
-          variant="raised"
-          color="secondary"
-          className="cancel"
-          data-qa-cancel
-        >
-          Cancel
-        </Button>
+        <Button type="cancel" onClick={this.closeRemoveDialog} data-qa-cancel>Cancel</Button>
+        <Button type="secondary" destructive onClick={this.removeDomain} data-qa-submit>Confirm</Button>
       </ActionsPanel>
     )
   }
