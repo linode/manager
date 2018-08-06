@@ -1,6 +1,5 @@
-import * as Promise from 'bluebird';
 import { shim } from 'promise.prototype.finally';
-import { append, flatten, pathOr, range } from 'ramda';
+import { lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
@@ -19,14 +18,17 @@ import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import Placeholder from 'src/components/Placeholder';
 import SideMenu from 'src/components/SideMenu';
+import { RegionsProvider, WithRegionsContext } from 'src/context/regions';
+import { TypesProvider, WithTypesContext } from 'src/context/types';
 import Footer from 'src/features/Footer';
 import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
-import { getLinodeKernels, getLinodeTypes } from 'src/services/linodes';
+import { getLinodeTypes } from 'src/services/linodes';
 import { getRegions } from 'src/services/misc';
 import { getProfile } from 'src/services/profile';
 import { request, response } from 'src/store/reducers/resources';
+import composeState from 'src/utilities/composeState';
 
 import BetaNotification from './BetaNotification';
 
@@ -128,7 +130,8 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   },
 });
 
-interface Props { toggleTheme: () => void;
+interface Props {
+  toggleTheme: () => void;
   longLivedLoaded: boolean;
 }
 
@@ -141,14 +144,87 @@ interface ConnectedProps {
 interface State {
   menuOpen: Boolean;
   betaNotification: Boolean;
+  typesContext: WithTypesContext;
+  regionsContext: WithRegionsContext;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames> & ConnectedProps;
+type CombinedProps =
+  Props &
+  WithStyles<ClassNames> &
+  ConnectedProps;
+
+const typesContext = (path: string[]) => lensPath(['typesContext', ...path]);
+const regionsContext = (path: string[]) => lensPath(['regionsContext', ...path]);
+
+const L = {
+  typesContext: {
+    data: typesContext(['data']),
+    errors: typesContext(['errors']),
+    lastUpdated: typesContext(['lastUpdated']),
+    loading: typesContext(['loading']),
+  },
+  regionsContext: {
+    data: regionsContext(['data']),
+    errors: regionsContext(['errors']),
+    lastUpdated: regionsContext(['lastUpdated']),
+    loading: regionsContext(['loading']),
+  },
+};
 
 export class App extends React.Component<CombinedProps, State> {
+  composeState = composeState;
+
   state = {
     menuOpen: false,
     betaNotification: false,
+    typesContext: {
+      lastUpdated: 0,
+      loading: false,
+      request: () => {
+        this.composeState([set(L.typesContext.loading, true)]);
+
+        return getLinodeTypes()
+          .then((response) => {
+            this.composeState([
+              set(L.typesContext.loading, false),
+              set(L.typesContext.lastUpdated, Date.now()),
+              set(L.typesContext.data, response.data),
+            ])
+          })
+          .catch((error) => {
+            this.composeState([
+              set(L.typesContext.loading, false),
+              set(L.typesContext.lastUpdated, Date.now()),
+              set(L.typesContext.errors, error),
+            ]);
+          });
+      },
+      update: () => null, /** @todo */
+    },
+    regionsContext: {
+      lastUpdated: 0,
+      loading: false,
+      request: () => {
+        this.composeState([set(L.regionsContext.loading, true)]);
+
+        return getRegions()
+          .then((response) => {
+            this.composeState([
+              set(L.regionsContext.loading, false),
+              set(L.regionsContext.lastUpdated, Date.now()),
+              set(L.regionsContext.data, response.data),
+            ])
+          })
+          .catch((error) => {
+            this.composeState([
+              set(L.regionsContext.loading, false),
+              set(L.regionsContext.lastUpdated, Date.now()),
+              set(L.regionsContext.errors, error),
+            ]);
+          });
+      },
+      update: () => null, /** @todo */
+    }
   };
 
   /* Some browsers fire the resize event quite often so throttle it using an Observable */
@@ -173,58 +249,15 @@ export class App extends React.Component<CombinedProps, State> {
       this.setState({ betaNotification: true });
     }
 
-    const promises = [
-      new Promise(() => {
-        request(['regions']);
-        return getRegions()
-          .then(({ data }) => response(['regions', 'data'], data))
-          .catch(error => response(['regions'], error));
-      }),
-      new Promise(() => {
-        request(['types']);
-        return getLinodeTypes()
-          .then(({ data }) => response(['types', 'data'], data))
-          .catch(error => response(['types'], error));
-      }),
-      new Promise(() => {
-        request(['profile']);
-        return getProfile()
-          .then(({ data }) => {
-            response(['profile'], data);
-          })
-          .catch(error => response(['profile'], error));
-      }),
-      new Promise(() => {
-        request(['kernels']);
-        // Get first page of kernels.
-        return getLinodeKernels()
-          .then(({ data: firstPageData, page, pages }) => {
-            // If we only have one page, return it.
-            if (page === pages) { return firstPageData; }
+    request(['profile']);
+    getProfile()
+      .then(({ data }) => {
+        response(['profile'], data);
+      })
+      .catch(error => response(['profile'], error));
 
-            // Create an iterable list of the remaining pages.
-            const remainingPages = range(page + 1, pages + 1);
-
-            return Promise.map(remainingPages, currentPage =>
-              getLinodeKernels(currentPage)
-                .then(response => response.data),
-            )
-              .then(compose(flatten, append(firstPageData)));
-          })
-          .then(data => response(['kernels'], data))
-          .catch(error => response(['kernels'], error));
-      }),
-    ];
-
-    Promise
-      .all(promises)
-      .then((results) => {
-        /**
-         * We don't really need to do anything here. The Redux actions are dispatched
-         * by the individual promises, we have no concept of 'loading'. The consumer of these
-         * cached entities can check their individual status and do what they will with them.
-         */
-      });
+    this.state.regionsContext.request();
+    this.state.typesContext.request();
   }
 
   toggleMenu = () => {
@@ -253,46 +286,50 @@ export class App extends React.Component<CombinedProps, State> {
       <React.Fragment>
         {longLivedLoaded &&
           <React.Fragment>
-            <div className={classes.appFrame}>
-              <SideMenu open={menuOpen} toggle={this.toggleMenu} toggleTheme={toggleTheme} />
-              <main className={classes.content}>
-                <TopMenu toggleSideMenu={this.toggleMenu} />
-                <div className={classes.wrapper}>
-                  <Grid container spacing={0} className={classes.grid}>
-                    <Grid item className={`${classes.switchWrapper} ${hasDoc ? 'mlMain' : ''}`}>
-                      <Switch>
-                        <Route exact path="/dashboard" render={this.Dashboard} />
-                        <Route path="/linodes" component={LinodesRoutes} />
-                        <Route path="/volumes" component={Volumes} />
-                        <Route path="/nodebalancers" component={NodeBalancers} />
-                        <Route path="/domains" component={Domains} />
-                        <Route exact path="/managed" render={this.Managed} />
-                        <Route exact path="/longview" component={Longview}/>
-                        <Route path="/images" component={Images} />
-                        <Route path="/stackscripts" component={StackScripts} />
-                        <Route exact path="/billing" component={Account} />
-                        <Route exact path="/billing/invoices/:invoiceId" component={InvoiceDetail} />
-                        <Route path="/users" component={Users} />
-                        <Route exact path="/support" render={this.Support} />
-                        <Route path="/support/tickets" component={SupportTickets} />
-                        <Route path="/profile" component={Profile} />
-                        {/* Update to Dashboard when complete */}
-                        <Route exact path="/" component={LinodesRoutes} />
-                        <Route component={NotFound} />
-                      </Switch>
-                    </Grid>
-                    <DocsSidebar docs={documentation} />
-                  </Grid>
+            <TypesProvider value={this.state.typesContext}>
+              <RegionsProvider value={this.state.regionsContext}>
+                <div className={classes.appFrame}>
+                  <SideMenu open={menuOpen} toggle={this.toggleMenu} toggleTheme={toggleTheme} />
+                  <main className={classes.content}>
+                    <TopMenu toggleSideMenu={this.toggleMenu} />
+                    <div className={classes.wrapper}>
+                      <Grid container spacing={0} className={classes.grid}>
+                        <Grid item className={`${classes.switchWrapper} ${hasDoc ? 'mlMain' : ''}`}>
+                          <Switch>
+                            <Route exact path="/dashboard" render={this.Dashboard} />
+                            <Route path="/linodes" component={LinodesRoutes} />
+                            <Route path="/volumes" component={Volumes} />
+                            <Route path="/nodebalancers" component={NodeBalancers} />
+                            <Route path="/domains" component={Domains} />
+                            <Route exact path="/managed" render={this.Managed} />
+                            <Route exact path="/longview" component={Longview} />
+                            <Route path="/images" component={Images} />
+                            <Route path="/stackscripts" component={StackScripts} />
+                            <Route exact path="/billing" component={Account} />
+                            <Route exact path="/billing/invoices/:invoiceId" component={InvoiceDetail} />
+                            <Route path="/users" component={Users} />
+                            <Route exact path="/support" render={this.Support} />
+                            <Route path="/support/tickets" component={SupportTickets} />
+                            <Route path="/profile" component={Profile} />
+                            {/* Update to Dashboard when complete */}
+                            <Route exact path="/" component={LinodesRoutes} />
+                            <Route component={NotFound} />
+                          </Switch>
+                        </Grid>
+                        <DocsSidebar docs={documentation} />
+                      </Grid>
+                    </div>
+                  </main>
+                  <Footer />
+                  <BetaNotification
+                    open={this.state.betaNotification}
+                    onClose={this.closeBetaNotice}
+                    data-qa-beta-notice />
+                  <ToastNotifications />
+                  <VolumeDrawer />
                 </div>
-              </main>
-              <Footer />
-            </div>
-            <BetaNotification
-              open={this.state.betaNotification}
-              onClose={this.closeBetaNotice}
-              data-qa-beta-notice />
-            <ToastNotifications />
-            <VolumeDrawer />
+              </RegionsProvider>
+            </TypesProvider>
           </React.Fragment>
         }
       </React.Fragment>
@@ -306,11 +343,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
 );
 
 const mapStateToProps = (state: Linode.AppState) => ({
-  longLivedLoaded:
-    Boolean(pathOr(false, ['resources', 'types', 'data', 'data'], state))
-    && Boolean(pathOr(false, ['resources', 'kernels', 'data'], state))
-    && Boolean(pathOr(false, ['resources', 'profile', 'data'], state))
-    && Boolean(pathOr(false, ['resources', 'regions', 'data'], state)),
+  longLivedLoaded: Boolean(pathOr(false, ['resources', 'profile', 'data'], state)),
   documentation: state.documentation,
 });
 

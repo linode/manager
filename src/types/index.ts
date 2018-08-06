@@ -38,9 +38,6 @@ namespace Linode {
   }
 
   export interface ResourcesState {
-    types: { loading: boolean; data: ResourcePage<Linode.LinodeType>; };
-    regions: { loading: boolean; data: Linode.Region[] };
-    kernels: { loading: boolean; data: Linode.Kernel[] };
     profile: { loading: boolean; data: Linode.Profile };
   }
 
