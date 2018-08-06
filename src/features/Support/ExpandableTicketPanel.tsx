@@ -66,6 +66,8 @@ interface Props {
   reply?: Linode.SupportReply;
   ticket?: Linode.SupportTicket;
   open?: boolean;
+  urlCache: any;
+  addToCache: (id:string, url:string) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -85,6 +87,7 @@ interface Data {
 }
 
 export class ExpandableTicketPanel extends React.Component<CombinedProps, State> {
+  mounted: boolean = false;
   constructor(props:CombinedProps) {
     super(props);
     this.state = {
@@ -92,6 +95,16 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
       gravatarUrl: '',
       data: this.getData(),
     }
+  }
+
+  componentDidMount() {
+    const { data } = this.state;
+    this.mounted = true;
+    if (data) { this.setGravatarUrl(data.gravatar_id); }
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   togglePanel = () => {
@@ -119,7 +132,6 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
         from_linode: reply.from_linode,
       }
     }
-    this.setGravatarUrl(data!.gravatar_id);
     return data!;
   }
 
@@ -130,8 +142,17 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
   }
 
   setGravatarUrl = (gravatarId:string) => {
+    if (!this.mounted) { return; }
+
+    const { addToCache, urlCache } = this.props;
+    if (gravatarId in urlCache) { 
+      this.setState({ gravatarUrl: urlCache[gravatarId] });
+      return;
+    }
+
     getGravatarUrlFromHash(gravatarId)
       .then((url) => {
+        addToCache(gravatarId, url);
         this.setState({ gravatarUrl: url });
       });
   }

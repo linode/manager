@@ -74,6 +74,7 @@ const scrollToBottom = () => {
 }
 
 export class SupportTicketDetail extends React.Component<CombinedProps,State> {
+  urlCache = {};
   state: State = {
     loading: true,
   }
@@ -90,6 +91,11 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
   componentDidMount() {
     this.loadTicket();
     this.loadReplies();
+  }
+
+  addToCache = (gravatarId: string, url:string) => {
+    console.log('adding to cache');
+    this.urlCache[gravatarId] = url; 
   }
 
   loadTicket = () => {
@@ -167,7 +173,13 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
 
   renderReplies = (replies:Linode.SupportReply[]) => {
     return replies.map((reply:Linode.SupportReply, idx:number) => {
-      return <ExpandableTicketPanel key={idx} reply={reply} open={idx === replies.length - 1} />
+      return <ExpandableTicketPanel 
+        key={idx} 
+        reply={reply}
+        open={idx === replies.length - 1}
+        urlCache={this.urlCache}
+        addToCache={this.addToCache}
+      />
     });
   }
 
@@ -218,7 +230,12 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
         </Grid>
         {ticket.entity && this.renderEntityLabelWithIcon()}
         <Grid container direction="column" justify="center" alignItems="center" className={classes.listParent} >
-          <ExpandableTicketPanel key={ticket!.id} ticket={ticket} />
+          <ExpandableTicketPanel
+            key={ticket!.id}
+            ticket={ticket}
+            urlCache={this.urlCache}
+            addToCache={this.addToCache}
+          />
           {replies && this.renderReplies(replies)}
         </Grid>
       </React.Fragment>
