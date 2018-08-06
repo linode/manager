@@ -349,21 +349,21 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
                     },
                   });
                 }}
-                onEdit={() => openForEdit(
+                onEdit={() => this.props.openForEdit(
                   volume.id,
                   label,
                   size,
                   regionID,
                   linodeLabel,
                 )}
-                onResize={() => openForResize(
+                onResize={() => this.props.openForResize(
                   volume.id,
                   label,
                   size,
                   regionID,
                   linodeLabel,
                 )}
-                onClone={() => openForClone(
+                onClone={() => this.props.openForClone(
                   volume.id,
                   label,
                   size,
@@ -540,7 +540,7 @@ const styled = withStyles(styles, { withTheme: true });
 const documented = setDocs(VolumesLanding.docs);
 
 export default compose<Linode.TodoAny, Linode.TodoAny, Linode.TodoAny, Linode.TodoAny>(
-  documented,
   connected,
+  documented,
   styled,
 )(VolumesLanding);
