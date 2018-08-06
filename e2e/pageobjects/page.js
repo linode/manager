@@ -70,10 +70,8 @@ export default class Page {
         
         this.panels.forEach(panel => {
             panel.click();
-            browser.waitUntil(function() {
-                console.log('clicking panel!');
-                return panel.getAttribute('aria-expanded').includes('true');
-            }, constants.wait.normal);
+            // throttle expanding panels with a pause
+            browser.pause(500);
         });
 
     }
