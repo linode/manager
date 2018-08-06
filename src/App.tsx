@@ -82,6 +82,10 @@ const Longview = DefaultLoader({
   loader: () => import('src/features/Longview'),
 });
 
+const Managed = DefaultLoader({
+  loader: () => import('src/features/Managed'),
+});
+
 type ClassNames = 'appFrame'
   | 'content'
   | 'wrapper'
@@ -273,8 +277,6 @@ export class App extends React.Component<CombinedProps, State> {
 
   Dashboard = () => <Placeholder title="Dashboard" />;
 
-  Managed = () => <Placeholder title="Managed" />;
-
   Support = () => <Placeholder title="Support" />;
 
   render() {
@@ -301,7 +303,7 @@ export class App extends React.Component<CombinedProps, State> {
                             <Route path="/volumes" component={Volumes} />
                             <Route path="/nodebalancers" component={NodeBalancers} />
                             <Route path="/domains" component={Domains} />
-                            <Route exact path="/managed" render={this.Managed} />
+                            <Route exact path="/managed" component={Managed} />
                             <Route exact path="/longview" component={Longview} />
                             <Route path="/images" component={Images} />
                             <Route path="/stackscripts" component={StackScripts} />
