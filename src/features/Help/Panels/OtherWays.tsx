@@ -42,7 +42,7 @@ interface State {}
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class OtherWays extends React.Component<CombinedProps, State> {
+export class OtherWays extends React.Component<CombinedProps, State> {
   state: State = {};
 
   ada: any = undefined;

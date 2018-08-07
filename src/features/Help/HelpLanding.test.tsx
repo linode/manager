@@ -11,7 +11,15 @@ describe('Help Landing', () => {
       }}
     />
   )
-  it('should do the thing...', () => {
-    expect(component);
+  it('should render search panel', () => {
+    expect(component.find('WithStyles(SearchPanel)')).toHaveLength(1);
+  });
+
+  it('should render popular posts panel', () => {
+    expect(component.find('WithStyles(PopularPosts)')).toHaveLength(1);
+  });
+
+  it('should render other ways panel', () => {
+    expect(component.find('WithStyles(OtherWays)')).toHaveLength(1);
   });
 });
