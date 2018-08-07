@@ -16,6 +16,7 @@ import { getGravatarUrlFromHash } from 'src/utilities/gravatar';
 type ClassNames = 'root'
   | 'userWrapper'
   | 'leftIcon'
+  | 'userName'
   | 'paper'
   | 'paperOpen'
   | 'avatarCol'
@@ -29,7 +30,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     width: '100%',
     padding: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing.unit,
+    position: 'relative',
   },
   userWrapper: {
     marginTop: theme.spacing.unit / 2,
@@ -39,17 +41,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     borderRadius: '50%',
     width: 40,
     height: 40,
-    transition: theme.transitions.create(['box-shadow']),
-    [theme.breakpoints.down('sm')]: {
-      margin: 0,
-      width: '40px',
-      height: '40px',
-    },
   },
   leftIcon: {
     width: '100%',
     height: '100%',
     borderRadius: '50%',
+  },
+  userName: {
+    whiteSpace: 'nowrap',
   },
   paper: {
     padding: theme.spacing.unit * 3,
@@ -62,6 +61,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
   userCol: {
     minWidth: 100,
+    paddingRight: theme.spacing.unit * 4,
+
   },
   descCol: {},
   expCol: {
@@ -72,6 +73,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     position: 'relative',
     top: -theme.spacing.unit,
     left: theme.spacing.unit,
+    [theme.breakpoints.down('sm')]: {
+      position: 'absolute',
+      top: 16,
+      right: 16,
+      left: 'auto',
+    },
   },
   toggle: {
     height: 24,
@@ -178,24 +185,41 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
     return (
       <Grid item className={classes.root}>
         <Paper className={open ? classes.paperOpen : classes.paper}>
-          <Grid container direction="row" wrap="nowrap" justify="space-between" alignItems="flex-start">
-            <Grid item sm={3} className={classes.userCol}>
-              <Grid container>
+          <Grid container direction="row" justify="space-between" alignItems="flex-start">
+            <Grid 
+              item
+              xs={11}
+              sm={5}
+              md={3}
+              className={classes.userCol}
+            >
+              <Grid container wrap="nowrap">
                 <Grid item>
                   {this.renderAvatar()}
                 </Grid>
                 <Grid item>
-                  <Typography>{data.username}</Typography>
+                  <Typography className={classes.userName}>{data.username}</Typography>
                   {data.from_linode && <Typography variant="body1">Linode Expert</Typography>}
                   <Typography><DateTimeDisplay value={data.date} format={'YYYY/MM/DD - h:ssa'}/></Typography>
                   </Grid>
                 </Grid>
               </Grid>
-            <Grid item sm={truncatedText !== data.description ? 8 : 9} className={classes.descCol}>
+            <Grid 
+              item 
+              xs={truncatedText !== data.description ? 11 : 12} 
+              sm={truncatedText !== data.description ? 6 : 7} 
+              md={truncatedText !== data.description ? 8 : 9} 
+              className={classes.descCol}
+            >
               <Typography>{text}</Typography>
             </Grid>
             {truncatedText !== data.description &&
-              <Grid item sm={1} onClick={this.togglePanel} className={classes.expCol}>
+              <Grid
+                item
+                xs={1}
+                onClick={this.togglePanel}
+                className={classes.expCol}
+              >
                 <IconButton className={classes.expButton}>
                   {open ? <Collapse className={classes.toggle} /> : <Expand className={classes.toggle} />}
                 </IconButton>
