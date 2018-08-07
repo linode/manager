@@ -4,32 +4,40 @@ import * as React from 'react';
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Add from '@material-ui/icons/Add';
-import Remove from '@material-ui/icons/Remove';
 
+import Collapse from 'src/assets/icons/minus-square.svg';
+import Expand from 'src/assets/icons/plus-square.svg';
 import UserIcon from 'src/assets/icons/user.svg';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
+import IconButton from 'src/components/IconButton';
 
-type ClassNames = 'root' |
-  'userWrapper' |
-  'leftIcon' |
-  'paper' |
-  'paperOpen' |
-  'toggle';
+type ClassNames = 'root'
+  | 'userWrapper'
+  | 'leftIcon'
+  | 'paper'
+  | 'paperOpen'
+  | 'avatarCol'
+  | 'userCol'
+  | 'descCol'
+  | 'expCol'
+  | 'expButton'
+  | 'toggle';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     width: '100%',
-    minHeight: 100,
     padding: theme.spacing.unit * 2,
-    marginTop: theme.spacing.unit * 3,
+    marginBottom: theme.spacing.unit * 2,
   },
   userWrapper: {
-    marginRight: theme.spacing.unit,
+    marginTop: theme.spacing.unit / 2,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     borderRadius: '50%',
-    width: '46px',
-    height: '46px',
+    width: 40,
+    height: 40,
     transition: theme.transitions.create(['box-shadow']),
     [theme.breakpoints.down('sm')]: {
       margin: 0,
@@ -41,23 +49,32 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     width: '100%',
     height: '100%',
     borderRadius: '50%',
-    marginLeft: theme.spacing.unit * 2,
   },
   paper: {
-    minHeight: 180,
-    maxHeight: 180,
     padding: theme.spacing.unit * 3,
-    overflow: 'hidden',
   },
   paperOpen: {
-    minHeight: 180,
-    maxHeight: 'fit-content',
     padding: theme.spacing.unit * 3,
   },
+  avatarCol: {
+    minWidth: 60,
+  },
+  userCol: {
+    minWidth: 100,
+  },
+  descCol: {},
+  expCol: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+  },
+  expButton: {
+    position: 'relative',
+    top: -theme.spacing.unit,
+    left: theme.spacing.unit,
+  },
   toggle: {
-    height: 25,
-    width: 25,
-    border: 'solid 1px black',
+    height: 24,
+    width: 24,
   }
 });
 
@@ -159,21 +176,27 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
     return (
       <Grid item className={classes.root}>
         <Paper className={open ? classes.paperOpen : classes.paper}>
-          <Grid container direction="row" wrap="nowrap" justify="flex-start" alignItems="flex-start" style={{ height: '100%' }}>
-            <Grid item xs={1} >
-              {this.renderAvatar()}
-            </Grid>
-            <Grid item xs={2}>
-              <Typography variant="body1" >{data.username}</Typography>
-              {data.from_linode && <Typography variant="body1">Linode Expert</Typography>}
-              <Typography variant="body1" ><DateTimeDisplay value={data.date} format={'YYYY/MM/DD - h:ssa'}/></Typography>
-            </Grid>
-            <Grid item xs={8}>
-              <Typography variant="body1">{text}</Typography>
+          <Grid container direction="row" wrap="nowrap" justify="space-between" alignItems="flex-start">
+            <Grid item sm={3} className={classes.userCol}>
+              <Grid container>
+                <Grid item>
+                  {this.renderAvatar()}
+                </Grid>
+                <Grid item>
+                  <Typography>{data.username}</Typography>
+                  {data.from_linode && <Typography variant="body1">Linode Expert</Typography>}
+                  <Typography><DateTimeDisplay value={data.date} format={'YYYY/MM/DD - h:ssa'}/></Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
+            <Grid item sm={truncatedText !== data.description ? 8 : 9} className={classes.descCol}>
+              <Typography>{text}</Typography>
             </Grid>
             {truncatedText !== data.description &&
-              <Grid item xs={1} onClick={this.togglePanel} >
-                {open ? <Remove className={classes.toggle} /> : <Add className={classes.toggle} />}
+              <Grid item sm={1} onClick={this.togglePanel} className={classes.expCol}>
+                <IconButton className={classes.expButton}>
+                  {open ? <Collapse className={classes.toggle} /> : <Expand className={classes.toggle} />}
+                </IconButton>
               </Grid>
             }
           </Grid>

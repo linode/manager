@@ -21,12 +21,14 @@ import { getGravatarUrlFromHash } from 'src/utilities/gravatar';
 
 import ExpandableTicketPanel from '../ExpandableTicketPanel';
 
-type ClassNames = 'root' |
-  'title' |
-  'titleWrapper' |
-  'backButton' |
-  'listParent' |
-  'status';
+type ClassNames = 'root' 
+  | 'title'
+  | 'titleWrapper'
+  | 'backButton'
+  | 'listParent'
+  | 'label'
+  | 'labelIcon'
+  | 'status';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
@@ -45,6 +47,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
       width: 34,
       height: 34,
     },
+  },
+  label: {
+    marginBottom: theme.spacing.unit,
+  },
+  labelIcon: {
+    marginLeft: -theme.spacing.unit,
+    paddingRight: 0,
   },
   listParent: {
   },
@@ -162,11 +171,17 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
   }
 
   renderEntityLabelWithIcon = () => {
+    const { classes } = this.props;
     const { label, type } = this.state.ticket!.entity;
     const icon:JSX.Element = this.getEntityIcon(type);
     return (
-      <Grid container alignItems="center" justify="flex-start">
-        <Grid item>
+      <Grid
+        container
+        alignItems="center"
+        justify="flex-start"
+        className={classes.label}
+      >
+        <Grid item className={classes.labelIcon}>
           {icon}
         </Grid>
         <Grid item>
