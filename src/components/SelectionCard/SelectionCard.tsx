@@ -54,6 +54,8 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
 
   },
   icon: {
+    display: 'flex',
+    justifyContent: 'flex-end',
     '& svg, & span': {
       fontSize: '32px',
       color: '#939598',
@@ -162,6 +164,7 @@ class SelectionCard extends React.PureComponent<CombinedProps, {}> {
       <Grid
         container
         alignItems="center"
+        justify="space-between"
         className={classes.innerGrid}
       >
         {renderIcon &&
@@ -169,7 +172,11 @@ class SelectionCard extends React.PureComponent<CombinedProps, {}> {
             {renderIcon()}
           </Grid>
         }
-        <Grid item className={classes.flex}>
+        <Grid
+          item
+          xs={10}
+          className={classes.flex}
+        >
           <div className={classes.heading} data-qa-select-card-heading={heading}>
             {heading}
           </div>
@@ -182,18 +189,18 @@ class SelectionCard extends React.PureComponent<CombinedProps, {}> {
             );
           })}
         </Grid>
-
-        {checked &&
-          <Fade in={checked}>
-            <Grid
-              item
-              className={`${classes.icon} ${classes.checked}`}
-              data-qa-checked={checked}
-            >
+        <Grid
+          item
+          className={`${classes.icon} ${classes.checked}`}
+          data-qa-checked={checked}
+          xs={2}
+        >
+          {checked &&
+            <Fade in={checked}>
               <Check />
-            </Grid>
-          </Fade>
-        }
+            </Fade>
+          }
+        </Grid>
       </Grid>
     )
   }
