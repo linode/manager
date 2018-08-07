@@ -14,7 +14,11 @@ import SearchPanel from './Panels/SearchPanel';
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {},
+  root: {
+    [theme.breakpoints.up('sm')]: {
+      padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 14}px`,
+    },
+  },
 });
 
 interface Props {}
@@ -27,12 +31,14 @@ export class HelpLanding extends React.Component<CombinedProps, State> {
   state: State = {};
 
   render() {
+    const { classes } = this.props;
+
     return (
-      <React.Fragment>
+      <div className={classes.root}>
         <SearchPanel />
         <PopularPosts />
         <OtherWays />
-      </React.Fragment>
+      </div>
     );
   }
 }
