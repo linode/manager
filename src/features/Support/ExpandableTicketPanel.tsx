@@ -11,6 +11,8 @@ import UserIcon from 'src/assets/icons/user.svg';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
 import IconButton from 'src/components/IconButton';
+import { getGravatarUrlFromHash } from 'src/utilities/gravatar';
+
 
 type ClassNames = 'root'
   | 'userWrapper'
@@ -89,7 +91,8 @@ interface Props {
   reply?: Linode.SupportReply;
   ticket?: Linode.SupportTicket;
   open?: boolean;
-  gravatarUrl: string;
+  addToCache: (url:string, gravatarId:string) => void;
+  urlCache: any;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -97,6 +100,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 interface State {
   open: boolean;
   data?: Data;
+  gravatarUrl?: string;
 }
 
 interface Data {
@@ -150,6 +154,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
         from_linode: reply.from_linode,
       }
     }
+    this.setGravatarUrl(data!.gravatar_id);
     return data!;
   }
 
@@ -159,17 +164,30 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
       : str
   }
 
+  setGravatarUrl = (gravatarId:string) => {
+    if (gravatarId in this.props.urlCache) {
+      console.log('using cached value');
+      this.setState({ gravatarUrl: this.props.urlCache[gravatarId] });
+    } else {
+      console.log('requesting from Gravatar');
+      getGravatarUrlFromHash(gravatarId)
+        .then((response) => {
+          this.props.addToCache(response, gravatarId);
+          this.setState({ gravatarUrl: response });
+        })
+    }
+  }
+
   renderAvatar() {
-    const { classes, gravatarUrl } = this.props;
-    if (!gravatarUrl) { return null; }
-    return (gravatarUrl !== 'not found'
+    const { classes } = this.props;
+    const { gravatarUrl = 'not found' } = this.state;
+    return (gravatarUrl !== 'not found')
       ? <div className={classes.userWrapper}>
           <img src={gravatarUrl} className={classes.leftIcon} />
         </div>
       : <div className={classes.userWrapper}>
           <UserIcon className={classes.leftIcon} />
         </div>
-    );
   }
   
   render() {

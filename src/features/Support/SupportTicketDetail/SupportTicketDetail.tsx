@@ -17,8 +17,6 @@ import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import { getTicket, getTicketReplies } from 'src/services/support';
-import { getGravatarUrlFromHash } from 'src/utilities/gravatar';
-
 import ExpandableTicketPanel from '../ExpandableTicketPanel';
 
 type ClassNames = 'root' 
@@ -71,6 +69,7 @@ interface State {
   errors?: Linode.ApiFieldError[];
   replies?: Linode.SupportReply[];
   ticket?: Linode.SupportTicket;
+  urlCache: any;
 }
 
 type CombinedProps = RouteProps & WithStyles<ClassNames>;
@@ -84,9 +83,9 @@ const scrollToBottom = () => {
 }
 
 export class SupportTicketDetail extends React.Component<CombinedProps,State> {
-  urlCache = {};
   state: State = {
     loading: true,
+    urlCache: {},
   }
 
   static docs: Linode.Doc[] = [
@@ -103,13 +102,10 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
     this.loadReplies();
   }
 
-  getGravatarUrl = (gravatarId:string) => {
-    if (gravatarId in this.urlCache) { return this.urlCache[gravatarId]; }
-    getGravatarUrlFromHash(gravatarId)
-      .then((url) => {
-        this.urlCache[gravatarId] = url;
-        return url;
-      });
+  addToCache = (url:string, gravatarId:string) => {
+    if (url in this.state.urlCache) { return; }
+    console.log('adding to cache');
+    this.setState({ urlCache: {gravatarId: url} });
   }
 
   loadTicket = () => {
@@ -197,7 +193,8 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
         key={idx} 
         reply={reply}
         open={idx === replies.length - 1}
-        gravatarUrl={this.getGravatarUrl(reply.gravatar_id)}
+        addToCache={this.addToCache}
+        urlCache={this.state.urlCache}
       />
     });
   }
@@ -252,7 +249,8 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
           <ExpandableTicketPanel
             key={ticket!.id}
             ticket={ticket}
-            gravatarUrl={this.getGravatarUrl(ticket.gravatar_id)}
+            addToCache={this.addToCache}
+            urlCache={this.state.urlCache}
           />
           {replies && this.renderReplies(replies)}
         </Grid>
@@ -262,8 +260,6 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
 }
 
 const styled = withStyles(styles, { withTheme: true });
-
-
 
 export default compose<any,any,any>(
   setDocs(SupportTicketDetail.docs),
