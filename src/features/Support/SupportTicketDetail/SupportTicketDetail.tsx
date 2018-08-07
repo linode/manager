@@ -1,6 +1,7 @@
 import * as Bluebird from 'bluebird';
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 
 import Chip from '@material-ui/core/Chip';
@@ -67,6 +68,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 type RouteProps = RouteComponentProps<{ ticketId?: number }>;
 
+interface ConnectedProps {
+  profileUsername: string;
+}
+
 interface State {
   loading: boolean;
   errors?: Linode.ApiFieldError[];
@@ -74,7 +79,7 @@ interface State {
   ticket?: Linode.SupportTicket;
 }
 
-type CombinedProps = RouteProps & WithStyles<ClassNames>;
+type CombinedProps = RouteProps & ConnectedProps & WithStyles<ClassNames>;
 
 const scrollToBottom = () => {
   window.scroll({
@@ -84,7 +89,8 @@ const scrollToBottom = () => {
   });
 }
 
-export class SupportTicketDetail extends React.Component<CombinedProps, State> {
+export class SupportTicketDetail extends React.Component<CombinedProps,State> {
+  mounted: boolean = false;
   state: State = {
     loading: true,
   }
@@ -99,6 +105,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
   ];
 
   componentDidMount() {
+    this.mounted = true;
     this.loadTicket();
     this.loadReplies();
   }
@@ -108,13 +115,15 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
     if (!ticketId) { return; }
     getTicket(ticketId)
       .then((response) => {
+        if (!this.mounted) { return; }
         this.setState({
           ticket: response.data,
           loading: false,
         }, scrollToBottom)
       })
       .catch((errors) => {
-        const status = pathOr(400, ['response', 'data', 'status'], errors);
+        if (!this.mounted) { return; }
+        const status = pathOr(400, ['response','data','status'], errors);
         const error = (status === 404)
           ? [{ reason: 'Ticket could not be found.' }]
           : [{ reason: 'There was an error retrieving your ticket.' }]
@@ -156,15 +165,25 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
         }));
       })
       .catch((errors) => {
+        if (!this.mounted) { return; }
         this.setState({
-          errors: pathOr([{ reason: 'There was an error retrieving your ticket.' }], ['response', 'data', 'errors'], errors),
+          errors: pathOr(
+            [{ reason: 'There was an error retrieving your ticket.' }],
+            ['response', 'data', 'errors'], errors),
           loading: false,
         })
       })
   }
 
   onBackButtonClick = () => {
-    this.props.history.push('/support/tickets');
+    const { ticket } = this.state;
+    if (!ticket) { this.props.history.push('/support/tickets'); }
+    else {
+      this.props.history.push({
+        pathname: '/support/tickets',
+        state:{ openFromRedirect: ['open','new'].includes(ticket.status)}
+      });
+    }
   }
 
   getEntityIcon = (type: string) => {
@@ -209,12 +228,13 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
         key={idx}
         reply={reply}
         open={idx === replies.length - 1}
+        isCurrentUser={this.props.profileUsername === reply.created_by}
       />
     });
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, profileUsername } = this.props;
     const { errors, loading, replies, ticket } = this.state;
 
     /*
@@ -263,6 +283,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
           <ExpandableTicketPanel
             key={ticket!.id}
             ticket={ticket}
+            isCurrentUser={profileUsername === ticket.opened_by}
           />
           {replies && this.renderReplies(replies)}
         </Grid>
@@ -273,7 +294,15 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default compose<any, any, any>(
+const mapStateToProps = (state: Linode.AppState) => ({
+  profileUsername: pathOr('', ['resources', 'profile', 'data', 'username'], state),
+});
+
+export const connected = connect(mapStateToProps);
+
+
+export default compose<any,any,any,any>(
   setDocs(SupportTicketDetail.docs),
   styled,
+  connected,
 )(SupportTicketDetail)

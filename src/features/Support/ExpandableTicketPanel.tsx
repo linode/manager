@@ -82,13 +82,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   toggle: {
     height: 24,
     width: 24,
-  }
+  },
 });
 
 interface Props {
   reply?: Linode.SupportReply;
   ticket?: Linode.SupportTicket;
   open?: boolean;
+  isCurrentUser: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -130,7 +131,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
   }
 
   getData = () => {
-    const { ticket, reply } = this.props;
+    const { ticket, reply, isCurrentUser } = this.props;
     if (!ticket && !reply) { return; }
     let data: Data;
     if (ticket) {
@@ -139,7 +140,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
         gravatarUrl: 'not found', /** @todo fix this! */
         date: ticket.opened,
         description: ticket.description,
-        username: "you",
+        username: isCurrentUser ? "you" : ticket.opened_by,
         from_linode: false,
       }
     } else if (reply) {

@@ -1,4 +1,4 @@
-import { compose, } from 'ramda';
+import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 
 import AppBar from '@material-ui/core/AppBar';
@@ -24,7 +24,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props {}
+interface Props {
+  history: any;
+}
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 interface State {
@@ -34,10 +36,14 @@ interface State {
   newTicket?: Linode.SupportTicket;
 }
 
-export class SupportTicketsLanding extends React.Component<CombinedProps, State> {
-  state: State = {
-    value: 0,
-    drawerOpen: false,
+export class SupportTicketsLanding extends React.Component<CombinedProps, State> {  
+  constructor(props:CombinedProps) {
+    super(props);
+    const open = pathOr(true, ['history', 'location', 'state', 'openFromRedirect'], this.props);
+    this.state = {
+      value: open ? 0 : 1,
+      drawerOpen: false,
+    }
   }
 
   handleChange = (event:React.ChangeEvent<HTMLDivElement>, value:number) => {
