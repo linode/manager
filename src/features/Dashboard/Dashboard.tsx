@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
 import Grid from 'src/components/Grid';
 
@@ -10,6 +11,7 @@ import LinodesDashboardCard from './LinodesDashboardCard';
 import NodeBalancersDashboardCard from './NodeBalancersDashboardCard';
 import TransferDashboardCard from './TransferDashboardCard';
 import VolumesDashboardCard from './VolumesDashboardCard';
+
 
 type ClassNames = 'root';
 
@@ -29,6 +31,9 @@ class Dashboard extends React.Component<CombinedProps, State> {
   render() {
     return (
       <Grid container>
+        <Grid item xs={12}>
+          <Typography variant="headline">Dashboard</Typography>
+        </Grid>
         <Grid item xs={7}>
           <LinodesDashboardCard />
           <VolumesDashboardCard />
