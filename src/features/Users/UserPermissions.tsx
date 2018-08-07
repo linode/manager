@@ -357,6 +357,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             <Toggle
               checked={checked}
               onChange={this.globalPermOnChange(perm)}
+              data-qa-global-permission={perm}
             />
           }
         />
@@ -376,9 +377,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     if (!(grants && grants.global)) { return null; }
     return (
       <div className={classes.section}>
-        <Grid container className={classes.section}>
+        <Grid container className={classes.section} data-qa-billing-section>
           <Grid item>
-            <Typography variant="subheading">
+            <Typography variant="subheading" data-qa-permissions-header="billing">
               Billing Access
             </Typography>
           </Grid>
@@ -389,18 +390,21 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             subheadings={['The user cannot view any billing information.']}
             checked={grants.global.account_access === null}
             onClick={this.billingPermOnClick(null)}
+            data-qa-billing-access="None"
           />
           <SelectionCard
             heading="Read Only"
             subheadings={['Can view invoices, view billing info, and will receive copies of all invoices and payment emails.']}
             checked={grants.global.account_access === 'read_only'}
             onClick={this.billingPermOnClick('read_only')}
+            data-qa-billing-access="Read Only"
           />
           <SelectionCard
             heading="Read-Write"
             subheadings={['Can make payments, update contact and billing info, and will receive copies of all invoices and payment emails']}
             checked={grants.global.account_access === 'read_write'}
             onClick={this.billingPermOnClick('read_write')}
+            data-qa-billing-access="Read-Write"
           />
         </Grid>
       </div>
@@ -419,12 +423,14 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           type="primary"
           loading={loading}
           onClick={onConfirm}
+          data-qa-submit
         >
           Save
         </Button>
         <Button
           type="cancel"
           onClick={onCancel}
+          data-qa-cancel
         >
           Cancel
         </Button>
@@ -436,8 +442,8 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     const { classes } = this.props;
     const { grants, success, saving } = this.state;
     return (
-      <Paper className={classes.globalSection}>
-        <Typography variant="title">
+      <Paper className={classes.globalSection} data-qa-global-section>
+        <Typography variant="title" data-qa-permissions-header="Global Permissions">
           Global Permissions
         </Typography>
         {success && success.global &&
@@ -508,7 +514,11 @@ class UserPermissions extends React.Component<CombinedProps, State> {
 
     return (
       <div key={entity} className={classes.section}>
-        <Typography variant="subheading" className={classes.tableSubheading}>
+        <Typography
+          variant="subheading"
+          className={classes.tableSubheading}
+          data-qa-permissions-header={entityNameMap[entity]}
+          >
           {entityNameMap[entity]}
         </Typography>
         <Table className={classes.grantTable}>
@@ -527,6 +537,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                     checked={this.entityIsAll(entity, null)}
                     value="null"
                     onChange={this.entitySetAllTo(entity, null)}
+                    data-qa-permission-header="None"
                   />
                 </label>
               </TableCell>
@@ -540,6 +551,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                     checked={this.entityIsAll(entity, 'read_only')}
                     value="read_only"
                     onChange={this.entitySetAllTo(entity, 'read_only')}
+                    data-qa-permission-header="Read Only"
                   />
                 </label>
               </TableCell>
@@ -553,6 +565,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                     checked={this.entityIsAll(entity, 'read_write')}
                     value="read_write"
                     onChange={this.entitySetAllTo(entity, 'read_write')}
+                    data-qa-permission-header="Read-Write"
                   />
                 </label>
               </TableCell>
@@ -561,7 +574,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           <TableBody>
             {entityGrants.map((grant, idx) => {
               return (
-                <TableRow key={grant.id}>
+                <TableRow key={grant.id} data-qa-specific-grant={grant.label}>
                   <TableCell>
                     {grant.label}
                   </TableCell>
@@ -573,6 +586,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                       checked={grant.permissions === null}
                       value="null"
                       onChange={this.setGrantTo(entity, idx, null)}
+                      data-qa-permission="None"
                     />
                   </TableCell>
                   <TableCell
@@ -583,6 +597,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                       checked={grant.permissions === 'read_only'}
                       value="read_only"
                       onChange={this.setGrantTo(entity, idx, 'read_only')}
+                      data-qa-permission="Read Only"
                     />
                   </TableCell>
                   <TableCell
@@ -593,6 +608,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                       checked={grant.permissions === 'read_write'}
                       value="read_write"
                       onChange={this.setGrantTo(entity, idx, 'read_write')}
+                      data-qa-permission="Read-Write"
                     />
                   </TableCell>
                 </TableRow>
@@ -617,10 +633,10 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     const { classes } = this.props;
     const { grants, success, setAllPerm, saving } = this.state;
     return (
-      <Paper className={classes.globalSection}>
+      <Paper className={classes.globalSection} data-qa-entity-section>
         <Grid container justify="space-between" alignItems="center">
           <Grid item>
-            <Typography variant="title">
+            <Typography variant="title" data-qa-permissions-header="Specifc Grants">
               Specific Grants
             </Typography>
           </Grid>
@@ -687,7 +703,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     /* TODO: render all permissions disabled with this message above */
     return (
       <Paper className={classes.unrestrictedRoot}>
-        <Typography>
+        <Typography data-qa-unrestricted-msg>
           This user has unrestricted access to the account.
         </Typography>
       </Paper>
@@ -707,14 +723,14 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         }
         <Grid container className={`${classes.topGrid} ${'py0'}`} justify="space-between" alignItems="center">
           <Grid item className={classes.titleWrapper}>
-            <Typography variant="title">
+            <Typography variant="title" data-qa-update-permissions-header>
               Update User Permissions
             </Typography>
           </Grid>
           <Grid item className="p0">
             <Grid container alignItems="center" style={{ width: 'auto' }}>
               <Grid item>
-                <Typography variant="title">
+                <Typography variant="title" data-qa-restrict-access={restricted}>
                   Restrict Access:
                 </Typography>
               </Grid>
