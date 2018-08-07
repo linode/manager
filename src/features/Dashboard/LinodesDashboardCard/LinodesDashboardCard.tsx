@@ -12,6 +12,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 
+import Grid from 'src/components/Grid';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
@@ -26,21 +27,17 @@ import DashboardCard from '../DashboardCard';
 
 type ClassNames =
   'root'
-  | 'statusCol'
   | 'labelCol'
   | 'moreCol'
   | 'actionsCol';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
-  statusCol: {
-    width: '5%',
-  },
   labelCol: {
-    width: '42%',
+    width: '60%',
   },
   moreCol: {
-    width: '43%',
+    width: '30%',
   },
   actionsCol: {
     width: '10%',
@@ -164,16 +161,26 @@ class LinodesDashboardCard extends React.Component<CombinedProps, State> {
 
     return data.map(({ id, label, region, status, type }) => (
       <TableRow key={label}>
-        <TableCell className={classes.statusCol}>
-          <LinodeStatusIndicator status={status} />
-        </TableCell>
         <TableCell className={classes.labelCol}>
-          <Typography variant="subheading">
-            <Link to={`/linodes/${id}`}>{label}</Link>
-          </Typography>
-          <Typography>
-            { typesData && displayType(type, typesData || []) }
-          </Typography>
+          <Grid container wrap="nowrap">
+            <Grid item>
+              <LinodeStatusIndicator status={status} />
+            </Grid>
+            <Grid item>
+              <Grid container direction="column">
+                <Grid item className="py0">
+                  <Link to={`/linodes/${id}`}>
+                    <Typography variant="subheading">{label}</Typography>
+                  </Link>
+                </Grid>
+                <Grid item className="py0">
+                  <Typography>
+                    { typesData && displayType(type, typesData || []) }
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
         </TableCell>
         <Hidden xsDown>
           <TableCell className={classes.moreCol}>

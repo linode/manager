@@ -3,10 +3,13 @@ import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
 import Grid from 'src/components/Grid';
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'title';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
+  title: {
+    marginTop: theme.spacing.unit * 3,
+  },
 });
 
 interface Props {
@@ -17,12 +20,18 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const DashboardCard: React.StatelessComponent<CombinedProps> = (props) => {
-  const { title, headerAction } = props;
+  const { title, headerAction, classes } = props;
   return (
     <Grid container>
       <Grid item xs={12}>
         <Grid container>
-          {title && <Grid item xs={6}><Typography variant="title">{title}</Typography></Grid>}
+          {title && 
+            <Grid item xs={6} className={'py0'}>
+              <Typography variant="title" className={classes.title}>
+                {title}
+              </Typography>
+            </Grid>
+          }
           {headerAction && <Grid item xs={6} style={{ textAlign: 'right' }}>{headerAction()}</Grid>}
         </Grid>
       </Grid>
