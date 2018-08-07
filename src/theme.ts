@@ -497,6 +497,7 @@ const LinodeTheme: Linode.Theme = {
       },
       icon: {
         marginTop: -2,
+        marginRight: 4,
         width: 28,
         height: 28,
         transition: 'color 225ms ease-in-out',
