@@ -17,6 +17,7 @@ import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import { getTicket, getTicketReplies } from 'src/services/support';
+import { getGravatarUrlFromHash } from 'src/utilities/gravatar';
 
 import ExpandableTicketPanel from '../ExpandableTicketPanel';
 
@@ -93,9 +94,13 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
     this.loadReplies();
   }
 
-  addToCache = (gravatarId: string, url:string) => {
-    console.log('adding to cache');
-    this.urlCache[gravatarId] = url; 
+  getGravatarUrl = (gravatarId:string) => {
+    if (gravatarId in this.urlCache) { return this.urlCache[gravatarId]; }
+    getGravatarUrlFromHash(gravatarId)
+      .then((url) => {
+        this.urlCache[gravatarId] = url;
+        return url;
+      });
   }
 
   loadTicket = () => {
@@ -177,8 +182,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
         key={idx} 
         reply={reply}
         open={idx === replies.length - 1}
-        urlCache={this.urlCache}
-        addToCache={this.addToCache}
+        gravatarUrl={this.getGravatarUrl(reply.gravatar_id)}
       />
     });
   }
@@ -233,8 +237,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
           <ExpandableTicketPanel
             key={ticket!.id}
             ticket={ticket}
-            urlCache={this.urlCache}
-            addToCache={this.addToCache}
+            gravatarUrl={this.getGravatarUrl(ticket.gravatar_id)}
           />
           {replies && this.renderReplies(replies)}
         </Grid>

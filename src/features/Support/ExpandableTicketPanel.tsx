@@ -10,7 +10,6 @@ import Remove from '@material-ui/icons/Remove';
 import UserIcon from 'src/assets/icons/user.svg';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
-import { getGravatarUrlFromHash } from 'src/utilities/gravatar';
 
 type ClassNames = 'root' |
   'userWrapper' |
@@ -66,15 +65,13 @@ interface Props {
   reply?: Linode.SupportReply;
   ticket?: Linode.SupportTicket;
   open?: boolean;
-  urlCache: any;
-  addToCache: (id:string, url:string) => void;
+  gravatarUrl: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 interface State {
   open: boolean;
-  gravatarUrl: string;
   data?: Data;
 }
 
@@ -92,15 +89,12 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
     super(props);
     this.state = {
       open: pathOr(true, ['open'], this.props),
-      gravatarUrl: '',
       data: this.getData(),
     }
   }
 
   componentDidMount() {
-    const { data } = this.state;
     this.mounted = true;
-    if (data) { this.setGravatarUrl(data.gravatar_id); }
   }
 
   componentWillUnmount() {
@@ -141,25 +135,8 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
       : str
   }
 
-  setGravatarUrl = (gravatarId:string) => {
-    if (!this.mounted) { return; }
-
-    const { addToCache, urlCache } = this.props;
-    if (gravatarId in urlCache) { 
-      this.setState({ gravatarUrl: urlCache[gravatarId] });
-      return;
-    }
-
-    getGravatarUrlFromHash(gravatarId)
-      .then((url) => {
-        addToCache(gravatarId, url);
-        this.setState({ gravatarUrl: url });
-      });
-  }
-
   renderAvatar() {
-    const { classes } = this.props;
-    const { gravatarUrl } = this.state;
+    const { classes, gravatarUrl } = this.props;
     if (!gravatarUrl) { return null; }
     return (gravatarUrl !== 'not found'
       ? <div className={classes.userWrapper}>
