@@ -11,6 +11,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 
+import Grid from 'src/components/Grid';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
@@ -21,17 +22,13 @@ import DashboardCard from '../DashboardCard';
 
 type ClassNames =
   'root'
-  | 'statusCol'
   | 'labelCol'
   | 'actionsCol';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
-  statusCol: {
-    width: '5%',
-  },
   labelCol: {
-    width: '42%',
+    width: '90%',
   },
   actionsCol: {
     width: '10%',
@@ -134,13 +131,13 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
   }
 
   renderLoading = () => {
-    return <TableRowLoading colSpan={3} />
+    return <TableRowLoading colSpan={2} />
   };
 
   renderErrors = (errors: Linode.ApiFieldError[]) =>
   <TableRowError colSpan={3} message={`Unable to load domains.`} />;
 
-  renderEmpty = () => <TableRowEmptyState colSpan={3} />;
+  renderEmpty = () => <TableRowEmptyState colSpan={2} />;
 
   renderData = (data: Linode.Domain[]) => {
     const { classes } = this.props;
@@ -148,12 +145,18 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
     return data.map(({ domain, type, status }) => (
       <TableRow key={domain}>
         <TableCell className={classes.labelCol}>
-          <Typography variant="subheading">
-            {domain}
-          </Typography>
-          <Typography>
-            {status}, {type}
-          </Typography>
+          <Grid container direction="column" spacing={8}>
+            <Grid item className="py0">
+              <Typography variant="subheading">
+                {domain}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="caption">
+                {status}, {type}
+              </Typography>
+            </Grid>
+          </Grid>
         </TableCell>
         <TableCell className={classes.actionsCol} />
       </TableRow>
