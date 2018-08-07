@@ -23,16 +23,16 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   root: {},
   wrapper: {
     marginTop: theme.spacing.unit * 2,
-    padding: theme.spacing.unit * 2,
   },
   heading: {
     textAlign: 'center',
-    marginTop: theme.spacing.unit * 4,
+    marginBottom: theme.spacing.unit * 4,
   },
   card: {
     textAlign: 'center',
     backgroundColor: theme.color.white,
-    margin: theme.spacing.unit * 2,
+    padding: theme.spacing.unit * 4,
+    border: `1px solid ${theme.color.grey2}`,
   },
 });
 
@@ -77,54 +77,50 @@ export class OtherWays extends React.Component<CombinedProps, State> {
           container
           className={classes.wrapper}
         >
-          <Grid
-            item xs={5}
-            className={classes.card}
-          >
-            <LinodeIcon />
-            <Typography variant="subheading">
-              <a target="_blank" href="https://linode.com/docs/">View Documentation</a>
-            </Typography>
-            <Typography variant="caption">
-              View Linode Documentation
-            </Typography>
+          <Grid item xs={6}>
+            <div className={classes.card}>
+              <LinodeIcon />
+              <Typography variant="subheading">
+                <a target="_blank" href="https://linode.com/docs/">View Documentation</a>
+              </Typography>
+              <Typography variant="caption">
+                View Linode Documentation
+              </Typography>
+            </div>
           </Grid>
-          <Grid
-            item xs={5}
-            className={classes.card}
-          >
-            <LinodeIcon />
-            <Typography variant="subheading">
-            <a target="_blank" href="https://linode.com/community/">Search the Community</a>
-            </Typography>
-            <Typography variant="caption">
-              Find help from other Linode users in the Community
-            </Typography>
+          <Grid item xs={6}>
+            <div className={classes.card}>
+              <LinodeIcon />
+              <Typography variant="subheading">
+              <a target="_blank" href="https://linode.com/community/">Search the Community</a>
+              </Typography>
+              <Typography variant="caption">
+                Find help from other Linode users in the Community
+              </Typography>
+            </div>
           </Grid>
-          <Grid
-            item xs={5}
-            className={classes.card}
-          >
-            <LinodeIcon />
-            <Typography variant="subheading">
-              <a onClick={this.handleAdaInit}>Talk to Ada</a>
-            </Typography>
-            <Typography variant="caption">
-              Chat with the Linode Support bot to help troubleshoot
-            </Typography>
+          <Grid item xs={6}>
+            <div className={classes.card}>
+              <LinodeIcon />
+              <Typography variant="subheading">
+                <a onClick={this.handleAdaInit}>Talk to Ada</a>
+              </Typography>
+              <Typography variant="caption">
+                Chat with the Linode Support bot to help troubleshoot
+              </Typography>
+            </div>
           </Grid>
-          <Grid
-            item xs={5}
-            className={classes.card}
-          >
-            <LinodeIcon />
-            <Typography variant="subheading">
-              <Link to="/support/tickets">Customer Support</Link>
-            </Typography>
-            <Typography variant="caption">
-              If you are not able to solve an issue with the resources listed above, you can
-              contact Linode Support
-            </Typography>
+          <Grid item xs={6}>
+            <div className={classes.card}>
+              <LinodeIcon />
+              <Typography variant="subheading">
+                <Link to="/support/tickets">Customer Support</Link>
+              </Typography>
+              <Typography variant="caption">
+                If you are not able to solve an issue with the resources listed above, you can
+                contact Linode Support
+              </Typography>
+            </div>
           </Grid>
         </Grid>
       </React.Fragment>

@@ -9,19 +9,40 @@ import {
 } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
+import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
+
 type ClassNames = 'root'
+  | 'bgIcon'
   | 'searchHeading';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
-    padding: theme.spacing.unit * 2,
+    padding: theme.spacing.unit * 10,
     backgroundColor: theme.color.green,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+  },
+  bgIcon: {
+    color: '#04994D',
+    position: 'absolute',
+    left: 0,
+    width: 250,
+    height: 250,
+    '& .circle': {
+      fill: 'transparent',
+    },
+    '& .outerCircle': {
+      stroke: 'transparent',
+    },
+    '& .insidePath path': {
+      stroke: '#04994D',
+    },
   },
   searchHeading: {
     textAlign: 'center',
-    margin: theme.spacing.unit * 3,
     color: theme.color.white,
-    fontSize: '1.2em',
   },
 });
 
@@ -41,8 +62,9 @@ class SearchPanel extends React.Component<CombinedProps, State> {
         <Paper
           className={classes.root}
         >
+          <LinodeIcon className={classes.bgIcon} />
           <Typography
-            variant="subheading"
+            variant="headline"
             className={classes.searchHeading}
           >
             Ways to Get Help
