@@ -6,6 +6,7 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ExpansionPanel from 'src/components/ExpansionPanel';
+import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import { updateLinode } from 'src/services/linodes';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
@@ -82,7 +83,15 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
   };
 
   renderAlertSections = () => {
-    const hasErrorFor = getAPIErrorFor({}, this.state.errors);
+
+    const hasErrorFor = getAPIErrorFor({
+      'alerts.cpu': 'CPU',
+      'alerts.network_in': 'Incoming traffic',
+      'alerts.network_out': 'Outbound traffic',
+      'alerts.transfer_quota': 'Transfer quota',
+      'alerts.io': 'Disk IO rate',
+    }, this.state.errors);
+
     return [
       {
         title: 'CPU Usage',
@@ -203,7 +212,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
         data-qa-alerts-save
       >
         Save
-              </Button>
+      </Button>
     </ActionsPanel>;
   };
 
@@ -232,6 +241,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
       })
       .catch((error) => {
         this.setState({
+          submitting: false,
           errors: pathOr([{ reason: 'Unable to update alerts thresholds.' }], ['response', 'data', 'errors'], error)
         });
       });
@@ -239,6 +249,8 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
 
   public render() {
     const alertSections: Section[] = this.renderAlertSections();
+    const hasErrorFor = getAPIErrorFor({}, this.state.errors);
+    const generalError = hasErrorFor('none');
 
     return (
       <ExpansionPanel
@@ -246,9 +258,10 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
         success={this.state.success}
         actions={this.renderExpansionActions}
       >
+      { generalError && <Notice error>{generalError}</Notice>}
         {
           alertSections.map((p, idx) =>
-            <AlertSection updateFor={[p.state, p.value]} key={idx} {...p} />)
+            <AlertSection updateFor={[p.state, p.value, this.state.errors]} key={idx} {...p} />)
         }
       </ExpansionPanel>
     );
