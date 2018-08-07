@@ -167,14 +167,14 @@ class LinodesDashboardCard extends React.Component<CombinedProps, State> {
               <LinodeStatusIndicator status={status} />
             </Grid>
             <Grid item>
-              <Grid container direction="column">
+              <Grid container direction="column" spacing={8}>
                 <Grid item className="py0">
                   <Link to={`/linodes/${id}`}>
                     <Typography variant="subheading">{label}</Typography>
                   </Link>
                 </Grid>
-                <Grid item className="py0">
-                  <Typography>
+                <Grid item>
+                  <Typography variant="caption">
                     { typesData && displayType(type, typesData || []) }
                   </Typography>
                 </Grid>

@@ -12,6 +12,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 
+import Grid from 'src/components/Grid';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
@@ -23,21 +24,17 @@ import DashboardCard from '../DashboardCard';
 
 type ClassNames =
   'root'
-  | 'statusCol'
   | 'labelCol'
   | 'moreCol'
   | 'actionsCol';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
-  statusCol: {
-    width: '5%',
-  },
   labelCol: {
-    width: '42%',
+    width: '60%',
   },
   moreCol: {
-    width: '43%',
+    width: '30%',
   },
   actionsCol: {
     width: '10%',
@@ -138,13 +135,13 @@ class VolumesDashboardCard extends React.Component<CombinedProps, State> {
   }
 
   renderLoading = () => {
-    return <TableRowLoading colSpan={3} />
+    return <TableRowLoading colSpan={2} />
   };
 
   renderErrors = (errors: Linode.ApiFieldError[]) =>
     <TableRowError colSpan={3} message={`Unable to load Volumes.`} />;
 
-  renderEmpty = () => <TableRowEmptyState colSpan={3} />;
+  renderEmpty = () => <TableRowEmptyState colSpan={2} />;
 
   renderData = (data: Linode.Volume[]) => {
     const { classes } = this.props;
@@ -152,12 +149,18 @@ class VolumesDashboardCard extends React.Component<CombinedProps, State> {
     return data.map(({ label, region, size, status }) => (
       <TableRow key={label}>
         <TableCell className={classes.labelCol}>
-          <Typography variant="subheading">
-            {label}
-          </Typography>
-          <Typography>
-            {status}, {size} GB
-          </Typography>
+          <Grid container direction="column" spacing={8}>
+            <Grid item className="py0">
+              <Typography variant="subheading">
+                {label}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="caption">
+                {status}, {size} GB
+              </Typography>
+            </Grid>
+          </Grid>
         </TableCell>
         <Hidden xsDown>
           <TableCell className={classes.moreCol}>
