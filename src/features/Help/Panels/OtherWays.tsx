@@ -45,6 +45,23 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 class OtherWays extends React.Component<CombinedProps, State> {
   state: State = {};
 
+  ada: any = undefined;
+
+  componentDidMount() {
+    /*
+    * Init Ada Chaperone chat app
+    * Script is included in index.html
+    */
+    this.ada = new (window as any).AdaChaperone('linode');
+  }
+
+  handleAdaInit = () => {
+    /*
+    * Show the Ada chat
+    */
+    this.ada.show();
+  }
+
   render() {
     const { classes } = this.props;
 
@@ -90,7 +107,7 @@ class OtherWays extends React.Component<CombinedProps, State> {
           >
             <LinodeIcon />
             <Typography variant="subheading">
-              Talk to Ada
+              <a onClick={this.handleAdaInit}>Talk to Ada</a>
             </Typography>
             <Typography variant="caption">
               Chat with the Linode Support bot to help troubleshoot
