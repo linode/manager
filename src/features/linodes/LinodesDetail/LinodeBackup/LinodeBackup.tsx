@@ -252,7 +252,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
       });
   }
 
-  cancelBackups() {
+  cancelBackups = () => {
     cancelBackups(this.props.linodeID)
       .then(() => {
         sendToast('Backups are being cancelled for this Linode');
