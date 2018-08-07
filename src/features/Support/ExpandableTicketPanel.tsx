@@ -149,7 +149,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
         gravatarUrl: pathOr('not found',['gravatarUrl'],reply),
         date: reply.created,
         description: reply.description,
-        username: reply.created_by,
+        username: isCurrentUser ? "you" : reply.created_by,
         from_linode: reply.from_linode,
       }
     }
