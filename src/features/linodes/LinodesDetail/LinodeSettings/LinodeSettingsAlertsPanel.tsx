@@ -1,4 +1,4 @@
-import { compose, lensPath, set } from 'ramda';
+import { compose, lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
@@ -195,16 +195,16 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
       .reduce((result, s) => result || Boolean(s.error), false));
 
     return <ActionsPanel>
-              <Button
-                type="primary"
-                onClick={this.setLinodeAlertThresholds}
-                disabled={noError}
-                loading={noError}
-                data-qa-alerts-save
-              >
-                Save
+      <Button
+        type="primary"
+        onClick={this.setLinodeAlertThresholds}
+        disabled={noError}
+        loading={noError}
+        data-qa-alerts-save
+      >
+        Save
               </Button>
-            </ActionsPanel>;
+    </ActionsPanel>;
   };
 
   setLinodeAlertThresholds = () => {
@@ -231,7 +231,9 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
         ));
       })
       .catch((error) => {
-        this.setState(set(lensPath(['errors']), error.response.data.errors));
+        this.setState({
+          errors: pathOr([{ reason: 'Unable to update alerts thresholds.' }], ['response', 'data', 'errors'], error)
+        });
       });
   }
 
@@ -246,7 +248,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
       >
         {
           alertSections.map((p, idx) =>
-          <AlertSection updateFor={[p.state, p.value]} key={idx} {...p} />)
+            <AlertSection updateFor={[p.state, p.value]} key={idx} {...p} />)
         }
       </ExpansionPanel>
     );
