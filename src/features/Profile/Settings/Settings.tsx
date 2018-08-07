@@ -64,8 +64,7 @@ class ProfileSettings extends React.Component<CombinedProps, State> {
                 <Toggle onChange={this.toggle} checked={status} />
               }
               label={`
-                ${status ? 'Disable' : 'Enable'}
-                ${'notifications to receive email alerts if a Linode exceeds thresholds defined in it\'s settings.'}
+                Email alerts if a Linode exceeds its configurated thresholds are ${status ? 'enabled' : 'disabled'}
               `}
               disabled={this.state.submitting}
             />
