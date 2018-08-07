@@ -43,6 +43,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   searchHeading: {
     textAlign: 'center',
     color: theme.color.white,
+    position: 'relative',
+    zIndex: 2,
   },
 });
 

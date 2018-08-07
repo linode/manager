@@ -17,7 +17,8 @@ import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 type ClassNames = 'root'
 | 'wrapper'
 | 'heading'
-| 'card';
+| 'card'
+| 'tileTitle';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {},
@@ -33,6 +34,16 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     backgroundColor: theme.color.white,
     padding: theme.spacing.unit * 4,
     border: `1px solid ${theme.color.grey2}`,
+    height: '100%',
+  },
+  tileTitle: {
+    fontSize: '1.2rem',
+    marginTop: theme.spacing.unit,
+    marginBottom: theme.spacing.unit,
+    '&:hover': {
+      color: theme.color.headline,
+      textDecoration: 'underline',
+    },
   },
 });
 
@@ -68,7 +79,7 @@ export class OtherWays extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <Typography
-          variant="subheading"
+          variant="title"
           className={classes.heading}
         >
           Other Ways to Get Help
@@ -77,45 +88,45 @@ export class OtherWays extends React.Component<CombinedProps, State> {
           container
           className={classes.wrapper}
         >
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <div className={classes.card}>
               <LinodeIcon />
-              <Typography variant="subheading">
-                <a target="_blank" href="https://linode.com/docs/">View Documentation</a>
-              </Typography>
+              <a target="_blank" href="https://linode.com/docs/">
+                <Typography variant="subheading" className={classes.tileTitle}>View Documentation</Typography>
+              </a>
               <Typography variant="caption">
                 View Linode Documentation
               </Typography>
             </div>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <div className={classes.card}>
               <LinodeIcon />
-              <Typography variant="subheading">
-              <a target="_blank" href="https://linode.com/community/">Search the Community</a>
-              </Typography>
+              <a target="_blank" href="https://linode.com/community/">
+                <Typography variant="subheading" className={classes.tileTitle}>Search the Community</Typography>
+              </a>
               <Typography variant="caption">
                 Find help from other Linode users in the Community
               </Typography>
             </div>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <div className={classes.card}>
               <LinodeIcon />
-              <Typography variant="subheading">
-                <a onClick={this.handleAdaInit}>Talk to Ada</a>
-              </Typography>
+                <a onClick={this.handleAdaInit}>
+                  <Typography variant="subheading" className={classes.tileTitle}>Talk to Ada</Typography>
+                </a>
               <Typography variant="caption">
                 Chat with the Linode Support bot to help troubleshoot
               </Typography>
             </div>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <div className={classes.card}>
               <LinodeIcon />
-              <Typography variant="subheading">
-                <Link to="/support/tickets">Customer Support</Link>
-              </Typography>
+              <Link to="/support/tickets">
+                <Typography variant="subheading" className={classes.tileTitle}>Customer Support</Typography>
+              </Link>
               <Typography variant="caption">
                 If you are not able to solve an issue with the resources listed above, you can
                 contact Linode Support

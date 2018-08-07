@@ -15,7 +15,7 @@ type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('md')]: {
       padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 14}px`,
     },
   },
