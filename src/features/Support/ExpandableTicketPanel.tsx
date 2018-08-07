@@ -11,7 +11,6 @@ import UserIcon from 'src/assets/icons/user.svg';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
 import IconButton from 'src/components/IconButton';
-import { getGravatarUrlFromHash } from 'src/utilities/gravatar';
 
 type ClassNames = 'root'
   | 'userWrapper'
@@ -90,13 +89,13 @@ interface Props {
   reply?: Linode.SupportReply;
   ticket?: Linode.SupportTicket;
   open?: boolean;
+  gravatarUrl: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 interface State {
   open: boolean;
-  gravatarUrl: string;
   data?: Data;
 }
 
@@ -109,13 +108,21 @@ interface Data {
 }
 
 export class ExpandableTicketPanel extends React.Component<CombinedProps, State> {
+  mounted: boolean = false;
   constructor(props:CombinedProps) {
     super(props);
     this.state = {
       open: pathOr(true, ['open'], this.props),
-      gravatarUrl: '',
       data: this.getData(),
     }
+  }
+
+  componentDidMount() {
+    this.mounted = true;
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   togglePanel = () => {
@@ -143,7 +150,6 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
         from_linode: reply.from_linode,
       }
     }
-    this.setGravatarUrl(data!.gravatar_id);
     return data!;
   }
 
@@ -153,16 +159,8 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
       : str
   }
 
-  setGravatarUrl = (gravatarId:string) => {
-    getGravatarUrlFromHash(gravatarId)
-      .then((url) => {
-        this.setState({ gravatarUrl: url });
-      });
-  }
-
   renderAvatar() {
-    const { classes } = this.props;
-    const { gravatarUrl } = this.state;
+    const { classes, gravatarUrl } = this.props;
     if (!gravatarUrl) { return null; }
     return (gravatarUrl !== 'not found'
       ? <div className={classes.userWrapper}>

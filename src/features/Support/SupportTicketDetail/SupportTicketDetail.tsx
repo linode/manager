@@ -17,6 +17,7 @@ import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import { getTicket, getTicketReplies } from 'src/services/support';
+import { getGravatarUrlFromHash } from 'src/utilities/gravatar';
 
 import ExpandableTicketPanel from '../ExpandableTicketPanel';
 
@@ -83,6 +84,7 @@ const scrollToBottom = () => {
 }
 
 export class SupportTicketDetail extends React.Component<CombinedProps,State> {
+  urlCache = {};
   state: State = {
     loading: true,
   }
@@ -99,6 +101,15 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
   componentDidMount() {
     this.loadTicket();
     this.loadReplies();
+  }
+
+  getGravatarUrl = (gravatarId:string) => {
+    if (gravatarId in this.urlCache) { return this.urlCache[gravatarId]; }
+    getGravatarUrlFromHash(gravatarId)
+      .then((url) => {
+        this.urlCache[gravatarId] = url;
+        return url;
+      });
   }
 
   loadTicket = () => {
@@ -182,7 +193,12 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
 
   renderReplies = (replies:Linode.SupportReply[]) => {
     return replies.map((reply:Linode.SupportReply, idx:number) => {
-      return <ExpandableTicketPanel key={idx} reply={reply} open={idx === replies.length - 1} />
+      return <ExpandableTicketPanel 
+        key={idx} 
+        reply={reply}
+        open={idx === replies.length - 1}
+        gravatarUrl={this.getGravatarUrl(reply.gravatar_id)}
+      />
     });
   }
 
@@ -233,7 +249,11 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
         </Grid>
         {ticket.entity && this.renderEntityLabelWithIcon()}
         <Grid container direction="column" justify="center" alignItems="center" className={classes.listParent} >
-          <ExpandableTicketPanel key={ticket!.id} ticket={ticket} />
+          <ExpandableTicketPanel
+            key={ticket!.id}
+            ticket={ticket}
+            gravatarUrl={this.getGravatarUrl(ticket.gravatar_id)}
+          />
           {replies && this.renderReplies(replies)}
         </Grid>
       </React.Fragment>
