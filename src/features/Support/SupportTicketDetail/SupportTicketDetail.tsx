@@ -1,3 +1,4 @@
+import * as Bluebird from 'bluebird';
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
@@ -17,9 +18,11 @@ import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import { getTicket, getTicketReplies } from 'src/services/support';
+import { getGravatarUrlFromHash } from 'src/utilities/gravatar';
+
 import ExpandableTicketPanel from '../ExpandableTicketPanel';
 
-type ClassNames = 'root' 
+type ClassNames = 'root'
   | 'title'
   | 'titleWrapper'
   | 'backButton'
@@ -59,7 +62,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     marginLeft: theme.spacing.unit,
     padding: theme.spacing.unit,
     backgroundColor: 'yellow',
-  }, 
+  },
 });
 
 type RouteProps = RouteComponentProps<{ ticketId?: number }>;
@@ -69,7 +72,6 @@ interface State {
   errors?: Linode.ApiFieldError[];
   replies?: Linode.SupportReply[];
   ticket?: Linode.SupportTicket;
-  urlCache: any;
 }
 
 type CombinedProps = RouteProps & WithStyles<ClassNames>;
@@ -82,10 +84,9 @@ const scrollToBottom = () => {
   });
 }
 
-export class SupportTicketDetail extends React.Component<CombinedProps,State> {
+export class SupportTicketDetail extends React.Component<CombinedProps, State> {
   state: State = {
     loading: true,
-    urlCache: {},
   }
 
   static docs: Linode.Doc[] = [
@@ -102,12 +103,6 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
     this.loadReplies();
   }
 
-  addToCache = (url:string, gravatarId:string) => {
-    if (url in this.state.urlCache) { return; }
-    console.log('adding to cache');
-    this.setState({ urlCache: {gravatarId: url} });
-  }
-
   loadTicket = () => {
     const ticketId = this.props.match.params.ticketId;
     if (!ticketId) { return; }
@@ -119,7 +114,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
         }, scrollToBottom)
       })
       .catch((errors) => {
-        const status = pathOr(400, ['response','data','status'], errors);
+        const status = pathOr(400, ['response', 'data', 'status'], errors);
         const error = (status === 404)
           ? [{ reason: 'Ticket could not be found.' }]
           : [{ reason: 'There was an error retrieving your ticket.' }]
@@ -135,9 +130,24 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
     if (!ticketId) { return; }
     getTicketReplies(ticketId)
       .then((response) => {
-        this.setState({
-          replies: response.data,
-        }, scrollToBottom)
+
+        const uniqueGravatarIDs = response.data.reduce((acc: string[], reply) => {
+          const { gravatar_id } = reply;
+
+          return acc.includes(gravatar_id) ? acc : [...acc, gravatar_id];
+        }, []);
+
+        return Bluebird.reduce(
+          uniqueGravatarIDs,
+          (acc, id) => {
+            return getGravatarUrlFromHash(id)
+              .then((result) => ({...acc, [id]: result }));
+          },
+          {})
+        .then((gravatarMap) => this.setState({
+          replies: response.data.map((reply) => ({ ...reply, gravatarUrl: gravatarMap[reply.gravatar_id] })),
+          loading: false,
+        }));
       })
       .catch((errors) => {
         this.setState({
@@ -151,8 +161,8 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
     this.props.history.push('/support/tickets');
   }
 
-  getEntityIcon = (type:string) => {
-    switch(type) {
+  getEntityIcon = (type: string) => {
+    switch (type) {
       case 'domain':
         return <DomainIcon />
       case 'linode':
@@ -163,13 +173,13 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
         return <VolumeIcon />
       default:
         return <LinodeIcon />
-    } 
+    }
   }
 
   renderEntityLabelWithIcon = () => {
     const { classes } = this.props;
     const { label, type } = this.state.ticket!.entity;
-    const icon:JSX.Element = this.getEntityIcon(type);
+    const icon: JSX.Element = this.getEntityIcon(type);
     return (
       <Grid
         container
@@ -187,14 +197,12 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
     )
   }
 
-  renderReplies = (replies:Linode.SupportReply[]) => {
-    return replies.map((reply:Linode.SupportReply, idx:number) => {
-      return <ExpandableTicketPanel 
-        key={idx} 
+  renderReplies = (replies: Linode.SupportReply[]) => {
+    return replies.map((reply: Linode.SupportReply, idx: number) => {
+      return <ExpandableTicketPanel
+        key={idx}
         reply={reply}
         open={idx === replies.length - 1}
-        addToCache={this.addToCache}
-        urlCache={this.state.urlCache}
       />
     });
   }
@@ -203,7 +211,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
     const { classes } = this.props;
     const { errors, loading, replies, ticket } = this.state;
 
-    /* 
+    /*
     * Including loading/error states here (rather than in a
     * renderContent function) because the header
     * depends on having a ticket object for its content.
@@ -249,8 +257,6 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
           <ExpandableTicketPanel
             key={ticket!.id}
             ticket={ticket}
-            addToCache={this.addToCache}
-            urlCache={this.state.urlCache}
           />
           {replies && this.renderReplies(replies)}
         </Grid>
@@ -261,7 +267,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default compose<any,any,any>(
+export default compose<any, any, any>(
   setDocs(SupportTicketDetail.docs),
   styled,
 )(SupportTicketDetail)

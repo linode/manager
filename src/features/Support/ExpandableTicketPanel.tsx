@@ -11,8 +11,6 @@ import UserIcon from 'src/assets/icons/user.svg';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
 import IconButton from 'src/components/IconButton';
-import { getGravatarUrlFromHash } from 'src/utilities/gravatar';
-
 
 type ClassNames = 'root'
   | 'userWrapper'
@@ -91,8 +89,6 @@ interface Props {
   reply?: Linode.SupportReply;
   ticket?: Linode.SupportTicket;
   open?: boolean;
-  addToCache: (url:string, gravatarId:string) => void;
-  urlCache: any;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -100,11 +96,11 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 interface State {
   open: boolean;
   data?: Data;
-  gravatarUrl?: string;
 }
 
 interface Data {
   gravatar_id: string;
+  gravatarUrl: string;
   date: string;
   description: string;
   username: string;
@@ -140,6 +136,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
     if (ticket) {
       data = {
         gravatar_id: ticket.gravatar_id,
+        gravatarUrl: 'not found', /** @todo fix this! */
         date: ticket.opened,
         description: ticket.description,
         username: "you",
@@ -148,13 +145,14 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
     } else if (reply) {
       data = {
         gravatar_id: reply.gravatar_id,
+        gravatarUrl: reply.gravatarUrl,
         date: reply.created,
         description: reply.description,
         username: reply.created_by,
         from_linode: reply.from_linode,
       }
     }
-    this.setGravatarUrl(data!.gravatar_id);
+
     return data!;
   }
 
@@ -164,32 +162,18 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
       : str
   }
 
-  setGravatarUrl = (gravatarId:string) => {
-    if (gravatarId in this.props.urlCache) {
-      console.log('using cached value');
-      this.setState({ gravatarUrl: this.props.urlCache[gravatarId] });
-    } else {
-      console.log('requesting from Gravatar');
-      getGravatarUrlFromHash(gravatarId)
-        .then((response) => {
-          this.props.addToCache(response, gravatarId);
-          this.setState({ gravatarUrl: response });
-        })
-    }
-  }
-
-  renderAvatar() {
+  renderAvatar(url: string) {
     const { classes } = this.props;
-    const { gravatarUrl = 'not found' } = this.state;
-    return (gravatarUrl !== 'not found')
+
+    return (url !== 'not found')
       ? <div className={classes.userWrapper}>
-          <img src={gravatarUrl} className={classes.leftIcon} />
+          <img src={url} className={classes.leftIcon} />
         </div>
       : <div className={classes.userWrapper}>
           <UserIcon className={classes.leftIcon} />
         </div>
   }
-  
+
   render() {
     const { classes } = this.props;
     const { data, open } = this.state;
@@ -202,7 +186,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
       <Grid item className={classes.root}>
         <Paper className={open ? classes.paperOpen : classes.paper}>
           <Grid container direction="row" justify="space-between" alignItems="flex-start">
-            <Grid 
+            <Grid
               item
               xs={11}
               sm={5}
@@ -211,7 +195,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
             >
               <Grid container wrap="nowrap">
                 <Grid item>
-                  {this.renderAvatar()}
+                  {this.renderAvatar(data.gravatarUrl)}
                 </Grid>
                 <Grid item>
                   <Typography className={classes.userName}>{data.username}</Typography>
@@ -220,11 +204,11 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
                   </Grid>
                 </Grid>
               </Grid>
-            <Grid 
-              item 
-              xs={truncatedText !== data.description ? 11 : 12} 
-              sm={truncatedText !== data.description ? 6 : 7} 
-              md={truncatedText !== data.description ? 8 : 9} 
+            <Grid
+              item
+              xs={truncatedText !== data.description ? 11 : 12}
+              sm={truncatedText !== data.description ? 6 : 7}
+              md={truncatedText !== data.description ? 8 : 9}
               className={classes.descCol}
             >
               <Typography>{text}</Typography>
