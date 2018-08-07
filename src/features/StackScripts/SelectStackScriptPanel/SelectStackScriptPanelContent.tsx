@@ -128,7 +128,7 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
     showMoreButtonVisible: true,
     sortOrder: 'asc',
     currentFilterType: null,
-    currentFilter: { ['+order_by']: 'deployments_total', ['+order']: 'desc' },
+    currentFilter: { ['+order_by']: 'deployments_active', ['+order']: 'desc' },
     currentSearchFilter: {},
     isSorting: false,
     error: undefined,
