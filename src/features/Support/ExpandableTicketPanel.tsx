@@ -137,7 +137,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
     if (ticket) {
       data = {
         gravatar_id: ticket.gravatar_id,
-        gravatarUrl: 'not found', /** @todo fix this! */
+        gravatarUrl: pathOr('not found',['gravatarUrl'],ticket),
         date: ticket.opened,
         description: ticket.description,
         username: isCurrentUser ? "you" : ticket.opened_by,
@@ -146,7 +146,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
     } else if (reply) {
       data = {
         gravatar_id: reply.gravatar_id,
-        gravatarUrl: reply.gravatarUrl,
+        gravatarUrl: pathOr('not found',['gravatarUrl'],reply),
         date: reply.created,
         description: reply.description,
         username: reply.created_by,

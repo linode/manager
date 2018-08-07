@@ -1,5 +1,5 @@
 import * as Bluebird from 'bluebird';
-import { compose, pathOr } from 'ramda';
+import { compose, concat, merge, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
@@ -106,73 +106,54 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
 
   componentDidMount() {
     this.mounted = true;
-    this.loadTicket();
-    this.loadReplies();
+    this.loadTicketAndReplies();
   }
 
-  loadTicket = () => {
+  loadTicketAndReplies = () => {
     const ticketId = this.props.match.params.ticketId;
     if (!ticketId) { return; }
     getTicket(ticketId)
-      .then((response) => {
-        if (!this.mounted) { return; }
-        this.setState({
-          ticket: response.data,
-          loading: false,
-        }, scrollToBottom)
-      })
-      .catch((errors) => {
-        if (!this.mounted) { return; }
-        const status = pathOr(400, ['response','data','status'], errors);
-        const error = (status === 404)
-          ? [{ reason: 'Ticket could not be found.' }]
-          : [{ reason: 'There was an error retrieving your ticket.' }]
-        this.setState({
-          errors: pathOr(error, ['response', 'data', 'errors'], errors),
-          loading: false,
-        })
-      })
-  }
+      .then((ticketResponse) => {
+        const gravatarId: string[] = [ticketResponse.data.gravatar_id];
+        getTicketReplies(ticketId)
+          .then((replyResponse) => {
+            /** Gets a unique list of gravatar IDs */
+            const uniqueGravatarIDs = concat(
+              replyResponse.data.reduce((acc: string[], reply) => {
+                const { gravatar_id } = reply;
 
-  loadReplies = () => {
-    const ticketId = this.props.match.params.ticketId;
-    if (!ticketId) { return; }
-    getTicketReplies(ticketId)
-      .then((response) => {
-
-        /** Gets a unique list of gravatar IDs */
-        const uniqueGravatarIDs = response.data.reduce((acc: string[], reply) => {
-          const { gravatar_id } = reply;
-
-          return acc.includes(gravatar_id) ? acc : [...acc, gravatar_id];
-        }, []);
-
-        /** Send a request for the gravatar for each unique ID. */
-        return Bluebird.reduce(
-          uniqueGravatarIDs,
-          (acc, id) => {
-            return getGravatarUrlFromHash(id)
-              /* Map the response to a dict of { id: url }*/
-              .then((result) => ({...acc, [id]: result }));
-          },
-          {})
-        /** We now have the gravatar map from the reducer above, and the replies from further up,
-         * so we can merge them together.
-         */
-        .then((gravatarMap) => this.setState({
-          replies: response.data.map((reply) => ({ ...reply, gravatarUrl: gravatarMap[reply.gravatar_id] })),
-          loading: false,
-        }));
+                return acc.includes(gravatar_id) ? acc : [...acc, gravatar_id];
+              }, []),
+              gravatarId);
+            /** Send a request for the gravatar for each unique ID. */
+            return Bluebird.reduce(
+              uniqueGravatarIDs,
+              (acc, id) => {
+                return getGravatarUrlFromHash(id)
+                  /* Map the response to a dict of { id: url }*/
+                  .then((result) => ({...acc, [id]: result }));
+              },
+              {})
+            /** We now have the gravatar map from the reducer above, and the replies from further up,
+             * so we can merge them together.
+             */
+            .then((gravatarMap) => {
+              this.setState({
+              replies: replyResponse.data.map((reply) => ({ ...reply, gravatarUrl: gravatarMap[reply.gravatar_id] })),
+              ticket: merge(ticketResponse.data, {gravatarUrl: gravatarMap[ticketResponse.data.gravatar_id]}),
+              loading: false,
+            }, scrollToBottom)});
+        });
+     })
+     .catch((errors) => {
+      if (!this.mounted) { return; }
+      this.setState({
+        errors: pathOr(
+          [{ reason: 'There was an error retrieving your ticket.' }],
+          ['response', 'data', 'errors'], errors),
+        loading: false,
       })
-      .catch((errors) => {
-        if (!this.mounted) { return; }
-        this.setState({
-          errors: pathOr(
-            [{ reason: 'There was an error retrieving your ticket.' }],
-            ['response', 'data', 'errors'], errors),
-          loading: false,
-        })
-      })
+    })
   }
 
   onBackButtonClick = () => {

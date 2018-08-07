@@ -176,6 +176,7 @@ namespace Linode {
     summary: string;
     updated: string;
     updated_by: string;
+    gravatarUrl: string | undefined;
   }
 
   export interface SupportReply {
@@ -185,5 +186,6 @@ namespace Linode {
     description: string;
     id: number;
     from_linode: boolean;
+    gravatarUrl: string | undefined;
   }
 }
