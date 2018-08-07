@@ -17,7 +17,6 @@ import Notice from 'src/components/Notice';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import Select from 'src/components/Select';
 import TextField from 'src/components/TextField';
-import { dcDisplayNames } from 'src/constants';
 import { withRegions } from 'src/context/regions';
 import { events$, resetEventsPolling } from 'src/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
@@ -25,6 +24,7 @@ import { updateVolumes$ } from 'src/features/Volumes/Volumes';
 import { getLinodeConfigs, getLinodes } from 'src/services/linodes';
 import { cloneVolume, createVolume, resizeVolume, updateVolume, VolumeRequestPayload } from 'src/services/volumes';
 import { close } from 'src/store/reducers/volumeDrawer';
+import { formatRegion } from 'src/utilities';
 import composeState from 'src/utilities/composeState';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -535,7 +535,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
                 value={region.id}
                 data-qa-attach-to-region={region.id}
               >
-                {dcDisplayNames[region.id]}
+                {formatRegion('' + region.id)}
               </MenuItem>,
             )}
           </Select>

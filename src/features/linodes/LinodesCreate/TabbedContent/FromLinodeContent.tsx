@@ -1,5 +1,4 @@
-import { pathOr } from 'ramda';
-import * as React from 'react';
+import { pathOr } from 'ramda';import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
@@ -12,6 +11,7 @@ import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
 import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
 import { resetEventsPolling } from 'src/events';
+import { Info } from 'src/features/linodes/LinodesCreate/LinodesCreate';
 import { allocatePrivateIP, cloneLinode } from 'src/services/linodes';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -66,7 +66,7 @@ interface Props {
   extendLinodes: (linodes: Linode.Linode[]) => ExtendedLinode[];
   linodes: Linode.Linode[];
   getTypeInfo: (selectedTypeID: string | null) => TypeInfo;
-  getRegionName: (selectedRegionID: string | null) => string | undefined;
+  getRegionInfo: (selectedRegionID: string | null) => Info;
   history: any;
 }
 
@@ -179,12 +179,12 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
       selectedRegionID, selectedTypeID, selectedDiskSize, isMakingRequest } = this.state;
 
     const { notice, types, linodes, regions, extendLinodes, getBackupsMonthlyPrice,
-      getTypeInfo, getRegionName, classes } = this.props;
+      getTypeInfo, getRegionInfo, classes } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
 
-    const regionName = getRegionName(selectedRegionID);
+    const regionInfo = getRegionInfo(selectedRegionID);
 
     const typeInfo = getTypeInfo(selectedTypeID);
 
@@ -261,8 +261,11 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
                   {
                     (props: StickyProps) => {
                       const displaySections = [];
-                      if (regionName) {
-                        displaySections.push({ title: regionName });
+                      if (regionInfo) {
+                        displaySections.push({
+                          title: regionInfo.title,
+                          details: regionInfo.details,
+                        });
                       }
 
                       if (typeInfo) {

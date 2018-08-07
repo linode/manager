@@ -1,13 +1,13 @@
+import { dcDisplayCountry, dcDisplayNames } from 'src/constants';
+
 export function titlecase(string: string): string {
   return `${string.substr(0, 1).toUpperCase()}${string.substr(1)}`;
 }
 
 export function formatRegion(region: string) {
-  if (region.indexOf('-') < 0) {
-    return titlecase(region);
-  }
-  const [countryCode, area] = region.split('-');
-  return `${countryCode.toUpperCase()} ${titlecase(area)}`;
+  const country = dcDisplayCountry[region];
+  const city = dcDisplayNames[region];
+  return `${country || ''} ${city || ''}`;
 }
 
 export function typeLabelLong(label: string, memory: number, disk: number, cpus: number) {

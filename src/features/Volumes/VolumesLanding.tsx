@@ -24,13 +24,13 @@ import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
-import { dcDisplayNames } from 'src/constants';
 import { events$, generateInFilter, resetEventsPolling } from 'src/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { updateVolumes$ } from 'src/features/Volumes/Volumes.tsx';
 import { getLinodes } from 'src/services/linodes';
 import { deleteVolume, detachVolume, getVolumes } from 'src/services/volumes';
 import { openForClone, openForCreating, openForEdit, openForResize } from 'src/store/reducers/volumeDrawer';
+import { formatRegion } from 'src/utilities';
 import scrollToTop from 'src/utilities/scrollToTop';
 
 import DestructiveVolumeDialog from './DestructiveVolumeDialog';
@@ -315,7 +315,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
         volume,
       );
       const regionID = pathOr('', ['region'], volume);
-      const region = dcDisplayNames[regionID];
+      const region = formatRegion(regionID);
 
       return isVolumeUpdating(volume.recentEvent)
         ? (

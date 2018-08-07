@@ -28,7 +28,7 @@ import FromImageContent from './TabbedContent/FromImageContent';
 import FromLinodeContent from './TabbedContent/FromLinodeContent';
 import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
 
-type Info = { title: string, details?: string } | undefined;
+export type Info = { title: string, details?: string } | undefined;
 
 export type TypeInfo = {
   title: string,
@@ -203,7 +203,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
             images={this.props.images.response}
             types={this.props.typesData}
             getTypeInfo={this.getTypeInfo}
-            getRegionName={this.getRegionName}
+            getRegionInfo={this.getRegionInfo}
             history={this.props.history}
           />
         );
@@ -226,7 +226,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
             extendLinodes={this.extendLinodes}
             getBackupsMonthlyPrice={this.getBackupsMonthlyPrice}
             getTypeInfo={this.getTypeInfo}
-            getRegionName={this.getRegionName}
+            getRegionInfo={this.getRegionInfo}
             history={this.props.history}
           />
         );
@@ -248,7 +248,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
             linodes={this.props.linodes.response}
             extendLinodes={this.extendLinodes}
             getTypeInfo={this.getTypeInfo}
-            getRegionName={this.getRegionName}
+            getRegionInfo={this.getRegionInfo}
             history={this.props.history}
           />
         );
@@ -264,7 +264,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
             images={this.props.images.response}
             types={this.props.typesData}
             getTypeInfo={this.getTypeInfo}
-            getRegionName={this.getRegionName}
+            getRegionInfo={this.getRegionInfo}
             history={this.props.history}
             selectedStackScriptFromQuery={this.state.selectedStackScriptIDFromQueryString}
             selectedTabFromQuery={this.state.selectedStackScriptTabFromQueryString}
@@ -306,11 +306,14 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
     };
   }
 
-  getRegionName = (selectedRegionID: string | null): string | undefined => {
+  getRegionInfo = (selectedRegionID: string | null): Info => {
     const selectedRegion = this.props.regionsData.find(
       region => region.id === selectedRegionID);
 
-    return selectedRegion && selectedRegion.display;
+    return selectedRegion && {
+      title: selectedRegion.country.toUpperCase(),
+      details: selectedRegion.display,
+    }
   }
 
   render() {

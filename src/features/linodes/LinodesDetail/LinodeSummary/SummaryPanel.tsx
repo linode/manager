@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 
 import Grid from 'src/components/Grid';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
-import { formatRegion } from 'src/features/linodes/presentation';
+import { formatRegion } from 'src/utilities';
 
 type ClassNames = 'root'
   | 'title'
