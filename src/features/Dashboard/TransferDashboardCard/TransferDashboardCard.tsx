@@ -10,10 +10,16 @@ import { getNetworkUtilization } from 'src/services/account';
 
 import DashboardCard from '../DashboardCard';
 
-type ClassNames = 'root';
+type ClassNames = 'root'
+ | 'poolUsageProgress';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {},
+  root: {
+    padding: theme.spacing.unit * 3,
+  },
+  poolUsageProgress: {
+
+  },
 });
 
 interface Props { }
@@ -45,6 +51,7 @@ class TransferDashboardCard extends React.Component<CombinedProps, State> {
 
   render() {
     const { errors, loading, used, quota } = this.state;
+    const { classes } = this.props;
 
     if (loading) {
       return this.renderLoadingState();
@@ -59,13 +66,21 @@ class TransferDashboardCard extends React.Component<CombinedProps, State> {
       return null;
     }
 
+    const poolUsagePct = ((used / quota) * 100) < 1 ? 1 : (used / quota) * 100;
+
     return (
       <DashboardCard>
-        <Paper>
+        <Paper className={classes.root}>
           <Grid container>
             <Grid item xs={12} md={6}>
-              {/* @todo I really don't know what to put here so I'm leaving that to you Alban */}
-              {used} / {quota}
+              <CircleProgress
+                variant="static"
+                noTopMargin
+                value={poolUsagePct}
+                className={classes.poolUsageProgress}
+              >
+                <span>{`${used} of ${quota}`}</span>
+              </CircleProgress>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant='subheading'>This Month's Network Transfer Pool</Typography>

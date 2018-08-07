@@ -34,13 +34,13 @@ class Dashboard extends React.Component<CombinedProps, State> {
         <Grid item xs={12}>
           <Typography variant="headline">Dashboard</Typography>
         </Grid>
-        <Grid item xs={7}>
+        <Grid item xs={12} md={7}>
           <LinodesDashboardCard />
           <VolumesDashboardCard />
           <NodeBalancersDashboardCard />
           <DomainsDashboardCard />
         </Grid>
-        <Grid item xs={5}>
+        <Grid item xs={12} md={5}>
           <TransferDashboardCard />
           <BlogDashboardCard />
         </Grid>

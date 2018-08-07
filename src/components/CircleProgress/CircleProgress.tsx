@@ -1,7 +1,7 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress, { CircularProgressProps } from '@material-ui/core/CircularProgress';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 type CSSClasses = 'root'
@@ -9,7 +9,9 @@ type CSSClasses = 'root'
 | 'progress'
 | 'topWrapper'
 | 'noTopMargin'
-| 'mini';
+| 'mini'
+| 'hasValueInside'
+| 'valueInside';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -57,25 +59,32 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   },
   mini: {
     padding: theme.spacing.unit * 1.3,
+  },
+  hasValueInside: {
+
+  },
+  valueInside: {
+    position: 'absolute',
   }
 });
 
-interface Props {
-  value?: Boolean | number;
+interface Props extends CircularProgressProps {
   noTopMargin?: boolean;
   className?: string;
   noInner?: boolean;
-  mini?: boolean; 
+  mini?: boolean;
+  children?: JSX.Element;
 }
 
 const circleProgressComponent = (props: Props & WithStyles<CSSClasses>) => {
   const variant = typeof props.value === 'number' ? 'static' : 'indeterminate';
   const value = typeof props.value === 'number' ? props.value : 0;
-  const { classes, noTopMargin } = props;
+  const { children, classes, noTopMargin } = props;
 
   const outerClasses = {
     [classes.root]: true,
     [classes.noTopMargin]: noTopMargin,
+    [classes.hasValueInside]: children !== undefined,
   };
 
   if (props.className) {
@@ -91,6 +100,11 @@ const circleProgressComponent = (props: Props & WithStyles<CSSClasses>) => {
         outerClasses,
       )}
       >
+        {children !== undefined &&
+          <div className={classes.valueInside}>
+            {children}
+          </div>
+        }
         {(props.noInner !== true) &&
           <div className={classes.topWrapper}>
             <div className={classes.top} />
