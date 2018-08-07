@@ -12,7 +12,7 @@ import {
   getStackScriptsByUser,
 } from 'src/services/stackscripts';
 
-import SelectStackScriptPanelContainer from './SelectStackScriptPanelContainer';
+import SelectStackScriptPanelContent from './SelectStackScriptPanelContent';
 
 export interface ExtendedLinode extends Linode.Linode {
   heading: string;
@@ -85,7 +85,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
   tabs = [
     {
       title: 'My StackScripts',
-      render: () => <SelectStackScriptPanelContainer
+      render: () => <SelectStackScriptPanelContent
         onSelect={this.props.onSelect}
         publicImages={this.props.publicImages}
         currentUser={this.props.profile.username}
@@ -98,7 +98,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
     },
     {
       title: 'Linode StackScripts',
-      render: () => <SelectStackScriptPanelContainer
+      render: () => <SelectStackScriptPanelContent
         onSelect={this.props.onSelect}
         publicImages={this.props.publicImages}
         currentUser={this.props.profile.username}
@@ -112,7 +112,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
     },
     {
       title: 'Community StackScripts',
-      render: () => <SelectStackScriptPanelContainer
+      render: () => <SelectStackScriptPanelContent
         onSelect={this.props.onSelect}
         publicImages={this.props.publicImages}
         currentUser={this.props.profile.username}
