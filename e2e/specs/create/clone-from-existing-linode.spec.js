@@ -7,8 +7,7 @@ import Create from '../../pageobjects/create';
 describe('Create Linode - Clone from Existing Suite', () => {
     beforeAll(() => {
         apiCreateLinode();
-        Create.menuButton.click();
-        Create.linode();
+        ConfigureLinode.selectGlobalCreateItem('Linode');
     });
 
     it('should display clone elements', () => {
