@@ -29,7 +29,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 interface Props {
   open: boolean;
-  onClose: (domain?: Partial<Linode.Domain>) => void;
+  onClose: () => void;
+  onSuccess: () => void;
   mode: 'clone' | 'create';
   cloneID?: number;
   domain?: string;
@@ -197,7 +198,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
   reset = () => this.setState({ ...this.defaultState });
 
   create = () => {
-    const { onClose } = this.props;
+    const { onClose, onSuccess } = this.props;
     const { domain, type, soaEmail, master_ips } = this.state;
 
     const finalMasterIPs = master_ips.filter(v => v !== '');
@@ -223,7 +224,8 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
     createDomain(data)
       .then((res) => {
         this.reset();
-        onClose(res.data);
+        onSuccess();
+        onClose();
       })
       .catch((err) => {
         this.setState({
@@ -249,7 +251,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
     cloneDomain(cloneID, cloneName)
       .then((res) => {
         this.reset();
-        onClose(res.data);
+        onClose();
       })
       .catch((err) => {
         this.setState({
