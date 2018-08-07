@@ -13,6 +13,7 @@ interface TicketRequest {
   longviewclient_id?: number;
   nodebalancer_id?: number;
   volume_id?: number;
+  gravatarUrl?: string;
 }
 
 export const getTickets = (params?: any, filter?: any) =>

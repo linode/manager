@@ -140,7 +140,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
     getTicketReplies(ticketId)
       .then((response) => {
 
-        /** Get's a unique list of gravatar IDs */
+        /** Gets a unique list of gravatar IDs */
         const uniqueGravatarIDs = response.data.reduce((acc: string[], reply) => {
           const { gravatar_id } = reply;
 
