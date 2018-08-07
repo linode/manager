@@ -7,6 +7,8 @@ import {
   WithStyles,
 } from '@material-ui/core/styles';
 
+import OtherWays from './Panels/OtherWays';
+import PopularPosts from './Panels/PopularPosts';
 import SearchPanel from './Panels/SearchPanel';
 
 type ClassNames = 'root';
@@ -26,7 +28,11 @@ export class HelpLanding extends React.Component<CombinedProps, State> {
 
   render() {
     return (
-      <SearchPanel />
+      <React.Fragment>
+        <SearchPanel />
+        <PopularPosts />
+        <OtherWays />
+      </React.Fragment>
     );
   }
 }
