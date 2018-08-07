@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
+import Waypoint from 'react-waypoint';
+
 import {
   StyleRulesCallback,
   Theme,
@@ -681,18 +683,23 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
         * so don't show the "show more stackscripts" button
         */}
         {this.state.showMoreButtonVisible && !isSorting &&
-          <Button
-            title="Show More StackScripts"
-            onClick={this.getNext}
-            type="secondary"
-            disabled={this.state.gettingMoreStackScripts}
-            style={{ marginTop: 32 }}
-          >
-            {!this.state.gettingMoreStackScripts
-              ? 'Show More StackScripts'
-              : 'Loading...'
-            }
-          </Button>
+          <React.Fragment>
+            <Waypoint
+              onEnter={() => console.log('hello world')}
+            />
+            <Button
+              title="Show More StackScripts"
+              onClick={this.getNext}
+              type="secondary"
+              disabled={this.state.gettingMoreStackScripts}
+              style={{ marginTop: 32 }}
+            >
+              {!this.state.gettingMoreStackScripts
+                ? 'Show More StackScripts'
+                : 'Loading...'
+              }
+            </Button>
+          </React.Fragment>
         }
         {this.renderDeleteStackScriptDialog()}
         {this.renderMakePublicDialog()}
