@@ -118,7 +118,7 @@ interface State {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class SelectStackScriptPanelContainer extends React.Component<CombinedProps, State> {
+class SelectStackScriptPanelContent extends React.Component<CombinedProps, State> {
   state: State = {
     selected: this.props.selectedStackScriptIDFromQuery || undefined,
     currentPage: 1,
@@ -704,4 +704,4 @@ class SelectStackScriptPanelContainer extends React.Component<CombinedProps, Sta
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(SelectStackScriptPanelContainer);
+export default styled(SelectStackScriptPanelContent);
