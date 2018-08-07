@@ -238,7 +238,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
   }
 
   clone = () => {
-    const { onClose, cloneID } = this.props;
+    const { onClose, onSuccess, cloneID } = this.props;
     const { cloneName } = this.state;
 
     if (!cloneID) {
@@ -251,6 +251,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
     cloneDomain(cloneID, cloneName)
       .then((res) => {
         this.reset();
+        onSuccess()
         onClose();
       })
       .catch((err) => {
