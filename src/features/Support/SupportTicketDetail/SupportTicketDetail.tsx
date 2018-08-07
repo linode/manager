@@ -131,19 +131,25 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
     getTicketReplies(ticketId)
       .then((response) => {
 
+        /** Get's a unique list of gravatar IDs */
         const uniqueGravatarIDs = response.data.reduce((acc: string[], reply) => {
           const { gravatar_id } = reply;
 
           return acc.includes(gravatar_id) ? acc : [...acc, gravatar_id];
         }, []);
 
+        /** Send a request for the gravatar for each unique ID. */
         return Bluebird.reduce(
           uniqueGravatarIDs,
           (acc, id) => {
             return getGravatarUrlFromHash(id)
+              /* Map the response to a dict of { id: url }*/
               .then((result) => ({...acc, [id]: result }));
           },
           {})
+        /** We now have the gravatar map from the reducer above, and the replies from further up,
+         * so we can merge them together.
+         */
         .then((gravatarMap) => this.setState({
           replies: response.data.map((reply) => ({ ...reply, gravatarUrl: gravatarMap[reply.gravatar_id] })),
           loading: false,
