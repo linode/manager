@@ -131,7 +131,8 @@ class PopularPosts extends React.Component<CombinedProps, State> {
         >
           <Grid
             item
-            xs={6}
+            xs={12}
+            sm={6}
             className={classes.withSeparator}
           >
             <div className={classes.postCard}>
@@ -146,7 +147,8 @@ class PopularPosts extends React.Component<CombinedProps, State> {
           </Grid>
           <Grid
             item
-            xs={6}
+            xs={12}
+            sm={6}
           >
             <div className={classes.postCard}>
               <Typography
