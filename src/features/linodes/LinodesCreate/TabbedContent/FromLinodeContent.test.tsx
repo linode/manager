@@ -11,7 +11,7 @@ const mockProps = {
   getBackupsMonthlyPrice: jest.fn(),
   extendLinodes: jest.fn(),
   linodes,
-  getRegionName: jest.fn(),
+  getRegionInfo: jest.fn(),
   getTypeInfo: jest.fn(),
   history: null,
 };

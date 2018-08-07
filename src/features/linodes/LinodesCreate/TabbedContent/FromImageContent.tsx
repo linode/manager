@@ -10,6 +10,7 @@ import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
 import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
 import { resetEventsPolling } from 'src/events';
+import { Info } from 'src/features/linodes/LinodesCreate/LinodesCreate';
 import { allocatePrivateIP, createLinode } from 'src/services/linodes';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -44,7 +45,7 @@ interface Props {
   types: ExtendedType[];
   getBackupsMonthlyPrice: (selectedTypeID: string | null) => number | null;
   getTypeInfo: (selectedTypeID: string | null) => TypeInfo;
-  getRegionName: (selectedRegionID: string | null) => string | undefined;
+  getRegionInfo: (selectedRegionID: string | null) => Info;
   history: any;
 }
 
@@ -75,8 +76,6 @@ const errorResources = {
   root_pass: 'A root password',
   image: 'Image',
 };
-
-type Info = { title: string, details?: string } | undefined;
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
@@ -187,7 +186,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
       selectedRegionID, selectedTypeID, password, isMakingRequest, initTab } = this.state;
 
     const { classes, notice, types, regions, images, getBackupsMonthlyPrice,
-      getRegionName, getTypeInfo } = this.props;
+      getRegionInfo, getTypeInfo } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
@@ -195,7 +194,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
     const imageInfo = this.getImageInfo(this.props.images.find(
       image => image.id === selectedImageID));
 
-    const regionName = getRegionName(selectedRegionID);
+    const regionInfo = getRegionInfo(selectedRegionID);
 
     const typeInfo = getTypeInfo(selectedTypeID);
 
@@ -270,8 +269,11 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
                   displaySections.push(imageInfo);
                 }
 
-                if (regionName) {
-                  displaySections.push({ title: regionName });
+                if (regionInfo) {
+                  displaySections.push({
+                    title: regionInfo.title,
+                    details: regionInfo.details,
+                  });
                 }
 
                 if (typeInfo) {

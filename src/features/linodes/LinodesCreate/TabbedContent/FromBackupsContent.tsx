@@ -13,6 +13,7 @@ import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
 import { resetEventsPolling } from 'src/events';
+import { Info } from 'src/features/linodes/LinodesCreate/LinodesCreate';
 import { allocatePrivateIP, createLinode, getLinodeBackups } from 'src/services/linodes';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -41,8 +42,6 @@ export type TypeInfo = {
   backupsMonthly: number | null,
 } | undefined;
 
-type Info = { title: string, details?: string } | undefined;
-
 interface Props {
   notice?: Notice;
   linodes: Linode.Linode[];
@@ -50,7 +49,7 @@ interface Props {
   extendLinodes: (linodes: Linode.Linode[]) => ExtendedLinode[];
   getBackupsMonthlyPrice: (selectedTypeID: string | null) => number | null;
   getTypeInfo: (selectedTypeID: string | null) => TypeInfo;
-  getRegionName: (selectedRegionID: string | null) => string | undefined;
+  getRegionInfo: (selectedRegionID: string | null) => Info;
   history: any;
   selectedBackupFromQuery?: number;
   selectedLinodeFromQuery?: number;
@@ -249,13 +248,13 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       selectedTypeID, selectedRegionID, label, backups, linodesWithBackups, privateIP,
     selectedBackupInfo, isMakingRequest } = this.state;
     const { extendLinodes, getBackupsMonthlyPrice, classes,
-       notice, types, getRegionName, getTypeInfo } = this.props;
+       notice, types, getRegionInfo, getTypeInfo } = this.props;
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
 
     const imageInfo = selectedBackupInfo;
 
-    const regionName = getRegionName(selectedRegionID);
+    const regionInfo = getRegionInfo(selectedRegionID);
 
     const typeInfo = getTypeInfo(selectedTypeID);
 
@@ -346,8 +345,11 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                     displaySections.push(imageInfo);
                   }
 
-                  if (regionName) {
-                    displaySections.push({ title: regionName });
+                  if (regionInfo) {
+                    displaySections.push({
+                      title: regionInfo.title,
+                      details: regionInfo.details,
+                    });
                   }
 
                   if (typeInfo) {

@@ -10,7 +10,7 @@ const mockProps = {
   getBackupsMonthlyPrice: jest.fn(),
   history: null,
   getTypeInfo: jest.fn(),
-  getRegionName: jest.fn(),
+  getRegionInfo: jest.fn(),
 };
 
 describe('FromImageContent', () => {
