@@ -120,6 +120,10 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     nodeIdxToDelete: undefined,
   };
 
+  static defaultFieldsStates = {
+    configs: [createNewNodeBalancerConfig(true)],
+  };
+
   state: State = {
     linodesWithPrivateIPs: [],
     configs: pathOr([], ['response'], this.props.configs),
@@ -693,9 +697,9 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   confirmationConfigError = () =>
     (this.state.deleteConfigConfirmDialog.errors || []).map(e => e.reason).join(',')
 
-  updateState = (lens: Lens) => (value: any) => {
+  updateState = (lens: Lens, callback?: () => void) => (value: any) => {
     this.clearMessages();
-    this.setState(set(lens, value));
+    this.setState(set(lens, value), callback);
   }
 
   updateStateWithClamp = (lens: Lens) => (value: any) => {
@@ -795,7 +799,20 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           }}
 
           healthCheckType={view(healthCheckTypeLens, this.state)}
-          onHealthCheckTypeChange={this.updateState(healthCheckTypeLens)}
+          onHealthCheckTypeChange={this.updateState(healthCheckTypeLens, () => {
+            this.setState(compose(
+              set(checkPathLens,
+                NodeBalancerConfigurations.defaultFieldsStates.configs[0].check_path),
+              set(checkBodyLens,
+                NodeBalancerConfigurations.defaultFieldsStates.configs[0].check_body),
+              set(healthCheckAttemptsLens,
+                NodeBalancerConfigurations.defaultFieldsStates.configs[0].check_attempts),
+              set(healthCheckIntervalLens,
+                NodeBalancerConfigurations.defaultFieldsStates.configs[0].check_interval),
+              set(healthCheckTimeoutLens,
+                NodeBalancerConfigurations.defaultFieldsStates.configs[0].check_timeout),
+            ))}
+          )}
 
           healthCheckAttempts={view(healthCheckAttemptsLens, this.state)}
           onHealthCheckAttemptsChange={this.updateStateWithClamp(healthCheckAttemptsLens)}

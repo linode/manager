@@ -497,8 +497,19 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
                       healthCheckType={view(healthCheckTypeLens, this.state)}
                       onHealthCheckTypeChange={(healthCheckType: string) =>
-                        this.setState(state =>
-                          set(healthCheckTypeLens, healthCheckType, state))}
+                        this.setState(compose(
+                          set(healthCheckTypeLens, healthCheckType),
+                          set(checkPathLens,
+                            NodeBalancerCreate.defaultFieldsStates.configs[0].check_path),
+                          set(checkBodyLens,
+                            NodeBalancerCreate.defaultFieldsStates.configs[0].check_body),
+                          set(healthCheckAttemptsLens,
+                            NodeBalancerCreate.defaultFieldsStates.configs[0].check_attempts),
+                          set(healthCheckIntervalLens,
+                            NodeBalancerCreate.defaultFieldsStates.configs[0].check_interval),
+                          set(healthCheckTimeoutLens,
+                            NodeBalancerCreate.defaultFieldsStates.configs[0].check_timeout),
+                        ))}
 
                       healthCheckAttempts={view(healthCheckAttemptsLens, this.state)}
                       onHealthCheckAttemptsChange={(healthCheckAttempts: string) => {
@@ -711,7 +722,7 @@ export const validationErrorsToFieldErrors = (error: Joi.ValidationError) => {
 
     /**
      * This is a one-off solution for dealing with port uniqueness constraint on the configs.
-     * */
+     */
     .map((detail) => {
       const path = detail.path.split('_');
 
