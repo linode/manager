@@ -18,10 +18,11 @@ import CircleProgress from 'src/components/CircleProgress';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
-import { getTicket, getTicketReplies } from 'src/services/support';
+import { getTicket, getTicketReplies, Page, SupportReply, SupportTicket } from 'src/services/support';
 import { getGravatarUrlFromHash } from 'src/utilities/gravatar';
 
 import ExpandableTicketPanel from '../ExpandableTicketPanel';
+// import { getTicketRedirectUrl } from 'src/eventTypes';
 
 type ClassNames = 'root'
   | 'title'
@@ -109,51 +110,53 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
     this.loadTicketAndReplies();
   }
 
-  loadTicketAndReplies = () => {
+  loadTicket = () : any => {
     const ticketId = this.props.match.params.ticketId;
-    if (!ticketId) { return; }
-    getTicket(ticketId)
-      .then((ticketResponse) => {
-        const gravatarId: string[] = [ticketResponse.data.gravatar_id];
-        getTicketReplies(ticketId)
-          .then((replyResponse) => {
-            /** Gets a unique list of gravatar IDs */
-            const uniqueGravatarIDs = concat(
-              replyResponse.data.reduce((acc: string[], reply) => {
-                const { gravatar_id } = reply;
+    if (!ticketId) { return null; }
+    return getTicket(ticketId);
+  }
+  
+  loadReplies = () : any => {
+    const ticketId = this.props.match.params.ticketId;
+    if (!ticketId) { return null; }
+    return getTicketReplies(ticketId)
+      .then((response) => {
+        return response.data;
+      });
+  }
 
-                return acc.includes(gravatar_id) ? acc : [...acc, gravatar_id];
-              }, []),
-              gravatarId);
-            /** Send a request for the gravatar for each unique ID. */
-            return Bluebird.reduce(
-              uniqueGravatarIDs,
-              (acc, id) => {
-                return getGravatarUrlFromHash(id)
-                  /* Map the response to a dict of { id: url }*/
-                  .then((result) => ({...acc, [id]: result }));
-              },
-              {})
-            /** We now have the gravatar map from the reducer above, and the replies from further up,
-             * so we can merge them together.
-             */
-            .then((gravatarMap) => {
-              this.setState({
-              replies: replyResponse.data.map((reply) => ({ ...reply, gravatarUrl: gravatarMap[reply.gravatar_id] })),
-              ticket: merge(ticketResponse.data, {gravatarUrl: gravatarMap[ticketResponse.data.gravatar_id]}),
-              loading: false,
-            }, scrollToBottom)});
-        });
-     })
-     .catch((errors) => {
-      if (!this.mounted) { return; }
-      this.setState({
-        errors: pathOr(
-          [{ reason: 'There was an error retrieving your ticket.' }],
-          ['response', 'data', 'errors'], errors),
+  handleJoinedPromise = (ticketResponse:SupportTicket, replyResponse:SupportReply[]) => {
+    const gravatarId: string[] = [ticketResponse.gravatar_id];
+    /** Gets a unique list of gravatar IDs */
+    const uniqueGravatarIDs = concat(
+      replyResponse.reduce((acc: string[], reply:SupportReply) => {
+        const { gravatar_id } = reply;
+
+        return acc.includes(gravatar_id) ? acc : [...acc, gravatar_id];
+      }, []),
+      gravatarId);
+    /** Send a request for the gravatar for each unique ID. */
+    return Bluebird.reduce(
+      uniqueGravatarIDs,
+      (acc, id) => {
+        return getGravatarUrlFromHash(id)
+          /* Map the response to a dict of { id: url }*/
+          .then((result) => ({...acc, [id]: result }));
+      },
+      {})
+    /** We now have the gravatar map from the reducer above, and the replies from further up,
+     * so we can merge them together.
+     */
+      .then((gravatarMap) => {
+        this.setState({
+        replies: replyResponse.map((reply:SupportReply) => ({ ...reply, gravatarUrl: gravatarMap[reply.gravatar_id] })),
+        ticket: merge(ticketResponse, {gravatarUrl: gravatarMap[ticketResponse.gravatar_id]}),
         loading: false,
-      })
-    })
+      }, scrollToBottom)});
+  };
+
+  loadTicketAndReplies = () => {
+    Bluebird.join(this.loadTicket(), this.loadReplies(), this.handleJoinedPromise);
   }
 
   onBackButtonClick = () => {
