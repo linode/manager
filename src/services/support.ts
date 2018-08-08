@@ -62,3 +62,10 @@ export const createSupportTicket = (data:TicketRequest) =>
     setMethod('POST'),
     setData(data),
   )
+
+export const createReply = (data:ReplyRequest) =>
+Request<SupportReply>(
+  setURL(`${API_ROOT}/support/tickets/${data.ticket_id}/replies`),
+  setMethod('POST'),
+  setData(data),
+)
