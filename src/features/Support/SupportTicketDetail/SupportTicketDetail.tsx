@@ -1,4 +1,5 @@
 import * as Bluebird from 'bluebird';
+import * as classNames from 'classnames';
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -30,9 +31,11 @@ type ClassNames = 'root'
   | 'listParent'
   | 'label'
   | 'labelIcon'
-  | 'status';
+  | 'status'
+  | 'open'
+  | 'closed';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {},
   title: {
     display: 'flex',
@@ -62,7 +65,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   status: {
     marginLeft: theme.spacing.unit,
     padding: theme.spacing.unit,
-    backgroundColor: 'yellow',
+    color: theme.color.white,
+  },
+  open: {
+    backgroundColor: theme.color.green,
+  },
+  closed: {
+    backgroundColor: theme.color.red,
   },
 });
 
@@ -245,7 +254,12 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
             </IconButton>
             <Typography variant="headline" className={classes.title} data-qa-domain-title>
               {`#${ticket.id}: ${ticket.summary}`}
-              <Chip className={classes.status} label={ticket.status} />
+              <Chip className={classNames({
+                [classes.status]: true,
+                [classes.open]: ticket.status === 'open',
+                [classes.closed]: ticket.status === 'closed',
+              })}
+              label={ticket.status} />
             </Typography>
           </Grid>
         </Grid>
