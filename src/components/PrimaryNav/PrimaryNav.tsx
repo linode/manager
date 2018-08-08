@@ -14,7 +14,7 @@ import Grid from 'src/components/Grid';
 import Toggle from 'src/components/Toggle';
 
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
-import {userHasManagedAPI, userHasManagedLocal} from 'src/utilities/userHasManaged';
+import { userHasManagedAPI, userHasManagedLocal } from 'src/utilities/userHasManaged';
 
 interface PrimaryLink {
   display: string,
