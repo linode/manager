@@ -12,13 +12,17 @@ import Typography from '@material-ui/core/Typography';
 
 import Grid from 'src/components/Grid';
 
-import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
+import Chat from 'src/assets/icons/chat.svg';
+import Community from 'src/assets/icons/community.svg';
+import Documentation from 'src/assets/icons/document.svg';
+import Support from 'src/assets/icons/support.svg';
 
 type ClassNames = 'root'
 | 'wrapper'
 | 'heading'
 | 'card'
-| 'tileTitle';
+| 'tileTitle'
+| 'icon';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {},
@@ -40,10 +44,16 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     fontSize: '1.2rem',
     marginTop: theme.spacing.unit,
     marginBottom: theme.spacing.unit,
-    '&:hover': {
-      color: theme.color.headline,
-      textDecoration: 'underline',
-    },
+  },
+  icon: {
+    margin: '0 auto 16px',
+    display: 'block',
+    padding: 16,
+    borderRadius: '50%',
+    border: `2px solid ${theme.palette.divider}`,
+    width: 66,
+    height: 66,
+    color: theme.palette.primary.main,
   },
 });
 
@@ -94,10 +104,10 @@ export class OtherWays extends React.Component<CombinedProps, State> {
         >
           <Grid item xs={12} sm={6}>
             <div className={classes.card}>
-              <LinodeIcon />
-              <a target="_blank" href="https://linode.com/docs/">
-                <Typography variant="subheading" className={classes.tileTitle}>View Documentation</Typography>
-              </a>
+              <span className={classes.icon}><Documentation /></span>
+                <Typography variant="subheading" className={classes.tileTitle}>
+                  <a target="_blank" href="https://linode.com/docs/" className="black">View Documentation</a>
+                </Typography>
               <Typography variant="caption">
                 View Linode Documentation
               </Typography>
@@ -105,10 +115,10 @@ export class OtherWays extends React.Component<CombinedProps, State> {
           </Grid>
           <Grid item xs={12} sm={6}>
             <div className={classes.card}>
-              <LinodeIcon />
-              <a target="_blank" href="https://linode.com/community/">
-                <Typography variant="subheading" className={classes.tileTitle}>Search the Community</Typography>
-              </a>
+              <span className={classes.icon}><Community /></span>
+                <Typography variant="subheading" className={classes.tileTitle}>
+                  <a target="_blank" href="https://linode.com/community/" className="black">Search the Community</a>
+                </Typography>
               <Typography variant="caption">
                 Find help from other Linode users in the Community
               </Typography>
@@ -116,21 +126,21 @@ export class OtherWays extends React.Component<CombinedProps, State> {
           </Grid>
           <Grid item xs={12} sm={6}>
             <div className={classes.card}>
-              <LinodeIcon />
-                <a onClick={this.handleAdaInit}>
-                  <Typography variant="subheading" className={classes.tileTitle}>Talk to Ada</Typography>
-                </a>
-              <Typography variant="caption">
-                Chat with the Linode Support bot to help troubleshoot
-              </Typography>
+              <span className={classes.icon}><Chat /></span>
+                <Typography variant="subheading" className={classes.tileTitle}>
+                  <a href="#" onClick={this.handleAdaInit} className="black">Talk to Ada</a>
+                </Typography>
+                <Typography variant="caption">
+                  Chat with the Linode Support bot to help troubleshoot
+                </Typography>
             </div>
           </Grid>
           <Grid item xs={12} sm={6}>
             <div className={classes.card}>
-              <LinodeIcon />
-              <Link to="/support/tickets">
-                <Typography variant="subheading" className={classes.tileTitle}>Customer Support</Typography>
-              </Link>
+              <span className={classes.icon}><Support /></span>
+                <Typography variant="subheading" className={classes.tileTitle}>
+                  <Link to="/support/tickets" className="black">Customer Support</Link>
+                </Typography>
               <Typography variant="caption">
                 If you are not able to solve an issue with the resources listed above, you can
                 contact Linode Support
