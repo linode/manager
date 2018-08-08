@@ -148,7 +148,7 @@ class LinodeRow extends React.Component<CombinedProps> {
       <TableCell className={classes.linodeCell}>
         <Link to={`/linodes/${linodeId}`} className={classes.link} tabIndex={-1}>
           <Button className={classes.linkButton}>
-            <Grid container alignItems="center">
+            <Grid container wrap="nowrap" alignItems="center">
               <Grid item className="py0">
                 <LinodeStatusIndicator status={linodeStatus} />
               </Grid>
