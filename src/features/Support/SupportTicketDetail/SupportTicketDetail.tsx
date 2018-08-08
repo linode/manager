@@ -256,7 +256,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
               {`#${ticket.id}: ${ticket.summary}`}
               <Chip className={classNames({
                 [classes.status]: true,
-                [classes.open]: ticket.status === 'open',
+                [classes.open]: ticket.status === 'open' || ticket.status === 'new',
                 [classes.closed]: ticket.status === 'closed',
               })}
               label={ticket.status} />
