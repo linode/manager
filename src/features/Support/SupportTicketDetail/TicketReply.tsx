@@ -9,7 +9,7 @@ import Button from 'src/components/Button';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import { createReply, SupportReply } from 'src/services/support';
+import { createReply } from 'src/services/support';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 type ClassNames = 'root' | 'form';
@@ -26,7 +26,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 interface Props {
   ticketId: number;
-  onSuccess: (newReply:SupportReply) => void;
+  onSuccess: (newReply:Linode.SupportReply) => void;
 }
 
 interface State {

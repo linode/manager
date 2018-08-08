@@ -1,6 +1,6 @@
 import * as Bluebird from 'bluebird';
 import * as classNames from 'classnames';
-import { compose, pathOr } from 'ramda';
+import { compose, concat, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
@@ -19,10 +19,12 @@ import CircleProgress from 'src/components/CircleProgress';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
-import { getTicket, getTicketReplies, SupportReply, SupportTicket } from 'src/services/support';
+import { getTicket, getTicketReplies, SupportTicket } from 'src/services/support';
 import { getGravatarUrlFromHash } from 'src/utilities/gravatar';
 
 import ExpandableTicketPanel from '../ExpandableTicketPanel';
+import TicketReply from './TicketReply';
+
 
 type ClassNames = 'root'
   | 'title'
@@ -133,7 +135,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
       });
   }
 
-  handleJoinedPromise = (ticketResponse: SupportTicket, replyResponse: SupportReply[]) => {
+  handleJoinedPromise = (ticketResponse: SupportTicket, replyResponse: Linode.SupportReply[]) => {
     /** Gets a unique list of gravatar IDs */
     const uniqueGravatarIDs = replyResponse.reduce(reduceToUniqueGravatarIDs, [ticketResponse.gravatar_id]);
 
@@ -164,6 +166,18 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
         state:{ openFromRedirect: ['open','new'].includes(ticket.status)}
       });
     }
+  }
+
+  onCreateReplySuccess = (newReply:Linode.SupportReply) => {
+    const replies = pathOr([], ['replies'], this.state);
+    getGravatarUrlFromHash(newReply.gravatar_id)
+      .then((url) => {
+        newReply.gravatarUrl = url;
+        const updatedReplies = concat(replies, [newReply]);
+        this.setState({
+          replies: updatedReplies,
+        })
+      })
   }
 
   getEntityIcon = (type: string) => {
@@ -216,6 +230,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
   render() {
     const { classes, profileUsername } = this.props;
     const { errors, loading, replies, ticket } = this.state;
+    const ticketId = this.props.match.params.ticketId;
 
     /*
     * Including loading/error states here (rather than in a
@@ -265,19 +280,27 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
         </Grid>
         {ticket.entity && this.renderEntityLabelWithIcon()}
         <Grid container direction="column" justify="center" alignItems="center" className={classes.listParent} >
+          {/* Display the contents of the ticket, followed by replies (if any) */}
           <ExpandableTicketPanel
             key={ticket!.id}
             ticket={ticket}
             isCurrentUser={profileUsername === ticket.opened_by}
           />
           {replies && this.renderReplies(replies)}
+          {/* If the ticket is open, allow users to reply to it. */}
+          {['open','new'].includes(ticket.status) &&
+            <TicketReply 
+              ticketId={ticketId!}
+              onSuccess={this.onCreateReplySuccess}
+            />
+          }
         </Grid>
       </React.Fragment>
     )
   }
 }
 
-const reduceToUniqueGravatarIDs = (acc: string[], reply:SupportReply) => {
+const reduceToUniqueGravatarIDs = (acc: string[], reply:Linode.SupportReply) => {
   const { gravatar_id } = reply;
 
   return acc.includes(gravatar_id) ? acc : [...acc, gravatar_id];
@@ -295,7 +318,7 @@ const mapStateToProps = (state: Linode.AppState) => ({
   profileUsername: pathOr('', ['resources', 'profile', 'data', 'username'], state),
 });
 
-const matchGravatarURLToReply = (gravatarMap: {[ key: string]: string }) => (reply: SupportReply) =>
+const matchGravatarURLToReply = (gravatarMap: {[ key: string]: string }) => (reply: Linode.SupportReply) =>
   ({ ...reply, gravatarUrl: pathOr('not found', [reply.gravatar_id], gravatarMap) });
 
 export const connected = connect(mapStateToProps);

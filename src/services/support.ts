@@ -2,9 +2,14 @@ import { API_ROOT } from 'src/constants';
 
 import Request, { setData, setMethod, setParams, setURL, setXFilter } from './index';
 
-export type Page<T> = Linode.ResourcePage<T>;
+export interface ReplyRequest {
+  ticket_id: number;
+  description: string;
+}
+
+type Page<T> = Linode.ResourcePage<T>;
 export type SupportTicket = Linode.SupportTicket;
-export type SupportReply = Linode.SupportReply;
+
 interface TicketRequest {
   summary: string;
   description: string;
@@ -45,7 +50,7 @@ export const getTicket = (ticketID:number, params?: any, filter?: any) =>
   ).then((response) => response.data);
 
 export const getTicketReplies = (ticketId:number, params?: any, filter?: any) =>
-  Request<Page<SupportReply>>(
+  Request<Page<Linode.SupportReply>>(
     setURL(`${API_ROOT}/support/tickets/${ticketId}/replies`),
     setMethod('GET'),
     setParams(params),
@@ -64,7 +69,7 @@ export const createSupportTicket = (data:TicketRequest) =>
   )
 
 export const createReply = (data:ReplyRequest) =>
-Request<SupportReply>(
+Request<Linode.SupportReply>(
   setURL(`${API_ROOT}/support/tickets/${data.ticket_id}/replies`),
   setMethod('POST'),
   setData(data),
