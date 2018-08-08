@@ -14,6 +14,7 @@ import NodeBalancer from 'src/assets/addnewmenu/nodebalancer.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
+import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import Grid from 'src/components/Grid';
@@ -23,7 +24,6 @@ import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRowError from 'src/components/TableRowError';
-import TableRowLoading from 'src/components/TableRowLoading';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
 import { deleteNodeBalancer, getNodeBalancerConfigs, getNodeBalancers } from 'src/services/nodebalancers';
@@ -247,7 +247,11 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
       pageSize,
     } = this.state;
 
-    if (!loading && count === 0) {
+    if(loading){
+      return this.renderLoading();
+    }
+
+    if (count === 0) {
       return this.renderEmpty()
     }
 
@@ -338,13 +342,8 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
     const {
       count,
       errors,
-      loading,
       nodeBalancers,
     } = this.state;
-
-    if (loading) {
-      return this.renderLoading();
-    }
 
     if (errors) {
       return this.renderErrors(errors);
@@ -357,7 +356,9 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
     return null;
   };
 
-  renderLoading = () => <TableRowLoading colSpan={7} />;
+  renderLoading = () => {
+    return (<CircleProgress />);
+  };
 
   renderErrors = (errors: Linode.ApiFieldError[]) => {
     return <TableRowError message="There was an error loading your NodeBalancers. Please try again later." colSpan={7} />;

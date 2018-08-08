@@ -15,18 +15,18 @@ import Typography from '@material-ui/core/Typography';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
+import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
+import PaginationFooter, { PaginationProps } from 'src/components/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
-import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import Table from 'src/components/Table';
 import { events$ } from 'src/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
-import { deleteImage, getUserImages } from 'src/services/images';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { deleteImage, getImages } from 'src/services/images';
 
 import ImageRow from './ImageRow';
 import ImagesDrawer from './ImagesDrawer';
@@ -42,13 +42,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 interface Props { }
 
-interface PromiseLoaderProps {
-  images: PromiseLoaderResponse<Linode.Image>;
-}
-
-interface State {
+interface State extends PaginationProps {
+  loading: boolean;
   images: Linode.Image[];
-  error?: Error;
+  errors?: Error;
   imageDrawer: {
     open: boolean,
     mode: 'edit' | 'create' | 'restore',
@@ -67,14 +64,19 @@ interface State {
   };
 }
 
-type CombinedProps = Props & PromiseLoaderProps & WithStyles<ClassNames> & RouteComponentProps<{}>;
+type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
 
 class ImagesLanding extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
+
   eventsSub: Subscription;
+
   state: State = {
-    images: pathOr([], ['response', 'data'], this.props.images),
-    error: pathOr(undefined, ['error'], this.props.images),
+    loading: true,
+    count: 0,
+    page: 1,
+    pageSize: 25,
+    images: [],
     imageDrawer: {
       open: false,
       mode: 'edit',
@@ -107,6 +109,8 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
   componentDidMount() {
     this.mounted = true;
 
+    this.requestImages(undefined, undefined, true);
+
     this.eventsSub = events$
       .filter(event => (
         !event._initial
@@ -118,7 +122,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
       .subscribe((event) => {
         if (event.action === 'disk_imagize' && event.status === 'finished') {
           sendToast('Image created successfully.');
-          this.refreshImages();
+          this.requestImages();
         }
 
         if (event.action === 'image_delete' && event.status === 'notification') {
@@ -131,16 +135,25 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
     this.mounted = false;
   }
 
-  componentDidCatch(error: Error) {
-    this.setState({ error }, () => { scrollErrorIntoView(); });
-  }
+  requestImages = (
+    page: number = this.state.page,
+    pageSize: number = this.state.pageSize,
+    initial: boolean = false,
+  ) => {
+    this.setState({ loading: initial });
 
-  refreshImages = () => {
-    getUserImages()
-      .then((response) => {
-       if (this.mounted) { this.setState({ images: response.data }); }
-      });
- }
+    getImages({ page, page_size: pageSize }, { is_public: false })
+      .then((response) => this.mounted && this.setState({
+        images: response.data,
+        loading: false,
+        page: response.page,
+        count: response.results,
+      }))
+      .catch((error) => this.mounted && this.setState({
+        errors: pathOr([{ reason: 'Unable to load images.' }], ['response', 'data', 'errors'], error),
+        loading: false,
+      }));
+  }
 
   openForCreate = () => {
     this.setState({
@@ -187,45 +200,45 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
     const { history } = this.props;
     history.push({
       pathname: '/linodes/create',
-      state: { selectedImageId: imageID, selectedTab: 0, initTab: 1},
+      state: { selectedImageId: imageID, selectedTab: 0, initTab: 1 },
     });
   }
 
   removeImage = () => {
     const { removeDialog } = this.state;
     if (!this.state.removeDialog.imageID) {
-      this.setState({ removeDialog: { ...removeDialog, error: "Image is not available."}});
+      this.setState({ removeDialog: { ...removeDialog, error: "Image is not available." } });
       return;
-     }
-    this.setState({ removeDialog: { ...removeDialog, submitting: true, errors: undefined, }});
+    }
+    this.setState({ removeDialog: { ...removeDialog, submitting: true, errors: undefined, } });
     deleteImage(this.state.removeDialog.imageID)
       .then(() => {
         this.closeRemoveDialog();
-        this.refreshImages();
+        this.requestImages();
       })
       .catch((err) => {
         const errors: Linode.ApiFieldError[] = pathOr([], ['response', 'data', 'errors'], err);
         const error: string = errors.length > 0 ? errors[0].reason : "There was an error deleting the image."
-        this.setState({ removeDialog:  { ...removeDialog, error} });
+        this.setState({ removeDialog: { ...removeDialog, error } });
       })
   }
 
   changeSelectedLinode = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (this.state.imageDrawer.selectedLinode !== e.target.value) {
-      this.setState({ imageDrawer: { ...this.state.imageDrawer, selectedDisk: 'none', selectedLinode: e.target.value }});
+      this.setState({ imageDrawer: { ...this.state.imageDrawer, selectedDisk: 'none', selectedLinode: e.target.value } });
     }
   }
 
   changeSelectedDisk = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ imageDrawer: { ...this.state.imageDrawer, selectedDisk: e.target.value }});
+    this.setState({ imageDrawer: { ...this.state.imageDrawer, selectedDisk: e.target.value } });
   }
 
   setLabel = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ imageDrawer: { ...this.state.imageDrawer, label: e.target.value }});
+    this.setState({ imageDrawer: { ...this.state.imageDrawer, label: e.target.value } });
   }
 
   setDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ imageDrawer: { ...this.state.imageDrawer, description: e.target.value }});
+    this.setState({ imageDrawer: { ...this.state.imageDrawer, description: e.target.value } });
   }
 
   getActions = () => {
@@ -246,7 +259,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
   }
 
   closeImageDrawer = () => {
-    this.setState({ imageDrawer: { ...this.state.imageDrawer, open: false, }});
+    this.setState({ imageDrawer: { ...this.state.imageDrawer, open: false, } });
   }
 
   renderImageDrawer = () => {
@@ -264,36 +277,26 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
       changeLabel={this.setLabel}
       changeDescription={this.setDescription}
       onClose={this.closeImageDrawer}
-      onSuccess={this.refreshImages}
+      onSuccess={this.requestImages}
     />
   }
 
   render() {
     const { classes } = this.props;
-    const { error, images } = this.state;
+    const { errors, images, loading, count, page, pageSize } = this.state;
+
+    if (loading) {
+      return this.renderLoading();
+    }
 
     /** Error State */
-    if (error) {
-      return <ErrorState
-        errorText="There was an error retrieving your images. Please reload and try again."
-      />;
+    if (errors) {
+      return this.renderError(errors);
     }
 
     /** Empty State */
-    if (images.length === 0) {
-      return (
-        <React.Fragment>
-          <Placeholder
-            title="Add an Image"
-            copy="Adding a new image is easy. Click below to add an image."
-            buttonProps={{
-              onClick: this.openForCreate,
-              children: 'Add an Image',
-            }}
-          />
-          {this.renderImageDrawer()}
-        </React.Fragment>
-      );
+    if (count === 0) {
+      return this.renderEmpty();
     }
 
     return (
@@ -328,16 +331,23 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
             <TableBody>
               {images.map((image, idx) =>
                 <ImageRow key={idx}
-                          image={image}
-                          onRestore={this.openForRestore}
-                          onDeploy={this.deployNewLinode}
-                          onEdit={this.openForEdit}
-                          onDelete={this.openRemoveDialog}
-                          updateFor={[image]} />
+                  image={image}
+                  onRestore={this.openForRestore}
+                  onDeploy={this.deployNewLinode}
+                  onEdit={this.openForEdit}
+                  onDelete={this.openRemoveDialog}
+                  updateFor={[image]} />
               )}
             </TableBody>
           </Table>
         </Paper>
+        <PaginationFooter
+          count={count}
+          handlePageChange={this.handlePageChanage}
+          handleSizeChange={this.handlePageSizeChanage}
+          page={page}
+          pageSize={pageSize}
+        />
         {this.renderImageDrawer()}
         <ConfirmationDialog
           open={this.state.removeDialog.open}
@@ -345,25 +355,56 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
           onClose={this.closeRemoveDialog}
           actions={this.getActions}
         >
-          { this.state.removeDialog.error &&
-          <Notice error text={this.state.removeDialog.error} />
+          {this.state.removeDialog.error &&
+            <Notice error text={this.state.removeDialog.error} />
           }
           <Typography>Are you sure you want to remove this image?</Typography>
         </ConfirmationDialog>
       </React.Fragment>
     );
   }
+
+  renderError = (e: Error) => {
+    return (
+      <ErrorState
+        errorText="There was an error retrieving your images. Please reload and try again."
+      />
+    );
+  }
+
+  renderLoading = () => {
+    return (<CircleProgress />);
+  }
+
+  renderEmpty = () => {
+    return (
+      <React.Fragment>
+        <Placeholder
+          title="Add an Image"
+          copy="Adding a new image is easy. Click below to add an image."
+          buttonProps={{
+            onClick: this.openForCreate,
+            children: 'Add an Image',
+          }}
+        />
+        {this.renderImageDrawer()}
+      </React.Fragment>
+    );
+  };
+
+  handlePageChanage = (page: number) => {
+    this.setState({ page }, () => this.requestImages() );
+  }
+
+  handlePageSizeChanage = (pageSize: number) => {
+    this.setState({ pageSize }, () => this.requestImages() )
+  }
 }
 
 const styled = withStyles(styles, { withTheme: true });
 
-const loaded = PromiseLoader<Props>({
-  images: props => getUserImages(),
-});
-
 export default compose(
   setDocs(ImagesLanding.docs),
   withRouter,
-  loaded,
   styled,
 )(ImagesLanding);

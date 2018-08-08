@@ -12,6 +12,7 @@ import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
+import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
@@ -19,7 +20,6 @@ import Grid from 'src/components/Grid';
 import PaginationFooter, { PaginationProps } from 'src/components/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
-import TableRowLoading from 'src/components/TableRowLoading';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { deleteDomain, getDomains } from 'src/services/domains';
 import scrollToTop from 'src/utilities/scrollToTop';
@@ -243,7 +243,11 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
     const { classes } = this.props;
     const { count, loading } = this.state;
 
-    if (!loading && count === 0) {
+    if(loading){
+      return this.renderLoading();
+    }
+
+    if (count === 0) {
       return this.renderEmpty();
     }
 
@@ -312,11 +316,8 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
   }
 
   renderContent = () => {
-    const { loading, errors, count, domains } = this.state;
+    const { errors, count, domains } = this.state;
 
-    if (loading) {
-      return this.renderLoading();
-    }
     if (errors) {
       return this.renderLoading();
     }
@@ -330,7 +331,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
 
   renderLoading = () => {
     return (
-      <TableRowLoading colSpan={3} />
+      <CircleProgress />
     );
   };
 

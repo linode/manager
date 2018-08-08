@@ -2,6 +2,8 @@ import * as classNames from 'classnames';
 import { lensPath, over, set, tail } from 'ramda';
 import * as React from 'react';
 import 'rxjs/add/operator/bufferTime';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/merge';
 import { Subscription } from 'rxjs/Subscription';
 
 import Button from '@material-ui/core/Button';
