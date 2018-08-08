@@ -23,11 +23,16 @@ interface ConnectedProps {
 type CombinedProps = Props & ConnectedProps & WithStyles<ClassNames>;
 
 const DateTimeDisplay: React.StatelessComponent<CombinedProps> = (props) => {
+  try {
     return (
-    <React.Fragment>
-      { moment(props.value).tz(props.timezone).format(props.format || 'Y-MM-DD') }
-    </React.Fragment>
-  );
+      <React.Fragment>
+        { moment(props.value).tz(props.timezone).format(props.format || 'Y-MM-DD') }
+      </React.Fragment>
+    )
+  }
+  catch {
+    return null;
+  }
 };
 
 const styled = withStyles(styles, { withTheme: true });
