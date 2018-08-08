@@ -1,3 +1,4 @@
+import * as classNames from 'classnames';
 import { pathOr, take } from 'ramda';
 import * as React from 'react';
 
@@ -23,9 +24,18 @@ type ClassNames = 'root'
   | 'descCol'
   | 'expCol'
   | 'expButton'
-  | 'toggle';
+  | 'toggle'
+  | 'isCurrentUser';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+  '@keyframes fadeIn': {
+    from: {
+      opacity: 0,
+    },
+    to: {
+      opacity: 1,
+    },
+  },
   root: {
     width: '100%',
     padding: theme.spacing.unit * 2,
@@ -48,12 +58,16 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
   userName: {
     whiteSpace: 'nowrap',
+    fontWeight: 700,
+    color: theme.color.headline,
   },
   paper: {
     padding: theme.spacing.unit * 3,
   },
   paperOpen: {
-    padding: theme.spacing.unit * 3,
+    '& $descCol': {
+      animation: 'fadeIn 225ms linear forwards',
+    },
   },
   avatarCol: {
     minWidth: 60,
@@ -82,6 +96,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   toggle: {
     height: 24,
     width: 24,
+  },
+  isCurrentUser: {
+    backgroundColor: theme.color.grey2,
   },
 });
 
@@ -176,7 +193,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, isCurrentUser } = this.props;
     const { data, open } = this.state;
     if (!data) { return };
 
@@ -185,7 +202,13 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
 
     return (
       <Grid item className={classes.root}>
-        <Paper className={open ? classes.paperOpen : classes.paper}>
+        <Paper className={
+            classNames({
+              [classes.paper]: true,
+              [classes.paperOpen]: open,
+              [classes.isCurrentUser]: isCurrentUser,
+            })
+          }>
           <Grid container direction="row" justify="space-between" alignItems="flex-start">
             <Grid
               item
@@ -221,7 +244,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
                 onClick={this.togglePanel}
                 className={classes.expCol}
               >
-                <IconButton className={classes.expButton}>
+                <IconButton className={classes.expButton} aria-label="Expand full answer">
                   {open ? <Collapse className={classes.toggle} /> : <Expand className={classes.toggle} />}
                 </IconButton>
               </Grid>
