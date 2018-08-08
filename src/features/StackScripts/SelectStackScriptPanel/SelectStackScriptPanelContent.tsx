@@ -692,7 +692,7 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
             * show loading indicator if we're getting more stackscripts
             * and if we're not showing the "get more stackscripts" button
             */}
-            {gettingMoreStackScripts &&
+            {gettingMoreStackScripts && !isSorting &&
               <div style={{ margin: '32px 0 32px 0', textAlign: 'center' }}><CircleProgress mini /></div>
             }
           </React.Fragment>
