@@ -4,7 +4,6 @@ import Typography from '@material-ui/core/Typography';
 import Axios from 'axios';
 import { compose, map, pathOr, take } from 'ramda';
 import * as React from 'react';
-import Grid from 'src/components/Grid';
 import { parseString } from 'xml2js';
 import DashboardCard from '../DashboardCard';
 
