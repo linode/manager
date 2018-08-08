@@ -358,7 +358,7 @@ class PrimaryNav extends React.Component<Props, State> {
               target="_blank"
               role="menuitem"
             >
-              Community Forum
+              Community Questions
             </a>
             <Link
               to="/support"
