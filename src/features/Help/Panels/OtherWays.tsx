@@ -63,7 +63,9 @@ export class OtherWays extends React.Component<CombinedProps, State> {
     * Init Ada Chaperone chat app
     * Script is included in index.html
     */
-    this.ada = new (window as any).AdaChaperone('linode');
+    if ('AdaChaperone' in window) {
+      this.ada = new (window as any).AdaChaperone('linode');
+    }
   }
 
   handleAdaInit = () => {
