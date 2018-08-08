@@ -11,6 +11,7 @@ type CSSClasses = 'root'
 | 'noTopMargin'
 | 'mini'
 | 'hasValueInside'
+| 'green'
 | 'valueInside';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
@@ -60,12 +61,25 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   mini: {
     padding: theme.spacing.unit * 1.3,
   },
-  hasValueInside: {
-
-  },
   valueInside: {
     position: 'absolute',
-  }
+  },
+  hasValueInside: {},
+  green: {
+    '& circle': {
+      stroke: theme.color.green,
+    },
+    '& $progress': {
+      [theme.breakpoints.down('xs')]: {
+        width: '128px !important',
+        height: '128px !important',
+      },
+    },
+    '& $top': {
+      width: 120,
+      height: 120,
+    },
+  },
 });
 
 interface Props extends CircularProgressProps {
@@ -74,17 +88,21 @@ interface Props extends CircularProgressProps {
   noInner?: boolean;
   mini?: boolean;
   children?: JSX.Element;
+  green?: boolean;
 }
 
-const circleProgressComponent = (props: Props & WithStyles<CSSClasses>) => {
+type CombinedProps = Props & WithStyles<CSSClasses>;
+
+const circleProgressComponent: React.StatelessComponent<CombinedProps> = (props) => {
   const variant = typeof props.value === 'number' ? 'static' : 'indeterminate';
   const value = typeof props.value === 'number' ? props.value : 0;
-  const { children, classes, noTopMargin } = props;
+  const { children, classes, noTopMargin, green, ...rest } = props;
 
   const outerClasses = {
     [classes.root]: true,
     [classes.noTopMargin]: noTopMargin,
     [classes.hasValueInside]: children !== undefined,
+    [classes.green]: green,
   };
 
   if (props.className) {
@@ -111,11 +129,12 @@ const circleProgressComponent = (props: Props & WithStyles<CSSClasses>) => {
           </div>
         }
         <CircularProgress
+          {...rest}
           className={classes.progress}
-          size={124}
+          size={green ? 128 : 124}
           value={value}
           variant={variant}
-          thickness={2}
+          thickness={green ? 4 : 2}
           data-qa-circle-progress
         />
       </div>

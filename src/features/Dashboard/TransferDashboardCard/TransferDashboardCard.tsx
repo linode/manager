@@ -11,15 +11,53 @@ import { getNetworkUtilization } from 'src/services/account';
 import DashboardCard from '../DashboardCard';
 
 type ClassNames = 'root'
- | 'poolUsageProgress';
+  | 'grid'
+  | 'poolUsageProgress'
+  | 'circleChildren'
+  | 'used'
+  | 'quota';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
-    padding: theme.spacing.unit * 3,
+    padding: theme.spacing.unit * 4,
+    [theme.breakpoints.up('md')]: {
+      marginTop: theme.spacing.unit * 4,
+    },
+  },
+  grid: {
+    flexWrap: 'wrap',
+    flexDirection: 'column',
+    textAlign: 'center',
+    [theme.breakpoints.up('sm')]: {
+      flexWrap: 'nowrap',
+      flexDirection: 'row',
+      textAlign: 'left',
+    },
+    [theme.breakpoints.up('md')]: {
+      flexWrap: 'wrap',
+      flexDirection: 'column',
+      textAlign: 'center',
+    },
+    [theme.breakpoints.up('lg')]: {
+      flexDirection: 'row',
+      flexWrap: 'nowrap',
+      textAlign: 'left',
+    },
   },
   poolUsageProgress: {
-
+    marginRight: theme.spacing.unit * 4,
   },
+  circleChildren: {
+    textAlign: 'center',
+    position: 'relative',
+    top: -6,
+  },
+  used: {
+    fontSize: '1.5rem',
+    fontWeight: 700,
+    color: theme.color.headline,
+  },
+  quota: {},
 });
 
 interface Props { }
@@ -71,19 +109,29 @@ class TransferDashboardCard extends React.Component<CombinedProps, State> {
     return (
       <DashboardCard>
         <Paper className={classes.root}>
-          <Grid container>
-            <Grid item xs={12} md={6}>
+          <Grid
+            container
+            justify="center"
+            alignItems="center"
+            wrap="nowrap"
+            className={classes.grid}
+          >
+            <Grid item>
               <CircleProgress
                 variant="static"
                 noTopMargin
+                green
                 value={poolUsagePct}
                 className={classes.poolUsageProgress}
               >
-                <span>{`${used} of ${quota}`}</span>
+                <span className={classes.circleChildren}>
+                  <Typography className={classes.used}>{used}</Typography>
+                  <Typography variant="caption" className={classes.quota}>of {quota} GB</Typography>
+                </span>
               </CircleProgress>
             </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant='subheading'>This Month's Network Transfer Pool</Typography>
+            <Grid item>
+              <Typography variant='title'>This Month's Network Transfer Pool</Typography>
               <Typography>Network bandwith during the current billing cycle.</Typography>
             </Grid>
           </Grid>
