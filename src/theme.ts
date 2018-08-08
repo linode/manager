@@ -734,7 +734,7 @@ const LinodeTheme: Linode.Theme = {
     },
     caption: {
       fontSize: '.9rem',
-      lineHeight: '1.1em',
+      lineHeight: '1.2em',
     },
   },
   color: {

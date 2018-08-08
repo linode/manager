@@ -13,19 +13,18 @@ const parseXMLStringPromise = (str: string) => new Promise((resolve, reject) =>
 
 type ClassNames =
   'root' |
-  'itemContainer' |
-  'itemTitleContainer' |
-  'itemDescriptionContainer';
+  'itemTitle';
 
 const req = Axios.create();
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
-    padding: theme.spacing.unit * 2
+    padding: theme.spacing.unit * 3,
+    borderBottom: `1px solid ${theme.palette.divider}`,
   },
-  itemContainer: {},
-  itemTitleContainer: {},
-  itemDescriptionContainer: {}
+  itemTitle: {
+    marginBottom: theme.spacing.unit,
+  },
 });
 
 interface Props { }
@@ -76,18 +75,12 @@ class BlogDashboardCard extends React.Component<CombinedProps, State> {
 
     return (
       <Paper key={idx} className={classes.root}>
-        <Grid container className={classes.itemContainer}>
-          <Grid item xs={12} className={classes.itemTitleContainer}>
-            <a href={item.link} target="_blank">
-              <Typography variant="subheading">{item.title}</Typography>
-            </a>
-          </Grid>
-          <Grid item xs={12} className={classes.itemDescriptionContainer}>
-            <Typography>
-              {item.description}
-            </Typography>
-          </Grid>
-        </Grid>
+        <Typography variant="subheading" className={classes.itemTitle}>
+          <a href={item.link} target="_blank">{item.title}</a>
+        </Typography>
+        <Typography variant="caption">
+          {item.description}
+        </Typography>
       </Paper>
     );
   };

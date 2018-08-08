@@ -21,7 +21,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   root: {
     padding: theme.spacing.unit * 4,
     [theme.breakpoints.up('md')]: {
-      marginTop: theme.spacing.unit * 4,
+      marginTop: theme.spacing.unit,
     },
   },
   grid: {

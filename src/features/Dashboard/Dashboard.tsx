@@ -30,7 +30,7 @@ class Dashboard extends React.Component<CombinedProps, State> {
 
   render() {
     return (
-      <Grid container>
+      <Grid container spacing={24}>
         <Grid item xs={12}>
           <Typography variant="headline">Dashboard</Typography>
         </Grid>
