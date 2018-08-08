@@ -72,7 +72,9 @@ export class OtherWays extends React.Component<CombinedProps, State> {
     /*
     * Show the Ada chat
     */
-    this.ada.show();
+    if (typeof this.ada !== 'undefined') {
+      this.ada.show();
+    }
   }
 
   render() {
