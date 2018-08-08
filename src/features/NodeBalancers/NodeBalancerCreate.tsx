@@ -162,6 +162,28 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   onNodeWeightChange = (configIdx: number, nodeIdx: number, value: string) =>
     this.setNodeValue(configIdx, nodeIdx, 'weight', value)
 
+  afterProtocolUpdate = (L: { [key: string]: Lens}) => () => {
+    this.setState(compose(
+      set(L.sslCertificateLens, ''),
+      set(L.privateKeyLens, ''),
+    ))
+  }
+
+  afterHealthCheckTypeUpdate = (L: { [key: string]: Lens}) => () => {
+    this.setState(compose(
+      set(L.checkPathLens,
+        NodeBalancerCreate.defaultFieldsStates.configs[0].check_path),
+      set(L.checkBodyLens,
+        NodeBalancerCreate.defaultFieldsStates.configs[0].check_body),
+      set(L.healthCheckAttemptsLens,
+        NodeBalancerCreate.defaultFieldsStates.configs[0].check_attempts),
+      set(L.healthCheckIntervalLens,
+        NodeBalancerCreate.defaultFieldsStates.configs[0].check_interval),
+      set(L.healthCheckTimeoutLens,
+        NodeBalancerCreate.defaultFieldsStates.configs[0].check_timeout),
+    ));
+  }
+
   clearNodeErrors = () => {
     // Build paths for all config errors.
     const configPaths = this.state.nodeBalancerFields.configs.map((config, idxC) => {
@@ -364,11 +386,11 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   })
 
   updateState = (
-    L: { [key: string]: Lens},
     lens: Lens,
+    L?: { [key: string]: Lens},
     callback?: (L: { [key: string]: Lens }) => () => void
   ) => (value: any) => {
-    this.setState(set(lens, value), callback ? callback(L) : undefined);
+    this.setState(set(lens, value), L && callback ? callback(L) : undefined);
   }
 
   confirmationConfigError = () =>
@@ -409,28 +431,6 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       // the user won't be presented with any suggestions when typing in the
       // node address field, which isn't the end of the world.
       .catch(err => err);
-  }
-
-  afterProtocolUpdate = (L: { [key: string]: Lens}) => () => {
-    this.setState(compose(
-      set(L.sslCertificateLens, ''),
-      set(L.privateKeyLens, ''),
-    ))
-  }
-  
-  afterHealthCheckTypeUpdate = (L: { [key: string]: Lens}) => () => {
-    this.setState(compose(
-      set(L.checkPathLens,
-        NodeBalancerCreate.defaultFieldsStates.configs[0].check_path),
-      set(L.checkBodyLens,
-        NodeBalancerCreate.defaultFieldsStates.configs[0].check_body),
-      set(L.healthCheckAttemptsLens,
-        NodeBalancerCreate.defaultFieldsStates.configs[0].check_attempts),
-      set(L.healthCheckIntervalLens,
-        NodeBalancerCreate.defaultFieldsStates.configs[0].check_interval),
-      set(L.healthCheckTimeoutLens,
-        NodeBalancerCreate.defaultFieldsStates.configs[0].check_timeout),
-    ));
   }
 
   render() {
@@ -508,45 +508,45 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                       configIdx={idx}
 
                       algorithm={view(L.algorithmLens, this.state)}
-                      onAlgorithmChange={this.updateState(L, L.algorithmLens)}
+                      onAlgorithmChange={this.updateState(L.algorithmLens)}
 
                       checkPassive={view(L.checkPassiveLens, this.state)}
-                      onCheckPassiveChange={this.updateState(L, L.checkPassiveLens)}
+                      onCheckPassiveChange={this.updateState(L.checkPassiveLens)}
 
                       checkBody={view(L.checkBodyLens, this.state)}
-                      onCheckBodyChange={this.updateState(L, L.checkBodyLens)}
+                      onCheckBodyChange={this.updateState(L.checkBodyLens)}
 
                       checkPath={view(L.checkPathLens, this.state)}
-                      onCheckPathChange={this.updateState(L, L.checkPathLens)}
+                      onCheckPathChange={this.updateState(L.checkPathLens)}
 
                       port={view(L.portLens, this.state)}
-                      onPortChange={this.updateState(L, L.portLens)}
+                      onPortChange={this.updateState(L.portLens)}
 
                       protocol={view(L.protocolLens, this.state)}
                       onProtocolChange={this.updateState(
-                        L, L.protocolLens, this.afterProtocolUpdate)}
+                        L.protocolLens, L, this.afterProtocolUpdate)}
 
                       healthCheckType={view(L.healthCheckTypeLens, this.state)}
                       onHealthCheckTypeChange={this.updateState(
-                        L, L.healthCheckTypeLens, this.afterHealthCheckTypeUpdate)}
+                        L.healthCheckTypeLens, L, this.afterHealthCheckTypeUpdate)}
 
                       healthCheckAttempts={view(L.healthCheckAttemptsLens, this.state)}
-                      onHealthCheckAttemptsChange={this.updateState(L, L.healthCheckAttemptsLens)}
+                      onHealthCheckAttemptsChange={this.updateState(L.healthCheckAttemptsLens)}
 
                       healthCheckInterval={view(L.healthCheckIntervalLens, this.state)}
-                      onHealthCheckIntervalChange={this.updateState(L, L.healthCheckIntervalLens)}
+                      onHealthCheckIntervalChange={this.updateState(L.healthCheckIntervalLens)}
 
                       healthCheckTimeout={view(L.healthCheckTimeoutLens, this.state)}
-                      onHealthCheckTimeoutChange={this.updateState(L, L.healthCheckTimeoutLens)}
+                      onHealthCheckTimeoutChange={this.updateState(L.healthCheckTimeoutLens)}
 
                       sessionStickiness={view(L.sessionStickinessLens, this.state)}
-                      onSessionStickinessChange={this.updateState(L, L.sessionStickinessLens)}
+                      onSessionStickinessChange={this.updateState(L.sessionStickinessLens)}
 
                       sslCertificate={view(L.sslCertificateLens, this.state)}
-                      onSslCertificateChange={this.updateState(L, L.sslCertificateLens)}
+                      onSslCertificateChange={this.updateState(L.sslCertificateLens)}
 
                       privateKey={view(L.privateKeyLens, this.state)}
-                      onPrivateKeyChange={this.updateState(L, L.privateKeyLens)}
+                      onPrivateKeyChange={this.updateState(L.privateKeyLens)}
 
                       nodes={this.state.nodeBalancerFields.configs[idx].nodes}
 

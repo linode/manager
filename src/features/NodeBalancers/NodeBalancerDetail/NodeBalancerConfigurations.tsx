@@ -697,9 +697,13 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   confirmationConfigError = () =>
     (this.state.deleteConfigConfirmDialog.errors || []).map(e => e.reason).join(',')
 
-  updateState = (lens: Lens, callback?: () => void) => (value: any) => {
+  updateState = (
+    lens: Lens,
+    L?: { [key: string]: Lens},
+    callback?: (L: { [key: string]: Lens }) => () => void
+  ) => (value: any) => {
     this.clearMessages();
-    this.setState(set(lens, value), callback);
+    this.setState(set(lens, value), L && callback ? callback(L) : undefined);
   }
 
   updateStateWithClamp = (lens: Lens) => (value: any) => {
