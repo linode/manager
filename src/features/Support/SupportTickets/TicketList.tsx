@@ -151,7 +151,7 @@ class TicketList extends React.Component<Props, State> {
   renderRow = (ticket: Linode.SupportTicket) => {
     return (
       <TableRow key={`ticket-${ticket.id}`} >
-        <TableCell data-qa-support-id><Link to="/support">{ticket.id}</Link></TableCell>
+        <TableCell data-qa-support-id><Link to={`/support/tickets/${ticket.id}`}>{ticket.id}</Link></TableCell>
         <TableCell data-qa-support-topic>{this.renderTopic(ticket)}</TableCell>
         <TableCell data-qa-support-entity>{this.renderEntityLink(ticket)}</TableCell>
         <TableCell data-qa-support-subject>{ticket.summary}</TableCell>

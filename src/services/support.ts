@@ -2,8 +2,9 @@ import { API_ROOT } from 'src/constants';
 
 import Request, { setData, setMethod, setParams, setURL, setXFilter } from './index';
 
-type Page<T> = Linode.ResourcePage<T>;
-type SupportTicket = Linode.SupportTicket;
+export type Page<T> = Linode.ResourcePage<T>;
+export type SupportTicket = Linode.SupportTicket;
+export type SupportReply = Linode.SupportReply;
 interface TicketRequest {
   summary: string;
   description: string;
@@ -33,6 +34,26 @@ export const getTicketsPage = (pagination: Linode.PaginationOptions = {}, open?:
     : { status: 'closed'}
 
   return getTickets(pagination, filter).then((response) => response.data);
+}
+
+export const getTicket = (ticketID:number, params?: any, filter?: any) =>
+  Request<SupportTicket>(
+    setURL(`${API_ROOT}/support/tickets/${ticketID}`),
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filter),
+  ).then((response) => response.data);
+
+export const getTicketReplies = (ticketId:number, params?: any, filter?: any) =>
+  Request<Page<SupportReply>>(
+    setURL(`${API_ROOT}/support/tickets/${ticketId}/replies`),
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filter),
+  ).then((response) => response.data);
+
+export const getTicketRepliesPage = (ticketId:number, pagination: Linode.PaginationOptions = {}) => {
+  return getTicketReplies(ticketId, pagination).then((response) => response.data);
 }
 
 export const createSupportTicket = (data:TicketRequest) =>
