@@ -39,7 +39,12 @@ import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import NodeBalancerConfigPanel from './NodeBalancerConfigPanel';
-import { clampNumericString, createNewNodeBalancerConfig, createNewNodeBalancerConfigNode, NodeBalancerConfigFields, transformConfigsForRequest } from './utils';
+import {
+  createNewNodeBalancerConfig,
+  createNewNodeBalancerConfigNode,
+  NodeBalancerConfigFields,
+  transformConfigsForRequest
+} from './utils';
 
 type Styles =
   'root'
