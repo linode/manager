@@ -18,11 +18,10 @@ import CircleProgress from 'src/components/CircleProgress';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
-import { getTicket, getTicketReplies, Page, SupportReply, SupportTicket } from 'src/services/support';
+import { getTicket, getTicketReplies, SupportReply, SupportTicket } from 'src/services/support';
 import { getGravatarUrlFromHash } from 'src/utilities/gravatar';
 
 import ExpandableTicketPanel from '../ExpandableTicketPanel';
-// import { getTicketRedirectUrl } from 'src/eventTypes';
 
 type ClassNames = 'root'
   | 'title'
