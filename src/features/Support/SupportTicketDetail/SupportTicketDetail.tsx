@@ -1,5 +1,5 @@
 import * as Bluebird from 'bluebird';
-import { compose, concat, merge, pathOr } from 'ramda';
+import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
@@ -114,7 +114,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
     if (!ticketId) { return null; }
     return getTicket(ticketId);
   }
-  
+
   loadReplies = () : any => {
     const ticketId = this.props.match.params.ticketId;
     if (!ticketId) { return null; }
@@ -124,34 +124,22 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
       });
   }
 
-  handleJoinedPromise = (ticketResponse:SupportTicket, replyResponse:SupportReply[]) => {
-    const gravatarId: string[] = [ticketResponse.gravatar_id];
+  handleJoinedPromise = (ticketResponse: SupportTicket, replyResponse: SupportReply[]) => {
     /** Gets a unique list of gravatar IDs */
-    const uniqueGravatarIDs = concat(
-      replyResponse.reduce((acc: string[], reply:SupportReply) => {
-        const { gravatar_id } = reply;
+    const uniqueGravatarIDs = replyResponse.reduce(reduceToUniqueGravatarIDs, [ticketResponse.gravatar_id]);
 
-        return acc.includes(gravatar_id) ? acc : [...acc, gravatar_id];
-      }, []),
-      gravatarId);
     /** Send a request for the gravatar for each unique ID. */
-    return Bluebird.reduce(
-      uniqueGravatarIDs,
-      (acc, id) => {
-        return getGravatarUrlFromHash(id)
-          /* Map the response to a dict of { id: url }*/
-          .then((result) => ({...acc, [id]: result }));
-      },
-      {})
-    /** We now have the gravatar map from the reducer above, and the replies from further up,
-     * so we can merge them together.
-     */
+    return Bluebird.reduce(uniqueGravatarIDs, requestAndMapGravatar, {})
       .then((gravatarMap) => {
+        /** We now have the gravatar map from the reducer above, and the replies from further up,
+         * so we can merge them together.
+         */
         this.setState({
-        replies: replyResponse.map((reply:SupportReply) => ({ ...reply, gravatarUrl: gravatarMap[reply.gravatar_id] })),
-        ticket: merge(ticketResponse, {gravatarUrl: gravatarMap[ticketResponse.gravatar_id]}),
-        loading: false,
-      }, scrollToBottom)});
+          replies: replyResponse.map(matchGravatarURLToReply(gravatarMap)),
+          ticket: {...ticketResponse, gravatarUrl: gravatarMap[ticketResponse.gravatar_id]},
+          loading: false,
+        }, scrollToBottom)
+      });
   };
 
   loadTicketAndReplies = () => {
@@ -275,14 +263,28 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
   }
 }
 
+const reduceToUniqueGravatarIDs = (acc: string[], reply:SupportReply) => {
+  const { gravatar_id } = reply;
+
+  return acc.includes(gravatar_id) ? acc : [...acc, gravatar_id];
+};
+
+const requestAndMapGravatar = (acc: any, id: string) => {
+  return getGravatarUrlFromHash(id)
+    /* Map the response to a dict of { id: url }*/
+    .then((result) => ({...acc, [id]: result }));
+};
+
 const styled = withStyles(styles, { withTheme: true });
 
 const mapStateToProps = (state: Linode.AppState) => ({
   profileUsername: pathOr('', ['resources', 'profile', 'data', 'username'], state),
 });
 
-export const connected = connect(mapStateToProps);
+const matchGravatarURLToReply = (gravatarMap: {[ key: string]: string }) => (reply: SupportReply) =>
+  ({ ...reply, gravatarUrl: pathOr('not found', [reply.gravatar_id], gravatarMap) });
 
+export const connected = connect(mapStateToProps);
 
 export default compose<any,any,any,any>(
   setDocs(SupportTicketDetail.docs),
