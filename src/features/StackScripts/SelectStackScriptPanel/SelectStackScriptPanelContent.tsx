@@ -169,8 +169,6 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
       .then((response: Linode.ResourcePage<Linode.StackScript.Response>) => {
         if (!this.mounted) { return; }
 
-        if (page > 1) { throw new Error('noooooo') }
-
         /*
         * if we have no results at all or if we've loaded all available results
         */
@@ -526,7 +524,9 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
         actions={this.renderConfirmDeleteActions}
         onClose={this.handleCloseDialog}
       >
-        <Typography>Are you sure you want to delete this StackScript?</Typography>
+        <Typography>
+          Are you sure you want to delete this StackScript?
+        </Typography>
       </ConfirmationDialog>
     )
   }
@@ -555,6 +555,9 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
     const { currentFilter } = this.state;
     const filteredUser = (isLinodeStackScripts) ? 'linode' : currentUser;
 
+    /*
+    * Search by label or description of the StackScript
+    */
     const filter = {
       ["+or"]: [
         {
@@ -702,7 +705,8 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
         {!isSorting && !allStackScriptsLoaded && !gettingMoreStackScripts &&
           <div style={{ textAlign: 'center' }}>
             {/* 
-            * If the lazy-load failed, show the "Show more StackScripts button
+            * If the lazy-load failed (marked by the catch in getNext), 
+            * show the "Show more StackScripts button
             * Otherwise, try to lazy load some more dang stackscripts
             */}
             {(!getMoreStackScriptsFailed)
