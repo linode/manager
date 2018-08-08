@@ -383,6 +383,7 @@ class PrimaryNav extends React.Component<Props, State> {
             className={classNames({
               [classes.listItem]: true,
               [classes.collapsible]: true,
+              [classes.active]: this.linkIsActive('/help') === true,
             })}
           >
             <ListItemText
