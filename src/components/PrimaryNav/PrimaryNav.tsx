@@ -54,6 +54,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     width: '100%',
     height: '100%',
     margin: 0,
+    padding: 0,
     paddingBottom: theme.spacing.unit * 3,
     [theme.breakpoints.up('sm')]: {
       minHeight: 72,
@@ -105,6 +106,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     paddingRight: theme.spacing.unit * 2,
     fontSize: '.9rem',
     flexShrink: 0,
+    listStyleType: 'none',
   },
   sublink: {
     padding: '4px 0 4px 8px',
@@ -223,6 +225,8 @@ class PrimaryNav extends React.Component<Props, State> {
         key={PrimaryLink.display}
         button
         divider
+        component="li"
+        role="menuitem"
         focusRipple={true}
         onClick={() => this.navigate(PrimaryLink.href)}
         className={`
@@ -257,6 +261,8 @@ class PrimaryNav extends React.Component<Props, State> {
           direction="column"
           wrap="nowrap"
           spacing={0}
+          component="ul"
+          role="menu"
         >
           <Grid item>
             <div className={classes.logoItem}>
@@ -265,13 +271,15 @@ class PrimaryNav extends React.Component<Props, State> {
             </Link>
             </div>
           </Grid>
-
+          
           {primaryLinks.map(primaryLink => this.renderPrimaryLink(primaryLink))}
 
           <ListItem
             data-menu-name="account"
             focusRipple={true}
             button
+            component="li"
+            role="menuitem"
             onClick={this.expandMenutItem}
             className={classNames({
               [classes.listItem]: true,
@@ -297,34 +305,39 @@ class PrimaryNav extends React.Component<Props, State> {
                 || (this.linkIsActive('/billing') === true)
                 || (this.linkIsActive('/users') === true)}
             timeout="auto"
+            component="ul"
             unmountOnExit
             className={classes.sublinkPanel}
           >
-            <Link
-              to="/billing"
-              role="menuitem"
-              className={classNames({
-                [classes.sublink]: true,
-                [classes.sublinkActive]: this.linkIsActive('/billing') === true,
-              })}
-            >
-              Account &amp; Billing
-            </Link>
-            <Link
-              to="/users"
-              role="menuitem"
-              className={classNames({
-                [classes.sublink]: true,
-                [classes.sublinkActive]: this.linkIsActive('/users') === true,
-              })}
-            >
-              Users
-            </Link>
+            <li role="menuitem">
+              <Link
+                to="/billing"
+                className={classNames({
+                  [classes.sublink]: true,
+                  [classes.sublinkActive]: this.linkIsActive('/billing') === true,
+                })}
+              >
+                Account &amp; Billing
+              </Link>
+            </li>
+            <li role="menuitem">
+              <Link
+                to="/users"
+                className={classNames({
+                  [classes.sublink]: true,
+                  [classes.sublinkActive]: this.linkIsActive('/users') === true,
+                })}
+              >
+                Users
+              </Link>
+            </li>
           </Collapse>
 
           <ListItem
             data-menu-name="support"
             button
+            component="li"
+            role="menuitem"
             focusRipple={true}
             onClick={this.expandMenutItem}
             className={classNames({
@@ -350,34 +363,38 @@ class PrimaryNav extends React.Component<Props, State> {
                 || this.linkIsActive('/support/tickets') === true}
             timeout="auto"
             unmountOnExit
+            component="ul"
             className={classes.sublinkPanel}
           >
-            <a
-              className={classes.sublink}
-              href="https://www.linode.com/docs"
-              target="_blank"
-              role="menuitem"
-            >
-              Documentation
-            </a>
-            <a
-              className={classes.sublink}
-              href="//www.linode.com/community/questions"
-              target="_blank"
-              role="menuitem"
-            >
-              Community Forum
-            </a>
-            <Link
-              to="/support/tickets"
-              role="menuitem"
-              className={classNames({
-                [classes.sublink]: true,
-                [classes.sublinkActive]: this.linkIsActive('/support/tickets') === true,
-              })}
-            >
-              Support Tickets
-            </Link>
+            <li role="menuitem">
+              <a
+                className={classes.sublink}
+                href="https://www.linode.com/docs"
+                target="_blank"
+                >
+                  Documentation
+              </a>
+            </li>
+            <li role="menuitem">
+              <a
+                className={classes.sublink}
+                href="//www.linode.com/community/questions"
+                target="_blank"
+              >
+                Community Forum
+              </a>
+            </li>
+            <li role="menuitem">
+              <Link
+                to="/support"
+                className={classNames({
+                  [classes.sublink]: true,
+                  [classes.sublinkActive]: this.linkIsActive('/support/tickets') === true,
+                })}
+              >
+                Support Tickets
+              </Link>
+            </li>
           </Collapse>
 
           <ListItem
