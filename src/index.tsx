@@ -13,6 +13,7 @@ import 'src/exceptionReporting';
 import Logout from 'src/layouts/Logout';
 import OAuthCallbackPage from 'src/layouts/OAuth';
 import store from 'src/store';
+import 'src/utilities/createImageBitmap';
 import 'src/utilities/request';
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
 
