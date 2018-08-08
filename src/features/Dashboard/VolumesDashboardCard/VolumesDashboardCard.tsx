@@ -164,7 +164,7 @@ class VolumesDashboardCard extends React.Component<CombinedProps, State> {
         </TableCell>
         <Hidden xsDown>
           <TableCell className={classes.moreCol}>
-          <RegionIndicator region={region} />
+            <RegionIndicator region={region} />
           </TableCell>
         </Hidden>
       </TableRow>

@@ -10,8 +10,7 @@ import DashboardCard from '../DashboardCard';
 const parseXMLStringPromise = (str: string) => new Promise((resolve, reject) =>
   parseString(str, (err, result) => err ? reject(err) : resolve(result)));
 
-type ClassNames =
-  'root' |
+type ClassNames = 'root' |
   'itemTitle';
 
 const req = Axios.create();
@@ -75,7 +74,7 @@ class BlogDashboardCard extends React.Component<CombinedProps, State> {
     return (
       <Paper key={idx} className={classes.root}>
         <Typography variant="subheading" className={classes.itemTitle}>
-          <a href={item.link} target="_blank">{item.title}</a>
+          <a href={item.link} className="blue" target="_blank">{item.title}</a>
         </Typography>
         <Typography variant="caption">
           {item.description}
@@ -84,7 +83,7 @@ class BlogDashboardCard extends React.Component<CombinedProps, State> {
     );
   };
 
-  renderAction = () => <a href="https://blog.linode.com/" target="_blank">Read More</a>;
+  renderAction = () => <a href="https://blog.linode.com/" className="blue" target="_blank">Read More</a>;
 }
 
 const processXMLData = compose(

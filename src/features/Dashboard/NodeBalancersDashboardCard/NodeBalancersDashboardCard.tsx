@@ -151,9 +151,11 @@ class NodeBalancersDashboardCard extends React.Component<CombinedProps, State> {
         <TableCell className={classes.labelCol}>
           <Grid container direction="column" spacing={8}>
             <Grid item className="py0">
-              <Link to={`/nodebalancers/${id}`}>
-                <Typography variant="subheading">{label}</Typography>
-              </Link>
+              <Typography variant="subheading">
+                <Link to={`/nodebalancers/${id}`} className="black">
+                  {label}
+                </Link>
+              </Typography>
             </Grid>
             <Grid item>
               <Typography variant="caption">
@@ -164,7 +166,7 @@ class NodeBalancersDashboardCard extends React.Component<CombinedProps, State> {
         </TableCell>
         <Hidden xsDown>
           <TableCell className={classes.moreCol}>
-          <RegionIndicator region={region} />
+            <RegionIndicator region={region} />
           </TableCell>
         </Hidden>
       </TableRow>
