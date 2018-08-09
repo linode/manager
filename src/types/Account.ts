@@ -34,6 +34,16 @@ namespace Linode {
     total: string | number;
   }
 
+  export interface InvoiceItem {
+    amount: number;
+    from: null | string;
+    to: null | string;
+    label: string;
+    quantity: null | number;
+    type: 'hourly' | 'prepay' | 'misc';
+    unit_price: null | number;
+  }
+
   export interface Payment {
     id: number;
     date: string;
@@ -56,5 +66,11 @@ namespace Linode {
 
   export type Grants = GlobalGrants & {
     [key: string]: Grant[];
+  }
+
+  export interface NetworkUtilization {
+   billable: number;
+   used: number;
+   quota: number;
   }
 }

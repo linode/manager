@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Drawer from 'src/components/Drawer';
+import { formatRegion } from 'src/utilities';
 
 type ClassNames = 'root'
   | 'section';
@@ -28,7 +29,8 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const ViewRangeDrawer: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes } = props;
+  const { classes, range } = props;
+  const region = (range && range.region) || '';
 
   return (
     <Drawer
@@ -48,7 +50,7 @@ const ViewRangeDrawer: React.StatelessComponent<CombinedProps> = (props) => {
           <div className={classes.section} style={{ border: 0, paddingBottom: 0 }}>
             <Typography variant="subheading">Region</Typography>
             <Typography variant="body1">
-              {props.range.region}
+              {formatRegion(region)}
             </Typography>
           </div>
 

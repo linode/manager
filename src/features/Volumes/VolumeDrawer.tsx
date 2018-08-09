@@ -1,17 +1,15 @@
-import { lensPath, path, set, view } from 'ramda';
-import * as React from 'react';
-import { connect, Dispatch } from 'react-redux';
-import { bindActionCreators, compose } from 'redux';
-import 'rxjs/add/operator/filter';
-import { Subscription } from 'rxjs/Subscription';
-
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-
+import { append, filter, lensPath, over, path, set, view, when } from 'ramda';
+import * as React from 'react';
+import { connect, Dispatch } from 'react-redux';
+import { bindActionCreators, compose } from 'redux';
+import 'rxjs/add/operator/filter';
+import { Subscription } from 'rxjs/Subscription';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
@@ -19,13 +17,14 @@ import Notice from 'src/components/Notice';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import Select from 'src/components/Select';
 import TextField from 'src/components/TextField';
-import { dcDisplayNames } from 'src/constants';
+import { withRegions } from 'src/context/regions';
 import { events$, resetEventsPolling } from 'src/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { updateVolumes$ } from 'src/features/Volumes/Volumes';
 import { getLinodeConfigs, getLinodes } from 'src/services/linodes';
 import { cloneVolume, createVolume, resizeVolume, updateVolume, VolumeRequestPayload } from 'src/services/volumes';
 import { close } from 'src/store/reducers/volumeDrawer';
+import { formatRegion } from 'src/utilities';
 import composeState from 'src/utilities/composeState';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -41,8 +40,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 });
 
 export interface Props {
-  regions: Linode.Volume[];
   cloneLabel?: string;
+}
+
+interface RegionsContextProps {
+  regionsData?: Linode.Region[];
 }
 
 interface ActionCreatorProps {
@@ -73,7 +75,12 @@ interface State {
   success?: string;
 }
 
-type CombinedProps = Props & ReduxProps & ActionCreatorProps & WithStyles<ClassNames>;
+type CombinedProps =
+  Props &
+  ReduxProps &
+  RegionsContextProps &
+  ActionCreatorProps &
+  WithStyles<ClassNames>;
 
 export const modes = {
   CLOSED: 'closed',
@@ -155,10 +162,6 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           sendToast(`Volume ${event.entity && event.entity.label} has been created successfully.`);
         }
 
-        if (event.action === 'volume_create' && event.status === 'failed') {
-          sendToast(`There was an error attaching volume ${event.entity && event.entity.label}.`, 'error');
-        }
-
         if (event.action === 'volume_delete' && event.status === 'notification') {
           sendToast(`Volume ${event.entity && event.entity.label} has been deleted.`);
         }
@@ -201,8 +204,8 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
         this.setState({ configs: configChoices });
         if (configChoices.length > 1) {
           this.setState({
-          selectedConfig: configChoices[0][0],
-        });
+            selectedConfig: configChoices[0][0],
+          });
         }
       })
       .catch(() => {
@@ -238,10 +241,10 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     switch (mode) {
       case modes.CREATING:
 
-      this.composeState([
-        set(L.submitting, true),
-        set(L.errors, undefined),
-      ]);
+        this.composeState([
+          set(L.submitting, true),
+          set(L.errors, undefined),
+        ]);
 
         const payload: VolumeRequestPayload = {
           label,
@@ -371,13 +374,49 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
   }
 
   setSize = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (this.mounted) { this.setState({ size: +(e.target.value) || 0 }); }
+    this.composeState([
+      when<State, State>(
+        (prevState) => prevState.size <= 10240 && Boolean(prevState.errors),
+        over(L.errors, filter((e: Linode.ApiFieldError) => e.field !== 'size')),
+      ),
+
+      // (prevState: State) => {
+      //   const { size, errors } = prevState;
+      //   if (size <= 10240 && errors) {
+      //     return {
+      //       ...prevState,
+      //       errors: errors.filter(e => e.field !== 'size'),
+      //     };
+      //   }
+
+      //   return prevState;
+      // }
+
+      when<State, State>(
+        (prevState) => prevState.size > 10240,
+        over(L.errors, append({ field: 'size', reason: 'Size cannot be over 10240.' })),
+      ),
+
+      // (prevState: State) => {
+      //   const { size, errors } = prevState;
+      //   if (size > 10240) {
+      //     return {
+      //       ...prevState,
+      //       errors: (errors || []).push({ field: 'size', reason: 'Size cannot be over 10240.' }),
+      //     };
+      //   }
+
+      //   return prevState;
+      // }
+
+      set(L.size, +e.target.value || ''),
+    ]);
   }
 
   render() {
     const { mode } = this.props;
     const { linodes } = this.state;
-    const regions = this.props.regions;
+    const regions = this.props.regionsData;
     const linodeLabel = this.props.linodeLabel || '';
 
     const {
@@ -458,6 +497,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           error={Boolean(sizeError)}
           errorText={sizeError}
           disabled={mode === modes.CLONING || mode === modes.EDITING}
+          helperText={'Maximum: 10240 GB'}
           InputProps={{
             endAdornment:
               <InputAdornment position="end">
@@ -495,7 +535,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
                 value={region.id}
                 data-qa-attach-to-region={region.id}
               >
-                {dcDisplayNames[region.id]}
+                {formatRegion('' + region.id)}
               </MenuItem>,
             )}
           </Select>
@@ -638,15 +678,19 @@ const mapStateToProps = (state: Linode.AppState) => ({
   region: path(['volumeDrawer', 'region'], state),
   linodeLabel: path(['volumeDrawer', 'linodeLabel'], state),
   linodeId: path(['volumeDrawer', 'linodeId'], state),
-  regions: path(['resources', 'regions', 'data', 'data'], state),
 });
+
+const regionsContext = withRegions(({ data }) => ({
+  regionsData: data,
+}))
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default compose<any, any, any, any>(
+export default compose<any, any, any, any, any>(
   connected,
+  regionsContext,
   styled,
   SectionErrorBoundary,
 )(VolumeDrawer);

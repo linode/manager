@@ -22,6 +22,14 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => {
   const { palette: { status } } = theme;
 
   return {
+    '@keyframes fadeIn': {
+      from: {
+        opacity: 0,
+      },
+      to: {
+        opacity: 1,
+      },
+    },
     root: {
       marginBottom: theme.spacing.unit * 2,
       padding: '4px 16px',
@@ -45,27 +53,21 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => {
     },
     error: {
       borderLeft: `5px solid ${status.errorDark}`,
-      '& $noticeText': {
-        color: status.errorDark,
-      },
+      animation: 'fadeIn 225ms linear forwards',
     },
     errorList: {
       borderLeft: `5px solid ${status.errorDark}`,
     },
     warning: {
       borderLeft: `5px solid ${status.warningDark}`,
-      '& $noticeText': {
-        color: status.warningDark,
-      },
+      animation: 'fadeIn 225ms linear forwards',
     },
     warningList: {
       borderLeft: `5px solid ${status.warningDark}`,
     },
     success: {
       borderLeft: `5px solid ${status.successDark}`,
-      '& $noticeText': {
-        color: status.successDark,
-      },
+      animation: 'fadeIn 225ms linear forwards',
     },
     successList: {
       borderLeft: `5px solid ${status.successDark}`,
@@ -87,6 +89,8 @@ interface Props extends GridProps {
   className?: string;
   flag?: boolean;
   notificationList?: boolean;
+  spacingTop?: 0 | 8 | 16 | 24;
+  spacingBottom?: 0 | 8 | 16 | 24;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
@@ -107,6 +111,8 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
     html,
     notificationList,
     onClick,
+    spacingTop,
+    spacingBottom,
   } = props;
 
   const c = html
@@ -137,6 +143,10 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
         notice: true,
         ...(className && { [className]: true }),
       })}
+      style={{ 
+        marginTop: spacingTop !== undefined ? spacingTop : 0,
+        marginBottom: spacingBottom !== undefined ? spacingBottom : 24 
+      }}
       data-qa-notice
     >
       {

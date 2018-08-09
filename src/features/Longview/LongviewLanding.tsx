@@ -1,0 +1,62 @@
+import * as React from 'react';
+
+import { compose } from 'ramda';
+
+import {
+  StyleRulesCallback,
+  Theme,
+  withStyles,
+  WithStyles,
+} from '@material-ui/core/styles';
+
+import setDocs from 'src/components/DocsSidebar/setDocs';
+import Placeholder from 'src/components/Placeholder';
+
+type ClassNames = 'root';
+
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+  root: {},
+});
+
+interface Props {}
+
+interface State {}
+
+type CombinedProps = Props & WithStyles<ClassNames>;
+
+export class LongviewLanding extends React.Component<CombinedProps, State> {
+  state: State = {};
+
+  static docs: Linode.Doc[] = [
+    {
+      title: 'What is Longview and How to Use it',
+      src: 'https://www.linode.com/docs/platform/longview/longview/',
+      body: `This guide shows how to install and use Linode Longview.`,
+    },
+    {
+      title: 'Monitoring and Maintaining Your Server',
+      src: 'https://www.linode.com/docs/uptime/monitoring-and-maintaining-your-server/',
+      body: `This guide introdues concepts and tools for monitoring and maintaining your server.`,
+    },
+  ];
+
+  render() {
+    return (
+      <Placeholder
+        title="Longview"
+        copy="Keep your Linux systems running smoothly with insights from your system metrics."
+        buttonProps={{
+          onClick: () => window.open('https://manager.linode.com/longview', '_blank'),
+          children: 'Go to Longview',
+        }}
+      />
+    );
+  }
+}
+
+const styled = withStyles(styles, { withTheme: true });
+
+export default compose(
+  setDocs(LongviewLanding.docs),
+  styled
+)(LongviewLanding)

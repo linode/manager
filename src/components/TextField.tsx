@@ -7,6 +7,7 @@ import * as classNames from 'classnames';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import TextField, { TextFieldProps } from '@material-ui/core/TextField';
+import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 
 import HelpIcon from 'src/components/HelpIcon';
 
@@ -48,6 +49,7 @@ class LinodeTextField extends React.Component<CombinedProps> {
       || nextProps.select !== this.props.select
       || nextProps.type !== this.props.type
       || nextProps.disabled !== this.props.disabled
+      || nextProps.helperText !== this.props.helperText
       || Boolean(this.props.select && nextProps.children !== this.props.children)
       || !equals(nextProps.InputProps, this.props.InputProps);
   }
@@ -106,6 +108,7 @@ class LinodeTextField extends React.Component<CombinedProps> {
             disableUnderline: true,
           }}
           SelectProps={{
+            IconComponent: KeyboardArrowDown,
             MenuProps: {
               getContentAnchorEl: undefined,
               anchorOrigin: { vertical: 'bottom', horizontal: 'left' },

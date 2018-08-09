@@ -3,6 +3,9 @@ import * as React from 'react';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
+import ListItem from '@material-ui/core/ListItem';
+import Typography from '@material-ui/core/Typography';
+
 type ClassNames = 'root'
   | 'title'
   | 'content'
@@ -18,14 +21,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       borderLeft: '5px solid transparent',
       padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px`,
       borderBottom: `1px solid ${theme.palette.divider}`,
-      opacity: .7,
+      display: 'block',
       transition: theme.transitions.create(['border-color', 'opacity']),
-      '&:hover': {
-        backgroundColor: 'white',
+      outline: 0,
+      '&:hover, &:focus': {
+        backgroundColor: theme.bg.main,
       },
     },
     title: {
-      ...theme.typography.subheading,
       marginBottom: theme.spacing.unit / 2,
     },
     content: {
@@ -42,12 +45,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       borderLeftColor: status.successDark,
     },
     pointer: {
-      cursor: 'pointer',
-      border: 'none',
-      outline: 0,
-      '&:hover, &:focus': {
-        backgroundColor: theme.bg.main,
-        opacity: 1,
+      '& > h3': {
+        lineHeight: '1.2',
+        textDecoration: 'underline',
       },
     },
   };
@@ -67,17 +67,19 @@ type CombinedProps = UserEventsListItemProps & WithStyles<ClassNames>;
 const userEventsListItem: React.StatelessComponent<CombinedProps> = (props) => {
   const { classes, title, content, warning, success, error, onClick } = props;
   return (
-    <div className={classNames({
-      [classes.root]: true,
-      [classes.unread]: error || warning || success,
-      [classes.pointer]: Boolean(onClick),
-    })}
-      onClick={onClick}
+    <ListItem className={classNames({
+        [classes.root]: true,
+        [classes.unread]: error || warning || success,
+        [classes.pointer]: Boolean(onClick),
+      })}
+      component="li"
       tabIndex={1}
+      onClick={onClick}
+      button={Boolean(onClick)}
     >
-      <div className={classes.title}>{title}</div>
+      <Typography variant="subheading" className={classes.title}>{title}</Typography>
       {content && <div className={classes.content}>{content}</div>}
-    </div>
+    </ListItem>
   );
 };
 

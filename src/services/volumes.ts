@@ -1,26 +1,24 @@
 import { API_ROOT } from 'src/constants';
 
-import Request, { setData, setMethod, setParams, setURL } from './index';
+import Request, { setData, setMethod, setParams, setURL, setXFilter } from './index';
 
 /** Alises for short lines. */
 type Page<T> = Linode.ResourcePage<T>;
 type Volume = Linode.Volume;
 
-export const getVolumesPage = (page: number = 0) =>
+export const getVolumes = (pagination: any = {}, filters: any = {}) =>
   Request<Page<Volume>>(
     setURL(`${API_ROOT}/volumes`),
     setMethod('GET'),
-    setParams({ page }),
+    setParams(pagination),
+    setXFilter(filters),
   )
     .then(response => response.data);
-
-export const getVolumes = (): Promise<Linode.ResourcePage<Linode.Volume>> =>
-  getVolumesPage(1);
 
 export const attachVolume = (volumeId: number, payload: {
   linode_id: number,
   config_id?: number,
-}) => Request<Linode.Volume>(
+}) => Request<Volume>(
   setURL(`${API_ROOT}/volumes/${volumeId}/attach`),
   setMethod('POST'),
   setData(payload),

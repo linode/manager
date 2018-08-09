@@ -26,6 +26,7 @@ interface Props {
   diskError?: string,
   disks: Linode.Disk[],
   selectedDisk?: string,
+  disabled?: boolean,
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
 }
 
@@ -33,31 +34,41 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 const DiskSelect: React.StatelessComponent<CombinedProps> = (props) => {
   return(
-        <FormControl fullWidth>
-        <InputLabel
-          htmlFor="disk"
-          disableAnimation
-          shrink={true}
-          error={Boolean(props.diskError)}
-        >
+    <FormControl fullWidth>
+      <InputLabel
+        htmlFor="disk"
+        disableAnimation
+        shrink={true}
+        error={Boolean(props.diskError)}
+      >
         Disk
-        </InputLabel>
-        <TextField
-          value={props.selectedDisk || 'none'}
-          onChange={props.handleChange}
-          inputProps={{ name: 'linode', id: 'linode' }}
-          error={Boolean(props.diskError)}
-          select
-        >
+      </InputLabel>
+      <TextField
+        value={props.selectedDisk || 'none'}
+        onChange={props.handleChange}
+        inputProps={{ name: 'linode', id: 'linode' }}
+        error={Boolean(props.diskError)}
+        disabled={props.disabled}
+        select
+        data-qa-disk-select
+      >
         <MenuItem value="none" disabled>Select a Disk</MenuItem>
         {
           props.disks && props.disks.map((disk) => {
-          return <MenuItem key={disk.id} value={disk.id}>{disk.label}</MenuItem>;
+            return (
+              <MenuItem
+                key={disk.id}
+                value={'' + disk.id}
+                data-qa-disk-menu-item={disk.label}
+              >
+                {disk.label}
+              </MenuItem>
+            );
           })
         }
-        </TextField>
-        { Boolean(props.diskError) && <FormHelperText error>{ props.diskError }</FormHelperText> }
-        { Boolean(props.generalError) && <FormHelperText error>{ props.generalError }</FormHelperText> }
+      </TextField>
+      { Boolean(props.diskError) && <FormHelperText error>{ props.diskError }</FormHelperText> }
+      { Boolean(props.generalError) && <FormHelperText error>{ props.generalError }</FormHelperText> }
     </FormControl>
     );
 }

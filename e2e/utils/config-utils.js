@@ -42,15 +42,34 @@ exports.readToken = () => {
 */
 exports.login = (username, password) => {
     browser.url(constants.routes.dashboard);
-    browser.waitForVisible('#username');
-    browser.setValue('#username', username);
-    browser.setValue('#password', password);
+    try {
+        browser.waitForVisible('#username', constants.wait.long);
+    } catch (err) {
+        console.log(browser.getSource());
+
+    }
+    browser.waitForVisible('#password', constants.wait.long);
+    browser.trySetValue('#username', username);
+    browser.trySetValue('#password', password);
     browser.click('.btn-primary');
+
+    try {
+        browser.waitUntil(function() {
+            return browser.isExisting('[data-qa-add-new-menu-button]') || browser.getUrl().includes('oauth/authorize');
+        }, constants.wait.normal);
+    } catch (err) {
+        console.log('failed to login!');
+        if (browser.getText('.alert').includes('This field is required.')) {
+            browser.trySetValue('#password', password);
+            browser.click('.btn-primary');
+        }
+    }
+    
     if (browser.isExisting('.Modal')) {
         browser.click('.btn-primary');
     }
-    browser.waitForVisible('[data-qa-add-new-menu-button]', 20000);
-    browser.waitForVisible('[data-qa-circle-progress]', 20000, true);
+    browser.waitForVisible('[data-qa-add-new-menu-button]', constants.wait.long);
+    browser.waitForVisible('[data-qa-circle-progress]', constants.wait.long, true);
 
     exports.saveTokenIfNeeded(username, password);
 }

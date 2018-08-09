@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Drawer from 'src/components/Drawer';
+import { formatRegion } from 'src/utilities';
 
 type ClassNames = 'root'
   | 'section';
@@ -89,7 +90,7 @@ const ViewIPDrawer: React.StatelessComponent<CombinedProps> = (props) => {
           >
             <Typography variant="subheading">Region</Typography>
             <Typography variant="body1" data-qa-region>
-              {props.ip.region}
+              {formatRegion(props.ip.region)}
             </Typography>
           </div>
 

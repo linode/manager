@@ -15,7 +15,7 @@ import IconButton from '@material-ui/core/IconButton';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
-import { KeyboardArrowLeft } from '@material-ui/icons';
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 
 import CircleProgress from 'src/components/CircleProgress';
 import EditableText from 'src/components/EditableText';
@@ -458,7 +458,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     disks.request();
     volumes.request();
     linode.request()
-      .then((l) => { 
+      .then((l) => {
         if (l) { image.request(l.image) }
       })
       .catch(console.error);

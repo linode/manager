@@ -53,8 +53,6 @@ describe('Linode Detail - Volumes Suite', () => {
             drawerElems = [
                 VolumeDetail.label,
                 VolumeDetail.size,
-                VolumeDetail.regionField,
-                VolumeDetail.attachedTo,
                 VolumeDetail.submit,
                 VolumeDetail.cancel,
             ]
@@ -117,10 +115,10 @@ describe('Linode Detail - Volumes Suite', () => {
         });
 
         it('should display volume create icon text link', () => {
-            const createIcon = VolumeDetail.createIconLink;
+            const createIcon = $('[data-qa-icon-text-link="Add a Volume"]');
             
             expect(createIcon.isVisible()).toBe(true);
-            expect(createIcon.getText()).toBe('Create a Volume');
+            expect(createIcon.getText()).toBe('Add a Volume');
             expect(createIcon.$('svg').isVisible()).toBe(true);
         });
     });

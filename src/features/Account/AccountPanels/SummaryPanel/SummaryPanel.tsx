@@ -135,7 +135,7 @@ export class SummaryPanel extends React.Component<CombinedProps, State> {
                 <strong>Address: </strong>
                 {!(address_1 || address_2 || city || state || zip) && 'None'}
                 <span>{address_1}</span>
-                <span>{address_2}</span>
+                <div className={classes.address2}>{address_2}</div>
                 <div className={classes.address2}>
                   {`${city} ${city && state && ', '} ${state} ${zip}`}
                 </div>

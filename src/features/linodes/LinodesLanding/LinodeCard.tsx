@@ -1,6 +1,5 @@
-import { compose, pathOr } from 'ramda';
+import { compose } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import Button from '@material-ui/core/Button';
@@ -16,6 +15,7 @@ import Typography from '@material-ui/core/Typography';
 import Flag from 'src/assets/icons/flag.svg';
 import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/Grid';
+import { withTypes } from 'src/context/types';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
 import { lishLaunch } from 'src/features/Lish';
@@ -184,11 +184,15 @@ interface Props {
     linodeId: number, linodeLabel: string) => void;
 }
 
-interface ConnectedProps {
-  typeLabel: string;
+interface TypesContextProps {
+  typesLoading: boolean;
+  typesData: Linode.LinodeType[];
 }
 
-type CombinedProps = Props & ConnectedProps & WithStyles<CSSClasses>;
+type CombinedProps =
+  Props &
+  TypesContextProps &
+  WithStyles<CSSClasses>;
 
 class LinodeCard extends React.Component<CombinedProps> {
   renderTitle() {
@@ -253,14 +257,15 @@ class LinodeCard extends React.Component<CombinedProps> {
       linodeSpecMemory,
       linodeSpecDisk,
       linodeSpecVcpus,
-      typeLabel,
+      linodeType,
+      typesData,
     } = this.props;
 
     return (
       <CardContent className={`${classes.cardContent} ${classes.customeMQ}`}>
         <div>
           <div className={classes.cardSection} data-qa-linode-summary>
-            {`${typeLabel}: `}
+            { typesData && `${displayType(linodeType, typesData || [])}: ` }
             {typeLabelDetails(linodeSpecMemory, linodeSpecDisk, linodeSpecVcpus)}
           </div>
           <div className={classes.cardSection} data-qa-region>
@@ -278,8 +283,8 @@ class LinodeCard extends React.Component<CombinedProps> {
     );
   }
 
-  shouldComponentUpdate(nextProps: Props) {
-    return haveAnyBeenModified<Props>(
+  shouldComponentUpdate(nextProps: CombinedProps) {
+    return haveAnyBeenModified<CombinedProps>(
       nextProps,
       this.props,
       [
@@ -290,13 +295,15 @@ class LinodeCard extends React.Component<CombinedProps> {
         'linodeLabel',
         'linodeIpv6',
         'linodeIpv4',
+        'typesData',
+        'typesLoading',
       ],
     );
   }
 
   render() {
     const { classes, openConfigDrawer, linodeId, linodeLabel, linodeRecentEvent,
-       linodeStatus, toggleConfirmation } = this.props;
+      linodeStatus, toggleConfirmation } = this.props;
     const loading = linodeInTransition(linodeStatus, linodeRecentEvent)
 
     return (
@@ -346,15 +353,12 @@ class LinodeCard extends React.Component<CombinedProps> {
   }
 }
 
-const connected = connect((state: Linode.AppState, ownProps: Props) => ({
-  typeLabel: displayType(
-    ownProps.linodeType,
-    pathOr([], ['resources', 'types', 'data', 'data'],
-    state),
-  ),
+const typesContext = withTypes(({ data: typesData, loading: typesLoading }) => ({
+  typesData,
+  typesLoading,
 }));
 
 export default compose(
   withStyles(styles, { withTheme: true }),
-  connected,
+  typesContext,
 )(LinodeCard) as React.ComponentType<Props>;

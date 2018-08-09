@@ -1,7 +1,6 @@
 import * as moment from 'moment-timezone';
 import { compose, map, pathOr, sort } from 'ramda';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -12,7 +11,7 @@ import TableRow from '@material-ui/core/TableRow';
 
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import ExpansionPanel from 'src/components/ExpansionPanel';
-import PaginationFooter from 'src/components/PaginationFooter';
+import PaginationFooter, { PaginationProps } from 'src/components/PaginationFooter';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
@@ -28,14 +27,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 interface Props { }
 
-interface State {
+interface State extends PaginationProps {
   errors?: Linode.ApiFieldError[];
   loading: boolean;
   data?: PaymentWithDate[],
-  page: number;
-  pages: number;
-  results: number;
-  perPage: number;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -44,9 +39,8 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
   state: State = {
     loading: true,
     page: 1,
-    pages: 1,
-    results: 1,
-    perPage: 25,
+    count: 1,
+    pageSize: 25,
   };
 
   mounted: boolean = false;
@@ -79,15 +73,14 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
       errors: undefined,
     });
 
-    return getPayments({ page_size: this.state.perPage, page })
+    return getPayments({ page_size: this.state.pageSize, page })
       .then(({ data, page, pages, results }) => {
         if (!this.mounted) { return; }
 
         this.setState({
           loading: false,
           page,
-          pages,
-          results,
+          count: results,
           data: this.addToItems(data),
         });
       })
@@ -113,8 +106,8 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
     const {
       data,
       page,
-      perPage,
-      results,
+      pageSize,
+      count,
     } = this.state;
 
     return (
@@ -133,11 +126,11 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
         </Table>
         {data && data.length > 0 &&
           <PaginationFooter
-            count={results}
+            count={count}
             page={page}
-            pageSize={perPage}
+            pageSize={pageSize}
             handlePageChange={this.handlePageChange}
-            handleSizeChange={this.handlePerPageChange}
+            handleSizeChange={this.handlePageSizeChange}
           />
         }
       </ExpansionPanel>
@@ -155,7 +148,7 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
       return <TableRowError colSpan={3} message="We were unable to load your payments." />
     }
 
-    return data ? this.renderItems(data) : <TableRowEmptyState colSpan={3} />
+    return data && data.length > 0 ? this.renderItems(data) : <TableRowEmptyState colSpan={3} />
   };
 
   renderItems = (items: PaymentWithDate[]) => items.map(this.renderRow);
@@ -164,7 +157,7 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
     return (
       <TableRow key={`payment-${item.id}`}>
         <TableCell><DateTimeDisplay value={item.date} /></TableCell>
-        <TableCell><Link to="">Payment #{item.id}</Link></TableCell>
+        <TableCell>Payment #{item.id}</TableCell>
         <TableCell>${item.usd}</TableCell>
       </TableRow>
     );
@@ -178,11 +171,11 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
 
   handlePageChange = (page: number) => this.requestPayments(page);
 
-  handlePerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  handlePageSizeChange = (pageSize: number) => {
     if (!this.mounted) { return; }
 
     this.setState(
-      { perPage: +e.target.value },
+      { pageSize },
       () => { this.requestPayments() },
     );
   }
@@ -190,9 +183,7 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const enhanced = compose(
-  styled,
-);
+const enhanced = compose(styled);
 
 export default enhanced(RecentPaymentsPanel);
 

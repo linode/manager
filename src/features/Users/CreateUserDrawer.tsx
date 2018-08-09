@@ -121,6 +121,7 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
           required
           onChange={this.onChangeUsername}
           errorText={hasErrorFor('username')}
+          data-qa-create-username
         />
         <TextField
           label="Email"
@@ -129,6 +130,7 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
           required
           onChange={this.onChangeEmail}
           errorText={hasErrorFor('email')}
+          data-qa-create-email
         />
         <FormControlLabel
           style={{ marginTop: 8 }}
@@ -137,6 +139,7 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
             <Toggle
               checked={restricted}
               onChange={this.onChangeRestricted}
+              data-qa-create-restricted
             />
           }
         />
@@ -152,6 +155,7 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
             variant="raised"
             onClick={this.onSubmit}
             loading={submitting}
+            data-qa-submit
           >
             Submit
           </Button>
@@ -159,6 +163,7 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
             type="cancel"
             variant="raised"
             onClick={onClose}
+            data-qa-cancel
           >
             Cancel
           </Button>

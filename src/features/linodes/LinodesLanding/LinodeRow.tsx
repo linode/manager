@@ -1,6 +1,5 @@
-import { compose, pathOr } from 'ramda';
+import { compose } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import Button from '@material-ui/core/Button';
@@ -13,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import Flag from 'src/assets/icons/flag.svg';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
+import { withTypes } from 'src/context/types';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { displayType } from 'src/features/linodes/presentation';
 import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
@@ -112,15 +112,19 @@ interface Props {
     linodeId: number, linodeLabel: string) => void;
 }
 
-interface ConnectedProps {
-  typeLabel: string;
+interface TypesContextProps {
+  typesData?: Linode.LinodeType[];
+  typesLoading: boolean;
 }
 
-type PropsWithStyles = Props & ConnectedProps & WithStyles<ClassNames>;
+type CombinedProps =
+  Props &
+  TypesContextProps &
+  WithStyles<ClassNames>;
 
-class LinodeRow extends React.Component<PropsWithStyles> {
-  shouldComponentUpdate(nextProps: PropsWithStyles) {
-    return haveAnyBeenModified<Props>(
+class LinodeRow extends React.Component<CombinedProps> {
+  shouldComponentUpdate(nextProps: CombinedProps) {
+    return haveAnyBeenModified<Props & TypesContextProps>(
       nextProps,
       this.props,
       [
@@ -131,18 +135,20 @@ class LinodeRow extends React.Component<PropsWithStyles> {
         'linodeLabel',
         'linodeIpv6',
         'linodeIpv4',
+        'typesData',
+        'typesLoading',
       ],
     );
   }
 
   headCell = () => {
-    const { linodeId, linodeStatus, linodeLabel, classes, typeLabel } = this.props;
+    const { linodeId, linodeStatus, linodeLabel, linodeType, typesData, typesLoading, classes } = this.props;
 
     return (
       <TableCell className={classes.linodeCell}>
         <Link to={`/linodes/${linodeId}`} className={classes.link} tabIndex={-1}>
           <Button className={classes.linkButton}>
-            <Grid container alignItems="center">
+            <Grid container wrap="nowrap" alignItems="center">
               <Grid item className="py0">
                 <LinodeStatusIndicator status={linodeStatus} />
               </Grid>
@@ -150,9 +156,7 @@ class LinodeRow extends React.Component<PropsWithStyles> {
                 <Typography variant="subheading" data-qa-label>
                   {linodeLabel}
                 </Typography>
-                <Typography>
-                  {typeLabel}
-                </Typography>
+                {!typesLoading && <Typography> {displayType(linodeType, typesData || [])} </Typography>}
               </Grid>
             </Grid>
           </Button>
@@ -229,14 +233,13 @@ class LinodeRow extends React.Component<PropsWithStyles> {
       : this.loadedState();
   }
 }
-const connected = connect((state: Linode.AppState, ownProps: Props) => ({
-  typeLabel: displayType(
-    ownProps.linodeType,
-    pathOr([], ['resources', 'types', 'data', 'data'], state),
-  ),
+
+const typesContext = withTypes(({ loading: typesLoading, data: typesData }) => ({
+  typesLoading,
+  typesData,
 }));
 
 export default compose(
   withStyles(styles, { withTheme: true }),
-  connected,
+  typesContext,
 )(LinodeRow) as React.ComponentType<Props>;

@@ -6,6 +6,7 @@ interface Props {
   linodeStatus: string;
   onRename: () => void;
   onResize: () => void;
+  onImagize: () => void;
   onDelete: () => void;
 }
 
@@ -28,6 +29,14 @@ class DiskActionMenu extends React.Component<CombinedProps> {
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           e.preventDefault();
           this.props.onResize();
+          closeMenu();
+        },
+      },
+      {
+        title: 'Imagize',
+        onClick: (e: React.MouseEvent<HTMLElement>) => {
+          e.preventDefault();
+          this.props.onImagize();
           closeMenu();
         },
       },

@@ -46,13 +46,11 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => 
 
   const renderStackScriptTable = () => {
     return (!!onSelect)
-    ? selectStackScript(onSelect, selectedId)
-    : listStackScript(true, triggerDelete, selectedId)
+    ? selectStackScript()
+    : listStackScript()
   }
 
-  const selectStackScript: (fn: (s: Linode.StackScript.Response) => void, id?: number) =>
-  (s: Linode.StackScript.Response) => JSX.Element =
-  (onSelect, selectedId) => s => (
+  const selectStackScript = () => (s: Linode.StackScript.Response) => (
     <SelectionRow
       key={s.id}
       label={s.label}
@@ -62,7 +60,7 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => 
       images={stripImageName(s.images)}
       deploymentsActive={s.deployments_active}
       updated={formatDate(s.updated, false)}
-      onSelect={() => onSelect(s)}
+      onSelect={() => onSelect!(s)}
       checked={selectedId === s.id}
       updateFor={[selectedId === s.id]}
       stackScriptID={s.id}
@@ -71,13 +69,7 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => 
     />
   )
 
-const listStackScript: (
-  showDeployLink: boolean,
-  triggerDelete: (id: number, label: string) => void,
-  id?: number
-) =>
-  (s: Linode.StackScript.Response) => JSX.Element =
-  (showDeployLink, triggerDelete, selectedId) => s => (
+const listStackScript = () => (s: Linode.StackScript.Response) => (
     <SelectionRow
       key={s.id}
       label={s.label}
@@ -87,7 +79,7 @@ const listStackScript: (
       images={stripImageName(s.images)}
       deploymentsActive={s.deployments_active}
       updated={formatDate(s.updated, false)}
-      showDeployLink={showDeployLink}
+      showDeployLink={true}
       stackScriptID={s.id}
       triggerDelete={triggerDelete}
       triggerMakePublic={triggerMakePublic}

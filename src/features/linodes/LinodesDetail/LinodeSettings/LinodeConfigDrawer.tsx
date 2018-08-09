@@ -1,4 +1,5 @@
-import { clamp, pathOr } from 'ramda';
+import * as Bluebird from 'bluebird';
+import { append, clamp, compose, flatten, pathOr, range } from 'ramda';
 import * as React from 'react';
 
 import Button from '@material-ui/core/Button';
@@ -20,6 +21,7 @@ import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
 import DeviceSelection, { ExtendedDisk, ExtendedVolume } from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
+import { getLinodeKernels } from 'src/services/linodes';
 import { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
@@ -62,7 +64,6 @@ interface Props extends EditableFields {
   mode: 'create' | 'edit';
   errors?: Linode.ApiFieldError[];
   useCustomRoot: boolean;
-  kernels: Linode.Kernel[];
   maxMemory: number;
   availableDevices: {
     disks: ExtendedDisk[];
@@ -73,17 +74,60 @@ interface Props extends EditableFields {
   onChange: (k: keyof EditableFields, v: any) => void;
 }
 
-interface State { }
+interface State {
+  kernels?: Linode.Kernel[];
+  loading: boolean;
+  errors?: Linode.ApiFieldError[];
+}
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
-  state: State = {};
+  state: State = {
+    loading: true,
+  };
+
+  requestKernels = () => {
+    this.setState({ loading: true });
+
+    // Get first page of kernels.
+    return getLinodeKernels()
+      .then(({ data: firstPageData, page, pages }) => {
+        // If we only have one page, return it.
+        if (page === pages) { return firstPageData; }
+
+        // Create an iterable list of the remaining pages.
+        const remainingPages = range(page + 1, pages + 1);
+
+        return Bluebird.map(remainingPages, currentPage =>
+          getLinodeKernels(currentPage)
+            .then(response => response.data),
+        )
+          .then(compose(flatten, append(firstPageData)));
+      })
+      .then((data: Linode.Kernel[]) => {
+        this.setState({
+          loading: false,
+          kernels: data,
+        })
+      })
+      .catch(error => {
+        this.setState({
+          loading: false,
+          errors: pathOr([{ reason: 'Unable to load kernesl.' }], ['response', 'data', 'errors'], error),
+        })
+      });
+  };
+
+  componentDidUpdate(prevProps: CombinedProps, prevState: State) {
+    if (prevProps.open === false && this.props.open === true && !prevState.kernels) {
+      this.requestKernels();
+    }
+  }
 
   render() {
     const {
       errors,
-      kernels,
       availableDevices,
 
       // Editable Values
@@ -107,6 +151,8 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
 
       classes,
     } = this.props;
+
+    const { kernels } = this.state;
 
     const errorFor = getAPIErrorsFor({}, errors);
     const generalError = errorFor('none');
@@ -177,7 +223,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               errorGroup="linode-config-drawer"
             >
               <MenuItem value="none" disabled><em>Select a Kernel</em></MenuItem>
-              {
+              {kernels &&
                 kernels.map(kernel =>
                   <MenuItem
                     // Can't use ID for key until DBA-162 is closed.

@@ -4,9 +4,9 @@ exports.constants = {
 	},
 	wait: {
 		short: process.env.DOCKER ? 10000 : 5000,
-		normal: process.env.DOCKER ? 16000 : 12000,
+		normal: process.env.DOCKER ? 20000 : 12000,
 		long: process.env.DOCKER ?  40000 : 30000,
-		minute: 60000,
+		minute: process.env.DOCKER ? 75000 : 60000,
 		custom: (milliseconds) => milliseconds,
 	},
 	routes: {

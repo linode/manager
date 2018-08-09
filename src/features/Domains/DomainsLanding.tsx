@@ -1,8 +1,3 @@
-import { compose, pathOr } from 'ramda';
-import * as React from 'react';
-import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
-
-import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
@@ -10,21 +5,24 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
-
+import { compose, pathOr } from 'ramda';
+import * as React from 'react';
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
+import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import PaginationFooter, { PaginationProps } from 'src/components/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
-import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import Table from 'src/components/Table';
+import TableRowLoading from 'src/components/TableRowLoading';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { deleteDomain, getDomains } from 'src/services/domains';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-
+import scrollToTop from 'src/utilities/scrollToTop';
 import ActionMenu from './DomainActionMenu';
 import DomainCreateDrawer from './DomainCreateDrawer';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
@@ -43,13 +41,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 interface Props { }
 
-interface PromiseLoaderProps {
-  domains: PromiseLoaderResponse<Linode.Domain>;
-}
-
-interface State {
+interface State extends PaginationProps {
   domains: Linode.Domain[];
-  error?: Error;
+  loading: boolean;
+  errors?: Error;
   importDrawer: {
     open: boolean,
     submitting: boolean,
@@ -70,12 +65,15 @@ interface State {
   };
 }
 
-type CombinedProps = Props & PromiseLoaderProps & WithStyles<ClassNames> & RouteComponentProps<{}>;
+type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
 
 class DomainsLanding extends React.Component<CombinedProps, State> {
   state: State = {
-    domains: pathOr([], ['response', 'data'], this.props.domains),
-    error: pathOr(undefined, ['error'], this.props.domains),
+    domains: [],
+    page: 1,
+    count: 0,
+    pageSize: 25,
+    loading: true,
     importDrawer: {
       open: false,
       submitting: false,
@@ -88,6 +86,8 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
       open: false,
     },
   };
+
+  mounted: boolean = false;
 
   static docs: Linode.Doc[] = [
     {
@@ -102,26 +102,65 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
     },
   ];
 
-  refreshDomains = () => {
-    getDomains()
+  getDomains = (
+    page: number = this.state.page,
+    pageSize: number = this.state.pageSize,
+    initial: boolean = false,
+  ) => {
+    if (!this.mounted) { return; }
+    this.setState({ loading: initial });
+
+    getDomains({ page, page_size: pageSize })
       .then((response) => {
-        this.setState({ domains: response.data });
+        if (!this.mounted) { return; }
+
+        this.setState({
+          count: response.results,
+          domains: response.data,
+          loading: false,
+          page: response.page,
+        });
+      })
+      .catch((error) => {
+        if (!this.mounted) { return; }
+        this.setState({
+          errors: pathOr([{ reason: 'Unable to load domains.' }], ['response', 'data', 'errors'], error),
+          loading: false,
+        })
       });
   }
 
-  componentDidCatch(error: Error) {
-    this.setState({ error }, () => { scrollErrorIntoView(); });
+  handlePageChange = (page: number) => {
+    this.setState({ page });
+    this.getDomains(page);
+    scrollToTop();
+  };
+
+  handlePageSizeChange = (pageSize: number) => {
+    this.setState({ pageSize });
+    this.getDomains(undefined, pageSize);
+  };
+
+  componentDidMount() {
+    this.mounted = true;
+    this.getDomains(undefined, undefined, true);
   }
 
-  openImportZoneDrawer = () => this.setState({ importDrawer: { ...this.state.importDrawer, open: true }});
+  componentWillUnmount() {
+    this.mounted = false
+  }
 
-  closeImportZoneDrawer = () => this.setState({ importDrawer: {
-    open: false,
-    submitting: false,
-    remote_nameserver: undefined,
-    domain: undefined,
-    errors: undefined,
-  }});
+  openImportZoneDrawer = () => this.setState({ importDrawer: { ...this.state.importDrawer, open: true } });
+
+  closeImportZoneDrawer = () => this.setState({
+    importDrawer: {
+      open: false,
+      submitting: false,
+      remote_nameserver: undefined,
+      domain: undefined,
+      errors: undefined,
+    }
+  });
 
   openCreateDrawer = () => {
     this.setState({
@@ -129,48 +168,26 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
     });
   }
 
-  openCloneDrawer(domain: string, id: number) {
+  openCloneDrawer = (domain: string, id: number) => {
     this.setState({
       createDrawer: { open: true, mode: 'clone', domain, cloneID: id },
     });
   }
 
-  closeCreateDrawer(domain?: Partial<Linode.Domain>) {
+  closeCreateDrawer = () => {
     this.setState({
       createDrawer: { open: false, mode: 'create' },
     });
-    if (domain) {
-      this.setState({
-        domains: [...this.state.domains, domain as Linode.Domain],
-      });
-    }
   }
 
   getActions = () => {
     return (
       <ActionsPanel>
-        <Button
-          variant="raised"
-          color="secondary"
-          className="destructive"
-          onClick={this.removeDomain}
-          data-qa-submit
-        >
-          Confirm
-        </Button>
-        <Button
-          onClick={this.closeRemoveDialog}
-          variant="raised"
-          color="secondary"
-          className="cancel"
-          data-qa-cancel
-        >
-          Cancel
-        </Button>
+        <Button type="cancel" onClick={this.closeRemoveDialog} data-qa-cancel>Cancel</Button>
+        <Button type="secondary" destructive onClick={this.removeDomain} data-qa-submit>Confirm</Button>
       </ActionsPanel>
     )
   }
-
 
   removeDomain = () => {
     const { removeDialog: { domainID } } = this.state;
@@ -178,7 +195,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
       deleteDomain(domainID)
         .then(() => {
           this.closeRemoveDialog();
-          this.refreshDomains();
+          this.getDomains();
         })
         .catch(() => {
           this.closeRemoveDialog();
@@ -197,48 +214,31 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
   }
 
   closeRemoveDialog = () => {
+    const { removeDialog } = this.state;
     this.setState({
-      removeDialog: { open: false, domain: undefined, domainID: undefined },
+      removeDialog: { ...removeDialog, open: false },
     });
   }
 
-  DomainCreateDrawer = () => (
-    <DomainCreateDrawer
-      open={this.state.createDrawer.open}
-      onClose={(domain: Partial<Linode.Domain>) => this.closeCreateDrawer(domain)}
-      mode={this.state.createDrawer.mode}
-      domain={this.state.createDrawer.domain}
-      cloneID={this.state.createDrawer.cloneID}
-    />
-  )
+  domainCreateDrawer = () => {
+    return (
+      <DomainCreateDrawer
+        open={this.state.createDrawer.open}
+        onClose={this.closeCreateDrawer}
+        mode={this.state.createDrawer.mode}
+        domain={this.state.createDrawer.domain}
+        cloneID={this.state.createDrawer.cloneID}
+        onSuccess={this.getDomains}
+      />
+    );
+  }
 
   render() {
-    const { classes, history } = this.props;
-    const { error, domains } = this.state;
+    const { classes } = this.props;
+    const { count, loading } = this.state;
 
-    /** Error State */
-    if (error) {
-      return <ErrorState
-        errorText="There was an error retrieving your domains. Please reload and try again."
-      />;
-    }
-
-    /** Empty State */
-    if (domains.length === 0) {
-      return (
-        <React.Fragment>
-          <Placeholder
-            title="Add a Domain"
-            copy="Adding a new domain is easy. Click below to add a domain."
-            icon={DomainIcon}
-            buttonProps={{
-              onClick: () => this.openCreateDrawer(),
-              children: 'Add a Domain',
-            }}
-          />
-          <this.DomainCreateDrawer />
-        </React.Fragment>
-      );
+    if (!loading && count === 0) {
+      return this.renderEmpty();
     }
 
     return (
@@ -250,7 +250,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
             </Typography>
           </Grid>
           <Grid item>
-            <Grid container alignItems="flex-end">
+            <Grid container alignItems="flex-end" style={{ width: 'auto' }}>
               <Grid item>
                 <AddNewLink
                   onClick={this.openImportZoneDrawer}
@@ -276,37 +276,22 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
               </TableRow>
             </TableHead>
             <TableBody>
-              {domains.map(domain =>
-                <TableRow key={domain.id} data-qa-domain-cell={domain.id}>
-                  <TableCell className={classes.domain} data-qa-domain-label>
-                    <Link to={`/domains/${domain.id}`}>
-                      {domain.domain}
-                    </Link>
-                  </TableCell>
-                  <TableCell data-qa-domain-type>{domain.type}</TableCell>
-                  <TableCell>
-                    <ActionMenu
-                      onEditRecords={() => {
-                        history.push(`/domains/${domain.id}`);
-                      }}
-                      onRemove={() => {
-                        this.openRemoveDialog(domain.domain, domain.id);
-                      }}
-                      onClone={() => {
-                        this.openCloneDrawer(domain.domain, domain.id);
-                      }}
-                    />
-                  </TableCell>
-                </TableRow>,
-              )}
+              {this.renderContent()}
             </TableBody>
           </Table>
         </Paper>
-        <this.DomainCreateDrawer />
+        <PaginationFooter
+          count={this.state.count}
+          page={this.state.page}
+          pageSize={this.state.pageSize}
+          handlePageChange={this.handlePageChange}
+          handleSizeChange={this.handlePageSizeChange}
+        />
+        <this.domainCreateDrawer />
         <DomainZoneImportDrawer
           open={this.state.importDrawer.open}
           onClose={this.closeImportZoneDrawer}
-          onSuccess={this.refreshDomains}
+          onSuccess={this.getDomains}
         />
         <ConfirmationDialog
           open={this.state.removeDialog.open}
@@ -319,17 +304,90 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
       </React.Fragment>
     );
   }
+
+  renderContent = () => {
+    const { loading, errors, count, domains } = this.state;
+
+    if (loading) {
+      return this.renderLoading();
+    }
+    if (errors) {
+      return this.renderLoading();
+    }
+
+    if (count > 0) {
+      return this.renderData(domains);
+    }
+
+    return null;
+  };
+
+  renderLoading = () => {
+    return (
+      <TableRowLoading colSpan={3} />
+    );
+  };
+
+  renderErrors = () => {
+    return (
+      <ErrorState
+        errorText="There was an error retrieving your domains. Please reload and try again."
+      />
+    );
+  }
+
+  renderEmpty = () => {
+    return (
+      <React.Fragment>
+        <Placeholder
+          title="Add a Domain"
+          copy="Adding a new domain is easy. Click below to add a domain."
+          icon={DomainIcon}
+          buttonProps={{
+            onClick: () => this.openCreateDrawer(),
+            children: 'Add a Domain',
+          }}
+        />
+        <this.domainCreateDrawer />
+      </React.Fragment>
+    );
+  }
+
+  renderData = (domains: Linode.Domain[]) => {
+    const { classes, history } = this.props;
+
+    return (
+      domains.map(domain =>
+        <TableRow key={domain.id} data-qa-domain-cell={domain.id}>
+          <TableCell className={classes.domain} data-qa-domain-label>
+            <Link to={`/domains/${domain.id}`}>
+              {domain.domain}
+            </Link>
+          </TableCell>
+          <TableCell data-qa-domain-type>{domain.type}</TableCell>
+          <TableCell>
+            <ActionMenu
+              onEditRecords={() => {
+                history.push(`/domains/${domain.id}`);
+              }}
+              onRemove={() => {
+                this.openRemoveDialog(domain.domain, domain.id);
+              }}
+              onClone={() => {
+                this.openCloneDrawer(domain.domain, domain.id);
+              }}
+            />
+          </TableCell>
+        </TableRow>,
+      )
+    );
+  }
 }
 
 const styled = withStyles(styles, { withTheme: true });
 
-const loaded = PromiseLoader<Props>({
-  domains: props => getDomains(),
-});
-
 export default compose(
   setDocs(DomainsLanding.docs),
   withRouter,
-  loaded,
   styled,
 )(DomainsLanding);

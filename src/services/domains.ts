@@ -2,22 +2,22 @@ import * as Joi from 'joi';
 
 import { API_ROOT } from 'src/constants';
 
-import Request, { setData, setMethod, setParams, setURL, validateRequestData } from './index';
+import Request, { setData, setMethod, setParams, setURL, setXFilter, validateRequestData } from './index';
 
 type Page<T> = Linode.ResourcePage<T>;
 type Domain = Linode.Domain;
 type Record = Linode.Record;
 
-export const getDomainsPage = (page: number) =>
-  Request<Page<Domain>>(
-    setURL(`${API_ROOT}/domains/?page=${page}`),
-    setMethod('GET'),
-    setParams({ page }),
-  )
-    .then(response => response.data);
-
-export const getDomains = () =>
-  getDomainsPage(1);
+export const getDomains = (
+  params: any = {},
+  filters: any = {},
+) => Request<Page<Domain>>(
+  setURL(`${API_ROOT}/domains`),
+  setMethod('GET'),
+  setParams(params),
+  setXFilter(filters),
+)
+  .then(response => response.data);;
 
 export const getDomain = (domainId: number) =>
   Request<Domain>(
@@ -56,9 +56,9 @@ export const deleteDomainRecord = (domainID: number, recordId: number) =>
 
 export const createDomain = (data: Partial<Linode.Domain>) =>
   Request<Domain>(
-  setData(data),
-  setURL(`${API_ROOT}/domains`),
-  setMethod('POST'),
+    setData(data),
+    setURL(`${API_ROOT}/domains`),
+    setMethod('POST'),
   );
 
 export const updateDomain = (
@@ -72,16 +72,16 @@ export const updateDomain = (
 
 export const deleteDomain = (domainID: number) =>
   Request<{}>(
-  setURL(`${API_ROOT}/domains/${domainID}`),
-  setMethod('DELETE'),
-);
+    setURL(`${API_ROOT}/domains/${domainID}`),
+    setMethod('DELETE'),
+  );
 
 export const cloneDomain = (domainID: number, cloneName: string) =>
   Request(
-  setData({ domain: cloneName }),
-  setURL(`${API_ROOT}/domains/${domainID}/clone`),
-  setMethod('POST'),
-);
+    setData({ domain: cloneName }),
+    setURL(`${API_ROOT}/domains/${domainID}/clone`),
+    setMethod('POST'),
+  );
 
 const importZoneSchema = Joi.object({
   domain: Joi.string().required(),

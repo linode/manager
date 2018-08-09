@@ -39,7 +39,7 @@ describe('Show More Expansion Suite', () => {
     });
 
     it('should display example text', () => {
-        const exampleText = $('[data-qa-show-more-expanded] p');
+        const exampleText = $('[data-qa-show-more-expanded] + div p');
         expect(exampleText.getText()).toMatch(/([A-z])/ig);
     });
 

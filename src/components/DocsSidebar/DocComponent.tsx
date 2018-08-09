@@ -1,3 +1,4 @@
+import { take } from 'ramda';
 import * as React from 'react';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
@@ -35,9 +36,15 @@ interface Props extends Doc {}
 
 type PropsWithStyles = Props & WithStyles<CSSClasses>;
 
-class DocComponent extends React.Component<PropsWithStyles> {
+class DocComponent extends React.PureComponent<PropsWithStyles> {
+
+  body = () => {
+    const { body } = this.props;
+    return body.length > 203 ? truncateText(body, 200) : body;
+  };
+
   render() {
-    const { classes, src, title, body } = this.props;
+    const { classes, src, title } = this.props;
 
     return (
       <React.Fragment>
@@ -46,12 +53,14 @@ class DocComponent extends React.Component<PropsWithStyles> {
             <a href={src} target="_blank" className={classes.titleLink}>{title}</a>
           </Typography>
           <Typography variant="body2" className={classes.body}>
-            {body}
+            {this.body()}
           </Typography>
         </div>
       </React.Fragment>
     );
   }
 }
+
+const truncateText = (str: string, len: number) => `${take(len, str)}...`;
 
 export default withStyles(styles, { withTheme: true })<Props>(DocComponent);

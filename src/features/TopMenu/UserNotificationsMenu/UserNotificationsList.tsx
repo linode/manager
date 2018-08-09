@@ -79,7 +79,7 @@ const createClickHandlerForNotification =
         return (e: React.MouseEvent<HTMLElement>) => onClick(`/linodes/${id}`);
 
       case 'ticket':
-        return (e: React.MouseEvent<HTMLElement>) => onClick(`/support/ticket/${id}`);
+        return (e: React.MouseEvent<HTMLElement>) => onClick(`/support/tickets/${id}`);
 
       default:
         return;

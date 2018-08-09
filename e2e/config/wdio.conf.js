@@ -12,7 +12,7 @@ const password = process.env.MANAGER_PASS;
 
 const specsToRun = () => {
     if (argv.file) {
-        return [argv.file];
+        return ['./e2e/setup/setup.spec.js', argv.file];
     }
     if (argv.dir || argv.d) {
         return ['./e2e/setup/setup.spec.js', `./e2e/specs/${argv.dir || argv.d}/**/*.spec.js`]
@@ -86,7 +86,7 @@ exports.config = {
     coloredLogs: true,
     //
     // Warns when a deprecated command is used
-    deprecationWarnings: true,
+    deprecationWarnings: false,
     //
     // If you only want to run your tests until a specific amount of tests have failed use
     // bail (default is 0 - don't bail, run all tests).
@@ -102,7 +102,7 @@ exports.config = {
     baseUrl: process.env.DOCKER ? 'https://manager-local:3000' : process.env.REACT_APP_APP_ROOT,
     //
     // Default timeout for all waitFor* commands.
-    waitforTimeout: process.env.DOCKER ? 20000 : 10000,
+    waitforTimeout: process.env.DOCKER ? 30000 : 10000,
     //
     // Default timeout in milliseconds for request
     // if Selenium Grid doesn't send response
@@ -227,7 +227,7 @@ exports.config = {
         }
 
         if (browser.options.desiredCapabilities.browserName.includes('chrome')) {
-            browser.timeouts('page load', 20000);
+            browser.timeouts('page load', process.env.DOCKER ? 30000 : 20000);
         }
 
         login(username, password);

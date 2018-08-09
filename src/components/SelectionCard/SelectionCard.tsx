@@ -9,15 +9,15 @@ import Check from '@material-ui/icons/Check';
 import Grid from 'src/components/Grid';
 
 type CSSClasses =
-'root'
-| 'icon'
-| 'checked'
-| 'flex'
-| 'heading'
-| 'innerGrid'
-| 'subheading'
-| 'disabled'
-| 'showCursor';
+  'root'
+  | 'icon'
+  | 'checked'
+  | 'flex'
+  | 'heading'
+  | 'innerGrid'
+  | 'subheading'
+  | 'disabled'
+  | 'showCursor';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   '@keyframes fadeIn': {
@@ -54,6 +54,8 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
 
   },
   icon: {
+    display: 'flex',
+    justifyContent: 'flex-end',
     '& svg, & span': {
       fontSize: '32px',
       color: '#939598',
@@ -65,7 +67,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   },
   checked: {
     display: 'flex',
-    animation: 'fadeIn 225ms ease-in-out forwards',
+    animation: 'fadeIn 225ms ease-in-out forwards 10ms',
     '& svg': {
       borderRadius: '16px',
       border: '1px solid',
@@ -117,42 +119,96 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-const styled = withStyles(styles, { withTheme: true });
-
 export interface Props {
   onClick?: (e: React.SyntheticEvent<HTMLElement>) => void;
   onKeyPress?: (e: React.SyntheticEvent<HTMLElement>) => void;
   renderIcon?: () => JSX.Element;
   heading: string;
-  subheadings: (string|undefined)[];
+  subheadings: (string | undefined)[];
   checked?: boolean;
   disabled?: boolean;
   tooltip?: string;
 }
 
 type CombinedProps = Props & WithStyles<CSSClasses>;
+
 interface WithTooltipProps {
-  title? : string;
+  title?: string;
   render: () => JSX.Element;
 }
 
 const WithTooltip: React.StatelessComponent<WithTooltipProps> = ({ title, render }) => (title)
-  ? (<Tooltip title={title} className="w100">{ render() }</Tooltip>)
+  ? (<Tooltip title={title} className="w100">{render()}</Tooltip>)
   : render();
 
-const SelectionCard: React.StatelessComponent<CombinedProps> = (props) => {
-  const {
-    renderIcon,
-    heading,
-    subheadings,
-    classes,
-    checked,
-    disabled,
-    tooltip,
-    onClick,
-  } = props;
+class SelectionCard extends React.PureComponent<CombinedProps, {}> {
+  handleKeyPress = (e: React.KeyboardEvent<HTMLElement>) => {
+    const { onClick, disabled } = this.props;
+    if (onClick && !disabled) {
+      e.preventDefault();
+      onClick(e);
+    }
+  }
 
-  return (
+  handleClick = (e: React.MouseEvent<HTMLElement>) => {
+    const { onClick, disabled } = this.props;
+    if (onClick && !disabled) {
+      onClick(e);
+    }
+  }
+
+  content = () => {
+    const { checked, classes, heading, renderIcon, subheadings } = this.props;
+
+    return (
+      <Grid
+        container
+        alignItems="center"
+        justify="space-between"
+        className={classes.innerGrid}
+      >
+        {renderIcon &&
+          <Grid item className={classes.icon}>
+            {renderIcon()}
+          </Grid>
+        }
+        <Grid
+          item
+          xs={10}
+          className={classes.flex}
+        >
+          <div className={classes.heading} data-qa-select-card-heading={heading}>
+            {heading}
+          </div>
+          {subheadings.map((subheading, idx) => {
+            return (
+              <div key={idx} className={classes.subheading}
+                data-qa-select-card-subheading={subheading}>
+                {subheading}
+              </div>
+            );
+          })}
+        </Grid>
+        <Grid
+          item
+          className={`${classes.icon} ${classes.checked}`}
+          data-qa-checked={checked}
+          xs={2}
+        >
+          {checked &&
+            <Fade in={checked}>
+              <Check />
+            </Fade>
+          }
+        </Grid>
+      </Grid>
+    )
+  }
+
+  render() {
+    const { checked, classes, disabled, onClick, tooltip } = this.props;
+
+    return (
       <Grid
         item
         xs={12}
@@ -169,52 +225,19 @@ const SelectionCard: React.StatelessComponent<CombinedProps> = (props) => {
             selectionCard: true,
           })
         }
-        { ...((onClick && !disabled) && { onClick, onKeyPress: onClick }) }
+        onClick={this.handleClick}
+        onKeyPress={this.handleKeyPress}
         data-qa-selection-card
       >
         <WithTooltip
           title={tooltip}
-          render={() => (
-            <Grid
-              container
-              alignItems="center"
-              className={classes.innerGrid}
-            >
-              {renderIcon &&
-                <Grid item className={classes.icon}>
-                  {renderIcon()}
-                </Grid>
-              }
-              <Grid item className={classes.flex}>
-                <div className={classes.heading} data-qa-select-card-heading={heading}>
-                  {heading}
-                </div>
-                {subheadings.map((subheading, idx) => {
-                  return (
-                    <div key={idx} className={classes.subheading}
-                      data-qa-select-card-subheading={subheading}>
-                      {subheading}
-                    </div>
-                  );
-                })}
-              </Grid>
-
-              {checked &&
-              <Fade in={checked}>
-                <Grid
-                  item
-                  className={`${classes.icon} ${classes.checked}`}
-                  data-qa-checked={checked}
-                >
-                  <Check />
-                </Grid>
-              </Fade>
-              }
-            </Grid>
-          )}
+          render={this.content}
         />
       </Grid>
-  );
+    );
+  }
 };
 
-export default styled<Props>(SelectionCard);
+const styled = withStyles(styles, { withTheme: true });
+
+export default styled(SelectionCard);

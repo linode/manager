@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import { clone, compose, gte, ifElse, isEmpty, path, pathEq, pathOr, prop, propEq } from 'ramda';
+import { clone, compose, defaultTo, lensPath, map, over, path, pathEq, pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import 'rxjs/add/observable/combineLatest';
@@ -8,18 +8,19 @@ import 'rxjs/add/operator/filter';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import Button from '@material-ui/core/Button';
 import Hidden from '@material-ui/core/Hidden';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import PaginationFooter from 'src/components/PaginationFooter';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
+import { withTypes } from 'src/context/types';
 import { events$ } from 'src/events';
 import LinodeConfigSelectionDrawer, { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { newLinodeEvents } from 'src/features/linodes/events';
@@ -78,11 +79,24 @@ const preloaded = PromiseLoader<Props>({
   images: () => getImages(),
 });
 
+interface TypesContextProps {
+  typesRequest: () => void;
+  typesLoading: boolean;
+  typesLastUpdated: number;
+}
+
 type CombinedProps = Props
+  & TypesContextProps
   & PreloadedProps
   & RouteComponentProps<{}>
   & WithStyles<ClassNames>
   & SetDocsProps;
+
+const L = {
+  response: {
+    data: lensPath(['response', 'data']),
+  }
+};
 
 export class ListLinodes extends React.Component<CombinedProps, State> {
   eventsSub: Subscription;
@@ -130,6 +144,12 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     this.mounted = true;
     const mountTime = moment().subtract(5, 'seconds');
 
+    const { typesLastUpdated, typesLoading, typesRequest } = this.props;
+
+    if (typesLastUpdated === 0 && !typesLoading) {
+      typesRequest();
+    }
+
     this.eventsSub = events$
       .filter(newLinodeEvents(mountTime))
       .filter(e => !e._initial)
@@ -159,20 +179,14 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           .map(notifications => notifications.filter(pathEq(['entity', 'type'], 'linode'))),
         Observable.of(this.props.linodes),
     )
-      .map(([notifications, linodes]) => {
-        /** Imperative and gross a/f. Ill fix it. */
-        linodes.response.data = linodes.response.data.map((linode) => {
-          const notification = notifications.find(pathEq(['entity', 'id'], linode.id));
-          if (notification) {
-            linode.notification = notification.message;
-            return linode;
-          }
-
-          return linode;
-        });
-
-        return linodes;
-      })
+      .map(([notifications, linodes]) => over(
+        L.response.data,
+        compose(
+          map(addNotificationToLinode(notifications)),
+          defaultTo([]),
+        ),
+        linodes,
+      ))
       .subscribe((response) => {
         if (!this.mounted) { return; }
 
@@ -212,6 +226,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   changeViewStyle = (style: string) => {
     const { history } = this.props;
     history.push(`#${style}`);
+    localStorage.setItem('linodesViewStyle', style);
   }
 
   renderListView = (
@@ -267,8 +282,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     this.getLinodes(Math.min(page), this.state.pageSize);
   }
 
-  handlePageSizeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    this.getLinodes(this.state.page, parseInt(event.target.value, 0));
+  handlePageSizeChange = (pageSize: number) => {
+    this.getLinodes(this.state.page, pageSize);
   }
 
   selectConfig = (id: number) => {
@@ -289,7 +304,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   }
 
   toggleDialog = (bootOption: Linode.BootAction,
-     selectedLinodeId: number, selectedLinodeLabel: string) => {
+    selectedLinodeId: number, selectedLinodeLabel: string) => {
     this.setState({
       powerAlertOpen: !this.state.powerAlertOpen,
       selectedLinodeId,
@@ -310,7 +325,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
   render() {
     const { location: { hash } } = this.props;
-    const { linodes, configDrawer, bootOption, powerAlertOpen } = this.state;
+    const { linodes, configDrawer, bootOption, powerAlertOpen, results } = this.state;
     const images = pathOr([], ['response', 'data'], this.props.images);
 
     if (linodes.length === 0) {
@@ -329,7 +344,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       );
     }
 
-    const displayGrid: 'grid' | 'list' = getDisplayFormat({ hash, length: linodes.length });
+    const displayGrid: 'grid' | 'list' = getDisplayFormat({ hash, length: results });
 
     return (
       <Grid container>
@@ -382,30 +397,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
         </Grid>
         <ConfirmationDialog
           title={(bootOption === 'reboot') ? 'Confirm Reboot' : 'Powering Off'}
-          actions={() =>
-            <ActionsPanel style={{ padding: 0 }}>
-              <Button
-                variant="raised"
-                color="secondary"
-                className="destructive"
-                onClick={this.rebootOrPowerLinode}
-                data-qa-confirm-cancel
-              >
-                {(bootOption === 'reboot')
-                  ? 'Reboot'
-                  : 'Power Off'}
-              </Button>
-              <Button
-                onClick={() => this.setState({ powerAlertOpen: false })}
-                variant="raised"
-                color="secondary"
-                className="cancel"
-                data-qa-cancel-cancel
-              >
-                Cancel
-            </Button>
-            </ActionsPanel>
-          }
+          actions={this.renderConfirmationActions}
           open={powerAlertOpen}
         >
           {bootOption === 'reboot'
@@ -415,28 +407,72 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       </Grid>
     );
   }
+
+  renderConfirmationActions = () => {
+    const { bootOption } = this.state;
+    return (
+      <ActionsPanel style={{ padding: 0 }}>
+        <Button
+          type="cancel"
+          onClick={this.closePowerAlert}
+          data-qa-cancel-cancel
+        >
+          Cancel
+        </Button>
+        <Button
+          type="secondary"
+          onClick={this.rebootOrPowerLinode}
+          data-qa-confirm-cancel
+        >
+          {bootOption === 'reboot' ? 'Reboot' : 'Power Off'}
+        </Button>
+      </ActionsPanel>
+    );
+  };
+
+  closePowerAlert = () => this.setState({ powerAlertOpen: false });
 }
 
-const getDisplayFormat = ifElse(
-  compose(isEmpty, prop('hash')),
-  /* is empty */
-  ifElse(
-    compose(gte(3), prop('length')),
-    () => 'grid',
-    () => 'list',
-  ),
-  /* is not empty */
-  ifElse(
-    propEq('hash', '#grid'),
-    () => 'grid',
-    () => 'list',
-  ),
-);
+
+const getNotificationMessageByEntityId = (id: number, notifications: Linode.Notification[]): undefined | string => {
+  const found = notifications.find((n) => n.entity !== null && n.entity.id === id);
+  return found ? found.message : undefined;
+}
+
+const addNotificationToLinode = (notifications: Linode.Notification[]) => (linode: Linode.Linode) => ({
+  ...linode,
+  notification: getNotificationMessageByEntityId(linode.id, notifications)
+});
+
+const getDisplayFormat = ({ hash, length }: { hash?: string, length: number }): 'grid' | 'list' => {
+  const local = localStorage.getItem('linodesViewStyle');
+
+  if (hash) {
+    return hash === '#grid' ? 'grid' : 'list';
+  }
+
+  if (local) {
+    return local as 'grid' | 'list';
+  }
+
+  return (length >= 3) ? 'list' : 'grid';
+};
 
 export const styled = withStyles(styles, { withTheme: true });
 
+const typesContext = withTypes(({
+  lastUpdated: typesLastUpdated,
+  loading: typesLoading,
+  request: typesRequest,
+}) => ({
+  typesRequest,
+  typesLoading,
+  typesLastUpdated,
+}));
+
 export const enhanced = compose(
   withRouter,
+  typesContext,
   styled,
   preloaded,
   setDocs(ListLinodes.docs),
