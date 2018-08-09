@@ -24,7 +24,7 @@ import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoad
 import renderGuard from 'src/components/RenderGuard';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import Table from 'src/components/Table';
-import { events$, resetEventsPolling } from 'src/events';
+import { resetEventsPolling } from 'src/events';
 import { getLinodeConfigs, getLinodeVolumes } from 'src/services/linodes';
 import { attachVolume, cloneVolume, createVolume, deleteVolume, detachVolume, getVolumes, resizeVolume, updateVolume } from 'src/services/volumes';
 import composeState from 'src/utilities/composeState';
@@ -153,22 +153,22 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
   componentDidMount() {
     this.mounted = true;
 
-    this.eventSubscription = events$
-      /** @todo filter on mount time. */
-      .filter(e => [
-        'volume_attach',
-        'volume_clone',
-        'volume_create',
-        'volume_delete',
-        'volume_detach',
-        'volume_resize',
-      ].includes(e.action))
-      .filter(e => !e._initial)
-      .subscribe((v) => {
-        if (this.mounted) {
-          this.getVolumes();
-        }
-      });
+    // this.eventSubscription = events$
+    //   /** @todo filter on mount time. */
+    //   .filter(e => [
+    //     'volume_attach',
+    //     'volume_clone',
+    //     'volume_create',
+    //     'volume_delete',
+    //     'volume_detach',
+    //     'volume_resize',
+    //   ].includes(e.action))
+    //   .filter(e => !e._initial)
+    //   .subscribe((v) => {
+    //     if (this.mounted) {
+    //       this.getVolumes();
+    //     }
+    //   });
   }
 
   componentWillUnmount() {

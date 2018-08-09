@@ -16,10 +16,10 @@ import Grid from 'src/components/Grid';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import Table from 'src/components/Table';
-import { events$ } from 'src/events';
+// import { events$ } from 'src/events';
 import { withConfigs, withDisks, withLinode } from 'src/features/linodes/LinodesDetail/context';
 import { ExtendedDisk, ExtendedVolume } from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
-import { genEvent } from 'src/features/linodes/LinodesLanding/powerActions';
+// import { genEvent } from 'src/features/linodes/LinodesLanding/powerActions';
 import { createLinodeConfig, deleteLinodeConfig, updateLinodeConfig } from 'src/services/linodes';
 import { getVolumes } from 'src/services/volumes';
 import createDevicesFromStrings, { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
@@ -279,7 +279,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
 
   deleteConfig = () => {
     this.setConfirmDelete({ submitting: true });
-    const { linodeId, linodeLabel } = this.props;
+    const { linodeId } = this.props;
     const { confirmDelete: { id: configId } } = this.state;
     if (!configId) { return; }
 
@@ -289,14 +289,14 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
           linodeConfigs: this.state.linodeConfigs.filter(config => config.id !== configId),
         });
 
-        events$.next(genEvent('linode_reboot', linodeId, linodeLabel));
+        // events$.next(genEvent('linode_reboot', linodeId, linodeLabel));
 
         this.setConfirmDelete({
           submitting: false,
         }, () => { this.setConfirmDelete({ submitting: false, open: false, id: undefined }); });
       })
       .catch((error) => {
-        events$.next(genEvent('linode_reboot', linodeId, linodeLabel));
+        // events$.next(genEvent('linode_reboot', linodeId, linodeLabel));
       });
   }
 
@@ -380,7 +380,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
   }
 
   createConfig = () => {
-    const { linodeId, linodeLabel } = this.props;
+    const { linodeId } = this.props;
     const {
       label, devices, kernel, comments, memory_limit, run_level, virt_mode, helpers, root_device,
     } = this.state.configDrawer;
@@ -399,7 +399,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
       root_device,
     })
       .then((response) => {
-        events$.next(genEvent('linode_reboot', linodeId, linodeLabel));
+        // events$.next(genEvent('linode_reboot', linodeId, linodeLabel));
 
         this.setState({ linodeConfigs: append(response.data, this.state.linodeConfigs) });
 

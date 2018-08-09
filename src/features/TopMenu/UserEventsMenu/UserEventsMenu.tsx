@@ -1,5 +1,5 @@
-import * as moment from 'moment';
-import { assoc, compose, sort, take, values } from 'ramda';
+// import * as moment from 'moment';
+// import { assoc, compose, sort, take, values } from 'ramda';
 import * as React from 'react';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/observable/fromEvent'
@@ -9,15 +9,15 @@ import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/scan';
 import 'rxjs/add/operator/withLatestFrom';
-import { Observable } from 'rxjs/Observable';
+// import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import ListItem from '@material-ui/core/ListItem';
 import Menu from '@material-ui/core/Menu';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-import { events$, init } from 'src/events';
-import { markEventsSeen } from 'src/services/account';
+// import { events$, init } from 'src/events';
+// import { markEventsSeen } from 'src/services/account';
 
 import UserEventsButton from './UserEventsButton';
 import UserEventsList from './UserEventsList';
@@ -62,9 +62,9 @@ interface State {
 
 type CombinedProps = {} & WithStyles<ClassNames>;
 
-interface EventsMap {
-  [index: string]: Linode.Event;
-}
+// interface EventsMap {
+//   [index: string]: Linode.Event;
+// }
 
 class UserEventsMenu extends React.Component<CombinedProps, State> {
   state = {
@@ -84,50 +84,50 @@ class UserEventsMenu extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     this.mounted = true;
-    this.subscription = events$
-      /** Filter the fuax event used to kick off the progress bars. */
-      .filter((event: Linode.Event) => event.id !== 1)
+    // this.subscription = events$
+    //   /** Filter the fuax event used to kick off the progress bars. */
+    //   .filter((event: Linode.Event) => event.id !== 1)
 
-      /** Create a map of the Events using Event.ID as the key. */
-      .scan((events: EventsMap, event: Linode.Event) =>
-        assoc(String(event.id), event, events), {})
+    //   /** Create a map of the Events using Event.ID as the key. */
+    //   .scan((events: EventsMap, event: Linode.Event) =>
+    //     assoc(String(event.id), event, events), {})
 
-      /** Wait for the events to settle before calling setState. */
-      .debounce(() => Observable.interval(250))
+    //   /** Wait for the events to settle before calling setState. */
+    //   .debounce(() => Observable.interval(250))
 
-      /** Notifications are fine, but the events need to be extracts and sorted. */
-      .map(extractAndSortByCreated)
-      .subscribe(
-        (events: Linode.Event[]) => {
-          if (!this.mounted) { return; }
-          this.setState({
-            unseenCount: getNumUnseenEvents(events),
-            events,
-          });
-        },
-        () => null,
-    );
+    //   /** Notifications are fine, but the events need to be extracts and sorted. */
+    //   .map(extractAndSortByCreated)
+    //   .subscribe(
+    //     (events: Linode.Event[]) => {
+    //       if (!this.mounted) { return; }
+    //       this.setState({
+    //         unseenCount: getNumUnseenEvents(events),
+    //         events,
+    //       });
+    //     },
+    //     () => null,
+    // );
 
-    Observable
-      .fromEvent(this.buttonRef, 'click')
-      .withLatestFrom(
-        events$
-          .filter(e => e.id !== 1)
-          .map(e => e.id),
-    )
-      .subscribe(([e, id]) => {
-        markEventsSeen(id)
-          .then(() => init())
-          .catch(console.error);
-      });
+    // Observable
+    //   .fromEvent(this.buttonRef, 'click')
+    //   .withLatestFrom(
+    //     events$
+    //       .filter(e => e.id !== 1)
+    //       .map(e => e.id),
+    // )
+    //   .subscribe(([e, id]) => {
+    //     markEventsSeen(id)
+    //       .then(() => init())
+    //       .catch(console.error);
+    //   });
   }
 
   componentWillUnmount() {
     this.mounted = false;
-    this.subscription.unsubscribe();
+    // this.subscription.unsubscribe();
   }
 
-  private buttonRef: HTMLElement;
+  buttonRef: HTMLElement;
 
   setRef = (element: HTMLElement) => {
     this.buttonRef = element;
@@ -175,25 +175,25 @@ class UserEventsMenu extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const extractAndSortByCreated = compose(
-  take(25),
-  sort((a: Linode.Event, b: Linode.Event) => moment(b.created).diff(moment(a.created))),
-  values,
-);
+// const extractAndSortByCreated = compose(
+//   take(25),
+//   sort((a: Linode.Event, b: Linode.Event) => moment(b.created).diff(moment(a.created))),
+//   values,
+// );
 
-const getNumUnseenEvents = (events: Linode.Event[]) => {
-  const len = events.length;
-  let unseenCount = 0;
-  let idx = 0;
-  while (idx < len) {
-    if (!events[idx].seen) {
-      unseenCount += 1;
-    }
+// const getNumUnseenEvents = (events: Linode.Event[]) => {
+//   const len = events.length;
+//   let unseenCount = 0;
+//   let idx = 0;
+//   while (idx < len) {
+//     if (!events[idx].seen) {
+//       unseenCount += 1;
+//     }
 
-    idx += 1;
-  }
+//     idx += 1;
+//   }
 
-  return unseenCount;
-};
+//   return unseenCount;
+// };
 
 export default styled<Props>(UserEventsMenu);

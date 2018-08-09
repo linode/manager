@@ -1,7 +1,7 @@
 import * as moment from 'moment';
 import { pathOr } from 'ramda';
 
-import { events$, resetEventsPolling } from 'src/events';
+// import { events$, resetEventsPolling } from 'src/events';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { getLinodeConfigs, linodeBoot, linodeReboot, linodeShutdown } from 'src/services/linodes';
@@ -40,8 +40,8 @@ export interface LinodePowerAction {
 const _rebootLinode: LinodePowerAction = (id, label, config_id) => {
   linodeReboot(id, { config_id })
   .then((response) => {
-    events$.next(genEvent('linode_reboot', id, label));
-    resetEventsPolling();
+    // events$.next(genEvent('linode_reboot', id, label));
+    // resetEventsPolling();
   })
   .catch((err) => {
     const errors: Linode.ApiFieldError[] = pathOr([], ['response', 'data', 'errors'], err);
@@ -52,8 +52,8 @@ const _rebootLinode: LinodePowerAction = (id, label, config_id) => {
 const _powerOnLinode: LinodePowerAction = (id, label) => {
   linodeBoot(id)
   .then((response) => {
-    events$.next(genEvent('linode_boot', id, label));
-    resetEventsPolling();
+    // events$.next(genEvent('linode_boot', id, label));
+    // resetEventsPolling();
   });
 };
 
@@ -84,8 +84,8 @@ const withAction = (
 export const powerOffLinode: LinodePowerAction = (id, label) => {
   linodeShutdown(id)
   .then((response) => {
-    events$.next(genEvent('linode_shutdown', id, label));
-    resetEventsPolling();
+    // events$.next(genEvent('linode_shutdown', id, label));
+    // resetEventsPolling();
   });
 };
 

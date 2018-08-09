@@ -18,9 +18,9 @@ import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import Select from 'src/components/Select';
 import TextField from 'src/components/TextField';
 import { withRegions } from 'src/context/regions';
-import { events$, resetEventsPolling } from 'src/events';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
-import { updateVolumes$ } from 'src/features/Volumes/VolumesLanding';
+// import { resetEventsPolling } from 'src/events';
+// import { sendToast } from 'src/features/ToastNotifications/toasts';
+import { updateVolumes$ } from 'src/features/Volumes/Volumes';
 import { getLinodeConfigs, getLinodes } from 'src/services/linodes';
 import { cloneVolume, createVolume, resizeVolume, updateVolume, VolumeRequestPayload } from 'src/services/volumes';
 import { close } from 'src/store/reducers/volumeDrawer';
@@ -137,35 +137,35 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
   componentDidMount() {
     this.mounted = true;
 
-    this.eventsSub = events$
-      .filter(event => (
-        !event._initial
-        && [
-          'volume_detach',
-          'volume_create',
-          'volume_delete',
-        ].includes(event.action)
-      ))
-      .subscribe((event) => {
-        if (event.action === 'volume_detach' && event.status === 'finished') {
-          sendToast(`Volume ${event.entity && event.entity.label} finished detaching`);
-        }
-        /**
-         * If a volume is created, but not attached, the event is volume_create with a status of notification.
-         * If a volume is created and attached, the event is volume_create with status of scheduled, started, failed, finished.
-         */
-        if (event.action === 'volume_create' && event.status === 'scheduled') {
-          sendToast(`Volume ${event.entity && event.entity.label} scheduled for creation.`);
-        }
+    // this.eventsSub = events$
+    //   .filter(event => (
+    //     !event._initial
+    //     && [
+    //       'volume_detach',
+    //       'volume_create',
+    //       'volume_delete',
+    //     ].includes(event.action)
+    //   ))
+    //   .subscribe((event) => {
+    //     if (event.action === 'volume_detach' && event.status === 'finished') {
+    //       sendToast(`Volume ${event.entity && event.entity.label} finished detaching`);
+    //     }
+    //     /**
+    //      * If a volume is created, but not attached, the event is volume_create with a status of notification.
+    //      * If a volume is created and attached, the event is volume_create with status of scheduled, started, failed, finished.
+    //      */
+    //     if (event.action === 'volume_create' && event.status === 'scheduled') {
+    //       sendToast(`Volume ${event.entity && event.entity.label} scheduled for creation.`);
+    //     }
 
-        if (event.action === 'volume_create' && (event.status === 'notification' || event.status === 'finished')) {
-          sendToast(`Volume ${event.entity && event.entity.label} has been created successfully.`);
-        }
+    //     if (event.action === 'volume_create' && (event.status === 'notification' || event.status === 'finished')) {
+    //       sendToast(`Volume ${event.entity && event.entity.label} has been created successfully.`);
+    //     }
 
-        if (event.action === 'volume_delete' && event.status === 'notification') {
-          sendToast(`Volume ${event.entity && event.entity.label} has been deleted.`);
-        }
-      });
+    //     if (event.action === 'volume_delete' && event.status === 'notification') {
+    //       sendToast(`Volume ${event.entity && event.entity.label} has been deleted.`);
+    //     }
+    //   });
   }
 
   componentWillUnmount() {
@@ -255,7 +255,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
 
         createVolume(payload)
           .then(() => {
-            resetEventsPolling();
+            // resetEventsPolling();
             this.composeState([
               set(L.success, 'Volume has been scheduled for creation.'),
               set(L.submitting, false),
@@ -307,7 +307,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
 
         resizeVolume(volumeID, Number(size))
           .then(() => {
-            resetEventsPolling();
+            // resetEventsPolling();
             close();
           })
           .catch(this.handleAPIErrorResponse);
@@ -330,7 +330,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
 
         cloneVolume(volumeID, cloneLabel)
           .then(() => {
-            resetEventsPolling();
+            // resetEventsPolling();
             close();
           })
           .catch(this.handleAPIErrorResponse);
