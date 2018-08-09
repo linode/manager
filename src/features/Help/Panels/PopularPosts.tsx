@@ -70,15 +70,20 @@ class PopularPosts extends React.Component<CombinedProps, State> {
           </a>
         </div>
         <div className={classes.post}>
-          <a target="_blank" href="https://linode.com/docs/platform/disk-images/linode-backup-service/">
+          <a
+            target="_blank"
+            href="https://linode.com/docs/platform/disk-images/linode-backup-service/"
+          >
             <Typography variant="subheading">
               Linode Backup Service
             </Typography>
           </a>
         </div>
         <div className={classes.post}>
-          <a target="_blank" href="h~ttps://linode
-            .com/docs/security/authentication/use-public-key-authentication-with-ssh/">
+          <a
+            target="_blank"
+            href="https://linode.com/docs/security/authentication/use-public-key-authentication-with-ssh/"
+          >
             <Typography variant="subheading">
               Public Key Authentication with SSH
             </Typography>
@@ -93,24 +98,30 @@ class PopularPosts extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <div className={classes.post}>
-          <a target="_blank" href="https://linode.com/community/questions/
-          16988/completing-install-of-phpmyadmin-on-centos-7">
+          <a
+            target="_blank"
+            href="https://linode.com/community/questions/16988/completing-install-of-phpmyadmin-on-centos-7"
+          >
             <Typography variant="subheading">
               Completing Install of phpMyAdmin on CentOS 7
             </Typography>
           </a>
         </div>
         <div className={classes.post}>
-          <a target="_blank" href="https://linode.com/community/questions/16956/
-          how-do-i-switch-from-a-commercial-ssl-to-lets-encrypt">
+          <a
+            target="_blank"
+            href="https://linode.com/community/questions/16956/how-do-i-switch-from-a-commercial-ssl-to-lets-encrypt"
+          >
             <Typography variant="subheading">
               How do I switch from a commercial SSL to Let's Encrypt?
             </Typography>
           </a>
         </div>
         <div className={classes.post}>
-          <a target="_blank" href="https://linode.com/community/questions/
-          16945/how-can-i-install-angularcli-on-ubuntu-1604-lts">
+          <a
+            target="_blank"
+            href="https://linode.com/community/questions/16945/how-can-i-install-angularcli-on-ubuntu-1604-lts"
+          >
             <Typography variant="subheading">
               How can I install @angular/cli on ubuntu 16.04 LTS?
             </Typography>
