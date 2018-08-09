@@ -8,11 +8,11 @@ type Page<T> = Linode.ResourcePage<T>;
 type NodeBalancer = Linode.NodeBalancer;
 type Config = Linode.NodeBalancerConfig;
 
-export const getNodeBalancers = (params: any = {}, filters: any = {}) =>
+export const getNodeBalancers = (pagination: any = {}, filters: any = {}) =>
   Request<Page<NodeBalancer>>(
     setURL(`${API_ROOT}/nodebalancers/`),
     setMethod('GET'),
-    setParams(params),
+    setParams(pagination),
     setXFilter(filters),
   )
     .then(response => response.data);
@@ -60,6 +60,7 @@ export const updateNodeBalancerConfigNode = (
   configId: number,
   nodeId: number,
   data: any,
+
 ) =>
   Request<Linode.NodeBalancerConfigNode>(
     setMethod('PUT'),

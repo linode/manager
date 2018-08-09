@@ -192,3 +192,10 @@ export const makePayment = (data: { usd: string, ccv: string }) =>
     setData(data),
   )
     .then(response => response.data)
+
+export const getNetworkUtilization = () =>
+  Request<Linode.NetworkUtilization>(
+    setURL(`${API_ROOT}/account/transfer`),
+    setMethod('GET'),
+  )
+  .then(response => response.data);

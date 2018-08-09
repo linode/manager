@@ -55,6 +55,39 @@ a {
   display: none !important;
 }
 
+a.blue {
+  transition: color 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+a.blue:visited {
+  color: #3683DC;
+}
+
+a.blue:hover {
+  color: #4D99F1;
+}
+
+a.blue:active {
+  color: #2466B3;
+}
+
+a.black {
+  color: #32363C;
+}
+
+a.black:visited {
+  color: #32363C;
+}
+
+a.black:hover {
+  color: #32363C;
+  text-decoration: underline;
+}
+
+a.black:active {
+  text-decoration: underline;
+}
+
 :focus {
   outline: 1px dotted #999;
 }
