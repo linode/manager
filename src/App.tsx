@@ -90,6 +90,10 @@ const Managed = DefaultLoader({
   loader: () => import('src/features/Managed'),
 });
 
+const Help = DefaultLoader({
+  loader: () => import('src/features/Help'),
+});
+
 type ClassNames = 'appFrame'
   | 'content'
   | 'wrapper'
@@ -318,6 +322,7 @@ export class App extends React.Component<CombinedProps, State> {
                             <Route exact path="/support/tickets" component={SupportTickets} />
                             <Route path="/support/tickets/:ticketId" component={SupportTicketDetail} />
                             <Route path="/profile" component={Profile} />
+                            <Route path="/help" component={Help} />
                             {/* Update to Dashboard when complete */}
                             <Route exact path="/" component={LinodesRoutes} />
                             <Route component={NotFound} />
