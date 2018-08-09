@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import { clone, compose, path, pathEq, pathOr } from 'ramda';
+import { clone, compose, defaultTo, lensPath, map, over, path, pathEq, pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import 'rxjs/add/observable/combineLatest';
@@ -7,7 +7,6 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/filter';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-
 
 import Hidden from '@material-ui/core/Hidden';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
@@ -93,6 +92,12 @@ type CombinedProps = Props
   & WithStyles<ClassNames>
   & SetDocsProps;
 
+const L = {
+  response: {
+    data: lensPath(['response', 'data']),
+  }
+};
+
 export class ListLinodes extends React.Component<CombinedProps, State> {
   eventsSub: Subscription;
   notificationSub: Subscription;
@@ -174,20 +179,14 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           .map(notifications => notifications.filter(pathEq(['entity', 'type'], 'linode'))),
         Observable.of(this.props.linodes),
     )
-      .map(([notifications, linodes]) => {
-        /** Imperative and gross a/f. Ill fix it. */
-        linodes.response.data = linodes.response.data.map((linode) => {
-          const notification = notifications.find(pathEq(['entity', 'id'], linode.id));
-          if (notification) {
-            linode.notification = notification.message;
-            return linode;
-          }
-
-          return linode;
-        });
-
-        return linodes;
-      })
+      .map(([notifications, linodes]) => over(
+        L.response.data,
+        compose(
+          map(addNotificationToLinode(notifications)),
+          defaultTo([]),
+        ),
+        linodes,
+      ))
       .subscribe((response) => {
         if (!this.mounted) { return; }
 
@@ -433,6 +432,17 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
   closePowerAlert = () => this.setState({ powerAlertOpen: false });
 }
+
+
+const getNotificationMessageByEntityId = (id: number, notifications: Linode.Notification[]): undefined | string => {
+  const found = notifications.find((n) => n.entity !== null && n.entity.id === id);
+  return found ? found.message : undefined;
+}
+
+const addNotificationToLinode = (notifications: Linode.Notification[]) => (linode: Linode.Linode) => ({
+  ...linode,
+  notification: getNotificationMessageByEntityId(linode.id, notifications)
+});
 
 const getDisplayFormat = ({ hash, length }: { hash?: string, length: number }): 'grid' | 'list' => {
   const local = localStorage.getItem('linodesViewStyle');
