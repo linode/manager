@@ -137,10 +137,7 @@ describe('Profile - OAuth Clients Suite', () => {
             browser.waitForVisible(dialogTitle, constants.wait.normal);
             $(dialogConfirm).click();
 
-            browser.waitUntil(function() {
-                browser.waitForVisible(dialogTitle, constants.wait.normal);
-                return browser.getText(dialogTitle).includes('Client Secret');
-            }, constants.wait.normal, 'Client Secret dialog failed to display');
+            profile.waitForNotice(/\w\d/, constants.wait.normal);
 
             const content = $(dialogContent).getText();
             expect(content).toContain('Here is your client secret! Store it securely, as it won\'t be shown again.');
