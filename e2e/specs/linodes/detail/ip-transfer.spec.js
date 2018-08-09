@@ -23,7 +23,7 @@ describe('Linode Detail - Ip Transfer Suite', () => {
 		Networking.networkActionsTitle.waitForVisible(constants.wait.normal);
 
 		// Expand the panels
-		$$('[data-qa-panel-summary]').forEach(panel => panel.click());
+		Networking.expandPanels(2);
 
 		expect(Networking.networkingActionsSubheading.isVisible()).toBe(true);
 		expect(Networking.ipTransferSubheading.isVisible()).toBe(true);
