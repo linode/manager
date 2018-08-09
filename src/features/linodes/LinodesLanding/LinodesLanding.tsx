@@ -1,6 +1,6 @@
 // import * as moment from 'moment';
 // import { clone, compose, defaultTo, lensPath, map, over, path, pathEq, pathOr } from 'ramda';
-import { compose, lensPath, pathOr } from 'ramda';
+import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -104,11 +104,11 @@ type CombinedProps = Props
   & SetDocsProps
   & ConnectedProps;
 
-const L = {
-  response: {
-    data: lensPath(['response', 'data']),
-  }
-};
+// const L = {
+//   response: {
+//     data: lensPath(['response', 'data']),
+//   }
+// };
 
 export class ListLinodes extends React.Component<CombinedProps, State> {
   eventsSub: Subscription;
@@ -497,15 +497,15 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 }
 
 
-const getNotificationMessageByEntityId = (id: number, notifications: Linode.Notification[]): undefined | string => {
-  const found = notifications.find((n) => n.entity !== null && n.entity.id === id);
-  return found ? found.message : undefined;
-}
+// const getNotificationMessageByEntityId = (id: number, notifications: Linode.Notification[]): undefined | string => {
+//   const found = notifications.find((n) => n.entity !== null && n.entity.id === id);
+//   return found ? found.message : undefined;
+// }
 
-const addNotificationToLinode = (notifications: Linode.Notification[]) => (linode: Linode.Linode) => ({
-  ...linode,
-  notification: getNotificationMessageByEntityId(linode.id, notifications)
-});
+// const addNotificationToLinode = (notifications: Linode.Notification[]) => (linode: Linode.Linode) => ({
+//   ...linode,
+//   notification: getNotificationMessageByEntityId(linode.id, notifications)
+// });
 
 const getDisplayFormat = ({ hash, length }: { hash?: string, length: number }): 'grid' | 'list' => {
   const local = localStorage.getItem('linodesViewStyle');
