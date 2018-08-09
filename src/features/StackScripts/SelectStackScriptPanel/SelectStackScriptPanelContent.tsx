@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
+import Waypoint from 'react-waypoint';
+
 import {
   StyleRulesCallback,
   Theme,
@@ -101,7 +103,8 @@ interface State {
   selected?: number;
   loading?: boolean;
   gettingMoreStackScripts: boolean;
-  showMoreButtonVisible: boolean;
+  allStackScriptsLoaded: boolean;
+  getMoreStackScriptsFailed: boolean; // did our attempt to get the next page of stackscripts fail?
   listOfStackScripts: Linode.StackScript.Response[]; // @TODO type correctly
   sortOrder: SortOrder;
   currentFilterType: CurrentFilter | null;
@@ -125,7 +128,8 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
     loading: true,
     gettingMoreStackScripts: false,
     listOfStackScripts: [],
-    showMoreButtonVisible: true,
+    allStackScriptsLoaded: false,
+    getMoreStackScriptsFailed: false,
     sortOrder: 'asc',
     currentFilterType: null,
     currentFilter: { ['+order_by']: 'deployments_active', ['+order']: 'desc' },
@@ -169,7 +173,7 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
         * if we have no results at all or if we've loaded all available results
         */
         if (!response.data.length || response.data.length === response.results) {
-          this.setState({ showMoreButtonVisible: false });
+          this.setState({ allStackScriptsLoaded: true });
         }
 
         /*
@@ -218,12 +222,14 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
           gettingMoreStackScripts: false,
           loading: false,
           isSorting: false,
+          getMoreStackScriptsFailed: false,
         });
         return cleanedData;
       })
       .catch((e: any) => {
         if (!this.mounted) { return; }
-        this.setState({ error: e.response, loading: false, });
+        if (page > 1) { this.setState({ getMoreStackScriptsFailed: true }) }
+        this.setState({ error: e.response, loading: false, gettingMoreStackScripts: false });
       });
   }
 
@@ -265,7 +271,7 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
     this.mounted = false;
   }
 
-  getNext = () => {
+  getNext = (e?: any) => {
     if (!this.mounted) { return; }
     this.setState(
       { currentPage: this.state.currentPage + 1 },
@@ -518,7 +524,9 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
         actions={this.renderConfirmDeleteActions}
         onClose={this.handleCloseDialog}
       >
-        <Typography>Are you sure you want to delete this StackScript?</Typography>
+        <Typography>
+          Are you sure you want to delete this StackScript?
+        </Typography>
       </ConfirmationDialog>
     )
   }
@@ -547,6 +555,9 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
     const { currentFilter } = this.state;
     const filteredUser = (isLinodeStackScripts) ? 'linode' : currentUser;
 
+    /*
+    * Search by label or description of the StackScript
+    */
     const filter = {
       ["+or"]: [
         {
@@ -581,12 +592,12 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
         */
         if (value) {
           this.setState({
-            showMoreButtonVisible: false,
+            allStackScriptsLoaded: true,
             currentSearchFilter: filter,
            });
         } else {
           this.setState({
-            showMoreButtonVisible: true,
+            allStackScriptsLoaded: false,
             currentSearchFilter: [],
           });
         }
@@ -608,7 +619,10 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
       listOfStackScripts,
       didSearch,
       successMessage,
-      sortOrder
+      sortOrder,
+      allStackScriptsLoaded,
+      gettingMoreStackScripts,
+      getMoreStackScriptsFailed,
     } = this.state;
 
     if(error) {
@@ -674,25 +688,43 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
                 {...selectProps}
               />
             </Table>
+            {/*
+            * show loading indicator if we're getting more stackscripts
+            * and if we're not showing the "get more stackscripts" button
+            */}
+            {gettingMoreStackScripts && !isSorting &&
+              <div style={{ margin: '32px 0 32px 0', textAlign: 'center' }}><CircleProgress mini /></div>
+            }
           </React.Fragment>
         }
         {/* 
-        * if we're sorting, the loading indicator is showing
-        * so don't show the "show more stackscripts" button
+        * if we're sorting, or if we already loaded all results
+        * or if we're in the middle of getting more results, don't render
+        * the lazy load trigger
         */}
-        {this.state.showMoreButtonVisible && !isSorting &&
-          <Button
-            title="Show More StackScripts"
-            onClick={this.getNext}
-            type="secondary"
-            disabled={this.state.gettingMoreStackScripts}
-            style={{ marginTop: 32 }}
-          >
-            {!this.state.gettingMoreStackScripts
-              ? 'Show More StackScripts'
-              : 'Loading...'
+        {!isSorting && !allStackScriptsLoaded && !gettingMoreStackScripts &&
+          <div style={{ textAlign: 'center' }}>
+            {/* 
+            * If the lazy-load failed (marked by the catch in getNext), 
+            * show the "Show more StackScripts button
+            * Otherwise, try to lazy load some more dang stackscripts
+            */}
+            {(!getMoreStackScriptsFailed)
+              ? <Waypoint
+                onEnter={this.getNext}
+              />
+              : <Button
+                title="Show More StackScripts"
+                onClick={this.getNext}
+                value="Show More"
+                type="secondary"
+                disabled={this.state.gettingMoreStackScripts}
+                style={{ margin: '32px 0 32px 0' }}
+              >
+                Show More StackScripts
+              </Button>
             }
-          </Button>
+          </div>
         }
         {this.renderDeleteStackScriptDialog()}
         {this.renderMakePublicDialog()}
