@@ -1,8 +1,10 @@
+import * as React from 'react';
+
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
-import * as React from 'react';
-import SkeletonScreen from 'src/components/SkeletonScreen';
+
+import CircleProgress from 'src/components/CircleProgress';
 
 type ClassNames = 'root';
 
@@ -20,7 +22,7 @@ const tableRowLoading: React.StatelessComponent<CombinedProps> = (props) => {
   return (
     <TableRow>
       <TableCell colSpan={props.colSpan}>
-        <SkeletonScreen type="table" />
+        <CircleProgress mini />
       </TableCell>
     </TableRow>
   );
