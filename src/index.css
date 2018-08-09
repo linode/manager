@@ -45,6 +45,14 @@ body {
 a {
   text-decoration: none;
   color: #3683DC;
+  cursor: pointer;
+}
+
+/* 
+* do not show the ada chat app button site-wide
+*/
+.ada-chat-button {
+  display: none !important;
 }
 
 a.blue {

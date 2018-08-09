@@ -95,7 +95,6 @@ const errorResources = {
   region: 'A region selection',
   label: 'A label',
   root_pass: 'A root password',
-  udf: 'UDF',
   image: 'image',
 };
 
@@ -125,8 +124,8 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
      stackScriptImages: string[], userDefinedFields: Linode.StackScript.UserDefinedField[]) => {
     const { images } = this.props;
     const filteredImages = images.filter((image) => {
-      for (let i = 0; i < stackScriptImages.length; i = i + 1) {
-        if (image.id === stackScriptImages[i]) {
+      for (const stackScriptImage of stackScriptImages) {
+        if (image.id === stackScriptImage) {
           return true;
         }
       }
@@ -252,7 +251,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
       booted: true,
     })
       .then((linode) => {
-        if (privateIP) allocatePrivateIP(linode.id);
+        if (privateIP) { allocatePrivateIP(linode.id) };
         resetEventsPolling();
         history.push('/linodes');
       })
@@ -261,17 +260,8 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
 
         if (error.response && error.response.data && error.response.data.errors) {
           const listOfErrors = error.response.data.errors;
-          const updatedErrorList = listOfErrors.map((error: Linode.ApiFieldError) => {
-            if (error.reason.toLowerCase().includes('udf')) {
-              return { ...error, field: 'udf' };
-            }
-            if (error.reason.toLowerCase().includes('linode image')) {
-              return { ...error, field: 'image' };
-            }
-            return error;
-          });
           this.setState(() => ({
-            errors: updatedErrorList,
+            errors: listOfErrors,
           }), () => {
             scrollErrorIntoView();
           });
@@ -307,7 +297,27 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
-    const udfErrors = (errors) ? errors.filter(error => error.field === 'udf') : undefined;
+
+    
+    /*
+    * errors with UDFs have dynamic keys
+    * for exmaple, if there are UDFs that aren't filled out, you can can
+    * errors that look something like this
+    * { field: 'wordpress_pass', reason: 'you must fill out a WP password' }
+    * Because of this, we need to both make each error doesn't match any
+    * that are in our errorResources map and that it has a 'field' key in the first
+    * place. Then, we can confirm we are indeed looking at a UDF error
+    */
+    const udfErrors = (errors)
+      ? errors.filter(error => {
+        // ensure the error isn't a root_pass, image, region, type, label
+        const isNotUDFError = Object.keys(errorResources).some(errorKey => {
+          return errorKey === error.field
+        });
+        // if the 'field' prop exists and isn't any other error
+        return !!error.field && !isNotUDFError;
+      })
+      : undefined;
 
     const regionInfo = getRegionInfo(selectedRegionID);
     const typeInfo = getTypeInfo(selectedTypeID);

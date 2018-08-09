@@ -125,6 +125,7 @@ class EExpansionPanel extends React.Component<CombinedProps> {
                   {...(success && { success: true })}
                   {...(warning && { warning: true })}
                   {...(error && { error: true })}
+                  spacingBottom={0}
                 />
               </Grid>
             }

@@ -70,6 +70,10 @@ const SupportTickets = DefaultLoader({
   loader: () => import('src/features/Support/SupportTickets'),
 });
 
+const SupportTicketDetail = DefaultLoader({
+  loader: () => import('src/features/Support/SupportTicketDetail'),
+})
+
 const Users = DefaultLoader({
   loader: () => import('src/features/Users'),
 });
@@ -88,6 +92,10 @@ const Managed = DefaultLoader({
 
 const Dashboard = DefaultLoader({
   loader: () => import('src/features/Dashboard'),
+});
+
+const Help = DefaultLoader({
+  loader: () => import('src/features/Help'),
 });
 
 type ClassNames = 'appFrame'
@@ -314,8 +322,10 @@ export class App extends React.Component<CombinedProps, State> {
                             <Route exact path="/billing/invoices/:invoiceId" component={InvoiceDetail} />
                             <Route path="/users" component={Users} />
                             <Route exact path="/support" render={this.Support} />
-                            <Route path="/support/tickets" component={SupportTickets} />
+                            <Route exact path="/support/tickets" component={SupportTickets} />
+                            <Route path="/support/tickets/:ticketId" component={SupportTicketDetail} />
                             <Route path="/profile" component={Profile} />
+                            <Route path="/help" component={Help} />
                             <Route path="/dashboard" component={Dashboard} />
                             <Redirect exact from="/" to="/dashboard" />
                             <Route component={NotFound} />
