@@ -223,7 +223,7 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
   onSubmit = () => {
     const { description, entity_type, entity_id, summary } = this.state.ticket;
     const { onSuccess } = this.props;
-    if (entity_type && !entity_id) {
+    if (entity_type !== 'none' && !entity_id) {
       this.setState({ 
         errors: [{ field: 'input', reason: `Please select a ${entityIdtoNameMap[entity_type]}.`}]
       });
