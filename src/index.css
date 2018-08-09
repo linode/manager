@@ -146,3 +146,16 @@ a.black:active {
   margin-top: 0 !important;
   margin-bottom: 0 !important;
 }
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in-table {
+  animation: fadeIn .3s ease-in-out;
+}
