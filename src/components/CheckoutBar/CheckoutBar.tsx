@@ -122,7 +122,7 @@ class CheckoutBar extends React.Component<CombinedProps> {
               })}
             >
               {title &&
-                <Typography variant="subheading" data-qa-subheading={title}>
+                <Typography role="header" variant="subheading" data-qa-subheading={title}>
                   {title}
                 </Typography>}
               {details && <Typography className={classes.detail}>{details}</Typography>}
@@ -131,10 +131,10 @@ class CheckoutBar extends React.Component<CombinedProps> {
         }
         {
           <div className={`${classes.checkoutSection} ${classes.noBorder}`} data-qa-total-price>
-            <Typography variant="subheading" className={classes.price}>
+            <Typography role="header" variant="subheading" className={classes.price}>
               {displayPrice(calculatedPrice!)}
             </Typography>
-            <Typography variant="subheading" className={classes.per}>
+            <Typography role="header" variant="subheading" className={classes.per}>
               &nbsp;/mo
             </Typography>
           </div>

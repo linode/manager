@@ -152,6 +152,7 @@ class TablesPanel extends React.Component<CombinedProps, State> {
             </div>
           <Paper>
             <Typography
+              role="header"
               variant="subheading"
               className={classes.header}
             >
@@ -177,6 +178,7 @@ class TablesPanel extends React.Component<CombinedProps, State> {
           </Paper>
           <Paper className={classes.graphWrapper}>
             <Typography
+              role="header"
               variant="subheading"
               className={classes.header}
             >

@@ -117,7 +117,7 @@ export class SummaryPanel extends React.Component<CombinedProps, State> {
         <Grid item md={7}>
           <Grid container>
             <Grid item xs={12}>
-              <Typography variant="subheading">
+              <Typography role="header" variant="subheading">
                 Contact Information
               </Typography>
               </Grid>
@@ -158,7 +158,7 @@ export class SummaryPanel extends React.Component<CombinedProps, State> {
           <Grid item xs={12}>
             <Grid container>
               <Grid item xs={12}>
-                <Typography variant="subheading">
+                <Typography role="header" variant="subheading">
                   Billing Information
                   </Typography>
               </Grid>

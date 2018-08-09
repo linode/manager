@@ -379,7 +379,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       <div className={classes.section}>
         <Grid container className={classes.section} data-qa-billing-section>
           <Grid item>
-            <Typography variant="subheading" data-qa-permissions-header="billing">
+            <Typography role="header" variant="subheading" data-qa-permissions-header="billing">
               Billing Access
             </Typography>
           </Grid>
@@ -515,6 +515,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     return (
       <div key={entity} className={classes.section}>
         <Typography
+          role="header"
           variant="subheading"
           className={classes.tableSubheading}
           data-qa-permissions-header={entityNameMap[entity]}

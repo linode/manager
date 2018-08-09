@@ -41,14 +41,14 @@ const ViewRangeDrawer: React.StatelessComponent<CombinedProps> = (props) => {
       {props.range &&
         <React.Fragment>
           <div className={classes.section}>
-            <Typography variant="subheading">IP Range</Typography>
+            <Typography role="header" variant="subheading">IP Range</Typography>
             <Typography variant="body1">
               {props.range.range}
             </Typography>
           </div>
 
           <div className={classes.section} style={{ border: 0, paddingBottom: 0 }}>
-            <Typography variant="subheading">Region</Typography>
+            <Typography role="header" variant="subheading">Region</Typography>
             <Typography variant="body1">
               {formatRegion(region)}
             </Typography>

@@ -173,7 +173,7 @@ export class APITokens extends React.Component<CombinedProps, State> {
               {tokens.map((token: Linode.Token) =>
                 <TableRow key={token.id} data-qa-table-row={token.label}>
                   <TableCell>
-                    <Typography variant="subheading" data-qa-token-label>
+                    <Typography role="header" variant="subheading" data-qa-token-label>
                       {token.label}
                     </Typography>
                   </TableCell>
