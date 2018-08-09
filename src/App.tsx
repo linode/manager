@@ -270,6 +270,7 @@ export class App extends React.Component<CombinedProps, State> {
         this.socket.onmessage = (e: any) => {
           console.log('new message');
           const data = JSON.parse(e.data);
+          console.log(data);
           /*
           * check if body is an object because the inital connection will
           * send a message that is just a string and there's no need to add
