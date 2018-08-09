@@ -64,7 +64,7 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
 
     /** Cant sort on created, because domains dones't have created... */
     // getDomains({ page_size: 25 }, { '+order_by': 'updated', '+order': 'desc' })
-    getDomains({ page_size: 25 })
+    getDomains({ page_size: 25 }, { '+order_by': 'domain', '+order': 'asc' })
       .then(({ data, results }) => {
         if (!this.mounted) { return; }
         this.setState({
@@ -142,13 +142,13 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
   renderData = (data: Linode.Domain[]) => {
     const { classes } = this.props;
 
-    return data.map(({ domain, type, status }) => (
+    return data.map(({ id, domain, type, status }) => (
       <TableRow key={domain}>
         <TableCell className={classes.labelCol}>
           <Grid container direction="column" spacing={8}>
             <Grid item className="py0">
               <Typography variant="subheading">
-                {domain}
+                <Link to={`/domains/${id}/records`} className={'black'}>{domain}</Link>
               </Typography>
             </Grid>
             <Grid item>

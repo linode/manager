@@ -281,8 +281,6 @@ export class App extends React.Component<CombinedProps, State> {
 
   Dashboard = () => <Placeholder title="Dashboard" />;
 
-  Managed = () => <Placeholder title="Managed" />;
-
   Support = () => <Placeholder title="Support" />;
 
   render() {

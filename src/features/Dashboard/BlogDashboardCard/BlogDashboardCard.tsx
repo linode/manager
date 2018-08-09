@@ -35,6 +35,7 @@ interface BlogItem {
 
 interface State {
   items: BlogItem[];
+  loading: boolean;
   errors?: Linode.ApiFieldError[];
 }
 
@@ -43,20 +44,23 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 class BlogDashboardCard extends React.Component<CombinedProps, State> {
   state: State = {
     items: [],
+    loading: true,
   };
 
   componentDidMount() {
+
     req.get(`https://blog.linode.com/feed/`, { responseType: 'text' })
       .then(({ data }) => parseXMLStringPromise(data))
       .then(processXMLData)
-      .then((items: BlogItem[]) => this.setState({ items }))
-      .catch((error) => console.error(error))
+      .then((items: BlogItem[]) => this.setState({ items, loading: false, }))
+      .catch((error) => this.setState({ loading: false, errors: [{ reason: 'Unable to parse blog data.' }] }))
   }
 
   render() {
-    const { items, errors } = this.state;
-    if (!items) { return null; }
+    const { items, loading, errors } = this.state;
+
     if (errors) { return null; }
+    if (loading || !items) { return null; }
 
     return (
       <DashboardCard
