@@ -476,7 +476,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               handleSelection={this.regionChange}
             />
             <Grid item xs={12}>
-              <Typography variant="title" className={classes.title}>
+              <Typography role="header" variant="title" className={classes.title}>
                 NodeBalancer Settings
               </Typography>
             </Grid>

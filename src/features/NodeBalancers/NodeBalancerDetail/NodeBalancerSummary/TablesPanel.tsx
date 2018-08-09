@@ -148,7 +148,7 @@ class TablesPanel extends React.Component<CombinedProps, State> {
         {stats &&
           <React.Fragment>
             <div className={classes.graphControls}>
-              <Typography variant="title" className={classes.graphTitle}>Graphs</Typography>
+              <Typography role="header" variant="title" className={classes.graphTitle}>Graphs</Typography>
             </div>
           <Paper>
             <Typography

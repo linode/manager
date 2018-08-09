@@ -145,7 +145,7 @@ export class APITokens extends React.Component<CombinedProps, State> {
           alignItems="flex-end"
         >
           <Grid item>
-            <Typography variant="title" className={classes.headline} data-qa-table={title}>
+            <Typography role="header" variant="title" className={classes.headline} data-qa-table={title}>
               {title}
             </Typography>
           </Grid>

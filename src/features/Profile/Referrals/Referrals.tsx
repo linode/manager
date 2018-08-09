@@ -65,6 +65,7 @@ class Referrals extends React.Component<CombinedProps, State> {
         <Grid container>
           <Grid item xs={12}>
             <Typography
+              role="header"
               variant="title"
               className={classes.title}
               data-qa-title

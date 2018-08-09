@@ -437,6 +437,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <Paper className={classes.paper}>
           <Typography
+            role="header"
             variant="title"
             className={classes.subTitle}
             data-qa-manual-heading
@@ -492,6 +493,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <Paper className={classes.paper}>
           <Typography
+            role="header"
             variant="title"
             className={classes.subTitle}
             data-qa-settings-heading>
