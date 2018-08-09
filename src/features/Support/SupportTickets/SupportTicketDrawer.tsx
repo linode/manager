@@ -67,6 +67,7 @@ const L = {
   entity_id: lensPath(['ticket','entity_id']),
   inputValue: lensPath(['inputValue']),
   data: lensPath(['data']),
+  errors: lensPath(['errors']),
 };
 
 const entityMap = {
@@ -189,7 +190,8 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
       set(L.entity_type, e.target.value),
       set(L.entity_id, undefined),
       set(L.inputValue, ''),
-      set(L.data, [])
+      set(L.data, []),
+      set(L.errors, undefined),
     ]);
   }
 
@@ -222,7 +224,9 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
     const { description, entity_type, entity_id, summary } = this.state.ticket;
     const { onSuccess } = this.props;
     if (entity_type && !entity_id) {
-      this.setState({ errors: [{ reason: `Please select a ${entityIdtoNameMap[entity_type]}.`}] });
+      this.setState({ 
+        errors: [{ field: 'input', reason: `Please select a ${entityIdtoNameMap[entity_type]}.`}]
+      });
       return;
     }
     this.setState({ errors: undefined });
@@ -266,6 +270,7 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
     const summaryError = hasErrorFor('summary');
     const descriptionError = hasErrorFor('description');
     const generalError = hasErrorFor('none');
+    const inputError = hasErrorFor('input');
 
     const hasNoEntitiesMessage = this.getHasNoEntitiesMessage();
 
@@ -310,6 +315,7 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
             value={ticket.entity_id}
             handleSelect={this.handleEntityIDChange}
             disabled={data.length === 0}
+            errorText={inputError}
             helperText={hasNoEntitiesMessage}
             placeholder={`Select a ${entityIdtoNameMap[ticket.entity_type]}`}
             label={entityIdtoNameMap[ticket.entity_type]}
