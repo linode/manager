@@ -564,6 +564,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <Typography
+          role="header"
           variant="headline"
           className={classes.title}
           data-qa-title

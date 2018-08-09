@@ -220,7 +220,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
           <Grid item>
-            <Typography variant="headline" className={classes.title} data-qa-title >
+            <Typography role="header" variant="headline" className={classes.title} data-qa-title >
               Volumes
             </Typography>
           </Grid>

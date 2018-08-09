@@ -344,6 +344,7 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
               </IconButton>
             </Link>
             <Typography
+              role="header"
               className={classes.createTitle}
               variant="headline"
               data-qa-edit-header

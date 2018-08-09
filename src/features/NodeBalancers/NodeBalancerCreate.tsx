@@ -451,6 +451,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
         <Grid container>
           <Grid item className={`${classes.main} mlMain`}>
             <Typography
+              role="header"
               variant="headline"
               data-qa-create-nodebalancer-header
             >

@@ -669,6 +669,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                         </IconButton>
                       </Link>
                       <EditableText
+                        role="header"
                         variant="headline"
                         text={labelInput.label}
                         errorText={labelInput.errorText}
