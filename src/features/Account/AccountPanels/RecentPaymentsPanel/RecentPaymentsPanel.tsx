@@ -64,17 +64,17 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
       }),
     );
 
-  requestPayments = (page: number = 1) => {
+  requestPayments = (
+    page: number = this.state.page,
+    pageSize: number = this.state.pageSize,
+    initial: boolean = false,
+  ) => {
     if (!this.mounted) { return; }
 
-    this.setState({
-      /** Only display loading if the data is undefined (initial state)   */
-      loading: this.state.data === undefined,
-      errors: undefined,
-    });
+    this.setState({ loading: initial });
 
-    return getPayments({ page_size: this.state.pageSize, page })
-      .then(({ data, page, pages, results }) => {
+    return getPayments({ page, page_size: pageSize })
+      .then(({ data, page, results }) => {
         if (!this.mounted) { return; }
 
         this.setState({
@@ -169,15 +169,12 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
     }
   }
 
-  handlePageChange = (page: number) => this.requestPayments(page);
+  handlePageChange = (page: number) => {
+    this.setState({ page }, () => this.requestPayments())
+  };
 
   handlePageSizeChange = (pageSize: number) => {
-    if (!this.mounted) { return; }
-
-    this.setState(
-      { pageSize },
-      () => { this.requestPayments() },
-    );
+    this.setState({ pageSize }, () => this.requestPayments())
   }
 }
 

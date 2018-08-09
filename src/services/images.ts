@@ -13,11 +13,14 @@ export const getImagesPage = (page: number, filter: object = {}) =>
   )
     .then(response => response.data);
 
-export const getImages = () =>
-  getImagesPage(1);
-
-export const getUserImages = () =>
-  getImagesPage(1, { "is_public": false });
+export const getImages = (pagination: any = {}, filters: any = {}) =>
+  Request<Page<Image>>(
+    setURL(`${API_ROOT}/images`),
+    setMethod('GET'),
+    setParams(pagination),
+    setXFilter(filters),
+  )
+  .then(response => response.data);
 
 export const getLinodeImages = () =>
   getImagesPage(1, { "is_public": true });
