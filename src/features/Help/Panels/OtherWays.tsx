@@ -1,3 +1,4 @@
+import * as classNames from 'classnames';
 import * as React from 'react';
 
 import { Link } from 'react-router-dom';
@@ -22,7 +23,8 @@ type ClassNames = 'root'
 | 'heading'
 | 'card'
 | 'tileTitle'
-| 'icon';
+| 'icon'
+| 'ada';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {},
@@ -55,6 +57,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     height: 66,
     color: theme.palette.primary.main,
   },
+  ada: {
+    color: '#3683DC',
+    cursor: 'pointer',
+  }
 });
 
 interface Props {}
@@ -127,9 +133,15 @@ export class OtherWays extends React.Component<CombinedProps, State> {
           <Grid item xs={12} sm={6}>
             <div className={classes.card}>
               <span className={classes.icon}><Chat /></span>
-                <Typography variant="subheading" className={classes.tileTitle}>
-                  <a href="#" onClick={this.handleAdaInit} className="black">Talk to Ada</a>
-                </Typography>
+              <Typography
+                variant="subheading"
+                className={classNames({
+                  [classes.tileTitle]: true,
+                  [classes.ada]: true,
+                })}
+              >
+                <span onClick={this.handleAdaInit} className="black">Talk to Ada</span>
+              </Typography>
                 <Typography variant="caption">
                   Chat with the Linode Support bot to help troubleshoot
                 </Typography>
