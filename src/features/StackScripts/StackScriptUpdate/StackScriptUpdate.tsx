@@ -13,7 +13,7 @@ import {
 
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import { KeyboardArrowLeft } from '@material-ui/icons';
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -282,25 +282,23 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
 
   renderDialogActions = () => {
     return (
-      <React.Fragment>
-        <ActionsPanel>
-          <Button
-            type="secondary"
-            destructive
-            onClick={this.resetAllFields}
-            data-qa-confirm-cancel
-            >
-            Yes
-          </Button>
-          <Button
-            type="cancel"
-            onClick={this.handleCloseDialog}
-            data-qa-cancel-cancel
+      <ActionsPanel>
+        <Button
+          type="cancel"
+          onClick={this.handleCloseDialog}
+          data-qa-cancel-cancel
+        >
+          No
+        </Button>
+        <Button
+          type="secondary"
+          destructive
+          onClick={this.resetAllFields}
+          data-qa-confirm-cancel
           >
-            No
-          </Button>
-        </ActionsPanel>
-      </React.Fragment>
+          Reset
+        </Button>
+      </ActionsPanel>
     )
   }
 

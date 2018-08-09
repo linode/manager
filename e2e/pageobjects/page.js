@@ -4,6 +4,8 @@ export default class Page {
     get dialogTitle() { return $('[data-qa-dialog-title]'); }
     get dialogContent() { return $('[data-qa-dialog-content]'); }
     get dialogConfirm() { return $('[data-qa-confirm-cancel]'); }
+    get dialogConfirmDelete() { return $('[data-qa-confirm-delete]'); }
+    get dialogConfirmCancel() { return $('[data-qa-cancel-delete]'); }
     get dialogCancel() { return $('[data-qa-cancel-cancel]'); }
     get sidebarTitle() { return $('[data-qa-sidebar-title]'); }
     get drawerTitle() { return $('[data-qa-drawer-title]'); }
@@ -90,8 +92,8 @@ export default class Page {
     }
 
     toastDisplays(expectedMessage) {
-        this.toast.waitForVisible();
-        this.toastMsg.waitForVisible();
+        this.toast.waitForVisible(constants.wait.normal);
+        this.toastMsg.waitForVisible(constants.wait.normal);
         
         const displayedMsg = browser.getText('[data-qa-toast-message]');
         expect(displayedMsg).toBe(expectedMessage);
@@ -113,6 +115,7 @@ export default class Page {
 
     selectActionMenuItem(tableCell, item) {
         tableCell.$(this.actionMenu.selector).click();
+        browser.waitForVisible('[data-qa-action-menu-item]', constants.wait.normal);
         browser.jsClick(`[data-qa-action-menu-item="${item}"]`);
     }
 
@@ -126,7 +129,7 @@ export default class Page {
         browser.waitUntil(function() {
             return browser
                 .getAttribute(`[data-qa-tab="${tab}"]`, 'aria-selected').includes('true');
-        }, constants.wait.short, 'Failed to change tab');
+        }, constants.wait.normal, 'Failed to change tab');
         browser.waitForVisible('[data-qa-circle-progress]', constants.wait.normal, true);
         return this;
     }

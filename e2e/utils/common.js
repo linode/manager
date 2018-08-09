@@ -2,6 +2,7 @@ const crypto = require('crypto');
 const { argv } = require('yargs');
 const { constants } = require('../constants');
 const { readToken } = require('./config-utils');
+const { getPrivateImages, removeImage } = require('../setup/setup');
 
 import ConfigureLinode from '../pageobjects/configure-linode';
 import ListLinodes from '../pageobjects/list-linodes';
@@ -49,18 +50,19 @@ export const apiCreateLinode = (linodeLabel=false, privateIp=false) => {
     const linode = browser.createLinode(token, newLinodePass, linodeLabel);
 
     browser.url(constants.routes.linodes);
-    browser.waitForVisible('[data-qa-add-new-menu-button]');
+    browser.waitForVisible('[data-qa-add-new-menu-button]', constants.wait.normal);
     
     if (linodeLabel) {
-        browser.waitForVisible(`[data-qa-linode="${linodeLabel}"]`);
+        browser.waitForVisible(`[data-qa-linode="${linodeLabel}"]`, constants.wait.long);
+        browser.waitForVisible(`[data-qa-linode="${linodeLabel}"] [data-qa-status="running"]`, constants.wait.minute * 3);
     } else {
-        browser.waitForVisible('[data-qa-linode]', constants.wait.long);
+        browser.waitForVisible(`[data-qa-linode="${linode.label}"]`, constants.wait.long);
+        browser.waitForVisible(`[data-qa-linode="${linode.label}"] [data-qa-status="running"]`, constants.wait.minute * 3);
     }
 
     if (privateIp) {
         linode['privateIp'] = browser.allocatePrivateIp(token, linode.id).address;
     }
-    browser.waitForVisible('[data-qa-status="running"]', constants.wait.minute * 3);
     return linode;
 }
 
@@ -104,4 +106,9 @@ export const removeNodeBalancers = () => {
     apiDeleteAllLinodes();
     const availableNodeBalancers = browser.getNodeBalancers(token);
     availableNodeBalancers.data.forEach(nb => browser.removeNodeBalancer(token, nb.id));
+}
+
+export const apiDeletePrivateImages = token => {
+    const privateImages = getPrivateImages(token).data;
+    privateImages.forEach(i => removeImage(token, i.id));
 }

@@ -71,6 +71,7 @@ const UserDefinedFieldsPanel: React.StatelessComponent<CombinedProps> = (props) 
         udf_data={props.udf_data}
         updateFor={[props.udf_data[field.name]]}
         isOptional={isOptional}
+        placeholder={field.example}
       />;
     }
     return <UserDefinedText
@@ -80,6 +81,7 @@ const UserDefinedFieldsPanel: React.StatelessComponent<CombinedProps> = (props) 
       udf_data={props.udf_data}
       updateFor={[props.udf_data[field.name]]}
       isOptional={isOptional}
+      placeholder={field.example}
     />;
   };
 

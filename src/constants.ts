@@ -54,3 +54,22 @@ export const dcDisplayNames = {
   'eu-central': 'Frankfurt, DE',
   'ap-northeast': 'Tokyo 2, JP',
 };
+
+export const dcDisplayCountry = {
+  'us-east-1a': 'US',
+  'us-south-1a': 'US',
+  'us-west-1a': 'US',
+  'us-southeast-1a': 'US',
+  'eu-central-1a': 'DE',
+  'eu-west-1a': 'UK',
+  'ap-northeast-1a': 'JP',
+  'ap-northeast-1b': 'JP',
+  'us-central': 'US',
+  'us-west': 'US',
+  'us-southeast': 'US',
+  'us-east': 'US',
+  'eu-west': 'UK',
+  'ap-south': 'SG',
+  'eu-central': 'DE',
+  'ap-northeast': 'JP',
+};

@@ -11,7 +11,7 @@ const mockProps = {
   extendLinodes: jest.fn(),
   getBackupsMonthlyPrice: jest.fn(),
   getTypeInfo: jest.fn(),
-  getRegionName: jest.fn(),
+  getRegionInfo: jest.fn(),
   history: null,
 };
 
@@ -25,7 +25,7 @@ const mockPropsWithNotice = {
   extendLinodes: jest.fn(),
   getBackupsMonthlyPrice: jest.fn(),
   getTypeInfo: jest.fn(),
-  getRegionName: jest.fn(),
+  getRegionInfo: jest.fn(),
   history: null,
 };
 

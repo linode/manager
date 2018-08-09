@@ -22,6 +22,7 @@ interface Props {
   updateFormState: (key: string, value: any) => void;
   udf_data: Linode.StackScript.UserDefinedField;
   isOptional: boolean;
+  placeholder?: string;
 }
 
 interface State { }
@@ -32,7 +33,7 @@ class UserDefinedText extends React.Component<CombinedProps, State> {
   state: State = {};
 
   renderTextField = () => {
-    const { udf_data, field, isOptional } = this.props;
+    const { udf_data, field, placeholder, isOptional } = this.props;
 
     return (
       <TextField
@@ -40,12 +41,13 @@ class UserDefinedText extends React.Component<CombinedProps, State> {
         onChange={this.handleUpdateText}
         label={field.label}
         value={udf_data[field.name] || ''}
+        placeholder={placeholder}
       />
     );
   }
 
   renderPasswordField = () => {
-    const { udf_data, field, isOptional } = this.props;
+    const { udf_data, field, placeholder, isOptional } = this.props;
 
     return (
       <PasswordPanel
@@ -54,6 +56,7 @@ class UserDefinedText extends React.Component<CombinedProps, State> {
         handleChange={this.handleUpdatePassword}
         label={field.label}
         noPadding
+        placeholder={placeholder}
       />
     );
   }

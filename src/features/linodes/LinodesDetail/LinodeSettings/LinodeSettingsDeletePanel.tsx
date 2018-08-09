@@ -2,11 +2,12 @@ import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
-import Button from '@material-ui/core/Button';
+
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
@@ -50,13 +51,12 @@ class LinodeSettingsDeletPanel extends React.Component<CombinedProps, State> {
   render() {
     return (
       <React.Fragment>
-        <ExpansionPanel defaultExpanded heading="Delete Linode">
+        <ExpansionPanel heading="Delete Linode">
           <Button
-            variant="raised"
-            color="secondary"
-            className="destructive"
-            onClick={this.openDeleteDialog}
+            type="secondary"
+            destructive
             style={{ marginBottom: 8 }}
+            onClick={this.openDeleteDialog}
             data-qa-delete-linode
           >
             Delete
@@ -67,28 +67,7 @@ class LinodeSettingsDeletPanel extends React.Component<CombinedProps, State> {
         </ExpansionPanel>
         <ConfirmationDialog
           title="Confirm Deletion"
-          actions={() =>
-            <ActionsPanel style={{ padding: 0 }}>
-              <Button
-                variant="raised"
-                color="secondary"
-                className="destructive"
-                onClick={this.deleteLinode}
-                data-qa-confirm-delete
-              >
-                Delete
-              </Button>
-              <Button
-                onClick={() => this.setState({ open: false })}
-                variant="raised"
-                color="secondary"
-                className="cancel"
-                data-qa-cancel-delete
-              >
-                Cancel
-            </Button>
-            </ActionsPanel>
-          }
+          actions={this.renderConfirmationActions}
           open={this.state.open}
         >
           Deleting a Linode will result in permanent data loss. Are you sure?
@@ -96,6 +75,20 @@ class LinodeSettingsDeletPanel extends React.Component<CombinedProps, State> {
       </React.Fragment>
     );
   }
+
+  closeConfirmation = () => this.setState({ open: false })
+
+  renderConfirmationActions = () => (
+    <ActionsPanel style={{ padding: 0 }}>
+      <Button type="cancel" onClick={this.closeConfirmation} data-qa-cancel-delete>
+        Cancel
+      </Button>
+      <Button type="secondary" destructive onClick={this.deleteLinode} data-qa-confirm-delete>
+        Delete
+      </Button>
+    </ActionsPanel>
+  );
+
 }
 
 const styled = withStyles(styles, { withTheme: true });

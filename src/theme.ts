@@ -491,18 +491,18 @@ const LinodeTheme: Linode.Theme = {
       select: {
         '&[aria-pressed="true"]': {
           '&+ input + $icon': {
-            stroke: '#606469',
+            opacity: 1,
           },
         },
       },
       icon: {
-        marginTop: -5,
-        width: 32,
-        height: 32,
-        fill: 'none',
-        stroke: '#999',
-        clipPath: 'inset(45% 0 0 0)',
+        marginTop: -2,
+        marginRight: 4,
+        width: 28,
+        height: 28,
         transition: 'color 225ms ease-in-out',
+        color: '#aaa !important',
+        opacity: .5,
       },
       disabled: {
         '&+ input + $icon': {
@@ -575,6 +575,9 @@ const LinodeTheme: Linode.Theme = {
         backgroundColor: '#F4F4F4',
         border: '1px solid #999',
         boxSizing: 'content-box',
+      },
+      switchBase: {
+        color: '#3B85D9',
       },
     },
     MuiTab: {
@@ -732,7 +735,7 @@ const LinodeTheme: Linode.Theme = {
     },
     caption: {
       fontSize: '.9rem',
-      lineHeight: '1.1em',
+      lineHeight: '1.2em',
     },
   },
   color: {

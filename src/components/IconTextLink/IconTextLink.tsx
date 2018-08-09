@@ -9,7 +9,8 @@ type CSSClasses = 'root'
 | 'active'
 | 'disabled'
 | 'icon'
-| 'left';
+| 'left'
+| 'label';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -58,6 +59,9 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   left: {
     left: -12,
   },
+  label: {
+    whiteSpace: 'nowrap',
+  },
 });
 
 export interface Props {
@@ -104,7 +108,7 @@ const IconTextLink: React.StatelessComponent<FinalProps> = (props) => {
       data-qa-icon-text-link={title}
     >
       <SideIcon className={classes.icon} />
-      <span>
+      <span className={classes.label}>
         {text}
       </span>
     </Button>

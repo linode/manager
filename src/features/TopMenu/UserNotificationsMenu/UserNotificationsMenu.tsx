@@ -6,13 +6,16 @@ import { Subscription } from 'rxjs/Subscription';
 import Menu from '@material-ui/core/Menu';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
+import MenuItem from 'src/components/MenuItem';
 import GDPRNotification from 'src/GDPRNotification';
 import notifications$ from 'src/notifications';
 
 import UserNotificationButton from './UserNotificationsButton';
 import UserNotificationsList from './UserNotificationsList';
 
-type ClassNames = 'root' | 'dropDown';
+type ClassNames = 'root'
+  | 'dropDown'
+  | 'hidden';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -38,6 +41,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
         ...theme.typography.subheading,
       },
     },
+  },
+  hidden: {
+    height: 0,
+    padding: 0,
   },
 });
 
@@ -137,6 +144,7 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
           className={classes.root}
           PaperProps={{ className: classes.dropDown }}
         >
+          <MenuItem key="placeholder" className={classes.hidden} tabIndex={1} />
           <UserNotificationsList notifications={notifications} closeMenu={this.closeMenu} />
         </Menu>
         <GDPRNotification open={this.state.privacyPolicyModalOpen} onClose={this.closePrivacyPolicyModal} />

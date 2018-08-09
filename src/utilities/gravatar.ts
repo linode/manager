@@ -5,8 +5,8 @@ export const getEmailHash = (email: string) => {
   return email && md5(email.trim().toLowerCase());
 }
 
-export const getGravatarUrl = (email: string): Promise<string> => {
-  const url = `https://gravatar.com/avatar/${getEmailHash(email)}?d=404`;
+export const getGravatarUrlFromHash = (hash:string): Promise<string> => {
+  const url = `https://gravatar.com/avatar/${hash}?d=404`;
   const instance = Axios.create();
   return instance.get(url)
     .then((response) => {
@@ -19,4 +19,8 @@ export const getGravatarUrl = (email: string): Promise<string> => {
     .catch((error) => {
       return Promise.resolve('not found');
     });
+}
+
+export const getGravatarUrl = (email: string): Promise<string> => {
+  return getGravatarUrlFromHash(getEmailHash(email));
 }

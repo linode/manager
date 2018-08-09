@@ -108,17 +108,8 @@ class ActionMenu extends React.Component<CombinedProps, State> {
 
     if (typeof actions === 'undefined') { return null; }
 
-    return actions.length === 1
-      ? (actions as Action[]).map((a, idx) =>
-        <a
-          href="#"
-          key={idx}
-          onClick={e => a.onClick(e)}
-          className={classes.actionSingleLink}
-          data-qa-action-menu-link>
-            {a.title}
-        </a>)
-      : (<div className={classes.root}>
+    return (
+      <div className={classes.root}>
         <IconButton
           aria-owns={anchorEl ? 'action-menu' : undefined}
           aria-expanded={anchorEl ? true : undefined}
@@ -152,7 +143,8 @@ class ActionMenu extends React.Component<CombinedProps, State> {
             </MenuItem>,
           )}
         </Menu>
-      </div >);
+      </div >
+    );
   }
 }
 

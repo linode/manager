@@ -21,11 +21,7 @@ type ClassNames = 'root'
 const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
   const { palette: { status } } = theme;
   return {
-    root: {
-      '& .notice': {
-        margin: 0,
-      },
-    },
+    root: {},
     success: {
       backgroundColor: status.success,
       '&:hover, &:focus': {
@@ -129,6 +125,7 @@ class EExpansionPanel extends React.Component<CombinedProps> {
                   {...(success && { success: true })}
                   {...(warning && { warning: true })}
                   {...(error && { error: true })}
+                  spacingBottom={0}
                 />
               </Grid>
             }

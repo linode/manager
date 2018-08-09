@@ -209,6 +209,10 @@ class PrimaryNav extends React.Component<Props, State> {
     });
   };
 
+  goToHelp = () => {
+    this.navigate('/help');
+  }
+
   renderPrimaryLink(PrimaryLink: PrimaryLink) {
     const { classes } = this.props;
 
@@ -254,7 +258,9 @@ class PrimaryNav extends React.Component<Props, State> {
         >
           <Grid item>
             <div className={classes.logoItem}>
+            <Link to={`/dashboard`}>
               <Logo width={115} height={43} />
+            </Link>
             </div>
           </Grid>
 
@@ -371,6 +377,29 @@ class PrimaryNav extends React.Component<Props, State> {
               Support Tickets
             </Link>
           </Collapse>
+
+          <ListItem
+            button
+            focusRipple={true}
+            onClick={this.goToHelp}
+            className={classNames({
+              [classes.listItem]: true,
+              [classes.collapsible]: true,
+              [classes.active]: this.linkIsActive('/help') === true,
+            })}
+          >
+            <ListItemText
+              disableTypography={true}
+              className={classNames({
+                [classes.linkItem]: true,
+                [classes.activeLink]:
+                  expandedMenus.support
+                  || this.linkIsActive('/help') === true,
+              })}
+            >
+              Get Help
+            </ListItemText>
+          </ListItem>
 
           <div className={classes.switchWrapper}>
             <span className={`

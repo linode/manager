@@ -1,11 +1,13 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 
+import Fade from '@material-ui/core/Fade';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Input, { InputProps } from '@material-ui/core/Input';
 import { MenuProps } from '@material-ui/core/Menu';
 import Select, { SelectProps } from '@material-ui/core/Select';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 
 import HelpIcon from 'src/components/HelpIcon';
 
@@ -13,7 +15,8 @@ type ClassNames = 'inputSucess'
   | 'inputError'
   | 'textError'
   | 'helpWrapper'
-  | 'helpWrapperSelectField';
+  | 'helpWrapperSelectField'
+  | 'pagination';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   inputError: {
@@ -48,6 +51,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       width: 240,
     },
   },
+  pagination: {
+    minHeight: 40,
+    '& [role="button"]': {
+      padding: '3px 32px 3px 16px',
+      minHeight: 40,
+    },
+  },
 });
 
 interface Props extends SelectProps {
@@ -56,6 +66,7 @@ interface Props extends SelectProps {
   open?: boolean;
   errorText?: string;
   errorGroup?: string;
+  pagination?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -68,6 +79,7 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
   tooltipText,
   errorText,
   errorGroup,
+  pagination,
   ...props
 }) => {
 
@@ -81,8 +93,7 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
     transformOrigin: { vertical: 'top', horizontal: 'left' },
     MenuListProps: { className: 'selectMenuList' },
     PaperProps: { className: 'selectMenuDropdown' },
-    /** @todo Had to disable transition. */
-    // transition: Fade,
+    TransitionComponent: Fade,
   };
 
   const inputProps: InputProps = {
@@ -95,6 +106,7 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
     [classes.inputError]: error === true,
     [errorScrollClassName]: !!errorScrollClassName,
     [classes.helpWrapperSelectField]: Boolean(tooltipText),
+    [classes.pagination]: Boolean(pagination),
   });
 
   return (
@@ -108,6 +120,7 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
           MenuProps={menuProps}
           input={<Input {...inputProps} />}
           {...props}
+          IconComponent={KeyboardArrowDown}
           data-qa-select
         >
           {children}

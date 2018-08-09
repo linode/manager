@@ -6,11 +6,11 @@ import Cached from '@material-ui/icons/Cached';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 
 interface Props {
-  status: Linode.LinodeStatus;
+  status: Linode.LinodeStatus | 'loading';
   recentEvent?: Linode.Event;
 }
 
-type CSSClasses = 'dot' | 'green' | 'red' | 'transition';
+type CSSClasses = 'grey' | 'dot' | 'green' | 'red' | 'transition';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   '@keyframes rotate': {
@@ -37,11 +37,22 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   red: {
     color: '#d01e1e',
   },
+  grey: {
+    color: '#efefef',
+  },
 });
 
 const LinodeStatusIndicator = (props: Props & WithStyles<CSSClasses>) => {
   return (
     <React.Fragment>
+      {props.status === 'loading' &&
+        <span
+          className={`${props.classes.dot} ${props.classes.grey}`}
+          data-qa-status={props.status}
+        >
+          &#x25CF;
+        </span>
+      }
       {props.status === 'running' &&
         <span
           className={`${props.classes.dot} ${props.classes.green}`}

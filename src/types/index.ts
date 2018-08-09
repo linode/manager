@@ -38,9 +38,6 @@ namespace Linode {
   }
 
   export interface ResourcesState {
-    types: { loading: boolean; data: ResourcePage<Linode.LinodeType>; };
-    regions: { loading: boolean; data: Linode.Region[] };
-    kernels: { loading: boolean; data: Linode.Kernel[] };
     profile: { loading: boolean; data: Linode.Profile };
   }
 
@@ -164,5 +161,31 @@ namespace Linode {
   export interface PaginationOptions {
     page?: number,
     page_size?: number,
+  }
+
+  export interface SupportTicket {
+    opened: string;
+    id: number;
+    closed: string | null;
+    description: string;
+    entity: any | null;
+    gravatar_id: string;
+    attachments: string[];
+    opened_by: string;
+    status: 'closed' | 'new' | 'open';
+    summary: string;
+    updated: string;
+    updated_by: string;
+    gravatarUrl: string | undefined;
+  }
+
+  export interface SupportReply {
+    created: string;
+    created_by: string;
+    gravatar_id: string;
+    description: string;
+    id: number;
+    from_linode: boolean;
+    gravatarUrl: string | undefined;
   }
 }
