@@ -164,7 +164,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
 });
 
 interface Props extends WithStyles<ClassNames>, RouteComponentProps<{}> {
-  toggleMenu: () => void;
+  closeMenu: () => void;
   toggleTheme: () => void;
 }
 
@@ -189,9 +189,9 @@ class PrimaryNav extends React.Component<Props, State> {
   }
 
   navigate(href: string) {
-    const { history , toggleMenu } = this.props;
+    const { history , closeMenu } = this.props;
     history.push(href);
-    toggleMenu();
+    closeMenu();
   }
 
   linkIsActive(href: string) {
