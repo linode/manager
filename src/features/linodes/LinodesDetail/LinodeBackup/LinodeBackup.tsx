@@ -368,7 +368,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <Paper className={classes.paper} style={{ padding: 0 }}>
-          <Table>
+          <Table aria-label="List of Backups">
             <TableHead>
               <TableRow>
                 <TableCell>Date Created</TableCell>

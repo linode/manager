@@ -244,7 +244,7 @@ class OAuthClients extends React.Component<CombinedProps, State> {
           </Grid>
         </Grid>
         <Paper>
-          <Table>
+          <Table aria-label="List of OAuth Clients">
             <TableHead data-qa-table-head>
               <TableRow>
                 <TableCell>Label</TableCell>

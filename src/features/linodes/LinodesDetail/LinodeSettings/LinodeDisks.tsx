@@ -162,7 +162,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
   table = () => {
     const { disks, linodeStatus } = this.props;
     return (
-      <Table>
+      <Table aria-label="List of Disks">
         <TableHead>
           <TableRow>
             <TableCell>Label</TableCell>

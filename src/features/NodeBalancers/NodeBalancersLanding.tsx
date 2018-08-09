@@ -275,7 +275,7 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
           </Grid>
         </Grid>
         <Paper>
-          <Table>
+          <Table aria-label="List of NodeBalancers">
             <TableHead>
               <TableRow>
                 <TableCell className={classes.nameCell}>Name</TableCell>

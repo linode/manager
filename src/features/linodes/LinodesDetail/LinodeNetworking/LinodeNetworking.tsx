@@ -350,7 +350,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           </Grid>
         </Grid>
         <Paper style={{ padding: 0 }}>
-          <Table>
+          <Table aria-label="IPv4 Addresses">
             <TableHead>
               <TableRow>
                 <TableCell className={classes.address}>Address</TableCell>
@@ -403,7 +403,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           </Grid>
         </Grid>
         <Paper style={{ padding: 0 }}>
-          <Table>
+          <Table aria-label="List of IPv6 Addresses">
             <TableHead>
               <TableRow>
                 <TableCell className={classes.address}>Address</TableCell>

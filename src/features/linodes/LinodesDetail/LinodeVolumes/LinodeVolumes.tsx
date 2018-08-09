@@ -763,7 +763,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
           </Grid>
         </Grid>
         <Paper>
-          <Table>
+          <Table aria-label="List of Attached Volumes">
             <TableHead>
               <TableRow>
                 <TableCell>Label</TableCell>

@@ -277,7 +277,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
           </Grid>
         </Grid>
         <Paper>
-          <Table>
+          <Table aria-label="List of your Domains">
             <TableHead>
               <TableRow>
                 <TableCell data-qa-domain-name-header className={classes.domain}>Domain</TableCell>

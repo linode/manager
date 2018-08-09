@@ -308,7 +308,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
                 />
               }
               <Paper>
-                <Table>
+                <Table aria-label="List of Users">
                   <TableHead>
                     <TableRow>
                       <TableCell data-qa-username-column>Username</TableCell>

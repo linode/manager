@@ -168,7 +168,7 @@ class TicketList extends React.Component<Props, State> {
     return (
       <React.Fragment>
         <Paper>
-          <Table>
+          <Table aria-label="List of Tickets">
             <TableHead>
               <TableRow>
                 <TableCell data-qa-support-id-header>Ticket ID</TableCell>

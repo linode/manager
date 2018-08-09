@@ -157,7 +157,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
     const { scopes, selectAllSelectedScope } = this.state;
 
     return (
-      <Table className={classes.permsTable}>
+      <Table aria-label="Personnal Acccess Token Permissions" className={classes.permsTable}>
         <TableHead>
           <TableRow>
             <TableCell padding="checkbox" data-qa-perm-access>Access</TableCell>

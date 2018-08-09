@@ -452,7 +452,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                   <Grid item>{type.link && type.link()}</Grid>
                 </Grid>
                 <Paper>
-                  <Table>
+                  <Table arial-label="List of Domains MX Records">
                     <TableHead>
                       <TableRow>
                         {type.columns.length > 0 && type.columns.map((col, idx) => {

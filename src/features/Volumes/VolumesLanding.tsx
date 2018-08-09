@@ -236,7 +236,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           </Grid>
         </Grid>
         <Paper>
-          <Table>
+          <Table aria-label="List of Volumes">
             <TableHead>
               <TableRow>
                 <TableCell className={classes.labelCol}>Label</TableCell>

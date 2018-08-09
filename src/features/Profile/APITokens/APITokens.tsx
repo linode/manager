@@ -159,7 +159,7 @@ export class APITokens extends React.Component<CombinedProps, State> {
           </Grid>
         </Grid>
         <Paper className={classes.paper}>
-          <Table>
+          <Table aria-label="List of Personnal Acccess Tokens">
             <TableHead>
               <TableRow data-qa-table-head>
                 <TableCell className={classes.labelCell}>Label</TableCell>

@@ -669,7 +669,7 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
                 actionBeingPerfomed={isSearching}
               />
             </div>
-            <Table noOverflow={true} tableClass={classes.table}>
+            <Table aria-label="List of StackScripts" noOverflow={true} tableClass={classes.table}>
               <StackScriptTableHead
                 handleClickTableHeader={this.handleClickTableHeader}
                 sortOrder={sortOrder}

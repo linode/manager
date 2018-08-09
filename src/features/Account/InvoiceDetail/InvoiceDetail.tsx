@@ -110,7 +110,7 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
             </Grid>
           </Grid>
           <Grid item xs={12}>
-            <Table border>
+            <Table border aria-label="Invoice Details">
               <TableHead>
                 <TableRow>
                   <TableCell>Description</TableCell>
