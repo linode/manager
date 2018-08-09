@@ -254,7 +254,9 @@ class PrimaryNav extends React.Component<Props, State> {
         >
           <Grid item>
             <div className={classes.logoItem}>
+            <Link to={`/dashboard`}>
               <Logo width={115} height={43} />
+            </Link>
             </div>
           </Grid>
 
