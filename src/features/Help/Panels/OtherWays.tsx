@@ -140,7 +140,7 @@ export class OtherWays extends React.Component<CombinedProps, State> {
                   [classes.ada]: true,
                 })}
               >
-                <span onClick={this.handleAdaInit} className="black">Talk to Ada</span>
+                <a href="#" onClick={this.handleAdaInit} className="black">Talk to Ada</a>
               </Typography>
                 <Typography variant="caption">
                   Chat with the Linode Support bot to help troubleshoot
