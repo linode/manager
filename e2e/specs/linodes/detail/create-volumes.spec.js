@@ -48,26 +48,29 @@ describe('Linode Detail - Volumes Suite', () => {
 
         it('should display create a volume drawer', () => {
             VolumeDetail.createButton.click();
-            VolumeDetail.drawerTitle.waitForVisible();
+            VolumeDetail.drawerTitle.waitForVisible(constants.wait.normal);
+            VolumeDetail.label.waitForVisible(constants.wait.normal);
             
             drawerElems = [
                 VolumeDetail.label,
                 VolumeDetail.size,
                 VolumeDetail.submit,
                 VolumeDetail.cancel,
-            ]
+            ];
 
             drawerElems.forEach(e => expect(e.isVisible()).toBe(true));
         });
 
         it('should close on cancel', () => {
             VolumeDetail.cancel.click();
-            drawerElems.forEach(e => expect(e.waitForVisible(constants.wait.short, true)).toBe(true));
+            drawerElems.forEach(e => expect(e.waitForVisible(constants.wait.normal, true)).toBe(true));
+            VolumeDetail.drawerTitle.waitForExist(constants.wait.normal, true);
         });
 
         it('should prepopulate size with 20 gigs', () => {
             VolumeDetail.createButton.click();
-            VolumeDetail.drawerTitle.waitForVisible();
+            VolumeDetail.drawerTitle.waitForVisible(constants.wait.normal);
+            VolumeDetail.size.waitForVisible(constants.wait.normal);
 
             const defaultSize = VolumeDetail.size.$('input').getValue();
             expect(defaultSize).toBe('20');
@@ -75,7 +78,7 @@ describe('Linode Detail - Volumes Suite', () => {
 
         it('should fail to create without a label', () => {
             VolumeDetail.submit.click();
-            VolumeDetail.label.$('p').waitForVisible();
+            VolumeDetail.label.$('p').waitForVisible(constants.wait.normal);
             
             const labelError = VolumeDetail.label.$('p').getText();
 
@@ -83,8 +86,8 @@ describe('Linode Detail - Volumes Suite', () => {
         });
 
         it('should fail to create under 10 gb volume', () => {
-            VolumeDetail.label.$('input').setValue(testLabel);
-            VolumeDetail.size.$('input').setValue('5');
+            browser.trySetValue(`${VolumeDetail.label.selector} input`, testLabel);
+            browser.trySetValue(`${VolumeDetail.size.selector} input`, 5);
             VolumeDetail.submit.click();
 
             browser.waitForVisible('[data-qa-size] p', constants.wait.normal);
@@ -94,11 +97,11 @@ describe('Linode Detail - Volumes Suite', () => {
         });
 
         it('should create a volume after correcting errors', () => {
-            VolumeDetail.size.$('input').setValue('20');
+            browser.trySetValue(`${VolumeDetail.size.selector} input`,'20');
             VolumeDetail.submit.click();
 
 
-            VolumeDetail.volumeCellLabel.waitForVisible();
+            VolumeDetail.volumeCellLabel.waitForVisible(constants.wait.normal);
         });
     });
 
@@ -130,7 +133,7 @@ describe('Linode Detail - Volumes Suite', () => {
             // Refresh due to M3-388
             browser.refresh();
 
-            LinodeSummary.volumesAttached.waitForVisible();
+            LinodeSummary.volumesAttached.waitForVisible(constants.wait.normal);
 
             const volumesCount = LinodeSummary.volumesAttached.getAttribute('data-qa-volumes');
             expect(volumesCount).toBe('1');
