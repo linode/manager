@@ -38,7 +38,7 @@ const LinodeTheme: Linode.Theme = {
     border2: '#111',
     border3: '#222',
     grey1: '#abadaf',
-    grey2: '#E7E7E7',
+    grey2: 'rgba(0, 0, 0, 0.2)',
     grey3: '#ccc',
     white: '#32363C',
     black: '#fff',
@@ -213,7 +213,12 @@ const LinodeTheme: Linode.Theme = {
     },
     MuiCardHeader: {
       root: {
-        backgroundColor: '#fbfbfb',
+        backgroundColor: 'rgba(0, 0, 0, 0.2)',
+      },
+    },
+    MuiCardActions: {
+      root: {
+        backgroundColor: 'rgba(0, 0, 0, 0.2) !important',
       },
     },
     MuiChip: {
@@ -448,7 +453,7 @@ const LinodeTheme: Linode.Theme = {
       },
       disabled: {
         borderColor: '#606469',
-        color: 'white',
+        color: '#eee !important',
         opacity: .5,
       },
       input: {
@@ -566,6 +571,11 @@ const LinodeTheme: Linode.Theme = {
         },
       },
     },
+    MuiPaper: {
+      root: {
+        backgroundColor: '#32363C',
+      },
+    },
     MuiPopover: {
       paper: {
         boxShadow: '0 0 5px #222',
@@ -581,7 +591,6 @@ const LinodeTheme: Linode.Theme = {
       selectMenu: {
         padding: '7px 32px 7px 16px',
         color: primaryColors.main,
-        backgroundColor: '#111',
         lineHeight: 2.3,
         minHeight: 46,
         minWidth: 150,
@@ -739,6 +748,8 @@ const LinodeTheme: Linode.Theme = {
       },
       head: {
         fontSize: '.9rem',
+        color: primaryColors.text,
+        backgroundColor: 'rgba(0, 0, 0, 0.15)',
       },
       body: {
         fontSize: '.9rem',
