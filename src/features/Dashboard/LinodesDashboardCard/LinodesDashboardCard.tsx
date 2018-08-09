@@ -12,10 +12,10 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 
+import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/Grid';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
-import TableRowLoading from 'src/components/TableRowLoading';
 import { withTypes } from 'src/context/types';
 import { events$ } from 'src/events';
 import LinodeStatusIndicator from 'src/features/linodes/LinodesLanding/LinodeStatusIndicator';
@@ -148,7 +148,7 @@ class LinodesDashboardCard extends React.Component<CombinedProps, State> {
   }
 
   renderLoading = () => {
-    return <TableRowLoading colSpan={3} />
+    return <CircleProgress mini />
   };
 
   renderErrors = (errors: Linode.ApiFieldError[]) =>
