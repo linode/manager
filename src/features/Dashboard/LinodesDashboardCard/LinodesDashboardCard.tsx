@@ -108,7 +108,7 @@ class LinodesDashboardCard extends React.Component<CombinedProps, State> {
 
   componentWillUnmount() {
     this.mounted = false;
-    this.subscription.unsubscribe();
+    // this.subscription.unsubscribe();
   }
 
   render() {
