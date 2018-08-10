@@ -788,9 +788,9 @@ const LinodeTheme: Linode.Theme = {
       tooltip: {
         borderRadius: 0,
         maxWidth: 200,
-        backgroundColor: 'white',
-        boxShadow: '0 0 5px #bbb',
-        color: '#606469',
+        backgroundColor: '#444',
+        boxShadow: '0 0 5px #222',
+        color: '#fff',
         visibility: 'hidden',
         textAlign: 'left',
         width: 0,
