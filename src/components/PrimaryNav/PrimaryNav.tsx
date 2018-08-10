@@ -386,7 +386,7 @@ class PrimaryNav extends React.Component<Props, State> {
             </li>
             <li role="menuitem">
               <Link
-                to="/support"
+                to="/support/tickets"
                 className={classNames({
                   [classes.sublink]: true,
                   [classes.sublinkActive]: this.linkIsActive('/support/tickets') === true,
