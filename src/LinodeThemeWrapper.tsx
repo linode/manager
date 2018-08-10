@@ -41,14 +41,28 @@ class LinodeThemeWrapper extends React.Component<Props, State> {
       }
     });
 
+    const storedThemeChoice = window.localStorage.getItem('themeChoice');
+    if (storedThemeChoice === 'light') {
+      this.setState({
+        themeChoice: 'light'
+      });
+    }
+    else {
+      this.setState({
+        themeChoice: 'dark'
+      });
+    }
+
     this.forceUpdate();
   }
 
   toggleTheme = () => {
     if (this.state.themeChoice === 'light') {
       this.setState({ themeChoice: 'dark' });
+      window.localStorage.setItem('themeChoice', 'dark');
     } else {
       this.setState({ themeChoice: 'light' });
+      window.localStorage.setItem('themeChoice', 'light');
     }
 
     /**

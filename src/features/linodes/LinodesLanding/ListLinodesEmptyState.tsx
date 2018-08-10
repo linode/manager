@@ -43,11 +43,13 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   },
   icon: {
     animation: 'scaleIn .5s ease-in-out',
-    // backfaceVisibility: 'hidden',
     width: 225,
     height: 225,
+    '& use': {
+      fill: theme.bg.main,
+    },
     '& .outerCircle': {
-      fill: 'white',
+      fill: theme.color.absWhite,
       stroke: theme.bg.offWhite,
     },
     '& .insidePath path': {
