@@ -31,6 +31,9 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     maxWidth: 415,
     zIndex: 2,
     marginTop: -2,
+    '& .enhancedSelect-menu-item': {
+      color: theme.palette.text.primary,
+    },
   },
 })
 

@@ -97,7 +97,7 @@ export const createNodeBalancerConfigSchema = Joi.object({
     .when('check', { is: 'http_body', then: Joi.required() }),
   check_interval: Joi.number(),
   check_passive: Joi.bool(),
-  check_path: Joi.string().regex(/\/.+/)
+  check_path: Joi.string().regex(/\/.*/)
     .when('check', { is: 'http', then: Joi.required() })
     .when('check', { is: 'http_body', then: Joi.required() }),
   check_timeout: Joi.number().integer(),

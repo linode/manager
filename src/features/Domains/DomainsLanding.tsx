@@ -12,6 +12,7 @@ import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
+import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
@@ -19,7 +20,6 @@ import Grid from 'src/components/Grid';
 import PaginationFooter, { PaginationProps } from 'src/components/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
-import TableRowLoading from 'src/components/TableRowLoading';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { deleteDomain, getDomains } from 'src/services/domains';
 import scrollToTop from 'src/utilities/scrollToTop';
@@ -27,7 +27,10 @@ import ActionMenu from './DomainActionMenu';
 import DomainCreateDrawer from './DomainCreateDrawer';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 
-type ClassNames = 'root' | 'title' | 'domain';
+type ClassNames = 'root'
+  | 'title'
+  | 'domain'
+  | 'domainRow';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
@@ -36,6 +39,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
   domain: {
     width: '60%',
+  },
+  domainRow: {
+    height: 75,
   },
 });
 
@@ -237,7 +243,11 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
     const { classes } = this.props;
     const { count, loading } = this.state;
 
-    if (!loading && count === 0) {
+    if(loading){
+      return this.renderLoading();
+    }
+
+    if (count === 0) {
       return this.renderEmpty();
     }
 
@@ -306,11 +316,8 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
   }
 
   renderContent = () => {
-    const { loading, errors, count, domains } = this.state;
+    const { errors, count, domains } = this.state;
 
-    if (loading) {
-      return this.renderLoading();
-    }
     if (errors) {
       return this.renderLoading();
     }
@@ -324,7 +331,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
 
   renderLoading = () => {
     return (
-      <TableRowLoading colSpan={3} />
+      <CircleProgress />
     );
   };
 
@@ -358,8 +365,12 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
 
     return (
       domains.map(domain =>
-        <TableRow key={domain.id} data-qa-domain-cell={domain.id}>
-          <TableCell className={classes.domain} data-qa-domain-label>
+        <TableRow
+          key={domain.id}
+          data-qa-domain-cell={domain.id}
+          className={`${classes.domainRow} ${'fade-in-table'}`}
+        >
+          <TableCell data-qa-domain-label>
             <Link to={`/domains/${domain.id}`}>
               {domain.domain}
             </Link>

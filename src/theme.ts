@@ -2,7 +2,18 @@ import createBreakpoints from '@material-ui/core/styles/createBreakpoints';
 
 const breakpoints = createBreakpoints({});
 
+const primaryColors = {
+  main: '#3683DC',
+  light: '#4D99F1',
+  dark: '#2466B3',
+  text: '#606469',
+  headline: '#32363C',
+  divider: '#f4f4f4',
+}
+
 const LinodeTheme: Linode.Theme = {
+  name: 'lightTheme',
+  breakpoints: { breakpoints },
   '@keyframes rotate': {
     from: {
       transform: 'rotate(0deg)',
@@ -11,8 +22,89 @@ const LinodeTheme: Linode.Theme = {
       transform: 'rotate(360deg)',
     },
   },
-  name: 'lightTheme',
-  breakpoints: { breakpoints },
+  bg: {
+    main: '#f4f4f4',
+    offWhite: '#fbfbfb',
+    navy: '#32363C',
+    lightBlue: '#D7E3EF',
+    white: '#fff',
+  },
+  color: {
+    headline: primaryColors.headline,
+    red: '#CA0813',
+    green: '#00B159',
+    yellow: '#FECF2F',
+    border1: '#ABADAF',
+    border2: '#C5C6C8',
+    border3: '#eee',
+    grey1: '#abadaf',
+    grey2: '#E7E7E7',
+    grey3: '#ccc',
+    white: '#fff',
+    black: '#222',
+    boxShadow: '#ddd',
+    focusBorder: '#999',
+    absWhite: '#fff',
+  },
+  notificationList: {
+    padding: '16px 32px 16px 23px',
+    borderBottom: '1px solid #fbfbfb',
+    transition: 'background-color 225ms ease-in-out',
+    '&:hover': {
+      backgroundColor: '#f4f4f4',
+    },
+  },
+  palette: {
+    divider: primaryColors.divider,
+    primary: primaryColors,
+    status: {
+      success: '#d7e3EF',
+      successDark: '#3682dd',
+      warning: '#fdf4da',
+      warningDark: '#ffd002',
+      error: '#f8dedf',
+      errorDark: '#cd2227',
+    },
+    text: {
+      primary: primaryColors.text,
+    },
+  },
+  typography: {
+    fontFamily: '"Lato", sans-serif',
+    fontSize: 16,
+    headline: {
+      color: primaryColors.headline,
+      fontSize: '1.5rem',
+      fontWeight: 700,
+    },
+    title: {
+      color: primaryColors.headline,
+      fontSize: '1.125rem',
+      fontWeight: 700,
+      lineHeight: '1.35417em',
+    },
+    subheading: {
+      color: primaryColors.headline,
+      fontSize: '1rem',
+      fontWeight: 700,
+      lineHeight: '1.2em',
+    },
+    body1: {
+      fontSize: '1rem',
+    },
+    body2: {
+      fontSize: '.78rem',
+      lineHeight: '1.3em',
+    },
+    caption: {
+      fontSize: '.9rem',
+      lineHeight: '1.2em',
+      color: primaryColors.text,
+    },
+    display2: {
+      color: primaryColors.text,
+    },
+  },
   overrides: {
     MuiAppBar: {
       colorDefault: {
@@ -30,7 +122,7 @@ const LinodeTheme: Linode.Theme = {
         borderRadius: 0,
         fontSize: '1rem',
         fontWeight: 700,
-        color: '#3B85D9',
+        color: primaryColors.main,
         padding: '12px 28px 14px',
         '&:hover': {
           backgroundColor: '#fff',
@@ -39,15 +131,20 @@ const LinodeTheme: Linode.Theme = {
           backgroundColor: 'transparent',
         },
         '&[aria-expanded="true"]': {
-          backgroundColor: '#2466B3',
+          backgroundColor: primaryColors.dark,
+        },
+      },
+      flat: {
+        '&.cancel:hover': {
+          backgroundColor: 'transparent',
         },
       },
       raisedPrimary: {
         '&:hover, &:focus': {
-          backgroundColor: '#4D99F1',
+          backgroundColor: primaryColors.light,
         },
         '&:active': {
-          backgroundColor: '#2466B3',
+          backgroundColor: primaryColors.dark,
         },
         '&$disabled': {
           color: 'white',
@@ -60,19 +157,19 @@ const LinodeTheme: Linode.Theme = {
       },
       raisedSecondary: {
         backgroundColor: 'transparent',
-        color: '#3B85D9',
-        border: '1px solid #3B85D9',
+        color: primaryColors.main,
+        border: `1px solid ${primaryColors.main}`,
         padding: '11px 26px 13px',
         transition: 'border 225ms ease-in-out, color 225ms ease-in-out',
         '&:hover, &:focus': {
           backgroundColor: 'transparent',
-          color: '#4D99F1',
-          borderColor: '#4D99F1',
+          color: primaryColors.light,
+          borderColor: primaryColors.light,
         },
         '&:active': {
           backgroundColor: 'transparent',
-          color: '#2466B3',
-          borderColor: '#2466B3',
+          color: primaryColors.dark,
+          borderColor: primaryColors.dark,
         },
         '&$disabled': {
           borderColor: '#C9CACB',
@@ -82,7 +179,7 @@ const LinodeTheme: Linode.Theme = {
         '&.cancel': {
           borderColor: 'transparent',
           '&:hover, &:focus': {
-            borderColor: '#4D99F1',
+            borderColor: primaryColors.light,
             backgroundColor: 'transparent',
           },
         },
@@ -151,6 +248,7 @@ const LinodeTheme: Linode.Theme = {
     MuiDialog: {
       paper: {
         boxShadow: '0 0 5px #bbb',
+        // background: '#fff',
       },
     },
     MuiDialogActions: {
@@ -170,6 +268,9 @@ const LinodeTheme: Linode.Theme = {
       root: {
         borderBottom: '1px solid #eee',
         marginBottom: 20,
+        '& h2': {
+          color: primaryColors.headline,
+        },
       },
     },
     MuiDrawer: {
@@ -189,7 +290,7 @@ const LinodeTheme: Linode.Theme = {
           paddingRight: 16,
         },
         '& table': {
-          border: '1px solid #f4f4f4',
+          border: `1px solid ${primaryColors.divider}`,
           borderBottom: 0,
         },
       },
@@ -210,11 +311,11 @@ const LinodeTheme: Linode.Theme = {
         },
         '&:hover': {
           '& h3': {
-            color: '#4D99F1',
+            color: primaryColors.light,
           },
           '& $expandIcon': {
             '& svg': {
-              fill: '#4D99F1',
+              fill: primaryColors.light,
               stroke: 'white',
             },
           },
@@ -243,7 +344,7 @@ const LinodeTheme: Linode.Theme = {
         top: 0,
         right: 0,
         transform: 'none',
-        color: '#3B85D9',
+        color: primaryColors.main,
         position: 'relative',
         marginLeft: -16,
         '& svg': {
@@ -254,7 +355,7 @@ const LinodeTheme: Linode.Theme = {
           height: 22,
         },
         '& .border': {
-          stroke: '#4D99F1 !important',
+          stroke: `${primaryColors.light} !important`,
         },
         '&$expanded': {
           transform: 'none',
@@ -301,9 +402,9 @@ const LinodeTheme: Linode.Theme = {
     },
     MuiIconButton: {
       root: {
-        color: '#3B85D9',
+        color: primaryColors.main,
         '&:hover': {
-          color: '#4D99F1',
+          color: primaryColors.light,
           backgroundColor: 'transparent',
         },
       },
@@ -316,6 +417,7 @@ const LinodeTheme: Linode.Theme = {
         transition: 'border-color 225ms ease-in-out',
         lineHeight: 1,
         minHeight: 48,
+        color: primaryColors.text,
         boxSizing: 'border-box',
         backgroundColor: 'white',
         [breakpoints.down('xs')]: {
@@ -324,7 +426,7 @@ const LinodeTheme: Linode.Theme = {
         '& svg': {
           fontSize: 18,
           cursor: 'pointer',
-          color: '#3B85D9',
+          color: primaryColors.main,
           '&:hover': {
             color: '#5E9AEA',
           },
@@ -370,6 +472,7 @@ const LinodeTheme: Linode.Theme = {
         whiteSpace: 'nowrap',
         '& p': {
           fontSize: '.9rem',
+          color: '#606469',
         },
       },
       positionEnd: {
@@ -396,6 +499,7 @@ const LinodeTheme: Linode.Theme = {
           opacity: 1,
           fontWeight: 700,
           fontSize: '1rem',
+          color: primaryColors.text,
         },
       },
       disabled: {
@@ -424,7 +528,7 @@ const LinodeTheme: Linode.Theme = {
           overflowX: 'hidden',
           boxSizing: 'content-box',
           '& li': {
-            color: '#606469',
+            color: primaryColors.text,
             '&:hover, &:focus': {
               color: 'white',
             },
@@ -442,11 +546,11 @@ const LinodeTheme: Linode.Theme = {
         fontSize: '.9rem',
         whiteSpace: 'initial',
         textOverflow: 'initial',
-        color: '#3B85D9',
+        color: primaryColors.main,
         transition: `${'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), '}
         ${'color .2s cubic-bezier(0.4, 0, 0.2, 1)'}`,
         '&:hover, &:focus': {
-          backgroundColor: '#3B85D9',
+          backgroundColor: primaryColors.main,
           color: 'white',
         },
         '& em': {
@@ -455,7 +559,7 @@ const LinodeTheme: Linode.Theme = {
       },
       selected: {
         backgroundColor: 'white !important',
-        color: '#3B85D9 !important',
+        color: `${primaryColors.main} !important`,
         opacity: 1,
         '&:focus': {
           backgroundColor: '#f4f4f4 !important',
@@ -476,7 +580,7 @@ const LinodeTheme: Linode.Theme = {
       root: {},
       selectMenu: {
         padding: '5px 32px 5px 16px',
-        color: '#606469',
+        color: primaryColors.text,
         backgroundColor: '#fff',
         lineHeight: 2.3,
         minHeight: 46,
@@ -551,7 +655,7 @@ const LinodeTheme: Linode.Theme = {
       },
       checked: {
         transform: 'translateX(20px)',
-        color: '#3B85D9 !important',
+        color: `${primaryColors.main} !important`,
         '& input': {
           left: -20,
         },
@@ -560,7 +664,7 @@ const LinodeTheme: Linode.Theme = {
         },
         '& + $bar': {
           opacity: 1,
-          backgroundColor: '#3B85D9 !important',
+          backgroundColor: `${primaryColors.main} !important`,
           borderColor: '#2967B1',
         },
       },
@@ -577,7 +681,7 @@ const LinodeTheme: Linode.Theme = {
         boxSizing: 'content-box',
       },
       switchBase: {
-        color: '#3B85D9',
+        color: primaryColors.main,
       },
     },
     MuiTab: {
@@ -593,7 +697,7 @@ const LinodeTheme: Linode.Theme = {
           fontWeight: 700,
         },
         '&:hover': {
-          color: '#3B85D9',
+          color: primaryColors.main,
         },
       },
       label: {
@@ -610,6 +714,7 @@ const LinodeTheme: Linode.Theme = {
         },
       },
       textColorPrimary: {
+        // color: primaryColors.text,
         '&$selected': {
           color: '#32363C',
         },
@@ -618,7 +723,7 @@ const LinodeTheme: Linode.Theme = {
     MuiTabIndicator: {
       root: {
         bottom: 0,
-        backgroundColor: '#3B85D9',
+        backgroundColor: primaryColors.main,
       },
     },
     MuiTable: {
@@ -627,7 +732,7 @@ const LinodeTheme: Linode.Theme = {
     MuiTableCell: {
       root: {
         padding: '18px',
-        borderBottom: '1px solid #f4f4f4',
+        borderBottom: `1px solid ${primaryColors.divider}`,
         '&:last-child': {
           paddingRight: 18,
         },
@@ -685,88 +790,6 @@ const LinodeTheme: Linode.Theme = {
       root: {
         marginTop: 0,
       },
-    },
-  },
-  palette: {
-    primary: {
-      main: '#3683DC',
-      light: '#4D99F1',
-      dark: '#2466B3',
-    },
-    text: {
-      primary: '#606469',
-    },
-    divider: '#f4f4f4',
-    status: {
-      success: '#d7e3EF',
-      successDark: '#3682dd',
-      warning: '#fdf4da',
-      warningDark: '#ffd002',
-      error: '#f8dedf',
-      errorDark: '#cd2227',
-    },
-  },
-  typography: {
-    fontFamily: '"Lato", sans-serif',
-    fontSize: 16,
-    headline: {
-      color: '#32363C',
-      fontSize: '1.5rem',
-      fontWeight: 700,
-    },
-    title: {
-      fontSize: '1.125rem',
-      fontWeight: 700,
-      color: '#32363C',
-      lineHeight: '1.35417em',
-    },
-    subheading: {
-      color: '#32363C',
-      fontSize: '1rem',
-      fontWeight: 700,
-      lineHeight: '1.2em',
-    },
-    body1: {
-      fontSize: '1rem',
-    },
-    body2: {
-      fontSize: '.78rem',
-      lineHeight: '1.3em',
-    },
-    caption: {
-      fontSize: '.9rem',
-      lineHeight: '1.2em',
-    },
-  },
-  color: {
-    headline: '#32363C',
-    red: '#CA0813',
-    green: '#00B159',
-    yellow: '#FECF2F',
-    border1: '#ABADAF',
-    border2: '#C5C6C8',
-    border3: '#eee',
-    grey1: '#abadaf',
-    grey2: '#E7E7E7',
-    grey3: '#ccc',
-    white: '#fff',
-    black: '#222',
-    boxShadow: '#ddd',
-    focusBorder: '#999',
-  },
-  bg: {
-    main: '#f4f4f4',
-    offWhite: '#fbfbfb',
-    navy: '#32363C',
-    lightBlue: '#D7E3EF',
-    white: '#fff',
-  },
-  notificationList: {
-    padding: '16px 32px 16px 23px',
-    borderBottom: '1px solid #fbfbfb',
-    transition: 'background-color 225ms ease-in-out',
-    '&:hover': {
-      backgroundColor: '#f4f4f4',
     },
   },
 };

@@ -1,3 +1,4 @@
+import browser from 'browser-detect';
 import { contains, filter, propSatisfies } from 'ramda';
 import * as React from 'react';
 import 'rxjs/add/operator/map';
@@ -5,10 +6,12 @@ import { Subscription } from 'rxjs/Subscription';
 
 import Menu from '@material-ui/core/Menu';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
 import MenuItem from 'src/components/MenuItem';
 import GDPRNotification from 'src/GDPRNotification';
 import notifications$ from 'src/notifications';
+import UserAgentNotification from 'src/UserAgentNotification';
 
 import UserNotificationButton from './UserNotificationsButton';
 import UserNotificationsList from './UserNotificationsList';
@@ -54,10 +57,28 @@ interface State {
   anchorEl?: HTMLElement;
   notifications: Linode.Notification[];
   privacyPolicyModalOpen: boolean;
+  UserAgentNotification: boolean;
+  UserAgentNotificationWarning: any;
 }
 
 type CombinedProps = {} & WithStyles<ClassNames>;
 
+const b = typeof browser === "function" ? browser() : () => ({ name: 'unknown' });
+
+const userAgentDetection = () => {
+  switch(b.name) {
+    case "ie":
+      return(
+        <Typography>
+          Your Web Browser (<strong>{b.name}</strong>) is not compatible with the Linode Manager. 
+          Please update to <a href="https://www.microsoft.com/en-us/windows/microsoft-edge" target="_blank">Miscrosoft Edge</a> for more security, 
+          speed and the best experience on this site.
+        </Typography>
+      )
+    default:
+      return undefined;
+  }
+}
 
 class UserNotificationsMenu extends React.Component<CombinedProps, State> {
   static displayedEvents: Linode.NotificationType[] = [
@@ -76,6 +97,8 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
     notifications: [],
     anchorEl: undefined,
     privacyPolicyModalOpen: false,
+    UserAgentNotification: true,
+    UserAgentNotificationWarning: false,
   };
 
   componentDidMount() {
@@ -111,6 +134,10 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
           privacyPolicyModalOpen: Boolean(updatedPrivacyPolicyNotification),
         });
       });
+
+      this.setState({
+        UserAgentNotificationWarning: userAgentDetection()
+      });
   }
 
   componentWillUnmount() {
@@ -120,9 +147,10 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
   }
 
   closePrivacyPolicyModal = () => this.setState({ privacyPolicyModalOpen: false })
+  closeUserAgentNotification = () => this.setState({ UserAgentNotification: false })
 
   render() {
-    const { anchorEl, notifications } = this.state;
+    const { anchorEl, notifications, UserAgentNotificationWarning } = this.state;
     const { classes } = this.props;
     const severity = notifications.reduce(reduceSeverity, null);
 
@@ -148,6 +176,13 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
           <UserNotificationsList notifications={notifications} closeMenu={this.closeMenu} />
         </Menu>
         <GDPRNotification open={this.state.privacyPolicyModalOpen} onClose={this.closePrivacyPolicyModal} />
+        {UserAgentNotificationWarning &&
+          <UserAgentNotification
+            open={this.state.UserAgentNotification}
+            onClose={this.closeUserAgentNotification}
+            warning={UserAgentNotificationWarning}
+          />
+        }
       </React.Fragment>
     );
   }

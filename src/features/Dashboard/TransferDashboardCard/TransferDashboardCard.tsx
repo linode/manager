@@ -15,7 +15,8 @@ type ClassNames = 'root'
   | 'poolUsageProgress'
   | 'circleChildren'
   | 'used'
-  | 'quota';
+  | 'quota'
+  | 'initialLoader';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -58,6 +59,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     color: theme.color.headline,
   },
   quota: {},
+  initialLoader: {
+    minHeight: 150,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
 
 interface Props { }
@@ -144,8 +151,7 @@ class TransferDashboardCard extends React.Component<CombinedProps, State> {
 
   renderLoadingState = () => (
     <DashboardCard>
-      <Paper>
-        {/* @todo This looks a bit wonky, if you wouldn't mind fixing it up Alban. */}
+      <Paper className={this.props.classes.initialLoader}>
         <CircleProgress mini />
       </Paper>
     </DashboardCard>

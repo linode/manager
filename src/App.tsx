@@ -4,9 +4,6 @@ import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { bindActionCreators, compose } from 'redux';
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/operator/throttleTime';
-import { Observable } from 'rxjs/Observable';
 
 import 'typeface-lato';
 
@@ -16,7 +13,6 @@ import DefaultLoader from 'src/components/DefaultLoader';
 import DocsSidebar from 'src/components/DocsSidebar';
 import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
-import Placeholder from 'src/components/Placeholder';
 import SideMenu from 'src/components/SideMenu';
 import { RegionsProvider, WithRegionsContext } from 'src/context/regions';
 import { TypesProvider, WithTypesContext } from 'src/context/types';
@@ -243,22 +239,8 @@ export class App extends React.Component<CombinedProps, State> {
     }
   };
 
-  /* Some browsers fire the resize event quite often so throttle it using an Observable */
-  private resizeObservable = Observable.fromEvent(window, 'resize').throttleTime(200);
-
   componentDidMount() {
     const { request, response } = this.props;
-
-    /*
-     * Hide the SideMenu on every window resize so that it doesn't seem to
-     * randomly appear at narrow breakpoints.
-     */
-    this.resizeObservable.
-      subscribe((event) => {
-        this.setState({
-          menuOpen: false,
-        })
-      });
 
     const betaNotification = window.localStorage.getItem('BetaNotification');
     if (betaNotification !== 'closed') {
@@ -276,6 +258,9 @@ export class App extends React.Component<CombinedProps, State> {
     this.state.typesContext.request();
   }
 
+  closeMenu = () => { this.setState({ menuOpen: false }); }
+  openMenu = () => { this.setState({ menuOpen: true }); }
+
   toggleMenu = () => {
     this.setState({
       menuOpen: !this.state.menuOpen,
@@ -286,10 +271,6 @@ export class App extends React.Component<CombinedProps, State> {
     this.setState({ betaNotification: false });
     window.localStorage.setItem('BetaNotification', 'closed');
   }
-
-  Dashboard = () => <Placeholder title="Dashboard" />;
-
-  Support = () => <Placeholder title="Support" />;
 
   render() {
     const { menuOpen } = this.state;
@@ -303,9 +284,9 @@ export class App extends React.Component<CombinedProps, State> {
             <TypesProvider value={this.state.typesContext}>
               <RegionsProvider value={this.state.regionsContext}>
                 <div className={classes.appFrame}>
-                  <SideMenu open={menuOpen} toggle={this.toggleMenu} toggleTheme={toggleTheme} />
+                  <SideMenu open={menuOpen} closeMenu={this.closeMenu} toggleTheme={toggleTheme} />
                   <main className={classes.content}>
-                    <TopMenu toggleSideMenu={this.toggleMenu} />
+                    <TopMenu openSideMenu={this.openMenu} />
                     <div className={classes.wrapper}>
                       <Grid container spacing={0} className={classes.grid}>
                         <Grid item className={`${classes.switchWrapper} ${hasDoc ? 'mlMain' : ''}`}>
@@ -321,7 +302,6 @@ export class App extends React.Component<CombinedProps, State> {
                             <Route exact path="/billing" component={Account} />
                             <Route exact path="/billing/invoices/:invoiceId" component={InvoiceDetail} />
                             <Route path="/users" component={Users} />
-                            <Route exact path="/support" render={this.Support} />
                             <Route exact path="/support/tickets" component={SupportTickets} />
                             <Route path="/support/tickets/:ticketId" component={SupportTicketDetail} />
                             <Route path="/profile" component={Profile} />
