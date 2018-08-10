@@ -353,7 +353,7 @@ const LinodeTheme: Linode.Theme = {
         position: 'relative',
         marginLeft: -16,
         '& svg': {
-          fill: '#fff',
+          fill: 'transparent',
           transition: `${'stroke 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, '}
           ${'fill 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'}`,
           width: 22,
@@ -400,6 +400,7 @@ const LinodeTheme: Linode.Theme = {
     },
     MuiFormHelperText: {
       root: {
+        color: '#C9CACB',
         '&$error': {
           color: '#CA0813',
         },
@@ -555,7 +556,7 @@ const LinodeTheme: Linode.Theme = {
         transition: `${'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), '}
         ${'color .2s cubic-bezier(0.4, 0, 0.2, 1)'}`,
         '&:hover, &:focus': {
-          backgroundColor: primaryColors.main,
+          backgroundColor: primaryColors.text,
           color: '#222',
         },
         '& em': {
@@ -564,10 +565,10 @@ const LinodeTheme: Linode.Theme = {
       },
       selected: {
         backgroundColor: '#222 !important',
-        color: `${primaryColors.main} !important`,
+        color: `${primaryColors.text} !important`,
         opacity: 1,
         '&:focus': {
-          backgroundColor: '#111111 !important',
+          backgroundColor: '#444 !important',
         },
       },
     },
@@ -590,12 +591,12 @@ const LinodeTheme: Linode.Theme = {
       root: {},
       selectMenu: {
         padding: '7px 32px 7px 16px',
-        color: primaryColors.main,
+        color: primaryColors.text,
         lineHeight: 2.3,
         minHeight: 46,
         minWidth: 150,
         '&:focus': {
-          backgroundColor: '#111',
+          backgroundColor: '#444',
         },
         '& em': {
           fontStyle: 'normal',
@@ -789,6 +790,20 @@ const LinodeTheme: Linode.Theme = {
           height: 'auto',
           opacity: 1,
           visibility: 'visible',
+        },
+      },
+    },
+    MuiTypography: {
+      root: {
+        '& a.black': {
+          color: primaryColors.text,
+        },
+        '& a.black:visited': {
+          color: primaryColors.text,
+        },
+        '& a.black:hover': {
+          color: primaryColors.text,
+          textDecoration: 'underline',
         },
       },
     },

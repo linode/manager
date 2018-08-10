@@ -580,7 +580,7 @@ const LinodeTheme: Linode.Theme = {
       root: {},
       selectMenu: {
         padding: '5px 32px 5px 16px',
-        color: primaryColors.main,
+        color: primaryColors.text,
         backgroundColor: '#fff',
         lineHeight: 2.3,
         minHeight: 46,
