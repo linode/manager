@@ -719,7 +719,7 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
                 * would never be scrolled into view no matter how much you scrolled on the
                 * trackpad. Especially finicky at zoomed in browser sizes
                 */}
-                <div style={{ minHeight: '100px' }} />
+                <div style={{ minHeight: '150px' }} />
               </Waypoint>
               : <Button
                 title="Show More StackScripts"
