@@ -214,7 +214,7 @@ class PrimaryNav extends React.Component<Props, State> {
   };
 
   goToHelp = () => {
-    this.navigate('/help');
+    this.navigate('/support');
   }
 
   renderPrimaryLink(PrimaryLink: PrimaryLink) {
@@ -329,70 +329,6 @@ class PrimaryNav extends React.Component<Props, State> {
                 })}
               >
                 Users
-              </Link>
-            </li>
-          </Collapse>
-
-          <ListItem
-            data-menu-name="support"
-            button
-            component="li"
-            role="menuitem"
-            focusRipple={true}
-            onClick={this.expandMenutItem}
-            className={classNames({
-              [classes.listItem]: true,
-              [classes.collapsible]: true,
-            })}
-          >
-            <ListItemText
-              disableTypography={true}
-              className={classNames({
-                [classes.linkItem]: true,
-                [classes.activeLink]:
-                  expandedMenus.support
-                  || this.linkIsActive('/support/tickets') === true,
-              })}
-            >
-              <KeyboardArrowRight className={classes.arrow} />
-              Support
-            </ListItemText>
-          </ListItem>
-          <Collapse
-            in={expandedMenus.support
-                || this.linkIsActive('/support/tickets') === true}
-            timeout="auto"
-            unmountOnExit
-            component="ul"
-            className={classes.sublinkPanel}
-          >
-            <li role="menuitem">
-              <a
-                className={classes.sublink}
-                href="https://www.linode.com/docs"
-                target="_blank"
-                >
-                  Documentation
-              </a>
-            </li>
-            <li role="menuitem">
-              <a
-                className={classes.sublink}
-                href="//www.linode.com/community/questions"
-                target="_blank"
-              >
-                Community Forum
-              </a>
-            </li>
-            <li role="menuitem">
-              <Link
-                to="/support/tickets"
-                className={classNames({
-                  [classes.sublink]: true,
-                  [classes.sublinkActive]: this.linkIsActive('/support/tickets') === true,
-                })}
-              >
-                Support Tickets
               </Link>
             </li>
           </Collapse>
