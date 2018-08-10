@@ -95,7 +95,7 @@ class AddNewMenuItem extends React.Component<PropsWithStyles, State> {
             <ItemIcon />
           </div>
           <div className={classes.content}>
-            <Typography variant="subheading">
+            <Typography role="header" variant="subheading">
               <a
                 href="javascript:void(0)"
                 onClick={onClick}

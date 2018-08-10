@@ -752,6 +752,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
         <Grid container justify="space-between" alignItems="flex-end">
           <Grid item>
             <Typography
+              role="header"
               variant="headline"
               className={classes.title}
               data-qa-title>
@@ -763,7 +764,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
           </Grid>
         </Grid>
         <Paper>
-          <Table>
+          <Table aria-label="List of Attached Volumes">
             <TableHead>
               <TableRow>
                 <TableCell>Label</TableCell>

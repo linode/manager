@@ -373,7 +373,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
               {hasErrorFor('image') &&
                 <Notice error={true} text={hasErrorFor('image')} />
               }
-              <Typography variant="title" data-qa-tp="Select Image">
+              <Typography role="header" variant="title" data-qa-tp="Select Image">
                 Select Image
               </Typography>
               <Typography

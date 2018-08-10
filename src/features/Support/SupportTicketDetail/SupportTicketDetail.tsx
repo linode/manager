@@ -267,7 +267,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
             >
               <KeyboardArrowLeft />
             </IconButton>
-            <Typography variant="headline" className={classes.title} data-qa-domain-title>
+            <Typography role="header" variant="headline" className={classes.title} data-qa-domain-title>
               {`#${ticket.id}: ${ticket.summary}`}
               <Chip className={classNames({
                 [classes.status]: true,

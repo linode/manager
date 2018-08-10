@@ -42,7 +42,7 @@ class Profile extends React.Component<Props> {
 
     return (
       <React.Fragment>
-        <Typography variant="headline" data-qa-profile-header>
+        <Typography role="header" variant="headline" data-qa-profile-header>
           My Profile
         </Typography>
         <AppBar position="static" color="default">

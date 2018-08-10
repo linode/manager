@@ -53,7 +53,7 @@ class ProfileSettings extends React.Component<CombinedProps, State> {
 
     return (
       <Paper className={classes.root}>
-        <Typography variant="title" className={classes.title}>
+        <Typography role="header" variant="title" className={classes.title}>
           Notifications
         </Typography>
         <Grid container alignItems="center">

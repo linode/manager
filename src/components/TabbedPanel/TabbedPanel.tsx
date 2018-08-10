@@ -73,7 +73,7 @@ class TabbedPanel extends React.Component<CombinedProps> {
       <Paper className={`${classes.root} ${rootClass}`} data-qa-tp={header}>
         <div className={`${classes.inner}`}>
           {error && <Notice text={error} error />}
-          <Typography variant="title" data-qa-tp-title>{header}</Typography>
+          <Typography role="header" variant="title" data-qa-tp-title>{header}</Typography>
           {copy && <Typography component="div" className={classes.copy}
             data-qa-tp-copy>{copy}</Typography>}
           <AppBar position="static" color="default">

@@ -153,7 +153,7 @@ class LinodeRow extends React.Component<CombinedProps> {
                 <LinodeStatusIndicator status={linodeStatus} />
               </Grid>
               <Grid item className="py0">
-                <Typography variant="subheading" data-qa-label>
+                <Typography role="header" variant="subheading" data-qa-label>
                   {linodeLabel}
                 </Typography>
                 {!typesLoading && <Typography> {displayType(linodeType, typesData || [])} </Typography>}

@@ -127,7 +127,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
           <Grid item xs={12}>
             <Grid container>
               <Grid item>
-                <Typography component={'span'} variant="title">Current Balance:</Typography>
+                <Typography role="header" component={'span'} variant="title">Current Balance:</Typography>
               </Grid>
               <Grid item>
                 <Typography

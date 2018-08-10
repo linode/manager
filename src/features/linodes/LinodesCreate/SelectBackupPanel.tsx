@@ -143,7 +143,7 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
       <Paper className={`${classes.root}`}>
         <div className={classes.inner}>
           {error && <Notice text={error} error />}
-          <Typography variant="title">
+          <Typography role="header" variant="title">
             Select Backup
           </Typography>
           <Grid container alignItems="center" className={classes.wrapper}>
