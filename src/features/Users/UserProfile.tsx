@@ -106,7 +106,7 @@ class UserProfile extends React.Component<CombinedProps> {
           {generalError &&
             <Notice error>Error when updating user profile</Notice>
           }
-          <Typography variant="title">
+          <Typography role="header" variant="title">
             User Profile
           </Typography>
           <TextField
@@ -180,7 +180,7 @@ class UserProfile extends React.Component<CombinedProps> {
     return (
       <Paper className={classes.deleteRoot}>
         <div className={classes.inner}>
-          <Typography variant="title">
+          <Typography role="header" variant="title">
             Delete User
           </Typography>
           {userDeleteError &&

@@ -108,6 +108,7 @@ class EExpansionPanel extends React.Component<CombinedProps> {
           data-qa-panel-summary
         >
           <Typography
+            role="header"
             {...headingProps}
             variant="subheading"
             data-qa-panel-subheading

@@ -102,15 +102,15 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
                     <KeyboardArrowLeft />
                   </IconButton>
                 </Link>
-                {invoice && <Typography variant="title">Invoice #{invoice.id}</Typography>}
+                {invoice && <Typography role="header" variant="title">Invoice #{invoice.id}</Typography>}
               </Grid>
               <Grid item className={classes.titleWrapper}>
-                {invoice && <Typography variant="title">Total ${Number(invoice.total).toFixed(2)}</Typography>}
+                {invoice && <Typography role="header" variant="title">Total ${Number(invoice.total).toFixed(2)}</Typography>}
               </Grid>
             </Grid>
           </Grid>
           <Grid item xs={12}>
-            <Table border>
+            <Table border aria-label="Invoice Details">
               <TableHead>
                 <TableRow>
                   <TableCell>Description</TableCell>
@@ -130,7 +130,7 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
             <Grid container justify="space-between">
               <Grid item className={classes.titleWrapper} />
               <Grid item className={classes.titleWrapper}>
-                {invoice && <Typography variant="title">Total ${Number(invoice.total).toFixed(2)}</Typography>}
+                {invoice && <Typography role="header" variant="title">Total ${Number(invoice.total).toFixed(2)}</Typography>}
               </Grid>
             </Grid>
           </Grid>

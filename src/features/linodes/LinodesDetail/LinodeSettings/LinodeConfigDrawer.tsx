@@ -166,7 +166,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
         <Grid container direction="row">
           {generalError && <Notice error errorGroup="linode-config-drawer" text={generalError} />}
           <Grid item xs={12} className={classes.section}>
-            <Typography variant="subheading">Label and Comments</Typography>
+            <Typography role="header" variant="subheading">Label and Comments</Typography>
             <TextField
               label="Label"
               required
@@ -190,7 +190,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
           <Divider className={classes.divider} />
 
           <Grid item xs={12} className={classes.section}>
-            <Typography variant="subheading">Virtual Machine</Typography>
+            <Typography role="header" variant="subheading">Virtual Machine</Typography>
             <FormControl component="fieldset">
               <FormLabel
                 htmlFor="virt_mode"
@@ -213,7 +213,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
           <Divider className={classes.divider} />
 
           <Grid item xs={12} className={classes.section}>
-            <Typography variant="subheading">Boot Settings</Typography>
+            <Typography role="header" variant="subheading">Boot Settings</Typography>
             <TextField
               label="Kernel"
               select={true}
@@ -267,7 +267,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
           <Divider className={classes.divider} />
 
           <Grid item xs={12} className={classes.section}>
-            <Typography variant="subheading">Block Device Assignment</Typography>
+            <Typography role="header" variant="subheading">Block Device Assignment</Typography>
             <DeviceSelection
               slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh']}
               devices={availableDevices}
@@ -318,7 +318,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
           <Divider className={classes.divider} />
 
           <Grid item xs={12} className={classes.section}>
-            <Typography variant="subheading">Filesystem/Boot Helpers</Typography>
+            <Typography role="header" variant="subheading">Filesystem/Boot Helpers</Typography>
             <FormControl fullWidth component="fieldset">
               <FormGroup>
                 <FormControlLabel

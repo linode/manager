@@ -261,7 +261,7 @@ class UserDetail extends React.Component<CombinedProps> {
                   className={classes.avatar}
                 />
             }
-            <Typography variant="headline" data-qa-user-detail-header>
+            <Typography role="header" variant="headline" data-qa-user-detail-header>
               {username}
             </Typography>
           </Grid>

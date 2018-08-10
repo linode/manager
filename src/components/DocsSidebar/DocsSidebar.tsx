@@ -36,6 +36,7 @@ class DocsSidebar extends React.Component<CombinedProps>  {
     return (
       <Grid item className="mlSidebar">
         <Typography
+          role="header"
           variant="title"
           className={classes.title}
           data-qa-sidebar-title

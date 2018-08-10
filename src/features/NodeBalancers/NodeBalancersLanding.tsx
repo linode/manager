@@ -259,7 +259,7 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
       <React.Fragment>
         <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
           <Grid item>
-            <Typography variant="headline" className={classes.title} data-qa-title >
+            <Typography role="header" variant="headline" className={classes.title} data-qa-title >
               NodeBalancers
             </Typography>
           </Grid>
@@ -275,7 +275,7 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
           </Grid>
         </Grid>
         <Paper>
-          <Table>
+          <Table aria-label="List of NodeBalancers">
             <TableHead>
               <TableRow>
                 <TableCell className={classes.nameCell}>Name</TableCell>

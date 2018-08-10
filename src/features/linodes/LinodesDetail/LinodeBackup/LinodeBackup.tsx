@@ -368,7 +368,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <Paper className={classes.paper} style={{ padding: 0 }}>
-          <Table>
+          <Table aria-label="List of Backups">
             <TableHead>
               <TableRow>
                 <TableCell>Date Created</TableCell>
@@ -437,6 +437,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <Paper className={classes.paper}>
           <Typography
+            role="header"
             variant="title"
             className={classes.subTitle}
             data-qa-manual-heading
@@ -492,6 +493,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <Paper className={classes.paper}>
           <Typography
+            role="header"
             variant="title"
             className={classes.subTitle}
             data-qa-settings-heading>
@@ -564,6 +566,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <Typography
+          role="header"
           variant="headline"
           className={classes.title}
           data-qa-title

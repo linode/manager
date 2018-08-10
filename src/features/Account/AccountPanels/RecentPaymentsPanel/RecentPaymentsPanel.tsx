@@ -112,7 +112,7 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
 
     return (
       <ExpansionPanel onChange={this.handleExpansion} heading="Recent Payments">
-        <Table>
+        <Table aria-label="List of Recent Payments">
           <TableHead>
             <TableRow>
               <TableCell>Date Created</TableCell>
