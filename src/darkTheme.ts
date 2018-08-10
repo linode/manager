@@ -728,6 +728,11 @@ const LinodeTheme: Linode.Theme = {
         '&$selected': {
           color: primaryColors.text,
         },
+        '&$disabled': {
+          color: '#666',
+          cursor: 'not-allowed',
+          pointerEvents: 'all !important',
+        },
       },
     },
     MuiTabIndicator: {
