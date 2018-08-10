@@ -77,7 +77,7 @@ export class SupportTicketsLanding extends React.Component<CombinedProps, State>
 
   render() {
     const { classes } = this.props;
-    const { notice, value } = this.state;
+    const { notice, newTicket, value } = this.state;
 
 
     return (
@@ -114,7 +114,7 @@ export class SupportTicketsLanding extends React.Component<CombinedProps, State>
           </Tabs>
         </AppBar>
         {/* NB: 0 is the index of the open tickets tab, which evaluates to false */}
-        <TicketList filterStatus={value ? 'closed' : 'open'} />
+        <TicketList newTicket={newTicket} filterStatus={value ? 'closed' : 'open'} />
         {this.renderTicketDrawer()}
       </React.Fragment>
     );
