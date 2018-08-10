@@ -35,11 +35,17 @@ class LinodeThemeWrapper extends React.Component<Props, State> {
   };
 
   componentDidMount() {
-    document.addEventListener('keydown', (e) => {
-      if (e.ctrlKey && e.altKey && e.code === 'KeyD') {
-        this.toggleTheme();
-      }
-    });
+    const storedThemeChoice = window.localStorage.getItem('themeChoice');
+    if (storedThemeChoice === 'light') {
+      this.setState({
+        themeChoice: 'light'
+      });
+    }
+    else {
+      this.setState({
+        themeChoice: 'dark'
+      });
+    }
 
     this.forceUpdate();
   }
@@ -47,8 +53,10 @@ class LinodeThemeWrapper extends React.Component<Props, State> {
   toggleTheme = () => {
     if (this.state.themeChoice === 'light') {
       this.setState({ themeChoice: 'dark' });
+      window.localStorage.setItem('themeChoice', 'dark');
     } else {
       this.setState({ themeChoice: 'light' });
+      window.localStorage.setItem('themeChoice', 'light');
     }
 
     /**
