@@ -287,10 +287,6 @@ export class App extends React.Component<CombinedProps, State> {
     window.localStorage.setItem('BetaNotification', 'closed');
   }
 
-  Dashboard = () => <Placeholder title="Dashboard" />;
-
-  Support = () => <Placeholder title="Support" />;
-
   render() {
     const { menuOpen } = this.state;
     const { classes, longLivedLoaded, documentation, toggleTheme } = this.props;
@@ -321,7 +317,6 @@ export class App extends React.Component<CombinedProps, State> {
                             <Route exact path="/billing" component={Account} />
                             <Route exact path="/billing/invoices/:invoiceId" component={InvoiceDetail} />
                             <Route path="/users" component={Users} />
-                            <Route exact path="/support" render={this.Support} />
                             <Route exact path="/support/tickets" component={SupportTickets} />
                             <Route path="/support/tickets/:ticketId" component={SupportTicketDetail} />
                             <Route path="/profile" component={Profile} />
