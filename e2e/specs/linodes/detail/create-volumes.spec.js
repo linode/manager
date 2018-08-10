@@ -19,11 +19,12 @@ describe('Linode Detail - Volumes Suite', () => {
         browser.url(constants.routes.linodes);
         apiCreateLinode();
 
-        browser.waitForVisible('[data-qa-active-view]');
-        browser.waitForVisible('[data-qa-linode]');
-        
+        browser.waitForVisible('[data-qa-active-view]', constants.wait.normal);
+        browser.waitForVisible('[data-qa-linode]', constants.wait.normal);
+        browser.waitForVisible('[data-qa-status="running"]', constants.wait.normal);
+
         const linodes = ListLinodes.linode;
-        
+
         ListLinodes.shutdownIfRunning(linodes[0]);
         ListLinodes.navigateToDetail();
         LinodeDetail.landingElemsDisplay();
@@ -37,7 +38,7 @@ describe('Linode Detail - Volumes Suite', () => {
 
     describe("Linode Detail - Volumes - Create Suite", () => {     
         it('should display placeholder text and add a volume button', () => {
-            VolumeDetail.placeholderText.waitForVisible();
+            VolumeDetail.placeholderText.waitForVisible(constants.wait.normal);
 
             const placeholderTitle = VolumeDetail.placeholderText;
             const createButton = VolumeDetail.createButton;
@@ -77,7 +78,7 @@ describe('Linode Detail - Volumes Suite', () => {
         });
 
         it('should fail to create without a label', () => {
-            VolumeDetail.submit.click();
+            VolumeDetail.submit.click();    
             VolumeDetail.label.$('p').waitForVisible(constants.wait.normal);
             
             const labelError = VolumeDetail.label.$('p').getText();
@@ -86,14 +87,13 @@ describe('Linode Detail - Volumes Suite', () => {
         });
 
         it('should fail to create under 10 gb volume', () => {
-            browser.trySetValue(`${VolumeDetail.label.selector} input`, testLabel);
-            browser.trySetValue(`${VolumeDetail.size.selector} input`, 5);
+            browser.setValue(`${VolumeDetail.label.selector} input`, testLabel);
+            browser.setValue(`${VolumeDetail.size.selector} input`, 5);
             VolumeDetail.submit.click();
 
-            browser.waitForVisible('[data-qa-size] p', constants.wait.normal);
-
-            const sizeError = VolumeDetail.size.$('p').getText();
-            expect(sizeError.includes('Must be 10-1024')).toBe(true);
+            browser.waitUntil(function() {
+                return browser.getText('[data-qa-size] p').includes('Must be 10-10240');
+            }, constants.wait.normal);
         });
 
         it('should create a volume after correcting errors', () => {
