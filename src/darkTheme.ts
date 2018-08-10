@@ -224,9 +224,14 @@ const LinodeTheme: Linode.Theme = {
     MuiChip: {
       root: {
         backgroundColor: '#f4f4f4',
-        height: 20,
+        height: 24,
         borderRadius: 4,
         color: '#555',
+        '&:hover': {
+          '& $deleteIcon': {
+            color: '#222',
+          },
+        },
       },
       label: {
         paddingLeft: 4,
@@ -238,6 +243,7 @@ const LinodeTheme: Linode.Theme = {
         width: 20,
         height: 20,
         marginLeft: 2,
+        marginRight: 2,
       },
     },
     MuiCircularProgress: {

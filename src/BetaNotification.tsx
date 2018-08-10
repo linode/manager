@@ -15,7 +15,7 @@ type ClassNames = 'root'
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
-    backgroundColor: 'white',
+    backgroundColor: theme.color.white,
     padding: 12,
     [theme.breakpoints.up('md')]: {
       borderRadius: 2,
@@ -25,11 +25,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   content: {
     '& a': {
-      color: '#000',
-      '&:hover': {
-        textDecoration: 'underline',
-      },
-    },
+      fontWeight: 700,
+    }
   },
   actions: {
     display: 'flex',
@@ -76,7 +73,7 @@ const BetaNotification: React.StatelessComponent<CombinedProps> = (props) => {
       >
         <Grid item className={classes.content} xs={9} lg={10}>
           <Typography>
-            This is the early-access Linode Manager. <a href="https://manager.linode.com/">Click
+            This is the early-access Linode Manager. <a className="black" href="https://manager.linode.com/">Click
             here</a> to go back to the classic Linode Manager.
           </Typography>
         </Grid>

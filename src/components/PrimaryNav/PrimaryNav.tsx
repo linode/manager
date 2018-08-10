@@ -139,7 +139,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     width: 'calc(100% - 20px)',
     justifyContent: 'center',
     // hidding for now - replace with flex
-    display: 'none',
+    display: 'flex',
   },
   toggle: {
     '& > span:last-child': {
