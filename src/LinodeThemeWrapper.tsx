@@ -42,14 +42,14 @@ class LinodeThemeWrapper extends React.Component<Props, State> {
     });
 
     const storedThemeChoice = window.localStorage.getItem('themeChoice');
-    if (storedThemeChoice === 'light') {
+    if (storedThemeChoice === 'dark') {
       this.setState({
-        themeChoice: 'light'
+        themeChoice: 'dark'
       });
     }
     else {
       this.setState({
-        themeChoice: 'dark'
+        themeChoice: 'light'
       });
     }
 
