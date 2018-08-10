@@ -35,6 +35,12 @@ class LinodeThemeWrapper extends React.Component<Props, State> {
   };
 
   componentDidMount() {
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.altKey && e.code === 'KeyD') {
+        this.toggleTheme();
+      }
+    });
+
     const storedThemeChoice = window.localStorage.getItem('themeChoice');
     if (storedThemeChoice === 'light') {
       this.setState({
