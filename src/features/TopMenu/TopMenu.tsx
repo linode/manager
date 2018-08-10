@@ -56,14 +56,14 @@ const styles = (theme: Linode.Theme): StyleRules => ({
 });
 
 interface Props {
-  toggleSideMenu: () => void;
+  openSideMenu: () => void;
 }
 
 type PropsWithStyles = Props & WithStyles<ClassNames>;
 
 class TopMenu extends React.Component<PropsWithStyles> {
   render() {
-    const { classes, toggleSideMenu } = this.props;
+    const { classes, openSideMenu } = this.props;
 
     return (
       <AppBar className={classes.appBar}>
@@ -71,7 +71,7 @@ class TopMenu extends React.Component<PropsWithStyles> {
           <IconButton
             color="inherit"
             aria-label="open menu"
-            onClick={toggleSideMenu}
+            onClick={openSideMenu}
             className={classes.navIconHide}
           >
             <MenuIcon />
