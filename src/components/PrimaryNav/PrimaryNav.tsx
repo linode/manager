@@ -136,6 +136,8 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     padding: '16px 40px 16px 34px',
     alignItems: 'center',
     marginTop: 'auto',
+    width: 'calc(100% - 20px)',
+    justifyContent: 'center',
     // hidding for now - replace with flex
     display: 'none',
   },
@@ -401,6 +403,8 @@ class PrimaryNav extends React.Component<Props, State> {
             </ListItemText>
           </ListItem>
 
+          <div className={classes.spacer} />
+
           <div className={classes.switchWrapper}>
             <span className={`
               ${classes.switchText}
@@ -426,8 +430,6 @@ class PrimaryNav extends React.Component<Props, State> {
               Dark
             </span>
           </div>
-
-          <div className={classes.spacer} />
         </Grid>
       </React.Fragment>
     );

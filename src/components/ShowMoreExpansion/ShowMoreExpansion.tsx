@@ -21,7 +21,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     transition: theme.transitions.create('color'),
     '&:hover': {
       color: theme.palette.primary.main,
-      '& $caret, & $header': {
+      '& $caret': {
         color: theme.palette.primary.light,
       },
     },
