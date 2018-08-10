@@ -136,6 +136,8 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     padding: '16px 40px 16px 34px',
     alignItems: 'center',
     marginTop: 'auto',
+    width: 'calc(100% - 20px)',
+    justifyContent: 'center',
     // hidding for now - replace with flex
     display: 'none',
   },
@@ -164,7 +166,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
 });
 
 interface Props extends WithStyles<ClassNames>, RouteComponentProps<{}> {
-  toggleMenu: () => void;
+  closeMenu: () => void;
   toggleTheme: () => void;
 }
 
@@ -189,9 +191,9 @@ class PrimaryNav extends React.Component<Props, State> {
   }
 
   navigate(href: string) {
-    const { history , toggleMenu } = this.props;
+    const { history , closeMenu } = this.props;
     history.push(href);
-    toggleMenu();
+    closeMenu();
   }
 
   linkIsActive(href: string) {
@@ -336,7 +338,7 @@ class PrimaryNav extends React.Component<Props, State> {
                 [classes.linkItem]: true,
                 [classes.activeLink]:
                   expandedMenus.support
-                  || this.linkIsActive('/support') === true,
+                  || this.linkIsActive('/support/tickets') === true,
               })}
             >
               <KeyboardArrowRight className={classes.arrow} />
@@ -345,7 +347,7 @@ class PrimaryNav extends React.Component<Props, State> {
           </ListItem>
           <Collapse
             in={expandedMenus.support
-                || this.linkIsActive('/support') === true}
+                || this.linkIsActive('/support/tickets') === true}
             timeout="auto"
             unmountOnExit
             className={classes.sublinkPanel}
@@ -367,11 +369,11 @@ class PrimaryNav extends React.Component<Props, State> {
               Community Forum
             </a>
             <Link
-              to="/support"
+              to="/support/tickets"
               role="menuitem"
               className={classNames({
                 [classes.sublink]: true,
-                [classes.sublinkActive]: this.linkIsActive('/support') === true,
+                [classes.sublinkActive]: this.linkIsActive('/support/tickets') === true,
               })}
             >
               Support Tickets
@@ -401,6 +403,8 @@ class PrimaryNav extends React.Component<Props, State> {
             </ListItemText>
           </ListItem>
 
+          <div className={classes.spacer} />
+
           <div className={classes.switchWrapper}>
             <span className={`
               ${classes.switchText}
@@ -426,8 +430,6 @@ class PrimaryNav extends React.Component<Props, State> {
               Dark
             </span>
           </div>
-
-          <div className={classes.spacer} />
         </Grid>
       </React.Fragment>
     );

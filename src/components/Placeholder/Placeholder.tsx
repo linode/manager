@@ -47,7 +47,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => ({
     width: '225px !important',
     height: '225px !important',
     '& .outerCircle': {
-      fill: 'white',
+      fill: theme.color.absWhite,
       stroke: theme.bg.offWhite,
     },
     '& .insidePath path': {

@@ -62,9 +62,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   suggestionItem: {
     borderBottom: `1px solid ${theme.palette.divider}`,
+    color: theme.palette.text.primary,
     '&:hover, &:focus': {
       backgroundColor: `${theme.palette.primary.main} !important`,
-      color: `${theme.color.white} !important`,
+      color: `white !important`,
     },
     '&:last-item': {
       border: 0,
@@ -711,7 +712,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     >
                       <TextField
                         label="Check HTTP Path"
-                        value={checkPath}
+                        value={checkPath || ''}
                         onChange={this.onCheckPathChange}
                         required={['http', 'http_body'].includes(healthCheckType)}
                         errorText={hasErrorFor('check_path')}

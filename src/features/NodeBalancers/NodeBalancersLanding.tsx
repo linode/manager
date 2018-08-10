@@ -6,7 +6,6 @@ import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
@@ -15,6 +14,7 @@ import NodeBalancer from 'src/assets/addnewmenu/nodebalancer.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
+import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import Grid from 'src/components/Grid';
@@ -22,8 +22,8 @@ import PaginationFooter, { PaginationProps } from 'src/components/PaginationFoot
 import Placeholder from 'src/components/Placeholder';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
 import TableRowError from 'src/components/TableRowError';
-import TableRowLoading from 'src/components/TableRowLoading';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
 import { deleteNodeBalancer, getNodeBalancerConfigs, getNodeBalancers } from 'src/services/nodebalancers';
@@ -33,16 +33,40 @@ import scrollToTop from 'src/utilities/scrollToTop';
 
 import NodeBalancerActionMenu from './NodeBalancerActionMenu';
 
-type ClassNames = 'root' | 'title' | 'NBStatus';
+type ClassNames = 'root'
+  | 'title'
+  | 'nodeStatus'
+  | 'nameCell'
+  | 'nodeStatus'
+  | 'transferred'
+  | 'ports'
+  | 'ip';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
   title: {
     marginBottom: theme.spacing.unit * 2,
   },
-  NBStatus: {
-    whiteSpace: 'nowrap',
-  }
+  nameCell: {
+    width: '15%',
+    minWidth: 150,
+  },
+  nodeStatus: {
+    width: '10%',
+    minWidth: 100,
+  },
+  transferred: {
+    width: '10%',
+    minWidth: 100,
+  },
+  ports: {
+    width: '5%',
+    minWidth: 50,
+  },
+  ip: {
+    width: '20%',
+    minWidth: 200,
+  },
 });
 
 interface Props { }
@@ -223,7 +247,11 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
       pageSize,
     } = this.state;
 
-    if (!loading && count === 0) {
+    if(loading){
+      return this.renderLoading();
+    }
+
+    if (count === 0) {
       return this.renderEmpty()
     }
 
@@ -250,11 +278,11 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Node Status</TableCell>
-                <TableCell>Transferred</TableCell>
-                <TableCell>Ports</TableCell>
-                <TableCell>IP Addresses</TableCell>
+                <TableCell className={classes.nameCell}>Name</TableCell>
+                <TableCell className={classes.nodeStatus} noWrap>Node Status</TableCell>
+                <TableCell className={classes.transferred}>Transferred</TableCell>
+                <TableCell className={classes.ports}>Ports</TableCell>
+                <TableCell className={classes.ip} noWrap>IP Addresses</TableCell>
                 <TableCell>Region</TableCell>
                 <TableCell />
               </TableRow>
@@ -314,13 +342,8 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
     const {
       count,
       errors,
-      loading,
       nodeBalancers,
     } = this.state;
-
-    if (loading) {
-      return this.renderLoading();
-    }
 
     if (errors) {
       return this.renderErrors(errors);
@@ -333,7 +356,9 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
     return null;
   };
 
-  renderLoading = () => <TableRowLoading colSpan={7} />;
+  renderLoading = () => {
+    return (<CircleProgress />);
+  };
 
   renderErrors = (errors: Linode.ApiFieldError[]) => {
     return <TableRowError message="There was an error loading your NodeBalancers. Please try again later." colSpan={7} />;
@@ -354,19 +379,18 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
   };
 
   renderData = (nodeBalancers: Linode.ExtendedNodeBalancer[]) => {
-    const { classes } = this.props;
 
     return nodeBalancers.map((nodeBalancer) => {
       return (
-        <TableRow key={nodeBalancer.id} data-qa-nodebalancer-cell>
+        <TableRow key={nodeBalancer.id} data-qa-nodebalancer-cell className="fade-in-table">
           <TableCell data-qa-nodebalancer-label>
             <Link to={`/nodebalancers/${nodeBalancer.id}`}>
               {nodeBalancer.label}
             </Link>
           </TableCell>
           <TableCell data-qa-node-status>
-            <span className={classes.NBStatus}>{nodeBalancer.up} up</span> <br />
-            <span className={classes.NBStatus}>{nodeBalancer.down} down</span>
+            <span>{nodeBalancer.up} up</span> <br />
+            <span>{nodeBalancer.down} down</span>
           </TableCell>
           <TableCell data-qa-transferred>
             {convertMegabytesTo(nodeBalancer.transfer.total)}

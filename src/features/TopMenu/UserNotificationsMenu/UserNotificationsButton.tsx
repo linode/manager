@@ -29,7 +29,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     width: 28,
     height: 28,
     transition: theme.transitions.create(['background-color']),
-    color: 'white',
+    color: theme.color.white,
     borderRadius: '50%',
     backgroundColor: theme.color.grey3,
     fontSize: 17,

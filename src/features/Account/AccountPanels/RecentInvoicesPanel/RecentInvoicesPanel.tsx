@@ -65,18 +65,17 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
       }),
     );
 
-  requestInvoices = (page: number = 1) => {
-    if (!this.mounted) { return; }
+  requestInvoices = (
+    page: number = this.state.page,
+    pageSize: number = this.state.pageSize,
+    initial: boolean = false,
+  ) => {
 
-    this.setState({
-      /** Only display loading if the data is undefined (initial state)   */
-      loading: this.state.data === undefined,
-      errors: undefined,
-    });
-
-    return getInvoices({ page_size: this.state.pageSize, page })
-      .then(({ data, page, pages, results }) => {
+    return getInvoices({ page, page_size: pageSize })
+      .then(({ data, results }) => {
         if (!this.mounted) { return; }
+
+        this.setState({ loading: initial });
 
         this.setState({
           loading: false,
@@ -157,7 +156,7 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
 
   handleExpansion = (e: any, expanded: boolean) => {
     if (expanded && !this.state.data) {
-      this.requestInvoices();
+      this.requestInvoices(undefined, undefined, true);
     }
   };
 
@@ -173,15 +172,12 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
     );
   };
 
-  handlePageChange = (page: number) => this.requestInvoices(page);
+  handlePageChange = (page: number) => {
+    this.setState({ page}, () => this.requestInvoices() )
+  };
 
   handlePageSizeChange = (pageSize: number) => {
-    if (!this.mounted) { return; }
-
-    this.setState(
-      { pageSize },
-      () => { this.requestInvoices() },
-    );
+    this.setState({ pageSize }, () => this.requestInvoices() )
   }
 }
 
