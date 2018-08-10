@@ -545,7 +545,7 @@ const LinodeTheme: Linode.Theme = {
           '& li': {
             color: primaryColors.text,
             '&:hover, &:focus': {
-              color: 'black',
+              color: 'white',
             },
           },
           [breakpoints.down('xs')]: {
@@ -565,15 +565,15 @@ const LinodeTheme: Linode.Theme = {
         transition: `${'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), '}
         ${'color .2s cubic-bezier(0.4, 0, 0.2, 1)'}`,
         '&:hover, &:focus': {
-          backgroundColor: primaryColors.text,
-          color: '#222',
+          backgroundColor: '#444',
+          color: '#fff',
         },
         '& em': {
           fontStyle: 'normal !important',
         },
       },
       selected: {
-        backgroundColor: '#222 !important',
+        backgroundColor: '#444 !important',
         color: `${primaryColors.text} !important`,
         opacity: 1,
         '&:focus': {
