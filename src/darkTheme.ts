@@ -389,6 +389,9 @@ const LinodeTheme: Linode.Theme = {
       root: {
         marginLeft: -11,
       },
+      disabled: {
+        color: '#aaa !important',
+      },
     },
     MuiFormLabel: {
       root: {
@@ -775,7 +778,7 @@ const LinodeTheme: Linode.Theme = {
     MuiTabs: {
       root: {
         margin: '16px 0',
-        boxShadow: 'inset 0 -1px 0 #C5C6C8',
+        boxShadow: 'inset 0 -1px 0 #222',
       },
       fixed: {
         overflowX: 'auto',
