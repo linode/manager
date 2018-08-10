@@ -711,7 +711,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     >
                       <TextField
                         label="Check HTTP Path"
-                        value={checkPath}
+                        value={checkPath || ''}
                         onChange={this.onCheckPathChange}
                         required={['http', 'http_body'].includes(healthCheckType)}
                         errorText={hasErrorFor('check_path')}
