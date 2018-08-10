@@ -16,7 +16,6 @@ import DefaultLoader from 'src/components/DefaultLoader';
 import DocsSidebar from 'src/components/DocsSidebar';
 import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
-import Placeholder from 'src/components/Placeholder';
 import SideMenu from 'src/components/SideMenu';
 import { RegionsProvider, WithRegionsContext } from 'src/context/regions';
 import { TypesProvider, WithTypesContext } from 'src/context/types';
