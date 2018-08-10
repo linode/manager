@@ -26,7 +26,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
 
 interface Props {
   open: boolean;
-  toggle: () => void;
+  closeMenu: () => void;
   toggleTheme: () => void;
 }
 
@@ -34,7 +34,7 @@ type CombinedProps = Props & WithStyles<CSSClasses>;
 
 class SideMenu extends React.Component<CombinedProps> {
   render() {
-    const { classes, open, toggle, toggleTheme } = this.props;
+    const { classes, open, closeMenu, toggleTheme } = this.props;
 
     return (
       <React.Fragment>
@@ -43,12 +43,12 @@ class SideMenu extends React.Component<CombinedProps> {
             variant="temporary"
             open={open}
             classes={{ paper: classes.menuPaper }}
-            onClose={toggle}
+            onClose={closeMenu}
             ModalProps={{
               keepMounted: true, // Better open performance on mobile.
             }}
           >
-            <PrimaryNav toggleMenu={toggle} toggleTheme={toggleTheme} />
+            <PrimaryNav closeMenu={closeMenu} toggleTheme={toggleTheme} />
           </Drawer>
         </Hidden>
         <Hidden smDown implementation="css">
@@ -60,7 +60,7 @@ class SideMenu extends React.Component<CombinedProps> {
               docked: classes.menuDocked,
             }}
           >
-            <PrimaryNav toggleMenu={toggle} toggleTheme={toggleTheme} />
+            <PrimaryNav closeMenu={closeMenu} toggleTheme={toggleTheme} />
           </Drawer>
         </Hidden>
       </React.Fragment>
