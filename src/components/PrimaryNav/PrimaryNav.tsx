@@ -336,7 +336,7 @@ class PrimaryNav extends React.Component<Props, State> {
                 [classes.linkItem]: true,
                 [classes.activeLink]:
                   expandedMenus.support
-                  || this.linkIsActive('/support') === true,
+                  || this.linkIsActive('/support/tickets') === true,
               })}
             >
               <KeyboardArrowRight className={classes.arrow} />
@@ -345,7 +345,7 @@ class PrimaryNav extends React.Component<Props, State> {
           </ListItem>
           <Collapse
             in={expandedMenus.support
-                || this.linkIsActive('/support') === true}
+                || this.linkIsActive('/support/tickets') === true}
             timeout="auto"
             unmountOnExit
             className={classes.sublinkPanel}
@@ -367,11 +367,11 @@ class PrimaryNav extends React.Component<Props, State> {
               Community Forum
             </a>
             <Link
-              to="/support"
+              to="/support/tickets"
               role="menuitem"
               className={classNames({
                 [classes.sublink]: true,
-                [classes.sublinkActive]: this.linkIsActive('/support') === true,
+                [classes.sublinkActive]: this.linkIsActive('/support/tickets') === true,
               })}
             >
               Support Tickets
