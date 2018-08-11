@@ -11,7 +11,6 @@ import { Subscription } from 'rxjs/Subscription';
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
@@ -22,17 +21,19 @@ import CircleProgress from 'src/components/CircleProgress';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
-import PaginationFooter, { PaginationProps } from 'src/components/PaginationFooter';
+import withPagination, { PaginationProps } from 'src/components/Pagey';
+import PaginationFooter from 'src/components/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
 import TableRowError from 'src/components/TableRowError';
+import TableSortCell from 'src/components/TableSortCell';
 import { events$, generateInFilter, resetEventsPolling } from 'src/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { getLinodes } from 'src/services/linodes';
 import { deleteVolume, detachVolume, getVolumes } from 'src/services/volumes';
 import { openForClone, openForCreating, openForEdit, openForResize } from 'src/store/reducers/volumeDrawer';
 import { formatRegion } from 'src/utilities';
-import scrollToTop from 'src/utilities/scrollToTop';
 
 import DestructiveVolumeDialog from './DestructiveVolumeDialog';
 import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
@@ -68,21 +69,18 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   pathCol: {
     width: '25%',
     minWidth: 250,
-  }
+  },
 });
 
-interface Props {
+interface Props extends PaginationProps<Linode.Volume> {
   openForEdit: typeof openForEdit;
   openForResize: typeof openForResize;
   openForClone: typeof openForClone;
   openForCreating: typeof openForCreating;
 }
 
-interface State extends PaginationProps {
-  loading: boolean;
+interface State {
   labelsLoading: boolean;
-  errors?: Linode.ApiFieldError[];
-  volumes: Linode.Volume[];
   linodeLabels: { [id: number]: string };
   linodeStatuses: { [id: number]: string };
   configDrawer: {
@@ -107,11 +105,6 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 class VolumesLanding extends React.Component<CombinedProps, State> {
   state: State = {
-    page: 1,
-    count: 0,
-    pageSize: 25,
-    volumes: [],
-    loading: true,
     labelsLoading: true,
     linodeLabels: {},
     linodeStatuses: {},
@@ -152,12 +145,11 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     },
   ];
 
-  componentDidMount() {
+  async componentDidMount() {
     this.mounted = true;
 
-    this.getVolumes(undefined, undefined, true);
-
-    this.getLinodeLabels();
+    await this.props.request()
+    await this.getLinodeLabels();
 
     this.eventsSub = events$
       .filter(event => (
@@ -173,20 +165,10 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       ))
       .merge(updateVolumes$)
       .subscribe((event) => {
-        this.getVolumes()
-          .then((volumes) => {
-            if (!volumes || !this.mounted) { return; }
-
-            this.setState({
-              volumes: volumes.map((v) => ({
-                ...v,
-                ...maybeAddEvent(event, v),
-              })),
-            });
-          })
-          .catch(() => {
-            /* @todo: how do we want to display this error? */
-          });
+        this.props.request((volumes) => volumes.map((v) => ({
+          ...v,
+          ...maybeAddEvent(event, v),
+        })));
       });
   }
 
@@ -195,20 +177,23 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   }
 
   componentDidUpdate(prevProps: CombinedProps, prevState: State) {
-    /*
-    We just need to know if different volumes are now on the state, so we can compare a list of
-    IDs rather than the whole object.
-    */
-    if (!equals(prevState.volumes.map(v => v.id), this.state.volumes.map(v => v.id))) {
-      this.getLinodeLabels();
+    //   /*
+    //   We just need to know if different volumes are now on the state, so we can compare a list of
+    //   IDs rather than the whole object.
+    //   */
+    const { result: prevResult } = prevProps;
+    const { result } = this.props;
+
+    if (result && prevResult && !equals(prevResult.map(v => v.id), result.map(v => v.id))) {
+      this.getLinodeLabels(false);
     }
   }
 
   render() {
-    const { classes } = this.props;
-    const { count, loading, labelsLoading } = this.state;
+    const { classes, count, loading, page, pageSize, handlePageChange, handlePageSizeChange, result: volumes } = this.props;
+    const { labelsLoading } = this.state;
 
-    if (loading || labelsLoading) {
+    if ((!volumes && loading) || labelsLoading) {
       return this.renderLoading();
     }
 
@@ -239,7 +224,14 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           <Table aria-label="List of Volumes">
             <TableHead>
               <TableRow>
-                <TableCell className={classes.labelCol}>Label</TableCell>
+                <TableSortCell
+                  active={this.props.orderBy === 'label'}
+                  direction={this.props.order}
+                  handleClick={this.props.updateOrderBy}
+                  label={'label'}
+                >
+                  Label
+                </TableSortCell>
                 <TableCell className={classes.attachmentCol}>Attached To</TableCell>
                 <TableCell className={classes.sizeCol}>Size</TableCell>
                 <TableCell className={classes.pathCol}>File System Path</TableCell>
@@ -253,11 +245,11 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           </Table>
         </Paper>
         <PaginationFooter
-          count={this.state.count}
-          page={this.state.page}
-          pageSize={this.state.pageSize}
-          handlePageChange={this.handlePageChange}
-          handleSizeChange={this.handlePageSizeChange}
+          count={count}
+          page={page}
+          pageSize={pageSize}
+          handlePageChange={handlePageChange}
+          handleSizeChange={handlePageSizeChange}
         />
         <VolumeConfigDrawer
           open={this.state.configDrawer.open}
@@ -284,10 +276,11 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   }
 
   renderContent = () => {
-    const { errors, volumes, count, linodeLabels, linodeStatuses } = this.state;
+    const { linodeLabels, linodeStatuses } = this.state;
+    const { error, result: volumes, count } = this.props;
 
-    if (errors) {
-      return this.renderErrors(errors);
+    if (error) {
+      return this.renderErrors(error);
     }
 
 
@@ -302,7 +295,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     return <CircleProgress />;
   };
 
-  renderErrors = (errors: Linode.ApiFieldError[]) => {
+  renderErrors = (errors: Error) => {
     return (
       <TableRowError colSpan={5} message="There was an error loading your volumes." />
     );
@@ -426,48 +419,12 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     });
   };
 
-  getVolumes = (
-    page: number = this.state.page,
-    pageSize: number = this.state.pageSize,
-    initial: boolean = false,
-  ) => {
-
-    if (initial) {
-      this.setState({ loading: true });
-    }
-
-    return getVolumes({ page, page_size: pageSize })
-      .then((response) => {
-        if (!this.mounted) { return response.data; }
-
-        this.setState({
-          count: response.results,
-          page: response.page,
-          loading: false,
-          volumes: response.data,
-        });
-
-        return response.data;
-      })
-      .catch((err) => this.mounted && this.setState({
-        loading: false,
-        errors: pathOr([{ reason: 'Unable to load Volumes.' }], ['response', 'data', 'errors'], err),
-      }));
-  };
-
-  handlePageChange = (page: number) => {
-    this.setState({ page }, () => { this.getVolumes() });
-    scrollToTop();
-  }
-
-  handlePageSizeChange = (pageSize: number) => {
-    this.setState({ pageSize }, () => { this.getVolumes() });
-  }
-
-  getLinodeLabels = () => {
-    const linodeIDs = this.state.volumes.map(volume => volume.linode_id).filter(Boolean);
+  getLinodeLabels = (initial: boolean = true) => {
+    const { result: volumes } = this.props;
+    if (!volumes) { return; }
+    const linodeIDs = volumes.map(volume => volume.linode_id).filter(Boolean);
     const xFilter = generateInFilter('id', linodeIDs);
-    this.setState({ labelsLoading: true });
+    this.setState({ labelsLoading: initial });
 
     getLinodes(undefined, xFilter)
       .then((response) => {
@@ -559,13 +516,16 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
   dispatch,
 );
 
+const paginated = withPagination(getVolumes);
+
 const connected = connect(undefined, mapDispatchToProps);
 
 const styled = withStyles(styles, { withTheme: true });
 
 const documented = setDocs(VolumesLanding.docs);
 
-export default compose<Linode.TodoAny, Linode.TodoAny, Linode.TodoAny, Linode.TodoAny>(
+export default compose<any, any, any, any, any>(
+  paginated,
   connected,
   documented,
   styled,
