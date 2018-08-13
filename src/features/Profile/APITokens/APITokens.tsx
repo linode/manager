@@ -145,7 +145,7 @@ export class APITokens extends React.Component<CombinedProps, State> {
           alignItems="flex-end"
         >
           <Grid item>
-            <Typography variant="title" className={classes.headline} data-qa-table={title}>
+            <Typography role="header" variant="title" className={classes.headline} data-qa-table={title}>
               {title}
             </Typography>
           </Grid>
@@ -159,7 +159,7 @@ export class APITokens extends React.Component<CombinedProps, State> {
           </Grid>
         </Grid>
         <Paper className={classes.paper}>
-          <Table>
+          <Table aria-label="List of Personnal Acccess Tokens">
             <TableHead>
               <TableRow data-qa-table-head>
                 <TableCell className={classes.labelCell}>Label</TableCell>
@@ -173,7 +173,7 @@ export class APITokens extends React.Component<CombinedProps, State> {
               {tokens.map((token: Linode.Token) =>
                 <TableRow key={token.id} data-qa-table-row={token.label}>
                   <TableCell>
-                    <Typography variant="subheading" data-qa-token-label>
+                    <Typography role="header" variant="subheading" data-qa-token-label>
                       {token.label}
                     </Typography>
                   </TableCell>

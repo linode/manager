@@ -84,7 +84,7 @@ export class SupportTicketsLanding extends React.Component<CombinedProps, State>
       <React.Fragment>
         <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }} updateFor={[]}>
           <Grid item>
-            <Typography variant="headline" className={classes.title} data-qa-title >
+            <Typography role="header" variant="headline" className={classes.title} data-qa-title >
               Customer Support
             </Typography>
           </Grid>

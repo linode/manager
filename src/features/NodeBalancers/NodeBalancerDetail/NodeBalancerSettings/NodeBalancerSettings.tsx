@@ -122,7 +122,7 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <Typography variant="headline" className={classes.title}>
+        <Typography role="header" variant="headline" className={classes.title}>
           Settings
         </Typography>
         <Paper style={{ padding: 24 }}>

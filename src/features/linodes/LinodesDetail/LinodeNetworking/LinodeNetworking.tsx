@@ -1,4 +1,4 @@
-import { compose, head, path, pathOr } from 'ramda';
+import { compose, equals, head, path, pathOr } from 'ramda';
 import * as React from 'react';
 
 import Paper from '@material-ui/core/Paper';
@@ -148,6 +148,18 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     },
   };
 
+  componentDidUpdate(prevProps: Props, prevState: State) {
+    const maybeNewLinodeIPs =
+      path<Linode.LinodeIPsResponse>(['linodeIPs', 'response'], this.props);
+    const oldLinodeIPs =
+      path<Linode.LinodeIPsResponse>(['linodeIPs', 'response'], prevProps); 
+    if (!equals(maybeNewLinodeIPs, oldLinodeIPs)) {
+      this.setState({
+        linodeIPs: maybeNewLinodeIPs,
+      });
+    }
+  }
+
   refreshIPs = () => {
     return getLinodeIPs(this.props.linodeID)
       .then(ips => this.setState({ linodeIPs: ips }))
@@ -227,7 +239,8 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
   closeViewIPDrawer = () => this.setState({ viewIPDrawer: { open: false, ip: undefined }, })
 
-  closeViewRangeDrawer = () => this.setState({ viewRangeDrawer: { open: false, range: undefined }, })
+  closeViewRangeDrawer = () => this.setState(
+    { viewRangeDrawer: { open: false, range: undefined }, })
 
   closeEditRDNSDrawer = () => {
     this.setState({ editRDNSDrawer: { open: false, address: undefined, rnds: undefined }, });
@@ -243,14 +256,16 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
   openCreateIPv6Drawer = () => this.setState({ createIPv6Drawer: { open: true } })
 
-  openCreatePublicIPv4Drawer = () => this.setState({ createIPv4Drawer: { ...this.state.createIPv4Drawer, open: true, forPublic: true } })
+  openCreatePublicIPv4Drawer = () => this.setState(
+    { createIPv4Drawer: { ...this.state.createIPv4Drawer, open: true, forPublic: true } })
 
-  openCreatePrivateIPv4Drawer = () => this.setState({ createIPv4Drawer: { ...this.state.createIPv4Drawer, open: true, forPublic: false } })
+  openCreatePrivateIPv4Drawer = () => this.setState(
+    { createIPv4Drawer: { ...this.state.createIPv4Drawer, open: true, forPublic: false } })
 
   hasPrivateIPAddress() {
     const { linodeIPs } = this.state;
     const privateIPs = pathOr([], ['ipv4', 'private'], linodeIPs);
-    return privateIPs > 0;
+    return privateIPs.length > 0;
   }
 
   render() {
@@ -310,7 +325,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
   renderIPv4 = () => {
     const { classes } = this.props;
-    const ipv4 = path<Linode.LinodeIPsResponseIPV4>(['linodeIPs', 'response', 'ipv4'], this.props);
+    const ipv4 = path<Linode.LinodeIPsResponseIPV4>(['linodeIPs', 'ipv4'], this.state);
 
     if (!ipv4) { return null; }
 
@@ -321,6 +336,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         <Grid container justify="space-between" alignItems="flex-end">
           <Grid item className={classes.ipv4TitleContainer}>
             <Typography
+              role="header"
               variant="title"
               className={classes.ipv4Title}
               data-qa-ipv4-subheading
@@ -350,7 +366,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           </Grid>
         </Grid>
         <Paper style={{ padding: 0 }}>
-          <Table>
+          <Table aria-label="IPv4 Addresses">
             <TableHead>
               <TableRow>
                 <TableCell className={classes.address}>Address</TableCell>
@@ -373,7 +389,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
   renderIPv6 = () => {
     const { classes } = this.props;
-    const ipv6 = path<Linode.LinodeIPsResponseIPV6>(['linodeIPs', 'response', 'ipv6'], this.props);
+    const ipv6 = path<Linode.LinodeIPsResponseIPV6>(['linodeIPs', 'ipv6'], this.state);
 
     if (!ipv6) { return null; }
 
@@ -388,6 +404,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         >
           <Grid item>
             <Typography
+              role="header"
               variant="title"
               className={classes.ipv4Title}
               data-qa-ipv6-subheading
@@ -403,7 +420,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           </Grid>
         </Grid>
         <Paper style={{ padding: 0 }}>
-          <Table>
+          <Table aria-label="List of IPv6 Addresses">
             <TableHead>
               <TableRow>
                 <TableCell className={classes.address}>Address</TableCell>
@@ -434,6 +451,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
       <Grid container>
         <Grid item xs={12}>
           <Typography
+            role="header"
             variant="title"
             className={classes.netActionsTitle}
             data-qa-network-actions-title
