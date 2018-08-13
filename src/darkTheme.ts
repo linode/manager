@@ -27,7 +27,7 @@ const LinodeTheme: Linode.Theme = {
     offWhite: '#111111',
     offWhiteDT: '#444', // better handing for dark theme
     navy: '#32363C',
-    lightBlue: '#D7E3EF',
+    lightBlue: '#444',
     white: '#32363C',
   },
   color: {
@@ -227,7 +227,7 @@ const LinodeTheme: Linode.Theme = {
         backgroundColor: '#f4f4f4',
         height: 24,
         borderRadius: 4,
-        color: '#555',
+        color: '#fff',
         '&:hover': {
           '& $deleteIcon': {
             color: '#222',
