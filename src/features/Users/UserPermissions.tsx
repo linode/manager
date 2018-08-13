@@ -379,7 +379,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       <div className={classes.section}>
         <Grid container className={classes.section} data-qa-billing-section>
           <Grid item>
-            <Typography variant="subheading" data-qa-permissions-header="billing">
+            <Typography role="header" variant="subheading" data-qa-permissions-header="billing">
               Billing Access
             </Typography>
           </Grid>
@@ -443,7 +443,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     const { grants, success, saving } = this.state;
     return (
       <Paper className={classes.globalSection} data-qa-global-section>
-        <Typography variant="title" data-qa-permissions-header="Global Permissions">
+        <Typography role="header" variant="title" data-qa-permissions-header="Global Permissions">
           Global Permissions
         </Typography>
         {success && success.global &&
@@ -515,13 +515,14 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     return (
       <div key={entity} className={classes.section}>
         <Typography
+          role="header"
           variant="subheading"
           className={classes.tableSubheading}
           data-qa-permissions-header={entityNameMap[entity]}
           >
           {entityNameMap[entity]}
         </Typography>
-        <Table className={classes.grantTable}>
+        <Table aria-label="User Permissions" className={classes.grantTable}>
           <TableHead data-qa-table-head>
             <TableRow>
               <TableCell>
@@ -636,7 +637,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       <Paper className={classes.globalSection} data-qa-entity-section>
         <Grid container justify="space-between" alignItems="center">
           <Grid item>
-            <Typography variant="title" data-qa-permissions-header="Specifc Grants">
+            <Typography role="header" variant="title" data-qa-permissions-header="Specifc Grants">
               Specific Grants
             </Typography>
           </Grid>
@@ -723,19 +724,19 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         }
         <Grid container className={`${classes.topGrid} ${'py0'}`} justify="space-between" alignItems="center">
           <Grid item className={classes.titleWrapper}>
-            <Typography variant="title" data-qa-update-permissions-header>
+            <Typography role="header" variant="title" data-qa-update-permissions-header>
               Update User Permissions
             </Typography>
           </Grid>
           <Grid item className="p0">
             <Grid container alignItems="center" style={{ width: 'auto' }}>
               <Grid item>
-                <Typography variant="title" data-qa-restrict-access={restricted}>
+                <Typography role="header" variant="title" data-qa-restrict-access={restricted}>
                   Restrict Access:
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="title">
+                <Typography role="header" variant="title">
                   {restricted
                     ? 'On'
                     : 'Off'

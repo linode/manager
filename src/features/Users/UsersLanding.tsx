@@ -275,7 +275,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
           ? <React.Fragment>
               <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }} >
                 <Grid item>
-                  <Typography variant="headline" data-qa-title className={classes.title}>
+                  <Typography role="header" variant="headline" data-qa-title className={classes.title}>
                     Users
                   </Typography>
                 </Grid>
@@ -308,7 +308,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
                 />
               }
               <Paper>
-                <Table>
+                <Table aria-label="List of Users">
                   <TableHead>
                     <TableRow>
                       <TableCell data-qa-username-column>Username</TableCell>

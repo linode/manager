@@ -115,7 +115,7 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
         heading="Recent Invoices"
         onChange={this.handleExpansion}
       >
-        <Table>
+        <Table aria-label="List of Recent Invoices">
           <TableHead>
             <TableRow>
               <TableCell>Date Created</TableCell>

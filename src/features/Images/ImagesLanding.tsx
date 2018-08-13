@@ -319,7 +319,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
           </Grid>
         </Grid>
         <Paper>
-          <Table>
+          <Table aria-label="List of Your Images">
             <TableHead>
               <TableRow>
                 <TableCell data-qa-image-name-header>Label</TableCell>

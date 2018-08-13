@@ -2,8 +2,8 @@ import * as classNames from 'classnames';
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import RadioGroup from '@material-ui/core/RadioGroup';
+// import FormControlLabel from '@material-ui/core/FormControlLabel';
+// import RadioGroup from '@material-ui/core/RadioGroup';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
@@ -12,7 +12,7 @@ import Button from 'src/components/Button';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import Radio from 'src/components/Radio';
+// import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
 import { withAccount } from 'src/features/Account/context';
 import { makePayment } from 'src/services/account';
@@ -127,7 +127,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
           <Grid item xs={12}>
             <Grid container>
               <Grid item>
-                <Typography component={'span'} variant="title">Current Balance:</Typography>
+                <Typography role="header" component={'span'} variant="title">Current Balance:</Typography>
               </Grid>
               <Grid item>
                 <Typography
@@ -148,7 +148,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
           <Grid item xs={12}>
             {generalError && <Notice error text={generalError} />}
             {success && <Notice success text={`Payment successfully submitted.`} />}
-            <RadioGroup
+            {/* <RadioGroup // Hide this choice until PayPal component is completed.
               aria-label="payment type"
               name="type"
               value={this.state.type}
@@ -157,7 +157,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
             >
               <FormControlLabel value="CREDIT_CARD" label="Credit Card" control={<Radio disabled />} />
               <FormControlLabel value="PAYPAL" label="Paypal" control={<Radio disabled />} />
-            </RadioGroup>
+            </RadioGroup> */}
             <TextField
               errorText={hasErrorFor('usd')}
               label="Amount to Charge"

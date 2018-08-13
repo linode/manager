@@ -303,6 +303,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
               </IconButton>
             </Link>
             <Typography
+              role="header"
               className={classes.createTitle}
               variant="headline"
               data-qa-create-header
