@@ -12,6 +12,7 @@ import {
 import Typography from '@material-ui/core/Typography';
 
 import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 
 import Chat from 'src/assets/icons/chat.svg';
 import Community from 'src/assets/icons/community.svg';
@@ -36,7 +37,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     marginBottom: theme.spacing.unit * 4,
   },
   card: {
-    textAlign: 'center',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
     backgroundColor: theme.color.white,
     padding: theme.spacing.unit * 4,
     border: `1px solid ${theme.color.grey2}`,
@@ -65,12 +68,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 
 interface Props {}
 
-interface State {}
+interface State {
+  error?: string;
+}
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 export class OtherWays extends React.Component<CombinedProps, State> {
-  state: State = {};
+  state: State = { };
 
   ada: any = undefined;
 
@@ -88,9 +93,12 @@ export class OtherWays extends React.Component<CombinedProps, State> {
     /*
     * Show the Ada chat
     */
-    if (typeof this.ada !== 'undefined') {
-      this.ada.show();
+    if (typeof this.ada === 'undefined') {
+      this.setState({ error: 'There was an issue loading the chat at this time. Please try again later.' })
+      return;
     }
+    this.setState({ error: '' })
+    this.ada.show();
   }
 
   render() {
@@ -142,9 +150,12 @@ export class OtherWays extends React.Component<CombinedProps, State> {
               >
                 <a href="javascript:;" onClick={this.handleAdaInit} className="black">Talk to Ada</a>
               </Typography>
-                <Typography variant="caption">
-                  Chat with the Linode Support bot to help troubleshoot
-                </Typography>
+              {this.state.error &&
+                <Notice error={true} text={this.state.error} />
+              }
+              <Typography variant="caption">
+                Chat with the Linode Support bot to help troubleshoot
+              </Typography>
             </div>
           </Grid>
           <Grid item xs={12} sm={6}>
