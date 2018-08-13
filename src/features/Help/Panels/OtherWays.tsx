@@ -75,7 +75,7 @@ interface State {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 export class OtherWays extends React.Component<CombinedProps, State> {
-  state: State = {};
+  state: State = { };
 
   ada: any = undefined;
 
@@ -97,6 +97,7 @@ export class OtherWays extends React.Component<CombinedProps, State> {
       this.setState({ error: 'There was an issue loading the chat at this time. Please try again later.' })
       return;
     }
+    this.setState({ error: '' })
     this.ada.show();
   }
 
