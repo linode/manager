@@ -154,7 +154,11 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
   };
 
   loadTicketAndReplies = () => {
-    Bluebird.join(this.loadTicket(), this.loadReplies(), this.handleJoinedPromise);
+    Bluebird.join(this.loadTicket(), this.loadReplies(), this.handleJoinedPromise)
+      .catch((err) => {
+        const error = [{ "reason": "Ticket not found." }]
+        this.setState({ loading: false, errors: pathOr(error, ['response', 'data', 'errors'], err)});
+      });
   }
 
   onBackButtonClick = () => {
