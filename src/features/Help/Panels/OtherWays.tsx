@@ -37,7 +37,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     marginBottom: theme.spacing.unit * 4,
   },
   card: {
-    textAlign: 'center',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
     backgroundColor: theme.color.white,
     padding: theme.spacing.unit * 4,
     border: `1px solid ${theme.color.grey2}`,
