@@ -12,9 +12,12 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import Logo from 'src/assets/logo/logo-text.svg';
 import Grid from 'src/components/Grid';
 import Toggle from 'src/components/Toggle';
+
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
 
-type PrimaryLink = {
+import { getAccountSettings } from 'src/services/account';
+
+interface PrimaryLink {
   display: string,
   href: string,
 };
@@ -175,6 +178,7 @@ interface State {
   expandedMenus: {
     [key: string]: boolean;
   };
+  userHasManaged: boolean;
 }
 
 class PrimaryNav extends React.Component<Props, State> {
@@ -184,11 +188,24 @@ class PrimaryNav extends React.Component<Props, State> {
       account: false,
       support: false,
     },
+    userHasManaged: false,
   };
 
   constructor(props: Props) {
     super(props);
   }
+  
+  componentDidMount() {
+    getAccountSettings()
+      .then(data => this.setState({ userHasManaged: data.managed }))
+      /*
+      * Don't really need to do any error handling here since 
+      * the fallback is the Managed navigation tab not rendering 
+      */
+      .catch(e => e);
+  }
+
+  
 
   navigate(href: string) {
     const { history , closeMenu } = this.props;
@@ -202,7 +219,7 @@ class PrimaryNav extends React.Component<Props, State> {
 
   expandMenutItem = (e: React.MouseEvent<HTMLElement>) => {
     const menuName = e.currentTarget.getAttribute('data-menu-name');
-    if (!menuName) return;
+    if (!menuName) { return };
     this.setState({
       expandedMenus: {
         ...this.state.expandedMenus,
@@ -215,29 +232,31 @@ class PrimaryNav extends React.Component<Props, State> {
     this.navigate('/support');
   }
 
-  renderPrimaryLink(PrimaryLink: PrimaryLink) {
+  renderPrimaryLink(primaryLink: PrimaryLink) {
     const { classes } = this.props;
+
+    if (primaryLink.display === 'Managed' && !this.state.userHasManaged) { return; }
 
     return (
       <ListItem
-        key={PrimaryLink.display}
+        key={primaryLink.display}
         button
         divider
         component="li"
         role="menuitem"
         focusRipple={true}
-        onClick={() => this.navigate(PrimaryLink.href)}
+        onClick={() => this.navigate(primaryLink.href)}
         className={`
           ${classes.listItem}
-          ${this.linkIsActive(PrimaryLink.href) && classes.active}
+          ${this.linkIsActive(primaryLink.href) && classes.active}
         `}
       >
         <ListItemText
-          primary={PrimaryLink.display}
+          primary={primaryLink.display}
           disableTypography={true}
           className={`
             ${classes.linkItem}
-            ${this.linkIsActive(PrimaryLink.href) && classes.activeLink}
+            ${this.linkIsActive(primaryLink.href) && classes.activeLink}
           `}
         />
       </ListItem>
