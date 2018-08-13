@@ -340,7 +340,7 @@ class PrimaryNav extends React.Component<Props, State> {
             className={classNames({
               [classes.listItem]: true,
               [classes.collapsible]: true,
-              [classes.active]: this.linkIsActive('/help') === true,
+              [classes.active]: this.linkIsActive('/support') === true,
             })}
           >
             <ListItemText
@@ -349,7 +349,7 @@ class PrimaryNav extends React.Component<Props, State> {
                 [classes.linkItem]: true,
                 [classes.activeLink]:
                   expandedMenus.support
-                  || this.linkIsActive('/help') === true,
+                  || this.linkIsActive('/support') === true,
               })}
             >
               Get Help
