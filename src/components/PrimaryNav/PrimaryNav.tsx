@@ -12,9 +12,11 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import Logo from 'src/assets/logo/logo-text.svg';
 import Grid from 'src/components/Grid';
 import Toggle from 'src/components/Toggle';
-import isPathOneOf from 'src/utilities/routing/isPathOneOf';
 
-type PrimaryLink = {
+import isPathOneOf from 'src/utilities/routing/isPathOneOf';
+import { userHasManagedAPI, userHasManagedLocal } from 'src/utilities/userHasManaged';
+
+interface PrimaryLink {
   display: string,
   href: string,
 };
@@ -204,7 +206,7 @@ class PrimaryNav extends React.Component<Props, State> {
 
   expandMenutItem = (e: React.MouseEvent<HTMLElement>) => {
     const menuName = e.currentTarget.getAttribute('data-menu-name');
-    if (!menuName) return;
+    if (!menuName) { return };
     this.setState({
       expandedMenus: {
         ...this.state.expandedMenus,
@@ -217,30 +219,62 @@ class PrimaryNav extends React.Component<Props, State> {
     this.navigate('/support');
   }
 
-  renderPrimaryLink(PrimaryLink: PrimaryLink) {
+  renderPrimaryLink(primaryLink: PrimaryLink) {
+    if (primaryLink.display === 'Managed') {
+      // does local storage tell us if the customer has managed services?
+      const localStorageManaged = userHasManagedLocal();
+
+      if (localStorageManaged === false) {
+        return <React.Fragment key="placeholder" />
+      }
+
+      /*
+      * local storage value doesn't exist
+      * so make the API call to determine if this
+      * customer has managed
+      */
+      if (localStorageManaged === null) {
+        userHasManagedAPI()
+          .then(hasManaged => {
+            if (hasManaged === false) {
+              return <React.Fragment key="placeholder" />
+            }
+            return this.renderListItem(primaryLink);
+          })
+      }
+    }
+
+    /*
+    * Either we're not looking at the managed nav item
+    * or local storage told us this customer has Managed Services
+    */
+    return this.renderListItem(primaryLink);
+  }
+
+  renderListItem = (primaryLink: PrimaryLink) => {
     const { classes } = this.props;
 
     return (
       <ListItem
-        key={PrimaryLink.display}
+        key={primaryLink.display}
         button
         divider
         component="li"
         role="menuitem"
         focusRipple={true}
-        onClick={() => this.navigate(PrimaryLink.href)}
+        onClick={() => this.navigate(primaryLink.href)}
         className={`
-          ${classes.listItem}
-          ${this.linkIsActive(PrimaryLink.href) && classes.active}
-        `}
+            ${classes.listItem}
+            ${this.linkIsActive(primaryLink.href) && classes.active}
+          `}
       >
         <ListItemText
-          primary={PrimaryLink.display}
+          primary={primaryLink.display}
           disableTypography={true}
           className={`
-            ${classes.linkItem}
-            ${this.linkIsActive(PrimaryLink.href) && classes.activeLink}
-          `}
+              ${classes.linkItem}
+              ${this.linkIsActive(primaryLink.href) && classes.activeLink}
+            `}
         />
       </ListItem>
     );

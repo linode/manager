@@ -198,4 +198,11 @@ export const getNetworkUtilization = () =>
     setURL(`${API_ROOT}/account/transfer`),
     setMethod('GET'),
   )
-  .then(response => response.data);
+    .then(response => response.data);
+
+export const getAccountSettings = () =>
+  Request<Linode.AccountSettings>(
+    setURL(`${API_ROOT}/account/settings`),
+    setMethod('GET')
+  )
+    .then(response => response.data);

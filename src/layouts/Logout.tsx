@@ -19,6 +19,9 @@ export class Logout extends Component<Props> {
     // Reset state
     dispatch(logout());
 
+    // Remove user has managed info from local storage
+    localStorage.removeItem('userHasManaged');
+
     window.location.assign(`${LOGIN_ROOT}/logout`);
   }
 
