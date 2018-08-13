@@ -147,7 +147,7 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
 
   const renderLabel = () => {
     return (
-      <Typography variant="subheading">
+      <Typography role="header" variant="subheading">
         {stackScriptUsername &&
           <label
             htmlFor={`${stackScriptID}`}
@@ -183,6 +183,7 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
         </TableCell>
         <TableCell>
           <Typography
+            role="header"
             variant="subheading"
             data-qa-stackscript-deploys
           >
@@ -190,7 +191,7 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
           </Typography>
         </TableCell>
         <TableCell>
-          <Typography variant="subheading" data-qa-stackscript-revision>{updated}</Typography>
+          <Typography role="header" variant="subheading" data-qa-stackscript-revision>{updated}</Typography>
         </TableCell>
         <TableCell className={classes.stackScriptCell} data-qa-stackscript-images>
           {

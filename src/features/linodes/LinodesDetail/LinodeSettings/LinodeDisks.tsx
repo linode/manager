@@ -141,7 +141,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 16 }}>
           <Grid item>
-            <Typography variant="title" className={classes.headline}>Disks</Typography>
+            <Typography role="header" variant="title" className={classes.headline}>Disks</Typography>
           </Grid>
           <Grid item>
             <AddNewLink onClick={this.openDrawerForCreation} label="Add a Disk" />
@@ -162,7 +162,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
   table = () => {
     const { disks, linodeStatus } = this.props;
     return (
-      <Table>
+      <Table aria-label="List of Disks">
         <TableHead>
           <TableRow>
             <TableCell>Label</TableCell>

@@ -394,6 +394,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
             >
               <Grid item xs={12}>
                 <Typography
+                  role="header"
                   variant="title"
                   data-qa-port-config-header
                 >
@@ -567,6 +568,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 xs={12}
               >
                 <Typography
+                  role="header"
                   variant="title"
                   data-qa-active-checks-header
                 >
@@ -760,6 +762,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
             >
               <Grid item xs={12}>
                 <Typography
+                  role="header"
                   variant="title"
                   data-qa-passive-checks-header
                 >
@@ -806,6 +809,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   }
                 </Grid>
                 <Typography
+                  role="header"
                   variant="title"
                   data-qa-backend-ip-header
                 >

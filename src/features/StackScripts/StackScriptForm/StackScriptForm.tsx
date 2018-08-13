@@ -255,7 +255,7 @@ export class StackScriptForm extends React.Component<CombinedProps> {
                 className={classes.tips}
                 component="div"
               >
-                <Typography variant="title">Tips</Typography>
+                <Typography role="header" variant="title">Tips</Typography>
                 <Typography>There are four default environment variables provided to you:</Typography>
                 <ul>
                   <li>LINODE_ID</li>

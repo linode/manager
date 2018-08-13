@@ -350,6 +350,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       <Grid container>
         <Grid item xs={12}>
           <Typography
+            role="header"
             variant="headline"
             className={this.props.classes.title}
             data-qa-title

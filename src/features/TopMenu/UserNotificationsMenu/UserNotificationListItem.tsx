@@ -114,7 +114,7 @@ const userNotificationListItem: React.StatelessComponent<CombinedProps> = (props
           [classes.innerLink]: Boolean(onClick),
         }
       )}>
-        <Typography variant="subheading" className={classes.innerTitle}>{label}</Typography>
+        <Typography role="header" variant="subheading" className={classes.innerTitle}>{label}</Typography>
         <Typography variant="caption">{message}</Typography>
       </div>
     </ListItem>

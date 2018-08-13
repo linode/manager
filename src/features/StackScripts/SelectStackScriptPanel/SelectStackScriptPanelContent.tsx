@@ -669,7 +669,7 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
                 actionBeingPerfomed={isSearching}
               />
             </div>
-            <Table noOverflow={true} tableClass={classes.table}>
+            <Table aria-label="List of StackScripts" noOverflow={true} tableClass={classes.table}>
               <StackScriptTableHead
                 handleClickTableHeader={this.handleClickTableHeader}
                 sortOrder={sortOrder}
@@ -712,7 +712,15 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
             {(!getMoreStackScriptsFailed)
               ? <Waypoint
                 onEnter={this.getNext}
-              />
+              >
+                {/* 
+                * The reason for this empty div is that there was some wonkiness when
+                * scrolling to the waypoint with trackpads. For some reason, the Waypoint
+                * would never be scrolled into view no matter how much you scrolled on the
+                * trackpad. Especially finicky at zoomed in browser sizes
+                */}
+                <div style={{ minHeight: '150px' }} />
+              </Waypoint>
               : <Button
                 title="Show More StackScripts"
                 onClick={this.getNext}
