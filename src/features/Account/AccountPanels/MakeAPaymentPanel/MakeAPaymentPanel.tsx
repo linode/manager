@@ -2,8 +2,8 @@ import * as classNames from 'classnames';
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 
-// import FormControlLabel from '@material-ui/core/FormControlLabel';
-// import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import RadioGroup from '@material-ui/core/RadioGroup';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
@@ -13,11 +13,14 @@ import ErrorState from 'src/components/ErrorState';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-// import Radio from 'src/components/Radio';
+import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
 import { withAccount } from 'src/features/Account/context';
-import { makePayment } from 'src/services/account';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+
+import { makePayment } from 'src/services/account';
+
+import scriptLoader from 'react-async-script-loader';
 
 type ClassNames = 'root' | 'positive' | 'negative';
 
@@ -59,7 +62,17 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
     ccv: '',
   };
 
-  handleTypeChange = () => null;
+  componentDidMount() {
+    console.log(this.props);
+  }
+
+  componentDidUpdate() {
+    console.log(this.props);
+  }
+
+  handleTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ type: e.target.value as 'CREDIT_CARD' | 'PAYPAL' });
+  }
 
   handleUSDChange = (e: React.ChangeEvent<HTMLInputElement>) => this.setState({ usd: e.target.value || '' });
 
@@ -161,16 +174,16 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
           <Grid item xs={12}>
             {generalError && <Notice error text={generalError} />}
             {success && <Notice success text={`Payment successfully submitted.`} />}
-            {/* <RadioGroup // Hide this choice until PayPal component is completed.
+            <RadioGroup
               aria-label="payment type"
               name="type"
               value={this.state.type}
               onChange={this.handleTypeChange}
               row
             >
-              <FormControlLabel value="CREDIT_CARD" label="Credit Card" control={<Radio disabled />} />
-              <FormControlLabel value="PAYPAL" label="Paypal" control={<Radio disabled />} />
-            </RadioGroup> */}
+              <FormControlLabel value="CREDIT_CARD" label="Credit Card" control={<Radio />} />
+              <FormControlLabel value="PAYPAL" label="Paypal" control={<Radio />} />
+            </RadioGroup>
             <TextField
               errorText={hasErrorFor('usd')}
               label="Amount to Charge"
@@ -180,15 +193,17 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
               type="number"
               placeholder={`1.00`}
             />
-            <TextField
-              errorText={hasErrorFor('ccv')}
-              label="CCV"
-              onChange={this.handleCCVChange}
-              value={this.state.ccv}
-              required
-              type="number"
-              placeholder={`000`}
-            />
+            {this.state.type === 'CREDIT_CARD' &&
+              <TextField
+                errorText={hasErrorFor('ccv')}
+                label="CCV"
+                onChange={this.handleCCVChange}
+                value={this.state.ccv}
+                required
+                type="number"
+                placeholder={`000`}
+              />
+            }
           </Grid>
         </Grid>
       </ExpansionPanel>
@@ -208,9 +223,12 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
         <Button
           type="primary"
           loading={this.state.submitting}
-          onClick={this.submitForm}
+          onClick={() => console.log('payment submitted!')}
         >
-          Confirm Payment
+          {this.state.type === 'PAYPAL'
+            ? 'Proceed to Paypal'
+            : 'Confrm Payment'
+          }
         </Button>
         <Button
           type="cancel"
@@ -232,4 +250,6 @@ const accountContext = withAccount((context) => ({
 
 const enhanced = compose(styled, accountContext);
 
-export default enhanced(MakeAPaymentPanel);
+export default
+  scriptLoader('https://www.paypalobjects.com/api/checkout.js')
+    (enhanced(MakeAPaymentPanel));

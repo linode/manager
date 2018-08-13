@@ -201,3 +201,28 @@ export const getNetworkUtilization = () =>
     setMethod('GET'),
   )
   .then(response => response.data);
+
+interface Paypal {
+  cancel_url: string;
+  redirect_url: string;
+  usd: string;
+}
+
+export const stagePaypalPayment = (data: Paypal) =>
+  Request<any>(
+    setURL(`${API_ROOT}/account/payments/paypal`),
+    setMethod('POST'),
+    setData(data),
+  ).then(response => response.data);
+
+interface Execute {
+  payer_id: string;
+  payment_id: string;
+}
+
+export const executePaypalPayment = (data: Execute) =>
+  Request<any>(
+    setURL(`${API_ROOT}/account/payments/paypal/execute`),
+    setMethod('POST'),
+    setData(data),
+  ).then(response => response.data);
