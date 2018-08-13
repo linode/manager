@@ -25,6 +25,7 @@ const LinodeTheme: Linode.Theme = {
   bg: {
     main: '#f4f4f4',
     offWhite: '#fbfbfb',
+    offWhiteDT: '#fbfbfb', // better handing for dark theme
     navy: '#32363C',
     lightBlue: '#D7E3EF',
     white: '#fff',

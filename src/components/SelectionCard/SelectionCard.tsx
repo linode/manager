@@ -96,11 +96,14 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   },
   innerGrid: {
     width: '100%',
+    height: '100%',
     minHeight: 70,
-    backgroundColor: theme.bg.offWhite,
+    backgroundColor: theme.bg.offWhiteDT,
     border: '1px solid ' + `${theme.bg.main}`,
-    transition: `${'background-color 225ms ease-in-out, '}
-    ${'border-color 225ms ease-in-out'}`,
+    transition: `
+      ${'background-color 225ms ease-in-out, '}
+      ${'border-color 225ms ease-in-out'}
+    `,
     '&:hover': {
       backgroundColor: theme.bg.main,
       borderColor: theme.color.border2,
