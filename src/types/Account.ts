@@ -22,6 +22,12 @@ namespace Linode {
     phone: string;
     company: string;
   }
+
+  export interface AccountSettings {
+    managed: boolean;
+    longview_subscription: string | null;
+    network_helper: boolean;
+  }
   interface CreditCard {
     expiry: string;
     last_four: string;
@@ -74,3 +80,5 @@ namespace Linode {
    quota: number;
   }
 }
+
+
