@@ -305,7 +305,7 @@ export class App extends React.Component<CombinedProps, State> {
                             <Route exact path="/support/tickets" component={SupportTickets} />
                             <Route path="/support/tickets/:ticketId" component={SupportTicketDetail} />
                             <Route path="/profile" component={Profile} />
-                            <Route path="/help" component={Help} />
+                            <Route exact path="/support" component={Help} />
                             <Route path="/dashboard" component={Dashboard} />
                             <Redirect exact from="/" to="/dashboard" />
                             <Route component={NotFound} />
