@@ -4,6 +4,64 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.31.3] - 2018-08-13
+### Added:
+- Account
+    - Update credit card on file
+    - Make a payment
+- Support
+    - View open support tickets
+    - Open a support ticket
+    - View ticket replies
+    - Reply to ticket
+- Polyfill for ES2015+ methods, createImageBitmap
+- Linode Settings
+    - Create image from disk, "Imagize"
+- Get Help
+    - Get Help landing page
+    - Popular Documentation and Community Posts
+    - Ada chat bot
+- Dashboard
+    - Linode services Dashboard
+    - Make Dashboard the default route
+- Add warning for unsupported browser
+### Changed:
+- StackScripts
+    - Added placeholders to User-Defined Fields
+    - Show UDF errors adjacent to each field
+    - Infinite-scroll on Community StackScript selection
+- Linodes
+    - Linodes without IPv6 do not attempt to render ipv6 components
+- Documentation
+    - Summary truncated at 200 characters
+- Volumes
+    - Warn user before they attempt to create a Volume larger than 10TB
+- Confirmation Dialogs
+    - Actions to the right, Power-Off and Reboot not considered destructive
+- Notices
+    - New appearance
+- SelectionCards
+    - Consistent appearance with/without selection
+- Region Names
+    - Format consistently throughout the application
+- TextField Select
+    - Show select icon
+### Fixed:
+- Safari compatibilty with SelectionCard interaction
+- Ripple effect when using Toggle component
+- Domain deletion confirmation no longer flashes "Undefiend"
+- Pressing the spacebar to select a SelectionCard no longer scrolls the page
+- Rebuilding a Linode appears as a transitional state
+- PrimaryNav does not seem to open randomly on window resize
+- Focus state for Toggle components
+- Some instances where functions were not bound to component instance
+- Re-request domains on successful creation
+- Settings helper text language improvements
+- Address spacing in Account settings
+- Some instances where state properties were being read directly
+- LinodeRow plan name does not wrap below status indicator
+- Ability to create a NodeBalancer with a check path of '/'
+
 ## [0.30.1] - 2018-07-26
 ### Fixed:
 - Notification icon position
