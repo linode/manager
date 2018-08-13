@@ -37,6 +37,7 @@ const QRCodeForm: React.StatelessComponent<CombinedProps> = (props) => {
   return (
     <React.Fragment>
       <Typography
+        role="header"
         variant="subheading"
         data-qa-copy
         className={classes.instructions}
@@ -50,9 +51,10 @@ const QRCodeForm: React.StatelessComponent<CombinedProps> = (props) => {
         className={classes.qrcode}
       />
       <Typography
-          variant="subheading"
-          data-qa-copy
-          className={classes.instructions}
+        role="header"
+        variant="subheading"
+        data-qa-copy
+        className={classes.instructions}
       >
         If your TFA app does not have a scanner, you can use this secret key:
       </Typography>

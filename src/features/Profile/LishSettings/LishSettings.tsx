@@ -116,6 +116,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <Paper className={classes.root}>
           <Typography
+            role="header"
             variant="title"
             className={classes.title}
             data-qa-title

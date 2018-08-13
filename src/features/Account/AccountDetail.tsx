@@ -126,13 +126,13 @@ export class AccountDetail extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <AccountProvider value={this.state.account}>
-          <Typography variant="headline" className={classes.heading}>Billing</Typography>
+          <Typography role="header" variant="headline" className={classes.heading}>Billing</Typography>
           <SummaryPanel />
 
-          <Typography variant="title" className={classes.heading}>Billing Account</Typography>
+          <Typography role="header" variant="title" className={classes.heading}>Billing Account</Typography>
           <UpdateContactInformationPanel />
 
-          <Typography variant="title" className={classes.heading}>Billing Information</Typography>
+          <Typography role="header" variant="title" className={classes.heading}>Billing Information</Typography>
           <UpdateCreditCardPanel />
           <MakeAPaymentPanel />
           <RecentInvoicesPanel />

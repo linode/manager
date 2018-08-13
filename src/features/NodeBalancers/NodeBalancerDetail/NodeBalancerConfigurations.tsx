@@ -914,6 +914,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <Typography
+          role="header"
           variant="headline"
           data-qa-title
           className={classes.title}

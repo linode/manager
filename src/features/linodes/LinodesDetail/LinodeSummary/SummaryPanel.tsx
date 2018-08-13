@@ -63,6 +63,7 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
       <Grid container>
         <Grid item xs={12}>
           <Typography
+            role="header"
             variant="headline"
             className={classes.title}
             data-qa-title

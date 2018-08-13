@@ -152,7 +152,7 @@ class DomainDetail extends React.Component<CombinedProps, State> {
             >
               <KeyboardArrowLeft />
             </IconButton>
-            <Typography variant="headline" data-qa-domain-title>{domain.domain}</Typography>
+            <Typography role="header" variant="headline" data-qa-domain-title>{domain.domain}</Typography>
           </Grid>
         </Grid>
         <AppBar position="static" color="default">
