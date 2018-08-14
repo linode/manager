@@ -23,7 +23,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     label: {},
     root: {},
     white: {
-      backgroundColor: 'white',
+      backgroundColor: theme.color.white,
     },
     gray: {
       backgroundColor: '#939598',

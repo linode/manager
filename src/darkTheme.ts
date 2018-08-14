@@ -25,8 +25,9 @@ const LinodeTheme: Linode.Theme = {
   bg: {
     main: '#2F3236',
     offWhite: '#111111',
+    offWhiteDT: '#444', // better handing for dark theme
     navy: '#32363C',
-    lightBlue: '#D7E3EF',
+    lightBlue: '#444',
     white: '#32363C',
   },
   color: {
@@ -37,14 +38,16 @@ const LinodeTheme: Linode.Theme = {
     border1: '#000',
     border2: '#111',
     border3: '#222',
+    borderPagination: '#222222',
     grey1: '#abadaf',
     grey2: 'rgba(0, 0, 0, 0.2)',
-    grey3: '#ccc',
+    grey3: '#999',
     white: '#32363C',
     black: '#fff',
     boxShadow: '#222',
     focusBorder: '#999',
     absWhite: '#000',
+    blueDTwhite: '#fff',
   },
   notificationList: {
     padding: '16px 32px 16px 23px',
@@ -133,6 +136,9 @@ const LinodeTheme: Linode.Theme = {
         '&[aria-expanded="true"]': {
           backgroundColor: primaryColors.dark,
         },
+        '&$disabled': {
+          color: '#888',
+        },
       },
       flat: {
         '&.cancel:hover': {
@@ -147,7 +153,7 @@ const LinodeTheme: Linode.Theme = {
           backgroundColor: primaryColors.dark,
         },
         '&$disabled': {
-          color: 'white',
+          color: '#888',
         },
         '&.cancel': {
           '&:hover, &:focus': {
@@ -224,9 +230,14 @@ const LinodeTheme: Linode.Theme = {
     MuiChip: {
       root: {
         backgroundColor: '#f4f4f4',
-        height: 20,
+        height: 24,
         borderRadius: 4,
-        color: '#555',
+        color: '#fff',
+        '&:hover': {
+          '& $deleteIcon': {
+            color: '#222',
+          },
+        },
       },
       label: {
         paddingLeft: 4,
@@ -238,6 +249,7 @@ const LinodeTheme: Linode.Theme = {
         width: 20,
         height: 20,
         marginLeft: 2,
+        marginRight: 2,
       },
     },
     MuiCircularProgress: {
@@ -382,6 +394,9 @@ const LinodeTheme: Linode.Theme = {
     MuiFormControlLabel: {
       root: {
         marginLeft: -11,
+      },
+      disabled: {
+        color: '#aaa !important',
       },
     },
     MuiFormLabel: {
@@ -536,7 +551,7 @@ const LinodeTheme: Linode.Theme = {
           '& li': {
             color: primaryColors.text,
             '&:hover, &:focus': {
-              color: 'black',
+              color: 'white',
             },
           },
           [breakpoints.down('xs')]: {
@@ -556,15 +571,15 @@ const LinodeTheme: Linode.Theme = {
         transition: `${'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), '}
         ${'color .2s cubic-bezier(0.4, 0, 0.2, 1)'}`,
         '&:hover, &:focus': {
-          backgroundColor: primaryColors.text,
-          color: '#222',
+          backgroundColor: '#444',
+          color: '#fff',
         },
         '& em': {
           fontStyle: 'normal !important',
         },
       },
       selected: {
-        backgroundColor: '#222 !important',
+        backgroundColor: '#444 !important',
         color: `${primaryColors.text} !important`,
         opacity: 1,
         '&:focus': {
@@ -769,7 +784,7 @@ const LinodeTheme: Linode.Theme = {
     MuiTabs: {
       root: {
         margin: '16px 0',
-        boxShadow: 'inset 0 -1px 0 #C5C6C8',
+        boxShadow: 'inset 0 -1px 0 #222',
       },
       fixed: {
         overflowX: 'auto',
@@ -779,9 +794,9 @@ const LinodeTheme: Linode.Theme = {
       tooltip: {
         borderRadius: 0,
         maxWidth: 200,
-        backgroundColor: 'white',
-        boxShadow: '0 0 5px #bbb',
-        color: '#606469',
+        backgroundColor: '#444',
+        boxShadow: '0 0 5px #222',
+        color: '#fff',
         visibility: 'hidden',
         textAlign: 'left',
         width: 0,

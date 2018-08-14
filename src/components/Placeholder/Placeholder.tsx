@@ -50,6 +50,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => ({
       fill: theme.color.absWhite,
       stroke: theme.bg.offWhite,
     },
+    '& .circle': {
+      fill: theme.color.absWhite,
+    },
     '& .insidePath path': {
       opacity: 0,
       animation: 'fadeIn .2s ease-in-out forwards .3s',
