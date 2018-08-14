@@ -65,8 +65,12 @@ class TicketReply extends React.Component<CombinedProps, State> {
     const { onSuccess, ticketId } = this.props;
     const { value, files } = this.state;
 
+    this.setState({
+      submitting: true,
+      errors: [],
+    });
+
     /* Send the reply */
-    this.setState({ submitting: true });
     createReply({ description: value, ticket_id: ticketId })
       .then((response) => {
         onSuccess(response.data);
@@ -74,9 +78,12 @@ class TicketReply extends React.Component<CombinedProps, State> {
       })
       .catch((errors) => {
         const error = [{ 'reason': 'There was an error creating your reply. Please try again.' }];
+        const newErrors = pathOr(error, ['response', 'data', 'errors'], errors);
         this.setState({
-          errors: pathOr(error, ['response', 'data', 'errors'], errors),
-          submitting: false });
+          /* One of the file attachments might finish first so we have spread existing errors */
+          errors: [...(this.state.errors || []), ...newErrors],
+          submitting: false
+        });
       })
 
     /* Send each file */
@@ -86,10 +93,16 @@ class TicketReply extends React.Component<CombinedProps, State> {
       formData.append('file', file.file);
       uploadAttachment(this.props.ticketId, formData)
         .then(() => {
-          console.log('file uploaded successfully');
+          this.setState(set(lensPath(['files', idx, 'uploading']), false));
         })
-        .catch(() => {
-          console.log('file failed to upload');
+        .catch((errors) => {
+          this.setState(set(lensPath(['files', idx, 'uploading']), false));
+          const error = [{ 'reason': 'There was an error attaching this ticket. Please try again.' }];
+          const newErrors = pathOr(error, ['response', 'data', 'errors'], errors);
+          this.setState({
+            /* These file attachments might complete out of order so we have to spread existing errors */
+            errors: [...(this.state.errors || []), ...newErrors],
+          });
         })
     })
   }
