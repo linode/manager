@@ -1,4 +1,4 @@
-import { pathOr } from 'ramda';
+import { pathOr, set, lensPath } from 'ramda';
 import * as React from 'react';
 
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
@@ -10,7 +10,7 @@ import Button from 'src/components/Button';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import { createReply } from 'src/services/support';
+import { createReply, uploadAttachment } from 'src/services/support';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 type ClassNames = 'root' | 'form' | 'attachFileButton';
@@ -34,10 +34,15 @@ interface Props {
   onSuccess: (newReply:Linode.SupportReply) => void;
 }
 
+interface FileAttachment {
+  file: File,
+  uploading: boolean,
+}
+
 interface State {
   value: string;
   submitting: boolean;
-  attachSubmitting: boolean;
+  files: FileAttachment[];
   errors?: Linode.ApiFieldError[];
 }
 
@@ -47,17 +52,22 @@ class TicketReply extends React.Component<CombinedProps, State> {
   state: State = {
     value: '',
     submitting: false,
-    attachSubmitting: false,
+    files: [],
   }
+
+  inputRef = React.createRef<HTMLInputElement>();
 
   handleReplyInput = (e:React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ value: e.target.value });
   }
 
   submitForm = () => {
-    const { onSuccess } = this.props;
+    const { onSuccess, ticketId } = this.props;
+    const { value, files } = this.state;
+
+    /* Send the reply */
     this.setState({ submitting: true });
-    createReply({ description: this.state.value, ticket_id: this.props.ticketId })
+    createReply({ description: value, ticket_id: ticketId })
       .then((response) => {
         onSuccess(response.data);
         this.setState({ submitting: false, value: '' });
@@ -68,15 +78,37 @@ class TicketReply extends React.Component<CombinedProps, State> {
           errors: pathOr(error, ['response', 'data', 'errors'], errors),
           submitting: false });
       })
+
+    /* Send each file */
+    files.map((file, idx) => {
+      this.setState(set(lensPath(['files', idx, 'uploading']), true));
+      const formData = new FormData(); 
+      formData.append('file', file.file);
+      uploadAttachment(this.props.ticketId, formData)
+        .then(() => {
+          console.log('file uploaded successfully');
+        })
+        .catch(() => {
+          console.log('file failed to upload');
+        })
+    })
+  }
+
+  clickAttachButton = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (this.inputRef.current) {
+      this.inputRef.current.click();
+    }
   }
 
   handleFileSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('going to attach a file', e.target.files);
+    if (e.target.files) {
+      console.log('going to attach a file', e.target.files);
+    }
   }
 
   render() {
     const { classes } = this.props;
-    const { errors, submitting, attachSubmitting, value } = this.state;
+    const { errors, submitting, value } = this.state;
 
     const hasErrorFor = getAPIErrorFor({
       description: 'description',
@@ -108,22 +140,21 @@ class TicketReply extends React.Component<CombinedProps, State> {
             Send
           </Button>
           <input
+            ref={this.inputRef}
             type="file"
             id="attach-file"
             style={{ display: 'none' }}
             onChange={this.handleFileSelected}
           />
-          <label htmlFor="attach-file">
-            <Button
-              component="span"
-              className={classes.attachFileButton}
-              type="secondary"
-              loading={attachSubmitting}
-            >
-              <AttachFile />
-              Attach a file
-            </Button>
-          </label>
+          <Button
+            component="span"
+            className={classes.attachFileButton}
+            type="secondary"
+            onClick={this.clickAttachButton}
+          >
+            <AttachFile />
+            Attach a file
+          </Button>
         </ActionsPanel>
       </Grid>
     )
