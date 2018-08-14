@@ -102,7 +102,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
         this.handleClose();
         e.preventDefault();
       },
-      body: `Manage your DNS records and direct web traffic to your Linodes`,
+      body: `Manage your DNS records using Linode’s high-availability name servers`,
       ItemIcon: DomainIcon,
     },
   ];
