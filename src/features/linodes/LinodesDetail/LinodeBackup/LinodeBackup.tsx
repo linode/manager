@@ -576,7 +576,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         {backups.length
           ? <this.Table backups={backups} />
           : <Paper className={classes.paper} data-qa-backup-description>
-            Automatic and manual backups will be listed here
+              <Typography>Automatic and manual backups will be listed here</Typography>
             </Paper>
         }
         <this.SnapshotForm />

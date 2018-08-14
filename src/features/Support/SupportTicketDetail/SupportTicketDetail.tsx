@@ -59,8 +59,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     marginBottom: theme.spacing.unit,
   },
   labelIcon: {
-    marginLeft: -theme.spacing.unit,
     paddingRight: 0,
+    '& .outerCircle': {
+      fill: theme.bg.offWhiteDT,
+      stroke: theme.bg.main,
+    },
+    '& .circle': {
+      stroke: theme.bg.main,
+    },
   },
   listParent: {
   },
@@ -120,6 +126,13 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
     this.loadTicketAndReplies();
   }
 
+  componentDidUpdate(prevProps:CombinedProps, prevState:State) {
+    if (prevProps.match.params.ticketId !== this.props.match.params.ticketId) {
+      this.setState({ loading: true });
+      this.loadTicketAndReplies();
+    }
+  }
+
   loadTicket = () : any => {
     const ticketId = this.props.match.params.ticketId;
     if (!ticketId) { return null; }
@@ -154,7 +167,11 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
   };
 
   loadTicketAndReplies = () => {
-    Bluebird.join(this.loadTicket(), this.loadReplies(), this.handleJoinedPromise);
+    Bluebird.join(this.loadTicket(), this.loadReplies(), this.handleJoinedPromise)
+      .catch((err) => {
+        const error = [{ "reason": "Ticket not found." }]
+        this.setState({ loading: false, errors: pathOr(error, ['response', 'data', 'errors'], err)});
+      });
   }
 
   onBackButtonClick = () => {
@@ -210,7 +227,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
           {icon}
         </Grid>
         <Grid item>
-          {label}
+          <Typography>{label}</Typography>
         </Grid>
       </Grid>
     )

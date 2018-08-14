@@ -33,6 +33,7 @@ type CSSClasses =
   | 'flexContainer'
   | 'cardHeader'
   | 'cardContent'
+  | 'cardLoadingContainer'
   | 'distroIcon'
   | 'rightMargin'
   | 'actionMenu'
@@ -88,6 +89,11 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
       minHeight: 230,
     },
   },
+  cardLoadingContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    height: '100%',
+  },
   distroIcon: {
     marginTop: theme.spacing.unit,
     width: theme.spacing.unit * 3,
@@ -132,7 +138,6 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   },
   loadingStatusText: {
     fontSize: '1.1rem',
-    color: '#444',
     textTransform: 'capitalize',
     position: 'relative',
     top: - theme.spacing.unit * 2,
@@ -232,7 +237,7 @@ class LinodeCard extends React.Component<CombinedProps> {
     const value = (linodeRecentEvent && linodeRecentEvent.percent_complete) || 1;
 
     return (
-      <CardContent className={classes.cardContent}>
+      <CardContent className={`${classes.cardContent} ${classes.cardLoadingContainer}`}>
         <Grid container>
           <Grid item xs={12}>
             <CircleProgress value={value} noTopMargin />

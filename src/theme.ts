@@ -25,6 +25,7 @@ const LinodeTheme: Linode.Theme = {
   bg: {
     main: '#f4f4f4',
     offWhite: '#fbfbfb',
+    offWhiteDT: '#fbfbfb', // better handing for dark theme
     navy: '#32363C',
     lightBlue: '#D7E3EF',
     white: '#fff',
@@ -37,6 +38,7 @@ const LinodeTheme: Linode.Theme = {
     border1: '#ABADAF',
     border2: '#C5C6C8',
     border3: '#eee',
+    borderPagination: '#ccc',
     grey1: '#abadaf',
     grey2: '#E7E7E7',
     grey3: '#ccc',
@@ -45,6 +47,7 @@ const LinodeTheme: Linode.Theme = {
     boxShadow: '#ddd',
     focusBorder: '#999',
     absWhite: '#fff',
+    blueDTwhite: '#3683DC',
   },
   notificationList: {
     padding: '16px 32px 16px 23px',
@@ -133,6 +136,9 @@ const LinodeTheme: Linode.Theme = {
         '&[aria-expanded="true"]': {
           backgroundColor: primaryColors.dark,
         },
+        '&$disabled': {
+          color: '#bbb',
+        },
       },
       flat: {
         '&.cancel:hover': {
@@ -219,20 +225,28 @@ const LinodeTheme: Linode.Theme = {
     MuiChip: {
       root: {
         backgroundColor: '#f4f4f4',
-        height: 20,
+        height: 24,
         borderRadius: 4,
         color: '#555',
+        '&:hover': {
+          '& $deleteIcon': {
+            color: '#222',
+          },
+        },
       },
       label: {
         paddingLeft: 4,
         paddingRight: 4,
         fontSize: '.9rem',
+        position: 'relative',
+        top: -1,
       },
       deleteIcon: {
         color: '#aaa',
         width: 20,
         height: 20,
         marginLeft: 2,
+        marginRight: 2,
       },
     },
     MuiCircularProgress: {

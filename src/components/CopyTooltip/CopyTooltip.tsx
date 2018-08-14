@@ -48,7 +48,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     '&:hover': {
       backgroundColor: theme.palette.text.primary,
       '& svg': {
-        color: 'white',
+        color: theme.color.white,
       },
     },
   },

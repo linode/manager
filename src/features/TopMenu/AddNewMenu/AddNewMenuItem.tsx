@@ -26,14 +26,20 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     display: 'flex',
     alignItems: 'center',
     transition: 'background-color .2s ease-in-out',
+    '& .circle': {
+      fill: theme.bg.offWhiteDT,
+    },
+    '& .outerCircle': {
+      stroke: theme.bg.main,
+    },
     '&:hover': {
-      backgroundColor: theme.bg.offWhite,
+      backgroundColor: theme.bg.offWhiteDT,
       '& .circle': {
         fill: theme.palette.primary.main,
         transition: 'fill .2s ease-in-out .2s',
       },
       '& .outerCircle': {
-        stroke: '#2967B1',
+        stroke: theme.palette.primary.dark,
         strokeDasharray: 1000,
         strokeDashoffset: 1000,
         animation: 'dash 2s linear forwards',

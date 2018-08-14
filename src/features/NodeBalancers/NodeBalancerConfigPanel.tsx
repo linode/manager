@@ -53,7 +53,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     right: 0,
     top: 80,
     padding: 0,
-    boxShadow: `0 0 5px ${theme.color.boxShadow}`,
+    boxShadow: `0 0 10px ${theme.color.boxShadow}`,
     maxHeight: 150,
     overflowY: 'auto',
     width: '100%',
@@ -73,7 +73,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   selectedSuggestionItem: {
     backgroundColor: `${theme.palette.primary.main} !important`,
-    color: `${theme.color.white} !important`,
+    color: '#fff !important',
   },
 });
 

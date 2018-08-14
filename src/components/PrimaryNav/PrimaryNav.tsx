@@ -140,13 +140,11 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     marginTop: 'auto',
     width: 'calc(100% - 20px)',
     justifyContent: 'center',
-    // hidding for now - replace with flex
-    display: 'none',
+    display: 'flex',
   },
   toggle: {
     '& > span:last-child': {
       backgroundColor: '#f4f4f4 !important',
-      /** @todo Had to remove !important */
       opacity: 0.38,
     },
     '&.darkTheme .square': {
