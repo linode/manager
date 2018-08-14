@@ -38,9 +38,10 @@ const LinodeTheme: Linode.Theme = {
     border1: '#000',
     border2: '#111',
     border3: '#222',
+    borderPagination: '#222222',
     grey1: '#abadaf',
     grey2: 'rgba(0, 0, 0, 0.2)',
-    grey3: '#ccc',
+    grey3: '#999',
     white: '#32363C',
     black: '#fff',
     boxShadow: '#222',
@@ -134,6 +135,9 @@ const LinodeTheme: Linode.Theme = {
         },
         '&[aria-expanded="true"]': {
           backgroundColor: primaryColors.dark,
+        },
+        '&$disabled': {
+          color: '#888',
         },
       },
       flat: {
