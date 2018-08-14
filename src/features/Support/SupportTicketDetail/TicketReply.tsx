@@ -1,4 +1,4 @@
-import { pathOr, set, lensPath } from 'ramda';
+import { compose, lensPath, pathOr,  set } from 'ramda';
 import * as React from 'react';
 
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
@@ -35,8 +35,14 @@ interface Props {
 }
 
 interface FileAttachment {
+  name: string,
   file: File,
+  /* Used to keep track of initial upload status */
   uploading: boolean,
+  /* Used to ensure that the file doesn't get uploaded again */
+  uploaded: boolean,
+  /* Each file needs to keep track of its own errors because each request hits the same endpoint */
+  errors?: Linode.ApiFieldError[];
 }
 
 interface State {
@@ -80,29 +86,31 @@ class TicketReply extends React.Component<CombinedProps, State> {
         const error = [{ 'reason': 'There was an error creating your reply. Please try again.' }];
         const newErrors = pathOr(error, ['response', 'data', 'errors'], errors);
         this.setState({
-          /* One of the file attachments might finish first so we have spread existing errors */
-          errors: [...(this.state.errors || []), ...newErrors],
+          errors: newErrors,
           submitting: false
         });
       })
 
     /* Send each file */
     files.map((file, idx) => {
+      if (file.uploaded) { return ; } 
       this.setState(set(lensPath(['files', idx, 'uploading']), true));
       const formData = new FormData(); 
       formData.append('file', file.file);
       uploadAttachment(this.props.ticketId, formData)
         .then(() => {
-          this.setState(set(lensPath(['files', idx, 'uploading']), false));
+          this.setState(compose(
+            /* null out an uploaded file after upload */
+            set(lensPath(['files', idx, 'file']), null),
+            set(lensPath(['files', idx, 'uploading']), false),
+            set(lensPath(['files', idx, 'uploaded']), true),
+          ));
         })
         .catch((errors) => {
           this.setState(set(lensPath(['files', idx, 'uploading']), false));
-          const error = [{ 'reason': 'There was an error attaching this ticket. Please try again.' }];
+          const error = [{ 'reason': 'There was an error attaching this file. Please try again.' }];
           const newErrors = pathOr(error, ['response', 'data', 'errors'], errors);
-          this.setState({
-            /* These file attachments might complete out of order so we have to spread existing errors */
-            errors: [...(this.state.errors || []), ...newErrors],
-          });
+          this.setState(set(lensPath(['files', idx, 'errors']), newErrors));
         })
     })
   }
@@ -115,13 +123,26 @@ class TicketReply extends React.Component<CombinedProps, State> {
 
   handleFileSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      console.log('going to attach a file', e.target.files);
+      this.setState({
+        files: [
+          ...this.state.files,
+          {
+            name: e.target.files[0].name,
+            /* The file! These can be quite big */
+            file: e.target.files[0],
+            /* Used to keep track of initial upload status */
+            uploading: false,
+            /* Used to ensure that the file doesn't get uploaded again */
+            uploaded: false,
+          }
+        ]
+      })
     }
   }
 
   render() {
     const { classes } = this.props;
-    const { errors, submitting, value } = this.state;
+    const { errors, submitting, value, files } = this.state;
 
     const hasErrorFor = getAPIErrorFor({
       description: 'description',
@@ -144,6 +165,17 @@ class TicketReply extends React.Component<CombinedProps, State> {
           onChange={this.handleReplyInput}
           errorText={replyError}
         />
+        {files.map((file) => (
+          file.uploaded
+            ? null /* this file has already been uploaded don't show it */
+            : (
+              <TextField
+                disabled
+                value={file.name}
+                errorText={file.errors && file.errors.length && file.errors[0].reason}
+              />
+            )
+        ))}
         <ActionsPanel style={{ marginTop: 16 }}>
           <Button
             type="primary"
