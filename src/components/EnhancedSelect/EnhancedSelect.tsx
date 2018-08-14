@@ -16,6 +16,7 @@ type ClassNames = 'root'
 const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   root: {
     position: 'relative',
+    width: '100%',
   },
   searchSuggestions: {
     position: 'absolute',
@@ -27,8 +28,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     border: '1px solid #999',
     maxHeight: 192,
     overflowY: 'auto',
-    width: '100%',
-    maxWidth: 415,
+    maxWidth: '100%',
     zIndex: 2,
     marginTop: -2,
     '& .enhancedSelect-menu-item': {
@@ -49,6 +49,7 @@ interface Props {
   placeholder?: string;
   inputValue: string;
   onInputValueChange: (input:string) => void;
+  renderItems?: (items:Item, index:number, highlighted:boolean) => React.ReactElement<any>[];
 }
 
 interface State {}
@@ -56,6 +57,7 @@ interface State {}
 export interface Item {
   value: string;
   label: string;
+  data?: any;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -187,7 +189,9 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
     if ( isHighlighted ) { classes += " enhancedSelect-menu-item-highlighted"; }
     if ( isSelected )    { classes += " enhancedSelect-menu-item-selected"; }
 
-    return (
+    return this.props.renderItems 
+      ? this.props.renderItems(item, index, isHighlighted)
+      :
       <div className={classes}
         key={index} 
         {...itemProps}
@@ -195,7 +199,6 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
       >
         {item.label}
       </div>
-    )
   }
   
   render() {
