@@ -153,7 +153,7 @@ const LinodeTheme: Linode.Theme = {
           backgroundColor: primaryColors.dark,
         },
         '&$disabled': {
-          color: 'white',
+          color: '#888',
         },
         '&.cancel': {
           '&:hover, &:focus': {

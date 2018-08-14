@@ -59,8 +59,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     marginBottom: theme.spacing.unit,
   },
   labelIcon: {
-    marginLeft: -theme.spacing.unit,
     paddingRight: 0,
+    '& .outerCircle': {
+      fill: theme.bg.offWhiteDT,
+      stroke: theme.bg.main,
+    },
+    '& .circle': {
+      stroke: theme.bg.main,
+    },
   },
   listParent: {
   },
@@ -210,7 +216,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
           {icon}
         </Grid>
         <Grid item>
-          {label}
+          <Typography>{label}</Typography>
         </Grid>
       </Grid>
     )
