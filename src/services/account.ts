@@ -208,19 +208,23 @@ interface Paypal {
   usd: string;
 }
 
+interface PaymentID {
+  payment_id: string;
+}
+
 export const stagePaypalPayment = (data: Paypal) =>
-  Request<any>(
+  Request<PaymentID>(
     setURL(`${API_ROOT}/account/payments/paypal`),
     setMethod('POST'),
     setData(data),
   ).then(response => response.data);
 
-interface Execute {
+interface ExecutePayload {
   payer_id: string;
   payment_id: string;
 }
 
-export const executePaypalPayment = (data: Execute) =>
+export const executePaypalPayment = (data: ExecutePayload) =>
   Request<any>(
     setURL(`${API_ROOT}/account/payments/paypal/execute`),
     setMethod('POST'),
