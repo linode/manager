@@ -29,7 +29,6 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     },
   },
   root: {
-    marginBottom: theme.spacing.unit * 2,
     minWidth: 200,
     padding: theme.spacing.unit * 2,
     justifyContent: 'center',
@@ -100,6 +99,8 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     minHeight: 70,
     backgroundColor: theme.bg.offWhiteDT,
     border: '1px solid ' + `${theme.bg.main}`,
+    margin: 0,
+    padding: '0 !important',
     transition: `
       ${'background-color 225ms ease-in-out, '}
       ${'border-color 225ms ease-in-out'}
@@ -107,9 +108,6 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     '&:hover': {
       backgroundColor: theme.bg.main,
       borderColor: theme.color.border2,
-    },
-    [theme.breakpoints.up('sm')]: {
-      padding: 8,
     },
   },
   flex: {
