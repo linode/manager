@@ -102,7 +102,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
         this.handleClose();
         e.preventDefault();
       },
-      body: `Ensure your valuable applications and services are highly-available`,
+      body: `Manage your DNS records and direct web traffic to your Linodes`,
       ItemIcon: DomainIcon,
     },
   ];
@@ -124,9 +124,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
   }
 
   onDomainSuccess = (domain:Linode.Domain) => {
-    const id = domain.id;
-    if (!id) { console.log(`There was an error featuring ${domain}.`)}
-    this.props.history.push(`/domains/${id}`); 
+    this.props.history.push(`/domains/${domain.id}`);
   }
 
   render() {
