@@ -178,7 +178,7 @@ interface State {
   expandedMenus: {
     [key: string]: boolean;
   };
-  userHasManaged: boolean;
+  userHasManaged?: boolean;
 }
 
 class PrimaryNav extends React.Component<Props, State> {
@@ -188,7 +188,7 @@ class PrimaryNav extends React.Component<Props, State> {
       account: false,
       support: false,
     },
-    userHasManaged: false,
+    userHasManaged: undefined,
   };
 
   constructor(props: Props) {
@@ -265,8 +265,12 @@ class PrimaryNav extends React.Component<Props, State> {
 
   render() {
     const { classes, toggleTheme } = this.props;
-    const { expandedMenus } = this.state;
+    const { expandedMenus, userHasManaged } = this.state;
     const themeName = (this.props.theme as any).name;
+
+    if (userHasManaged === undefined) {
+      return null;
+    }
 
     return (
       <React.Fragment>
