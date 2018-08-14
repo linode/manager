@@ -12,11 +12,14 @@ namespace Paypal {
     production: string;
   }
 
+  type Env = 'sandbox' | 'production';
+
   /*
   * Please note. The is not the full list of available props
   * but for our purposes, these are the ones we require
   */
   export interface PayButtonProps {
+    env: Env;
     client: Client,
     onAuthorize: () => void;
     onCancel: () => void;
