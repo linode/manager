@@ -57,7 +57,7 @@ interface State {
 
 interface PaypalScript {
   isScriptLoadSucceed?: boolean;
-  isScriptLoaded: boolean;
+  isScriptLoaded?: boolean;
   onScriptLoaded?: () => void;
 } 
 
@@ -334,7 +334,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
     const balanceDisplay = !accountLoading && balance !== false ? `$${Math.abs(balance).toFixed(2)}` : '';
     return (
       <React.Fragment>
-      <ExpansionPanel defaultExpanded={true} heading="Make a Payment" actions={this.renderActions}>
+      <ExpansionPanel heading="Make a Payment" actions={this.renderActions}>
         <Grid container>
           {/* Current Balance */}
           <Grid item xs={12}>
