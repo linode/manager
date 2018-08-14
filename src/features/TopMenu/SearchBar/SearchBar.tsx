@@ -320,7 +320,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
         /* TODO: Update this with the Images icon! */
         Icon: VolumeIcon,
         /* TODO: Choose a real location for this to link to */
-        path: `/images/${image.id}`,
+        path: `/images`,
       }))));
     }
 

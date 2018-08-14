@@ -297,7 +297,7 @@ export class App extends React.Component<CombinedProps, State> {
                             <Route path="/domains" component={Domains} />
                             <Route exact path="/managed" component={Managed} />
                             <Route exact path="/longview" component={Longview} />
-                            <Route path="/images" component={Images} />
+                            <Route exact path="/images" component={Images} />
                             <Route path="/stackscripts" component={StackScripts} />
                             <Route exact path="/billing" component={Account} />
                             <Route exact path="/billing/invoices/:invoiceId" component={InvoiceDetail} />
