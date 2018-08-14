@@ -77,7 +77,7 @@ type ClassNames = 'root'
     },
     tips: {
       marginLeft: theme.spacing.unit * 4,
-      marginTop: theme.spacing.unit * 4,
+      marginTop: `${theme.spacing.unit * 4}px !important`,
       padding: theme.spacing.unit * 4,
       backgroundColor: theme.palette.divider,
       [theme.breakpoints.down('lg')]: {

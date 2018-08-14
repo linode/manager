@@ -8,21 +8,29 @@ type CSSClasses = 'root';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Linode.Theme) => ({
   root: {
-    backgroundColor: theme.bg.offWhite,
-    border: '1px solid ' + `${theme.color.grey3}`,
+    backgroundColor: theme.bg.offWhiteDT,
+    border: '1px solid ' + `${theme.color.borderPagination}`,
     borderRight: 0,
     padding: theme.spacing.unit,
     minWidth: 40,
     minHeight: 40,
+    color: theme.palette.text.primary,
     '& svg': {
       fontSize: 22,
     },
     '&.active': {
       backgroundColor: theme.bg.main,
-      color: 'black',
+      color: theme.color.black,
     },
     '&:last-child': {
-      borderRight: '1px solid ' + `${theme.color.grey3}`,
+      borderRight: '1px solid ' + `${theme.color.borderPagination}`,
+    },
+    '&:hover': {
+      backgroundColor: theme.palette.primary.main,
+      color: '#fff',
+    },
+    '&$disabled': {
+      color: '#ccc',
     },
   },
 });
