@@ -37,7 +37,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     ${'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'}`,
     '&:hover, &:focus': {
       backgroundColor: theme.palette.primary.main,
-      color: 'white',
+      color: theme.color.headline,
     },
   },
   button: {
