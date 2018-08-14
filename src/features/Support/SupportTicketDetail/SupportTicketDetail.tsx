@@ -120,6 +120,13 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
     this.loadTicketAndReplies();
   }
 
+  componentDidUpdate(prevProps:CombinedProps, prevState:State) {
+    if (prevProps.match.params.ticketId !== this.props.match.params.ticketId) {
+      this.setState({ loading: true });
+      this.loadTicketAndReplies();
+    }
+  }
+
   loadTicket = () : any => {
     const ticketId = this.props.match.params.ticketId;
     if (!ticketId) { return null; }
