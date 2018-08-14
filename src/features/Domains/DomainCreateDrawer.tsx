@@ -30,7 +30,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 interface Props {
   open: boolean;
   onClose: () => void;
-  onSuccess: () => void;
+  onSuccess: (domain?:Linode.Domain) => void;
   mode: 'clone' | 'create';
   cloneID?: number;
   domain?: string;
@@ -224,7 +224,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
     createDomain(data)
       .then((res) => {
         this.reset();
-        onSuccess();
+        onSuccess(res.data);
         onClose();
       })
       .catch((err) => {

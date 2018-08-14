@@ -186,6 +186,10 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
     });
   }
 
+  handleSuccess = () => {
+    this.getDomains();
+  }
+
   getActions = () => {
     return (
       <ActionsPanel>
@@ -234,7 +238,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
         mode={this.state.createDrawer.mode}
         domain={this.state.createDrawer.domain}
         cloneID={this.state.createDrawer.cloneID}
-        onSuccess={this.getDomains}
+        onSuccess={this.handleSuccess}
       />
     );
   }
