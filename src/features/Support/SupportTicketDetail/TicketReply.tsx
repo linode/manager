@@ -3,6 +3,7 @@ import * as React from 'react';
 
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import AttachFile from '@material-ui/icons/AttachFile';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -12,7 +13,7 @@ import TextField from 'src/components/TextField';
 import { createReply } from 'src/services/support';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
-type ClassNames = 'root' | 'form';
+type ClassNames = 'root' | 'form' | 'attachFileButton';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
@@ -22,6 +23,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     minWidth: '100% !important',
     width: '100vw !important',
   },
+  attachFileButton: {
+    paddingLeft: 14,
+    paddingRight: 20,
+  }
 });
 
 interface Props {
@@ -32,6 +37,7 @@ interface Props {
 interface State {
   value: string;
   submitting: boolean;
+  attachSubmitting: boolean;
   errors?: Linode.ApiFieldError[];
 }
 
@@ -41,6 +47,7 @@ class TicketReply extends React.Component<CombinedProps, State> {
   state: State = {
     value: '',
     submitting: false,
+    attachSubmitting: false,
   }
 
   handleReplyInput = (e:React.ChangeEvent<HTMLInputElement>) => {
@@ -63,9 +70,13 @@ class TicketReply extends React.Component<CombinedProps, State> {
       })
   }
 
+  handleFileSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('going to attach a file', e.target.files);
+  }
+
   render() {
     const { classes } = this.props;
-    const { errors, submitting, value } = this.state;
+    const { errors, submitting, attachSubmitting, value } = this.state;
 
     const hasErrorFor = getAPIErrorFor({
       description: 'description',
@@ -96,6 +107,23 @@ class TicketReply extends React.Component<CombinedProps, State> {
           >
             Send
           </Button>
+          <input
+            type="file"
+            id="attach-file"
+            style={{ display: 'none' }}
+            onChange={this.handleFileSelected}
+          />
+          <label htmlFor="attach-file">
+            <Button
+              component="span"
+              className={classes.attachFileButton}
+              type="secondary"
+              loading={attachSubmitting}
+            >
+              <AttachFile />
+              Attach a file
+            </Button>
+          </label>
         </ActionsPanel>
       </Grid>
     )
