@@ -106,6 +106,10 @@ class TicketReply extends React.Component<CombinedProps, State> {
             set(lensPath(['files', idx, 'uploaded']), true),
           ));
         })
+        /* 
+         * Note! We want the first few uploads to succeed even if the last few
+         * fail! Don't try to aggregate errors!
+         */
         .catch((errors) => {
           this.setState(set(lensPath(['files', idx, 'uploading']), false));
           const error = [{ 'reason': 'There was an error attaching this file. Please try again.' }];
@@ -140,6 +144,11 @@ class TicketReply extends React.Component<CombinedProps, State> {
     }
   }
 
+  removeFile = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (!e.target) { return ; }
+    const idx = e.currentTarget.getAttribute('');
+  }
+
   render() {
     const { classes } = this.props;
     const { errors, submitting, value, files } = this.state;
@@ -165,15 +174,22 @@ class TicketReply extends React.Component<CombinedProps, State> {
           onChange={this.handleReplyInput}
           errorText={replyError}
         />
-        {files.map((file) => (
+        {files.map((file, idx) => (
           file.uploaded
-            ? null /* this file has already been uploaded don't show it */
+            ? null /* this file has already been uploaded so don't show it */
             : (
-              <TextField
-                disabled
-                value={file.name}
-                errorText={file.errors && file.errors.length && file.errors[0].reason}
-              />
+              <React.Fragment>
+                <TextField
+                  disabled
+                  value={file.name}
+                  errorText={file.errors && file.errors.length && file.errors[0].reason}
+                />
+                <Button
+                  type="remove"
+                  data-file-idx={idx}
+                  onClick={this.removeFile}
+                />
+              </React.Fragment>
             )
         ))}
         <ActionsPanel style={{ marginTop: 16 }}>
