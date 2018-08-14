@@ -46,6 +46,7 @@ const LinodeTheme: Linode.Theme = {
     boxShadow: '#222',
     focusBorder: '#999',
     absWhite: '#000',
+    blueDTwhite: '#fff',
   },
   notificationList: {
     padding: '16px 32px 16px 23px',
