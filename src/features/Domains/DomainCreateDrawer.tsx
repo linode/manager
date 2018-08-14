@@ -95,6 +95,11 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
         open={open}
         onClose={this.closeDrawer}
       >
+        {generalError &&
+          <Notice error spacingTop={8}>
+            {generalError}
+          </Notice>
+        }
         <RadioGroup
           aria-label="type"
           name="type"
@@ -154,11 +159,6 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
               left
             />
           </React.Fragment>
-        }
-        {generalError &&
-          <Notice error>
-            generalError
-          </Notice>
         }
         <ActionsPanel>
           {!submitting
