@@ -139,7 +139,7 @@ const typeMap = {
 };
 
 const evenize = (n: number): number => {
-  if (n === 0) return n;
+  if (n === 0) { return n; }
   return (n % 2 === 0) ? n : n - 1;
 };
 
@@ -150,7 +150,7 @@ export const aggregateBackups = (backups: Linode.LinodeBackupsResponse): Linode.
   return backups && [...backups.automatic!, manualSnapshot!].filter(b => Boolean(b));
 };
 
-export function formatBackupDate(backupDate: string) {
+export const formatBackupDate = (backupDate: string) => {
   return moment.utc(backupDate).local().fromNow();
 }
 
@@ -197,6 +197,8 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
             /* @todo: how do we want to display this error? */
           });
       });
+    const { enableOnLoad } = pathOr(false, ['location','state'], this.props);
+    if (enableOnLoad) { this.enableBackups(); }
   }
 
   componentWillUnmount() {
@@ -239,7 +241,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     ];
   }
 
-  enableBackups() {
+  enableBackups = () => {
     const { linodeID } = this.props;
     enableBackups(linodeID)
       .then(() => {
@@ -337,6 +339,11 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     this.setState({ cancelBackupsAlertOpen: true });
   }
 
+  handleRestoreSubmit = () => {
+    this.closeRestoreDrawer();
+    sendToast('Backup restore started');
+  }
+
   Placeholder = (): JSX.Element | null => {
     const backupsMonthlyPrice = path<number>(
       ['type', 'response', 'addons', 'backups', 'price'],
@@ -376,7 +383,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
                 <TableCell>Duration</TableCell>
                 <TableCell>Disks</TableCell>
                 <TableCell>Space Required</TableCell>
-                <TableCell></TableCell>
+                <TableCell />
               </TableRow>
             </TableHead>
             <TableBody>
@@ -604,10 +611,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
           backupID={this.state.restoreDrawer.backupID}
           backupCreated={this.state.restoreDrawer.backupCreated}
           onClose={this.closeRestoreDrawer}
-          onSubmit={() => {
-            this.closeRestoreDrawer();
-            sendToast('Backup restore started');
-          }}
+          onSubmit={this.handleRestoreSubmit}
         />
         <ConfirmationDialog
           title="Confirm Cancellation"
