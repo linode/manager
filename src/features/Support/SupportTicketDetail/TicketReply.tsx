@@ -8,12 +8,21 @@ import AttachFile from '@material-ui/icons/AttachFile';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Grid from 'src/components/Grid';
+import LinearProgress from 'src/components/LinearProgress';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { createReply, uploadAttachment } from 'src/services/support';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
-type ClassNames = 'root' | 'form' | 'attachFileButton';
+type ClassNames =
+  'root'
+  | 'form'
+  | 'attachFileButton'
+  | 'attachmentsContainer'
+  | 'attachmentField'
+  | 'removeButton'
+  | 'replyField'
+  | 'uploadProgress';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
@@ -26,6 +35,26 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   attachFileButton: {
     paddingLeft: 14,
     paddingRight: 20,
+  },
+  attachmentsContainer: {
+    maxWidth: 800,
+  },
+  attachmentField: {
+    width: 415,
+    [theme.breakpoints.down('xs')]: {
+      width: 165,
+    },
+  },
+  removeButton: {
+    marginTop: theme.spacing.unit * 2,
+  },
+  replyField: {
+    '& > div': {
+      maxWidth: '800px !important',
+    },
+  },
+  uploadProgress: {
+    maxWidth: 415,
   }
 });
 
@@ -82,6 +111,35 @@ class TicketReply extends React.Component<CombinedProps, State> {
         onSuccess(response.data);
         this.setState({ submitting: false, value: '' });
       })
+      .then(() => {
+        /* Make sure the reply will go through before attaching files */
+        /* Send each file */
+        files.map((file, idx) => {
+          if (file.uploaded) { return ; } 
+          this.setState(set(lensPath(['files', idx, 'uploading']), true));
+          const formData = new FormData(); 
+          formData.append('file', file.file);
+          uploadAttachment(this.props.ticketId, formData)
+            .then(() => {
+              this.setState(compose(
+                /* null out an uploaded file after upload */
+                set(lensPath(['files', idx, 'file']), null),
+                set(lensPath(['files', idx, 'uploading']), false),
+                set(lensPath(['files', idx, 'uploaded']), true),
+              ));
+            })
+            /* 
+            * Note! We want the first few uploads to succeed even if the last few
+            * fail! Don't try to aggregate errors!
+            */
+            .catch((errors) => {
+              this.setState(set(lensPath(['files', idx, 'uploading']), false));
+              const error = [{ 'reason': 'There was an error attaching this file. Please try again.' }];
+              const newErrors = pathOr(error, ['response', 'data', 'errors'], errors);
+              this.setState(set(lensPath(['files', idx, 'errors']), newErrors));
+            })
+        })
+      })
       .catch((errors) => {
         const error = [{ 'reason': 'There was an error creating your reply. Please try again.' }];
         const newErrors = pathOr(error, ['response', 'data', 'errors'], errors);
@@ -90,33 +148,6 @@ class TicketReply extends React.Component<CombinedProps, State> {
           submitting: false
         });
       })
-
-    /* Send each file */
-    files.map((file, idx) => {
-      if (file.uploaded) { return ; } 
-      this.setState(set(lensPath(['files', idx, 'uploading']), true));
-      const formData = new FormData(); 
-      formData.append('file', file.file);
-      uploadAttachment(this.props.ticketId, formData)
-        .then(() => {
-          this.setState(compose(
-            /* null out an uploaded file after upload */
-            set(lensPath(['files', idx, 'file']), null),
-            set(lensPath(['files', idx, 'uploading']), false),
-            set(lensPath(['files', idx, 'uploaded']), true),
-          ));
-        })
-        /* 
-         * Note! We want the first few uploads to succeed even if the last few
-         * fail! Don't try to aggregate errors!
-         */
-        .catch((errors) => {
-          this.setState(set(lensPath(['files', idx, 'uploading']), false));
-          const error = [{ 'reason': 'There was an error attaching this file. Please try again.' }];
-          const newErrors = pathOr(error, ['response', 'data', 'errors'], errors);
-          this.setState(set(lensPath(['files', idx, 'errors']), newErrors));
-        })
-    })
   }
 
   clickAttachButton = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -145,8 +176,13 @@ class TicketReply extends React.Component<CombinedProps, State> {
   }
 
   removeFile = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (!e.target) { return ; }
-    const idx = e.currentTarget.getAttribute('');
+    if (!e.target) { return; }
+    const aidx = e.currentTarget.getAttribute('data-file-idx');
+    if (!aidx) { return; }
+    const idx = +aidx;
+    this.setState({
+      files: this.state.files.filter((_, i) => i !== idx),
+    });
   }
 
   render() {
@@ -167,6 +203,7 @@ class TicketReply extends React.Component<CombinedProps, State> {
         </Typography>
         {generalError && <Notice error spacingBottom={8} spacingTop={8} text={generalError} />}
         <TextField
+          className={classes.replyField}
           multiline
           rows={5}
           value={value}
@@ -179,16 +216,29 @@ class TicketReply extends React.Component<CombinedProps, State> {
             ? null /* this file has already been uploaded so don't show it */
             : (
               <React.Fragment>
-                <TextField
-                  disabled
-                  value={file.name}
-                  errorText={file.errors && file.errors.length && file.errors[0].reason}
-                />
-                <Button
-                  type="remove"
-                  data-file-idx={idx}
-                  onClick={this.removeFile}
-                />
+                <Grid container className={classes.attachmentsContainer}>
+                  <Grid item>
+                    <TextField
+                      className={classes.attachmentField}
+                      disabled
+                      value={file.name}
+                      errorText={file.errors && file.errors.length && file.errors[0].reason}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Button
+                      className={classes.removeButton}
+                      type="remove"
+                      data-file-idx={idx}
+                      onClick={this.removeFile}
+                    />
+                  </Grid>
+                  {file.uploading &&
+                    <Grid item xs={12}>
+                      <LinearProgress className={classes.uploadProgress} variant="indeterminate"/>
+                    </Grid>
+                  }
+                </Grid>
               </React.Fragment>
             )
         ))}
