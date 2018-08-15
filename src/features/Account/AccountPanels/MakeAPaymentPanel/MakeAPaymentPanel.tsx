@@ -25,7 +25,10 @@ import { executePaypalPayment, makePayment, stagePaypalPayment }
 
 import scriptLoader from 'react-async-script-loader';
 
-type ClassNames = 'root' | 'positive' | 'negative';
+type ClassNames = 'root'
+  | 'positive'
+  | 'negative'
+  | 'actionPanel';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {},
@@ -34,6 +37,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   negative: {
     color: theme.color.red,
+  },
+  actionPanel: {
+    display: 'flex',
+    alignItems: 'center',
+    flexWrap: 'wrap',
   },
 });
 
@@ -430,8 +438,9 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
   }
 
   renderActions = () => {
+    const { classes } = this.props;
     return (
-      <ActionsPanel>
+      <ActionsPanel className={classes.actionPanel}>
         {this.state.type === 'PAYPAL' && this.state.showPaypal
           // @Alban: I ran into issues when wrapping the Paypal
           // button in a MUI Button component
