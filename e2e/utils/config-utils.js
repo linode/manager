@@ -41,7 +41,7 @@ exports.readToken = () => {
 * @returns {null} returns nothing
 */
 exports.login = (username, password) => {
-    browser.url(constants.routes.dashboard);
+    browser.url(constants.routes.linodes);
     try {
         browser.waitForVisible('#username', constants.wait.long);
     } catch (err) {

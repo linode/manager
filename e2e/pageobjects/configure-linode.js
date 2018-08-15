@@ -122,7 +122,7 @@ class ConfigureLinode extends Page {
     }
 
     baseDisplay() {
-        expect(this.createHeader.waitForVisible()).toBe(true);
+        expect(this.createHeader.waitForVisible(constants.wait.normal)).toBe(true);
 
         expect(this.createFromImage.isVisible()).toBe(true);
         expect(this.createFromBackup.isVisible()).toBe(true);

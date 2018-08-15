@@ -134,13 +134,10 @@ describe('Profile - OAuth Clients Suite', () => {
 
         it('should display new secret on reset', () => {
             profile.selectActionMenu(editedClient.label, 'Reset Secret');
-            browser.waitForVisible(dialogTitle);
+            browser.waitForVisible(dialogTitle, constants.wait.normal);
             $(dialogConfirm).click();
 
-            browser.waitUntil(function() {
-                browser.waitForVisible(dialogTitle);
-                return browser.getText(dialogTitle).includes('Client Secret');
-            }, constants.wait.short);
+            profile.waitForNotice(/\w\d/, constants.wait.normal);
 
             const content = $(dialogContent).getText();
             expect(content).toContain('Here is your client secret! Store it securely, as it won\'t be shown again.');

@@ -3,6 +3,7 @@ const { constants } = require('../../constants');
 import Page from '../page';
 
 class Settings extends Page {
+    get header() { return $('[data-qa-settings-header]'); }
     get actionPanels() { return $$('[data-qa-panel-summary]'); }
     get actionPanelSubheading() { return $('[data-qa-panel-subheading]'); }
     get delete() { return $('[data-qa-delete-linode]'); }

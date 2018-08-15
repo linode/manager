@@ -22,6 +22,7 @@ export default class Page {
     get addNodeBalancerMenu() { return $('[data-qa-add-new-menu="NodeBalancer"]'); }
     get notice() { return $('[data-qa-notice]'); }
     get notices() { return $$('[data-qa-notice]'); }
+    get panels() { return $$('[data-qa-panel-summary]'); }
     get progressBar() { return $('[data-qa-circle-progress]'); }
     get actionMenu() { return $('[data-qa-action-menu]'); }
     get actionMenuItem() { return $('[data-qa-action-menu-item]'); }
@@ -62,8 +63,21 @@ export default class Page {
         browser.waitForVisible(`[data-value="${selectOption}"]`, constants.wait.normal, true);
     }
 
+    expandPanels(numberOfPanels) {
+        browser.waitUntil(function() {
+            return $$('[data-qa-panel-summary]').length === numberOfPanels
+        }, constants.wait.normal);
+        
+        this.panels.forEach(panel => {
+            panel.click();
+            // throttle expanding panels with a pause
+            browser.pause(500);
+        });
+
+    }
+
     selectGlobalCreateItem(menuItem) {
-        this.globalCreate.waitForVisible();
+        this.globalCreate.waitForVisible(constants.wait.normal);
         this.globalCreate.click();
         browser.waitForVisible('[data-qa-add-new-menu]', constants.wait.normal);
         browser.click(`[data-qa-add-new-menu="${menuItem}"]`);
