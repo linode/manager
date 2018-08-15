@@ -36,6 +36,7 @@ const primaryLinks: PrimaryLink[] = [
 
 type ClassNames =
   'menuGrid'
+  | 'fadeContainer'
   | 'logoItem'
   | 'listItem'
   | 'collapsible'
@@ -65,6 +66,9 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     [theme.breakpoints.up('md')]: {
       minHeight: 80,
     },
+  },
+  fadeContainer: {
+    width: '100%',
   },
   logoItem: {
     padding: '10px 0 8px 26px',
@@ -268,10 +272,6 @@ class PrimaryNav extends React.Component<Props, State> {
     const { expandedMenus, userHasManaged } = this.state;
     const themeName = (this.props.theme as any).name;
 
-    if (userHasManaged === undefined) {
-      return null;
-    }
-
     return (
       <React.Fragment>
         <Grid
@@ -292,118 +292,128 @@ class PrimaryNav extends React.Component<Props, State> {
             </Link>
             </div>
           </Grid>
-          
-          {primaryLinks.map(primaryLink => this.renderPrimaryLink(primaryLink))}
 
-          <ListItem
-            data-menu-name="account"
-            focusRipple={true}
-            button
-            component="li"
-            role="menuitem"
-            onClick={this.expandMenutItem}
-            className={classNames({
-              [classes.listItem]: true,
-              [classes.collapsible]: true,
-            })}
-          >
-            <ListItemText
-              disableTypography={true}
+          {userHasManaged !== undefined &&
+          <div className={classNames(
+            'fade-in-table',
+            {
+              [classes.fadeContainer]: true,
+            }
+          )}>
+
+            {primaryLinks.map(primaryLink => this.renderPrimaryLink(primaryLink))}
+
+            <ListItem
+              data-menu-name="account"
+              focusRipple={true}
+              button
+              component="li"
+              role="menuitem"
+              onClick={this.expandMenutItem}
               className={classNames({
-                [classes.linkItem]: true,
-                [classes.activeLink]:
-                  expandedMenus.account
-                  || this.linkIsActive('/billing') === true
-                  || this.linkIsActive('/users') === true,
+                [classes.listItem]: true,
+                [classes.collapsible]: true,
               })}
             >
-              <KeyboardArrowRight className={classes.arrow} />
-              Account
-            </ListItemText>
-          </ListItem>
-          <Collapse
-            in={expandedMenus.account
-                || (this.linkIsActive('/billing') === true)
-                || (this.linkIsActive('/users') === true)}
-            timeout="auto"
-            component="ul"
-            unmountOnExit
-            className={classes.sublinkPanel}
-          >
-            <li role="menuitem">
-              <Link
-                to="/billing"
+              <ListItemText
+                disableTypography={true}
                 className={classNames({
-                  [classes.sublink]: true,
-                  [classes.sublinkActive]: this.linkIsActive('/billing') === true,
+                  [classes.linkItem]: true,
+                  [classes.activeLink]:
+                    expandedMenus.account
+                    || this.linkIsActive('/billing') === true
+                    || this.linkIsActive('/users') === true,
                 })}
               >
-                Account &amp; Billing
-              </Link>
-            </li>
-            <li role="menuitem">
-              <Link
-                to="/users"
-                className={classNames({
-                  [classes.sublink]: true,
-                  [classes.sublinkActive]: this.linkIsActive('/users') === true,
-                })}
-              >
-                Users
-              </Link>
-            </li>
-          </Collapse>
-
-          <ListItem
-            button
-            focusRipple={true}
-            onClick={this.goToHelp}
-            className={classNames({
-              [classes.listItem]: true,
-              [classes.collapsible]: true,
-              [classes.active]: this.linkIsActive('/support') === true,
-            })}
-          >
-            <ListItemText
-              disableTypography={true}
+                <KeyboardArrowRight className={classes.arrow} />
+                Account
+              </ListItemText>
+            </ListItem>
+            <Collapse
+              in={expandedMenus.account
+                  || (this.linkIsActive('/billing') === true)
+                  || (this.linkIsActive('/users') === true)}
+              timeout="auto"
+              component="ul"
+              unmountOnExit
+              className={classes.sublinkPanel}
+            >
+              <li role="menuitem">
+                <Link
+                  to="/billing"
+                  className={classNames({
+                    [classes.sublink]: true,
+                    [classes.sublinkActive]: this.linkIsActive('/billing') === true,
+                  })}
+                >
+                  Account &amp; Billing
+                </Link>
+              </li>
+              <li role="menuitem">
+                <Link
+                  to="/users"
+                  className={classNames({
+                    [classes.sublink]: true,
+                    [classes.sublinkActive]: this.linkIsActive('/users') === true,
+                  })}
+                >
+                  Users
+                </Link>
+              </li>
+            </Collapse>
+  
+            <ListItem
+              button
+              focusRipple={true}
+              onClick={this.goToHelp}
               className={classNames({
-                [classes.linkItem]: true,
-                [classes.activeLink]:
-                  expandedMenus.support
-                  || this.linkIsActive('/support') === true,
+                [classes.listItem]: true,
+                [classes.collapsible]: true,
+                [classes.active]: this.linkIsActive('/support') === true,
               })}
             >
-              Get Help
-            </ListItemText>
-          </ListItem>
-
-          <div className={classes.spacer} />
-
-          <div className={classes.switchWrapper}>
-            <span className={`
-              ${classes.switchText}
-              ${themeName === 'lightTheme' ? 'active' : ''}
-            `}>
-              Light
-            </span>
-            <Toggle
-              onChange={() => toggleTheme()}
-              checked={themeName !== 'lightTheme'}
-              className={`
-                ${classes.toggle}
-                ${themeName}
-              `}
-            />
-            <span
-              className={`
+              <ListItemText
+                disableTypography={true}
+                className={classNames({
+                  [classes.linkItem]: true,
+                  [classes.activeLink]:
+                    expandedMenus.support
+                    || this.linkIsActive('/support') === true,
+                })}
+              >
+                Get Help
+              </ListItemText>
+            </ListItem>
+  
+            <div className={classes.spacer} />
+  
+            <div className={classes.switchWrapper}>
+              <span className={`
                 ${classes.switchText}
-                ${themeName === 'darkTheme' ? 'active' : ''}
-              `}
-              style={{ marginLeft: 4 }}
-            >
-              Dark
-            </span>
+                ${themeName === 'lightTheme' ? 'active' : ''}
+              `}>
+                Light
+              </span>
+              <Toggle
+                onChange={() => toggleTheme()}
+                checked={themeName !== 'lightTheme'}
+                className={`
+                  ${classes.toggle}
+                  ${themeName}
+                `}
+              />
+              <span
+                className={`
+                  ${classes.switchText}
+                  ${themeName === 'darkTheme' ? 'active' : ''}
+                `}
+                style={{ marginLeft: 4 }}
+              >
+                Dark
+              </span>
+            </div>
           </div>
+          }
         </Grid>
       </React.Fragment>
     );
