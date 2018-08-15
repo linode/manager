@@ -7,6 +7,7 @@ import { RouteComponentProps } from 'react-router-dom';
 
 import Chip from '@material-ui/core/Chip';
 import IconButton from '@material-ui/core/IconButton';
+import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
@@ -238,6 +239,13 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
     )
   }
 
+  renderAttachments = (attachments: string[]) => {
+    return (
+      <Paper>
+      </Paper>
+    );
+  }
+
   renderReplies = (replies: Linode.SupportReply[]) => {
     return replies.map((reply: Linode.SupportReply, idx: number) => {
       return <ExpandableTicketPanel
@@ -309,6 +317,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
             isCurrentUser={profileUsername === ticket.opened_by}
           />
           {replies && this.renderReplies(replies)}
+          {ticket.attachments && this.renderAttachments(ticket.attachments)}
           {/* If the ticket is open, allow users to reply to it. */}
           {['open','new'].includes(ticket.status) &&
             <TicketReply 

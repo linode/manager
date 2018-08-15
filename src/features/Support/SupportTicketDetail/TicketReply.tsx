@@ -215,7 +215,7 @@ class TicketReply extends React.Component<CombinedProps, State> {
           file.uploaded
             ? null /* this file has already been uploaded so don't show it */
             : (
-              <React.Fragment>
+              <React.Fragment key={idx}>
                 <Grid container className={classes.attachmentsContainer}>
                   <Grid item>
                     <TextField
