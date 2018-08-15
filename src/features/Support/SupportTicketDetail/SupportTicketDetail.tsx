@@ -10,7 +10,10 @@ import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import InsertDriveFile from '@material-ui/icons/InsertDriveFile';
+import InsertPhoto from '@material-ui/icons/InsertPhoto';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
+
 
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
@@ -37,7 +40,8 @@ type ClassNames = 'root'
   | 'status'
   | 'open'
   | 'ticketLabel'
-  | 'closed';
+  | 'closed'
+  | 'attachmentPaper';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {},
@@ -87,6 +91,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   closed: {
     backgroundColor: theme.color.red,
   },
+  attachmentPaper: {
+    padding: theme.spacing.unit * 2,
+    maxWidth: 500,
+  }
 });
 
 type RouteProps = RouteComponentProps<{ ticketId?: number }>;
@@ -240,9 +248,44 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
   }
 
   renderAttachments = (attachments: string[]) => {
+    const { classes } = this.props;
+
+    // create an array of icons to use
+    const icons = attachments.map((attachment, idx) => {
+      // try to find a file extension
+      const lastDotIndex = attachment.lastIndexOf('.');
+      const ext = attachment.slice(lastDotIndex + 1);
+      if (ext) {
+        if (['jpg', 'jpeg', 'png', 'bmp', 'tiff'].includes(ext.toLowerCase())) {
+          return <InsertPhoto key={idx} />;
+        }
+      }
+      return <InsertDriveFile key={idx} />;
+    })
     return (
-      <Paper>
-      </Paper>
+      <Grid item xs={12} container justify="flex-start">
+        <Grid item xs={12}>
+          <Typography variant="subheading">Attachments</Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <Paper className={classes.attachmentPaper}>
+              {attachments.map((attachment, idx) => {
+                return (
+                  <Grid container key={idx}>
+                    <Grid item>
+                      {icons[idx]}
+                    </Grid>
+                    <Grid item>
+                      <Typography component="span">
+                        {attachment}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                )
+              })}
+          </Paper>
+        </Grid>
+      </Grid>
     );
   }
 
