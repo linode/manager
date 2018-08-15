@@ -28,7 +28,10 @@ import scriptLoader from 'react-async-script-loader';
 type ClassNames = 'root'
   | 'positive'
   | 'negative'
-  | 'actionPanel';
+  | 'actionPanel'
+  | 'paypalMask'
+  | 'paypalButtonWrapper'
+  | 'PaypalHidden';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {},
@@ -42,6 +45,23 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     display: 'flex',
     alignItems: 'center',
     flexWrap: 'wrap',
+    position: 'relative',
+  },
+  paypalMask: {
+    width: 175,
+    height: 45,
+    position: 'absolute',
+    zIndex: 2,
+    left: theme.spacing.unit * 2,
+    top: theme.spacing.unit * 2,
+  },
+  paypalButtonWrapper: {
+    position: 'relative',
+    zIndex: 1,
+    transition: [theme.transitions.create('opacity')],
+  },
+  PaypalHidden: {
+    opacity: .3,
   },
 });
 
@@ -439,25 +459,29 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
 
   renderActions = () => {
     const { classes } = this.props;
+    const { paypalSubmitEnabled } = this.state;
     return (
       <ActionsPanel className={classes.actionPanel}>
         {this.state.type === 'PAYPAL' && this.state.showPaypal
-          // @Alban: I ran into issues when wrapping the Paypal
-          // button in a MUI Button component
-          // what should happen is when you click the paypal button
-          // it should open up paypal.com in a new tab
-          // further, the user should only be able to click this button
-          // if this.state.paypalSubmitEnabled is true
-          ? <div>
-            <PaypalButton
-              env={env}
-              payment={this.payment}
-              onAuthorize={this.onAuthorize}
-              client={client}
-              commit={false}
-              onCancel={this.onCancel}
-            />
-          </div>
+          ? 
+          <React.Fragment>
+            {!paypalSubmitEnabled && <div className={classes.paypalMask} />}
+            <div className={classNames(
+              {
+                [classes.paypalButtonWrapper]: true,
+                [classes.PaypalHidden]: !paypalSubmitEnabled,
+              }
+            )}>
+              <PaypalButton
+                env={env}
+                payment={this.payment}
+                onAuthorize={this.onAuthorize}
+                client={client}
+                commit={false}
+                onCancel={this.onCancel}
+              />
+            </div>
+          </React.Fragment>
           : <Button
             type="primary"
             loading={this.state.submitting}
