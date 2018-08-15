@@ -117,7 +117,7 @@ export class VolumeDetail extends Page {
         this.submit.click();
 
         if (volume.hasOwnProperty('attachedLinode')) {
-            browser.waitForVisible(`[data-qa-volume-cell-attachment="${volume.attachedLinode}"]`, constants.wait.long);
+            browser.waitForVisible(`[data-qa-volume-cell-attachment="${volume.attachedLinode}"]`, constants.wait.long * 2);
         }
 
         if (volume.hasOwnProperty('region')) {

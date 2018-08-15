@@ -25,7 +25,7 @@ describe('StackScripts - List Suite', () => {
     it('should pre-select stackscript on selecting a stackscript to deploy on a new linode ', () => {
         const stackScriptToDeploy = ListStackScripts.stackScriptRows[0].$(ListStackScripts.stackScriptTitle.selector).getText();
         
-        ListStackScripts.stackScriptRows[0].$(ListStackScripts.stackScriptActionMenuLink.selector).click();
+        ListStackScripts.selectActionMenuItem(ListStackScripts.stackScriptRows[0], 'Deploy New Linode');
 
         ConfigureLinode.stackScriptTableDisplay();
         const selectedStackScript = ConfigureLinode.stackScriptRows.filter(row => row.$('[data-qa-radio="true"]'));
