@@ -17,7 +17,7 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import { withTypes } from 'src/context/types';
-import { events$ } from 'src/events';
+// import { events$ } from 'src/events';
 import LinodeStatusIndicator from 'src/features/linodes/LinodesLanding/LinodeStatusIndicator';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
 import { displayType } from 'src/features/linodes/presentation';
@@ -99,16 +99,16 @@ class LinodesDashboardCard extends React.Component<CombinedProps, State> {
 
     this.requestLinodes(true);
 
-    this.subscription = events$
-      .filter(e => !e._initial)
-      .filter(e => Boolean(e.entity && e.entity.type === 'linode'))
-      .filter(e => Boolean(this.state.data && this.state.data.length < 5) || isFoundInData(e.entity!.id, this.state.data))
-      .subscribe(() => this.requestLinodes(false));
+    // this.subscription = events$
+    //   .filter(e => !e._initial)
+    //   .filter(e => Boolean(e.entity && e.entity.type === 'linode'))
+    //   .filter(e => Boolean(this.state.data && this.state.data.length < 5) || isFoundInData(e.entity!.id, this.state.data))
+    //   .subscribe(() => this.requestLinodes(false));
   }
 
   componentWillUnmount() {
     this.mounted = false;
-    this.subscription.unsubscribe();
+    // this.subscription.unsubscribe();
   }
 
   render() {
@@ -204,7 +204,7 @@ const typesContext = withTypes((context) => ({
 
 const enhanced = compose(styled, typesContext);
 
-const isFoundInData = (id: number, data: Linode.Linode[] = []): boolean =>
-  data.reduce((result, linode) => result || linode.id === id, false);
+// const isFoundInData = (id: number, data: Linode.Linode[] = []): boolean =>
+//   data.reduce((result, linode) => result || linode.id === id, false);
 
 export default enhanced(LinodesDashboardCard);

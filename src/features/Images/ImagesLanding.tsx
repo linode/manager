@@ -24,8 +24,8 @@ import Notice from 'src/components/Notice';
 import PaginationFooter, { PaginationProps } from 'src/components/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
-import { events$ } from 'src/events';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
+// import { events$ } from 'src/events';
+// import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { deleteImage, getImages } from 'src/services/images';
 
 import ImageRow from './ImageRow';
@@ -111,24 +111,24 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
 
     this.requestImages(undefined, undefined, true);
 
-    this.eventsSub = events$
-      .filter(event => (
-        !event._initial
-        && [
-          'disk_imagize',
-          'image_delete',
-        ].includes(event.action)
-      ))
-      .subscribe((event) => {
-        if (event.action === 'disk_imagize' && event.status === 'finished') {
-          sendToast('Image created successfully.');
-          this.requestImages();
-        }
+    // this.eventsSub = events$
+    //   .filter(event => (
+    //     !event._initial
+    //     && [
+    //       'disk_imagize',
+    //       'image_delete',
+    //     ].includes(event.action)
+    //   ))
+    //   .subscribe((event) => {
+    //     if (event.action === 'disk_imagize' && event.status === 'finished') {
+    //       sendToast('Image created successfully.');
+    //       this.requestImages();
+    //     }
 
-        if (event.action === 'image_delete' && event.status === 'notification') {
-          sendToast('Image has been deleted successfully.')
-        }
-      });
+    //     if (event.action === 'image_delete' && event.status === 'notification') {
+    //       sendToast('Image has been deleted successfully.')
+    //     }
+    //   });
   }
 
   componentWillUnmount() {

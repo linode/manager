@@ -1,12 +1,13 @@
 import { Location } from 'history';
-import * as moment from 'moment';
-import { allPass, compose, filter, has, Lens, lensPath, pathEq, pathOr, set } from 'ramda';
+// import * as moment from 'moment';
+import { compose, Lens, lensPath, pathOr, set } from 'ramda';
+// import { allPass, compose, filter, has, Lens, lensPath, pathEq, pathOr, set } from 'ramda';
 import * as React from 'react';
 import { Link, matchPath, Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/debounce';
 import 'rxjs/add/operator/filter';
-import { Observable } from 'rxjs/Observable';
+// import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import AppBar from '@material-ui/core/AppBar';
@@ -23,13 +24,13 @@ import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import ProductNotification from 'src/components/ProductNotification';
-import { events$ } from 'src/events';
+// import { events$ } from 'src/events';
 import { reportException } from 'src/exceptionReporting';
 import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawer';
-import { newLinodeEvents } from 'src/features/linodes/events';
+// import { newLinodeEvents } from 'src/features/linodes/events';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 import { lishLaunch } from 'src/features/Lish';
-import notifications$ from 'src/notifications';
+// import notifications$ from 'src/notifications';
 import { Requestable } from 'src/requestableContext';
 import { getImage } from 'src/services/images';
 import { getLinode, getLinodeConfigs, getLinodeDisks, getLinodeVolumes, renameLinode } from 'src/services/linodes';
@@ -407,52 +408,52 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     this.mounted = true;
 
     const { context: { configs, disks, image, linode, volumes } } = this.state;
-    const mountTime = moment().subtract(5, 'seconds');
-    const { match: { params: { linodeId } } } = this.props;
+    // const mountTime = moment().subtract(5, 'seconds');
+    // const { match: { params: { linodeId } } } = this.props;
 
-    this.diskResizeSubscription = events$
-      .filter((e) => !e._initial)
-      .filter(pathEq(['entity', 'id'], Number(this.props.match.params.linodeId)))
-      .filter((e) => e.status === 'finished' && e.action === 'disk_resize')
-      .subscribe((e) => disks.request())
+    // this.diskResizeSubscription = events$
+    //   .filter((e) => !e._initial)
+    //   .filter(pathEq(['entity', 'id'], Number(this.props.match.params.linodeId)))
+    //   .filter((e) => e.status === 'finished' && e.action === 'disk_resize')
+    //   .subscribe((e) => disks.request())
 
-    this.eventsSubscription = events$
-      .filter(pathEq(['entity', 'id'], Number(this.props.match.params.linodeId)))
-      .filter(newLinodeEvents(mountTime))
-      .debounce(() => Observable.timer(1000))
-      .subscribe((linodeEvent) => {
-        configs.request();
-        disks.request();
-        volumes.request();
-        linode.request(linodeEvent)
-          .then((l) => {
-            if (l) { image.request(l.image) }
-          })
-          .catch(console.error);
-      });
+    // this.eventsSubscription = events$
+    //   .filter(pathEq(['entity', 'id'], Number(this.props.match.params.linodeId)))
+    //   .filter(newLinodeEvents(mountTime))
+    //   .debounce(() => Observable.timer(1000))
+    //   .subscribe((linodeEvent) => {
+    //     configs.request();
+    //     disks.request();
+    //     volumes.request();
+    //     linode.request(linodeEvent)
+    //       .then((l) => {
+    //         if (l) { image.request(l.image) }
+    //       })
+    //       .catch(console.error);
+    //   });
 
-    /** Get events which are related to volumes and this Linode */
-    this.volumeEventsSubscription = events$
-      .filter(e => [
-        'volume_attach',
-        'volume_clone',
-        'volume_create',
-        'volume_delete',
-        'volume_detach',
-        'volume_resize',
-      ].includes(e.action))
-      .filter(e => !e._initial)
-      .subscribe((v) => {
-        volumes.request();
-      });
-    /** Get /notifications relevant to this Linode */
-    this.notificationsSubscription = notifications$
-      .map(filter(allPass([
-        pathEq(['entity', 'id'], linodeId),
-        has('message'),
-      ])))
-      .subscribe((notifications: Linode.Notification[]) =>
-        this.setState({ notifications }));
+    // /** Get events which are related to volumes and this Linode */
+    // this.volumeEventsSubscription = events$
+    //   .filter(e => [
+    //     'volume_attach',
+    //     'volume_clone',
+    //     'volume_create',
+    //     'volume_delete',
+    //     'volume_detach',
+    //     'volume_resize',
+    //   ].includes(e.action))
+    //   .filter(e => !e._initial)
+    //   .subscribe((v) => {
+    //     volumes.request();
+    //   });
+    // /** Get /notifications relevant to this Linode */
+    // this.notificationsSubscription = notifications$
+    //   .map(filter(allPass([
+    //     pathEq(['entity', 'id'], linodeId),
+    //     has('message'),
+    //   ])))
+    //   .subscribe((notifications: Linode.Notification[]) =>
+    //     this.setState({ notifications }));
 
     configs.request();
     disks.request();

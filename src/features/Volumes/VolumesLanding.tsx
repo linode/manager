@@ -26,7 +26,7 @@ import PaginationFooter, { PaginationProps } from 'src/components/PaginationFoot
 import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
 import TableRowError from 'src/components/TableRowError';
-import { events$, generateInFilter, resetEventsPolling } from 'src/events';
+// import { events$, generateInFilter, resetEventsPolling } from 'src/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { getLinodes } from 'src/services/linodes';
 import { deleteVolume, detachVolume, getVolumes } from 'src/services/volumes';
@@ -159,35 +159,35 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
 
     this.getLinodeLabels();
 
-    this.eventsSub = events$
-      .filter(event => (
-        !event._initial
-        && [
-          'volume_create',
-          'volume_attach',
-          'volume_delete',
-          'volume_detach',
-          'volume_resize',
-          'volume_clone',
-        ].includes(event.action)
-      ))
-      .merge(updateVolumes$)
-      .subscribe((event) => {
-        this.getVolumes()
-          .then((volumes) => {
-            if (!volumes || !this.mounted) { return; }
+    // this.eventsSub = events$
+    //   .filter(event => (
+    //     !event._initial
+    //     && [
+    //       'volume_create',
+    //       'volume_attach',
+    //       'volume_delete',
+    //       'volume_detach',
+    //       'volume_resize',
+    //       'volume_clone',
+    //     ].includes(event.action)
+    //   ))
+    //   .merge(updateVolumes$)
+    //   .subscribe((event) => {
+    //     this.getVolumes()
+    //       .then((volumes) => {
+    //         if (!volumes || !this.mounted) { return; }
 
-            this.setState({
-              volumes: volumes.map((v) => ({
-                ...v,
-                ...maybeAddEvent(event, v),
-              })),
-            });
-          })
-          .catch(() => {
-            /* @todo: how do we want to display this error? */
-          });
-      });
+    //         this.setState({
+    //           volumes: volumes.map((v) => ({
+    //             ...v,
+    //             ...maybeAddEvent(event, v),
+    //           })),
+    //         });
+    //       })
+    //       .catch(() => {
+    //         /* @todo: how do we want to display this error? */
+    //       });
+    //   });
   }
 
   componentWillUnmount() {
@@ -465,11 +465,11 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   }
 
   getLinodeLabels = () => {
-    const linodeIDs = this.state.volumes.map(volume => volume.linode_id).filter(Boolean);
-    const xFilter = generateInFilter('id', linodeIDs);
+    // const linodeIDs = this.state.volumes.map(volume => volume.linode_id).filter(Boolean);
+    // const xFilter = generateInFilter('id', linodeIDs);
     this.setState({ labelsLoading: true });
 
-    getLinodes(undefined, xFilter)
+    getLinodes(undefined)
       .then((response) => {
         if (!this.mounted) { return; }
         const linodeLabels = {};
@@ -510,7 +510,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
         /* @todo: show a progress bar for volume detachment */
         sendToast('Volume detachment started');
         this.closeDestructiveDialog();
-        resetEventsPolling();
+        // resetEventsPolling();
       })
       .catch((response) => {
         /** @todo Error handling. */
@@ -524,7 +524,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     deleteVolume(volumeID)
       .then((response) => {
         this.closeDestructiveDialog();
-        resetEventsPolling();
+        // resetEventsPolling();
       })
       .catch((response) => {
         /** @todo Error handling. */
@@ -548,11 +548,11 @@ const progressFromEvent = (e?: Linode.Event) => {
   return undefined;
 }
 
-const maybeAddEvent = (e: boolean | Linode.Event, volume: Linode.Volume) => {
-  if (typeof e === 'boolean') { return {} };
-  if (!e.entity || e.entity.id !== volume.id) { return {} }
-  return { recentEvent: e };
-};
+// const maybeAddEvent = (e: boolean | Linode.Event, volume: Linode.Volume) => {
+//   if (typeof e === 'boolean') { return {} };
+//   if (!e.entity || e.entity.id !== volume.id) { return {} }
+//   return { recentEvent: e };
+// };
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
   { openForEdit, openForResize, openForClone, openForCreating },

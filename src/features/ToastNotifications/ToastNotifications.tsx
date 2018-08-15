@@ -13,9 +13,10 @@ import Typography from '@material-ui/core/Typography';
 import Close from '@material-ui/icons/Close';
 
 import Grid from 'src/components/Grid';
-import { events$ } from 'src/events';
+// import { events$ } from 'src/events';
 
-import toasts$, { createToast, Toast } from './toasts';
+import { Toast } from './toasts';
+// import toasts$, { createToast, Toast } from './toasts';
 
 type ClassNames = 'root'
   | 'content'
@@ -116,39 +117,39 @@ class Notifier extends React.Component<CombinedProps, State> {
   subscription: Subscription;
 
   componentDidMount() {
-    this.subscription = toasts$
-      .merge(
-        events$
-          .filter((e) => !e._initial && e.status === 'failed')
-          .map(event => {
-            if (event.action === 'disk_imagize') {
-              return createToast('There was an error creating an image.', 'error');
-            }
+    // this.subscription = toasts$
+    //   .merge(
+    //     events$
+    //       .filter((e) => !e._initial && e.status === 'failed')
+    //       .map(event => {
+    //         if (event.action === 'disk_imagize') {
+    //           return createToast('There was an error creating an image.', 'error');
+    //         }
 
-            if (event.action === 'volume_create') {
-              return createToast(`There was an error attaching volume ${event.entity && event.entity.label}.`, 'error');
-            }
+    //         if (event.action === 'volume_create') {
+    //           return createToast(`There was an error attaching volume ${event.entity && event.entity.label}.`, 'error');
+    //         }
 
-            return;
-          })
-      )
-      /**
-       * In the somewhat unlikely scenario that we get a flood of events, we're
-       * going to buffer for 1s to prevent data loss from React setState being unable
-       * to keep up with the process.
-       */
-      .filter(Boolean)
-      .bufferTime(500)
-      .subscribe((toasts) => {
-        if (toasts.length === 0) {
-          return;
-        }
+    //         return;
+    //       })
+    //   )
+    //   /**
+    //    * In the somewhat unlikely scenario that we get a flood of events, we're
+    //    * going to buffer for 1s to prevent data loss from React setState being unable
+    //    * to keep up with the process.
+    //    */
+    //   .filter(Boolean)
+    //   .bufferTime(500)
+    //   .subscribe((toasts) => {
+    //     if (toasts.length === 0) {
+    //       return;
+    //     }
 
-        this.setState(
-          () => ({ toasts: [...this.state.toasts, ...toasts] }),
-          () => this.setState({ toasts: openFirstToast(this.state.toasts) }),
-        );
-      });
+    //     this.setState(
+    //       () => ({ toasts: [...this.state.toasts, ...toasts] }),
+    //       () => this.setState({ toasts: openFirstToast(this.state.toasts) }),
+    //     );
+    //   });
   }
 
   onClose = (e: any, reason?: string) => {

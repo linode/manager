@@ -4,7 +4,6 @@ import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { bindActionCreators, compose } from 'redux';
-
 import 'typeface-lato';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
@@ -17,16 +16,20 @@ import SideMenu from 'src/components/SideMenu';
 import { RegionsProvider, WithRegionsContext } from 'src/context/regions';
 import { TypesProvider, WithTypesContext } from 'src/context/types';
 import Footer from 'src/features/Footer';
-import ToastNotifications from 'src/features/ToastNotifications';
+// import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
-import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
+// import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import { getLinodeTypes } from 'src/services/linodes';
 import { getRegions } from 'src/services/misc';
 import { getProfile } from 'src/services/profile';
+
+import { addEvent, removeEvent } from 'src/store/reducers/events';
 import { request, response } from 'src/store/reducers/resources';
 import composeState from 'src/utilities/composeState';
 
 import BetaNotification from './BetaNotification';
+
+import { getToken } from 'src/services/linodes';
 
 shim(); // allows for .finally() usage
 
@@ -150,7 +153,10 @@ interface Props {
 interface ConnectedProps {
   request: typeof request;
   response: typeof response;
+  addEvent: typeof addEvent;
+  removeEvent: typeof removeEvent;
   documentation: Linode.Doc[];
+  events: Linode.Event[];
 }
 
 interface State {
@@ -158,6 +164,7 @@ interface State {
   betaNotification: Boolean;
   typesContext: WithTypesContext;
   regionsContext: WithRegionsContext;
+  socketMessages: any;
 }
 
 type CombinedProps =
@@ -189,6 +196,7 @@ export class App extends React.Component<CombinedProps, State> {
   state = {
     menuOpen: false,
     betaNotification: false,
+    socketMessages: [],
     typesContext: {
       lastUpdated: 0,
       loading: false,
@@ -239,8 +247,49 @@ export class App extends React.Component<CombinedProps, State> {
     }
   };
 
+  /* Some browsers fire the resize event quite often so throttle it using an Observable */
+  // private resizeObservable = Observable.fromEvent(window, 'resize').throttleTime(200);
+
+  socket: WebSocket;
+
+  componentWillUnmount() {
+    this.socket.close();
+  }
+
   componentDidMount() {
-    const { request, response } = this.props;
+    const { request, response, addEvent } = this.props;
+
+    getToken()
+      .then((data: any) => {
+        this.socket = new WebSocket(`ws://events.lindev.local:7443/${data.data.token}`);
+
+        this.socket.onopen = () => {
+          console.log('connection opened!');
+        }
+
+        this.socket.onmessage = (e: any) => {
+          console.log('new message');
+          const data = JSON.parse(e.data);
+          console.log(data);
+          /*
+          * check if body is an object because the inital connection will
+          * send a message that is just a string and there's no need to add
+          * that to redux state
+          */
+          if (typeof data.body === 'object') {
+            addEvent(data.body);
+          }
+          this.setState({ socketMessages: e });
+        }
+
+        this.socket.onclose = () => {
+          console.log('connection closed');
+        }
+
+        this.socket.onerror = () => {
+          console.log('error: connection closed');
+        }
+      })
 
     const betaNotification = window.localStorage.getItem('BetaNotification');
     if (betaNotification !== 'closed') {
@@ -320,8 +369,8 @@ export class App extends React.Component<CombinedProps, State> {
                     open={this.state.betaNotification}
                     onClose={this.closeBetaNotice}
                     data-qa-beta-notice />
-                  <ToastNotifications />
-                  <VolumeDrawer />
+                  {/* <ToastNotifications />
+                  <VolumeDrawer /> */}
                 </div>
               </RegionsProvider>
             </TypesProvider>
@@ -333,13 +382,14 @@ export class App extends React.Component<CombinedProps, State> {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
-  { request, response },
+  { request, response, removeEvent, addEvent },
   dispatch,
 );
 
 const mapStateToProps = (state: Linode.AppState) => ({
   longLivedLoaded: Boolean(pathOr(false, ['resources', 'profile', 'data'], state)),
   documentation: state.documentation,
+  events: state.events,
 });
 
 export const connected = connect(mapStateToProps, mapDispatchToProps);

@@ -16,7 +16,7 @@ import Grid from 'src/components/Grid';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
-import { events$ } from 'src/events';
+// import { events$ } from 'src/events';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
 import { getNodeBalancers } from 'src/services/nodebalancers';
 
@@ -87,16 +87,16 @@ class NodeBalancersDashboardCard extends React.Component<CombinedProps, State> {
 
     this.requestData(true);
 
-    this.subscription = events$
-      .filter(e => !e._initial)
-      .filter(e => Boolean(e.entity && e.entity.type === 'nodebalancer'))
-      .filter(e => Boolean(this.state.data && this.state.data.length < 5) || isFoundInData(e.entity!.id, this.state.data))
-      .subscribe(() => this.requestData(false));
+    // this.subscription = events$
+    //   .filter(e => !e._initial)
+    //   .filter(e => Boolean(e.entity && e.entity.type === 'nodebalancer'))
+    //   .filter(e => Boolean(this.state.data && this.state.data.length < 5) || isFoundInData(e.entity!.id, this.state.data))
+    //   .subscribe(() => this.requestData(false));
   }
 
   componentWillUnmount() {
     this.mounted = false;
-    this.subscription.unsubscribe();
+    // this.subscription.unsubscribe();
   }
 
   render() {
@@ -179,7 +179,7 @@ const styled = withStyles(styles, { withTheme: true });
 
 const enhanced = compose(styled);
 
-const isFoundInData = (id: number, data: Linode.NodeBalancer[] = []): boolean =>
-  data.reduce((result, nodebalancer) => result || nodebalancer.id === id, false);
+// const isFoundInData = (id: number, data: Linode.NodeBalancer[] = []): boolean =>
+//   data.reduce((result, nodebalancer) => result || nodebalancer.id === id, false);
 
 export default enhanced(NodeBalancersDashboardCard);

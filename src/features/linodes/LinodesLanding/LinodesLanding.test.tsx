@@ -49,6 +49,7 @@ describe('ListLinodes', () => {
             typesRequest={jest.fn}
             typesLoading={false}
             typesLastUpdated={1}
+            events={{} as any}
           />
         </StaticRouter>
       </LinodeThemeWrapper>,
@@ -69,6 +70,7 @@ describe('ListLinodes', () => {
             typesRequest={jest.fn}
             typesLoading={false}
             typesLastUpdated={1}
+            events={{} as any}
           />
         </StaticRouter>
       </LinodeThemeWrapper>,
@@ -93,6 +95,7 @@ describe('ListLinodes', () => {
             typesRequest={jest.fn}
             typesLoading={false}
             typesLastUpdated={1}
+            events={{} as any}
           />
         </StaticRouter>
       </LinodeThemeWrapper>,

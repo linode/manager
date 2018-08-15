@@ -1,11 +1,16 @@
-import * as moment from 'moment';
-import { clone, compose, defaultTo, lensPath, map, over, path, pathEq, pathOr } from 'ramda';
+// import * as moment from 'moment';
+// import { clone, compose, defaultTo, lensPath, map, over, path, pathEq, pathOr } from 'ramda';
+import { compose, pathOr } from 'ramda';
 import * as React from 'react';
+import { connect, Dispatch } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/filter';
-import { Observable } from 'rxjs/Observable';
+// import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import Hidden from '@material-ui/core/Hidden';
@@ -21,10 +26,10 @@ import Grid from 'src/components/Grid';
 import PaginationFooter from 'src/components/PaginationFooter';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import { withTypes } from 'src/context/types';
-import { events$ } from 'src/events';
+// import { events$ } from 'src/events';
 import LinodeConfigSelectionDrawer, { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
-import { newLinodeEvents } from 'src/features/linodes/events';
-import notifications$ from 'src/notifications';
+// import { newLinodeEvents } from 'src/features/linodes/events';
+// import notifications$ from 'src/notifications';
 import { getImages } from 'src/services/images';
 import { getLinode, getLinodes } from 'src/services/linodes';
 import scrollToTop from 'src/utilities/scrollToTop';
@@ -32,8 +37,10 @@ import scrollToTop from 'src/utilities/scrollToTop';
 import LinodesGridView from './LinodesGridView';
 import LinodesListView from './LinodesListView';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
-import { powerOffLinode, rebootLinode } from './powerActions';
+// import { powerOffLinode, rebootLinode } from './powerActions';
 import ToggleBox from './ToggleBox';
+
+import { removeEvent } from 'src/store/reducers/events';
 
 type ClassNames = 'root' | 'title';
 
@@ -49,6 +56,10 @@ interface Props { }
 interface PreloadedProps {
   linodes: PromiseLoaderResponse<Linode.ResourcePage<Linode.EnhancedLinode>>;
   images: PromiseLoaderResponse<Linode.ResourcePage<Linode.Image>>;
+}
+
+interface ConnectedProps {
+  events: Partial<Linode.Event>[];
 }
 
 interface ConfigDrawerState {
@@ -90,13 +101,14 @@ type CombinedProps = Props
   & PreloadedProps
   & RouteComponentProps<{}>
   & WithStyles<ClassNames>
-  & SetDocsProps;
+  & SetDocsProps
+  & ConnectedProps;
 
-const L = {
-  response: {
-    data: lensPath(['response', 'data']),
-  }
-};
+// const L = {
+//   response: {
+//     data: lensPath(['response', 'data']),
+//   }
+// };
 
 export class ListLinodes extends React.Component<CombinedProps, State> {
   eventsSub: Subscription;
@@ -140,9 +152,16 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
   ];
 
+  isRelevantEvent = (status: string) => {
+    if (status === 'linode_boot') {
+      return true;
+    }
+    return false;
+  } 
+
   componentDidMount() {
     this.mounted = true;
-    const mountTime = moment().subtract(5, 'seconds');
+    // const mountTime = moment().subtract(5, 'seconds');
 
     const { typesLastUpdated, typesLoading, typesRequest } = this.props;
 
@@ -150,54 +169,98 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       typesRequest();
     }
 
-    this.eventsSub = events$
-      .filter(newLinodeEvents(mountTime))
-      .filter(e => !e._initial)
-      .subscribe((linodeEvent) => {
-        const linodeId = path<number>(['entity', 'id'], linodeEvent);
-        if (!linodeId) { return; }
+    /*
+    * we only want to update Linodes if we have a Linode that's
+    * in the process of booting
+    */
+    const linodesToUpdate = this.props.events.filter(event => {
+      return this.isRelevantEvent(event.action!);
+    });
 
-        getLinode(linodeId)
-          .then(response => response.data)
-          .then((linode) => {
-            if (!this.mounted) { return; }
+    /*
+    * Now that we have our linodes that we know need to be updated,
+    * we need to run getLinode for that linode
+    */
+    const getEachLinode = () => {
+      return !!linodesToUpdate.length && Promise.all(linodesToUpdate.map(linodeToUpdate => {
+        return new Promise(() => {
+          return getLinode(linodeToUpdate.entity!.id)
+            .then((response: any) => {
+              this.setState({
+                linodes: [
+                  ...this.state.linodes.filter(linode => linode.id !== response.data.id),
+                  ...response.data,
+                ]
+              })
+              return response;
+            })
+            .catch(e => e)
+        })
+      }))
+        .then((response: any) => response)
+        .catch(e => e)
+    }
+    // const promises = linodesToUpdate.map(linodeToUpdate => {
+    //   return new Promise(() => {
+    //     return getLinode(linodeToUpdate.entity!.id)
+    //       .then(data => data)
+    //       .catch(e => e)
+    //   })
+    // });
 
-            return this.setState((prevState) => {
-              const targetIndex = prevState.linodes.findIndex(
-                _linode => _linode.id === (linodeEvent.entity as Linode.Entity).id);
-              const updatedLinodes = clone(prevState.linodes);
-              updatedLinodes[targetIndex] = linode;
-              updatedLinodes[targetIndex].recentEvent = linodeEvent;
-              return { linodes: updatedLinodes };
-            });
-          });
-      });
-
-    this.notificationSub = Observable
-      .combineLatest(
-        notifications$
-          .map(notifications => notifications.filter(pathEq(['entity', 'type'], 'linode'))),
-        Observable.of(this.props.linodes),
+    setInterval(
+      () => getEachLinode(),
+      4000
     )
-      .map(([notifications, linodes]) => over(
-        L.response.data,
-        compose(
-          map(addNotificationToLinode(notifications)),
-          defaultTo([]),
-        ),
-        linodes,
-      ))
-      .subscribe((response) => {
-        if (!this.mounted) { return; }
 
-        return this.setState({ linodes: response.response.data });
-      });
+    // this.eventsSub = events$
+    //   .filter(newLinodeEvents(mountTime))
+    //   .filter(e => !e._initial)
+    //   .subscribe((linodeEvent) => {
+    //     const linodeId = path<number>(['entity', 'id'], linodeEvent);
+    //     if (!linodeId) { return; }
+
+    //     getLinode(linodeId)
+    //       .then(response => response.data)
+    //       .then((linode) => {
+    //         if (!this.mounted) { return; }
+
+    //         return this.setState((prevState) => {
+    //           const targetIndex = prevState.linodes.findIndex(
+    //             _linode => _linode.id === (linodeEvent.entity as Linode.Entity).id);
+    //           const updatedLinodes = clone(prevState.linodes);
+    //           updatedLinodes[targetIndex] = linode;
+    //           updatedLinodes[targetIndex].recentEvent = linodeEvent;
+    //           return { linodes: updatedLinodes };
+    //         });
+    //       });
+    //   });
+
+    // this.notificationSub = Observable
+    //   .combineLatest(
+    //     notifications$
+    //       .map(notifications => notifications.filter(pathEq(['entity', 'type'], 'linode'))),
+    //     Observable.of(this.props.linodes),
+    // )
+    //   .map(([notifications, linodes]) => over(
+    //     L.response.data,
+    //     compose(
+    //       map(addNotificationToLinode(notifications)),
+    //       defaultTo([]),
+    //     ),
+    //     linodes,
+    //   ))
+    //   .subscribe((response) => {
+    //     if (!this.mounted) { return; }
+
+    //     return this.setState({ linodes: response.response.data });
+    //   });
   }
 
   componentWillUnmount() {
     this.mounted = false;
-    this.eventsSub.unsubscribe();
-    this.notificationSub.unsubscribe();
+    // this.eventsSub.unsubscribe();
+    // this.notificationSub.unsubscribe();
   }
 
   openConfigDrawer = (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => {
@@ -313,15 +376,15 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     });
   }
 
-  rebootOrPowerLinode = () => {
-    const { bootOption, selectedLinodeId, selectedLinodeLabel } = this.state;
-    if (bootOption === 'reboot') {
-      rebootLinode(this.openConfigDrawer, selectedLinodeId!, selectedLinodeLabel);
-    } else {
-      powerOffLinode(selectedLinodeId!, selectedLinodeLabel);
-    }
-    this.setState({ powerAlertOpen: false });
-  }
+  // rebootOrPowerLinode = () => {
+  //   const { bootOption, selectedLinodeId, selectedLinodeLabel } = this.state;
+  //   if (bootOption === 'reboot') {
+  //     rebootLinode(this.openConfigDrawer, selectedLinodeId!, selectedLinodeLabel);
+  //   } else {
+  //     powerOffLinode(selectedLinodeId!, selectedLinodeLabel);
+  //   }
+  //   this.setState({ powerAlertOpen: false });
+  // }
 
   render() {
     const { location: { hash } } = this.props;
@@ -422,7 +485,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
         </Button>
         <Button
           type="secondary"
-          onClick={this.rebootOrPowerLinode}
+          // onClick={this.rebootOrPowerLinode}
           data-qa-confirm-cancel
         >
           {bootOption === 'reboot' ? 'Reboot' : 'Power Off'}
@@ -435,15 +498,15 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 }
 
 
-const getNotificationMessageByEntityId = (id: number, notifications: Linode.Notification[]): undefined | string => {
-  const found = notifications.find((n) => n.entity !== null && n.entity.id === id);
-  return found ? found.message : undefined;
-}
+// const getNotificationMessageByEntityId = (id: number, notifications: Linode.Notification[]): undefined | string => {
+//   const found = notifications.find((n) => n.entity !== null && n.entity.id === id);
+//   return found ? found.message : undefined;
+// }
 
-const addNotificationToLinode = (notifications: Linode.Notification[]) => (linode: Linode.Linode) => ({
-  ...linode,
-  notification: getNotificationMessageByEntityId(linode.id, notifications)
-});
+// const addNotificationToLinode = (notifications: Linode.Notification[]) => (linode: Linode.Linode) => ({
+//   ...linode,
+//   notification: getNotificationMessageByEntityId(linode.id, notifications)
+// });
 
 const getDisplayFormat = ({ hash, length }: { hash?: string, length: number }): 'grid' | 'list' => {
   const local = localStorage.getItem('linodesViewStyle');
@@ -471,8 +534,20 @@ const typesContext = withTypes(({
   typesLastUpdated,
 }));
 
+const mapStateToProps = (state: Linode.AppState) => ({
+  events: state.events,
+});
+
+const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
+  { removeEvent },
+  dispatch
+);
+
+const connected = connect(mapStateToProps, mapDispatchToProps);
+
 export const enhanced = compose(
   withRouter,
+  connected,
   typesContext,
   styled,
   preloaded,

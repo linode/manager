@@ -11,7 +11,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Drawer from 'src/components/Drawer';
 import MenuItem from 'src/components/MenuItem';
 import Select from 'src/components/Select';
-import { resetEventsPolling } from 'src/events';
+// import { resetEventsPolling } from 'src/events';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import { getLinodeConfigs, getLinodes } from 'src/services/linodes';
 import { attachVolume } from 'src/services/volumes';
@@ -128,7 +128,7 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
 
     attachVolume(Number(volumeID), { linode_id: Number(selectedLinode) })
       .then((response) => {
-        resetEventsPolling();
+        // resetEventsPolling();
         onClose();
       })
       .catch((error) => {

@@ -15,7 +15,7 @@ import Grid from 'src/components/Grid';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
-import { events$ } from 'src/events';
+// import { events$ } from 'src/events';
 import { getDomains } from 'src/services/domains';
 
 import DashboardCard from '../DashboardCard';
@@ -83,16 +83,16 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
 
     this.requestData(true);
 
-    this.subscription = events$
-      .filter(e => !e._initial)
-      .filter(e => Boolean(e.entity && e.entity.type === 'domain'))
-      .filter(e => Boolean(this.state.data && this.state.data.length < 5) || isFoundInData(e.entity!.id, this.state.data))
-      .subscribe(() => this.requestData(false));
+    // this.subscription = events$
+    //   .filter(e => !e._initial)
+    //   .filter(e => Boolean(e.entity && e.entity.type === 'domain'))
+    //   .filter(e => Boolean(this.state.data && this.state.data.length < 5) || isFoundInData(e.entity!.id, this.state.data))
+    //   .subscribe(() => this.requestData(false));
   }
 
   componentWillUnmount() {
     this.mounted = false;
-    this.subscription.unsubscribe();
+    // this.subscription.unsubscribe();
   }
 
   render() {
@@ -169,7 +169,7 @@ const styled = withStyles(styles, { withTheme: true });
 
 const enhanced = compose(styled);
 
-const isFoundInData = (id: number, data: Linode.Domain[] = []): boolean =>
-  data.reduce((result, domain) => result || domain.id === id, false);
+// const isFoundInData = (id: number, data: Linode.Domain[] = []): boolean =>
+//   data.reduce((result, domain) => result || domain.id === id, false);
 
 export default enhanced(DomainsDashboardCard);
