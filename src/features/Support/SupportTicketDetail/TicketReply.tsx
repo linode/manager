@@ -60,7 +60,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 interface Props {
   ticketId: number;
-  onSuccess: (newReply:Linode.SupportReply) => void;
+  onSuccess: (newReply: Linode.SupportReply) => void;
+  reloadAttachments: () => void;
 }
 
 interface FileAttachment {
@@ -127,6 +128,7 @@ class TicketReply extends React.Component<CombinedProps, State> {
                 set(lensPath(['files', idx, 'uploading']), false),
                 set(lensPath(['files', idx, 'uploaded']), true),
               ));
+              this.props.reloadAttachments();
             })
             /* 
             * Note! We want the first few uploads to succeed even if the last few
@@ -157,7 +159,7 @@ class TicketReply extends React.Component<CombinedProps, State> {
   }
 
   handleFileSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
+    if (e.target.files && e.target.files.length) {
       this.setState({
         files: [
           ...this.state.files,

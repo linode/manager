@@ -162,6 +162,18 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
       });
   }
 
+  reloadAttachments = () => {
+    this.loadTicket()
+      .then((ticket: Linode.SupportTicket) => {
+        this.setState({
+          ticket: {
+            ...this.state.ticket!,
+            attachments: ticket.attachments,
+          },
+        });
+      });
+  }
+
   handleJoinedPromise = (ticketResponse: SupportTicket, replyResponse: Linode.SupportReply[]) => {
     /** Gets a unique list of gravatar IDs */
     const uniqueGravatarIDs = replyResponse.reduce(reduceToUniqueGravatarIDs, [ticketResponse.gravatar_id]);
@@ -366,6 +378,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
             <TicketReply 
               ticketId={ticketId!}
               onSuccess={this.onCreateReplySuccess}
+              reloadAttachments={this.reloadAttachments}
             />
           }
         </Grid>
