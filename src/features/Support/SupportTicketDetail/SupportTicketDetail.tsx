@@ -306,7 +306,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
           <Paper className={classes.attachmentPaper}>
               {attachments.map((attachment, idx) => {
                 return (
-                  <Grid container key={idx} className={classes.attachmentRow}>
+                  <Grid container wrap="nowrap" key={idx} className={classes.attachmentRow}>
                     <Grid item className={classes.attachmentIcon}>
                       {icons[idx]}
                     </Grid>
