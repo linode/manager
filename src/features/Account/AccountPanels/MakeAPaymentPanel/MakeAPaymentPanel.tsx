@@ -118,7 +118,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
     }, errors);
 
     const generalError = hasErrorFor('none');
-    const balanceDisplay = !accountLoading && balance !== false ? `$${balance.toFixed(2)}` : '';
+    const balanceDisplay = !accountLoading && balance !== false ? `$${Math.abs(balance).toFixed(2)}` : '';
     return (
       <ExpansionPanel heading="Make a Payment" actions={this.renderActions}>
         <Grid container>
@@ -134,11 +134,12 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
                   component={'span'}
                   variant="title"
                   className={classNames({
-                    [classes.positive]: balance >= 0,
-                    [classes.negative]: balance < 0,
+                    [classes.negative]: balance > 0,
+                    [classes.positive]: balance <= 0,
                   })}
                 >
                   {balanceDisplay}
+                  { balance < 0 && ` (credit)` }
                 </Typography>
               </Grid>
             </Grid>
