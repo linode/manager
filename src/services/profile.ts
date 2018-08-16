@@ -123,3 +123,10 @@ export const getSSHKeys = (pagination: any = {}, filters: any ={}) =>
     setURL(`${API_ROOT}/profile/sshkeys`),
   )
 .then(response => response.data);
+
+export const deleteSSHKey = (id: number) =>
+  Request<{}>(
+    setMethod('DELETE'),
+    setURL(`${API_ROOT}/profile/sshkeys/${id}`),
+  )
+.then(response => response.data);

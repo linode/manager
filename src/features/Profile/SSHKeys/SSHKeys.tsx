@@ -1,7 +1,3 @@
-import * as moment from 'moment-timezone';
-import { compose } from 'ramda';
-import * as React from 'react';
-
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
@@ -9,7 +5,9 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
-
+import * as moment from 'moment-timezone';
+import { compose } from 'ramda';
+import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import paginate, { PaginationProps } from 'src/components/Pagey';
@@ -19,7 +17,8 @@ import TableHeader from 'src/components/TableHeader';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
-import SSHKeyActionMenu from 'src/features/Profile/SSHKeys/SSHkeyActionMenu';
+import DeleteSSHKeyDialog from 'src/features/Profile/SSHKeys/DeleteSSHKeyDialog';
+import SSHKeyActionMenu from 'src/features/Profile/SSHKeys/SSHKeyActionMenu';
 import { getSSHKeys } from 'src/services/profile';
 import fingerprint from 'src/utilities/ssh-fingerprint';
 
@@ -44,12 +43,24 @@ interface ConnectedProps {
 
 type ExtendedSSHKey = SSHKey & { fingerprint: string };
 
-interface State { }
+interface State {
+  confirmDelete: {
+    open: boolean,
+    id?: number,
+    label?: string,
+  };
+}
 
 type CombinedProps = Props & ConnectedProps & WithStyles<ClassNames>;
 
 class SSHKeys extends React.Component<CombinedProps, State> {
-  state: State = {};
+  state: State = {
+    confirmDelete: {
+      open: false,
+      id: undefined,
+      label: undefined,
+    }
+  };
 
   static docs: Linode.Doc[] = [
     {
@@ -93,6 +104,13 @@ class SSHKeys extends React.Component<CombinedProps, State> {
           handlePageChange={this.props.handlePageChange}
           handleSizeChange={this.props.handlePageSizeChange}
         />
+        <DeleteSSHKeyDialog
+          id={this.state.confirmDelete.id}
+          label={this.state.confirmDelete.label}
+          open={this.state.confirmDelete.open}
+          onSuccess={this.handleSuccessfulDeletion}
+          closeDialog={this.handleCancelDeletion}
+        />
       </React.Fragment>
     );
   }
@@ -109,10 +127,16 @@ class SSHKeys extends React.Component<CombinedProps, State> {
     }
 
     if (result && count > 0) {
-      return SSHKeys.renderData(result);
+      return this.renderData(result);
     }
 
     return SSHKeys.renderEmptyState();
+  };
+
+  headerAction = () => {
+    return (
+      <AddNewLink label='Add a SSH Key' onClick={() => null} disabled />
+    );
   };
 
   static renderLoading = () => {
@@ -133,7 +157,7 @@ class SSHKeys extends React.Component<CombinedProps, State> {
     );
   };
 
-  static renderData = (keys: ExtendedSSHKey[]) => {
+  renderData = (keys: ExtendedSSHKey[]) => {
     return keys.map(key =>
       <TableRow key={key.id}>
         <TableCell>{key.label}</TableCell>
@@ -143,17 +167,32 @@ class SSHKeys extends React.Component<CombinedProps, State> {
         </TableCell>
         <TableCell>{key.created}</TableCell>
         <TableCell>
-          <SSHKeyActionMenu sshKeyID={key.id} />
+          <SSHKeyActionMenu
+            id={key.id}
+            label={key.label}
+            onDelete={this.displayConfirmDeleteDialog}
+          />
         </TableCell>
       </TableRow>
     );
   };
 
-  headerAction = () => {
-    return (
-      <AddNewLink label='Add a SSH Key' onClick={() => null} disabled />
+  displayConfirmDeleteDialog = (id: number, label: string) => {
+    this.setState({ confirmDelete: { open: true, id, label } });
+  };
+
+  handleCancelDeletion = () => {
+    this.setState(
+      (prevState) => ({ confirmDelete: { ...prevState.confirmDelete, open: false } }),
     );
   };
+
+  handleSuccessfulDeletion = () => {
+    this.setState(
+      (prevState) => ({ confirmDelete: { ...prevState.confirmDelete, open: false } }),
+      () => this.props.request(),
+    )
+  }
 }
 
 const updateResponseData = (keys: Linode.SSHKey[]) => keys.map((key) => ({
