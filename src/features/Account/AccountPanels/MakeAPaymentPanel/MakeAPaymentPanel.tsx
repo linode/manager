@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import ErrorState from 'src/components/ErrorState';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -17,7 +18,6 @@ import TextField from 'src/components/TextField';
 import { withAccount } from 'src/features/Account/context';
 import { makePayment } from 'src/services/account';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import ErrorState from 'src/components/ErrorState';
 
 type ClassNames = 'root' | 'positive' | 'negative';
 

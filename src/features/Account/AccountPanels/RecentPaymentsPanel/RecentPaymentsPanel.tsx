@@ -1,5 +1,4 @@
-import * as moment from 'moment-timezone';
-import { compose, map, pathOr, sort } from 'ramda';
+import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
@@ -17,8 +16,6 @@ import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import { getPayments } from 'src/services/account';
 
-interface PaymentWithDate extends Linode.Payment { moment: moment.Moment };
-
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
@@ -30,7 +27,7 @@ interface Props { }
 interface State extends PaginationProps {
   errors?: Linode.ApiFieldError[];
   loading: boolean;
-  data?: PaymentWithDate[],
+  data?: Linode.Payment[],
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -44,25 +41,6 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
   };
 
   mounted: boolean = false;
-
-  addToItems: (incoming: Linode.Payment[]) => PaymentWithDate[] =
-    compose(
-
-      /** Sort in descending/revers chronological order. */
-      sort((a, b) => b.moment.diff(a.moment)),
-
-      /**
-       * Add the moment reference for sorting.
-       * Add the displayDate now since we already have the reference.
-       */
-      map<Linode.Payment, PaymentWithDate>((item) => {
-        const m = moment(item.date);
-        return {
-          ...item,
-          moment: m,
-        };
-      }),
-    );
 
   requestPayments = (
     page: number = this.state.page,
@@ -81,7 +59,7 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
           loading: false,
           page,
           count: results,
-          data: this.addToItems(data),
+          data,
         });
       })
       .catch((response) => {
@@ -151,9 +129,9 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
     return data && data.length > 0 ? this.renderItems(data) : <TableRowEmptyState colSpan={3} />
   };
 
-  renderItems = (items: PaymentWithDate[]) => items.map(this.renderRow);
+  renderItems = (items: Linode.Payment[]) => items.map(this.renderRow);
 
-  renderRow = (item: PaymentWithDate) => {
+  renderRow = (item: Linode.Payment) => {
     return (
       <TableRow key={`payment-${item.id}`}>
         <TableCell><DateTimeDisplay value={item.date} /></TableCell>
@@ -183,4 +161,3 @@ const styled = withStyles(styles, { withTheme: true });
 const enhanced = compose(styled);
 
 export default enhanced(RecentPaymentsPanel);
-

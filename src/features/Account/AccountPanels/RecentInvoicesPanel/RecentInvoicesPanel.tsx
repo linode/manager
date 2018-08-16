@@ -1,5 +1,4 @@
-import * as moment from 'moment-timezone';
-import { compose, map, pathOr, sort } from 'ramda';
+import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -18,8 +17,6 @@ import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import { getInvoices } from 'src/services/account';
 
-interface InvoiceWithDate extends Linode.Invoice { moment: moment.Moment };
-
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
@@ -31,7 +28,7 @@ interface Props { }
 interface State extends PaginationProps {
   errors?: Linode.ApiFieldError[];
   loading: boolean;
-  data?: InvoiceWithDate[],
+  data?: Linode.Invoice[],
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -45,25 +42,6 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
   };
 
   mounted: boolean = false;
-
-  addToItems: (incoming: Linode.Invoice[]) => InvoiceWithDate[] =
-    compose(
-
-      /** Sort in descending/revers chronological order. */
-      sort((a, b) => b.moment.diff(a.moment)),
-
-      /**
-       * Add the moment reference for sorting.
-       * Add the displayDate now since we already have the reference.
-       */
-      map<Linode.Invoice, InvoiceWithDate>((item) => {
-        const m = moment(item.date);
-        return {
-          ...item,
-          moment: m,
-        };
-      }),
-    );
 
   requestInvoices = (
     page: number = this.state.page,
@@ -81,7 +59,7 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
           loading: false,
           page,
           count: results,
-          data: this.addToItems(data),
+          data,
         });
       })
       .catch((response) => {
@@ -160,9 +138,9 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
     }
   };
 
-  renderItems = (items: InvoiceWithDate[]) => items.map(this.renderRow);
+  renderItems = (items: Linode.Invoice[]) => items.map(this.renderRow);
 
-  renderRow = (item: InvoiceWithDate) => {
+  renderRow = (item: Linode.Invoice) => {
     return (
       <TableRow key={`invoice-${item.id}`}>
         <TableCell><DateTimeDisplay value={item.date}/></TableCell>
@@ -188,4 +166,3 @@ const enhanced = compose(
 );
 
 export default enhanced(RecentInvoicesPanel);
-
