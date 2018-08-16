@@ -30,14 +30,14 @@ import Select from 'src/components/Select';
 import Table from 'src/components/Table';
 import TextField from 'src/components/TextField';
 import { events$, resetEventsPolling } from 'src/events';
-import { linodeInTransition } from 'src/features/linodes/transitions';
+import { linodeInTransition as isLinodeInTransition } from 'src/features/linodes/transitions';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { cancelBackups, enableBackups, getLinodeBackups, getType, takeSnapshot, updateBackupsWindow } from 'src/services/linodes';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import { withLinode } from '../context';
-import LinodeBackupActionMenu from './LinodeBackupActionMenu';
+import BackupTableRow from './BackupTableRow';
 import RestoreToLinodeDrawer from './RestoreToLinodeDrawer';
 
 type ClassNames =
@@ -132,11 +132,6 @@ type CombinedProps = Props
   & RouteComponentProps<{}>
   & ContextProps
   & ConnectedProps;
-
-const typeMap = {
-  auto: 'Automatic',
-  snapshot: 'Manual',
-};
 
 const evenize = (n: number): number => {
   if (n === 0) { return n; }
@@ -339,6 +334,19 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     this.setState({ cancelBackupsAlertOpen: true });
   }
 
+  handleDeploy = (backup:Linode.LinodeBackup) => {
+    const { history, linodeID } = this.props;
+    history.push('/linodes/create'
+      + `?type=fromBackup&backupID=${backup.id}&linodeID=${linodeID}`);
+  }
+
+  handleRestore = (backup:Linode.LinodeBackup) => {
+    this.openRestoreDrawer(
+      backup.id,
+      formatBackupDate(backup.created),
+    )
+  }
+
   handleRestoreSubmit = () => {
     this.closeRestoreDrawer();
     sendToast('Backup restore started');
@@ -370,7 +378,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
   }
 
   Table = ({ backups }: { backups: Linode.LinodeBackup[] }): JSX.Element | null => {
-    const { classes, history, linodeID } = this.props;
+    const { classes } = this.props;
 
     return (
       <React.Fragment>
@@ -387,47 +395,14 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
               </TableRow>
             </TableHead>
             <TableBody>
-              {backups.map((backup) => {
-                return (
-                  <TableRow key={backup.id} data-qa-backup>
-                    <TableCell>
-                      {formatBackupDate(backup.created)}
-                    </TableCell>
-                    <TableCell data-qa-backup-name>
-                      {backup.label || typeMap[backup.type]}
-                    </TableCell>
-                    <TableCell>
-                      {moment.duration(
-                        moment(backup.finished).diff(moment(backup.created)),
-                      ).humanize()}
-                    </TableCell>
-                    <TableCell data-qa-backup-disks>
-                      {backup.disks.map((disk, idx) => (
-                        <div key={idx}>
-                          {disk.label} ({disk.filesystem}) - {disk.size}MB
-                        </div>
-                      ))}
-                    </TableCell>
-                    <TableCell data-qa-space-required>
-                      {backup.disks.reduce((acc, disk) => (
-                        acc + disk.size
-                      ), 0)}MB
-                    </TableCell>
-                    <TableCell>
-                      <LinodeBackupActionMenu
-                        onRestore={() => this.openRestoreDrawer(
-                          backup.id,
-                          formatBackupDate(backup.created),
-                        )}
-                        onDeploy={() => {
-                          history.push('/linodes/create'
-                            + `?type=fromBackup&backupID=${backup.id}&linodeID=${linodeID}`);
-                        }}
-                      />
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
+              {backups.map((backup:Linode.LinodeBackup, idx:number) => 
+                <BackupTableRow
+                  key={idx}
+                  backup={backup}
+                  handleDeploy={this.handleDeploy}
+                  handleRestore={this.handleRestore}
+                />
+              )}
             </TableBody>
           </Table>
         </Paper>
@@ -675,7 +650,7 @@ const linodeContext = withLinode((context) => ({
   backupsEnabled: context.data!.backups.enabled,
   backupsSchedule: context.data!.backups.schedule,
   linodeID: context.data!.id,
-  linodeInTransition: linodeInTransition(context.data!.status),
+  linodeInTransition: isLinodeInTransition(context.data!.status),
   linodeRegion: context.data!.region,
   linodeType: context.data!.type,
 }));
