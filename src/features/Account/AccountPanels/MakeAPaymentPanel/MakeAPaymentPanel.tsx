@@ -17,6 +17,7 @@ import TextField from 'src/components/TextField';
 import { withAccount } from 'src/features/Account/context';
 import { makePayment } from 'src/services/account';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import ErrorState from 'src/components/ErrorState';
 
 type ClassNames = 'root' | 'positive' | 'negative';
 
@@ -108,7 +109,19 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
     type: 'CREDIT_CARD',
   });
 
-  render() {
+  renderNotAuthorized = () => {
+    return (
+      <ExpansionPanel heading="Make a Payment">
+        <Grid container>
+          <ErrorState
+            errorText="You are not authorized to view billing information"
+          />
+        </Grid>
+      </ExpansionPanel>
+    )
+  }
+
+  renderForm = () => {
     const { accountLoading, balance, classes } = this.props;
     const { errors, success } = this.state;
 
@@ -122,7 +135,6 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
     return (
       <ExpansionPanel heading="Make a Payment" actions={this.renderActions}>
         <Grid container>
-
           {/* Current Balance */}
           <Grid item xs={12}>
             <Grid container>
@@ -180,6 +192,13 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
           </Grid>
         </Grid>
       </ExpansionPanel>
+    );
+  }
+
+  render() {
+    const { accountLoading, balance } = this.props;
+    return (
+      (!accountLoading && balance === undefined) ? this.renderNotAuthorized() : this.renderForm()
     );
   }
 
