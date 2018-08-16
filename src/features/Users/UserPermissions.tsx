@@ -233,7 +233,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     if (!username || !(grants)) {
       return this.setState({
         errors: [
-          { reason: `Can\'t set Entity-Specific Grants at this time. Please try again later` }
+          { reason: `Can\'t set Entity-Specific Permissions at this time. Please try again later` }
         ]
       })
     }
@@ -261,7 +261,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         }
         this.setState(compose(
           set(lensPath(['success', 'specific']),
-            'Successfully updated Entity-Specific Grants'),
+            'Successfully updated Entity-Specific Permissions'),
           set(lensPath(['saving', 'entity']), false),
         ));
       })
@@ -269,7 +269,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         this.setState({
           errors: pathOr(
             [{ reason: 
-              'Error while updating Entity-Specific Grants for this user. Try again later'}],
+              'Error while updating Entity-Specific Permissions for this user. Try again later'}],
             ['response', 'data', 'errors'],
             errResponse,
           ),
@@ -637,14 +637,14 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       <Paper className={classes.globalSection} data-qa-entity-section>
         <Grid container justify="space-between" alignItems="center">
           <Grid item>
-            <Typography role="header" variant="title" data-qa-permissions-header="Specifc Grants">
-              Specific Grants
+            <Typography role="header" variant="title" data-qa-permissions-header="Specifc Permissions">
+              Specific Permissions
             </Typography>
           </Grid>
           <Grid item>
             <Grid container justify="flex-end" alignItems="center" style={{ width: 'auto' }}>
               <Grid item>
-                Set all Grants to:
+                Set all Permissions to:
               </Grid>
               <Grid item>
                 <Select
