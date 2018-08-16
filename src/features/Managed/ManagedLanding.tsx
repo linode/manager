@@ -39,10 +39,10 @@ export class ManagedLanding extends React.Component<CombinedProps, State> {
     return (
       <Placeholder
         title="Managed Services"
-        copy="Let us worry about your infrastructure, so you can get back to worrying about your business."
+        copy={`Linode Managed is only available in the Classic Manager`}
         buttonProps={{
           onClick: () => window.open('https://manager.linode.com/account#managed', '_blank'),
-          children: 'Upgrade to Linode Managed',
+          children: 'Navigate to Classic Manager',
         }}
       />
     );
