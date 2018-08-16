@@ -193,7 +193,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
           });
       });
     const { enableOnLoad } = pathOr(false, ['location','state'], this.props);
-    if (enableOnLoad) { this.enableBackups(); }
+    if (enableOnLoad && !this.props.backupsEnabled) { this.enableBackups(); }
   }
 
   componentWillUnmount() {
