@@ -155,7 +155,7 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
   };
 
   handlePageSizeChange = (pageSize: number) => {
-    this.setState({ pageSize }, () => this.requestInvoices() )
+    this.setState({ pageSize, page: 1 }, () => this.requestInvoices() )
   }
 }
 
