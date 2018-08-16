@@ -92,6 +92,7 @@ export const getPayments = (pagination: Linode.PaginationOptions = {}) =>
     setURL(`${API_ROOT}/account/payments`),
     setMethod('GET'),
     setParams(pagination),
+    setXFilter({ '+order_by': 'date', '+order': 'desc' }),
   )
     .then(response => response.data);
 
@@ -100,6 +101,7 @@ export const getInvoices = (pagination: Linode.PaginationOptions = {}) =>
     setURL(`${API_ROOT}/account/invoices`),
     setMethod('GET'),
     setParams(pagination),
+    setXFilter({ '+order_by': 'date', '+order': 'desc' }),
   )
     .then(response => response.data);
 
