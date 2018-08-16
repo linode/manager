@@ -6,7 +6,7 @@ import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 interface Props {
   backup: Linode.LinodeBackup;
   onRestore: (backup:Linode.LinodeBackup) => void;
-  onDeploy: () => void;
+  onDeploy: (backup:Linode.LinodeBackup) => void;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}>;
@@ -32,7 +32,7 @@ class LinodeBackupActionMenu extends React.Component<CombinedProps> {
         {
           title: 'Deploy New Linode',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            onDeploy();
+            onDeploy(backup);
             closeMenu();
             e.preventDefault();
           },
