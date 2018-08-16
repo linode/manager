@@ -139,6 +139,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
                   })}
                 >
                   {balanceDisplay}
+                  { balance < 0 && ` (credit)` }
                 </Typography>
               </Grid>
             </Grid>
