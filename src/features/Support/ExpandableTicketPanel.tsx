@@ -55,6 +55,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     width: '100%',
     height: '100%',
     borderRadius: '50%',
+    color: theme.palette.text.primary,
   },
   userName: {
     whiteSpace: 'nowrap',
@@ -218,7 +219,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
               className={classes.userCol}
             >
               <Grid container wrap="nowrap">
-                <Grid item>
+                <Grid item style={{ paddingLeft: 0 }}>
                   {this.renderAvatar(data.gravatarUrl)}
                 </Grid>
                 <Grid item>

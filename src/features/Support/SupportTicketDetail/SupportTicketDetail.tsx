@@ -41,7 +41,10 @@ type ClassNames = 'root'
   | 'open'
   | 'ticketLabel'
   | 'closed'
-  | 'attachmentPaper';
+  | 'attachmentPaperWrapper'
+  | 'attachmentPaper'
+  | 'attachmentRow'
+  | 'attachmentIcon';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {},
@@ -91,10 +94,30 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   closed: {
     backgroundColor: theme.color.red,
   },
+  attachmentPaperWrapper: {
+    overflowX: 'auto',
+  },
   attachmentPaper: {
-    padding: theme.spacing.unit * 2,
-    maxWidth: 500,
-  }
+    padding: `
+      ${theme.spacing.unit * 2}px
+      ${theme.spacing.unit * 3}px
+      ${theme.spacing.unit}px
+    `,
+    overflowX: 'auto',
+    width: 500,
+  },
+  attachmentRow: {
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    marginBottom: 12,
+    '&:last-child': {
+      marginBottom: 0,
+      border: 0,
+    },
+  },
+  attachmentIcon: {
+    paddingLeft: `0 !important`,
+    color: theme.palette.text.primary,
+  },
 });
 
 type RouteProps = RouteComponentProps<{ ticketId?: number }>;
@@ -275,16 +298,16 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
       return <InsertDriveFile key={idx} />;
     })
     return (
-      <Grid item xs={12} container justify="flex-start">
+      <Grid item xs={12} container justify="flex-start" className="px0">
         <Grid item xs={12}>
           <Typography variant="subheading">Attachments</Typography>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} className={classes.attachmentPaperWrapper}>
           <Paper className={classes.attachmentPaper}>
               {attachments.map((attachment, idx) => {
                 return (
-                  <Grid container key={idx}>
-                    <Grid item>
+                  <Grid container key={idx} className={classes.attachmentRow}>
+                    <Grid item className={classes.attachmentIcon}>
                       {icons[idx]}
                     </Grid>
                     <Grid item>
