@@ -37,5 +37,5 @@ export const initTagManager = (gtmId?: string) => {
     return;
   }
 
-  initGTM(window, document, 'script', 'dataLayer', 'GTM-KR9HHQ7');
+  initGTM(window, document, 'script', 'dataLayer', gtmId);
 }
