@@ -6,6 +6,7 @@ import * as ReactDOM from 'react-dom';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -58,7 +59,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   paypalButtonWrapper: {
     position: 'relative',
     zIndex: 1,
-    transition: [theme.transitions.create('opacity')],
+    transition: theme.transitions.create(['opacity']),
   },
   PaypalHidden: {
     opacity: .3,
@@ -465,22 +466,33 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
         {this.state.type === 'PAYPAL' && this.state.showPaypal
           ? 
           <React.Fragment>
-            {!paypalSubmitEnabled && <div className={classes.paypalMask} />}
-            <div className={classNames(
-              {
-                [classes.paypalButtonWrapper]: true,
-                [classes.PaypalHidden]: !paypalSubmitEnabled,
-              }
-            )}>
-              <PaypalButton
-                env={env}
-                payment={this.payment}
-                onAuthorize={this.onAuthorize}
-                client={client}
-                commit={false}
-                onCancel={this.onCancel}
-              />
-            </div>
+            {!paypalSubmitEnabled && 
+              <Tooltip
+                title={'You need a minimum amount of $5.00 to enable the payment.'}
+                data-qa-help-tooltip
+                enterTouchDelay={0}
+                leaveTouchDelay={5000}
+              >
+                <div className={classes.paypalMask} />
+              </Tooltip>
+            }
+            
+              <div className={classNames(
+                {
+                  [classes.paypalButtonWrapper]: true,
+                  [classes.PaypalHidden]: !paypalSubmitEnabled,
+                }
+              )}>
+                <PaypalButton
+                  env={env}
+                  payment={this.payment}
+                  onAuthorize={this.onAuthorize}
+                  client={client}
+                  commit={false}
+                  onCancel={this.onCancel}
+                />
+              </div>
+            
           </React.Fragment>
           : <Button
             type="primary"
