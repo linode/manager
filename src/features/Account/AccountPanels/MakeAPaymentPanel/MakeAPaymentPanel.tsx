@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import ErrorState from 'src/components/ErrorState';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -108,7 +109,19 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
     type: 'CREDIT_CARD',
   });
 
-  render() {
+  renderNotAuthorized = () => {
+    return (
+      <ExpansionPanel heading="Make a Payment">
+        <Grid container>
+          <ErrorState
+            errorText="You are not authorized to view billing information"
+          />
+        </Grid>
+      </ExpansionPanel>
+    )
+  }
+
+  renderForm = () => {
     const { accountLoading, balance, classes } = this.props;
     const { errors, success } = this.state;
 
@@ -118,11 +131,10 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
     }, errors);
 
     const generalError = hasErrorFor('none');
-    const balanceDisplay = !accountLoading && balance !== false ? `$${balance.toFixed(2)}` : '';
+    const balanceDisplay = !accountLoading && balance !== false ? `$${Math.abs(balance).toFixed(2)}` : '';
     return (
       <ExpansionPanel heading="Make a Payment" actions={this.renderActions}>
         <Grid container>
-
           {/* Current Balance */}
           <Grid item xs={12}>
             <Grid container>
@@ -134,11 +146,12 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
                   component={'span'}
                   variant="title"
                   className={classNames({
-                    [classes.positive]: balance >= 0,
-                    [classes.negative]: balance < 0,
+                    [classes.negative]: balance > 0,
+                    [classes.positive]: balance <= 0,
                   })}
                 >
                   {balanceDisplay}
+                  { balance < 0 && ` (credit)` }
                 </Typography>
               </Grid>
             </Grid>
@@ -179,6 +192,13 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
           </Grid>
         </Grid>
       </ExpansionPanel>
+    );
+  }
+
+  render() {
+    const { accountLoading, balance } = this.props;
+    return (
+      (!accountLoading && balance === undefined) ? this.renderNotAuthorized() : this.renderForm()
     );
   }
 
