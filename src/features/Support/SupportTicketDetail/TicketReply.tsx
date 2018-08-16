@@ -22,7 +22,6 @@ type ClassNames =
   | 'attachFileButton'
   | 'attachmentsContainer'
   | 'attachmentField'
-  | 'removeButton'
   | 'replyField'
   | 'uploadProgress'
 
@@ -42,7 +41,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     maxWidth: 800,
   },
   attachmentField: {
-    marginTop: 14,
+    marginTop: 0,
     width: 415,
     [theme.breakpoints.down('xs')]: {
       width: 165,
@@ -56,9 +55,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       width: 24, 
       fontSize: 22, 
     },
-  },
-  removeButton: {
-    marginTop: theme.spacing.unit * 2,
   },
   replyField: {
     paddingBottom: theme.spacing.unit * 4,
@@ -250,7 +246,6 @@ class TicketReply extends React.Component<CombinedProps, State> {
                   </Grid>
                   <Grid item>
                     <Button
-                      className={classes.removeButton}
                       type="remove"
                       data-file-idx={idx}
                       onClick={this.removeFile}
