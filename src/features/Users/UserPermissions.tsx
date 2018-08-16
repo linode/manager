@@ -447,7 +447,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           Global Permissions
         </Typography>
         {success && success.global &&
-          <Notice success text={success.global} className={classes.section}/>
+          <Notice success text={success.global} className={classes.section} spacingTop={8} />
         }
         <div className={classes.section}>
           {grants && grants.global &&
@@ -674,7 +674,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           }
         </div>
         {success && success.specific &&
-          <Notice success text={success.specific} className={classes.section}/>
+          <Notice success text={success.specific} className={classes.section} spacingTop={8} />
         }
         {this.renderActions(
           this.saveSpecificGrants,
@@ -720,7 +720,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         {generalError &&
-          <Notice error text={generalError} />
+          <Notice error text={generalError} spacingTop={8} />
         }
         <Grid container className={`${classes.topGrid} ${'py0'}`} justify="space-between" alignItems="center">
           <Grid item className={classes.titleWrapper}>
