@@ -66,7 +66,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-interface Props { }
+interface Props {
+ }
 
 interface State {
   type: 'CREDIT_CARD' | 'PAYPAL',
@@ -76,12 +77,12 @@ interface State {
   errors?: Linode.ApiFieldError[];
   usd: string;
   ccv: string;
-  showPaypal: boolean;
   paymentID: string;
   payerID: string;
   isExecutingPaypalPayment: boolean;
   paypalSubmitEnabled: boolean;
   dialogOpen: boolean;
+  paypalLoaded: boolean;
 }
 
 interface PaypalScript {
@@ -92,7 +93,8 @@ interface PaypalScript {
 
 interface AccountContextProps {
   accountLoading: boolean;
-  balance: false | number,
+  balance: false | number;
+  request: () => Promise<void>;
 }
 
 type CombinedProps = Props
@@ -100,8 +102,10 @@ type CombinedProps = Props
   & PaypalScript
   & WithStyles<ClassNames>;
 
+type PaypalButton = React.ComponentType<Paypal.PayButtonProps>;
+
 /* tslint:disable-next-line */
-let PaypalButton: any = undefined; // needs to be a JSX.Element with some props
+let PaypalButton: PaypalButton; // needs to be a JSX.Element with some props
 
 /*
 * Client IDs for Linode Paypal Apps
@@ -121,23 +125,23 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
     submitting: false,
     usd: '',
     ccv: '',
-    showPaypal: false,
     dialogOpen: false,
     paymentID: '',
     payerID: '',
     isExecutingPaypalPayment: false,
+    paypalLoaded: false,
     paypalSubmitEnabled: false, // disabled until a user enters in an amount over $5 USD
   };
 
   componentDidUpdate(prevProps: CombinedProps) {
-    if (!this.state.showPaypal && this.props.isScriptLoadSucceed) {
+    if (!prevProps.isScriptLoadSucceed && this.props.isScriptLoadSucceed) {
       /*
       * Becuase the paypal script is now loaded, so now we have access to this React component
       * in the window element. This will be used in the render method.
       * See documentation: https://github.com/paypal/paypal-checkout/blob/master/docs/frameworks.md
       */
       PaypalButton = (window as any).paypal.Button.driver('react', { React, ReactDOM });
-      this.setState({ showPaypal: true });
+      this.setState({ paypalLoaded: true })
     }
   }
 
@@ -149,13 +153,19 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
     /*
     * This is a little hacky. Papyal doesn't give us any reliable way to
     * validate the form before opening up paypal.com in a new tab, so we have
-    * to do this validation on each keypress.
+    * to do this validation on each keypress and disable the submit button if
+    * the criteria isn't met
     * Luckily, the only thing the API validates is if the amount is over $5 USD
     */
     const amountAsInt = parseInt(e.target.value, 10)
     if (this.state.type === 'PAYPAL' && amountAsInt >= 5) {
       this.setState({ paypalSubmitEnabled: true });
     }
+
+    if (this.state.type === 'PAYPAL' && !e.target.value) {
+      this.setState({ paypalSubmitEnabled: false });
+    }
+
     this.setState({ usd: e.target.value || '' });
   }
 
@@ -208,7 +218,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
     success: undefined,
     usd: '',
     ccv: '',
-    type: 'CREDIT_CARD',
+    paypalSubmitEnabled: false,
   });
 
   closeDialog = () => {
@@ -226,6 +236,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
       payment_id: paymentID
     })
       .then(() => {
+        this.props.request();
         this.setState({
           isExecutingPaypalPayment: false,
           dialogOpen: false,
@@ -236,7 +247,9 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
       })
       .catch((error) => {
         this.setState({
-          submitting: false,
+          isExecutingPaypalPayment: false,
+          dialogOpen: false,
+          usd: '',
           errors: pathOr([{ reason: 'Unable to make a payment at this time.' }],
             ['response', 'data', 'errors'], error),
         })
@@ -287,12 +300,12 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
       redirect_url: 'https://cloud.linode.com/billing',
       usd: (+usd).toFixed(2)
     })
-      .then((data: any) => {
+      .then((response: any) => {
         this.setState({ 
           submitting: false,
-          paymentID: data.payment_id
+          paymentID: response.payment_id
          })
-        return data.payment_id;
+        return response.payment_id;
       })
       .catch((error) => {
         this.setState({
@@ -348,7 +361,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
 
   renderForm = () => {
     const { accountLoading, balance, classes } = this.props;
-    const { errors, success, showPaypal } = this.state;
+    const { errors, success } = this.state;
 
     const hasErrorFor = getAPIErrorFor({
       usd: 'amount',
@@ -409,7 +422,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
             >
               <FormControlLabel value="CREDIT_CARD" label="Credit Card" control={<Radio />} />
               {
-                showPaypal && PaypalButton !== 'undefined' &&
+                !!PaypalButton && this.state.paypalLoaded &&
                 <FormControlLabel value="PAYPAL" label="Paypal" control={<Radio />} />
               }
             </RadioGroup>
@@ -463,7 +476,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
     const { paypalSubmitEnabled } = this.state;
     return (
       <ActionsPanel className={classes.actionPanel}>
-        {this.state.type === 'PAYPAL' && this.state.showPaypal
+        {this.state.type === 'PAYPAL'
           ? 
           <React.Fragment>
             {!paypalSubmitEnabled && 
@@ -477,7 +490,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
               </Tooltip>
             }
             
-              <div className={classNames(
+              <div data-qa-paypal-button className={classNames(
                 {
                   [classes.paypalButtonWrapper]: true,
                   [classes.PaypalHidden]: !paypalSubmitEnabled,
@@ -490,6 +503,10 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
                   client={client}
                   commit={false}
                   onCancel={this.onCancel}
+                  style={{
+                    color: 'blue',
+                    shape: 'rect',
+                  }}
                 />
               </div>
             
@@ -518,6 +535,7 @@ const styled = withStyles(styles, { withTheme: true });
 const accountContext = withAccount((context) => ({
   accountLoading: context.loading,
   balance: context.data && context.data.balance,
+  request: context.request,
 }));
 
 const enhanced = compose(styled, accountContext);
