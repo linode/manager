@@ -1,9 +1,11 @@
 import { compose, lensPath, pathOr,  set } from 'ramda';
 import * as React from 'react';
 
+import InputAdornment from '@material-ui/core/InputAdornment';
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import AttachFile from '@material-ui/icons/AttachFile';
+import CloudUpload from '@material-ui/icons/CloudUpload';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -22,9 +24,9 @@ type ClassNames =
   | 'attachmentField'
   | 'removeButton'
   | 'replyField'
-  | 'uploadProgress';
+  | 'uploadProgress'
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
     width: '100%',
   },
@@ -40,22 +42,35 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     maxWidth: 800,
   },
   attachmentField: {
+    marginTop: 14,
     width: 415,
     [theme.breakpoints.down('xs')]: {
       width: 165,
+    },
+    '& > div ': {
+      backgroundColor: theme.bg.main,
+      border: 0,
+    },
+    '& svg': {
+      color: theme.palette.text.primary,
+      width: 24, 
+      fontSize: 22, 
     },
   },
   removeButton: {
     marginTop: theme.spacing.unit * 2,
   },
   replyField: {
+    paddingBottom: theme.spacing.unit * 4,
+    marginBottom: theme.spacing.unit * 2,
+    borderBottom: '1px solid #ddd',
     '& > div': {
-      maxWidth: '800px !important',
+      maxWidth: '100% !important',
     },
   },
   uploadProgress: {
     maxWidth: 415,
-  }
+  },
 });
 
 interface Props {
@@ -203,7 +218,7 @@ class TicketReply extends React.Component<CombinedProps, State> {
         <Typography variant="headline" className={classes.root} data-qa-title >
           Reply
         </Typography>
-        {generalError && <Notice error spacingBottom={8} spacingTop={8} text={generalError} />}
+        {generalError && <Notice error spacingBottom={8} spacingTop={16} text={generalError} />}
         <TextField
           className={classes.replyField}
           multiline
@@ -222,10 +237,16 @@ class TicketReply extends React.Component<CombinedProps, State> {
                   <Grid item>
                     <TextField
                       className={classes.attachmentField}
-                      disabled
                       value={file.name}
                       errorText={file.errors && file.errors.length && file.errors[0].reason}
+                      InputProps={{
+                        startAdornment:
+                        <InputAdornment position="end">
+                          <CloudUpload />
+                        </InputAdornment>
+                      }}
                     />
+                    
                   </Grid>
                   <Grid item>
                     <Button
