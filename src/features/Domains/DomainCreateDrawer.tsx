@@ -30,7 +30,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 interface Props {
   open: boolean;
   onClose: () => void;
-  onSuccess: () => void;
+  onSuccess: (domain?:Linode.Domain) => void;
   mode: 'clone' | 'create';
   cloneID?: number;
   domain?: string;
@@ -95,6 +95,11 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
         open={open}
         onClose={this.closeDrawer}
       >
+        {generalError &&
+          <Notice error spacingTop={8}>
+            {generalError}
+          </Notice>
+        }
         <RadioGroup
           aria-label="type"
           name="type"
@@ -154,11 +159,6 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
               left
             />
           </React.Fragment>
-        }
-        {generalError &&
-          <Notice error>
-            generalError
-          </Notice>
         }
         <ActionsPanel>
           {!submitting
@@ -224,7 +224,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
     createDomain(data)
       .then((res) => {
         this.reset();
-        onSuccess();
+        onSuccess(res.data);
         onClose();
       })
       .catch((err) => {
