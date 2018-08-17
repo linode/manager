@@ -188,7 +188,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     if (!username || !(grants && grants[type])) {
       return this.setState({
         errors: [
-          { reason: `Can\'t set ${type} grants at this time. Please try again later`}]
+          { reason: `Can\'t set ${type} permissions at this time. Please try again later`}]
       })
     }
 
@@ -233,7 +233,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     if (!username || !(grants)) {
       return this.setState({
         errors: [
-          { reason: `Can\'t set Entity-Specific Grants at this time. Please try again later` }
+          { reason: `Can\'t set entity-specific permissions at this time. Please try again later` }
         ]
       })
     }
@@ -261,7 +261,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         }
         this.setState(compose(
           set(lensPath(['success', 'specific']),
-            'Successfully updated Entity-Specific Grants'),
+            'Successfully updated entity-specific permissions'),
           set(lensPath(['saving', 'entity']), false),
         ));
       })
@@ -269,7 +269,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         this.setState({
           errors: pathOr(
             [{ reason: 
-              'Error while updating Entity-Specific Grants for this user. Try again later'}],
+              'Error while updating entity-specific permissions for this user. Try again later'}],
             ['response', 'data', 'errors'],
             errResponse,
           ),
@@ -338,9 +338,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   renderGlobalPerm = (perm: string, checked: boolean) => {
     const { classes } = this.props;
     const permDescriptionMap = {
-      add_linodes: 'Can add Linodes to this Account ($)',
-      add_nodebalancers: 'Can add NodeBalancers to this Account ($)',
-      add_longview: 'Can add Longview clients to this Account',
+      add_linodes: 'Can add Linodes to this account ($)',
+      add_nodebalancers: 'Can add NodeBalancers to this account ($)',
+      add_longview: 'Can add Longview clients to this account',
       longview_subscription: 'Can modify this account\'s Longview subscription ($)',
       add_domains: 'Can add Domains using the DNS Manager',
       add_stackscripts: 'Can create StackScripts under this account',
@@ -447,7 +447,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           Global Permissions
         </Typography>
         {success && success.global &&
-          <Notice success text={success.global} className={classes.section}/>
+          <Notice success text={success.global} className={classes.section} spacingTop={8} />
         }
         <div className={classes.section}>
           {grants && grants.global &&
@@ -637,14 +637,14 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       <Paper className={classes.globalSection} data-qa-entity-section>
         <Grid container justify="space-between" alignItems="center">
           <Grid item>
-            <Typography role="header" variant="title" data-qa-permissions-header="Specifc Grants">
-              Specific Grants
+            <Typography role="header" variant="title" data-qa-permissions-header="Specific Permissions">
+              Specific Permissions
             </Typography>
           </Grid>
           <Grid item>
             <Grid container justify="flex-end" alignItems="center" style={{ width: 'auto' }}>
               <Grid item>
-                Set all Grants to:
+                Set all permissions to:
               </Grid>
               <Grid item>
                 <Select
@@ -674,7 +674,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           }
         </div>
         {success && success.specific &&
-          <Notice success text={success.specific} className={classes.section}/>
+          <Notice success text={success.specific} className={classes.section} spacingTop={8} />
         }
         {this.renderActions(
           this.saveSpecificGrants,
@@ -720,7 +720,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         {generalError &&
-          <Notice error text={generalError} />
+          <Notice error text={generalError} spacingTop={8} />
         }
         <Grid container className={`${classes.topGrid} ${'py0'}`} justify="space-between" alignItems="center">
           <Grid item className={classes.titleWrapper}>
