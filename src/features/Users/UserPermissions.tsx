@@ -637,7 +637,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       <Paper className={classes.globalSection} data-qa-entity-section>
         <Grid container justify="space-between" alignItems="center">
           <Grid item>
-            <Typography role="header" variant="title" data-qa-permissions-header="Specifc Permissions">
+            <Typography role="header" variant="title" data-qa-permissions-header="Specific Permissions">
               Specific Permissions
             </Typography>
           </Grid>
