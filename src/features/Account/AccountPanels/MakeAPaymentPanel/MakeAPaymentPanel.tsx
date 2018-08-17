@@ -52,7 +52,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     width: 175,
     height: 45,
     position: 'absolute',
-    zIndex: 2,
+    zIndex: 10,
     left: theme.spacing.unit * 2,
     top: theme.spacing.unit * 2,
   },
@@ -66,8 +66,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-interface Props {
- }
+interface Props { }
 
 interface State {
   type: 'CREDIT_CARD' | 'PAYPAL',
@@ -146,7 +145,11 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
   }
 
   handleTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ type: e.target.value as 'CREDIT_CARD' | 'PAYPAL' });
+    this.setState({
+      success: false,
+      successMessage: '', 
+      type: e.target.value as 'CREDIT_CARD' | 'PAYPAL' 
+    });
   }
 
   handleUSDChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -223,9 +226,11 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
 
   closeDialog = () => {
     this.setState({ 
+      errors: undefined,
       dialogOpen: false,
       success: true,
-      successMessage: 'Payment Cancelled' });
+      successMessage: 'Payment Cancelled' 
+    });
   }
 
   confirmPaypalPayment = () => {
@@ -292,7 +297,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
 
     this.setState({
       submitting: true,
-      errors: [],
+      errors: undefined,
     });
 
     return stagePaypalPayment({
