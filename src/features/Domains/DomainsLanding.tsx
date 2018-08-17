@@ -186,6 +186,15 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
     });
   }
 
+  handleSuccess = (domain:Linode.Domain) => {
+    if (domain.id) {
+      this.props.history.push(`/domains/${domain.id}`);
+    }
+    else {
+      this.getDomains();
+    }
+  }
+
   getActions = () => {
     return (
       <ActionsPanel>
@@ -234,7 +243,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
         mode={this.state.createDrawer.mode}
         domain={this.state.createDrawer.domain}
         cloneID={this.state.createDrawer.cloneID}
-        onSuccess={this.getDomains}
+        onSuccess={this.handleSuccess}
       />
     );
   }
@@ -301,7 +310,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
         <DomainZoneImportDrawer
           open={this.state.importDrawer.open}
           onClose={this.closeImportZoneDrawer}
-          onSuccess={this.getDomains}
+          onSuccess={this.handleSuccess}
         />
         <ConfirmationDialog
           open={this.state.removeDialog.open}
