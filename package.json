@@ -113,9 +113,10 @@
     "storyshots:test": "npx jest --config ./.storybook/storyshots.jest.config.js src/components/Storyshots.test.tsx --env=jsdom",
     "build-storybook": "build-storybook",
     "serve": "node testServer.js",
-    "selenium": "./node_modules/.bin/selenium-standalone install --config=./e2e/config/selenium-config.js && ./node_modules/.bin/selenium-standalone start --config=./e2e/config/selenium-config.js",
-    "e2e": "./node_modules/.bin/wdio ./e2e/config/wdio.conf.js",
-    "e2e:all": "./node_modules/.bin/wdio ./e2e/config/wdio.conf.js; ./node_modules/.bin/wdio ./e2e/config/wdio.storybook.conf.js",
+    "selenium": "npx selenium-standalone install --config=./e2e/config/selenium-config.js && ./node_modules/.bin/selenium-standalone start --config=./e2e/config/selenium-config.js",
+    "e2e": "npx wdio ./e2e/config/wdio.conf.js",
+    "e2e:all": "npx wdio ./e2e/config/wdio.conf.js; ./node_modules/.bin/wdio ./e2e/config/wdio.storybook.conf.js",
+    "e2e:browserstack": "npx wdio ./e2e/config/browserstack.conf.js",
     "mb": "npx mb"
   },
   "pre-commit": [
@@ -165,6 +166,7 @@
     "tslint-config-airbnb": "^5.6.0",
     "tslint-config-prettier": "^1.13.0",
     "typescript": "^2.7.2",
+    "wdio-browserstack-service": "^0.1.16",
     "wdio-dot-reporter": "0.0.9",
     "wdio-jasmine-framework": "0.3.5",
     "wdio-junit-reporter": "^0.4.2",
