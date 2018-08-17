@@ -124,6 +124,7 @@ interface State {
     backupID?: number;
   };
   cancelBackupsAlertOpen: boolean;
+  enabling: boolean;
 }
 
 type CombinedProps = Props
@@ -164,6 +165,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
       backupCreated: '',
     },
     cancelBackupsAlertOpen: false,
+    enabling: false,
   };
 
   windows: string[][] = [];
@@ -190,6 +192,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
           })
           .catch(() => {
             /* @todo: how do we want to display this error? */
+            this.setState({ enabling: false })
           });
       });
     const { enableOnLoad } = pathOr(false, ['location','state'], this.props);
@@ -237,15 +240,19 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
   }
 
   enableBackups = () => {
+    this.setState({ enabling: true });
     const { linodeID } = this.props;
     enableBackups(linodeID)
       .then(() => {
+        // There is no event for when backups have been enabled,
+        // so we don't reset the enabling state.
         sendToast('Backups are being enabled for this Linode');
         resetEventsPolling();
       })
       .catch((errorResponse) => {
         pathOr([], ['response', 'data', 'errors'], errorResponse)
           .forEach((err: Linode.ApiFieldError) => sendToast(err.reason, 'error'));
+        this.setState({ enabling: false });
       });
   }
 
@@ -253,6 +260,9 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     cancelBackups(this.props.linodeID)
       .then(() => {
         sendToast('Backups are being cancelled for this Linode');
+        // Just in case the user immediately disables backups
+        // and enabling is still true:
+        this.setState({ enabling: false, })
         resetEventsPolling();
       })
       .catch((errorResponse) => {
@@ -353,6 +363,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
   }
 
   Placeholder = (): JSX.Element | null => {
+    const { enabling } = this.state;
     const backupsMonthlyPrice = path<number>(
       ['type', 'response', 'addons', 'backups', 'price'],
       this.props,
@@ -372,6 +383,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         buttonProps={{
           onClick: () => this.enableBackups(),
           children: enableText,
+          loading: enabling,
         }}
       />
     );
