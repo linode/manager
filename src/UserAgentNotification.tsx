@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { event } from 'react-ga';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
@@ -24,6 +25,14 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 class UserAgentNotification extends React.Component<CombinedProps, State> {
   state: State = {
   };
+
+  componentDidMount() {
+    event({
+      category: "Browser Warning",
+      action: "Browser Warning - GA",
+      label: location.pathname,
+    })
+  }
   
   actions = () => <Button onClick={this.props.onClose} type="primary">Dismiss</Button>;
 
@@ -32,6 +41,7 @@ class UserAgentNotification extends React.Component<CombinedProps, State> {
 
     return (
       <ConfirmationDialog
+        data-qa-browser-warning
         actions={this.actions}
         open={this.props.open}
         onClose={this.props.onClose}

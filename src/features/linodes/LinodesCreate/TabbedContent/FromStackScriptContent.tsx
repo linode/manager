@@ -2,6 +2,8 @@ import { assocPath, pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
 
+import { event } from 'react-ga';
+
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -251,11 +253,23 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
       booted: true,
     })
       .then((linode) => {
+        event({
+          category: 'Create Linode',
+          action: 'Create Success - GA',
+          label: location.pathname,
+        })
+
         if (privateIP) { allocatePrivateIP(linode.id) };
         resetEventsPolling();
         history.push('/linodes');
       })
       .catch((error) => {
+        event({
+          category: 'Create Linode',
+          action: 'Create Error - GA',
+          label: location.pathname,
+        })
+        
         if (!this.mounted) { return; }
 
         if (error.response && error.response.data && error.response.data.errors) {

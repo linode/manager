@@ -100,6 +100,7 @@ export default <T>(...fns: Function[]): Axios.AxiosPromise<T> => {
         (window as any).dataLayer.push({
           'event': 'asyncActionSuccess',
           'url': response.config.url,
+          'method': response.config.method,
         });
       }
 
@@ -117,6 +118,7 @@ export default <T>(...fns: Function[]): Axios.AxiosPromise<T> => {
         (window as any).dataLayer.push({
           'event': 'asyncActionFailure',
           'url': e.response.config.url,
+          'method': e.response.config.method,
         });
       }
       
