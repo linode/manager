@@ -12,6 +12,7 @@ import {
 
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect';
 import Grid from 'src/components/Grid';
+import { ALGOLIA_APPLICATION_ID, ALGOLIA_SEARCH_KEY, DOCS_BASE_URL } from 'src/constants';
 
 import SearchItem from './SearchItem';
 
@@ -82,32 +83,36 @@ interface State {
 
 type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
 
-const dummyData = [
-  {
-    value: "1",
-    label: "Ubuntu",
-    data: {
-      source: "Community Site",
-      href: "https://www.linode.com/docs/web-servers/nginx/use-nginx-reverse-proxy/"
-    }
-  },
-  {
-    value: "2",
-    label: "Gentoo",
-    data: {
-      source: "Docs",
-      href: "https://www.linode.com/docs/web-servers/nginx/use-nginx-reverse-proxy/"
-    }
-  },
-  {
-    value: "3",
-    label: "Arch Linux",
-    data: {
-      source: "Docs",
-      href: "https://www.linode.com/docs/web-servers/nginx/use-nginx-reverse-proxy/"
-    }
-  }
-]
+// Algolia API Client
+const client = Algolia(ALGOLIA_APPLICATION_ID, ALGOLIA_SEARCH_KEY);
+const searchIndex = client.initIndex('linode-docs');
+
+// const dummyData = [
+//   {
+//     value: "1",
+//     label: "Ubuntu",
+//     data: {
+//       source: "Community Site",
+//       href: "https://www.linode.com/docs/web-servers/nginx/use-nginx-reverse-proxy/"
+//     }
+//   },
+//   {
+//     value: "2",
+//     label: "Gentoo",
+//     data: {
+//       source: "Docs",
+//       href: "https://www.linode.com/docs/web-servers/nginx/use-nginx-reverse-proxy/"
+//     }
+//   },
+//   {
+//     value: "3",
+//     label: "Arch Linux",
+//     data: {
+//       source: "Docs",
+//       href: "https://www.linode.com/docs/web-servers/nginx/use-nginx-reverse-proxy/"
+//     }
+//   }
+// ]
 
 class SearchPanel extends React.Component<CombinedProps, State> {
   state: State = {
@@ -116,17 +121,41 @@ class SearchPanel extends React.Component<CombinedProps, State> {
     options: [],
   };
 
-  componentDidMount() {
-    this.setState({ options: dummyData })
-  }
-
   getDataFromOptions = () => {
     const { options, inputValue } = this.state;
     return concat(options,[{value: 'search', label: inputValue, data: { source: 'finalLink'}}]);
   }
 
+  searchAlgolia = (inputValue:string) => {
+    searchIndex.search({
+      query: inputValue,
+      hitsPerPage: 10,
+    }, this.searchSuccess);
+  }
+
+  searchSuccess = (err:any, content:any) => {
+    if (err) { 
+      // @todo handle error
+      console.log(err);
+    }
+    console.log(content.hits);
+    const options = this.convertHitsToItems(content.hits);
+    this.setState({ options });
+  }
+
+  convertHitsToItems = (hits:any) : Item[] => {
+    if (!hits) { return []; }
+    return hits.map((hit:any, idx:number) => {
+      return { value: idx, label: hit.title, data: {
+        source: 'docs',
+        href: DOCS_BASE_URL + hit.href,
+      } }
+    })
+  }
+
   onInputValueChange = (inputValue:string) => {
     this.setState({ inputValue });
+    this.searchAlgolia(inputValue);
   }
 
   renderOptionsHelper = (item:Item, index:number, highlighted:boolean, itemProps:any, classes:any) => {
@@ -169,6 +198,7 @@ class SearchPanel extends React.Component<CombinedProps, State> {
             onInputValueChange={this.onInputValueChange}
             handleSelect={this.handleSelect}
             placeholder="Search docs and Community questions"
+            noFilter
           />
         </Grid>
       </Grid>
