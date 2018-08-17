@@ -49,7 +49,7 @@ interface Props {
   placeholder?: string;
   inputValue: string;
   onInputValueChange: (input:string) => void;
-  renderItems?: (items:Item, index:number, highlighted:boolean) => React.ReactElement<any>[];
+  renderItems?: (items:Item, index:number, highlighted:boolean, inputProps:any, classes:string) => React.ReactElement<any>[];
 }
 
 interface State {}
@@ -189,7 +189,7 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
     if ( isSelected )    { classes += " enhancedSelect-menu-item-selected"; }
 
     return this.props.renderItems 
-      ? this.props.renderItems(item, index, isHighlighted)
+      ? this.props.renderItems(item, index, isHighlighted, itemProps, classes)
       :
       <div className={classes}
         key={index} 
