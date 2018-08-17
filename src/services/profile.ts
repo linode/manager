@@ -115,18 +115,26 @@ export const getPersonalAccessTokens = () =>
   )
     .then(response => response.data);
 
-export const getSSHKeys = (pagination: any = {}, filters: any ={}) =>
+export const getSSHKeys = (pagination: any = {}, filters: any = {}) =>
   Request<Page<SSHKey>>(
     setMethod('GET'),
     setParams(pagination),
     setXFilter(filters),
     setURL(`${API_ROOT}/profile/sshkeys`),
   )
-.then(response => response.data);
+    .then(response => response.data);
+
+export const createSSHKey = (data: { label: string, ssh_key: string }) =>
+  Request<SSHKey>(
+    setMethod('POST'),
+    setURL(`${API_ROOT}/profile/sshkeys`),
+    setData(data),
+  )
+    .then(response => response.data);
 
 export const deleteSSHKey = (id: number) =>
   Request<{}>(
     setMethod('DELETE'),
     setURL(`${API_ROOT}/profile/sshkeys/${id}`),
   )
-.then(response => response.data);
+    .then(response => response.data);

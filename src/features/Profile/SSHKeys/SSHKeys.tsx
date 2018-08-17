@@ -21,6 +21,7 @@ import DeleteSSHKeyDialog from 'src/features/Profile/SSHKeys/DeleteSSHKeyDialog'
 import SSHKeyActionMenu from 'src/features/Profile/SSHKeys/SSHKeyActionMenu';
 import { getSSHKeys } from 'src/services/profile';
 import fingerprint from 'src/utilities/ssh-fingerprint';
+import SSHKeyCreationDrawer from './SSHKeyCreationDrawer';
 
 type ClassNames = 'root';
 
@@ -49,16 +50,22 @@ interface State {
     id?: number,
     label?: string,
   };
+  creationDrawer: {
+    open: boolean;
+  },
 }
 
 type CombinedProps = Props & ConnectedProps & WithStyles<ClassNames>;
 
-class SSHKeys extends React.Component<CombinedProps, State> {
+export class SSHKeys extends React.Component<CombinedProps, State> {
   state: State = {
     confirmDelete: {
       open: false,
       id: undefined,
       label: undefined,
+    },
+    creationDrawer: {
+      open: false,
     }
   };
 
@@ -111,6 +118,11 @@ class SSHKeys extends React.Component<CombinedProps, State> {
           onSuccess={this.handleSuccessfulDeletion}
           closeDialog={this.handleCancelDeletion}
         />
+        <SSHKeyCreationDrawer
+          open={this.state.creationDrawer.open}
+          onSuccess={this.handleSuccessfulCreation}
+          onCancel={this.closeCreationDrawer}
+        />
       </React.Fragment>
     );
   }
@@ -135,7 +147,7 @@ class SSHKeys extends React.Component<CombinedProps, State> {
 
   headerAction = () => {
     return (
-      <AddNewLink label='Add a SSH Key' onClick={() => null} disabled />
+      <AddNewLink label='Add a SSH Key' onClick={this.openCreationDrawer} />
     );
   };
 
@@ -159,7 +171,7 @@ class SSHKeys extends React.Component<CombinedProps, State> {
 
   renderData = (keys: ExtendedSSHKey[]) => {
     return keys.map(key =>
-      <TableRow key={key.id}>
+      <TableRow data-qa-content-row key={key.id}>
         <TableCell>{key.label}</TableCell>
         <TableCell>
           <Typography>{key.ssh_key.slice(0, 26)}</Typography>
@@ -193,6 +205,19 @@ class SSHKeys extends React.Component<CombinedProps, State> {
       () => this.props.request(),
     )
   }
+
+  handleSuccessfulCreation = () => {
+    this.closeCreationDrawer();
+    this.props.request();
+  };
+
+  openCreationDrawer = () => {
+    this.setState({ creationDrawer: { open: true } });
+  };
+
+  closeCreationDrawer = () => {
+    this.setState({ creationDrawer: { open: false } });
+  };
 }
 
 const updateResponseData = (keys: Linode.SSHKey[]) => keys.map((key) => ({
