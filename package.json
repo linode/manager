@@ -61,6 +61,7 @@
     "ramda": "^0.25.0",
     "raven-js": "^3.22.3",
     "react": "^16.4.1",
+    "react-async-script-loader": "^0.3.0",
     "react-chartjs-2": "^2.7.0",
     "react-dev-utils": "4.2.1",
     "react-dom": "^16.4.1",
