@@ -226,8 +226,13 @@ exports.config = {
             browser.loadImposter(imposter);
         }
 
+
         if (browser.options.desiredCapabilities.browserName.includes('chrome')) {
             browser.timeouts('page load', process.env.DOCKER ? 30000 : 20000);
+        }
+
+        if (browser.options.desiredCapabilities.browserName.includes('edge')) {
+            browser.windowHandleMaximize();
         }
 
         login(username, password);

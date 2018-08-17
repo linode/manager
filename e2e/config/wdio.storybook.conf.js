@@ -5,8 +5,8 @@ const wdioMaster = require('./wdio.conf.js');
 const { constants } = require('../constants');
 const { browserConf } = require('./browser-config');
 const selectedBrowser = () => {
-    if (argv.b) {
-        return browserConf[argv.b];
+    if (argv.browser) {
+        return browserConf[argv.browser];
     }
     if (process.env.DOCKER || argv.debug) {
      return browserConf['chrome'];
