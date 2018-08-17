@@ -1,6 +1,8 @@
 import { pathOr } from 'ramda';import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
 
+import { event } from 'react-ga';
+
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
@@ -146,11 +148,23 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
       backups_enabled: backups,
     })
       .then((linode) => {
+        event({
+          category: 'Create Linode',
+          action: 'Create Success - GA',
+          label: location.pathname,
+        })
+
         if (privateIP) allocatePrivateIP(linode.id);
         resetEventsPolling();
         history.push('/linodes');
       })
       .catch((error) => {
+        event({
+          category: 'Create Linode',
+          action: 'Create Error - GA',
+          label: location.pathname,
+        })
+        
         if (!this.mounted) { return; }
 
         this.setState(() => ({

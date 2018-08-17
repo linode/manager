@@ -5,6 +5,8 @@ import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
+import { event } from 'react-ga';
+
 import { initAnalytics, initTagManager } from 'src/analytics';
 import AuthenticationWrapper from 'src/components/AuthenticationWrapper';
 import DefaultLoader from 'src/components/DefaultLoader';
@@ -35,6 +37,24 @@ const Lish = DefaultLoader({
  */
 initAnalytics(GA_ID, isProduction);
 initTagManager(GTM_ID);
+
+const themeChoice = localStorage.getItem('themeChoice');
+
+if(themeChoice === 'dark') {
+  event({
+    category: 'Theme Choice',
+    action: 'Theme Choice - GA',
+    label: 'Dark Theme - GA',
+  })
+}
+
+if(themeChoice === 'light') {
+  event({
+    category: 'Theme Choice',
+    action: 'Theme Choice - GA',
+    label: 'Light Theme - GA',
+  })
+}
 
 /**
  * Send pageviews unless blacklisted.
