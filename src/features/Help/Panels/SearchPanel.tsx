@@ -87,33 +87,6 @@ type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
 const client = Algolia(ALGOLIA_APPLICATION_ID, ALGOLIA_SEARCH_KEY);
 const searchIndex = client.initIndex('linode-docs');
 
-// const dummyData = [
-//   {
-//     value: "1",
-//     label: "Ubuntu",
-//     data: {
-//       source: "Community Site",
-//       href: "https://www.linode.com/docs/web-servers/nginx/use-nginx-reverse-proxy/"
-//     }
-//   },
-//   {
-//     value: "2",
-//     label: "Gentoo",
-//     data: {
-//       source: "Docs",
-//       href: "https://www.linode.com/docs/web-servers/nginx/use-nginx-reverse-proxy/"
-//     }
-//   },
-//   {
-//     value: "3",
-//     label: "Arch Linux",
-//     data: {
-//       source: "Docs",
-//       href: "https://www.linode.com/docs/web-servers/nginx/use-nginx-reverse-proxy/"
-//     }
-//   }
-// ]
-
 class SearchPanel extends React.Component<CombinedProps, State> {
   state: State = {
     value: '',
@@ -138,7 +111,6 @@ class SearchPanel extends React.Component<CombinedProps, State> {
       // @todo handle error
       console.log(err);
     }
-    console.log(content.hits);
     const options = this.convertHitsToItems(content.hits);
     this.setState({ options });
   }
@@ -146,8 +118,8 @@ class SearchPanel extends React.Component<CombinedProps, State> {
   convertHitsToItems = (hits:any) : Item[] => {
     if (!hits) { return []; }
     return hits.map((hit:any, idx:number) => {
-      return { value: idx, label: hit.title, data: {
-        source: 'docs',
+      return { value: idx, label: hit._highlightResult.title.value, data: {
+        source: 'Linode documentation',
         href: DOCS_BASE_URL + hit.href,
       } }
     })
@@ -197,7 +169,7 @@ class SearchPanel extends React.Component<CombinedProps, State> {
             renderItems={this.renderOptionsHelper}
             onInputValueChange={this.onInputValueChange}
             handleSelect={this.handleSelect}
-            placeholder="Search docs and Community questions"
+            placeholder="Search Linode Docs and Community questions"
             noFilter
           />
         </Grid>
