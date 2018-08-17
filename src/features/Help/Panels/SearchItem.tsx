@@ -44,19 +44,21 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 const SearchItem: React.StatelessComponent<CombinedProps> = (props) => {
   const getLabel = () => {
-    return item.label ? `Search for "${item.label}"` : 'Search';
+    if (isFinal) { 
+      return item.label ? `Search for "${item.label}"` : 'Search';
+    } else { return item.label}
   }
+
   const { classes, item } = props;
   const source = item.data ? item.data.source : '';
   const isFinal = source === 'finalLink';
-  const labelText = isFinal ? getLabel() : item.label;
 
   return (
     <React.Fragment>
       <Grid container className={classes.root} direction={"column"}>
         <Grid item className={classes.label}>
           <Grid container className={classes.row} direction={"row"} alignItems={"center"} justify={"flex-start"}>
-            <Grid item>{labelText}</Grid>
+            <Grid item dangerouslySetInnerHTML={{__html: getLabel()}}/>
             {!isFinal && <Grid item><OpenInNew className={classes.icon} /></Grid>}
           </Grid>
         </Grid>
