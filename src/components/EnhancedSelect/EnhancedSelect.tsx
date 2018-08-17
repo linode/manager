@@ -50,6 +50,7 @@ interface Props {
   inputValue: string;
   onInputValueChange: (input:string) => void;
   renderItems?: (items:Item, index:number, highlighted:boolean, inputProps:any, classes:string) => React.ReactElement<any>[];
+  noFilter?: boolean;
 }
 
 interface State {}
@@ -92,7 +93,8 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
   }
 
   getSearchSuggestions = (inputText:string) => {
-    const { options } = this.props;
+    const { options, noFilter } = this.props;
+    if (noFilter) { return options };
     const text = inputText.toLowerCase();
     return options.filter((item:Item) => {
       return item.label ? item.label.toLowerCase().includes(text) : false;
