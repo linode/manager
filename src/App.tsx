@@ -11,6 +11,10 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 
 import DefaultLoader from 'src/components/DefaultLoader';
 import DocsSidebar from 'src/components/DocsSidebar';
+import {
+  DocumentTitleSegmentsProvider,
+  TitleSegmentsContext,
+} from 'src/components/DocumentTitleSegments/DocumentTitleSegments';
 import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import SideMenu from 'src/components/SideMenu';
@@ -158,6 +162,7 @@ interface State {
   betaNotification: Boolean;
   typesContext: WithTypesContext;
   regionsContext: WithRegionsContext;
+  documentTitleSegments: DocumentTitleSegmentsProvider;
 }
 
 type CombinedProps =
