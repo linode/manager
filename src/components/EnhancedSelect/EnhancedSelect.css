@@ -33,8 +33,3 @@
 .enhancedSelect-menu-item-selected.enhancedSelect-menu-item-highlighted {
   background-color: #f4f4f4 !important;
 }
-
-.enhancedSelect-menu-item em {
-  font-style: normal;
-  color: #3683DC;
-}
