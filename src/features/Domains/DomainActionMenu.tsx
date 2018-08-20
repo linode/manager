@@ -3,23 +3,22 @@ import * as React from 'react';
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
-  onEditRecords: () => void;
-  onRemove: () => void;
-  onClone: () => void;
+  onRemove: (domain: string, id: number) => void;
+  onClone: (domain: string, id: number) => void;
+  domainID: number,
+  domain: string,
 }
 
 type CombinedProps = Props;
 
 class LinodeActionMenu extends React.Component<CombinedProps> {
   createActions = () => (closeMenu: Function): Action[] => {
+    const { onRemove, onClone, domainID, domain } = this.props;
+
     return [
       {
         title: 'Edit DNS Records',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          this.props.onEditRecords();
-          closeMenu();
-          e.preventDefault();
-        },
+        linkTo: `/domains/${domainID}`
       },
       {
         title: 'Check Zone',
@@ -40,7 +39,7 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
       {
         title: 'Clone',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
-          this.props.onClone();
+          onClone(domain, domainID);
           closeMenu();
           e.preventDefault();
         },
@@ -48,7 +47,7 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
       {
         title: 'Remove',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
-          this.props.onRemove();
+          onRemove(domain, domainID);
           closeMenu();
           e.preventDefault();
         },
