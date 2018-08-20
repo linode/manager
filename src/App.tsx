@@ -94,6 +94,10 @@ const Help = DefaultLoader({
   loader: () => import('src/features/Help'),
 });
 
+const SupportSearchLanding = DefaultLoader({
+  loader: () => import('src/features/Help/SupportSearchLanding'),
+});
+
 type ClassNames = 'appFrame'
   | 'content'
   | 'wrapper'
@@ -306,6 +310,7 @@ export class App extends React.Component<CombinedProps, State> {
                             <Route path="/support/tickets/:ticketId" component={SupportTicketDetail} />
                             <Route path="/profile" component={Profile} />
                             <Route exact path="/support" component={Help} />
+                            <Route exact path="/support/search/" component={SupportSearchLanding} />
                             <Route path="/dashboard" component={Dashboard} />
                             <Redirect exact from="/" to="/dashboard" />
                             <Route component={NotFound} />
