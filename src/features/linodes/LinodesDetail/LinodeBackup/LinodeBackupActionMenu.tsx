@@ -4,8 +4,9 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
-  onRestore: () => void;
-  onDeploy: () => void;
+  backup: Linode.LinodeBackup;
+  onRestore: (backup:Linode.LinodeBackup) => void;
+  onDeploy: (backup:Linode.LinodeBackup) => void;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}>;
@@ -13,16 +14,17 @@ type CombinedProps = Props & RouteComponentProps<{}>;
 class LinodeBackupActionMenu extends React.Component<CombinedProps> {
   createActions = () => {
     const {
+      backup,
       onRestore,
       onDeploy,
     } = this.props;
 
-    return function (closeMenu: Function): Action[] {
+    return (closeMenu: Function): Action[] => {
       const actions = [
         {
           title: 'Restore to Existing Linode',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            onRestore();
+            onRestore(backup);
             closeMenu();
             e.preventDefault();
           },
@@ -30,7 +32,7 @@ class LinodeBackupActionMenu extends React.Component<CombinedProps> {
         {
           title: 'Deploy New Linode',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            onDeploy();
+            onDeploy(backup);
             closeMenu();
             e.preventDefault();
           },

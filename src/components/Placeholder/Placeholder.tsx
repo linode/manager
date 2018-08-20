@@ -1,10 +1,10 @@
 import * as React from 'react';
 
-import Button, { ButtonProps } from '@material-ui/core/Button';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
+import Button, { ButtonProps } from 'src/components/Button';
 import Grid from 'src/components/Grid';
 
 type ClassNames = 'root'
@@ -105,7 +105,7 @@ const Placeholder: React.StatelessComponent<CombinedProps> = (props) => {
         <Grid item xs={12} lg={10} className={classes.copy}>
           <Button
             variant="raised"
-            color="primary"
+            type="primary"
             className={classes.button}
             {...buttonProps}
             data-qa-placeholder-button

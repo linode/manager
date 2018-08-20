@@ -23,7 +23,6 @@ const safeGetImageLabel = (images: Linode.Image[], slug: string | null): string 
 
 const LinodesGridView: React.StatelessComponent<Props> = (props) => {
   const { linodes, images, openConfigDrawer, toggleConfirmation } = props;
-
   return (
     <Grid container>
       {linodes.map(linode =>
@@ -37,6 +36,7 @@ const LinodesGridView: React.StatelessComponent<Props> = (props) => {
           linodeType={linode.type}
           linodeNotification={linode.notification}
           linodeLabel={linode.label}
+          linodeBackups={linode.backups}
           linodeRecentEvent={linode.recentEvent}
           imageLabel={safeGetImageLabel(images, linode.image)}
           openConfigDrawer={openConfigDrawer}

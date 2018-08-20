@@ -106,6 +106,7 @@ interface Props {
   linodeType: null | string;
   linodeNotification?: string;
   linodeLabel: string;
+  linodeBackups: Linode.LinodeBackups;
   linodeRecentEvent?: Linode.Event;
   openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
   toggleConfirmation: (bootOption: Linode.BootAction,
@@ -192,6 +193,7 @@ class LinodeRow extends React.Component<CombinedProps> {
       linodeRegion,
       linodeNotification,
       linodeLabel,
+      linodeBackups,
       classes,
       openConfigDrawer,
       toggleConfirmation,
@@ -216,6 +218,7 @@ class LinodeRow extends React.Component<CombinedProps> {
               linodeId={linodeId}
               linodeLabel={linodeLabel}
               linodeStatus={linodeStatus}
+              linodeBackups={linodeBackups}
               openConfigDrawer={openConfigDrawer}
               toggleConfirmation={toggleConfirmation}
             />

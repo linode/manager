@@ -48,6 +48,7 @@ const LinodesListView: React.StatelessComponent<Props> = (props) => {
                   linodeRegion={linode.region}
                   linodeNotification={linode.notification}
                   linodeLabel={linode.label}
+                  linodeBackups={linode.backups}
                   linodeRecentEvent={linode.recentEvent}
                   openConfigDrawer={openConfigDrawer}
                   toggleConfirmation={toggleConfirmation}
