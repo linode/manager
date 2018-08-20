@@ -5,8 +5,8 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 import Grid from 'src/components/Grid';
 
 type CSSClasses = 'container'
-| 'link'
-| 'navWrapper'
+  | 'link'
+  | 'navWrapper'
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   container: {
@@ -43,26 +43,46 @@ interface Props { }
 
 type CombinedProps = Props & WithStyles<CSSClasses>;
 
-const footer: React.StatelessComponent<CombinedProps> = ({ classes }) => {
-  return (
-    <Grid container spacing={32} className={classes.container}>
-      <Grid item xs={12} className={classes.navWrapper}>
-        <a
-          className={classes.link}
-          href="https://developers.linode.com"
-          target="_blank"
-        >
-          API Reference
-        </a>
-        <a
-          className={classes.link}
-          href="mailto:feedback@linode.com"
-        >
-          Provide Feedback
-        </a>
-      </Grid>
-    </Grid>
-  );
-};
+export class Footer extends React.PureComponent<CombinedProps> {
+  render() {
+    const { classes } = this.props;
 
-export default styled(footer);
+    return (
+      <Grid container spacing={32} className={classes.container}>
+        <Grid item xs={12} className={classes.navWrapper}>
+          {this.renderVersion(classes.link)}
+          <a
+            className={classes.link}
+            href="https://developers.linode.com"
+            target="_blank"
+          >
+            API Reference
+          </a>
+          <a
+            className={classes.link}
+            href="mailto:feedback@linode.com"
+          >
+            Provide Feedback
+          </a>
+        </Grid>
+      </Grid>
+    );
+  }
+
+  renderVersion = (className: string) => {
+    const { VERSION } = process.env;
+    if (!VERSION) { return null; }
+
+    return (
+    <a
+      className={className}
+      href={`https://github.com/linode/manager/releases/tag/v${VERSION}`}
+      target="_blank"
+    >
+      v{VERSION}
+    </a>
+    );
+  };
+}
+
+export default styled(Footer);
