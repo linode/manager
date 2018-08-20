@@ -13,6 +13,7 @@ import Typography from '@material-ui/core/Typography';
 
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect';
 import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 import { ALGOLIA_APPLICATION_ID, ALGOLIA_SEARCH_KEY, DOCS_BASE_URL } from 'src/constants';
 
 import SearchItem from './SearchItem';
@@ -103,7 +104,7 @@ interface State {
   value: string;
   inputValue: string;
   options: Item[];
-  errors?: any; 
+  error?: string; 
 }
 
 type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
@@ -132,12 +133,17 @@ class SearchPanel extends React.Component<CombinedProps, State> {
   }
 
   searchSuccess = (err:any, content:any) => {
-    if (err) { 
-      // @todo handle error
-      console.log(err);
+    if (err) {
+      /*
+      * Errors from Algolia have the format: {'message':string, 'code':number}
+      * We do not want to push these messages on to the user as they are not under
+      * our control and can be account-related (e.g. "You have exceeded your quota").
+      */
+      this.setState({ error: "There was an error retrieving your search results." });
+      return;
     }
     const options = this.convertHitsToItems(content.hits);
-    this.setState({ options });
+    this.setState({ options, error: undefined });
   }
 
   convertHitsToItems = (hits:any) : Item[] => {
@@ -181,7 +187,7 @@ class SearchPanel extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes } = this.props;
-    const { inputValue, value } = this.state;
+    const { error, inputValue, value } = this.state;
     const data = this.getDataFromOptions();
 
     return (
@@ -196,6 +202,7 @@ class SearchPanel extends React.Component<CombinedProps, State> {
             <Typography variant='headline' >
                 What can we help you with?
             </Typography>
+            {error && <Notice error spacingTop={8} spacingBottom={0} >{error}</Notice>}
             <EnhancedSelect
               className={classes.input}
               options={data}
