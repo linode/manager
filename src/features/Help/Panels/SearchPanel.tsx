@@ -67,6 +67,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     alignItems: 'center',
     justifyContent: 'flex-start',
     textDecoration: 'none',
+    '& em': {
+      fontStyle: 'normal',
+      color: '#3683DC',
+    }
   },
   searchItemHighlighted: {
     backgroundColor: '#3683DC',
