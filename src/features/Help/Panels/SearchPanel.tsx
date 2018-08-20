@@ -9,6 +9,7 @@ import {
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect';
 import Grid from 'src/components/Grid';
@@ -17,40 +18,59 @@ import { ALGOLIA_APPLICATION_ID, ALGOLIA_SEARCH_KEY, DOCS_BASE_URL } from 'src/c
 import SearchItem from './SearchItem';
 
 type ClassNames = 'root'
-  | 'bgIcon'
+  | 'searchBox'
   | 'searchHeading'
+  | 'searchField'
+  | 'searchItem'
+  | 'searchItemHighlighted'
   | 'input'
   | 'textfield';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
-    padding: theme.spacing.unit * 4,
     maxWidth: '100%',
-    backgroundColor: theme.color.green,
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     position: 'relative',
   },
-  bgIcon: {
-    color: '#04994D',
-    width: 250,
-    height: 250,
-    '& .circle': {
-      fill: 'transparent',
-    },
-    '& .outerCircle': {
-      stroke: 'transparent',
-    },
-    '& .insidePath path': {
-      stroke: '#04994D',
-    },
+  searchBox: {
+    backgroundColor: theme.color.grey2,
+    marginLeft: theme.spacing.unit,
+    marginRight: '-6px',
   },
   searchHeading: {
-    textAlign: 'center',
-    color: theme.color.white,
+    color: theme.color.black,
+    marginBottom: theme.spacing.unit * 2,
+    fontSize: '175%',
+  },
+  searchField: {
+    padding: theme.spacing.unit * 3,
+    width: '100%',
+  },
+  searchItem: {
+    height: '24px',
+    boxSizing: 'content-box',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    fontSize: '.9rem',
+    transition: 'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), color .2s cubic-bezier(0.4, 0, 0.2, 1)',
+    fontWeight: 400,
+    fontFamily: 'Lato, sans-serif',
+    lineHeight: '1.2em',
+    whiteSpace: 'initial',
+    padding: '12px',
+    width: 'auto',
+    display: 'flex',
     position: 'relative',
-    zIndex: 2,
+    textAlign: 'left',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    textDecoration: 'none',
+  },
+  searchItemHighlighted: {
+    backgroundColor: '#3683DC',
+    color: 'white',
   },
   textfield: {
     backgroundColor: theme.color.white,
@@ -79,6 +99,7 @@ interface State {
   value: string;
   inputValue: string;
   options: Item[];
+  errors?: any; 
 }
 
 type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
@@ -130,9 +151,10 @@ class SearchPanel extends React.Component<CombinedProps, State> {
     this.searchAlgolia(inputValue);
   }
 
-  renderOptionsHelper = (item:Item, index:number, highlighted:boolean, itemProps:any, classes:any) => {
+  renderOptionsHelper = (item:Item, index:number, highlighted:boolean, itemProps:any) => {
+    const { classes } = this.props;
     return (
-    <div key={index} {...itemProps} className={classes} >
+    <div key={index} {...itemProps} className={`${classes.searchItem} ${highlighted && classes.searchItemHighlighted}`} >
       <SearchItem item={item} highlighted={highlighted}  />
     </div>
     )
@@ -159,19 +181,30 @@ class SearchPanel extends React.Component<CombinedProps, State> {
     const data = this.getDataFromOptions();
 
     return (
-      <Grid container className={classes.root}>
-        <Grid item xs={12} >
-          <EnhancedSelect
-            className={classes.input}
-            options={data}
-            value={value}
-            inputValue={inputValue}
-            renderItems={this.renderOptionsHelper}
-            onInputValueChange={this.onInputValueChange}
-            handleSelect={this.handleSelect}
-            placeholder="Search Linode Docs and Community questions"
-            noFilter
-          />
+      <Grid container justify='flex-start' className={classes.root}>
+        <Grid item>
+          <Typography variant='headline' className={classes.searchHeading} >
+              Get Help
+          </Typography>
+        </Grid>
+        <Grid item container xs={12} className={classes.searchBox} >
+          <Grid item className={classes.searchField}>
+            <Typography variant='headline' >
+                What can we help you with?
+            </Typography>
+            <EnhancedSelect
+              className={classes.input}
+              options={data}
+              value={value}
+              inputValue={inputValue}
+              renderItems={this.renderOptionsHelper}
+              onInputValueChange={this.onInputValueChange}
+              handleSelect={this.handleSelect}
+              placeholder="Search Linode Docs and Community questions"
+              noFilter
+              search
+            />
+          </Grid>
         </Grid>
       </Grid>
     );
