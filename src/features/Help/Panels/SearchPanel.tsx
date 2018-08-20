@@ -74,8 +74,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     }
   },
   searchItemHighlighted: {
-    backgroundColor: '#3683DC',
-    color: 'white',
+    backgroundColor: theme.color.grey1,
   },
   textfield: {
     backgroundColor: theme.color.white,
