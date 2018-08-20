@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 
 import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
@@ -11,7 +12,8 @@ export interface Action {
   title: string;
   disabled?: boolean;
   tooltip?: string;
-  onClick: (e: React.MouseEvent<HTMLAnchorElement>) => void;
+  onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
+  linkTo?: string;
 }
 
 type CSSClasses = 'root'
@@ -24,7 +26,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   root: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'flex-end',
+    justifypContent: 'flex-end',
   },
   item: {
     paddingLeft: theme.spacing.unit * 2,
@@ -89,6 +91,7 @@ class ActionMenu extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     const { createActions } = this.props;
+
     this.generateActions(createActions);
   }
 
@@ -134,16 +137,27 @@ class ActionMenu extends React.Component<CombinedProps, State> {
         >
           <MenuItem key="placeholder" className={classes.hidden} />
           {(actions as Action[]).map((a, idx) =>
-            <MenuItem
-              key={idx}
-              onClick={a.onClick}
-              className={classes.item}
-              data-qa-action-menu-item={a.title}
-              disabled={a.disabled}
-              tooltip={a.tooltip}
-            >
-              {a.title}
-            </MenuItem>,
+            (a.linkTo) // we want to be able to ctrl+click for items that link out
+              ? <Link key={idx} to={a.linkTo}>
+                <MenuItem
+                  className={classes.item}
+                  data-qa-action-menu-item={a.title}
+                  disabled={a.disabled}
+                  tooltip={a.tooltip}
+                >
+                  {a.title}
+                </MenuItem>
+            </Link>
+              : <MenuItem
+                key={idx}
+                onClick={a.onClick}
+                className={classes.item}
+                data-qa-action-menu-item={a.title}
+                disabled={a.disabled}
+                tooltip={a.tooltip}
+              >
+                {a.title}
+              </MenuItem>,
           )}
         </Menu>
       </div >

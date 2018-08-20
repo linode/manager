@@ -242,9 +242,8 @@ class PrimaryNav extends React.Component<Props, State> {
     if (primaryLink.display === 'Managed' && !this.state.userHasManaged) { return; }
 
     return (
-      <Link to={primaryLink.href}>
+      <Link key={primaryLink.display} to={primaryLink.href}>
         <ListItem
-          key={primaryLink.display}
           button
           divider
           component="li"
