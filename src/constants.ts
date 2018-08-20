@@ -18,7 +18,9 @@ export const OAUTH_TOKEN_REFRESH_TIMEOUT = LOGIN_SESSION_LIFETIME_MS / 2;
 export const ALGOLIA_APPLICATION_ID = 'KGUN8FAIPF'; // '64F7MR66VE' <-- Jared's demo account; will produce an error.
 export const ALGOLIA_SEARCH_KEY = 'd6df24e2856b435f440d9dc107bced01'; // '2b792e5fddbbf94860edf1c14bed0c8b' <-- demo account.
 
-export const DOCS_BASE_URL = 'https://linode.com/'
+export const DOCS_BASE_URL = 'https://linode.com/';
+export const DOCS_SEARCH_URL = 'https://linode.com/docs/search/?q=';
+export const COMMUNITY_SEARCH_URL = 'https://linode.com/community/questions/search?query=';
 
 export const ZONES = {
   'us-east': 'newark',

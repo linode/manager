@@ -1,7 +1,10 @@
 import * as classNames from 'classnames';
+import { compose } from 'ramda';
 import * as React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 
-import { Link } from 'react-router-dom';
+import SupportTicketDrawer from 'src/features/Support/SupportTickets/SupportTicketDrawer';
+
 
 import {
   StyleRulesCallback,
@@ -69,12 +72,15 @@ interface Props {}
 
 interface State {
   error?: string;
+  drawerOpen: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & RouteComponentProps<{}> & WithStyles<ClassNames>;
 
 export class OtherWays extends React.Component<CombinedProps, State> {
-  state: State = { };
+  state: State = { 
+    drawerOpen: false,
+  };
 
   ada: any = undefined;
 
@@ -100,21 +106,37 @@ export class OtherWays extends React.Component<CombinedProps, State> {
     this.ada.show();
   }
 
+  openTicketDrawer = (e:React.MouseEvent) => {
+    this.setState({ drawerOpen: true });
+  }
+
+  closeTicketDrawer = () => {
+    this.setState({ drawerOpen: false })
+  }
+
+  onTicketCreated = (ticket:Linode.SupportTicket) => {
+    const { history } = this.props;
+    history.push(`/support/tickets/${ticket.id}`);
+  }
+
   render() {
     const { classes } = this.props;
+    const { drawerOpen } = this.state;
 
     return (
       <React.Fragment>
-        <Typography
-          variant="title"
-          className={classes.heading}
-        >
-          Other Ways to Get Help
-        </Typography>
         <Grid
           container
           className={classes.wrapper}
         >
+          <Grid item xs={12}>
+            <Typography
+              variant="title"
+              className={classes.heading}
+            >
+              Didn't find what you need? Get help.
+            </Typography>
+          </Grid>
           <Grid item xs={12} sm={4}>
             <div className={classes.card}>
               <span className={classes.icon}><Community /></span>
@@ -146,11 +168,11 @@ export class OtherWays extends React.Component<CombinedProps, State> {
               </Typography>
             </div>
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={4} onClick={this.openTicketDrawer}>
             <div className={classes.card}>
               <span className={classes.icon}><Support /></span>
                 <Typography variant="subheading" className={classes.tileTitle}>
-                  <Link to="/support/tickets" className="black">Open a Ticket</Link>
+                  Open a Ticket
                 </Typography>
               <Typography variant="caption">
                 If you are not able to solve an issue with the resources listed above, you can
@@ -159,6 +181,11 @@ export class OtherWays extends React.Component<CombinedProps, State> {
             </div>
           </Grid>
         </Grid>
+        <SupportTicketDrawer
+          open={drawerOpen}
+          onClose={this.closeTicketDrawer}
+          onSuccess={this.onTicketCreated}
+        />
       </React.Fragment>
     );
   }
@@ -166,4 +193,7 @@ export class OtherWays extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(OtherWays);
+export default compose<any,any,any>(
+  styled,
+  withRouter
+)(OtherWays);

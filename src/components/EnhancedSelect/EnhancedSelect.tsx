@@ -115,7 +115,6 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
 
   downshiftStateReducer = (state: DownshiftState, changes: StateChangeOptions) => {
     const { value } = this.props;
-
     switch (changes.type) {
       // Don't clear the field value when we leave the field
       case Downshift.stateChangeTypes.blurInput:
@@ -139,6 +138,7 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
       inputValue,
       highlightedIndex,
       openMenu,
+      selectHighlightedItem,
       selectedItem,
     } = downshift;
 
@@ -160,10 +160,10 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
             disabled,
             helperText,
             label,
-            onKeyPress: (e:React.KeyboardEvent<KeyboardEvent>) => {
+            onKeyDown: (e:React.KeyboardEvent<KeyboardEvent>) => {
               if (e.key === 'Enter') {
-                this.onSubmit();
-                e.preventDefault();
+                if (highlightedIndex !== null) { selectHighlightedItem(); }
+                else { this.onSubmit(); }
               }
             },
             onFocus: (e:React.ChangeEvent<HTMLInputElement>) => {
