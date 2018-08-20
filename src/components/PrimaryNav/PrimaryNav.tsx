@@ -242,28 +242,30 @@ class PrimaryNav extends React.Component<Props, State> {
     if (primaryLink.display === 'Managed' && !this.state.userHasManaged) { return; }
 
     return (
-      <ListItem
-        key={primaryLink.display}
-        button
-        divider
-        component="li"
-        role="menuitem"
-        focusRipple={true}
-        onClick={() => this.navigate(primaryLink.href)}
-        className={`
+      <Link to={primaryLink.href}>
+        <ListItem
+          key={primaryLink.display}
+          button
+          divider
+          component="li"
+          role="menuitem"
+          focusRipple={true}
+          onClick={() => this.navigate(primaryLink.href)}
+          className={`
           ${classes.listItem}
           ${this.linkIsActive(primaryLink.href) && classes.active}
         `}
-      >
-        <ListItemText
-          primary={primaryLink.display}
-          disableTypography={true}
-          className={`
+        >
+          <ListItemText
+            primary={primaryLink.display}
+            disableTypography={true}
+            className={`
             ${classes.linkItem}
             ${this.linkIsActive(primaryLink.href) && classes.activeLink}
           `}
-        />
-      </ListItem>
+          />
+        </ListItem>
+      </Link>
     );
   }
 
@@ -362,28 +364,30 @@ class PrimaryNav extends React.Component<Props, State> {
               </li>
             </Collapse>
   
-            <ListItem
-              button
-              focusRipple={true}
-              onClick={this.goToHelp}
-              className={classNames({
-                [classes.listItem]: true,
-                [classes.collapsible]: true,
-                [classes.active]: this.linkIsActive('/support') === true,
-              })}
-            >
-              <ListItemText
-                disableTypography={true}
+            <Link to="/support">
+              <ListItem
+                button
+                focusRipple={true}
+                onClick={this.goToHelp}
                 className={classNames({
-                  [classes.linkItem]: true,
-                  [classes.activeLink]:
-                    expandedMenus.support
-                    || this.linkIsActive('/support') === true,
+                  [classes.listItem]: true,
+                  [classes.collapsible]: true,
+                  [classes.active]: this.linkIsActive('/support') === true,
                 })}
               >
-                Get Help
+                <ListItemText
+                  disableTypography={true}
+                  className={classNames({
+                    [classes.linkItem]: true,
+                    [classes.activeLink]:
+                      expandedMenus.support
+                      || this.linkIsActive('/support') === true,
+                  })}
+                >
+                  Get Help
               </ListItemText>
-            </ListItem>
+              </ListItem>
+            </Link>
   
             <div className={classes.spacer} />
   
