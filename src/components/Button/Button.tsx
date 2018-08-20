@@ -1,6 +1,7 @@
 import * as classNames from 'classnames';
 import { always, cond, propEq } from 'ramda';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 
 import Button, { ButtonProps } from '@material-ui/core/Button';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
@@ -21,6 +22,7 @@ export interface Props extends ButtonProps {
   type?: 'primary' | 'secondary' | 'cancel' | 'remove';
   className?: string;
   tooltipText?: string;
+  linkTo?: string;
 }
 
 const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
@@ -117,29 +119,56 @@ const wrappedButton: React.StatelessComponent<CombinedProps> = (props) => {
     tooltipText,
     type,
     className,
+    linkTo,
     ...rest
   } = props;
 
+  if(!!props.onClick && !!props.linkTo) {
+    throw new Error('onClick and linkTo are mutually exclusive');
+  }
+
   return (
     <React.Fragment>
-      <Button
-        {...rest}
-        variant={getVariant(props)}
-        disabled={props.disabled || loading}
-        color={getColor(props)}
-        className={classNames(
-          type,
-          {
-            [classes.root]: true,
-            [classes.loading]: loading,
-            [classes.destructive]: destructive,
-          },
-          className,
-        )}
-      >
-        {loading ? <Reload /> : props.children}
-        {type === 'remove' && 'Remove'}
-      </Button>
+      {(!!props.linkTo)
+        ? <Link to={props.linkTo}>
+          <Button
+            {...rest}
+            variant={getVariant(props)}
+            disabled={props.disabled || loading}
+            color={getColor(props)}
+            className={classNames(
+              type,
+              {
+                [classes.root]: true,
+                [classes.loading]: loading,
+                [classes.destructive]: destructive,
+              },
+              className,
+            )}
+          >
+            {loading ? <Reload /> : props.children}
+            {type === 'remove' && 'Remove'}
+          </Button>
+        </Link>
+        : <Button
+          {...rest}
+          variant={getVariant(props)}
+          disabled={props.disabled || loading}
+          color={getColor(props)}
+          className={classNames(
+            type,
+            {
+              [classes.root]: true,
+              [classes.loading]: loading,
+              [classes.destructive]: destructive,
+            },
+            className,
+          )}
+        >
+          {loading ? <Reload /> : props.children}
+          {type === 'remove' && 'Remove'}
+        </Button>
+      }
       {tooltipText && <HelpIcon text={tooltipText} />}
     </React.Fragment>
   );

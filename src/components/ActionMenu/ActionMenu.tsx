@@ -108,6 +108,42 @@ class ActionMenu extends React.Component<CombinedProps, State> {
     this.setState({ anchorEl: undefined });
   }
 
+  renderActionItem = (a: Action, idx: number) => {
+    const { classes } = this.props;
+
+    // cannot have both onClick and linkTo props
+    if (!!a.onClick && !!a.linkTo) {
+      throw new Error('onClick and linkTo are mutually exclusive');
+    }
+
+    return (
+      <React.Fragment key={idx}>
+        {!!a.linkTo
+          ? <Link to={a.linkTo}>
+            <MenuItem
+              className={classes.item}
+              data-qa-action-menu-item={a.title}
+              disabled={a.disabled}
+              tooltip={a.tooltip}
+            >
+              {a.title}
+            </MenuItem>
+          </Link>
+          : <MenuItem
+            key={idx}
+            onClick={a.onClick}
+            className={classes.item}
+            data-qa-action-menu-item={a.title}
+            disabled={a.disabled}
+            tooltip={a.tooltip}
+          >
+            {a.title}
+          </MenuItem>
+        }
+      </React.Fragment>
+    )
+  }
+
   render() {
     const { classes } = this.props;
     const { actions, anchorEl } = this.state;
@@ -137,27 +173,7 @@ class ActionMenu extends React.Component<CombinedProps, State> {
         >
           <MenuItem key="placeholder" className={classes.hidden} />
           {(actions as Action[]).map((a, idx) =>
-            (a.linkTo) // we want to be able to ctrl+click for items that link out
-              ? <Link key={idx} to={a.linkTo}>
-                <MenuItem
-                  className={classes.item}
-                  data-qa-action-menu-item={a.title}
-                  disabled={a.disabled}
-                  tooltip={a.tooltip}
-                >
-                  {a.title}
-                </MenuItem>
-            </Link>
-              : <MenuItem
-                key={idx}
-                onClick={a.onClick}
-                className={classes.item}
-                data-qa-action-menu-item={a.title}
-                disabled={a.disabled}
-                tooltip={a.tooltip}
-              >
-                {a.title}
-              </MenuItem>,
+            this.renderActionItem(a, idx)
           )}
         </Menu>
       </div >
