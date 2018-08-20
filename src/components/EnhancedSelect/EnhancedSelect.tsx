@@ -138,6 +138,7 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
     return (
       <div className={classes.root}>
         <TextField
+          data-qa-enhanced-select
           {...getInputProps({
             placeholder: placeholderText,
             errorText,
@@ -189,7 +190,8 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
     return (
       <div className={classes}
         key={index} 
-        {...itemProps} 
+        {...itemProps}
+        data-qa-select-menu-item={item.label}
       >
         {item.label}
       </div>
