@@ -2,8 +2,10 @@ import Downshift, { DownshiftState, StateChangeOptions } from 'downshift';
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 
+import InputAdornment from '@material-ui/core/InputAdornment';
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Search from '@material-ui/icons/Search';
 
 import RenderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
@@ -11,12 +13,16 @@ import TextField from 'src/components/TextField';
 import './EnhancedSelect.css';
 
 type ClassNames = 'root'
-  | 'searchSuggestions';
+  | 'searchSuggestions'
+  | 'searchIcon';
 
 const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   root: {
     position: 'relative',
     width: '100%',
+  },
+  searchIcon: {
+    color: `${theme.color.grey1} !important`,
   },
   searchSuggestions: {
     position: 'absolute',
@@ -51,6 +57,7 @@ interface Props {
   onInputValueChange: (input:string) => void;
   renderItems?: (items:Item, index:number, highlighted:boolean, inputProps:any, classes:string) => React.ReactElement<any>[];
   noFilter?: boolean;
+  search?: boolean;
 }
 
 interface State {}
@@ -135,7 +142,7 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
       selectedItem,
     } = downshift;
 
-    const { classes, disabled, errorText, helperText, label, placeholder } = this.props;
+    const { classes, disabled, errorText, helperText, label, placeholder, search } = this.props;
     const selectedIndex = this.getIndex(selectedItem);
     const placeholderText = placeholder ? placeholder : "Enter a value"
 
@@ -143,6 +150,11 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
       <div className={classes.root}>
         <TextField
           data-qa-enhanced-select
+          InputProps={search && {
+            startAdornment: <InputAdornment position="end">
+              <Search className={classes.searchIcon} />
+            </InputAdornment>
+          }}
           {...getInputProps({
             placeholder: placeholderText,
             errorText,
