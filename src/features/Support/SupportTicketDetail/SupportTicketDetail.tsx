@@ -35,6 +35,7 @@ type ClassNames = 'root'
   | 'labelIcon'
   | 'status'
   | 'open'
+  | 'ticketLabel'
   | 'closed';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
@@ -57,6 +58,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   label: {
     marginBottom: theme.spacing.unit,
+  },
+  ticketLabel: {
+    position: 'relative',
+    top: -3,
   },
   labelIcon: {
     paddingRight: 0,
@@ -227,7 +232,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
           {icon}
         </Grid>
         <Grid item>
-          <Typography>{label}</Typography>
+          <Typography className={classes.ticketLabel}>{label}</Typography>
         </Grid>
       </Grid>
     )
