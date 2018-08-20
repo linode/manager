@@ -9,46 +9,21 @@ import {
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect';
-import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import { ALGOLIA_APPLICATION_ID, ALGOLIA_SEARCH_KEY, DOCS_BASE_URL } from 'src/constants';
 
 import SearchItem from './SearchItem';
 
 type ClassNames = 'root'
-  | 'searchBox'
-  | 'searchHeading'
-  | 'searchField'
   | 'searchItem'
   | 'searchItemHighlighted'
   | 'input'
   | 'textfield';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
-  root: {
-    maxWidth: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    position: 'relative',
-  },
-  searchBox: {
-    backgroundColor: theme.color.grey2,
-    marginLeft: theme.spacing.unit,
-    marginRight: '-6px',
-  },
-  searchHeading: {
-    color: theme.color.black,
-    marginBottom: theme.spacing.unit * 2,
-    fontSize: '175%',
-  },
-  searchField: {
-    padding: theme.spacing.unit * 3,
-    width: '100%',
-  },
+  root: {},
   searchItem: {
     height: '24px',
     boxSizing: 'content-box',
