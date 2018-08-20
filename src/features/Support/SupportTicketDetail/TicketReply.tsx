@@ -184,6 +184,10 @@ class TicketReply extends React.Component<CombinedProps, State> {
             uploaded: false,
           }
         ]
+      }, () => {
+        if (this.inputRef.current) {
+          this.inputRef.current.value = '';
+        }
       })
     }
   }
@@ -195,6 +199,10 @@ class TicketReply extends React.Component<CombinedProps, State> {
     const idx = +aidx;
     this.setState({
       files: this.state.files.filter((_, i) => i !== idx),
+    }, () => {
+      if (this.inputRef.current) {
+        this.inputRef.current.value = '';
+      }
     });
   }
 
