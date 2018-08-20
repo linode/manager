@@ -108,7 +108,7 @@ export class SecuritySettings extends React.Component<CombinedProps, State> {
             className={classes.title}
             data-qa-title
           >
-            Account Security
+            IP Whitelisting (Legacy)
           </Typography>
           {generalError && <Notice error text={generalError} />}
           <Typography
