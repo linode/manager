@@ -1,4 +1,3 @@
-import * as Algolia from 'algoliasearch';
 import { compose } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -18,9 +17,7 @@ import AlgoliaSearchBar from './AlgoliaSearchBar';
 type ClassNames = 'root'
   | 'searchBox'
   | 'searchHeading'
-  | 'searchField'
-  | 'input'
-  | 'textfield';
+  | 'searchField';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -43,25 +40,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   searchField: {
     padding: theme.spacing.unit * 3,
     width: '100%',
-  },
-  textfield: {
-    backgroundColor: theme.color.white,
-    margin: 0,
-    flex: 1,
-    minHeight: 'initial',
-    '& input:focus': {
-      outline: '1px dotted #606469',
-    },
-  },
-  input: {
-    border: 0,
-    width: '100%',
-    background: 'transparent',
-    '& input': {
-      transition: theme.transitions.create(['opacity']),
-      fontSize: '1.0em',
-      [theme.breakpoints.down('sm')]: {},
-    },
   },
 });
 
