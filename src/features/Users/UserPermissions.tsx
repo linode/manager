@@ -722,37 +722,28 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         {generalError &&
           <Notice error text={generalError} spacingTop={8} />
         }
-        <Grid container className={`${classes.topGrid} ${'py0'}`} justify="space-between" alignItems="center">
-          <Grid item className={classes.titleWrapper}>
-            <Typography role="header" variant="title" data-qa-update-permissions-header>
-              Update User Permissions
-            </Typography>
-          </Grid>
-          <Grid item className="p0">
-            <Grid container alignItems="center" style={{ width: 'auto' }}>
-              <Grid item>
-                <Typography role="header" variant="title" data-qa-restrict-access={restricted}>
-                  Restrict Access:
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Typography role="header" variant="title">
-                  {restricted
-                    ? 'On'
-                    : 'Off'
-                  }
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Toggle
-                  checked={restricted}
-                  onChange={this.onChangeRestricted}
-                  className={classes.toggle}
-                />
-              </Grid>
+          <Grid container alignItems="center" style={{ width: 'auto' }}>
+            <Grid item>
+              <Typography role="header" variant="title" data-qa-restrict-access={restricted}>
+                Restrict Access:
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography role="header" variant="title">
+                {restricted
+                  ? 'On'
+                  : 'Off'
+                }
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Toggle
+                checked={restricted}
+                onChange={this.onChangeRestricted}
+                className={classes.toggle}
+              />
             </Grid>
           </Grid>
-        </Grid>
         {restricted
           ? this.renderPermissions()
           : this.renderUnrestricted()
