@@ -32,7 +32,6 @@ interface Props { }
 
 interface ConnectedProps {
   profileLoading: boolean;
-
   code?: string;
   url?: string;
   total?: number;
@@ -87,8 +86,8 @@ class Referrals extends React.Component<CombinedProps, State> {
                     </Typography>
                   </Grid>
                   <Grid item xs={12}>
-                    <CopyableTextField value={code} label='Referral Code' className={classes.copyField} />
-                    <CopyableTextField value={url} label='Referral URL' className={classes.copyField} />
+                    <CopyableTextField value={code} label='Referral Code' className={classes.copyField} expand />
+                    <CopyableTextField value={url} label='Referral URL' className={classes.copyField} expand />
                   </Grid>
                 </React.Fragment>
               )
