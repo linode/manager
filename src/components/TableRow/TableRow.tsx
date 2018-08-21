@@ -1,5 +1,4 @@
 import * as classNames from 'classnames';
-import { compose } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
@@ -13,7 +12,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 });
 
 interface Props {
-  goTo?: string;
+  goToLink?: string;
+  className?: string;
 }
 
 type CombinedProps = Props & TableRowProps & RouteComponentProps<{}> & WithStyles<ClassNames>;
@@ -25,26 +25,26 @@ class WrappedTableRow extends React.Component<CombinedProps> {
   }
 
   render() {
-    const { classes, className, ...rest } = this.props;
+    const { classes, className, goToLink, ...rest } = this.props;
 
     return (
         <TableRow
+          onClick={() => goToLink && this.goTo(goToLink)}
           className={classNames(
           className,
             {
               [classes.root]: true,
             })}
-          {...rest
-        }>
+          {...rest}
+        >
           {this.props.children}
         </TableRow>
     );
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles<ClassNames>(styles, { withTheme: true });
+const styledTableRow = styled<CombinedProps>(WrappedTableRow);
+const routedStyledTableRow = withRouter(styledTableRow);
 
-export default compose(
-  styled,
-  withRouter
-)(WrappedTableRow);
+export default routedStyledTableRow;
