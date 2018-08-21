@@ -80,7 +80,7 @@ const VolumeConfigDrawer: React.StatelessComponent<CombinedProps> = (props) => {
             </Typography>
             <CopyableTextField
               className={classes.copyField}
-              value={`${props.volumePath} /mnt/${props.volumeLabel}`}
+              value={`${props.volumePath} /mnt/${props.volumeLabel} ext4 defaults,noatime 0 2`}
             />
           </div>
           <ActionsPanel>
