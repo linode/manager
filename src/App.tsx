@@ -1,5 +1,5 @@
 import { shim } from 'promise.prototype.finally';
-import { lensPath, pathOr, set } from 'ramda';
+import { clone, lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
@@ -14,7 +14,7 @@ import DocsSidebar from 'src/components/DocsSidebar';
 import {
   DocumentTitleSegmentsProvider,
   TitleSegmentsContext,
-} from 'src/components/DocumentTitleSegments/DocumentTitleSegments';
+} from 'src/components/DocumentTitleSegments';
 import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import SideMenu from 'src/components/SideMenu';
@@ -158,11 +158,11 @@ interface ConnectedProps {
 }
 
 interface State {
-  menuOpen: Boolean;
-  betaNotification: Boolean;
+  menuOpen: boolean;
+  betaNotification: boolean;
   typesContext: WithTypesContext;
   regionsContext: WithRegionsContext;
-  documentTitleSegments: DocumentTitleSegmentsProvider;
+  documentTitleContext: TitleSegmentsContext;
 }
 
 type CombinedProps =
@@ -172,6 +172,7 @@ type CombinedProps =
 
 const typesContext = (path: string[]) => lensPath(['typesContext', ...path]);
 const regionsContext = (path: string[]) => lensPath(['regionsContext', ...path]);
+const documentTitleContext = (path: string[]) => lensPath(['documentTitleContext', ...path]);
 
 const L = {
   typesContext: {
@@ -186,12 +187,15 @@ const L = {
     lastUpdated: regionsContext(['lastUpdated']),
     loading: regionsContext(['loading']),
   },
+  documentTitleContext: {
+    titleSegments: documentTitleContext(['titleSegments']),
+  },
 };
 
 export class App extends React.Component<CombinedProps, State> {
   composeState = composeState;
 
-  state = {
+  state: State = {
     menuOpen: false,
     betaNotification: false,
     typesContext: {
@@ -241,6 +245,24 @@ export class App extends React.Component<CombinedProps, State> {
           });
       },
       update: () => null, /** @todo */
+    },
+    documentTitleContext: {
+      titleSegments: ['Linode Manager'],
+      appendSegment: (segment: string) => {
+        this.composeState([
+          set(L.documentTitleContext.titleSegments,
+            [...this.state.documentTitleContext.titleSegments, segment])
+        ]);
+      },
+      removeSegment: (segment: string) => {
+        const targetIdx = this.state.documentTitleContext.titleSegments.findIndex(
+          el => el === segment);
+        const newTitleSegments = clone(this.state.documentTitleContext.titleSegments);
+        newTitleSegments.splice(targetIdx, 1);
+        this.composeState([
+          set(L.documentTitleContext.titleSegments, newTitleSegments),
+        ]);
+      }
     }
   };
 
@@ -286,50 +308,52 @@ export class App extends React.Component<CombinedProps, State> {
       <React.Fragment>
         {longLivedLoaded &&
           <React.Fragment>
-            <TypesProvider value={this.state.typesContext}>
-              <RegionsProvider value={this.state.regionsContext}>
-                <div className={classes.appFrame}>
-                  <SideMenu open={menuOpen} closeMenu={this.closeMenu} toggleTheme={toggleTheme} />
-                  <main className={classes.content}>
-                    <TopMenu openSideMenu={this.openMenu} />
-                    <div className={classes.wrapper}>
-                      <Grid container spacing={0} className={classes.grid}>
-                        <Grid item className={`${classes.switchWrapper} ${hasDoc ? 'mlMain' : ''}`}>
-                          <Switch>
-                            <Route path="/linodes" component={LinodesRoutes} />
-                            <Route path="/volumes" component={Volumes} />
-                            <Route path="/nodebalancers" component={NodeBalancers} />
-                            <Route path="/domains" component={Domains} />
-                            <Route exact path="/managed" component={Managed} />
-                            <Route exact path="/longview" component={Longview} />
-                            <Route exact path="/images" component={Images} />
-                            <Route path="/stackscripts" component={StackScripts} />
-                            <Route exact path="/billing" component={Account} />
-                            <Route exact path="/billing/invoices/:invoiceId" component={InvoiceDetail} />
-                            <Route path="/users" component={Users} />
-                            <Route exact path="/support/tickets" component={SupportTickets} />
-                            <Route path="/support/tickets/:ticketId" component={SupportTicketDetail} />
-                            <Route path="/profile" component={Profile} />
-                            <Route exact path="/support" component={Help} />
-                            <Route path="/dashboard" component={Dashboard} />
-                            <Redirect exact from="/" to="/dashboard" />
-                            <Route component={NotFound} />
-                          </Switch>
+            <DocumentTitleSegmentsProvider value={this.state.documentTitleContext}>
+              <TypesProvider value={this.state.typesContext}>
+                <RegionsProvider value={this.state.regionsContext}>
+                  <div className={classes.appFrame}>
+                    <SideMenu open={menuOpen} closeMenu={this.closeMenu} toggleTheme={toggleTheme} />
+                    <main className={classes.content}>
+                      <TopMenu openSideMenu={this.openMenu} />
+                      <div className={classes.wrapper}>
+                        <Grid container spacing={0} className={classes.grid}>
+                          <Grid item className={`${classes.switchWrapper} ${hasDoc ? 'mlMain' : ''}`}>
+                            <Switch>
+                              <Route path="/linodes" component={LinodesRoutes} />
+                              <Route path="/volumes" component={Volumes} />
+                              <Route path="/nodebalancers" component={NodeBalancers} />
+                              <Route path="/domains" component={Domains} />
+                              <Route exact path="/managed" component={Managed} />
+                              <Route exact path="/longview" component={Longview} />
+                              <Route exact path="/images" component={Images} />
+                              <Route path="/stackscripts" component={StackScripts} />
+                              <Route exact path="/billing" component={Account} />
+                              <Route exact path="/billing/invoices/:invoiceId" component={InvoiceDetail} />
+                              <Route path="/users" component={Users} />
+                              <Route exact path="/support/tickets" component={SupportTickets} />
+                              <Route path="/support/tickets/:ticketId" component={SupportTicketDetail} />
+                              <Route path="/profile" component={Profile} />
+                              <Route exact path="/support" component={Help} />
+                              <Route path="/dashboard" component={Dashboard} />
+                              <Redirect exact from="/" to="/dashboard" />
+                              <Route component={NotFound} />
+                            </Switch>
+                          </Grid>
+                          <DocsSidebar docs={documentation} />
                         </Grid>
-                        <DocsSidebar docs={documentation} />
-                      </Grid>
-                    </div>
-                  </main>
-                  <Footer />
-                  <BetaNotification
-                    open={this.state.betaNotification}
-                    onClose={this.closeBetaNotice}
-                    data-qa-beta-notice />
-                  <ToastNotifications />
-                  <VolumeDrawer />
-                </div>
-              </RegionsProvider>
-            </TypesProvider>
+                      </div>
+                    </main>
+                    <Footer />
+                    <BetaNotification
+                      open={this.state.betaNotification}
+                      onClose={this.closeBetaNotice}
+                      data-qa-beta-notice />
+                    <ToastNotifications />
+                    <VolumeDrawer />
+                  </div>
+                </RegionsProvider>
+              </TypesProvider>
+            </DocumentTitleSegmentsProvider>
           </React.Fragment>
         }
       </React.Fragment>

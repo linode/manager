@@ -20,8 +20,8 @@ const DocumentTitleSegmentsConsumer = documentTitleSegments.Consumer;
 
 export function withDocumentTitleSegment<P> (segment: string) {
   return function (Component: React.ComponentType<P>) {
-    class ComponentWithDocumentTitleSegment extends React.Component<TitleSegmentsContext> {
-      static displayName = `WithDocumentTitleSegment(${getDisplayName(Component)}`
+    class ComponentWithDocumentTitleSegment extends React.Component<P & TitleSegmentsContext> {
+      static displayName = `WithDocumentTitleSegment(${getDisplayName(Component)})`
 
       componentDidMount() {
         this.props.appendSegment(segment);
@@ -32,19 +32,19 @@ export function withDocumentTitleSegment<P> (segment: string) {
       }
 
       render() {
+        const { titleSegments, appendSegment, removeSegment, ...rest } = this.props as any;
         return (
           /* The component does not need to passed any information about its title segment */
-          <Component />
+          <Component {...rest} />
         )
       }
-
     }
 
     /* 
      * This must be a _doubly nested_ HOC, so that we can control the context
      * using lifecycle methods
      */
-    return class InnerComponentWithDocumentTitleSegment extends React.Component {
+    return class InnerComponentWithDocumentTitleSegment extends React.Component<P> {
       static displayName = `InnerComponentWithDocumentTitleSegment(${getDisplayName(
         ComponentWithDocumentTitleSegment)})`
 
@@ -52,7 +52,11 @@ export function withDocumentTitleSegment<P> (segment: string) {
         return (
           <DocumentTitleSegmentsConsumer>
             {(value: TitleSegmentsContext) => {
-              return <ComponentWithDocumentTitleSegment {...value} />
+              const finalProps = {
+                ...value,
+                ...this.props as any,
+              }
+              return <ComponentWithDocumentTitleSegment {...finalProps} />
             }}
           </DocumentTitleSegmentsConsumer>
         );
