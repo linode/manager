@@ -1,8 +1,6 @@
 import { assocPath, pathOr } from 'ramda';
 import * as React from 'react';
-import { Sticky, StickyProps } from 'react-sticky';
-
-import { event } from 'react-ga';
+import { Sticky, StickyProps } from 'react-sticky'
 
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
@@ -18,6 +16,8 @@ import { Info } from 'src/features/linodes/LinodesCreate/LinodesCreate';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
 import { allocatePrivateIP, createLinode } from 'src/services/linodes';
+
+import { sendEvent } from 'src/utilities/analytics';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -253,9 +253,9 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
       booted: true,
     })
       .then((linode) => {
-        event({
-          category: 'Create Linode',
-          action: 'Create Success - GA',
+        sendEvent({
+          category: 'Linode',
+          action: 'Create Success',
           label: location.pathname,
         })
 
@@ -264,9 +264,9 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
         history.push('/linodes');
       })
       .catch((error) => {
-        event({
-          category: 'Create Linode',
-          action: 'Create Error - GA',
+        sendEvent({
+          category: 'Linode',
+          action: 'Create Error',
           label: location.pathname,
         })
         

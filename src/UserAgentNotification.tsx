@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { event } from 'react-ga';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+
+import { sendEvent } from 'src/utilities/analytics';
 
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
@@ -27,10 +28,10 @@ class UserAgentNotification extends React.Component<CombinedProps, State> {
   };
 
   componentDidMount() {
-    event({
+    sendEvent({
       category: "Browser Warning",
-      action: "Browser Warning - GA",
-      label: location.pathname,
+      action: "Browser Warning",
+      label: this.props.warning || location.pathname,
     })
   }
   
