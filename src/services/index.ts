@@ -87,43 +87,7 @@ export default <T>(...fns: Function[]): Axios.AxiosPromise<T> => {
     });
   }
 
-  return Axios.default(config)
-    .then(response => {
-
-      /*
-      * This is sending an event to the Google Tag Manager
-      * data layer. This is important because it lets us track
-      * async actions as custom events
-      */
-      if ((window as any).dataLayer) {
-        (window as any).dataLayer = (window as any).dataLayer || [];
-        (window as any).dataLayer.push({
-          'event': 'asyncActionSuccess',
-          'url': response.config.url,
-          'method': response.config.method,
-        });
-      }
-
-      return response;
-    })
-    .catch(e => {
-
-      /*
-      * This is sending an event to the Google Tag Manager
-      * data layer. This is important because it lets us track
-      * async actions as custom events
-      */
-      if ((window as any).dataLayer) {
-        (window as any).dataLayer = (window as any).dataLayer || [];
-        (window as any).dataLayer.push({
-          'event': 'asyncActionFailure',
-          'url': e.response.config.url,
-          'method': e.response.config.method,
-        });
-      }
-      
-      return Promise.reject(e);
-    });
+  return Axios.default(config);
 };
 
 /**

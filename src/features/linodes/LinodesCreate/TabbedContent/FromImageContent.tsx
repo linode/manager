@@ -2,8 +2,6 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
 
-import { event } from 'react-ga';
-
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import CheckoutBar from 'src/components/CheckoutBar';
@@ -14,6 +12,8 @@ import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPa
 import { resetEventsPolling } from 'src/events';
 import { Info } from 'src/features/linodes/LinodesCreate/LinodesCreate';
 import { allocatePrivateIP, createLinode } from 'src/services/linodes';
+
+import { sendEvent } from 'src/utilities/analytics';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -155,9 +155,9 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
       booted: true,
     })
       .then((linode) => {
-        event({
-          category: 'Create Linode',
-          action: 'Create Success - GA',
+        sendEvent({
+          category: 'Linode',
+          action: 'Create Success',
           label: location.pathname,
         })
 
@@ -166,9 +166,9 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
         history.push('/linodes');
       })
       .catch((error) => {
-        event({
-          category: 'Create Linode',
-          action: 'Create Error - GA',
+        sendEvent({
+          category: 'Linode',
+          action: 'Create Error',
           label: location.pathname,
         })
         if (!this.mounted) { return; }

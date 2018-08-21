@@ -5,16 +5,16 @@ import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-import { event } from 'react-ga';
-
-import { initAnalytics, initTagManager } from 'src/analytics';
+import { initAnalytics } from 'src/analytics';
 import AuthenticationWrapper from 'src/components/AuthenticationWrapper';
 import DefaultLoader from 'src/components/DefaultLoader';
-import { GA_ID, GTM_ID, isProduction } from 'src/constants';
+import { GA_ID, isProduction } from 'src/constants';
 import 'src/exceptionReporting';
 import Logout from 'src/layouts/Logout';
 import OAuthCallbackPage from 'src/layouts/OAuth';
 import store from 'src/store';
+
+import { sendEvent } from 'src/utilities/analytics';
 import 'src/utilities/createImageBitmap';
 import 'src/utilities/request';
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
@@ -36,23 +36,22 @@ const Lish = DefaultLoader({
  * Initialize Analytic and Google Tag Manager
  */
 initAnalytics(GA_ID, isProduction);
-initTagManager(GTM_ID);
 
 const themeChoice = localStorage.getItem('themeChoice');
 
-if(themeChoice === 'dark') {
-  event({
+if (themeChoice === 'dark') {
+  sendEvent({
     category: 'Theme Choice',
-    action: 'Theme Choice - GA',
-    label: 'Dark Theme - GA',
+    action: 'Dark Theme',
+    label: location.pathname,
   })
 }
 
-if(themeChoice === 'light') {
-  event({
+if (themeChoice === 'light' || themeChoice === null) {
+  sendEvent({
     category: 'Theme Choice',
-    action: 'Theme Choice - GA',
-    label: 'Light Theme - GA',
+    action: 'Light Theme',
+    label: location.pathname,
   })
 }
 
