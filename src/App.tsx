@@ -1,5 +1,5 @@
 import { shim } from 'promise.prototype.finally';
-import { clone, lensPath, pathOr, set } from 'ramda';
+import { clone, lensPath, pathOr, reverse, set } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
@@ -252,7 +252,7 @@ export class App extends React.Component<CombinedProps, State> {
         this.composeState([
           set(L.documentTitleContext.titleSegments,
             [...this.state.documentTitleContext.titleSegments, segment])
-        ]);
+        ], () => this.updateDocumentTitle());
       },
       removeSegment: (segment: string) => {
         const targetIdx = this.state.documentTitleContext.titleSegments.findIndex(
@@ -261,10 +261,15 @@ export class App extends React.Component<CombinedProps, State> {
         newTitleSegments.splice(targetIdx, 1);
         this.composeState([
           set(L.documentTitleContext.titleSegments, newTitleSegments),
-        ]);
+        ], () => this.updateDocumentTitle());
       }
     }
   };
+
+  updateDocumentTitle = () => {
+    const newTitle = reverse(this.state.documentTitleContext.titleSegments).join(' | ');
+    document.title = newTitle;
+  }
 
   componentDidMount() {
     const { request, response } = this.props;
