@@ -9,7 +9,7 @@ import {
   Theme,
   WithStyles,
   withStyles,
-} from '@material-ui/core/styles';  
+} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import Notice from 'src/components/Notice';
@@ -108,7 +108,7 @@ export class SecuritySettings extends React.Component<CombinedProps, State> {
             className={classes.title}
             data-qa-title
           >
-            Account Security
+            IP Whitelisting (Legacy)
           </Typography>
           {generalError && <Notice error text={generalError} />}
           <Typography
