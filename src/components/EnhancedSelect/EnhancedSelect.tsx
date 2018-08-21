@@ -139,6 +139,7 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
       inputValue,
       highlightedIndex,
       openMenu,
+      selectHighlightedItem,
       selectedItem,
     } = downshift;
 
@@ -161,10 +162,10 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
             disabled,
             helperText,
             label,
-            onKeyPress: (e:React.KeyboardEvent<KeyboardEvent>) => {
+            onKeyDown: (e:React.KeyboardEvent<KeyboardEvent>) => {
               if (e.key === 'Enter') {
-                this.onSubmit();
-                e.preventDefault();
+                if (highlightedIndex !== null) { selectHighlightedItem(); }
+                else { this.onSubmit(); }
               }
             },
             onFocus: (e:React.ChangeEvent<HTMLInputElement>) => {

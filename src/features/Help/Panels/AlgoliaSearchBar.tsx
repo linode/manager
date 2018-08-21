@@ -100,9 +100,10 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
   }
 
   searchAlgolia = (inputValue:string) => {
+    if (!inputValue) { this.setState({ options: [] }); }
     searchIndex.search({
       query: inputValue,
-      hitsPerPage: 10,
+      hitsPerPage: 5,
     }, this.searchSuccess);
   }
 
@@ -144,19 +145,30 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
     )
   }
 
+  getLinkTarget = (inputValue:string) => {
+    return inputValue
+      ? `/support/search/?query=${inputValue}`
+      : '/support/search/'
+  }
+
   handleSelect = (selected:Item) => {
     if (!selected) { return; }
     const { history } = this.props;
     const { inputValue } = this.state;
     const href = pathOr('', ['data', 'href'], selected)
     if (selected.value === 'search') {
-      const link = inputValue
-        ? `/support/search/?query=${inputValue}`
-        : '/support/search/'
+      const link = this.getLinkTarget(inputValue);
       history.push(link)
     } else {
       window.open(href,'_newtab');
     }
+  }
+
+  handleSubmit = () => {
+    const { inputValue } = this.state;
+    const { history } = this.props;
+    const link = this.getLinkTarget(inputValue);
+    history.push(link);
   }
 
   render() {
@@ -174,6 +186,7 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
           inputValue={inputValue}
           renderItems={this.renderOptionsHelper}
           onInputValueChange={this.onInputValueChange}
+          onSubmit={this.handleSubmit}
           handleSelect={this.handleSelect}
           placeholder="Search Linode Docs and Community questions"
           noFilter
