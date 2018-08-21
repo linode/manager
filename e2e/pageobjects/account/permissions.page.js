@@ -6,7 +6,7 @@ class Permissions extends Page {
     get updatePermissionsHeader() { return $('[data-qa-update-permissions-header]'); }
     get globalPermissionsHeader() { return $('[data-qa-permissions-header="Global Permissions"]'); }
     get billingAccessHeader() { return $('[data-qa-permissions-header="billing"]'); }
-    get specificGrantsHeader() { return $('[data-qa-permissions-header="Specifc Grants"]'); }
+    get specificPermissionsHeader() { return $('[data-qa-permissions-header="Specific Permissions"]'); }
     
     // Global Toggles
     get restrictAccessToggle() { return $('[data-qa-restrict-access]'); }
@@ -46,7 +46,7 @@ class Permissions extends Page {
         if (restricted) {
             expect(this.globalPermissionsHeader.isVisible()).toBe(true);
             expect(this.billingAccessHeader.isVisible()).toBe(true);
-            expect(this.specificGrantsHeader.isVisible()).toBe(true);
+            expect(this.specificPermissionsHeader.isVisible()).toBe(true);
             expect(this.globalPermissions.length).toBeGreaterThan(1);
             expect(this.billingPermissionNone.isVisible()).toBe(true);
             expect(this.billingPermissionRead.isVisible()).toBe(true);
@@ -78,17 +78,17 @@ class Permissions extends Page {
         this.waitForNotice(`Successfully updated global permissions`);
     }
 
-    setSpecificGrant(grantType, grant, accessLevel) {
+    setSpecificPermission(permType, perm, accessLevel) {
         const permission =
-            $(`[data-qa-permissions-header="${grantType}"]`).$('..')
-                .$(`[data-qa-specific-grant="${grant}"]`)
+            $(`[data-qa-permissions-header="${permType}"]`).$('..')
+                .$(`[data-qa-specific-grant="${perm}"]`)
                 .$(`[data-qa-permission="${accessLevel}"]`);
         permission.click();
         
         expect(permission.getAttribute('data-qa-radio')).toBe('true');
 
         this.specificSection.$(this.saveButton.selector).click();
-        this.waitForNotice('Successfully updated Entity-Specific Grants');
+        this.waitForNotice('Successfully updated Entity-Specific Permissions');
     }
 
     setBillingPermission(accessLevel) {
