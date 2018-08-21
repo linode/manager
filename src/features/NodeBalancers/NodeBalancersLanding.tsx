@@ -371,8 +371,8 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
         copy="Adding a NodeBalancer is easy. Click below to add a NodeBalancer."
         icon={NodeBalancer}
         buttonProps={{
-          onClick: () => this.props.history.push('/nodebalancers/create'),
           children: 'Add a NodeBalancer',
+          linkTo: '/nodebalancers/create'
         }}
       />
     );

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 
 import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
@@ -11,7 +12,8 @@ export interface Action {
   title: string;
   disabled?: boolean;
   tooltip?: string;
-  onClick: (e: React.MouseEvent<HTMLAnchorElement>) => void;
+  onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
+  linkTo?: string;
 }
 
 type CSSClasses = 'root'
@@ -24,7 +26,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   root: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'flex-end',
+    justifypContent: 'flex-end',
   },
   item: {
     paddingLeft: theme.spacing.unit * 2,
@@ -89,6 +91,7 @@ class ActionMenu extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     const { createActions } = this.props;
+
     this.generateActions(createActions);
   }
 
@@ -103,6 +106,42 @@ class ActionMenu extends React.Component<CombinedProps, State> {
 
   handleClose = () => {
     this.setState({ anchorEl: undefined });
+  }
+
+  renderActionItem = (a: Action, idx: number) => {
+    const { classes } = this.props;
+
+    // cannot have both onClick and linkTo props
+    if (!!a.onClick && !!a.linkTo) {
+      throw new Error('onClick and linkTo are mutually exclusive');
+    }
+
+    return (
+      <React.Fragment key={idx}>
+        {!!a.linkTo
+          ? <Link to={a.linkTo}>
+            <MenuItem
+              className={classes.item}
+              data-qa-action-menu-item={a.title}
+              disabled={a.disabled}
+              tooltip={a.tooltip}
+            >
+              {a.title}
+            </MenuItem>
+          </Link>
+          : <MenuItem
+            key={idx}
+            onClick={a.onClick}
+            className={classes.item}
+            data-qa-action-menu-item={a.title}
+            disabled={a.disabled}
+            tooltip={a.tooltip}
+          >
+            {a.title}
+          </MenuItem>
+        }
+      </React.Fragment>
+    )
   }
 
   render() {
@@ -134,16 +173,7 @@ class ActionMenu extends React.Component<CombinedProps, State> {
         >
           <MenuItem key="placeholder" className={classes.hidden} />
           {(actions as Action[]).map((a, idx) =>
-            <MenuItem
-              key={idx}
-              onClick={a.onClick}
-              className={classes.item}
-              data-qa-action-menu-item={a.title}
-              disabled={a.disabled}
-              tooltip={a.tooltip}
-            >
-              {a.title}
-            </MenuItem>,
+            this.renderActionItem(a, idx)
           )}
         </Menu>
       </div >

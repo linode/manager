@@ -32,31 +32,19 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
         },
         {
           title: 'View Graphs',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            push(`/linodes/${linodeId}/summary`);
-            e.preventDefault();
-          },
+          linkTo: `linodes/${linodeId}/summary`
         },
         {
           title: 'Resize',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            push(`/linodes/${linodeId}/resize`);
-            e.preventDefault();
-          },
+          linkTo: `linodes/${linodeId}/resize`
         },
         {
           title: 'View Backups',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            push(`/linodes/${linodeId}/backup`);
-            e.preventDefault();
-          },
+          linkTo: `linodes/${linodeId}/backup`
         },
         {
           title: 'Settings',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            push(`/linodes/${linodeId}/settings`);
-            e.preventDefault();
-          },
+          linkTo: `linodes/${linodeId}/settings`
         },
       ];
 

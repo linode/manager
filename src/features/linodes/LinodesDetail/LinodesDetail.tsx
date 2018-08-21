@@ -470,6 +470,10 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     history.push(`${routeName}`);
   }
 
+  handleTabClick = (e: any) => {
+    console.log(e.which)
+  }
+
   tabs = [
     /* NB: These must correspond to the routes inside the Switch */
     { routeName: `${this.props.match.url}/summary`, title: 'Summary' },
@@ -708,7 +712,11 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                       scrollButtons="off"
                     >
                       {this.tabs.map(tab =>
-                        <Tab key={tab.title} label={tab.title} data-qa-tab={tab.title} />)}
+                        <Tab
+                          key={tab.title}
+                          label={tab.title}
+                          data-qa-tab={tab.title}
+                        />)}
                     </Tabs>
                   </AppBar>
                   {

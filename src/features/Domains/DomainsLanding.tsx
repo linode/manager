@@ -370,7 +370,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
   }
 
   renderData = (domains: Linode.Domain[]) => {
-    const { classes, history } = this.props;
+    const { classes } = this.props;
 
     return (
       domains.map(domain =>
@@ -387,15 +387,10 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
           <TableCell data-qa-domain-type>{domain.type}</TableCell>
           <TableCell>
             <ActionMenu
-              onEditRecords={() => {
-                history.push(`/domains/${domain.id}`);
-              }}
-              onRemove={() => {
-                this.openRemoveDialog(domain.domain, domain.id);
-              }}
-              onClone={() => {
-                this.openCloneDrawer(domain.domain, domain.id);
-              }}
+              domainID={domain.id}
+              domain={domain.domain}
+              onRemove={this.openRemoveDialog}
+              onClone={this.openCloneDrawer}
             />
           </TableCell>
         </TableRow>,
