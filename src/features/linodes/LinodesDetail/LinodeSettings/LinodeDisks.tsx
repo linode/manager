@@ -68,7 +68,6 @@ interface DrawerState {
   mode: 'create' | 'rename' | 'resize';
   errors?: Linode.ApiFieldError[];
   diskId?: number;
-  maximumSize: number;
   fields: {
     label: string;
     filesystem: string;
@@ -100,7 +99,6 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     submitting: false,
     mode: 'create',
     errors: undefined,
-    maximumSize: 0,
     fields: {
       label: '',
       filesystem: 'ext4',
@@ -327,12 +325,12 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
   }
 
   drawer = () => {
+    const { linodeTotalDisk } = this.props;
     const {
       mode,
       open,
       errors,
       submitting,
-      maximumSize,
       fields: { label, size, filesystem },
     } = this.state.drawer;
 
@@ -345,7 +343,8 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
         label={label}
         filesystem={filesystem}
         size={size}
-        maximumSize={maximumSize}
+        totalSpaceMB={linodeTotalDisk}
+        freeSpaceMB={this.calculateDiskFree()}
         onLabelChange={this.onLabelChange}
         onSizeChange={this.onSizeChange}
         onFilesystemChange={this.onFilesystemChange}
@@ -492,7 +491,6 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     this.setDrawer({
       diskId,
       errors: undefined,
-      maximumSize: Math.max(size, this.calculateDiskFree(size)),
       fields: {
         filesystem,
         label,
@@ -508,7 +506,6 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     this.setDrawer({
       diskId: undefined,
       errors: undefined,
-      maximumSize: this.calculateDiskFree(0),
       fields: {
         filesystem: 'ext4',
         label: '',
@@ -524,12 +521,12 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     this.setDrawer({ open: false });
   };
 
-  calculateDiskFree = (currentDiskSize: number): number => {
+  calculateDiskFree = (): number => {
     const { linodeTotalDisk, disks } = this.props;
 
     return linodeTotalDisk - disks.reduce((acc: number, disk: Linode.Disk) => {
       return acc + disk.size;
-    }, 0) - currentDiskSize;
+    }, 0);
   }
 }
 

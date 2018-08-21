@@ -1,4 +1,3 @@
-import { clamp } from 'ramda';
 import * as React from 'react';
 
 import FormHelperText from '@material-ui/core/FormHelperText';
@@ -37,18 +36,18 @@ interface Props extends EditableFields {
   mode: 'create' | 'rename' | 'resize';
   open: boolean;
   errors?: Linode.ApiFieldError[];
-  maximumSize: number;
+  totalSpaceMB: number;
+  freeSpaceMB: number;
   submitting: boolean;
   onClose: () => void;
   onSubmit: () => void;
   onLabelChange: (value: string) => void;
   onFilesystemChange: (value: string) => void;
-  onSizeChange: (value: number | string) => void;
+  onSizeChange: (value: number) => void;
 }
 
 interface State {
   hasErrorFor?: (v: string) => any,
-  initialSize: number;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -56,7 +55,6 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
   state: State = {
     hasErrorFor: (v) => null,
-    initialSize: this.props.size,
   };
 
   static getDerivedStateFromProps(props: CombinedProps, state: State) {
@@ -81,14 +79,8 @@ class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
   onLabelChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     this.props.onLabelChange(e.target.value);
 
-  onSizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { valueAsNumber } = e.target;
-    if (isNaN(valueAsNumber)) {
-      return this.props.onSizeChange('');
-    }
-
-    this.props.onSizeChange(clamp(0, this.props.maximumSize, valueAsNumber));
-  };
+  onSizeChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    this.props.onSizeChange(e.target.valueAsNumber || 0);
 
   onFilesystemChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     this.props.onFilesystemChange(e.target.value);
@@ -144,7 +136,7 @@ class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
         }}
       />
       <FormHelperText style={{ marginTop: 8 }}>
-        Maximum Size: {this.props.maximumSize} MB
+        {this.props.freeSpaceMB} MB free of {this.props.totalSpaceMB} MB
       </FormHelperText>
     </React.Fragment>
   );
