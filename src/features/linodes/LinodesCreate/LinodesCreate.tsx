@@ -10,6 +10,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
 
 import CircleProgress from 'src/components/CircleProgress';
+import { withDocumentTitleSegment } from 'src/components/DocumentTitleSegments';
 import Grid from 'src/components/Grid';
 import PromiseLoader from 'src/components/PromiseLoader';
 import { ExtendedRegion } from 'src/components/SelectRegionPanel';
@@ -397,4 +398,5 @@ export default compose(
   typesContext,
   styled,
   withRouter,
+  withDocumentTitleSegment<CombinedProps>('Create a Linode'),
 )(LinodeCreate);

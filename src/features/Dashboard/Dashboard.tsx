@@ -3,6 +3,7 @@ import * as React from 'react';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
+import { withDocumentTitleSegment } from 'src/components/DocumentTitleSegments';
 import Grid from 'src/components/Grid';
 
 import BlogDashboardCard from './BlogDashboardCard';
@@ -50,5 +51,6 @@ class Dashboard extends React.Component<CombinedProps, State> {
 }
 
 const styled = withStyles(styles, { withTheme: true });
+const titled = withDocumentTitleSegment<CombinedProps>('Dashboard');
 
-export default styled(Dashboard);
+export default styled(titled(Dashboard));

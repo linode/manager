@@ -6,6 +6,8 @@ import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
 
+import { withDocumentTitleSegment } from 'src/components/DocumentTitleSegments';
+
 import APITokens from './APITokens';
 import AuthenticationSettings from './AuthenticationSettings';
 import DisplaySettings from './DisplaySettings';
@@ -71,4 +73,6 @@ class Profile extends React.Component<Props> {
   }
 }
 
-export default withRouter(Profile);
+const titled = withDocumentTitleSegment<Props>('My Profile');
+
+export default withRouter(titled(Profile));

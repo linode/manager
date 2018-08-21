@@ -54,7 +54,7 @@ export function withDocumentTitleSegment<P> (segment: string) {
             {(value: TitleSegmentsContext) => {
               const finalProps = {
                 ...value,
-                ...this.props as any,
+                ...this.props as any, /* TS isn't treating this.props as an Object */
               }
               return <ComponentWithDocumentTitleSegment {...finalProps} />
             }}

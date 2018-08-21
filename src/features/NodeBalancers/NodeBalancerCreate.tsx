@@ -26,6 +26,7 @@ import Button from 'src/components/Button';
 import CheckoutBar from 'src/components/CheckoutBar';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { withDocumentTitleSegment } from 'src/components/DocumentTitleSegments';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
@@ -801,4 +802,5 @@ export default compose(
   preloaded,
   styled,
   withRouter,
+  withDocumentTitleSegment<CombinedProps>('Create a NodeBalancer'),
 )(NodeBalancerCreate);
