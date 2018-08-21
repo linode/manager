@@ -106,7 +106,7 @@ class UserProfile extends React.Component<CombinedProps> {
           {generalError &&
             <Notice error>Error when updating user profile</Notice>
           }
-          <Typography role="header" variant="title">
+          <Typography variant="title" data-qa-profile-header>
             User Profile
           </Typography>
           <TextField
@@ -115,12 +115,14 @@ class UserProfile extends React.Component<CombinedProps> {
             value={username}
             onChange={changeUsername}
             errorText={hasErrorFor('username')}
+            data-qa-username
           />
           <TextField
             disabled /* API doesn't allow changing user email address */
             className={classes.field}
             label="Email Address"
             value={email}
+            data-qa-email
           />
           <ActionsPanel style={{ marginTop: 16 }}>
             <Button
@@ -180,7 +182,7 @@ class UserProfile extends React.Component<CombinedProps> {
     return (
       <Paper className={classes.deleteRoot}>
         <div className={classes.inner}>
-          <Typography role="header" variant="title">
+          <Typography variant="title" data-qa-delete-user-header>
             Delete User
           </Typography>
           {userDeleteError &&
