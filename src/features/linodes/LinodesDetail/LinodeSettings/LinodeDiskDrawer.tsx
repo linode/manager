@@ -157,7 +157,9 @@ class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
     return (
       <Drawer title={LinodeDiskDrawer.getTitle(mode)} open={open} onClose={onClose}>
         <Grid container direction="row">
-          {generalError && <Notice error errorGroup="linode-disk-drawer" text={generalError} />}
+          <Grid item xs={12}> 
+            {generalError && <Notice error spacingBottom={8} errorGroup="linode-disk-drawer" text={generalError} />}
+          </Grid>
           <Grid item xs={12} className={classes.section}>
             <this.labelField />
             <this.filesystemField />
