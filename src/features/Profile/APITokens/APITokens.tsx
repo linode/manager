@@ -194,10 +194,12 @@ export class APITokens extends React.Component<CombinedProps, State> {
                   </TableCell>
                   <TableCell>
                     <APITokenMenu
+                      token={token}
+                      type={type}
                       isAppTokenMenu={(title === 'Apps')}
-                      openViewDrawer={() => this.openViewDrawer(token)}
-                      openEditDrawer={() => this.openEditDrawer(token)}
-                      openRevokeDialog={() => this.openRevokeDialog(token.label, token.id, type)}
+                      openViewDrawer={this.openViewDrawer}
+                      openEditDrawer={this.openEditDrawer}
+                      openRevokeDialog={this.openRevokeDialog}
                     />
                   </TableCell>
                 </TableRow>,
@@ -228,7 +230,6 @@ export class APITokens extends React.Component<CombinedProps, State> {
       .then(response => response.data)
       .then((data) => {
         if (!this.mounted) { return; }
-
         return this.setState({ pats: data });
       });
   }
@@ -287,7 +288,8 @@ export class APITokens extends React.Component<CombinedProps, State> {
     });
   }
 
-  openRevokeDialog = (label: string, id: number, type: string) => {
+  openRevokeDialog = (token:Linode.Token, type:string) => {
+    const { label, id} = token;
     this.setState({ dialog: { open: true, label, id, type } });
   }
 
@@ -315,6 +317,14 @@ export class APITokens extends React.Component<CombinedProps, State> {
     deleteAppToken(dialog.id)
       .then(() => { this.closeRevokeDialog(); })
       .then(() => this.requestTokens());
+  }
+
+  handleDrawerChange = (key:string, value:string) => {
+    const { form } = this.state;
+    this.setState({
+      form:
+      { ...form, values: { ...form.values, [key]: value } },
+    });
   }
 
   createToken = (scopes: string) => {
@@ -425,7 +435,12 @@ export class APITokens extends React.Component<CombinedProps, State> {
 
   render() {
     const { form, dialog } = this.state;
-    const now = moment.utc().format();
+    /* The API occasionally sets the expiry date
+    * of a token to ~ 1 second later than the
+    * time this render is called. Setting 'now'
+    * to 10 seconds in the future avoids this issue.
+    */
+    const now = moment.utc().add(10,'s').format();
     const isPastNow = isPast(now);
 
     const appTokens = compose<
@@ -473,11 +488,8 @@ export class APITokens extends React.Component<CombinedProps, State> {
           scopes={form.values.scopes}
           expiry={form.values.expiry}
           closeDrawer={this.closeDrawer}
-          onChange={(key, value) => this.setState({
-            form:
-              { ...form, values: { ...form.values, [key]: value } },
-          })}
-          onCreate={(scopes: string) => this.createToken(scopes)}
+          onChange={this.handleDrawerChange}
+          onCreate={this.createToken}
           onEdit={this.editToken}
         />
         <ConfirmationDialog

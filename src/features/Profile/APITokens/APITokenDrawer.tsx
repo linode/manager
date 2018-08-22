@@ -132,6 +132,14 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
     });
   }
 
+  handleLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.props.onChange('label', e.target.value);
+  }
+
+  handleExpiryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    this.props.onChange('expiry', e.target.value);
+  }
+
   // return whether all scopes selected in the create token flow are the same
   allScopesIdentical = () => {
     const { scopes, selectAllSelectedScope } = this.state;
@@ -283,7 +291,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
             errorText={errorFor('label')}
             value={label || ''}
             label="Label"
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange('label', e.target.value)}
+            onChange={this.handleLabelChange}
             data-qa-add-label
           />
         }
@@ -294,7 +302,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
             </InputLabel>
             <Select
               value={expiry || expiryTups[0][1]}
-              onChange={e => onChange('expiry', e.target.value)}
+              onChange={this.handleExpiryChange}
               inputProps={{ name: 'expiry', id: 'expiry' }}
             >
               {expiryTups.map((expiryTup: Expiry) => (
@@ -322,7 +330,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
             <Button
               variant="raised"
               color="primary"
-              onClick={() => closeDrawer()}
+              onClick={closeDrawer}
               data-qa-close-drawer
             >
               Done
@@ -347,7 +355,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
                 color="secondary"
                 className="cancel"
                 key="cancel"
-                onClick={() => closeDrawer()} data-qa-cancel
+                onClick={closeDrawer} data-qa-cancel
               >
                 Cancel
               </Button>,
