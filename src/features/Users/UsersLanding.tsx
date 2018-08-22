@@ -264,9 +264,12 @@ class UsersLanding extends React.Component<CombinedProps, State> {
 
     if (error) {
       return (
-        <ErrorState
-          errorText="There was an error retrieving the user list. Please reload and try again."
-        />
+        <React.Fragment>
+          <DocumentTitleSegment segment="Users" />
+          <ErrorState
+            errorText="There was an error retrieving the user list. Please reload and try again."
+          />
+        </React.Fragment>
       );
     }
 

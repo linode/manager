@@ -151,11 +151,21 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
     } = this.props;
 
     if (disksError) {
-      return <ErrorState errorText="There was an error retrieving disks information." />;
+      return (
+        <React.Fragment>
+          <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
+          <ErrorState errorText="There was an error retrieving disks information." />
+        </React.Fragment>
+      );
     }
 
     if (volumesError) {
-      return <ErrorState errorText="There was an error retrieving volumes information." />;
+      return (
+        <React.Fragment>
+          <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
+          <ErrorState errorText="There was an error retrieving volumes information." />
+        </React.Fragment>
+      );
     }
 
     return (

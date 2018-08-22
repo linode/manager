@@ -312,15 +312,18 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
 
   renderEmpty = () => {
     return (
-      <Placeholder
-        title="Create a Volume"
-        copy="Add storage to your Linodes using the resilient Volumes service"
-        icon={VolumesIcon}
-        buttonProps={{
-          onClick: this.props.openForCreating,
-          children: 'Create a Volume',
-        }}
-      />
+      <React.Fragment>
+        <DocumentTitleSegment segment="Volumes" />
+        <Placeholder
+          title="Create a Volume"
+          copy="Add storage to your Linodes using the resilient Volumes service"
+          icon={VolumesIcon}
+          buttonProps={{
+            onClick: this.props.openForCreating,
+            children: 'Create a Volume',
+          }}
+        />
+      </React.Fragment>
     );
   };
 

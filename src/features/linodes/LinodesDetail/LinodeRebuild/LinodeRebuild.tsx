@@ -144,7 +144,12 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
     const { errors, selected } = this.state;
 
     if (imagesError) {
-      return <ErrorState errorText="There was an error retrieving images information." />;
+      return (
+        <React.Fragment>
+          <DocumentTitleSegment segment={`${linodeLabel} - Rebuild`} />
+          <ErrorState errorText="There was an error retrieving images information." />
+        </React.Fragment>
+      );
     }
 
     const getErrorFor = getAPIErrorFor({}, errors);

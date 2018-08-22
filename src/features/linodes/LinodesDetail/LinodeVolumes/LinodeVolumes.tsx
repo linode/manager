@@ -842,7 +842,12 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
 
 
     if (volumesError || linodeConfigsError) {
-      return <ErrorState errorText="An error has occured." />;
+      return (
+        <React.Fragment>
+          <DocumentTitleSegment segment={`${linodeLabel} - Volumes`} />
+          <ErrorState errorText="An error has occured." />;
+        </React.Fragment>
+      );
     }
 
     return (

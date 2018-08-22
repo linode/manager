@@ -330,18 +330,29 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     const images = pathOr([], ['response', 'data'], this.props.images);
 
     if (linodes.length === 0) {
-      return <ListLinodesEmptyState />;
+      return (
+        <React.Fragment>
+          <DocumentTitleSegment segment="Linodes" />
+          <ListLinodesEmptyState />
+        </React.Fragment>
+      );
     }
 
     if (this.props.linodes.error) {
       return (
-        <ErrorState errorText="Error loading data" />
+        <React.Fragment>
+          <DocumentTitleSegment segment="Linodes" />
+          <ErrorState errorText="Error loading data" />
+        </React.Fragment>
       );
     }
 
     if (this.props.images.error) {
       return (
-        <ErrorState errorText="Error loading data" />
+        <React.Fragment>
+          <DocumentTitleSegment segment="Linodes" />
+          <ErrorState errorText="Error loading data" />
+        </React.Fragment>
       );
     }
 

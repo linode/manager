@@ -368,9 +368,12 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
 
   renderError = (e: Error) => {
     return (
-      <ErrorState
-        errorText="There was an error retrieving your images. Please reload and try again."
-      />
+      <React.Fragment>
+        <DocumentTitleSegment segment="Images" />
+        <ErrorState
+          errorText="There was an error retrieving your images. Please reload and try again."
+        />
+      </React.Fragment>
     );
   }
 
@@ -381,6 +384,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
   renderEmpty = () => {
     return (
       <React.Fragment>
+        <DocumentTitleSegment segment="Images" />
         <Placeholder
           title="Add an Image"
           copy="Adding a new image is easy. Click below to add an image."

@@ -368,15 +368,18 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
 
   renderEmpty = () => {
     return (
-      <Placeholder
-        title="Add a NodeBalancer"
-        copy="Adding a NodeBalancer is easy. Click below to add a NodeBalancer."
-        icon={NodeBalancer}
-        buttonProps={{
-          onClick: () => this.props.history.push('/nodebalancers/create'),
-          children: 'Add a NodeBalancer',
-        }}
-      />
+      <React.Fragment>
+        <DocumentTitleSegment segment="NodeBalancers" />
+        <Placeholder
+          title="Add a NodeBalancer"
+          copy="Adding a NodeBalancer is easy. Click below to add a NodeBalancer."
+          icon={NodeBalancer}
+          buttonProps={{
+            onClick: () => this.props.history.push('/nodebalancers/create'),
+            children: 'Add a NodeBalancer',
+          }}
+        />
+      </React.Fragment>
     );
   };
 

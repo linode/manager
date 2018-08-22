@@ -360,6 +360,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
   renderEmpty = () => {
     return (
       <React.Fragment>
+        <DocumentTitleSegment segment="Domains" />
         <Placeholder
           title="Add a Domain"
           copy="Adding a new domain is easy. Click below to add a domain."
