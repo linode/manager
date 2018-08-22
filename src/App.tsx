@@ -1,5 +1,5 @@
 import { shim } from 'promise.prototype.finally';
-import { clone, lensPath, pathOr, reverse, set } from 'ramda';
+import { lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
@@ -11,10 +11,7 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 
 import DefaultLoader from 'src/components/DefaultLoader';
 import DocsSidebar from 'src/components/DocsSidebar';
-import {
-  DocumentTitleSegmentsProvider,
-  TitleSegmentsContext,
-} from 'src/components/DocumentTitleSegments';
+import { DocumentTitleSegment, withDocumentTitleProvider } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import SideMenu from 'src/components/SideMenu';
@@ -30,7 +27,7 @@ import { getProfile } from 'src/services/profile';
 import { request, response } from 'src/store/reducers/resources';
 import composeState from 'src/utilities/composeState';
 
-import BetaNotification from './BetaNotification';
+import BetaNotification from 'src/BetaNotification';
 
 shim(); // allows for .finally() usage
 
@@ -162,7 +159,6 @@ interface State {
   betaNotification: boolean;
   typesContext: WithTypesContext;
   regionsContext: WithRegionsContext;
-  documentTitleContext: TitleSegmentsContext;
 }
 
 type CombinedProps =
@@ -246,30 +242,7 @@ export class App extends React.Component<CombinedProps, State> {
       },
       update: () => null, /** @todo */
     },
-    documentTitleContext: {
-      titleSegments: ['Linode Manager'],
-      appendSegment: (segment: string) => {
-        this.composeState([
-          set(L.documentTitleContext.titleSegments,
-            [...this.state.documentTitleContext.titleSegments, segment])
-        ], () => this.updateDocumentTitle());
-      },
-      removeSegment: (segment: string) => {
-        const targetIdx = this.state.documentTitleContext.titleSegments.findIndex(
-          el => el === segment);
-        const newTitleSegments = clone(this.state.documentTitleContext.titleSegments);
-        newTitleSegments.splice(targetIdx, 1);
-        this.composeState([
-          set(L.documentTitleContext.titleSegments, newTitleSegments),
-        ], () => this.updateDocumentTitle());
-      }
-    }
   };
-
-  updateDocumentTitle = () => {
-    const newTitle = reverse(this.state.documentTitleContext.titleSegments).join(' | ');
-    document.title = newTitle;
-  }
 
   componentDidMount() {
     const { request, response } = this.props;
@@ -311,54 +284,53 @@ export class App extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
+        <DocumentTitleSegment segment="Linode Manager" />
         {longLivedLoaded &&
           <React.Fragment>
-            <DocumentTitleSegmentsProvider value={this.state.documentTitleContext}>
-              <TypesProvider value={this.state.typesContext}>
-                <RegionsProvider value={this.state.regionsContext}>
-                  <div className={classes.appFrame}>
-                    <SideMenu open={menuOpen} closeMenu={this.closeMenu} toggleTheme={toggleTheme} />
-                    <main className={classes.content}>
-                      <TopMenu openSideMenu={this.openMenu} />
-                      <div className={classes.wrapper}>
-                        <Grid container spacing={0} className={classes.grid}>
-                          <Grid item className={`${classes.switchWrapper} ${hasDoc ? 'mlMain' : ''}`}>
-                            <Switch>
-                              <Route path="/linodes" component={LinodesRoutes} />
-                              <Route path="/volumes" component={Volumes} />
-                              <Route path="/nodebalancers" component={NodeBalancers} />
-                              <Route path="/domains" component={Domains} />
-                              <Route exact path="/managed" component={Managed} />
-                              <Route exact path="/longview" component={Longview} />
-                              <Route exact path="/images" component={Images} />
-                              <Route path="/stackscripts" component={StackScripts} />
-                              <Route exact path="/billing" component={Account} />
-                              <Route exact path="/billing/invoices/:invoiceId" component={InvoiceDetail} />
-                              <Route path="/users" component={Users} />
-                              <Route exact path="/support/tickets" component={SupportTickets} />
-                              <Route path="/support/tickets/:ticketId" component={SupportTicketDetail} />
-                              <Route path="/profile" component={Profile} />
-                              <Route exact path="/support" component={Help} />
-                              <Route path="/dashboard" component={Dashboard} />
-                              <Redirect exact from="/" to="/dashboard" />
-                              <Route component={NotFound} />
-                            </Switch>
-                          </Grid>
-                          <DocsSidebar docs={documentation} />
+            <TypesProvider value={this.state.typesContext}>
+              <RegionsProvider value={this.state.regionsContext}>
+                <div className={classes.appFrame}>
+                  <SideMenu open={menuOpen} closeMenu={this.closeMenu} toggleTheme={toggleTheme} />
+                  <main className={classes.content}>
+                    <TopMenu openSideMenu={this.openMenu} />
+                    <div className={classes.wrapper}>
+                      <Grid container spacing={0} className={classes.grid}>
+                        <Grid item className={`${classes.switchWrapper} ${hasDoc ? 'mlMain' : ''}`}>
+                          <Switch>
+                            <Route path="/linodes" component={LinodesRoutes} />
+                            <Route path="/volumes" component={Volumes} />
+                            <Route path="/nodebalancers" component={NodeBalancers} />
+                            <Route path="/domains" component={Domains} />
+                            <Route exact path="/managed" component={Managed} />
+                            <Route exact path="/longview" component={Longview} />
+                            <Route exact path="/images" component={Images} />
+                            <Route path="/stackscripts" component={StackScripts} />
+                            <Route exact path="/billing" component={Account} />
+                            <Route exact path="/billing/invoices/:invoiceId" component={InvoiceDetail} />
+                            <Route path="/users" component={Users} />
+                            <Route exact path="/support/tickets" component={SupportTickets} />
+                            <Route path="/support/tickets/:ticketId" component={SupportTicketDetail} />
+                            <Route path="/profile" component={Profile} />
+                            <Route exact path="/support" component={Help} />
+                            <Route path="/dashboard" component={Dashboard} />
+                            <Redirect exact from="/" to="/dashboard" />
+                            <Route component={NotFound} />
+                          </Switch>
                         </Grid>
-                      </div>
-                    </main>
-                    <Footer />
-                    <BetaNotification
-                      open={this.state.betaNotification}
-                      onClose={this.closeBetaNotice}
-                      data-qa-beta-notice />
-                    <ToastNotifications />
-                    <VolumeDrawer />
-                  </div>
-                </RegionsProvider>
-              </TypesProvider>
-            </DocumentTitleSegmentsProvider>
+                        <DocsSidebar docs={documentation} />
+                      </Grid>
+                    </div>
+                  </main>
+                  <Footer />
+                  <BetaNotification
+                    open={this.state.betaNotification}
+                    onClose={this.closeBetaNotice}
+                    data-qa-beta-notice />
+                  <ToastNotifications />
+                  <VolumeDrawer />
+                </div>
+              </RegionsProvider>
+            </TypesProvider>
           </React.Fragment>
         }
       </React.Fragment>
@@ -383,4 +355,5 @@ export const styled = withStyles(styles, { withTheme: true });
 export default compose(
   connected,
   styled,
+  withDocumentTitleProvider,
 )(App);

@@ -6,7 +6,7 @@ import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
 
-import { withDocumentTitleSegment } from 'src/components/DocumentTitleSegments';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 import APITokens from './APITokens';
 import AuthenticationSettings from './AuthenticationSettings';
@@ -44,6 +44,7 @@ class Profile extends React.Component<Props> {
 
     return (
       <React.Fragment>
+        <DocumentTitleSegment segment="My Profile" />
         <Typography role="header" variant="headline" data-qa-profile-header>
           My Profile
         </Typography>
@@ -73,6 +74,4 @@ class Profile extends React.Component<Props> {
   }
 }
 
-const titled = withDocumentTitleSegment<Props>('My Profile');
-
-export default withRouter(titled(Profile));
+export default withRouter(Profile);

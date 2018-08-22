@@ -10,7 +10,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
 
 import CircleProgress from 'src/components/CircleProgress';
-import { withDocumentTitleSegment } from 'src/components/DocumentTitleSegments';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import PromiseLoader from 'src/components/PromiseLoader';
 import { ExtendedRegion } from 'src/components/SelectRegionPanel';
@@ -21,13 +21,13 @@ import { getImages } from 'src/services/images';
 import { getLinodes } from 'src/services/linodes';
 import { parseQueryParams } from 'src/utilities/queryParams';
 
-import { displayType, typeLabelDetails } from '../presentation';
-import { ExtendedLinode } from './SelectLinodePanel';
-import { ExtendedType } from './SelectPlanPanel';
-import FromBackupsContent from './TabbedContent/FromBackupsContent';
-import FromImageContent from './TabbedContent/FromImageContent';
-import FromLinodeContent from './TabbedContent/FromLinodeContent';
-import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
+import { ExtendedLinode } from 'src/features/linodes/LinodesCreate/SelectLinodePanel';
+import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
+import FromBackupsContent from 'src/features/linodes/LinodesCreate/TabbedContent/FromBackupsContent';
+import FromImageContent from 'src/features/linodes/LinodesCreate/TabbedContent/FromImageContent';
+import FromLinodeContent from 'src/features/linodes/LinodesCreate/TabbedContent/FromLinodeContent';
+import FromStackScriptContent from 'src/features/linodes/LinodesCreate/TabbedContent/FromStackScriptContent';
+import { displayType, typeLabelDetails } from 'src/features/linodes/presentation';
 
 export type Info = { title: string, details?: string } | undefined;
 
@@ -328,6 +328,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
 
     return (
       <StickyContainer>
+        <DocumentTitleSegment segment="Create a Linode" />
         <Grid container>
           <Grid item className={`${classes.main} mlMain`}>
             <Typography role="header" variant="headline" data-qa-create-linode-header>
@@ -398,5 +399,4 @@ export default compose(
   typesContext,
   styled,
   withRouter,
-  withDocumentTitleSegment<CombinedProps>('Create a Linode'),
 )(LinodeCreate);

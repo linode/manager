@@ -16,7 +16,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
-import { withDocumentTitleSegment } from 'src/components/DocumentTitleSegments';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import PaginationFooter from 'src/components/PaginationFooter';
@@ -349,6 +349,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
     return (
       <Grid container>
+        <DocumentTitleSegment segment="Linodes" />
         <Grid item xs={12}>
           <Typography
             role="header"
@@ -478,7 +479,6 @@ export const enhanced = compose(
   styled,
   preloaded,
   setDocs(ListLinodes.docs),
-  withDocumentTitleSegment<CombinedProps>('Linodes'),
 );
 
 export default enhanced(ListLinodes) as typeof ListLinodes;

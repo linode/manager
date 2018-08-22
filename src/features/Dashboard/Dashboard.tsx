@@ -3,15 +3,15 @@ import * as React from 'react';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
-import { withDocumentTitleSegment } from 'src/components/DocumentTitleSegments';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 
-import BlogDashboardCard from './BlogDashboardCard';
-import DomainsDashboardCard from './DomainsDashboardCard';
-import LinodesDashboardCard from './LinodesDashboardCard';
-import NodeBalancersDashboardCard from './NodeBalancersDashboardCard';
-import TransferDashboardCard from './TransferDashboardCard';
-import VolumesDashboardCard from './VolumesDashboardCard';
+import BlogDashboardCard from 'src/features/Dashboard/BlogDashboardCard';
+import DomainsDashboardCard from 'src/features/Dashboard/DomainsDashboardCard';
+import LinodesDashboardCard from 'src/features/Dashboard/LinodesDashboardCard';
+import NodeBalancersDashboardCard from 'src/features/Dashboard/NodeBalancersDashboardCard';
+import TransferDashboardCard from 'src/features/Dashboard/TransferDashboardCard';
+import VolumesDashboardCard from 'src/features/Dashboard/VolumesDashboardCard';
 
 
 type ClassNames = 'root';
@@ -32,6 +32,7 @@ class Dashboard extends React.Component<CombinedProps, State> {
   render() {
     return (
       <Grid container spacing={24}>
+        <DocumentTitleSegment segment="Dashboard" />
         <Grid item xs={12}>
           <Typography variant="headline">Dashboard</Typography>
         </Grid>
@@ -51,6 +52,5 @@ class Dashboard extends React.Component<CombinedProps, State> {
 }
 
 const styled = withStyles(styles, { withTheme: true });
-const titled = withDocumentTitleSegment<CombinedProps>('Dashboard');
 
-export default styled(titled(Dashboard));
+export default styled(Dashboard);
