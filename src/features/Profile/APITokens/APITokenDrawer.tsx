@@ -267,7 +267,6 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
       open,
       mode,
       closeDrawer,
-      onChange,
       onCreate,
       onEdit,
     } = this.props;
