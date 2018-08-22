@@ -9,7 +9,7 @@ import ErrorState from 'src/components/ErrorState';
 import { getLishSchemeAndHostname, resizeViewPort } from '.';
 import VncDisplay from './VncDisplay';
 
-type ClassNames = 'container' | 'errorState';
+type ClassNames = 'container' | 'errorState' | 'message';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   container: {
@@ -17,6 +17,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
       margin: 'auto',
       display: 'block',
     }
+  },
+  message: {
+    color: 'white',
+    textAlign: 'center',
+    minHeight: '30px',
+    margin: theme.spacing.unit * 2,
   },
   errorState: {
     '& *': {
@@ -37,9 +43,14 @@ interface State {
   powered: boolean;
   /* used to prevent flickering of the progress indicator */
   initialConnect: boolean;
+  isRetryingConnection: boolean;
+  retryAttempts: number;
+  error: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{ linodeId?: number }>;
+
+const maxRetryAttempts: number = 3;
 
 class Glish extends React.Component<CombinedProps, State> {
   state: State = {
@@ -47,6 +58,9 @@ class Glish extends React.Component<CombinedProps, State> {
     connected: false,
     powered: true,
     initialConnect: false,
+    isRetryingConnection: false,
+    retryAttempts: 0,
+    error: '',
   };
 
   mounted: boolean = false;
@@ -76,7 +90,19 @@ class Glish extends React.Component<CombinedProps, State> {
     }
   }
 
-  componentDidUpdate(prevProps: CombinedProps) {
+  componentDidUpdate(prevProps: CombinedProps, prevState: State) {
+    /*
+    * If our connection failed, and we did not surpass the max number of
+    * reconnection attempts, try to reconnect
+    */
+    const { retryAttempts, isRetryingConnection } = this.state;
+    if (prevState.retryAttempts !== retryAttempts && isRetryingConnection) {
+      setTimeout(() => {
+        this.props.refreshToken();
+      }, 3000);
+    }
+
+
     if (this.props.token !== prevProps.token) {
       const { linode } = this.props;
       const region = (linode as Linode.Linode).region;
@@ -148,6 +174,8 @@ class Glish extends React.Component<CombinedProps, State> {
   }
 
   connectMonitor = (region: string, token: string) => {
+    const { retryAttempts } = this.state;
+
     if (this.monitor && this.monitor.readyState === this.monitor.OPEN) {
       this.monitor.close();
     }
@@ -163,11 +191,28 @@ class Glish extends React.Component<CombinedProps, State> {
       } else if (data.poweredStatus === 'Powered Off') {
         if (!this.mounted) { return; }
         this.setState({ powered: false });
+        return;
       }
 
       if (data.type === 'error'
           && data.reason === 'Your session has expired.') {
-        this.props.refreshToken();
+        /*
+        * We tried to reconnect 3 times
+        */
+        if (retryAttempts === maxRetryAttempts) {
+          this.setState({
+            error: 'Session could not be initialized. Please try again later'
+          });
+          return;
+        }
+        /*
+        * We've tried less than 3 reconnects
+        */
+        this.setState({
+          isRetryingConnection: true,
+          retryAttempts: retryAttempts + 1,
+        })
+        return;
       }
 
       if (data.type === 'kick') {
@@ -180,10 +225,47 @@ class Glish extends React.Component<CombinedProps, State> {
     resizeViewPort(width + 40, height + 70);
   }
 
+  renderErrorState = () => {
+    const { error } = this.state;
+    const { classes } = this.props;
+    return (
+      <div className={classes.errorState}>
+        <ErrorState errorText={error} />
+      </div>
+    )
+  }
+
+  renderRetryState = () => {
+    const { classes } = this.props;
+    const { retryAttempts } = this.state;
+
+    return (
+      <div className={classes.message}>
+        {`Connection could not be opened. Retrying in 3 seconds...
+          ${retryAttempts} / ${maxRetryAttempts}`}
+        <CircleProgress mini />
+      </div>
+    )
+  }
+
   render() {
     const { classes, linode, token } = this.props;
-    const { activeVnc, initialConnect, powered } = this.state;
+    const {
+      activeVnc,
+      initialConnect,
+      powered,
+      error,
+      isRetryingConnection
+    } = this.state;
     const region = linode && (linode as Linode.Linode).region;
+
+    if (error) {
+      return this.renderErrorState()
+    }
+
+    if (isRetryingConnection) {
+      return this.renderRetryState()
+    }
 
     return (
       <div id="Glish">
