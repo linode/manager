@@ -8,28 +8,36 @@ import TableRow, { TableRowProps } from '@material-ui/core/TableRow';
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
-  root: {},
+  root: {
+    transition: theme.transitions.create('background-color'),
+  },
 });
 
 interface Props {
-  goToLink?: string;
+  rowLink?: string;
   className?: string;
+  staticContext?: boolean;
 }
 
 type CombinedProps = Props & TableRowProps & RouteComponentProps<{}> & WithStyles<ClassNames>;
 
 class WrappedTableRow extends React.Component<CombinedProps> {
 
-  goTo = (path: string) =>  {
-    this.props.history.push(path);
+  goTo = (e: any, path: string) =>  {
+    if (e.target.tagName === 'TD') {
+      e.stopPropagation();
+      this.props.history.push(path);
+    }
   }
 
   render() {
-    const { classes, className, goToLink, ...rest } = this.props;
+    const { classes, className, rowLink, staticContext, ...rest } = this.props;
 
     return (
         <TableRow
-          onClick={() => goToLink && this.goTo(goToLink)}
+          onClick={(e) => rowLink && this.goTo(e, rowLink)}
+          hover={rowLink !== undefined}
+          role={rowLink && 'link'}
           className={classNames(
           className,
             {
@@ -46,5 +54,6 @@ class WrappedTableRow extends React.Component<CombinedProps> {
 const styled = withStyles<ClassNames>(styles, { withTheme: true });
 const styledTableRow = styled<CombinedProps>(WrappedTableRow);
 const routedStyledTableRow = withRouter(styledTableRow);
+
 
 export default routedStyledTableRow;

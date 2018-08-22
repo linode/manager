@@ -781,6 +781,24 @@ const LinodeTheme: Linode.Theme = {
         backgroundColor: '#32363C',
       },
     },
+    MuiTableRow: {
+      root: {
+        position: 'relative',
+        zIndex: 1,
+        '&:hover': {
+          '&$hover': {
+            backgroundColor: 'rgba(0, 0, 0, 0.1)',
+          },
+        },
+      },
+      hover: {
+        cursor: 'pointer',
+        '& a': {
+          color: primaryColors.text,
+          fontWeight: 700,
+        },
+      },
+    },
     MuiTabs: {
       root: {
         margin: '16px 0',
