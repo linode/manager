@@ -75,7 +75,7 @@ class SearchPanel extends React.Component<CombinedProps, State> {
             variant="headline"
             className={classes.searchHeading}
           >
-            Ways to Get Help
+            What can we help you with?
         </Typography>
         <AlgoliaSearchBar />
         </Paper>
