@@ -19,12 +19,16 @@ type ClassNames = 'root'
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
-    padding: theme.spacing.unit * 10,
+    padding: theme.spacing.unit * 4,
     backgroundColor: theme.color.green,
     display: 'flex',
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative',
+    [theme.breakpoints.up('md')]: {
+      padding: theme.spacing.unit * 8,
+    }
   },
   bgIcon: {
     color: '#04994D',

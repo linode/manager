@@ -58,6 +58,7 @@ interface Props {
   renderItems?: (items:Item, index:number, highlighted:boolean, inputProps:any, classes:string) => React.ReactElement<any>[];
   noFilter?: boolean;
   search?: boolean;
+  className?: string;
 }
 
 interface State {}
@@ -143,12 +144,12 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
       selectedItem,
     } = downshift;
 
-    const { classes, disabled, errorText, helperText, label, placeholder, search } = this.props;
+    const { classes, className, disabled, errorText, helperText, label, placeholder, search } = this.props;
     const selectedIndex = this.getIndex(selectedItem);
     const placeholderText = placeholder ? placeholder : "Enter a value"
 
     return (
-      <div className={classes.root}>
+      <div className={`${classes.root} ${className}`}>
         <TextField
           data-qa-enhanced-select
           InputProps={search && {
