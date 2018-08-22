@@ -15,8 +15,8 @@ export const SENTRY_URL = process.env.REACT_APP_SENTRY_URL;
 export const LOGIN_SESSION_LIFETIME_MS = 45 * 60 * 1000;
 export const OAUTH_TOKEN_REFRESH_TIMEOUT = LOGIN_SESSION_LIFETIME_MS / 2;
 
-export const ALGOLIA_APPLICATION_ID = 'KGUN8FAIPF'; // '64F7MR66VE' <-- Jared's demo account; will produce an error.
-export const ALGOLIA_SEARCH_KEY = 'd6df24e2856b435f440d9dc107bced01'; // '2b792e5fddbbf94860edf1c14bed0c8b' <-- demo account.
+export const ALGOLIA_APPLICATION_ID = process.env.ALGOLIA_APPLICATION_ID; // '64F7MR66VE' <-- Jared's demo account; will produce an error.
+export const ALGOLIA_SEARCH_KEY = process.env.ALGOLIA_SEARCH_KEY; // '2b792e5fddbbf94860edf1c14bed0c8b' <-- demo account.
 
 export const DOCS_BASE_URL = 'https://linode.com/';
 export const DOCS_SEARCH_URL = 'https://linode.com/docs/search/?q=';
