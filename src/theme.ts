@@ -434,6 +434,7 @@ const LinodeTheme: Linode.Theme = {
         color: primaryColors.text,
         boxSizing: 'border-box',
         backgroundColor: 'white',
+
         [breakpoints.down('xs')]: {
           maxWidth: 240,
         },
