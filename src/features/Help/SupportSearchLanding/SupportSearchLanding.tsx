@@ -26,7 +26,6 @@ import HelpResources from './HelpResources';
 type ClassNames = 'root'
   | 'backButton'
   | 'searchBar'
-  | 'searchBox'
   | 'searchBoxInner'
   | 'searchHeading'
   | 'searchField';
@@ -49,13 +48,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   searchBar: {
     maxWidth: '100%',
   },
-  searchBox: {
-    backgroundColor: theme.color.grey2,
-    margin: theme.spacing.unit * 3,
-    display: 'block',
-  },
   searchBoxInner: {
     padding: theme.spacing.unit * 3,
+    backgroundColor: theme.color.grey2,
     marginTop: 0,
   },
   searchHeading: {
@@ -146,18 +141,24 @@ class SupportSearchLanding extends React.Component<CombinedProps, State> {
 
     return (
       <Grid container direction="column">
-        <Grid container item direction="row" alignItems="center" justify="flex-start">
-          <IconButton
-            onClick={this.onBackButtonClick}
-            className={classes.backButton}
-          >
-            <KeyboardArrowLeft />
-          </IconButton>
-          <Typography variant="headline" >
-            {query ? `Search results for "${query}"` : "Search"} 
-          </Typography>
+        <Grid item>
+          <Grid container alignItems="center">
+            <Grid item>
+              <IconButton
+                onClick={this.onBackButtonClick}
+                className={classes.backButton}
+              >
+                <KeyboardArrowLeft />
+              </IconButton>
+            </Grid>
+            <Grid item>
+              <Typography variant="headline" >
+                {query ? `Search results for "${query}"` : "Search"} 
+              </Typography>
+            </Grid>
+          </Grid>
         </Grid>
-        <Grid item className={classes.searchBox} >
+        <Grid item>
           <TextField
             className={classes.searchBoxInner}
             placeholder="Search Linode documentation and community questions"

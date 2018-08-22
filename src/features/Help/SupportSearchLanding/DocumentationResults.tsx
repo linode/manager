@@ -1,16 +1,15 @@
 import * as React from 'react';
 
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import OpenInNew from '@material-ui/icons/OpenInNew';
 
-import Table from 'src/components/Table';
-
+import Paper from '@material-ui/core/Paper';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 
-import Grid from 'src/components/Grid';
+import Table from 'src/components/Table';
 
 type ClassNames = 'root'
   | 'resultsContainer'
@@ -21,16 +20,11 @@ type ClassNames = 'root'
   | 'link'
   | 'searchItem';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme &  Linode.Theme) => {
   // const { palette: { status } } = theme;
   return {
-    root: {
-      height: '20em',
-      margin: theme.spacing.unit * 2,
-    },
+    root: {},
     resultsContainer: {
-      maxWidth: '100%',
-      height: '11em',
       '& em': {
         fontStyle: 'normal',
       },
@@ -46,6 +40,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
       marginLeft: theme.spacing.unit,
     },
     header: {
+      marginTop: theme.spacing.unit * 3,
       marginBottom: theme.spacing.unit * 2,
     },
     label: {
@@ -105,23 +100,21 @@ const DocumentationResults: React.StatelessComponent<CombinedProps> = (props) =>
   }
 
   return (
-    <Grid container alignItems="flex-start" direction="column" className={classes.root}>
-      <Grid item>
-        <Typography variant="headline" className={classes.header}>
-          { `Most Relevant ${sectionTitle}` }
-        </Typography>
-      </Grid>
-      <Table className={classes.resultsContainer}>
-        <TableBody>
-          {results.length > 0 ? renderResults() : renderEmptyState()}
-        </TableBody>
-      </Table>
-      <Grid item>
-        <Typography variant="body2" className={classes.moreResults}>
-         <a href={target} className={classes.link} >View more {sectionTitle}</a>
-        </Typography>
-      </Grid>
-    </Grid>
+    <div className={classes.root}>
+      <Typography variant="headline" className={classes.header}>
+        { `Most Relevant ${sectionTitle}` }
+      </Typography>
+      <Paper>
+        <Table className={classes.resultsContainer}>
+          <TableBody>
+            {results.length > 0 ? renderResults() : renderEmptyState()}
+          </TableBody>
+        </Table>
+      </Paper>
+      <Typography variant="body2" className={classes.moreResults}>
+        <a href={target} className={classes.link} >View more {sectionTitle}</a>
+      </Typography>
+    </div>
   )
 }
 
