@@ -136,7 +136,6 @@ describe('View - Personal Access Tokens', () => {
 
             it('should revoke on remove', () => {
                 browser.click(dialogConfirm);
-                browser.refresh();
                 profile.tokenBaseElems();
                 browser.waitForVisible(updatedSelector, constants.wait.long, true);
             });
