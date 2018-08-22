@@ -71,11 +71,14 @@ interface State {
   error?: string; 
 }
 
+type index = 'linode-docs';
+
 type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
 
 // Algolia API Client
 const client = Algolia(ALGOLIA_APPLICATION_ID, ALGOLIA_SEARCH_KEY);
-const searchIndex = client.initIndex('linode-docs');
+const idx: index = 'linode-docs';
+const searchIndex = client.initIndex(idx);
 
 class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
   state: State = {
