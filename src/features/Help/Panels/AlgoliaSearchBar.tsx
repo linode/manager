@@ -25,31 +25,20 @@ type ClassNames = 'root'
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {},
   searchItem: {
-    height: '24px',
-    boxSizing: 'content-box',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    fontSize: '.9rem',
-    transition: 'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), color .2s cubic-bezier(0.4, 0, 0.2, 1)',
-    fontWeight: 400,
-    fontFamily: 'Lato, sans-serif',
-    lineHeight: '1.2em',
-    whiteSpace: 'initial',
-    padding: '12px',
-    width: 'auto',
-    display: 'flex',
-    position: 'relative',
-    textAlign: 'left',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    textDecoration: 'none',
     '& em': {
       fontStyle: 'normal',
-      color: '#3683DC',
+      color: theme.palette.primary.main,
     }
   },
   searchItemHighlighted: {
-    backgroundColor: theme.color.grey1,
+    backgroundColor: theme.palette.primary.main,
+    cursor: 'pointer',
+    '& div, & span': {
+      color: 'white',
+    },
+    '& em': {
+      color: theme.color.black,
+    }
   },
   textfield: {
     backgroundColor: theme.color.white,
@@ -63,6 +52,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   enhancedSelectWrapper: {
     margin: '0 auto',
     width: '100%s',
+    maxHeight: 500,
     '& [class*="formControl"]': {
       maxWidth: '100%',
     },
@@ -191,6 +181,7 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
           noFilter
           search
           className={classes.enhancedSelectWrapper}
+          maxHeight={500}
         />
       </React.Fragment>
     );
