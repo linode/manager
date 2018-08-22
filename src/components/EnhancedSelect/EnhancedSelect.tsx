@@ -32,7 +32,6 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     padding: 0,
     borderRadius: 0,
     border: '1px solid #999',
-    maxHeight: 192,
     overflowY: 'auto',
     maxWidth: '100%',
     zIndex: 2,
@@ -58,6 +57,7 @@ interface Props {
   renderItems?: (items:Item, index:number, highlighted:boolean, inputProps:any, classes:string) => React.ReactElement<any>[];
   noFilter?: boolean;
   search?: boolean;
+  maxHeight?: number;
   className?: string;
 }
 
@@ -144,7 +144,7 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
       selectedItem,
     } = downshift;
 
-    const { classes, className, disabled, errorText, helperText, label, placeholder, search } = this.props;
+    const { classes, className, maxHeight, disabled, errorText, helperText, label, placeholder, search } = this.props;
     const selectedIndex = this.getIndex(selectedItem);
     const placeholderText = placeholder ? placeholder : "Enter a value"
 
@@ -176,7 +176,7 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
           })}
         />
         {isOpen &&
-          <Paper className={classes.searchSuggestions}>
+          <Paper className={classes.searchSuggestions} style={{ maxHeight: maxHeight || 192 }}>
             {this.getSearchSuggestions(inputValue).map((suggestion:Item, index:number) => {
               return this.renderSuggestion(
                 suggestion,

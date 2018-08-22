@@ -1,11 +1,12 @@
 import { compose } from 'ramda';
 import * as React from 'react';
 
+import ListItem from '@material-ui/core/ListItem';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 import OpenInNew from '@material-ui/icons/OpenInNew';
 
 import { Item } from 'src/components/EnhancedSelect';
-import Grid from 'src/components/Grid';
 import RenderGuard from 'src/components/RenderGuard';
 
 type ClassNames = 'root'
@@ -14,25 +15,31 @@ type ClassNames = 'root'
 | 'icon'
 | 'row';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
   },
   label: {
-    fontSize: '1.2em',
-  },
-  source: {
-    fontSize: '0.em',
-    margin: '0px',
-    paddingTop: '0px !important',
-    paddingBottom: '0px !important',
+    display: 'inline',
+    color: theme.palette.text.primary,
+    maxWidth: '95%',
   },
   icon: {
+    display: 'inline-block',
     fontSize: '0.8em',
+    position: 'relative',
+    top: 5,
+    marginLeft: theme.spacing.unit / 2,
+  },
+  source: {
+    fontWeight: 700,
   },
   row: {
-    paddingTop: '0px !important',
-    paddingBottom: '0px !important',
-  }
+    display: 'flex',
+    width: '100%',
+    justifyContent: 'space-between',
+  },
 });
 
 interface Props {
@@ -42,7 +49,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const SearchItem: React.StatelessComponent<CombinedProps> = (props) => {
+const searchItem: React.StatelessComponent<CombinedProps> = (props) => {
   const getLabel = () => {
     if (isFinal) { 
       return item.label ? `Search for "${item.label}"` : 'Search';
@@ -55,15 +62,13 @@ const SearchItem: React.StatelessComponent<CombinedProps> = (props) => {
 
   return (
     <React.Fragment>
-      <Grid container className={classes.root} direction={"column"}>
-        <Grid item className={classes.label}>
-          <Grid container className={classes.row} direction={"row"} alignItems={"center"} justify={"flex-start"}>
-            <Grid item dangerouslySetInnerHTML={{__html: getLabel()}}/>
-            {!isFinal && <Grid item><OpenInNew className={classes.icon} /></Grid>}
-          </Grid>
-        </Grid>
-        {!isFinal && <Grid item className={classes.source}>{source}</Grid>}
-      </Grid>
+      <ListItem className={classes.root} component="div">
+        <div className={classes.row}>
+          <div className={classes.label} dangerouslySetInnerHTML={{__html: getLabel()}} />
+          {!isFinal && <OpenInNew className={classes.icon} />}
+        </div>
+        {!isFinal && <Typography variant="caption" className={classes.source}>{source}</Typography>}
+      </ListItem>
     </React.Fragment>
   );
 }
@@ -73,4 +78,4 @@ const styled = withStyles(styles, { withTheme: true });
 export default compose<any, any, any>(
   styled,
   RenderGuard
-  )(SearchItem);
+  )(searchItem);
