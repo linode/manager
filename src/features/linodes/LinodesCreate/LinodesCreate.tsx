@@ -21,13 +21,13 @@ import { getImages } from 'src/services/images';
 import { getLinodes } from 'src/services/linodes';
 import { parseQueryParams } from 'src/utilities/queryParams';
 
-import { ExtendedLinode } from 'src/features/linodes/LinodesCreate/SelectLinodePanel';
-import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
-import FromBackupsContent from 'src/features/linodes/LinodesCreate/TabbedContent/FromBackupsContent';
-import FromImageContent from 'src/features/linodes/LinodesCreate/TabbedContent/FromImageContent';
-import FromLinodeContent from 'src/features/linodes/LinodesCreate/TabbedContent/FromLinodeContent';
-import FromStackScriptContent from 'src/features/linodes/LinodesCreate/TabbedContent/FromStackScriptContent';
 import { displayType, typeLabelDetails } from 'src/features/linodes/presentation';
+import { ExtendedLinode } from './SelectLinodePanel';
+import { ExtendedType } from './SelectPlanPanel';
+import FromBackupsContent from './TabbedContent/FromBackupsContent';
+import FromImageContent from './TabbedContent/FromImageContent';
+import FromLinodeContent from './TabbedContent/FromLinodeContent';
+import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
 
 export type Info = { title: string, details?: string } | undefined;
 

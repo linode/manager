@@ -6,12 +6,12 @@ import Typography from '@material-ui/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 
-import BlogDashboardCard from 'src/features/Dashboard/BlogDashboardCard';
-import DomainsDashboardCard from 'src/features/Dashboard/DomainsDashboardCard';
-import LinodesDashboardCard from 'src/features/Dashboard/LinodesDashboardCard';
-import NodeBalancersDashboardCard from 'src/features/Dashboard/NodeBalancersDashboardCard';
-import TransferDashboardCard from 'src/features/Dashboard/TransferDashboardCard';
-import VolumesDashboardCard from 'src/features/Dashboard/VolumesDashboardCard';
+import BlogDashboardCard from './BlogDashboardCard';
+import DomainsDashboardCard from './DomainsDashboardCard';
+import LinodesDashboardCard from './LinodesDashboardCard';
+import NodeBalancersDashboardCard from './NodeBalancersDashboardCard';
+import TransferDashboardCard from './TransferDashboardCard';
+import VolumesDashboardCard from './VolumesDashboardCard';
 
 
 type ClassNames = 'root';

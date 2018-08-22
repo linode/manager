@@ -168,7 +168,6 @@ type CombinedProps =
 
 const typesContext = (path: string[]) => lensPath(['typesContext', ...path]);
 const regionsContext = (path: string[]) => lensPath(['regionsContext', ...path]);
-const documentTitleContext = (path: string[]) => lensPath(['documentTitleContext', ...path]);
 
 const L = {
   typesContext: {
@@ -182,9 +181,6 @@ const L = {
     errors: regionsContext(['errors']),
     lastUpdated: regionsContext(['lastUpdated']),
     loading: regionsContext(['loading']),
-  },
-  documentTitleContext: {
-    titleSegments: documentTitleContext(['titleSegments']),
   },
 };
 
