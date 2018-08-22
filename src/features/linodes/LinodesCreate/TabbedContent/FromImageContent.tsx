@@ -13,7 +13,6 @@ import { resetEventsPolling } from 'src/events';
 import { Info } from 'src/features/linodes/LinodesCreate/LinodesCreate';
 import { allocatePrivateIP, createLinode } from 'src/services/linodes';
 
-import { sendEvent } from 'src/utilities/analytics';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -155,22 +154,11 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
       booted: true,
     })
       .then((linode) => {
-        sendEvent({
-          category: 'Linode',
-          action: 'Create Success',
-          label: location.pathname,
-        })
-
         if (privateIP) { allocatePrivateIP(linode.id); }
         resetEventsPolling();
         history.push('/linodes');
       })
       .catch((error) => {
-        sendEvent({
-          category: 'Linode',
-          action: 'Create Error',
-          label: location.pathname,
-        })
         if (!this.mounted) { return; }
 
         this.setState(() => ({

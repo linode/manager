@@ -2,8 +2,6 @@ import * as React from 'react';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-import { sendEvent } from 'src/utilities/analytics';
-
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 
@@ -26,14 +24,6 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 class UserAgentNotification extends React.Component<CombinedProps, State> {
   state: State = {
   };
-
-  componentDidMount() {
-    sendEvent({
-      category: "Browser Warning",
-      action: "Browser Warning",
-      label: this.props.warning || location.pathname,
-    })
-  }
   
   actions = () => <Button onClick={this.props.onClose} type="primary">Dismiss</Button>;
 
