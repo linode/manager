@@ -90,7 +90,10 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
   }
 
   searchAlgolia = (inputValue:string) => {
-    if (!inputValue) { this.setState({ options: [] }); }
+    if (!inputValue) { 
+      this.setState({ options: [] }); 
+      return; 
+    }
     searchIndex.search({
       query: inputValue,
       hitsPerPage: 5,
@@ -177,7 +180,7 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
           onInputValueChange={this.onInputValueChange}
           onSubmit={this.handleSubmit}
           handleSelect={this.handleSelect}
-          placeholder="Search Linode Docs and Community questions"
+          placeholder="Search for answers..."
           noFilter
           search
           className={classes.enhancedSelectWrapper}
