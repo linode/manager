@@ -4,15 +4,13 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 import Typography from '@material-ui/core/Typography';
 import OpenInNew from '@material-ui/icons/OpenInNew';
 
+import ListItem from '@material-ui/core/ListItem';
+import MenuList from '@material-ui/core/MenuList';
 import Paper from '@material-ui/core/Paper';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-
-import Table from 'src/components/Table';
 
 type ClassNames = 'root'
   | 'resultsContainer'
+  | 'noResultsContainer'
   | 'moreResults'
   | 'icon'
   | 'header'
@@ -28,6 +26,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme &  Linode.Theme) =>
       '& em': {
         fontStyle: 'normal',
       },
+    },
+    noResultsContainer: {
+      padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px`,
     },
     moreResults: {
       fontSize: '1rem',
@@ -78,24 +79,26 @@ const DocumentationResults: React.StatelessComponent<CombinedProps> = (props) =>
   const { classes, results, sectionTitle, target } = props;
   const renderResults = () => {
     return results.map((result:SearchResult, idx:number) =>
-      <TableRow key={idx} className={classes.searchItem}>
-        <TableCell onClick={() => window.open(result.data.href, '_newtab')}>
-          <Typography variant="body1" className={classes.label} >
-            {result.label}
-            <OpenInNew className={classes.icon} />
-          </Typography>
-        </TableCell>
-      </TableRow>
+      <ListItem
+        key={idx}
+        role="menu-item"
+        onClick={() => window.open(result.data.href, '_newtab')}
+        className={classes.searchItem}
+        tabIndex={1}
+      >
+        <Typography variant="body1" className={classes.label} >
+          {result.label}
+          <OpenInNew className={classes.icon} />
+        </Typography>
+      </ListItem>
     )
   }
 
   const renderEmptyState = () => {
     return(
-      <TableRow >
-        <TableCell>
-          <Typography variant="body1">No results</Typography>
-        </TableCell>
-      </TableRow>
+      <Paper className={classes.noResultsContainer}>
+        <Typography variant="body1">No results</Typography>
+      </Paper>
     )
   }
 
@@ -105,11 +108,9 @@ const DocumentationResults: React.StatelessComponent<CombinedProps> = (props) =>
         { `Most Relevant ${sectionTitle}` }
       </Typography>
       <Paper>
-        <Table className={classes.resultsContainer}>
-          <TableBody>
+        <MenuList>
             {results.length > 0 ? renderResults() : renderEmptyState()}
-          </TableBody>
-        </Table>
+        </MenuList>
       </Paper>
       <Typography variant="body2" className={classes.moreResults}>
         <a href={target} className={classes.link} >View more {sectionTitle}</a>
