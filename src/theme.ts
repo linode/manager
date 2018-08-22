@@ -772,6 +772,24 @@ const LinodeTheme: Linode.Theme = {
         overflowX: 'auto',
       },
     },
+    MuiTableRow: {
+      root: {
+        position: 'relative',
+        zIndex: 1,
+        '&:hover': {
+          '&$hover': {
+            backgroundColor: '#fbfbfb',
+          },
+        },
+      },
+      hover: {
+        cursor: 'pointer',
+        '& a': {
+          color: primaryColors.text,
+          fontWeight: 700,
+        },
+      },
+    },
     MuiTooltip: {
       tooltip: {
         borderRadius: 0,

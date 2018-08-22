@@ -7,7 +7,6 @@ import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 
 import NodeBalancer from 'src/assets/addnewmenu/nodebalancer.svg';
@@ -23,6 +22,7 @@ import Placeholder from 'src/components/Placeholder';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 import TableRowError from 'src/components/TableRowError';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
@@ -382,7 +382,13 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
 
     return nodeBalancers.map((nodeBalancer) => {
       return (
-        <TableRow key={nodeBalancer.id} data-qa-nodebalancer-cell className="fade-in-table">
+        <TableRow
+          key={nodeBalancer.id}
+          data-qa-nodebalancer-cell
+          rowLink={`/nodebalancers/${nodeBalancer.id}`}
+          className="fade-in-table"
+          arial-label={nodeBalancer.label}
+        >
           <TableCell data-qa-nodebalancer-label>
             <Link to={`/nodebalancers/${nodeBalancer.id}`}>
               {nodeBalancer.label}
