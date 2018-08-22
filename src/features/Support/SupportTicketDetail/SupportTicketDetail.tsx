@@ -17,6 +17,7 @@ import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import CircleProgress from 'src/components/CircleProgress';
 import setDocs from 'src/components/DocsSidebar/setDocs';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import { getTicket, getTicketReplies, SupportTicket } from 'src/services/support';
@@ -276,6 +277,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
 
     return (
       <React.Fragment>
+        <DocumentTitleSegment segment={`Support Ticket ${ticketId}`} />
         <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
           <Grid item className={classes.titleWrapper}>
             <IconButton

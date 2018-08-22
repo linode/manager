@@ -24,6 +24,13 @@ class InnerDocumentTitleSegment extends React.Component<Props & DocumentTitleSeg
     this.props.appendSegment(this.props.segment);
   }
 
+  componentDidUpdate(prevProps: Props & DocumentTitleSegmentsContext) {
+    if (prevProps.segment !== this.props.segment) {
+      this.props.removeSegment(prevProps.segment);
+      this.props.appendSegment(this.props.segment);
+    }
+  }
+
   componentWillUnmount() {
     this.props.removeSegment(this.props.segment);
   }

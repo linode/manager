@@ -17,6 +17,7 @@ import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import PaginationFooter, { PaginationProps } from 'src/components/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
@@ -257,6 +258,7 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
 
     return (
       <React.Fragment>
+        <DocumentTitleSegment segment="NodeBalancers" />
         <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
           <Grid item>
             <Typography role="header" variant="headline" className={classes.title} data-qa-title >

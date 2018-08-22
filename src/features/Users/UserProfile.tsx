@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
@@ -224,6 +225,7 @@ class UserProfile extends React.Component<CombinedProps> {
         {username !== undefined
           ? (
             <React.Fragment>
+              <DocumentTitleSegment segment={`${username} - Profile`} />
               {this.renderProfileSection()}
               {this.renderDeleteSection()}
               <UserDeleteConfirmationDialog

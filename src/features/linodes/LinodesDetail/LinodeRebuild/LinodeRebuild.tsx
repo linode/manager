@@ -10,6 +10,7 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import MenuItem from 'src/components/MenuItem';
 import PasswordInput from 'src/components/PasswordInput';
@@ -55,6 +56,7 @@ interface Props { }
 
 interface ContextProps {
   linodeId: number;
+  linodeLabel: string;
 }
 
 interface PromiseLoaderProps {
@@ -138,7 +140,7 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { images: { error: imagesError }, classes } = this.props;
+    const { images: { error: imagesError }, classes, linodeLabel } = this.props;
     const { errors, selected } = this.state;
 
     if (imagesError) {
@@ -151,6 +153,7 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
+        <DocumentTitleSegment segment={`${linodeLabel} - Rebuild`} />
         <Paper className={classes.root}>
           <Typography
             role="header"
@@ -226,6 +229,7 @@ const preloaded = PromiseLoader({
 
 const linodeContext = withLinode((context) => ({
   linodeId: context.data!.id,
+  linodeLabel: context.data!.label,
 }));
 
 export default compose<any, any, any, any, any>(

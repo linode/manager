@@ -233,7 +233,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
             exact
             path={`${path}/configurations`}
             render={() =>
-              <NodeBalancerConfigurations />
+              <NodeBalancerConfigurations nodeBalancerLabel={nodeBalancer.label}/>
             }
           />
           {/* 404 */}

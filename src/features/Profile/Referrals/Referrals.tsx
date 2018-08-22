@@ -6,6 +6,7 @@ import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import CopyableTextField from 'src/features/Volumes/CopyableTextField';
 
@@ -62,6 +63,7 @@ class Referrals extends React.Component<CombinedProps, State> {
 
     return (
       <Paper className={classes.root}>
+        <DocumentTitleSegment segment="Referrals" />
         <Grid container>
           <Grid item xs={12}>
             <Typography
