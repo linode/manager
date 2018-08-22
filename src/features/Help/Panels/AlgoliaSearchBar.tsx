@@ -19,7 +19,7 @@ import SearchItem from './SearchItem';
 type ClassNames = 'root'
   | 'searchItem'
   | 'searchItemHighlighted'
-  | 'input'
+  | 'enhancedSelectWrapper'
   | 'textfield';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
@@ -60,14 +60,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       outline: '1px dotted #606469',
     },
   },
-  input: {
-    border: 0,
-    width: '100%',
-    background: 'transparent',
-    '& input': {
-      transition: theme.transitions.create(['opacity']),
-      fontSize: '1.0em',
-      [theme.breakpoints.down('sm')]: {},
+  enhancedSelectWrapper: {
+    margin: '0 auto',
+    width: '100%s',
+    '& [class*="formControl"]': {
+      maxWidth: '100%',
+    },
+    [theme.breakpoints.up('md')]: {
+      width: 500,
     },
   },
 });
@@ -180,7 +180,6 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
       <React.Fragment>
       {error && <Notice error spacingTop={8} spacingBottom={0} >{error}</Notice>}
         <EnhancedSelect
-          className={classes.input}
           options={data}
           value={value}
           inputValue={inputValue}
@@ -191,6 +190,7 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
           placeholder="Search Linode Docs and Community questions"
           noFilter
           search
+          className={classes.enhancedSelectWrapper}
         />
       </React.Fragment>
     );
