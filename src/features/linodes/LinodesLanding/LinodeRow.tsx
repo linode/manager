@@ -2,16 +2,15 @@ import { compose } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-import Button from '@material-ui/core/Button';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 
 import Flag from 'src/assets/icons/flag.svg';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
+import TableRow from 'src/components/TableRow';
 import { withTypes } from 'src/context/types';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { displayType } from 'src/features/linodes/presentation';
@@ -147,21 +146,17 @@ class LinodeRow extends React.Component<CombinedProps> {
 
     return (
       <TableCell className={classes.linodeCell}>
-        <Link to={`/linodes/${linodeId}`} className={classes.link} tabIndex={-1}>
-          <Button className={classes.linkButton}>
-            <Grid container wrap="nowrap" alignItems="center">
-              <Grid item className="py0">
-                <LinodeStatusIndicator status={linodeStatus} />
-              </Grid>
-              <Grid item className="py0">
-                <Typography role="header" variant="subheading" data-qa-label>
-                  {linodeLabel}
-                </Typography>
-                {!typesLoading && <Typography> {displayType(linodeType, typesData || [])} </Typography>}
-              </Grid>
-            </Grid>
-          </Button>
-        </Link>
+        <Grid container wrap="nowrap" alignItems="center">
+          <Grid item className="py0">
+            <LinodeStatusIndicator status={linodeStatus} />
+          </Grid>
+          <Grid item className="py0">
+            <Typography role="header" variant="subheading" data-qa-label>
+              <Link to={`/linodes/${linodeId}`} className={classes.link}>{linodeLabel}</Link>
+            </Typography>
+            {!typesLoading && <Typography> {displayType(linodeType, typesData || [])} </Typography>}
+          </Grid>
+        </Grid>
       </TableCell>
     );
   }
@@ -200,7 +195,13 @@ class LinodeRow extends React.Component<CombinedProps> {
     } = this.props;
 
     return (
-      <TableRow key={linodeId} data-qa-linode={linodeLabel}>
+      <TableRow
+        key={linodeId}
+        className={`${classes.bodyRow} 'fade-in-table'`}
+        data-qa-loading
+        rowLink={`/linodes/${linodeId}`}
+        arial-label={linodeLabel}
+      >
         {this.headCell()}
         <TableCell className={classes.ipCell} data-qa-ips>
           <IPAddress ips={linodeIpv4} copyRight />
