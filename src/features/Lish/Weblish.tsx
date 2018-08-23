@@ -75,11 +75,11 @@ export class Weblish extends React.Component<CombinedProps, State> {
     /*
     * If we have a new token, refresh the webosocket connection
     * and console with the new token
+    * NOT WORKING
     */
-    if (this.props.token !== prevProps.token) {
-      this.connect()
-      return;
-    }
+    // if (this.props.token !== prevProps.token) {
+    //   this.socket.close();
+    // }
 
     /*
     * If our connection failed, and we did not surpass the max number of
@@ -87,7 +87,9 @@ export class Weblish extends React.Component<CombinedProps, State> {
     */
     if (prevState.retryAttempts !== retryAttempts && retryingConnection) {
       setTimeout(() => {
+        console.log('refresh token');
         this.props.refreshToken();
+        this.connect();
       }, 3000);
     }
   }
@@ -157,7 +159,7 @@ export class Weblish extends React.Component<CombinedProps, State> {
         this.setState({
           retryingConnection: true,
           retryAttempts: retryAttempts + 1,
-        })
+        });
         return;
       }
       this.setState({
@@ -194,7 +196,7 @@ export class Weblish extends React.Component<CombinedProps, State> {
 
     return (
       <div className={classes.message}>
-        {`Connection could not be opened. Retrying in 3 seconds...
+        {`Lish Token could not be validated. Retrying in 3 seconds...
           ${retryAttempts} / ${maxRetryAttempts}`}
         <CircleProgress mini />
       </div>
