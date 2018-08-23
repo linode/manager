@@ -788,7 +788,7 @@ const LinodeTheme: Linode.Theme = {
         zIndex: 1,
         '&:hover': {
           '&$hover': {
-            backgroundColor: '#fbfbfb',
+            color: primaryColors.offBlack,
           },
         },
       },
