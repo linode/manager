@@ -16,6 +16,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import PaginationFooter from 'src/components/PaginationFooter';
@@ -329,18 +330,29 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     const images = pathOr([], ['response', 'data'], this.props.images);
 
     if (linodes.length === 0) {
-      return <ListLinodesEmptyState />;
+      return (
+        <React.Fragment>
+          <DocumentTitleSegment segment="Linodes" />
+          <ListLinodesEmptyState />
+        </React.Fragment>
+      );
     }
 
     if (this.props.linodes.error) {
       return (
-        <ErrorState errorText="Error loading data" />
+        <React.Fragment>
+          <DocumentTitleSegment segment="Linodes" />
+          <ErrorState errorText="Error loading data" />
+        </React.Fragment>
       );
     }
 
     if (this.props.images.error) {
       return (
-        <ErrorState errorText="Error loading data" />
+        <React.Fragment>
+          <DocumentTitleSegment segment="Linodes" />
+          <ErrorState errorText="Error loading data" />
+        </React.Fragment>
       );
     }
 
@@ -348,6 +360,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
     return (
       <Grid container>
+        <DocumentTitleSegment segment="Linodes" />
         <Grid item xs={12}>
           <Typography
             role="header"

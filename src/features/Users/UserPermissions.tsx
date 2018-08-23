@@ -15,6 +15,7 @@ import Typography from '@material-ui/core/Typography';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
@@ -754,8 +755,11 @@ class UserPermissions extends React.Component<CombinedProps, State> {
 
   render() {
     const { loading } = this.state;
+    const { username } = this.props;
+
     return (
       <React.Fragment>
+        <DocumentTitleSegment segment={`${username} - Permissions`} />
         {loading
           ? <CircleProgress />
           : this.renderBody()

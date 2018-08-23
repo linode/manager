@@ -24,6 +24,7 @@ import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Placeholder from 'src/components/Placeholder';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import Select from 'src/components/Select';
@@ -95,8 +96,8 @@ interface ContextProps {
   backupsEnabled: boolean;
   backupsSchedule: Linode.LinodeBackupSchedule;
   linodeInTransition: boolean;
+  linodeLabel: string;
 }
-
 
 interface ConnectedProps {
   timezone: string;
@@ -628,10 +629,11 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
 
 
   render() {
-    const { backupsEnabled } = this.props;
+    const { backupsEnabled, linodeLabel } = this.props;
 
     return (
       <React.Fragment>
+        <DocumentTitleSegment segment={`${linodeLabel} - Backups`} />
         {backupsEnabled
           ? <this.Management />
           : <this.Placeholder />
@@ -663,6 +665,7 @@ const linodeContext = withLinode((context) => ({
   backupsSchedule: context.data!.backups.schedule,
   linodeID: context.data!.id,
   linodeInTransition: isLinodeInTransition(context.data!.status),
+  linodeLabel: context.data!.label,
   linodeRegion: context.data!.region,
   linodeType: context.data!.type,
 }));

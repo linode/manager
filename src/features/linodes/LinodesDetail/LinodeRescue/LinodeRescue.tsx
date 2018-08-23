@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
@@ -46,6 +47,7 @@ interface Props { }
 interface ContextProps {
   linodeId: number;
   linodeRegion?: string;
+  linodeLabel: string;
 }
 
 interface PromiseLoaderProps {
@@ -141,18 +143,34 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
 
   render() {
     const { devices } = this.state;
-    const { disks: { error: disksError }, volumes: { error: volumesError }, classes } = this.props;
+    const { 
+      disks: { error: disksError },
+      volumes: { error: volumesError },
+      classes,
+      linodeLabel,
+    } = this.props;
 
     if (disksError) {
-      return <ErrorState errorText="There was an error retrieving disks information." />;
+      return (
+        <React.Fragment>
+          <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
+          <ErrorState errorText="There was an error retrieving disks information." />
+        </React.Fragment>
+      );
     }
 
     if (volumesError) {
-      return <ErrorState errorText="There was an error retrieving volumes information." />;
+      return (
+        <React.Fragment>
+          <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
+          <ErrorState errorText="There was an error retrieving volumes information." />
+        </React.Fragment>
+      );
     }
 
     return (
       <React.Fragment>
+        <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
         <Paper className={classes.root}>
           <Typography
             role="header"
@@ -218,6 +236,7 @@ export const preloaded = PromiseLoader({
 const linodeContext = withLinode((context) => ({
   linodeId: context.data!.id,
   linodeRegion: context.data!.region,
+  linodeLabel: context.data!.label,
 }));
 
 export default compose<any, any, any, any, any>(

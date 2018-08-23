@@ -6,6 +6,7 @@ import { bindActionCreators, Dispatch } from 'redux';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import setDocs from 'src/components/DocsSidebar/setDocs';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Notice from 'src/components/Notice';
 import { response } from 'src/store/reducers/resources';
 
@@ -66,6 +67,7 @@ export class AuthenticationSettings extends React.Component<CombinedProps, State
 
     return (
       <React.Fragment>
+        <DocumentTitleSegment segment={`Password & Authentication`} />
         {/* Remove when logic above is cleared */}
         {success && <Notice success text={success} />}
         {!loading &&
