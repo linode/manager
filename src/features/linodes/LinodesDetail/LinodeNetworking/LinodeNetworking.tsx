@@ -11,6 +11,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 
 import AddNewLink from 'src/components/AddNewLink';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import Table from 'src/components/Table';
@@ -275,7 +276,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-
+        <DocumentTitleSegment segment={`${linodeLabel} - Networking`} />
         <LinodeNetworkingSummaryPanel
           linkLocal={path(['ipv6', 'link_local', 'address'], linodeIPs)}
           sshIPAddress={firstPublicIPAddress}

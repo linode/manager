@@ -17,6 +17,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Placeholder, { PlaceholderProps } from 'src/components/Placeholder';
@@ -834,17 +835,24 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
     const {
       volumes: { error: volumesError },
       linodeConfigs: { error: linodeConfigsError },
+      linodeLabel,
     } = this.props;
 
     const { volumeDrawer } = this.state;
 
 
     if (volumesError || linodeConfigsError) {
-      return <ErrorState errorText="An error has occured." />;
+      return (
+        <React.Fragment>
+          <DocumentTitleSegment segment={`${linodeLabel} - Volumes`} />
+          <ErrorState errorText="An error has occured." />;
+        </React.Fragment>
+      );
     }
 
     return (
       <React.Fragment>
+        <DocumentTitleSegment segment={`${linodeLabel} - Volumes`} />
         <this.placeholder />
         <this.table updateFor={[this.props.linodeVolumes]} />
         <VolumeDrawer {...volumeDrawer} />

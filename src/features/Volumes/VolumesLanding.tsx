@@ -20,6 +20,7 @@ import VolumesIcon from 'src/assets/addnewmenu/volume.svg';
 import AddNewLink from 'src/components/AddNewLink';
 import CircleProgress from 'src/components/CircleProgress';
 import setDocs from 'src/components/DocsSidebar/setDocs';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
 import PaginationFooter, { PaginationProps } from 'src/components/PaginationFooter';
@@ -218,6 +219,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
+        <DocumentTitleSegment segment="Volumes" />
         <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
           <Grid item>
             <Typography role="header" variant="headline" className={classes.title} data-qa-title >
@@ -310,15 +312,18 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
 
   renderEmpty = () => {
     return (
-      <Placeholder
-        title="Create a Volume"
-        copy="Add storage to your Linodes using the resilient Volumes service"
-        icon={VolumesIcon}
-        buttonProps={{
-          onClick: this.props.openForCreating,
-          children: 'Create a Volume',
-        }}
-      />
+      <React.Fragment>
+        <DocumentTitleSegment segment="Volumes" />
+        <Placeholder
+          title="Create a Volume"
+          copy="Add storage to your Linodes using the resilient Volumes service"
+          icon={VolumesIcon}
+          buttonProps={{
+            onClick: this.props.openForCreating,
+            children: 'Create a Volume',
+          }}
+        />
+      </React.Fragment>
     );
   };
 

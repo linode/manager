@@ -49,14 +49,14 @@ describe('SummaryPanel', () => {
   it('should render "Expired" text next to the CC expiration if has an old date', () => {
     expect(componentExpiredCC.find('span')
       .filterWhere((n) => {
-        return n.childAt(0).text() === 'Expired'
+        return n.text() === 'Expired'
       })).toHaveLength(1);
   });
 
   it('should not render "Expired" text next to the CC expiration if has an future date', () => {
     expect(componentValidCC.find('span')
       .filterWhere((n) => {
-        return n.childAt(0).text() === 'Expired'
+        return n.text() === 'Expired'
       })).toHaveLength(0);
   });
 });

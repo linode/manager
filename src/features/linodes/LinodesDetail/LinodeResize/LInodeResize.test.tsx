@@ -20,6 +20,7 @@ describe('LinodeResize', () => {
       linodeId={12}
       linodeType={null}
       typesData={mockTypes}
+      linodeLabel=""
     />,
   );
 
@@ -36,6 +37,7 @@ describe('LinodeResize', () => {
           linodeId={12}
           linodeType={null}
           typesData={mockTypes}
+          linodeLabel=""
         />
       </LinodeThemeWrapper>,
     );
@@ -62,6 +64,7 @@ describe('LinodeResize', () => {
               linodeId={12}
               linodeType={null}
               typesData={mockTypes}
+              linodeLabel=""
             />
           </LinodeThemeWrapper>,
         );
@@ -90,6 +93,7 @@ describe('LinodeResize', () => {
               linodeId={12}
               linodeType={'_something_unexpected_'}
               typesData={mockTypes}
+              linodeLabel=""
             />
           </LinodeThemeWrapper>,
         );

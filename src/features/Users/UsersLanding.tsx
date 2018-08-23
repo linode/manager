@@ -15,6 +15,7 @@ import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import setDocs from 'src/components/DocsSidebar/setDocs';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -263,14 +264,18 @@ class UsersLanding extends React.Component<CombinedProps, State> {
 
     if (error) {
       return (
-        <ErrorState
-          errorText="There was an error retrieving the user list. Please reload and try again."
-        />
+        <React.Fragment>
+          <DocumentTitleSegment segment="Users" />
+          <ErrorState
+            errorText="There was an error retrieving the user list. Please reload and try again."
+          />
+        </React.Fragment>
       );
     }
 
     return (
       <React.Fragment>
+        <DocumentTitleSegment segment="Users" />
         {users
           ? <React.Fragment>
               <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }} >
