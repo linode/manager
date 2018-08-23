@@ -91,22 +91,27 @@ class Glish extends React.Component<CombinedProps, State> {
   }
 
   componentDidUpdate(prevProps: CombinedProps, prevState: State) {
+
     /*
-    * If our connection failed, and we did not surpass the max number of
-    * reconnection attempts, try to reconnect
+    * If we have a new token, refresh the console
+    * and the websocket connection with the new token
+    */
+    if (this.props.token !== prevProps.token) {
+      const { linode } = this.props;
+      const region = (linode as Linode.Linode).region;
+      this.refreshMonitor(region, this.props.token);
+      return;
+    }
+
+    /*
+    * If refreshing the console failed, and we did not surpass the max number of
+    * reconnection attempts, try to get a new lish token
     */
     const { retryAttempts, isRetryingConnection } = this.state;
     if (prevState.retryAttempts !== retryAttempts && isRetryingConnection) {
       setTimeout(() => {
         this.props.refreshToken();
       }, 3000);
-    }
-
-
-    if (this.props.token !== prevProps.token) {
-      const { linode } = this.props;
-      const region = (linode as Linode.Linode).region;
-      this.refreshMonitor(region, this.props.token);
     }
   }
 
