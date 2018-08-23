@@ -18,6 +18,7 @@ import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import setDocs from 'src/components/DocsSidebar/setDocs';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -301,6 +302,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
+        <DocumentTitleSegment segment="Images" />
         <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }} updateFor={[]}>
           <Grid item>
             <Typography variant="headline" data-qa-title className={classes.title}>
@@ -366,9 +368,12 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
 
   renderError = (e: Error) => {
     return (
-      <ErrorState
-        errorText="There was an error retrieving your images. Please reload and try again."
-      />
+      <React.Fragment>
+        <DocumentTitleSegment segment="Images" />
+        <ErrorState
+          errorText="There was an error retrieving your images. Please reload and try again."
+        />
+      </React.Fragment>
     );
   }
 
@@ -379,6 +384,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
   renderEmpty = () => {
     return (
       <React.Fragment>
+        <DocumentTitleSegment segment="Images" />
         <Placeholder
           title="Add an Image"
           copy="Adding a new image is easy. Click below to add an image."

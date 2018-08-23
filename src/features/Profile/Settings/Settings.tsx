@@ -8,6 +8,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Toggle from 'src/components/Toggle';
 import { updateProfile } from 'src/services/profile';
@@ -53,6 +54,7 @@ class ProfileSettings extends React.Component<CombinedProps, State> {
 
     return (
       <Paper className={classes.root}>
+        <DocumentTitleSegment segment="Settings" />
         <Typography role="header" variant="title" className={classes.title}>
           Notifications
         </Typography>

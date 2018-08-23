@@ -39,6 +39,7 @@ describe('LinodeRescue', () => {
           linodeId={7843027}
           linodeRegion="us-east"
           volumes={volumesAsPromise}
+          linodeLabel=""
         />
       </LinodeThemeWrapper>,
     );
