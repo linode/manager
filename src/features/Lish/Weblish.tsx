@@ -31,6 +31,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 interface Props {
   linode: Linode.Linode;
   token: string;
+  refreshToken: () => void;
 }
 
 interface State {
@@ -70,13 +71,23 @@ export class Weblish extends React.Component<CombinedProps, State> {
 
   componentDidUpdate(prevProps: CombinedProps, prevState: State) {
     const { retryAttempts, retryingConnection } = this.state;
+
+    /*
+    * If we have a new token, refresh the webosocket connection
+    * and console with the new token
+    */
+    if (this.props.token !== prevProps.token) {
+      this.connect()
+      return;
+    }
+
     /*
     * If our connection failed, and we did not surpass the max number of
     * reconnection attempts, try to reconnect
     */
     if (prevState.retryAttempts !== retryAttempts && retryingConnection) {
       setTimeout(() => {
-        this.connect();
+        this.props.refreshToken();
       }, 3000);
     }
   }
