@@ -8,6 +8,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import LineGraph from 'src/components/LineGraph';
 import Select from 'src/components/Select';
@@ -271,6 +272,7 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
+        <DocumentTitleSegment segment={`${linode.label} - Summary`} />
         <SummaryPanel linode={linode} image={image} volumes={volumes} typesLongLabel={longLabel} />
 
         {stats &&

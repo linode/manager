@@ -5,6 +5,7 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 import Typography from '@material-ui/core/Typography';
 
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Requestable } from 'src/requestableContext';
 import { getAccountInfo } from 'src/services/account';
 import composeState from 'src/utilities/composeState';
@@ -125,6 +126,7 @@ export class AccountDetail extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
+        <DocumentTitleSegment segment={`Account & Billing`} />
         <AccountProvider value={this.state.account}>
           <Typography role="header" variant="headline" className={classes.heading}>Billing</Typography>
           <SummaryPanel />

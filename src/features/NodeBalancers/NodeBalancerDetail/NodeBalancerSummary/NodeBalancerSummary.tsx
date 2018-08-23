@@ -2,10 +2,11 @@ import * as React from 'react';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+
 import NodeBalancerCreationErrors, { ConfigOrNodeErrorResponse } from './NodeBalancerCreationErrors';
 import SummaryPanel from './SummaryPanel';
 import TablesPanel from './TablesPanel';
-
 
 type ClassNames = 'root';
 
@@ -24,6 +25,7 @@ const NodeBalancerSummary: React.StatelessComponent<CombinedProps> = (props) => 
   const { nodeBalancer, errorResponses } = props;
   return (
     <React.Fragment>
+      <DocumentTitleSegment segment={`${nodeBalancer.label} - Summary`} />
       <NodeBalancerCreationErrors errors={errorResponses} />
       <SummaryPanel nodeBalancer={nodeBalancer} />
       <TablesPanel nodeBalancer={nodeBalancer} />

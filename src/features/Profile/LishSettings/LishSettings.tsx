@@ -14,6 +14,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import setDocs from 'src/components/DocsSidebar/setDocs';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import MenuItem from 'src/components/MenuItem';
 import Notice from 'src/components/Notice';
 import Select from 'src/components/Select';
@@ -114,6 +115,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
     const authorizedKeysError = hasErrorFor('authorized_keys');
     return (
       <React.Fragment>
+        <DocumentTitleSegment segment="Lish" />
         <Paper className={classes.root}>
           <Typography
             role="header"
