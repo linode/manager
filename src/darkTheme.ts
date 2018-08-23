@@ -9,6 +9,7 @@ const primaryColors = {
   text: '#ffffff',
   headline: '#f4f4f4',
   divider: '#222222',
+  offBlack: '#fff',
 }
 
 const LinodeTheme: Linode.Theme = {
@@ -787,14 +788,14 @@ const LinodeTheme: Linode.Theme = {
         zIndex: 1,
         '&:hover': {
           '&$hover': {
-            backgroundColor: 'rgba(0, 0, 0, 0.1)',
+            backgroundColor: '#fbfbfb',
           },
         },
       },
       hover: {
         cursor: 'pointer',
         '& a': {
-          color: primaryColors.text,
+          color: primaryColors.offBlack,
           fontWeight: 700,
         },
       },
