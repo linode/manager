@@ -13,6 +13,7 @@ import Typography from '@material-ui/core/Typography';
 
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
+import Tile from 'src/components/Tile';
 
 import Chat from 'src/assets/icons/chat.svg';
 import Community from 'src/assets/icons/community.svg';
@@ -58,6 +59,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     border: `2px solid ${theme.palette.divider}`,
     width: 66,
     height: 66,
+    transition: 'border-color 225ms ease-in-out',
     color: theme.palette.primary.main,
   },
   ada: {
@@ -117,58 +119,37 @@ export class OtherWays extends React.Component<CombinedProps, State> {
           className={classes.wrapper}
         >
           <Grid item xs={12} sm={6}>
-            <div className={classes.card}>
-              <span className={classes.icon}><Documentation /></span>
-                <Typography variant="subheading" className={classes.tileTitle}>
-                  <a target="_blank" href="https://linode.com/docs/" className="black">View Documentation</a>
-                </Typography>
-              <Typography variant="caption">
-                View Linode Documentation
-              </Typography>
-            </div>
+            <Tile
+              title="View Documentation"
+              description="View Linode Documentation"
+              icon={<Documentation />}
+              link="https://linode.com/docs/"
+            />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <div className={classes.card}>
-              <span className={classes.icon}><Community /></span>
-                <Typography variant="subheading" className={classes.tileTitle}>
-                  <a target="_blank" href="https://linode.com/community/" className="black">Search the Community</a>
-                </Typography>
-              <Typography variant="caption">
-                Find help from other Linode users in the Community
-              </Typography>
-            </div>
+            <Tile
+              title="Search the Community"
+              description="Find help from other Linode users in the Community"
+              icon={<Community />}
+              link="https://linode.com/community/"
+            />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <div className={classes.card}>
-              <span className={classes.icon}><Chat /></span>
-              <Typography
-                variant="subheading"
-                className={classNames({
-                  [classes.tileTitle]: true,
-                  [classes.ada]: true,
-                })}
-              >
-                <a href="javascript:;" onClick={this.handleAdaInit} className="black">Talk to Ada</a>
-              </Typography>
-              {this.state.error &&
-                <Notice error={true} text={this.state.error} />
-              }
-              <Typography variant="caption">
-                Chat with the Linode Support bot to help troubleshoot
-              </Typography>
-            </div>
+            <Tile
+              title="Talk to Ada"
+              description="Chat with the Linode Support bot to help troubleshoot"
+              icon={<Chat />}
+              link={this.handleAdaInit}
+            />  
           </Grid>
           <Grid item xs={12} sm={6}>
-            <div className={classes.card}>
-              <span className={classes.icon}><Support /></span>
-                <Typography variant="subheading" className={classes.tileTitle}>
-                  <Link to="/support/tickets" className="black">Customer Support</Link>
-                </Typography>
-              <Typography variant="caption">
-                If you are not able to solve an issue with the resources listed above, you can
-                contact Linode Support
-              </Typography>
-            </div>
+            <Tile
+              title="Customer Support"
+              description="If you are not able to solve an issue with the resources listed above,
+              you can contact Linode Support"
+              icon={<Support />}
+              link="/support/tickets"
+            />
           </Grid>
         </Grid>
       </React.Fragment>
