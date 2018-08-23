@@ -91,17 +91,21 @@ class Glish extends React.Component<CombinedProps, State> {
   }
 
   componentDidUpdate(prevProps: CombinedProps, prevState: State) {
+    const { linode } = this.props;
+    const region = (linode as Linode.Linode).region;
 
     /*
     * If we have a new token, refresh the console
     * and the websocket connection with the new token
     */
-    if (this.props.token !== prevProps.token) {
-      const { linode } = this.props;
-      const region = (linode as Linode.Linode).region;
-      this.refreshMonitor(region, this.props.token);
-      return;
-    }
+    // if (this.props.token !== prevProps.token) {
+    //   const { linode } = this.props;
+    //   const region = (linode as Linode.Linode).region;
+    //   this.monitor.close();
+    //   resizeViewPort(1080, 840);
+    //   this.refreshMonitor(region, this.props.token);
+    //   this.renewVncToken();
+    // }
 
     /*
     * If refreshing the console failed, and we did not surpass the max number of
@@ -111,6 +115,8 @@ class Glish extends React.Component<CombinedProps, State> {
     if (prevState.retryAttempts !== retryAttempts && isRetryingConnection) {
       setTimeout(() => {
         this.props.refreshToken();
+        this.refreshMonitor(region, this.props.token);
+        this.renewVncToken();
       }, 3000);
     }
   }
