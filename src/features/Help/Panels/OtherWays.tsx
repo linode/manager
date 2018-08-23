@@ -1,7 +1,4 @@
-import * as classNames from 'classnames';
 import * as React from 'react';
-
-import { Link } from 'react-router-dom';
 
 import {
   StyleRulesCallback,
@@ -12,7 +9,6 @@ import {
 import Typography from '@material-ui/core/Typography';
 
 import Grid from 'src/components/Grid';
-import Notice from 'src/components/Notice';
 import Tile from 'src/components/Tile';
 
 import Chat from 'src/assets/icons/chat.svg';
@@ -23,10 +19,6 @@ import Support from 'src/assets/icons/support.svg';
 type ClassNames = 'root'
 | 'wrapper'
 | 'heading'
-| 'card'
-| 'tileTitle'
-| 'icon'
-| 'ada';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {},
@@ -37,35 +29,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     textAlign: 'center',
     marginBottom: theme.spacing.unit * 4,
   },
-  card: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    backgroundColor: theme.color.white,
-    padding: theme.spacing.unit * 4,
-    border: `1px solid ${theme.color.grey2}`,
-    height: '100%',
-  },
-  tileTitle: {
-    fontSize: '1.2rem',
-    marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit,
-  },
-  icon: {
-    margin: '0 auto 16px',
-    display: 'block',
-    padding: 16,
-    borderRadius: '50%',
-    border: `2px solid ${theme.palette.divider}`,
-    width: 66,
-    height: 66,
-    transition: 'border-color 225ms ease-in-out',
-    color: theme.palette.primary.main,
-  },
-  ada: {
-    color: '#3683DC',
-    cursor: 'pointer',
-  }
 });
 
 interface Props {}
