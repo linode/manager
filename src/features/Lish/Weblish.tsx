@@ -31,7 +31,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 interface Props {
   linode: Linode.Linode;
   token: string;
-  refreshToken: () => void;
+  refreshToken: () => Promise<void> | undefined;
 }
 
 interface State {
@@ -75,11 +75,11 @@ export class Weblish extends React.Component<CombinedProps, State> {
     /*
     * If we have a new token, refresh the webosocket connection
     * and console with the new token
-    * NOT WORKING
     */
-    // if (this.props.token !== prevProps.token) {
-    //   this.socket.close();
-    // }
+    if (this.props.token !== prevProps.token) {
+      this.socket.close();
+      this.terminal.destroy();
+    }
 
     /*
     * If our connection failed, and we did not surpass the max number of
@@ -87,9 +87,14 @@ export class Weblish extends React.Component<CombinedProps, State> {
     */
     if (prevState.retryAttempts !== retryAttempts && retryingConnection) {
       setTimeout(() => {
-        console.log('refresh token');
-        this.props.refreshToken();
-        this.connect();
+        /*
+        * It's okay to disregard typescript checking here
+        * because the parent component <Lish /> handles
+        * the situation where refreshToken() returns undefined
+        */
+        this.props.refreshToken()!
+          .then(() => this.connect())
+          .catch(e => e);
       }, 3000);
     }
   }
@@ -211,15 +216,19 @@ export class Weblish extends React.Component<CombinedProps, State> {
       return this.renderErrorState()
     }
 
-    if (retryingConnection) {
-      return this.renderRetryState()
-    }
-
+    /*
+    * The loading states have to render with the terminal div because
+    * the messages from the websocket connection are sent during this loading period,
+    * and if you're rendering a loading state, then get a message from websockets,
+    * then render the terminal div, you end up with a blank black screen
+    */
     return (
       <React.Fragment>
         {this.socket && (this.socket.readyState === this.socket.OPEN)
           ? <div id="terminal" className="terminal" />
-          : <CircleProgress className={classes.progress} noInner />
+          : (!retryingConnection) // basically are we switching tabs after the lish token expired?
+            ? <CircleProgress className={classes.progress} noInner />
+            : this.renderRetryState()
         }
       </React.Fragment>
     );
