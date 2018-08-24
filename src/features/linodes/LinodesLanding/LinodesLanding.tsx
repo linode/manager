@@ -414,9 +414,12 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           actions={this.renderConfirmationActions}
           open={powerAlertOpen}
         >
-          {bootOption === 'reboot'
-            ? 'Are you sure you want to reboot your Linode'
-            : 'Are you sure you want to power down your Linode'}
+          <Typography>
+            {bootOption === 'reboot'
+              ? 'Are you sure you want to reboot your Linode'
+              : 'Are you sure you want to power down your Linode'
+            }
+          </Typography>
         </ConfirmationDialog>
       </Grid>
     );
@@ -434,7 +437,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           Cancel
         </Button>
         <Button
-          type="secondary"
+          type="primary"
           onClick={this.rebootOrPowerLinode}
           data-qa-confirm-cancel
         >
