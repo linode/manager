@@ -34,7 +34,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 interface Props {
   linode: Linode.Linode;
   token: string;
-  refreshToken: () => void;
+  refreshToken: () => Promise<void> | undefined;
 }
 
 interface State {
@@ -98,14 +98,9 @@ class Glish extends React.Component<CombinedProps, State> {
     * If we have a new token, refresh the console
     * and the websocket connection with the new token
     */
-    // if (this.props.token !== prevProps.token) {
-    //   const { linode } = this.props;
-    //   const region = (linode as Linode.Linode).region;
-    //   this.monitor.close();
-    //   resizeViewPort(1080, 840);
-    //   this.refreshMonitor(region, this.props.token);
-    //   this.renewVncToken();
-    // }
+    if (this.props.token !== prevProps.token) {
+      this.monitor.close();
+    }
 
     /*
     * If refreshing the console failed, and we did not surpass the max number of
@@ -114,9 +109,17 @@ class Glish extends React.Component<CombinedProps, State> {
     const { retryAttempts, isRetryingConnection } = this.state;
     if (prevState.retryAttempts !== retryAttempts && isRetryingConnection) {
       setTimeout(() => {
-        this.props.refreshToken();
-        this.refreshMonitor(region, this.props.token);
-        this.renewVncToken();
+        /*
+        * It's okay to disregard typescript checking here
+        * because the parent component <Lish /> handles
+        * the situation where refreshToken() returns undefined
+        */
+        this.props.refreshToken()!
+          .then(() => {
+            this.refreshMonitor(region, this.props.token);
+            this.renewVncToken();
+          })
+          .catch(e => e)
       }, 3000);
     }
   }
@@ -252,7 +255,7 @@ class Glish extends React.Component<CombinedProps, State> {
 
     return (
       <div className={classes.message}>
-        {`Connection could not be opened. Retrying in 3 seconds...
+        {`Lish Token could not be validated. Retrying in 3 seconds...
           ${retryAttempts} / ${maxRetryAttempts}`}
         <CircleProgress mini />
       </div>
@@ -274,10 +277,6 @@ class Glish extends React.Component<CombinedProps, State> {
       return this.renderErrorState()
     }
 
-    if (isRetryingConnection) {
-      return this.renderRetryState()
-    }
-
     return (
       <div id="Glish">
         {!powered &&
@@ -286,8 +285,17 @@ class Glish extends React.Component<CombinedProps, State> {
           </div>
         }
 
-        {(powered && !initialConnect) &&
-          <CircleProgress noInner/>
+        {/*
+        * The loading states have to render with the VncDisplay component
+        * because the messages from the websocket connection have to be send
+        * if you're rendering a loading state, then get a message from websockets,
+        * then render the VncDisplay, you end up with a blank black screen
+        */}
+        {(powered && !initialConnect)
+          ? (isRetryingConnection)
+            ? this.renderRetryState()
+            : <CircleProgress noInner />
+          : <React.Fragment />
         }
 
         {(powered && activeVnc && token && region) &&

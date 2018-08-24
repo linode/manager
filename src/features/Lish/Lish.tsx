@@ -90,7 +90,7 @@ class Lish extends React.Component<CombinedProps, State> {
       return;
     }
 
-    getLinodeLishToken(linodeId)
+    return getLinodeLishToken(linodeId)
       .then((response) => {
         const { data: { lish_token: token } } = response;
         if (!this.mounted) { return; }
