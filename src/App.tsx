@@ -282,6 +282,7 @@ export class App extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
+        <a href="#main-content" className="visually-hidden">Skip to main content</a>
         <DocumentTitleSegment segment="Linode Manager" />
         {longLivedLoaded &&
           <React.Fragment>
@@ -290,9 +291,8 @@ export class App extends React.Component<CombinedProps, State> {
                 <div {...themeDataAttr()} className={classes.appFrame}>
                   <SideMenu open={menuOpen} closeMenu={this.closeMenu} toggleTheme={toggleTheme} />
                   <main className={classes.content}>
-                    <TopMenu openSideMenu={this.openMenu} />
-                   
-                    <div className={classes.wrapper}>
+                    <TopMenu openSideMenu={this.openMenu} />                  
+                    <div className={classes.wrapper} id="main-content">
                     <StickyContainer>
                       <Grid container spacing={0} className={classes.grid}>
                         <Grid item className={`${classes.switchWrapper} ${hasDoc ? 'mlMain' : ''}`}>
