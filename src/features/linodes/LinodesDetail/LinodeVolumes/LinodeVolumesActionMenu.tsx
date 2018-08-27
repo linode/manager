@@ -4,7 +4,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
-  volume: Linode.Volume;
+  poweredOff: boolean;
   onDetach: () => void;
   onDelete: () => void;
   onClone: () => void;
@@ -22,10 +22,8 @@ class LinodeVolumeActionMenu extends React.Component<CombinedProps> {
       onClone,
       onEdit,
       onResize,
-      volume,
+      poweredOff,
     } = this.props;
-
-    const attached = Boolean(volume.linode_id);
 
     return (closeMenu: Function): Action[] => {
       const actions = [
@@ -63,8 +61,7 @@ class LinodeVolumeActionMenu extends React.Component<CombinedProps> {
         }
       ];
 
-      if (!attached) {
-        actions.pop();
+      if (poweredOff) {
         actions.push(
           {
             title: 'Delete',
