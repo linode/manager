@@ -3,7 +3,9 @@ import { lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { bindActionCreators, compose } from 'redux';
+import { bindActionCreators, compose } from 'redux'
+
+import { Sticky, StickyContainer, StickyProps } from 'react-sticky';;
 
 import 'typeface-lato';
 
@@ -289,7 +291,9 @@ export class App extends React.Component<CombinedProps, State> {
                   <SideMenu open={menuOpen} closeMenu={this.closeMenu} toggleTheme={toggleTheme} />
                   <main className={classes.content}>
                     <TopMenu openSideMenu={this.openMenu} />
+                   
                     <div className={classes.wrapper}>
+                    <StickyContainer>
                       <Grid container spacing={0} className={classes.grid}>
                         <Grid item className={`${classes.switchWrapper} ${hasDoc ? 'mlMain' : ''}`}>
                           <Switch>
@@ -313,9 +317,23 @@ export class App extends React.Component<CombinedProps, State> {
                             <Route component={NotFound} />
                           </Switch>
                         </Grid>
-                        <DocsSidebar docs={documentation} />
+                        <Grid className={`${hasDoc ? 'mlSidebar': ''}`}>
+                          <Sticky topOffset={-24} disableCompensation>
+                          {(props: StickyProps) => {
+                            return (
+                              <DocsSidebar
+                                docs={documentation}
+                                {...props}
+                              />
+                              )
+                            }
+                          }
+                          </Sticky>
+                        </Grid>
                       </Grid>
+                      </StickyContainer>
                     </div>
+                    
                   </main>
                   <Footer />
                   <BetaNotification
