@@ -25,3 +25,6 @@ script:
 - 'pkill -f selenium-standalone || :'
 - pkill -f storybook
 - cat ./coverage/lcov.info | ./node_modules/.bin/coveralls
+
+secure: "aV/fYqDjHMTEUuwxk9EM8n7duFPMvgB8ywvTB7x5iGDQ9958EvM0i6BWGJ30hRRbdx6Nklnn8puXctKAE7sNlI/jsyuaXNSycFeS8R7ItDeDKiEG5jRKEzoLJ5NkCdSThY/w31sw88EZlAdJZ7olHz6v91XDhHdqLrtDChPADQPf5/EF5hja+EeX3H6vXGuo5CxctUtQMr4xkuXL4i8+oR5X7sOFMy2++ZpdwoX3JtX/bYxGzokTbzv7HH4YK0WKyZZpUFyC/YVP2pxw/YjLTS2kyLBfoMuFjCYojhbgwKiQyb0XrE028Dc5TGPbd01xZdmiZ3lnd4HAZhanEBCnVoKbOXdejZjo007QZrkInWGTM4nqsz+OegnMrxdaaLZmXdQ4F+Tt9SmPlKVIsHwQAqzXGeC/WkykWF4qazRumKmlJgYXogPlqCFbh8O0Y7sAGysNNRDx6/7DGVKBq8oD+iTbTFPwPWCTy7m6tuesyHww0F1r/QN4fbpyEEneCRy+kPgWfAF5nj+SJO6Ajm710xxoelvQpjJpd9wsQIWV61cy2wwcifk+V3W24KdZZBqm746Tr7XzbqdRFWyzWbevdUAxhkkXjrOevP+UZYAs3o4iFjWQ1Sh4jANOCYHdvrc+EbjRd8rdTfGwRqsgdYLFMbwiJca/NfZbmLlaRTClBvI="
+
