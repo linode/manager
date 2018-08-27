@@ -134,13 +134,17 @@ class UpgradeDrawer extends React.Component<CombinedProps, State> {
           <li>Your Linode will be shut down and its disk images will be migrated</li>
           <li>Your Linode will be upgraded and booted (if it was previously running).</li>
           <Typography variant="caption">
-          After the migration completes, you can take advantage of the new resources
-          by resizing your disk images.
+            After the migration completes, you can take advantage of the new resources
+            by resizing your disk images.
           </Typography>
         </ol>
         <Button type="primary">
           Enter the Upgrade Queue
         </Button>
+        <p>
+          Need help? Refer to the
+          <a href="google.com" target="_blank">supporting documentation</a>.
+        </p>
       </Drawer>
     );
   }
