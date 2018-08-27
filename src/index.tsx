@@ -5,7 +5,7 @@ import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-import analytics from 'src/analytics';
+import { initAnalytics } from 'src/analytics';
 import AuthenticationWrapper from 'src/components/AuthenticationWrapper';
 import DefaultLoader from 'src/components/DefaultLoader';
 import { GA_ID, isProduction } from 'src/constants';
@@ -13,6 +13,8 @@ import 'src/exceptionReporting';
 import Logout from 'src/layouts/Logout';
 import OAuthCallbackPage from 'src/layouts/OAuth';
 import store from 'src/store';
+
+import { sendEvent } from 'src/utilities/analytics';
 import 'src/utilities/createImageBitmap';
 import 'src/utilities/request';
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
@@ -31,9 +33,27 @@ const Lish = DefaultLoader({
 });
 
 /*
- * Initialize Analytics.
+ * Initialize Analytic and Google Tag Manager
  */
-analytics(GA_ID, isProduction);
+initAnalytics(GA_ID, isProduction);
+
+const themeChoice = localStorage.getItem('themeChoice');
+
+if (themeChoice === 'dark') {
+  sendEvent({
+    category: 'Theme Choice',
+    action: 'Dark Theme',
+    label: location.pathname,
+  })
+}
+
+if (themeChoice === 'light' || themeChoice === null) {
+  sendEvent({
+    category: 'Theme Choice',
+    action: 'Light Theme',
+    label: location.pathname,
+  })
+}
 
 /**
  * Send pageviews unless blacklisted.

@@ -1,6 +1,6 @@
 import { assocPath, pathOr } from 'ramda';
 import * as React from 'react';
-import { Sticky, StickyProps } from 'react-sticky';
+import { Sticky, StickyProps } from 'react-sticky'
 
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
@@ -16,6 +16,7 @@ import { Info } from 'src/features/linodes/LinodesCreate/LinodesCreate';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
 import { allocatePrivateIP, createLinode } from 'src/services/linodes';
+
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 

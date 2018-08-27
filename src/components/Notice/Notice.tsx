@@ -128,6 +128,15 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
 
   const errorScrollClassName = errorGroup ? `error-for-scroll-${errorGroup}` : `error-for-scroll`;
 
+  const dataAttributes = (!props.error)
+    ? {
+      'data-qa-notice': true
+    }
+    : {
+      'data-qa-notice': true,
+      'data-qa-error': true,
+    }
+
   return (
     <Grid
       item
@@ -147,7 +156,7 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
         marginTop: spacingTop !== undefined ? spacingTop : 0,
         marginBottom: spacingBottom !== undefined ? spacingBottom : 24 
       }}
-      data-qa-notice
+      {...dataAttributes}
     >
       {
         flag &&

@@ -32,6 +32,7 @@ class UserAgentNotification extends React.Component<CombinedProps, State> {
 
     return (
       <ConfirmationDialog
+        data-qa-browser-warning
         actions={this.actions}
         open={this.props.open}
         onClose={this.props.onClose}

@@ -285,7 +285,7 @@ export class App extends React.Component<CombinedProps, State> {
           <React.Fragment>
             <TypesProvider value={this.state.typesContext}>
               <RegionsProvider value={this.state.regionsContext}>
-                <div className={classes.appFrame}>
+                <div {...themeDataAttr()} className={classes.appFrame}>
                   <SideMenu open={menuOpen} closeMenu={this.closeMenu} toggleTheme={toggleTheme} />
                   <main className={classes.content}>
                     <TopMenu openSideMenu={this.openMenu} />
@@ -331,6 +331,18 @@ export class App extends React.Component<CombinedProps, State> {
         }
       </React.Fragment>
     );
+  }
+}
+
+const themeDataAttr = () => {
+  const localStorageVal = localStorage.getItem('themeChoice');
+  if (localStorageVal === 'dark') {
+    return {
+      'data-qa-theme-dark': true
+    }
+  }
+  return {
+    'data-qa-theme-light': true
   }
 }
 
