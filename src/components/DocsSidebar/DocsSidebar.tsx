@@ -11,7 +11,12 @@ import DocComponent, { Doc } from './DocComponent';
 type ClassNames = 'root' | 'title';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
-  root: {},
+  root: {
+    [theme.breakpoints.down('md')]: {
+      position: 'relative !important',
+      left: `${theme.spacing.unit}px !important`,
+    },
+  },
   title: {
     fontSize: '1.5rem',
     color: theme.color.green,
@@ -44,7 +49,7 @@ class DocsSidebar extends React.Component<CombinedProps>  {
     }
 
     return (
-      <Grid item style={stickyStyles}>
+      <Grid item style={stickyStyles} className={classes.root}>
         <Typography
           role="header"
           variant="title"
