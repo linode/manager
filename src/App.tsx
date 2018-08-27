@@ -11,6 +11,7 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 
 import DefaultLoader from 'src/components/DefaultLoader';
 import DocsSidebar from 'src/components/DocsSidebar';
+import { DocumentTitleSegment, withDocumentTitleProvider } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import SideMenu from 'src/components/SideMenu';
@@ -26,7 +27,7 @@ import { getProfile } from 'src/services/profile';
 import { request, response } from 'src/store/reducers/resources';
 import composeState from 'src/utilities/composeState';
 
-import BetaNotification from './BetaNotification';
+import BetaNotification from 'src/BetaNotification';
 
 shim(); // allows for .finally() usage
 
@@ -158,8 +159,8 @@ interface ConnectedProps {
 }
 
 interface State {
-  menuOpen: Boolean;
-  betaNotification: Boolean;
+  menuOpen: boolean;
+  betaNotification: boolean;
   typesContext: WithTypesContext;
   regionsContext: WithRegionsContext;
 }
@@ -190,7 +191,7 @@ const L = {
 export class App extends React.Component<CombinedProps, State> {
   composeState = composeState;
 
-  state = {
+  state: State = {
     menuOpen: false,
     betaNotification: false,
     typesContext: {
@@ -240,7 +241,7 @@ export class App extends React.Component<CombinedProps, State> {
           });
       },
       update: () => null, /** @todo */
-    }
+    },
   };
 
   componentDidMount() {
@@ -283,11 +284,12 @@ export class App extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
+        <DocumentTitleSegment segment="Linode Manager" />
         {longLivedLoaded &&
           <React.Fragment>
             <TypesProvider value={this.state.typesContext}>
               <RegionsProvider value={this.state.regionsContext}>
-                <div className={classes.appFrame}>
+                <div {...themeDataAttr()} className={classes.appFrame}>
                   <SideMenu open={menuOpen} closeMenu={this.closeMenu} toggleTheme={toggleTheme} />
                   <main className={classes.content}>
                     <TopMenu openSideMenu={this.openMenu} />
@@ -301,7 +303,7 @@ export class App extends React.Component<CombinedProps, State> {
                             <Route path="/domains" component={Domains} />
                             <Route exact path="/managed" component={Managed} />
                             <Route exact path="/longview" component={Longview} />
-                            <Route path="/images" component={Images} />
+                            <Route exact path="/images" component={Images} />
                             <Route path="/stackscripts" component={StackScripts} />
                             <Route exact path="/billing" component={Account} />
                             <Route exact path="/billing/invoices/:invoiceId" component={InvoiceDetail} />
@@ -337,6 +339,18 @@ export class App extends React.Component<CombinedProps, State> {
   }
 }
 
+const themeDataAttr = () => {
+  const localStorageVal = localStorage.getItem('themeChoice');
+  if (localStorageVal === 'dark') {
+    return {
+      'data-qa-theme-dark': true
+    }
+  }
+  return {
+    'data-qa-theme-light': true
+  }
+}
+
 const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
   { request, response },
   dispatch,
@@ -354,4 +368,5 @@ export const styled = withStyles(styles, { withTheme: true });
 export default compose(
   connected,
   styled,
+  withDocumentTitleProvider,
 )(App);

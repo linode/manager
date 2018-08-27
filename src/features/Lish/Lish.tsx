@@ -14,9 +14,9 @@ import Weblish from './Weblish';
 
 type ClassNames = 'tabs' | 'tabRoot' | 'progress' | 'notFound';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   tabs: {
-    backgroundColor: '#f4f4f4',
+    backgroundColor: theme.bg.offWhite,
     margin: 0,
   },
   tabRoot: {
@@ -90,7 +90,7 @@ class Lish extends React.Component<CombinedProps, State> {
       return;
     }
 
-    getLinodeLishToken(linodeId)
+    return getLinodeLishToken(linodeId)
       .then((response) => {
         const { data: { lish_token: token } } = response;
         if (!this.mounted) { return; }
@@ -122,7 +122,7 @@ class Lish extends React.Component<CombinedProps, State> {
   renderWeblish = () => {
     const { linode, token } = this.state;
     if (linode && token) {
-      return <Weblish token={token} linode={linode} />;
+      return <Weblish token={token} linode={linode} refreshToken={this.refreshToken} />;
     }
     return null;
   }

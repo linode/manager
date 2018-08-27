@@ -2,6 +2,8 @@ import { mount } from 'enzyme';
 import * as React from 'react';
 import { StaticRouter } from 'react-router-dom';
 
+import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
+
 import ActionMenu from './ActionMenu';
 
 describe('ActionMenu', () => {
@@ -24,9 +26,11 @@ describe('ActionMenu', () => {
 
   it('should render a menu when provided many or one action(s).', () => {
     const result = mount(
-      <StaticRouter context={{}}>
-        <ActionMenu createActions={createActionsMany}/>
-      </StaticRouter>,
+      <LinodeThemeWrapper>
+        <StaticRouter context={{}}>
+          <ActionMenu createActions={createActionsMany}/>
+        </StaticRouter>
+      </LinodeThemeWrapper>,
     );
     expect(result.find('WithStyles(ActionMenu)')).toHaveLength(1);
 

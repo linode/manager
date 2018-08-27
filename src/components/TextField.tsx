@@ -13,7 +13,8 @@ import HelpIcon from 'src/components/HelpIcon';
 
 type ClassNames = 'root'
   | 'helpWrapper'
-  | 'helpWrapperTextField';
+  | 'helpWrapperTextField'
+  | 'expand';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {},
@@ -27,6 +28,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       width: 240,
     },
   },
+  expand: {
+    maxWidth: '100%',
+  },
 });
 
 export interface Props extends TextFieldProps {
@@ -36,6 +40,7 @@ export interface Props extends TextFieldProps {
   tooltipText?: string;
   className?: any;
   [index: string]: any;
+  expand?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -65,6 +70,7 @@ class LinodeTextField extends React.Component<CombinedProps> {
       tooltipText,
       theme,
       className,
+      expand,
       ...textFieldProps
     } = this.props;
 
@@ -106,7 +112,10 @@ class LinodeTextField extends React.Component<CombinedProps> {
           InputProps={{
             ...finalProps.InputProps,
             disableUnderline: true,
-          }}
+            className: classNames({
+              [classes.expand]: expand,
+            })}
+          }
           SelectProps={{
             IconComponent: KeyboardArrowDown,
             MenuProps: {

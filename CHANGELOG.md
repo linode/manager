@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.31.5] - 2018-08-16
+### Fixed:
+- Various bugfixes for Account information display
+
+## [0.31.4] - 2018-08-14
+### Added:
+- Toggle for dark theme
+### Fixed:
+- Support ticket links in event menu
+- Images links in search bar
+
 ## [0.31.3] - 2018-08-13
 ### Added:
 - Account

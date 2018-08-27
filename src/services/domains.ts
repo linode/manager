@@ -89,7 +89,7 @@ const importZoneSchema = Joi.object({
 });
 
 export const importZone = (domain?: string, remote_nameserver?: string) =>
-  Request(
+  Request<Domain>(
     validateRequestData({ domain, remote_nameserver }, importZoneSchema),
     setData({ domain, remote_nameserver }),
     setURL(`${API_ROOT}/domains/import`),

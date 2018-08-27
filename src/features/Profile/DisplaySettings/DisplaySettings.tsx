@@ -6,6 +6,7 @@ import { bindActionCreators, Dispatch } from 'redux';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import setDocs from 'src/components/DocsSidebar/setDocs';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 import { response } from 'src/store/reducers/resources';
 
@@ -53,6 +54,7 @@ export class DisplaySettings extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
+        <DocumentTitleSegment segment="Display" />
         {!loading &&
           <React.Fragment>
             <EmailChangeForm

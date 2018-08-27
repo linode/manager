@@ -12,9 +12,12 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import Logo from 'src/assets/logo/logo-text.svg';
 import Grid from 'src/components/Grid';
 import Toggle from 'src/components/Toggle';
+
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
 
-type PrimaryLink = {
+import { getAccountSettings } from 'src/services/account';
+
+interface PrimaryLink {
   display: string,
   href: string,
 };
@@ -33,6 +36,7 @@ const primaryLinks: PrimaryLink[] = [
 
 type ClassNames =
   'menuGrid'
+  | 'fadeContainer'
   | 'logoItem'
   | 'listItem'
   | 'collapsible'
@@ -62,6 +66,12 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     [theme.breakpoints.up('md')]: {
       minHeight: 80,
     },
+  },
+  fadeContainer: {
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
   },
   logoItem: {
     padding: '10px 0 8px 26px',
@@ -140,13 +150,11 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     marginTop: 'auto',
     width: 'calc(100% - 20px)',
     justifyContent: 'center',
-    // hidding for now - replace with flex
-    display: 'none',
+    display: 'flex',
   },
   toggle: {
     '& > span:last-child': {
       backgroundColor: '#f4f4f4 !important',
-      /** @todo Had to remove !important */
       opacity: 0.38,
     },
     '&.darkTheme .square': {
@@ -177,6 +185,7 @@ interface State {
   expandedMenus: {
     [key: string]: boolean;
   };
+  userHasManaged?: boolean;
 }
 
 class PrimaryNav extends React.Component<Props, State> {
@@ -186,11 +195,24 @@ class PrimaryNav extends React.Component<Props, State> {
       account: false,
       support: false,
     },
+    userHasManaged: undefined,
   };
 
   constructor(props: Props) {
     super(props);
   }
+  
+  componentDidMount() {
+    getAccountSettings()
+      .then(data => this.setState({ userHasManaged: data.managed }))
+      /*
+      * Don't really need to do any error handling here since 
+      * the fallback is the Managed navigation tab not rendering 
+      */
+      .catch(e => e);
+  }
+
+  
 
   navigate(href: string) {
     const { history , closeMenu } = this.props;
@@ -204,7 +226,7 @@ class PrimaryNav extends React.Component<Props, State> {
 
   expandMenutItem = (e: React.MouseEvent<HTMLElement>) => {
     const menuName = e.currentTarget.getAttribute('data-menu-name');
-    if (!menuName) return;
+    if (!menuName) { return };
     this.setState({
       expandedMenus: {
         ...this.state.expandedMenus,
@@ -217,29 +239,31 @@ class PrimaryNav extends React.Component<Props, State> {
     this.navigate('/support');
   }
 
-  renderPrimaryLink(PrimaryLink: PrimaryLink) {
+  renderPrimaryLink(primaryLink: PrimaryLink) {
     const { classes } = this.props;
+
+    if (primaryLink.display === 'Managed' && !this.state.userHasManaged) { return; }
 
     return (
       <ListItem
-        key={PrimaryLink.display}
+        key={primaryLink.display}
         button
         divider
         component="li"
         role="menuitem"
         focusRipple={true}
-        onClick={() => this.navigate(PrimaryLink.href)}
+        onClick={() => this.navigate(primaryLink.href)}
         className={`
           ${classes.listItem}
-          ${this.linkIsActive(PrimaryLink.href) && classes.active}
+          ${this.linkIsActive(primaryLink.href) && classes.active}
         `}
       >
         <ListItemText
-          primary={PrimaryLink.display}
+          primary={primaryLink.display}
           disableTypography={true}
           className={`
             ${classes.linkItem}
-            ${this.linkIsActive(PrimaryLink.href) && classes.activeLink}
+            ${this.linkIsActive(primaryLink.href) && classes.activeLink}
           `}
         />
       </ListItem>
@@ -248,7 +272,7 @@ class PrimaryNav extends React.Component<Props, State> {
 
   render() {
     const { classes, toggleTheme } = this.props;
-    const { expandedMenus } = this.state;
+    const { expandedMenus, userHasManaged } = this.state;
     const themeName = (this.props.theme as any).name;
 
     return (
@@ -271,118 +295,128 @@ class PrimaryNav extends React.Component<Props, State> {
             </Link>
             </div>
           </Grid>
-          
-          {primaryLinks.map(primaryLink => this.renderPrimaryLink(primaryLink))}
 
-          <ListItem
-            data-menu-name="account"
-            focusRipple={true}
-            button
-            component="li"
-            role="menuitem"
-            onClick={this.expandMenutItem}
-            className={classNames({
-              [classes.listItem]: true,
-              [classes.collapsible]: true,
-            })}
-          >
-            <ListItemText
-              disableTypography={true}
+          {userHasManaged !== undefined &&
+          <div className={classNames(
+            'fade-in-table',
+            {
+              [classes.fadeContainer]: true,
+            }
+          )}>
+
+            {primaryLinks.map(primaryLink => this.renderPrimaryLink(primaryLink))}
+
+            <ListItem
+              data-menu-name="account"
+              focusRipple={true}
+              button
+              component="li"
+              role="menuitem"
+              onClick={this.expandMenutItem}
               className={classNames({
-                [classes.linkItem]: true,
-                [classes.activeLink]:
-                  expandedMenus.account
-                  || this.linkIsActive('/billing') === true
-                  || this.linkIsActive('/users') === true,
+                [classes.listItem]: true,
+                [classes.collapsible]: true,
               })}
             >
-              <KeyboardArrowRight className={classes.arrow} />
-              Account
-            </ListItemText>
-          </ListItem>
-          <Collapse
-            in={expandedMenus.account
-                || (this.linkIsActive('/billing') === true)
-                || (this.linkIsActive('/users') === true)}
-            timeout="auto"
-            component="ul"
-            unmountOnExit
-            className={classes.sublinkPanel}
-          >
-            <li role="menuitem">
-              <Link
-                to="/billing"
+              <ListItemText
+                disableTypography={true}
                 className={classNames({
-                  [classes.sublink]: true,
-                  [classes.sublinkActive]: this.linkIsActive('/billing') === true,
+                  [classes.linkItem]: true,
+                  [classes.activeLink]:
+                    expandedMenus.account
+                    || this.linkIsActive('/billing') === true
+                    || this.linkIsActive('/users') === true,
                 })}
               >
-                Account &amp; Billing
-              </Link>
-            </li>
-            <li role="menuitem">
-              <Link
-                to="/users"
-                className={classNames({
-                  [classes.sublink]: true,
-                  [classes.sublinkActive]: this.linkIsActive('/users') === true,
-                })}
-              >
-                Users
-              </Link>
-            </li>
-          </Collapse>
-
-          <ListItem
-            button
-            focusRipple={true}
-            onClick={this.goToHelp}
-            className={classNames({
-              [classes.listItem]: true,
-              [classes.collapsible]: true,
-              [classes.active]: this.linkIsActive('/support') === true,
-            })}
-          >
-            <ListItemText
-              disableTypography={true}
+                <KeyboardArrowRight className={classes.arrow} />
+                Account
+              </ListItemText>
+            </ListItem>
+            <Collapse
+              in={expandedMenus.account
+                  || (this.linkIsActive('/billing') === true)
+                  || (this.linkIsActive('/users') === true)}
+              timeout="auto"
+              component="ul"
+              unmountOnExit
+              className={classes.sublinkPanel}
+            >
+              <li role="menuitem">
+                <Link
+                  to="/billing"
+                  className={classNames({
+                    [classes.sublink]: true,
+                    [classes.sublinkActive]: this.linkIsActive('/billing') === true,
+                  })}
+                >
+                  Account &amp; Billing
+                </Link>
+              </li>
+              <li role="menuitem">
+                <Link
+                  to="/users"
+                  className={classNames({
+                    [classes.sublink]: true,
+                    [classes.sublinkActive]: this.linkIsActive('/users') === true,
+                  })}
+                >
+                  Users
+                </Link>
+              </li>
+            </Collapse>
+  
+            <ListItem
+              button
+              focusRipple={true}
+              onClick={this.goToHelp}
               className={classNames({
-                [classes.linkItem]: true,
-                [classes.activeLink]:
-                  expandedMenus.support
-                  || this.linkIsActive('/support') === true,
+                [classes.listItem]: true,
+                [classes.collapsible]: true,
+                [classes.active]: this.linkIsActive('/support') === true,
               })}
             >
-              Get Help
-            </ListItemText>
-          </ListItem>
-
-          <div className={classes.spacer} />
-
-          <div className={classes.switchWrapper}>
-            <span className={`
-              ${classes.switchText}
-              ${themeName === 'lightTheme' ? 'active' : ''}
-            `}>
-              Light
-            </span>
-            <Toggle
-              onChange={() => toggleTheme()}
-              checked={themeName !== 'lightTheme'}
-              className={`
-                ${classes.toggle}
-                ${themeName}
-              `}
-            />
-            <span
-              className={`
+              <ListItemText
+                disableTypography={true}
+                className={classNames({
+                  [classes.linkItem]: true,
+                  [classes.activeLink]:
+                    expandedMenus.support
+                    || this.linkIsActive('/support') === true,
+                })}
+              >
+                Get Help
+              </ListItemText>
+            </ListItem>
+  
+            <div className={classes.spacer} />
+  
+            <div className={classes.switchWrapper}>
+              <span className={`
                 ${classes.switchText}
-                ${themeName === 'darkTheme' ? 'active' : ''}
-              `}
-              style={{ marginLeft: 4 }}
-            >
-              Dark
-            </span>
+                ${themeName === 'lightTheme' ? 'active' : ''}
+              `}>
+                Light
+              </span>
+              <Toggle
+                onChange={() => toggleTheme()}
+                checked={themeName !== 'lightTheme'}
+                className={`
+                  ${classes.toggle}
+                  ${themeName}
+                `}
+              />
+              <span
+                className={`
+                  ${classes.switchText}
+                  ${themeName === 'darkTheme' ? 'active' : ''}
+                `}
+                style={{ marginLeft: 4 }}
+              >
+                Dark
+              </span>
+            </div>
           </div>
+          }
         </Grid>
       </React.Fragment>
     );

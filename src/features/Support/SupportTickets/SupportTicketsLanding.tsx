@@ -7,8 +7,8 @@ import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
 
-
 import AddNewLink from 'src/components/AddNewLink';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 
@@ -82,6 +82,7 @@ export class SupportTicketsLanding extends React.Component<CombinedProps, State>
 
     return (
       <React.Fragment>
+        <DocumentTitleSegment segment="Support Tickets" />
         <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }} updateFor={[]}>
           <Grid item>
             <Typography role="header" variant="headline" className={classes.title} data-qa-title >

@@ -19,37 +19,26 @@ import SearchItem from './SearchItem';
 type ClassNames = 'root'
   | 'searchItem'
   | 'searchItemHighlighted'
-  | 'input'
+  | 'enhancedSelectWrapper'
   | 'textfield';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {},
   searchItem: {
-    height: '24px',
-    boxSizing: 'content-box',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    fontSize: '.9rem',
-    transition: 'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), color .2s cubic-bezier(0.4, 0, 0.2, 1)',
-    fontWeight: 400,
-    fontFamily: 'Lato, sans-serif',
-    lineHeight: '1.2em',
-    whiteSpace: 'initial',
-    padding: '12px',
-    width: 'auto',
-    display: 'flex',
-    position: 'relative',
-    textAlign: 'left',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    textDecoration: 'none',
     '& em': {
       fontStyle: 'normal',
-      color: '#3683DC',
+      color: theme.palette.primary.main,
     }
   },
   searchItemHighlighted: {
-    backgroundColor: theme.color.grey1,
+    backgroundColor: theme.palette.primary.main,
+    cursor: 'pointer',
+    '& div, & span': {
+      color: 'white',
+    },
+    '& em': {
+      color: theme.color.black,
+    }
   },
   textfield: {
     backgroundColor: theme.color.white,
@@ -60,14 +49,15 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       outline: '1px dotted #606469',
     },
   },
-  input: {
-    border: 0,
-    width: '100%',
-    background: 'transparent',
-    '& input': {
-      transition: theme.transitions.create(['opacity']),
-      fontSize: '1.0em',
-      [theme.breakpoints.down('sm')]: {},
+  enhancedSelectWrapper: {
+    margin: '0 auto',
+    width: '100%s',
+    maxHeight: 500,
+    '& [class*="formControl"]': {
+      maxWidth: '100%',
+    },
+    [theme.breakpoints.up('md')]: {
+      width: 500,
     },
   },
 });
@@ -75,24 +65,40 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 interface Props {}
 
 interface State {
+  enabled: boolean;
   value: string;
   inputValue: string;
   options: Item[];
   error?: string; 
 }
 
+type index = 'linode-docs';
+
 type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
 
-// Algolia API Client
-const client = Algolia(ALGOLIA_APPLICATION_ID, ALGOLIA_SEARCH_KEY);
-const searchIndex = client.initIndex('linode-docs');
-
 class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
+  searchIndex:any = null;
   state: State = {
+    enabled: true,
     value: '',
     inputValue: '',
     options: [],
   };
+
+  componentDidMount() {
+    // initialize Algolia API Client
+    try {
+      const client = Algolia(ALGOLIA_APPLICATION_ID, ALGOLIA_SEARCH_KEY);
+      const idx: index = 'linode-docs';
+      this.searchIndex = client.initIndex(idx);
+    }
+    catch {
+      // Credentials were incorrect or couldn't be found;
+      // Disable the search functionality in the component.
+      this.setState({ enabled: false, error: "Search could not be enabled." });
+      return;
+    }
+  }
 
   getDataFromOptions = () => {
     const { options, inputValue } = this.state;
@@ -100,11 +106,15 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
   }
 
   searchAlgolia = (inputValue:string) => {
-    if (!inputValue) {
-      this.setState({ options: [] });
+    if (!inputValue) { 
+      this.setState({ options: [] }); 
+      return; 
+    }
+    if (!this.searchIndex) {
+      this.setState({ options: [], error: "Search could not be enabled."});
       return;
     }
-    searchIndex.search({
+    this.searchIndex.search({
       query: inputValue,
       hitsPerPage: 5,
     }, this.searchSuccess);
@@ -163,7 +173,7 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
       const link = this.getLinkTarget(inputValue);
       history.push(link)
     } else {
-      window.open(href,'_newtab');
+      window.open(href,'_blank');
     }
   }
 
@@ -176,24 +186,26 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes } = this.props;
-    const { error, inputValue, value } = this.state;
+    const { enabled, error, inputValue, value } = this.state;
     const data = this.getDataFromOptions();
 
     return (
       <React.Fragment>
       {error && <Notice error spacingTop={8} spacingBottom={0} >{error}</Notice>}
         <EnhancedSelect
-          className={classes.input}
+          disabled={!enabled}
           options={data}
           value={value}
           inputValue={inputValue}
           renderItems={this.renderOptionsHelper}
           onInputValueChange={this.onInputValueChange}
-          handleSelect={this.handleSelect}
           onSubmit={this.handleSubmit}
-          placeholder="Search Linode Docs and Community questions"
+          handleSelect={this.handleSelect}
+          placeholder="Search for answers..."
           noFilter
           search
+          className={classes.enhancedSelectWrapper}
+          maxHeight={500}
         />
       </React.Fragment>
     );

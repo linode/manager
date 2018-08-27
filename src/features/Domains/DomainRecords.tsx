@@ -13,6 +13,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
 import Table from 'src/components/Table';
@@ -431,10 +432,12 @@ class DomainRecords extends React.Component<CombinedProps, State> {
   }
 
   render() {
+    const { domain } = this.props;
     const { drawer, confirmDialog } = this.state;
 
     return (
       <React.Fragment>
+        <DocumentTitleSegment segment={`${domain.domain} - DNS Records`} />
         {
           this.state.types.map((type, idx) => {
             return (

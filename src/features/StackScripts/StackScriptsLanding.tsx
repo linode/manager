@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 
 import AddNewLink from 'src/components/AddNewLink';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import PromiseLoader from 'src/components/PromiseLoader';
@@ -67,6 +68,7 @@ export class StackScriptsLanding extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
+        <DocumentTitleSegment segment="StackScripts" />
         {!!history.location.state && !!history.location.state.successMessage &&
           <Notice success text={history.location.state.successMessage} />
         }

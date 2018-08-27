@@ -50,7 +50,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     marginRight: theme.spacing.unit * 2,
     transition: theme.transitions.create(['opacity']),
     [theme.breakpoints.down('sm')]: {
-      backgroundColor: 'white',
+      backgroundColor: theme.bg.white,
       position: 'absolute',
       width: 'calc(100% - 118px)',
       zIndex: 2,
@@ -84,8 +84,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
       padding: 2,
     },
     '&:hover, &:focus': {
-      color: 'white',
-      backgroundColor: theme.palette.primary.main,
+      color: theme.palette.primary.main,
     },
   },
   icon: {
@@ -320,7 +319,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
         /* TODO: Update this with the Images icon! */
         Icon: VolumeIcon,
         /* TODO: Choose a real location for this to link to */
-        path: `/images/${image.id}`,
+        path: `/images`,
       }))));
     }
 

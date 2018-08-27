@@ -18,7 +18,9 @@ class Networking extends Page {
     get swapWithIps() { return $$('[data-qa-swap-with]'); }
     get ipTransferSave() { return $('[data-qa-ip-transfer-save]'); }
     get ipTransferCancel() { return $('[data-qa-ip-transfer-cancel]'); }
-    
+    get addPrivateIp() { return $('[data-qa-icon-text-link="Add Private IPv4"]'); }
+    get addPublicIp() { return $('[data-qa-icon-text-link="Add Public IPv4"]'); }
+
     get drawerTitle() { return $('[data-qa-drawer-title]'); }
     get ips() { return $$('[data-qa-ip]'); }
     get ip() {return $('[data-qa-ip]'); }
@@ -65,6 +67,14 @@ class Networking extends Page {
         // IPv6 Elems display
     }
 
+    allocateElemsDisplay() {
+        this.drawerTitle.waitForVisible(constants.wait.normal);
+        expect(this.serviceNotice.isVisible()).toBe(true);
+        expect(this.allocate.isVisible()).toBe(true);
+        expect(this.submit.isVisible()).toBe(true);
+        expect(this.cancel.isVisible()).toBe(true);
+    }
+
     getIpsByType(ipType) {
         const regex = {
             ipv4: /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/g,
@@ -73,17 +83,9 @@ class Networking extends Page {
         return this.ips.filter(ip => !!ip.getAttribute('data-qa-ip').match(regex[ipType]));
     }
 
-    viewConfiguration(ip, type) {
-        const tableElem = $(`[data-qa-ip="${ip}"]`);
-
-        if (type === 'Link Local') {
-            tableElem.$(this.viewButton.selector).click();
-            this.drawerTitle.waitForVisible();
-            return;
-        }
-
+    viewConfiguration(ip) {
         this.selectActionMenuItem(ip, 'View');
-        this.drawerTitle.waitForVisible();
+        this.drawerTitle.waitForVisible(constants.wait.normal);
     }
 
     ipDetailsDisplay(ipType) {

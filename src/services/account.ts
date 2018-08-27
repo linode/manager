@@ -92,6 +92,7 @@ export const getPayments = (pagination: Linode.PaginationOptions = {}) =>
     setURL(`${API_ROOT}/account/payments`),
     setMethod('GET'),
     setParams(pagination),
+    setXFilter({ '+order_by': 'date', '+order': 'desc' }),
   )
     .then(response => response.data);
 
@@ -100,6 +101,7 @@ export const getInvoices = (pagination: Linode.PaginationOptions = {}) =>
     setURL(`${API_ROOT}/account/invoices`),
     setMethod('GET'),
     setParams(pagination),
+    setXFilter({ '+order_by': 'date', '+order': 'desc' }),
   )
     .then(response => response.data);
 
@@ -199,3 +201,41 @@ export const getNetworkUtilization = () =>
     setMethod('GET'),
   )
   .then(response => response.data);
+
+interface Paypal {
+  cancel_url: string;
+  redirect_url: string;
+  usd: string;
+}
+
+interface PaymentID {
+  payment_id: string;
+}
+
+export const stagePaypalPayment = (data: Paypal) =>
+  Request<PaymentID>(
+    setURL(`${API_ROOT}/account/payments/paypal`),
+    setMethod('POST'),
+    setData(data),
+  )
+    .then(response => response.data);
+
+interface ExecutePayload {
+  payer_id: string;
+  payment_id: string;
+}
+
+export const executePaypalPayment = (data: ExecutePayload) =>
+  Request<any>(
+    setURL(`${API_ROOT}/account/payments/paypal/execute`),
+    setMethod('POST'),
+    setData(data),
+  )
+    .then(response => response.data);
+
+export const getAccountSettings = () =>
+  Request<Linode.AccountSettings>(
+    setURL(`${API_ROOT}/account/settings`),
+    setMethod('GET')
+  )
+    .then(response => response.data);

@@ -3,6 +3,8 @@ import * as React from 'react';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+
 import { ConfigsConsumer, DisksConsumer, LinodeConsumer } from '../context';
 import LinodeAdvancedConfigurationsPanel from './LinodeAdvancedConfigurationsPanel';
 import LinodeSettingsAlertsPanel from './LinodeSettingsAlertsPanel';
@@ -43,7 +45,15 @@ const LinodeSettings: React.StatelessComponent<CombinedProps> = (props) => {
                     if (!configs) { return null; }
                     return (
                       <React.Fragment>
-                        <Typography role="header" variant="headline" className={classes.title}>Settings</Typography>
+                        <DocumentTitleSegment segment={`${linodeContext.data!.label} - Settings`} />
+                        <Typography
+                          role="header"
+                          variant="headline"
+                          className={classes.title}
+                          data-qa-settings-header
+                        >
+                          Settings
+                        </Typography>
                         <LinodeSettingsLabelPanel />
                         <LinodeSettingsPasswordPanel
                           linodeDisks={disks}

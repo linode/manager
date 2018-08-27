@@ -56,7 +56,7 @@ describe('Create - Volume Suite', () => {
         
         browser.waitUntil(function() {
             return VolumeDetail.getVolumeId(testVolume.label).length > 0;
-        }, 10000);
+        }, constants.wait.normal);
 
         VolumeDetail.volumeCellElem.waitForVisible(constants.wait.normal);
         VolumeDetail.removeAllVolumes();

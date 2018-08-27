@@ -431,8 +431,8 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
           </Grid>
           <Grid item xs={12}>
             <Grid container>
-              <Grid item className={classes.ipFieldLabel} data-qa-transfer-ip-label>IP Address</Grid>
-              <Grid item className={classes.actionsLabel}>Actions</Grid>
+              <Grid item className={classes.ipFieldLabel} data-qa-transfer-ip-label><Typography>IP Address</Typography></Grid>
+              <Grid item className={classes.actionsLabel}><Typography>Actions</Typography></Grid>
             </Grid>
             {
               this.state.loading

@@ -43,11 +43,12 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
 });
 
 const LinodeStatusIndicator = (props: Props & WithStyles<CSSClasses>) => {
+  const { classes } = props;
   return (
     <React.Fragment>
       {props.status === 'loading' &&
         <span
-          className={`${props.classes.dot} ${props.classes.grey}`}
+          className={`${classes.dot} ${classes.grey}`}
           data-qa-status={props.status}
         >
           &#x25CF;

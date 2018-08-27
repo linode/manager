@@ -16,6 +16,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import PaginationFooter from 'src/components/PaginationFooter';
@@ -329,18 +330,29 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     const images = pathOr([], ['response', 'data'], this.props.images);
 
     if (linodes.length === 0) {
-      return <ListLinodesEmptyState />;
+      return (
+        <React.Fragment>
+          <DocumentTitleSegment segment="Linodes" />
+          <ListLinodesEmptyState />
+        </React.Fragment>
+      );
     }
 
     if (this.props.linodes.error) {
       return (
-        <ErrorState errorText="Error loading data" />
+        <React.Fragment>
+          <DocumentTitleSegment segment="Linodes" />
+          <ErrorState errorText="Error loading data" />
+        </React.Fragment>
       );
     }
 
     if (this.props.images.error) {
       return (
-        <ErrorState errorText="Error loading data" />
+        <React.Fragment>
+          <DocumentTitleSegment segment="Linodes" />
+          <ErrorState errorText="Error loading data" />
+        </React.Fragment>
       );
     }
 
@@ -348,6 +360,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
     return (
       <Grid container>
+        <DocumentTitleSegment segment="Linodes" />
         <Grid item xs={12}>
           <Typography
             role="header"
@@ -401,9 +414,12 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           actions={this.renderConfirmationActions}
           open={powerAlertOpen}
         >
-          {bootOption === 'reboot'
-            ? 'Are you sure you want to reboot your Linode'
-            : 'Are you sure you want to power down your Linode'}
+          <Typography>
+            {bootOption === 'reboot'
+              ? 'Are you sure you want to reboot your Linode'
+              : 'Are you sure you want to power down your Linode'
+            }
+          </Typography>
         </ConfirmationDialog>
       </Grid>
     );
@@ -421,7 +437,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           Cancel
         </Button>
         <Button
-          type="secondary"
+          type="primary"
           onClick={this.rebootOrPowerLinode}
           data-qa-confirm-cancel
         >

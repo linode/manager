@@ -77,7 +77,7 @@ type ClassNames = 'root'
     },
     tips: {
       marginLeft: theme.spacing.unit * 4,
-      marginTop: theme.spacing.unit * 4,
+      marginTop: `${theme.spacing.unit * 4}px !important`,
       padding: theme.spacing.unit * 4,
       backgroundColor: theme.palette.divider,
       [theme.breakpoints.down('lg')]: {
@@ -180,7 +180,7 @@ export class StackScriptForm extends React.Component<CombinedProps> {
                 placeholder='Enter a label'
                 value={label.value}
                 errorText={hasErrorFor('label')}
-                tooltipText="Select a StackScript Label"
+                tooltipText="Give your StackScript a label"
                 className={classes.labelField}
                 data-qa-stackscript-label
               />
@@ -280,8 +280,6 @@ export class StackScriptForm extends React.Component<CombinedProps> {
             data-qa-stackscript-script
           />
           <TextField
-            multiline
-            rows={1}
             label="Revision Note"
             placeholder='Enter a revision note'
             onChange={revision.handler}

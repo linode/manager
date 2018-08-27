@@ -1,7 +1,6 @@
-import { compose } from 'ramda';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
 
+import Paper from '@material-ui/core/Paper';
 import {
   StyleRulesCallback,
   Theme,
@@ -10,46 +9,56 @@ import {
 } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
-import Grid from 'src/components/Grid';
+import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 
 import AlgoliaSearchBar from './AlgoliaSearchBar';
 
 type ClassNames = 'root'
-  | 'searchBox'
-  | 'searchHeading'
-  | 'searchField';
+  | 'bgIcon'
+  | 'searchHeading';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
-    maxWidth: '100%',
+    padding: theme.spacing.unit * 4,
+    backgroundColor: theme.color.green,
     display: 'flex',
+    flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     position: 'relative',
+    [theme.breakpoints.up('md')]: {
+      padding: theme.spacing.unit * 8,
+    }
   },
-  searchBox: {
-    backgroundColor: theme.color.grey2,
-    marginLeft: theme.spacing.unit,
-    marginRight: '-6px',
+  bgIcon: {
+    color: '#04994D',
+    position: 'absolute',
+    left: 0,
+    width: 250,
+    height: 250,
+    '& .circle': {
+      fill: 'transparent',
+    },
+    '& .outerCircle': {
+      stroke: 'transparent',
+    },
+    '& .insidePath path': {
+      stroke: '#04994D',
+    },
   },
   searchHeading: {
-    color: theme.color.black,
-    marginBottom: theme.spacing.unit * 2,
-    fontSize: '175%',
-  },
-  searchField: {
-    padding: theme.spacing.unit * 3,
-    width: '100%',
+    textAlign: 'center',
+    color: theme.color.white,
+    position: 'relative',
+    zIndex: 2,
   },
 });
 
 interface Props {}
 
-interface State {
-  error?: string; 
-}
+interface State {}
 
-type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 class SearchPanel extends React.Component<CombinedProps, State> {
   state: State = {};
@@ -57,27 +66,25 @@ class SearchPanel extends React.Component<CombinedProps, State> {
   render() {
     const { classes } = this.props;
     return (
-      <Grid container justify='flex-start' className={classes.root}>
-        <Grid item>
-          <Typography variant='headline' className={classes.searchHeading} >
-              Get Help
-          </Typography>
-        </Grid>
-        <Grid item container xs={12} className={classes.searchBox} >
-          <Grid item className={classes.searchField}>
-            <Typography variant='headline' >
-                What can we help you with?
-            </Typography>
-            <AlgoliaSearchBar />
-          </Grid>
-        </Grid>
-      </Grid>
+      <React.Fragment>
+        <Paper
+          className={classes.root}
+        >
+          <LinodeIcon className={classes.bgIcon} />
+          <Typography
+            variant="headline"
+            className={classes.searchHeading}
+          >
+            What can we help you with?
+        </Typography>
+        <AlgoliaSearchBar />
+        </Paper>
+      </React.Fragment>
     );
   }
 }
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default compose<any,any,any>(
-  styled,
-  withRouter)(SearchPanel);
+export default styled(SearchPanel);
+

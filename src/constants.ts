@@ -2,6 +2,8 @@ const PRODUCTION = 'production';
 
 export const GA_ID = process.env.REACT_APP_GA_ID;
 
+export const GTM_ID = process.env.REACT_APP_GTM_ID;
+
 export const isProduction = process.env.NODE_ENV === PRODUCTION;
 
 export const APP_ROOT = process.env.REACT_APP_APP_ROOT || 'http://localhost:3000';
@@ -15,12 +17,12 @@ export const SENTRY_URL = process.env.REACT_APP_SENTRY_URL;
 export const LOGIN_SESSION_LIFETIME_MS = 45 * 60 * 1000;
 export const OAUTH_TOKEN_REFRESH_TIMEOUT = LOGIN_SESSION_LIFETIME_MS / 2;
 
-export const ALGOLIA_APPLICATION_ID = process.env.REACT_APP_ALGOLIA_APPLICATION_ID || '64F7MR66VE'; // <-- Jared's demo account; will produce an error.
-export const ALGOLIA_SEARCH_KEY = process.env.REACT_APP_ALGOLIA_SEARCH_KEY || '2b792e5fddbbf94860edf1c14bed0c8b'; // <-- demo account.
-
 export const DOCS_BASE_URL = 'https://linode.com/';
 export const DOCS_SEARCH_URL = 'https://linode.com/docs/search/?q=';
 export const COMMUNITY_SEARCH_URL = 'https://linode.com/community/questions/search?query=';
+
+export const ALGOLIA_APPLICATION_ID = process.env.REACT_APP_ALGOLIA_APPLICATION_ID || '';
+export const ALGOLIA_SEARCH_KEY = process.env.REACT_APP_ALGOLIA_SEARCH_KEY || '';
 
 export const ZONES = {
   'us-east': 'newark',
