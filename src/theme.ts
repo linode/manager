@@ -240,7 +240,6 @@ const LinodeTheme: Linode.Theme = {
         paddingRight: 4,
         fontSize: '.9rem',
         position: 'relative',
-        top: -1,
       },
       deleteIcon: {
         color: '#aaa',
