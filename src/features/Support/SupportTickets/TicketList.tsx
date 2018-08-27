@@ -1,5 +1,3 @@
-import * as moment from 'moment';
-import { sort } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
