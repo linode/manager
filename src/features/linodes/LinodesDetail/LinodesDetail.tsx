@@ -85,6 +85,7 @@ interface State {
   showPendingUpgrade: boolean;
   upgradeInfo: UpgradeInfo | null;
   upgradeDrawerOpen: boolean;
+  currentNetworkOut: number | null;
 }
 
 interface MatchProps { linodeId?: number };
@@ -400,6 +401,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     showPendingUpgrade: false,
     upgradeInfo: null,
     upgradeDrawerOpen: false,
+    currentNetworkOut: null,
   };
 
   composeState = (...fns: StateSetter[]) =>
@@ -449,6 +451,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                 // finally show the notice to the user with the upgrade info
                 this.setState({
                   showPendingUpgrade: true,
+                  currentNetworkOut: currentType.network_out,
                   // data is only relevant if the upgrade data is different from the current type's data
                   upgradeInfo: {
                     vcpus: (successorData.vcpus !== currentType.vcpus) ? successorData.vcpus : null,
@@ -463,17 +466,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               // see the notice
               .catch(e => e);
           }
-          this.setState({
-            showPendingUpgrade: true,
-            // data is only relevant if the upgrade data is different from the current type's data
-            upgradeInfo: {
-              vcpus: 1000,
-              network_out: 1000,
-              disk: 1000,
-              transfer: 1000,
-              memory: null,
-            }
-          });
         })
         // no action needed. Worse case scenario, the user doesn't
         // see the notice
@@ -837,6 +829,13 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                       open={upgradeDrawerOpen}
                       handleClose={this.closeUpgradeDrawer}
                       upgradeInfo={upgradeInfo!}
+                      currentTypeInfo={{
+                        vcpus: linode.specs.vcpus,
+                        transfer: linode.specs.transfer,
+                        disk: linode.specs.disk,
+                        memory: linode.specs.memory,
+                        network_out: this.state.currentNetworkOut,
+                      }}
                     />
                   }
                 </VolumesProvider>
