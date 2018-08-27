@@ -35,7 +35,7 @@ type ClassNames = 'bodyRow'
   | 'link'
   | 'linkButton';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => {
   return ({
     bodyRow: {
       height: 77,
@@ -81,7 +81,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
     status: {
       textTransform: 'capitalize',
       marginBottom: theme.spacing.unit,
-      color: '#555',
+      color: theme.palette.text.primary,
       fontSize: '.92rem',
     },
     link: {
