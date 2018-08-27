@@ -173,7 +173,7 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
       const link = this.getLinkTarget(inputValue);
       history.push(link)
     } else {
-      window.open(href,'blank');
+      window.open(href,'_blank');
     }
   }
 
