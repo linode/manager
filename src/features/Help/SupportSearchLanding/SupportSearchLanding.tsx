@@ -16,6 +16,7 @@ import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import Search from '@material-ui/icons/Search';
 
 import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { ALGOLIA_APPLICATION_ID, ALGOLIA_SEARCH_KEY, DOCS_BASE_URL, DOCS_SEARCH_URL } from 'src/constants';
 import { parseQueryParams } from 'src/utilities/queryParams';
@@ -66,6 +67,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 interface Props {}
 
 interface State {
+  enabled: boolean;
   error?: string;
   query: string;
   results: SearchResult[];
@@ -73,12 +75,12 @@ interface State {
 
 type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
 
-// Algolia API Client
-const client = Algolia(ALGOLIA_APPLICATION_ID, ALGOLIA_SEARCH_KEY);
-const searchIndex = client.initIndex('linode-docs');
+type index = 'linode-docs';
 
 class SupportSearchLanding extends React.Component<CombinedProps, State> {
+  searchIndex:any = null;
   state: State = {
+    enabled: true,
     query: '',
     results: [],
   }
@@ -87,6 +89,18 @@ class SupportSearchLanding extends React.Component<CombinedProps, State> {
     const queryFromParams = parseQueryParams(this.props.location.search)['?query'];
     const query = queryFromParams ? queryFromParams : '';
     this.setState({ query });
+    // initialize Algolia API Client
+    try {
+      const client = Algolia(ALGOLIA_APPLICATION_ID, ALGOLIA_SEARCH_KEY);
+      const idx: index = 'linode-docs';
+      this.searchIndex = client.initIndex(idx);
+    }
+    catch {
+      // Credentials were incorrect or couldn't be found;
+      // Disable the search functionality in the component.
+      this.setState({ enabled: false, error: "Search could not be enabled." });
+      return;
+    }
     this.searchAlgolia(query);
   }
 
@@ -105,7 +119,11 @@ class SupportSearchLanding extends React.Component<CombinedProps, State> {
       this.setState({ results: [] });
       return;
     }
-    searchIndex.search({
+    if (!this.searchIndex) {
+      this.setState({ results: [], error: "Search could not be enabled."});
+      return;
+    }
+    this.searchIndex.search({
       query: inputValue,
       hitsPerPage: 3,
     }, this.searchSuccess);
@@ -137,7 +155,7 @@ class SupportSearchLanding extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes } = this.props;
-    const { query, results } = this.state;
+    const { error, query, results } = this.state;
 
     return (
       <Grid container direction="column">
@@ -159,11 +177,13 @@ class SupportSearchLanding extends React.Component<CombinedProps, State> {
           </Grid>
         </Grid>
         <Grid item>
+          {error && <Notice error>{error}</Notice>}
           <TextField
             className={classes.searchBoxInner}
             placeholder="Search Linode documentation and community questions"
             value={query}
             onChange={this.onInputChange}
+            disabled={Boolean(error)}
             InputProps={{
               className: classes.searchBar,
               startAdornment:
