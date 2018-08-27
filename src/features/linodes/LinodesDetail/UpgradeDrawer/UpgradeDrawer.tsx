@@ -6,6 +6,7 @@ import {
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
@@ -26,7 +27,8 @@ interface UpgradeInfo {
 
 interface Spec {
   label: string;
-  amount: number | null;
+  newAmount: number | null;
+  currentAmount: number;
 }
 
 interface ExtendedUpgradeInfo {
@@ -41,6 +43,7 @@ interface Props {
   open: boolean;
   handleClose: () => void;
   upgradeInfo: UpgradeInfo;
+  currentTypeInfo: UpgradeInfo;
 }
 
 interface State {
@@ -57,23 +60,33 @@ class UpgradeDrawer extends React.Component<CombinedProps, State> {
       extendedUpgradeInfo: {
         vcpus: {
           label: 'vCPUs',
-          amount: props.upgradeInfo.vcpus,
+          newAmount: props.upgradeInfo.vcpus,
+          currentAmount: props.currentTypeInfo.vcpus,
+          unit: ''
         },
         memory: {
           label: 'RAM',
-          amount: props.upgradeInfo.memory,
+          newAmount: props.upgradeInfo.memory,
+          currentAmount: props.currentTypeInfo.memory,
+          unit: 'MB'
         },
         disk: {
           label: 'Storage',
-          amount: props.upgradeInfo.disk,
+          newAmount: props.upgradeInfo.disk,
+          currentAmount: props.currentTypeInfo.disk,
+          unit: 'GB'
         },
         transfer: {
           label: 'Transfer',
-          amount: props.upgradeInfo.transfer,
+          newAmount: props.upgradeInfo.transfer,
+          currentAmount: props.currentTypeInfo.transfer,
+          unit: ''
         },
         network_out: {
           label: 'Outbound Mbits',
-          amount: props.upgradeInfo.network_out,
+          newAmount: props.upgradeInfo.network_out,
+          currentAmount: props.currentTypeInfo.network_out,
+          unit: 'Mbits'
         }
       }
     } as State;
@@ -87,8 +100,6 @@ class UpgradeDrawer extends React.Component<CombinedProps, State> {
 
     const { extendedUpgradeInfo } = this.state;
 
-    console.log(extendedUpgradeInfo);
-
     return (
       <Drawer
         open={open}
@@ -98,21 +109,38 @@ class UpgradeDrawer extends React.Component<CombinedProps, State> {
         <p>This Linode has pending upgrades. The resouces that are affected include:</p>
         <ul>
           {Object.keys(extendedUpgradeInfo).map((newSpec) => {
-            console.log(newSpec);
-            if(extendedUpgradeInfo[newSpec].amount === null) {
-              console.log('null');
+            const {
+              label,
+              currentAmount,
+              newAmount,
+              unit
+            } = extendedUpgradeInfo[newSpec];
+
+            if (newAmount === null) {
               return;
             }
             return (
-              <li key={extendedUpgradeInfo[newSpec]}>
-                {`${extendedUpgradeInfo[newSpec].label}
-                goes from xxxx to
-                ${extendedUpgradeInfo[newSpec].amount}`}
+              <li key={label}>
+                {`${label} goes from ${currentAmount} ${unit} to
+                ${newAmount} ${unit}`}
               </li>
             )
           })}
-          </ul>
-        <Button>Do the thing</Button>
+        </ul>
+        <Typography variant="title">How it Works</Typography>
+        <p>After entering the upgrade queue, the following will occur:</p>
+        <ol>
+          <li>Wait your turn in the upgrade queue</li>
+          <li>Your Linode will be shut down and its disk images will be migrated</li>
+          <li>Your Linode will be upgraded and booted (if it was previously running).</li>
+          <Typography variant="caption">
+          After the migration completes, you can take advantage of the new resources
+          by resizing your disk images.
+          </Typography>
+        </ol>
+        <Button type="primary">
+          Enter the Upgrade Queue
+        </Button>
       </Drawer>
     );
   }
