@@ -18,8 +18,10 @@
   "dependencies": {
     "@material-ui/core": "^1.2.2",
     "@material-ui/icons": "^1.1.0",
+    "@types/algoliasearch": "^3.27.5",
     "@types/qrcode.react": "^0.8.0",
     "@types/throttle-debounce": "^1.0.0",
+    "algoliasearch": "^3.30.0",
     "autoprefixer": "7.1.6",
     "axios": "^0.18.0",
     "bluebird": "^3.5.1",

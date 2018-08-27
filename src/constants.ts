@@ -17,6 +17,11 @@ export const SENTRY_URL = process.env.REACT_APP_SENTRY_URL;
 export const LOGIN_SESSION_LIFETIME_MS = 45 * 60 * 1000;
 export const OAUTH_TOKEN_REFRESH_TIMEOUT = LOGIN_SESSION_LIFETIME_MS / 2;
 
+export const ALGOLIA_APPLICATION_ID = process.env.REACT_APP_ALGOLIA_APPLICATION_ID || '';
+export const ALGOLIA_SEARCH_KEY = process.env.REACT_APP_ALGOLIA_SEARCH_KEY || '';
+
+export const DOCS_BASE_URL = 'https://linode.com/'
+
 export const ZONES = {
   'us-east': 'newark',
   'us-east-1a': 'newark',
