@@ -4,6 +4,7 @@ namespace Linode {
     disk: number;
     class: LinodeTypeClass;
     price: PriceObject;
+    successor: string | null;
     label: string;
     addons: {
       backups: { price: PriceObject };
