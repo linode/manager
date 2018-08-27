@@ -4268,16 +4268,6 @@ entities@^1.1.1, entities@~1.1.1:
 envify@^4.0.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/envify/-/envify-4.1.0.tgz#f39ad3db9d6801b4e6b478b61028d3f0b6819f7e"
-<<<<<<< HEAD
-  dependencies:
-    esprima "^4.0.0"
-    through "~2.3.4"
-
-enzyme-adapter-react-16@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/enzyme-adapter-react-16/-/enzyme-adapter-react-16-1.1.1.tgz#a8f4278b47e082fbca14f5bfb1ee50ee650717b4"
-=======
->>>>>>> develop
   dependencies:
     esprima "^4.0.0"
     through "~2.3.4"
