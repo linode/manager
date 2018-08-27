@@ -34,6 +34,7 @@ export class ListLinodes extends Page {
     get viewGraphsMenu() { return $('[data-qa-action-menu-item="View Graphs"]'); }
     get resizeMenu() { return $('[data-qa-action-menu-item="Resize"]'); }
     get viewBackupsMenu() { return $('[data-qa-action-menu-item="View Backups"]'); }
+    get enableBackupsMenu() { return $('[data-qa-action-menu-item="Enable Backups"]'); }
     get settingsMenu() { return $('[data-qa-action-menu-item="Settings"]'); }
     get copyIp() { return $('[data-qa-copy-ip] svg'); }
 
