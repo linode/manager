@@ -26,6 +26,7 @@ type ClassNames = 'bodyRow'
   | 'linodeCell'
   | 'tagsCell'
   | 'ipCell'
+  | 'ipCellWrapper'
   | 'regionCell'
   | 'actionCell'
   | 'actionInner'
@@ -50,6 +51,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
     },
     ipCell: {
       width: '30%',
+    },
+    ipCellWrapper: {
+      display: 'inline-flex',
+      flexDirection: 'column',
     },
     regionCell: {
       width: '15%',
@@ -146,17 +151,19 @@ class LinodeRow extends React.Component<CombinedProps> {
 
     return (
       <TableCell className={classes.linodeCell}>
-        <Grid container wrap="nowrap" alignItems="center">
-          <Grid item className="py0">
-            <LinodeStatusIndicator status={linodeStatus} />
+        <Link to={`/linodes/${linodeId}`} className={classes.link}>
+          <Grid container wrap="nowrap" alignItems="center">
+            <Grid item className="py0">
+              <LinodeStatusIndicator status={linodeStatus} />
+            </Grid>
+            <Grid item className="py0">
+              <Typography role="header" variant="subheading" data-qa-label>
+                {linodeLabel}
+              </Typography>
+              {!typesLoading && <Typography variant="caption">{displayType(linodeType, typesData || [])} </Typography>}
+            </Grid>
           </Grid>
-          <Grid item className="py0">
-            <Typography role="header" variant="subheading" data-qa-label>
-              <Link to={`/linodes/${linodeId}`} className={classes.link}>{linodeLabel}</Link>
-            </Typography>
-            {!typesLoading && <Typography> {displayType(linodeType, typesData || [])} </Typography>}
-          </Grid>
-        </Grid>
+          </Link>
       </TableCell>
     );
   }
@@ -204,8 +211,10 @@ class LinodeRow extends React.Component<CombinedProps> {
       >
         {this.headCell()}
         <TableCell className={classes.ipCell} data-qa-ips>
-          <IPAddress ips={linodeIpv4} copyRight />
-          <IPAddress ips={[linodeIpv6]} copyRight />
+          <div className={classes.ipCellWrapper}>
+            <IPAddress ips={linodeIpv4} copyRight />
+            <IPAddress ips={[linodeIpv6]} copyRight />
+          </div>
         </TableCell>
         <TableCell className={classes.regionCell} data-qa-region>
           <RegionIndicator region={linodeRegion} />
