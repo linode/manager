@@ -65,6 +65,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 interface Props {}
 
 interface State {
+  enabled: boolean;
   value: string;
   inputValue: string;
   options: Item[];
@@ -75,17 +76,29 @@ type index = 'linode-docs';
 
 type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
 
-// Algolia API Client
-const client = Algolia(ALGOLIA_APPLICATION_ID, ALGOLIA_SEARCH_KEY);
-const idx: index = 'linode-docs';
-const searchIndex = client.initIndex(idx);
-
 class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
+  searchIndex:any = null;
   state: State = {
+    enabled: true,
     value: '',
     inputValue: '',
     options: [],
   };
+
+  componentDidMount() {
+    // initialize Algolia API Client
+    try {
+      const client = Algolia(ALGOLIA_APPLICATION_ID, ALGOLIA_SEARCH_KEY);
+      const idx: index = 'linode-docs';
+      this.searchIndex = client.initIndex(idx);
+    }
+    catch {
+      // Credentials were incorrect or couldn't be found;
+      // Disable the search functionality in the component.
+      this.setState({ enabled: false, error: "Search could not be enabled." });
+      return;
+    }
+  }
 
   getDataFromOptions = () => {
     const { options, inputValue } = this.state;
@@ -97,7 +110,11 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
       this.setState({ options: [] }); 
       return; 
     }
-    searchIndex.search({
+    if (!this.searchIndex) {
+      this.setState({ options: [], error: "Search could not be enabled."});
+      return;
+    }
+    this.searchIndex.search({
       query: inputValue,
       hitsPerPage: 5,
     }, this.searchSuccess);
@@ -169,13 +186,14 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes } = this.props;
-    const { error, inputValue, value } = this.state;
+    const { enabled, error, inputValue, value } = this.state;
     const data = this.getDataFromOptions();
 
     return (
       <React.Fragment>
       {error && <Notice error spacingTop={8} spacingBottom={0} >{error}</Notice>}
         <EnhancedSelect
+          disabled={!enabled}
           options={data}
           value={value}
           inputValue={inputValue}
