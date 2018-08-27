@@ -22,6 +22,7 @@ import EditableText from 'src/components/EditableText';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
+import Notice from 'src/components/Notice';
 import ProductNotification from 'src/components/ProductNotification';
 import { events$ } from 'src/events';
 import { reportException } from 'src/exceptionReporting';
@@ -32,7 +33,10 @@ import { lishLaunch } from 'src/features/Lish';
 import notifications$ from 'src/notifications';
 import { Requestable } from 'src/requestableContext';
 import { getImage } from 'src/services/images';
-import { getLinode, getLinodeConfigs, getLinodeDisks, getLinodeVolumes, renameLinode } from 'src/services/linodes';
+import {
+  getLinode, getLinodeConfigs, getLinodeDisks,
+  getLinodeVolumes, getType, renameLinode
+} from 'src/services/linodes';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -49,6 +53,7 @@ import LinodeSummary from './LinodeSummary';
 import LinodeBusyStatus from './LinodeSummary/LinodeBusyStatus';
 import LinodeVolumes from './LinodeVolumes';
 import reloadableWithRouter from './reloadableWithRouter';
+import UpgradeDrawer from './UpgradeDrawer';
 
 interface ConfigDrawerState {
   open: boolean;
@@ -56,6 +61,14 @@ interface ConfigDrawerState {
   error?: string;
   selected?: number;
   action?: (id: number) => void;
+}
+
+interface UpgradeInfo {
+  vcpus: number | null;
+  memory: number | null;
+  disk: number | null;
+  transfer: number | null;
+  network_out: number | null;
 }
 
 interface State {
@@ -69,6 +82,9 @@ interface State {
   configDrawer: ConfigDrawerState;
   labelInput: { label: string; errorText: string; };
   notifications?: Linode.Notification[];
+  showPendingUpgrade: boolean;
+  upgradeInfo: UpgradeInfo | null;
+  upgradeDrawerOpen: boolean;
 }
 
 interface MatchProps { linodeId?: number };
@@ -78,7 +94,8 @@ type RouteProps = RouteComponentProps<MatchProps>;
 type ClassNames = 'titleWrapper'
   | 'backButton'
   | 'cta'
-  | 'launchButton';
+  | 'launchButton'
+  | 'link';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   titleWrapper: {
@@ -117,6 +134,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       borderColor: theme.palette.primary.main,
     },
   },
+  link: {
+    color: theme.palette.primary.main,
+    cursor: 'pointer',
+    '&:hover': {
+      textDecoration: 'underline',
+    }
+  }
 });
 
 type CombinedProps = RouteProps & WithStyles<ClassNames>;
@@ -373,6 +397,9 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       label: '',
       errorText: '',
     },
+    showPendingUpgrade: false,
+    upgradeInfo: null,
+    upgradeDrawerOpen: false,
   };
 
   composeState = (...fns: StateSetter[]) =>
@@ -385,7 +412,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     return haveAnyBeenModified<State>(
       this.state,
       nextState,
-      ['context', 'configDrawer', 'labelInput'],
+      ['context', 'configDrawer', 'labelInput', 'upgradeDrawerOpen'],
     )
       || haveAnyBeenModified<Location>(location, nextLocation, ['pathname', 'search']);
   }
@@ -396,6 +423,62 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     this.diskResizeSubscription.unsubscribe();
     this.notificationsSubscription.unsubscribe();
     this.volumeEventsSubscription.unsubscribe();
+  }
+
+  componentDidUpdate(prevProps: CombinedProps, prevState: State) {
+    const { context: { linode: { data: linode } } } = this.state;
+
+    /*
+    * /linodes/instances/types/type has a "successor" property
+    * that will have a non-null value if this Linode has an upgrade
+    * available
+    */
+    if (!!linode
+      && prevState.context.linode.data !== linode
+      && linode.type) {
+      getType(linode.type)
+        .then((currentType: Linode.LinodeType) => {
+          const typeIsDeprecated = currentType.successor !== null;
+          /*
+          * Now that we know the type is deprecated, get the successor's new
+          * specs so we can show the user what exactly is getting upgraded
+          */
+          if (typeIsDeprecated) {
+            getType(currentType.successor!)
+              .then((successorData: Linode.LinodeType) => {
+                // finally show the notice to the user with the upgrade info
+                this.setState({
+                  showPendingUpgrade: true,
+                  // data is only relevant if the upgrade data is different from the current type's data
+                  upgradeInfo: {
+                    vcpus: (successorData.vcpus !== currentType.vcpus) ? successorData.vcpus : null,
+                    network_out: (successorData.network_out !== currentType.network_out) ? successorData.network_out : null,
+                    disk: (successorData.disk !== currentType.disk) ? successorData.disk : null,
+                    transfer: (successorData.transfer !== currentType.transfer) ? successorData.transfer : null,
+                    memory: (successorData.memory !== currentType.memory) ? successorData.memory : null,
+                  }
+                });
+              })
+              // no action needed. Worse case scenario, the user doesn't
+              // see the notice
+              .catch(e => e);
+          }
+          this.setState({
+            showPendingUpgrade: true,
+            // data is only relevant if the upgrade data is different from the current type's data
+            upgradeInfo: {
+              vcpus: 1000,
+              network_out: 1000,
+              disk: 1000,
+              transfer: 1000,
+              memory: null,
+            }
+          });
+        })
+        // no action needed. Worse case scenario, the user doesn't
+        // see the notice
+        .catch(e => e);
+    }
   }
 
   componentDidMount() {
@@ -554,12 +637,21 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     lishLaunch(linode!.id);
   }
 
-  render() {
+  openUpgradeDrawer = () => {
+    this.setState({ upgradeDrawerOpen: true });
+  }
 
+  closeUpgradeDrawer = () => {
+    this.setState({ upgradeDrawerOpen: false });
+  }
+
+  render() {
     const { match: { url }, classes } = this.props;
     const {
       labelInput,
       configDrawer,
+      upgradeDrawerOpen,
+      upgradeInfo,
       context: {
         volumes: {
           data: volumes,
@@ -651,6 +743,15 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
             <ImageProvider value={this.state.context.image}>
               <LinodeProvider value={this.state.context.linode}>
                 <VolumesProvider value={this.state.context.volumes}>
+                  {(this.state.showPendingUpgrade) &&
+                    <Notice warning>
+                      This Linode has pending upgrades available. To learn more about
+                    this upgrade and what it includes,
+                      <span className={classes.link} onClick={this.openUpgradeDrawer}>
+                        {` click here`}
+                      </span>
+                    </Notice>
+                  }
                   <Grid
                     container
                     justify="space-between"
@@ -731,6 +832,13 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                     selected={String(configDrawer.selected)}
                     error={configDrawer.error}
                   />
+                  {(this.state.showPendingUpgrade) &&
+                    <UpgradeDrawer
+                      open={upgradeDrawerOpen}
+                      handleClose={this.closeUpgradeDrawer}
+                      upgradeInfo={upgradeInfo!}
+                    />
+                  }
                 </VolumesProvider>
               </LinodeProvider>
             </ImageProvider>
