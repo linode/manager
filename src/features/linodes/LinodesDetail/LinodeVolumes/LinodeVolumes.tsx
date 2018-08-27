@@ -793,6 +793,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
                     <TableCell data-qa-fs-path>{filesysPath}</TableCell>
                     <TableCell>
                       <ActionMenu
+                        data-qa-linode-volume-actions
                         poweredOff={['offline'].includes(linodeStatus)}
                         onDetach={this.openUpdateDialog('detach', volume.id)}
                         onDelete={this.openUpdateDialog('delete', volume.id)}

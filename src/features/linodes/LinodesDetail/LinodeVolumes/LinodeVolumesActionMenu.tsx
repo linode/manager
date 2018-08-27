@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
@@ -12,9 +11,9 @@ interface Props {
   onResize: () => void;
 }
 
-type CombinedProps = Props & RouteComponentProps<{}>;
+type CombinedProps = Props;
 
-class LinodeVolumeActionMenu extends React.Component<CombinedProps> {
+export class LinodeVolumeActionMenu extends React.Component<CombinedProps> {
   createLinodeActions = () => {
     const {
       onDetach,
@@ -83,4 +82,4 @@ class LinodeVolumeActionMenu extends React.Component<CombinedProps> {
   }
 }
 
-export default withRouter(LinodeVolumeActionMenu);
+export default LinodeVolumeActionMenu;
