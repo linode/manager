@@ -792,7 +792,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
                     <TableCell data-qa-fs-path>{filesysPath}</TableCell>
                     <TableCell>
                       <ActionMenu
-                        volumeId={volume.id}
+                        volume={volume}
                         onDetach={this.openUpdateDialog('detach', volume.id)}
                         onDelete={this.openUpdateDialog('delete', volume.id)}
                         onClone={this.openUpdatingDrawer(
