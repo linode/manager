@@ -317,19 +317,21 @@ export class App extends React.Component<CombinedProps, State> {
                             <Route component={NotFound} />
                           </Switch>
                         </Grid>
-                        <Grid className={`${hasDoc ? 'mlSidebar': ''}`}>
-                          <Sticky topOffset={-24} disableCompensation>
-                          {(props: StickyProps) => {
-                            return (
-                              <DocsSidebar
-                                docs={documentation}
-                                {...props}
-                              />
-                              )
-                            }
-                          }
-                          </Sticky>
-                        </Grid>
+                        {hasDoc &&
+                          <Grid className='mlSidebar'>
+                            <Sticky topOffset={-24} disableCompensation>
+                              {(props: StickyProps) => {
+                                return (
+                                  <DocsSidebar
+                                    docs={documentation}
+                                    {...props}
+                                  />
+                                )
+                              }
+                              }
+                            </Sticky>
+                          </Grid>
+                        }
                       </Grid>
                       </StickyContainer>
                     </div>
