@@ -41,7 +41,7 @@ class DocComponent extends React.PureComponent<PropsWithStyles> {
 
   body = () => {
     const { body } = this.props;
-    return body.length > 203 ? truncateText(body, 200) : body;
+    return truncateText(body, 200);
   };
 
   render() {

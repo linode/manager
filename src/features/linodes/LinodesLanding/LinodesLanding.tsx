@@ -127,16 +127,14 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     {
       title: 'Getting Started with Linode',
       src: 'https://linode.com/docs/getting-started/',
-      body: `Thank you for choosing Linode as your cloud hosting provider! This guide will help you
-      sign up for an account, set up a Linux distribution, boot your Linode, and perform some basic
-      system administr...`,
+      body: `This guide will help you set up your first Linode.`,
     },
     {
       title: 'How to Secure your Server',
       src: 'https://linode.com/docs/security/securing-your-server/',
-      body: `Keeping your software up to date is the single biggest security precaution you can
-      take for any operating system. Software updates range from critical vulnerability patches to
-      minor bug fixes, and...`,
+      body: `This guide covers basic best practices for securing a production server,
+      including setting up user accounts, configuring a firewall, securing SSH,
+      and disabling unused network services.`,
     },
 
   ];
