@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import ThemeDecorator from '../../utilities/storybookDecorators';
 
-import EnhancedSelect from './EnhancedSelect';
+import EnhancedSelect from './EnhancedSelect2';
 
 const data = [
   {
@@ -37,8 +37,7 @@ class Example extends React.Component {
       <React.Fragment>
         <EnhancedSelect 
           options={data}
-          value={data[0].value}
-          handleSelect={this.handleSelect}
+          errorText="this is an error"
         />
       </React.Fragment>
     );
