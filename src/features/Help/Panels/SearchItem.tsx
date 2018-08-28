@@ -31,6 +31,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     position: 'relative',
     top: 5,
     marginLeft: theme.spacing.unit / 2,
+    color: theme.palette.text.primary,
   },
   source: {
     marginTop: theme.spacing.unit / 2,
