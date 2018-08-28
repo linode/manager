@@ -5,7 +5,6 @@ import Typography from '@material-ui/core/Typography';
 import OpenInNew from '@material-ui/icons/OpenInNew';
 
 import ListItem from '@material-ui/core/ListItem';
-import MenuList from '@material-ui/core/MenuList';
 import Paper from '@material-ui/core/Paper';
 
 type ClassNames = 'root'
@@ -33,7 +32,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme &  Linode.Theme) =>
     moreResults: {
       fontSize: '1rem',
       fontWeight: 'bold',
-      marginTop: theme.spacing.unit * 3,
+      marginTop: theme.spacing.unit * 2,
     },
     icon: {
       color: '#3683DC',
@@ -51,9 +50,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme &  Linode.Theme) =>
       display: 'inline-block',
     },
     searchItem: {
+      position: 'initial',
       backgroundColor: theme.color.white,
+      borderBottom: `1px solid ${theme.palette.divider}`,
       '&:hover': {
-        backgroundColor: theme.color.grey2,
+        backgroundColor: theme.bg.offWhite,
       }
     },
   }
@@ -80,10 +81,11 @@ const DocumentationResults: React.StatelessComponent<CombinedProps> = (props) =>
   const renderResults = () => {
     return results.map((result:SearchResult, idx:number) =>
       <ListItem
-        key={idx}
-        role="menu-item"
-        onClick={() => window.open(result.data.href, '_newtab')}
         className={classes.searchItem}
+        key={idx}
+        role="menuitem"
+        component="a"
+        onClick={() => window.open(result.data.href, '_newtab')}
         tabIndex={1}
       >
         <Typography variant="body1" className={classes.label} >
@@ -108,9 +110,9 @@ const DocumentationResults: React.StatelessComponent<CombinedProps> = (props) =>
         { `Most Relevant ${sectionTitle}` }
       </Typography>
       <Paper>
-        <MenuList>
-            {results.length > 0 ? renderResults() : renderEmptyState()}
-        </MenuList>
+        <nav role="menu">
+          {results.length > 0 ? renderResults() : renderEmptyState()}
+        </nav>
       </Paper>
       <Typography variant="body2" className={classes.moreResults}>
         <a href={target} className={classes.link} >View more {sectionTitle}</a>

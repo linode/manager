@@ -29,7 +29,8 @@ type ClassNames = 'root'
   | 'searchBar'
   | 'searchBoxInner'
   | 'searchHeading'
-  | 'searchField';
+  | 'searchField'
+  | 'searchIcon';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -53,6 +54,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     padding: theme.spacing.unit * 3,
     backgroundColor: theme.color.grey2,
     marginTop: 0,
+    '& > div': {
+      maxWidth: '100%',
+    },
   },
   searchHeading: {
     color: theme.color.black,
@@ -61,6 +65,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   searchField: {
     padding: theme.spacing.unit * 3,
+  },
+  searchIcon: {
+    marginRight: 0,
+    '& svg': {
+      color: theme.palette.text.primary,
+    }
   },
 });
 
@@ -187,7 +197,7 @@ class SupportSearchLanding extends React.Component<CombinedProps, State> {
             InputProps={{
               className: classes.searchBar,
               startAdornment:
-                <InputAdornment position="end">
+                <InputAdornment position="end" className={classes.searchIcon}>
                   <Search />
                 </InputAdornment>
             }}
