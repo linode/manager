@@ -1,8 +1,9 @@
-import { take } from 'ramda';
 import * as React from 'react';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+
+import truncateText from 'src/utilities/truncateText';
 
 export interface Doc {
   title: string;
@@ -40,7 +41,7 @@ class DocComponent extends React.PureComponent<PropsWithStyles> {
 
   body = () => {
     const { body } = this.props;
-    return body.length > 203 ? truncateText(body, 200) : body;
+    return truncateText(body, 200);
   };
 
   render() {
@@ -60,7 +61,5 @@ class DocComponent extends React.PureComponent<PropsWithStyles> {
     );
   }
 }
-
-const truncateText = (str: string, len: number) => `${take(len, str)}...`;
 
 export default withStyles(styles, { withTheme: true })<Props>(DocComponent);
