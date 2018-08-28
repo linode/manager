@@ -28,7 +28,9 @@ import { newLinodeEvents } from 'src/features/linodes/events';
 import notifications$ from 'src/notifications';
 import { getImages } from 'src/services/images';
 import { getLinode, getLinodes } from 'src/services/linodes';
+
 import scrollToTop from 'src/utilities/scrollToTop';
+import { getStorage, views } from 'src/utilities/storage';
 
 import LinodesGridView from './LinodesGridView';
 import LinodesListView from './LinodesListView';
@@ -222,10 +224,14 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     });
   }
 
-  changeViewStyle = (style: string) => {
+  changeViewStyle = (style: 'grid' | 'list') => {
     const { history } = this.props;
     history.push(`#${style}`);
-    localStorage.setItem('linodesViewStyle', style);
+    if (style === 'grid') {
+      views.linode.setGridView();
+    } else {
+      views.linode.setListView();
+    }
   }
 
   getLinodes = (page = 1, pageSize = 25) => {
@@ -460,7 +466,7 @@ const addNotificationToLinode = (notifications: Linode.Notification[]) => (linod
 });
 
 const getDisplayFormat = ({ hash, length }: { hash?: string, length: number }): 'grid' | 'list' => {
-  const local = localStorage.getItem('linodesViewStyle');
+  const local = getStorage('linodesViewStyle');
 
   if (hash) {
     return hash === '#grid' ? 'grid' : 'list';
