@@ -1,4 +1,3 @@
-import * as classNames from 'classnames';
 import { compose } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -15,7 +14,7 @@ import {
 import Typography from '@material-ui/core/Typography';
 
 import Grid from 'src/components/Grid';
-import Notice from 'src/components/Notice';
+import Tile from 'src/components/Tile';
 
 import Chat from 'src/assets/icons/chat.svg';
 import Community from 'src/assets/icons/community.svg';
@@ -32,11 +31,11 @@ type ClassNames = 'root'
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {},
   wrapper: {
-    marginTop: theme.spacing.unit * 2,
+    marginTop: theme.spacing.unit * 4,
   },
   heading: {
     textAlign: 'center',
-    marginBottom: theme.spacing.unit * 4,
+    marginBottom: theme.spacing.unit * 2,
   },
   card: {
     display: 'flex',
@@ -125,67 +124,52 @@ export class OtherWays extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <Grid
-          container
-          className={classes.wrapper}
-        >
-          <Grid item xs={12}>
-            <Typography
-              variant="title"
-              className={classes.heading}
-            >
-              Didn't find what you need? Get help.
-            </Typography>
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <div className={classes.card}>
-              <span className={classes.icon}><Community /></span>
-                <Typography variant="subheading" className={classes.tileTitle}>
-                  <a target="_blank" href="https://linode.com/community/" className="black">Create a Community Post</a>
-                </Typography>
-              <Typography variant="caption">
-                Find help from other Linode users in the Community
-              </Typography>
-            </div>
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <div className={classes.card}>
-              <span className={classes.icon}><Chat /></span>
+        <Grid item>
+          <Grid
+            container
+            className={classes.wrapper}
+          >
+            <Grid item xs={12}>
               <Typography
-                variant="subheading"
-                className={classNames({
-                  [classes.tileTitle]: true,
-                  [classes.ada]: true,
-                })}
+                variant="title"
+                className={classes.heading}
               >
-                <a href="javascript:;" onClick={this.handleAdaInit} className="black">Talk to Ada</a>
+                Didn't find what you need? Get help.
               </Typography>
-              {this.state.error &&
-                <Notice error={true} text={this.state.error} />
-              }
-              <Typography variant="caption">
-                Chat with the Linode Support bot to help troubleshoot
-              </Typography>
-            </div>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <Tile
+                title="Create a Community Post"
+                description="Find help from other Linode users in the Community"
+                icon={<Community />}
+                link="https://linode.com/community/"
+              />
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <Tile
+                title="Talk to Ada"
+                description="Chat with the Linode Support bot to help troubleshoot"
+                icon={<Chat />}
+                link={this.handleAdaInit}
+                errorText={this.state.error}
+              />
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <Tile
+                title="Open a ticket"
+                description="If you are not able to solve an issue with the resources listed above,
+                you can contact Linode Support"
+                icon={<Support />}
+                link="/support/tickets"
+              />
+            </Grid>
           </Grid>
-          <Grid item xs={12} sm={4} onClick={this.openTicketDrawer}>
-            <div className={classes.card}>
-              <span className={classes.icon}><Support /></span>
-                <Typography variant="subheading" className={classes.tileTitle}>
-                  Open a Ticket
-                </Typography>
-              <Typography variant="caption">
-                If you are not able to solve an issue with the resources listed above, you can
-                open a Support ticket.
-              </Typography>
-            </div>
-          </Grid>
+          <SupportTicketDrawer
+            open={drawerOpen}
+            onClose={this.closeTicketDrawer}
+            onSuccess={this.onTicketCreated}
+          />
         </Grid>
-        <SupportTicketDrawer
-          open={drawerOpen}
-          onClose={this.closeTicketDrawer}
-          onSuccess={this.onTicketCreated}
-        />
       </React.Fragment>
     );
   }

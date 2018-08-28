@@ -103,6 +103,7 @@ export class OtherWays extends React.Component<CombinedProps, State> {
               description="Chat with the Linode Support bot to help troubleshoot"
               icon={<Chat />}
               link={this.handleAdaInit}
+              errorText={this.state.error}
             />  
           </Grid>
           <Grid item xs={12} sm={6}>
