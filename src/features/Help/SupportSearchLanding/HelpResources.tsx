@@ -160,7 +160,7 @@ export class OtherWays extends React.Component<CombinedProps, State> {
                 description="If you are not able to solve an issue with the resources listed above,
                 you can contact Linode Support"
                 icon={<Support />}
-                link="/support/tickets"
+                link={this.openTicketDrawer}
               />
             </Grid>
           </Grid>
