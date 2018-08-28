@@ -14,7 +14,6 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import { getTicketsPage } from 'src/services/support';
-import capitalize from 'src/utilities/capitalize';
 import { formatString } from 'src/utilities/format-date-iso8601';
 
 interface Props {
