@@ -41,6 +41,6 @@ describe('Account - Restricted User - Permissions Suite', () => {
     });
 
     it('should update an entity-based specific grant', () => {
-        Permissions.setSpecificGrant('Linodes', linode.label, 'Read Only');
+        Permissions.setSpecificPermission('Linodes', linode.label, 'Read Only');
     });
 });

@@ -11,7 +11,10 @@ const mockAxiosResponse = (
 describe('PromiseLoaderSpec', () => {
   const Component = () => <div id="component"></div>;
   const data = { name: 'whatever' };
-  const preloaded = PromiseLoader({ resource: () => Promise.resolve(data) });
+  const preloaded = PromiseLoader({ resource: async () => {
+    await mockAxiosResponse(100);
+    return Promise.resolve(data);
+  } });
   const LoadedComponent = preloaded(Component);
   let wrapper: ShallowWrapper;
 
@@ -28,7 +31,7 @@ describe('PromiseLoaderSpec', () => {
   describe('after resolution', async () => {
     beforeEach(async () => {
       wrapper = shallow(<LoadedComponent />);
-      await mockAxiosResponse(100);
+      await mockAxiosResponse(120);
       wrapper.update();
     });
 

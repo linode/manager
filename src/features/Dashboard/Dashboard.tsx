@@ -3,6 +3,7 @@ import * as React from 'react';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 
 import BlogDashboardCard from './BlogDashboardCard';
@@ -31,6 +32,7 @@ class Dashboard extends React.Component<CombinedProps, State> {
   render() {
     return (
       <Grid container spacing={24}>
+        <DocumentTitleSegment segment="Dashboard" />
         <Grid item xs={12}>
           <Typography variant="headline">Dashboard</Typography>
         </Grid>

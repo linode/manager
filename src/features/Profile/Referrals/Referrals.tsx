@@ -6,6 +6,7 @@ import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import CopyableTextField from 'src/features/Volumes/CopyableTextField';
 
@@ -32,7 +33,6 @@ interface Props { }
 
 interface ConnectedProps {
   profileLoading: boolean;
-
   code?: string;
   url?: string;
   total?: number;
@@ -62,6 +62,7 @@ class Referrals extends React.Component<CombinedProps, State> {
 
     return (
       <Paper className={classes.root}>
+        <DocumentTitleSegment segment="Referrals" />
         <Grid container>
           <Grid item xs={12}>
             <Typography
@@ -87,8 +88,8 @@ class Referrals extends React.Component<CombinedProps, State> {
                     </Typography>
                   </Grid>
                   <Grid item xs={12}>
-                    <CopyableTextField value={code} label='Referral Code' className={classes.copyField} />
-                    <CopyableTextField value={url} label='Referral URL' className={classes.copyField} />
+                    <CopyableTextField value={code} label='Referral Code' className={classes.copyField} expand />
+                    <CopyableTextField value={url} label='Referral URL' className={classes.copyField} expand />
                   </Grid>
                 </React.Fragment>
               )

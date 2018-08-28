@@ -7,9 +7,13 @@ import { RouteComponentProps } from 'react-router-dom';
 
 import Chip from '@material-ui/core/Chip';
 import IconButton from '@material-ui/core/IconButton';
+import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import InsertDriveFile from '@material-ui/icons/InsertDriveFile';
+import InsertPhoto from '@material-ui/icons/InsertPhoto';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
+
 
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
@@ -17,6 +21,7 @@ import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import CircleProgress from 'src/components/CircleProgress';
 import setDocs from 'src/components/DocsSidebar/setDocs';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import { getTicket, getTicketReplies, SupportTicket } from 'src/services/support';
@@ -35,7 +40,12 @@ type ClassNames = 'root'
   | 'labelIcon'
   | 'status'
   | 'open'
-  | 'closed';
+  | 'ticketLabel'
+  | 'closed'
+  | 'attachmentPaperWrapper'
+  | 'attachmentPaper'
+  | 'attachmentRow'
+  | 'attachmentIcon';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {},
@@ -57,6 +67,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   label: {
     marginBottom: theme.spacing.unit,
+  },
+  ticketLabel: {
+    position: 'relative',
+    top: -3,
   },
   labelIcon: {
     paddingRight: 0,
@@ -80,6 +94,30 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   closed: {
     backgroundColor: theme.color.red,
+  },
+  attachmentPaperWrapper: {
+    overflowX: 'auto',
+  },
+  attachmentPaper: {
+    padding: `
+      ${theme.spacing.unit * 2}px
+      ${theme.spacing.unit * 3}px
+      ${theme.spacing.unit}px
+    `,
+    overflowX: 'auto',
+    width: 500,
+  },
+  attachmentRow: {
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    marginBottom: 12,
+    '&:last-child': {
+      marginBottom: 0,
+      border: 0,
+    },
+  },
+  attachmentIcon: {
+    paddingLeft: `0 !important`,
+    color: theme.palette.text.primary,
   },
 });
 
@@ -145,6 +183,18 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
     return getTicketReplies(ticketId)
       .then((response) => {
         return response.data;
+      });
+  }
+
+  reloadAttachments = () => {
+    this.loadTicket()
+      .then((ticket: Linode.SupportTicket) => {
+        this.setState({
+          ticket: {
+            ...this.state.ticket!,
+            attachments: ticket.attachments,
+          },
+        });
       });
   }
 
@@ -227,10 +277,52 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
           {icon}
         </Grid>
         <Grid item>
-          <Typography>{label}</Typography>
+          <Typography className={classes.ticketLabel}>{label}</Typography>
         </Grid>
       </Grid>
     )
+  }
+
+  renderAttachments = (attachments: string[]) => {
+    const { classes } = this.props;
+
+    // create an array of icons to use
+    const icons = attachments.map((attachment, idx) => {
+      // try to find a file extension
+      const lastDotIndex = attachment.lastIndexOf('.');
+      const ext = attachment.slice(lastDotIndex + 1);
+      if (ext) {
+        if (['jpg', 'jpeg', 'png', 'bmp', 'tiff'].includes(ext.toLowerCase())) {
+          return <InsertPhoto key={idx} />;
+        }
+      }
+      return <InsertDriveFile key={idx} />;
+    })
+    return (
+      <Grid item xs={12} container justify="flex-start" className="px0">
+        <Grid item xs={12}>
+          <Typography variant="subheading">Attachments</Typography>
+        </Grid>
+        <Grid item xs={12} className={classes.attachmentPaperWrapper}>
+          <Paper className={classes.attachmentPaper}>
+              {attachments.map((attachment, idx) => {
+                return (
+                  <Grid container wrap="nowrap" key={idx} className={classes.attachmentRow}>
+                    <Grid item className={classes.attachmentIcon}>
+                      {icons[idx]}
+                    </Grid>
+                    <Grid item>
+                      <Typography component="span">
+                        {attachment}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                )
+              })}
+          </Paper>
+        </Grid>
+      </Grid>
+    );
   }
 
   renderReplies = (replies: Linode.SupportReply[]) => {
@@ -276,6 +368,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
 
     return (
       <React.Fragment>
+        <DocumentTitleSegment segment={`Support Ticket ${ticketId}`} />
         <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
           <Grid item className={classes.titleWrapper}>
             <IconButton
@@ -304,11 +397,13 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
             isCurrentUser={profileUsername === ticket.opened_by}
           />
           {replies && this.renderReplies(replies)}
+          {ticket.attachments && this.renderAttachments(ticket.attachments)}
           {/* If the ticket is open, allow users to reply to it. */}
           {['open','new'].includes(ticket.status) &&
             <TicketReply 
               ticketId={ticketId!}
               onSuccess={this.onCreateReplySuccess}
+              reloadAttachments={this.reloadAttachments}
             />
           }
         </Grid>

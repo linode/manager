@@ -100,7 +100,7 @@ class ConfigureStackScript extends Page {
 
         this.script.$('textarea').click();
         this.script.$('textarea').setValue(config.script);
-        this.revisionNote.$('textarea').setValue(config.revisionNote);
+        this.revisionNote.$('input').setValue(config.revisionNote);
     }
 
     create(config, update=false) {

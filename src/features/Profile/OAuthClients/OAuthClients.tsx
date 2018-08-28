@@ -12,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import Preload, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
@@ -225,6 +226,7 @@ class OAuthClients extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
+        <DocumentTitleSegment segment="OAuth Clients" />
         <Grid
           container
           justify="space-between"

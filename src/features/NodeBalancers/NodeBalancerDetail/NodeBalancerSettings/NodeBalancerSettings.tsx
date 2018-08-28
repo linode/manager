@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
@@ -116,12 +117,13 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
 
   render() {
     const { fields, isSubmitting, success } = this.state;
-    const { classes } = this.props;
+    const { classes, nodeBalancerLabel } = this.props;
     const hasErrorFor = getAPIErrorFor(errorResources, this.state.errors);
     const generalError = hasErrorFor('none');
 
     return (
       <React.Fragment>
+        <DocumentTitleSegment segment={`${nodeBalancerLabel} - Settings`} />
         <Typography role="header" variant="headline" className={classes.title}>
           Settings
         </Typography>

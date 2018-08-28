@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
@@ -41,9 +42,6 @@ import {
   transformConfigsForRequest
 } from '../utils';
 
-
-
-
 type ClassNames = 'root' | 'title';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
@@ -54,7 +52,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props { }
+interface Props {
+  nodeBalancerLabel: string;
+}
 
 type MatchProps = { nodeBalancerId?: number };
 type RouteProps = RouteComponentProps<MatchProps>;
@@ -902,7 +902,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, nodeBalancerLabel } = this.props;
     const {
       configs,
       configErrors,
@@ -913,6 +913,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
+        <DocumentTitleSegment segment={`${nodeBalancerLabel} - Configurations`} />
         <Typography
           role="header"
           variant="headline"
