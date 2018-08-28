@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
+import Notice from 'src/components/Notice';
 
 type ClassNames = 'root';
 
@@ -17,7 +18,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
 });
 
-interface UpgradeInfo {
+interface MutateInfo {
   vcpus: number | null;
   memory: number | null;
   disk: number | null;
@@ -42,8 +43,12 @@ interface ExtendedUpgradeInfo {
 interface Props {
   open: boolean;
   handleClose: () => void;
-  upgradeInfo: UpgradeInfo;
-  currentTypeInfo: UpgradeInfo;
+  initMutation: () => void;
+  mutateInfo: MutateInfo;
+  currentTypeInfo: MutateInfo;
+  linodeId: number;
+  loading: boolean;
+  error: string;
 }
 
 interface State {
@@ -52,7 +57,7 @@ interface State {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class UpgradeDrawer extends React.Component<CombinedProps, State> {
+class MutateDrawer extends React.Component<CombinedProps, State> {
   constructor(props: CombinedProps) {
     super(props);
     
@@ -60,31 +65,31 @@ class UpgradeDrawer extends React.Component<CombinedProps, State> {
       extendedUpgradeInfo: {
         vcpus: {
           label: 'vCPUs',
-          newAmount: props.upgradeInfo.vcpus,
+          newAmount: props.mutateInfo.vcpus,
           currentAmount: props.currentTypeInfo.vcpus,
           unit: ''
         },
         memory: {
           label: 'RAM',
-          newAmount: props.upgradeInfo.memory,
+          newAmount: props.mutateInfo.memory,
           currentAmount: props.currentTypeInfo.memory,
           unit: 'MB'
         },
         disk: {
           label: 'Storage',
-          newAmount: props.upgradeInfo.disk,
+          newAmount: props.mutateInfo.disk,
           currentAmount: props.currentTypeInfo.disk,
           unit: 'GB'
         },
         transfer: {
           label: 'Transfer',
-          newAmount: props.upgradeInfo.transfer,
+          newAmount: props.mutateInfo.transfer,
           currentAmount: props.currentTypeInfo.transfer,
           unit: ''
         },
         network_out: {
           label: 'Outbound Mbits',
-          newAmount: props.upgradeInfo.network_out,
+          newAmount: props.mutateInfo.network_out,
           currentAmount: props.currentTypeInfo.network_out,
           unit: 'Mbits'
         }
@@ -96,6 +101,8 @@ class UpgradeDrawer extends React.Component<CombinedProps, State> {
     const {
       open,
       handleClose,
+      loading,
+      error,
     } = this.props;
 
     const { extendedUpgradeInfo } = this.state;
@@ -106,6 +113,9 @@ class UpgradeDrawer extends React.Component<CombinedProps, State> {
         onClose={handleClose}
         title="Free Upgrade Available"
       >
+        {error &&
+          <Notice error text={error} />
+        }
         <p>This Linode has pending upgrades. The resouces that are affected include:</p>
         <ul>
           {Object.keys(extendedUpgradeInfo).map((newSpec) => {
@@ -138,11 +148,14 @@ class UpgradeDrawer extends React.Component<CombinedProps, State> {
             by resizing your disk images.
           </Typography>
         </ol>
-        <Button type="primary">
+        <Button loading={loading} onClick={this.props.initMutation} type="primary">
           Enter the Upgrade Queue
         </Button>
-        <p>
-          Need help? Refer to the
+        {/*
+        * Show when the relevant docs exist
+        */}
+        <p style={{ display: 'none' }}>
+          {`Need help? Refer to the `}
           <a href="google.com" target="_blank">supporting documentation</a>.
         </p>
       </Drawer>
@@ -152,4 +165,4 @@ class UpgradeDrawer extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(UpgradeDrawer);
+export default styled(MutateDrawer);
