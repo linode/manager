@@ -20,7 +20,9 @@ export const OAUTH_TOKEN_REFRESH_TIMEOUT = LOGIN_SESSION_LIFETIME_MS / 2;
 export const ALGOLIA_APPLICATION_ID = process.env.REACT_APP_ALGOLIA_APPLICATION_ID || '';
 export const ALGOLIA_SEARCH_KEY = process.env.REACT_APP_ALGOLIA_SEARCH_KEY || '';
 
-export const DOCS_BASE_URL = 'https://linode.com/'
+export const DOCS_BASE_URL = 'https://linode.com/';
+
+export const ISO_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
 export const ZONES = {
   'us-east': 'newark',

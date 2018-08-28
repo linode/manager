@@ -12,7 +12,6 @@ import UserIcon from 'src/assets/icons/user.svg';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
 import IconButton from 'src/components/IconButton';
-import { formatDate } from 'src/utilities/format-date-iso8601';
 
 type ClassNames = 'root'
   | 'userWrapper'
@@ -150,7 +149,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
   }
 
   getData = () => {
-    const { ticket, reply, isCurrentUser } = this.props;
+    const { ticket, reply } = this.props;
     if (!ticket && !reply) { return; }
     let data: Data;
     if (ticket) {
@@ -226,7 +225,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
                 <Grid item>
                   <Typography className={classes.userName}>{data.username}</Typography>
                   {data.from_linode && <Typography variant="body1">Linode Expert</Typography>}
-                  <Typography>{formatDate(data.date, true)}</Typography>
+                  <Typography><DateTimeDisplay value={data.date} /></Typography>
                   </Grid>
                 </Grid>
               </Grid>
