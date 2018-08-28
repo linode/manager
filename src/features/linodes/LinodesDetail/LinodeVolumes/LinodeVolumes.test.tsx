@@ -30,6 +30,7 @@ describe('Linode Volumes', () => {
       linodeVolumes={volumes}
       linodeLabel="test"
       linodeRegion="us-east"
+      linodeStatus="running"
       linodeID={100}
       history={{
         length: 2,
@@ -71,6 +72,7 @@ describe('Linode Volumes', () => {
             linodeVolumes={[]}
             linodeLabel="test"
             linodeRegion="us-east"
+            linodeStatus="running"
             linodeID={100}
             {...reactRouterProps}
           />
@@ -93,6 +95,7 @@ describe('Linode Volumes', () => {
             linodeConfigs={linodeConfigsAsPromiseResponse}
             linodeVolumes={[]}
             linodeLabel="test"
+            linodeStatus="running"
             linodeRegion="us-east"
             linodeID={100}
             {...reactRouterProps}
@@ -120,6 +123,7 @@ describe('Linode Volumes', () => {
               linodeVolumes={volumes}
               linodeLabel="test"
               linodeRegion="us-east"
+              linodeStatus="running"
               linodeID={100}
               {...reactRouterProps}
             />
