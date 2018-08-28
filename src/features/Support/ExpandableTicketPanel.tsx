@@ -12,6 +12,7 @@ import UserIcon from 'src/assets/icons/user.svg';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
 import IconButton from 'src/components/IconButton';
+import { formatDate } from 'src/utilities/format-date-iso8601';
 
 type ClassNames = 'root'
   | 'userWrapper'
@@ -158,7 +159,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
         gravatarUrl: pathOr('not found',['gravatarUrl'],ticket),
         date: ticket.opened,
         description: ticket.description,
-        username: isCurrentUser ? "you" : ticket.opened_by,
+        username: ticket.opened_by,
         from_linode: false,
       }
     } else if (reply) {
@@ -167,7 +168,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
         gravatarUrl: pathOr('not found',['gravatarUrl'],reply),
         date: reply.created,
         description: reply.description,
-        username: isCurrentUser ? "you" : reply.created_by,
+        username: reply.created_by,
         from_linode: reply.from_linode,
       }
     }
@@ -225,7 +226,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
                 <Grid item>
                   <Typography className={classes.userName}>{data.username}</Typography>
                   {data.from_linode && <Typography variant="body1">Linode Expert</Typography>}
-                  <Typography><DateTimeDisplay value={data.date} format={'YYYY/MM/DD - h:ssa'}/></Typography>
+                  <Typography>{formatDate(data.date, true)}</Typography>
                   </Grid>
                 </Grid>
               </Grid>
