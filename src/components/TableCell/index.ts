@@ -1,2 +1,2 @@
-import TableCell from './TableCell';
-export default TableCell;
+export { default, Props as TableCellProps } from './TableCell';
+

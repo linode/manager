@@ -33,6 +33,13 @@ namespace Linode {
     thumbnail_url?: null | string;
   };
 
+  export interface SSHKey {
+    id: number;
+    label: string;
+    ssh_key: string;
+    created: string;
+  }
+
   export interface OAuthClient {
     id: string;
     label: string;
