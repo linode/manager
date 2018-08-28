@@ -6,9 +6,6 @@ import LinodeDarkTheme from 'src/darkTheme';
 import { init } from 'src/events';
 import LinodeLightTheme from 'src/theme';
 
-interface Props {
-}
-
 interface State {
   themeChoice: 'light' | 'dark';
   render: boolean;
@@ -28,7 +25,7 @@ const themes = {
 themes.light.shadows.fill('none');
 themes.dark.shadows.fill('none');
 
-class LinodeThemeWrapper extends React.Component<Props, State> {
+class LinodeThemeWrapper extends React.Component<{}, State> {
   state: State = {
     themeChoice: 'light',
     render: true,

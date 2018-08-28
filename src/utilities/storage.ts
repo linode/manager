@@ -1,4 +1,4 @@
-export function getStorage(key: string) {
+export const getStorage = (key: string) => {
   const item = window.localStorage.getItem(key);
   try {
     return JSON.parse(item as any);
@@ -7,6 +7,6 @@ export function getStorage(key: string) {
   }
 }
 
-export function setStorage(key: string, value: string) {
+export const setStorage = (key: string, value: string) => {
   return window.localStorage.setItem(key, value);
 }
