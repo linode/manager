@@ -69,7 +69,7 @@ describe('List Linodes Suite', () => {
         });
 
         it('should display launch console button', () => {
-            ListLinodes.linodeLabel.waitForVisible();
+            ListLinodes.linodeLabel.waitForVisible(constants.wait.normal);
             const consoleButton = ListLinodes.linode[0].$(ListLinodes.launchConsole.selector);
             expect(consoleButton.isVisible()).toBe(true);
         });

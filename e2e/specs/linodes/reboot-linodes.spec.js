@@ -63,8 +63,7 @@ describe('List Linodes - Actions - Reboot Suite', () => {
         });
 
         it('should update status on reboot to rebooting', () => {
-            const currentStatus = linodes[0].$(ListLinodes.status.selector).getAttribute('data-qa-status');
-            expect(currentStatus).toBe('rebooting');
+            browser.waitForVisible('[data-qa-status="rebooting"]', constants.wait.normal);
         });
 
         it('should hide action menu', () => {
