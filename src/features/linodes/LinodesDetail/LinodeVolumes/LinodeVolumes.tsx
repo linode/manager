@@ -26,8 +26,9 @@ import renderGuard from 'src/components/RenderGuard';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import Table from 'src/components/Table';
 import { events$, resetEventsPolling } from 'src/events';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { getLinodeConfigs, getLinodeVolumes } from 'src/services/linodes';
-import { attachVolume, cloneVolume, createVolume, deleteVolume, detachVolume, getVolumes, resizeVolume, updateVolume } from 'src/services/volumes';
+import { attachVolume, cloneVolume, createVolume, deleteVolume, detachVolume, resizeVolume, updateVolume } from 'src/services/volumes';
 import composeState from 'src/utilities/composeState';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -248,14 +249,14 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
   }
 
   detachVolume = () => {
-    const { updateVolumes } = this.props;
     const { updateDialog: { id } } = this.state;
     if (!id) { return; }
 
     detachVolume(id)
       .then(() => {
         this.closeUpdateDialog();
-        updateVolumes((volumes) => volumes.filter((v) => v.id !== id));
+        sendToast('Volume is being detached from this Linode.')
+        this.getVolumes();
       })
       .catch((errorResponse) => {
         const fallbackError = [{ reason: 'Unable to attach volume.' }];
@@ -870,7 +871,7 @@ const preloaded = PromiseLoader<Props & LinodeContextProps & VolumesContextProps
   linodeConfigs: (props) => getLinodeConfigs(props.linodeID)
     .then(response => response.data),
 
-  volumes: (props) => getVolumes()
+  volumes: (props) => getLinodeVolumes(props.linodeID)
     .then(response => response.data
       .filter(volume => volume.region === props.linodeRegion && volume.linode_id === null)),
 });
