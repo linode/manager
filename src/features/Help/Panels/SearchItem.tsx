@@ -33,6 +33,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     marginLeft: theme.spacing.unit / 2,
   },
   source: {
+    marginTop: theme.spacing.unit / 2,
     fontWeight: 700,
   },
   row: {

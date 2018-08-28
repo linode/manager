@@ -31,14 +31,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     }
   },
   searchItemHighlighted: {
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: theme.color.grey2,
     cursor: 'pointer',
-    '& div, & span': {
-      color: 'white',
-    },
-    '& em': {
-      color: theme.color.black,
-    }
   },
   textfield: {
     backgroundColor: theme.color.white,
@@ -55,6 +49,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     maxHeight: 500,
     '& [class*="formControl"]': {
       maxWidth: '100%',
+      '& > div': {
+        marginRight: 0,
+      },
     },
     [theme.breakpoints.up('md')]: {
       width: 500,
