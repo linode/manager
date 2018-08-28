@@ -21,6 +21,8 @@ import { updateProfile } from 'src/services/profile';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
+import Select from 'react-select';
+
 type ClassNames = 'root' | 'select' | 'title';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
@@ -153,17 +155,13 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
             Your current timezone is: <strong>{timezoneDisplay}</strong>.
           </Typography>
           <React.Fragment>
-            <EnhancedSelect
+            <Select
               className={classes.select}
               options={timezoneList}
-              errorText={timezoneError}
-              label='Timezone'
-              onSubmit={this.onSubmit}
-              value={updatedTimezone}
               placeholder={"Choose a timezone."}
-              handleSelect={this.handleTimezoneChange}
+              onChange={this.handleTimezoneChange}
               inputValue={inputValue}
-              onInputValueChange={this.onInputValueChange}
+              onInputChange={this.onInputValueChange}
               data-qa-tz-select
             />
             <ActionsPanel>
