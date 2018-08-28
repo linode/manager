@@ -35,8 +35,10 @@ export const getTicketsPage = (pagination: Linode.PaginationOptions = {}, open?:
         { status: 'open'},
         { status: 'new' },
       ],
+      '+order_by': 'updated',
+      '+order': 'desc'
     }
-    : { status: 'closed'}
+    : { status: 'closed', '+order_by': 'updated', '+order': 'desc'}
 
   return getTickets(pagination, filter).then((response) => response.data);
 }

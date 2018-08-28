@@ -1,5 +1,3 @@
-import * as moment from 'moment';
-import { sort } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -58,10 +56,6 @@ class TicketList extends React.Component<Props, State> {
     this.mounted = false;
   }
 
-  compareTickets = (a:Linode.SupportTicket, b:Linode.SupportTicket) => {
-    return moment(b.updated).diff(moment(a.updated));
-  }
-
   getLinkTargets = (entity:any) => {
     switch (entity.type) {
       case 'linode':
@@ -79,11 +73,6 @@ class TicketList extends React.Component<Props, State> {
     }
   }
 
-  getSortedTickets = (incoming: Linode.SupportTicket[]) => {
-    // Sort by when each ticket was last updated
-    return sort(this.compareTickets, incoming);
-  }
-
   getTickets = (page:number = this.state.page, pageSize:number = this.state.pageSize) => {
     const { tickets } = this.state;
     this.setState({ errors: undefined, loading: tickets === undefined});
@@ -94,7 +83,7 @@ class TicketList extends React.Component<Props, State> {
         
         this.setState({
           loading: false,
-          tickets: this.getSortedTickets(response.data),
+          tickets: response.data,
           errors: undefined,
           count: response.results,
           page: response.page,
@@ -156,7 +145,7 @@ class TicketList extends React.Component<Props, State> {
         <TableCell data-qa-support-entity>{this.renderEntityLink(ticket)}</TableCell>
         <TableCell data-qa-support-subject>{ticket.summary}</TableCell>
         <TableCell data-qa-support-date><DateTimeDisplay value={ticket.opened} format={formatString} /></TableCell>
-        <TableCell data-qa-support-updated><DateTimeDisplay value={ticket.opened} format={formatString} /></TableCell>
+        <TableCell data-qa-support-updated><DateTimeDisplay value={ticket.updated} format={formatString} /></TableCell>
         <TableCell />
       </TableRow>
     );
