@@ -131,17 +131,10 @@ class TicketList extends React.Component<Props, State> {
       : null
   }
 
-  renderTopic = (ticket: Linode.SupportTicket) => {
-    return ticket.entity
-      ? capitalize(ticket.entity.type)
-      : null;
-  }
-
   renderRow = (ticket: Linode.SupportTicket) => {
     return (
       <TableRow key={`ticket-${ticket.id}`} >
         <TableCell data-qa-support-id><Link to={`/support/tickets/${ticket.id}`}>{ticket.id}</Link></TableCell>
-        <TableCell data-qa-support-topic>{this.renderTopic(ticket)}</TableCell>
         <TableCell data-qa-support-entity>{this.renderEntityLink(ticket)}</TableCell>
         <TableCell data-qa-support-subject>{ticket.summary}</TableCell>
         <TableCell data-qa-support-date><DateTimeDisplay value={ticket.opened} format={formatString} /></TableCell>
@@ -161,7 +154,6 @@ class TicketList extends React.Component<Props, State> {
             <TableHead>
               <TableRow>
                 <TableCell data-qa-support-id-header>Ticket ID</TableCell>
-                <TableCell data-qa-support-topic-header>Product</TableCell>
                 <TableCell data-qa-support-regarding-header>Regarding</TableCell>
                 <TableCell data-qa-support-subject-header style={{ minWidth: 200 }}>Subject</TableCell>
                 <TableCell data-qa-support-date-header noWrap>Date Created</TableCell>
