@@ -23,13 +23,7 @@ describe('Header - Search - Volumes Suite', () => {
         LinodeDetail
             .landingElemsDisplay()
             .changeTab('Volumes');
-        try {
-            VolumeDetail.volumeCellElem.isVisible();
-        } catch (err) {
-            if (!VolumeDetail.placeholderText.waitForVisible(constants.wait.normal)) {
-                throw err;
-            }
-        }
+        browser.waitForVisible('[data-qa-circle-progress]', constants.wait.normal, true);
     }
 
     afterAll(() => {
@@ -41,7 +35,6 @@ describe('Header - Search - Volumes Suite', () => {
         
         apiCreateLinode();
 
-        ListLinodes.linodesDisplay();
         linodeName = ListLinodes.linode[0].$(ListLinodes.linodeLabel.selector).getText();
 
         ListLinodes.shutdownIfRunning(ListLinodes.linode[0]);

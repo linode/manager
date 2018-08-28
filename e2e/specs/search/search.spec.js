@@ -49,15 +49,19 @@ describe('Header - Search Suite', () => {
     });
 
     it('should select result on arrow down', () => {
+        if (!browser.options.desiredCapabilities.browserName.includes('chrome')) {
+            pending();
+        }
         SearchBar.selectByKeyDown();
     });
 
     it('should navigate to result on enter', () => {
-        if (browser.options.desiredCapabilities.browserName.includes('chrome')) {
-            SearchBar.searchInput.setValue('\uE006');
-        } else {
-            browser.keys('Enter');
+        if (!browser.options.desiredCapabilities.browserName.includes('chrome')) {
+            pending();
         }
+
+        SearchBar.searchInput.setValue('\uE006');
+
         const currentUrl = browser.getUrl();
         
         browser.waitUntil(function() {
@@ -70,7 +74,7 @@ describe('Header - Search Suite', () => {
         const currentUrl = browser.getUrl();
         
         SearchBar.executeSearch(testLinode);
-        browser.waitForVisible('[data-qa-suggestion]');
+        browser.waitForVisible('[data-qa-suggestion]', constants.wait.normal);
 
         SearchBar.suggestions[0].click();
 

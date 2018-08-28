@@ -91,8 +91,9 @@ export class VolumeDetail extends Page {
         } else {
             this.createIconLink.click();
         }
-        this.drawerTitle.waitForVisible();
+        this.drawerTitle.waitForVisible(constants.wait.normal);
 
+        browser.waitForVisible('[data-qa-volume-label] input', constants.wait.normal);
         browser.trySetValue('[data-qa-volume-label] input', volume.label);
         browser.trySetValue('[data-qa-size] input', volume.size);
 
