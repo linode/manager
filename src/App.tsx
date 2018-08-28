@@ -11,6 +11,7 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 
 import DefaultLoader from 'src/components/DefaultLoader';
 import DocsSidebar from 'src/components/DocsSidebar';
+import { DocumentTitleSegment, withDocumentTitleProvider } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import SideMenu from 'src/components/SideMenu';
@@ -26,7 +27,7 @@ import { getProfile } from 'src/services/profile';
 import { request, response } from 'src/store/reducers/resources';
 import composeState from 'src/utilities/composeState';
 
-import BetaNotification from './BetaNotification';
+import BetaNotification from 'src/BetaNotification';
 
 shim(); // allows for .finally() usage
 
@@ -154,8 +155,8 @@ interface ConnectedProps {
 }
 
 interface State {
-  menuOpen: Boolean;
-  betaNotification: Boolean;
+  menuOpen: boolean;
+  betaNotification: boolean;
   typesContext: WithTypesContext;
   regionsContext: WithRegionsContext;
 }
@@ -186,7 +187,7 @@ const L = {
 export class App extends React.Component<CombinedProps, State> {
   composeState = composeState;
 
-  state = {
+  state: State = {
     menuOpen: false,
     betaNotification: false,
     typesContext: {
@@ -236,7 +237,7 @@ export class App extends React.Component<CombinedProps, State> {
           });
       },
       update: () => null, /** @todo */
-    }
+    },
   };
 
   componentDidMount() {
@@ -279,6 +280,7 @@ export class App extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
+        <DocumentTitleSegment segment="Linode Manager" />
         {longLivedLoaded &&
           <React.Fragment>
             <TypesProvider value={this.state.typesContext}>
@@ -349,4 +351,5 @@ export const styled = withStyles(styles, { withTheme: true });
 export default compose(
   connected,
   styled,
+  withDocumentTitleProvider,
 )(App);

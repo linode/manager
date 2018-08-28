@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.32.1] - 2018-08-27
+### Added:
+- Project version link as been added to the global footer.
+- Enable backups from the list Linodes page.
+- Create a domain record from the global "Create" button.
+- Users can now make a payment via Paypal.
+- Update document title based on location within the application.
+- Support
+  - Added "Get Help" link to primary navigation.
+  - Users can now reply to support tickets and attach files.
+
+### Changed:
+- "Managed" item removed from primary navigation unless user already has the managed service.
+- "Account security" was renamed "Whitelist IP (legacy)" to better clarify intent.
+
+### Fixed:
+- Bug during NodeBalancer creation that would prevent the user from creating a NodeBalancer.
+- Bug where the UI would not update after allocating a new private IP.
+
 ## [0.31.5] - 2018-08-16
 ### Fixed:
 - Various bugfixes for Account information display
