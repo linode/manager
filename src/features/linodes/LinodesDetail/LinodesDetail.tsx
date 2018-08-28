@@ -35,7 +35,7 @@ import { Requestable } from 'src/requestableContext';
 import { getImage } from 'src/services/images';
 import {
   getLinode, getLinodeConfigs, getLinodeDisks,
-  getLinodeVolumes, getType, renameLinode
+  getLinodeVolumes, getType, renameLinode, startMutation,
 } from 'src/services/linodes';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -52,8 +52,8 @@ import LinodeSettings from './LinodeSettings';
 import LinodeSummary from './LinodeSummary';
 import LinodeBusyStatus from './LinodeSummary/LinodeBusyStatus';
 import LinodeVolumes from './LinodeVolumes';
+import MutateDrawer from './MutateDrawer';
 import reloadableWithRouter from './reloadableWithRouter';
-import UpgradeDrawer from './UpgradeDrawer';
 
 interface ConfigDrawerState {
   open: boolean;
@@ -63,12 +63,18 @@ interface ConfigDrawerState {
   action?: (id: number) => void;
 }
 
-interface UpgradeInfo {
+interface MutateInfo {
   vcpus: number | null;
   memory: number | null;
   disk: number | null;
   transfer: number | null;
   network_out: number | null;
+}
+
+interface MutateDrawer {
+  open: boolean;
+  loading: boolean;
+  error: string;
 }
 
 interface State {
@@ -82,10 +88,11 @@ interface State {
   configDrawer: ConfigDrawerState;
   labelInput: { label: string; errorText: string; };
   notifications?: Linode.Notification[];
-  showPendingUpgrade: boolean;
-  upgradeInfo: UpgradeInfo | null;
-  upgradeDrawerOpen: boolean;
+  showPendingMutation: boolean;
+  mutateInfo: MutateInfo | null;
+  mutateDrawer: MutateDrawer
   currentNetworkOut: number | null;
+  mutateSuccess?: string;
 }
 
 interface MatchProps { linodeId?: number };
@@ -398,9 +405,13 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       label: '',
       errorText: '',
     },
-    showPendingUpgrade: false,
-    upgradeInfo: null,
-    upgradeDrawerOpen: false,
+    showPendingMutation: false,
+    mutateInfo: null,
+    mutateDrawer: {
+      open: false,
+      loading: false,
+      error: '',
+    },
     currentNetworkOut: null,
   };
 
@@ -414,7 +425,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     return haveAnyBeenModified<State>(
       this.state,
       nextState,
-      ['context', 'configDrawer', 'labelInput', 'upgradeDrawerOpen'],
+      ['context', 'configDrawer', 'labelInput', 'mutateDrawer'],
     )
       || haveAnyBeenModified<Location>(location, nextLocation, ['pathname', 'search']);
   }
@@ -438,6 +449,8 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     if (!!linode
       && prevState.context.linode.data !== linode
       && linode.type) {
+      console.log('new linode data');
+      console.log(linode);
       getType(linode.type)
         .then((currentType: Linode.LinodeType) => {
           const typeIsDeprecated = currentType.successor !== null;
@@ -450,10 +463,10 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               .then((successorData: Linode.LinodeType) => {
                 // finally show the notice to the user with the upgrade info
                 this.setState({
-                  showPendingUpgrade: true,
+                  showPendingMutation: true,
                   currentNetworkOut: currentType.network_out,
                   // data is only relevant if the upgrade data is different from the current type's data
-                  upgradeInfo: {
+                  mutateInfo: {
                     vcpus: (successorData.vcpus !== currentType.vcpus) ? successorData.vcpus : null,
                     network_out: (successorData.network_out !== currentType.network_out) ? successorData.network_out : null,
                     disk: (successorData.disk !== currentType.disk) ? successorData.disk : null,
@@ -629,12 +642,58 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     lishLaunch(linode!.id);
   }
 
-  openUpgradeDrawer = () => {
-    this.setState({ upgradeDrawerOpen: true });
+  openMutateDrawer = () => {
+    this.setState({ mutateDrawer: { ...this.state.mutateDrawer, open: true } });
   }
 
-  closeUpgradeDrawer = () => {
-    this.setState({ upgradeDrawerOpen: false });
+  closeMutateDrawer = () => {
+    this.setState({
+      mutateDrawer: {
+        ...this.state.mutateDrawer,
+        open: false,
+        error: '',
+      }
+    });
+  }
+
+  initMutation = () => {
+    const { mutateDrawer, context: { linode } } = this.state;
+
+    this.setState({
+      mutateDrawer: {
+        ...mutateDrawer,
+        loading: true,
+        error: '',
+      }
+    })
+    /*
+    * It's okay to disregard the possiblity of linode
+    * being undefined. The upgrade message won't appear unless
+    * it's undefined
+    */
+    startMutation(linode.data!.id)
+      .then(data => {
+        linode.request();
+        this.setState({
+          mutateDrawer: {
+            ...mutateDrawer,
+            open: false,
+            error: '',
+            loading: false,
+          },
+          // showPendingMutation: false,
+          mutateSuccess: 'Linode Mutation initiated',
+        })
+      })
+      .catch(e => {
+        this.setState({
+          mutateDrawer: {
+            ...mutateDrawer,
+            loading: false,
+            error: 'Mutation could not be initiated. Please try again later.'
+          }
+        })
+      });
   }
 
   render() {
@@ -642,8 +701,8 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     const {
       labelInput,
       configDrawer,
-      upgradeDrawerOpen,
-      upgradeInfo,
+      mutateDrawer,
+      mutateInfo,
       context: {
         volumes: {
           data: volumes,
@@ -735,12 +794,15 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
             <ImageProvider value={this.state.context.image}>
               <LinodeProvider value={this.state.context.linode}>
                 <VolumesProvider value={this.state.context.volumes}>
-                  {(this.state.showPendingUpgrade) &&
+                  {this.state.mutateSuccess &&
+                    <Notice success text={this.state.mutateSuccess} />
+                  }
+                  {this.state.showPendingMutation && linode &&
                     <Notice warning>
-                      This Linode has pending upgrades available. To learn more about
-                    this upgrade and what it includes,
-                      <span className={classes.link} onClick={this.openUpgradeDrawer}>
-                        {` click here`}
+                      {`This Linode has pending upgrades available. To learn more about
+                      this upgrade and what it includes, `}
+                      <span className={classes.link} onClick={this.openMutateDrawer}>
+                        click here
                       </span>
                     </Notice>
                   }
@@ -824,11 +886,14 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                     selected={String(configDrawer.selected)}
                     error={configDrawer.error}
                   />
-                  {(this.state.showPendingUpgrade) &&
-                    <UpgradeDrawer
-                      open={upgradeDrawerOpen}
-                      handleClose={this.closeUpgradeDrawer}
-                      upgradeInfo={upgradeInfo!}
+                  {this.state.showPendingMutation && linode &&
+                    <MutateDrawer
+                      linodeId={linode.id}
+                      open={mutateDrawer.open}
+                      loading={mutateDrawer.loading}
+                      error={mutateDrawer.error}
+                      handleClose={this.closeMutateDrawer}
+                      mutateInfo={mutateInfo!}
                       currentTypeInfo={{
                         vcpus: linode.specs.vcpus,
                         transfer: linode.specs.transfer,
@@ -836,6 +901,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                         memory: linode.specs.memory,
                         network_out: this.state.currentNetworkOut,
                       }}
+                      initMutation={this.initMutation}
                     />
                   }
                 </VolumesProvider>
