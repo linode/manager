@@ -230,34 +230,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     localStorage.setItem('linodesViewStyle', style);
   }
 
-  renderListView = (
-    linodes: Linode.Linode[],
-    images: Linode.Image[],
-  ) => {
-    return (
-      <LinodesListView
-        linodes={linodes}
-        images={images}
-        openConfigDrawer={this.openConfigDrawer}
-        toggleConfirmation={this.toggleDialog}
-      />
-    );
-  }
-
-  renderGridView = (
-    linodes: Linode.Linode[],
-    images: Linode.Image[],
-  ) => {
-    return (
-      <LinodesGridView
-        linodes={linodes}
-        images={images}
-        openConfigDrawer={this.openConfigDrawer}
-        toggleConfirmation={this.toggleDialog}
-      />
-    );
-  }
-
   getLinodes = (page = 1, pageSize = 25) => {
     const lastPage = Math.ceil(this.state.results / pageSize);
     getLinodes({
@@ -322,6 +294,34 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       powerOffLinode(selectedLinodeId!, selectedLinodeLabel);
     }
     this.setState({ powerAlertOpen: false });
+  }
+
+  renderListView = (
+    linodes: Linode.Linode[],
+    images: Linode.Image[],
+  ) => {
+    return (
+      <LinodesListView
+        linodes={linodes}
+        images={images}
+        openConfigDrawer={this.openConfigDrawer}
+        toggleConfirmation={this.toggleDialog}
+      />
+    );
+  }
+
+  renderGridView = (
+    linodes: Linode.Linode[],
+    images: Linode.Image[],
+  ) => {
+    return (
+      <LinodesGridView
+        linodes={linodes}
+        images={images}
+        openConfigDrawer={this.openConfigDrawer}
+        toggleConfirmation={this.toggleDialog}
+      />
+    );
   }
 
   render() {

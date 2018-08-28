@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
+import { lishLaunch } from 'src/features/Lish';
+
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 import { powerOnLinode } from './powerActions';
@@ -26,7 +28,7 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
         {
           title: 'Launch Console',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            push(`/linodes/${linodeId}/glish`);
+            lishLaunch(linodeId);
             e.preventDefault();
           },
         },
