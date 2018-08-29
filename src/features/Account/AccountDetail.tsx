@@ -129,10 +129,7 @@ export class AccountDetail extends React.Component<CombinedProps, State> {
           <Typography role="header" variant="headline" className={classes.heading}>Billing</Typography>
           <SummaryPanel />
 
-          <Typography role="header" variant="title" className={classes.heading}>Billing Account</Typography>
           <UpdateContactInformationPanel />
-
-          <Typography role="header" variant="title" className={classes.heading}>Billing Information</Typography>
           <UpdateCreditCardPanel />
           <MakeAPaymentPanel />
           <RecentInvoicesPanel />
