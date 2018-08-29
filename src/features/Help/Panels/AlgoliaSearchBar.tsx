@@ -31,14 +31,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     }
   },
   searchItemHighlighted: {
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: theme.color.grey2,
     cursor: 'pointer',
-    '& div, & span': {
-      color: 'white',
-    },
-    '& em': {
-      color: theme.color.black,
-    }
   },
   textfield: {
     backgroundColor: theme.color.white,
@@ -55,6 +49,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     maxHeight: 500,
     '& [class*="formControl"]': {
       maxWidth: '100%',
+      '& > div': {
+        marginRight: 0,
+      },
     },
     [theme.breakpoints.up('md')]: {
       width: 500,
@@ -77,7 +74,8 @@ type index = 'linode-docs';
 type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
 
 class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
-  searchIndex:any = null;
+  searchIndex: any = null;
+  mounted: boolean = false;
   state: State = {
     enabled: true,
     value: '',
@@ -86,6 +84,7 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
   };
 
   componentDidMount() {
+    this.mounted = true;
     // initialize Algolia API Client
     try {
       const client = Algolia(ALGOLIA_APPLICATION_ID, ALGOLIA_SEARCH_KEY);
@@ -100,12 +99,17 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
     }
   }
 
+  componentWillUnmount() {
+    this.mounted = false;
+  }
+
   getDataFromOptions = () => {
     const { options, inputValue } = this.state;
     return concat(options,[{value: 'search', label: inputValue, data: { source: 'finalLink'}}]);
   }
 
   searchAlgolia = (inputValue:string) => {
+    if (!this.mounted) { return; }
     if (!inputValue) { 
       this.setState({ options: [] }); 
       return; 
@@ -121,6 +125,7 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
   }
 
   searchSuccess = (err:any, content:any) => {
+    if (!this.mounted) { return; }
     if (err) {
       /*
       * Errors from Algolia have the format: {'message':string, 'code':number}
@@ -145,6 +150,7 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
   }
 
   onInputValueChange = (inputValue:string) => {
+    if (!this.mounted) { return; }
     this.setState({ inputValue });
     this.searchAlgolia(inputValue);
   }

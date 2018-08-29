@@ -447,7 +447,6 @@ const LinodeTheme: Linode.Theme = {
         },
         '& svg': {
           fontSize: 18,
-          cursor: 'pointer',
           color: primaryColors.main,
           '&:hover': {
             color: '#5E9AEA',

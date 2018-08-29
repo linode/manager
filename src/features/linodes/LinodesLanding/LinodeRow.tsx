@@ -73,7 +73,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     flag: {
       marginRight: 10,
       transition: theme.transitions.create(['opacity']),
-      opaity: 1,
+      opacity: 1,
       '&:hover': {
         opacity: .75,
       },
