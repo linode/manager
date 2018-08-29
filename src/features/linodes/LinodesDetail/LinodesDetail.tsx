@@ -30,6 +30,7 @@ import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawe
 import { newLinodeEvents } from 'src/features/linodes/events';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 import { lishLaunch } from 'src/features/Lish';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
 import notifications$ from 'src/notifications';
 import { Requestable } from 'src/requestableContext';
 import { getImage } from 'src/services/images';
@@ -92,7 +93,6 @@ interface State {
   mutateInfo: MutateInfo | null;
   mutateDrawer: MutateDrawer
   currentNetworkOut: number | null;
-  mutateSuccess?: string;
 }
 
 interface MatchProps { linodeId?: number };
@@ -681,9 +681,8 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
             error: '',
             loading: false,
           },
-          // showPendingMutation: false,
-          mutateSuccess: 'Linode Mutation initiated',
-        })
+        });
+        sendToast('Linode Mutation initiated')
       })
       .catch(e => {
         this.setState({
@@ -794,9 +793,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
             <ImageProvider value={this.state.context.image}>
               <LinodeProvider value={this.state.context.linode}>
                 <VolumesProvider value={this.state.context.volumes}>
-                  {this.state.mutateSuccess &&
-                    <Notice success text={this.state.mutateSuccess} />
-                  }
                   {this.state.showPendingMutation && linode &&
                     <Notice warning>
                       {`This Linode has pending upgrades available. To learn more about
