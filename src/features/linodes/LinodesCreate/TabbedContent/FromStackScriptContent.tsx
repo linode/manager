@@ -6,6 +6,7 @@ import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
+import AccessPanel from 'src/components/AccessPanel';
 import CheckoutBar from 'src/components/CheckoutBar';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
@@ -20,7 +21,6 @@ import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import AddonsPanel from '../AddonsPanel';
-import PasswordPanel from '../PasswordPanel';
 import SelectImagePanel from '../SelectImagePanel';
 import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
 
@@ -298,7 +298,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
 
-    
+
     /*
     * errors with UDFs have dynamic keys
     * for exmaple, if there are UDFs that aren't filled out, you can can
@@ -409,7 +409,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
             }}
             updateFor={[label]}
           />
-          <PasswordPanel
+          <AccessPanel
             error={hasErrorFor('root_pass')}
             updateFor={[password, errors]}
             password={password}

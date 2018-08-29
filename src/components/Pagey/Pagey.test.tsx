@@ -75,45 +75,71 @@ describe('Paginator 2: Pagement Day', () => {
   });
 
   describe('when handlePageChange is called', () => {
-    const mockData: Linode.ResourcePage<any> = {
-      page: 1, pages: 1, results: 0, data: []
-    };
-
-    const { wrapper, mockRequest } = setup(jest.fn((() => Promise.resolve(mockData))))
-
-    const handlePageChange = wrapper.prop('handlePageChange');
-
-    handlePageChange(9);
-
-    wrapper.update();
 
     it('should update page with provided argument', () => {
+      const mockData: Linode.ResourcePage<any> = {
+        page: 1, pages: 1, results: 0, data: []
+      };
+
+      const { wrapper } = setup(jest.fn((() => Promise.resolve(mockData))))
+
+      const handlePageChange = wrapper.prop('handlePageChange');
+
+      handlePageChange(9);
+
+      wrapper.update();
+
       expect(wrapper.prop('page')).toEqual(9);
     });
 
     it('should result in the request being called with updated params', () => {
+      const mockData: Linode.ResourcePage<any> = {
+        page: 1, pages: 1, results: 0, data: []
+      };
+
+      const { wrapper, mockRequest } = setup(jest.fn((() => Promise.resolve(mockData))))
+
+      const handlePageChange = wrapper.prop('handlePageChange');
+
+      handlePageChange(9);
+
+      wrapper.update();
+
       expect(mockRequest).toBeCalledWith({ page: 9, page_size: 25 }, {});
     });
   });
 
   describe('when handlePageSizeChange is called', () => {
-    const mockData: Linode.ResourcePage<any> = {
-      page: 1, pages: 1, results: 0, data: []
-    };
-
-    const { wrapper, mockRequest } = setup(jest.fn((() => Promise.resolve(mockData))));
-
-    const handlePageSizeChange = wrapper.prop('handlePageSizeChange');
-
-    handlePageSizeChange(100);
-
-    wrapper.update();
 
     it('should update pageSize with provided argument', () => {
+      const mockData: Linode.ResourcePage<any> = {
+        page: 1, pages: 1, results: 0, data: []
+      };
+
+      const { wrapper } = setup(jest.fn((() => Promise.resolve(mockData))));
+
+      const handlePageSizeChange = wrapper.prop('handlePageSizeChange');
+
+      handlePageSizeChange(100);
+
+      wrapper.update();
+
       expect(wrapper.prop('pageSize')).toEqual(100);
     });
 
     it('should result in the request being called with updated params', () => {
+      const mockData: Linode.ResourcePage<any> = {
+        page: 1, pages: 1, results: 0, data: []
+      };
+
+      const { wrapper, mockRequest } = setup(jest.fn((() => Promise.resolve(mockData))));
+
+      const handlePageSizeChange = wrapper.prop('handlePageSizeChange');
+
+      handlePageSizeChange(100);
+
+      wrapper.update();
+
       expect(mockRequest).toBeCalledWith({ page: 1, page_size: 100 }, {});
     });
   })
@@ -181,26 +207,26 @@ describe('Paginator 2: Pagement Day', () => {
       expect(updateOrderBy).toBeInstanceOf(Function);
     });
 
-    it('should send request with sort by prop asecending on first call', async () => {
-      await updateOrderBy('label');
+    it('should send request with sort by prop asecending on first call', () => {
+      updateOrderBy('label');
 
       expect(mockRequest).toHaveBeenCalledWith({ page: 1, page_size: 25 }, { '+order_by': 'label', '+order': 'asc' })
     });
 
-    it('should send request with sort by prop descending on second call', async () => {
-      await updateOrderBy('label');
+    it('should send request with sort by prop descending on second call', () => {
+      updateOrderBy('label');
 
       expect(mockRequest).toHaveBeenCalledWith({ page: 1, page_size: 25 }, { '+order_by': 'label', '+order': 'desc' })
     });
 
-    it('should send request with sort by prop ascending on third call', async () => {
-      await updateOrderBy('label');
+    it('should send request with sort by prop ascending on third call', () => {
+      updateOrderBy('label');
 
       expect(mockRequest).toHaveBeenCalledWith({ page: 1, page_size: 25 }, { '+order_by': 'label', '+order': 'asc' })
     });
 
-    it('should send request with sort by prop ascending on first call of new label', async () => {
-      await updateOrderBy('other');
+    it('should send request with sort by prop ascending on first call of new label', () => {
+      updateOrderBy('other');
 
       expect(mockRequest).toHaveBeenCalledWith({ page: 1, page_size: 25 }, { '+order_by': 'other', '+order': 'asc' })
     });
