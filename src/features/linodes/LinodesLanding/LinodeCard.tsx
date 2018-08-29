@@ -225,7 +225,7 @@ class LinodeCard extends React.Component<CombinedProps> {
 
   handleConsoleButtonClick = () => {
     const { linodeId } = this.props;
-    lishLaunch(`${linodeId}`);
+    lishLaunch(linodeId);
   }
 
   handleRebootButtonClick = () => {

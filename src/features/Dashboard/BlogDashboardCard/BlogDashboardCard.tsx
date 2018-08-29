@@ -64,7 +64,7 @@ class BlogDashboardCard extends React.Component<CombinedProps, State> {
 
     return (
       <DashboardCard
-        title="Product News"
+        title="Blog"
         headerAction={this.renderAction}
       >
         {items.map(this.renderItem)}
