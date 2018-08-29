@@ -13,9 +13,9 @@ import TableCell from 'src/components/TableCell';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
+import { ISO_FORMAT } from 'src/constants';
 import { getTicketsPage } from 'src/services/support';
 import capitalize from 'src/utilities/capitalize';
-import { formatString } from 'src/utilities/format-date-iso8601';
 
 interface Props {
   filterStatus: 'open' | 'closed';
@@ -144,8 +144,8 @@ class TicketList extends React.Component<Props, State> {
         <TableCell data-qa-support-topic>{this.renderTopic(ticket)}</TableCell>
         <TableCell data-qa-support-entity>{this.renderEntityLink(ticket)}</TableCell>
         <TableCell data-qa-support-subject>{ticket.summary}</TableCell>
-        <TableCell data-qa-support-date><DateTimeDisplay value={ticket.opened} format={formatString} /></TableCell>
-        <TableCell data-qa-support-updated><DateTimeDisplay value={ticket.updated} format={formatString} /></TableCell>
+        <TableCell data-qa-support-date><DateTimeDisplay value={ticket.opened} format={ISO_FORMAT} /></TableCell>
+        <TableCell data-qa-support-updated><DateTimeDisplay value={ticket.updated} format={ISO_FORMAT} /></TableCell>
         <TableCell />
       </TableRow>
     );
