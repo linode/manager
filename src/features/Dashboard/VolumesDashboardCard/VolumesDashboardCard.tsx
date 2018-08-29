@@ -68,7 +68,7 @@ class VolumesDashboardCard extends React.Component<CombinedProps, State> {
       this.setState({ loading: true });
     }
 
-    getVolumes({ page_size: 25 }, { '+order_by': 'updated', '+order': 'desc' })
+    getVolumes({ page_size: 25 }, { '+order_by': 'label', '+order': 'asc' })
       .then(({ data, results }) => {
         if (!this.mounted) { return; }
         this.setState({
