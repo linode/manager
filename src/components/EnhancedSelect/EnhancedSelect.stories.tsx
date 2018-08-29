@@ -5,6 +5,8 @@ import ThemeDecorator from '../../utilities/storybookDecorators';
 
 import EnhancedSelect from './EnhancedSelect2';
 
+import timezones from 'src/assets/timezones/timezones';
+
 const data = [
   {
     value: 'apple',
@@ -20,8 +22,15 @@ const data = [
   }
 ]
 
+const data2 = timezones.map((tz:any) => {
+  return { value: tz.value, label: tz.name };
+});
+
 class Example extends React.Component {
-  state = { open: false };
+  state = { 
+    open: false,
+    options: data2.slice(0,15),
+  };
 
   toggleDrawer = (v: boolean) => (e: React.MouseEvent<any>) => {
     this.setState({ open: v });
@@ -32,12 +41,19 @@ class Example extends React.Component {
     console.log(`${selected} has been selected`);
   }
 
+  getNext = (inputValue:string, page:number) => {
+    const increment = 25;
+    return data2.slice(0, increment * page + 1);
+  }
+
   render() {
     return (
       <React.Fragment>
-        <EnhancedSelect 
-          options={data}
+        <EnhancedSelect
+          label="Example"
+          placeholder="Choose a timezone"
           errorText="this is an error"
+          options={data2}
         />
       </React.Fragment>
     );

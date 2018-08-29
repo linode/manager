@@ -9,46 +9,6 @@ import Typography from '@material-ui/core/Typography';
 
 import TextField from 'src/components/TextField';
 
-const suggestions = [
-  { label: 'Afghanistan' },
-  { label: 'Aland Islands' },
-  { label: 'Albania' },
-  { label: 'Algeria' },
-  { label: 'American Samoa' },
-  { label: 'Andorra' },
-  { label: 'Angola' },
-  { label: 'Anguilla' },
-  { label: 'Antarctica' },
-  { label: 'Antigua and Barbuda' },
-  { label: 'Argentina' },
-  { label: 'Armenia' },
-  { label: 'Aruba' },
-  { label: 'Australia' },
-  { label: 'Austria' },
-  { label: 'Azerbaijan' },
-  { label: 'Bahamas' },
-  { label: 'Bahrain' },
-  { label: 'Bangladesh' },
-  { label: 'Barbados' },
-  { label: 'Belarus' },
-  { label: 'Belgium' },
-  { label: 'Belize' },
-  { label: 'Benin' },
-  { label: 'Bermuda' },
-  { label: 'Bhutan' },
-  { label: 'Bolivia, Plurinational State of' },
-  { label: 'Bonaire, Sint Eustatius and Saba' },
-  { label: 'Bosnia and Herzegovina' },
-  { label: 'Botswana' },
-  { label: 'Bouvet Island' },
-  { label: 'Brazil' },
-  { label: 'British Indian Ocean Territory' },
-  { label: 'Brunei Darussalam' },
-].map(suggestion => ({
-  value: suggestion.label,
-  label: suggestion.label,
-}));
-
 interface Item {
   value: string;
   label: string;
@@ -109,7 +69,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-const NoOptionsMessage = (props) => {
+const NoOptionsMessage = (props:any) => {
   return (
     <Typography
       color="textSecondary"
@@ -125,7 +85,7 @@ const inputComponent = ({ inputRef, ...props }) => {
   return <div ref={inputRef} {...props} />;
 }
 
-const Control = (props) => {
+const Control = (props:any) => {
   return (
     <TextField
       fullWidth
@@ -143,7 +103,7 @@ const Control = (props) => {
   );
 }
 
-const Option = (props) => {
+const Option = (props:any) => {
   return (
     <MenuItem
       buttonRef={props.innerRef}
@@ -159,7 +119,7 @@ const Option = (props) => {
   );
 }
 
-const Placeholder = (props) => {
+const Placeholder = (props:any) => {
   return (
     <Typography
       color="textSecondary"
@@ -171,11 +131,11 @@ const Placeholder = (props) => {
   );
 }
 
-const ValueContainer = (props) => {
+const ValueContainer = (props:any) => {
   return <div className={props.selectProps.classes.valueContainer}>{props.children}</div>;
 }
 
-const MultiValue = (props) => {
+const MultiValue = (props:any) => {
   return (
     <Chip
       tabIndex={-1}
@@ -189,7 +149,7 @@ const MultiValue = (props) => {
   );
 }
 
-const Menu = (props) => {
+const Menu = (props:any) => {
   return (
     <Paper square className={props.selectProps.classes.paper} {...props.innerProps}>
       {props.children}
@@ -208,7 +168,12 @@ const components = {
 };
 
 interface Props {
-
+  options: Item[];
+  label: string;
+  placeholder?: string;
+  errorText: string;
+  getNext?: (currentIndex:number, nextAmount:number) => void;
+  resultLimit?: number;
 }
 
 interface State {
@@ -229,31 +194,26 @@ class IntegrationReactSelect extends React.Component<CombinedProps,State> {
   };
 
   render() {
-    const { classes, theme } = this.props;
-
-    const selectStyles = {
-      input: base => ({
-        ...base,
-        color: theme!.palette.text.primary,
-      }),
-    };
+    const { classes, errorText, label, placeholder, options, } = this.props;
 
     return (
       <div className={classes.root}>
           <Select
             classes={classes}
-            styles={selectStyles}
             textFieldProps={{
-              label: 'Label',
+              label,
+              errorText,
               InputLabelProps: {
                 shrink: true,
               },
             }}
-            options={suggestions}
+            options={options}
             components={components}
             value={this.state.value}
             onChange={this.handleChange}
-            placeholder="Select multiple countries"
+            isClearable
+            isSearchable
+            placeholder={placeholder || 'Select a value...'}
             isMulti
           />
       </div>
