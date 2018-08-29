@@ -133,9 +133,9 @@ class TicketList extends React.Component<Props, State> {
   renderRow = (ticket: Linode.SupportTicket) => {
     return (
       <TableRow key={`ticket-${ticket.id}`} >
+        <TableCell data-qa-support-subject>{ticket.summary}</TableCell>
         <TableCell data-qa-support-id><Link to={`/support/tickets/${ticket.id}`}>{ticket.id}</Link></TableCell>
         <TableCell data-qa-support-entity>{this.renderEntityLink(ticket)}</TableCell>
-        <TableCell data-qa-support-subject>{ticket.summary}</TableCell>
         <TableCell data-qa-support-date><DateTimeDisplay value={ticket.opened} format={formatString} /></TableCell>
         <TableCell data-qa-support-updated><DateTimeDisplay value={ticket.updated} format={formatString} /></TableCell>
         <TableCell />
@@ -152,9 +152,9 @@ class TicketList extends React.Component<Props, State> {
           <Table aria-label="List of Tickets">
             <TableHead>
               <TableRow>
+                <TableCell data-qa-support-subject-header style={{ minWidth: 200 }}>Subject</TableCell>
                 <TableCell data-qa-support-id-header>Ticket ID</TableCell>
                 <TableCell data-qa-support-regarding-header>Regarding</TableCell>
-                <TableCell data-qa-support-subject-header style={{ minWidth: 200 }}>Subject</TableCell>
                 <TableCell data-qa-support-date-header noWrap>Date Created</TableCell>
                 <TableCell data-qa-support-updated-header noWrap>Last Updated</TableCell>
                 <TableCell />
