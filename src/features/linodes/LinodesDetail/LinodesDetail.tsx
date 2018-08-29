@@ -425,7 +425,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     return haveAnyBeenModified<State>(
       this.state,
       nextState,
-      ['context', 'configDrawer', 'labelInput', 'mutateDrawer'],
+      ['context', 'configDrawer', 'labelInput', 'mutateDrawer', 'showPendingMutation'],
     )
       || haveAnyBeenModified<Location>(location, nextLocation, ['pathname', 'search']);
   }
@@ -449,20 +449,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     if (!!linode
       && prevState.context.linode.data !== linode
       && linode.type) {
-      console.log('new linode data');
-      console.log(linode);
-      /** @todo remove this. For the purposes of testing */
-      this.setState({
-        showPendingMutation: true,
-        currentNetworkOut: 1000,
-        mutateInfo: {
-          vcpus: 100,
-          network_out: 1000,
-          disk: 1000,
-          transfer: 1000,
-          memory: 100,
-        }
-      })
       getType(linode.type)
         .then((currentType: Linode.LinodeType) => {
           const typeIsDeprecated = currentType.successor !== null;
@@ -490,6 +476,8 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               // no action needed. Worse case scenario, the user doesn't
               // see the notice
               .catch(e => e);
+          } else { // type is not deprecated
+            this.setState({ showPendingMutation: false })
           }
         })
         // no action needed. Worse case scenario, the user doesn't
