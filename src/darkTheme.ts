@@ -9,6 +9,7 @@ const primaryColors = {
   text: '#ffffff',
   headline: '#f4f4f4',
   divider: '#222222',
+  offBlack: '#fff',
 }
 
 const LinodeTheme: Linode.Theme = {
@@ -779,6 +780,24 @@ const LinodeTheme: Linode.Theme = {
     MuiTableHead: {
       root: {
         backgroundColor: '#32363C',
+      },
+    },
+    MuiTableRow: {
+      root: {
+        position: 'relative',
+        zIndex: 1,
+        '&:hover': {
+          '&$hover': {
+            color: primaryColors.offBlack,
+          },
+        },
+      },
+      hover: {
+        cursor: 'pointer',
+        '& a': {
+          color: primaryColors.offBlack,
+          fontWeight: 700,
+        },
       },
     },
     MuiTabs: {

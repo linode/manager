@@ -1,10 +1,6 @@
 import * as React from 'react';
 
-function getDisplayName(Component: React.ComponentType) {
-  return Component.displayName ||
-    Component.name ||
-    'Component';
-}
+import { getDisplayName } from 'src/utilities';
 
 export interface Requestable<T> {
   lastUpdated: number;

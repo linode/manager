@@ -9,6 +9,7 @@ const primaryColors = {
   text: '#606469',
   headline: '#32363C',
   divider: '#f4f4f4',
+  offBlack: '#444',
 }
 
 const LinodeTheme: Linode.Theme = {
@@ -239,7 +240,6 @@ const LinodeTheme: Linode.Theme = {
         paddingRight: 4,
         fontSize: '.9rem',
         position: 'relative',
-        top: -1,
       },
       deleteIcon: {
         color: '#aaa',
@@ -434,6 +434,7 @@ const LinodeTheme: Linode.Theme = {
         color: primaryColors.text,
         boxSizing: 'border-box',
         backgroundColor: 'white',
+
         [breakpoints.down('xs')]: {
           maxWidth: 240,
         },
@@ -770,6 +771,24 @@ const LinodeTheme: Linode.Theme = {
       },
       fixed: {
         overflowX: 'auto',
+      },
+    },
+    MuiTableRow: {
+      root: {
+        position: 'relative',
+        zIndex: 1,
+        '&:hover': {
+          '&$hover': {
+            backgroundColor: '#fbfbfb',
+          },
+        },
+      },
+      hover: {
+        cursor: 'pointer',
+        '& a': {
+          color: primaryColors.offBlack,
+          fontWeight: 700,
+        },
       },
     },
     MuiTooltip: {

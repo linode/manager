@@ -7,6 +7,7 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import SelectionCard from 'src/components/SelectionCard';
 import { withTypes } from 'src/context/types';
 import { resetEventsPolling } from 'src/events';
@@ -55,6 +56,7 @@ interface LinodeContextProps {
   linodeId: number;
   linodeType: null | string;
   linodeStatus?: Linode.LinodeStatus;
+  linodeLabel: string;
 }
 
 interface State {
@@ -116,7 +118,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { typesData, linodeType, classes } = this.props;
+    const { typesData, linodeType, linodeLabel, classes } = this.props;
     const type = typesData.find(t => t.id === linodeType);
 
     const currentPlanHeading = linodeType
@@ -136,6 +138,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
+        <DocumentTitleSegment segment={`${linodeLabel} - Resize`} />
         <Paper className={classes.root}>
           <Typography
             role="header"
@@ -200,6 +203,7 @@ const linodeContext = withLinode((context) => ({
   linodeId: pathOr(undefined, ['data', 'id'], context),
   linodeType: pathOr(undefined, ['data', 'type'], context),
   linodeStatus: pathOr(undefined, ['data', 'status'], context),
+  linodeLabel: pathOr(undefined, ['data', 'label'], context),
 }));
 
 export default compose<any, any, any, any>(

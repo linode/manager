@@ -74,13 +74,19 @@ class ListDomains extends Page {
         this.createSoaEmail.$('input').setValue(email);
         this.submit.click();
 
-        if (placeholder) {
-            this.domainElem.waitForVisible(constants.wait.normal);
-        } else {
-            browser.waitUntil(function() {
-                return $$('[data-qa-domain-cell]').length > existingDomainsCount;
-            }, constants.wait.normal, 'Domain failed to be created');
-        }
+        browser.waitForVisible('[data-qa-domain-title]', constants.wait.normal);
+        
+        browser.waitUntil(function() {
+            return browser.getUrl().includes('/records');
+        }, constants.wait.normal);
+
+        // if (placeholder) {
+        //     this.domainElem.waitForVisible(constants.wait.normal);
+        // } else {
+        //     browser.waitUntil(function() {
+        //         return $$('[data-qa-domain-cell]').length > existingDomainsCount;
+        //     }, constants.wait.normal, 'Domain failed to be created');
+        // }
     }
 
     editDnsRecord(domain) {

@@ -88,10 +88,10 @@ describe('Profile - OAuth Clients Suite', () => {
 
         it('should update table on edit submit', () => {
             createDrawer.updateLabel(editedClient.label);
-            createDrawer.callbackUrl.setValue(editedClient.callback);
+            browser.trySetValue(createDrawer.callbackUrl.selector, editedClient.callback);
             createDrawer.submit.click();
 
-            browser.waitForVisible(editedRow);
+            browser.waitForVisible(editedRow, constants.wait.normal);
             const displayedLabel = $(editedRow).$(profile.oauthLabel.selector).getText();
             const displayedAccess = $(editedRow).$(profile.oauthAccess.selector).getText();
             const displayedCallback = $(editedRow).$(profile.oauthCallback.selector).getText();
@@ -106,7 +106,7 @@ describe('Profile - OAuth Clients Suite', () => {
         it('should display reset in action panel', () => {
             browser.click(`${editedRow} [data-qa-action-menu]`);
 
-            browser.waitForVisible('[data-qa-action-menu-item]');
+            browser.waitForVisible('[data-qa-action-menu-item]', constants.wait.normal);
 
             const actionMenuItems = $$('[data-qa-action-menu-item]')
                 .map(item => item.getAttribute('data-qa-action-menu-item'));
@@ -149,7 +149,7 @@ describe('Profile - OAuth Clients Suite', () => {
 
         beforeAll(() => {
             browser.refresh()
-            profile.oauthLabel.waitForVisible();
+            profile.oauthLabel.waitForVisible(constants.wait.normal);
         });
 
         it('should display delete dialog', () => {

@@ -7,7 +7,6 @@ import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 
 import NodeBalancer from 'src/assets/addnewmenu/nodebalancer.svg';
@@ -17,12 +16,14 @@ import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import PaginationFooter, { PaginationProps } from 'src/components/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 import TableRowError from 'src/components/TableRowError';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
@@ -257,6 +258,7 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
 
     return (
       <React.Fragment>
+        <DocumentTitleSegment segment="NodeBalancers" />
         <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
           <Grid item>
             <Typography role="header" variant="headline" className={classes.title} data-qa-title >
@@ -366,15 +368,18 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
 
   renderEmpty = () => {
     return (
-      <Placeholder
-        title="Add a NodeBalancer"
-        copy="Adding a NodeBalancer is easy. Click below to add a NodeBalancer."
-        icon={NodeBalancer}
-        buttonProps={{
-          onClick: () => this.props.history.push('/nodebalancers/create'),
-          children: 'Add a NodeBalancer',
-        }}
-      />
+      <React.Fragment>
+        <DocumentTitleSegment segment="NodeBalancers" />
+        <Placeholder
+          title="Add a NodeBalancer"
+          copy="Adding a NodeBalancer is easy. Click below to add a NodeBalancer."
+          icon={NodeBalancer}
+          buttonProps={{
+            onClick: () => this.props.history.push('/nodebalancers/create'),
+            children: 'Add a NodeBalancer',
+          }}
+        />
+      </React.Fragment>
     );
   };
 
@@ -382,7 +387,13 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
 
     return nodeBalancers.map((nodeBalancer) => {
       return (
-        <TableRow key={nodeBalancer.id} data-qa-nodebalancer-cell className="fade-in-table">
+        <TableRow
+          key={nodeBalancer.id}
+          data-qa-nodebalancer-cell
+          rowLink={`/nodebalancers/${nodeBalancer.id}`}
+          className="fade-in-table"
+          arial-label={nodeBalancer.label}
+        >
           <TableCell data-qa-nodebalancer-label>
             <Link to={`/nodebalancers/${nodeBalancer.id}`}>
               {nodeBalancer.label}

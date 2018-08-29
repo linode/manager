@@ -10,6 +10,7 @@ import {
 } from '@material-ui/core/styles';
 
 import setDocs from 'src/components/DocsSidebar/setDocs';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Placeholder from 'src/components/Placeholder';
 
 type ClassNames = 'root';
@@ -37,14 +38,17 @@ export class ManagedLanding extends React.Component<CombinedProps, State> {
 
   render() {
     return (
-      <Placeholder
-        title="Managed Services"
-        copy="Let us worry about your infrastructure, so you can get back to worrying about your business."
-        buttonProps={{
-          onClick: () => window.open('https://manager.linode.com/account#managed', '_blank'),
-          children: 'Upgrade to Linode Managed',
-        }}
-      />
+      <React.Fragment>
+        <DocumentTitleSegment segment="Managed" />        
+        <Placeholder
+          title="Managed Services"
+          copy={`Linode Managed is only available in the Classic Manager`}
+          buttonProps={{
+            onClick: () => window.open('https://manager.linode.com/account#managed', '_blank'),
+            children: 'Navigate to Classic Manager',
+          }}
+        />
+      </React.Fragment>
     );
   }
 }

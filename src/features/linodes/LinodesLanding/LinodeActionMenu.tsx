@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
+import { lishLaunch } from 'src/features/Lish';
+
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 import { powerOnLinode } from './powerActions';
@@ -8,6 +10,7 @@ import { powerOnLinode } from './powerActions';
 interface Props {
   linodeId: number;
   linodeLabel: string;
+  linodeBackups: Linode.LinodeBackups;
   linodeStatus: string;
   openConfigDrawer: (configs: Linode.Config[], fn: (id: number) => void) => void;
   toggleConfirmation: (bootOption: Linode.BootAction,
@@ -18,15 +21,14 @@ type CombinedProps = Props & RouteComponentProps<{}>;
 
 class LinodeActionMenu extends React.Component<CombinedProps> {
   createLinodeActions = () => {
-    const { linodeId, linodeLabel, linodeStatus,
+    const { linodeId, linodeLabel, linodeBackups, linodeStatus,
        openConfigDrawer, toggleConfirmation, history: { push } } = this.props;
-
     return (closeMenu: Function): Action[] => {
       const actions = [
         {
           title: 'Launch Console',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            push(`/linodes/${linodeId}/glish`);
+            lishLaunch(linodeId);
             e.preventDefault();
           },
         },
@@ -88,6 +90,19 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
             },
           }
         );
+      }
+
+      if (!linodeBackups.enabled) {
+        actions.splice(-2, 1, {
+          title: 'Enable Backups',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            push({
+              pathname: `/linodes/${linodeId}/backup`,
+              state: { enableOnLoad: true }
+            });
+            e.preventDefault();
+          },
+        })
       }
 
       return actions;

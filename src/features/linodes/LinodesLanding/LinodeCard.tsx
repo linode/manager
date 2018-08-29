@@ -178,6 +178,7 @@ interface Props {
   linodeType: null | string;
   linodeNotification?: string;
   linodeLabel: string;
+  linodeBackups: Linode.LinodeBackups;
   linodeRecentEvent?: Linode.Event;
   linodeSpecDisk: number;
   linodeSpecMemory: number;
@@ -224,7 +225,7 @@ class LinodeCard extends React.Component<CombinedProps> {
 
   handleConsoleButtonClick = () => {
     const { linodeId } = this.props;
-    lishLaunch(`${linodeId}`);
+    lishLaunch(linodeId);
   }
 
   handleRebootButtonClick = () => {
@@ -308,7 +309,7 @@ class LinodeCard extends React.Component<CombinedProps> {
 
   render() {
     const { classes, openConfigDrawer, linodeId, linodeLabel, linodeRecentEvent,
-      linodeStatus, toggleConfirmation } = this.props;
+      linodeStatus, linodeBackups, toggleConfirmation } = this.props;
     const loading = linodeInTransition(linodeStatus, linodeRecentEvent)
 
     return (
@@ -326,6 +327,7 @@ class LinodeCard extends React.Component<CombinedProps> {
                   linodeId={linodeId}
                   linodeLabel={linodeLabel}
                   linodeStatus={linodeStatus}
+                  linodeBackups={linodeBackups}
                   openConfigDrawer={openConfigDrawer}
                   toggleConfirmation={toggleConfirmation}
                 />

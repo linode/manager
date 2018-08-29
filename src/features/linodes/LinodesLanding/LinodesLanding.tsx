@@ -16,6 +16,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import PaginationFooter from 'src/components/PaginationFooter';
@@ -126,16 +127,14 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     {
       title: 'Getting Started with Linode',
       src: 'https://linode.com/docs/getting-started/',
-      body: `Thank you for choosing Linode as your cloud hosting provider! This guide will help you
-      sign up for an account, set up a Linux distribution, boot your Linode, and perform some basic
-      system administr...`,
+      body: `This guide will help you set up your first Linode.`,
     },
     {
       title: 'How to Secure your Server',
       src: 'https://linode.com/docs/security/securing-your-server/',
-      body: `Keeping your software up to date is the single biggest security precaution you can
-      take for any operating system. Software updates range from critical vulnerability patches to
-      minor bug fixes, and...`,
+      body: `This guide covers basic best practices for securing a production server,
+      including setting up user accounts, configuring a firewall, securing SSH,
+      and disabling unused network services.`,
     },
 
   ];
@@ -229,34 +228,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     localStorage.setItem('linodesViewStyle', style);
   }
 
-  renderListView = (
-    linodes: Linode.Linode[],
-    images: Linode.Image[],
-  ) => {
-    return (
-      <LinodesListView
-        linodes={linodes}
-        images={images}
-        openConfigDrawer={this.openConfigDrawer}
-        toggleConfirmation={this.toggleDialog}
-      />
-    );
-  }
-
-  renderGridView = (
-    linodes: Linode.Linode[],
-    images: Linode.Image[],
-  ) => {
-    return (
-      <LinodesGridView
-        linodes={linodes}
-        images={images}
-        openConfigDrawer={this.openConfigDrawer}
-        toggleConfirmation={this.toggleDialog}
-      />
-    );
-  }
-
   getLinodes = (page = 1, pageSize = 25) => {
     const lastPage = Math.ceil(this.state.results / pageSize);
     getLinodes({
@@ -323,24 +294,63 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     this.setState({ powerAlertOpen: false });
   }
 
+  renderListView = (
+    linodes: Linode.Linode[],
+    images: Linode.Image[],
+  ) => {
+    return (
+      <LinodesListView
+        linodes={linodes}
+        images={images}
+        openConfigDrawer={this.openConfigDrawer}
+        toggleConfirmation={this.toggleDialog}
+      />
+    );
+  }
+
+  renderGridView = (
+    linodes: Linode.Linode[],
+    images: Linode.Image[],
+  ) => {
+    return (
+      <LinodesGridView
+        linodes={linodes}
+        images={images}
+        openConfigDrawer={this.openConfigDrawer}
+        toggleConfirmation={this.toggleDialog}
+      />
+    );
+  }
+
   render() {
     const { location: { hash } } = this.props;
     const { linodes, configDrawer, bootOption, powerAlertOpen, results } = this.state;
     const images = pathOr([], ['response', 'data'], this.props.images);
 
     if (linodes.length === 0) {
-      return <ListLinodesEmptyState />;
+      return (
+        <React.Fragment>
+          <DocumentTitleSegment segment="Linodes" />
+          <ListLinodesEmptyState />
+        </React.Fragment>
+      );
     }
 
     if (this.props.linodes.error) {
       return (
-        <ErrorState errorText="Error loading data" />
+        <React.Fragment>
+          <DocumentTitleSegment segment="Linodes" />
+          <ErrorState errorText="Error loading data" />
+        </React.Fragment>
       );
     }
 
     if (this.props.images.error) {
       return (
-        <ErrorState errorText="Error loading data" />
+        <React.Fragment>
+          <DocumentTitleSegment segment="Linodes" />
+          <ErrorState errorText="Error loading data" />
+        </React.Fragment>
       );
     }
 
@@ -348,6 +358,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
     return (
       <Grid container>
+        <DocumentTitleSegment segment="Linodes" />
         <Grid item xs={12}>
           <Typography
             role="header"
@@ -401,9 +412,12 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           actions={this.renderConfirmationActions}
           open={powerAlertOpen}
         >
-          {bootOption === 'reboot'
-            ? 'Are you sure you want to reboot your Linode'
-            : 'Are you sure you want to power down your Linode'}
+          <Typography>
+            {bootOption === 'reboot'
+              ? 'Are you sure you want to reboot your Linode'
+              : 'Are you sure you want to power down your Linode'
+            }
+          </Typography>
         </ConfirmationDialog>
       </Grid>
     );
@@ -421,7 +435,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           Cancel
         </Button>
         <Button
-          type="secondary"
+          type="primary"
           onClick={this.rebootOrPowerLinode}
           data-qa-confirm-cancel
         >

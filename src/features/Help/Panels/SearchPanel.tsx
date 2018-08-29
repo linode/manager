@@ -11,18 +11,24 @@ import Typography from '@material-ui/core/Typography';
 
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 
+import AlgoliaSearchBar from './AlgoliaSearchBar';
+
 type ClassNames = 'root'
   | 'bgIcon'
   | 'searchHeading';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
-    padding: theme.spacing.unit * 10,
+    padding: theme.spacing.unit * 4,
     backgroundColor: theme.color.green,
     display: 'flex',
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative',
+    [theme.breakpoints.up('md')]: {
+      padding: theme.spacing.unit * 8,
+    }
   },
   bgIcon: {
     color: '#04994D',
@@ -69,8 +75,9 @@ class SearchPanel extends React.Component<CombinedProps, State> {
             variant="headline"
             className={classes.searchHeading}
           >
-            Ways to Get Help
+            What can we help you with?
         </Typography>
+        <AlgoliaSearchBar />
         </Paper>
       </React.Fragment>
     );

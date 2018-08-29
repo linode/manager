@@ -7,7 +7,9 @@ import TableRow from '@material-ui/core/TableRow';
 
 import CircleProgress from 'src/components/CircleProgress';
 import SelectionRow from 'src/components/SelectionRow';
+
 import { formatDate } from 'src/utilities/format-date-iso8601';
+import truncateText from 'src/utilities/truncateText';
 
 type ClassNames = 'root' | 'loadingWrapper';
 
@@ -55,7 +57,7 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => 
       key={s.id}
       label={s.label}
       stackScriptUsername={s.username}
-      description={truncateDescription(s.description)}
+      description={truncateText(s.description, 100)}
       isPublic={s.is_public}
       images={stripImageName(s.images)}
       deploymentsActive={s.deployments_active}
@@ -74,7 +76,7 @@ const listStackScript = () => (s: Linode.StackScript.Response) => (
       key={s.id}
       label={s.label}
       stackScriptUsername={s.username}
-      description={truncateDescription(s.description)}
+      description={truncateText(s.description, 100)}
       isPublic={s.is_public}
       images={stripImageName(s.images)}
       deploymentsActive={s.deployments_active}
@@ -123,17 +125,6 @@ const listStackScript = () => (s: Linode.StackScript.Response) => (
       }
     </TableBody>
   );
-};
-
-/*
-* Truncate description of stackscript on the select panel
-* only if the description exceeds 140 characters (s/o Twitter)
-*/
-const truncateDescription = (desc: string) => {
-  if (desc.length > 140) {
-    return `${desc.split(' ').splice(0, 10).join(' ')} [...]`;
-  }
-  return desc;
 };
 
 /*

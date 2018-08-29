@@ -10,7 +10,21 @@ exports.browserConf = {
             '--disable-dev-shm-usage',
             '--window-size=1600,1080',
             ]
-        }
+        },
+        'os': 'Windows',
+        'os_version': '10',
+        'browser': 'Chrome',
+        'browser_version': '68.0',
+        'resolution': '1440x900',
+    },
+    edge: {
+        'browserName': 'edge',
+        'acceptSslCerts': true,
+        'os': 'Windows',
+        'os_version': '10',
+        'browser': 'Edge',
+        'browser_version': '17.0',
+        'resolution': '1440x900'
     },
     headlessChrome: {
         browserName: 'chrome',
@@ -57,7 +71,12 @@ exports.browserConf = {
             acceptInsecureCerts: true
         },
         maxInstances: 1,
-        acceptInsecureCerts: true
+        acceptInsecureCerts: true,
+        'os': 'OS X',
+        'os_version': 'High Sierra',
+        'browser': 'Safari',
+        'browser_version': '11.0',
+        'resolution': '1600x1200'
     },
     safariPreview: {
         browserName: 'safari',

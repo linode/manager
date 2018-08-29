@@ -17,6 +17,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Placeholder, { PlaceholderProps } from 'src/components/Placeholder';
@@ -58,6 +59,7 @@ interface LinodeContextProps {
   linodeLabel: string;
   linodeRegion: string;
   linodeID: number;
+  linodeStatus: string;
 }
 
 interface UpdateDialogState {
@@ -740,7 +742,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
    * - Else show rows of volumes.
    */
   table = renderGuard((): null | JSX.Element => {
-    const { classes } = this.props;
+    const { classes, linodeStatus } = this.props;
     const { attachedVolumes } = this.state;
 
     if (attachedVolumes.length === 0) {
@@ -791,7 +793,8 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
                     <TableCell data-qa-fs-path>{filesysPath}</TableCell>
                     <TableCell>
                       <ActionMenu
-                        volumeId={volume.id}
+                        data-qa-linode-volume-actions
+                        poweredOff={['offline'].includes(linodeStatus)}
                         onDetach={this.openUpdateDialog('detach', volume.id)}
                         onDelete={this.openUpdateDialog('delete', volume.id)}
                         onClone={this.openUpdatingDrawer(
@@ -834,19 +837,26 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
     const {
       volumes: { error: volumesError },
       linodeConfigs: { error: linodeConfigsError },
+      linodeLabel,
     } = this.props;
 
     const { volumeDrawer } = this.state;
 
 
     if (volumesError || linodeConfigsError) {
-      return <ErrorState errorText="An error has occured." />;
+      return (
+        <React.Fragment>
+          <DocumentTitleSegment segment={`${linodeLabel} - Volumes`} />
+          <ErrorState errorText="An error has occured." />;
+        </React.Fragment>
+      );
     }
 
     return (
       <React.Fragment>
+        <DocumentTitleSegment segment={`${linodeLabel} - Volumes`} />
         <this.placeholder />
-        <this.table updateFor={[this.props.linodeVolumes]} />
+        <this.table updateFor={[this.props.linodeVolumes, this.props.linodeStatus]} />
         <VolumeDrawer {...volumeDrawer} />
         <this.updateDialog />
       </React.Fragment>
@@ -869,6 +879,7 @@ const linodeContext = withLinode((context) => ({
   linodeID: context.data!.id,
   linodeLabel: context.data!.label,
   linodeRegion: context.data!.region,
+  linodeStatus: context.data!.status
 }));
 
 const volumesContext = withVolumes((context) => ({

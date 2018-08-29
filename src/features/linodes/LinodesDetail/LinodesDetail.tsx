@@ -551,7 +551,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
   launchLish = () => {
     const { data: linode } = this.state.context.linode;
-    lishLaunch(`${linode!.id}`);
+    lishLaunch(linode!.id);
   }
 
   render() {

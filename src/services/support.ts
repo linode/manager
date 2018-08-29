@@ -35,8 +35,10 @@ export const getTicketsPage = (pagination: Linode.PaginationOptions = {}, open?:
         { status: 'open'},
         { status: 'new' },
       ],
+      '+order_by': 'updated',
+      '+order': 'desc'
     }
-    : { status: 'closed'}
+    : { status: 'closed', '+order_by': 'updated', '+order': 'desc'}
 
   return getTickets(pagination, filter).then((response) => response.data);
 }
@@ -61,16 +63,23 @@ export const getTicketRepliesPage = (ticketId:number, pagination: Linode.Paginat
   return getTicketReplies(ticketId, pagination).then((response) => response.data);
 }
 
-export const createSupportTicket = (data:TicketRequest) =>
+export const createSupportTicket = (data: TicketRequest) =>
   Request<SupportTicket>(
     setURL(`${API_ROOT}/support/tickets`),
     setMethod('POST'),
     setData(data),
   )
 
-export const createReply = (data:ReplyRequest) =>
+export const createReply = (data: ReplyRequest) =>
 Request<Linode.SupportReply>(
   setURL(`${API_ROOT}/support/tickets/${data.ticket_id}/replies`),
   setMethod('POST'),
   setData(data),
 )
+
+export const uploadAttachment = (ticketId: number, formData: FormData) =>
+Request<{}>(
+  setURL(`${API_ROOT}/support/tickets/${ticketId}/attachments`),
+  setMethod('POST'),
+  setData(formData),
+);

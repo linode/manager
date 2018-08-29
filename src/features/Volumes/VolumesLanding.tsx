@@ -20,6 +20,7 @@ import VolumesIcon from 'src/assets/addnewmenu/volume.svg';
 import AddNewLink from 'src/components/AddNewLink';
 import CircleProgress from 'src/components/CircleProgress';
 import setDocs from 'src/components/DocsSidebar/setDocs';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
 import PaginationFooter, { PaginationProps } from 'src/components/PaginationFooter';
@@ -136,19 +137,12 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       title: 'How to Use Block Storage with Your Linode',
       /* tslint:disable-next-line */
       src: `https://www.linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode`,
-      body: `Linode’s Block Storage service allows you to attach additional storage volumes to your
-      Linode. A single volume can range from 10 GiB to 10,000 GiB in size and costs $0.10/GiB per
-      month. They can be partitioned however you like and can accommodate any filesystem type you
-      choose. Up to eight volumes can be attached to a single Linode, be it new or already
-      existing, so you do not need to recreate your server to add a Block Storage Volume.`,
+      body: `This tutorial explains how to use Linode's block storage service.`,
     },
     {
       title: 'Boot a Linode from a Block Storage Volume',
       src: `https://www.linode.com/docs/platform/block-storage/boot-from-block-storage-volume/`,
-      body: `Linode’s Block Storage service allows you to attach additional storage volumes to your
-      Linode. In addition to storing files and media, you can also use a Block Storage Volume as a
-      boot disk. This can provide a low-cost way to maintain an image that can be quickly attached
-      to a new Linode and booted up when needed.`,
+      body: `This guide shows how to boot a Linode from a Block Storage Volume.`,
     },
   ];
 
@@ -218,6 +212,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
+        <DocumentTitleSegment segment="Volumes" />
         <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
           <Grid item>
             <Typography role="header" variant="headline" className={classes.title} data-qa-title >
@@ -310,15 +305,18 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
 
   renderEmpty = () => {
     return (
-      <Placeholder
-        title="Create a Volume"
-        copy="Add storage to your Linodes using the resilient Volumes service"
-        icon={VolumesIcon}
-        buttonProps={{
-          onClick: this.props.openForCreating,
-          children: 'Create a Volume',
-        }}
-      />
+      <React.Fragment>
+        <DocumentTitleSegment segment="Volumes" />
+        <Placeholder
+          title="Create a Volume"
+          copy="Add storage to your Linodes using the resilient Volumes service"
+          icon={VolumesIcon}
+          buttonProps={{
+            onClick: this.props.openForCreating,
+            children: 'Create a Volume',
+          }}
+        />
+      </React.Fragment>
     );
   };
 

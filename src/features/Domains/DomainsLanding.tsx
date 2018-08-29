@@ -1,13 +1,14 @@
+import { compose, pathOr } from 'ramda';
+import * as React from 'react';
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
+
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
-import { compose, pathOr } from 'ramda';
-import * as React from 'react';
-import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
+
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
@@ -15,14 +16,17 @@ import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import setDocs from 'src/components/DocsSidebar/setDocs';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import PaginationFooter, { PaginationProps } from 'src/components/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
+import TableRow from 'src/components/TableRow';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { deleteDomain, getDomains } from 'src/services/domains';
 import scrollToTop from 'src/utilities/scrollToTop';
+
 import ActionMenu from './DomainActionMenu';
 import DomainCreateDrawer from './DomainCreateDrawer';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
@@ -186,6 +190,15 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
     });
   }
 
+  handleSuccess = (domain:Linode.Domain) => {
+    if (domain.id) {
+      this.props.history.push(`/domains/${domain.id}`);
+    }
+    else {
+      this.getDomains();
+    }
+  }
+
   getActions = () => {
     return (
       <ActionsPanel>
@@ -234,7 +247,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
         mode={this.state.createDrawer.mode}
         domain={this.state.createDrawer.domain}
         cloneID={this.state.createDrawer.cloneID}
-        onSuccess={this.getDomains}
+        onSuccess={this.handleSuccess}
       />
     );
   }
@@ -253,6 +266,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
+        <DocumentTitleSegment segment="Domains" />
         <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }} >
           <Grid item>
             <Typography role="header" variant="headline" data-qa-title className={classes.title}>
@@ -301,7 +315,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
         <DomainZoneImportDrawer
           open={this.state.importDrawer.open}
           onClose={this.closeImportZoneDrawer}
-          onSuccess={this.getDomains}
+          onSuccess={this.handleSuccess}
         />
         <ConfirmationDialog
           open={this.state.removeDialog.open}
@@ -346,6 +360,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
   renderEmpty = () => {
     return (
       <React.Fragment>
+        <DocumentTitleSegment segment="Domains" />
         <Placeholder
           title="Add a Domain"
           copy="Adding a new domain is easy. Click below to add a domain."

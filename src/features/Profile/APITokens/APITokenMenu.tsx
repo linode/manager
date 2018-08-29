@@ -3,39 +3,41 @@ import * as React from 'react';
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
+  token: Linode.Token;
+  type: string;
   isAppTokenMenu: boolean;
-  openViewDrawer: () => void;
-  openEditDrawer: () => void;
-  openRevokeDialog: () => void;
+  openViewDrawer: (token:Linode.Token) => void;
+  openEditDrawer: (token:Linode.Token) => void;
+  openRevokeDialog: (token:Linode.Token, type:string) => void;
 }
 
 type CombinedProps = Props;
 
 class APITokenMenu extends React.Component<CombinedProps> {
   createActions = () => {
-    const { isAppTokenMenu, openViewDrawer, openEditDrawer, openRevokeDialog } = this.props;
+    const { isAppTokenMenu, openViewDrawer, openEditDrawer, openRevokeDialog, token, type } = this.props;
 
-    return function (closeMenu: Function): Action[] {
+    return (closeMenu: Function): Action[] => {
       const actions = (!isAppTokenMenu)
         ? [
           {
             title: 'View Token Scopes',
             onClick: (e: React.MouseEvent<HTMLElement>) => {
-              openViewDrawer();
+              openViewDrawer(token);
               closeMenu();
             },
           },
           {
             title: 'Edit',
             onClick: (e: React.MouseEvent<HTMLElement>) => {
-              openEditDrawer();
+              openEditDrawer(token);
               closeMenu();
             },
           },
           {
             title: 'Revoke',
             onClick: (e: React.MouseEvent<HTMLElement>) => {
-              openRevokeDialog();
+              openRevokeDialog(token,type);
               closeMenu();
             },
           },
@@ -44,14 +46,14 @@ class APITokenMenu extends React.Component<CombinedProps> {
           {
             title: 'View Token Scopes',
             onClick: (e: React.MouseEvent<HTMLElement>) => {
-              openViewDrawer();
+              openViewDrawer(token);
               closeMenu();
             },
           },
           {
             title: 'Revoke',
             onClick: (e: React.MouseEvent<HTMLElement>) => {
-              openRevokeDialog();
+              openRevokeDialog(token,type);
               closeMenu();
             },
           },

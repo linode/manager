@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
@@ -106,7 +107,7 @@ class UserProfile extends React.Component<CombinedProps> {
           {generalError &&
             <Notice error>Error when updating user profile</Notice>
           }
-          <Typography role="header" variant="title">
+          <Typography variant="title" data-qa-profile-header>
             User Profile
           </Typography>
           <TextField
@@ -115,12 +116,14 @@ class UserProfile extends React.Component<CombinedProps> {
             value={username}
             onChange={changeUsername}
             errorText={hasErrorFor('username')}
+            data-qa-username
           />
           <TextField
             disabled /* API doesn't allow changing user email address */
             className={classes.field}
             label="Email Address"
             value={email}
+            data-qa-email
           />
           <ActionsPanel style={{ marginTop: 16 }}>
             <Button
@@ -180,7 +183,7 @@ class UserProfile extends React.Component<CombinedProps> {
     return (
       <Paper className={classes.deleteRoot}>
         <div className={classes.inner}>
-          <Typography role="header" variant="title">
+          <Typography variant="title" data-qa-delete-user-header>
             Delete User
           </Typography>
           {userDeleteError &&
@@ -224,6 +227,7 @@ class UserProfile extends React.Component<CombinedProps> {
         {username !== undefined
           ? (
             <React.Fragment>
+              <DocumentTitleSegment segment={`${username} - Profile`} />
               {this.renderProfileSection()}
               {this.renderDeleteSection()}
               <UserDeleteConfirmationDialog

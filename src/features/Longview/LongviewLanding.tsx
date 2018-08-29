@@ -10,6 +10,7 @@ import {
 } from '@material-ui/core/styles';
 
 import setDocs from 'src/components/DocsSidebar/setDocs';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Placeholder from 'src/components/Placeholder';
 
 type ClassNames = 'root';
@@ -42,14 +43,17 @@ export class LongviewLanding extends React.Component<CombinedProps, State> {
 
   render() {
     return (
-      <Placeholder
-        title="Longview"
-        copy="Keep your Linux systems running smoothly with insights from your system metrics."
-        buttonProps={{
-          onClick: () => window.open('https://manager.linode.com/longview', '_blank'),
-          children: 'Go to Longview',
-        }}
-      />
+      <React.Fragment>
+        <DocumentTitleSegment segment="Longview" />
+        <Placeholder
+          title="Longview"
+          copy="Keep your Linux systems running smoothly with insights from your system metrics."
+          buttonProps={{
+            onClick: () => window.open('https://manager.linode.com/longview', '_blank'),
+            children: 'Go to Longview',
+          }}
+        />
+      </React.Fragment>
     );
   }
 }

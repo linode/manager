@@ -7,6 +7,8 @@ import {
   WithStyles,
 } from '@material-ui/core/styles';
 
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+
 import OtherWays from './Panels/OtherWays';
 import PopularPosts from './Panels/PopularPosts';
 import SearchPanel from './Panels/SearchPanel';
@@ -35,6 +37,7 @@ export class HelpLanding extends React.Component<CombinedProps, State> {
 
     return (
       <div className={classes.root}>
+        <DocumentTitleSegment segment="Get Help" />
         <SearchPanel />
         <PopularPosts />
         <OtherWays />

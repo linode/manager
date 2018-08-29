@@ -9,10 +9,12 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
 
+import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import NodebalancerIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 
+import DomainCreateDrawer from 'src/features/Domains/DomainCreateDrawer';
 import { openForCreating } from 'src/store/reducers/volumeDrawer';
 import AddNewMenuItem, { MenuItem } from './AddNewMenuItem';
 
@@ -49,6 +51,7 @@ interface Props {
 
 interface State {
   anchorEl?: HTMLElement;
+  domainDrawerOpen: boolean;
 }
 
 type CombinedProps = Props & WithStyles<CSSClasses> & RouteComponentProps<{}>;
@@ -58,6 +61,7 @@ const styled = withStyles(styles, { withTheme: true });
 class AddNewMenu extends React.Component<CombinedProps, State> {
   state = {
     anchorEl: undefined,
+    domainDrawerOpen: false,
   };
 
   items: MenuItem[] = [
@@ -91,6 +95,16 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
       body: `Ensure your valuable applications and services are highly-available`,
       ItemIcon: NodebalancerIcon,
     },
+    {
+      title: 'Domain',
+      onClick: (e) => {
+        this.openDomainDrawer();
+        this.handleClose();
+        e.preventDefault();
+      },
+      body: `Manage your DNS records using Linode’s high-availability name servers`,
+      ItemIcon: DomainIcon,
+    },
   ];
 
   handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -101,8 +115,21 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
     this.setState({ anchorEl: undefined });
   }
 
+  openDomainDrawer = () => {
+    this.setState({ domainDrawerOpen: true });
+  }
+
+  closeDomainDrawer = () => {
+    this.setState({ domainDrawerOpen: false });
+  }
+
+  onDomainSuccess = (domain:Linode.Domain) => {
+    const id = domain.id ? domain.id : '';
+    this.props.history.push(`/domains/${id}`);
+  }
+
   render() {
-    const { anchorEl } = this.state;
+    const { anchorEl, domainDrawerOpen } = this.state;
     const { classes } = this.props;
     const itemsLen = this.items.length;
 
@@ -143,6 +170,12 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
               {...i}
             />)}
         </Menu>
+        <DomainCreateDrawer
+          open={domainDrawerOpen}
+          onClose={this.closeDomainDrawer}
+          onSuccess={this.onDomainSuccess}
+          mode="create"
+        />
       </div>
 
     );

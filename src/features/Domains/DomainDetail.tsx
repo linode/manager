@@ -96,10 +96,10 @@ class DomainDetail extends React.Component<CombinedProps, State> {
     },
   ];
 
-  tabs = [
+  tabs: { routeName: string, title: string, disabled?: boolean}[] = [
     { routeName: `${this.props.match.url}/records`, title: 'DNS Records' },
-    { routeName: `${this.props.match.url}/check-zone`, title: 'Check Zone', disabled: true },
-    { routeName: `${this.props.match.url}/zone-file`, title: 'Zone File', disabled: true },
+    // { routeName: `${this.props.match.url}/check-zone`, title: 'Check Zone', disabled: true },
+    // { routeName: `${this.props.match.url}/zone-file`, title: 'Zone File', disabled: true },
   ];
 
   updateRecords = () => {
