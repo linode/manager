@@ -68,7 +68,7 @@ class NodeBalancersDashboardCard extends React.Component<CombinedProps, State> {
       this.setState({ loading: true });
     }
 
-    getNodeBalancers({ page_size: 25 }, { '+order_by': 'updated', '+order': 'desc' })
+    getNodeBalancers({ page_size: 25 }, { '+order_by': 'label', '+order': 'asc' })
       .then(({ data, results }) => {
         if (!this.mounted) { return; }
         this.setState({

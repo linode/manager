@@ -80,7 +80,7 @@ class LinodesDashboardCard extends React.Component<CombinedProps, State> {
       this.setState({ loading: true });
     }
 
-    getLinodes({ page_size: 25 }, { '+order_by': 'updated', '+order': 'desc' })
+    getLinodes({ page_size: 25 }, { '+order_by': 'label', '+order': 'asc' })
       .then(({ data, results }) => {
         if (!this.mounted) { return; }
         this.setState({
