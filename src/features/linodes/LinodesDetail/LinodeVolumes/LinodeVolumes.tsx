@@ -174,6 +174,10 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
       .filter(e => !e._initial)
       .subscribe((v) => {
         if (this.mounted) {
+          console.log(v);
+          if (v.action === 'volume_detach' && ['finished','notification'].includes(v.status)) {
+            sendToast('Volume has been detached.')
+          }
           this.getVolumes();
         }
       });
