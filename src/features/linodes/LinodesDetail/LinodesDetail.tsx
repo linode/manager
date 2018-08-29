@@ -451,6 +451,18 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       && linode.type) {
       console.log('new linode data');
       console.log(linode);
+      /** @todo remove this. For the purposes of testing */
+      this.setState({
+        showPendingMutation: true,
+        currentNetworkOut: 1000,
+        mutateInfo: {
+          vcpus: 100,
+          network_out: 1000,
+          disk: 1000,
+          transfer: 1000,
+          memory: 100,
+        }
+      })
       getType(linode.type)
         .then((currentType: Linode.LinodeType) => {
           const typeIsDeprecated = currentType.successor !== null;
