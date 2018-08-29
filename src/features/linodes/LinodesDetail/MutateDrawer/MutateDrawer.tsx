@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import ListItem from '@material-ui/core/ListItem';
+import MenuList from '@material-ui/core/MenuList';
 import {
   StyleRulesCallback,
   Theme,
@@ -117,7 +119,7 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
           <Notice error text={error} />
         }
         <p>This Linode has pending upgrades. The resouces that are affected include:</p>
-        <ul>
+        <MenuList dense>
           {Object.keys(extendedUpgradeInfo).map((newSpec) => {
             const {
               label,
@@ -130,24 +132,24 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
               return;
             }
             return (
-              <li key={label}>
+              <ListItem dense key={label}>
                 {`${label} goes from ${currentAmount} ${unit} to
                 ${newAmount} ${unit}`}
-              </li>
+              </ListItem>
             )
           })}
-        </ul>
+        </MenuList>
         <Typography variant="title">How it Works</Typography>
         <p>After entering the upgrade queue, the following will occur:</p>
-        <ol>
-          <li>Wait your turn in the upgrade queue</li>
-          <li>Your Linode will be shut down and its disk images will be migrated</li>
-          <li>Your Linode will be upgraded and booted (if it was previously running).</li>
+        <MenuList component="ol" dense>
+          <ListItem>Wait your turn in the upgrade queue</ListItem>
+          <ListItem>Your Linode will be shut down and its disk images will be migrated</ListItem>
+          <ListItem>Your Linode will be upgraded and booted (if it was previously running).</ListItem>
           <Typography variant="caption">
             After the migration completes, you can take advantage of the new resources
             by resizing your disk images.
           </Typography>
-        </ol>
+        </MenuList>
         <Button loading={loading} onClick={this.props.initMutation} type="primary">
           Enter the Upgrade Queue
         </Button>
