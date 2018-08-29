@@ -1,6 +1,6 @@
 import { API_ROOT } from 'src/constants';
 
-import Request, { mockAPIError, setData, setMethod, setParams, setURL, setXFilter } from './index';
+import Request, { setData, setMethod, setParams, setURL, setXFilter } from './index';
 
 /** Alises for short lines. */
 type Page<T> = Linode.ResourcePage<T>;
@@ -24,16 +24,16 @@ export const attachVolume = (volumeId: number, payload: {
   setData(payload),
   );
 
-export const detachVolume = (volumeId: number) => mockAPIError(400, 'whatever', { errors: [ { reason: 'Shenanigans' } ] }) // Request<{}>(
-//   setURL(`${API_ROOT}/volumes/${volumeId}/detach`),
-//   setMethod('POST'),
-// );
+export const detachVolume = (volumeId: number) => Request<{}>(
+  setURL(`${API_ROOT}/volumes/${volumeId}/detach`),
+  setMethod('POST'),
+);
 
 // delete is a reserve word
-export const deleteVolume = (volumeId: number) => mockAPIError(400, 'whatever', { errors: [ { reason: 'Shenanigans' } ] }) // Request<{}>(
-//   setURL(`${API_ROOT}/volumes/${volumeId}`),
-//   setMethod('DELETE'),
-// );
+export const deleteVolume = (volumeId: number) => Request<{}>(
+  setURL(`${API_ROOT}/volumes/${volumeId}`),
+  setMethod('DELETE'),
+);
 
 export const cloneVolume = (volumeId: number, label: string) => Request<{}>(
   setURL(`${API_ROOT}/volumes/${volumeId}/clone`),
