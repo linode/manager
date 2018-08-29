@@ -1,15 +1,14 @@
 import * as React from 'react';
-import Select from 'react-select';
+import CreatableSelect from 'react-select/lib/Creatable';
 
 import Chip from '@material-ui/core/Chip';
-import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import TextField from 'src/components/TextField';
 
-interface Item {
+export interface Item {
   value: string;
   label: string;
   data?: any;
@@ -103,22 +102,6 @@ const Control = (props:any) => {
   );
 }
 
-const Option = (props:any) => {
-  return (
-    <MenuItem
-      buttonRef={props.innerRef}
-      selected={props.isFocused}
-      component="div"
-      style={{
-        fontWeight: props.isSelected ? 500 : 400,
-      }}
-      {...props.innerProps}
-    >
-      {props.children}
-    </MenuItem>
-  );
-}
-
 const Placeholder = (props:any) => {
   return (
     <Typography
@@ -136,15 +119,16 @@ const ValueContainer = (props:any) => {
 }
 
 const MultiValue = (props:any) => {
+  const onDelete = (event:React.SyntheticEvent<HTMLElement>) => {
+    props.removeProps.onClick();
+        props.removeProps.onMouseDown(event);
+  }
   return (
     <Chip
       tabIndex={-1}
       label={props.children}
       className={props.selectProps.classes.chip}
-      onDelete={event => {
-        props.removeProps.onClick();
-        props.removeProps.onMouseDown(event);
-      }}
+      onDelete={onDelete}
     />
   );
 }
@@ -158,7 +142,6 @@ const Menu = (props:any) => {
 }
 
 const components = {
-  Option,
   Control,
   NoOptionsMessage,
   Placeholder,
@@ -169,16 +152,15 @@ const components = {
 
 interface Props {
   options: Item[];
+  value: Item[];
   label: string;
   placeholder?: string;
-  errorText: string;
-  getNext?: (currentIndex:number, nextAmount:number) => void;
-  resultLimit?: number;
+  errorText?: string;
+  handleChange: (selected:Item[]) => void;
+  createNew?: (inputValue:string) => void;
 }
 
-interface State {
-  value: Item | null;
-}
+interface State {}
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
@@ -187,18 +169,15 @@ class IntegrationReactSelect extends React.Component<CombinedProps,State> {
     value: null,
   };
 
-  handleChange = (value:Item) => {
-    this.setState({
-      value,
-    });
-  };
-
   render() {
-    const { classes, errorText, label, placeholder, options, } = this.props;
+    const { classes, createNew, errorText, handleChange, label, placeholder, options, value } = this.props;
 
     return (
       <div className={classes.root}>
-          <Select
+          <CreatableSelect
+            isClearable
+            isSearchable
+            isMulti
             classes={classes}
             textFieldProps={{
               label,
@@ -207,14 +186,12 @@ class IntegrationReactSelect extends React.Component<CombinedProps,State> {
                 shrink: true,
               },
             }}
+            value={value}
             options={options}
             components={components}
-            value={this.state.value}
-            onChange={this.handleChange}
-            isClearable
-            isSearchable
+            onChange={handleChange}
+            onCreateOption={createNew}
             placeholder={placeholder || 'Select a value...'}
-            isMulti
           />
       </div>
     );
