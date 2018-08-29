@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import ThemeDecorator from '../../utilities/storybookDecorators';
 
-import EnhancedSelect from './EnhancedSelect2';
+import EnhancedSelect, { Item } from './EnhancedSelect2';
 
 import timezones from 'src/assets/timezones/timezones';
 
@@ -23,27 +23,38 @@ const data = [
 ]
 
 const data2 = timezones.map((tz:any) => {
-  return { value: tz.value, label: tz.name };
+  return { value: tz.name, label: tz.label };
 });
 
-class Example extends React.Component {
-  state = { 
+interface State {
+  open: boolean;
+  value: Item[];
+}
+
+interface Props {}
+
+class Example extends React.Component<Props,State> {
+  state:State = { 
     open: false,
-    options: data2.slice(0,15),
+    value: [],
   };
 
   toggleDrawer = (v: boolean) => (e: React.MouseEvent<any>) => {
     this.setState({ open: v });
   }
 
-  handleSelect = (selected:any) => {
-    /* tslint:disable-next-line */
-    console.log(`${selected} has been selected`);
-  }
+  handleChange = (value:Item[]) => {
+    this.setState({
+      value,
+    });
+  };
 
-  getNext = (inputValue:string, page:number) => {
-    const increment = 25;
-    return data2.slice(0, increment * page + 1);
+  createNew = (inputValue:string) => {
+    const { value } = this.state;
+    const newItem = {value:inputValue, label:inputValue};
+    data2.push(newItem);
+    value.push(newItem);
+    this.setState({ value });
   }
 
   render() {
@@ -51,9 +62,11 @@ class Example extends React.Component {
       <React.Fragment>
         <EnhancedSelect
           label="Example"
+          value={this.state.value}
           placeholder="Choose a timezone"
-          errorText="this is an error"
+          handleChange={this.handleChange}
           options={data2}
+          createNew={this.createNew}
         />
       </React.Fragment>
     );
