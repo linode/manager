@@ -77,7 +77,7 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
     };
 
     public handlePageSizeChange = (pageSize: number) => {
-      this.setState({ pageSize }, () => { this.request() });
+      this.setState({ pageSize, page: 1 }, () => { this.request() });
     };
 
     public handlePageChange = (page: number) => {
