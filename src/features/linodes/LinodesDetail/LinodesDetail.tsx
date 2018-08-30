@@ -22,6 +22,7 @@ import EditableText from 'src/components/EditableText';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
+import Notice from 'src/components/Notice';
 import ProductNotification from 'src/components/ProductNotification';
 import { events$ } from 'src/events';
 import { reportException } from 'src/exceptionReporting';
@@ -29,10 +30,14 @@ import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawe
 import { newLinodeEvents } from 'src/features/linodes/events';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 import { lishLaunch } from 'src/features/Lish';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
 import notifications$ from 'src/notifications';
 import { Requestable } from 'src/requestableContext';
 import { getImage } from 'src/services/images';
-import { getLinode, getLinodeConfigs, getLinodeDisks, getLinodeVolumes, renameLinode } from 'src/services/linodes';
+import {
+  getLinode, getLinodeConfigs, getLinodeDisks,
+  getLinodeVolumes, getType, renameLinode, startMutation,
+} from 'src/services/linodes';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -48,6 +53,7 @@ import LinodeSettings from './LinodeSettings';
 import LinodeSummary from './LinodeSummary';
 import LinodeBusyStatus from './LinodeSummary/LinodeBusyStatus';
 import LinodeVolumes from './LinodeVolumes';
+import MutateDrawer from './MutateDrawer';
 import reloadableWithRouter from './reloadableWithRouter';
 
 interface ConfigDrawerState {
@@ -56,6 +62,20 @@ interface ConfigDrawerState {
   error?: string;
   selected?: number;
   action?: (id: number) => void;
+}
+
+interface MutateInfo {
+  vcpus: number | null;
+  memory: number | null;
+  disk: number | null;
+  transfer: number | null;
+  network_out: number | null;
+}
+
+interface MutateDrawer {
+  open: boolean;
+  loading: boolean;
+  error: string;
 }
 
 interface State {
@@ -69,6 +89,10 @@ interface State {
   configDrawer: ConfigDrawerState;
   labelInput: { label: string; errorText: string; };
   notifications?: Linode.Notification[];
+  showPendingMutation: boolean;
+  mutateInfo: MutateInfo | null;
+  mutateDrawer: MutateDrawer
+  currentNetworkOut: number | null;
 }
 
 interface MatchProps { linodeId?: number };
@@ -78,7 +102,8 @@ type RouteProps = RouteComponentProps<MatchProps>;
 type ClassNames = 'titleWrapper'
   | 'backButton'
   | 'cta'
-  | 'launchButton';
+  | 'launchButton'
+  | 'link';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   titleWrapper: {
@@ -117,6 +142,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       borderColor: theme.palette.primary.main,
     },
   },
+  link: {
+    color: theme.palette.primary.main,
+    cursor: 'pointer',
+    '&:hover': {
+      textDecoration: 'underline',
+    }
+  }
 });
 
 type CombinedProps = RouteProps & WithStyles<ClassNames>;
@@ -373,6 +405,14 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       label: '',
       errorText: '',
     },
+    showPendingMutation: false,
+    mutateInfo: null,
+    mutateDrawer: {
+      open: false,
+      loading: false,
+      error: '',
+    },
+    currentNetworkOut: null,
   };
 
   composeState = (...fns: StateSetter[]) =>
@@ -385,7 +425,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     return haveAnyBeenModified<State>(
       this.state,
       nextState,
-      ['context', 'configDrawer', 'labelInput'],
+      ['context', 'configDrawer', 'labelInput', 'mutateDrawer', 'showPendingMutation'],
     )
       || haveAnyBeenModified<Location>(location, nextLocation, ['pathname', 'search']);
   }
@@ -396,6 +436,54 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     this.diskResizeSubscription.unsubscribe();
     this.notificationsSubscription.unsubscribe();
     this.volumeEventsSubscription.unsubscribe();
+  }
+
+  componentDidUpdate(prevProps: CombinedProps, prevState: State) {
+    const { context: { linode: { data: linode } } } = this.state;
+
+    /*
+    * /linodes/instances/types/type has a "successor" property
+    * that will have a non-null value if this Linode has an upgrade
+    * available
+    */
+    if (!!linode
+      && prevState.context.linode.data !== linode
+      && linode.type) {
+      getType(linode.type)
+        .then((currentType: Linode.LinodeType) => {
+          const typeIsDeprecated = currentType.successor !== null;
+          /*
+          * Now that we know the type is deprecated, get the successor's new
+          * specs so we can show the user what exactly is getting upgraded
+          */
+          if (typeIsDeprecated) {
+            getType(currentType.successor!)
+              .then((successorData: Linode.LinodeType) => {
+                // finally show the notice to the user with the upgrade info
+                this.setState({
+                  showPendingMutation: true,
+                  currentNetworkOut: currentType.network_out,
+                  // data is only relevant if the upgrade data is different from the current type's data
+                  mutateInfo: {
+                    vcpus: (successorData.vcpus !== currentType.vcpus) ? successorData.vcpus : null,
+                    network_out: (successorData.network_out !== currentType.network_out) ? successorData.network_out : null,
+                    disk: (successorData.disk !== currentType.disk) ? successorData.disk : null,
+                    transfer: (successorData.transfer !== currentType.transfer) ? successorData.transfer : null,
+                    memory: (successorData.memory !== currentType.memory) ? successorData.memory : null,
+                  }
+                });
+              })
+              // no action needed. Worse case scenario, the user doesn't
+              // see the notice
+              .catch((e: Error) => e);
+          } else { // type is not deprecated
+            this.setState({ showPendingMutation: false })
+          }
+        })
+        // no action needed. Worse case scenario, the user doesn't
+        // see the notice
+        .catch((e: Error) => e);
+    }
   }
 
   componentDidMount() {
@@ -554,12 +642,66 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     lishLaunch(linode!.id);
   }
 
-  render() {
+  openMutateDrawer = () => {
+    this.setState({ mutateDrawer: { ...this.state.mutateDrawer, open: true } });
+  }
 
+  closeMutateDrawer = () => {
+    this.setState({
+      mutateDrawer: {
+        ...this.state.mutateDrawer,
+        open: false,
+        error: '',
+      }
+    });
+  }
+
+  initMutation = () => {
+    const { mutateDrawer, context: { linode } } = this.state;
+
+    this.setState({
+      mutateDrawer: {
+        ...mutateDrawer,
+        loading: true,
+        error: '',
+      }
+    })
+    /*
+    * It's okay to disregard the possiblity of linode
+    * being undefined. The upgrade message won't appear unless
+    * it's defined
+    */
+    startMutation(linode.data!.id)
+      .then(() => {
+        linode.request();
+        this.setState({
+          mutateDrawer: {
+            ...mutateDrawer,
+            open: false,
+            error: '',
+            loading: false,
+          },
+        });
+        sendToast('Linode upgrade has been initiated')
+      })
+      .catch(() => {
+        this.setState({
+          mutateDrawer: {
+            ...mutateDrawer,
+            loading: false,
+            error: 'Mutation could not be initiated. Please try again later.'
+          }
+        })
+      });
+  }
+
+  render() {
     const { match: { url }, classes } = this.props;
     const {
       labelInput,
       configDrawer,
+      mutateDrawer,
+      mutateInfo,
       context: {
         volumes: {
           data: volumes,
@@ -651,6 +793,15 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
             <ImageProvider value={this.state.context.image}>
               <LinodeProvider value={this.state.context.linode}>
                 <VolumesProvider value={this.state.context.volumes}>
+                  {this.state.showPendingMutation && linode &&
+                    <Notice warning>
+                      {`This Linode has pending upgrades available. To learn more about
+                      this upgrade and what it includes, `}
+                      <span className={classes.link} onClick={this.openMutateDrawer}>
+                        click here.
+                      </span>
+                    </Notice>
+                  }
                   <Grid
                     container
                     justify="space-between"
@@ -731,6 +882,24 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                     selected={String(configDrawer.selected)}
                     error={configDrawer.error}
                   />
+                  {this.state.showPendingMutation && linode &&
+                    <MutateDrawer
+                      linodeId={linode.id}
+                      open={mutateDrawer.open}
+                      loading={mutateDrawer.loading}
+                      error={mutateDrawer.error}
+                      handleClose={this.closeMutateDrawer}
+                      mutateInfo={mutateInfo!}
+                      currentTypeInfo={{
+                        vcpus: linode.specs.vcpus,
+                        transfer: linode.specs.transfer,
+                        disk: linode.specs.disk,
+                        memory: linode.specs.memory,
+                        network_out: this.state.currentNetworkOut,
+                      }}
+                      initMutation={this.initMutation}
+                    />
+                  }
                 </VolumesProvider>
               </LinodeProvider>
             </ImageProvider>
