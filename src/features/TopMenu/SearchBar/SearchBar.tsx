@@ -343,6 +343,18 @@ class SearchBar extends React.Component<CombinedProps, State> {
     });
   }
 
+  onSelect = (item: SearchSuggestionT) => {
+    const { history } = this.props;
+    /* Need to unfocus the search bar so the
+    *  keyboard disappears on mobile.
+    *  This is a known issue with Downshift (https://github.com/paypal/downshift/issues/32),
+    *  hopefully this kludge won't be needed with React-Select.
+    */ 
+    const node = document.getElementById('searchbar-simple');
+    if (node) { node.blur(); }
+    history.push(item.path);
+  } 
+
   renderSuggestion(
     suggestion: SearchSuggestionT,
     index: number,
@@ -412,7 +424,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
             data-qa-search-icon
           />
           <Downshift
-            onSelect={(item: SearchSuggestionT) => history.push(item.path)}
+            onSelect={this.onSelect}
             stateReducer={this.downshiftStateReducer}
             itemToString={(item: SearchSuggestionT) => (item && item.title) || ''}
             render={({
