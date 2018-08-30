@@ -2,9 +2,9 @@ import { stringify } from 'querystring';
 import { v4 } from 'uuid';
 
 import { APP_ROOT, CLIENT_ID, LOGIN_ROOT, OAUTH_TOKEN_REFRESH_TIMEOUT } from 'src/constants';
-import { getStorage, setStorage } from 'src/storage';
 import store from 'src/store';
 import { setToken } from 'src/store/reducers/authentication';
+import { getStorage, setStorage } from 'src/utilities/storage';
 
 
 export const AUTH_TOKEN = 'authentication/oauth-token';
@@ -12,7 +12,7 @@ export const AUTH_SCOPES = 'authentication/scopes';
 export const AUTH_EXPIRE_DATETIME = 'authentication/expire-datetime';
 export const LATEST_REFRESH = 'authentication/latest-refresh';
 
-export function start(oauthToken = '', scopes = '', expires = '') {
+export const start = (oauthToken = '', scopes = '', expires = '') => {
   // Set these two so we can grab them on subsequent page loads
   setStorage(AUTH_TOKEN, oauthToken);
   setStorage(AUTH_SCOPES, scopes);
@@ -22,13 +22,13 @@ export function start(oauthToken = '', scopes = '', expires = '') {
   store.dispatch(setToken(oauthToken, scopes));
 }
 
-export function refresh() {
+export const refresh = () => {
   const authToken = getStorage(AUTH_TOKEN);
   const scopes = getStorage(AUTH_SCOPES);
   store.dispatch(setToken(authToken, scopes));
 }
 
-export function expire() {
+export const expire = () => {
   // Remove these from local storage so if login fails, next time we jump to login sooner.
   setStorage(AUTH_TOKEN, '');
   setStorage(AUTH_SCOPES, '');
@@ -36,7 +36,7 @@ export function expire() {
   store.dispatch(setToken(null, null));
 }
 
-export function initialize() {
+export const initialize = () => {
   const expires = getStorage(AUTH_EXPIRE_DATETIME) || null;
   if (expires && new Date(expires) < new Date()) {
     expire();
@@ -49,7 +49,7 @@ export function initialize() {
   start(token, scopes, expires);
 }
 
-export function genOAuthEndpoint(redirectUri: string, scope = '*', nonce: string) {
+export const genOAuthEndpoint = (redirectUri: string, scope = '*', nonce: string) => {
   const query = {
     client_id: CLIENT_ID,
     scope,
@@ -61,18 +61,18 @@ export function genOAuthEndpoint(redirectUri: string, scope = '*', nonce: string
   return `${LOGIN_ROOT}/oauth/authorize?${stringify(query)}`;
 }
 
-export function prepareOAuthEndpoint(redirectUri: string, scope = '*') {
+export const prepareOAuthEndpoint = (redirectUri: string, scope = '*') => {
   const nonce = v4();
   setStorage('authentication/nonce', nonce);
   return genOAuthEndpoint(redirectUri, scope, nonce);
 }
 
-export function redirectToLogin(path: string, querystring: string) {
+export const redirectToLogin = (path: string, querystring: string) => {
   const redirectUri = `${path}${querystring && `${querystring}`}`;
   window.location.href = prepareOAuthEndpoint(redirectUri);
 }
 
-export function refreshOAuthToken() {
+export const refreshOAuthToken = () => {
   /*
    * This timestamp is for throttling the refresh process itself. It's
    * heavyweight because it hits localStorage. It's important to do this
@@ -105,7 +105,7 @@ export function refreshOAuthToken() {
   setTimeout(() => iframeContainer.removeChild(iframe), 5000);
 }
 
-export function refreshOAuthOnUserInteraction() {
+export const refreshOAuthOnUserInteraction = () => {
   /*
    * This timestamp is for throttling events on this tab. The comparison is
    * lightweight because it's between integers and doesn't hit localStorage.

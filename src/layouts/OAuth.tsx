@@ -4,8 +4,8 @@ import { withRouter } from 'react-router-dom';
 import { compose } from 'redux';
 
 import * as session from 'src/session';
-import { getStorage, setStorage } from 'src/storage';
 import { parseQueryParams, splitIntoTwo } from 'src/utilities/queryParams';
+import { getStorage, setStorage } from 'src/utilities/storage';
 
 export class OAuthCallbackPage extends Component<Linode.TodoAny> {
   checkNonce(nonce: string) {

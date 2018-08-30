@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-export default function substituteLink(text: string, substr: string, path: string) {
+export const substituteLink = (text: string, substr: string, path: string) => {
   const loc = text.toLowerCase().indexOf(substr.toLowerCase());
   if (loc === -1) {
     return text;
@@ -14,3 +14,5 @@ export default function substituteLink(text: string, substr: string, path: strin
     </React.Fragment>
   );
 }
+
+export default substituteLink;

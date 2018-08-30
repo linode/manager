@@ -27,7 +27,9 @@ import { getLinodeTypes } from 'src/services/linodes';
 import { getRegions } from 'src/services/misc';
 import { getProfile } from 'src/services/profile';
 import { request, response } from 'src/store/reducers/resources';
+
 import composeState from 'src/utilities/composeState';
+import { notifications, theme } from 'src/utilities/storage';
 
 import BetaNotification from 'src/BetaNotification';
 
@@ -249,8 +251,7 @@ export class App extends React.Component<CombinedProps, State> {
   componentDidMount() {
     const { request, response } = this.props;
 
-    const betaNotification = window.localStorage.getItem('BetaNotification');
-    if (betaNotification !== 'closed') {
+    if (notifications.beta.get() === 'open') {
       this.setState({ betaNotification: true });
     }
 
@@ -276,7 +277,7 @@ export class App extends React.Component<CombinedProps, State> {
 
   closeBetaNotice = () => {
     this.setState({ betaNotification: false });
-    window.localStorage.setItem('BetaNotification', 'closed');
+    notifications.beta.set('closed');
   }
 
   render() {
@@ -360,8 +361,7 @@ export class App extends React.Component<CombinedProps, State> {
 }
 
 const themeDataAttr = () => {
-  const localStorageVal = localStorage.getItem('themeChoice');
-  if (localStorageVal === 'dark') {
+  if (theme.get() === 'dark') {
     return {
       'data-qa-theme-dark': true
     }
