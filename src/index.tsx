@@ -18,6 +18,7 @@ import { sendEvent } from 'src/utilities/analytics';
 import 'src/utilities/createImageBitmap';
 import 'src/utilities/request';
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
+import { theme } from 'src/utilities/storage';
 
 import App from './App';
 import './events';
@@ -37,17 +38,13 @@ const Lish = DefaultLoader({
  */
 initAnalytics(GA_ID, isProduction);
 
-const themeChoice = localStorage.getItem('themeChoice');
-
-if (themeChoice === 'dark') {
+if (theme.get() === 'dark') {
   sendEvent({
     category: 'Theme Choice',
     action: 'Dark Theme',
     label: location.pathname,
   })
-}
-
-if (themeChoice === 'light' || themeChoice === null) {
+} else {
   sendEvent({
     category: 'Theme Choice',
     action: 'Light Theme',
