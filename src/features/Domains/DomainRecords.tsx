@@ -444,7 +444,6 @@ class DomainRecords extends React.Component<CombinedProps, State> {
               <ExpansionPanel
                 key={idx}
                 heading={type.title}
-                defaultExpanded
               >
                 <Grid
                   container
