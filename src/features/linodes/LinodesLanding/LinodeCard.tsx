@@ -8,6 +8,7 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import Divider from '@material-ui/core/Divider';
+import IconButton from '@material-ui/core/IconButton';
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
@@ -46,6 +47,8 @@ type CSSClasses =
   | 'loadingStatusText'
   | 'flag'
   | 'flagContainer'
+  | 'linkWrapper'
+  | 'StatusIndicatorWrapper'
   | 'link';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
@@ -80,10 +83,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   cardHeader: {
     fontWeight: 700,
     color: 'black',
-    flex: 1,
-    '& h3': {
-      transition: theme.transitions.create(['color']),
-    },
+    marginLeft: theme.spacing.unit,
   },
   cardContent: {
     flex: 1,
@@ -168,6 +168,15 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
         color: theme.palette.primary.main,
       },
     },
+  },
+  StatusIndicatorWrapper: {
+    position: 'relative',
+    top: 2,
+  },
+  linkWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    flex: 1,
   },
 });
 
@@ -324,7 +333,9 @@ class LinodeCard extends React.Component<CombinedProps, State> {
       return (
         <Grid item className={classes.flagContainer}>
           <Tooltip title="There is a free upgrade available for this Linode">
-            <Flag className={classes.flag} />
+            <IconButton>
+              <Flag className={classes.flag} />
+            </IconButton>
           </Tooltip>
         </Grid>
       )
@@ -340,18 +351,20 @@ class LinodeCard extends React.Component<CombinedProps, State> {
   }
 
   renderTitle() {
-    const { classes, linodeStatus, linodeLabel } = this.props;
+    const { classes, linodeStatus, linodeLabel, linodeId } = this.props;
 
     return (
       <Grid container alignItems="center">
-        <Grid item className={'py0'}>
-          <LinodeStatusIndicator status={linodeStatus} />
-        </Grid>
-        <Grid item className={classes.cardHeader + ' py0'}>
-          <Typography role="header" variant="subheading" data-qa-label>
-            {linodeLabel}
-          </Typography>
-        </Grid>
+        <Link to={`/linodes/${linodeId}`} className={classes.linkWrapper}>
+          <Grid item className={`${classes.StatusIndicatorWrapper} ${'py0'}`}>
+            <LinodeStatusIndicator status={linodeStatus} />
+          </Grid>
+          <Grid item className={classes.cardHeader + ' py0'}>
+            <Typography role="header" variant="subheading" data-qa-label>
+              {linodeLabel}
+            </Typography>
+          </Grid>
+        </Link>
         {this.renderFlag()}
       </Grid>
     );
@@ -365,10 +378,6 @@ class LinodeCard extends React.Component<CombinedProps, State> {
     return (
       <Grid item xs={12} sm={6} lg={4} xl={3} data-qa-linode={linodeLabel}>
         <Card className={classes.flexContainer}>
-          {/* Give Button a child of ' ', because the component requires children */}
-          <Link to={`/linodes/${linodeId}`}>
-            <Button className={classes.link}> </Button>
-          </Link>
           <CardHeader
             subheader={this.renderTitle()}
             action={
