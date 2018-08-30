@@ -27,7 +27,9 @@ import { getLinodeTypes } from 'src/services/linodes';
 import { getRegions } from 'src/services/misc';
 import { getProfile } from 'src/services/profile';
 import { request, response } from 'src/store/reducers/resources';
+
 import composeState from 'src/utilities/composeState';
+import { notifications, theme } from 'src/utilities/storage';
 
 import BetaNotification from 'src/BetaNotification';
 
@@ -95,6 +97,10 @@ const Dashboard = DefaultLoader({
 
 const Help = DefaultLoader({
   loader: () => import('src/features/Help'),
+});
+
+const SupportSearchLanding = DefaultLoader({
+  loader: () => import('src/features/Help/SupportSearchLanding'),
 });
 
 type ClassNames = 'appFrame'
@@ -245,8 +251,7 @@ export class App extends React.Component<CombinedProps, State> {
   componentDidMount() {
     const { request, response } = this.props;
 
-    const betaNotification = window.localStorage.getItem('BetaNotification');
-    if (betaNotification !== 'closed') {
+    if (notifications.beta.get() === 'open') {
       this.setState({ betaNotification: true });
     }
 
@@ -272,7 +277,7 @@ export class App extends React.Component<CombinedProps, State> {
 
   closeBetaNotice = () => {
     this.setState({ betaNotification: false });
-    window.localStorage.setItem('BetaNotification', 'closed');
+    notifications.beta.set('closed');
   }
 
   render() {
@@ -282,6 +287,7 @@ export class App extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
+        <a href="#main-content" className="visually-hidden">Skip to main content</a>
         <DocumentTitleSegment segment="Linode Manager" />
         {longLivedLoaded &&
           <React.Fragment>
@@ -290,9 +296,8 @@ export class App extends React.Component<CombinedProps, State> {
                 <div {...themeDataAttr()} className={classes.appFrame}>
                   <SideMenu open={menuOpen} closeMenu={this.closeMenu} toggleTheme={toggleTheme} />
                   <main className={classes.content}>
-                    <TopMenu openSideMenu={this.openMenu} />
-                   
-                    <div className={classes.wrapper}>
+                    <TopMenu openSideMenu={this.openMenu} />                  
+                    <div className={classes.wrapper} id="main-content">
                     <StickyContainer>
                       <Grid container spacing={0} className={classes.grid}>
                         <Grid item className={`${classes.switchWrapper} ${hasDoc ? 'mlMain' : ''}`}>
@@ -312,24 +317,27 @@ export class App extends React.Component<CombinedProps, State> {
                             <Route path="/support/tickets/:ticketId" component={SupportTicketDetail} />
                             <Route path="/profile" component={Profile} />
                             <Route exact path="/support" component={Help} />
+                            <Route exact path="/support/search/" component={SupportSearchLanding} />
                             <Route path="/dashboard" component={Dashboard} />
                             <Redirect exact from="/" to="/dashboard" />
                             <Route component={NotFound} />
                           </Switch>
                         </Grid>
-                        <Grid className={`${hasDoc ? 'mlSidebar': ''}`}>
-                          <Sticky topOffset={-24} disableCompensation>
-                          {(props: StickyProps) => {
-                            return (
-                              <DocsSidebar
-                                docs={documentation}
-                                {...props}
-                              />
-                              )
-                            }
-                          }
-                          </Sticky>
-                        </Grid>
+                        {hasDoc &&
+                          <Grid className='mlSidebar'>
+                            <Sticky topOffset={-24} disableCompensation>
+                              {(props: StickyProps) => {
+                                return (
+                                  <DocsSidebar
+                                    docs={documentation}
+                                    {...props}
+                                  />
+                                )
+                              }
+                              }
+                            </Sticky>
+                          </Grid>
+                        }
                       </Grid>
                       </StickyContainer>
                     </div>
@@ -353,8 +361,7 @@ export class App extends React.Component<CombinedProps, State> {
 }
 
 const themeDataAttr = () => {
-  const localStorageVal = localStorage.getItem('themeChoice');
-  if (localStorageVal === 'dark') {
+  if (theme.get() === 'dark') {
     return {
       'data-qa-theme-dark': true
     }

@@ -340,7 +340,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
             color="primary"
             data-qa-submit
           >
-            Submit
+            Create
           </Button>
           <Button
             onClick={this.close}

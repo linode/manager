@@ -116,7 +116,6 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
 
   downshiftStateReducer = (state: DownshiftState, changes: StateChangeOptions) => {
     const { value } = this.props;
-
     switch (changes.type) {
       // Don't clear the field value when we leave the field
       case Downshift.stateChangeTypes.blurInput:

@@ -102,7 +102,7 @@ const LinodeTheme: Linode.Theme = {
     },
     caption: {
       fontSize: '.9rem',
-      lineHeight: '1.1em',
+      lineHeight: '1.3em',
       color: primaryColors.text,
     },
     display2: {
@@ -447,7 +447,6 @@ const LinodeTheme: Linode.Theme = {
         },
         '& svg': {
           fontSize: 18,
-          cursor: 'pointer',
           color: primaryColors.main,
           '&:hover': {
             color: '#5E9AEA',
@@ -517,6 +516,7 @@ const LinodeTheme: Linode.Theme = {
     },
     MuiListItem: {
       root: {
+        color: primaryColors.text,
         '&.selectHeader': {
           opacity: 1,
           fontWeight: 700,

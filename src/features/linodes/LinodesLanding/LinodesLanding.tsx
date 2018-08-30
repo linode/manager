@@ -28,7 +28,9 @@ import { newLinodeEvents } from 'src/features/linodes/events';
 import notifications$ from 'src/notifications';
 import { getImages } from 'src/services/images';
 import { getLinode, getLinodes } from 'src/services/linodes';
+
 import scrollToTop from 'src/utilities/scrollToTop';
+import { views } from 'src/utilities/storage';
 
 import LinodesGridView from './LinodesGridView';
 import LinodesListView from './LinodesListView';
@@ -127,16 +129,14 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     {
       title: 'Getting Started with Linode',
       src: 'https://linode.com/docs/getting-started/',
-      body: `Thank you for choosing Linode as your cloud hosting provider! This guide will help you
-      sign up for an account, set up a Linux distribution, boot your Linode, and perform some basic
-      system administr...`,
+      body: `This guide will help you set up your first Linode.`,
     },
     {
       title: 'How to Secure your Server',
       src: 'https://linode.com/docs/security/securing-your-server/',
-      body: `Keeping your software up to date is the single biggest security precaution you can
-      take for any operating system. Software updates range from critical vulnerability patches to
-      minor bug fixes, and...`,
+      body: `This guide covers basic best practices for securing a production server,
+      including setting up user accounts, configuring a firewall, securing SSH,
+      and disabling unused network services.`,
     },
 
   ];
@@ -224,10 +224,14 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     });
   }
 
-  changeViewStyle = (style: string) => {
+  changeViewStyle = (style: 'grid' | 'list') => {
     const { history } = this.props;
     history.push(`#${style}`);
-    localStorage.setItem('linodesViewStyle', style);
+    if (style === 'grid') {
+      views.linode.set('grid');
+    } else {
+      views.linode.set('list');
+    }
   }
 
   getLinodes = (page = 1, pageSize = 25) => {
@@ -462,14 +466,16 @@ const addNotificationToLinode = (notifications: Linode.Notification[]) => (linod
 });
 
 const getDisplayFormat = ({ hash, length }: { hash?: string, length: number }): 'grid' | 'list' => {
-  const local = localStorage.getItem('linodesViewStyle');
 
   if (hash) {
     return hash === '#grid' ? 'grid' : 'list';
   }
 
-  if (local) {
-    return local as 'grid' | 'list';
+  /*
+  * If local stroage exists, set the view based on that
+  */
+  if (views.linode.get() !== null) {
+    return views.linode.get();
   }
 
   return (length >= 3) ? 'list' : 'grid';

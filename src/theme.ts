@@ -102,7 +102,7 @@ const LinodeTheme: Linode.Theme = {
     },
     caption: {
       fontSize: '.9rem',
-      lineHeight: '1.2em',
+      lineHeight: '1.3em',
       color: primaryColors.text,
     },
     display2: {
@@ -440,7 +440,6 @@ const LinodeTheme: Linode.Theme = {
         },
         '& svg': {
           fontSize: 18,
-          cursor: 'pointer',
           color: primaryColors.main,
           '&:hover': {
             color: '#5E9AEA',
@@ -507,9 +506,22 @@ const LinodeTheme: Linode.Theme = {
         paddingTop: 0,
         paddingBottom: 0,
       },
+      root: {
+        '&.reset': {
+          padding: 'inherit',
+          margin: 'inherit',
+          listStyle: 'initial',
+          '& li': {
+            display: 'list-item',
+            padding: 0,
+            listStyleType: 'initial',
+          },
+        },
+      },
     },
     MuiListItem: {
       root: {
+        color: primaryColors.text,
         '&.selectHeader': {
           opacity: 1,
           fontWeight: 700,

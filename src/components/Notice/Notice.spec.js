@@ -14,7 +14,7 @@ describe('Notice Suite', () => {
 
     it('should display three notices', () => {
         notices = $$('[data-qa-notice]');
-        expect(notices.length).toEqual(3);
+        expect(notices.length).toEqual(6);
     });
 
     it('should display an error notice', () => {
@@ -36,6 +36,30 @@ describe('Notice Suite', () => {
     it('should display a success notice', () => {
         const successNotices = notices.filter(n => {
             const successMsg = 'This is a success notice';
+            return n.getAttribute('class').includes('success') && n.isVisible() && n.getText().includes(successMsg);
+        });
+        expect(successNotices.length).toEqual(1);
+    });
+
+    it('should display an important error notice', () => {
+        const errorNotices = notices.filter(n => {
+            const errorMsg = 'This is an important error notice';
+            return n.getAttribute('class').includes('error') && n.isVisible() && n.getText().includes(errorMsg);
+        });
+        expect(errorNotices.length).toEqual(1);
+    });
+
+    it('should display an important warning notice', () => {
+        const warningNotices = notices.filter(n => {
+            const warningMsg = 'This is an important warning notice';
+            return n.getAttribute('class').includes('warning') && n.isVisible() && n.getText().includes(warningMsg);
+        });
+        expect(warningNotices.length).toEqual(1);
+    });
+
+    it('should display an important success notice', () => {
+        const successNotices = notices.filter(n => {
+            const successMsg = 'This is an important success notice';
             return n.getAttribute('class').includes('success') && n.isVisible() && n.getText().includes(successMsg);
         });
         expect(successNotices.length).toEqual(1);
