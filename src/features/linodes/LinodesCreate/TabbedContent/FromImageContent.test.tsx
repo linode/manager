@@ -11,6 +11,7 @@ const mockProps = {
   history: null,
   getTypeInfo: jest.fn(),
   getRegionInfo: jest.fn(),
+  userSSHKeys: [],
 };
 
 describe('FromImageContent', () => {
