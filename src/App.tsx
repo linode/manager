@@ -251,7 +251,7 @@ export class App extends React.Component<CombinedProps, State> {
   componentDidMount() {
     const { request, response } = this.props;
 
-    if (notifications.beta.isOpen) {
+    if (notifications.beta.get() === 'open') {
       this.setState({ betaNotification: true });
     }
 
@@ -277,7 +277,7 @@ export class App extends React.Component<CombinedProps, State> {
 
   closeBetaNotice = () => {
     this.setState({ betaNotification: false });
-    notifications.beta.close();
+    notifications.beta.set('closed');
   }
 
   render() {
@@ -361,7 +361,7 @@ export class App extends React.Component<CombinedProps, State> {
 }
 
 const themeDataAttr = () => {
-  if (theme.isDarkTheme) {
+  if (theme.get() === 'dark') {
     return {
       'data-qa-theme-dark': true
     }

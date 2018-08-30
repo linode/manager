@@ -1,5 +1,13 @@
-export const getStorage = (key: string) => {
+export const getStorage = (key: string, fallback?: string) => {
   const item = window.localStorage.getItem(key);
+  /*
+  * Basically, if localstorage doesn't exist,
+  * return whatever we set as a fallback
+  */
+  if (item === null && !!fallback) {
+    return fallback;
+  }
+
   try {
     return JSON.parse(item as any);
   } catch (e) {
@@ -15,24 +23,25 @@ const THEME = 'themeChoice';
 const BETA_NOTIFICATION = 'BetaNotification';
 const LINODE_VIEW = 'linodesViewStyle';
 
+type Theme = 'dark' | 'light';
+type Beta = 'open' | 'closed';
+type LinodeView = 'grid' | 'list';
+
 export const storage = {
   theme: {
-    isDarkTheme: getStorage(THEME) === 'dark',
-    setLightTheme: () => setStorage(THEME, 'light'),
-    setDarkTheme: () => setStorage(THEME, 'dark'),
+    get: (): Theme => getStorage(THEME, 'light'),
+    set: (whichTheme: Theme) => setStorage(THEME, whichTheme),
   },
   notifications: {
     beta: {
-      isOpen: getStorage(BETA_NOTIFICATION) !== 'closed',
-      close: () => setStorage(BETA_NOTIFICATION, 'closed'),
+      get: (): Beta => getStorage(BETA_NOTIFICATION, 'open'),
+      set: (open: Beta) => setStorage(BETA_NOTIFICATION, open),
     }
   },
   views: {
     linode: {
-      isGridView: getStorage(LINODE_VIEW) === 'grid',
-      isListView: getStorage(LINODE_VIEW) === 'list',
-      setGridView: () => setStorage(LINODE_VIEW, 'grid'),
-      setListView: () => setStorage(LINODE_VIEW, 'list'),
+      get: (): LinodeView => getStorage(LINODE_VIEW, 'list'),
+      set: (view: LinodeView) => setStorage(LINODE_VIEW, view),
     }
   }
 }

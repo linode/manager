@@ -228,9 +228,9 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     const { history } = this.props;
     history.push(`#${style}`);
     if (style === 'grid') {
-      views.linode.setGridView();
+      views.linode.set('grid');
     } else {
-      views.linode.setListView();
+      views.linode.set('list');
     }
   }
 
