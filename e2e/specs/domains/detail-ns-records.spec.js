@@ -8,17 +8,16 @@ import { apiDeleteAllDomains } from '../../utils/common';
 describe('Domains - Detail - NS Actions Suite', () => {
     const domainName = `A${new Date().getTime()}.com`;
 
-    beforeAll(() => {
+    it('should setup the spec', () => {
         browser.url(constants.routes.domains);
         ListDomains.globalCreate.waitForVisible();
         ListDomains.progressBar.waitForVisible(constants.wait.normal, true);
         ListDomains.baseElemsDisplay(true);
         ListDomains.create(domainName,'foo@bar.com', true);
-        ListDomains.baseElemsDisplay();
-        ListDomains.domains[0].$(`${ListDomains.label.selector} a`).click();
-        
         // TODO - Update to use DomainDetail.baseElemsDisplay();
-        DomainDetail.domainTitle.waitForVisible();
+
+        DomainDetail.domainTitle.waitForVisible(constants.wait.normal);
+        DomainDetail.expandPanel('NS Record');
     });
 
     it('should add an ns record', () => {
