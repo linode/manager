@@ -135,7 +135,6 @@ const L = {
     errors: compose(configsLens, lensPath(['errors'])) as Lens,
     lastUpdated: compose(configsLens, lensPath(['lastUpdated'])) as Lens,
     loading: compose(configsLens, lensPath(['loading'])) as Lens,
-    request: compose(configsLens, lensPath(['request'])) as Lens,
   },
   disks: {
     data: compose(disksLens, lensPath(['data'])) as Lens,
@@ -143,7 +142,6 @@ const L = {
     errors: compose(disksLens, lensPath(['errors'])) as Lens,
     lastUpdated: compose(disksLens, lensPath(['lastUpdated'])) as Lens,
     loading: compose(disksLens, lensPath(['loading'])) as Lens,
-    request: compose(disksLens, lensPath(['request'])) as Lens,
   },
   image: {
     data: compose(imageLens, lensPath(['data'])) as Lens,
@@ -151,7 +149,6 @@ const L = {
     image: imageLens,
     lastUpdated: compose(imageLens, lensPath(['lastUpdated'])) as Lens,
     loading: compose(imageLens, lensPath(['loading'])) as Lens,
-    request: compose(imageLens, lensPath(['request'])) as Lens,
   },
   labelInput: {
     errorText: compose(labelInputLens, lensPath(['errorText'])) as Lens,
@@ -164,14 +161,12 @@ const L = {
     lastUpdated: compose(linodeLens, lensPath(['lastUpdated'])) as Lens,
     linode: linodeLens,
     loading: compose(linodeLens, lensPath(['loading'])) as Lens,
-    request: compose(linodeLens, lensPath(['request'])) as Lens,
   },
   volumes: {
     data: compose(volumesLens, lensPath(['data'])) as Lens,
     errors: compose(volumesLens, lensPath(['errors'])) as Lens,
     lastUpdated: compose(volumesLens, lensPath(['lastUpdated'])) as Lens,
     loading: compose(volumesLens, lensPath(['loading'])) as Lens,
-    request: compose(volumesLens, lensPath(['request'])) as Lens,
     volumes: volumesLens,
   },
 };
@@ -217,7 +212,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               this.composeState(
                 set(L.configs.lastUpdated, Date.now()),
                 set(L.configs.loading, false),
-                set(L.configs.errors, [{ field: 'none', reason: 'Could not load instance config for some reason.' }])
+                set(L.configs.errors, r)
               );
             });
         },
@@ -249,7 +244,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               this.composeState(
                 set(L.disks.lastUpdated, Date.now()),
                 set(L.disks.loading, false),
-                set(L.disks.errors, [{ field: 'none', reason: 'Could not load Linode disks for some reason.' }])
+                set(L.disks.errors, r)
               );
             });
         },
@@ -292,7 +287,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               this.composeState(
                 set(L.image.lastUpdated, Date.now()),
                 set(L.image.loading, false),
-                set(L.image.errors, [{ field: 'none', reason: 'Could not load Linode for some reason.' }])
+                set(L.image.errors, r)
               );
             });
         },
@@ -325,7 +320,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               this.composeState(
                 set(L.linode.lastUpdated, Date.now()),
                 set(L.linode.loading, false),
-                set(L.linode.errors, [{ field: 'none', reason: 'Could not load instance for some reason.' }])
+                set(L.linode.errors, r)
               );
             });
         },
@@ -360,7 +355,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               this.composeState(
                 set(L.volumes.lastUpdated, Date.now()),
                 set(L.volumes.loading, false),
-                set(L.volumes.errors, [{ field: 'none', reason: 'Could not load Linode for some reason.' }])
+                set(L.volumes.errors, r)
               );
             });
         },
