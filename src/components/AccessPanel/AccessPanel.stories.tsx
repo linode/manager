@@ -29,34 +29,31 @@ class PasswordAndSSHAccess extends React.Component<{}, { password: string, users
     users: [
       {
         gravatarUrl: 'https://www.gravatar.com/avatar/00000000000000000000000000000000?s=24',
-        id: 1,
         username: 'Joe',
         selected: false,
         keys: ['some-key','some-key','some-key','some-key','some-key','some-key','some-key','some-key','some-key','some-key','some-key','some-key','some-key',],
-        onChange: (e: React.ChangeEvent<HTMLInputElement>, result: boolean) => this.toggleSSHUserKeys(1, result),
+        onChange: (e: React.ChangeEvent<HTMLInputElement>, result: boolean) => this.toggleSSHUserKeys('Joe', result),
       },
       {
         gravatarUrl: 'https://www.gravatar.com/avatar/00000000000000000000000000000000?s=24',
-        id: 2,
         username: 'Bob',
         selected: false,
         keys: ['some-key',],
-        onChange: (e: React.ChangeEvent<HTMLInputElement>, result: boolean) => this.toggleSSHUserKeys(2, result),
+        onChange: (e: React.ChangeEvent<HTMLInputElement>, result: boolean) => this.toggleSSHUserKeys('Bob', result),
       },
       {
         gravatarUrl: 'https://www.gravatar.com/avatar/00000000000000000000000000000000?s=24',
-        id: 3,
         username: 'Mark',
         selected: false,
         keys: ['some-key','some-key'],
-        onChange: (e: React.ChangeEvent<HTMLInputElement>, result: boolean) => this.toggleSSHUserKeys(3, result),
+        onChange: (e: React.ChangeEvent<HTMLInputElement>, result: boolean) => this.toggleSSHUserKeys('Mark', result),
       },
     ]
   };
 
-  toggleSSHUserKeys = (id: number, result: boolean) => this.setState((state) => ({
+  toggleSSHUserKeys = (username: string, result: boolean) => this.setState((state) => ({
     ...state,
-    users: state.users.map((user) => (id === user.id) ? { ...user, selected: result } : user)
+    users: state.users.map((user) => (username === user.username) ? { ...user, selected: result } : user)
   }));
 
   handlePasswordChange = (password: string) => this.setState({ password: password || '' });
