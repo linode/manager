@@ -87,3 +87,4 @@ class SearchPanel extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles, { withTheme: true });
 
 export default styled(SearchPanel);
+

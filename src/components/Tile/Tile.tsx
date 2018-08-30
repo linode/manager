@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
+import Notice from 'src/components/Notice';
+
 type ClassNames = 'root'
   | 'card'
   | 'clickableTile'
@@ -44,6 +46,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     fontSize: '1.2rem',
     marginTop: theme.spacing.unit,
     marginBottom: theme.spacing.unit,
+    textAlign: 'center',
   },
   icon: {
     margin: '0 auto 16px',
@@ -68,6 +71,7 @@ interface Props {
   link?: string | onClickFn;
   className?: string;
   icon?: JSX.Element;
+  errorText?: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -92,7 +96,7 @@ class Tile extends React.Component<CombinedProps> {
   }
 
   render() {
-    const { classes, className, title, description, link, icon } = this.props;
+    const { classes, className, title, description, link, icon, errorText } = this.props;
 
     return (
       <div className={classNames(
@@ -104,6 +108,9 @@ class Tile extends React.Component<CombinedProps> {
       )} data-qa-tile>
         {icon &&
           <span className={classes.icon} data-qa-tile-icon>{icon}</span>
+        }
+        {errorText &&
+          <Notice error={true} text={errorText} />
         }
         <Typography variant="subheading" className={classes.tileTitle} data-qa-tile-title>
           <React.Fragment>

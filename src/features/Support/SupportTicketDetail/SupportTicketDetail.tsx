@@ -340,7 +340,6 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
     const { classes, profileUsername } = this.props;
     const { errors, loading, replies, ticket } = this.state;
     const ticketId = this.props.match.params.ticketId;
-
     /*
     * Including loading/error states here (rather than in a
     * renderContent function) because the header
@@ -397,7 +396,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
             isCurrentUser={profileUsername === ticket.opened_by}
           />
           {replies && this.renderReplies(replies)}
-          {ticket.attachments && this.renderAttachments(ticket.attachments)}
+          {ticket.attachments.length > 0 && this.renderAttachments(ticket.attachments)}
           {/* If the ticket is open, allow users to reply to it. */}
           {['open','new'].includes(ticket.status) &&
             <TicketReply 
