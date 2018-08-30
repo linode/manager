@@ -9,7 +9,16 @@ type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
-    transition: theme.transitions.create('background-color'),
+    transition: theme.transitions.create(['background-color', 'border-left-color']),
+    '& .secondaryLink': {
+      transition: theme.transitions.create('color'),
+      '&:hover': {
+        textDecoration: 'underline',
+      }
+    },
+    '&:hover .secondaryLink': {
+      color: theme.palette.primary.main,
+    },
   },
 });
 

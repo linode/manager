@@ -14,7 +14,6 @@ import InsertDriveFile from '@material-ui/icons/InsertDriveFile';
 import InsertPhoto from '@material-ui/icons/InsertPhoto';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 
-
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
@@ -286,6 +285,8 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
   renderAttachments = (attachments: string[]) => {
     const { classes } = this.props;
 
+    console.log(attachments);
+
     // create an array of icons to use
     const icons = attachments.map((attachment, idx) => {
       // try to find a file extension
@@ -299,29 +300,33 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
       return <InsertDriveFile key={idx} />;
     })
     return (
-      <Grid item xs={12} container justify="flex-start" className="px0">
-        <Grid item xs={12}>
-          <Typography variant="subheading">Attachments</Typography>
-        </Grid>
-        <Grid item xs={12} className={classes.attachmentPaperWrapper}>
-          <Paper className={classes.attachmentPaper}>
-              {attachments.map((attachment, idx) => {
-                return (
-                  <Grid container wrap="nowrap" key={idx} className={classes.attachmentRow}>
-                    <Grid item className={classes.attachmentIcon}>
-                      {icons[idx]}
+      <React.Fragment>
+        {attachments.length !== 0 &&
+        <Grid item xs={12} container justify="flex-start" className="px0">
+          <Grid item xs={12}>
+            <Typography variant="subheading">Attachments</Typography>
+          </Grid>
+          <Grid item xs={12} className={classes.attachmentPaperWrapper}>
+            <Paper className={classes.attachmentPaper}>
+                {attachments.map((attachment, idx) => {
+                  return (
+                    <Grid container wrap="nowrap" key={idx} className={classes.attachmentRow}>
+                      <Grid item className={classes.attachmentIcon}>
+                        {icons[idx]}
+                      </Grid>
+                      <Grid item>
+                        <Typography component="span">
+                          {attachment}
+                        </Typography>
+                      </Grid>
                     </Grid>
-                    <Grid item>
-                      <Typography component="span">
-                        {attachment}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                )
-              })}
-          </Paper>
+                  )
+                })}
+            </Paper>
+          </Grid>
         </Grid>
-      </Grid>
+        }
+      </React.Fragment>
     );
   }
 

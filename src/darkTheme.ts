@@ -788,12 +788,17 @@ const LinodeTheme: Linode.Theme = {
         zIndex: 1,
         '&:hover': {
           '&$hover': {
-            color: primaryColors.offBlack,
+            backgroundColor: 'rgba(0, 0, 0, 0.1)',
+            borderLeftColor: primaryColors.main,
           },
         },
       },
       hover: {
         cursor: 'pointer',
+        borderLeft: '5px solid transparent',
+        '& > td:first-child': {
+          paddingLeft: 13,
+        },
         '& a': {
           color: primaryColors.offBlack,
           fontWeight: 700,
