@@ -44,7 +44,7 @@ export default (Component: React.ComponentType<any>) => {
             ],
           })
         })
-        .catch(console.error);
+        .catch(() => { /* We don't need to do anything here, we just don't add the keys. */});
 
       getUsers()
         .then((response) => {
@@ -72,7 +72,7 @@ export default (Component: React.ComponentType<any>) => {
             ],
           })
         })
-        .catch(console.error);
+        .catch(() => { /* We don't need to do anything here, we just don't add the keys. */});
     }
 
     render() {
