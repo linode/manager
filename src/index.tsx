@@ -38,7 +38,7 @@ const Lish = DefaultLoader({
  */
 initAnalytics(GA_ID, isProduction);
 
-if (theme.isDarkTheme) {
+if (theme.get() === 'dark') {
   sendEvent({
     category: 'Theme Choice',
     action: 'Dark Theme',

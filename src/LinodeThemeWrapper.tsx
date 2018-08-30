@@ -34,7 +34,7 @@ class LinodeThemeWrapper extends React.Component<{}, State> {
   };
 
   componentDidMount() {
-    if (theme.isDarkTheme) {
+    if (theme.get() === 'dark') {
       this.setState({
         themeChoice: 'dark'
       });
@@ -51,10 +51,10 @@ class LinodeThemeWrapper extends React.Component<{}, State> {
   toggleTheme = () => {
     if (this.state.themeChoice === 'light') {
       this.setState({ themeChoice: 'dark' });
-      theme.setDarkTheme();
+      theme.set('dark');
     } else {
       this.setState({ themeChoice: 'light' });
-      theme.setLightTheme();
+      theme.set('light');
     }
 
     /**
