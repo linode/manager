@@ -50,6 +50,7 @@ interface Props {
   linodeId: number;
   loading: boolean;
   error: string;
+  optOut: () => void;
 }
 
 interface State {
@@ -101,6 +102,7 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
   render() {
     const {
       open,
+      optOut,
       handleClose,
       loading,
       error,
@@ -151,6 +153,9 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
         </ol>
         <Button loading={loading} onClick={this.props.initMutation} type="primary" style={{ marginTop: 32 }}>
           Enter the Upgrade Queue
+        </Button>
+        <Button onClick={optOut} type="secondary" style={{ marginTop: 32 }}>
+          Opt Out of Upgrade
         </Button>
         {/*
         * Show when the relevant docs exist

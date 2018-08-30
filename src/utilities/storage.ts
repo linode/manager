@@ -1,4 +1,4 @@
-export const getStorage = (key: string, fallback?: string) => {
+export const getStorage = (key: string, fallback?: any) => {
   const item = window.localStorage.getItem(key);
   /*
   * Basically, if localstorage doesn't exist,
@@ -22,6 +22,7 @@ export const setStorage = (key: string, value: string) => {
 const THEME = 'themeChoice';
 const BETA_NOTIFICATION = 'BetaNotification';
 const LINODE_VIEW = 'linodesViewStyle';
+const OPTED_OUT_LINODES = 'optedOutLinodes';
 
 type Theme = 'dark' | 'light';
 type Beta = 'open' | 'closed';
@@ -36,6 +37,12 @@ export const storage = {
     beta: {
       get: (): Beta => getStorage(BETA_NOTIFICATION, 'open'),
       set: (open: Beta) => setStorage(BETA_NOTIFICATION, open),
+    },
+    linodeMutation: {
+      get: (): number[] => getStorage(OPTED_OUT_LINODES, []),
+      set(linodeId: number) {
+        setStorage(OPTED_OUT_LINODES, JSON.stringify([...this.get(), linodeId]))
+      },
     }
   },
   views: {

@@ -38,8 +38,10 @@ import {
   getLinode, getLinodeConfigs, getLinodeDisks,
   getLinodeVolumes, getType, renameLinode, startMutation,
 } from 'src/services/linodes';
+
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { notifications } from 'src/utilities/storage';
 
 import { ConfigsProvider, DisksProvider, ImageProvider, LinodeProvider, VolumesProvider } from './context';
 import LinodeBackup from './LinodeBackup';
@@ -449,6 +451,14 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     if (!!linode
       && prevState.context.linode.data !== linode
       && linode.type) {
+      /*
+      * Check local storage to see if user has opted out to upgrades on this specific Linode
+      */
+      const userHasOptedOut = notifications.linodeMutation.get().some((optedOutLinode) => {
+        return optedOutLinode === linode.id;
+      });
+      if (userHasOptedOut) { return; }
+
       getType(linode.type)
         .then((currentType: Linode.LinodeType) => {
           const typeIsDeprecated = currentType.successor !== null;
@@ -656,6 +666,15 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     });
   }
 
+  optOut = () => {
+    const { context: { linode: { data: linode } } } = this.state;
+    /* close the drawer, remove the warning, and set local storage */
+    this.closeMutateDrawer();
+    this.setState({ showPendingMutation: false });
+    notifications.linodeMutation.set(linode!.id);
+    sendToast('You have successfully opted out of this Linode upgrade')
+  }
+
   initMutation = () => {
     const { mutateDrawer, context: { linode } } = this.state;
 
@@ -794,7 +813,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               <LinodeProvider value={this.state.context.linode}>
                 <VolumesProvider value={this.state.context.volumes}>
                   {this.state.showPendingMutation && linode &&
-                    <Notice warning>
+                    <Notice important warning>
                       {`This Linode has pending upgrades available. To learn more about
                       this upgrade and what it includes, `}
                       <span className={classes.link} onClick={this.openMutateDrawer}>
@@ -898,6 +917,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                         network_out: this.state.currentNetworkOut,
                       }}
                       initMutation={this.initMutation}
+                      optOut={this.optOut}
                     />
                   }
                 </VolumesProvider>
