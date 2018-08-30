@@ -1,12 +1,13 @@
 import * as React from 'react';
 import CreatableSelect from 'react-select/lib/Creatable';
 
-import Chip from '@material-ui/core/Chip';
-import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 
-import TextField from 'src/components/TextField';
+import MultiValue from './MultiValue';
+import NoOptionsMessage from './NoOptionsMessage';
+import Control from './SelectControl';
+import Menu from './SelectMenu';
+import Placeholder from './SelectPlaceholder';
 
 export interface Item {
   value: string;
@@ -16,7 +17,6 @@ export interface Item {
 
 type ClassNames = 'root'
   | 'input'
-  | 'valueContainer'
   | 'chip'
   | 'chipFocused'
   | 'noOptionsMessage'
@@ -32,12 +32,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   input: {
     display: 'flex',
     padding: 0,
-  },
-  valueContainer: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    flex: 1,
-    alignItems: 'center',
   },
   chip: {
     margin: `${theme.spacing.unit / 2}px ${theme.spacing.unit / 4}px`,
@@ -68,85 +62,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-const NoOptionsMessage = (props:any) => {
-  return (
-    <Typography
-      color="textSecondary"
-      className={props.selectProps.classes.noOptionsMessage}
-      {...props.innerProps}
-    >
-      {props.children}
-    </Typography>
-  );
-}
-
-const inputComponent = ({ inputRef, ...props }) => {
-  return <div ref={inputRef} {...props} />;
-}
-
-const Control = (props:any) => {
-  return (
-    <TextField
-      fullWidth
-      InputProps={{
-        inputComponent,
-        inputProps: {
-          className: props.selectProps.classes.input,
-          inputRef: props.innerRef,
-          children: props.children,
-          ...props.innerProps,
-        },
-      }}
-      {...props.selectProps.textFieldProps}
-    />
-  );
-}
-
-const Placeholder = (props:any) => {
-  return (
-    <Typography
-      color="textSecondary"
-      className={props.selectProps.classes.placeholder}
-      {...props.innerProps}
-    >
-      {props.children}
-    </Typography>
-  );
-}
-
-const ValueContainer = (props:any) => {
-  return <div className={props.selectProps.classes.valueContainer}>{props.children}</div>;
-}
-
-const MultiValue = (props:any) => {
-  const onDelete = (event:React.SyntheticEvent<HTMLElement>) => {
-    props.removeProps.onClick();
-        props.removeProps.onMouseDown(event);
-  }
-  return (
-    <Chip
-      tabIndex={-1}
-      label={props.children}
-      className={props.selectProps.classes.chip}
-      onDelete={onDelete}
-    />
-  );
-}
-
-const Menu = (props:any) => {
-  return (
-    <Paper square className={props.selectProps.classes.paper} {...props.innerProps}>
-      {props.children}
-    </Paper>
-  );
-}
-
 const components = {
   Control,
   NoOptionsMessage,
   Placeholder,
   MultiValue,
-  ValueContainer,
   Menu,
 };
 
@@ -174,25 +94,25 @@ class IntegrationReactSelect extends React.Component<CombinedProps,State> {
 
     return (
       <div className={classes.root}>
-          <CreatableSelect
-            isClearable
-            isSearchable
-            isMulti
-            classes={classes}
-            textFieldProps={{
-              label,
-              errorText,
-              InputLabelProps: {
-                shrink: true,
-              },
-            }}
-            value={value}
-            options={options}
-            components={components}
-            onChange={handleChange}
-            onCreateOption={createNew}
-            placeholder={placeholder || 'Select a value...'}
-          />
+        <CreatableSelect
+          isClearable
+          isSearchable
+          isMulti
+          classes={classes}
+          textFieldProps={{
+            label,
+            errorText,
+            InputLabelProps: {
+              shrink: true,
+            },
+          }}
+          value={value}
+          options={options}
+          components={components}
+          onChange={handleChange}
+          onCreateOption={createNew}
+          placeholder={placeholder || 'Select a value...'}
+        />
       </div>
     );
   }
