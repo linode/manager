@@ -30,7 +30,7 @@ describe('Header - Search - Volumes Suite', () => {
         apiDeleteAllLinodes();
     });
 
-    it('should setup the spec', () => {
+    beforeAll(() => {
         browser.url(constants.routes.linodes);
         
         apiCreateLinode();
@@ -38,11 +38,11 @@ describe('Header - Search - Volumes Suite', () => {
         linodeName = ListLinodes.linode[0].$(ListLinodes.linodeLabel.selector).getText();
 
         ListLinodes.shutdownIfRunning(ListLinodes.linode[0]);
-        
+          
         navigateToVolumes(linodeName);
         const volumeCount = VolumeDetail.volumeCellElem.isVisible() ? VolumeDetail.volumeCell.length : 0;
         
-        VolumeDetail.createVolume(testVolume);
+        VolumeDetail.createVolume(testVolume, 'placeholder');
 
         // Wait until the volume is created before searching for it
         browser.waitUntil(function() {
