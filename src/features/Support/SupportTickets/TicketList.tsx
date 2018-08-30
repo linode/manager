@@ -1,15 +1,17 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+
 import Paper from '@material-ui/core/Paper';
 import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import PaginationFooter, { PaginationProps } from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
@@ -27,7 +29,15 @@ interface State extends PaginationProps {
   loading: boolean;
 }
 
-class TicketList extends React.Component<Props, State> {
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+  root: {},
+});
+
+type ClassNames = 'root';
+
+type CombinedProps = Props & WithStyles<ClassNames>;
+
+class TicketList extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
   state: State = {
     errors: undefined,
@@ -126,15 +136,16 @@ class TicketList extends React.Component<Props, State> {
 
   renderEntityLink = (ticket: Linode.SupportTicket) => {
     return ticket.entity
-      ? <Link to={this.getLinkTargets(ticket.entity)} >{ticket.entity.label}</Link>
+      ? <Link to={this.getLinkTargets(ticket.entity)} className="secondaryLink">{ticket.entity.label}</Link>
       : null
   }
 
   renderRow = (ticket: Linode.SupportTicket) => {
+    const { classes } = this.props;
     return (
-      <TableRow key={`ticket-${ticket.id}`} >
-        <TableCell data-qa-support-subject>{ticket.summary}</TableCell>
-        <TableCell data-qa-support-id><Link to={`/support/tickets/${ticket.id}`}>{ticket.id}</Link></TableCell>
+      <TableRow key={`ticket-${ticket.id}`} rowLink={`/support/tickets/${ticket.id}`} className={classes.row}>
+        <TableCell data-qa-support-subject><Link to={`/support/tickets/${ticket.id}`}>{ticket.summary}</Link></TableCell>
+        <TableCell data-qa-support-id>{ticket.id}</TableCell>
         <TableCell data-qa-support-entity>{this.renderEntityLink(ticket)}</TableCell>
         <TableCell data-qa-support-date><DateTimeDisplay value={ticket.opened} format={formatString} /></TableCell>
         <TableCell data-qa-support-updated><DateTimeDisplay value={ticket.updated} format={formatString} /></TableCell>
@@ -180,4 +191,6 @@ class TicketList extends React.Component<Props, State> {
   }
 }
 
-export default TicketList;
+const styled = withStyles(styles, { withTheme: true });
+
+export default styled(TicketList);

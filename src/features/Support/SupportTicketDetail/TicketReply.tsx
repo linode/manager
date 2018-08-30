@@ -36,6 +36,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   attachFileButton: {
     paddingLeft: 14,
     paddingRight: 20,
+    marginTop: theme.spacing.unit,
+    marginBottom: theme.spacing.unit * 2,
   },
   attachmentsContainer: {
     maxWidth: 800,
@@ -57,9 +59,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     },
   },
   replyField: {
-    paddingBottom: theme.spacing.unit * 4,
-    marginBottom: theme.spacing.unit * 2,
-    borderBottom: '1px solid #ddd',
     '& > div': {
       maxWidth: '100% !important',
     },
@@ -232,6 +231,22 @@ class TicketReply extends React.Component<CombinedProps, State> {
           onChange={this.handleReplyInput}
           errorText={replyError}
         />
+        <input
+            ref={this.inputRef}
+            type="file"
+            id="attach-file"
+            style={{ display: 'none' }}
+            onChange={this.handleFileSelected}
+          />
+          <Button
+            component="span"
+            className={classes.attachFileButton}
+            type="secondary"
+            onClick={this.clickAttachButton}
+          >
+            <AttachFile />
+            Attach a file
+          </Button>
         {files.map((file, idx) => (
           file.uploaded
             ? null /* this file has already been uploaded so don't show it */
@@ -275,22 +290,6 @@ class TicketReply extends React.Component<CombinedProps, State> {
             onClick={this.submitForm}
           >
             Send
-          </Button>
-          <input
-            ref={this.inputRef}
-            type="file"
-            id="attach-file"
-            style={{ display: 'none' }}
-            onChange={this.handleFileSelected}
-          />
-          <Button
-            component="span"
-            className={classes.attachFileButton}
-            type="secondary"
-            onClick={this.clickAttachButton}
-          >
-            <AttachFile />
-            Attach a file
           </Button>
         </ActionsPanel>
       </Grid>
