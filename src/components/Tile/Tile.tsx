@@ -105,14 +105,14 @@ class Tile extends React.Component<CombinedProps> {
           [classes.clickableTile]: link !== undefined,
         },
         className,
-      )}>
+      )} data-qa-tile>
         {icon &&
-          <span className={classes.icon}>{icon}</span>
+          <span className={classes.icon} data-qa-tile-icon>{icon}</span>
         }
         {errorText &&
           <Notice error={true} text={errorText} />
         }
-        <Typography variant="subheading" className={classes.tileTitle}>
+        <Typography variant="subheading" className={classes.tileTitle} data-qa-tile-title>
           <React.Fragment>
             {link
               ?
@@ -123,7 +123,7 @@ class Tile extends React.Component<CombinedProps> {
           </React.Fragment>
         </Typography>
           {description &&
-            <Typography variant="caption" align="center">
+            <Typography variant="caption" align="center" data-qa-tile-desc>
               {description}
             </Typography>
           }
