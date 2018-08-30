@@ -86,7 +86,7 @@ class TicketList extends React.Component<CombinedProps, State> {
     const { tickets } = this.state;
     this.setState({ errors: undefined, loading: tickets === undefined});
 
-    getTicketsPage({ page_size: pageSize, page }, this.props.filterStatus === 'open')
+    getTicketsPage({ page_size: pageSize, page }, this.props.filterStatus)
       .then((response) => {
         if (!this.mounted) { return; }
         
