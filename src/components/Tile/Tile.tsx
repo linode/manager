@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
+import ExternalLink from 'src/components/ExternalLink';
 import Notice from 'src/components/Notice';
 
 type ClassNames = 'root'
@@ -85,7 +86,13 @@ class Tile extends React.Component<CombinedProps> {
       return <a href="javascript:;" onClick={link} className="black tile-link">{title}</a>
     }
     else if (link && (link.startsWith('http://') || link.startsWith('https://'))) {
-      return <a target="_blank" href={link} className="black tile-link">{title}</a>
+      return (
+        <ExternalLink
+          link={link}
+          text={title}
+          className="black tile-link"
+       />
+      )
     }
     else if (link && link.startsWith('/') ) {
       return <Link to={link} className="black tile-link">{title}</Link>
