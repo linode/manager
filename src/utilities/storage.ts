@@ -40,7 +40,7 @@ export const storage = {
   },
   views: {
     linode: {
-      get: (): LinodeView => getStorage(LINODE_VIEW, 'list'),
+      get: (): LinodeView => getStorage(LINODE_VIEW),
       set: (view: LinodeView) => setStorage(LINODE_VIEW, view),
     }
   }
