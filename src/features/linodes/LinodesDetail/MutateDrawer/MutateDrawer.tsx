@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import ListItem from '@material-ui/core/ListItem';
 import {
   StyleRulesCallback,
   Theme,
@@ -130,19 +131,19 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
               return;
             }
             return (
-              <li key={label}>
+              <ListItem key={label}>
                 {`${label} goes from ${currentAmount} ${unit} to
                 ${newAmount} ${unit}`}
-              </li>
+              </ListItem>
             )
           })}
         </ul>
         <Typography variant="title" style={{ marginTop: 32, marginBottom: 16 }}>How it Works</Typography>
         <Typography>After entering the upgrade queue, the following will occur:</Typography>
         <ol className="nonMUI-list">
-          <li>Wait your turn in the upgrade queue</li>
-          <li>Your Linode will be shut down and its disk images will be migrated</li>
-          <li>Your Linode will be upgraded and booted (if it was previously running).</li>
+          <ListItem>Wait your turn in the upgrade queue</ListItem>
+          <ListItem>Your Linode will be shut down and its disk images will be migrated</ListItem>
+          <ListItem>Your Linode will be upgraded and booted (if it was previously running).</ListItem>
           <Typography variant="caption" style={{ marginTop: 16 }}>
             After the migration completes, you can take advantage of the new resources
             by resizing your disk images.

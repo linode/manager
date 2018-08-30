@@ -59,11 +59,11 @@ a {
 .nonMUI-list {
   margin-top: 16px;
   margin-bottom: 16px;
-  color: #606469;
 }
 
 .nonMUI-list li {
   padding: 4px 0;
+  display: list-item;
 }
 
 /* 
