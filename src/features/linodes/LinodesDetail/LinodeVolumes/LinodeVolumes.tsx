@@ -20,14 +20,16 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 import Placeholder, { PlaceholderProps } from 'src/components/Placeholder';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import renderGuard from 'src/components/RenderGuard';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import Table from 'src/components/Table';
 import { events$, resetEventsPolling } from 'src/events';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { getLinodeConfigs, getLinodeVolumes } from 'src/services/linodes';
-import { attachVolume, cloneVolume, createVolume, deleteVolume, detachVolume, getVolumes, resizeVolume, updateVolume } from 'src/services/volumes';
+import { attachVolume, cloneVolume, createVolume, deleteVolume, detachVolume, resizeVolume, updateVolume } from 'src/services/volumes';
 import composeState from 'src/utilities/composeState';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -64,8 +66,10 @@ interface LinodeContextProps {
 
 interface UpdateDialogState {
   open: boolean;
+  submitting: boolean;
   mode?: 'detach' | 'delete';
   id?: number;
+  error?: string;
 }
 
 interface VolumeDrawer extends VolumeDrawerProps {
@@ -111,6 +115,8 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
 
   static updateDialogDefaultState = {
     open: false,
+    error: undefined,
+    submitting: false,
   };
 
   static volumeDrawerDefaultState = {
@@ -236,9 +242,24 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
       updateDialog: {
         mode,
         open: true,
+        submitting: false,
         id,
       },
     });
+  }
+
+  setDialogError = (errorResponse:Linode.ApiFieldError) => {
+    const { updateDialog } = this.state;
+    const fallbackError = [{ reason: 'Unable to detach volume.' }];
+    const apiError = pathOr(fallbackError, ['response', 'data', 'errors'], errorResponse);
+    const error = apiError[0].reason;
+    this.setState({ 
+      updateDialog: {
+        ...updateDialog,
+        error,
+        submitting: false,
+      }
+    })
   }
 
   closeUpdateDialog = () => {
@@ -248,41 +269,43 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
   }
 
   detachVolume = () => {
-    const { updateVolumes } = this.props;
     const { updateDialog: { id } } = this.state;
     if (!id) { return; }
+    this.setState({ updateDialog: {
+      ...this.state.updateDialog,
+      submitting: true,
+      error: undefined,
+    }})
 
     detachVolume(id)
       .then(() => {
         this.closeUpdateDialog();
-        updateVolumes((volumes) => volumes.filter((v) => v.id !== id));
+        sendToast('Volume is being detached from this Linode.')
+        this.getVolumes();
       })
       .catch((errorResponse) => {
-        const fallbackError = [{ reason: 'Unable to attach volume.' }];
-
-        this.setState({
-          volumeDrawer: {
-            ...this.state.volumeDrawer,
-            errors: pathOr(fallbackError, ['response', 'data', 'errors'], errorResponse),
-          },
-        }, () => {
-          scrollErrorIntoView();
-        });
+        this.setDialogError(errorResponse);
       });
   }
 
   deleteVolume = () => {
     const { updateDialog: { id } } = this.state;
     if (!id) { return; }
+    this.setState({
+      updateDialog: {
+        ...this.state.updateDialog,
+        submitting: true,
+        error: undefined,
+      }
+    })
 
     deleteVolume(id)
       .then((response) => {
         this.closeUpdateDialog();
         resetEventsPolling();
       })
-      .catch((response) => {
-        this.closeUpdateDialog();
-        /** @todo Error handling */
+      .catch((errorResponse) => {
+        this.setDialogError(errorResponse);
       });
   }
 
@@ -291,6 +314,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
       updateDialog: {
         mode,
         open,
+        error,
       },
     } = this.state;
 
@@ -303,6 +327,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
         actions={mode === 'detach' ? this.renderDetachDialogActions : this.renderDeleteDialogActions}
         title={mode === 'detach' ? 'Detach Volume' : 'Delete Volume'}
       >
+        {error && <Notice error text={error}/>}
         <Typography> Are you sure you want to {mode} this volume?</Typography>
       </ConfirmationDialog>
     );
@@ -320,6 +345,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
         </Button>
         <Button
           type="secondary"
+          loading={this.state.updateDialog.submitting}
           onClick={this.detachVolume}
           data-qa-confirm
         >
@@ -336,12 +362,13 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
           onClick={this.closeUpdateDialog}
           type="cancel"
           data-qa-cancel
-        >
+          >
           Cancel
         </Button>
         <Button
           type="secondary"
           destructive
+          loading={this.state.updateDialog.submitting}
           onClick={this.deleteVolume}
           data-qa-confirm
         >
@@ -870,7 +897,7 @@ const preloaded = PromiseLoader<Props & LinodeContextProps & VolumesContextProps
   linodeConfigs: (props) => getLinodeConfigs(props.linodeID)
     .then(response => response.data),
 
-  volumes: (props) => getVolumes()
+  volumes: (props) => getLinodeVolumes(props.linodeID)
     .then(response => response.data
       .filter(volume => volume.region === props.linodeRegion && volume.linode_id === null)),
 });
