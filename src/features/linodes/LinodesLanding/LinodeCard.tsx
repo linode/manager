@@ -21,6 +21,8 @@ import { linodeInTransition, transitionText } from 'src/features/linodes/transit
 import { lishLaunch } from 'src/features/Lish';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 
+import { getType } from 'src/services/linodes';
+
 import { displayType, typeLabelDetails } from '../presentation';
 import IPAddress from './IPAddress';
 import LinodeActionMenu from './LinodeActionMenu';
@@ -169,6 +171,10 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   },
 });
 
+interface State {
+  mutationAvailable: boolean;
+}
+
 interface Props {
   linodeId: number;
   linodeStatus: Linode.LinodeStatus;
@@ -200,27 +206,44 @@ type CombinedProps =
   TypesContextProps &
   WithStyles<CSSClasses>;
 
-class LinodeCard extends React.Component<CombinedProps> {
-  renderTitle() {
-    const { classes, linodeStatus, linodeLabel, linodeNotification } = this.props;
+class LinodeCard extends React.Component<CombinedProps, State> {
+  state: State = {
+    mutationAvailable: false,
+  }
 
-    return (
-      <Grid container alignItems="center">
-        <Grid item className={'py0'}>
-          <LinodeStatusIndicator status={linodeStatus} />
-        </Grid>
-        <Grid item className={classes.cardHeader + ' py0'}>
-          <Typography role="header" variant="subheading" data-qa-label>
-            {linodeLabel}
-          </Typography>
-        </Grid>
-        {linodeNotification &&
-          <Grid item className={classes.flagContainer}>
-            <Tooltip title={linodeNotification}><Flag className={classes.flag} /></Tooltip>
-          </Grid>
+  shouldComponentUpdate(nextProps: CombinedProps, nextState: State) {
+    return haveAnyBeenModified<CombinedProps>(
+      nextProps,
+      this.props,
+      [
+        'linodeStatus',
+        'linodeRegion',
+        'linodeNotification',
+        'linodeRecentEvent',
+        'linodeLabel',
+        'linodeIpv6',
+        'linodeIpv4',
+        'typesData',
+        'typesLoading',
+      ],
+    )
+      || haveAnyBeenModified<State>(
+        nextState,
+        this.state,
+        ['mutationAvailable']
+      )
+  }
+
+  componentDidMount() {
+    const { linodeType } = this.props;
+    if (!linodeType) { return }
+    getType(linodeType)
+      .then((data: Linode.LinodeType) => {
+        if (data.successor !== null) {
+          this.setState({ mutationAvailable: true })
         }
-      </Grid>
-    );
+      })
+      .catch((e: Error) => e)
   }
 
   handleConsoleButtonClick = () => {
@@ -289,21 +312,48 @@ class LinodeCard extends React.Component<CombinedProps> {
     );
   }
 
-  shouldComponentUpdate(nextProps: CombinedProps) {
-    return haveAnyBeenModified<CombinedProps>(
-      nextProps,
-      this.props,
-      [
-        'linodeStatus',
-        'linodeRegion',
-        'linodeNotification',
-        'linodeRecentEvent',
-        'linodeLabel',
-        'linodeIpv6',
-        'linodeIpv4',
-        'typesData',
-        'typesLoading',
-      ],
+  renderFlag = () => {
+    /*
+    * Render either a flag for if the Linode has a notification
+    * or if it has a pending mutation available. Mutations take
+    * precedent over notifications
+    */
+    const { mutationAvailable } = this.state;
+    const { linodeNotification, classes } = this.props;
+    if (mutationAvailable) {
+      return (
+        <Grid item className={classes.flagContainer}>
+          <Tooltip title="There is a free upgrade available for this Linode">
+            <Flag className={classes.flag} />
+          </Tooltip>
+        </Grid>
+      )
+    }
+    if (linodeNotification) {
+      return (
+        <Grid item className={classes.flagContainer}>
+          <Tooltip title={linodeNotification}><Flag className={classes.flag} /></Tooltip>
+        </Grid>
+      )
+    }
+    return null;
+  }
+
+  renderTitle() {
+    const { classes, linodeStatus, linodeLabel } = this.props;
+
+    return (
+      <Grid container alignItems="center">
+        <Grid item className={'py0'}>
+          <LinodeStatusIndicator status={linodeStatus} />
+        </Grid>
+        <Grid item className={classes.cardHeader + ' py0'}>
+          <Typography role="header" variant="subheading" data-qa-label>
+            {linodeLabel}
+          </Typography>
+        </Grid>
+        {this.renderFlag()}
+      </Grid>
     );
   }
 
