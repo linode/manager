@@ -253,7 +253,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: e => `StackScript ${e.entity!.label} has been deleted.`,
   },
   stackscript_publicize: {
-    notification: e => `StackScript ${e.entity!.label} has been publicized.`,
+    notification: e => `StackScript ${e.entity!.label} has been made public.`,
   },
   stackscript_revise: {
     notification: e => `StackScript ${e.entity!.label} has been revised.`,
