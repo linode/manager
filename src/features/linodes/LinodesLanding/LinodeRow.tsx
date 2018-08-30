@@ -206,6 +206,7 @@ class LinodeRow extends React.Component<CombinedProps> {
         key={linodeId}
         className={`${classes.bodyRow} 'fade-in-table'`}
         data-qa-loading
+        data-qa-linode={linodeLabel}
         rowLink={`/linodes/${linodeId}`}
         arial-label={linodeLabel}
       >

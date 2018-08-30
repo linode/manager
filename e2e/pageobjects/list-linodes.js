@@ -34,6 +34,7 @@ export class ListLinodes extends Page {
     get viewGraphsMenu() { return $('[data-qa-action-menu-item="View Graphs"]'); }
     get resizeMenu() { return $('[data-qa-action-menu-item="Resize"]'); }
     get viewBackupsMenu() { return $('[data-qa-action-menu-item="View Backups"]'); }
+    get enableBackupsMenu() { return $('[data-qa-action-menu-item="Enable Backups"]'); }
     get settingsMenu() { return $('[data-qa-action-menu-item="Settings"]'); }
     get copyIp() { return $('[data-qa-copy-ip] svg'); }
 
@@ -124,8 +125,7 @@ export class ListLinodes extends Page {
     }
 
     powerOff(linode) {
-        linode.$(this.linodeActionMenu.selector).click();
-        this.powerOffMenu.click();
+        this.selectActionMenuItem(linode, 'Power Off');
         this.acceptDialog('Powering Off');
         
         browser.waitUntil(function() {
@@ -134,8 +134,7 @@ export class ListLinodes extends Page {
     }
 
     powerOn(linode) {
-        linode.$(this.linodeActionMenu.selector).click();
-        this.powerOnMenu.click();
+        this.selectActionMenuItem(linode, 'Power On');
 
         browser.waitUntil(function() {
             return browser.isVisible('[data-qa-status="running"]');
@@ -146,14 +145,6 @@ export class ListLinodes extends Page {
         if (this.getStatus(linode) === 'running') {
             this.powerOff(linode);
         }
-    }
-
-    selectMenuItem(linode, item) {
-        if (this.getStatus(linode) === 'rebooting') {
-            browser.waitForVisible('[data-qa-status="running"]', 45000);
-        }
-        linode.$(this.linodeActionMenu.selector).click();
-        browser.jsClick(`[data-qa-action-menu-item="${item}"]`);
     }
 
     switchView(view) {

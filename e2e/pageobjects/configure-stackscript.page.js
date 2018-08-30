@@ -92,8 +92,8 @@ class ConfigureStackScript extends Page {
             browser.waitForVisible(`[data-value="${imageName}"]`, constants.wait.normal, true);
         }
 
-        // Refactor to use actions API 
-        browser.keys('\uE00C');
+        // Click outside the select
+        browser.click('body');
 
         this.targetImagesSelect.waitForVisible(constants.wait.normal);
         browser.waitForVisible('#menu-image', constants.wait.normal, true);

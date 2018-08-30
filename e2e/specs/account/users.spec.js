@@ -31,8 +31,7 @@ describe('Account - Users Suite', () => {
         expect(deleteToolTip.isVisible()).toBe(false);
         expect(deleteToolTip.isExisting()).toBe(true);
 
-        // Refactor to use actions api
-        browser.keys('Escape');
+        browser.click('body');
         Users.actionMenuItem.waitForExist(constants.wait.normal, true);
     });
 
@@ -52,7 +51,8 @@ describe('Account - Users Suite', () => {
             expect($('[data-qa-action-menu-item="Delete"]').isVisible()).toBe(true);
             expect($('[data-qa-action-menu-item="Delete"]').isEnabled()).toBe(true);
             
-            browser.keys('Escape');
+            browser.click('body');
+
             Users.actionMenuItem.waitForExist(constants.wait.normal, true);
         });
 

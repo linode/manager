@@ -95,7 +95,7 @@ export default class Page {
             }
 
             return noticeMsgDisplays.length > 0;
-        }, timeout, `${noticeMsg} failed to display`);
+        }, timeout, `${noticeMsg} failed to display after ${timeout}ms`);
     }
 
     assertDocsDisplay() {
