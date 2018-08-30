@@ -57,7 +57,7 @@ describe('FromImageContent', () => {
   });
 
   it('should render SelectPassword panel', () => {
-    expect(component.find('WithStyles(WithRenderGuard(PasswordPanel))')).toHaveLength(1);
+    expect(component.find('WithStyles(WithRenderGuard(AccessPanel))')).toHaveLength(1);
   });
 
   it('should render SelectAddOns panel', () => {

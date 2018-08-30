@@ -4,6 +4,7 @@ import { Sticky, StickyProps } from 'react-sticky';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
+import AccessPanel from 'src/components/AccessPanel';
 import CheckoutBar from 'src/components/CheckoutBar';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
@@ -16,7 +17,6 @@ import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import AddonsPanel from '../AddonsPanel';
-import PasswordPanel from '../PasswordPanel';
 import SelectImagePanel from '../SelectImagePanel';
 import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
 
@@ -243,7 +243,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
             }}
             updateFor={[label, errors]}
           />
-          <PasswordPanel
+          <AccessPanel
             error={hasErrorFor('root_pass')}
             password={password}
             handleChange={this.handleTypePassword}

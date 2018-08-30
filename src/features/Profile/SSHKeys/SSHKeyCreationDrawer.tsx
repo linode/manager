@@ -81,10 +81,12 @@ export class SSHKeyCreationDrawer extends React.PureComponent<CombinedProps, Sta
           onChange={this.handleKeyChange}
           value={this.state.sshKey}
           data-qa-ssh-key-field
+          multiline
+          rows={10}
         />
 
         <ActionsPanel>
-          <Button data-qa-submit type="primary" loading={this.state.submitting} onClick={this.onSubmit}>Save</Button>
+          <Button data-qa-submit type="primary" loading={this.state.submitting} onClick={this.onSubmit}>Add Key</Button>
           <Button data-qa-cancel type="cancel" onClick={this.props.onCancel}>Cancel</Button>
         </ActionsPanel>
       </Drawer>
