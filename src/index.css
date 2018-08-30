@@ -56,6 +56,16 @@ a {
   clip: rect(1px, 1px, 1px, 1px);
 }
 
+.nonMUI-list {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.nonMUI-list li {
+  padding: 4px 0;
+  display: list-item;
+}
+
 /* 
 * do not show the ada chat app button site-wide
 */
