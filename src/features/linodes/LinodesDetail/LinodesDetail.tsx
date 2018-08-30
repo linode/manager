@@ -475,14 +475,14 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               })
               // no action needed. Worse case scenario, the user doesn't
               // see the notice
-              .catch(e => e);
+              .catch((e: Error) => e);
           } else { // type is not deprecated
             this.setState({ showPendingMutation: false })
           }
         })
         // no action needed. Worse case scenario, the user doesn't
         // see the notice
-        .catch(e => e);
+        .catch((e: Error) => e);
     }
   }
 
@@ -669,10 +669,10 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     /*
     * It's okay to disregard the possiblity of linode
     * being undefined. The upgrade message won't appear unless
-    * it's undefined
+    * it's defined
     */
     startMutation(linode.data!.id)
-      .then(data => {
+      .then(() => {
         linode.request();
         this.setState({
           mutateDrawer: {
@@ -682,9 +682,9 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
             loading: false,
           },
         });
-        sendToast('Linode Mutation initiated')
+        sendToast('Linode upgrade has been initiated')
       })
-      .catch(e => {
+      .catch(() => {
         this.setState({
           mutateDrawer: {
             ...mutateDrawer,
@@ -798,7 +798,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                       {`This Linode has pending upgrades available. To learn more about
                       this upgrade and what it includes, `}
                       <span className={classes.link} onClick={this.openMutateDrawer}>
-                        click here
+                        click here.
                       </span>
                     </Notice>
                   }

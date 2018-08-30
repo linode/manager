@@ -141,8 +141,8 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
         <Typography variant="title" style={{ marginTop: 32, marginBottom: 16 }}>How it Works</Typography>
         <Typography>After entering the upgrade queue, the following will occur:</Typography>
         <ol className="nonMUI-list">
-          <ListItem>Wait your turn in the upgrade queue</ListItem>
-          <ListItem>Your Linode will be shut down and its disk images will be migrated</ListItem>
+          <ListItem>Wait your turn in the upgrade queue.</ListItem>
+          <ListItem>Your Linode will be shut down and its disk images will be migrated.</ListItem>
           <ListItem>Your Linode will be upgraded and booted (if it was previously running).</ListItem>
           <Typography variant="caption" style={{ marginTop: 16 }}>
             After the migration completes, you can take advantage of the new resources

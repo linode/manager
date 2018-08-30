@@ -367,7 +367,7 @@ export const cloneLinode = (source_linode_id: number, data: LinodeCloneData) => 
 };
 
 export const startMutation = (linodeID: number) => {
-  return Request(
+  return Request<{}>(
     setURL(`${API_ROOT}/linode/instances/${linodeID}/mutate`),
     setMethod('POST'),
   )
