@@ -3,7 +3,6 @@ const { constants } = require('../../constants');
 import Page from '../page';
 
 class Permissions extends Page {
-    get updatePermissionsHeader() { return $('[data-qa-update-permissions-header]'); }
     get globalPermissionsHeader() { return $('[data-qa-permissions-header="Global Permissions"]'); }
     get billingAccessHeader() { return $('[data-qa-permissions-header="billing"]'); }
     get specificPermissionsHeader() { return $('[data-qa-permissions-header="Specific Permissions"]'); }
@@ -42,7 +41,7 @@ class Permissions extends Page {
     get unrestrictedMsg() { return $('[data-qa-unrestricted-msg'); }
 
     baseElementsDisplay(restricted) {
-        this.updatePermissionsHeader.waitForVisible(constants.wait.normal);
+        this.restrictAccessToggle.waitForVisible(constants.wait.normal);
         if (restricted) {
             expect(this.globalPermissionsHeader.isVisible()).toBe(true);
             expect(this.billingAccessHeader.isVisible()).toBe(true);
