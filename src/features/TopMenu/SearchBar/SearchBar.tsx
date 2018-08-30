@@ -400,7 +400,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, history } = this.props;
+    const { classes } = this.props;
     const { searchActive } = this.state;
 
     return (
