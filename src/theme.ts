@@ -506,6 +506,18 @@ const LinodeTheme: Linode.Theme = {
         paddingTop: 0,
         paddingBottom: 0,
       },
+      root: {
+        '&.reset': {
+          padding: 'inherit',
+          margin: 'inherit',
+          listStyle: 'initial',
+          '& li': {
+            display: 'list-item',
+            padding: 0,
+            listStyleType: 'initial',
+          },
+        },
+      },
     },
     MuiListItem: {
       root: {

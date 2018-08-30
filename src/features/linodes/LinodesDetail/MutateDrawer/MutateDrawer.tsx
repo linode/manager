@@ -1,7 +1,5 @@
 import * as React from 'react';
 
-import ListItem from '@material-ui/core/ListItem';
-import MenuList from '@material-ui/core/MenuList';
 import {
   StyleRulesCallback,
   Theme,
@@ -118,8 +116,8 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
         {error &&
           <Notice error text={error} />
         }
-        <p>This Linode has pending upgrades. The resouces that are affected include:</p>
-        <MenuList dense>
+        <Typography>This Linode has pending upgrades. The resouces that are affected include:</Typography>
+        <ul className="nonMUI-list">
           {Object.keys(extendedUpgradeInfo).map((newSpec) => {
             const {
               label,
@@ -132,34 +130,34 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
               return;
             }
             return (
-              <ListItem dense key={label}>
+              <li key={label}>
                 {`${label} goes from ${currentAmount} ${unit} to
                 ${newAmount} ${unit}`}
-              </ListItem>
+              </li>
             )
           })}
-        </MenuList>
-        <Typography variant="title">How it Works</Typography>
-        <p>After entering the upgrade queue, the following will occur:</p>
-        <MenuList component="ol" dense>
-          <ListItem>Wait your turn in the upgrade queue</ListItem>
-          <ListItem>Your Linode will be shut down and its disk images will be migrated</ListItem>
-          <ListItem>Your Linode will be upgraded and booted (if it was previously running).</ListItem>
-          <Typography variant="caption">
+        </ul>
+        <Typography variant="title" style={{ marginTop: 32, marginBottom: 16 }}>How it Works</Typography>
+        <Typography>After entering the upgrade queue, the following will occur:</Typography>
+        <ol className="nonMUI-list">
+          <li>Wait your turn in the upgrade queue</li>
+          <li>Your Linode will be shut down and its disk images will be migrated</li>
+          <li>Your Linode will be upgraded and booted (if it was previously running).</li>
+          <Typography variant="caption" style={{ marginTop: 16 }}>
             After the migration completes, you can take advantage of the new resources
             by resizing your disk images.
           </Typography>
-        </MenuList>
-        <Button loading={loading} onClick={this.props.initMutation} type="primary">
+        </ol>
+        <Button loading={loading} onClick={this.props.initMutation} type="primary" style={{ marginTop: 32 }}>
           Enter the Upgrade Queue
         </Button>
         {/*
         * Show when the relevant docs exist
         */}
-        <p style={{ display: 'none' }}>
+        <Typography style={{ display: 'none' }}>
           {`Need help? Refer to the `}
           <a href="google.com" target="_blank">supporting documentation</a>.
-        </p>
+        </Typography>
       </Drawer>
     );
   }
