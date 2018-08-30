@@ -62,11 +62,7 @@ describe('Linode - Volumes - Attach, Detach, Delete Suite', () => {
         VolumeDetail.drawerTitle.waitForVisible(constants.wait.normal);
     });
 
-    xit('should attach to linode', () => {
+    it('should attach to linode', () => {
         VolumeDetail.attachVolume(linodeName, testVolume);
-    });
-
-    xit('should remove the volume', () => {
-        VolumeDetail.removeVolume($(`[data-qa-volume-cell="${testVolume.id}"]`));
     });
 });

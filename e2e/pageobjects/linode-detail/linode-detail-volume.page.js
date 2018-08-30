@@ -152,19 +152,26 @@ export class VolumeDetail extends Page {
 
     attachVolume(linodeLabel, volume) {
         browser.waitForVisible('[data-qa-drawer-title]');
-        const drawerTitle = browser.getText('[data-qa-drawer-title]');
+        browser.waitForVisible('[data-qa-mode-radio-group]', constants.wait.normal);
 
-        browser.jsClick('[data-qa-volume-select] span');
+        const attachRadio = $('[data-qa-mode-radio-group]').$$('[data-qa-radio]')
+            .filter(radio => radio.$('..').getText().includes('Attach Existing'));
+
+        attachRadio[0].click();
+
+        browser.waitForVisible('[data-qa-volume-select]', constants.wait.normal);
+        browser.jsClick('[data-qa-volume-select] div div div');
+
+        this.volumeOptions.waitForVisible(constants.wait.normal);
         
         const options = this.volumeOptions.map(v => v.getText());
         const optToClick = this.volumeOptions.filter(opt => opt.getText() === volume.label);
 
-        expect(drawerTitle).toBe(`Attach Volume to ${linodeLabel}`);
-        expect(options).toContain(volume.label);
-
         optToClick[0].click();
-        browser.jsClick('[data-qa-confirm-attach]');
-        browser.waitForVisible(`[data-qa-volume-cell="${volume.id}"]`);
+        optToClick[0].waitForVisible(constants.wait.normal, true);
+
+        browser.click('[data-qa-submit]');
+        browser.waitForVisible(`[data-qa-volume-cell="${volume.id}"]`, constants.wait.normal);   
     }
 
     detachVolume(volume) {
