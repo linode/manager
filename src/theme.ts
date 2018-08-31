@@ -798,10 +798,6 @@ const LinodeTheme: Linode.Theme = {
       },
       hover: {
         cursor: 'pointer',
-        borderLeft: '5px solid transparent',
-        '& > td:first-child': {
-          paddingLeft: 13,
-        },
         '& a': {
           color: primaryColors.offBlack,
           fontWeight: 700,

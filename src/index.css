@@ -73,6 +73,10 @@ a {
   display: none !important;
 }
 
+.block {
+  display: block;
+}
+
 a.blue {
   transition: color 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
@@ -97,12 +101,12 @@ a.black:visited {
   color: #32363C;
 }
 
-a.black:hover {
+a.black:not(.nu):hover {
   color: #32363C;
   text-decoration: underline;
 }
 
-a.black:active {
+a.black:not(.nu):active {
   text-decoration: underline;
 }
 

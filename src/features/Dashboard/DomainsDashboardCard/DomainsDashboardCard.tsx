@@ -8,10 +8,10 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 
 import Grid from 'src/components/Grid';
+import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
@@ -141,21 +141,23 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
     const { classes } = this.props;
 
     return data.map(({ id, domain, type, status }) => (
-      <TableRow key={domain} data-qa-domain>
+      <TableRow key={domain} rowLink={`/domains/${id}/records`}>
         <TableCell className={classes.labelCol}>
-          <Grid container direction="column" spacing={8}>
-            <Grid item className="py0">
-              <Typography variant="subheading" data-qa-domain-name>
-                <Link to={`/domains/${id}/records`} className={'black'}>{domain}</Link>
-              </Typography>
+          <Link to={`/domains/${id}/records`} className={'black nu block'}>
+            <Grid container direction="column" spacing={8}>
+              <Grid item className="py0">
+                <Typography variant="subheading" data-qa-domain-name>
+                  {domain}
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant="caption" data-qa-domain-status>
+                  {status}, {type}
+                </Typography>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Typography variant="caption" data-qa-domain-status>
-                {status}, {type}
-              </Typography>
-            </Grid>
-          </Grid>
-        </TableCell>
+            </Link>
+          </TableCell>
         <TableCell className={classes.actionsCol} />
       </TableRow>
     ));
