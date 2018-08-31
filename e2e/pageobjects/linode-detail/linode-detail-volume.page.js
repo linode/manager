@@ -26,7 +26,7 @@ export class VolumeDetail extends Page {
     get volumeFsPath() { return $('[data-qa-fs-path]'); }
     get volumeActionMenu() { return $('[data-qa-action-menu]'); }
     get volumeSelect() { return $('[data-qa-volume-select] span'); }
-    get volumeOptions() { return $$('[data-qa-volume-option]'); }
+    get volumeOptions() { return $$('[data-value]'); }
     get attachButton() { return $('[data-qa-confirm-attach]'); }
     get cancelButton() { return $('[data-qa-cancel]'); }
     get cloneLabel() { return $('[data-qa-clone-from] input'); }
@@ -162,7 +162,7 @@ export class VolumeDetail extends Page {
         browser.waitForVisible('[data-qa-volume-select]', constants.wait.normal);
         browser.jsClick('[data-qa-volume-select] div div div');
 
-        this.volumeOptions.waitForVisible(constants.wait.normal);
+        browser.waitForVisible('[data-value]', constants.wait.normal);
         
         const options = this.volumeOptions.map(v => v.getText());
         const optToClick = this.volumeOptions.filter(opt => opt.getText() === volume.label);
