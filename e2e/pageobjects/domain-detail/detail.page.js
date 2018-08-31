@@ -16,6 +16,7 @@ class DomainDetail extends Page {
     get cancelButton() { return $('[data-qa-record-cancel]'); }
 
     addNsRecord(nameServer, subdomain) {
+        this.addNsRecordButton.waitForVisible(constants.wait.normal);
         this.addNsRecordButton.click();
         this.drawerTitle.waitForVisible();
         expect(this.drawerTitle.getText()).toBe('Create NS Record');
