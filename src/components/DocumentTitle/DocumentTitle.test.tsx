@@ -23,7 +23,7 @@ class MyChild extends React.Component<any, any> {
   }
 }
 
-describe('should do the thing', () => {
+describe('Document Title HOC', () => {
   it('document title should read "Profile | Linode Manager', () => {
     const DocComponent = withDocumentTitleProvider(MyParent);
     mount(
