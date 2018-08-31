@@ -188,4 +188,10 @@ namespace Linode {
     from_linode: boolean;
     gravatarUrl: string | undefined;
   }
+  export interface SSHKey {
+    created: string;
+    id: number;
+    label: string;
+    ssh_key: string;
+  }
 }

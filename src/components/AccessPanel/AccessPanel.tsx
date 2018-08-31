@@ -70,7 +70,6 @@ interface Props {
 
 export interface UserSSHKeyObject {
   gravatarUrl: string;
-  id: number;
   username: string;
   selected: boolean;
   keys: string[];
@@ -88,6 +87,7 @@ class AccessPanel extends React.Component<CombinedProps> {
       noPadding,
       required,
       placeholder,
+      users,
     } = this.props;
 
     return (
@@ -101,7 +101,7 @@ class AccessPanel extends React.Component<CombinedProps> {
             placeholder={placeholder || "Enter a password."}
             onChange={this.handleChange}
           />
-          {this.props.users && this.renderUserSSHKeyTable(this.props.users)}
+          {users && users.length > 0 && this.renderUserSSHKeyTable(users)}
         </div>
       </Paper>
     );
@@ -142,7 +142,7 @@ class AccessPanel extends React.Component<CombinedProps> {
                       {username}
                     </div>
                   </TableCell>
-                  <TableCell>{keys.join(',')}</TableCell>
+                  <TableCell>{keys.join(', ')}</TableCell>
                 </TableRow>
               ))}
           </TableBody>
