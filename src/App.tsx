@@ -23,7 +23,7 @@ import Footer from 'src/features/Footer';
 import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
-import { getLinodeTypes } from 'src/services/linodes';
+import { getDeprecatedLinodeTypes, getLinodeTypes } from 'src/services/linodes';
 import { getRegions } from 'src/services/misc';
 import { getProfile } from 'src/services/profile';
 import { request, response } from 'src/store/reducers/resources';
@@ -204,12 +204,12 @@ export class App extends React.Component<CombinedProps, State> {
       request: () => {
         this.composeState([set(L.typesContext.loading, true)]);
 
-        return getLinodeTypes()
+        return Promise.all([getLinodeTypes(), getDeprecatedLinodeTypes()])
           .then((response) => {
             this.composeState([
               set(L.typesContext.loading, false),
               set(L.typesContext.lastUpdated, Date.now()),
-              set(L.typesContext.data, response.data),
+              set(L.typesContext.data, [...response[0].data, ...response[1].data]),
             ])
           })
           .catch((error) => {
