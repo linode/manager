@@ -22,20 +22,28 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
+type onClickFn = (e: React.MouseEvent<HTMLElement>) => void;
+
 interface Props {
-  rowLink?: string;
+  rowLink?: string | onClickFn;
   className?: string;
   staticContext?: boolean;
+  htmlFor?: string;
 }
 
 type CombinedProps = Props & TableRowProps & RouteComponentProps<{}> & WithStyles<ClassNames>;
 
 class WrappedTableRow extends React.Component<CombinedProps> {
 
-  goTo = (e: any, path: string) =>  {
+  rowClick = (e: any, target: string | onClickFn ) =>  {
     if (e.target.tagName === 'TD') {
       e.stopPropagation();
-      this.props.history.push(path);
+      if (typeof(target) === 'string') {
+        this.props.history.push(target);
+      }
+      else if (typeof(target) === 'function') {
+        e = () => target;
+      }
     }
   }
 
@@ -44,7 +52,7 @@ class WrappedTableRow extends React.Component<CombinedProps> {
 
     return (
         <TableRow
-          onClick={(e) => rowLink && this.goTo(e, rowLink)}
+          onClick={(e) => rowLink && this.rowClick(e, rowLink)}
           hover={rowLink !== undefined}
           role={rowLink && 'link'}
           className={classNames(
