@@ -23,7 +23,7 @@ import Footer from 'src/features/Footer';
 import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
-import { getDeprecatedLinodeTypes, getLinodeTypes } from 'src/services/linodes';
+import { getLinodeTypes } from 'src/services/linodes';
 import { getRegions } from 'src/services/misc';
 import { getProfile } from 'src/services/profile';
 import { request, response } from 'src/store/reducers/resources';
@@ -204,15 +204,17 @@ export class App extends React.Component<CombinedProps, State> {
       request: () => {
         this.composeState([set(L.typesContext.loading, true)]);
 
-        return Promise.all([getLinodeTypes(), getDeprecatedLinodeTypes()])
-          .then((response) => {
+        // uncomment when /linode-legacy endpoint becomes available
+        // return Promise.all([getLinodeTypes(), getDeprecatedLinodeTypes()])
+        return getLinodeTypes()
+          .then((types: Linode.ResourcePage<Linode.LinodeType>) => {
             this.composeState([
               set(L.typesContext.loading, false),
               set(L.typesContext.lastUpdated, Date.now()),
-              set(L.typesContext.data, [...response[0].data, ...response[1].data]),
+              set(L.typesContext.data, types.data),
             ])
           })
-          .catch((error) => {
+          .catch((error: any) => {
             this.composeState([
               set(L.typesContext.loading, false),
               set(L.typesContext.lastUpdated, Date.now()),
@@ -229,11 +231,11 @@ export class App extends React.Component<CombinedProps, State> {
         this.composeState([set(L.regionsContext.loading, true)]);
 
         return getRegions()
-          .then((response) => {
+          .then((regions) => {
             this.composeState([
               set(L.regionsContext.loading, false),
               set(L.regionsContext.lastUpdated, Date.now()),
-              set(L.regionsContext.data, response.data),
+              set(L.regionsContext.data, regions.data),
             ])
           })
           .catch((error) => {
