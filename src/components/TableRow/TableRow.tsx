@@ -9,6 +9,10 @@ type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
+    borderLeft: '5px solid transparent',
+    '& > td:first-child, & > th:first-child': {
+      paddingLeft: 13,
+    },
     transition: theme.transitions.create(['background-color', 'border-left-color']),
     '& .secondaryLink': {
       transition: theme.transitions.create('color'),
@@ -56,7 +60,7 @@ class WrappedTableRow extends React.Component<CombinedProps> {
           hover={rowLink !== undefined}
           role={rowLink && 'link'}
           className={classNames(
-          className,
+            className,
             {
               [classes.root]: true,
             })}
