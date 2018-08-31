@@ -38,8 +38,8 @@ describe('layouts/OAuth', () => {
           hash: '#access_token=123456',
         }}
         startSession={startMock}
-        checkNonce={() => null}
-        redirect={() => null}
+        checkNonce={startMock}
+        redirect={startMock}
         history={{ push: jest.fn() }}
       />);
     expect(startMock).toBeCalled();
@@ -55,8 +55,8 @@ describe('layouts/OAuth', () => {
         location={{
           hash: '#access_token=123456&return=https://localhost:3000/oauth/callback?returnTo=/asdf',
         }}
-        startSession={() => null}
-        checkNonce={() => null}
+        startSession={redirectMock}
+        checkNonce={redirectMock}
         redirect={redirectMock}
         history={historyMock}
       />);
