@@ -1,13 +1,13 @@
 import * as React from 'react';
-import CreatableSelect from 'react-select/lib/Creatable';
+import Select from 'react-select';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-import MultiValue from './MultiValue';
-import NoOptionsMessage from './NoOptionsMessage';
-import Control from './SelectControl';
-import Menu from './SelectMenu';
-import Placeholder from './SelectPlaceholder';
+import MultiValue from 'src/components/EnhancedSelect/MultiValue';
+import NoOptionsMessage from 'src/components/EnhancedSelect/NoOptionsMessage';
+import Control from 'src/components/EnhancedSelect/SelectControl';
+import Menu from 'src/components/EnhancedSelect/SelectMenu';
+import Placeholder from 'src/components/EnhancedSelect/SelectPlaceholder';
 
 export interface Item {
   value: string;
@@ -73,52 +73,43 @@ const components = {
 interface Props {
   options: Item[];
   value: Item[];
-  label: string;
+  label?: string;
   placeholder?: string;
   errorText?: string;
-  handleChange: (selected:Item[]) => void;
-  createNew?: (inputValue:string) => void;
+  onChange: (selected:Item[]) => void;
 }
 
 interface State {}
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class IntegrationReactSelect extends React.Component<CombinedProps,State> {
-  state = {
-    value: null,
-  };
-
+class MultiSelect extends React.PureComponent<CombinedProps,State> {
   render() {
-    const { classes, createNew, errorText, handleChange, label, placeholder, options, value } = this.props;
-
+    const { classes, errorText, label, placeholder, onChange, options, value } = this.props;
     return (
-      <div className={classes.root}>
-        <CreatableSelect
-          isClearable
-          isSearchable
-          isMulti
-          classes={classes}
-          textFieldProps={{
-            label,
-            errorText,
-            InputLabelProps: {
-              shrink: true,
-            },
-          }}
-          value={value}
-          options={options}
-          components={components}
-          onChange={handleChange}
-          onCreateOption={createNew}
-          placeholder={placeholder || 'Select a value...'}
-        />
-      </div>
+      <Select
+        isClearable
+        isSearchable
+        isMulti
+        classes={classes}
+        textFieldProps={{
+          label,
+          errorText,
+          InputLabelProps: {
+            shrink: true,
+          },
+        }}
+        value={value}
+        options={options}
+        components={components}
+        onChange={onChange}
+        placeholder={placeholder || 'Select a value...'}
+      />
     );
   }
 }
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(IntegrationReactSelect);
+export default styled(MultiSelect);
 

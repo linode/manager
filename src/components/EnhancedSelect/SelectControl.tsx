@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import TextField from '@material-ui/core/TextField';
+import TextField from 'src/components/TextField';
 
 const inputComponent = ({ inputRef, ...props }) => {
   return <div ref={inputRef} {...props} />;

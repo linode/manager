@@ -3,32 +3,44 @@ import * as React from 'react';
 
 import ThemeDecorator from '../../utilities/storybookDecorators';
 
-import EnhancedSelect, { Item } from './EnhancedSelect2';
+import CreatableSelect, { Item } from './CreatableSelect';
+import MultiSelect from './MultiSelect';
+import Select from './Select';
 
 import timezones from 'src/assets/timezones/timezones';
 
-const data = [
-  {
-    value: 'apple',
-    label: 'Apple'
-  },
-  {
-    value: 'pear',
-    label: 'Pear'
-  },
-  {
-    value: 'orange',
-    label: 'Orange'
-  }
-]
-
-const data2 = timezones.map((tz:any) => {
+const tz = timezones.map((tz:any) => {
   return { value: tz.name, label: tz.label };
 });
 
+const fruit = [
+  {
+    label: 'Apple',
+    value: 'apple'
+  },
+  {
+    label: 'Pear',
+    value: 'pear'
+  },
+  {
+    label: 'Mango',
+    value: 'mango'
+  },
+  {
+    label: 'Durian',
+    value: 'durian'
+  },
+  {
+    label: 'Strawberry',
+    value: 'strawberry'
+  },
+]
+
 interface State {
   open: boolean;
-  value: Item[];
+  valueCreatable: Item[];
+  valueMulti: Item[];
+  valueSingle: Item | null;
 }
 
 interface Props {}
@@ -36,36 +48,73 @@ interface Props {}
 class Example extends React.Component<Props,State> {
   state:State = { 
     open: false,
-    value: [],
+    valueCreatable: [],
+    valueMulti: [],
+    valueSingle: null,
   };
 
   toggleDrawer = (v: boolean) => (e: React.MouseEvent<any>) => {
     this.setState({ open: v });
   }
 
-  handleChange = (value:Item[]) => {
+  handleChangeSingle = (valueSingle:Item) => {
+    this.setState({ 
+      valueSingle,
+    })
+  }
+
+  handleChangeCreatable = (valueCreatable:Item[]) => {
     this.setState({
-      value,
+      valueCreatable,
     });
   };
 
+  handleChangeMulti = (valueMulti:Item[]) => {
+    this.setState({
+      valueMulti,
+    })
+  }
+
   createNew = (inputValue:string) => {
-    const { value } = this.state;
+    const { valueCreatable } = this.state;
     const newItem = {value:inputValue, label:inputValue};
-    data2.push(newItem);
-    value.push(newItem);
-    this.setState({ value });
+    tz.push(newItem);
+    valueCreatable.push(newItem);
+    this.setState({ valueCreatable });
   }
 
   render() {
+    const { valueCreatable, valueMulti, valueSingle } = this.state;
     return (
       <React.Fragment>
-        <EnhancedSelect
-          label="Example"
-          value={this.state.value}
-          placeholder="Choose a timezone"
-          handleChange={this.handleChange}
-          options={data2}
+        <Select
+          label="Basic Select"
+          value={valueSingle}
+          placeholder="Choose one fruit"
+          onChange={this.handleChangeSingle}
+          options={fruit}
+        />
+        <Select
+          label="Basic Select with Error"
+          errorText="You didn't choose the correct fruit."
+          value={valueSingle}
+          placeholder="Choose one fruit"
+          onChange={this.handleChangeSingle}
+          options={fruit}
+        />
+        <MultiSelect
+          label="Multi Select"
+          value={valueMulti}
+          placeholder="Choose some fruit"
+          onChange={this.handleChangeMulti}
+          options={fruit}
+        />
+        <CreatableSelect
+          label="Creatable Select"
+          value={valueCreatable}
+          placeholder="Choose some timezones"
+          onChange={this.handleChangeCreatable}
+          options={tz}
           createNew={this.createNew}
         />
       </React.Fragment>
