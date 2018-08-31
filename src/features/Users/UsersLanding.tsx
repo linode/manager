@@ -7,7 +7,6 @@ import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 
 import UserIcon from 'src/assets/icons/user.svg';
@@ -20,6 +19,7 @@ import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import Table from 'src/components/Table';
+import TableRow from 'src/components/TableRow';
 import { deleteUser, getUsers } from 'src/services/account';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -215,7 +215,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
   renderUserRow = (user: Linode.User) => {
     const { classes } = this.props;
     return (
-      <TableRow key={user.username} data-qa-user-row>
+      <TableRow key={user.username} data-qa-user-row rowLink={`/users/${user.username}`}>
         <TableCell data-qa-username>
           <Link to={`/users/${user.username}`} title={user.username}>
             <Button className={classes.userButton} tabIndex={-1}>
