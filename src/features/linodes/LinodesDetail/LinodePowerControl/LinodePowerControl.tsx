@@ -251,12 +251,10 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
           actions={this.renderActions}
           open={powerAlertOpen}
         >
-        <Typography>
-            {bootOption === 'reboot'
-              ? 'Are you sure you want to reboot your Linode?'
-              : 'Are you sure you want to power down your Linode?'
-            }
-            </Typography>
+          {bootOption === 'reboot'
+            ? <Typography>Are you sure you want to reboot your Linode?</Typography>
+            : <Typography>Are you sure you want to power down your Linode?</Typography>
+          }
         </ConfirmationDialog>
       </React.Fragment>
     );
