@@ -90,7 +90,7 @@ export default (Component: React.ComponentType<any>) => {
     createUserObject = (username: string, email: string, keys: string[]) => ({
       keys,
       username,
-      gravatarUrl: `https://www.gravatar.com/avatar/${getEmailHash(email)}?s=24`,
+      gravatarUrl: `https://www.gravatar.com/avatar/${getEmailHash(email)}?d=mp&s=24`,
       selected: false,
       onChange: (_: any, result: boolean) => this.toggleSSHUserKeys(username, result),
     })
