@@ -449,14 +449,16 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     if (!!linode
       && prevState.context.linode.data !== linode
       && linode.type) {
+      console.log(linode.type);
       getType(linode.type)
         .then((currentType: Linode.LinodeType) => {
+
           const typeIsDeprecated = currentType.successor !== null;
           /*
           * Now that we know the type is deprecated, get the successor's new
           * specs so we can show the user what exactly is getting upgraded
           */
-          if (typeIsDeprecated) {
+          if (!!currentType.successor && typeIsDeprecated) {
             getType(currentType.successor!)
               .then((successorData: Linode.LinodeType) => {
                 // finally show the notice to the user with the upgrade info
