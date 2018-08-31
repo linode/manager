@@ -8,6 +8,7 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import Divider from '@material-ui/core/Divider';
+import IconButton from '@material-ui/core/IconButton';
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
@@ -20,6 +21,8 @@ import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSe
 import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
 import { lishLaunch } from 'src/features/Lish';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
+
+import { getType } from 'src/services/linodes';
 
 import { displayType, typeLabelDetails } from '../presentation';
 import IPAddress from './IPAddress';
@@ -44,6 +47,8 @@ type CSSClasses =
   | 'loadingStatusText'
   | 'flag'
   | 'flagContainer'
+  | 'linkWrapper'
+  | 'StatusIndicatorWrapper'
   | 'link';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
@@ -78,10 +83,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   cardHeader: {
     fontWeight: 700,
     color: 'black',
-    flex: 1,
-    '& h3': {
-      transition: theme.transitions.create(['color']),
-    },
+    marginLeft: theme.spacing.unit,
   },
   cardContent: {
     flex: 1,
@@ -167,7 +169,20 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
       },
     },
   },
+  StatusIndicatorWrapper: {
+    position: 'relative',
+    top: 2,
+  },
+  linkWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    flex: 1,
+  },
 });
+
+interface State {
+  mutationAvailable: boolean;
+}
 
 interface Props {
   linodeId: number;
@@ -200,27 +215,44 @@ type CombinedProps =
   TypesContextProps &
   WithStyles<CSSClasses>;
 
-class LinodeCard extends React.Component<CombinedProps> {
-  renderTitle() {
-    const { classes, linodeStatus, linodeLabel, linodeNotification } = this.props;
+class LinodeCard extends React.Component<CombinedProps, State> {
+  state: State = {
+    mutationAvailable: false,
+  }
 
-    return (
-      <Grid container alignItems="center">
-        <Grid item className={'py0'}>
-          <LinodeStatusIndicator status={linodeStatus} />
-        </Grid>
-        <Grid item className={classes.cardHeader + ' py0'}>
-          <Typography role="header" variant="subheading" data-qa-label>
-            {linodeLabel}
-          </Typography>
-        </Grid>
-        {linodeNotification &&
-          <Grid item className={classes.flagContainer}>
-            <Tooltip title={linodeNotification}><Flag className={classes.flag} /></Tooltip>
-          </Grid>
+  shouldComponentUpdate(nextProps: CombinedProps, nextState: State) {
+    return haveAnyBeenModified<CombinedProps>(
+      nextProps,
+      this.props,
+      [
+        'linodeStatus',
+        'linodeRegion',
+        'linodeNotification',
+        'linodeRecentEvent',
+        'linodeLabel',
+        'linodeIpv6',
+        'linodeIpv4',
+        'typesData',
+        'typesLoading',
+      ],
+    )
+      || haveAnyBeenModified<State>(
+        nextState,
+        this.state,
+        ['mutationAvailable']
+      )
+  }
+
+  componentDidMount() {
+    const { linodeType } = this.props;
+    if (!linodeType) { return }
+    getType(linodeType)
+      .then((data: Linode.LinodeType) => {
+        if (data.successor !== null) {
+          this.setState({ mutationAvailable: true })
         }
-      </Grid>
-    );
+      })
+      .catch((e: Error) => e)
   }
 
   handleConsoleButtonClick = () => {
@@ -289,21 +321,52 @@ class LinodeCard extends React.Component<CombinedProps> {
     );
   }
 
-  shouldComponentUpdate(nextProps: CombinedProps) {
-    return haveAnyBeenModified<CombinedProps>(
-      nextProps,
-      this.props,
-      [
-        'linodeStatus',
-        'linodeRegion',
-        'linodeNotification',
-        'linodeRecentEvent',
-        'linodeLabel',
-        'linodeIpv6',
-        'linodeIpv4',
-        'typesData',
-        'typesLoading',
-      ],
+  renderFlag = () => {
+    /*
+    * Render either a flag for if the Linode has a notification
+    * or if it has a pending mutation available. Mutations take
+    * precedent over notifications
+    */
+    const { mutationAvailable } = this.state;
+    const { linodeNotification, classes } = this.props;
+    if (mutationAvailable) {
+      return (
+        <Grid item className={classes.flagContainer}>
+          <Tooltip title="There is a free upgrade available for this Linode">
+            <IconButton>
+              <Flag className={classes.flag} />
+            </IconButton>
+          </Tooltip>
+        </Grid>
+      )
+    }
+    if (linodeNotification) {
+      return (
+        <Grid item className={classes.flagContainer}>
+          <Tooltip title={linodeNotification}><Flag className={classes.flag} /></Tooltip>
+        </Grid>
+      )
+    }
+    return null;
+  }
+
+  renderTitle() {
+    const { classes, linodeStatus, linodeLabel, linodeId } = this.props;
+
+    return (
+      <Grid container alignItems="center">
+        <Link to={`/linodes/${linodeId}`} className={classes.linkWrapper}>
+          <Grid item className={`${classes.StatusIndicatorWrapper} ${'py0'}`}>
+            <LinodeStatusIndicator status={linodeStatus} />
+          </Grid>
+          <Grid item className={classes.cardHeader + ' py0'}>
+            <Typography role="header" variant="subheading" data-qa-label>
+              {linodeLabel}
+            </Typography>
+          </Grid>
+        </Link>
+        {this.renderFlag()}
+      </Grid>
     );
   }
 
@@ -315,10 +378,6 @@ class LinodeCard extends React.Component<CombinedProps> {
     return (
       <Grid item xs={12} sm={6} lg={4} xl={3} data-qa-linode={linodeLabel}>
         <Card className={classes.flexContainer}>
-          {/* Give Button a child of ' ', because the component requires children */}
-          <Link to={`/linodes/${linodeId}`}>
-            <Button className={classes.link}> </Button>
-          </Link>
           <CardHeader
             subheader={this.renderTitle()}
             action={

@@ -183,6 +183,13 @@ export const getLinodeTypes = () =>
   )
     .then(response => response.data);
 
+export const getDeprecatedLinodeTypes = () =>
+  Request<Page<Type>>(
+    setURL(`${API_ROOT}/linode/types-legacy`),
+    setMethod('GET')
+  )
+    .then(response => response.data);
+
 export const getType = (typeId: string) =>
   Request<Type>(
     setURL(`${API_ROOT}/linode/types/${typeId}`),

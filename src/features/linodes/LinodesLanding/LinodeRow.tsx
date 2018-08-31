@@ -17,6 +17,8 @@ import { displayType } from 'src/features/linodes/presentation';
 import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 
+import { getType } from 'src/services/linodes';
+
 import IPAddress from './IPAddress';
 import LinodeActionMenu from './LinodeActionMenu';
 import LinodeStatusIndicator from './LinodeStatusIndicator';
@@ -101,6 +103,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   });
 };
 
+interface State {
+  mutationAvailable: boolean;
+}
+
 interface Props {
   linodeId: number;
   linodeStatus: Linode.LinodeStatus;
@@ -127,8 +133,12 @@ type CombinedProps =
   TypesContextProps &
   WithStyles<ClassNames>;
 
-class LinodeRow extends React.Component<CombinedProps> {
-  shouldComponentUpdate(nextProps: CombinedProps) {
+class LinodeRow extends React.Component<CombinedProps, State> {
+  state: State = {
+    mutationAvailable: false,
+  }
+
+  shouldComponentUpdate(nextProps: CombinedProps, nextState: State) {
     return haveAnyBeenModified<Props & TypesContextProps>(
       nextProps,
       this.props,
@@ -143,7 +153,24 @@ class LinodeRow extends React.Component<CombinedProps> {
         'typesData',
         'typesLoading',
       ],
-    );
+    )
+      || haveAnyBeenModified<State>(
+        nextState,
+        this.state,
+        ['mutationAvailable']
+      )
+  }
+
+  componentDidMount() {
+    const { linodeType } = this.props;
+    if (!linodeType) { return }
+    getType(linodeType)
+      .then((data: Linode.LinodeType) => {
+        if (data.successor !== null) {
+          this.setState({ mutationAvailable: true })
+        }
+      })
+      .catch((e: Error) => e)
   }
 
   headCell = () => {
@@ -186,6 +213,29 @@ class LinodeRow extends React.Component<CombinedProps> {
     );
   }
 
+  renderFlag = () => {
+    /*
+    * Render either a flag for if the Linode has a notification
+    * or if it has a pending mutation available. Mutations take
+    * precedent over notifications
+    */
+    const { mutationAvailable } = this.state;
+    const { linodeNotification, classes } = this.props;
+    if (mutationAvailable) {
+      return (
+        <Tooltip title="There is a free upgrade available for this Linode">
+          <Flag className={classes.flag} />
+        </Tooltip>
+      )
+    }
+    if (linodeNotification) {
+      return (
+        <Tooltip title={linodeNotification}><Flag className={classes.flag} /></Tooltip>
+      )
+    }
+    return null;
+  }
+
   loadedState = () => {
     const {
       linodeId,
@@ -193,7 +243,6 @@ class LinodeRow extends React.Component<CombinedProps> {
       linodeIpv4,
       linodeIpv6,
       linodeRegion,
-      linodeNotification,
       linodeLabel,
       linodeBackups,
       classes,
@@ -222,9 +271,7 @@ class LinodeRow extends React.Component<CombinedProps> {
         </TableCell>
         <TableCell className={classes.actionCell} data-qa-notifications>
           <div className={classes.actionInner}>
-            {linodeNotification &&
-              <Tooltip title={linodeNotification}><Flag className={classes.flag} /></Tooltip>
-            }
+            {this.renderFlag()}
             <LinodeActionMenu
               linodeId={linodeId}
               linodeLabel={linodeLabel}
