@@ -449,7 +449,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     if (!!linode
       && prevState.context.linode.data !== linode
       && linode.type) {
-      console.log(linode.type);
       getType(linode.type)
         .then((currentType: Linode.LinodeType) => {
 
