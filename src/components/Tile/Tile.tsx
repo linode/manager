@@ -112,7 +112,7 @@ class Tile extends React.Component<CombinedProps> {
           [classes.clickableTile]: link !== undefined,
         },
         className,
-      )} data-qa-tile>
+      )} data-qa-tile={title}>
         {icon &&
           <span className={classes.icon} data-qa-tile-icon>{icon}</span>
         }

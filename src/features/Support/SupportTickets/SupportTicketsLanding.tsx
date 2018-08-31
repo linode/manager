@@ -121,8 +121,8 @@ export class SupportTicketsLanding extends React.Component<CombinedProps, State>
             textColor="primary"
             className={classes.root}
           >
-            <Tab key={0} label="Open Tickets"/>
-            <Tab key={1} label="Closed Tickets"/>
+            <Tab data-qa-tab="Open Tickets" key={0} label="Open Tickets"/>
+            <Tab data-qa-tab="Closed Tickets" key={1} label="Closed Tickets"/>
           </Tabs>
         </AppBar>
         {/* NB: 0 is the index of the open tickets tab, which evaluates to false */}

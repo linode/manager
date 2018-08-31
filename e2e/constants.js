@@ -31,9 +31,10 @@ exports.constants = {
 			oauth: '/profile/clients'
 		},
 		support: {
+			landing: '/support',
 			docs: '/documentation',
 			community: '/community/questions/',
-			tickets: '/support',
+			tickets: '/support/tickets',
 		}
 	},
 }

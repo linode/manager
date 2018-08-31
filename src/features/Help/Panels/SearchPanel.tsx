@@ -74,6 +74,7 @@ class SearchPanel extends React.Component<CombinedProps, State> {
           <Typography
             variant="headline"
             className={classes.searchHeading}
+            data-qa-search-heading
           >
             What can we help you with?
         </Typography>
