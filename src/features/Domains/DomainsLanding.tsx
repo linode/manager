@@ -385,6 +385,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
           key={domain.id}
           data-qa-domain-cell={domain.id}
           className={`${classes.domainRow} ${'fade-in-table'}`}
+          rowLink={`/domains/${domain.id}`}
         >
           <TableCell data-qa-domain-label>
             <Link to={`/domains/${domain.id}`}>
