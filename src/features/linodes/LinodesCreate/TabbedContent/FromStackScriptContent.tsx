@@ -1,4 +1,4 @@
-import { assocPath, pathOr } from 'ramda';
+import { assocPath, compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
 
@@ -6,7 +6,7 @@ import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
-import AccessPanel from 'src/components/AccessPanel';
+import AccessPanel, { UserSSHKeyObject } from 'src/components/AccessPanel';
 import CheckoutBar from 'src/components/CheckoutBar';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
@@ -23,6 +23,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import AddonsPanel from '../AddonsPanel';
 import SelectImagePanel from '../SelectImagePanel';
 import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
+import userSSHKeyHoc from './userSSHKeyHoc';
 
 type ClassNames = 'root'
   | 'main'
@@ -70,6 +71,9 @@ interface Props {
   history: any;
   selectedTabFromQuery?: string;
   selectedStackScriptFromQuery?: number;
+
+  /** Comes from HOC */
+  userSSHKeys: UserSSHKeyObject[];
 }
 
 interface State {
@@ -224,7 +228,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
   }
 
   createLinode = () => {
-    const { history } = this.props;
+    const { history, userSSHKeys } = this.props;
     const {
       selectedImageID,
       selectedRegionID,
@@ -249,6 +253,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
       image: selectedImageID, /* optional */
       backups_enabled: backups, /* optional */
       booted: true,
+      authorized_users: userSSHKeys.filter(u => u.selected).map((u) => u.username),
     })
       .then((linode) => {
         if (privateIP) { allocatePrivateIP(linode.id) };
@@ -293,7 +298,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
       selectedStackScriptUsername } = this.state;
 
     const { notice, getBackupsMonthlyPrice, regions, types, classes,
-      getRegionInfo, getTypeInfo, images } = this.props;
+      getRegionInfo, getTypeInfo, images, userSSHKeys } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
@@ -414,6 +419,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
             updateFor={[password, errors]}
             password={password}
             handleChange={this.handleTypePassword}
+            users={userSSHKeys.length > 0 && selectedImageID ? userSSHKeys : []}
           />
           <AddonsPanel
             backups={backups}
@@ -480,4 +486,6 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(FromStackScriptContent);
+const enhanced = compose(styled, userSSHKeyHoc);
+
+export default enhanced(FromStackScriptContent) as any;

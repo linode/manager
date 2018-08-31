@@ -125,6 +125,7 @@ describe('Paginator 2: Pagement Day', () => {
       wrapper.update();
 
       expect(wrapper.prop('pageSize')).toEqual(100);
+      expect(wrapper.prop('page')).toEqual(1);
     });
 
     it('should result in the request being called with updated params', () => {
