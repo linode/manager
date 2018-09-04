@@ -46,7 +46,7 @@ class WrappedTableRow extends React.Component<CombinedProps> {
         this.props.history.push(target);
       }
     }
-    e = () => target;
+    if (typeof(target) === 'function') { target(e) };
   }
 
   render() {
