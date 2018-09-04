@@ -4,13 +4,12 @@ import * as React from 'react';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
-
 
 import Radio from 'src/components/Radio';
 import RenderGuard from 'src/components/RenderGuard';
 import ShowMore from 'src/components/ShowMore';
+import TableRow from 'src/components/TableRow';
 import Tag from 'src/components/Tag';
 import StackScriptsActionMenu from 'src/features/StackScripts/SelectStackScriptPanel/StackScriptActionMenu';
 
@@ -166,7 +165,7 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
 
   return (
     <React.Fragment>
-      <TableRow data-qa-table-row={label}>
+      <TableRow data-qa-table-row={label} rowLink={() => window.open(`https://www.linode.com/stackscripts/view/${stackScriptID}`, '_blank')}>
         {onSelect &&
           <TableCell>
             <Radio checked={checked} onChange={onSelect} id={`${stackScriptID}`} />
