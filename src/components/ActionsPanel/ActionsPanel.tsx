@@ -11,9 +11,12 @@ type ClassNames = 'root';
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     paddingTop: 16,
-    paddingBottom: 16,
-    '& > :not(:first-child):not([data-qa-paypal-button])': {
-      marginLeft: 8,
+    paddingBottom: 8,
+    '& > button': {
+      marginBottom: 8,
+    },
+    '& > :first-child': {
+      marginRight: 8,
     },
   },
 });
