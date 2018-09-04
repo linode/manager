@@ -63,7 +63,11 @@ class PopularPosts extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <div className={classes.post}>
-          <a target="_blank" href="https://www.linode.com/docs/getting-started/">
+          <a
+            target="_blank"
+            href="https://www.linode.com/docs/getting-started/"
+            data-qa-doc-link
+          >
             <Typography variant="subheading">
               Getting Started with Linode
             </Typography>
@@ -73,6 +77,7 @@ class PopularPosts extends React.Component<CombinedProps, State> {
           <a
             target="_blank"
             href="https://www.linode.com/docs/security/securing-your-server/"
+            data-qa-doc-link
           >
             <Typography variant="subheading">
               How to Secure Your Server
@@ -83,6 +88,7 @@ class PopularPosts extends React.Component<CombinedProps, State> {
           <a
             target="_blank"
             href="https://www.linode.com/docs/troubleshooting/troubleshooting/"
+            data-qa-doc-link
           >
             <Typography variant="subheading">
               Troubleshooting
@@ -101,6 +107,7 @@ class PopularPosts extends React.Component<CombinedProps, State> {
           <a
             target="_blank"
             href="https://www.linode.com/community/questions/323/my-linode-is-unreachable-after-maintenance"
+            data-qa-community-post
           >
             <Typography variant="subheading">
             My Linode is unreachable after maintenance
@@ -111,6 +118,7 @@ class PopularPosts extends React.Component<CombinedProps, State> {
           <a
             target="_blank"
             href="https://www.linode.com/community/questions/232/why-is-my-website-so-slow"
+            data-qa-community-post
           >
             <Typography variant="subheading">
               Why is my website so slow?
@@ -121,6 +129,7 @@ class PopularPosts extends React.Component<CombinedProps, State> {
           <a
             target="_blank"
             href="https://www.linode.com/community/questions/479/stackscript-guide"
+            data-qa-community-post
           >
             <Typography variant="subheading">
               Stackscript guide?
