@@ -18,7 +18,7 @@ interface ResponseAction {
 
 type Actions = RequestAction | ResponseAction;
 
-export function oneOfType(action: { type: string }, list: string[]): action is Actions {
+export const oneOfType = (action: { type: string }, list: string[]): action is Actions => {
   let i = 0;
   const len = list.length;
   const type = action.type;
