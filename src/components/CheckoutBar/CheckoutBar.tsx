@@ -88,7 +88,7 @@ class CheckoutBar extends React.Component<CombinedProps> {
        * Note:
        * This 'style' prop is what gives us the "sticky" styles. Other special
        * props are available, see https://github.com/captivationsoftware/react-sticky
-       **/
+       */
       style,
       isSticky,
       classes,

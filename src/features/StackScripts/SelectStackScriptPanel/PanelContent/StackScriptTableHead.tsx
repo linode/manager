@@ -78,13 +78,9 @@ interface Props {
   currentFilterType: CurrentFilter | null;
 }
 
-interface State {}
-
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class StackScriptTableHead extends React.Component<CombinedProps, State> {
-  state: State = {};
-
+class StackScriptTableHead extends React.Component<CombinedProps, {}> {
   renderIcon = () => {
     const { sortOrder } = this.props;
 

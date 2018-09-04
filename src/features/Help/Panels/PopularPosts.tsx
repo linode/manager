@@ -49,15 +49,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-interface Props { }
+type CombinedProps = WithStyles<ClassNames>;
 
-interface State { }
-
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-class PopularPosts extends React.Component<CombinedProps, State> {
-  state: State = {};
-
+class PopularPosts extends React.Component<CombinedProps, {}> {
   renderPopularDocs = () => {
     const { classes } = this.props;
     return (

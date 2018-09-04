@@ -31,13 +31,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-interface Props {}
-
 interface State {
   error?: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = WithStyles<ClassNames>;
 
 export class OtherWays extends React.Component<CombinedProps, State> {
   state: State = { };
