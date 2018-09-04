@@ -197,7 +197,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
     imageId: string,
   ) {
     const { images } = this.state;
-    const image = (images && images.find(image => image.id === imageId))
+    const image = (images && images.find((img:Linode.Image) => img.id === imageId))
       || { label: 'Unknown Image' };
     const imageDesc = image.label;
     const typeDesc = typeLabelLong(typeLabel, memory, disk, vcpus);
@@ -352,6 +352,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
     */ 
     const node = document.getElementById('searchbar-simple');
     if (node) { node.blur(); }
+    this.toggleSearch();
     history.push(item.path);
   } 
 
