@@ -157,8 +157,8 @@ interface Props {
 }
 
 interface ConnectedProps {
-  request: typeof request;
-  response: typeof response;
+  dispatchRequest: typeof request;
+  dispatchResponse: typeof response;
   documentation: Linode.Doc[];
 }
 
@@ -251,18 +251,18 @@ export class App extends React.Component<CombinedProps, State> {
   };
 
   componentDidMount() {
-    const { request, response } = this.props;
+    const { dispatchRequest, dispatchResponse } = this.props;
 
     if (notifications.beta.get() === 'open') {
       this.setState({ betaNotification: true });
     }
 
-    request(['profile']);
+    dispatchRequest(['profile']);
     getProfile()
       .then(({ data }) => {
-        response(['profile'], data);
+        dispatchResponse(['profile'], data);
       })
-      .catch(error => response(['profile'], error));
+      .catch(error => dispatchResponse(['profile'], error));
 
     this.state.regionsContext.request();
     this.state.typesContext.request();
@@ -374,7 +374,10 @@ const themeDataAttr = () => {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
-  { request, response },
+  {
+    dispatchRequest: request,
+    dispatchResponse: response,
+  },
   dispatch,
 );
 

@@ -21,8 +21,8 @@ it('renders without crashing', () => {
               switchWrapper: '',
             }}
             longLivedLoaded
-            request={jest.fn()}
-            response={jest.fn()}
+            dispatchRequest={jest.fn()}
+            dispatchResponse={jest.fn()}
             documentation={[]}
             toggleTheme={() => { return; }}
           />

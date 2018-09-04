@@ -1,7 +1,7 @@
 const SET_TOKEN = '@@manager/authentication/SET_TOKEN';
 const LOGOUT = '@@manager/authentication/LOGOUT';
 
-export type SetToken = {
+export interface SetToken {
   type: typeof SET_TOKEN,
   token: Linode.NullableString,
   scopes: Linode.NullableString,
@@ -18,7 +18,7 @@ export const setToken = (
   };
 }
 
-export type Logout = { type: typeof LOGOUT };
+export interface Logout { type: typeof LOGOUT };
 
 export const defaultState = {
   token: null,

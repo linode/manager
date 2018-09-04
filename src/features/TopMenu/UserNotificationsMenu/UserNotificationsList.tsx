@@ -21,13 +21,9 @@ interface Props {
   closeMenu: () => void;
 }
 
-interface State { }
-
 type CombinedProps = Props & RouteComponentProps<void> & WithStyles<ClassNames>;
 
-class UserNotificationsList extends React.Component<CombinedProps, State> {
-  state: State = {};
-
+class UserNotificationsList extends React.Component<CombinedProps, {}> {
   render() {
     const { classes, notifications, closeMenu, history: { push } } = this.props;
 
@@ -39,9 +35,9 @@ class UserNotificationsList extends React.Component<CombinedProps, State> {
     return (notifications || []).map((notification, idx) => {
       const onClick = createClickHandlerForNotification(
         notification,
-        (path: string) => {
+        (targetPath: string) => {
           closeMenu();
-          push(path);
+          push(targetPath);
         });
       return React.createElement(UserNotificationListItem, {
         key: idx,

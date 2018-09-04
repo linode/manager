@@ -19,8 +19,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
 });
 
-interface Props { }
-
 interface ContextProps {
   linodeLabel: string;
   linodeId: number;
@@ -35,7 +33,7 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = Props & ContextProps & WithStyles<ClassNames>;
+type CombinedProps = ContextProps & WithStyles<ClassNames>;
 
 class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
   state: State = {
@@ -121,4 +119,4 @@ export default compose(
   errorBoundary,
   styled,
  linodeContext
-)(LinodeSettingsLabelPanel) as React.ComponentType<Props>;
+)(LinodeSettingsLabelPanel) as React.ComponentType<{}>;

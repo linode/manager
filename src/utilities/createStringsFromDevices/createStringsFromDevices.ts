@@ -18,10 +18,10 @@ const rdx = (
 };
 
 const isDisk = (d: null | Linode.DiskDevice | Linode.VolumeDevice): d is Linode.DiskDevice => {
-  return d !== null && (<Linode.DiskDevice>d).disk_id !== undefined;
+  return d !== null && (d as Linode.DiskDevice).disk_id !== undefined;
 }
 const isVolume = (d: null | Linode.DiskDevice | Linode.VolumeDevice): d is Linode.VolumeDevice => {
-  return d !== null && (<Linode.VolumeDevice>d).volume_id !== undefined;
+  return d !== null && (d as Linode.VolumeDevice).volume_id !== undefined;
 }
 
 export default compose(

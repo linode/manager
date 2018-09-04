@@ -61,7 +61,7 @@ describe('Linode Volumes', () => {
   });
 
   it('should display placeholder if Linode has no configurations.', () => {
-    const component = mount(
+    const componentWithTheme = mount(
       <StaticRouter context={{}}>
         <LinodeThemeWrapper>
           <LinodeVolumes
@@ -79,13 +79,13 @@ describe('Linode Volumes', () => {
         </LinodeThemeWrapper>
       </StaticRouter>
     );
-    const noConfigsMessage = component.find(`Typography[data-qa-placeholder-title]`);
+    const noConfigsMessage = componentWithTheme.find(`Typography[data-qa-placeholder-title]`);
 
     expect(noConfigsMessage.text()).toBe('No configs available')
   });
 
   it('should display placeholder if Linode has no attached volumes.', () => {
-    const component = mount(
+    const componentWithTheme = mount(
       <StaticRouter context={{}}>
         <LinodeThemeWrapper>
           <LinodeVolumes
@@ -103,7 +103,7 @@ describe('Linode Volumes', () => {
         </LinodeThemeWrapper>
       </StaticRouter>
     );
-    const noConfigsMessage = component.find(`Typography[data-qa-placeholder-title]`);
+    const noConfigsMessage = componentWithTheme.find(`Typography[data-qa-placeholder-title]`);
 
     expect(noConfigsMessage.text()).toBe('No volumes found')
   });

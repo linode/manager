@@ -61,8 +61,6 @@ interface Props {
   className?: string;
 }
 
-interface State {}
-
 export interface Item {
   value: string;
   label: string;
@@ -71,14 +69,14 @@ export interface Item {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class EnhancedSelect extends React.Component<CombinedProps, State> {
+class EnhancedSelect extends React.Component<CombinedProps, {}> {
   optionsIdx: any = {};
 
   componentDidMount() {
     this.createItemIndex();
   }
 
-  componentDidUpdate(prevProps:CombinedProps, prevState:State) {
+  componentDidUpdate(prevProps:CombinedProps, prevState:{}) {
     if (this.props.options !== prevProps.options) {
       this.createItemIndex();
     }

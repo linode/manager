@@ -14,9 +14,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
 });
 
-export interface LinodeConfigSelectionDrawerCallback {
-  (id: number): void;
-}
+export type LinodeConfigSelectionDrawerCallback = (id: number) => void;
 
 interface Props {
   onClose: () => void;

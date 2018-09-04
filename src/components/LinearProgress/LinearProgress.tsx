@@ -9,10 +9,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   root: {},
 });
 
-interface Props extends LinearProgressProps {
-}
-
-type CombinedProps = Props & WithStyles<CSSClasses>;
+type CombinedProps = LinearProgressProps & WithStyles<CSSClasses>;
 
 const LinearProgressComponent: React.StatelessComponent<CombinedProps> = (props) => {
   const variant = typeof props.value === 'number' ? 'determinate' : 'indeterminate';
@@ -31,4 +28,4 @@ const LinearProgressComponent: React.StatelessComponent<CombinedProps> = (props)
 
 const decorate = withStyles(styles, { withTheme: true });
 
-export default decorate<Props>(LinearProgressComponent);
+export default decorate<CombinedProps>(LinearProgressComponent);

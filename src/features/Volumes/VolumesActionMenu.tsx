@@ -31,7 +31,7 @@ class VolumesActionMenu extends React.Component<CombinedProps> {
       onDelete,
     } = this.props;
 
-    return function (closeMenu: Function): Action[] {
+    return (closeMenu: Function): Action[] => {
       const actions = [
         {
           title: 'Show Configuration',
