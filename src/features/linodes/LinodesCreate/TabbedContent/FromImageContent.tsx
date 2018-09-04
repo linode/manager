@@ -12,6 +12,7 @@ import Notice from 'src/components/Notice';
 import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
 import { resetEventsPolling } from 'src/events';
 import { Info } from 'src/features/linodes/LinodesCreate/LinodesCreate';
+import userSSHKeyHoc from 'src/features/linodes/userSSHKeyHoc';
 import { allocatePrivateIP, createLinode } from 'src/services/linodes';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -19,7 +20,6 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import AddonsPanel from '../AddonsPanel';
 import SelectImagePanel from '../SelectImagePanel';
 import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
-import userSSHKeyHoc from './userSSHKeyHoc';
 
 type ClassNames = 'root' | 'main' | 'sidebar';
 
