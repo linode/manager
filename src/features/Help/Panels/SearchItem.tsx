@@ -2,12 +2,9 @@ import { compose } from 'ramda';
 import * as React from 'react';
 
 import ListItem from '@material-ui/core/ListItem';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, Theme, withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import OpenInNew from '@material-ui/icons/OpenInNew';
-
-import { Item } from 'src/components/EnhancedSelect';
-import RenderGuard from 'src/components/RenderGuard';
 
 type ClassNames = 'root'
 | 'label'
@@ -44,40 +41,30 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-interface Props {
-  item: Item;
-  highlighted: boolean;
-}
-
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-const searchItem: React.StatelessComponent<CombinedProps> = (props) => {
+const searchItem: React.StatelessComponent = (props:any) => {
   const getLabel = () => {
     if (isFinal) { 
-      return item.label ? `Search for "${item.label}"` : 'Search';
-    } else { return item.label}
+      return label ? `Search for "${label}"` : 'Search';
+    } else { return label; }
   }
 
-  const { classes, item } = props;
-  const source = item.data ? item.data.source : '';
-  const isFinal = source === 'finalLink';
+  const { classes, label } = props;
+  const source = 'No source' // data ? data.source : '';
+  const isFinal = false; // source === 'finalLink';
 
   return (
-    <React.Fragment>
-      <ListItem className={classes.root} component="div">
-        <div className={classes.row}>
-          <div className={classes.label} dangerouslySetInnerHTML={{__html: getLabel()}} />
-          {!isFinal && <OpenInNew className={classes.icon} />}
-        </div>
-        {!isFinal && <Typography variant="caption" className={classes.source}>{source}</Typography>}
-      </ListItem>
-    </React.Fragment>
+    <ListItem className={classes.root} component="div" {...props.innerProps}>
+      <div className={classes.row}>
+        <div className={classes.label} dangerouslySetInnerHTML={{__html: getLabel()}} />
+        {!isFinal && <OpenInNew className={classes.icon} />}
+      </div>
+      {!isFinal && <Typography variant="caption" className={classes.source}>{source}</Typography>}
+    </ListItem>
   );
 }
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default compose<any, any, any>(
+export default searchItem; compose<any, any>(
   styled,
-  RenderGuard
   )(searchItem);
