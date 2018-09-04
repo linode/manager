@@ -22,6 +22,16 @@ describe('Create - Volume Suite', () => {
         linodeLabel = ListLinodes.linode[0].$(ListLinodes.linodeLabel.selector).getText();
     });
 
+    afterAll(() => {
+        apiDeleteAllLinodes();
+        try {
+            // attempt to remove all volumes, in case the ui failed
+            apiDeleteAllVolumes();
+        } catch (err) {
+            // do nothing
+        }
+    });
+
     it('should display create volumes option in global create menu', () => {
         ListLinodes.globalCreate.click();
         ListLinodes.addVolumeMenu.waitForVisible(constants.wait.normal);
@@ -35,14 +45,14 @@ describe('Create - Volume Suite', () => {
     });
 
     it('should display form error on create without a label', () => {
-        VolumeDetail.createVolume(testVolume, true);
+        VolumeDetail.createVolume(testVolume, 'header');
         VolumeDetail.label.$('p').waitForText(constants.wait.normal);
         VolumeDetail.closeVolumeDrawer();
     });
 
     it('should display a error notice on create without region', () => {
         testVolume['label'] = `ASD${new Date().getTime()}`;
-        VolumeDetail.createVolume(testVolume, true);
+        VolumeDetail.createVolume(testVolume, 'header');
         VolumeDetail.notice.waitForVisible(constants.wait.normal);
         VolumeDetail.closeVolumeDrawer();
     });
@@ -51,7 +61,7 @@ describe('Create - Volume Suite', () => {
         testVolume['label'] = `ASD${new Date().getTime()}`;
         testVolume['region'] = 'us-east';
         
-        VolumeDetail.createVolume(testVolume, true);
+        VolumeDetail.createVolume(testVolume, 'header');
         browser.url(constants.routes.volumes);
         
         browser.waitUntil(function() {
@@ -66,19 +76,9 @@ describe('Create - Volume Suite', () => {
         testVolume['label'] = `ASD${new Date().getTime()}`,
         testVolume['attachedLinode'] = linodeLabel;
 
-        VolumeDetail.createVolume(testVolume, true);
+        VolumeDetail.createVolume(testVolume, 'header');
 
         VolumeDetail.volumeCellElem.waitForVisible(constants.wait.normal);
         VolumeDetail.removeAllVolumes();
-    });
-
-    afterAll(() => {
-        apiDeleteAllLinodes();
-        try {
-            // attempt to remove all volumes, in case the ui failed
-            apiDeleteAllVolumes();
-        } catch (err) {
-            // do nothing
-        }
     });
 });
