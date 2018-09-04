@@ -9,6 +9,7 @@ import {
 } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
+import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
@@ -151,12 +152,23 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
             by resizing your disk images.
           </Typography>
         </ol>
-        <Button loading={loading} onClick={this.props.initMutation} type="primary" style={{ marginTop: 32 }}>
-          Enter the Upgrade Queue
-        </Button>
-        <Button onClick={optOut} type="secondary" style={{ marginTop: 32 }}>
-          Opt Out of Upgrade
-        </Button>
+        <ActionsPanel style={{ marginTop: 32 }}>
+          <Button 
+            loading={loading}
+            onClick={this.props.initMutation}
+            type="primary"
+            compact
+          >
+            Enter the Upgrade Queue
+          </Button>
+          <Button 
+            onClick={optOut}
+            type="secondary"
+            compact
+          >
+            Opt Out of Upgrade
+          </Button>
+        </ActionsPanel>
         {/*
         * Show when the relevant docs exist
         */}

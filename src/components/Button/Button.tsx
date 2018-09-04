@@ -13,7 +13,8 @@ type ClassNames = 'root'
   | 'loading'
   | 'destructive'
   | 'cancel'
-  | 'remove';
+  | 'remove'
+  | 'compact';
 
 export interface Props extends ButtonProps {
   loading?: boolean;
@@ -21,6 +22,7 @@ export interface Props extends ButtonProps {
   type?: 'primary' | 'secondary' | 'cancel' | 'remove';
   className?: string;
   tooltipText?: string;
+  compact?: boolean;
 }
 
 const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
@@ -87,6 +89,10 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
       },
     },
   },
+  compact: {
+    paddingLeft: 14,
+    paddingRight: 14,
+  }
 });
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -116,6 +122,7 @@ const wrappedButton: React.StatelessComponent<CombinedProps> = (props) => {
     destructive,
     tooltipText,
     type,
+    compact,
     className,
     ...rest
   } = props;
@@ -133,6 +140,7 @@ const wrappedButton: React.StatelessComponent<CombinedProps> = (props) => {
             [classes.root]: true,
             [classes.loading]: loading,
             [classes.destructive]: destructive,
+            [classes.compact]: compact,
           },
           className,
         )}
