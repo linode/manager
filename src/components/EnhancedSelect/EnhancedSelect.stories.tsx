@@ -4,7 +4,6 @@ import * as React from 'react';
 import ThemeDecorator from '../../utilities/storybookDecorators';
 
 import CreatableSelect, { Item } from './CreatableSelect';
-import MultiSelect from './MultiSelect';
 import Select from './Select';
 
 import timezones from 'src/assets/timezones/timezones';
@@ -102,8 +101,9 @@ class Example extends React.Component<Props,State> {
           onChange={this.handleChangeSingle}
           options={fruit}
         />
-        <MultiSelect
+        <Select
           label="Multi Select"
+          isMulti={true}
           value={valueMulti}
           placeholder="Choose some fruit"
           onChange={this.handleChangeMulti}

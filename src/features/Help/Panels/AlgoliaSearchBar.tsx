@@ -10,7 +10,7 @@ import {
   WithStyles,
 } from '@material-ui/core/styles';
 
-import EnhancedSelect, { Item } from 'src/components/EnhancedSelect';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
 import { ALGOLIA_APPLICATION_ID, ALGOLIA_SEARCH_KEY, DOCS_BASE_URL } from 'src/constants';
 
@@ -190,26 +190,21 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes } = this.props;
-    const { enabled, error, inputValue, value } = this.state;
+    const { enabled, error } = this.state;
     const data = this.getDataFromOptions();
 
     return (
       <React.Fragment>
       {error && <Notice error spacingTop={8} spacingBottom={0} >{error}</Notice>}
-        <EnhancedSelect
+        <Select
           disabled={!enabled}
           options={data}
-          value={value}
-          inputValue={inputValue}
-          renderItems={this.renderOptionsHelper}
-          onInputValueChange={this.onInputValueChange}
-          onSubmit={this.handleSubmit}
-          handleSelect={this.handleSelect}
+          components={{ Option: SearchItem }}
+          onInputChange={this.onInputValueChange}
+          // onSubmit={this.handleSubmit}
+          onChange={this.handleSelect}
           placeholder="Search for answers..."
-          noFilter
-          search
           className={classes.enhancedSelectWrapper}
-          maxHeight={500}
         />
       </React.Fragment>
     );
