@@ -44,8 +44,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props { }
-
 interface ConnectedProps {
   types: Linode.LinodeType[]
 }
@@ -62,7 +60,7 @@ interface State {
   results?: number;
 }
 
-type CombinedProps = Props & ConnectedProps & TypesContext & WithStyles<ClassNames>;
+type CombinedProps = ConnectedProps & TypesContext & WithStyles<ClassNames>;
 
 class LinodesDashboardCard extends React.Component<CombinedProps, State> {
   state: State = {
