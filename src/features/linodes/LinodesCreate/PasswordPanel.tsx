@@ -40,10 +40,14 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class PasswordPanel extends React.Component<CombinedProps> {
+
+  handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.props.handleChange(e.target.value);
+  }
+
   render() {
     const {
       classes,
-      handleChange,
       error,
       label,
       noPadding,
@@ -60,7 +64,7 @@ class PasswordPanel extends React.Component<CombinedProps> {
             value={this.props.password || ''}
             label={label || 'Root Password'}
             placeholder={placeholder || "Enter a password."}
-            onChange={e => handleChange(e.target.value)}
+            onChange={this.handleChange}
           />
         </div>
     </Paper>

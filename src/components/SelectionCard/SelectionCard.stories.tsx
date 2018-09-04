@@ -120,7 +120,7 @@ storiesOf('SelectionCard', module)
           return <US width="32" height="24" viewBox="0 0 720 480" />;
         }}
         heading="United States"
-        subheadings={[
+        subheadings={[ // fdafds
           'The United States of America',
           '\'Mericaaaaa, oh yeah!',
         ]}

@@ -35,18 +35,26 @@ class Example extends React.Component {
     );
   }
 
+  handleOpenDialog = () => {
+    this.setState({ open: true });
+  }
+
+  handleCloseDialog = () => {
+    this.setState({ open: false })
+  }
+
   render() {
     return (
       <React.Fragment>
         <Button
-          onClick={() => { this.setState({ open: true }); }}
+          onClick={this.handleOpenDialog}
           data-qa-dialog-button
         >
           Do something!
         </Button>
         <ConfirmationDialog
           open={this.state.open}
-          onClose={() => { this.setState({ open: false }); }}
+          onClose={this.handleCloseDialog}
           title="Are you sure you wanna?"
           actions={this.renderActions}
         >

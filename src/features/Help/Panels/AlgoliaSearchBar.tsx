@@ -59,8 +59,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-interface Props {}
-
 interface State {
   enabled: boolean;
   value: string;
@@ -71,7 +69,7 @@ interface State {
 
 type index = 'linode-docs';
 
-type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
+type CombinedProps = WithStyles<ClassNames> & RouteComponentProps<{}>;
 
 class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
   searchIndex: any = null;
@@ -155,10 +153,10 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
     this.searchAlgolia(inputValue);
   }
 
-  renderOptionsHelper = (item:Item, index:number, highlighted:boolean, itemProps:any) => {
+  renderOptionsHelper = (item:Item, currentIndex:number, highlighted:boolean, itemProps:any) => {
     const { classes } = this.props;
     return (
-    <div key={index} {...itemProps} className={`${classes.searchItem} ${highlighted && classes.searchItemHighlighted}`} >
+    <div key={currentIndex} {...itemProps} className={`${classes.searchItem} ${highlighted && classes.searchItemHighlighted}`} >
       <SearchItem item={item} highlighted={highlighted}  />
     </div>
     )

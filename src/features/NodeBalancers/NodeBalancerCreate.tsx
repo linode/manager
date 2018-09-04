@@ -9,7 +9,7 @@ import {
   map,
   omit,
   over,
-  path,
+  path as ramdaPath,
   set,
   view
 } from 'ramda';
@@ -30,7 +30,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
-import PromiseLoader from 'src/components/PromiseLoader';
 import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
 import { dcDisplayCountry, dcDisplayNames } from 'src/constants';
 import { withRegions } from 'src/context/regions';
@@ -65,16 +64,12 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   },
 });
 
-interface Props {
-}
-
 interface RegionsContextProps {
   regionsData: ExtendedRegion[];
   regionsLoading: boolean;
 }
 
-type CombinedProps = Props
-  & RegionsContextProps
+type CombinedProps = RegionsContextProps
   & RouteComponentProps<{}>
   & WithStyles<Styles>;
 
@@ -96,8 +91,6 @@ interface State {
     idxToDelete?: number;
   };
 }
-
-const preloaded = PromiseLoader<Props>({});
 
 const errorResources = {
   label: 'label',
@@ -299,7 +292,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     createNodeBalancer(mergeIPAndPort(nodeBalancerRequestData))
       .then((nodeBalancer) => this.props.history.push(`/nodebalancers/${nodeBalancer.id}/summary`))
       .catch((errorResponse) => {
-        const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'], errorResponse);
+        const errors = ramdaPath<Linode.ApiFieldError[]>(['response', 'data', 'errors'], errorResponse);
 
         if (errors) {
           this.setNodeErrors(errors.map((e) => ({
@@ -582,7 +575,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               <Grid item>
                 <Button
                   type="secondary"
-                  onClick={() => this.addNodeBalancer()}
+                  onClick={this.addNodeBalancer}
                   data-qa-add-config
                 >
                   Add another Configuration
@@ -610,7 +603,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                   return (
                     <CheckoutBar
                       heading={`${this.state.nodeBalancerFields.label || 'NodeBalancer'} Summary`}
-                      onDeploy={() => this.createNodeBalancer()}
+                      onDeploy={this.createNodeBalancer}
                       calculatedPrice={20}
                       displaySections={displaySections && [displaySections]}
                       disabled={this.state.submitting}
@@ -800,7 +793,6 @@ export const validationErrorsToFieldErrors = (error: Joi.ValidationError) => {
 
 export default compose(
   regionsContext,
-  preloaded,
   styled,
   withRouter,
 )(NodeBalancerCreate);

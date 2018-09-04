@@ -47,8 +47,6 @@ interface PreloadedProps {
   nodeBalancer: PromiseLoaderResponse<Linode.ExtendedNodeBalancer>;
 }
 
-interface Props { }
-
 interface State {
   nodeBalancer: Linode.ExtendedNodeBalancer;
   error?: Error;
@@ -56,8 +54,7 @@ interface State {
   labelInput?: string;
 }
 
-type CombinedProps = Props &
-  RouteProps &
+type CombinedProps = RouteProps &
   PreloadedProps &
   WithStyles<ClassNames>;
 
@@ -125,6 +122,11 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
     this.setState({ ApiError: undefined, labelInput: this.state.nodeBalancer.label });
   }
 
+  handleGoBack = () => {
+    const { history } = this.props;
+    history.push('/nodebalancers')
+  }
+
   static docs: Linode.Doc[] = [
     {
       title: 'Getting Started with NodeBalancers',
@@ -146,7 +148,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
 
   render() {
     const matches = (p: string) => Boolean(matchPath(p, { path: this.props.location.pathname }));
-    const { match: { path, url }, history, classes } = this.props;
+    const { match: { path, url }, classes } = this.props;
     const { error, nodeBalancer } = this.state;
 
     /** Empty State */
@@ -172,7 +174,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
         <Grid container justify="space-between">
           <Grid item className={classes.titleWrapper}>
             <IconButton
-              onClick={() => history.push('/nodebalancers')}
+              onClick={this.handleGoBack}
               className={classes.backButton}
             >
               <KeyboardArrowLeft />

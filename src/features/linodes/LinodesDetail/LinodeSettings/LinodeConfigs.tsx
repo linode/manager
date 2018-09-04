@@ -39,14 +39,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props { }
-
 interface PromiseLoaderProps {
   volumes: PromiseLoaderResponse<ExtendedVolume[]>;
 }
 
-type CombinedProps = Props
-  & PromiseLoaderProps
+type CombinedProps = PromiseLoaderProps
   & LinodeContext
   & DiskContext
   & ConfigsContext
@@ -240,14 +237,14 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
       ...this.state.configDrawer,
       ...obj,
     },
-  }, () => { if (fn) fn(); })
+  }, () => { if (fn) { fn(); } })
 
   setConfirmDelete = (obj: Partial<ConfirmDeleteState>, fn?: () => void) => this.setState({
     confirmDelete: {
       ...this.state.confirmDelete,
       ...obj,
     },
-  }, () => { if (fn) fn(); })
+  }, () => { if (fn) { fn(); } })
 
   setEdit = (config: Linode.Config) => {
     this.setConfigDrawer({
@@ -419,7 +416,7 @@ const styled = withStyles(styles, { withTheme: true });
 
 const errorBoundary = PanelErrorBoundary({ heading: 'Advanced Configurations' });
 
-const preloaded = PromiseLoader<Props & LinodeContext>({
+const preloaded = PromiseLoader<LinodeContext>({
   volumes: ({ linodeId, linodeRegion }): Promise<ExtendedVolume[]> => getVolumes()
     .then(
       compose<

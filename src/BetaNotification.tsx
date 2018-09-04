@@ -51,10 +51,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-interface Props extends SnackbarProps {
-}
-
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = SnackbarProps & WithStyles<ClassNames>;
 
 const BetaNotification: React.StatelessComponent<CombinedProps> = (props) => {
   const { classes, onClose, ...rest } = props;
@@ -95,4 +92,4 @@ const BetaNotification: React.StatelessComponent<CombinedProps> = (props) => {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(BetaNotification);
+export default styled<{}>(BetaNotification);

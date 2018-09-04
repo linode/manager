@@ -66,8 +66,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-interface Props { }
-
 interface State {
   type: 'CREDIT_CARD' | 'PAYPAL',
   submitting: boolean;
@@ -96,8 +94,7 @@ interface AccountContextProps {
   request: () => Promise<void>;
 }
 
-type CombinedProps = Props
-  & AccountContextProps
+type CombinedProps = AccountContextProps
   & PaypalScript
   & WithStyles<ClassNames>;
 

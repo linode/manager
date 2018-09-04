@@ -49,8 +49,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props { }
-
 interface State extends PaginationProps {
   domains: Linode.Domain[];
   loading: boolean;
@@ -75,7 +73,7 @@ interface State extends PaginationProps {
   };
 }
 
-type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
+type CombinedProps = WithStyles<ClassNames> & RouteComponentProps<{}>;
 
 class DomainsLanding extends React.Component<CombinedProps, State> {
   state: State = {

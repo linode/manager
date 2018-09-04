@@ -23,15 +23,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
 });
 
-interface Props { }
-
 interface State extends PaginationProps {
   errors?: Linode.ApiFieldError[];
   loading: boolean;
   data?: Linode.Invoice[],
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = WithStyles<ClassNames>;
 
 class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
   state: State = {

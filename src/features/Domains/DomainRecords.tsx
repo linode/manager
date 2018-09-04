@@ -450,7 +450,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                   justify="space-between"
                   alignItems="flex-end"
                 >
-                  <Grid item></Grid>
+                  <Grid item />
                   <Grid item>{type.link && type.link()}</Grid>
                 </Grid>
                 <Paper>
@@ -470,10 +470,10 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                           return (
                             <TableRow key={idx} data-qa-record-row>
                               {type.columns.length > 0
-                                && type.columns.map(({ title, render }, idx) => {
+                                && type.columns.map(({ title, render }, columnIndex) => {
                                   return (
                                     <TableCell
-                                      key={idx}
+                                      key={columnIndex}
                                       data-qa-column={title}
                                     >
                                       {render(data)}
