@@ -9,15 +9,16 @@ import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
+import AccessPanel, { UserSSHKeyObject } from 'src/components/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import MenuItem from 'src/components/MenuItem';
-import PasswordInput from 'src/components/PasswordInput';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import Select from 'src/components/Select';
 import { resetEventsPolling } from 'src/events';
+import userSSHKeyHoc from 'src/features/linodes/userSSHKeyHoc';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { getImages } from 'src/services/images';
 import { rebuildLinode } from 'src/services/linodes';
@@ -52,7 +53,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props { }
+interface Props {
+  userSSHKeys: UserSSHKeyObject[];
+}
 
 interface ContextProps {
   linodeId: number;
@@ -105,7 +108,12 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
       return;
     }
 
-    rebuildLinode(linodeId, selected, password)
+    rebuildLinode(
+      linodeId,
+      selected,
+      password,
+      this.props.userSSHKeys.filter(u => u.selected).map((u) => u.username),
+    )
       .then((response) => {
         resetEventsPolling();
         this.setState({ errors: undefined, selected: undefined, password: undefined });
@@ -140,7 +148,7 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { images: { error: imagesError }, classes, linodeLabel } = this.props;
+    const { images: { error: imagesError }, classes, linodeLabel, userSSHKeys } = this.props;
     const { errors, selected } = this.state;
 
     if (imagesError) {
@@ -200,13 +208,14 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
               <FormHelperText error data-qa-image-error>{imageError}</FormHelperText>}
             </div>
           </FormControl>
-
-          <PasswordInput
-            label="Root Password"
-            onChange={e => this.onPasswordChange(e.target.value)}
-            errorText={passwordError}
-            value={this.state.password || ''}
+          <AccessPanel
+            noPadding
+            password={this.state.password || ''}
+            handleChange={this.onPasswordChange}
+            error={passwordError}
+            users={userSSHKeys.length > 0 ? userSSHKeys : []}
           />
+
           <ActionsPanel>
             <Button
               variant="raised"
@@ -237,11 +246,12 @@ const linodeContext = withLinode((context) => ({
   linodeLabel: context.data!.label,
 }));
 
-export default compose<any, any, any, any, any>(
+export default compose<any, any, any, any, any, any>(
   linodeContext,
   preloaded,
   SectionErrorBoundary,
   styled,
+  userSSHKeyHoc,
 )(LinodeRebuild);
 
 interface GroupedImages {
