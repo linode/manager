@@ -1,3 +1,4 @@
+import { merge } from 'ramda';
 import * as React from 'react';
 import SSelect from 'react-select';
 
@@ -62,7 +63,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-const components = {
+const _components = {
   Control,
   NoOptionsMessage,
   Placeholder,
@@ -70,38 +71,63 @@ const components = {
   Menu,
 };
 
-interface Props {
+export interface EnhancedSelectProps {
   options: Item[];
-  value?: Item | null;
+  className?: string;
+  components?: any;
+  disabled?: boolean;
+  isMulti?: boolean;
+  value?: Item | Item[] | null;
   label?: string;
   placeholder?: string;
   errorText?: string;
-  onChange: (selected:Item) => void;
+  onChange: (selected:Item | Item[]) => void;
+  onInputChange?: (inputValue:string) => void;
 }
 
 interface State {}
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = EnhancedSelectProps & WithStyles<ClassNames>;
 
 class Select extends React.PureComponent<CombinedProps,State> {
   render() {
-    const { classes, errorText, label, placeholder, onChange, options, value } = this.props;
+    const {
+      classes,
+      className,
+      components,
+      disabled,
+      errorText,
+      label,
+      isMulti,
+      placeholder,
+      onChange,
+      onInputChange,
+      options,
+      value
+    } = this.props;
+
+    const combinedComponents = merge(_components, components);
+
     return (
       <SSelect
         isClearable
         isSearchable
+        isMulti={isMulti}
         classes={classes}
+        className={className}
         textFieldProps={{
           label,
           errorText,
+          disabled,
           InputLabelProps: {
             shrink: true,
           },
         }}
         value={value}
         options={options}
-        components={components}
+        components={combinedComponents}
         onChange={onChange}
+        onInputChange={onInputChange}
         placeholder={placeholder || 'Select a value...'}
       />
     );
