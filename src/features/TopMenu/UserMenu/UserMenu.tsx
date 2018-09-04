@@ -12,7 +12,7 @@ import { StyleRules, Theme, withStyles, WithStyles } from '@material-ui/core/sty
 import UserIcon from 'src/assets/icons/user.svg';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 
-type MenuLink = {
+interface MenuLink {
   display: string,
   href: string,
 };

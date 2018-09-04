@@ -39,8 +39,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props { }
-
 interface State {
   invoice?: Linode.Invoice;
   items?: Linode.InvoiceItem[];
@@ -48,7 +46,7 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = Props & RouteComponentProps<{ invoiceId: number }> & WithStyles<ClassNames>;
+type CombinedProps = RouteComponentProps<{ invoiceId: number }> & WithStyles<ClassNames>;
 
 class InvoiceDetail extends React.Component<CombinedProps, State> {
   state: State = {

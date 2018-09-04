@@ -1,4 +1,4 @@
-import { clone, pathOr } from 'ramda';
+import { clone, compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { matchPath, Route, RouteComponentProps, Switch } from 'react-router-dom';
@@ -64,8 +64,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 });
 
 interface ConnectedProps {
-  request: typeof request;
-  response: typeof response;
+  dispatchRequest: typeof request;
+  dispatchResponse: typeof response;
   profileUsername: string;
 }
 
@@ -160,7 +160,7 @@ class UserDetail extends React.Component<CombinedProps> {
   }
 
   onSave = () => {
-    const { history, match: { path }, profileUsername, request, response } = this.props;
+    const { history, match: { path }, profileUsername, dispatchRequest, dispatchResponse } = this.props;
     const { originalUsername, username, restricted } = this.state;
     if (!originalUsername) { return; }
     this.setState({
@@ -176,12 +176,12 @@ class UserDetail extends React.Component<CombinedProps> {
           profileSaving: false,
         })
         if (profileUsername === originalUsername) {
-          request(['profile']);
+          dispatchRequest(['profile']);
           getProfile()
             .then(({ data }) => {
-              response(['profile'], data);
+              dispatchResponse(['profile'], data);
             })
-            .catch(error => response(['profile'], error));
+            .catch(error => dispatchResponse(['profile'], error));
         }
         history.push(path.replace(':username', user.username), { success: true });
       })
@@ -291,7 +291,10 @@ class UserDetail extends React.Component<CombinedProps> {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
-  { request, response },
+  {
+    dispatchResponse: response,
+    dispatchRequest: request,
+  },
   dispatch,
 );
 
@@ -307,4 +310,8 @@ const styled = withStyles(styles, { withTheme: true });
 
 export const connected = connect(mapStateToProps, mapDispatchToProps);
 
-export default connected(styled(reloadable(UserDetail)));
+export default compose<any, any, any, any>(
+  connected,
+  styled,
+  reloadable
+)(UserDetail)

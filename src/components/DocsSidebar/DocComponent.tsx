@@ -33,9 +33,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-interface Props extends Doc {}
-
-type PropsWithStyles = Props & WithStyles<CSSClasses>;
+type PropsWithStyles = Doc & WithStyles<CSSClasses>;
 
 class DocComponent extends React.PureComponent<PropsWithStyles> {
 
@@ -62,4 +60,4 @@ class DocComponent extends React.PureComponent<PropsWithStyles> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })<Props>(DocComponent);
+export default withStyles(styles, { withTheme: true })<PropsWithStyles>(DocComponent);

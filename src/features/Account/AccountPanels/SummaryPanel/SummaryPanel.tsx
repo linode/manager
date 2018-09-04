@@ -32,8 +32,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   }
 });
 
-interface Props { }
-
 interface AccountContextProps {
   loading: boolean,
   errors?: Linode.ApiFieldError[],
@@ -41,13 +39,9 @@ interface AccountContextProps {
   data?: Linode.Account;
 }
 
-interface State { }
+type CombinedProps = AccountContextProps & WithStyles<ClassNames>;
 
-type CombinedProps = Props & AccountContextProps & WithStyles<ClassNames>;
-
-export class SummaryPanel extends React.Component<CombinedProps, State> {
-  state: State = {};
-
+export class SummaryPanel extends React.Component<CombinedProps, {}> {
   render() {
     const { classes, data, loading, errors, lastUpdated } = this.props;
 

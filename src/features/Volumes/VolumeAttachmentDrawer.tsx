@@ -78,9 +78,11 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
           return [`${config.id}`, config.label];
         });
         this.setState({ configs: configChoices });
-        configChoices.length > 1 && this.setState({
-          selectedConfig: configChoices[0][0],
-        });
+        if (configChoices.length > 1) {
+          this.setState({
+            selectedConfig: configChoices[0][0],
+          });
+        }
       })
       .catch(() => {
         /*

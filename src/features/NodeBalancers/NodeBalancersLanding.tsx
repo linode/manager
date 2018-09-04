@@ -70,8 +70,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props { }
-
 interface DeleteConfirmDialogState {
   open: boolean;
   submitting: boolean;
@@ -86,8 +84,7 @@ interface State extends PaginationProps {
   selectedNodeBalancerId?: number;
 }
 
-type CombinedProps = Props
-  & WithStyles<ClassNames>
+type CombinedProps = WithStyles<ClassNames>
   & RouteComponentProps<{}>
   & SetDocsProps;
 

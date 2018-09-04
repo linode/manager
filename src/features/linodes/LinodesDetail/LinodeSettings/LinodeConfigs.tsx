@@ -483,6 +483,7 @@ const enhanced = compose<any, any, any, any, any>(
 
 export default enhanced(LinodeConfigs);
 
+/* tslint:disable-next-line */
 function replaceById<T>(data: T, id: number | string, list: T[]): T[] {
   const idx = findIndex(propEq('id', id), list);
   if (!idx) { return list; }

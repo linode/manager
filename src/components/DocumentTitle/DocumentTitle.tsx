@@ -52,6 +52,7 @@ export class DocumentTitleSegment extends React.Component<Props> {
   }
 }
 
+/* tslint:disable-next-line */
 export function withDocumentTitleProvider<P> (Component: React.ComponentType<P>) {
   return class DocumentTitleProviderManager extends React.Component<P, DocumentTitleSegmentsContext> {
     /* Make this a class property to avoid race conditions with setState */

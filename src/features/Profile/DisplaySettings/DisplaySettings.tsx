@@ -25,8 +25,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props { }
-
 interface ConnectedProps {
   loading: boolean;
   username: string;
@@ -36,10 +34,13 @@ interface ConnectedProps {
 }
 
 interface State {
-
+  submitting: boolean;
+  updatedEmail: string;
+  errors?: any;
+  success?: any;
 }
 
-type CombinedProps = Props & ConnectedProps & WithStyles<ClassNames>;
+type CombinedProps = ConnectedProps & WithStyles<ClassNames>;
 
 export class DisplaySettings extends React.Component<CombinedProps, State> {
   state: State = {

@@ -62,6 +62,7 @@ export default (
   action: Actions | Action,
 ): Linode.ResourcesState => when(
   () => oneOfType(action, [REQUEST, RESPONSE]),
+  /* tslint:disable-next-line */
   (state) => {
     const path = (action as Actions).meta.path;
     const setLoading = assocPath([...path, 'loading']);

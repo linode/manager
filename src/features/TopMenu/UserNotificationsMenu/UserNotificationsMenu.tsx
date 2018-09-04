@@ -51,8 +51,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-interface Props { }
-
 interface State {
   anchorEl?: HTMLElement;
   notifications: Linode.Notification[];
@@ -61,7 +59,7 @@ interface State {
   UserAgentNotificationWarning: any;
 }
 
-type CombinedProps = {} & WithStyles<ClassNames>;
+type CombinedProps = WithStyles<ClassNames>;
 
 const b = typeof browser === "function" ? browser() : () => ({ name: 'unknown' });
 
@@ -212,4 +210,4 @@ const reduceSeverity = (result: Linode.NotificationSeverity | null, { severity }
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(UserNotificationsMenu);
+export default styled<CombinedProps>(UserNotificationsMenu);
