@@ -1,6 +1,6 @@
 import { /* dcDisplayCountry, */ dcDisplayNames } from 'src/constants';
 
-export function formatRegion(region: string) {
+export const formatRegion = (region: string) => {
   const city = dcDisplayNames[region];
 
   return `${city || ''}`;

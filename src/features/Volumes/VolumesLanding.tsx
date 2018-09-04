@@ -198,6 +198,14 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     }
   }
 
+  handleCloseConfigDrawer = () => {
+    this.setState({ configDrawer: { open: false } });
+  }
+
+  handleCloseAttachDrawer = () => {
+    this.setState({ attachmentDrawer: { open: false } });
+  }
+
   render() {
     const { classes } = this.props;
     const { count, loading, labelsLoading } = this.state;
@@ -256,7 +264,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
         />
         <VolumeConfigDrawer
           open={this.state.configDrawer.open}
-          onClose={() => { this.setState({ configDrawer: { open: false } }); }}
+          onClose={this.handleCloseConfigDrawer}
           volumePath={this.state.configDrawer.volumePath}
           volumeLabel={this.state.configDrawer.volumeLabel}
         />
@@ -265,14 +273,14 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           volumeID={this.state.attachmentDrawer.volumeID || 0}
           volumeLabel={this.state.attachmentDrawer.volumeLabel || ''}
           linodeRegion={this.state.attachmentDrawer.linodeRegion || ''}
-          onClose={() => { this.setState({ attachmentDrawer: { open: false } }); }}
+          onClose={this.handleCloseAttachDrawer}
         />
         <DestructiveVolumeDialog
           open={this.state.destructiveDialog.open}
           mode={this.state.destructiveDialog.mode}
-          onClose={() => this.closeDestructiveDialog()}
-          onDetach={() => this.detachVolume()}
-          onDelete={() => this.deleteVolume()}
+          onClose={this.closeDestructiveDialog}
+          onDetach={this.detachVolume}
+          onDelete={this.deleteVolume}
         />
       </React.Fragment>
     );
@@ -326,7 +334,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       const linodeLabel = volume.linode_id ? linodeLabels[volume.linode_id] : '';
       const linodeStatus = volume.linode_id ? linodeStatuses[volume.linode_id] : '';
       const size = pathOr('', ['size'], volume);
-      const filesystem_path = pathOr(
+      const filesystemPath = pathOr(
         /** @todo Remove path default when API releases filesystem_path. */
         `/dev/disk/by-id/scsi-0Linode_Volume_${label}`,
         ['filesystem_path'],
@@ -354,7 +362,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
                 </Link>
               }</TableCell>
             <TableCell data-qa-volume-size>{size} GB</TableCell>
-            <TableCell data-qa-fs-path>{filesystem_path}</TableCell>
+            <TableCell data-qa-fs-path>{filesystemPath}</TableCell>
             <TableCell data-qa-volume-region>{region}</TableCell>
             <TableCell>
               <VolumesActionMenu
@@ -362,7 +370,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
                   this.setState({
                     configDrawer: {
                       open: true,
-                      volumePath: filesystem_path,
+                      volumePath: filesystemPath,
                       volumeLabel: label,
                     },
                   });
