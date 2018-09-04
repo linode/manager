@@ -787,6 +787,7 @@ const LinodeTheme: Linode.Theme = {
     },
     MuiTableRow: {
       root: {
+        backfaceVisibility: 'hidden',
         position: 'relative',
         zIndex: 1,
         '&:hover': {
