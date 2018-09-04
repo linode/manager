@@ -92,4 +92,4 @@ const BetaNotification: React.StatelessComponent<CombinedProps> = (props) => {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<{}>(BetaNotification);
+export default styled<CombinedProps>(BetaNotification);
