@@ -78,13 +78,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
   };
 };
 
-interface Props { }
-
 interface State {
   toasts: Toast[];
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = WithStyles<ClassNames>;
 
 const openFirstToast = (ts: Toast[]): Toast[] => {
   if (ts.length === 0) { return ts; }

@@ -5,6 +5,7 @@ interface Props {
   updateFor?: any[];
 }
 
+/* tslint:disable-next-line */
 export default function renderGuard<P>(Component: React.ComponentType) {
   return class ComponentWithRenderGuard extends React.Component<Props & P> {
     static displayName = `WithRenderGuard(${getDisplayName(Component)})`;
@@ -30,7 +31,7 @@ export default function renderGuard<P>(Component: React.ComponentType) {
   };
 }
 
-function getDisplayName(Component: React.ComponentType) {
+const getDisplayName = (Component: React.ComponentType) => {
   return Component.displayName ||
     Component.name ||
     'Component';

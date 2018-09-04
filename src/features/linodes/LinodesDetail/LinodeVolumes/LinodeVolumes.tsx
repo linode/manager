@@ -89,12 +89,12 @@ type CombinedProps = Props
   & RouteComponentProps<{}>
   & WithStyles<ClassNames>;
 
-const volumeDrawer = (path: (string | number)[]) => lensPath(['volumeDrawer', ...path])
+const volumeDrawerData = (path: (string | number)[]) => lensPath(['volumeDrawer', ...path])
 
 const L = {
   volumeDrawer: {
-    errors: volumeDrawer(['errors']),
-    size: volumeDrawer(['size']),
+    errors: volumeDrawerData(['errors']),
+    size: volumeDrawerData(['size']),
   }
 };
 
@@ -402,19 +402,19 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
             region: linodeRegion,
             linodeId: linodeID,
             onClose: this.closeUpdatingDrawer,
-            onModeChange: (mode: Modes) => this.setState(prevState => ({
+            onModeChange: (newMode: Modes) => this.setState(prevState => ({
               volumeDrawer: {
                 ...prevState.volumeDrawer,
-                mode,
+                mode: newMode,
               },
             })),
-            onLabelChange: (label: string) => this.setState(prevState => ({
+            onLabelChange: (newLabel: string) => this.setState(prevState => ({
               volumeDrawer: {
                 ...prevState.volumeDrawer,
-                label,
+                label: newLabel,
               },
             })),
-            onSizeChange: (size: string) => this.composeState([
+            onSizeChange: (newSize: string) => this.composeState([
               when<State, State>(
                 (prevState) => prevState.volumeDrawer.size <= 10240 && Boolean(prevState.volumeDrawer.errors),
                 over(L.volumeDrawer.errors, filter((e: Linode.ApiFieldError) => e.field !== 'size')),
@@ -423,7 +423,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
                 (prevState) => prevState.volumeDrawer.size > 10240,
                 over(L.volumeDrawer.errors, append({ field: 'size', reason: 'Size cannot be over 10240.' })),
               ),
-              set(L.volumeDrawer.size, +size || ''),
+              set(L.volumeDrawer.size, +newSize || ''),
             ]),
             onVolumeChange: (selectedVolume: string) => this.setState(prevState => ({
               volumeDrawer: {
@@ -450,10 +450,10 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
             region: linodeRegion,
             linodeId: linodeID,
             onClose: this.closeUpdatingDrawer,
-            onSizeChange: (size: string) => this.setState(prevState => ({
+            onSizeChange: (newSize: string) => this.setState(prevState => ({
               volumeDrawer: {
                 ...prevState.volumeDrawer,
-                size: Number(size),
+                size: Number(newSize),
               },
             })),
             onSubmit: this.resizeVolume,
@@ -502,10 +502,10 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
             region: linodeRegion,
             linodeId: linodeID,
             onClose: this.closeUpdatingDrawer,
-            onLabelChange: (label: string) => this.setState(prevState => ({
+            onLabelChange: (newLabel: string) => this.setState(prevState => ({
               volumeDrawer: {
                 ...prevState.volumeDrawer,
-                label,
+                label: newLabel,
               },
             })),
             onSubmit: this.editVolume,

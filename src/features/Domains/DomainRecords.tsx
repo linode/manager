@@ -439,10 +439,10 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <DocumentTitleSegment segment={`${domain.domain} - DNS Records`} />
         {
-          this.state.types.map((type, idx) => {
+          this.state.types.map((type, eachTypeIdx) => {
             return (
               <ExpansionPanel
-                key={idx}
+                key={eachTypeIdx}
                 heading={type.title}
               >
                 <Grid
@@ -457,9 +457,9 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                   <Table arial-label="List of Domains MX Records">
                     <TableHead>
                       <TableRow>
-                        {type.columns.length > 0 && type.columns.map((col, idx) => {
+                        {type.columns.length > 0 && type.columns.map((col, columnIndex) => {
                           return (
-                            <TableCell key={idx}>{col.title}</TableCell>
+                            <TableCell key={columnIndex}>{col.title}</TableCell>
                           );
                         })}
                       </TableRow>

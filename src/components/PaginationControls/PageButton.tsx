@@ -37,6 +37,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Linode.Theme) => ({
 
 const styled = withStyles<CSSClasses>(styles, { withTheme: true });
 
+/* tslint:disable-next-line */
 export interface Props extends ButtonProps { }
 
 const PageButton: React.StatelessComponent<Props & WithStyles<CSSClasses>> = ((props) => {

@@ -52,7 +52,7 @@ const StrengthIndicator: React.StatelessComponent<CombinedProps> = (props) => {
             <div className={classNames({
               [classes.block]: true,
               [classes[`strength-${strength}`]]: !isNil(strength) && idx <= strength,
-            })}></div>
+            })} />
             </Grid>
           ))
       }

@@ -25,8 +25,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props { }
-
 interface BlogItem {
   description: string;
   link: string;
@@ -39,7 +37,7 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = WithStyles<ClassNames>;
 
 class BlogDashboardCard extends React.Component<CombinedProps, State> {
   state: State = {

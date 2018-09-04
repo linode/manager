@@ -35,8 +35,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props { }
-
 interface State {
   loading: boolean;
   errors?: Linode.ApiFieldError[];
@@ -44,7 +42,7 @@ interface State {
   results?: number;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = WithStyles<ClassNames>;
 
 class DomainsDashboardCard extends React.Component<CombinedProps, State> {
   state: State = {

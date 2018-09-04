@@ -67,8 +67,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-interface Props { }
-
 interface State {
   loading: boolean;
   errors?: Linode.ApiFieldError[];
@@ -76,7 +74,7 @@ interface State {
   quota?: number;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = WithStyles<ClassNames>;
 
 class TransferDashboardCard extends React.Component<CombinedProps, State> {
   state: State = {
