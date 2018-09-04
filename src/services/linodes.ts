@@ -128,11 +128,11 @@ export const allocatePublicIP = (linodeID: number) =>
     setData({ type: 'ipv4', public: true }),
   ).then(response => response.data);
 
-export const rebuildLinode = (id: number, image: string, password: string) =>
+export const rebuildLinode = (id: number, image: string, password: string, users: string[] = []) =>
   Request<{}>(
     setURL(`${API_ROOT}/linode/instances/${id}/rebuild`),
     setMethod('POST'),
-    setData({ image, root_pass: password }),
+    setData({ image, root_pass: password, authorized_users: users }),
   ).then(response => response.data);
 
 export const resizeLinode = (id: number, type: string) =>
