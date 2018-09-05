@@ -107,7 +107,6 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
   render() {
     const {
       open,
-      optOut,
       handleClose,
       loading,
       error,
@@ -166,7 +165,7 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
             Enter the Upgrade Queue
           </Button>
           <Button 
-            onClick={optOut}
+            onClick={this.handleOptOut}
             type="secondary"
             compact
           >
