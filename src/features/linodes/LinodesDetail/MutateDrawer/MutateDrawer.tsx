@@ -51,7 +51,7 @@ interface Props {
   linodeId: number;
   loading: boolean;
   error: string;
-  optOut: () => void;
+  optOut: (linodeId: number) => void;
 }
 
 interface State {
@@ -98,6 +98,10 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
         }
       }
     } as State;
+  }
+
+  handleOptOut = () => {
+    this.props.optOut(this.props.linodeId)
   }
 
   render() {

@@ -666,12 +666,11 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     });
   }
 
-  optOut = () => {
-    const { context: { linode: { data: linode } } } = this.state;
+  optOut = (linodeId: number) => {
     /* close the drawer, remove the warning, and set local storage */
     this.closeMutateDrawer();
     this.setState({ showPendingMutation: false });
-    notifications.linodeMutation.set(linode!.id);
+    notifications.linodeMutation.set(linodeId);
     sendToast('You have successfully opted out of this Linode upgrade')
   }
 
