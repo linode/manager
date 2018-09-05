@@ -394,15 +394,11 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
           <TableCell data-qa-domain-type>{domain.type}</TableCell>
           <TableCell>
             <ActionMenu
-              onEditRecords={() => {
-                history.push(`/domains/${domain.id}`);
-              }}
-              onRemove={() => {
-                this.openRemoveDialog(domain.domain, domain.id);
-              }}
-              onClone={() => {
-                this.openCloneDrawer(domain.domain, domain.id);
-              }}
+              domain={domain.domain}
+              id={domain.id}
+              history={history}
+              onRemove={this.openRemoveDialog}
+              onClone={this.openCloneDrawer}
             />
           </TableCell>
         </TableRow>,
