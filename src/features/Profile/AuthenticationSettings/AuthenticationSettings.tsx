@@ -26,8 +26,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props { }
-
 interface ConnectedProps {
   loading: boolean;
   ipWhitelisting: boolean;
@@ -40,7 +38,7 @@ interface State {
   success?: string;
 }
 
-type CombinedProps = Props & ConnectedProps & WithStyles<ClassNames>;
+type CombinedProps = ConnectedProps & WithStyles<ClassNames>;
 
 export class AuthenticationSettings extends React.Component<CombinedProps, State> {
   /*

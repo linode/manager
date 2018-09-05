@@ -108,9 +108,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
   };
 };
 
-interface Props {
-}
-
 interface TypesContextProps {
   typesData?: Linode.LinodeType[];
 }
@@ -129,8 +126,7 @@ interface State {
   statsLoadError?: string;
 }
 
-type CombinedProps = Props &
-  LinodeContextProps &
+type CombinedProps = LinodeContextProps &
   TypesContextProps &
   WithStyles<ClassNames>;
 

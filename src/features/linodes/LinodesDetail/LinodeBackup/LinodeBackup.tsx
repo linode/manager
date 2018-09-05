@@ -87,8 +87,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props { }
-
 interface ContextProps {
   linodeID: number;
   linodeRegion: string;
@@ -128,8 +126,7 @@ interface State {
   enabling: boolean;
 }
 
-type CombinedProps = Props
-  & PreloadedProps
+type CombinedProps = PreloadedProps
   & WithStyles<ClassNames>
   & RouteComponentProps<{}>
   & ContextProps
@@ -643,7 +640,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
   }
 }
 
-const preloaded = PromiseLoader<Props & ContextProps>({
+const preloaded = PromiseLoader<ContextProps>({
   backups: (props) => getLinodeBackups(props.linodeID),
   types: ({ linodeType }) => {
     if (!linodeType) {

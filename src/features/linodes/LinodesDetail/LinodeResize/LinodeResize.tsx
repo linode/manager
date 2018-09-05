@@ -46,8 +46,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-interface Props { }
-
 interface TypesContextProps {
   typesData: ExtendedType[];
 }
@@ -64,9 +62,7 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps =
-  Props &
-  TypesContextProps &
+type CombinedProps = TypesContextProps &
   LinodeContextProps &
   WithStyles<ClassNames>;
 

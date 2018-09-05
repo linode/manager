@@ -22,7 +22,7 @@ export const splitIntoTwo = (str: string, sep: string): string[] => {
  * @returns An object of the parsed key/value pairs
  */
 export const parseQueryParams = (str: string) => {
-  return str
+   return str
     .split('&')
     .reduce(
       (acc, keyVal) => {

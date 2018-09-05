@@ -13,13 +13,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
 });
 
-interface State {}
+type CombinedProps = WithStyles<ClassNames>;
 
-interface Props {}
-
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-class LinodeAdvancedConfigurationsPanel extends React.Component<CombinedProps, State> {
+class LinodeAdvancedConfigurationsPanel extends React.Component<CombinedProps, {}> {
   render() {
     return (
       <React.Fragment>

@@ -43,7 +43,7 @@ namespace Linode {
 
   export type DocumentationState = Linode.Doc[];
 
-  export type VolumeDrawerState = {
+  export interface VolumeDrawerState {
     mode: string;
   };
 
