@@ -17,6 +17,7 @@ export const reportException = (error: string | Error, extra?: any) => {
   if (process.env.NODE_ENV === 'production' && SENTRY_URL) {
     Raven.captureException(error, { extra })
   } else {
+    /* tslint:disable */
     console.error('====================================');
     console.error(error);
     console.log(extra);

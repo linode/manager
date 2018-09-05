@@ -49,9 +49,6 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   },
 });
 
-interface Props {
-}
-
 interface TypesContextProps {
   typesData: ExtendedType[];
   typesLoading: boolean;
@@ -67,8 +64,7 @@ interface PreloadedProps {
   linodes: { response: Linode.LinodeWithBackups[] };
 }
 
-type CombinedProps = Props
-  & TypesContextProps
+type CombinedProps = TypesContextProps
   & RegionsContextProps
   & WithStyles<Styles>
   & PreloadedProps
@@ -90,7 +86,7 @@ interface QueryStringOptions {
   stackScriptUsername: string;
 }
 
-const preloaded = PromiseLoader<Props>({
+const preloaded = PromiseLoader<{}>({
   linodes: () => getLinodes()
     /*
      * @todo: We're only allowing the user to select from their first 100

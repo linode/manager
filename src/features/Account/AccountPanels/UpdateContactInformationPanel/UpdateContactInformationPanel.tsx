@@ -33,8 +33,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props { }
-
 interface State {
   submitting: boolean;
   submissionErrors?: Linode.ApiFieldError[];
@@ -55,8 +53,7 @@ interface State {
   },
 }
 
-type CombinedProps = Props
-  & Requestable<Linode.Account>
+type CombinedProps = Requestable<Linode.Account>
   & WithStyles<ClassNames>;
 
 const field = (path: string[]) => lensPath(['fields', ...path]);

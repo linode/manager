@@ -22,15 +22,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
 });
 
-interface Props { }
-
 interface State extends PaginationProps {
   errors?: Linode.ApiFieldError[];
   loading: boolean;
   data?: Linode.Payment[],
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = WithStyles<ClassNames>;
 
 class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
   state: State = {
@@ -43,7 +41,7 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
 
   requestPayments = (
-    page: number = this.state.page,
+    whichPage: number = this.state.page,
     pageSize: number = this.state.pageSize,
     initial: boolean = false,
   ) => {
@@ -51,7 +49,7 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
 
     this.setState({ loading: initial });
 
-    return getPayments({ page, page_size: pageSize })
+    return getPayments({ page: whichPage, page_size: pageSize })
       .then(({ data, page, results }) => {
         if (!this.mounted) { return; }
 

@@ -54,15 +54,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-interface Props {}
+type CombinedProps = WithStyles<ClassNames>;
 
-interface State {}
-
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-class SearchPanel extends React.Component<CombinedProps, State> {
-  state: State = {};
-
+class SearchPanel extends React.Component<CombinedProps, {}> {
   render() {
     const { classes } = this.props;
     return (

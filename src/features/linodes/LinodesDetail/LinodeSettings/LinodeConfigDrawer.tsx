@@ -224,13 +224,13 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             >
               <MenuItem value="none" disabled><em>Select a Kernel</em></MenuItem>
               {kernels &&
-                kernels.map(kernel =>
+                kernels.map(eachKernel =>
                   <MenuItem
                     // Can't use ID for key until DBA-162 is closed.
-                    key={`${kernel.id}-${kernel.label}`}
-                    value={kernel.id}
+                    key={`${eachKernel.id}-${eachKernel.label}`}
+                    value={eachKernel.id}
                   >
-                    {kernel.label}
+                    {eachKernel.label}
                   </MenuItem>)
               }
             </TextField>

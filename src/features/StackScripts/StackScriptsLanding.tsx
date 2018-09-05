@@ -25,30 +25,21 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props {}
-
 interface PreloadedProps {
   images: { response: Linode.Image[] };
 }
 
-interface State {
-}
-
-type CombinedProps = Props
-  & SetDocsProps
+type CombinedProps = SetDocsProps
   & WithStyles<ClassNames>
   & PreloadedProps
   & RouteComponentProps<{}>;
 
-  const preloaded = PromiseLoader<Props>({
+  const preloaded = PromiseLoader<{}>({
     images: () => getLinodeImages()
       .then(response => response.data || []),
   });
 
-export class StackScriptsLanding extends React.Component<CombinedProps, State> {
-  state: State = {
-  };
-
+export class StackScriptsLanding extends React.Component<CombinedProps, {}> {
   static docs = [
     {
       title: 'Automate Deployment with StackScripts',

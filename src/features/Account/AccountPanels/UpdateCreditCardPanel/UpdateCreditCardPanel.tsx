@@ -44,8 +44,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-interface Props { }
-
 interface AccountContextProps {
   accountLoading: boolean;
   accountErrors: Linode.ApiFieldError[];
@@ -63,7 +61,7 @@ interface State {
   expiry_year: number;
 }
 
-type CombinedProps = Props & AccountContextProps & WithStyles<ClassNames>;
+type CombinedProps = AccountContextProps & WithStyles<ClassNames>;
 
 class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
   state: State = {

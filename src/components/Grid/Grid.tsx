@@ -4,6 +4,7 @@ import Grid, { GridProps } from '@material-ui/core/Grid';
 
 import RenderGuard from 'src/components/RenderGuard';
 
+/* tslint:disable-next-line */
 export interface Props extends GridProps {}
 
 const WrappedGrid: React.StatelessComponent<Props> = (props) => {

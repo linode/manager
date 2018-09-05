@@ -149,9 +149,6 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   },
 });
 
-interface Props {
-}
-
 interface TypesContextProps {
   typesData?: Linode.LinodeType[];
 }
@@ -167,8 +164,7 @@ interface State {
   [resource: string]: any;
 }
 
-type CombinedProps = Props
-  & TypesContextProps
+type CombinedProps = TypesContextProps
   & WithStyles<Styles>
   & RouteComponentProps<{}>;
 
@@ -246,7 +242,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
 
   getSearchSuggestions(query: string | null) {
     const { typesData } = this.props;
-    if (!this.dataAvailable() || !query) return [];
+    if (!this.dataAvailable() || !query) { return [] };
 
     const searchResults = [];
 
@@ -434,7 +430,6 @@ class SearchBar extends React.Component<CombinedProps, State> {
               isOpen,
               inputValue,
               highlightedIndex,
-              clearSelection,
             }) => (
                 <div className={classes.textfieldContainer}>
                   <TextField

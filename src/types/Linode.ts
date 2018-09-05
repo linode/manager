@@ -1,4 +1,5 @@
 namespace Linode {
+  /* tslint:disable-next-line */
   export interface Linode {
     id: number;
     alerts: LinodeAlerts;

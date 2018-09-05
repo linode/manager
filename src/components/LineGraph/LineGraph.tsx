@@ -31,8 +31,6 @@ interface Props {
   data: DataSet[];
 }
 
-interface State { }
-
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const chartOptions: any = {
@@ -100,8 +98,7 @@ const lineOptions = {
   pointHitRadius: 10,
 };
 
-class LineGraph extends React.Component<CombinedProps, State> {
-  state: State = {};
+class LineGraph extends React.Component<CombinedProps, {}> {
 
   getChartOptions = (suggestedMax?: number) => {
     const finalChartOptions = clone(chartOptions);

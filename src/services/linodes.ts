@@ -159,7 +159,7 @@ export const getLinodesPage = (page: number) =>
   )
     .then(response => response.data);
 
-/**@todo isnt this a Partial<Linode>? */
+/** @todo isnt this a Partial<Linode>? */
 export const createLinode = (data: any) =>
   Request<Linode>(
     setURL(`${API_ROOT}/linode/instances`),
@@ -240,7 +240,7 @@ export const deleteLinode = (linodeId: number) =>
     setMethod('DELETE'),
   );
 
-/**@todo type */
+/** @todo type */
 export const restoreBackup = (
   linodeID: number,
   backupID: number,
@@ -364,9 +364,9 @@ export interface LinodeCloneData {
   backups_enabled?: boolean | null;
 }
 
-export const cloneLinode = (source_linode_id: number, data: LinodeCloneData) => {
+export const cloneLinode = (sourceLinodeId: number, data: LinodeCloneData) => {
   return Request<Linode>(
-    setURL(`${API_ROOT}/linode/instances/${source_linode_id}/clone`),
+    setURL(`${API_ROOT}/linode/instances/${sourceLinodeId}/clone`),
     setMethod('POST'),
     setData(data),
   )

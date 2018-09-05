@@ -48,7 +48,7 @@ interface RegionsContextProps {
 }
 
 interface ActionCreatorProps {
-  close: typeof close;
+  handleClose: typeof close;
 }
 
 interface ReduxProps {
@@ -231,11 +231,11 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
 
   onClose = () => {
     this.reset();
-    this.props.close();
+    this.props.handleClose();
   }
 
   onSubmit = () => {
-    const { mode, volumeID, close } = this.props;
+    const { mode, volumeID, handleClose } = this.props;
     const { cloneLabel, label, size, region, linodeId } = this.state;
 
     switch (mode) {
@@ -264,7 +264,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
             setTimeout(() => {
               this.composeState([
                 set(L.success, undefined),
-              ], close)
+              ], handleClose)
             }, 4000);;
           })
           .catch(this.handleAPIErrorResponse);
@@ -285,7 +285,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
         updateVolume(volumeID, label)
           .then(() => {
             updateVolumes$.next(true);
-            close();
+            handleClose();
           })
           .catch(this.handleAPIErrorResponse);
         return;
@@ -308,7 +308,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
         resizeVolume(volumeID, Number(size))
           .then(() => {
             resetEventsPolling();
-            close();
+            handleClose();
           })
           .catch(this.handleAPIErrorResponse);
         return;
@@ -331,7 +331,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
         cloneVolume(volumeID, cloneLabel)
           .then(() => {
             resetEventsPolling();
-            close();
+            handleClose();
           })
           .catch(this.handleAPIErrorResponse);
         return;
@@ -377,7 +377,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     this.composeState([
       when<State, State>(
         (prevState) => prevState.size <= 10240 && Boolean(prevState.errors),
-        over(L.errors, filter((e: Linode.ApiFieldError) => e.field !== 'size')),
+        over(L.errors, filter((event: Linode.ApiFieldError) => event.field !== 'size')),
       ),
 
       // (prevState: State) => {
@@ -529,13 +529,13 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
             data-qa-select-region
           >
             <MenuItem key="none" value="none">Select a Region</MenuItem>,
-            {regions && regions.map(region =>
+            {regions && regions.map(eachRegion =>
               <MenuItem
-                key={region.id}
-                value={region.id}
-                data-qa-attach-to-region={region.id}
+                key={eachRegion.id}
+                value={eachRegion.id}
+                data-qa-attach-to-region={eachRegion.id}
               >
-                {formatRegion('' + region.id)}
+                {formatRegion('' + eachRegion.id)}
               </MenuItem>,
             )}
           </Select>
@@ -666,7 +666,9 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
-  { close },
+  {
+    handleClose: () => close()
+  },
   dispatch,
 );
 

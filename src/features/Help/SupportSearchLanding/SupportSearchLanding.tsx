@@ -74,8 +74,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-interface Props {}
-
 interface State {
   enabled: boolean;
   error?: string;
@@ -83,7 +81,7 @@ interface State {
   results: SearchResult[];
 }
 
-type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
+type CombinedProps = WithStyles<ClassNames> & RouteComponentProps<{}>;
 
 type index = 'linode-docs';
 

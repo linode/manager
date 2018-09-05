@@ -37,8 +37,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props { }
-
 interface DiskContextProps {
   disksUpdate: (fn: (disks: Linode.Disk[]) => Linode.Disk[]) => void,
   disks: Linode.Disk[];
@@ -89,8 +87,7 @@ interface State {
   confirmDelete: ConfirmDeleteState,
 }
 
-type CombinedProps = Props
-  & DiskContextProps
+type CombinedProps = DiskContextProps
   & LinodeContextProps
   & WithStyles<ClassNames>;
 
@@ -528,7 +525,6 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     if (!linodeTotalDisk) {
       return 0;
     }
-    console.log(linodeTotalDisk, disks.filter((d) => d.id !== diskId).map((d) => Number(d.size)).join(', '));
     return linodeTotalDisk - disks.reduce((acc: number, disk: Linode.Disk) => {
       return diskId === disk.id ? acc : acc + disk.size
       // return acc + disk.size;
