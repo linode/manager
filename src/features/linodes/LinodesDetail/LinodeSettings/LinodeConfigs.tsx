@@ -62,19 +62,21 @@ interface State {
   success?: string;
 }
 
+interface Helpers {
+  updatedb_disabled: boolean;
+  distro: boolean;
+  modules_dep: boolean;
+  network: boolean;
+  devtmpfs_automount: boolean;
+}
+
 interface ConfigDrawerState {
   comments?: string;
   configId?: number;
   devices: DevicesAsStrings;
   devicesCounter: number;
   errors?: Linode.ApiFieldError[];
-  helpers: {
-    updatedb_disabled: boolean;
-    distro: boolean;
-    modules_dep: boolean;
-    network: boolean;
-    devtmpfs_automount: boolean;
-  };
+  helpers: Helpers;
   kernel?: string;
   label: string;
   maxMemory: number;
@@ -153,6 +155,27 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
     this.setState({ configDrawer: { ...configDrawer, virt_mode: value } })
   }
 
+  handleChangeKernel = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { configDrawer } = this.state;
+    this.setState({ configDrawer: { ...configDrawer, kernel: e.target.value } })
+  }
+  
+  handleChangeRunLevel = (e: any, value: 'binbash' | 'default' | 'single') => {
+    const { configDrawer } = this.state;
+    this.setState({ configDrawer: { ...configDrawer, run_level: value } })
+  }
+
+  handleToggleBootHelpers = (stateToUpdate: keyof Helpers, value: boolean) => {
+    const { configDrawer } = this.state;
+    const { helpers } = configDrawer
+    this.setState({
+      configDrawer: {
+        ...configDrawer,
+        helpers: { ...helpers, [stateToUpdate]: value }
+      }
+    })
+  }
+
   render() {
     const { configDrawer } = this.state;
     const { classes } = this.props;
@@ -185,6 +208,9 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
             handleChangeLabel={this.handleChangeLabel}
             handleChangeComments={this.handleChangeComments}
             handleChangeVirtMode={this.handleChangeVirtMode}
+            handleChangeKernel={this.handleChangeKernel}
+            handleChangeRunLevel={this.handleChangeRunLevel}
+            toggleBootHelpers={this.handleToggleBootHelpers}
             onClose={this.resetConfigDrawer}
             onSubmit={this.onConfigSubmit}
           />
