@@ -13,7 +13,7 @@ namespace Linode {
     restricted: boolean;
   }
 
-  type Referrals = {
+  interface Referrals {
     code: string,
     url: string,
     total: number,
@@ -22,7 +22,7 @@ namespace Linode {
     credit: number,
   };
 
-  export type Token = {
+  export interface Token {
     id: number,
     scopes: string,
     label: string,
@@ -42,7 +42,7 @@ namespace Linode {
     status: 'disabled' | 'active' | 'suspended';
   }
 
-  export type Secret = {
+  export interface Secret {
     secret: string;
     expiry: Date;
   }

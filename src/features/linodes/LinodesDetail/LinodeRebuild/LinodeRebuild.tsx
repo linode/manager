@@ -52,8 +52,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props { }
-
 interface ContextProps {
   linodeId: number;
   linodeLabel: string;
@@ -70,7 +68,7 @@ interface State {
   password?: string;
 }
 
-type CombinedProps = Props & PromiseLoaderProps & ContextProps &  WithStyles<ClassNames>;
+type CombinedProps = PromiseLoaderProps & ContextProps &  WithStyles<ClassNames>;
 
 class LinodeRebuild extends React.Component<CombinedProps, State> {
   constructor(props: CombinedProps) {

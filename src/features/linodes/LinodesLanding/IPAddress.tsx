@@ -126,8 +126,8 @@ class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
         {
           formattedIPS.length > 1 && <ShowMore
             items={tail(formattedIPS)}
-            render={(ips: string[]) => {
-              return ips.map((ip, idx) => this.renderIP(ip.replace('/64', ''), copyRight, idx));
+            render={(ipsAsArray: string[]) => {
+              return ipsAsArray.map((ip, idx) => this.renderIP(ip.replace('/64', ''), copyRight, idx));
             }} />
         }
       </div>

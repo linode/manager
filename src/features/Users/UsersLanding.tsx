@@ -67,8 +67,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   }
 });
 
-interface Props {}
-
 interface State {
   users?: Linode.User[];
   error?: Error;
@@ -80,7 +78,7 @@ interface State {
   userDeleteError?: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
+type CombinedProps = WithStyles<ClassNames> & RouteComponentProps<{}>;
 
 class UsersLanding extends React.Component<CombinedProps, State> {
   state: State = {

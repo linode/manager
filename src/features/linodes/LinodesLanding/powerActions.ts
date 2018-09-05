@@ -33,9 +33,7 @@ export const genEvent = (
   } as Linode.Event;
 };
 
-export interface LinodePowerAction {
-  (id: string | number, label: string, config_id?: number): void;
-}
+export type LinodePowerAction = (id: string | number, label: string, config_id?: number) => void;
 
 const _rebootLinode: LinodePowerAction = (id, label, config_id) => {
   linodeReboot(id, { config_id })
@@ -57,9 +55,8 @@ const _powerOnLinode: LinodePowerAction = (id, label) => {
   });
 };
 
-interface DrawerFunction {
-  (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback): void;
-}
+type DrawerFunction =
+  (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
 
 const withAction = (
   action: LinodePowerAction,

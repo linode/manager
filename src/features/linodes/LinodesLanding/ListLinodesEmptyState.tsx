@@ -63,9 +63,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-interface Props { }
-
-type PropsWithStyles = Props & WithStyles<CSSClasses> & RouteComponentProps<{}>;
+type PropsWithStyles = WithStyles<CSSClasses> & RouteComponentProps<{}>;
 
 class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
   render() {

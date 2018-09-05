@@ -67,14 +67,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   }
 });
 
-interface Props {}
-
 interface State {
   error?: string;
   drawerOpen: boolean;
 }
 
-type CombinedProps = Props & RouteComponentProps<{}> & WithStyles<ClassNames>;
+type CombinedProps = RouteComponentProps<{}> & WithStyles<ClassNames>;
 
 export class OtherWays extends React.Component<CombinedProps, State> {
   state: State = { 

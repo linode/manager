@@ -47,8 +47,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props { }
-
 interface PreloadedProps {
   linodes: PromiseLoaderResponse<Linode.ResourcePage<Linode.EnhancedLinode>>;
   images: PromiseLoaderResponse<Linode.ResourcePage<Linode.Image>>;
@@ -76,7 +74,7 @@ interface State {
   selectedLinodeLabel: string;
 }
 
-const preloaded = PromiseLoader<Props>({
+const preloaded = PromiseLoader<{}>({
   linodes: () => getLinodes({ page_size: 25 }),
 
   images: () => getImages(),
@@ -88,8 +86,7 @@ interface TypesContextProps {
   typesLastUpdated: number;
 }
 
-type CombinedProps = Props
-  & TypesContextProps
+type CombinedProps = TypesContextProps
   & PreloadedProps
   & RouteComponentProps<{}>
   & WithStyles<ClassNames>

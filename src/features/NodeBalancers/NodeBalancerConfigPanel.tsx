@@ -827,7 +827,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       return null;
                     }
 
-                    const hasErrorFor = getAPIErrorFor({
+                    const nodesHasErrorFor = getAPIErrorFor({
                       label: 'label',
                       address: 'address',
                       weight: 'weight',
@@ -858,7 +858,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             value={node.label}
                             inputProps={{ 'data-node-idx': idx }}
                             onChange={this.onNodeLabelChange}
-                            errorText={hasErrorFor('label')}
+                            errorText={nodesHasErrorFor('label')}
                             errorGroup={forEdit ? `${configIdx}`: undefined}
                             data-qa-backend-ip-label
                           />
@@ -891,7 +891,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                       })}
                                       label="IP Address"
                                       inputProps={{ 'data-node-idx': idx }}
-                                      errorText={hasErrorFor('address')}
+                                      errorText={nodesHasErrorFor('address')}
                                       errorGroup={`${configIdx}`}
                                       data-qa-backend-ip-address
                                     />
@@ -947,7 +947,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             value={node.port}
                             inputProps={{ 'data-node-idx': idx }}
                             onChange={this.onNodePortChange}
-                            errorText={hasErrorFor('port')}
+                            errorText={nodesHasErrorFor('port')}
                             errorGroup={forEdit ? `${configIdx}`: undefined}
                             data-qa-backend-ip-port
                             style={{ minWidth: 'auto' }}
@@ -960,7 +960,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             value={node.weight}
                             inputProps={{ 'data-node-idx': idx }}
                             onChange={this.onNodeWeightChange}
-                            errorText={hasErrorFor('weight')}
+                            errorText={nodesHasErrorFor('weight')}
                             errorGroup={forEdit ? `${configIdx}`: undefined}
                             data-qa-backend-ip-weight
                             style={{ minWidth: 'auto' }}
@@ -974,7 +974,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                               select
                               inputProps={{ 'data-node-idx': idx }}
                               onChange={this.onNodeModeChange}
-                              errorText={hasErrorFor('mode')}
+                              errorText={nodesHasErrorFor('mode')}
                               data-qa-backend-ip-mode
                             >
                               <MenuItem

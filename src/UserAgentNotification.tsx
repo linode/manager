@@ -17,14 +17,9 @@ interface Props {
   warning?: string;
 }
 
-interface State { }
-
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class UserAgentNotification extends React.Component<CombinedProps, State> {
-  state: State = {
-  };
-  
+class UserAgentNotification extends React.Component<CombinedProps, {}> {  
   actions = () => <Button onClick={this.props.onClose} type="primary">Dismiss</Button>;
 
   render() {

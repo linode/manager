@@ -75,8 +75,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props { }
-
 interface ConnectedProps {
   lishAuthMethod: string;
   authorizedKeys: string[];
@@ -93,7 +91,7 @@ interface State {
   authorizedKeysCount: number;
 }
 
-type CombinedProps = Props & ConnectedProps & WithStyles<ClassNames>;
+type CombinedProps = ConnectedProps & WithStyles<ClassNames>;
 
 class LishSettings extends React.Component<CombinedProps, State> {
   state: State = {
@@ -220,13 +218,13 @@ class LishSettings extends React.Component<CombinedProps, State> {
       lish_auth_method: lishAuthMethod,
       ...(lishAuthMethod !== 'disabled' && { authorized_keys: keys }),
     })
-      .then((response) => {
-        this.props.updateProfile(response);
+      .then((profileData) => {
+        this.props.updateProfile(profileData);
         this.setState({
           submitting: false,
           success: 'LISH authentication settings have been updated.',
-          authorizedKeys: response.authorized_keys || [],
-          authorizedKeysCount: response.authorized_keys ? response.authorized_keys.length : 1,
+          authorizedKeys: profileData.authorized_keys || [],
+          authorizedKeysCount: profileData.authorized_keys ? profileData.authorized_keys.length : 1,
         })
       })
       .catch((error) => {

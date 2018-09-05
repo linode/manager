@@ -53,7 +53,7 @@ export const updateVolume = (volumeId: number, label: string) => Request<{}>(
   setData({ label }),
 );
 
-export type VolumeRequestPayload = {
+export interface VolumeRequestPayload {
   label: string,
   size: number,
   region?: string,
