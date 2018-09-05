@@ -2,7 +2,7 @@ const crypto = require('crypto');
 const { argv } = require('yargs');
 const { constants } = require('../constants');
 const { readToken } = require('./config-utils');
-const { getPrivateImages, removeImage } = require('../setup/setup');
+const { getPrivateImages, removeImage, getPublicKeys, removePublicKey } = require('../setup/setup');
 
 import ConfigureLinode from '../pageobjects/configure-linode';
 import ListLinodes from '../pageobjects/list-linodes';
@@ -111,4 +111,10 @@ export const removeNodeBalancers = () => {
 export const apiDeletePrivateImages = token => {
     const privateImages = getPrivateImages(token).data;
     privateImages.forEach(i => removeImage(token, i.id));
+}
+
+export const apiRemoveSshKeys = () => {
+    const token = readToken();
+    const userKeys = getPublicKeys(token).data;
+    userKeys.forEach(key => removePublicKey(token, key.id));
 }

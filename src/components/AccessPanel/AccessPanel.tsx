@@ -112,7 +112,7 @@ class AccessPanel extends React.Component<CombinedProps> {
 
     return (
       <React.Fragment>
-        <TableHeader title="SSH Keys" />
+        <TableHeader title="SSH Keys"/>
         <Table>
           <TableHead>
             <TableRow>
@@ -129,7 +129,7 @@ class AccessPanel extends React.Component<CombinedProps> {
               selected,
               username,
             }) => (
-                <TableRow key={username}>
+                <TableRow key={username} data-qa-ssh-public-key>
                   <TableCell className={classes.cellCheckbox}>
                     <CheckBox
                       checked={selected}
