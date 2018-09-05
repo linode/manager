@@ -116,5 +116,6 @@ export const apiDeletePrivateImages = token => {
 export const apiRemoveSshKeys = () => {
     const token = readToken();
     const userKeys = getPublicKeys(token).data;
+
     userKeys.forEach(key => removePublicKey(token, key.id));
 }
