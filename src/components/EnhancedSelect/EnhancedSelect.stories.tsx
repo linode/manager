@@ -28,6 +28,7 @@ class Example extends React.Component {
   }
 
   handleSelect = (selected:any) => {
+    /* tslint:disable-next-line */
     console.log(`${selected} has been selected`);
   }
 

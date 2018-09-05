@@ -285,8 +285,6 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
   renderAttachments = (attachments: string[]) => {
     const { classes } = this.props;
 
-    console.log(attachments);
-
     // create an array of icons to use
     const icons = attachments.map((attachment, idx) => {
       // try to find a file extension

@@ -25,7 +25,7 @@
     "no-console": { "severity": "warning" },
     "no-empty-interface": { "severity": "warning" },
     "no-empty": { "severity": "warning" },
-    "no-namespace": { "severity": "warning" },
+    "no-namespace": { "severity": "none" },
     "no-shadowed-variable": { "severity": "warning"},
     "no-string-literal": { "severity": "warning" },
     "no-unused-expression": { "severity": "warning" },
@@ -33,6 +33,6 @@
     "only-arrow-functions": { "severity": "warning" },
     "prefer-for-of": {"severity": "warning"},
     "trailing-comma": { "severity": "warning" },
-    "variable-name": { "severity": "warning" }
+    "variable-name": { "severity": "none" }
   }
 }

@@ -76,6 +76,7 @@ interface State {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
+/* tslint:disable-next-line */
 interface _TextFieldProps {
   label: string;
   field: keyof EditableRecordFields | keyof EditableDomainFields;
@@ -89,7 +90,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
   /**
    * the defaultFieldState is used to prepopulate the drawer with either
    * editable data or defaults.
-  */
+   */
   static defaultFieldsState = (props: Partial<CombinedProps>) => ({
     id: pathOr(undefined, ['id'], props),
     name: pathOr(undefined, ['name'], props),
@@ -533,7 +534,10 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         open={open}
         onClose={this.onClose}
       >
-        {otherErrors.length > 0 && otherErrors.map(err => <Notice error text={err} />)}
+        {otherErrors.length > 0 && otherErrors.map((err, index) => {
+          return <Notice error key={index} text={err} />
+        })
+        }
         {fields.map((field: any, idx: number) => field(idx))}
         <ActionsPanel>
           <Button {...buttonProps} data-qa-record-save />

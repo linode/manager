@@ -1,29 +1,29 @@
 import { dcDisplayCountry, dcDisplayNames } from 'src/constants';
 
-export function titlecase(string: string): string {
+export const titlecase = (string: string): string => {
   return `${string.substr(0, 1).toUpperCase()}${string.substr(1)}`;
 }
 
-export function formatRegion(region: string) {
+export const formatRegion = (region: string) => {
   const country = dcDisplayCountry[region];
   const city = dcDisplayNames[region];
   return `${country || ''} ${city || ''}`;
 }
 
-export function typeLabelLong(label: string, memory: number, disk: number, cpus: number) {
+export const typeLabelLong = (label: string, memory: number, disk: number, cpus: number) => {
   return `${label}: ${typeLabelDetails(memory, disk, cpus)}`;
 }
 
-export function typeLabelDetails(memory: number, disk: number, cpus: number) {
+export const typeLabelDetails = (memory: number, disk: number, cpus: number) => {
   const memG = memory / 1024;
   const diskG = disk / 1024;
   return `${cpus} CPU, ${diskG}G Storage, ${memG}G RAM`;
 }
 
-export function displayType(
+export const displayType = (
   linodeTypeId: null | string,
   types: Pick<Linode.LinodeType, 'id' | 'label'>[],
-): string {
+): string => {
   const plans = [
     ...types,
     /** Legacy Types */

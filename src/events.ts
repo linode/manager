@@ -7,7 +7,7 @@ import { dateFormat } from 'src/time';
 import isPast from 'src/utilities/isPast';
 
 
-function createInitialDatestamp() {
+const createInitialDatestamp = () => {
   return moment('1970-01-01 00:00:00.000Z').utc().format(dateFormat);
 }
 
@@ -20,7 +20,7 @@ const initialPollInterval = 2000;
 export let eventRequestDeadline = Date.now();
 export let currentPollIntervalMultiplier = 1;
 
-export function resetEventsPolling() {
+export const resetEventsPolling = () => {
   eventRequestDeadline = Date.now() + initialPollInterval;
   currentPollIntervalMultiplier = 1;
 }
@@ -29,18 +29,18 @@ export const init = () => {
   resetEventsPolling();
 };
 
-export function generateInFilter(keyName: string, arr: any[]) {
+export const generateInFilter = (keyName: string, arr: any[]) => {
   return {
     '+or': arr.map(el => ({ [keyName]: el })),
   };
 }
 
-export function generatePollingFilter(datestamp: string, pollIDs: string[]) {
-  return pollIDs.length ?
+export const generatePollingFilter = (datestamp: string, pollIDsAsArr: string[]) => {
+  return pollIDsAsArr.length ?
     {
       '+or': [
         { created: { '+gt': datestamp } },
-        generateInFilter('id', pollIDs),
+        generateInFilter('id', pollIDsAsArr),
       ],
     }
     : {
@@ -76,13 +76,11 @@ export const setInitialEvents = when(
         over(lensPath(['data', 'data']), map(assoc('_initial', true))),
       )(response);
 
-    } catch (error) { }
-
-    return response;
+    } catch (error) { return response; }
   },
 );
 
-export function requestEvents() {
+export const requestEvents = () => {
   getEvents(
     { page_size: 25 },
     generatePollingFilter(filterDatestamp, Object.keys(pollIDs)),
@@ -120,7 +118,7 @@ export function requestEvents() {
           /** If a Linode is deleted the /events end-points sends updated regarding shutting down
            * and eventuallly deletion. Subscribers of this stream want active Linodes only, and
            * if provided a "deleted" Linode ID will result in 404s until the events stop.
-          */
+           */
           && !isBeingDeleted(events, linodeEvent.id)
         ) {
           // when we have an "incomplete event" poll at the initial polling rate

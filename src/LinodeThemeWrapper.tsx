@@ -6,7 +6,7 @@ import LinodeDarkTheme from 'src/darkTheme';
 import { init } from 'src/events';
 import LinodeLightTheme from 'src/theme';
 
-import { theme } from 'src/utilities/storage';
+import { theme as themeStorage } from 'src/utilities/storage';
 
 interface State {
   themeChoice: 'light' | 'dark';
@@ -34,7 +34,7 @@ class LinodeThemeWrapper extends React.Component<{}, State> {
   };
 
   componentDidMount() {
-    if (theme.get() === 'dark') {
+    if (themeStorage.get() === 'dark') {
       this.setState({
         themeChoice: 'dark'
       });
@@ -51,10 +51,10 @@ class LinodeThemeWrapper extends React.Component<{}, State> {
   toggleTheme = () => {
     if (this.state.themeChoice === 'light') {
       this.setState({ themeChoice: 'dark' });
-      theme.set('dark');
+      themeStorage.set('dark');
     } else {
       this.setState({ themeChoice: 'light' });
-      theme.set('light');
+      themeStorage.set('light');
     }
 
     /**

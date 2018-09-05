@@ -32,14 +32,11 @@ interface PreloadedProps {
   account: { response: Linode.Account };
 }
 
-interface Props { }
-
 interface State {
   account: Requestable<Linode.Account>,
 }
 
-type CombinedProps = Props
-  & SetDocsProps
+type CombinedProps = SetDocsProps
   & PreloadedProps
   & WithStyles<ClassNames>;
 

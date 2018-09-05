@@ -1,76 +1,76 @@
-export function baseRedirect() {
+export const baseRedirect = () => {
   return '/';
 }
 
-export function getLinodesRedirectUrl() {
+export const getLinodesRedirectUrl = () => {
   return '/linodes';
 }
 
-export function getLinodeRedirectUrl(entity: Linode.Entity) {
+export const getLinodeRedirectUrl = (entity: Linode.Entity) => {
   return `${getLinodesRedirectUrl()}/${entity.label}`;
 }
 
-export function getLinodeNetworkingRedirectUrl(entity: Linode.Entity) {
+export const getLinodeNetworkingRedirectUrl = (entity: Linode.Entity) => {
   return `${getLinodeRedirectUrl(entity)}/networking`;
 }
 
-export function getLinodeAdvancedRedirectUrl(entity: Linode.Entity) {
+export const getLinodeAdvancedRedirectUrl = (entity: Linode.Entity) => {
   return `${getLinodeRedirectUrl(entity)}/settings/advanced`;
 }
 
-export function getLinodeBackupRedirectUrl(entity: Linode.Entity) {
+export const getLinodeBackupRedirectUrl = (entity: Linode.Entity) => {
   return `${getLinodeRedirectUrl(entity)}/backups`;
 }
 
-export function getDomainsRedirectUrl() {
+export const getDomainsRedirectUrl = () => {
   return '/domains';
 }
 
-export function getDomainRedirectUrl(entity: Linode.Entity) {
+export const getDomainRedirectUrl = (entity: Linode.Entity) => {
   return `${getDomainsRedirectUrl()}/${entity.label}`;
 }
 
-export function getNodeBalancersRedirectUrl() {
+export const getNodeBalancersRedirectUrl = () => {
   return '/nodebalancers';
 }
 
-export function getNodebalancerRedirectUrl(entity: Linode.Entity) {
+export const getNodebalancerRedirectUrl = (entity: Linode.Entity) => {
   return `${getNodeBalancersRedirectUrl()}/${entity.label}`;
 }
 
-export function getTicketsRedirectUrl() {
+export const getTicketsRedirectUrl = () => {
   return '/support';
 }
 
-export function getTicketRedirectUrl(entity: Linode.Entity) {
+export const getTicketRedirectUrl = (entity: Linode.Entity) => {
   return `${getTicketsRedirectUrl()}/${entity.id}`;
 }
 
-export function getStackScriptsRedirectUrl() {
+export const getStackScriptsRedirectUrl = () => {
   return '/stackscripts';
 }
 
-export function getStackScriptRedirectUrl(entity: Linode.Entity) {
+export const getStackScriptRedirectUrl = (entity: Linode.Entity) => {
   return `${getStackScriptsRedirectUrl()}/${entity.id}`;
 }
 
-export function getVolumesRedirectUrl() {
+export const getVolumesRedirectUrl = () => {
   return '/volumes';
 }
 
-export function getVolumeRedirectUrl() {
+export const getVolumeRedirectUrl = () => {
   return getVolumesRedirectUrl();
 }
 
-export function getImagesRedirectUrl() {
+export const getImagesRedirectUrl = () => {
   return '/images';
 }
 
-export function getImageRedirectUrl() {
+export const getImageRedirectUrl = () => {
   return getImagesRedirectUrl();
 }
 
-export function getAccountRedirectUrl() {
+export const getAccountRedirectUrl = () => {
   return '/account';
 }
 

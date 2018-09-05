@@ -29,7 +29,7 @@ import { getProfile } from 'src/services/profile';
 import { request, response } from 'src/store/reducers/resources';
 
 import composeState from 'src/utilities/composeState';
-import { notifications, theme } from 'src/utilities/storage';
+import { notifications, theme as themeStorage } from 'src/utilities/storage';
 
 import BetaNotification from 'src/BetaNotification';
 
@@ -363,7 +363,7 @@ export class App extends React.Component<CombinedProps, State> {
 }
 
 const themeDataAttr = () => {
-  if (theme.get() === 'dark') {
+  if (themeStorage.get() === 'dark') {
     return {
       'data-qa-theme-dark': true
     }

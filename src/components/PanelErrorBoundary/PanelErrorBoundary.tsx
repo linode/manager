@@ -5,6 +5,7 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 import ErrorState from 'src/components/ErrorState';
 import ExpansionPanel, { ExpansionPanelProps } from 'src/components/ExpansionPanel';
 
+/* tslint:disable-next-line */
 export interface Props extends ExpansionPanelProps { }
 
 export default (expansionPanelProps: Props) =>

@@ -13,7 +13,7 @@ import {
 
 Date.now = jest.fn(() => 1234567890);
 
-function mockResponse(data: any[], headers: any = {}) {
+const mockResponse = (data: any[], headers: any = {}) => {
   return {
     data: {
       data,

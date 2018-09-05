@@ -217,7 +217,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       booted: true,
     })
       .then((linode) => {
-        if (privateIP) allocatePrivateIP(linode.id);
+        if (privateIP) { allocatePrivateIP(linode.id) };
         resetEventsPolling();
         history.push('/linodes');
       })

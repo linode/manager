@@ -21,13 +21,9 @@ interface Props {
   onDelete: () => void;
 }
 
-interface State {}
-
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class DestructiveVolumeDialog extends React.PureComponent<CombinedProps, State> {
-  state: State = {};
-
+class DestructiveVolumeDialog extends React.PureComponent<CombinedProps, {}> {
   renderActions = () => {
     const method = {
       detach: this.props.onDetach,

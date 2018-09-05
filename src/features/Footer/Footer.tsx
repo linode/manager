@@ -39,9 +39,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
 
 const styled = withStyles(styles, { withTheme: true });
 
-interface Props { }
-
-type CombinedProps = Props & WithStyles<CSSClasses>;
+type CombinedProps = WithStyles<CSSClasses>;
 
 export class Footer extends React.PureComponent<CombinedProps> {
   render() {

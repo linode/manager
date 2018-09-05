@@ -25,13 +25,9 @@ interface Props {
   placeholder?: string;
 }
 
-interface State { }
-
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class UserDefinedText extends React.Component<CombinedProps, State> {
-  state: State = {};
-
+class UserDefinedText extends React.Component<CombinedProps, {}> {
   renderTextField = () => {
     const { udf_data, field, placeholder, isOptional } = this.props;
 

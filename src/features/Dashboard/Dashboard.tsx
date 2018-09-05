@@ -20,14 +20,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
 });
 
-interface Props { }
+type CombinedProps = WithStyles<ClassNames>;
 
-interface State { }
-
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-class Dashboard extends React.Component<CombinedProps, State> {
-  state: State = {};
+class Dashboard extends React.Component<CombinedProps, {}> {
 
   render() {
     return (
