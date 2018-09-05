@@ -43,7 +43,7 @@ Axios.interceptors.response.use(
       response &&
       response.status &&
       ![401, 404].includes(response.status) &&
-      /** Dont report failed stats requests. */
+      /** Don't report failed stats requests. */
       response.config.url && !response.config.url.includes('/stats')
     ) {
       reportException(error, { response, request });

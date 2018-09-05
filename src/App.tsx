@@ -27,6 +27,7 @@ import { getLinodeTypes } from 'src/services/linodes';
 import { getRegions } from 'src/services/misc';
 import { getProfile } from 'src/services/profile';
 import { request, response } from 'src/store/reducers/resources';
+import initSurvicate from 'src/survicate';
 
 import composeState from 'src/utilities/composeState';
 import { notifications, theme as themeStorage } from 'src/utilities/storage';
@@ -154,6 +155,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
 interface Props {
   toggleTheme: () => void;
   longLivedLoaded: boolean;
+  userId: number | null;
 }
 
 interface ConnectedProps {
@@ -194,6 +196,7 @@ const L = {
 
 export class App extends React.Component<CombinedProps, State> {
   composeState = composeState;
+  surveyed: boolean = false;
 
   state: State = {
     menuOpen: false,
@@ -266,6 +269,22 @@ export class App extends React.Component<CombinedProps, State> {
 
     this.state.regionsContext.request();
     this.state.typesContext.request();
+  }
+
+  componentDidUpdate() {
+    const { userId } = this.props;
+    /* userId is a connected prop; if it's loaded
+    * (default value is 1) and we haven't already
+    * done this, initialize the survey.
+    * */
+    if (userId && userId !== 1 && !this.surveyed) {
+      /* Initialize Survicate
+      * Done here rather than in index.tsx so that
+      * we have access to the logged in user's ID
+      */ 
+      initSurvicate(window, userId);
+      this.surveyed = true;
+    } 
   }
 
   closeMenu = () => { this.setState({ menuOpen: false }); }
@@ -383,6 +402,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
 
 const mapStateToProps = (state: Linode.AppState) => ({
   longLivedLoaded: Boolean(pathOr(false, ['resources', 'profile', 'data'], state)),
+  userId: pathOr(null,['resources', 'profile', 'data', 'uid'], state),
   documentation: state.documentation,
 });
 
