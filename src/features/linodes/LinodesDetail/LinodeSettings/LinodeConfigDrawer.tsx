@@ -72,6 +72,9 @@ interface Props extends EditableFields {
   onClose: () => void;
   onSubmit: () => void;
   onChange: (k: keyof EditableFields, v: any) => void;
+  handleChangeLabel: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleChangeComments: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleChangeVirtMode: (e: any, value: 'paravirt' | 'fullvirt') => void;
 }
 
 interface State {
@@ -171,7 +174,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               label="Label"
               required
               value={label}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange('label', e.target.value)}
+              onChange={this.props.handleChangeLabel}
               errorText={errorFor('label')}
               errorGroup="linode-config-drawer"
             />
@@ -179,7 +182,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             <TextField
               label="Comments"
               value={comments}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange('comments', e.target.value)}
+              onChange={this.props.handleChangeComments}
               multiline={true}
               rows={3}
               errorText={errorFor('comments')}
@@ -202,7 +205,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
                 aria-label="virt_mode"
                 name="virt_mode"
                 value={virt_mode}
-                onChange={(e, value: 'paravirt' | 'fullvirt') => onChange('virt_mode', value)}
+                onChange={this.props.handleChangeVirtMode}
               >
                 <FormControlLabel value="paravirt" label="Paravirtulization" control={<Radio />} />
                 <FormControlLabel value="fullvirt" label="Full-virtulization" control={<Radio />} />
