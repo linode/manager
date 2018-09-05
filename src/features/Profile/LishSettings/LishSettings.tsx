@@ -165,11 +165,13 @@ class LishSettings extends React.Component<CombinedProps, State> {
                           multiline
                           rows="4"
                           className={classes.keyTextarea}
+                          data-qa-public-key
                         />
                         <Button
                           type="remove"
                           onClick={this.onPublicKeyRemove(idx)}
                           className={classes.remove}
+                          data-qa-remove
                         />
                       </div>
                     ))
@@ -188,6 +190,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
               type="primary"
               onClick={this.onSubmit}
               loading={this.state.submitting}
+              data-qa-save
             >
               Save
             </Button>
