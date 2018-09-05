@@ -104,7 +104,7 @@ export interface Props {
   images: string[];
   deploymentsActive: number;
   updated: string;
-  onSelect?: (e: React.ChangeEvent<HTMLElement>, value: boolean) => void;
+  onSelect: (e: any | React.ChangeEvent<HTMLElement>, value: boolean) => void;
   checked?: boolean;
   showDeployLink?: boolean;
   stackScriptID: number;
@@ -165,7 +165,7 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
 
   return (
     <React.Fragment>
-      <TableRow data-qa-table-row={label} rowLink={() => window.open(`https://www.linode.com/stackscripts/view/${stackScriptID}`, '_blank')}>
+      <TableRow data-qa-table-row={label} rowLink={() => onSelect({}, !checked)}>
         {onSelect &&
           <TableCell>
             <Radio checked={checked} onChange={onSelect} id={`${stackScriptID}`} />
