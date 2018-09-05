@@ -184,7 +184,6 @@ export const createReply = (data: ReplyRequest) =>
  * 
  * @param ticketID { Number } the ID of the ticket to be retrieved
  * @param formData { Object } any parameters to be sent with the request
- * @param formData.file { file } the file to be attached 
  * 
  * @example uploadAttachment(123456, {file: file});
  */
