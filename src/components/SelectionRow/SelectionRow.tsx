@@ -104,7 +104,7 @@ export interface Props {
   images: string[];
   deploymentsActive: number;
   updated: string;
-  onSelect: (e: any | React.ChangeEvent<HTMLElement>, value: boolean) => void;
+  onSelect?: (e: any | React.ChangeEvent<HTMLElement>, value: boolean) => void;
   checked?: boolean;
   showDeployLink?: boolean;
   stackScriptID: number;
@@ -165,7 +165,7 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
 
   return (
     <React.Fragment>
-      <TableRow data-qa-table-row={label} rowLink={() => onSelect({}, !checked)}>
+      <TableRow data-qa-table-row={label} rowLink={() => onSelect && onSelect({}, !checked)}>
         {onSelect &&
           <TableCell>
             <Radio checked={checked} onChange={onSelect} id={`${stackScriptID}`} />
@@ -178,7 +178,7 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
               {renderLabel()}
             </a>
           }
-          <Typography>{description}</Typography>
+          <Typography variant="caption">{description}</Typography>
         </TableCell>
         <TableCell>
           <Typography
