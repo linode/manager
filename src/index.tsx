@@ -68,32 +68,41 @@ if (!(isPathOneOf(['/oauth', '/null', '/login'], window.location.pathname))) {
 }
 refreshOAuthOnUserInteraction();
 
+const renderNullAuth = () =>
+  <span>null auth route</span>
+
+const renderNull = () =>
+  <span>null route</span>
+
+const renderLish = () =>
+  <LinodeThemeWrapper>
+    <Lish />
+  </LinodeThemeWrapper>
+
+const renderApp = () =>
+  <LinodeThemeWrapper>
+    <App />
+  </LinodeThemeWrapper>
+
+const renderAuthentication = () =>
+  <AuthenticationWrapper>
+    <Switch>
+      <Route path="/linodes/:linodeId/lish" render={renderLish} />
+      <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
+      {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
+      <Route exact path="/nullauth" render={renderNullAuth} />
+      <Route exact path="/logout" component={Logout} />
+      <Route render={renderApp}/>
+    </Switch>
+  </AuthenticationWrapper>
+
 ReactDOM.render(
   <Provider store={store}>
     <Router>
       <Switch>
         {/* A place to go that prevents the app from loading while injecting OAuth tokens */}
-        <Route exact path="/null" render={() => <span>null route</span>} />
-        <Route render={() =>
-          <AuthenticationWrapper>
-            <Switch>
-              <Route path="/linodes/:linodeId/lish" render={() =>
-                <LinodeThemeWrapper>
-                  <Lish />
-                </LinodeThemeWrapper>
-              }/>
-              <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
-              {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
-              <Route exact path="/nullauth" render={() => <span>null auth route</span>} />
-              <Route exact path="/logout" component={Logout} />
-              <Route render={() =>
-                <LinodeThemeWrapper>
-                  <App />
-                </LinodeThemeWrapper>
-              }/>
-            </Switch>
-          </AuthenticationWrapper>
-        }/>
+        <Route exact path="/null" render={renderNull} />
+        <Route render={renderAuthentication}/>
       </Switch>
     </Router>
   </Provider>,

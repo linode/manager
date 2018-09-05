@@ -21,6 +21,7 @@ it('renders without crashing', () => {
               switchWrapper: '',
             }}
             longLivedLoaded
+            userId={123456}
             dispatchRequest={jest.fn()}
             dispatchResponse={jest.fn()}
             documentation={[]}

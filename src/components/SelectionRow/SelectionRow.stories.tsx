@@ -19,7 +19,7 @@ class InteractiveExample extends React.Component<{}, State> {
     {
       checked: this.state.selected === 0,
       onSelect: () => this.setState({ selected: 0 }),
-      label: 'Dont Stop Believing',
+      label: 'Don\'t Stop Believing',
       description: `Just a small town girl, living in a lonely world
       She took the midnight train going anywhere
       Just a city boy, born and raised in South Detroit
