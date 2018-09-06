@@ -178,14 +178,24 @@ a.black:not(.nu):active {
   }
 }
 
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 .fade-in-table {
   animation: fadeIn .3s ease-in-out;
 }
 
 .fade-exit-active {
-  animation: fadeIn .3s ease-in-out reverse;
+  animation: fadeOut .3s ease-in-out forwards;
 }
 
 .fade-enter-active {
-  animation: fadeIn .3s ease-in-out forwards;
+  position: absolute;
+  animation: fadeIn 5s ease-in-out forwards;
 }

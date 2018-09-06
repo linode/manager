@@ -324,65 +324,56 @@ export class App extends React.Component<CombinedProps, State> {
                   <SideMenu open={menuOpen} closeMenu={this.closeMenu} toggleTheme={toggleTheme} />
                   <main className={classes.content}>
                     <TopMenu openSideMenu={this.openMenu} />
-                    <div className={classes.wrapper} id="main-content">
-                    <StickyContainer>
-                      <Grid container spacing={0} className={classes.grid}>
-                        <Grid item className={`${classes.switchWrapper} ${hasDoc ? 'mlMain' : ''}`}>
-                        <Route render={({ location }) => (
-                          <TransitionGroup
-                            childFactory={child => React.cloneElement(
-                              child,
-                              {
-                                classNames: 'fade',
-                                timeout: 100
+                    <Route render={({ location }) => (
+                      <TransitionGroup>
+                        <CSSTransition key={location.key} classNames="fade" timeout={300}>
+                          <div className={classes.wrapper} id="main-content">
+                          <StickyContainer>
+                            <Grid container spacing={0} className={classes.grid}>
+                              <Grid item className={`${classes.switchWrapper} ${hasDoc ? 'mlMain' : ''}`}>
+                                <Switch location={location}>
+                                  <Route path="/linodes" component={LinodesRoutes} />
+                                  <Route path="/volumes" component={Volumes} />
+                                  <Route path="/nodebalancers" component={NodeBalancers} />
+                                  <Route path="/domains" component={Domains} />
+                                  <Route exact path="/managed" component={Managed} />
+                                  <Route exact path="/longview" component={Longview} />
+                                  <Route exact path="/images" component={Images} />
+                                  <Route path="/stackscripts" component={StackScripts} />
+                                  <Route exact path="/billing" component={Account} />
+                                  <Route exact path="/billing/invoices/:invoiceId" component={InvoiceDetail} />
+                                  <Route path="/users" component={Users} />
+                                  <Route exact path="/support/tickets" component={SupportTickets} />
+                                  <Route path="/support/tickets/:ticketId" component={SupportTicketDetail} />
+                                  <Route path="/profile" component={Profile} />
+                                  <Route exact path="/support" component={Help} />
+                                  <Route exact path="/support/search/" component={SupportSearchLanding} />
+                                  <Route path="/dashboard" component={Dashboard} />
+                                  <Redirect exact from="/" to="/dashboard" />
+                                  <Route component={NotFound} />
+                                </Switch>
+                              </Grid>
+                              {hasDoc &&
+                                <Grid className='mlSidebar'>
+                                  <Sticky topOffset={-24} disableCompensation>
+                                    {(props: StickyProps) => {
+                                      return (
+                                        <DocsSidebar
+                                          docs={documentation}
+                                          {...props}
+                                        />
+                                      )
+                                    }
+                                    }
+                                  </Sticky>
+                                </Grid>
                               }
-                            )}
-                          >
-                          <CSSTransition key={location.key} classNames="fade" timeout={300}>
-                            <Switch location={location}>
-                              <Route path="/linodes" component={LinodesRoutes} />
-                              <Route path="/volumes" component={Volumes} />
-                              <Route path="/nodebalancers" component={NodeBalancers} />
-                              <Route path="/domains" component={Domains} />
-                              <Route exact path="/managed" component={Managed} />
-                              <Route exact path="/longview" component={Longview} />
-                              <Route exact path="/images" component={Images} />
-                              <Route path="/stackscripts" component={StackScripts} />
-                              <Route exact path="/billing" component={Account} />
-                              <Route exact path="/billing/invoices/:invoiceId" component={InvoiceDetail} />
-                              <Route path="/users" component={Users} />
-                              <Route exact path="/support/tickets" component={SupportTickets} />
-                              <Route path="/support/tickets/:ticketId" component={SupportTicketDetail} />
-                              <Route path="/profile" component={Profile} />
-                              <Route exact path="/support" component={Help} />
-                              <Route exact path="/support/search/" component={SupportSearchLanding} />
-                              <Route path="/dashboard" component={Dashboard} />
-                              <Redirect exact from="/" to="/dashboard" />
-                              <Route component={NotFound} />
-                            </Switch>
-                          </CSSTransition>
-                          </TransitionGroup>
-                        )} />
-                        </Grid>
-                        {hasDoc &&
-                          <Grid className='mlSidebar'>
-                            <Sticky topOffset={-24} disableCompensation>
-                              {(props: StickyProps) => {
-                                return (
-                                  <DocsSidebar
-                                    docs={documentation}
-                                    {...props}
-                                  />
-                                )
-                              }
-                              }
-                            </Sticky>
-                          </Grid>
-                        }
-                      </Grid>
-                      </StickyContainer>
-                    </div>
-
+                            </Grid>
+                            </StickyContainer>
+                          </div>
+                        </CSSTransition>
+                      </TransitionGroup>
+                    )} />
                   </main>
                   <Footer />
                   <BetaNotification
