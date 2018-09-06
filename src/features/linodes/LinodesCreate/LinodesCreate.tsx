@@ -1,4 +1,4 @@
-import { compose, find, lensPath, map, pathOr, prop, propEq, set } from 'ramda';
+import { compose, filter, find, lensPath, map, pathOr, prop, propEq, set } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { StickyContainer } from 'react-sticky';
@@ -368,6 +368,13 @@ const typesContext = withTypes(({ data, loading }) => {
             typeLabelDetails(memory, disk, vcpus),
           ],
         };
+      }),
+      /* filter out all the deprecated types because we don't to display them */
+      filter<any>((eachType: Linode.LinodeType) => {
+        if (!eachType.successor) {
+          return true;
+        }
+        return eachType.successor === null
       }),
     )(data || []),
     typesLoading: loading,
