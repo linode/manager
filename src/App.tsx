@@ -206,10 +206,7 @@ export class App extends React.Component<CombinedProps, State> {
       loading: false,
       request: () => {
         this.composeState([set(L.typesContext.loading, true)]);
-
-        // uncomment when /linode-legacy endpoint becomes available
         return Promise.all([getLinodeTypes(), getDeprecatedLinodeTypes()])
-        // return getLinodeTypes()
           .then((types: Linode.ResourcePage<Linode.LinodeType>[]) => {
             this.composeState([
               set(L.typesContext.loading, false),
