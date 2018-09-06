@@ -26,7 +26,7 @@ export class VolumeDetail extends Page {
     get volumeFsPath() { return $('[data-qa-fs-path]'); }
     get volumeActionMenu() { return $('[data-qa-action-menu]'); }
     get volumeSelect() { return $('[data-qa-volume-select] span'); }
-    get volumeOptions() { return $$('[data-qa-volume-option]'); }
+    get volumeOptions() { return $$('[data-value]'); }
     get attachButton() { return $('[data-qa-confirm-attach]'); }
     get cancelButton() { return $('[data-qa-cancel]'); }
     get cloneLabel() { return $('[data-qa-clone-from] input'); }
@@ -81,18 +81,26 @@ export class VolumeDetail extends Page {
         return volumesWithLabel.map(v => v.getAttribute('data-qa-volume-cell'));
     }
 
-    createVolume(volume, menuCreate) {
-        if (menuCreate) {
-            this.globalCreate.click();
-            this.addVolumeMenu.waitForVisible();
-            this.addVolumeMenu.click();
-        } else if (this.placeholderText.isVisible()) {
+    createVolume(volume, createMethod) {
+        if (createMethod === 'placeholder') {
+            this.createButton.waitForVisible(constants.wait.normal);
             this.createButton.click();
-        } else {
+        }
+
+        if (createMethod === 'icon') {
+            this.createIconLink.waitForVisible(constants.wait.normal);
             this.createIconLink.click();
         }
-        this.drawerTitle.waitForVisible();
 
+        if (createMethod === 'header') {
+            this.selectGlobalCreateItem('Volume');
+        }
+
+        this.drawerTitle.waitForVisible(constants.wait.normal);
+
+        browser.waitForVisible('[data-qa-volume-label] input', constants.wait.normal);
+
+        browser.waitForVisible('[data-qa-volume-label] input', constants.wait.normal);
         browser.trySetValue('[data-qa-volume-label] input', volume.label);
         browser.trySetValue('[data-qa-size] input', volume.size);
 
@@ -126,8 +134,8 @@ export class VolumeDetail extends Page {
     }
 
     editVolume(volume, newLabel) {
-        browser.waitForVisible('[data-qa-drawer-title]');
-        const drawerTitle = browser.getText('[data-qa-drawer-title]');
+        browser.waitForVisible('[data-qa-drawer-title]', constants.wait.normal);
+        browser.waitForVisible('[data-qa-volume-label] input', constants.wait.normal);
 
         browser.trySetValue('[data-qa-volume-label] input', newLabel, constants.wait.normal);
 
@@ -135,7 +143,7 @@ export class VolumeDetail extends Page {
 
         browser.waitUntil(function() {
             return newLabel === $(`[data-qa-volume-cell="${volume.id}"]`).$('[data-qa-volume-cell-label]').getText();
-        }, constants.wait.normal);
+        }, constants.wait.normal, 'Volume label failed to be updated');
     }
 
     resizeVolume(volume, newSize) {
@@ -144,19 +152,26 @@ export class VolumeDetail extends Page {
 
     attachVolume(linodeLabel, volume) {
         browser.waitForVisible('[data-qa-drawer-title]');
-        const drawerTitle = browser.getText('[data-qa-drawer-title]');
+        browser.waitForVisible('[data-qa-mode-radio-group]', constants.wait.normal);
 
-        browser.jsClick('[data-qa-volume-select] span');
+        const attachRadio = $('[data-qa-mode-radio-group]').$$('[data-qa-radio]')
+            .filter(radio => radio.$('..').getText().includes('Attach Existing'));
+
+        attachRadio[0].click();
+
+        browser.waitForVisible('[data-qa-volume-select]', constants.wait.normal);
+        browser.jsClick('[data-qa-volume-select] div div div');
+
+        browser.waitForVisible('[data-value]', constants.wait.normal);
         
         const options = this.volumeOptions.map(v => v.getText());
         const optToClick = this.volumeOptions.filter(opt => opt.getText() === volume.label);
 
-        expect(drawerTitle).toBe(`Attach Volume to ${linodeLabel}`);
-        expect(options).toContain(volume.label);
-
         optToClick[0].click();
-        browser.jsClick('[data-qa-confirm-attach]');
-        browser.waitForVisible(`[data-qa-volume-cell="${volume.id}"]`);
+        optToClick[0].waitForVisible(constants.wait.normal, true);
+
+        browser.click('[data-qa-submit]');
+        browser.waitForVisible(`[data-qa-volume-cell="${volume.id}"]`, constants.wait.normal);   
     }
 
     detachVolume(volume) {
@@ -167,6 +182,7 @@ export class VolumeDetail extends Page {
         const dialogCancel = $('[data-qa-cancel]');
         const dialogContent = $('[data-qa-dialog-content]');
 
+        dialogTitle.waitForVisible(constants.wait.normal);
         expect(dialogTitle.isVisible()).toBe(true);
         expect(dialogTitle.getText()).toBe('Detach Volume');
         expect(dialogContent.getText()).toMatch(/\w/ig);
@@ -179,6 +195,7 @@ export class VolumeDetail extends Page {
     detachConfirm(volumeId) {
         this.dialogTitle.waitForVisible();
         browser.click('[data-qa-confirm]');
+
         browser.waitForVisible(`[data-qa-volume-cell="${volumeId}"]`, constants.wait.long, true);
 
         // Wait for progress bars to not display on volume detail pages
@@ -195,9 +212,9 @@ export class VolumeDetail extends Page {
     removeVolume(volumeElement) {
         if (volumeElement.$('[data-qa-volume-cell-attachment]').isExisting() && volumeElement.$('[data-qa-volume-cell-attachment]').getText() !== '') {
             volumeElement.$('[data-qa-action-menu]').click();
-            browser.waitForVisible('[data-qa-action-menu-item="Detach"]');
+            browser.waitForVisible('[data-qa-action-menu-item="Detach"]', constants.wait.normal);
             browser.jsClick('[data-qa-action-menu-item="Detach"]');
-            browser.waitForVisible('[data-qa-dialog-title]');
+            browser.waitForVisible('[data-qa-dialog-title]', constants.wait.normal);
             browser.click('[data-qa-confirm]');
             browser.waitForVisible('[data-qa-dialog-title]', constants.wait.normal, true);
 
@@ -205,7 +222,9 @@ export class VolumeDetail extends Page {
             browser.waitForVisible('[data-qa-volume-loading]', constants.wait.long, true);
 
             browser.waitUntil(function() {
-                return volumeElement.$('[data-qa-volume-cell-attachment]').getText() === '';
+                return browser.isExisting('[data-qa-volume-cell-attachment]') &&
+                    browser.getText('[data-qa-volume-cell-attachment]') === '' &&
+                    volumeElement.$('[data-qa-action-menu]').isVisible();
             }, constants.wait.minute, 'Remove Volume: Failed to detach volume');
         }
         const numberOfVolumes = this.volumeCell.length;

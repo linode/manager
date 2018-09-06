@@ -69,7 +69,7 @@ storiesOf('Button', module)
         data-qa-button="dropdown"
       >
         Primary Dropdown
-      <KeyboardArrowDown className="caret"></KeyboardArrowDown>
+      <KeyboardArrowDown className="caret" />
       </Button>
       <Divider />
       <Button
@@ -78,7 +78,7 @@ storiesOf('Button', module)
         data-qa-button="dropdown"
       >
         Primary Dropdown Active
-      <KeyboardArrowUp className="caret"></KeyboardArrowUp>
+      <KeyboardArrowUp className="caret" />
       </Button>
       <Divider />
       <Button
@@ -88,7 +88,7 @@ storiesOf('Button', module)
         data-qa-button="dropdown"
       >
         Primary Dropdown
-      <KeyboardArrowDown className="caret"></KeyboardArrowDown>
+      <KeyboardArrowDown className="caret" />
       </Button>
     </React.Fragment>
   ))
@@ -100,7 +100,7 @@ storiesOf('Button', module)
         data-qa-button="dropdown-secondary"
       >
         Secondary Dropdown
-    <KeyboardArrowDown className="caret"></KeyboardArrowDown>
+    <KeyboardArrowDown className="caret" />
       </Button>
       <Divider />
       <Button
@@ -109,7 +109,7 @@ storiesOf('Button', module)
         data-qa-button="dropdown-secondary"
       >
         Secondary Dropdown Active
-    <KeyboardArrowUp className="caret"></KeyboardArrowUp>
+    <KeyboardArrowUp className="caret" />
       </Button>
       <Divider />
       <Button
@@ -119,7 +119,7 @@ storiesOf('Button', module)
         data-qa-button="dropdown-secondary"
       >
         Secondary Dropdown
-    <KeyboardArrowDown className="caret"></KeyboardArrowDown>
+    <KeyboardArrowDown className="caret" />
       </Button>
     </React.Fragment>
   ));

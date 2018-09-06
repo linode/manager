@@ -67,8 +67,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-interface Props { }
-
 interface State {
   loading: boolean;
   errors?: Linode.ApiFieldError[];
@@ -76,7 +74,7 @@ interface State {
   quota?: number;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = WithStyles<ClassNames>;
 
 class TransferDashboardCard extends React.Component<CombinedProps, State> {
   state: State = {
@@ -122,6 +120,7 @@ class TransferDashboardCard extends React.Component<CombinedProps, State> {
             alignItems="center"
             wrap="nowrap"
             className={classes.grid}
+            data-qa-card="Monthly Transfer"
           >
             <Grid item>
               <CircleProgress
@@ -132,8 +131,19 @@ class TransferDashboardCard extends React.Component<CombinedProps, State> {
                 className={classes.poolUsageProgress}
               >
                 <span className={classes.circleChildren}>
-                  <Typography className={classes.used}>{used}</Typography>
-                  <Typography variant="caption" className={classes.quota}>of {quota} GB</Typography>
+                  <Typography
+                    className={classes.used}
+                    data-qa-transfer-used
+                  >
+                    {used}
+                  </Typography>
+                  <Typography
+                    variant="caption"
+                    className={classes.quota}
+                    data-qa-transfer-quota
+                  >
+                    of {quota} GB
+                  </Typography>
                 </span>
               </CircleProgress>
             </Grid>

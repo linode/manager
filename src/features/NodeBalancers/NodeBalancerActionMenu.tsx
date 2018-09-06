@@ -14,7 +14,7 @@ class NodeBalancerActionMenu extends React.Component<CombinedProps> {
   createLinodeActions = () => {
     const { nodeBalancerId, history, toggleDialog } = this.props;
 
-    return function (closeMenu: Function): Action[] {
+    return (closeMenu: Function): Action[] => {
       const actions = [
         {
           title: 'Summary',

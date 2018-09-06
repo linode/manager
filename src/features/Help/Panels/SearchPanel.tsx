@@ -11,18 +11,24 @@ import Typography from '@material-ui/core/Typography';
 
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 
+import AlgoliaSearchBar from './AlgoliaSearchBar';
+
 type ClassNames = 'root'
   | 'bgIcon'
   | 'searchHeading';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
-    padding: theme.spacing.unit * 10,
+    padding: theme.spacing.unit * 4,
     backgroundColor: theme.color.green,
     display: 'flex',
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative',
+    [theme.breakpoints.up('md')]: {
+      padding: theme.spacing.unit * 8,
+    }
   },
   bgIcon: {
     color: '#04994D',
@@ -48,15 +54,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-interface Props {}
+type CombinedProps = WithStyles<ClassNames>;
 
-interface State {}
-
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-class SearchPanel extends React.Component<CombinedProps, State> {
-  state: State = {};
-
+class SearchPanel extends React.Component<CombinedProps, {}> {
   render() {
     const { classes } = this.props;
     return (
@@ -68,9 +68,11 @@ class SearchPanel extends React.Component<CombinedProps, State> {
           <Typography
             variant="headline"
             className={classes.searchHeading}
+            data-qa-search-heading
           >
-            Ways to Get Help
+            What can we help you with?
         </Typography>
+        <AlgoliaSearchBar />
         </Paper>
       </React.Fragment>
     );
@@ -80,3 +82,4 @@ class SearchPanel extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles, { withTheme: true });
 
 export default styled(SearchPanel);
+

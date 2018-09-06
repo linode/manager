@@ -29,8 +29,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props { }
-
 interface ConnectedProps {
   profileLoading: boolean;
   code?: string;
@@ -41,13 +39,9 @@ interface ConnectedProps {
   credit?: number;
 }
 
-interface State { }
+type CombinedProps = ConnectedProps & WithStyles<ClassNames>;
 
-type CombinedProps = Props & ConnectedProps & WithStyles<ClassNames>;
-
-class Referrals extends React.Component<CombinedProps, State> {
-  state: State = {};
-
+class Referrals extends React.Component<CombinedProps, {}> {
   render() {
     const {
       classes,

@@ -1,4 +1,4 @@
-import { compose, find, lensPath, map, pathOr, prop, propEq, set } from 'ramda';
+import { compose, filter, find, lensPath, map, pathOr, prop, propEq, set } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { StickyContainer } from 'react-sticky';
@@ -49,9 +49,6 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   },
 });
 
-interface Props {
-}
-
 interface TypesContextProps {
   typesData: ExtendedType[];
   typesLoading: boolean;
@@ -67,8 +64,7 @@ interface PreloadedProps {
   linodes: { response: Linode.LinodeWithBackups[] };
 }
 
-type CombinedProps = Props
-  & TypesContextProps
+type CombinedProps = TypesContextProps
   & RegionsContextProps
   & WithStyles<Styles>
   & PreloadedProps
@@ -90,7 +86,7 @@ interface QueryStringOptions {
   stackScriptUsername: string;
 }
 
-const preloaded = PromiseLoader<Props>({
+const preloaded = PromiseLoader<{}>({
   linodes: () => getLinodes()
     /*
      * @todo: We're only allowing the user to select from their first 100
@@ -372,6 +368,13 @@ const typesContext = withTypes(({ data, loading }) => {
             typeLabelDetails(memory, disk, vcpus),
           ],
         };
+      }),
+      /* filter out all the deprecated types because we don't to display them */
+      filter<any>((eachType: Linode.LinodeType) => {
+        if (!eachType.successor) {
+          return true;
+        }
+        return eachType.successor === null
       }),
     )(data || []),
     typesLoading: loading,

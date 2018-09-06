@@ -32,14 +32,11 @@ interface PreloadedProps {
   account: { response: Linode.Account };
 }
 
-interface Props { }
-
 interface State {
   account: Requestable<Linode.Account>,
 }
 
-type CombinedProps = Props
-  & SetDocsProps
+type CombinedProps = SetDocsProps
   & PreloadedProps
   & WithStyles<ClassNames>;
 
@@ -131,10 +128,7 @@ export class AccountDetail extends React.Component<CombinedProps, State> {
           <Typography role="header" variant="headline" className={classes.heading}>Billing</Typography>
           <SummaryPanel />
 
-          <Typography role="header" variant="title" className={classes.heading}>Billing Account</Typography>
           <UpdateContactInformationPanel />
-
-          <Typography role="header" variant="title" className={classes.heading}>Billing Information</Typography>
           <UpdateCreditCardPanel />
           <MakeAPaymentPanel />
           <RecentInvoicesPanel />

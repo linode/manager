@@ -1,3 +1,4 @@
+import { clamp } from 'ramda';
 import * as React from 'react';
 
 import FormHelperText from '@material-ui/core/FormHelperText';
@@ -36,18 +37,18 @@ interface Props extends EditableFields {
   mode: 'create' | 'rename' | 'resize';
   open: boolean;
   errors?: Linode.ApiFieldError[];
-  totalSpaceMB: number;
-  freeSpaceMB: number;
+  maximumSize: number;
   submitting: boolean;
   onClose: () => void;
   onSubmit: () => void;
   onLabelChange: (value: string) => void;
   onFilesystemChange: (value: string) => void;
-  onSizeChange: (value: number) => void;
+  onSizeChange: (value: number | string) => void;
 }
 
 interface State {
   hasErrorFor?: (v: string) => any,
+  initialSize: number;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -55,6 +56,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
   state: State = {
     hasErrorFor: (v) => null,
+    initialSize: this.props.size,
   };
 
   static getDerivedStateFromProps(props: CombinedProps, state: State) {
@@ -79,8 +81,14 @@ class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
   onLabelChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     this.props.onLabelChange(e.target.value);
 
-  onSizeChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    this.props.onSizeChange(e.target.valueAsNumber || 0);
+  onSizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { valueAsNumber } = e.target;
+    if (isNaN(valueAsNumber)) {
+      return this.props.onSizeChange('');
+    }
+
+    this.props.onSizeChange(clamp(0, this.props.maximumSize, valueAsNumber));
+  };
 
   onFilesystemChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     this.props.onFilesystemChange(e.target.value);
@@ -136,7 +144,7 @@ class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
         }}
       />
       <FormHelperText style={{ marginTop: 8 }}>
-        {this.props.freeSpaceMB} MB free of {this.props.totalSpaceMB} MB
+        Maximum Size: {this.props.maximumSize} MB
       </FormHelperText>
     </React.Fragment>
   );
@@ -149,7 +157,9 @@ class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
     return (
       <Drawer title={LinodeDiskDrawer.getTitle(mode)} open={open} onClose={onClose}>
         <Grid container direction="row">
-          {generalError && <Notice error errorGroup="linode-disk-drawer" text={generalError} />}
+          <Grid item xs={12}> 
+            {generalError && <Notice error spacingBottom={8} errorGroup="linode-disk-drawer" text={generalError} />}
+          </Grid>
           <Grid item xs={12} className={classes.section}>
             <this.labelField />
             <this.filesystemField />

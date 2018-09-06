@@ -63,9 +63,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-interface Props { }
-
-type PropsWithStyles = Props & WithStyles<CSSClasses> & RouteComponentProps<{}>;
+type PropsWithStyles = WithStyles<CSSClasses> & RouteComponentProps<{}>;
 
 class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
   render() {
@@ -82,7 +80,7 @@ class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
     >
         <Grid item xs={12}><LinodeSvg className={classes.icon} /></Grid>
         <Typography variant="display2" className={classes.title} data-qa-placeholder-title>
-          You dont have any Linodes!
+          You don't have any Linodes!
         </Typography>
         <Grid item xs={12} lg={10} className={classes.copy}>
           <Typography variant="body1">

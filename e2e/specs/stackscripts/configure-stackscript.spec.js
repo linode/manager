@@ -32,10 +32,8 @@ describe('StackScript - Create Suite', () => {
     });
 
     it('should fail to create the stackscript', () => {
-        const errorMsg = 'Script must begin with a shebang';
-
         ConfigureStackScripts.saveButton.click();
-        ConfigureStackScripts.waitForNotice(errorMsg);
+        ConfigureStackScripts.script.$('p').waitForText(constants.wait.normal);
     });
 
     it('should clear the config fields on cancel', () => {

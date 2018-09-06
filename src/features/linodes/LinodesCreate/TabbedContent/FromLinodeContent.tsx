@@ -13,6 +13,7 @@ import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPa
 import { resetEventsPolling } from 'src/events';
 import { Info } from 'src/features/linodes/LinodesCreate/LinodesCreate';
 import { allocatePrivateIP, cloneLinode } from 'src/services/linodes';
+
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -146,7 +147,7 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
       backups_enabled: backups,
     })
       .then((linode) => {
-        if (privateIP) allocatePrivateIP(linode.id);
+        if (privateIP) { allocatePrivateIP(linode.id) };
         resetEventsPolling();
         history.push('/linodes');
       })

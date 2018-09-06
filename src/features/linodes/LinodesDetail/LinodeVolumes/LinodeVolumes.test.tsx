@@ -30,6 +30,7 @@ describe('Linode Volumes', () => {
       linodeVolumes={volumes}
       linodeLabel="test"
       linodeRegion="us-east"
+      linodeStatus="running"
       linodeID={100}
       history={{
         length: 2,
@@ -60,7 +61,7 @@ describe('Linode Volumes', () => {
   });
 
   it('should display placeholder if Linode has no configurations.', () => {
-    const component = mount(
+    const componentWithTheme = mount(
       <StaticRouter context={{}}>
         <LinodeThemeWrapper>
           <LinodeVolumes
@@ -71,19 +72,20 @@ describe('Linode Volumes', () => {
             linodeVolumes={[]}
             linodeLabel="test"
             linodeRegion="us-east"
+            linodeStatus="running"
             linodeID={100}
             {...reactRouterProps}
           />
         </LinodeThemeWrapper>
       </StaticRouter>
     );
-    const noConfigsMessage = component.find(`Typography[data-qa-placeholder-title]`);
+    const noConfigsMessage = componentWithTheme.find(`Typography[data-qa-placeholder-title]`);
 
     expect(noConfigsMessage.text()).toBe('No configs available')
   });
 
   it('should display placeholder if Linode has no attached volumes.', () => {
-    const component = mount(
+    const componentWithTheme = mount(
       <StaticRouter context={{}}>
         <LinodeThemeWrapper>
           <LinodeVolumes
@@ -93,6 +95,7 @@ describe('Linode Volumes', () => {
             linodeConfigs={linodeConfigsAsPromiseResponse}
             linodeVolumes={[]}
             linodeLabel="test"
+            linodeStatus="running"
             linodeRegion="us-east"
             linodeID={100}
             {...reactRouterProps}
@@ -100,7 +103,7 @@ describe('Linode Volumes', () => {
         </LinodeThemeWrapper>
       </StaticRouter>
     );
-    const noConfigsMessage = component.find(`Typography[data-qa-placeholder-title]`);
+    const noConfigsMessage = componentWithTheme.find(`Typography[data-qa-placeholder-title]`);
 
     expect(noConfigsMessage.text()).toBe('No volumes found')
   });
@@ -120,6 +123,7 @@ describe('Linode Volumes', () => {
               linodeVolumes={volumes}
               linodeLabel="test"
               linodeRegion="us-east"
+              linodeStatus="running"
               linodeID={100}
               {...reactRouterProps}
             />

@@ -23,33 +23,26 @@ describe('Header - Search - Volumes Suite', () => {
         LinodeDetail
             .landingElemsDisplay()
             .changeTab('Volumes');
-        try {
-            VolumeDetail.volumeCellElem.isVisible();
-        } catch (err) {
-            if (!VolumeDetail.placeholderText.waitForVisible(constants.wait.normal)) {
-                throw err;
-            }
-        }
+        browser.waitForVisible('[data-qa-circle-progress]', constants.wait.normal, true);
     }
 
     afterAll(() => {
         apiDeleteAllLinodes();
     });
 
-    it('should setup the spec', () => {
+    beforeAll(() => {
         browser.url(constants.routes.linodes);
         
         apiCreateLinode();
 
-        ListLinodes.linodesDisplay();
         linodeName = ListLinodes.linode[0].$(ListLinodes.linodeLabel.selector).getText();
 
         ListLinodes.shutdownIfRunning(ListLinodes.linode[0]);
-        
+          
         navigateToVolumes(linodeName);
         const volumeCount = VolumeDetail.volumeCellElem.isVisible() ? VolumeDetail.volumeCell.length : 0;
         
-        VolumeDetail.createVolume(testVolume);
+        VolumeDetail.createVolume(testVolume, 'placeholder');
 
         // Wait until the volume is created before searching for it
         browser.waitUntil(function() {

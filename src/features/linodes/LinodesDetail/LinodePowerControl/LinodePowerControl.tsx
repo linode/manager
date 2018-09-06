@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import Menu from '@material-ui/core/Menu';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
 
@@ -251,8 +252,9 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
           open={powerAlertOpen}
         >
           {bootOption === 'reboot'
-            ? 'Are you sure you want to reboot your Linode?'
-            : 'Are you sure you want to power down your Linode?'}
+            ? <Typography>Are you sure you want to reboot your Linode?</Typography>
+            : <Typography>Are you sure you want to power down your Linode?</Typography>
+          }
         </ConfirmationDialog>
       </React.Fragment>
     );
@@ -276,7 +278,7 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
           Cancel
         </Button>
         <Button
-          type="secondary"
+          type="primary"
           onClick={this.rebootOrPowerLinode}
           data-qa-confirm-cancel
         >

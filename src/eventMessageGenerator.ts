@@ -32,7 +32,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: e => `Credit card information has been updated.`,
   },
   disk_create: {
-    scheduled: e => `Disk is being added to Linode ${e.entity!.label}.`, 
+    scheduled: e => `Disk is being added to Linode ${e.entity!.label}.`,
     started: e => `Disk is being added to ${e.entity!.label}.`,
     failed: e => `Disk could not be added to Linode ${e.entity!.label}.`,
     finished: e => `Disk has been added to Linode ${e.entity!.label}.`,
@@ -246,34 +246,18 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   //   finished: e => ``,
   //   notification: e => ``,
   // },
-  // stackscript_create: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
-  // stackscript_delete: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
-  // stackscript_publicize: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
-  // stackscript_revise: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
+  stackscript_create: {
+    notification: e => `StackScript ${e.entity!.label} has been created.`,
+  },
+  stackscript_delete: {
+    notification: e => `StackScript ${e.entity!.label} has been deleted.`,
+  },
+  stackscript_publicize: {
+    notification: e => `StackScript ${e.entity!.label} has been made public.`,
+  },
+  stackscript_revise: {
+    notification: e => `StackScript ${e.entity!.label} has been revised.`,
+  },
   tfa_disabled: {
     notification: e => `Two-factor authentication has been disabled.`,
   },

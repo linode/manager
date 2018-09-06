@@ -17,16 +17,9 @@ interface Props {
   onClose: () => void;
 }
 
-interface State {
-
-}
-
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class GDPRNotification extends React.PureComponent<CombinedProps, State> {
-  state: State = {
-  };
-
+class GDPRNotification extends React.PureComponent<CombinedProps, {}> {
   actions = () => <Button onClick={this.props.onClose} type="primary">Dismiss</Button>;
 
   render() {

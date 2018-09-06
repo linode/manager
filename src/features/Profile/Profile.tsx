@@ -15,6 +15,7 @@ import LishSettings from './LishSettings';
 import OAuthClients from './OAuthClients';
 import Referrals from './Referrals';
 import Settings from './Settings';
+import SSHKeys from './SSHKeys';
 
 type Props = RouteComponentProps<{}>;
 
@@ -34,6 +35,7 @@ class Profile extends React.Component<Props> {
     { title: 'OAuth Clients', routeName: `${this.props.match.url}/clients` },
     { title: 'LISH', routeName: `${this.props.match.url}/lish` },
     { title: 'Referrals', routeName: `${this.props.match.url}/referrals` },
+    { title: 'SSH Keys', routeName: `${this.props.match.url}/keys` },
   ];
 
   render() {
@@ -67,6 +69,7 @@ class Profile extends React.Component<Props> {
           <Route exact path={`${url}/clients`} component={OAuthClients} />
           <Route exact path={`${url}/lish`} component={LishSettings} />
           <Route exact path={`${url}/referrals`} component={Referrals} />
+          <Route exact path={`${url}/keys`} component={SSHKeys} />
           <Route path={`${url}`} component={DisplaySettings} />
         </Switch>
       </React.Fragment>

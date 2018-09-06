@@ -37,8 +37,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props { }
-
 interface DiskContextProps {
   disksUpdate: (fn: (disks: Linode.Disk[]) => Linode.Disk[]) => void,
   disks: Linode.Disk[];
@@ -48,10 +46,10 @@ interface DiskContextProps {
 
 interface LinodeContextProps {
   linodeError: Linode.ApiFieldError[],
-  linodeId: number;
   linodeLoading: boolean,
-  linodeStatus: string;
-  linodeTotalDisk: number;
+  linodeId?: number;
+  linodeStatus?: string;
+  linodeTotalDisk?: number;
 }
 
 interface ConfirmDeleteState {
@@ -68,6 +66,7 @@ interface DrawerState {
   mode: 'create' | 'rename' | 'resize';
   errors?: Linode.ApiFieldError[];
   diskId?: number;
+  maximumSize: number;
   fields: {
     label: string;
     filesystem: string;
@@ -88,8 +87,7 @@ interface State {
   confirmDelete: ConfirmDeleteState,
 }
 
-type CombinedProps = Props
-  & DiskContextProps
+type CombinedProps = DiskContextProps
   & LinodeContextProps
   & WithStyles<ClassNames>;
 
@@ -99,6 +97,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     submitting: false,
     mode: 'create',
     errors: undefined,
+    maximumSize: 0,
     fields: {
       label: '',
       filesystem: 'ext4',
@@ -127,7 +126,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { classes, disks, disksErrors, disksLoading, linodeError, linodeLoading } = this.props;
+    const { classes, disks, disksErrors, disksLoading, linodeError, linodeLoading, linodeStatus } = this.props;
 
     if (disksErrors || linodeError) {
       return <ErrorState errorText="There was an error loading disk images." />
@@ -147,7 +146,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
             <AddNewLink onClick={this.openDrawerForCreation} label="Add a Disk" />
           </Grid>
         </Grid>
-        {disks.length === 0 ? <this.emptyState /> : <this.table />}
+        {disks.length === 0 || !linodeStatus ? this.emptyState() : this.table(disks, linodeStatus)}
         <this.confirmationDialog />
         <this.drawer />
         <this.imagizeDrawer />
@@ -159,8 +158,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     return <Typography>Linode has no disks.</Typography>;
   }
 
-  table = () => {
-    const { disks, linodeStatus } = this.props;
+  table = (disks: Linode.Disk[], status: string) => {
     return (
       <Table aria-label="List of Disks">
         <TableHead>
@@ -179,7 +177,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
                 <TableCell>{disk.size} MB</TableCell>
                 <TableCell>
                   <LinodeDiskActionMenu
-                    linodeStatus={linodeStatus}
+                    linodeStatus={status}
                     onRename={this.openDrawerForRename(disk)}
                     onResize={this.openDrawerForResize(disk)}
                     onImagize={this.openImagizeDrawer(disk)}
@@ -325,12 +323,12 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
   }
 
   drawer = () => {
-    const { linodeTotalDisk } = this.props;
     const {
       mode,
       open,
       errors,
       submitting,
+      maximumSize,
       fields: { label, size, filesystem },
     } = this.state.drawer;
 
@@ -343,8 +341,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
         label={label}
         filesystem={filesystem}
         size={size}
-        totalSpaceMB={linodeTotalDisk}
-        freeSpaceMB={this.calculateDiskFree()}
+        maximumSize={maximumSize}
         onLabelChange={this.onLabelChange}
         onSizeChange={this.onSizeChange}
         onFilesystemChange={this.onFilesystemChange}
@@ -491,6 +488,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     this.setDrawer({
       diskId,
       errors: undefined,
+      maximumSize: Math.max(size, this.calculateDiskFree(diskId)),
       fields: {
         filesystem,
         label,
@@ -506,6 +504,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     this.setDrawer({
       diskId: undefined,
       errors: undefined,
+      maximumSize: this.calculateDiskFree(0),
       fields: {
         filesystem: 'ext4',
         label: '',
@@ -521,11 +520,14 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     this.setDrawer({ open: false });
   };
 
-  calculateDiskFree = (): number => {
-    const { linodeTotalDisk, disks } = this.props;
-
+  calculateDiskFree = (diskId: number): number => {
+    const { linodeTotalDisk, disks, } = this.props;
+    if (!linodeTotalDisk) {
+      return 0;
+    }
     return linodeTotalDisk - disks.reduce((acc: number, disk: Linode.Disk) => {
-      return acc + disk.size;
+      return diskId === disk.id ? acc : acc + disk.size
+      // return acc + disk.size;
     }, 0);
   }
 }
@@ -553,22 +555,13 @@ const diskContext = withDisks((context) => {
   };
 });
 
-const linodeContext = withLinode((context) => {
-  const { loading, errors, data, lastUpdated } = context;
-
-  if (lastUpdated === 0 && loading) {
-    return {
-      linodeLoading: true,
-    };
-  }
-
-  return {
-    linodeError: errors,
-    linodeId: data!.id,
-    linodeTotalDisk: data!.specs.disk,
-    linodeStatus: data!.status,
-  };
-});
+const linodeContext = withLinode((context) => ({
+  linodeLoading: context.loading,
+  linodeError: context.errors,
+  linodeId: path(['data', 'id'], context),
+  linodeTotalDisk: path(['data', 'specs', 'disk'], context),
+  linodeStatus: path(['data', 'status'], context)
+}));
 
 const enhanced = compose(styled, linodeContext, diskContext);
 

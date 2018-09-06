@@ -109,6 +109,10 @@ class ListDomains extends Page {
         
         browser.trySetValue(`${this.cloneDomainName.selector} input`, newDomainName);
         this.submit.click();
+
+        browser.waitForVisible('[data-qa-domain-title]', constants.wait.normal);
+
+        browser.url(constants.routes.domains)
         
         browser.waitUntil(function() {
             const domains = $$('[data-qa-domain-cell] [data-qa-domain-label]');

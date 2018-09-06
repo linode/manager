@@ -22,6 +22,7 @@ import EditableText from 'src/components/EditableText';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
+import Notice from 'src/components/Notice';
 import ProductNotification from 'src/components/ProductNotification';
 import { events$ } from 'src/events';
 import { reportException } from 'src/exceptionReporting';
@@ -29,12 +30,18 @@ import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawe
 import { newLinodeEvents } from 'src/features/linodes/events';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 import { lishLaunch } from 'src/features/Lish';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
 import notifications$ from 'src/notifications';
 import { Requestable } from 'src/requestableContext';
 import { getImage } from 'src/services/images';
-import { getLinode, getLinodeConfigs, getLinodeDisks, getLinodeVolumes, renameLinode } from 'src/services/linodes';
+import {
+  getLinode, getLinodeConfigs, getLinodeDisks,
+  getLinodeVolumes, getType, renameLinode, startMutation,
+} from 'src/services/linodes';
+
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { notifications } from 'src/utilities/storage';
 
 import { ConfigsProvider, DisksProvider, ImageProvider, LinodeProvider, VolumesProvider } from './context';
 import LinodeBackup from './LinodeBackup';
@@ -48,6 +55,7 @@ import LinodeSettings from './LinodeSettings';
 import LinodeSummary from './LinodeSummary';
 import LinodeBusyStatus from './LinodeSummary/LinodeBusyStatus';
 import LinodeVolumes from './LinodeVolumes';
+import MutateDrawer from './MutateDrawer';
 import reloadableWithRouter from './reloadableWithRouter';
 
 interface ConfigDrawerState {
@@ -56,6 +64,20 @@ interface ConfigDrawerState {
   error?: string;
   selected?: number;
   action?: (id: number) => void;
+}
+
+interface MutateInfo {
+  vcpus: number | null;
+  memory: number | null;
+  disk: number | null;
+  transfer: number | null;
+  network_out: number | null;
+}
+
+interface MutateDrawer {
+  open: boolean;
+  loading: boolean;
+  error: string;
 }
 
 interface State {
@@ -69,6 +91,10 @@ interface State {
   configDrawer: ConfigDrawerState;
   labelInput: { label: string; errorText: string; };
   notifications?: Linode.Notification[];
+  showPendingMutation: boolean;
+  mutateInfo: MutateInfo | null;
+  mutateDrawer: MutateDrawer
+  currentNetworkOut: number | null;
 }
 
 interface MatchProps { linodeId?: number };
@@ -78,7 +104,8 @@ type RouteProps = RouteComponentProps<MatchProps>;
 type ClassNames = 'titleWrapper'
   | 'backButton'
   | 'cta'
-  | 'launchButton';
+  | 'launchButton'
+  | 'link';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   titleWrapper: {
@@ -117,6 +144,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       borderColor: theme.palette.primary.main,
     },
   },
+  link: {
+    color: theme.palette.primary.main,
+    cursor: 'pointer',
+    '&:hover': {
+      textDecoration: 'underline',
+    }
+  }
 });
 
 type CombinedProps = RouteProps & WithStyles<ClassNames>;
@@ -135,7 +169,6 @@ const L = {
     errors: compose(configsLens, lensPath(['errors'])) as Lens,
     lastUpdated: compose(configsLens, lensPath(['lastUpdated'])) as Lens,
     loading: compose(configsLens, lensPath(['loading'])) as Lens,
-    request: compose(configsLens, lensPath(['request'])) as Lens,
   },
   disks: {
     data: compose(disksLens, lensPath(['data'])) as Lens,
@@ -143,7 +176,6 @@ const L = {
     errors: compose(disksLens, lensPath(['errors'])) as Lens,
     lastUpdated: compose(disksLens, lensPath(['lastUpdated'])) as Lens,
     loading: compose(disksLens, lensPath(['loading'])) as Lens,
-    request: compose(disksLens, lensPath(['request'])) as Lens,
   },
   image: {
     data: compose(imageLens, lensPath(['data'])) as Lens,
@@ -151,7 +183,6 @@ const L = {
     image: imageLens,
     lastUpdated: compose(imageLens, lensPath(['lastUpdated'])) as Lens,
     loading: compose(imageLens, lensPath(['loading'])) as Lens,
-    request: compose(imageLens, lensPath(['request'])) as Lens,
   },
   labelInput: {
     errorText: compose(labelInputLens, lensPath(['errorText'])) as Lens,
@@ -164,14 +195,12 @@ const L = {
     lastUpdated: compose(linodeLens, lensPath(['lastUpdated'])) as Lens,
     linode: linodeLens,
     loading: compose(linodeLens, lensPath(['loading'])) as Lens,
-    request: compose(linodeLens, lensPath(['request'])) as Lens,
   },
   volumes: {
     data: compose(volumesLens, lensPath(['data'])) as Lens,
     errors: compose(volumesLens, lensPath(['errors'])) as Lens,
     lastUpdated: compose(volumesLens, lensPath(['lastUpdated'])) as Lens,
     loading: compose(volumesLens, lensPath(['loading'])) as Lens,
-    request: compose(volumesLens, lensPath(['request'])) as Lens,
     volumes: volumesLens,
   },
 };
@@ -217,7 +246,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               this.composeState(
                 set(L.configs.lastUpdated, Date.now()),
                 set(L.configs.loading, false),
-                set(L.configs.errors, [{ field: 'none', reason: 'Could not load instance config for some reason.' }])
+                set(L.configs.errors, r)
               );
             });
         },
@@ -249,7 +278,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               this.composeState(
                 set(L.disks.lastUpdated, Date.now()),
                 set(L.disks.loading, false),
-                set(L.disks.errors, [{ field: 'none', reason: 'Could not load Linode disks for some reason.' }])
+                set(L.disks.errors, r)
               );
             });
         },
@@ -292,7 +321,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               this.composeState(
                 set(L.image.lastUpdated, Date.now()),
                 set(L.image.loading, false),
-                set(L.image.errors, [{ field: 'none', reason: 'Could not load Linode for some reason.' }])
+                set(L.image.errors, r)
               );
             });
         },
@@ -325,7 +354,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               this.composeState(
                 set(L.linode.lastUpdated, Date.now()),
                 set(L.linode.loading, false),
-                set(L.linode.errors, [{ field: 'none', reason: 'Could not load instance for some reason.' }])
+                set(L.linode.errors, r)
               );
             });
         },
@@ -360,7 +389,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               this.composeState(
                 set(L.volumes.lastUpdated, Date.now()),
                 set(L.volumes.loading, false),
-                set(L.volumes.errors, [{ field: 'none', reason: 'Could not load Linode for some reason.' }])
+                set(L.volumes.errors, r)
               );
             });
         },
@@ -378,6 +407,14 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       label: '',
       errorText: '',
     },
+    showPendingMutation: false,
+    mutateInfo: null,
+    mutateDrawer: {
+      open: false,
+      loading: false,
+      error: '',
+    },
+    currentNetworkOut: null,
   };
 
   composeState = (...fns: StateSetter[]) =>
@@ -390,7 +427,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     return haveAnyBeenModified<State>(
       this.state,
       nextState,
-      ['context', 'configDrawer', 'labelInput'],
+      ['context', 'configDrawer', 'labelInput', 'mutateDrawer', 'showPendingMutation'],
     )
       || haveAnyBeenModified<Location>(location, nextLocation, ['pathname', 'search']);
   }
@@ -401,6 +438,63 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     this.diskResizeSubscription.unsubscribe();
     this.notificationsSubscription.unsubscribe();
     this.volumeEventsSubscription.unsubscribe();
+  }
+
+  componentDidUpdate(prevProps: CombinedProps, prevState: State) {
+    const { context: { linode: { data: linode } } } = this.state;
+
+    /*
+    * /linodes/instances/types/type has a "successor" property
+    * that will have a non-null value if this Linode has an upgrade
+    * available
+    */
+    if (!!linode
+      && prevState.context.linode.data !== linode
+      && linode.type) {
+      /*
+      * Check local storage to see if user has opted out to upgrades on this specific Linode
+      */
+      const userHasOptedOut = notifications.linodeMutation.get().some((optedOutLinode) => {
+        return optedOutLinode === linode.id;
+      });
+      if (userHasOptedOut) { return; }
+
+      getType(linode.type)
+        .then((currentType: Linode.LinodeType) => {
+
+          const typeIsDeprecated = currentType.successor !== null;
+          /*
+          * Now that we know the type is deprecated, get the successor's new
+          * specs so we can show the user what exactly is getting upgraded
+          */
+          if (!!currentType.successor && typeIsDeprecated) {
+            getType(currentType.successor!)
+              .then((successorData: Linode.LinodeType) => {
+                // finally show the notice to the user with the upgrade info
+                this.setState({
+                  showPendingMutation: true,
+                  currentNetworkOut: currentType.network_out,
+                  // data is only relevant if the upgrade data is different from the current type's data
+                  mutateInfo: {
+                    vcpus: (successorData.vcpus !== currentType.vcpus) ? successorData.vcpus : null,
+                    network_out: (successorData.network_out !== currentType.network_out) ? successorData.network_out : null,
+                    disk: (successorData.disk !== currentType.disk) ? successorData.disk : null,
+                    transfer: (successorData.transfer !== currentType.transfer) ? successorData.transfer : null,
+                    memory: (successorData.memory !== currentType.memory) ? successorData.memory : null,
+                  }
+                });
+              })
+              // no action needed. Worse case scenario, the user doesn't
+              // see the notice
+              .catch((e: Error) => e);
+          } else { // type is not deprecated
+            this.setState({ showPendingMutation: false })
+          }
+        })
+        // no action needed. Worse case scenario, the user doesn't
+        // see the notice
+        .catch((e: Error) => e);
+    }
   }
 
   componentDidMount() {
@@ -556,15 +650,77 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
   launchLish = () => {
     const { data: linode } = this.state.context.linode;
-    lishLaunch(`${linode!.id}`);
+    lishLaunch(linode!.id);
+  }
+
+  openMutateDrawer = () => {
+    this.setState({ mutateDrawer: { ...this.state.mutateDrawer, open: true } });
+  }
+
+  closeMutateDrawer = () => {
+    this.setState({
+      mutateDrawer: {
+        ...this.state.mutateDrawer,
+        open: false,
+        error: '',
+      }
+    });
+  }
+
+  optOut = (linodeId: number) => {
+    /* close the drawer, remove the warning, and set local storage */
+    this.closeMutateDrawer();
+    this.setState({ showPendingMutation: false });
+    notifications.linodeMutation.set(linodeId);
+    sendToast('You have successfully opted out of this Linode upgrade')
+  }
+
+  initMutation = () => {
+    const { mutateDrawer, context: { linode } } = this.state;
+
+    this.setState({
+      mutateDrawer: {
+        ...mutateDrawer,
+        loading: true,
+        error: '',
+      }
+    })
+    /*
+    * It's okay to disregard the possiblity of linode
+    * being undefined. The upgrade message won't appear unless
+    * it's defined
+    */
+    startMutation(linode.data!.id)
+      .then(() => {
+        linode.request();
+        this.setState({
+          mutateDrawer: {
+            ...mutateDrawer,
+            open: false,
+            error: '',
+            loading: false,
+          },
+        });
+        sendToast('Linode upgrade has been initiated')
+      })
+      .catch(() => {
+        this.setState({
+          mutateDrawer: {
+            ...mutateDrawer,
+            loading: false,
+            error: 'Mutation could not be initiated. Please try again later.'
+          }
+        })
+      });
   }
 
   render() {
-
     const { match: { url }, classes } = this.props;
     const {
       labelInput,
       configDrawer,
+      mutateDrawer,
+      mutateInfo,
       context: {
         volumes: {
           data: volumes,
@@ -656,6 +812,15 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
             <ImageProvider value={this.state.context.image}>
               <LinodeProvider value={this.state.context.linode}>
                 <VolumesProvider value={this.state.context.volumes}>
+                  {this.state.showPendingMutation && linode &&
+                    <Notice important warning>
+                      {`This Linode has pending upgrades available. To learn more about
+                      this upgrade and what it includes, `}
+                      <span className={classes.link} onClick={this.openMutateDrawer}>
+                        click here.
+                      </span>
+                    </Notice>
+                  }
                   <Grid
                     container
                     justify="space-between"
@@ -736,6 +901,25 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                     selected={String(configDrawer.selected)}
                     error={configDrawer.error}
                   />
+                  {this.state.showPendingMutation && linode &&
+                    <MutateDrawer
+                      linodeId={linode.id}
+                      open={mutateDrawer.open}
+                      loading={mutateDrawer.loading}
+                      error={mutateDrawer.error}
+                      handleClose={this.closeMutateDrawer}
+                      mutateInfo={mutateInfo!}
+                      currentTypeInfo={{
+                        vcpus: linode.specs.vcpus,
+                        transfer: linode.specs.transfer,
+                        disk: linode.specs.disk,
+                        memory: linode.specs.memory,
+                        network_out: this.state.currentNetworkOut,
+                      }}
+                      initMutation={this.initMutation}
+                      optOut={this.optOut}
+                    />
+                  }
                 </VolumesProvider>
               </LinodeProvider>
             </ImageProvider>

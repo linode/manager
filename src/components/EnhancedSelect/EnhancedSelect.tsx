@@ -2,8 +2,10 @@ import Downshift, { DownshiftState, StateChangeOptions } from 'downshift';
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 
+import InputAdornment from '@material-ui/core/InputAdornment';
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Search from '@material-ui/icons/Search';
 
 import RenderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
@@ -11,11 +13,16 @@ import TextField from 'src/components/TextField';
 import './EnhancedSelect.css';
 
 type ClassNames = 'root'
-  | 'searchSuggestions';
+  | 'searchSuggestions'
+  | 'searchIcon';
 
 const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   root: {
     position: 'relative',
+    width: '100%',
+  },
+  searchIcon: {
+    color: `${theme.color.grey1} !important`,
   },
   searchSuggestions: {
     position: 'absolute',
@@ -25,10 +32,8 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     padding: 0,
     borderRadius: 0,
     border: '1px solid #999',
-    maxHeight: 192,
     overflowY: 'auto',
-    width: '100%',
-    maxWidth: 415,
+    maxWidth: '100%',
     zIndex: 2,
     marginTop: -2,
     '& .enhancedSelect-menu-item': {
@@ -49,25 +54,29 @@ interface Props {
   placeholder?: string;
   inputValue: string;
   onInputValueChange: (input:string) => void;
+  renderItems?: (items:Item, index:number, highlighted:boolean, inputProps:any, classes:string) => React.ReactElement<any>[];
+  noFilter?: boolean;
+  search?: boolean;
+  maxHeight?: number;
+  className?: string;
 }
-
-interface State {}
 
 export interface Item {
   value: string;
   label: string;
+  data?: any;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class EnhancedSelect extends React.Component<CombinedProps, State> {
+class EnhancedSelect extends React.Component<CombinedProps, {}> {
   optionsIdx: any = {};
 
   componentDidMount() {
     this.createItemIndex();
   }
 
-  componentDidUpdate(prevProps:CombinedProps, prevState:State) {
+  componentDidUpdate(prevProps:CombinedProps, prevState:{}) {
     if (this.props.options !== prevProps.options) {
       this.createItemIndex();
     }
@@ -90,7 +99,8 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
   }
 
   getSearchSuggestions = (inputText:string) => {
-    const { options } = this.props;
+    const { options, noFilter } = this.props;
+    if (noFilter) { return options };
     const text = inputText.toLowerCase();
     return options.filter((item:Item) => {
       return item.label ? item.label.toLowerCase().includes(text) : false;
@@ -104,7 +114,6 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
 
   downshiftStateReducer = (state: DownshiftState, changes: StateChangeOptions) => {
     const { value } = this.props;
-
     switch (changes.type) {
       // Don't clear the field value when we leave the field
       case Downshift.stateChangeTypes.blurInput:
@@ -128,27 +137,33 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
       inputValue,
       highlightedIndex,
       openMenu,
+      selectHighlightedItem,
       selectedItem,
     } = downshift;
 
-    const { classes, disabled, errorText, helperText, label, placeholder } = this.props;
+    const { classes, className, maxHeight, disabled, errorText, helperText, label, placeholder, search } = this.props;
     const selectedIndex = this.getIndex(selectedItem);
     const placeholderText = placeholder ? placeholder : "Enter a value"
 
     return (
-      <div className={classes.root}>
+      <div className={`${classes.root} ${className}`}>
         <TextField
           data-qa-enhanced-select
+          InputProps={search && {
+            startAdornment: <InputAdornment position="end">
+              <Search className={classes.searchIcon} />
+            </InputAdornment>
+          }}
           {...getInputProps({
             placeholder: placeholderText,
             errorText,
             disabled,
             helperText,
             label,
-            onKeyPress: (e:React.KeyboardEvent<KeyboardEvent>) => {
+            onKeyDown: (e:React.KeyboardEvent<KeyboardEvent>) => {
               if (e.key === 'Enter') {
-                this.onSubmit();
-                e.preventDefault();
+                if (highlightedIndex !== null) { selectHighlightedItem(); }
+                else { this.onSubmit(); }
               }
             },
             onFocus: (e:React.ChangeEvent<HTMLInputElement>) => {
@@ -158,7 +173,7 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
           })}
         />
         {isOpen &&
-          <Paper className={classes.searchSuggestions}>
+          <Paper className={classes.searchSuggestions} style={{ maxHeight: maxHeight || 192 }}>
             {this.getSearchSuggestions(inputValue).map((suggestion:Item, index:number) => {
               return this.renderSuggestion(
                 suggestion,
@@ -187,7 +202,9 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
     if ( isHighlighted ) { classes += " enhancedSelect-menu-item-highlighted"; }
     if ( isSelected )    { classes += " enhancedSelect-menu-item-selected"; }
 
-    return (
+    return this.props.renderItems 
+      ? this.props.renderItems(item, index, isHighlighted, itemProps, classes)
+      :
       <div className={classes}
         key={index} 
         {...itemProps}
@@ -195,7 +212,6 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
       >
         {item.label}
       </div>
-    )
   }
   
   render() {

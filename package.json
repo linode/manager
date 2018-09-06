@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "0.32.2",
+  "version": "0.33.1",
   "private": true,
   "engines": {
     "node": ">= 8.11.2"
@@ -18,8 +18,10 @@
   "dependencies": {
     "@material-ui/core": "^1.2.2",
     "@material-ui/icons": "^1.1.0",
+    "@types/algoliasearch": "^3.27.5",
     "@types/qrcode.react": "^0.8.0",
     "@types/throttle-debounce": "^1.0.0",
+    "algoliasearch": "^3.30.0",
     "autoprefixer": "7.1.6",
     "axios": "^0.18.0",
     "bluebird": "^3.5.1",
@@ -65,12 +67,13 @@
     "react-chartjs-2": "^2.7.0",
     "react-dev-utils": "4.2.1",
     "react-dom": "^16.4.1",
+    "react-ga": "^2.5.3",
     "react-loadable": "^5.3.1",
     "react-number-format": "^3.5.0",
     "react-redux": "^5.0.7",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
-    "react-sticky": "^6.0.1",
+    "react-sticky": "^6.0.3",
     "react-text-mask": "^5.4.3",
     "react-waypoint": "^8.0.3",
     "redux": "^3.7.2",
@@ -117,6 +120,7 @@
     "selenium": "npx selenium-standalone install --config=./e2e/config/selenium-config.js && ./node_modules/.bin/selenium-standalone start --config=./e2e/config/selenium-config.js",
     "e2e": "npx wdio ./e2e/config/wdio.conf.js",
     "e2e:all": "npx wdio ./e2e/config/wdio.conf.js; ./node_modules/.bin/wdio ./e2e/config/wdio.storybook.conf.js",
+    "e2e:modified": "./scripts/run-modified-e2e.sh",
     "e2e:browserstack": "npx wdio ./e2e/config/browserstack.conf.js",
     "mb": "npx mb"
   },

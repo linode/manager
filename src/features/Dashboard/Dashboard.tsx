@@ -20,21 +20,16 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
 });
 
-interface Props { }
+type CombinedProps = WithStyles<ClassNames>;
 
-interface State { }
-
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-class Dashboard extends React.Component<CombinedProps, State> {
-  state: State = {};
+class Dashboard extends React.Component<CombinedProps, {}> {
 
   render() {
     return (
       <Grid container spacing={24}>
         <DocumentTitleSegment segment="Dashboard" />
         <Grid item xs={12}>
-          <Typography variant="headline">Dashboard</Typography>
+          <Typography variant="headline" data-qa-dashboard-header>Dashboard</Typography>
         </Grid>
         <Grid item xs={12} md={7}>
           <LinodesDashboardCard />

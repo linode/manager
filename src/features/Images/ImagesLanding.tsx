@@ -41,8 +41,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props { }
-
 interface State extends PaginationProps {
   loading: boolean;
   images: Linode.Image[];
@@ -65,7 +63,7 @@ interface State extends PaginationProps {
   };
 }
 
-type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
+type CombinedProps = WithStyles<ClassNames> & RouteComponentProps<{}>;
 
 class ImagesLanding extends React.Component<CombinedProps, State> {
   mounted: boolean = false;

@@ -51,7 +51,7 @@ export const levelMap = {
  *
  * Each permission level gives a user access to all lower permission levels.
  */
-export function scopeStringToPermTuples(scopes: string): Permission[] {
+export const scopeStringToPermTuples = (scopes: string): Permission[] => {
   if (scopes === '*') {
     return perms.map(perm => [perm, 2] as Permission);
   }
@@ -81,9 +81,9 @@ export function scopeStringToPermTuples(scopes: string): Permission[] {
     (map: { [perm: string]: number }, perm: string) => {
       const maxLevel = equivalentPerms[perm].reduce(
         (level: number, eqPerm: string) => {
-          return Math.max(level, map[eqPerm] || levelMap['none']);
+          return Math.max(level, map[eqPerm] || levelMap.none);
         },
-        map[perm] || levelMap['none'],
+        map[perm] || levelMap.none,
       );
       map[perm] = maxLevel;
       return map;
@@ -95,7 +95,7 @@ export function scopeStringToPermTuples(scopes: string): Permission[] {
     (tups: Permission[], permName: string): Permission[] => {
       const tup = [
         permName,
-        combinedScopeMap[permName] || levelMap['none'],
+        combinedScopeMap[permName] || levelMap.none,
       ] as Permission;
       return [...tups, tup];
     },
@@ -105,7 +105,7 @@ export function scopeStringToPermTuples(scopes: string): Permission[] {
   return permTuples;
 }
 
-export function allMaxPerm(scopeTups: Permission[]) : boolean {
+export const allMaxPerm = (scopeTups: Permission[]): boolean => {
   if (scopeTups.length !== perms.length) {
     return false;
   }
@@ -117,7 +117,7 @@ export function allMaxPerm(scopeTups: Permission[]) : boolean {
   );
 }
 
-export function permTuplesToScopeString(scopeTups: Permission[]): string {
+export const permTuplesToScopeString = (scopeTups: Permission[]): string => {
   if (allMaxPerm(scopeTups)) {
     return '*';
   }

@@ -8,5 +8,3 @@ export const formatDate = (utcDate: string, showTime?: boolean) => {
   }
   return formattedDate.substring(0, startOfTimeStamp);
 };
-
-export const formatString: string = 'YYYY-MM-DD HH:mm:ss';

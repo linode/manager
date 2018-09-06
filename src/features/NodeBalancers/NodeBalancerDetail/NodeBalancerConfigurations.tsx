@@ -56,7 +56,7 @@ interface Props {
   nodeBalancerLabel: string;
 }
 
-type MatchProps = { nodeBalancerId?: number };
+interface MatchProps { nodeBalancerId?: number };
 type RouteProps = RouteComponentProps<MatchProps>;
 
 interface PreloadedProps {
@@ -152,8 +152,8 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     });
     if (paths.length === 0) { return; }
     /* Map those paths to an array of updater functions */
-    const setFns = paths.map((path: any[]) => {
-      return set(lensPath(['configs', configIdx, ...path]), []);
+    const setFns = paths.map((eachPath: any[]) => {
+      return set(lensPath(['configs', configIdx, ...eachPath]), []);
     });
     /* Apply all of those update functions at once to state */
     this.setState(
@@ -377,10 +377,10 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
               }, true);
               if (success) {
                 // replace success message with a new one
-                const newMessages = [];
-                newMessages[idx] = 'All Nodes created successfully';
+                const newNodeMessages = [];
+                newNodeMessages[idx] = 'All Nodes created successfully';
                 this.setState({
-                  panelNodeMessages: newMessages,
+                  panelNodeMessages: newNodeMessages,
                 });
               }
               this.resetSubmitting(idx);
@@ -592,13 +592,13 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     const nodeData = nodeForRequest(node);
 
     return createNodeBalancerConfigNode(nodeBalancerId!, config.id!, formatAddress(nodeData))
-      .then((node) => {
+      .then((responseNode) => {
         /* Set the new Node data including the ID
            This also clears the errors and modify status. */
         this.setState(
           set(
             lensPath(['configs', configIdx, 'nodes', nodeIdx]),
-            parseAddress(node),
+            parseAddress(responseNode),
           ),
         );
         /* Return true as a Promise for the sake of aggregating results */
@@ -642,13 +642,13 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
     return (
       updateNodeBalancerConfigNode(nodeBalancerId!, config.id!, node!.id!, formatAddress(nodeData))
-      .then((node) => {
+      .then((responseNode) => {
         /* Set the new Node data including the ID
            This also clears the errors and modify status. */
         this.setState(
           set(
             lensPath(['configs', configIdx, 'nodes', nodeIdx]),
-            parseAddress(node),
+            parseAddress(responseNode),
           ),
         );
         /* Return true as a Promise for the sake of aggregating results */

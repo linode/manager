@@ -11,7 +11,7 @@ describe('List Linodes Suite', () => {
         expect(ListLinodes.rebootMenu.isVisible()).toBe(true);
         expect(ListLinodes.viewGraphsMenu.isVisible()).toBe(true);
         expect(ListLinodes.resizeMenu.isVisible()).toBe(true);
-        expect(ListLinodes.viewBackupsMenu.isVisible()).toBe(true);
+        expect(ListLinodes.enableBackupsMenu.isVisible()).toBe(true);
         expect(ListLinodes.settingsMenu.isVisible()).toBe(true);
     }
 
@@ -61,13 +61,15 @@ describe('List Linodes Suite', () => {
         it('should display action menu and linode action menu items', () => {
             // Click first Linode Action Menu
             ListLinodes.linode[0].$(ListLinodes.linodeActionMenu.selector).click();
+
+            ListLinodes.actionMenuItem.waitForVisible(constants.wait.normal);
             assertActionMenuItems();
 
             browser.refresh();
         });
 
         it('should display launch console button', () => {
-            ListLinodes.linodeLabel.waitForVisible();
+            ListLinodes.linodeLabel.waitForVisible(constants.wait.normal);
             const consoleButton = ListLinodes.linode[0].$(ListLinodes.launchConsole.selector);
             expect(consoleButton.isVisible()).toBe(true);
         });
@@ -120,6 +122,7 @@ describe('List Linodes Suite', () => {
             });
             linodes[0].$(ListLinodes.linodeActionMenu.selector).click();
 
+            ListLinodes.actionMenuItem.waitForVisible(constants.wait.normal);
             assertActionMenuItems();
         });
     });

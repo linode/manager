@@ -19,15 +19,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
 });
 
-interface Props {}
+type CombinedProps = WithStyles<ClassNames>;
 
-interface State {}
-
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-export class ManagedLanding extends React.Component<CombinedProps, State> {
-  state: State = {};
-
+export class ManagedLanding extends React.Component<CombinedProps, {}> {
   static docs: Linode.Doc[] = [
     {
       title: 'Linode Managed',

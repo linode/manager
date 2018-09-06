@@ -50,7 +50,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     marginRight: theme.spacing.unit * 2,
     transition: theme.transitions.create(['opacity']),
     [theme.breakpoints.down('sm')]: {
-      backgroundColor: 'white',
+      backgroundColor: theme.bg.white,
       position: 'absolute',
       width: 'calc(100% - 118px)',
       zIndex: 2,
@@ -84,8 +84,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
       padding: 2,
     },
     '&:hover, &:focus': {
-      color: 'white',
-      backgroundColor: theme.palette.primary.main,
+      color: theme.palette.primary.main,
     },
   },
   icon: {
@@ -150,9 +149,6 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   },
 });
 
-interface Props {
-}
-
 interface TypesContextProps {
   typesData?: Linode.LinodeType[];
 }
@@ -168,8 +164,7 @@ interface State {
   [resource: string]: any;
 }
 
-type CombinedProps = Props
-  & TypesContextProps
+type CombinedProps = TypesContextProps
   & WithStyles<Styles>
   & RouteComponentProps<{}>;
 
@@ -198,7 +193,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
     imageId: string,
   ) {
     const { images } = this.state;
-    const image = (images && images.find(image => image.id === imageId))
+    const image = (images && images.find((img:Linode.Image) => img.id === imageId))
       || { label: 'Unknown Image' };
     const imageDesc = image.label;
     const typeDesc = typeLabelLong(typeLabel, memory, disk, vcpus);
@@ -247,7 +242,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
 
   getSearchSuggestions(query: string | null) {
     const { typesData } = this.props;
-    if (!this.dataAvailable() || !query) return [];
+    if (!this.dataAvailable() || !query) { return [] };
 
     const searchResults = [];
 
@@ -344,6 +339,19 @@ class SearchBar extends React.Component<CombinedProps, State> {
     });
   }
 
+  onSelect = (item: SearchSuggestionT) => {
+    const { history } = this.props;
+    /* Need to unfocus the search bar so the
+    *  keyboard disappears on mobile.
+    *  This is a known issue with Downshift (https://github.com/paypal/downshift/issues/32),
+    *  hopefully this kludge won't be needed with React-Select.
+    */ 
+    const node = document.getElementById('searchbar-simple');
+    if (node) { node.blur(); }
+    this.toggleSearch();
+    history.push(item.path);
+  } 
+
   renderSuggestion(
     suggestion: SearchSuggestionT,
     index: number,
@@ -389,7 +397,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, history } = this.props;
+    const { classes } = this.props;
     const { searchActive } = this.state;
 
     return (
@@ -413,7 +421,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
             data-qa-search-icon
           />
           <Downshift
-            onSelect={(item: SearchSuggestionT) => history.push(item.path)}
+            onSelect={this.onSelect}
             stateReducer={this.downshiftStateReducer}
             itemToString={(item: SearchSuggestionT) => (item && item.title) || ''}
             render={({
@@ -422,7 +430,6 @@ class SearchBar extends React.Component<CombinedProps, State> {
               isOpen,
               inputValue,
               highlightedIndex,
-              clearSelection,
             }) => (
                 <div className={classes.textfieldContainer}>
                   <TextField

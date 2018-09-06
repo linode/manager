@@ -29,9 +29,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     },
   },
   root: {
-    alignItems: 'center',
     marginBottom: theme.spacing.unit / 2,
-    width: '100%',
     '&:last-child': {
       marginBottom: 0,
     },
@@ -128,8 +126,8 @@ class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
         {
           formattedIPS.length > 1 && <ShowMore
             items={tail(formattedIPS)}
-            render={(ips: string[]) => {
-              return ips.map((ip, idx) => this.renderIP(ip.replace('/64', ''), copyRight, idx));
+            render={(ipsAsArray: string[]) => {
+              return ipsAsArray.map((ip, idx) => this.renderIP(ip.replace('/64', ''), copyRight, idx));
             }} />
         }
       </div>

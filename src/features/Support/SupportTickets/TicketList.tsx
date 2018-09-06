@@ -1,23 +1,22 @@
-import * as moment from 'moment';
-import { sort } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import Paper from '@material-ui/core/Paper';
 import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import PaginationFooter, { PaginationProps } from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
+import { ISO_FORMAT } from 'src/constants';
 import { getTicketsPage } from 'src/services/support';
-import capitalize from 'src/utilities/capitalize';
-import { formatString } from 'src/utilities/format-date-iso8601';
 
 interface Props {
   filterStatus: 'open' | 'closed';
@@ -30,7 +29,15 @@ interface State extends PaginationProps {
   loading: boolean;
 }
 
-class TicketList extends React.Component<Props, State> {
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+  root: {},
+});
+
+type ClassNames = 'root';
+
+type CombinedProps = Props & WithStyles<ClassNames>;
+
+class TicketList extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
   state: State = {
     errors: undefined,
@@ -58,10 +65,6 @@ class TicketList extends React.Component<Props, State> {
     this.mounted = false;
   }
 
-  compareTickets = (a:Linode.SupportTicket, b:Linode.SupportTicket) => {
-    return moment(b.updated).diff(moment(a.updated));
-  }
-
   getLinkTargets = (entity:any) => {
     switch (entity.type) {
       case 'linode':
@@ -79,11 +82,6 @@ class TicketList extends React.Component<Props, State> {
     }
   }
 
-  getSortedTickets = (incoming: Linode.SupportTicket[]) => {
-    // Sort by when each ticket was last updated
-    return sort(this.compareTickets, incoming);
-  }
-
   getTickets = (page:number = this.state.page, pageSize:number = this.state.pageSize) => {
     const { tickets } = this.state;
     this.setState({ errors: undefined, loading: tickets === undefined});
@@ -94,7 +92,7 @@ class TicketList extends React.Component<Props, State> {
         
         this.setState({
           loading: false,
-          tickets: this.getSortedTickets(response.data),
+          tickets: response.data,
           errors: undefined,
           count: response.results,
           page: response.page,
@@ -138,25 +136,18 @@ class TicketList extends React.Component<Props, State> {
 
   renderEntityLink = (ticket: Linode.SupportTicket) => {
     return ticket.entity
-      ? <Link to={this.getLinkTargets(ticket.entity)} >{ticket.entity.label}</Link>
+      ? <Link to={this.getLinkTargets(ticket.entity)} className="secondaryLink">{ticket.entity.label}</Link>
       : null
-  }
-
-  renderTopic = (ticket: Linode.SupportTicket) => {
-    return ticket.entity
-      ? capitalize(ticket.entity.type)
-      : null;
   }
 
   renderRow = (ticket: Linode.SupportTicket) => {
     return (
-      <TableRow key={`ticket-${ticket.id}`} >
-        <TableCell data-qa-support-id><Link to={`/support/tickets/${ticket.id}`}>{ticket.id}</Link></TableCell>
-        <TableCell data-qa-support-topic>{this.renderTopic(ticket)}</TableCell>
+      <TableRow data-qa-support-ticket={ticket.id} key={`ticket-${ticket.id}`} rowLink={`/support/tickets/${ticket.id}`}>
+        <TableCell data-qa-support-subject><Link to={`/support/tickets/${ticket.id}`}>{ticket.summary}</Link></TableCell>
+        <TableCell data-qa-support-id>{ticket.id}</TableCell>
         <TableCell data-qa-support-entity>{this.renderEntityLink(ticket)}</TableCell>
-        <TableCell data-qa-support-subject>{ticket.summary}</TableCell>
-        <TableCell data-qa-support-date><DateTimeDisplay value={ticket.opened} format={formatString} /></TableCell>
-        <TableCell data-qa-support-updated><DateTimeDisplay value={ticket.opened} format={formatString} /></TableCell>
+        <TableCell data-qa-support-date><DateTimeDisplay value={ticket.opened} format={ISO_FORMAT} /></TableCell>
+        <TableCell data-qa-support-updated><DateTimeDisplay value={ticket.updated} format={ISO_FORMAT} /></TableCell>
         <TableCell />
       </TableRow>
     );
@@ -171,10 +162,9 @@ class TicketList extends React.Component<Props, State> {
           <Table aria-label="List of Tickets">
             <TableHead>
               <TableRow>
-                <TableCell data-qa-support-id-header>Ticket ID</TableCell>
-                <TableCell data-qa-support-topic-header>Product</TableCell>
-                <TableCell data-qa-support-regarding-header>Regarding</TableCell>
                 <TableCell data-qa-support-subject-header style={{ minWidth: 200 }}>Subject</TableCell>
+                <TableCell data-qa-support-id-header>Ticket ID</TableCell>
+                <TableCell data-qa-support-regarding-header>Regarding</TableCell>
                 <TableCell data-qa-support-date-header noWrap>Date Created</TableCell>
                 <TableCell data-qa-support-updated-header noWrap>Last Updated</TableCell>
                 <TableCell />
@@ -200,4 +190,6 @@ class TicketList extends React.Component<Props, State> {
   }
 }
 
-export default TicketList;
+const styled = withStyles(styles, { withTheme: true });
+
+export default styled(TicketList);

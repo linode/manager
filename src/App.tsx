@@ -3,7 +3,9 @@ import { lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { bindActionCreators, compose } from 'redux';
+import { bindActionCreators, compose } from 'redux'
+
+import { Sticky, StickyContainer, StickyProps } from 'react-sticky';;
 
 import 'typeface-lato';
 
@@ -15,17 +17,21 @@ import { DocumentTitleSegment, withDocumentTitleProvider } from 'src/components/
 import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import SideMenu from 'src/components/SideMenu';
+import { isProduction, isTest } from 'src/constants';
 import { RegionsProvider, WithRegionsContext } from 'src/context/regions';
 import { TypesProvider, WithTypesContext } from 'src/context/types';
 import Footer from 'src/features/Footer';
 import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
-import { getLinodeTypes } from 'src/services/linodes';
+import { getDeprecatedLinodeTypes, getLinodeTypes } from 'src/services/linodes';
 import { getRegions } from 'src/services/misc';
 import { getProfile } from 'src/services/profile';
 import { request, response } from 'src/store/reducers/resources';
+import initSurvicate from 'src/survicate';
+
 import composeState from 'src/utilities/composeState';
+import { notifications, theme as themeStorage } from 'src/utilities/storage';
 
 import BetaNotification from 'src/BetaNotification';
 
@@ -95,6 +101,10 @@ const Help = DefaultLoader({
   loader: () => import('src/features/Help'),
 });
 
+const SupportSearchLanding = DefaultLoader({
+  loader: () => import('src/features/Help/SupportSearchLanding'),
+});
+
 type ClassNames = 'appFrame'
   | 'content'
   | 'wrapper'
@@ -146,11 +156,12 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
 interface Props {
   toggleTheme: () => void;
   longLivedLoaded: boolean;
+  userId: number | null;
 }
 
 interface ConnectedProps {
-  request: typeof request;
-  response: typeof response;
+  dispatchRequest: typeof request;
+  dispatchResponse: typeof response;
   documentation: Linode.Doc[];
 }
 
@@ -186,6 +197,7 @@ const L = {
 
 export class App extends React.Component<CombinedProps, State> {
   composeState = composeState;
+  surveyed: boolean = false;
 
   state: State = {
     menuOpen: false,
@@ -195,16 +207,20 @@ export class App extends React.Component<CombinedProps, State> {
       loading: false,
       request: () => {
         this.composeState([set(L.typesContext.loading, true)]);
-
-        return getLinodeTypes()
-          .then((response) => {
+        return Promise.all([getLinodeTypes(), getDeprecatedLinodeTypes()
+          .catch(e => Promise.resolve([]))])
+          .then((types: any[]) => {
+            /* if for whatever reason we cannot get the types, just use the curernt types */
+            const cleanedTypes = (types[1].data)
+              ? [...types[0].data, ...types[1].data]
+              : types[0].data;
             this.composeState([
               set(L.typesContext.loading, false),
               set(L.typesContext.lastUpdated, Date.now()),
-              set(L.typesContext.data, response.data),
+              set(L.typesContext.data, cleanedTypes),
             ])
           })
-          .catch((error) => {
+          .catch((error: any) => {
             this.composeState([
               set(L.typesContext.loading, false),
               set(L.typesContext.lastUpdated, Date.now()),
@@ -221,11 +237,11 @@ export class App extends React.Component<CombinedProps, State> {
         this.composeState([set(L.regionsContext.loading, true)]);
 
         return getRegions()
-          .then((response) => {
+          .then((regions) => {
             this.composeState([
               set(L.regionsContext.loading, false),
               set(L.regionsContext.lastUpdated, Date.now()),
-              set(L.regionsContext.data, response.data),
+              set(L.regionsContext.data, regions.data),
             ])
           })
           .catch((error) => {
@@ -241,22 +257,42 @@ export class App extends React.Component<CombinedProps, State> {
   };
 
   componentDidMount() {
-    const { request, response } = this.props;
+    const { dispatchRequest, dispatchResponse } = this.props;
 
-    const betaNotification = window.localStorage.getItem('BetaNotification');
-    if (betaNotification !== 'closed') {
+    if (notifications.beta.get() === 'open') {
       this.setState({ betaNotification: true });
     }
 
-    request(['profile']);
+    dispatchRequest(['profile']);
     getProfile()
       .then(({ data }) => {
-        response(['profile'], data);
+        dispatchResponse(['profile'], data);
       })
-      .catch(error => response(['profile'], error));
+      .catch(error => dispatchResponse(['profile'], error));
 
     this.state.regionsContext.request();
     this.state.typesContext.request();
+  }
+
+  componentDidUpdate() {
+    const { userId } = this.props;
+    /* userId is a connected prop; if it's loaded
+    * (default value is 1) and we haven't already
+    * done this, initialize the survey. Also, shouldn't
+    * load the survey in development.
+    * */
+    if (isTest) {
+      // Temporary hack until we implement NODE_ENV=test
+      return;
+    }
+    if (userId && userId !== 1 && !this.surveyed && isProduction) {
+      /* Initialize Survicate
+      * Done here rather than in index.tsx so that
+      * we have access to the logged in user's ID
+      */
+      initSurvicate(window, userId);
+      this.surveyed = true;
+    }
   }
 
   closeMenu = () => { this.setState({ menuOpen: false }); }
@@ -270,7 +306,7 @@ export class App extends React.Component<CombinedProps, State> {
 
   closeBetaNotice = () => {
     this.setState({ betaNotification: false });
-    window.localStorage.setItem('BetaNotification', 'closed');
+    notifications.beta.set('closed');
   }
 
   render() {
@@ -280,16 +316,18 @@ export class App extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
+        <a href="#main-content" className="visually-hidden">Skip to main content</a>
         <DocumentTitleSegment segment="Linode Manager" />
         {longLivedLoaded &&
           <React.Fragment>
             <TypesProvider value={this.state.typesContext}>
               <RegionsProvider value={this.state.regionsContext}>
-                <div className={classes.appFrame}>
+                <div {...themeDataAttr()} className={classes.appFrame}>
                   <SideMenu open={menuOpen} closeMenu={this.closeMenu} toggleTheme={toggleTheme} />
                   <main className={classes.content}>
                     <TopMenu openSideMenu={this.openMenu} />
-                    <div className={classes.wrapper}>
+                    <div className={classes.wrapper} id="main-content">
+                    <StickyContainer>
                       <Grid container spacing={0} className={classes.grid}>
                         <Grid item className={`${classes.switchWrapper} ${hasDoc ? 'mlMain' : ''}`}>
                           <Switch>
@@ -308,14 +346,31 @@ export class App extends React.Component<CombinedProps, State> {
                             <Route path="/support/tickets/:ticketId" component={SupportTicketDetail} />
                             <Route path="/profile" component={Profile} />
                             <Route exact path="/support" component={Help} />
+                            <Route exact path="/support/search/" component={SupportSearchLanding} />
                             <Route path="/dashboard" component={Dashboard} />
                             <Redirect exact from="/" to="/dashboard" />
                             <Route component={NotFound} />
                           </Switch>
                         </Grid>
-                        <DocsSidebar docs={documentation} />
+                        {hasDoc &&
+                          <Grid className='mlSidebar'>
+                            <Sticky topOffset={-24} disableCompensation>
+                              {(props: StickyProps) => {
+                                return (
+                                  <DocsSidebar
+                                    docs={documentation}
+                                    {...props}
+                                  />
+                                )
+                              }
+                              }
+                            </Sticky>
+                          </Grid>
+                        }
                       </Grid>
+                      </StickyContainer>
                     </div>
+
                   </main>
                   <Footer />
                   <BetaNotification
@@ -334,13 +389,28 @@ export class App extends React.Component<CombinedProps, State> {
   }
 }
 
+const themeDataAttr = () => {
+  if (themeStorage.get() === 'dark') {
+    return {
+      'data-qa-theme-dark': true
+    }
+  }
+  return {
+    'data-qa-theme-light': true
+  }
+}
+
 const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
-  { request, response },
+  {
+    dispatchRequest: request,
+    dispatchResponse: response,
+  },
   dispatch,
 );
 
 const mapStateToProps = (state: Linode.AppState) => ({
   longLivedLoaded: Boolean(pathOr(false, ['resources', 'profile', 'data'], state)),
+  userId: pathOr(null,['resources', 'profile', 'data', 'uid'], state),
   documentation: state.documentation,
 });
 

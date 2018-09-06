@@ -82,7 +82,9 @@ const ConfirmToken: React.StatelessComponent<CombinedProps> = (props) => {
         {twoFactorConfirmed &&
           <Notice 
             warning
+            spacingTop={8}
             className={classes.warning}
+            
             text={"Confirming a new key will invalidate codes generated from any previous key."}
           />
         }

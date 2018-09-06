@@ -137,19 +137,12 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       title: 'How to Use Block Storage with Your Linode',
       /* tslint:disable-next-line */
       src: `https://www.linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode`,
-      body: `Linode’s Block Storage service allows you to attach additional storage volumes to your
-      Linode. A single volume can range from 10 GiB to 10,000 GiB in size and costs $0.10/GiB per
-      month. They can be partitioned however you like and can accommodate any filesystem type you
-      choose. Up to eight volumes can be attached to a single Linode, be it new or already
-      existing, so you do not need to recreate your server to add a Block Storage Volume.`,
+      body: `This tutorial explains how to use Linode's block storage service.`,
     },
     {
       title: 'Boot a Linode from a Block Storage Volume',
       src: `https://www.linode.com/docs/platform/block-storage/boot-from-block-storage-volume/`,
-      body: `Linode’s Block Storage service allows you to attach additional storage volumes to your
-      Linode. In addition to storing files and media, you can also use a Block Storage Volume as a
-      boot disk. This can provide a low-cost way to maintain an image that can be quickly attached
-      to a new Linode and booted up when needed.`,
+      body: `This guide shows how to boot a Linode from a Block Storage Volume.`,
     },
   ];
 
@@ -203,6 +196,14 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     if (!equals(prevState.volumes.map(v => v.id), this.state.volumes.map(v => v.id))) {
       this.getLinodeLabels();
     }
+  }
+
+  handleCloseConfigDrawer = () => {
+    this.setState({ configDrawer: { open: false } });
+  }
+
+  handleCloseAttachDrawer = () => {
+    this.setState({ attachmentDrawer: { open: false } });
   }
 
   render() {
@@ -263,7 +264,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
         />
         <VolumeConfigDrawer
           open={this.state.configDrawer.open}
-          onClose={() => { this.setState({ configDrawer: { open: false } }); }}
+          onClose={this.handleCloseConfigDrawer}
           volumePath={this.state.configDrawer.volumePath}
           volumeLabel={this.state.configDrawer.volumeLabel}
         />
@@ -272,14 +273,14 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           volumeID={this.state.attachmentDrawer.volumeID || 0}
           volumeLabel={this.state.attachmentDrawer.volumeLabel || ''}
           linodeRegion={this.state.attachmentDrawer.linodeRegion || ''}
-          onClose={() => { this.setState({ attachmentDrawer: { open: false } }); }}
+          onClose={this.handleCloseAttachDrawer}
         />
         <DestructiveVolumeDialog
           open={this.state.destructiveDialog.open}
           mode={this.state.destructiveDialog.mode}
-          onClose={() => this.closeDestructiveDialog()}
-          onDetach={() => this.detachVolume()}
-          onDelete={() => this.deleteVolume()}
+          onClose={this.closeDestructiveDialog}
+          onDetach={this.detachVolume}
+          onDelete={this.deleteVolume}
         />
       </React.Fragment>
     );
@@ -333,7 +334,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       const linodeLabel = volume.linode_id ? linodeLabels[volume.linode_id] : '';
       const linodeStatus = volume.linode_id ? linodeStatuses[volume.linode_id] : '';
       const size = pathOr('', ['size'], volume);
-      const filesystem_path = pathOr(
+      const filesystemPath = pathOr(
         /** @todo Remove path default when API releases filesystem_path. */
         `/dev/disk/by-id/scsi-0Linode_Volume_${label}`,
         ['filesystem_path'],
@@ -354,14 +355,14 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
         : (
           <TableRow key={volume.id} data-qa-volume-cell={volume.id} className="fade-in-table">
             <TableCell data-qa-volume-cell-label>{volume.label}</TableCell>
-            <TableCell data-qa-volume-cell-attachment>
+            <TableCell data-qa-volume-cell-attachment={linodeLabel}>
               {linodeLabel &&
                 <Link to={`/linodes/${volume.linode_id}`}>
                   {linodeLabel}
                 </Link>
               }</TableCell>
             <TableCell data-qa-volume-size>{size} GB</TableCell>
-            <TableCell data-qa-fs-path>{filesystem_path}</TableCell>
+            <TableCell data-qa-fs-path>{filesystemPath}</TableCell>
             <TableCell data-qa-volume-region>{region}</TableCell>
             <TableCell>
               <VolumesActionMenu
@@ -369,7 +370,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
                   this.setState({
                     configDrawer: {
                       open: true,
-                      volumePath: filesystem_path,
+                      volumePath: filesystemPath,
                       volumeLabel: label,
                     },
                   });

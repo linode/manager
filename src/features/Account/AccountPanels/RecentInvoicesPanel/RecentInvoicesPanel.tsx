@@ -7,11 +7,11 @@ import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import PaginationFooter, { PaginationProps } from 'src/components/PaginationFooter';
+import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
@@ -23,15 +23,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
 });
 
-interface Props { }
-
 interface State extends PaginationProps {
   errors?: Linode.ApiFieldError[];
   loading: boolean;
   data?: Linode.Invoice[],
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = WithStyles<ClassNames>;
 
 class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
   state: State = {
@@ -142,7 +140,7 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
 
   renderRow = (item: Linode.Invoice) => {
     return (
-      <TableRow key={`invoice-${item.id}`}>
+      <TableRow key={`invoice-${item.id}`} rowLink={`billing/invoices/${item.id}`}>
         <TableCell><DateTimeDisplay value={item.date}/></TableCell>
         <TableCell><Link to={`billing/invoices/${item.id}`}>Invoice #{item.id}</Link></TableCell>
         <TableCell>${item.total}</TableCell>

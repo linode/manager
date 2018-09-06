@@ -7,7 +7,6 @@ import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
@@ -23,6 +22,7 @@ import Grid from 'src/components/Grid';
 import PaginationFooter, { PaginationProps } from 'src/components/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
+import TableRow from 'src/components/TableRow';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { deleteDomain, getDomains } from 'src/services/domains';
 import scrollToTop from 'src/utilities/scrollToTop';
@@ -49,8 +49,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props { }
-
 interface State extends PaginationProps {
   domains: Linode.Domain[];
   loading: boolean;
@@ -75,7 +73,7 @@ interface State extends PaginationProps {
   };
 }
 
-type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
+type CombinedProps = WithStyles<ClassNames> & RouteComponentProps<{}>;
 
 class DomainsLanding extends React.Component<CombinedProps, State> {
   state: State = {
@@ -173,18 +171,21 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
   });
 
   openCreateDrawer = () => {
+    if (!this.mounted) { return; }
     this.setState({
       createDrawer: { open: true, mode: 'create' },
     });
   }
 
   openCloneDrawer = (domain: string, id: number) => {
+    if (!this.mounted) { return; }
     this.setState({
       createDrawer: { open: true, mode: 'clone', domain, cloneID: id },
     });
   }
 
   closeCreateDrawer = () => {
+    if (!this.mounted) { return; }
     this.setState({
       createDrawer: { open: false, mode: 'create' },
     });
@@ -384,6 +385,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
           key={domain.id}
           data-qa-domain-cell={domain.id}
           className={`${classes.domainRow} ${'fade-in-table'}`}
+          rowLink={`/domains/${domain.id}`}
         >
           <TableCell data-qa-domain-label>
             <Link to={`/domains/${domain.id}`}>

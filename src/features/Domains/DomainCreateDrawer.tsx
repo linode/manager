@@ -58,6 +58,7 @@ const masterIPsCountLens = lensPath(['masterIPsCount']);
 const updateMasterIPsCount = (fn: (s: any) => any) => (obj: any) => over(masterIPsCountLens, fn, obj);
 
 class DomainCreateDrawer extends React.Component<CombinedProps, State> {
+  mounted: boolean = false;
   defaultState: State = {
     domain: '',
     type: 'master',
@@ -72,6 +73,14 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
   state: State = {
     ...this.defaultState,
   };
+
+  componentDidMount() {
+    this.mounted = true;
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
+  }
 
   componentDidUpdate(prevProps: Props, prevState: State) {
     if (this.props.mode === 'clone' &&
@@ -195,7 +204,9 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
     soa_email: 'SOA Email',
   };
 
-  reset = () => this.setState({ ...this.defaultState });
+  reset = () => {
+    if (this.mounted) { this.setState({ ...this.defaultState }); }
+  }
 
   create = () => {
     const { onClose, onSuccess } = this.props;
@@ -223,11 +234,13 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
     this.setState({ submitting: true });
     createDomain(data)
       .then((res) => {
+        if (!this.mounted) { return; }
         this.reset();
         onSuccess(res.data);
         onClose();
       })
       .catch((err) => {
+        if (!this.mounted) { return; }
         this.setState({
           submitting: false,
           errors: pathOr([], ['response', 'data', 'errors'], err),
@@ -250,11 +263,13 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
     this.setState({ submitting: true });
     cloneDomain(cloneID, cloneName)
       .then((res) => {
+        if (!this.mounted) { return; }
         this.reset();
-        onSuccess()
+        onSuccess(res.data)
         onClose();
       })
       .catch((err) => {
+        if (!this.mounted) { return; }
         this.setState({
           submitting: false,
           errors: pathOr([], ['response', 'data', 'errors'], err),

@@ -850,7 +850,7 @@ A new visual design has begun!
 
 ## [0.9.3] 2017-06-16
 ### Fixed
-- dont crash on no nodebalancer ipv6
+- don't crash on no nodebalancer ipv6
 
 ## [0.9.2] 2017-06-16
 ### Fixed

@@ -28,7 +28,9 @@ import { newLinodeEvents } from 'src/features/linodes/events';
 import notifications$ from 'src/notifications';
 import { getImages } from 'src/services/images';
 import { getLinode, getLinodes } from 'src/services/linodes';
+
 import scrollToTop from 'src/utilities/scrollToTop';
+import { views } from 'src/utilities/storage';
 
 import LinodesGridView from './LinodesGridView';
 import LinodesListView from './LinodesListView';
@@ -44,8 +46,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     marginbottom: theme.spacing.unit * 2,
   },
 });
-
-interface Props { }
 
 interface PreloadedProps {
   linodes: PromiseLoaderResponse<Linode.ResourcePage<Linode.EnhancedLinode>>;
@@ -74,7 +74,7 @@ interface State {
   selectedLinodeLabel: string;
 }
 
-const preloaded = PromiseLoader<Props>({
+const preloaded = PromiseLoader<{}>({
   linodes: () => getLinodes({ page_size: 25 }),
 
   images: () => getImages(),
@@ -86,8 +86,7 @@ interface TypesContextProps {
   typesLastUpdated: number;
 }
 
-type CombinedProps = Props
-  & TypesContextProps
+type CombinedProps = TypesContextProps
   & PreloadedProps
   & RouteComponentProps<{}>
   & WithStyles<ClassNames>
@@ -127,16 +126,14 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     {
       title: 'Getting Started with Linode',
       src: 'https://linode.com/docs/getting-started/',
-      body: `Thank you for choosing Linode as your cloud hosting provider! This guide will help you
-      sign up for an account, set up a Linux distribution, boot your Linode, and perform some basic
-      system administr...`,
+      body: `This guide will help you set up your first Linode.`,
     },
     {
       title: 'How to Secure your Server',
       src: 'https://linode.com/docs/security/securing-your-server/',
-      body: `Keeping your software up to date is the single biggest security precaution you can
-      take for any operating system. Software updates range from critical vulnerability patches to
-      minor bug fixes, and...`,
+      body: `This guide covers basic best practices for securing a production server,
+      including setting up user accounts, configuring a firewall, securing SSH,
+      and disabling unused network services.`,
     },
 
   ];
@@ -224,38 +221,14 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     });
   }
 
-  changeViewStyle = (style: string) => {
+  changeViewStyle = (style: 'grid' | 'list') => {
     const { history } = this.props;
     history.push(`#${style}`);
-    localStorage.setItem('linodesViewStyle', style);
-  }
-
-  renderListView = (
-    linodes: Linode.Linode[],
-    images: Linode.Image[],
-  ) => {
-    return (
-      <LinodesListView
-        linodes={linodes}
-        images={images}
-        openConfigDrawer={this.openConfigDrawer}
-        toggleConfirmation={this.toggleDialog}
-      />
-    );
-  }
-
-  renderGridView = (
-    linodes: Linode.Linode[],
-    images: Linode.Image[],
-  ) => {
-    return (
-      <LinodesGridView
-        linodes={linodes}
-        images={images}
-        openConfigDrawer={this.openConfigDrawer}
-        toggleConfirmation={this.toggleDialog}
-      />
-    );
+    if (style === 'grid') {
+      views.linode.set('grid');
+    } else {
+      views.linode.set('list');
+    }
   }
 
   getLinodes = (page = 1, pageSize = 25) => {
@@ -322,6 +295,34 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       powerOffLinode(selectedLinodeId!, selectedLinodeLabel);
     }
     this.setState({ powerAlertOpen: false });
+  }
+
+  renderListView = (
+    linodes: Linode.Linode[],
+    images: Linode.Image[],
+  ) => {
+    return (
+      <LinodesListView
+        linodes={linodes}
+        images={images}
+        openConfigDrawer={this.openConfigDrawer}
+        toggleConfirmation={this.toggleDialog}
+      />
+    );
+  }
+
+  renderGridView = (
+    linodes: Linode.Linode[],
+    images: Linode.Image[],
+  ) => {
+    return (
+      <LinodesGridView
+        linodes={linodes}
+        images={images}
+        openConfigDrawer={this.openConfigDrawer}
+        toggleConfirmation={this.toggleDialog}
+      />
+    );
   }
 
   render() {
@@ -414,9 +415,12 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           actions={this.renderConfirmationActions}
           open={powerAlertOpen}
         >
-          {bootOption === 'reboot'
-            ? 'Are you sure you want to reboot your Linode'
-            : 'Are you sure you want to power down your Linode'}
+          <Typography>
+            {bootOption === 'reboot'
+              ? 'Are you sure you want to reboot your Linode'
+              : 'Are you sure you want to power down your Linode'
+            }
+          </Typography>
         </ConfirmationDialog>
       </Grid>
     );
@@ -434,7 +438,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           Cancel
         </Button>
         <Button
-          type="secondary"
+          type="primary"
           onClick={this.rebootOrPowerLinode}
           data-qa-confirm-cancel
         >
@@ -459,14 +463,16 @@ const addNotificationToLinode = (notifications: Linode.Notification[]) => (linod
 });
 
 const getDisplayFormat = ({ hash, length }: { hash?: string, length: number }): 'grid' | 'list' => {
-  const local = localStorage.getItem('linodesViewStyle');
 
   if (hash) {
     return hash === '#grid' ? 'grid' : 'list';
   }
 
-  if (local) {
-    return local as 'grid' | 'list';
+  /*
+  * If local stroage exists, set the view based on that
+  */
+  if (views.linode.get() !== null) {
+    return views.linode.get();
   }
 
   return (length >= 3) ? 'list' : 'grid';

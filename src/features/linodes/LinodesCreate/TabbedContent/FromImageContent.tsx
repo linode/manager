@@ -1,9 +1,10 @@
-import { pathOr } from 'ramda';
+import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
+import AccessPanel, { UserSSHKeyObject } from 'src/components/AccessPanel';
 import CheckoutBar from 'src/components/CheckoutBar';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
@@ -11,12 +12,13 @@ import Notice from 'src/components/Notice';
 import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
 import { resetEventsPolling } from 'src/events';
 import { Info } from 'src/features/linodes/LinodesCreate/LinodesCreate';
+import userSSHKeyHoc from 'src/features/linodes/userSSHKeyHoc';
 import { allocatePrivateIP, createLinode } from 'src/services/linodes';
+
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import AddonsPanel from '../AddonsPanel';
-import PasswordPanel from '../PasswordPanel';
 import SelectImagePanel from '../SelectImagePanel';
 import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
 
@@ -47,6 +49,9 @@ interface Props {
   getTypeInfo: (selectedTypeID: string | null) => TypeInfo;
   getRegionInfo: (selectedRegionID: string | null) => Info;
   history: any;
+
+  /** Comes from HOC */
+  userSSHKeys: UserSSHKeyObject[];
 }
 
 interface State {
@@ -130,7 +135,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
   }
 
   createNewLinode = () => {
-    const { history } = this.props;
+    const { history, userSSHKeys } = this.props;
     const {
       selectedImageID,
       selectedRegionID,
@@ -151,6 +156,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
       image: selectedImageID, /* optional */
       backups_enabled: backups, /* optional */
       booted: true,
+      authorized_users: userSSHKeys.filter(u => u.selected).map((u) => u.username),
     })
       .then((linode) => {
         if (privateIP) { allocatePrivateIP(linode.id); }
@@ -186,7 +192,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
       selectedRegionID, selectedTypeID, password, isMakingRequest, initTab } = this.state;
 
     const { classes, notice, types, regions, images, getBackupsMonthlyPrice,
-      getRegionInfo, getTypeInfo } = this.props;
+      getRegionInfo, getTypeInfo, userSSHKeys } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
@@ -243,11 +249,12 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
             }}
             updateFor={[label, errors]}
           />
-          <PasswordPanel
+          <AccessPanel
             error={hasErrorFor('root_pass')}
             password={password}
             handleChange={this.handleTypePassword}
-            updateFor={[password, errors]}
+            updateFor={[password, errors, userSSHKeys, selectedImageID]}
+            users={userSSHKeys.length > 0 && selectedImageID ? userSSHKeys : []}
           />
           <AddonsPanel
             backups={backups}
@@ -314,4 +321,6 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(FromImageContent);
+const enhanced = compose(styled, userSSHKeyHoc);
+
+export default enhanced(FromImageContent) as any;

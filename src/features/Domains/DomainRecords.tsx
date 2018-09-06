@@ -439,28 +439,27 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <DocumentTitleSegment segment={`${domain.domain} - DNS Records`} />
         {
-          this.state.types.map((type, idx) => {
+          this.state.types.map((type, eachTypeIdx) => {
             return (
               <ExpansionPanel
-                key={idx}
+                key={eachTypeIdx}
                 heading={type.title}
-                defaultExpanded
               >
                 <Grid
                   container
                   justify="space-between"
                   alignItems="flex-end"
                 >
-                  <Grid item></Grid>
+                  <Grid item />
                   <Grid item>{type.link && type.link()}</Grid>
                 </Grid>
                 <Paper>
                   <Table arial-label="List of Domains MX Records">
                     <TableHead>
                       <TableRow>
-                        {type.columns.length > 0 && type.columns.map((col, idx) => {
+                        {type.columns.length > 0 && type.columns.map((col, columnIndex) => {
                           return (
-                            <TableCell key={idx}>{col.title}</TableCell>
+                            <TableCell key={columnIndex}>{col.title}</TableCell>
                           );
                         })}
                       </TableRow>
@@ -471,10 +470,10 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                           return (
                             <TableRow key={idx} data-qa-record-row>
                               {type.columns.length > 0
-                                && type.columns.map(({ title, render }, idx) => {
+                                && type.columns.map(({ title, render }, columnIndex) => {
                                   return (
                                     <TableCell
-                                      key={idx}
+                                      key={columnIndex}
                                       data-qa-column={title}
                                     >
                                       {render(data)}

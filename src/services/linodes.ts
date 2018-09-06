@@ -128,11 +128,11 @@ export const allocatePublicIP = (linodeID: number) =>
     setData({ type: 'ipv4', public: true }),
   ).then(response => response.data);
 
-export const rebuildLinode = (id: number, image: string, password: string) =>
+export const rebuildLinode = (id: number, image: string, password: string, users: string[] = []) =>
   Request<{}>(
     setURL(`${API_ROOT}/linode/instances/${id}/rebuild`),
     setMethod('POST'),
-    setData({ image, root_pass: password }),
+    setData({ image, root_pass: password, authorized_users: users }),
   ).then(response => response.data);
 
 export const resizeLinode = (id: number, type: string) =>
@@ -159,7 +159,7 @@ export const getLinodesPage = (page: number) =>
   )
     .then(response => response.data);
 
-/**@todo isnt this a Partial<Linode>? */
+/** @todo isnt this a Partial<Linode>? */
 export const createLinode = (data: any) =>
   Request<Linode>(
     setURL(`${API_ROOT}/linode/instances`),
@@ -180,6 +180,13 @@ export const getLinodeTypes = () =>
   Request<Page<Type>>(
     setURL(`${API_ROOT}/linode/types`),
     setMethod('GET'),
+  )
+    .then(response => response.data);
+
+export const getDeprecatedLinodeTypes = () =>
+  Request<Page<Type>>(
+    setURL(`${API_ROOT}/linode/types-legacy`),
+    setMethod('GET')
   )
     .then(response => response.data);
 
@@ -233,7 +240,7 @@ export const deleteLinode = (linodeId: number) =>
     setMethod('DELETE'),
   );
 
-/**@todo type */
+/** @todo type */
 export const restoreBackup = (
   linodeID: number,
   backupID: number,
@@ -357,11 +364,19 @@ export interface LinodeCloneData {
   backups_enabled?: boolean | null;
 }
 
-export const cloneLinode = (source_linode_id: number, data: LinodeCloneData) => {
+export const cloneLinode = (sourceLinodeId: number, data: LinodeCloneData) => {
   return Request<Linode>(
-    setURL(`${API_ROOT}/linode/instances/${source_linode_id}/clone`),
+    setURL(`${API_ROOT}/linode/instances/${sourceLinodeId}/clone`),
     setMethod('POST'),
     setData(data),
   )
     .then(response => response.data);
 };
+
+export const startMutation = (linodeID: number) => {
+  return Request<{}>(
+    setURL(`${API_ROOT}/linode/instances/${linodeID}/mutate`),
+    setMethod('POST'),
+  )
+    .then(response => response.data)
+}

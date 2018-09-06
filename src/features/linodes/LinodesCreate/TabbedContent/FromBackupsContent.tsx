@@ -15,6 +15,7 @@ import Placeholder from 'src/components/Placeholder';
 import { resetEventsPolling } from 'src/events';
 import { Info } from 'src/features/linodes/LinodesCreate/LinodesCreate';
 import { allocatePrivateIP, createLinode, getLinodeBackups } from 'src/services/linodes';
+
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -216,7 +217,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       booted: true,
     })
       .then((linode) => {
-        if (privateIP) allocatePrivateIP(linode.id);
+        if (privateIP) { allocatePrivateIP(linode.id) };
         resetEventsPolling();
         history.push('/linodes');
       })

@@ -310,3 +310,35 @@ exports.removeImage = (token, id) => {
         });
     });
 }
+
+exports.getPublicKeys = token => {
+    return browser.call(function() {
+        return new Promise((resolve, reject) => {
+            const endpoint = '/profile/sshkeys';
+
+            return getAxiosInstance(token)
+                .get(endpoint)
+                .then(response => resolve(response.data))
+                .catch(error => {
+                    console.error("Error", error);
+                    reject(error);
+                });
+        });
+    });
+}
+
+exports.removePublicKey = (token, id) => {
+    return browser.call(function() {
+        return new Promise((resolve, reject) => {
+            const endpoint = `/profile/sshkeys/${id}`;
+
+            return getAxiosInstance(token)
+                .delete(endpoint)
+                .then(response => resolve(response.data))
+                .catch(error => {
+                    console.error('Error', error);
+                    reject(error);
+                });
+        });
+    })
+}

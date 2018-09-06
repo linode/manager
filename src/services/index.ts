@@ -67,11 +67,11 @@ export const validateRequestData = (data: any, schema: Schema) =>
 
     return error
       ? set(L.validationErrors, error.details.map((detail) => {
-        const path = detail.path.join('_');
+        const pathData = detail.path.join('_');
         const type = detail.type.replace('.', '_');
         return {
-          field: path,
-          reason: getErrorReason(`${path}_${type}`),
+          field: pathData,
+          reason: getErrorReason(`${pathData}_${type}`),
         };
       }), config)
       : config;

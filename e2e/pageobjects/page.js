@@ -63,10 +63,20 @@ export default class Page {
         browser.waitForVisible(`[data-value="${selectOption}"]`, constants.wait.normal, true);
     }
 
+    expandPanel(title) {
+        $(`[data-qa-panel-summary="${title}"]`).waitForVisible(constants.wait.normal);
+        $(`[data-qa-panel-summary="${title}"]`).click();
+
+        browser.waitUntil(function() {
+            return $(`[data-qa-panel-summary="${title}"]`)
+                .getAttribute('aria-expanded').includes('true');
+        }, constants.wait.normal, 'Panel failed to expand');
+    }
+
     expandPanels(numberOfPanels) {
         browser.waitUntil(function() {
             return $$('[data-qa-panel-summary]').length === numberOfPanels
-        }, constants.wait.normal);
+        }, constants.wait.normal, 'Number of expected panels failed to display');
         
         this.panels.forEach(panel => {
             panel.click();
@@ -95,7 +105,7 @@ export default class Page {
             }
 
             return noticeMsgDisplays.length > 0;
-        }, timeout, `${noticeMsg} failed to display`);
+        }, timeout, `${noticeMsg} failed to display after ${timeout}ms`);
     }
 
     assertDocsDisplay() {

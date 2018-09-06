@@ -39,7 +39,13 @@ Axios.interceptors.response.use(
       expire();
     }
 
-    if (response && response.status && ![401, 404].includes(response.status)) {
+    if (
+      response &&
+      response.status &&
+      ![401, 404].includes(response.status) &&
+      /** Don't report failed stats requests. */
+      response.config.url && !response.config.url.includes('/stats')
+    ) {
       reportException(error, { response, request });
     }
 

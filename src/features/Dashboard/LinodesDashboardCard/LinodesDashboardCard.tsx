@@ -9,10 +9,10 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 
 import Grid from 'src/components/Grid';
+import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
@@ -27,12 +27,17 @@ import DashboardCard from '../DashboardCard';
 
 type ClassNames =
   'root'
+  | 'linodeWrapper'
   | 'labelCol'
   | 'moreCol'
   | 'actionsCol';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
+  linodeWrapper: {
+    display: 'inline-flex',
+    width: 'auto',
+  },
   labelCol: {
     width: '60%',
   },
@@ -43,8 +48,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     width: '10%',
   },
 });
-
-interface Props { }
 
 interface ConnectedProps {
   types: Linode.LinodeType[]
@@ -62,7 +65,7 @@ interface State {
   results?: number;
 }
 
-type CombinedProps = Props & ConnectedProps & TypesContext & WithStyles<ClassNames>;
+type CombinedProps = ConnectedProps & TypesContext & WithStyles<ClassNames>;
 
 class LinodesDashboardCard extends React.Component<CombinedProps, State> {
   state: State = {
@@ -80,7 +83,7 @@ class LinodesDashboardCard extends React.Component<CombinedProps, State> {
       this.setState({ loading: true });
     }
 
-    getLinodes({ page_size: 25 }, { '+order_by': 'updated', '+order': 'desc' })
+    getLinodes({ page_size: 25 }, { '+order_by': 'label', '+order': 'asc' })
       .then(({ data, results }) => {
         if (!this.mounted) { return; }
         this.setState({
@@ -160,32 +163,32 @@ class LinodesDashboardCard extends React.Component<CombinedProps, State> {
     const { classes, typesData } = this.props;
 
     return data.map(({ id, label, region, status, type }) => (
-      <TableRow key={label}>
+      <TableRow key={label} rowLink={`/linodes/${id}`} data-qa-linode>
         <TableCell className={classes.labelCol}>
-          <Grid container wrap="nowrap">
-            <Grid item>
-              <LinodeStatusIndicator status={status} />
-            </Grid>
-            <Grid item>
-              <Grid container direction="column" spacing={8}>
-                <Grid item className="py0">
-                  <Typography variant="subheading">
-                    <Link to={`/linodes/${id}`} className="black">
+          <Link to={`/linodes/${id}`} className="black nu">
+            <Grid container wrap="nowrap" className={classes.linodeWrapper}>
+              <Grid item>
+                <LinodeStatusIndicator status={status} />
+              </Grid>
+              <Grid item>
+                <Grid container direction="column" spacing={8}>
+                  <Grid item className="py0">
+                    <Typography variant="subheading">
                       {label}
-                    </Link>
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Typography variant="caption">
-                    { typesData && displayType(type, typesData || []) }
-                  </Typography>
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="caption" data-qa-linode-plan>
+                      { typesData && displayType(type, typesData || []) }
+                    </Typography>
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
-          </Grid>
+          </Link>
         </TableCell>
         <Hidden xsDown>
-          <TableCell className={classes.moreCol}>
+          <TableCell className={classes.moreCol} data-qa-linode-region>
             <RegionIndicator region={region} />
           </TableCell>
         </Hidden>
