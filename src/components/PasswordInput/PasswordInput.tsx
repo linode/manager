@@ -17,7 +17,7 @@ interface Props extends TextFieldProps {
 }
 
 interface State {
-  strength: null | 0 | 1 | 2 | 3 | 4;
+  strength: null | 0 | 1 | 2 | 3;
 }
 
 type ClassNames = 'container' | 'strengthIndicator';
@@ -85,9 +85,19 @@ class PasswordInput extends React.Component<CombinedProps, State> {
   }
 }
 
-const maybeStrength = (value?: string) =>
-  !value || isEmpty(value)
-    ? null
-    : zxcvbn(value).score;
+
+
+const maybeStrength = (value?: string) => {
+  if (!value || isEmpty(value)) {
+    return null
+  }
+  else {
+    const score = zxcvbn(value).score;
+    if(score === 4){
+      return 3;
+    }
+    return score;
+  }
+}
 
 export default withStyles(styles, { withTheme: true })<Props>(PasswordInput);
