@@ -5,14 +5,14 @@ import documentation, { defaultState as documentationState } from './reducers/do
 import resources, { defaultState as resourcesState } from './reducers/resources';
 import volumeDrawer, { defaultState as volumeDrawerState } from './reducers/volumeDrawer';
 
-const defaultState: Linode.AppState = {
+const defaultState: ApplicationState = {
   authentication: authenticationState,
   resources: resourcesState,
   documentation: documentationState,
   volumeDrawer: volumeDrawerState,
 };
 
-export default createStore<Linode.AppState>(
+export default createStore<ApplicationState>(
   combineReducers({
     authentication,
     documentation,

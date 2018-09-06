@@ -96,7 +96,7 @@ class Referrals extends React.Component<CombinedProps, {}> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const connected = connect((state: Linode.AppState) => {
+const connected = connect((state: ApplicationState) => {
   const {
     loading: profileLoading,
     data: { referrals },

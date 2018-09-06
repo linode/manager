@@ -92,7 +92,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators({
   response: (p: Linode.Profile) => response(['profile'], p),
 }, dispatch);
 
-const mapStateToProps = (state: Linode.AppState) => {
+const mapStateToProps = (state: ApplicationState) => {
   return ({
     status: state.resources.profile!.data.email_notifications,
   })

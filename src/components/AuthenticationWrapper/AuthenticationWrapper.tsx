@@ -62,14 +62,14 @@ export class AuthenticationWrapper extends React.Component<Props> {
   }
 }
 
-const mapDispatchToProps = (state: Linode.AppState, ownProps: Props) => ({
+const mapDispatchToProps = (state: ApplicationState, ownProps: Props) => ({
   loginRedirect() {
     const { location: { pathname: path, search: querystring } } = ownProps;
     redirectToLogin(path, querystring);
   },
 });
 
-const mapStateToProps = (state: Linode.AppState) => ({
+const mapStateToProps = (state: ApplicationState) => ({
   isAuthenticated: Boolean(state.authentication.token),
 });
 

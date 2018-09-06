@@ -428,7 +428,7 @@ const requestAndMapGravatar = (acc: any, id: string) => {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const mapStateToProps = (state: Linode.AppState) => ({
+const mapStateToProps = (state: ApplicationState) => ({
   profileUsername: pathOr('', ['resources', 'profile', 'data', 'username'], state),
 });
 

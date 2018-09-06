@@ -15,9 +15,9 @@ describe('oneOfType', () => {
 describe('ResourcesReducer', () => {
   const data = { key: 'value' };
   const err = new Error();
-  let result: Linode.ResourcesState;
+  let result: any;
 
-  const resources: Linode.ResourcesState = {
+  const resources: any = {
     profile: {
       loading: false,
       data: {

@@ -119,7 +119,7 @@ const LinodeNetworkingSummaryPanel: React.StatelessComponent<CombinedProps> = (p
 
 const restyled = withStyles(styles, { withTheme: true });
 
-const connected = connect((state: Linode.AppState) => ({
+const connected = connect((state: ApplicationState) => ({
   username: path(['resources', 'profile', 'data', 'username'], state),
 }));
 

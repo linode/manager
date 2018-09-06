@@ -32,7 +32,7 @@ export const oneOfType = (action: { type: string }, list: string[]): action is A
   return false;
 }
 
-export const defaultState: Linode.ResourcesState = {
+export const defaultState: ResourcesState = {
   profile: {
     loading: false, data: {
       uid: 1,
@@ -58,9 +58,9 @@ export const defaultState: Linode.ResourcesState = {
 }
 
 export default (
-  state: Linode.ResourcesState = defaultState,
+  state: ResourcesState = defaultState,
   action: Actions | Action,
-): Linode.ResourcesState => when(
+): ResourcesState => when(
   () => oneOfType(action, [REQUEST, RESPONSE]),
   /* tslint:disable-next-line */
   (state) => {

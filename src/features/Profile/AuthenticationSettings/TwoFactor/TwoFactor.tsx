@@ -338,7 +338,7 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const connected = connect((state: Linode.AppState) => ({
+const connected = connect((state: ApplicationState) => ({
   profile: state.resources.profile,
 }));
 

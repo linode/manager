@@ -298,7 +298,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
   dispatch,
 );
 
-const mapStateToProps = (state: Linode.AppState) => ({
+const mapStateToProps = (state: ApplicationState) => ({
   profileUsername: pathOr('', ['resources', 'profile', 'data', 'username'], state),
 });
 

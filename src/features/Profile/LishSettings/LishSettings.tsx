@@ -258,7 +258,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const mapStateToProps = (state: Linode.AppState) => {
+const mapStateToProps = (state: ApplicationState) => {
   const { loading, data } = state.resources.profile!;
 
   if (loading) {

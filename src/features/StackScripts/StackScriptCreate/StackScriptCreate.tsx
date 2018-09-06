@@ -354,7 +354,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
   }
 }
 
-const mapStateToProps = (state: Linode.AppState) => ({
+const mapStateToProps = (state: ApplicationState) => ({
   profile: pathOr({}, ['resources', 'profile', 'data'], state),
 });
 

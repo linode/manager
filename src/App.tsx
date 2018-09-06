@@ -397,7 +397,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
   dispatch,
 );
 
-const mapStateToProps = (state: Linode.AppState) => ({
+const mapStateToProps = (state: ApplicationState) => ({
   longLivedLoaded: Boolean(pathOr(false, ['resources', 'profile', 'data'], state)),
   userId: pathOr(null,['resources', 'profile', 'data', 'uid'], state),
   documentation: state.documentation,

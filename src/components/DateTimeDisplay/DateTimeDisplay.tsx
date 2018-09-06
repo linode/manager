@@ -39,7 +39,7 @@ const DateTimeDisplay: React.StatelessComponent<CombinedProps> = (props) => {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const connected = connect<ConnectedProps>((state: Linode.AppState) => ({
+const connected = connect<ConnectedProps>((state: ApplicationState) => ({
   timezone: pathOr('GMT', ['resources', 'profile', 'data', 'timezone'], state),
 }));
 
