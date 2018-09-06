@@ -17,7 +17,7 @@ import { DocumentTitleSegment, withDocumentTitleProvider } from 'src/components/
 import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import SideMenu from 'src/components/SideMenu';
-import { isProduction } from 'src/constants';
+import { isProduction, isTest } from 'src/constants';
 import { RegionsProvider, WithRegionsContext } from 'src/context/regions';
 import { TypesProvider, WithTypesContext } from 'src/context/types';
 import Footer from 'src/features/Footer';
@@ -279,6 +279,10 @@ export class App extends React.Component<CombinedProps, State> {
     * done this, initialize the survey. Also, shouldn't
     * load the survey in development.
     * */
+    if (isTest) {
+      // Temporary hack until we implement NODE_ENV=test
+      return;
+    }
     if (userId && userId !== 1 && !this.surveyed && isProduction) {
       /* Initialize Survicate
       * Done here rather than in index.tsx so that
