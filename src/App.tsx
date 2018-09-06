@@ -1,16 +1,15 @@
 import { shim } from 'promise.prototype.finally';
 import { lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
-import { connect, Dispatch } from 'react-redux';
+import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { bindActionCreators, compose } from 'redux'
-
-import { Sticky, StickyContainer, StickyProps } from 'react-sticky';;
-
+import { Sticky, StickyContainer, StickyProps } from 'react-sticky';
+import { bindActionCreators, compose } from 'redux';
 import 'typeface-lato';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
+import BetaNotification from 'src/BetaNotification';
 import DefaultLoader from 'src/components/DefaultLoader';
 import DocsSidebar from 'src/components/DocsSidebar';
 import { DocumentTitleSegment, withDocumentTitleProvider } from 'src/components/DocumentTitle';
@@ -28,11 +27,8 @@ import { getRegions } from 'src/services/misc';
 import { getProfile } from 'src/services/profile';
 import { request, response } from 'src/store/reducers/resources';
 import initSurvicate from 'src/survicate';
-
 import composeState from 'src/utilities/composeState';
 import { notifications, theme as themeStorage } from 'src/utilities/storage';
-
-import BetaNotification from 'src/BetaNotification';
 
 shim(); // allows for .finally() usage
 
@@ -154,14 +150,6 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
 
 interface Props {
   toggleTheme: () => void;
-  longLivedLoaded: boolean;
-  userId: number | null;
-}
-
-interface ConnectedProps {
-  dispatchRequest: typeof request;
-  dispatchResponse: typeof response;
-  documentation: Linode.Doc[];
 }
 
 interface State {
@@ -171,10 +159,7 @@ interface State {
   regionsContext: WithRegionsContext;
 }
 
-type CombinedProps =
-  Props &
-  WithStyles<ClassNames> &
-  ConnectedProps;
+type CombinedProps = Props & DispatchProps & StateProps & WithStyles<ClassNames>;
 
 const typesContext = (path: string[]) => lensPath(['typesContext', ...path]);
 const regionsContext = (path: string[]) => lensPath(['regionsContext', ...path]);
@@ -278,10 +263,10 @@ export class App extends React.Component<CombinedProps, State> {
       /* Initialize Survicate
       * Done here rather than in index.tsx so that
       * we have access to the logged in user's ID
-      */ 
+      */
       initSurvicate(window, userId);
       this.surveyed = true;
-    } 
+    }
   }
 
   closeMenu = () => { this.setState({ menuOpen: false }); }
@@ -314,7 +299,7 @@ export class App extends React.Component<CombinedProps, State> {
                 <div {...themeDataAttr()} className={classes.appFrame}>
                   <SideMenu open={menuOpen} closeMenu={this.closeMenu} toggleTheme={toggleTheme} />
                   <main className={classes.content}>
-                    <TopMenu openSideMenu={this.openMenu} />                  
+                    <TopMenu openSideMenu={this.openMenu} />
                     <div className={classes.wrapper} id="main-content">
                     <StickyContainer>
                       <Grid container spacing={0} className={classes.grid}>
@@ -359,7 +344,7 @@ export class App extends React.Component<CombinedProps, State> {
                       </Grid>
                       </StickyContainer>
                     </div>
-                    
+
                   </main>
                   <Footer />
                   <BetaNotification
@@ -389,7 +374,12 @@ const themeDataAttr = () => {
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
+interface DispatchProps {
+  dispatchRequest: typeof request;
+  dispatchResponse: typeof response;
+}
+
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, ownProps) => bindActionCreators(
   {
     dispatchRequest: request,
     dispatchResponse: response,
@@ -397,7 +387,13 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
   dispatch,
 );
 
-const mapStateToProps = (state: ApplicationState) => ({
+interface StateProps {
+  documentation: Linode.Doc[];
+  longLivedLoaded: boolean;
+  userId: number | null;
+}
+
+const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state, ownProps) => ({
   longLivedLoaded: Boolean(pathOr(false, ['resources', 'profile', 'data'], state)),
   userId: pathOr(null,['resources', 'profile', 'data', 'uid'], state),
   documentation: state.documentation,
