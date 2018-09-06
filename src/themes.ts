@@ -291,7 +291,7 @@ export const dark = createTheme({
         },
       },
       focused: {
-        borderColor: '#606469',
+        borderColor: primaryColors.main,
       },
       disabled: {
         borderColor: '#606469',
@@ -317,7 +317,13 @@ export const dark = createTheme({
     MuiMenu: {
       paper: {
         '&.selectMenuDropdown': {
-          border: '1px solid #606469',
+          boxShadow: 'none',
+          position: 'absolute',
+          boxSizing: 'content-box',
+          border: `1px solid ${primaryColors.main}`,
+          margin: '0 0 0 -1px',
+          outline: 0,
+          borderRadius: 0,
         },
         '& .selectMenuList': {
           '& li': {
