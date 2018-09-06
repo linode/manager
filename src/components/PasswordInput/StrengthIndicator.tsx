@@ -3,19 +3,15 @@ import { isNil } from 'ramda';
 import * as React from 'react';
 
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
 import Grid from 'src/components/Grid';
 
 interface Props {
-  strength: null | 0 | 1 | 2 | 3 | 4;
+  strength: null | 0 | 1 | 2 | 3;
 }
 type ClassNames = 'root'
   | 'block'
-  | 'strength-0'
-  | 'strength-1'
-  | 'strength-2'
-  | 'strength-3'
-  | 'strength-4';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
@@ -28,12 +24,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     backgroundColor: '#C9CACB',
     height: '4px',
     transition: 'background-color .5s ease-in-out',
+    '&[class*="strength-"]' : { 
+      backgroundColor: theme.palette.primary.main,
+    },
   },
-  'strength-0' : { backgroundColor: '#BF332B !important' },
-  'strength-1' : { backgroundColor: '#BF332B !important' },
-  'strength-2' : { backgroundColor: '#BF332B !important' },
-  'strength-3' : { backgroundColor: '#4EAD62 !important' },
-  'strength-4' : { backgroundColor: '#4EAD62 !important' },
 });
 
 const styled = withStyles<ClassNames>(styles, { withTheme: true });
@@ -42,11 +36,18 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 const StrengthIndicator: React.StatelessComponent<CombinedProps> = (props) => {
   const { classes, strength } = props;
+  
   return (
-    <Grid container spacing={8} className={classes.root} data-qa-strength={strength}>
+    <Grid
+      container
+      alignItems="flex-end"
+      spacing={8}
+      className={classes.root}
+      data-qa-strength={strength}
+    >
       {
         Array
-          .from(Array(4), (v, idx) => idx + 1)
+          .from(Array(3), (v, idx) => idx + 1)
           .map(idx => (
             <Grid item
               key={idx}
@@ -54,11 +55,23 @@ const StrengthIndicator: React.StatelessComponent<CombinedProps> = (props) => {
             >
             <div className={classNames({
               [classes.block]: true,
-              [classes[`strength-${strength}`]]: !isNil(strength) && idx <= strength,
+              [`strength-${strength}`]: !isNil(strength) && idx <= strength,
             })} />
             </Grid>
           ))
       }
+       <Grid item xs={3} className="py0">
+        <Typography variant="caption" >
+          Strenght:
+          {strength
+            ?
+            strength === 1 && ' Weak' ||
+            strength === 2 && ' Fair' ||
+            strength === 3 && ' Good'
+            : ' None'
+          }
+        </Typography>
+      </Grid>
     </Grid>
   );
 };
