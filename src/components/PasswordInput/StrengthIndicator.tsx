@@ -12,6 +12,8 @@ interface Props {
 }
 type ClassNames = 'root'
   | 'block'
+  | 'strengthText'
+  | 'strengthLabel';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
@@ -27,6 +29,15 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     '&[class*="strength-"]' : { 
       backgroundColor: theme.palette.primary.main,
     },
+  },
+  strengthText: {
+    position: 'relative',
+    top: 3,
+  },
+  strengthLabel: {
+    [theme.breakpoints.down('xs')]: {
+      display: 'none',
+    }
   },
 });
 
@@ -61,14 +72,14 @@ const StrengthIndicator: React.StatelessComponent<CombinedProps> = (props) => {
           ))
       }
        <Grid item xs={3} className="py0">
-        <Typography variant="caption" >
-          Strenght:
+        <Typography variant="caption" className={classes.strengthText}>
+          <span className={classes.strengthLabel}>Strenght:</span>
           {strength
             ?
             strength === 1 && ' Weak' ||
             strength === 2 && ' Fair' ||
             strength === 3 && ' Good'
-            : ' None'
+            : ' Weak'
           }
         </Typography>
       </Grid>
