@@ -181,3 +181,11 @@ a.black:not(.nu):active {
 .fade-in-table {
   animation: fadeIn .3s ease-in-out;
 }
+
+.fade-exit-active {
+  animation: fadeIn .3s ease-in-out reverse;
+}
+
+.fade-enter-active {
+  animation: fadeIn .3s ease-in-out forwards;
+}
