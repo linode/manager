@@ -26,7 +26,9 @@ interface Props {
   edit?: boolean;
   onClose: () => void;
   onSubmit: () => void;
-  onChange: (key: string, value: string | boolean) => void;
+  onChangeLabel: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChangeRedirectURI: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChangePublic: () => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -40,7 +42,6 @@ const OAuthCreationDrawer: React.StatelessComponent<CombinedProps> = (props) => 
     edit,
     errors,
     onClose,
-    onChange,
     onSubmit,
   } = props;
 
@@ -57,14 +58,14 @@ const OAuthCreationDrawer: React.StatelessComponent<CombinedProps> = (props) => 
         value={label || ''}
         errorText={hasErrorFor('label')}
         label="Label"
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange('label', e.target.value)}
+        onChange={props.onChangeLabel}
         data-qa-add-label
       />
       <TextField
         value={redirect_uri || ''}
         label="Callback URL"
         errorText={hasErrorFor('redirect_uri')}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange('redirect_uri', e.target.value)}
+        onChange={props.onChangeRedirectURI}
         data-qa-callback
       />
       <FormControl>
@@ -72,7 +73,7 @@ const OAuthCreationDrawer: React.StatelessComponent<CombinedProps> = (props) => 
           label="Public"
           control={
             <CheckBox
-              onChange={() => onChange('public', !isPublic)}
+              onChange={props.onChangePublic}
               checked={isPublic}
               disabled={edit}
               data-qa-public
@@ -84,12 +85,12 @@ const OAuthCreationDrawer: React.StatelessComponent<CombinedProps> = (props) => 
         <Button
           variant="raised"
           color="primary"
-          onClick={() => onSubmit()}
+          onClick={onSubmit}
           data-qa-submit
           >Submit
         </Button>
         <Button
-          onClick={() => onClose()} data-qa-cancel
+          onClick={onClose} data-qa-cancel
           variant="raised"
           color="secondary"
           className="cancel"
