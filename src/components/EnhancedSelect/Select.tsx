@@ -11,7 +11,7 @@ import Menu from 'src/components/EnhancedSelect/SelectMenu';
 import Placeholder from 'src/components/EnhancedSelect/SelectPlaceholder';
 
 export interface Item {
-  value: string;
+  value: string | number;
   label: string;
   data?: any;
 }
