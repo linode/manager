@@ -1,9 +1,13 @@
-import { combineReducers, createStore } from 'redux';
+import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
+import thunk from 'redux-thunk';
 
 import authentication, { defaultState as authenticationState } from './reducers/authentication';
 import documentation, { defaultState as documentationState } from './reducers/documentation';
 import resources, { defaultState as resourcesState } from './reducers/resources';
 import volumeDrawer, { defaultState as volumeDrawerState } from './reducers/volumeDrawer';
+
+
+const reduxDevTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__;
 
 const defaultState: ApplicationState = {
   authentication: authenticationState,
@@ -12,13 +16,16 @@ const defaultState: ApplicationState = {
   volumeDrawer: volumeDrawerState,
 };
 
-export default createStore<ApplicationState>(
-  combineReducers({
-    authentication,
-    documentation,
-    resources,
-    volumeDrawer,
-  }),
-  defaultState,
-  (window as any).__REDUX_DEVTOOLS_EXTENSION__ && (window as any).__REDUX_DEVTOOLS_EXTENSION__(),
-);
+const reducers = combineReducers<ApplicationState>({
+  authentication,
+  documentation,
+  resources,
+  volumeDrawer,
+});
+
+const enhancers = compose(
+  applyMiddleware(thunk),
+  reduxDevTools ? reduxDevTools() : (f: any) => f,
+) as any;
+
+export default createStore<ApplicationState>(reducers, defaultState, enhancers);
