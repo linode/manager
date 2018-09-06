@@ -10,6 +10,8 @@ import { connect, Dispatch } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
 import 'rxjs/add/operator/filter';
 import { Subscription } from 'rxjs/Subscription';
+import { debounce } from 'throttle-debounce';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
@@ -359,11 +361,18 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
   }
 
   setSelectedLinode = (selected:Item) => {
-    if (this.mounted && selected) { 
+    if (!this.mounted) { return; } 
+    if (selected) { 
       this.setState({ 
         linodeId: Number(selected.value),
         value: selected,
       });
+    }
+    else {
+      this.setState({
+        linodeId: 0,
+        value: null
+      })
     }
   }
 
@@ -415,6 +424,25 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
 
       set(L.size, +e.target.value || ''),
     ]);
+  }
+
+  searchLinodes = (inputValue:string) => {
+    console.log('searching');
+    const filterLinodes = {
+      label: {
+        '+contains': inputValue,
+      }
+    }
+    getLinodes({}, filterLinodes)
+      .then((response) => {
+        this.setState({ linodes: response.data });
+      })
+  }
+
+  debouncedSearch = debounce(400, false, this.searchLinodes);
+
+  onInputChange = (inputValue:string) => {
+    this.debouncedSearch(inputValue);
   }
 
   renderLinodeOptions = (linodes:Linode.Linode[], mode:string, region:string, linodeLabel:string) => {
@@ -585,6 +613,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
                 || mode === modes.RESIZING
               }
               onChange={this.setSelectedLinode}
+              onInputChange={this.onInputChange}
               options={this.renderLinodeOptions(linodes, mode, region, linodeLabel)}
               data-qa-select-linode
             />
