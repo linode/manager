@@ -427,7 +427,6 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
   }
 
   searchLinodes = (inputValue:string) => {
-    console.log('searching');
     const filterLinodes = {
       label: {
         '+contains': inputValue,
