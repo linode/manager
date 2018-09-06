@@ -24,8 +24,9 @@ it('renders without crashing', () => {
             userId={123456}
             dispatchRequest={jest.fn()}
             dispatchResponse={jest.fn()}
+            dispatchRequestProfile={jest.fn()}
             documentation={[]}
-            toggleTheme={() => { return; }}
+            toggleTheme={jest.fn()}
           />
         </StaticRouter>
       </Provider>

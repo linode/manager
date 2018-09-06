@@ -4,7 +4,7 @@ import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { Sticky, StickyContainer, StickyProps } from 'react-sticky';
-import { bindActionCreators, compose } from 'redux';
+import { compose } from 'redux';
 import 'typeface-lato';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
@@ -22,10 +22,11 @@ import Footer from 'src/features/Footer';
 import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
-import { getDeprecatedLinodeTypes , getLinodeTypes } from 'src/services/linodes';
+import { getDeprecatedLinodeTypes, getLinodeTypes } from 'src/services/linodes';
 import { getRegions } from 'src/services/misc';
 import { getProfile } from 'src/services/profile';
 import { request, response } from 'src/store/reducers/resources';
+import { requestProfile } from 'src/store/reducers/resources/profile';
 import initSurvicate from 'src/survicate';
 import composeState from 'src/utilities/composeState';
 import { notifications, theme as themeStorage } from 'src/utilities/storage';
@@ -377,15 +378,16 @@ const themeDataAttr = () => {
 interface DispatchProps {
   dispatchRequest: typeof request;
   dispatchResponse: typeof response;
+  dispatchRequestProfile: () => void;
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, ownProps) => bindActionCreators(
-  {
-    dispatchRequest: request,
-    dispatchResponse: response,
-  },
-  dispatch,
-);
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, ownProps) => {
+  return {
+    dispatchRequest: (path: string[]) => dispatch(request(path)),
+    dispatchResponse: (path: string[], payload: any) => dispatch(response(path, payload)),
+    dispatchRequestProfile: () => dispatch(requestProfile()),
+  };
+};
 
 interface StateProps {
   documentation: Linode.Doc[];

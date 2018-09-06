@@ -1,7 +1,10 @@
 declare interface ApplicationState {
+  __resources: {
+    profile: RequestableData<Linode.Profile>;
+  },
   authentication: AuthState;
-  resources: ResourcesState;
   documentation: DocumentationState;
+  resources: ResourcesState;
   volumeDrawer: VolumeDrawerState;
 }
 
@@ -18,4 +21,11 @@ declare type DocumentationState = Linode.Doc[];
 
 declare interface VolumeDrawerState {
   mode: string;
+}
+
+declare interface RequestableData<D> {
+  lastUpdated: number;
+  loading: boolean;
+  data?: D;
+  error?: Error;
 }
