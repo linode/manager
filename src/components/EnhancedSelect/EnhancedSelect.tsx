@@ -62,7 +62,7 @@ interface Props {
 }
 
 export interface Item {
-  value: string;
+  value: string | number;
   label: string;
   data?: any;
 }
