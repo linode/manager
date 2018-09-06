@@ -94,7 +94,6 @@ class CopyTooltip extends React.Component<CombinedProps, State> {
       <a
         aria-label={text}
         title={text}
-        data-title={text}
         onClick={this.clickIcon}
         href="javascript:void(0)"
         className={classNames(
