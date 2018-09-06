@@ -179,9 +179,8 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
     const ticketId = this.props.match.params.ticketId;
     if (!ticketId) { return null; }
     return getTicketReplies(ticketId)
-      .then((response) => {
-        return response.data;
-      });
+      // This is a paginated method but here we only need the list of replies
+      .then(response => response.data);
   }
 
   reloadAttachments = () => {

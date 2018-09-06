@@ -137,7 +137,7 @@ export const getTicketReplies = (ticketId:number, params?: any, filter?: any) =>
  * @example getTicketReplies(123456. { page: 1, pageSize: 25 });
  */
 export const getTicketRepliesPage = (ticketId:number, pagination: Linode.PaginationOptions = {}) => {
-  return getTicketReplies(ticketId, pagination).then((response) => response.data);
+  return getTicketReplies(ticketId, pagination);
 }
 
 
@@ -157,7 +157,7 @@ export const createSupportTicket = (data: TicketRequest) =>
     setURL(`${API_ROOT}/support/tickets`),
     setMethod('POST'),
     setData(data),
-  )
+  ).then(response => response.data)
 
 /**
  * createReply
@@ -175,7 +175,7 @@ export const createReply = (data: ReplyRequest) =>
     setURL(`${API_ROOT}/support/tickets/${data.ticket_id}/replies`),
     setMethod('POST'),
     setData(data),
-)
+).then(response => response.data)
 
 /**
  * uploadAttachment
@@ -192,4 +192,4 @@ export const uploadAttachment = (ticketId: number, formData: FormData) =>
   setURL(`${API_ROOT}/support/tickets/${ticketId}/attachments`),
   setMethod('POST'),
   setData(formData),
-);
+).then(response => response.data);

@@ -130,7 +130,7 @@ class TicketReply extends React.Component<CombinedProps, State> {
     /* Send the reply */
     createReply({ description: value, ticket_id: ticketId })
       .then((response) => {
-        onSuccess(response.data);
+        onSuccess(response);
         this.setState({ submitting: false, value: '' });
       })
       .then(() => {
