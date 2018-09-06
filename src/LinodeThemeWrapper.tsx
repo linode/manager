@@ -8,6 +8,12 @@ import LinodeLightTheme from 'src/theme';
 
 import { theme as themeStorage } from 'src/utilities/storage';
 
+type RenderChildrenFunction = (toggleTheme: () => void) => React.ReactNode;
+
+interface Props {
+  children?: RenderChildrenFunction | React.ReactNode;
+}
+
 interface State {
   themeChoice: 'light' | 'dark';
   render: boolean;
@@ -27,7 +33,7 @@ const themes = {
 themes.light.shadows.fill('none');
 themes.dark.shadows.fill('none');
 
-class LinodeThemeWrapper extends React.Component<{}, State> {
+class LinodeThemeWrapper extends React.Component<Props, State> {
   state: State = {
     themeChoice: 'light',
     render: true,
@@ -63,11 +69,28 @@ class LinodeThemeWrapper extends React.Component<{}, State> {
      * upon switching the theme. Perhaps when we fully type our
      * theme using module augmentation, then we can remove this.
      * For now, it's fine, because switching the theme is rare.
+     *
+     * 2018-09-06: We may be able to remove render and init().
      */
     this.setState(
       { render: false },
       () => { this.setState({ render: true }); init(); },
     );
+  }
+
+  renderChildren = () => {
+    const { children } = this.props;
+
+    /** There are no children so bail. */
+    if (!children) { return; }
+
+    /** Render Children */
+    if (typeof children === 'function') {
+      return children(this.toggleTheme);
+    }
+
+    /** Non Render-Children Pattern */
+    return children;
   }
 
   render() {
@@ -77,12 +100,7 @@ class LinodeThemeWrapper extends React.Component<{}, State> {
       <React.Fragment>
         {render &&
           <MuiThemeProvider theme={theme}>
-            {React.cloneElement(
-              this.props.children as Linode.TodoAny,
-              {
-                toggleTheme: () => this.toggleTheme(),
-              },
-            )}
+            {this.renderChildren()}
           </MuiThemeProvider>
         }
       </React.Fragment>
