@@ -141,16 +141,16 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
     const { classes } = this.props;
 
     return data.map(({ id, domain, type, status }) => (
-      <TableRow key={domain}>
+      <TableRow key={domain} data-qa-domain>
         <TableCell className={classes.labelCol}>
           <Grid container direction="column" spacing={8}>
             <Grid item className="py0">
-              <Typography variant="subheading">
+              <Typography variant="subheading" data-qa-domain-name>
                 <Link to={`/domains/${id}/records`} className={'black'}>{domain}</Link>
               </Typography>
             </Grid>
             <Grid item>
-              <Typography variant="caption">
+              <Typography variant="caption" data-qa-domain-status>
                 {status}, {type}
               </Typography>
             </Grid>

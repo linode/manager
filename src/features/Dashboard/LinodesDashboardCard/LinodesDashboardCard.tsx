@@ -158,7 +158,7 @@ class LinodesDashboardCard extends React.Component<CombinedProps, State> {
     const { classes, typesData } = this.props;
 
     return data.map(({ id, label, region, status, type }) => (
-      <TableRow key={label}>
+      <TableRow key={label} data-qa-linode>
         <TableCell className={classes.labelCol}>
           <Grid container wrap="nowrap">
             <Grid item>
@@ -174,7 +174,7 @@ class LinodesDashboardCard extends React.Component<CombinedProps, State> {
                   </Typography>
                 </Grid>
                 <Grid item>
-                  <Typography variant="caption">
+                  <Typography variant="caption" data-qa-linode-plan>
                     { typesData && displayType(type, typesData || []) }
                   </Typography>
                 </Grid>
@@ -183,7 +183,7 @@ class LinodesDashboardCard extends React.Component<CombinedProps, State> {
           </Grid>
         </TableCell>
         <Hidden xsDown>
-          <TableCell className={classes.moreCol}>
+          <TableCell className={classes.moreCol} data-qa-linode-region>
             <RegionIndicator region={region} />
           </TableCell>
         </Hidden>

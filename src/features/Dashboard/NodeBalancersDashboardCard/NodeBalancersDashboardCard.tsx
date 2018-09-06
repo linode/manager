@@ -156,14 +156,14 @@ class NodeBalancersDashboardCard extends React.Component<CombinedProps, State> {
               </Typography>
             </Grid>
             <Grid item>
-              <Typography variant="caption">
+              <Typography variant="caption" data-qa-node-hostname>
                 {hostname}
               </Typography>
             </Grid>
           </Grid>
         </TableCell>
         <Hidden xsDown>
-          <TableCell className={classes.moreCol}>
+          <TableCell className={classes.moreCol} data-qa-node-region>
             <RegionIndicator region={region} />
           </TableCell>
         </Hidden>

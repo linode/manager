@@ -99,7 +99,7 @@ class VolumesDashboardCard extends React.Component<CombinedProps, State> {
 
   render() {
     return (
-      <DashboardCard title="Volumes" headerAction={this.renderAction}>
+      <DashboardCard title="Volumes" headerAction={this.renderAction} data-qa-dash-volume>
         <Paper>
           <Table>
             <TableBody>
@@ -145,7 +145,7 @@ class VolumesDashboardCard extends React.Component<CombinedProps, State> {
     const { classes } = this.props;
 
     return data.map(({ label, region, size, status }) => (
-      <TableRow key={label}>
+      <TableRow key={label} data-qa-volume={label}>
         <TableCell className={classes.labelCol}>
           <Grid container direction="column" spacing={8}>
             <Grid item className="py0">
@@ -154,14 +154,14 @@ class VolumesDashboardCard extends React.Component<CombinedProps, State> {
               </Typography>
             </Grid>
             <Grid item>
-              <Typography variant="caption">
+              <Typography variant="caption" data-qa-volume-status>
                 {status}, {size} GB
               </Typography>
             </Grid>
           </Grid>
         </TableCell>
         <Hidden xsDown>
-          <TableCell className={classes.moreCol}>
+          <TableCell className={classes.moreCol} data-qa-volume-region>
             <RegionIndicator region={region} />
           </TableCell>
         </Hidden>
