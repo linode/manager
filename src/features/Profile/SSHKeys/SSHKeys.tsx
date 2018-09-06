@@ -93,9 +93,9 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Label</TableCell>
-                <TableCell>Key</TableCell>
-                <TableCell>Table</TableCell>
+                <TableCell data-qa-label-column>Label</TableCell>
+                <TableCell data-qa-key-column>Key</TableCell>
+                <TableCell data-qa-created-column>Created</TableCell> 
                 <TableCell />
               </TableRow>
             </TableHead>
@@ -171,13 +171,13 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
 
   renderData = (keys: ExtendedSSHKey[]) => {
     return keys.map(key =>
-      <TableRow data-qa-content-row key={key.id}>
+      <TableRow data-qa-content-row={key.label} key={key.id}>
         <TableCell>{key.label}</TableCell>
-        <TableCell>
+        <TableCell data-qa-public-key>
           <Typography variant="caption">{key.ssh_key.slice(0, 26)}</Typography>
           <Typography variant="caption">Fingerprint: {key.fingerprint}</Typography>
         </TableCell>
-        <TableCell>{key.created}</TableCell>
+        <TableCell data-qa-key-created>{key.created}</TableCell>
         <TableCell>
           <SSHKeyActionMenu
             id={key.id}
