@@ -1,5 +1,6 @@
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import AppBar from '@material-ui/core/AppBar';
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
@@ -27,7 +28,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 interface Props {
   history: any;
 }
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
 
 interface State {
   value: number;
@@ -36,7 +37,8 @@ interface State {
   newTicket?: Linode.SupportTicket;
 }
 
-export class SupportTicketsLanding extends React.Component<CombinedProps, State> {  
+export class SupportTicketsLanding extends React.Component<CombinedProps, State> {
+  mounted: boolean = false;
   constructor(props:CombinedProps) {
     super(props);
     const open = pathOr(true, ['history', 'location', 'state', 'openFromRedirect'], this.props);
@@ -44,6 +46,14 @@ export class SupportTicketsLanding extends React.Component<CombinedProps, State>
       value: open ? 0 : 1,
       drawerOpen: false,
     }
+  }
+
+  componentDidMount() {
+    this.mounted = true;
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   handleChange = (event:React.ChangeEvent<HTMLDivElement>, value:number) => {
@@ -59,10 +69,11 @@ export class SupportTicketsLanding extends React.Component<CombinedProps, State>
   }
 
   handleAddTicketSuccess = (ticket:Linode.SupportTicket) => {
+    const { history } = this.props;
+    history.push(`/support/tickets/${ticket.id}`);
+    if (!this.mounted) { return; }
     this.setState({
       drawerOpen: false,
-      notice: "Ticket added successfully.",
-      newTicket: ticket,
     })
   }
 
@@ -110,8 +121,8 @@ export class SupportTicketsLanding extends React.Component<CombinedProps, State>
             textColor="primary"
             className={classes.root}
           >
-            <Tab key={0} label="Open Tickets"/>
-            <Tab key={1} label="Closed Tickets"/>
+            <Tab data-qa-tab="Open Tickets" key={0} label="Open Tickets"/>
+            <Tab data-qa-tab="Closed Tickets" key={1} label="Closed Tickets"/>
           </Tabs>
         </AppBar>
         {/* NB: 0 is the index of the open tickets tab, which evaluates to false */}
@@ -124,6 +135,7 @@ export class SupportTicketsLanding extends React.Component<CombinedProps, State>
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default compose(
+export default compose<any,any,any>(
   styled,
+  withRouter,
 )(SupportTicketsLanding);

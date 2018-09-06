@@ -19,11 +19,9 @@ interface Props {
   onCancel: () => void;
 }
 
-interface State { }
-
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class UserDeleteConfirmationDialog extends React.PureComponent<CombinedProps, State> {
+class UserDeleteConfirmationDialog extends React.PureComponent<CombinedProps, {}> {
 
   deleteUser = () => this.props.onDelete(this.props.username);
 

@@ -9,7 +9,7 @@ const mockAxiosResponse = (
 ) => new Promise(resolve => setTimeout(() => resolve(result), ms));
 
 describe('PromiseLoaderSpec', () => {
-  const Component = () => <div id="component"></div>;
+  const Component = () => <div id="component" />;
   const data = { name: 'whatever' };
   const preloaded = PromiseLoader({ resource: async () => {
     await mockAxiosResponse(100);

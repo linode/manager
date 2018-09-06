@@ -6,5 +6,5 @@ export default curry((defaultValue: number, v?: null | string | number) =>
     number | null | undefined,
     number>(
       defaultTo(defaultValue),
-      when(compose(not, isEmpty), (v: string) => +v),
+      when(compose(not, isEmpty), (value: string) => +value),
   )(v));

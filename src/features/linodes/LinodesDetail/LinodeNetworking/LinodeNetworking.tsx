@@ -90,8 +90,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props { }
-
 interface ContextProps {
   linodeID: number;
   linodeRegion: string;
@@ -126,7 +124,7 @@ interface State {
   };
 }
 
-type CombinedProps = Props & PreloadedProps & ContextProps & WithStyles<ClassNames>;
+type CombinedProps = PreloadedProps & ContextProps & WithStyles<ClassNames>;
 
 class LinodeNetworking extends React.Component<CombinedProps, State> {
   state: State = {
@@ -149,7 +147,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     },
   };
 
-  componentDidUpdate(prevProps: Props, prevState: State) {
+  componentDidUpdate(prevProps: CombinedProps, prevState: State) {
     const maybeNewLinodeIPs =
       path<Linode.LinodeIPsResponse>(['linodeIPs', 'response'], this.props);
     const oldLinodeIPs =
@@ -485,7 +483,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
   }
 }
 
-const preloaded = PromiseLoader<Props & ContextProps>({
+const preloaded = PromiseLoader<CombinedProps & ContextProps>({
   linodeIPs: props => getLinodeIPs(props.linodeID),
 });
 

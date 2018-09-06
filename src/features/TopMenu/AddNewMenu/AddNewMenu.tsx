@@ -147,8 +147,8 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
         >
           Create {
             anchorEl
-              ? <KeyboardArrowUp className={classes.caret}></KeyboardArrowUp>
-              : <KeyboardArrowDown className={classes.caret}></KeyboardArrowDown>
+              ? <KeyboardArrowUp className={classes.caret} />
+              : <KeyboardArrowDown className={classes.caret} />
           }
         </Button>
         <Menu

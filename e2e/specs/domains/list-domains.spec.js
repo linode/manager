@@ -67,20 +67,26 @@ describe('Domains - List Suite', () => {
     });
 
     it('should fail to clone with the same domain name', () => {
-            ListDomains.selectActionMenuItem($(domainElement), 'Clone');
-            ListDomains.clone(initialDomain);
-            ListDomains.cloneDomainName.$('p').waitForVisible(constants.wait.normal);
-            ListDomains.closeDrawer();
+        ListDomains.selectActionMenuItem($(domainElement), 'Clone');
+        ListDomains.cloneDrawerElemsDisplay();
+        
+        browser.trySetValue(`${ListDomains.cloneDomainName.selector} input`, initialDomain);
+        
+        ListDomains.submit.click();
+        ListDomains.cloneDomainName.$('p').waitForVisible(constants.wait.normal);
+        ListDomains.closeDrawer();
     });
 
     it('should clone domain', () => {
+        browser.url(constants.routes.domains);
         browser.waitForVisible('[data-qa-action-menu]');
         ListDomains.selectActionMenuItem($(domainElement), 'Clone');
         ListDomains.clone(cloneDomain);
     });
 
     it('should remove domain', () => {
-        ListDomains.drawerTitle.waitForExist(constants.wait.normal, true);
+        browser.url(constants.routes.domains);
+        browser.waitForVisible('[data-qa-action-menu]');
         ListDomains.selectActionMenuItem($(domainElement), 'Remove');
         ListDomains.remove($(domainElement), initialDomain);
     });

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { StickyProps } from 'react-sticky';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -10,7 +11,12 @@ import DocComponent, { Doc } from './DocComponent';
 type ClassNames = 'root' | 'title';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
-  root: {},
+  root: {
+    [theme.breakpoints.down('md')]: {
+      position: 'relative !important',
+      left: `${theme.spacing.unit}px !important`,
+    },
+  },
   title: {
     fontSize: '1.5rem',
     color: theme.color.green,
@@ -19,22 +25,31 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 
 interface Props {
   docs: Doc[];
+  isSticky?: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & StickyProps & WithStyles<ClassNames>;
 
 const styled = withStyles(styles, { withTheme: true });
 
 class DocsSidebar extends React.Component<CombinedProps>  {
   render() {
-    const { classes, docs } = this.props;
+    const { classes, docs, style, isSticky } = this.props;
 
     if (docs.length === 0) {
       return null;
     }
 
+    let stickyStyles;
+    if (isSticky) {
+      stickyStyles = {
+        ...style,
+        paddingTop: 24,
+      };
+    }
+
     return (
-      <Grid item className="mlSidebar">
+      <Grid item style={stickyStyles} className={classes.root}>
         <Typography
           role="header"
           variant="title"

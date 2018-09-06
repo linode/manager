@@ -5,7 +5,7 @@ import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-import analytics from 'src/analytics';
+import { initAnalytics } from 'src/analytics';
 import AuthenticationWrapper from 'src/components/AuthenticationWrapper';
 import DefaultLoader from 'src/components/DefaultLoader';
 import { GA_ID, isProduction } from 'src/constants';
@@ -13,9 +13,12 @@ import 'src/exceptionReporting';
 import Logout from 'src/layouts/Logout';
 import OAuthCallbackPage from 'src/layouts/OAuth';
 import store from 'src/store';
+
+import { sendEvent } from 'src/utilities/analytics';
 import 'src/utilities/createImageBitmap';
 import 'src/utilities/request';
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
+import { theme } from 'src/utilities/storage';
 
 import App from './App';
 import './events';
@@ -31,9 +34,23 @@ const Lish = DefaultLoader({
 });
 
 /*
- * Initialize Analytics.
+ * Initialize Analytic and Google Tag Manager
  */
-analytics(GA_ID, isProduction);
+initAnalytics(GA_ID, isProduction);
+
+if (theme.get() === 'dark') {
+  sendEvent({
+    category: 'Theme Choice',
+    action: 'Dark Theme',
+    label: location.pathname,
+  })
+} else {
+  sendEvent({
+    category: 'Theme Choice',
+    action: 'Light Theme',
+    label: location.pathname,
+  })
+}
 
 /**
  * Send pageviews unless blacklisted.
@@ -51,32 +68,41 @@ if (!(isPathOneOf(['/oauth', '/null', '/login'], window.location.pathname))) {
 }
 refreshOAuthOnUserInteraction();
 
+const renderNullAuth = () =>
+  <span>null auth route</span>
+
+const renderNull = () =>
+  <span>null route</span>
+
+const renderLish = () =>
+  <LinodeThemeWrapper>
+    <Lish />
+  </LinodeThemeWrapper>
+
+const renderApp = () =>
+  <LinodeThemeWrapper>
+    <App />
+  </LinodeThemeWrapper>
+
+const renderAuthentication = () =>
+  <AuthenticationWrapper>
+    <Switch>
+      <Route path="/linodes/:linodeId/lish" render={renderLish} />
+      <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
+      {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
+      <Route exact path="/nullauth" render={renderNullAuth} />
+      <Route exact path="/logout" component={Logout} />
+      <Route render={renderApp}/>
+    </Switch>
+  </AuthenticationWrapper>
+
 ReactDOM.render(
   <Provider store={store}>
     <Router>
       <Switch>
         {/* A place to go that prevents the app from loading while injecting OAuth tokens */}
-        <Route exact path="/null" render={() => <span>null route</span>} />
-        <Route render={() =>
-          <AuthenticationWrapper>
-            <Switch>
-              <Route path="/linodes/:linodeId/lish" render={() =>
-                <LinodeThemeWrapper>
-                  <Lish />
-                </LinodeThemeWrapper>
-              }/>
-              <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
-              {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
-              <Route exact path="/nullauth" render={() => <span>null auth route</span>} />
-              <Route exact path="/logout" component={Logout} />
-              <Route render={() =>
-                <LinodeThemeWrapper>
-                  <App />
-                </LinodeThemeWrapper>
-              }/>
-            </Switch>
-          </AuthenticationWrapper>
-        }/>
+        <Route exact path="/null" render={renderNull} />
+        <Route render={renderAuthentication}/>
       </Switch>
     </Router>
   </Provider>,

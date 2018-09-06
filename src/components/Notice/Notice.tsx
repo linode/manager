@@ -4,10 +4,15 @@ import * as React from 'react';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography, { TypographyProps } from '@material-ui/core/Typography';
 
-import Flag from 'src/assets/icons/flag.svg';
 import Grid, { GridProps } from 'src/components/Grid';
 
+import Error from 'src/assets/icons/alert.svg';
+import Check from 'src/assets/icons/check.svg';
+import Flag from 'src/assets/icons/flag.svg';
+import Warning from 'src/assets/icons/warning.svg';
+
 type ClassNames = 'root'
+  | 'important'
   | 'inner'
   | 'noticeText'
   | 'error'
@@ -16,7 +21,8 @@ type ClassNames = 'root'
   | 'warningList'
   | 'success'
   | 'successList'
-  | 'flag';
+  | 'flag'
+  | 'icon';
 
 const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => {
   const { palette: { status } } = theme;
@@ -43,6 +49,10 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => {
         marginTop: `${theme.spacing.unit}px !important`,
       },
     },
+    important: {
+      backgroundColor: theme.bg.white,
+      padding: theme.spacing.unit * 2,
+    },
     inner: {
       width: '100%',
     },
@@ -54,6 +64,9 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => {
     error: {
       borderLeft: `5px solid ${status.errorDark}`,
       animation: 'fadeIn 225ms linear forwards',
+      '&$important': {
+        borderLeftWidth: 26,
+      },
     },
     errorList: {
       borderLeft: `5px solid ${status.errorDark}`,
@@ -61,6 +74,9 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => {
     warning: {
       borderLeft: `5px solid ${status.warningDark}`,
       animation: 'fadeIn 225ms linear forwards',
+      '&$important': {
+        borderLeftWidth: 26,
+      },
     },
     warningList: {
       borderLeft: `5px solid ${status.warningDark}`,
@@ -68,12 +84,20 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => {
     success: {
       borderLeft: `5px solid ${status.successDark}`,
       animation: 'fadeIn 225ms linear forwards',
+      '&$important': {
+        borderLeftWidth: 26,
+      },
     },
     successList: {
       borderLeft: `5px solid ${status.successDark}`,
     },
     flag: {
       marginRight: theme.spacing.unit * 2,
+    },
+    icon: {
+      color: 'white',
+      marginLeft: -38,
+      marginRight: 18,
     },
   };
 };
@@ -83,6 +107,7 @@ interface Props extends GridProps {
   html?: string;
   error?: boolean;
   errorGroup?: string;
+  important?: boolean;
   warning?: boolean;
   success?: boolean;
   typeProps?: TypographyProps;
@@ -100,6 +125,7 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
   const {
     classes,
     className,
+    important,
     text,
     error,
     errorGroup,
@@ -128,11 +154,21 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
 
   const errorScrollClassName = errorGroup ? `error-for-scroll-${errorGroup}` : `error-for-scroll`;
 
+  const dataAttributes = (!props.error)
+    ? {
+      'data-qa-notice': true
+    }
+    : {
+      'data-qa-notice': true,
+      'data-qa-error': true,
+    }
+
   return (
     <Grid
       item
       className={classNames({
         [classes.root]: true,
+        [classes.important]: important,
         [errorScrollClassName]: error,
         [classes.error]: error && !notificationList,
         [classes.errorList]: error && notificationList,
@@ -147,13 +183,19 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
         marginTop: spacingTop !== undefined ? spacingTop : 0,
         marginBottom: spacingBottom !== undefined ? spacingBottom : 24 
       }}
-      data-qa-notice
+      {...dataAttributes}
     >
       {
         flag &&
         <Grid item>
           <Flag className={classes.flag} />
         </Grid>
+      }
+      {important && (
+        success && <Check className={classes.icon} /> ||
+        warning && <Warning className={classes.icon} /> ||
+        error &&  <Error className={classes.icon} />
+        )
       }
       <div className={classes.inner}>
         {c}

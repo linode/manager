@@ -11,14 +11,14 @@ import { ListLinodes } from './LinodesLanding';
 
 const RoutedListLinodes = withRouter(ListLinodes);
 
-function promiseLoaderType(response: any, error?: Error) {
+const promiseLoaderType = (response: any, error?: Error) => {
   return {
     error,
     response,
   };
 }
 
-function resourcePage(data: any[], pages = 0, page = 0, results = 0) {
+const resourcePage = (data: any[], pages = 0, page = 0, results = 0) => {
   return {
     pages,
     page,

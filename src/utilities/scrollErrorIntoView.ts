@@ -1,4 +1,4 @@
-export default function scrollErrorIntoView(errorGroup?: string) {
+const scrollErrorIntoView = (errorGroup?: string) => {
   const errorScrollClassSelector = errorGroup
     ? `.error-for-scroll-${errorGroup}`
     : `.error-for-scroll`;
@@ -11,3 +11,5 @@ export default function scrollErrorIntoView(errorGroup?: string) {
     });
   }
 }
+
+export default scrollErrorIntoView;

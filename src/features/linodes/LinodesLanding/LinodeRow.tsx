@@ -2,21 +2,22 @@ import { compose } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-import Button from '@material-ui/core/Button';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 
 import Flag from 'src/assets/icons/flag.svg';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
+import TableRow from 'src/components/TableRow';
 import { withTypes } from 'src/context/types';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { displayType } from 'src/features/linodes/presentation';
 import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
+
+import { getType } from 'src/services/linodes';
 
 import IPAddress from './IPAddress';
 import LinodeActionMenu from './LinodeActionMenu';
@@ -27,6 +28,7 @@ type ClassNames = 'bodyRow'
   | 'linodeCell'
   | 'tagsCell'
   | 'ipCell'
+  | 'ipCellWrapper'
   | 'regionCell'
   | 'actionCell'
   | 'actionInner'
@@ -35,7 +37,7 @@ type ClassNames = 'bodyRow'
   | 'link'
   | 'linkButton';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => {
   return ({
     bodyRow: {
       height: 77,
@@ -51,6 +53,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
     },
     ipCell: {
       width: '30%',
+    },
+    ipCellWrapper: {
+      display: 'inline-flex',
+      flexDirection: 'column',
     },
     regionCell: {
       width: '15%',
@@ -69,7 +75,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
     flag: {
       marginRight: 10,
       transition: theme.transitions.create(['opacity']),
-      opaity: 1,
+      opacity: 1,
       '&:hover': {
         opacity: .75,
       },
@@ -77,7 +83,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
     status: {
       textTransform: 'capitalize',
       marginBottom: theme.spacing.unit,
-      color: '#555',
+      color: theme.palette.text.primary,
       fontSize: '.92rem',
     },
     link: {
@@ -96,6 +102,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
     },
   });
 };
+
+interface State {
+  mutationAvailable: boolean;
+}
 
 interface Props {
   linodeId: number;
@@ -123,8 +133,12 @@ type CombinedProps =
   TypesContextProps &
   WithStyles<ClassNames>;
 
-class LinodeRow extends React.Component<CombinedProps> {
-  shouldComponentUpdate(nextProps: CombinedProps) {
+class LinodeRow extends React.Component<CombinedProps, State> {
+  state: State = {
+    mutationAvailable: false,
+  }
+
+  shouldComponentUpdate(nextProps: CombinedProps, nextState: State) {
     return haveAnyBeenModified<Props & TypesContextProps>(
       nextProps,
       this.props,
@@ -139,7 +153,24 @@ class LinodeRow extends React.Component<CombinedProps> {
         'typesData',
         'typesLoading',
       ],
-    );
+    )
+      || haveAnyBeenModified<State>(
+        nextState,
+        this.state,
+        ['mutationAvailable']
+      )
+  }
+
+  componentDidMount() {
+    const { linodeType } = this.props;
+    if (!linodeType) { return }
+    getType(linodeType)
+      .then((data: Linode.LinodeType) => {
+        if (data.successor && data.successor !== null) {
+          this.setState({ mutationAvailable: true })
+        }
+      })
+      .catch((e: Error) => e)
   }
 
   headCell = () => {
@@ -147,21 +178,19 @@ class LinodeRow extends React.Component<CombinedProps> {
 
     return (
       <TableCell className={classes.linodeCell}>
-        <Link to={`/linodes/${linodeId}`} className={classes.link} tabIndex={-1}>
-          <Button className={classes.linkButton}>
-            <Grid container wrap="nowrap" alignItems="center">
-              <Grid item className="py0">
-                <LinodeStatusIndicator status={linodeStatus} />
-              </Grid>
-              <Grid item className="py0">
-                <Typography role="header" variant="subheading" data-qa-label>
-                  {linodeLabel}
-                </Typography>
-                {!typesLoading && <Typography> {displayType(linodeType, typesData || [])} </Typography>}
-              </Grid>
+        <Link to={`/linodes/${linodeId}`} className={classes.link}>
+          <Grid container wrap="nowrap" alignItems="center">
+            <Grid item className="py0">
+              <LinodeStatusIndicator status={linodeStatus} />
             </Grid>
-          </Button>
-        </Link>
+            <Grid item className="py0">
+              <Typography role="header" variant="subheading" data-qa-label>
+                {linodeLabel}
+              </Typography>
+              {!typesLoading && <Typography variant="caption">{displayType(linodeType, typesData || [])} </Typography>}
+            </Grid>
+          </Grid>
+          </Link>
       </TableCell>
     );
   }
@@ -184,6 +213,29 @@ class LinodeRow extends React.Component<CombinedProps> {
     );
   }
 
+  renderFlag = () => {
+    /*
+    * Render either a flag for if the Linode has a notification
+    * or if it has a pending mutation available. Mutations take
+    * precedent over notifications
+    */
+    const { mutationAvailable } = this.state;
+    const { linodeNotification, classes } = this.props;
+    if (mutationAvailable) {
+      return (
+        <Tooltip title="There is a free upgrade available for this Linode">
+          <Flag className={classes.flag} />
+        </Tooltip>
+      )
+    }
+    if (linodeNotification) {
+      return (
+        <Tooltip title={linodeNotification}><Flag className={classes.flag} /></Tooltip>
+      )
+    }
+    return null;
+  }
+
   loadedState = () => {
     const {
       linodeId,
@@ -191,7 +243,6 @@ class LinodeRow extends React.Component<CombinedProps> {
       linodeIpv4,
       linodeIpv6,
       linodeRegion,
-      linodeNotification,
       linodeLabel,
       linodeBackups,
       classes,
@@ -200,20 +251,27 @@ class LinodeRow extends React.Component<CombinedProps> {
     } = this.props;
 
     return (
-      <TableRow key={linodeId} data-qa-linode={linodeLabel}>
+      <TableRow
+        key={linodeId}
+        className={`${classes.bodyRow} 'fade-in-table'`}
+        data-qa-loading
+        data-qa-linode={linodeLabel}
+        rowLink={`/linodes/${linodeId}`}
+        arial-label={linodeLabel}
+      >
         {this.headCell()}
         <TableCell className={classes.ipCell} data-qa-ips>
-          <IPAddress ips={linodeIpv4} copyRight />
-          <IPAddress ips={[linodeIpv6]} copyRight />
+          <div className={classes.ipCellWrapper}>
+            <IPAddress ips={linodeIpv4} copyRight />
+            <IPAddress ips={[linodeIpv6]} copyRight />
+          </div>
         </TableCell>
         <TableCell className={classes.regionCell} data-qa-region>
           <RegionIndicator region={linodeRegion} />
         </TableCell>
         <TableCell className={classes.actionCell} data-qa-notifications>
           <div className={classes.actionInner}>
-            {linodeNotification &&
-              <Tooltip title={linodeNotification}><Flag className={classes.flag} /></Tooltip>
-            }
+            {this.renderFlag()}
             <LinodeActionMenu
               linodeId={linodeId}
               linodeLabel={linodeLabel}

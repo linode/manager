@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
-  volumeId: number;
+  poweredOff: boolean;
   onDetach: () => void;
   onDelete: () => void;
   onClone: () => void;
@@ -12,9 +11,9 @@ interface Props {
   onResize: () => void;
 }
 
-type CombinedProps = Props & RouteComponentProps<{}>;
+type CombinedProps = Props;
 
-class LinodeVolumeActionMenu extends React.Component<CombinedProps> {
+export class LinodeVolumeActionMenu extends React.Component<CombinedProps> {
   createLinodeActions = () => {
     const {
       onDetach,
@@ -22,9 +21,10 @@ class LinodeVolumeActionMenu extends React.Component<CombinedProps> {
       onClone,
       onEdit,
       onResize,
+      poweredOff,
     } = this.props;
 
-    return function (closeMenu: Function): Action[] {
+    return (closeMenu: Function): Action[] => {
       const actions = [
         {
           title: 'Rename',
@@ -57,16 +57,20 @@ class LinodeVolumeActionMenu extends React.Component<CombinedProps> {
             closeMenu();
             e.preventDefault();
           },
-        },
-        {
-          title: 'Delete',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            onDelete();
-            closeMenu();
-            e.preventDefault();
-          },
-        },
+        }
       ];
+
+      if (poweredOff) {
+        actions.push(
+          {
+            title: 'Delete',
+            onClick: (e: React.MouseEvent<HTMLElement>) => {
+              onDelete();
+              closeMenu();
+              e.preventDefault();
+            },
+        })
+      }
       return actions;
     };
   }
@@ -78,4 +82,4 @@ class LinodeVolumeActionMenu extends React.Component<CombinedProps> {
   }
 }
 
-export default withRouter(LinodeVolumeActionMenu);
+export default LinodeVolumeActionMenu;

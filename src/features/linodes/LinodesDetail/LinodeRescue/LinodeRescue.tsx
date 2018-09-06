@@ -42,8 +42,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props { }
-
 interface ContextProps {
   linodeId: number;
   linodeRegion?: string;
@@ -66,7 +64,7 @@ interface State {
   counter: number;
 }
 
-type CombinedProps = Props & PromiseLoaderProps & ContextProps & WithStyles<ClassNames>;
+type CombinedProps = PromiseLoaderProps & ContextProps & WithStyles<ClassNames>;
 
 export class LinodeRescue extends React.Component<CombinedProps, State> {
   constructor(props: CombinedProps) {

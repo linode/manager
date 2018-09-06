@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
+import { ISO_FORMAT } from 'src/constants';
+
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
@@ -26,7 +28,7 @@ const DateTimeDisplay: React.StatelessComponent<CombinedProps> = (props) => {
   try {
     return (
       <React.Fragment>
-        { moment(props.value).tz(props.timezone).format(props.format || 'Y-MM-DD') }
+        { moment.utc(props.value).tz(props.timezone).format(props.format || ISO_FORMAT) }
       </React.Fragment>
     )
   }

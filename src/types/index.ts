@@ -43,7 +43,7 @@ namespace Linode {
 
   export type DocumentationState = Linode.Doc[];
 
-  export type VolumeDrawerState = {
+  export interface VolumeDrawerState {
     mode: string;
   };
 
@@ -187,5 +187,11 @@ namespace Linode {
     id: number;
     from_linode: boolean;
     gravatarUrl: string | undefined;
+  }
+  export interface SSHKey {
+    created: string;
+    id: number;
+    label: string;
+    ssh_key: string;
   }
 }

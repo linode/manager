@@ -46,8 +46,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-interface Props { }
-
 interface TypesContextProps {
   typesData: ExtendedType[];
 }
@@ -64,9 +62,7 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps =
-  Props &
-  TypesContextProps &
+type CombinedProps = TypesContextProps &
   LinodeContextProps &
   WithStyles<ClassNames>;
 
@@ -196,7 +192,13 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles, { withTheme: true });
 
 const typesContext = withTypes(({ data }) => ({
-  typesData: (data || []).map(LinodeResize.extendType),
+  typesData: (data || []).map(LinodeResize.extendType).filter((eachType) => {
+    /* filter out all the deprecated types because we don't to display them */
+    if (!eachType.successor) {
+      return true;
+    }
+    return eachType.successor === null
+  }),
 }));
 
 const linodeContext = withLinode((context) => ({

@@ -18,7 +18,7 @@ interface ResponseAction {
 
 type Actions = RequestAction | ResponseAction;
 
-export function oneOfType(action: { type: string }, list: string[]): action is Actions {
+export const oneOfType = (action: { type: string }, list: string[]): action is Actions => {
   let i = 0;
   const len = list.length;
   const type = action.type;
@@ -62,6 +62,7 @@ export default (
   action: Actions | Action,
 ): Linode.ResourcesState => when(
   () => oneOfType(action, [REQUEST, RESPONSE]),
+  /* tslint:disable-next-line */
   (state) => {
     const path = (action as Actions).meta.path;
     const setLoading = assocPath([...path, 'loading']);

@@ -117,7 +117,7 @@ type ActionTypes =
 | Resizing
 | Cloning;
 
-export default function volumeDrawer(state = defaultState, action: ActionTypes) {
+export const volumeDrawer = (state = defaultState, action: ActionTypes) => {
   switch (action.type) {
     case CLOSE:
       return {
@@ -162,3 +162,5 @@ export default function volumeDrawer(state = defaultState, action: ActionTypes) 
       return state;
   }
 }
+
+export default volumeDrawer;

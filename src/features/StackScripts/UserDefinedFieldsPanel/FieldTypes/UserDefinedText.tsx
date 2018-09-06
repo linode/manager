@@ -2,9 +2,9 @@ import * as React from 'react';
 
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 
+import AccessPanel from 'src/components/AccessPanel';
 import RenderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
-import PasswordPanel from 'src/features/linodes/LinodesCreate/PasswordPanel';
 
 type ClassNames = 'root';
 
@@ -25,13 +25,9 @@ interface Props {
   placeholder?: string;
 }
 
-interface State { }
-
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class UserDefinedText extends React.Component<CombinedProps, State> {
-  state: State = {};
-
+class UserDefinedText extends React.Component<CombinedProps, {}> {
   renderTextField = () => {
     const { udf_data, field, placeholder, isOptional } = this.props;
 
@@ -50,7 +46,7 @@ class UserDefinedText extends React.Component<CombinedProps, State> {
     const { udf_data, field, placeholder, isOptional } = this.props;
 
     return (
-      <PasswordPanel
+      <AccessPanel
         required={!isOptional}
         password={udf_data[field.name] || ''}
         handleChange={this.handleUpdatePassword}

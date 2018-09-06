@@ -149,7 +149,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
   }
 
   getData = () => {
-    const { ticket, reply, isCurrentUser } = this.props;
+    const { ticket, reply } = this.props;
     if (!ticket && !reply) { return; }
     let data: Data;
     if (ticket) {
@@ -158,7 +158,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
         gravatarUrl: pathOr('not found',['gravatarUrl'],ticket),
         date: ticket.opened,
         description: ticket.description,
-        username: isCurrentUser ? "you" : ticket.opened_by,
+        username: ticket.opened_by,
         from_linode: false,
       }
     } else if (reply) {
@@ -167,7 +167,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
         gravatarUrl: pathOr('not found',['gravatarUrl'],reply),
         date: reply.created,
         description: reply.description,
-        username: isCurrentUser ? "you" : reply.created_by,
+        username: reply.created_by,
         from_linode: reply.from_linode,
       }
     }
@@ -225,7 +225,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
                 <Grid item>
                   <Typography className={classes.userName}>{data.username}</Typography>
                   {data.from_linode && <Typography variant="body1">Linode Expert</Typography>}
-                  <Typography><DateTimeDisplay value={data.date} format={'YYYY/MM/DD - h:ssa'}/></Typography>
+                  <Typography><DateTimeDisplay value={data.date} /></Typography>
                   </Grid>
                 </Grid>
               </Grid>

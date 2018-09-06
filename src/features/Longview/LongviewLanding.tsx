@@ -19,15 +19,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
 });
 
-interface Props {}
+type CombinedProps = WithStyles<ClassNames>;
 
-interface State {}
-
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-export class LongviewLanding extends React.Component<CombinedProps, State> {
-  state: State = {};
-
+export class LongviewLanding extends React.Component<CombinedProps, {}> {
   static docs: Linode.Doc[] = [
     {
       title: 'What is Longview and How to Use it',

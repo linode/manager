@@ -9,10 +9,10 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 
 import Grid from 'src/components/Grid';
+import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
@@ -41,8 +41,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props { }
-
 interface State {
   loading: boolean;
   errors?: Linode.ApiFieldError[];
@@ -50,7 +48,7 @@ interface State {
   results?: number;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = WithStyles<ClassNames>;
 
 class NodeBalancersDashboardCard extends React.Component<CombinedProps, State> {
   state: State = {
@@ -68,7 +66,7 @@ class NodeBalancersDashboardCard extends React.Component<CombinedProps, State> {
       this.setState({ loading: true });
     }
 
-    getNodeBalancers({ page_size: 25 }, { '+order_by': 'updated', '+order': 'desc' })
+    getNodeBalancers({ page_size: 25 }, { '+order_by': 'label', '+order': 'asc' })
       .then(({ data, results }) => {
         if (!this.mounted) { return; }
         this.setState({
@@ -147,25 +145,25 @@ class NodeBalancersDashboardCard extends React.Component<CombinedProps, State> {
     const { classes } = this.props;
 
     return data.map(({ id, label, region, hostname }) => (
-      <TableRow key={label}>
+      <TableRow key={label} rowLink={`/nodebalancers/${id}`}>
         <TableCell className={classes.labelCol}>
-          <Grid container direction="column" spacing={8}>
-            <Grid item className="py0">
-              <Typography variant="subheading">
-                <Link to={`/nodebalancers/${id}`} className="black">
+          <Link to={`/nodebalancers/${id}`} className="black nu block">
+            <Grid container direction="column" spacing={8}>
+              <Grid item className="py0">
+                <Typography variant="subheading">
                   {label}
-                </Link>
-              </Typography>
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant="caption" data-qa-node-hostname>
+                  {hostname}
+                </Typography>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Typography variant="caption">
-                {hostname}
-              </Typography>
-            </Grid>
-          </Grid>
+          </Link>
         </TableCell>
         <Hidden xsDown>
-          <TableCell className={classes.moreCol}>
+          <TableCell className={classes.moreCol} data-qa-node-region>
             <RegionIndicator region={region} />
           </TableCell>
         </Hidden>

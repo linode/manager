@@ -23,15 +23,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props {}
+type CombinedProps = WithStyles<ClassNames>;
 
-interface State {}
-
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-export class HelpLanding extends React.Component<CombinedProps, State> {
-  state: State = {};
-
+export class HelpLanding extends React.Component<CombinedProps, {}> {
   render() {
     const { classes } = this.props;
 

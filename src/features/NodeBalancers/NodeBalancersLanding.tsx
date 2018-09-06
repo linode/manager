@@ -7,7 +7,6 @@ import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 
 import NodeBalancer from 'src/assets/addnewmenu/nodebalancer.svg';
@@ -24,6 +23,7 @@ import Placeholder from 'src/components/Placeholder';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 import TableRowError from 'src/components/TableRowError';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
@@ -41,6 +41,7 @@ type ClassNames = 'root'
   | 'nodeStatus'
   | 'transferred'
   | 'ports'
+  | 'ipsWrapper'
   | 'ip';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
@@ -61,16 +62,18 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     minWidth: 100,
   },
   ports: {
-    width: '5%',
+    width: '10%',
     minWidth: 50,
   },
+  ipsWrapper: {
+    display: 'inline-flex',
+    flexDirection: 'column',
+  },
   ip: {
-    width: '20%',
+    width: '30%',
     minWidth: 200,
   },
 });
-
-interface Props { }
 
 interface DeleteConfirmDialogState {
   open: boolean;
@@ -86,8 +89,7 @@ interface State extends PaginationProps {
   selectedNodeBalancerId?: number;
 }
 
-type CombinedProps = Props
-  & WithStyles<ClassNames>
+type CombinedProps = WithStyles<ClassNames>
   & RouteComponentProps<{}>
   & SetDocsProps;
 
@@ -384,10 +386,17 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
   };
 
   renderData = (nodeBalancers: Linode.ExtendedNodeBalancer[]) => {
+    const { classes } = this.props;
 
     return nodeBalancers.map((nodeBalancer) => {
       return (
-        <TableRow key={nodeBalancer.id} data-qa-nodebalancer-cell className="fade-in-table">
+        <TableRow
+          key={nodeBalancer.id}
+          data-qa-nodebalancer-cell
+          rowLink={`/nodebalancers/${nodeBalancer.id}`}
+          className="fade-in-table"
+          arial-label={nodeBalancer.label}
+        >
           <TableCell data-qa-nodebalancer-label>
             <Link to={`/nodebalancers/${nodeBalancer.id}`}>
               {nodeBalancer.label}
@@ -405,8 +414,10 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
             {nodeBalancer.ports.join(', ')}
           </TableCell>
           <TableCell data-qa-nodebalancer-ips>
-            <IPAddress ips={[nodeBalancer.ipv4]} copyRight />
-            {nodeBalancer.ipv6 && <IPAddress ips={[nodeBalancer.ipv6]} copyRight />}
+            <div className={classes.ipsWrapper}>
+              <IPAddress ips={[nodeBalancer.ipv4]} copyRight />
+              {nodeBalancer.ipv6 && <IPAddress ips={[nodeBalancer.ipv6]} copyRight />}
+            </div>
           </TableCell>
           <TableCell data-qa-region>
             <RegionIndicator region={nodeBalancer.region} />

@@ -25,8 +25,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Props { }
-
 interface BlogItem {
   description: string;
   link: string;
@@ -39,7 +37,7 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = WithStyles<ClassNames>;
 
 class BlogDashboardCard extends React.Component<CombinedProps, State> {
   state: State = {
@@ -64,7 +62,7 @@ class BlogDashboardCard extends React.Component<CombinedProps, State> {
 
     return (
       <DashboardCard
-        title="Product News"
+        title="Blog"
         headerAction={this.renderAction}
       >
         {items.map(this.renderItem)}
@@ -78,16 +76,16 @@ class BlogDashboardCard extends React.Component<CombinedProps, State> {
     return (
       <Paper key={idx} className={classes.root}>
         <Typography variant="subheading" className={classes.itemTitle}>
-          <a href={item.link} className="blue" target="_blank">{item.title}</a>
+          <a href={item.link} className="blue" target="_blank" data-qa-blog-post>{item.title}</a>
         </Typography>
-        <Typography variant="caption">
+        <Typography variant="caption" data-qa-post-desc>
           {item.description}
         </Typography>
       </Paper>
     );
   };
 
-  renderAction = () => <a href="https://blog.linode.com/" className="blue" target="_blank">Read More</a>;
+  renderAction = () => <a href="https://blog.linode.com/" className="blue" target="_blank" data-qa-read-more>Read More</a>;
 }
 
 const processXMLData = compose(

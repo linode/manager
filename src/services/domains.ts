@@ -77,7 +77,7 @@ export const deleteDomain = (domainID: number) =>
   );
 
 export const cloneDomain = (domainID: number, cloneName: string) =>
-  Request(
+  Request<Domain>(
     setData({ domain: cloneName }),
     setURL(`${API_ROOT}/domains/${domainID}/clone`),
     setMethod('POST'),

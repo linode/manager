@@ -17,7 +17,7 @@ class LinodeNetworkingActionMenu extends React.Component<CombinedProps> {
       onEdit,
     } = this.props;
 
-    return function (closeMenu: Function): Action[] {
+    return (closeMenu: Function): Action[] => {
       const actions = [
         {
           title: 'View',

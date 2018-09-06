@@ -11,7 +11,7 @@ describe('List Linodes - Actions - Reboot Suite', () => {
         browser.url(constants.routes.linodes);
         apiCreateLinode();
 
-        browser.waitForVisible('[data-qa-linode]');
+        browser.waitForVisible('[data-qa-linode]', constants.wait.normal);
     });
 
     afterAll(() => {
@@ -50,21 +50,20 @@ describe('List Linodes - Actions - Reboot Suite', () => {
         
         beforeAll(() => {
             ListLinodes.switchView('list');
-            ListLinodes.tableHead.waitForVisible();
+            ListLinodes.tableHead.waitForVisible(constants.wait.normal);
 
             linodes = ListLinodes.linode;
             totalLinodes = linodes.length;
         });
 
         it('should reboot linode on click', () => {
-            ListLinodes.selectMenuItem(linodes[0], 'Reboot');
+            ListLinodes.selectActionMenuItem(linodes[0], 'Reboot');
             ListLinodes.acceptDialog('Confirm Reboot');
-            browser.waitForVisible('[data-qa-loading]');
+            browser.waitForVisible('[data-qa-loading]', constants.wait.normal);
         });
 
         it('should update status on reboot to rebooting', () => {
-            const currentStatus = linodes[0].$(ListLinodes.status.selector).getAttribute('data-qa-status');
-            expect(currentStatus).toBe('rebooting');
+            browser.waitForVisible('[data-qa-status="rebooting"]', constants.wait.normal);
         });
 
         it('should hide action menu', () => {

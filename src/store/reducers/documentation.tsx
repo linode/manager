@@ -23,7 +23,7 @@ export const setDocs = (docs: Linode.Doc[]): SetType => ({
 
 export const defaultState: Linode.Doc[] = [];
 
-export default function documentation(state = defaultState, action: ClearType | SetType) {
+const documentation = (state = defaultState, action: ClearType | SetType) => {
   switch (action.type) {
     case CLEAR: return [];
 
@@ -33,3 +33,5 @@ export default function documentation(state = defaultState, action: ClearType | 
       return state;
   }
 }
+
+export default documentation;

@@ -14,7 +14,6 @@ import InsertDriveFile from '@material-ui/icons/InsertDriveFile';
 import InsertPhoto from '@material-ui/icons/InsertPhoto';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 
-
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
@@ -299,29 +298,33 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
       return <InsertDriveFile key={idx} />;
     })
     return (
-      <Grid item xs={12} container justify="flex-start" className="px0">
-        <Grid item xs={12}>
-          <Typography variant="subheading">Attachments</Typography>
-        </Grid>
-        <Grid item xs={12} className={classes.attachmentPaperWrapper}>
-          <Paper className={classes.attachmentPaper}>
-              {attachments.map((attachment, idx) => {
-                return (
-                  <Grid container wrap="nowrap" key={idx} className={classes.attachmentRow}>
-                    <Grid item className={classes.attachmentIcon}>
-                      {icons[idx]}
+      <React.Fragment>
+        {attachments.length !== 0 &&
+        <Grid item xs={12} container justify="flex-start" className="px0">
+          <Grid item xs={12}>
+            <Typography variant="subheading">Attachments</Typography>
+          </Grid>
+          <Grid item xs={12} className={classes.attachmentPaperWrapper}>
+            <Paper className={classes.attachmentPaper}>
+                {attachments.map((attachment, idx) => {
+                  return (
+                    <Grid container wrap="nowrap" key={idx} className={classes.attachmentRow}>
+                      <Grid item className={classes.attachmentIcon}>
+                        {icons[idx]}
+                      </Grid>
+                      <Grid item>
+                        <Typography component="span">
+                          {attachment}
+                        </Typography>
+                      </Grid>
                     </Grid>
-                    <Grid item>
-                      <Typography component="span">
-                        {attachment}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                )
-              })}
-          </Paper>
+                  )
+                })}
+            </Paper>
+          </Grid>
         </Grid>
-      </Grid>
+        }
+      </React.Fragment>
     );
   }
 
@@ -340,7 +343,6 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
     const { classes, profileUsername } = this.props;
     const { errors, loading, replies, ticket } = this.state;
     const ticketId = this.props.match.params.ticketId;
-
     /*
     * Including loading/error states here (rather than in a
     * renderContent function) because the header
@@ -397,7 +399,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
             isCurrentUser={profileUsername === ticket.opened_by}
           />
           {replies && this.renderReplies(replies)}
-          {ticket.attachments && this.renderAttachments(ticket.attachments)}
+          {ticket.attachments.length > 0 && this.renderAttachments(ticket.attachments)}
           {/* If the ticket is open, allow users to reply to it. */}
           {['open','new'].includes(ticket.status) &&
             <TicketReply 

@@ -4,8 +4,8 @@ import { withRouter } from 'react-router-dom';
 import { compose } from 'redux';
 
 import * as session from 'src/session';
-import { getStorage, setStorage } from 'src/storage';
 import { parseQueryParams, splitIntoTwo } from 'src/utilities/queryParams';
+import { getStorage, setStorage } from 'src/utilities/storage';
 
 export class OAuthCallbackPage extends Component<Linode.TodoAny> {
   checkNonce(nonce: string) {
@@ -24,7 +24,7 @@ export class OAuthCallbackPage extends Component<Linode.TodoAny> {
       return redirect('/', history);
     }
 
-    const hashParams = parseQueryParams(location.hash.substr(1));
+    const hashParams = parseQueryParams(location.hash.substr(1)) as any;
     const {
       access_token: accessToken,
       scope: scopes,
@@ -36,10 +36,10 @@ export class OAuthCallbackPage extends Component<Linode.TodoAny> {
     }
 
     let returnTo = '/';
-    if (hashParams['return']
-        && hashParams['return'].indexOf('?') > -1) {
+    if (hashParams.return
+        && hashParams.return.indexOf('?') > -1) {
       const returnParams =
-        parseQueryParams(splitIntoTwo(hashParams['return'], '?')[1]) as Linode.TodoAny;
+        parseQueryParams(splitIntoTwo(hashParams.return, '?')[1]) as Linode.TodoAny;
       returnTo = returnParams.returnTo;
     }
 

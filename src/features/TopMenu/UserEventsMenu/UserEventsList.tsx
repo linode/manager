@@ -61,8 +61,8 @@ const UserEventsList: React.StatelessComponent<CombinedProps> = (props) => {
 
             return title ? [...result, { title, content, success, error, onClick }] : result;
           }, [])
-          .map((props: UserEventsListItemProps, key: number) =>
-            <UserEventsListItem key={key} {...props} />,
+          .map((reducedProps: UserEventsListItemProps, key: number) =>
+            <UserEventsListItem key={key} {...reducedProps} />,
         )
       }
     </React.Fragment>

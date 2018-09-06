@@ -52,7 +52,7 @@ class PasswordInput extends React.Component<CombinedProps, State> {
   onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value: string = e.currentTarget.value;
 
-    this.props.onChange && this.props.onChange(e);
+    if (this.props.onChange) { this.props.onChange(e) }
     this.setState({ strength: maybeStrength(value) });
   }
 

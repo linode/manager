@@ -25,7 +25,7 @@ namespace Linode {
     'master'
     | 'slave';
 
-  export type ZoneFile = {
+  export interface ZoneFile {
     rendered: string,
     status:
     'current'

@@ -56,6 +56,9 @@ class ConfigureLinode extends Page {
     get passwordHeader() { return $('[data-qa-password-input]'); }
     get password() { return $('[data-qa-password-input] input'); }
 
+    get sshHeader() { return $('[data-qa-table="SSH Keys"]'); }
+    get sshKeys() { return $$('[data-qa-ssh-public-key]'); }
+
     get addonsHeader() { return $('[data-qa-add-ons]'); }
     get addons() { return $$('[data-qa-add-ons] [data-qa-checked]');  }
 

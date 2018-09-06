@@ -48,11 +48,33 @@ a {
   cursor: pointer;
 }
 
+.visually-hidden {
+  position: absolute;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+}
+
+.nonMUI-list {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.nonMUI-list li {
+  padding: 4px 0;
+  display: list-item;
+}
+
 /* 
 * do not show the ada chat app button site-wide
 */
 .ada-chat-button {
   display: none !important;
+}
+
+.block {
+  display: block;
 }
 
 a.blue {
@@ -79,12 +101,12 @@ a.black:visited {
   color: #32363C;
 }
 
-a.black:hover {
+a.black:not(.nu):hover {
   color: #32363C;
   text-decoration: underline;
 }
 
-a.black:active {
+a.black:not(.nu):active {
   text-decoration: underline;
 }
 

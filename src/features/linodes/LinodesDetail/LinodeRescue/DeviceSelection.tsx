@@ -74,6 +74,7 @@ const DeviceSelection: React.StatelessComponent<CombinedProps> = (props) => {
                     <MenuItem
                       className="selectHeader"
                       disabled
+                      key={type}
                     >
                       {titlecase(type)}
                     </MenuItem>,

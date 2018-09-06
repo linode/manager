@@ -253,12 +253,12 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
     this.setState({ isSubmitting: true });
 
     updateStackScript(stackScript.response.id, payload)
-      .then((stackScript: Linode.StackScript.Response) => {
+      .then((updatedStackScript: Linode.StackScript.Response) => {
         if (!this.mounted) { return; }
         this.setState({ isSubmitting: false });
         history.push(
           '/stackscripts',
-          { successMessage: `${stackScript.label} successfully updated` }
+          { successMessage: `${updatedStackScript.label} successfully updated` }
         );
       })
       .catch((error: Linode.TodoAny) => {

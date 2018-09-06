@@ -9,6 +9,7 @@ const primaryColors = {
   text: '#606469',
   headline: '#32363C',
   divider: '#f4f4f4',
+  offBlack: '#444',
 }
 
 const LinodeTheme: Linode.Theme = {
@@ -101,7 +102,7 @@ const LinodeTheme: Linode.Theme = {
     },
     caption: {
       fontSize: '.9rem',
-      lineHeight: '1.2em',
+      lineHeight: '1.3em',
       color: primaryColors.text,
     },
     display2: {
@@ -239,7 +240,6 @@ const LinodeTheme: Linode.Theme = {
         paddingRight: 4,
         fontSize: '.9rem',
         position: 'relative',
-        top: -1,
       },
       deleteIcon: {
         color: '#aaa',
@@ -440,7 +440,6 @@ const LinodeTheme: Linode.Theme = {
         },
         '& svg': {
           fontSize: 18,
-          cursor: 'pointer',
           color: primaryColors.main,
           '&:hover': {
             color: '#5E9AEA',
@@ -507,9 +506,22 @@ const LinodeTheme: Linode.Theme = {
         paddingTop: 0,
         paddingBottom: 0,
       },
+      root: {
+        '&.reset': {
+          padding: 'inherit',
+          margin: 'inherit',
+          listStyle: 'initial',
+          '& li': {
+            display: 'list-item',
+            padding: 0,
+            listStyleType: 'initial',
+          },
+        },
+      },
     },
     MuiListItem: {
       root: {
+        color: primaryColors.text,
         '&.selectHeader': {
           opacity: 1,
           fontWeight: 700,
@@ -771,6 +783,26 @@ const LinodeTheme: Linode.Theme = {
       },
       fixed: {
         overflowX: 'auto',
+      },
+    },
+    MuiTableRow: {
+      root: {
+        backfaceVisibility: 'hidden',
+        position: 'relative',
+        zIndex: 1,
+        '&:hover': {
+          '&$hover': {
+            backgroundColor: '#fbfbfb',
+            borderLeftColor: primaryColors.main,
+          },
+        },
+      },
+      hover: {
+        cursor: 'pointer',
+        '& a': {
+          color: primaryColors.offBlack,
+          fontWeight: 700,
+        },
       },
     },
     MuiTooltip: {

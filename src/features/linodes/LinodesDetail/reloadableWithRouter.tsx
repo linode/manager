@@ -11,8 +11,10 @@ type ReloadIf<R> = (
   routePropsNew: RouteComponentProps<R>,
 ) => boolean;
 
+/* tslint:disable */
 export default function reloadableWithRouter<P, R>(reloadIf: ReloadIf<R>) {
   return function (Component: React.ComponentType<P & RouteComponentProps<R>>) {
+    /* tslint:enable */
     class ReloadableComponent extends React.Component<P & RouteComponentProps<R>, State> {
       state = { rendering: true };
 

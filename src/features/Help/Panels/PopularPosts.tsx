@@ -49,43 +49,43 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-interface Props { }
+type CombinedProps = WithStyles<ClassNames>;
 
-interface State { }
-
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-class PopularPosts extends React.Component<CombinedProps, State> {
-  state: State = {};
-
+class PopularPosts extends React.Component<CombinedProps, {}> {
   renderPopularDocs = () => {
     const { classes } = this.props;
     return (
       <React.Fragment>
         <div className={classes.post}>
-          <a target="_blank" href="https://linode.com/docs/platform/stackscripts/">
+          <a
+            target="_blank"
+            href="https://www.linode.com/docs/getting-started/"
+            data-qa-doc-link
+          >
             <Typography variant="subheading">
-              Automate Deployment with StackScripts
+              Getting Started with Linode
             </Typography>
           </a>
         </div>
         <div className={classes.post}>
           <a
             target="_blank"
-            href="https://linode.com/docs/platform/disk-images/linode-backup-service/"
+            href="https://www.linode.com/docs/security/securing-your-server/"
+            data-qa-doc-link
           >
             <Typography variant="subheading">
-              Linode Backup Service
+              How to Secure Your Server
             </Typography>
           </a>
         </div>
         <div className={classes.post}>
           <a
             target="_blank"
-            href="https://linode.com/docs/security/authentication/use-public-key-authentication-with-ssh/"
+            href="https://www.linode.com/docs/troubleshooting/troubleshooting/"
+            data-qa-doc-link
           >
             <Typography variant="subheading">
-              Public Key Authentication with SSH
+              Troubleshooting
             </Typography>
           </a>
         </div>
@@ -100,30 +100,33 @@ class PopularPosts extends React.Component<CombinedProps, State> {
         <div className={classes.post}>
           <a
             target="_blank"
-            href="https://linode.com/community/questions/16988/completing-install-of-phpmyadmin-on-centos-7"
+            href="https://www.linode.com/community/questions/323/my-linode-is-unreachable-after-maintenance"
+            data-qa-community-post
           >
             <Typography variant="subheading">
-              Completing Install of phpMyAdmin on CentOS 7
+            My Linode is unreachable after maintenance
             </Typography>
           </a>
         </div>
         <div className={classes.post}>
           <a
             target="_blank"
-            href="https://linode.com/community/questions/16956/how-do-i-switch-from-a-commercial-ssl-to-lets-encrypt"
+            href="https://www.linode.com/community/questions/232/why-is-my-website-so-slow"
+            data-qa-community-post
           >
             <Typography variant="subheading">
-              How do I switch from a commercial SSL to Let's Encrypt?
+              Why is my website so slow?
             </Typography>
           </a>
         </div>
         <div className={classes.post}>
           <a
             target="_blank"
-            href="https://linode.com/community/questions/16945/how-can-i-install-angularcli-on-ubuntu-1604-lts"
+            href="https://www.linode.com/community/questions/479/stackscript-guide"
+            data-qa-community-post
           >
             <Typography variant="subheading">
-              How can I install @angular/cli on ubuntu 16.04 LTS?
+              Stackscript guide?
             </Typography>
           </a>
         </div>

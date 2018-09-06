@@ -28,7 +28,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 const DashboardCard: React.StatelessComponent<CombinedProps> = (props) => {
   const { title, headerAction, classes } = props;
   return (
-    <Grid container className={classes.container}>
+    <Grid container className={classes.container} data-qa-card={title}>
       <Grid item xs={12}>
         <Grid container justify="space-between" alignItems="flex-start">
           {title && 
