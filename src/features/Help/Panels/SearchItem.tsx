@@ -65,6 +65,6 @@ const searchItem: React.StatelessComponent = (props:any) => {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default searchItem; compose<any, any>(
+export default compose<any, any>(
   styled,
   )(searchItem);
