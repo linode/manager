@@ -326,8 +326,21 @@ export const dark = createTheme({
           borderRadius: 0,
         },
         '& .selectMenuList': {
+          maxHeight: 250,
+          overflowY: 'auto',
+          overflowX: 'hidden',
+          boxSizing: 'content-box',
+          padding: 4,
           '& li': {
             color: primaryColors.text,
+            paddingLeft: 12,
+            paddingRight: 12,
+            '&:hover, &:focus': {
+              color: 'white',
+            },
+          },
+          [breakpoints.down('xs')]: {
+            minWidth: 200,
           },
         },
       },
@@ -361,6 +374,10 @@ export const dark = createTheme({
     },
     MuiSelect: {
       selectMenu: {
+<<<<<<< HEAD:src/themes.ts
+=======
+        padding: '6px 32px 5px 16px',
+>>>>>>> stylying changes to select dropdown:src/darkTheme.ts
         color: primaryColors.text,
         backgroundColor: '#444',
         '&:focus': {
