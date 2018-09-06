@@ -29,7 +29,7 @@ import composeState from 'src/utilities/composeState';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-import EnhancedSelect, { Item } from 'src/components/EnhancedSelect';
+import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 
 type ClassNames = 'root'
   | 'actionPanel';
@@ -242,7 +242,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
 
   onSubmit = () => {
     const { mode, volumeID, handleClose } = this.props;
-    const { cloneLabel, label, size, region, linodeId } = this.state;
+    const { cloneLabel, label, size, region, linodeId, value } = this.state;
 
     switch (mode) {
       case modes.CREATING:
@@ -256,7 +256,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           label,
           size,
           region: region === 'none' ? undefined : region,
-          linode_id: linodeId === 0 ? undefined : linodeId,
+          linode_id: value ? Number(value.value) : linodeId,
         };
 
         createVolume(payload)
@@ -359,7 +359,12 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
   }
 
   setSelectedLinode = (selected:Item) => {
-    if (this.mounted && selected) { this.setState({ linodeId: Number(selected.value) }); }
+    if (this.mounted && selected) { 
+      this.setState({ 
+        linodeId: Number(selected.value),
+        value: selected,
+      });
+    }
   }
 
   setSelectedRegion = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -413,7 +418,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
   }
 
   renderLinodeOptions = (linodes:Linode.Linode[], mode:string, region:string, linodeLabel:string) => {
-    if (!linodes) { return; }
+    if (!linodes) { return []; }
     const options: Item[] = linodes.filter((linode) => {
       return (
         (region && region !== 'none')
@@ -446,10 +451,10 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
       label,
       size,
       region,
-      linodeId,
       configs,
       selectedConfig,
       errors,
+      value,
     } = this.state;
 
     const hasErrorFor = getAPIErrorFor({
@@ -574,16 +579,13 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
               label="Linode"
               placeholder="Select a Linode"
               errorText={linodeError}
-              value={mode === modes.EDITING || mode === modes.RESIZING
-                ? linodeLabel
-                : `${linodeId}`}
+              value={value}
               disabled={
                 mode === modes.EDITING
                 || mode === modes.RESIZING
               }
-              handleSelect={this.setSelectedLinode}
+              onChange={this.setSelectedLinode}
               options={this.renderLinodeOptions(linodes, mode, region, linodeLabel)}
-              inputProps={{ name: 'linode', id: 'linode' }}
               data-qa-select-linode
             />
             {region !== 'none' &&
