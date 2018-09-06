@@ -166,7 +166,7 @@ class LinodeRow extends React.Component<CombinedProps, State> {
     if (!linodeType) { return }
     getType(linodeType)
       .then((data: Linode.LinodeType) => {
-        if (data.successor !== null) {
+        if (data.successor && data.successor !== null) {
           this.setState({ mutationAvailable: true })
         }
       })
