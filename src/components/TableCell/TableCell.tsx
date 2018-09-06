@@ -31,13 +31,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-interface Props {
+export interface Props extends TableCellProps {
   noWrap?: boolean;
   sortable?: boolean;
   className?: string;
 }
 
-type CombinedProps = Props & TableCellProps & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 class WrappedTableCell extends React.Component<CombinedProps> {
 
