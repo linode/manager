@@ -4,6 +4,7 @@ namespace Linode {
     email: string;
     restricted: boolean;
     gravatarUrl?: string;
+    ssh_keys: string[];
   }
 
   export interface Account {

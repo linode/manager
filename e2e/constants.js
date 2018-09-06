@@ -13,6 +13,10 @@ exports.constants = {
 	routes: {
 		storybook: '/',
 		dashboard: '/',
+		create: {
+			linode: '/linodes/create',
+			nodebalancer: '/nodebalancers/create',
+		},
 		linodes: '/linodes',
 		volumes: '/volumes',
 		nodeBalancers: '/nodebalancers',
@@ -31,6 +35,7 @@ exports.constants = {
 			tokens: '/profile/tokens',
 			oauth: '/profile/clients',
 			lish: '/profile/lish',
+			sshKeys: '/profile/keys',
 		},
 		support: {
 			landing: '/support',

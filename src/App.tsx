@@ -284,10 +284,10 @@ export class App extends React.Component<CombinedProps, State> {
       /* Initialize Survicate
       * Done here rather than in index.tsx so that
       * we have access to the logged in user's ID
-      */ 
+      */
       initSurvicate(window, userId);
       this.surveyed = true;
-    } 
+    }
   }
 
   closeMenu = () => { this.setState({ menuOpen: false }); }
@@ -320,7 +320,7 @@ export class App extends React.Component<CombinedProps, State> {
                 <div {...themeDataAttr()} className={classes.appFrame}>
                   <SideMenu open={menuOpen} closeMenu={this.closeMenu} toggleTheme={toggleTheme} />
                   <main className={classes.content}>
-                    <TopMenu openSideMenu={this.openMenu} />                  
+                    <TopMenu openSideMenu={this.openMenu} />
                     <div className={classes.wrapper} id="main-content">
                     <StickyContainer>
                       <Grid container spacing={0} className={classes.grid}>
@@ -365,7 +365,7 @@ export class App extends React.Component<CombinedProps, State> {
                       </Grid>
                       </StickyContainer>
                     </div>
-                    
+
                   </main>
                   <Footer />
                   <BetaNotification
