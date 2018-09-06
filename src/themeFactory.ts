@@ -543,7 +543,7 @@ const themeDefaults: ThemeOptions = {
         lineHeight: 1.4,
       },
       focused: {
-        borderColor: '#999',
+        borderColor: primaryColors.main,
       },
       error: {
         borderColor: '#CA0813',
@@ -633,9 +633,10 @@ const themeDefaults: ThemeOptions = {
           boxShadow: 'none',
           position: 'absolute',
           boxSizing: 'content-box',
-          border: '1px solid #999',
+          border: `1px solid ${primaryColors.main}`,
           margin: '0 0 0 -1px',
           outline: 0,
+          borderRadius: 0,
         },
         '& .selectMenuList': {
           maxHeight: 250,
