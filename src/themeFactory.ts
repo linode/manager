@@ -643,9 +643,12 @@ const themeDefaults: ThemeOptions = {
           overflowY: 'auto',
           overflowX: 'hidden',
           boxSizing: 'content-box',
+          padding: 4,
           '& li': {
             color: primaryColors.text,
-            '&:hover, &:focus': {
+            paddingLeft: 12,
+            paddingRight: 12,
+            '&:hover': {
               color: 'white',
             },
           },
@@ -664,8 +667,8 @@ const themeDefaults: ThemeOptions = {
         textOverflow: 'initial',
         color: primaryColors.main,
         transition: `${'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), '}
-          ${'color .2s cubic-bezier(0.4, 0, 0.2, 1)'}`,
-        '&:hover, &:focus': {
+        ${'color .2s cubic-bezier(0.4, 0, 0.2, 1)'}`,
+        '&:hover': {
           backgroundColor: primaryColors.main,
           color: 'white',
         },
@@ -677,9 +680,6 @@ const themeDefaults: ThemeOptions = {
         backgroundColor: 'white !important',
         color: `${primaryColors.main} !important`,
         opacity: 1,
-        '&:focus': {
-          backgroundColor: '#f4f4f4 !important',
-        },
       },
     },
     MuiPaper: {
@@ -699,7 +699,7 @@ const themeDefaults: ThemeOptions = {
     },
     MuiSelect: {
       selectMenu: {
-        padding: '5px 32px 5px 16px',
+        padding: '6px 32px 5px 16px',
         color: primaryColors.text,
         backgroundColor: '#fff',
         lineHeight: 2.3,
