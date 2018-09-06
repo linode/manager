@@ -153,15 +153,6 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
     this.searchAlgolia(inputValue);
   }
 
-  renderOptionsHelper = (item:Item, currentIndex:number, highlighted:boolean, itemProps:any) => {
-    const { classes } = this.props;
-    return (
-    <div key={currentIndex} {...itemProps} className={`${classes.searchItem} ${highlighted && classes.searchItemHighlighted}`} >
-      <SearchItem item={item} highlighted={highlighted}  />
-    </div>
-    )
-  }
-
   getLinkTarget = (inputValue:string) => {
     return inputValue
       ? `/support/search/?query=${inputValue}`
