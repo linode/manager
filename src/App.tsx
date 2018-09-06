@@ -17,6 +17,7 @@ import { DocumentTitleSegment, withDocumentTitleProvider } from 'src/components/
 import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import SideMenu from 'src/components/SideMenu';
+import { isProduction } from 'src/constants';
 import { RegionsProvider, WithRegionsContext } from 'src/context/regions';
 import { TypesProvider, WithTypesContext } from 'src/context/types';
 import Footer from 'src/features/Footer';
@@ -275,9 +276,10 @@ export class App extends React.Component<CombinedProps, State> {
     const { userId } = this.props;
     /* userId is a connected prop; if it's loaded
     * (default value is 1) and we haven't already
-    * done this, initialize the survey.
+    * done this, initialize the survey. Also, shouldn't
+    * load the survey in development.
     * */
-    if (userId && userId !== 1 && !this.surveyed) {
+    if (userId && userId !== 1 && !this.surveyed && isProduction) {
       /* Initialize Survicate
       * Done here rather than in index.tsx so that
       * we have access to the logged in user's ID
