@@ -9,6 +9,7 @@ import {
 } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
+import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
@@ -50,6 +51,7 @@ interface Props {
   linodeId: number;
   loading: boolean;
   error: string;
+  optOut: (linodeId: number) => void;
 }
 
 interface State {
@@ -96,6 +98,10 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
         }
       }
     } as State;
+  }
+
+  handleOptOut = () => {
+    this.props.optOut(this.props.linodeId)
   }
 
   render() {
@@ -149,9 +155,23 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
             by resizing your disk images.
           </Typography>
         </ol>
-        <Button loading={loading} onClick={this.props.initMutation} type="primary" style={{ marginTop: 32 }}>
-          Enter the Upgrade Queue
-        </Button>
+        <ActionsPanel style={{ marginTop: 32 }}>
+          <Button 
+            loading={loading}
+            onClick={this.props.initMutation}
+            type="primary"
+            compact
+          >
+            Enter the Upgrade Queue
+          </Button>
+          <Button 
+            onClick={this.handleOptOut}
+            type="secondary"
+            compact
+          >
+            Opt Out of Upgrade
+          </Button>
+        </ActionsPanel>
         {/*
         * Show when the relevant docs exist
         */}
