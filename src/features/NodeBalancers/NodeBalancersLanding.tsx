@@ -41,6 +41,7 @@ type ClassNames = 'root'
   | 'nodeStatus'
   | 'transferred'
   | 'ports'
+  | 'ipsWrapper'
   | 'ip';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
@@ -61,11 +62,15 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     minWidth: 100,
   },
   ports: {
-    width: '5%',
+    width: '10%',
     minWidth: 50,
   },
+  ipsWrapper: {
+    display: 'inline-flex',
+    flexDirection: 'column',
+  },
   ip: {
-    width: '20%',
+    width: '30%',
     minWidth: 200,
   },
 });
@@ -381,6 +386,7 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
   };
 
   renderData = (nodeBalancers: Linode.ExtendedNodeBalancer[]) => {
+    const { classes } = this.props;
 
     return nodeBalancers.map((nodeBalancer) => {
       return (
@@ -408,8 +414,10 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
             {nodeBalancer.ports.join(', ')}
           </TableCell>
           <TableCell data-qa-nodebalancer-ips>
-            <IPAddress ips={[nodeBalancer.ipv4]} copyRight />
-            {nodeBalancer.ipv6 && <IPAddress ips={[nodeBalancer.ipv6]} copyRight />}
+            <div className={classes.ipsWrapper}>
+              <IPAddress ips={[nodeBalancer.ipv4]} copyRight />
+              {nodeBalancer.ipv6 && <IPAddress ips={[nodeBalancer.ipv6]} copyRight />}
+            </div>
           </TableCell>
           <TableCell data-qa-region>
             <RegionIndicator region={nodeBalancer.region} />

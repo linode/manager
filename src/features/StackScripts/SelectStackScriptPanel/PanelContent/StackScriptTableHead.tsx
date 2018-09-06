@@ -8,13 +8,13 @@ import {
   WithStyles,
 } from '@material-ui/core/styles';
 import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
 
 import Button from 'src/components/Button';
 import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 
 type ClassNames = 'root'
   | 'stackscriptLabel'
