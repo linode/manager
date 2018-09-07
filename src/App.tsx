@@ -16,6 +16,7 @@ import { DocumentTitleSegment, withDocumentTitleProvider } from 'src/components/
 import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import SideMenu from 'src/components/SideMenu';
+import { isProduction, isTest } from 'src/constants';
 import { RegionsProvider, WithRegionsContext } from 'src/context/regions';
 import { TypesProvider, WithTypesContext } from 'src/context/types';
 import Footer from 'src/features/Footer';
@@ -190,12 +191,17 @@ export class App extends React.Component<CombinedProps, State> {
       loading: false,
       request: () => {
         this.composeState([set(L.typesContext.loading, true)]);
-        return Promise.all([getLinodeTypes(), getDeprecatedLinodeTypes()])
-          .then((types: Linode.ResourcePage<Linode.LinodeType>[]) => {
+        return Promise.all([getLinodeTypes(), getDeprecatedLinodeTypes()
+          .catch(e => Promise.resolve([]))])
+          .then((types: any[]) => {
+            /* if for whatever reason we cannot get the types, just use the curernt types */
+            const cleanedTypes = (types[1].data)
+              ? [...types[0].data, ...types[1].data]
+              : types[0].data;
             this.composeState([
               set(L.typesContext.loading, false),
               set(L.typesContext.lastUpdated, Date.now()),
-              set(L.typesContext.data, [...types[0].data, ...types[1].data]),
+              set(L.typesContext.data, cleanedTypes),
             ])
           })
           .catch((error: any) => {
@@ -251,9 +257,14 @@ export class App extends React.Component<CombinedProps, State> {
     const { userId } = this.props;
     /* userId is a connected prop; if it's loaded
     * (default value is 1) and we haven't already
-    * done this, initialize the survey.
+    * done this, initialize the survey. Also, shouldn't
+    * load the survey in development.
     * */
-    if (userId && userId !== 1 && !this.surveyed) {
+    if (isTest) {
+      // Temporary hack until we implement NODE_ENV=test
+      return;
+    }
+    if (userId && userId !== 1 && !this.surveyed && isProduction) {
       /* Initialize Survicate
       * Done here rather than in index.tsx so that
       * we have access to the logged in user's ID

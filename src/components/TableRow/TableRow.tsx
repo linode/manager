@@ -9,6 +9,10 @@ type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
+    borderLeft: '5px solid transparent',
+    '& > td:first-child, & > th:first-child': {
+      paddingLeft: 13,
+    },
     transition: theme.transitions.create(['background-color', 'border-left-color']),
     '& .secondaryLink': {
       transition: theme.transitions.create('color'),
@@ -22,21 +26,27 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
+type onClickFn = (e: React.MouseEvent<HTMLElement>) => void;
+
 interface Props {
-  rowLink?: string;
+  rowLink?: string | onClickFn;
   className?: string;
   staticContext?: boolean;
+  htmlFor?: string;
 }
 
 type CombinedProps = Props & TableRowProps & RouteComponentProps<{}> & WithStyles<ClassNames>;
 
 class WrappedTableRow extends React.Component<CombinedProps> {
 
-  goTo = (e: any, path: string) =>  {
+  rowClick = (e: any, target: string | onClickFn ) =>  {
     if (e.target.tagName === 'TD') {
       e.stopPropagation();
-      this.props.history.push(path);
+      if (typeof(target) === 'string') {
+        this.props.history.push(target);
+      }
     }
+    if (typeof(target) === 'function') { target(e) };
   }
 
   render() {
@@ -44,11 +54,11 @@ class WrappedTableRow extends React.Component<CombinedProps> {
 
     return (
         <TableRow
-          onClick={(e) => rowLink && this.goTo(e, rowLink)}
+          onClick={(e) => rowLink && this.rowClick(e, rowLink)}
           hover={rowLink !== undefined}
           role={rowLink && 'link'}
           className={classNames(
-          className,
+            className,
             {
               [classes.root]: true,
             })}
