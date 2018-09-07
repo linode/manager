@@ -1,5 +1,5 @@
 import { shim } from 'promise.prototype.finally';
-import { lensPath, pathOr, set } from 'ramda';
+import { lensPath, path, set } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
@@ -24,8 +24,6 @@ import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import { getDeprecatedLinodeTypes, getLinodeTypes } from 'src/services/linodes';
 import { getRegions } from 'src/services/misc';
-import { getProfile } from 'src/services/profile';
-import { request, response } from 'src/store/reducers/resources';
 import { requestProfile } from 'src/store/reducers/resources/profile';
 import initSurvicate from 'src/survicate';
 import composeState from 'src/utilities/composeState';
@@ -237,18 +235,13 @@ export class App extends React.Component<CombinedProps, State> {
   };
 
   componentDidMount() {
-    const { dispatchRequest, dispatchResponse } = this.props;
+    const { getProfile } = this.props.actions;
 
     if (notifications.beta.get() === 'open') {
       this.setState({ betaNotification: true });
     }
 
-    dispatchRequest(['profile']);
-    getProfile()
-      .then(({ data }) => {
-        dispatchResponse(['profile'], data);
-      })
-      .catch(error => dispatchResponse(['profile'], error));
+    getProfile();
 
     this.state.regionsContext.request();
     this.state.typesContext.request();
@@ -286,14 +279,16 @@ export class App extends React.Component<CombinedProps, State> {
 
   render() {
     const { menuOpen } = this.state;
-    const { classes, longLivedLoaded, documentation, toggleTheme } = this.props;
+    const { classes, documentation, toggleTheme, profileLoading, profileError } = this.props;
+
     const hasDoc = documentation.length > 0;
 
     return (
       <React.Fragment>
         <a href="#main-content" className="visually-hidden">Skip to main content</a>
         <DocumentTitleSegment segment="Linode Manager" />
-        {longLivedLoaded &&
+
+        {profileLoading === false && !profileError &&
           <React.Fragment>
             <TypesProvider value={this.state.typesContext}>
               <RegionsProvider value={this.state.regionsContext}>
@@ -302,47 +297,47 @@ export class App extends React.Component<CombinedProps, State> {
                   <main className={classes.content}>
                     <TopMenu openSideMenu={this.openMenu} />
                     <div className={classes.wrapper} id="main-content">
-                    <StickyContainer>
-                      <Grid container spacing={0} className={classes.grid}>
-                        <Grid item className={`${classes.switchWrapper} ${hasDoc ? 'mlMain' : ''}`}>
-                          <Switch>
-                            <Route path="/linodes" component={LinodesRoutes} />
-                            <Route path="/volumes" component={Volumes} />
-                            <Route path="/nodebalancers" component={NodeBalancers} />
-                            <Route path="/domains" component={Domains} />
-                            <Route exact path="/managed" component={Managed} />
-                            <Route exact path="/longview" component={Longview} />
-                            <Route exact path="/images" component={Images} />
-                            <Route path="/stackscripts" component={StackScripts} />
-                            <Route exact path="/billing" component={Account} />
-                            <Route exact path="/billing/invoices/:invoiceId" component={InvoiceDetail} />
-                            <Route path="/users" component={Users} />
-                            <Route exact path="/support/tickets" component={SupportTickets} />
-                            <Route path="/support/tickets/:ticketId" component={SupportTicketDetail} />
-                            <Route path="/profile" component={Profile} />
-                            <Route exact path="/support" component={Help} />
-                            <Route exact path="/support/search/" component={SupportSearchLanding} />
-                            <Route path="/dashboard" component={Dashboard} />
-                            <Redirect exact from="/" to="/dashboard" />
-                            <Route component={NotFound} />
-                          </Switch>
-                        </Grid>
-                        {hasDoc &&
-                          <Grid className='mlSidebar'>
-                            <Sticky topOffset={-24} disableCompensation>
-                              {(props: StickyProps) => {
-                                return (
-                                  <DocsSidebar
-                                    docs={documentation}
-                                    {...props}
-                                  />
-                                )
-                              }
-                              }
-                            </Sticky>
+                      <StickyContainer>
+                        <Grid container spacing={0} className={classes.grid}>
+                          <Grid item className={`${classes.switchWrapper} ${hasDoc ? 'mlMain' : ''}`}>
+                            <Switch>
+                              <Route path="/linodes" component={LinodesRoutes} />
+                              <Route path="/volumes" component={Volumes} />
+                              <Route path="/nodebalancers" component={NodeBalancers} />
+                              <Route path="/domains" component={Domains} />
+                              <Route exact path="/managed" component={Managed} />
+                              <Route exact path="/longview" component={Longview} />
+                              <Route exact path="/images" component={Images} />
+                              <Route path="/stackscripts" component={StackScripts} />
+                              <Route exact path="/billing" component={Account} />
+                              <Route exact path="/billing/invoices/:invoiceId" component={InvoiceDetail} />
+                              <Route path="/users" component={Users} />
+                              <Route exact path="/support/tickets" component={SupportTickets} />
+                              <Route path="/support/tickets/:ticketId" component={SupportTicketDetail} />
+                              <Route path="/profile" component={Profile} />
+                              <Route exact path="/support" component={Help} />
+                              <Route exact path="/support/search/" component={SupportSearchLanding} />
+                              <Route path="/dashboard" component={Dashboard} />
+                              <Redirect exact from="/" to="/dashboard" />
+                              <Route component={NotFound} />
+                            </Switch>
                           </Grid>
-                        }
-                      </Grid>
+                          {hasDoc &&
+                            <Grid className='mlSidebar'>
+                              <Sticky topOffset={-24} disableCompensation>
+                                {(props: StickyProps) => {
+                                  return (
+                                    <DocsSidebar
+                                      docs={documentation}
+                                      {...props}
+                                    />
+                                  )
+                                }
+                                }
+                              </Sticky>
+                            </Grid>
+                          }
+                        </Grid>
                       </StickyContainer>
                     </div>
 
@@ -376,28 +371,34 @@ const themeDataAttr = () => {
 }
 
 interface DispatchProps {
-  dispatchRequest: typeof request;
-  dispatchResponse: typeof response;
-  dispatchRequestProfile: () => void;
+  actions: {
+    getProfile: () => void;
+  },
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, ownProps) => {
   return {
-    dispatchRequest: (path: string[]) => dispatch(request(path)),
-    dispatchResponse: (path: string[], payload: any) => dispatch(response(path, payload)),
-    dispatchRequestProfile: () => dispatch(requestProfile()),
+    actions: {
+      getProfile: () => dispatch(requestProfile()),
+    }
   };
 };
 
 interface StateProps {
+  /** Profile */
+  profileLoading: boolean;
+  profileError?: Error;
+  userId?: number;
+
   documentation: Linode.Doc[];
-  longLivedLoaded: boolean;
-  userId: number | null;
 }
 
 const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state, ownProps) => ({
-  longLivedLoaded: Boolean(pathOr(false, ['resources', 'profile', 'data'], state)),
-  userId: pathOr(null,['resources', 'profile', 'data', 'uid'], state),
+  /** Profile */
+  profileLoading: state.__resources.profile.loading,
+  profileError: state.__resources.profile.error,
+  userId: path(['data', 'uid'], state.__resources.profile),
+
   documentation: state.documentation,
 });
 

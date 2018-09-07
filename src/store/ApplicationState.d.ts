@@ -4,17 +4,12 @@ declare interface ApplicationState {
   },
   authentication: AuthState;
   documentation: DocumentationState;
-  resources: ResourcesState;
   volumeDrawer: VolumeDrawerState;
 }
 
 declare interface AuthState {
   token: null | string;
   scopes: null | string;
-}
-
-declare interface ResourcesState {
-  profile: { loading: boolean; data: Linode.Profile };
 }
 
 declare type DocumentationState = Linode.Doc[];

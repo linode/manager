@@ -1,6 +1,6 @@
-import { pathOr } from 'ramda';
+import { path } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
+import { connect, MapStateToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
@@ -10,11 +10,7 @@ interface Props {
   onDelete: (username: string) => void;
 }
 
-interface ConnectedProps {
-  profileUsername: string;
-}
-
-type CombinedProps = Props & RouteComponentProps<{}> & ConnectedProps;
+type CombinedProps = Props & StateProps & RouteComponentProps<{}>;
 
 class UsersActionMenu extends React.Component<CombinedProps> {
   createActions = () => {
@@ -67,9 +63,12 @@ class UsersActionMenu extends React.Component<CombinedProps> {
     );
   }
 }
+interface StateProps {
+  profileUsername?: string;
+}
 
-const mapStateToProps = (state: ApplicationState) => ({
-  profileUsername: pathOr('', ['resources', 'profile', 'data', 'username'], state),
+const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state, ownProps) => ({
+  profileUsername: path(['data', 'username'], state.__resources.profile),
 });
 
 export const connected = connect(mapStateToProps);

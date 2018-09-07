@@ -1,8 +1,8 @@
 import * as Bluebird from 'bluebird';
 import * as classNames from 'classnames';
-import { compose, concat, pathOr } from 'ramda';
+import { compose, concat, path, pathOr } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
+import { connect, MapStateToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 
 import Chip from '@material-ui/core/Chip';
@@ -122,10 +122,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 
 type RouteProps = RouteComponentProps<{ ticketId?: number }>;
 
-interface ConnectedProps {
-  profileUsername: string;
-}
-
 interface State {
   loading: boolean;
   errors?: Linode.ApiFieldError[];
@@ -133,7 +129,7 @@ interface State {
   ticket?: Linode.SupportTicket;
 }
 
-type CombinedProps = RouteProps & ConnectedProps & WithStyles<ClassNames>;
+type CombinedProps = RouteProps & StateProps & WithStyles<ClassNames>;
 
 const scrollToBottom = () => {
   window.scroll({
@@ -402,7 +398,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
           {ticket.attachments.length > 0 && this.renderAttachments(ticket.attachments)}
           {/* If the ticket is open, allow users to reply to it. */}
           {['open','new'].includes(ticket.status) &&
-            <TicketReply 
+            <TicketReply
               ticketId={ticketId!}
               onSuccess={this.onCreateReplySuccess}
               reloadAttachments={this.reloadAttachments}
@@ -428,8 +424,12 @@ const requestAndMapGravatar = (acc: any, id: string) => {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const mapStateToProps = (state: ApplicationState) => ({
-  profileUsername: pathOr('', ['resources', 'profile', 'data', 'username'], state),
+interface StateProps {
+  profileUsername?: string;
+}
+
+const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state) => ({
+  profileUsername: path(['data', 'username'], state.__resources.profile),
 });
 
 const matchGravatarURLToReply = (gravatarMap: {[ key: string]: string }) => (reply: Linode.SupportReply) =>

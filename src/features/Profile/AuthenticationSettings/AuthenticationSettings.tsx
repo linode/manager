@@ -1,14 +1,13 @@
-import { compose, lensPath, set, } from 'ramda';
+import { compose, lensPath, path, set } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators, Dispatch } from 'redux';
+import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Notice from 'src/components/Notice';
-import { response } from 'src/store/reducers/resources';
+import { handleUpdate } from 'src/store/reducers/resources/profile';
 
 import SecuritySettings from './SecuritySettings';
 import TwoFactor from './TwoFactor';
@@ -26,19 +25,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface ConnectedProps {
-  loading: boolean;
-  ipWhitelisting: boolean;
-  twoFactor: boolean;
-  username: string;
-  updateProfile: (v: Partial<Linode.Profile>) => void;
-}
-
 interface State {
   success?: string;
 }
 
-type CombinedProps = ConnectedProps & WithStyles<ClassNames>;
+type CombinedProps = StateProps & DispatchProps & WithStyles<ClassNames>;
 
 export class AuthenticationSettings extends React.Component<CombinedProps, State> {
   /*
@@ -51,16 +42,16 @@ export class AuthenticationSettings extends React.Component<CombinedProps, State
 
   // See above
   clearState = () => {
-    this.setState(set(lensPath(['success']), undefined ));
+    this.setState(set(lensPath(['success']), undefined));
   }
 
   // See above
   onWhitelistingDisable = () => {
-    this.setState(set(lensPath(['success']), 'IP whitelisting disabled. This feature cannot be re-enabled.' ));
+    this.setState(set(lensPath(['success']), 'IP whitelisting disabled. This feature cannot be re-enabled.'));
   }
 
   render() {
-    const { loading, ipWhitelisting, twoFactor, username, updateProfile } = this.props;
+    const { loading, ipWhitelisting, twoFactor, username, actions } = this.props;
     const { success } = this.state;
 
     return (
@@ -74,11 +65,11 @@ export class AuthenticationSettings extends React.Component<CombinedProps, State
               twoFactor={twoFactor}
               username={username}
               clearState={this.clearState}
-              updateProfile={updateProfile}
+              updateProfile={actions.updateProfile}
             />
             {ipWhitelisting &&
               <SecuritySettings
-                updateProfile={updateProfile}
+                updateProfile={actions.updateProfile}
                 onSuccess={this.onWhitelistingDisable}
                 data-qa-whitelisting-form
               />
@@ -99,26 +90,35 @@ export class AuthenticationSettings extends React.Component<CombinedProps, State
 
 const styled = withStyles(styles, { withTheme: true });
 
-const mapStateToProps = (state: ApplicationState) => {
-  const { loading, data } = state.resources.profile!;
+interface StateProps {
+  loading: boolean;
+  ipWhitelisting?: boolean;
+  twoFactor?: boolean;
+  username?: string;
+}
 
-  if (loading) {
-    return { loading: true }
-  }
+const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state) => {
+  const { profile } = state.__resources;
 
   return {
-    ipWhitelisting: data.ip_whitelist_enabled,
-    twoFactor: data.two_factor_auth,
-    username: data.username,
+    loading: profile.loading,
+    ipWhitelisting: path(['data', 'ip_whitelist_enabled'], profile),
+    twoFactor: path(['data', 'two_factor_auth'], profile),
+    username: path(['data', 'username'], profile),
   };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
-  {
-    updateProfile: (v: Partial<Linode.Profile>) => response(['profile'], v),
+interface DispatchProps {
+  actions: {
+    updateProfile: (v: Partial<Linode.Profile>) => void;
   },
-  dispatch,
-);
+}
+
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch) => ({
+  actions: {
+    updateProfile: (v: Partial<Linode.Profile>) => dispatch(handleUpdate(v)),
+  },
+});
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 

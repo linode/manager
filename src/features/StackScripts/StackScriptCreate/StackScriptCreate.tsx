@@ -1,37 +1,27 @@
+import { compose, path } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
+import { connect, MapStateToProps } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 
-import { compose, pathOr } from 'ramda';
-
-import {
-  StyleRulesCallback,
-  Theme,
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
-
 import IconButton from '@material-ui/core/IconButton';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import PromiseLoader from 'src/components/PromiseLoader';
-
-import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
-
+import ScriptForm from 'src/features/StackScripts/StackScriptForm';
 import { getLinodeImages } from 'src/services/images';
 import { createStackScript } from 'src/services/stackscripts';
-
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-
-import ScriptForm from 'src/features/StackScripts/StackScriptForm';
 
 type ClassNames = 'root'
   | 'backButton'
@@ -56,10 +46,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-interface Props {
-  profile: Linode.Profile;
-}
-
 interface PreloadedProps {
   images: { response: Linode.Image[] }
 }
@@ -77,13 +63,13 @@ interface State {
   dialogOpen: boolean;
 }
 
-type CombinedProps = Props
+type CombinedProps = StateProps
   & SetDocsProps
   & WithStyles<ClassNames>
   & PreloadedProps
   & RouteComponentProps<{}>;
 
-const preloaded = PromiseLoader<Props>({
+const preloaded = PromiseLoader({
   images: () => getLinodeImages()
     .then(response => response.data || [])
 })
@@ -255,8 +241,8 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
           destructive
           onClick={this.resetAllFields}
           data-qa-confirm-cancel
-          >
-        Reset
+        >
+          Reset
         </Button>
       </ActionsPanel>
     )
@@ -278,13 +264,17 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, profile } = this.props;
+    const { classes, username } = this.props;
     const { availableImages, selectedImages, script,
       labelText, descriptionText, revisionNote, errors,
-    isSubmitting } = this.state;
+      isSubmitting } = this.state;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
+
+    if (!username) {
+      return <ErrorState errorText="An error has occured. Please try again." />
+    }
 
     return (
       <React.Fragment>
@@ -315,7 +305,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
           </Grid>
         </Grid>
         <ScriptForm
-          currentUser={profile.username}
+          currentUser={username}
           images={{
             available: availableImages,
             selected: selectedImages,
@@ -354,9 +344,15 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
   }
 }
 
-const mapStateToProps = (state: ApplicationState) => ({
-  profile: pathOr({}, ['resources', 'profile', 'data'], state),
+interface StateProps {
+  username?: string;
+}
+
+const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state) => ({
+  username: path(['data', 'username'], state.__resources.profile),
 });
+
+const connected = connect(mapStateToProps);
 
 const styled = withStyles(styles, { withTheme: true });
 
@@ -364,6 +360,6 @@ export default compose(
   setDocs(StackScriptCreate.docs),
   styled,
   withRouter,
-  connect(mapStateToProps),
+  connected,
   preloaded,
 )(StackScriptCreate)

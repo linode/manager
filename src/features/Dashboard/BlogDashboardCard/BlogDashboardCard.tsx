@@ -45,13 +45,20 @@ class BlogDashboardCard extends React.Component<CombinedProps, State> {
     loading: true,
   };
 
+  mounted: boolean = false;
+
+  componentWillUnmount() {
+    this.mounted = false;
+  }
+
   componentDidMount() {
+    this.mounted = true;
 
     req.get(`https://blog.linode.com/feed/`, { responseType: 'text' })
       .then(({ data }) => parseXMLStringPromise(data))
       .then(processXMLData)
-      .then((items: BlogItem[]) => this.setState({ items, loading: false, }))
-      .catch((error) => this.setState({ loading: false, errors: [{ reason: 'Unable to parse blog data.' }] }))
+      .then((items: BlogItem[]) => this.mounted && this.setState({ items, loading: false, }))
+      .catch((error) => this.mounted && this.setState({ loading: false, errors: [{ reason: 'Unable to parse blog data.' }] }))
   }
 
   render() {

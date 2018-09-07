@@ -1,4 +1,6 @@
+import { prop } from 'ramda';
 import { compose, Dispatch } from 'redux';
+
 import { getProfile } from 'src/services/profile';
 
 // TYPES
@@ -25,7 +27,7 @@ export const handleError: ActionCreator = (error: Error) => ({ type: ERROR, erro
 
 export const handleSuccess: ActionCreator = (data: Linode.Profile) => ({ type: SUCCESS, data });
 
-export const handleUpdate: ActionCreator = (data: Linode.Profile) => ({ type: LOAD, data });
+export const handleUpdate: ActionCreator = (data: Linode.Profile) => ({ type: UPDATE, data });
 
 // DEFAULT STATE
 export const DEFAULT_STATE: State = {
@@ -48,6 +50,7 @@ export default (state: State = DEFAULT_STATE, action: Action) => {
       return { ...state, loading: false, lastUpdated: Date.now(), data: action.data };
 
     case UPDATE:
+    console.log('UPDATE')
       return { ...state, loading: false, lastUpdated: Date.now(), data: action.data };
 
     default:
@@ -60,6 +63,6 @@ export const requestProfile = () => (dispatch: Dispatch<State>) => {
 
   dispatch(startRequest());
   getProfile()
-    .then(compose(dispatch, handleSuccess))
+    .then(compose(dispatch, handleSuccess, prop('data')))
     .catch(compose(dispatch, handleError));
 };

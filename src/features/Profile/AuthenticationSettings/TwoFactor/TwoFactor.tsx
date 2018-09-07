@@ -1,6 +1,6 @@
-import { compose, pathOr } from 'ramda';
+import { compose, path, pathOr } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
+import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -14,7 +14,8 @@ import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';
-import { disableTwoFactor, getTFAToken, } from 'src/services/profile';
+import { disableTwoFactor, getTFAToken } from 'src/services/profile';
+import { handleUpdate } from 'src/store/reducers/resources/profile';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -56,16 +57,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   });
 
 interface Props {
-  twoFactor: boolean;
-  username: string;
   clearState: () => void;
-  updateProfile: (v: Partial<Linode.Profile>) => void;
-}
-
-interface ConnectedProps {
-  profile: {
-    data: Linode.Profile
-  };
 }
 
 interface ConfirmDisable {
@@ -81,11 +73,11 @@ interface State {
   secret: string;
   showQRCode: boolean;
   success?: string;
-  twoFactorEnabled: boolean;
-  twoFactorConfirmed: boolean;
+  twoFactorEnabled?: boolean;
+  twoFactorConfirmed?: boolean;
 }
 
-type CombinedProps = Props & ConnectedProps & WithStyles<ClassNames>;
+type CombinedProps = Props & StateProps & DispatchProps & WithStyles<ClassNames>;
 
 export class TwoFactor extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
@@ -108,7 +100,7 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
   * @todo This logic can be removed when IP Whitelisting (legacy)
   * has been fully deprecated.
   */
-  componentDidUpdate (prevProps:CombinedProps, prevState:State) {
+  componentDidUpdate(prevProps: CombinedProps, prevState: State) {
     if (prevState.twoFactorEnabled !== this.state.twoFactorEnabled) {
       this.props.clearState();
     }
@@ -118,7 +110,7 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
   }
 
   openDisableDialog = () => {
-    this.setState({ disableDialog: { open: true, error: undefined, submitting: false, }});
+    this.setState({ disableDialog: { open: true, error: undefined, submitting: false, } });
   }
 
   closeDisableDialog = () => {
@@ -128,12 +120,14 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
       disableDialog: {
         error: undefined,
         open: false,
-        submitting: false, }});
+        submitting: false,
+  }
+    });
   }
 
   confirmToken = () => {
-    this.props.updateProfile({
-      ...this.props.profile.data,
+    this.props.actions.updateProfile({
+      ...this.props.profile,
       two_factor_auth: true,
     });
     this.setState({
@@ -147,8 +141,8 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
   disableTFA = () => {
     disableTwoFactor()
     .then((response) => {
-      this.props.updateProfile({
-          ...this.props.profile.data,
+      this.props.actions.updateProfile({
+          ...this.props.profile,
         two_factor_auth: false,
       });
       this.setState({
@@ -258,8 +252,8 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <Paper className={classes.root}>
-          { success && <Notice success text={success}/>}
-          { generalError && <Notice error text={generalError} />}
+          {success && <Notice success text={success} />}
+          {generalError && <Notice error text={generalError} />}
           <Typography
             role="header"
             variant="title"
@@ -310,7 +304,7 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
               }
             </div>
           }
-          {twoFactorEnabled && showQRCode &&
+          {twoFactorEnabled && showQRCode && username && twoFactorConfirmed !== undefined &&
             <EnableTwoFactorForm
               secret={secret}
               username={username}
@@ -326,7 +320,7 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
           onClose={this.closeDisableDialog}
           actions={this.getActions}
         >
-        { this.state.disableDialog.error &&
+          {this.state.disableDialog.error &&
           <Notice error text={this.state.disableDialog.error} />
         }
         <Typography>Are you sure you want to disable two-factor authentication?</Typography>
@@ -338,9 +332,31 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const connected = connect((state: ApplicationState) => ({
-  profile: state.resources.profile,
-}));
+interface StateProps {
+  profile?: Linode.Profile;
+  twoFactor?: boolean;
+  username?: string;
+}
+
+const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state) => ({
+  profile: path(['data'], state.__resources.profile),
+  twoFactor: path(['data', 'two_factor_auth'], state.__resources.profile),
+  username: path(['data', 'username'], state.__resources.profile),
+});
+
+interface DispatchProps {
+  actions: {
+    updateProfile: (v: Partial<Linode.Profile>) => void;
+  },
+}
+
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, ownProps) => ({
+  actions: {
+    updateProfile: (profile: Linode.Profile) => dispatch(handleUpdate(profile)),
+  }
+});
+
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
 const enhanced = compose<any, any, any>(styled, connected);
 
