@@ -99,6 +99,9 @@ export const dark = createTheme({
       },
     },
     MuiButton: {
+      label: {
+        position: 'relative',
+      },
       root: {
         color: primaryColors.main,
         '&:hover': {
@@ -110,6 +113,9 @@ export const dark = createTheme({
         '&$disabled': {
           color: '#888',
         },
+        '&.loading': {
+          color: primaryColors.text,
+        },
       },
       raisedPrimary: {
         '&:hover, &:focus': {
@@ -120,6 +126,9 @@ export const dark = createTheme({
         },
         '&$disabled': {
           color: '#888',
+        },
+        '&.loading': {
+          backgroundColor: primaryColors.text,
         },
         '&.cancel': {
           '&:hover, &:focus': {
@@ -161,6 +170,21 @@ export const dark = createTheme({
             borderColor: '#963530',
           },
         },
+        '&.loading': {
+          borderColor: primaryColors.text,
+          color: primaryColors.text,
+          minWidth: 100,
+          '& svg': {
+            width: 22,
+            height: 22,
+            animation: 'rotate 2s linear infinite',
+          },
+        },
+      },
+    },
+    MuiButtonBase: {
+      root: {
+        fontSize: '1rem',
       },
     },
     MuiCardHeader: {
@@ -374,10 +398,7 @@ export const dark = createTheme({
     },
     MuiSelect: {
       selectMenu: {
-<<<<<<< HEAD:src/themes.ts
-=======
         padding: '6px 32px 5px 16px',
->>>>>>> stylying changes to select dropdown:src/darkTheme.ts
         color: primaryColors.text,
         backgroundColor: '#444',
         '&:focus': {

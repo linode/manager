@@ -206,6 +206,9 @@ const themeDefaults: ThemeOptions = {
       },
     },
     MuiButton: {
+      label: {
+        position: 'relative',
+      },
       root: {
         textTransform: 'inherit',
         borderRadius: 0,
@@ -225,6 +228,9 @@ const themeDefaults: ThemeOptions = {
         '&$disabled': {
           color: '#bbb',
         },
+        '&.loading': {
+          color: primaryColors.text,
+        },
       },
       flat: {
         '&.cancel:hover': {
@@ -240,6 +246,9 @@ const themeDefaults: ThemeOptions = {
         },
         '&$disabled': {
           color: 'white',
+        },
+        '&.loading': {
+          backgroundColor: primaryColors.text,
         },
         '&.cancel': {
           '&:hover, &:focus': {
@@ -289,6 +298,8 @@ const themeDefaults: ThemeOptions = {
           },
         },
         '&.loading': {
+          borderColor: primaryColors.text,
+          color: primaryColors.text,
           minWidth: 100,
           '& svg': {
             width: 22,
