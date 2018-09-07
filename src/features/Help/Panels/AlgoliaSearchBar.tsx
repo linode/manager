@@ -10,7 +10,7 @@ import {
   WithStyles,
 } from '@material-ui/core/styles';
 
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import EnhancedSelect, { Item } from 'src/components/EnhancedSelect';
 import Notice from 'src/components/Notice';
 import { ALGOLIA_APPLICATION_ID, ALGOLIA_SEARCH_KEY, DOCS_BASE_URL } from 'src/constants';
 
@@ -153,6 +153,15 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
     this.searchAlgolia(inputValue);
   }
 
+  renderOptionsHelper = (item:Item, currentIndex:number, highlighted:boolean, itemProps:any) => {
+    const { classes } = this.props;
+    return (
+    <div key={currentIndex} {...itemProps} className={`${classes.searchItem} ${highlighted && classes.searchItemHighlighted}`} >
+      <SearchItem item={item} highlighted={highlighted}  />
+    </div>
+    )
+  }
+
   getLinkTarget = (inputValue:string) => {
     return inputValue
       ? `/support/search/?query=${inputValue}`
@@ -160,11 +169,10 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
   }
 
   handleSelect = (selected:Item) => {
-    if (!selected) { this.setState({ inputValue: '' }); }
+    if (!selected) { return; }
     const { history } = this.props;
     const { inputValue } = this.state;
-    const href = pathOr(null, ['data', 'href'], selected);
-    if (!href) { return; }
+    const href = pathOr('', ['data', 'href'], selected)
     if (selected.value === 'search') {
       const link = this.getLinkTarget(inputValue);
       history.push(link)
@@ -182,20 +190,26 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes } = this.props;
-    const { enabled, error } = this.state;
+    const { enabled, error, inputValue, value } = this.state;
     const data = this.getDataFromOptions();
 
     return (
       <React.Fragment>
       {error && <Notice error spacingTop={8} spacingBottom={0} >{error}</Notice>}
-        <Select
+        <EnhancedSelect
           disabled={!enabled}
           options={data}
-          components={{ Option: SearchItem }}
-          onInputChange={this.onInputValueChange}
-          onChange={this.handleSelect}
+          value={value}
+          inputValue={inputValue}
+          renderItems={this.renderOptionsHelper}
+          onInputValueChange={this.onInputValueChange}
+          onSubmit={this.handleSubmit}
+          handleSelect={this.handleSelect}
           placeholder="Search for answers..."
+          noFilter
+          search
           className={classes.enhancedSelectWrapper}
+          maxHeight={500}
         />
       </React.Fragment>
     );

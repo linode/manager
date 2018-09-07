@@ -1,29 +1,23 @@
 import { merge } from 'ramda';
 import * as React from 'react';
 import SSelect from 'react-select';
+import CreatableSelect from 'react-select/lib/Creatable';
+// import { Props as reactSelectProps } from 'react-select/lib/Select';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-import MultiValue from 'src/components/EnhancedSelect/MultiValue';
-import NoOptionsMessage from 'src/components/EnhancedSelect/NoOptionsMessage';
-import Control from 'src/components/EnhancedSelect/SelectControl';
-import Menu from 'src/components/EnhancedSelect/SelectMenu';
-import Placeholder from 'src/components/EnhancedSelect/SelectPlaceholder';
+import MultiValue from './MultiValue';
+import NoOptionsMessage from './NoOptionsMessage';
+import Control from './SelectControl';
+import Menu from './SelectMenu';
+import Placeholder from './SelectPlaceholder';
 
-export interface Item {
-  value: string | number;
-  label: string;
-  data?: any;
-}
 
 type ClassNames = 'root'
-  | 'input'
-  | 'chip'
-  | 'chipFocused'
-  | 'noOptionsMessage'
-  | 'placeholder'
-  | 'paper'
-  | 'divider'
+| 'input'
+| 'noOptionsMessage'
+| 'paper'
+| 'divider'
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -34,22 +28,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     display: 'flex',
     padding: 0,
   },
-  chip: {
-    margin: `${theme.spacing.unit / 2}px ${theme.spacing.unit / 4}px`,
-  },
-  chipFocused: {
-    backgroundColor: 'blue',
-  },
   noOptionsMessage: {
     padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
-  },
-  singleValue: {
-    fontSize: 16,
-  },
-  placeholder: {
-    position: 'absolute',
-    left: 2,
-    fontSize: 16,
   },
   paper: {
     position: 'absolute',
@@ -63,6 +43,52 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
+export interface Item {
+  value: string | number;
+  label: string;
+  data?: any;
+}
+
+export interface SelectState {
+  data: any,
+  isDisabled: boolean,
+  isFocused: boolean;
+  isSelected: boolean;
+}
+
+export interface EnhancedSelectProps {
+  options: Item[];
+  className?: string;
+  components?: any;
+  disabled?: boolean;
+  isMulti?: boolean;
+  isCreatable?: boolean;
+  value?: Item | Item[] | null;
+  label?: string;
+  placeholder?: string;
+  errorText?: string;
+  onChange: (selected:Item | Item[]) => void;
+  createNew?: (inputValue:string) => void;
+  onInputChange?: (inputValue:string) => void;
+}
+
+const styleOverrides = {
+  option: (base:any, { data, isDisabled, isFocused, isSelected }:SelectState) => {
+    return {
+      ...base,
+      backgroundColor: isDisabled
+        ? null
+        : isSelected ? data.color : isFocused ? 'blue' : null,
+      color: isDisabled
+        ? '#ccc'
+        : isSelected
+          ? 'blue'
+          : 'green',
+      cursor: isDisabled ? 'not-allowed' : 'default',
+    };
+  },
+}
+
 const _components = {
   Control,
   NoOptionsMessage,
@@ -71,33 +97,19 @@ const _components = {
   Menu,
 };
 
-export interface EnhancedSelectProps {
-  options: Item[];
-  className?: string;
-  components?: any;
-  disabled?: boolean;
-  isMulti?: boolean;
-  value?: Item | Item[] | null;
-  label?: string;
-  placeholder?: string;
-  errorText?: string;
-  onChange: (selected:Item | Item[]) => void;
-  onInputChange?: (inputValue:string) => void;
-}
-
-interface State {}
-
 type CombinedProps = EnhancedSelectProps & WithStyles<ClassNames>;
 
-class Select extends React.PureComponent<CombinedProps,State> {
+class Select extends React.PureComponent<CombinedProps,{}> {
   render() {
     const {
       classes,
       className,
       components,
+      createNew,
       disabled,
       errorText,
       label,
+      isCreatable,
       isMulti,
       placeholder,
       onChange,
@@ -108,8 +120,10 @@ class Select extends React.PureComponent<CombinedProps,State> {
 
     const combinedComponents = merge(_components, components);
 
+    const BaseSelect = isCreatable ? CreatableSelect : SSelect;
+
     return (
-      <SSelect
+      <BaseSelect
         isClearable
         isSearchable
         isMulti={isMulti}
@@ -128,7 +142,9 @@ class Select extends React.PureComponent<CombinedProps,State> {
         components={combinedComponents}
         onChange={onChange}
         onInputChange={onInputChange}
+        onCreateOption={createNew}
         placeholder={placeholder || 'Select a value...'}
+        styles={styleOverrides}
       />
     );
   }

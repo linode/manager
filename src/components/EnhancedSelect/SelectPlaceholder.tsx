@@ -6,7 +6,6 @@ const SelectPlaceholder: React.StatelessComponent = (props:any) => {
   return (
     <Typography
       color="textSecondary"
-      className={props.selectProps.classes.placeholder}
       {...props.innerProps}
     >
       {props.children}
