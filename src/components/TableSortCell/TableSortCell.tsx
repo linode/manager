@@ -27,13 +27,9 @@ interface Props extends TableCellProps {
   handleClick: (v: string) => void;
 }
 
-interface State { }
-
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class TableSortCell extends React.PureComponent<CombinedProps, State> {
-  state: State = {};
-
+class TableSortCell extends React.PureComponent<CombinedProps, {}> {
   render() {
     const { classes, children, direction, label, active, handleClick, ...rest } = this.props;
 

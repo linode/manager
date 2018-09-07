@@ -15,8 +15,8 @@ describe('LinodesGridView', () => {
           <LinodesGridView
             linodes={linodes as Linode.Linode[]}
             images={images as Linode.Image[]}
-            openConfigDrawer={e => null}
-            toggleConfirmation={e => null}
+            openConfigDrawer={jest.fn()}
+            toggleConfirmation={jest.fn()}
           />
         </StaticRouter>
       </LinodeThemeWrapper>,
