@@ -76,12 +76,12 @@ const renderNull = () =>
 
 const renderLish = () =>
   <LinodeThemeWrapper>
-    {() => <Lish />}
+    <Lish />
   </LinodeThemeWrapper>
 
 const renderApp = () =>
   <LinodeThemeWrapper>
-    {(toggleTheme) => <App toggleTheme={toggleTheme} /> }
+    <App />
   </LinodeThemeWrapper>
 
 const renderAuthentication = () =>
