@@ -1,45 +1,44 @@
-import { compose } from 'ramda';
 import * as React from 'react';
 
 import ListItem from '@material-ui/core/ListItem';
-import { StyleRulesCallback, Theme, withStyles } from '@material-ui/core/styles';
+// import { StyleRulesCallback, Theme, withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import OpenInNew from '@material-ui/icons/OpenInNew';
 
-type ClassNames = 'root'
-| 'label'
-| 'source'
-| 'icon'
-| 'row';
+// type ClassNames = 'root'
+// | 'label'
+// | 'source'
+// | 'icon'
+// | 'row';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
-  root: {
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-  },
-  label: {
-    display: 'inline',
-    color: theme.palette.text.primary,
-    maxWidth: '95%',
-  },
-  icon: {
-    display: 'inline-block',
-    fontSize: '0.8em',
-    position: 'relative',
-    top: 5,
-    marginLeft: theme.spacing.unit / 2,
-    color: theme.palette.text.primary,
-  },
-  source: {
-    marginTop: theme.spacing.unit / 2,
-    fontWeight: 700,
-  },
-  row: {
-    display: 'flex',
-    width: '100%',
-    justifyContent: 'space-between',
-  },
-});
+// const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+//   root: {
+//     flexDirection: 'column',
+//     alignItems: 'flex-start',
+//   },
+//   label: {
+//     display: 'inline',
+//     color: theme.palette.text.primary,
+//     maxWidth: '95%',
+//   },
+//   icon: {
+//     display: 'inline-block',
+//     fontSize: '0.8em',
+//     position: 'relative',
+//     top: 5,
+//     marginLeft: theme.spacing.unit / 2,
+//     color: theme.palette.text.primary,
+//   },
+//   source: {
+//     marginTop: theme.spacing.unit / 2,
+//     fontWeight: 700,
+//   },
+//   row: {
+//     display: 'flex',
+//     width: '100%',
+//     justifyContent: 'space-between',
+//   },
+// });
 
 const searchItem: React.StatelessComponent = (props:any) => {
   const getLabel = () => {
@@ -48,23 +47,19 @@ const searchItem: React.StatelessComponent = (props:any) => {
     } else { return label; }
   }
 
-  const { classes, label } = props;
+  const { label } = props;
   const source = 'No source' // data ? data.source : '';
   const isFinal = false; // source === 'finalLink';
 
   return (
-    <ListItem className={classes.root} component="div" {...props.innerProps}>
-      <div className={classes.row}>
-        <div className={classes.label} dangerouslySetInnerHTML={{__html: getLabel()}} />
-        {!isFinal && <OpenInNew className={classes.icon} />}
+    <ListItem className={'SearchItem-root'} component="div" {...props.innerProps}>
+      <div className={'SearchItem-row'}>
+        <div className={'SearchItem-label'} dangerouslySetInnerHTML={{__html: getLabel()}} />
+        {!isFinal && <OpenInNew className={'SearchItem-icon'} />}
       </div>
-      {!isFinal && <Typography variant="caption" className={classes.source}>{source}</Typography>}
+      {!isFinal && <Typography variant="caption" className={'SeachItem-source'}>{source}</Typography>}
     </ListItem>
   );
 }
 
-const styled = withStyles(styles, { withTheme: true });
-
-export default compose<any, any>(
-  styled,
-  )(searchItem);
+export default searchItem;

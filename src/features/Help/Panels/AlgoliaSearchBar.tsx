@@ -160,10 +160,11 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
   }
 
   handleSelect = (selected:Item) => {
-    if (!selected) { return; }
+    if (!selected) { this.setState({ inputValue: '' }); }
     const { history } = this.props;
     const { inputValue } = this.state;
-    const href = pathOr('', ['data', 'href'], selected)
+    const href = pathOr(null, ['data', 'href'], selected);
+    if (!href) { return; }
     if (selected.value === 'search') {
       const link = this.getLinkTarget(inputValue);
       history.push(link)
@@ -192,7 +193,6 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
           options={data}
           components={{ Option: SearchItem }}
           onInputChange={this.onInputValueChange}
-          // onSubmit={this.handleSubmit}
           onChange={this.handleSelect}
           placeholder="Search for answers..."
           className={classes.enhancedSelectWrapper}
