@@ -1,25 +1,22 @@
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
+
 import thunk from 'redux-thunk';
-import authentication, { defaultState as authenticationState } from './reducers/authentication';
-import documentation, { defaultState as documentationState } from './reducers/documentation';
-import profile, { DEFAULT_STATE as profileState } from './reducers/resources/profile';
-import volumeDrawer, { defaultState as volumeDrawerState } from './reducers/volumeDrawer';
+import authentication, { defaultState as defaultAuthenticationState } from './reducers/authentication';
+import documentation, {defaultState as defaultDocumentationState } from './reducers/documentation';
+import resources, { defaultState as defaultResourcesState } from './reducers/resources';
+import volumeDrawer, { defaultState as defaultVolumeDrawerState } from './reducers/volumeDrawer';
+
+const defaultState: ApplicationState = {
+  __resources: defaultResourcesState,
+  authentication: defaultAuthenticationState,
+  documentation: defaultDocumentationState,
+  volumeDrawer: defaultVolumeDrawerState,
+};
 
 const reduxDevTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__;
 
-const defaultState: ApplicationState = {
-  __resources: {
-    profile: profileState,
-  },
-  authentication: authenticationState,
-  documentation: documentationState,
-  volumeDrawer: volumeDrawerState,
-};
-
 const reducers = combineReducers<ApplicationState>({
-  __resources: combineReducers({
-    profile,
-  }),
+  __resources: resources,
   authentication,
   documentation,
   volumeDrawer,
