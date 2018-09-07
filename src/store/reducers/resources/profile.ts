@@ -50,7 +50,6 @@ export default (state: State = DEFAULT_STATE, action: Action) => {
       return { ...state, loading: false, lastUpdated: Date.now(), data: action.data };
 
     case UPDATE:
-    console.log('UPDATE')
       return { ...state, loading: false, lastUpdated: Date.now(), data: action.data };
 
     default:
