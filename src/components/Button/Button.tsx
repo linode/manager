@@ -14,7 +14,8 @@ type ClassNames = 'root'
   | 'destructive'
   | 'cancel'
   | 'remove'
-  | 'compact';
+  | 'compact'
+  | 'hidden';
 
 export interface Props extends ButtonProps {
   loading?: boolean;
@@ -56,6 +57,12 @@ const styles: StyleRulesCallback = (theme) => ({
   },
   loading: {
     '& svg': {
+      position: 'absolute',
+      left: 0,
+      top: 0,
+      right: 0,
+      bottom: 0,
+      margin: '0 auto',
       width: 22,
       height: 22,
       animation: 'rotate 2s linear infinite',
@@ -92,7 +99,10 @@ const styles: StyleRulesCallback = (theme) => ({
   compact: {
     paddingLeft: 14,
     paddingRight: 14,
-  }
+  },
+  hidden: {
+    visibility: 'hidden',
+  },
 });
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -139,13 +149,15 @@ const wrappedButton: React.StatelessComponent<CombinedProps> = (props) => {
           {
             [classes.root]: true,
             [classes.loading]: loading,
+            'loading': loading,
             [classes.destructive]: destructive,
             [classes.compact]: compact,
           },
           className,
         )}
       >
-        {loading ? <Reload /> : props.children}
+        {loading && <Reload />} 
+        <span className={loading ? classes.hidden : ''}>{props.children}</span>
         {type === 'remove' && 'Remove'}
       </Button>
       {tooltipText && <HelpIcon text={tooltipText} />}
