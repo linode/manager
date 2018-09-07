@@ -1,65 +1,83 @@
+import { compose } from 'ramda';
 import * as React from 'react';
 
 import ListItem from '@material-ui/core/ListItem';
-// import { StyleRulesCallback, Theme, withStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import OpenInNew from '@material-ui/icons/OpenInNew';
 
-// type ClassNames = 'root'
-// | 'label'
-// | 'source'
-// | 'icon'
-// | 'row';
+import { Item } from 'src/components/EnhancedSelect';
+import RenderGuard from 'src/components/RenderGuard';
 
-// const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
-//   root: {
-//     flexDirection: 'column',
-//     alignItems: 'flex-start',
-//   },
-//   label: {
-//     display: 'inline',
-//     color: theme.palette.text.primary,
-//     maxWidth: '95%',
-//   },
-//   icon: {
-//     display: 'inline-block',
-//     fontSize: '0.8em',
-//     position: 'relative',
-//     top: 5,
-//     marginLeft: theme.spacing.unit / 2,
-//     color: theme.palette.text.primary,
-//   },
-//   source: {
-//     marginTop: theme.spacing.unit / 2,
-//     fontWeight: 700,
-//   },
-//   row: {
-//     display: 'flex',
-//     width: '100%',
-//     justifyContent: 'space-between',
-//   },
-// });
+type ClassNames = 'root'
+| 'label'
+| 'source'
+| 'icon'
+| 'row';
 
-const searchItem: React.StatelessComponent = (props:any) => {
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+  root: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  },
+  label: {
+    display: 'inline',
+    color: theme.palette.text.primary,
+    maxWidth: '95%',
+  },
+  icon: {
+    display: 'inline-block',
+    fontSize: '0.8em',
+    position: 'relative',
+    top: 5,
+    marginLeft: theme.spacing.unit / 2,
+    color: theme.palette.text.primary,
+  },
+  source: {
+    marginTop: theme.spacing.unit / 2,
+    fontWeight: 700,
+  },
+  row: {
+    display: 'flex',
+    width: '100%',
+    justifyContent: 'space-between',
+  },
+});
+
+interface Props {
+  item: Item;
+  highlighted: boolean;
+}
+
+type CombinedProps = Props & WithStyles<ClassNames>;
+
+const searchItem: React.StatelessComponent<CombinedProps> = (props) => {
   const getLabel = () => {
     if (isFinal) { 
-      return label ? `Search for "${label}"` : 'Search';
-    } else { return label; }
+      return item.label ? `Search for "${item.label}"` : 'Search';
+    } else { return item.label}
   }
 
-  const { label } = props;
-  const source = 'No source' // data ? data.source : '';
-  const isFinal = false; // source === 'finalLink';
+  const { classes, item } = props;
+  const source = item.data ? item.data.source : '';
+  const isFinal = source === 'finalLink';
 
   return (
-    <ListItem className={'SearchItem-root'} component="div" {...props.innerProps}>
-      <div className={'SearchItem-row'}>
-        <div className={'SearchItem-label'} dangerouslySetInnerHTML={{__html: getLabel()}} />
-        {!isFinal && <OpenInNew className={'SearchItem-icon'} />}
-      </div>
-      {!isFinal && <Typography variant="caption" className={'SeachItem-source'}>{source}</Typography>}
-    </ListItem>
+    <React.Fragment>
+      <ListItem className={classes.root} component="div">
+        <div className={classes.row}>
+          <div className={classes.label} dangerouslySetInnerHTML={{__html: getLabel()}} />
+          {!isFinal && <OpenInNew className={classes.icon} />}
+        </div>
+        {!isFinal && <Typography variant="caption" className={classes.source}>{source}</Typography>}
+      </ListItem>
+    </React.Fragment>
   );
 }
 
-export default searchItem;
+const styled = withStyles(styles, { withTheme: true });
+
+export default compose<any, any, any>(
+  styled,
+  RenderGuard
+  )(searchItem);

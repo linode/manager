@@ -3,13 +3,12 @@ import * as React from 'react';
 
 import ThemeDecorator from '../../utilities/storybookDecorators';
 
-import CreatableSelect, { Item } from './CreatableSelect';
-import Select from './Select';
+import Select, { Item } from './Select';
 
 import timezones from 'src/assets/timezones/timezones';
 
-const tz = timezones.map((tz:any) => {
-  return { value: tz.name, label: tz.label };
+const tz = timezones.map((timezone:any) => {
+  return { value: timezone.name, label: timezone.label };
 });
 
 const fruit = [
@@ -42,9 +41,7 @@ interface State {
   valueSingle: Item | null;
 }
 
-interface Props {}
-
-class Example extends React.Component<Props,State> {
+class Example extends React.Component<{},State> {
   state:State = { 
     open: false,
     valueCreatable: [],
@@ -109,8 +106,10 @@ class Example extends React.Component<Props,State> {
           onChange={this.handleChangeMulti}
           options={fruit}
         />
-        <CreatableSelect
+        <Select
           label="Creatable Select"
+          isCreatable={true}
+          isMulti={true}
           value={valueCreatable}
           placeholder="Choose some timezones"
           onChange={this.handleChangeCreatable}
