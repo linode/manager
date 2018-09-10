@@ -15,15 +15,15 @@ describe('Volume Configuration Panel', () => {
         apiDeleteAllVolumes();
     });
 
-    beforeAll(() => {
+    it('should create the test volume', () => {
         browser.url(constants.routes.volumes);
         Volumes.baseElemsDisplay(true);
-        VolumeDetail.createVolume(testVolume);
+        VolumeDetail.createVolume(testVolume, 'placeholder');
         VolumeDetail.volumeCellElem.waitForVisible(constants.wait.long);
     });
 
     it('should display the configuration drawer', () => {
-        const volumeElement = VolumeDetail.volumeCell[0]
+        const volumeElement = VolumeDetail.volumeCell[0];
         VolumeDetail.selectActionMenuItem(volumeElement, 'Show Configuration');
         VolumeDetail.drawerTitle.waitForVisible();
     });
