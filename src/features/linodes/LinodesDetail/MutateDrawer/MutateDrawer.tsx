@@ -51,7 +51,6 @@ interface Props {
   linodeId: number;
   loading: boolean;
   error: string;
-  optOut: (linodeId: number) => void;
 }
 
 interface State {
@@ -82,7 +81,7 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
           label: 'Storage',
           newAmount: props.mutateInfo.disk,
           currentAmount: props.currentTypeInfo.disk,
-          unit: 'GB'
+          unit: 'MB'
         },
         transfer: {
           label: 'Transfer',
@@ -98,10 +97,6 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
         }
       }
     } as State;
-  }
-
-  handleOptOut = () => {
-    this.props.optOut(this.props.linodeId)
   }
 
   render() {
@@ -163,13 +158,6 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
             compact
           >
             Enter the Upgrade Queue
-          </Button>
-          <Button 
-            onClick={this.handleOptOut}
-            type="secondary"
-            compact
-          >
-            Opt Out of Upgrade
           </Button>
         </ActionsPanel>
         {/*
