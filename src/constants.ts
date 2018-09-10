@@ -25,6 +25,9 @@ export const COMMUNITY_SEARCH_URL = 'https://linode.com/community/questions/sear
 export const ALGOLIA_APPLICATION_ID = process.env.REACT_APP_ALGOLIA_APPLICATION_ID || '';
 export const ALGOLIA_SEARCH_KEY = process.env.REACT_APP_ALGOLIA_SEARCH_KEY || '';
 
+export const DISABLE_EVENT_THROTTLE =
+  Boolean(process.env.REACT_APP_DISABLE_EVENT_THROTTLE) || false;
+
 export const ISO_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
 export const ZONES = {

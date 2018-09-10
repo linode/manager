@@ -2,10 +2,10 @@ import * as moment from 'moment';
 import { assoc, compose, either, ifElse, isEmpty, isNil, lensPath, map, not, over, path, view, when } from 'ramda';
 import { Subject } from 'rxjs/Subject';
 
+import { DISABLE_EVENT_THROTTLE } from 'src/constants';
 import { getEvents } from 'src/services/account';
 import { dateFormat } from 'src/time';
 import isPast from 'src/utilities/isPast';
-
 
 const createInitialDatestamp = () => {
   return moment('1970-01-01 00:00:00.000Z').utc().format(dateFormat);
@@ -136,10 +136,15 @@ setInterval(
     if (Date.now() > eventRequestDeadline) {
       requestEvents();
 
-      eventRequestDeadline =
-        Date.now() + initialPollInterval * currentPollIntervalMultiplier;
-      /* double the polling interval with each poll up to 16x */
-      currentPollIntervalMultiplier = Math.min(currentPollIntervalMultiplier * 2, 16);
+      if (DISABLE_EVENT_THROTTLE) {
+        /* If throttling is disabled, don't use or update the multiplier */
+        eventRequestDeadline = Date.now() + initialPollInterval;
+      } else {
+        eventRequestDeadline = Date.now()
+          + initialPollInterval * currentPollIntervalMultiplier;
+        /* double the polling interval with each poll up to 16x */
+        currentPollIntervalMultiplier = Math.min(currentPollIntervalMultiplier * 2, 16);
+      }
     }
   },
   /* the following is the Nyquist rate for the minimum polling interval */
