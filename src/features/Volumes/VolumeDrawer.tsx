@@ -10,6 +10,8 @@ import { connect, Dispatch } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
 import 'rxjs/add/operator/filter';
 import { Subscription } from 'rxjs/Subscription';
+import { debounce } from 'throttle-debounce';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
@@ -28,6 +30,8 @@ import { formatRegion } from 'src/utilities';
 import composeState from 'src/utilities/composeState';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+
+import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 
 type ClassNames = 'root'
   | 'actionPanel';
@@ -73,6 +77,8 @@ interface State {
   errors?: Linode.ApiFieldError[];
   submitting: boolean;
   success?: string;
+  options: Item[];
+  value: Item | null;
 }
 
 type CombinedProps =
@@ -125,6 +131,8 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     linodes: [],
     linodeId: this.props.linodeId,
     configs: [],
+    options: [],
+    value: null,
   };
 
   handleAPIErrorResponse = (errorResponse: any) => this.composeState([
@@ -236,7 +244,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
 
   onSubmit = () => {
     const { mode, volumeID, handleClose } = this.props;
-    const { cloneLabel, label, size, region, linodeId } = this.state;
+    const { cloneLabel, label, size, region, linodeId, value } = this.state;
 
     switch (mode) {
       case modes.CREATING:
@@ -250,7 +258,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           label,
           size,
           region: region === 'none' ? undefined : region,
-          linode_id: linodeId === 0 ? undefined : linodeId,
+          linode_id: value ? Number(value.value) : linodeId,
         };
 
         createVolume(payload)
@@ -352,14 +360,19 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     this.setState({ selectedConfig: e.target.value });
   }
 
-  setSelectedLinode = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    if (this.mounted) { this.setState({ linodeId: +(e.target.value) }); }
-    /**
-     * linodeId of 0 indicates user has selected the "Select a Linode" option, and we
-     * dont need to get configs for it.
-     */
-    if (e.target.value && +e.target.value !== 0) {
-      this.updateConfigs(+e.target.value);
+  setSelectedLinode = (selected:Item) => {
+    if (!this.mounted) { return; } 
+    if (selected) { 
+      this.setState({ 
+        linodeId: Number(selected.value),
+        value: selected,
+      });
+    }
+    else {
+      this.setState({
+        linodeId: 0,
+        value: null
+      })
     }
   }
 
@@ -413,6 +426,47 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     ]);
   }
 
+  searchLinodes = (inputValue:string) => {
+    const filterLinodes = {
+      label: {
+        '+contains': inputValue,
+      }
+    }
+    getLinodes({}, filterLinodes)
+      .then((response) => {
+        this.setState({ linodes: response.data });
+      })
+  }
+
+  debouncedSearch = debounce(400, false, this.searchLinodes);
+
+  onInputChange = (inputValue:string) => {
+    this.debouncedSearch(inputValue);
+  }
+
+  renderLinodeOptions = (linodes:Linode.Linode[], mode:string, region:string, linodeLabel:string) => {
+    if (!linodes) { return []; }
+    const options: Item[] = linodes.filter((linode) => {
+      return (
+        (region && region !== 'none')
+        /* if the user has selected a region above, limit linodes to that region */
+        ? linode.region === region
+        : true
+        );
+      })
+      .map((linode:Linode.Linode) => {
+        return { value: linode.id, label: linode.label }
+      });
+    if (mode === modes.EDITING || mode === modes.RESIZING) {
+      /*
+      * We optimize the lookup of the linodeLabel by providing it
+      * explicitly when editing or resizing
+      */
+        return [{ value: 'none', label: linodeLabel }];
+    }
+    return options;
+  }
+
   render() {
     const { mode } = this.props;
     const { linodes } = this.state;
@@ -424,10 +478,10 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
       label,
       size,
       region,
-      linodeId,
       configs,
       selectedConfig,
       errors,
+      value,
     } = this.state;
 
     const hasErrorFor = getAPIErrorFor({
@@ -548,67 +602,20 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
 
         {mode !== modes.CLONING &&
           <FormControl fullWidth>
-            <InputLabel
-              htmlFor="linode"
-              disableAnimation
-              shrink={true}
-              error={Boolean(linodeError)}
-            >
-              Linode
-            </InputLabel>
-            <Select
-              value={mode === modes.EDITING || mode === modes.RESIZING
-                ? linodeLabel
-                : `${linodeId}`}
+            <EnhancedSelect
+              label="Linode"
+              placeholder="Select a Linode"
+              errorText={linodeError}
+              value={value}
               disabled={
                 mode === modes.EDITING
                 || mode === modes.RESIZING
               }
               onChange={this.setSelectedLinode}
-              inputProps={{ name: 'linode', id: 'linode' }}
-              error={Boolean(linodeError)}
+              onInputChange={this.onInputChange}
+              options={this.renderLinodeOptions(linodes, mode, region, linodeLabel)}
               data-qa-select-linode
-            >
-              <MenuItem key="none" value="0">
-                {mode !== modes.CLONING
-                  ? 'Select a Linode'
-                  : ''
-                }
-              </MenuItem>,
-              {linodes && linodes
-                .filter((linode) => {
-                  return (
-                    (region && region !== 'none')
-                      /* if the user has selection a region above, limit linodes to that region */
-                      ? linode.region === region
-                      : true
-                  );
-                })
-                .map(linode =>
-                  <MenuItem
-                    key={linode.id}
-                    value={`${linode.id}`}
-                    data-qa-attached-linode={linode.label}
-                  >
-                    {linode.label}
-                  </MenuItem>,
-              )}
-              {(mode === modes.EDITING
-                || mode === modes.RESIZING) &&
-                /*
-                * We optimize the lookup of the linodeLabel by providing it
-                * explicitly when editing or resizing
-                */
-                <MenuItem key={linodeLabel} value={linodeLabel}>
-                  {linodeLabel}
-                </MenuItem>
-              }
-            </Select>
-            {linodeError &&
-              <FormHelperText error={Boolean(linodeError)}>
-                {linodeError}
-              </FormHelperText>
-            }
+            />
             {region !== 'none' &&
               <FormHelperText>
                 Only Linodes in the selected region are displayed.
