@@ -111,7 +111,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
     },
   ];
 
-  mySub = new Subscription;
+  domainsSubscription = new Subscription;
 
   getDomains = (
     page: number = this.state.page,
@@ -121,7 +121,12 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
 
     this.setState({ loading: initial });
 
-    this.mySub = Observable.fromPromise(getDomains()).switchMap(() => getDomains())
+    this.domainsSubscription = Observable
+      /* convert the promise into an observable */
+      .fromPromise(getDomains())
+      /* use switchMap to cancel previous request */
+      .switchMap(() => getDomains())
+      /* subscribe to successful and failed requets */
       .subscribe(
         (response) => {
           this.setState({
@@ -156,7 +161,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
   }
 
   componentWillUnmount() {
-    this.mySub.unsubscribe();
+    this.domainsSubscription.unsubscribe();
   }
 
   openImportZoneDrawer = () => this.setState({ importDrawer: { ...this.state.importDrawer, open: true } });
@@ -189,13 +194,12 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
     });
   }
 
-  handleSuccess = (domain:Linode.Domain) => {
+  handleSuccess = (domain: Linode.Domain) => {
     if (domain.id) {
       this.props.history.push(`/domains/${domain.id}`);
+      return;
     }
-    else {
-      this.getDomains();
-    }
+    this.getDomains();
   }
 
   getActions = () => {
