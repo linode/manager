@@ -34,23 +34,49 @@ export const setParams = (params: any = {}) => when(
   set(L.params, params),
 );
 
-/** Data */
-export const setData = <T>(data: T, schema?: ObjectSchema<T>) => {
+/**
+ * Validate and set data in the request configuration object.
+ */
+export const setData = <T>(
+  data: T,
+
+  /**
+   * If a schema is provided, execute it's validate method. If the validation fails the
+   * errors will be set at L.validationError's path.
+   */
+  schema?: ObjectSchema<T>,
+
+  /**
+   * postValidationTransform will be applied to the data just before it's set on the configuration
+   * object, after the validation has happened. Use with caution It was created as a trap door for
+   * merging IPv4 addresses and ports in the NodeBalancer creation flow.
+   */
+  postValidationTransform?: (v: any) => any,
+) => {
+
   if (!schema) {
     return set(L.data, data);
   }
 
+  const updatedData = typeof postValidationTransform === 'function'
+    ? postValidationTransform(data)
+    : data;
+
   try {
     schema.validateSync(data, { abortEarly: false });
-    return set(L.data, data);
+    return set(L.data, updatedData);
   } catch (error) {
     return compose(
-      set(L.data, data),
+      set(L.data, updatedData),
       set(L.validationErrors, convertYupToLinodeErrors(error)),
     );
   }
 };
 
+/**
+ * Attempt to convert a Yup error to our pattern. The only magic here is the recursive call
+ * to itself since we have nested structures (think NodeBalacners).
+ */
 const convertYupToLinodeErrors = (validationError: ValidationError): Linode.ApiFieldError[] => {
   const { inner } = validationError;
 
@@ -64,6 +90,7 @@ const convertYupToLinodeErrors = (validationError: ValidationError): Linode.ApiF
     }, []);
   }
 
+  /** If single error.  */
   return [mapYupToLinodeAPIError(validationError)]
 };
 
