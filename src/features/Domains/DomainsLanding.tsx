@@ -31,6 +31,9 @@ import ActionMenu from './DomainActionMenu';
 import DomainCreateDrawer from './DomainCreateDrawer';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 
+import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs/Subscription';
+
 type ClassNames = 'root'
   | 'title'
   | 'domain'
@@ -110,32 +113,33 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
     },
   ];
 
+  mySub = new Subscription;
+
   getDomains = (
     page: number = this.state.page,
     pageSize: number = this.state.pageSize,
     initial: boolean = false,
   ) => {
-    if (!this.mounted) { return; }
+
     this.setState({ loading: initial });
 
-    getDomains({ page, page_size: pageSize })
-      .then((response) => {
-        if (!this.mounted) { return; }
-
-        this.setState({
-          count: response.results,
-          domains: response.data,
-          loading: false,
-          page: response.page,
-        });
-      })
-      .catch((error) => {
-        if (!this.mounted) { return; }
-        this.setState({
-          errors: pathOr([{ reason: 'Unable to load domains.' }], ['response', 'data', 'errors'], error),
-          loading: false,
-        })
-      });
+    this.mySub = Observable.fromPromise(getDomains()).switchMap(() => getDomains())
+      .subscribe(
+        (response) => {
+          this.setState({
+            count: response.results,
+            domains: response.data,
+            loading: false,
+            page: response.page,
+          });
+        },
+        (error) => {
+          this.setState({
+            errors: pathOr([{ reason: 'Unable to load domains.' }], ['response', 'data', 'errors'], error),
+            loading: false,
+          })
+        }
+      )
   }
 
   handlePageChange = (page: number) => {
@@ -155,7 +159,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
   }
 
   componentWillUnmount() {
-    this.mounted = false
+    this.mySub.unsubscribe();
   }
 
   openImportZoneDrawer = () => this.setState({ importDrawer: { ...this.state.importDrawer, open: true } });
