@@ -1,17 +1,16 @@
 import { merge } from 'ramda';
 import * as React from 'react';
 import SSelect from 'react-select';
-import CreatableSelect from 'react-select/lib/Creatable';
-// import { Props as reactSelectProps } from 'react-select/lib/Select';
+import CreatableSelect, { Props as CCreatableProps } from 'react-select/lib/Creatable';
+import { Props as SProps } from 'react-select/lib/Select';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-import MultiValue from './MultiValue';
-import NoOptionsMessage from './NoOptionsMessage';
-import Control from './SelectControl';
-import Menu from './SelectMenu';
-import Placeholder from './SelectPlaceholder';
-
+import MultiValue from './components/MultiValue';
+import NoOptionsMessage from './components/NoOptionsMessage';
+import Control from './components/SelectControl';
+import Menu from './components/SelectMenu';
+import Placeholder from './components/SelectPlaceholder';
 
 type ClassNames = 'root'
 | 'input'
@@ -82,8 +81,8 @@ const styleOverrides = {
       color: isDisabled
         ? '#ccc'
         : isSelected
-          ? 'blue'
-          : 'green',
+          ? 'black'
+          : 'black',
       cursor: isDisabled ? 'not-allowed' : 'default',
     };
   },
@@ -98,6 +97,15 @@ const _components = {
 };
 
 type CombinedProps = EnhancedSelectProps & WithStyles<ClassNames>;
+
+interface BaseSelectProps extends SProps<any> {
+  classes: any;
+  textFieldProps: any;
+}
+
+interface CreatableProps extends CCreatableProps<any> {
+
+}
 
 class Select extends React.PureComponent<CombinedProps,{}> {
   render() {
@@ -120,7 +128,7 @@ class Select extends React.PureComponent<CombinedProps,{}> {
 
     const combinedComponents = merge(_components, components);
 
-    const BaseSelect = isCreatable ? CreatableSelect : SSelect;
+    const BaseSelect: React.ComponentClass<BaseSelectProps|CreatableProps> = isCreatable ? CreatableSelect : SSelect;
 
     return (
       <BaseSelect
