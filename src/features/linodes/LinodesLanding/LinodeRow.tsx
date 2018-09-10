@@ -1,4 +1,4 @@
-import { compose } from 'ramda';
+import { compose, take, takeLast } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -10,7 +10,9 @@ import Typography from '@material-ui/core/Typography';
 import Flag from 'src/assets/icons/flag.svg';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
+import ShowMore from 'src/components/ShowMore';
 import TableRow from 'src/components/TableRow';
+import Tag from 'src/components/Tag';
 import { withTypes } from 'src/context/types';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { displayType } from 'src/features/linodes/presentation';
@@ -35,7 +37,9 @@ type ClassNames = 'bodyRow'
   | 'flag'
   | 'status'
   | 'link'
-  | 'linkButton';
+  | 'linkButton'
+  | 'row'
+  | 'tag';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => {
   return ({
@@ -100,6 +104,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
         },
       },
     },
+    row: {
+      display: 'flex',
+      alignItems: 'center',
+    },
+    tag: {
+      color: theme.palette.text.primary,
+      fontSize: '.9rem',
+    },
   });
 };
 
@@ -117,6 +129,7 @@ interface Props {
   linodeNotification?: string;
   linodeLabel: string;
   linodeBackups: Linode.LinodeBackups;
+  linodeTags: string[];
   linodeRecentEvent?: Linode.Event;
   openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
   toggleConfirmation: (bootOption: Linode.BootAction,
@@ -132,6 +145,8 @@ type CombinedProps =
   Props &
   TypesContextProps &
   WithStyles<ClassNames>;
+
+const tagsToShow = 3;
 
 class LinodeRow extends React.Component<CombinedProps, State> {
   state: State = {
@@ -174,7 +189,7 @@ class LinodeRow extends React.Component<CombinedProps, State> {
   }
 
   headCell = () => {
-    const { linodeId, linodeStatus, linodeLabel, linodeType, typesData, typesLoading, classes } = this.props;
+    const { linodeId, linodeStatus, linodeLabel, linodeTags, classes } = this.props;
 
     return (
       <TableCell className={classes.linodeCell}>
@@ -187,7 +202,18 @@ class LinodeRow extends React.Component<CombinedProps, State> {
               <Typography role="header" variant="subheading" data-qa-label>
                 {linodeLabel}
               </Typography>
-              {!typesLoading && <Typography variant="caption">{displayType(linodeType, typesData || [])} </Typography>}
+              {
+                take(tagsToShow, linodeTags).map(eachTag => {
+                  return (
+                    <Tag
+                      label={eachTag}
+                      key={eachTag}
+                      variant="gray"
+                    />
+                  )
+                })
+              }
+              {linodeTags.length > 3 && this.renderMoreTags()}
             </Grid>
           </Grid>
           </Link>
@@ -236,6 +262,30 @@ class LinodeRow extends React.Component<CombinedProps, State> {
     return null;
   }
 
+  renderTag = (tags: string[]) => {
+    const { classes } = this.props;
+    return tags.map(eachTag => {
+      return (
+        <div key={eachTag} className={classes.row}>
+          <div className={`${classes.tag}`}>{eachTag}</div>
+        </div>
+      )
+    })
+  }
+
+  renderMoreTags = () => {
+    const { linodeTags } = this.props;
+
+    const tagsToHide = takeLast(linodeTags.length - tagsToShow, linodeTags);
+
+    return (
+      <ShowMore
+        items={tagsToHide}
+        render={this.renderTag}
+      />
+    )
+  }
+
   loadedState = () => {
     const {
       linodeId,
@@ -248,6 +298,9 @@ class LinodeRow extends React.Component<CombinedProps, State> {
       classes,
       openConfigDrawer,
       toggleConfirmation,
+      typesLoading,
+      typesData,
+      linodeType,
     } = this.props;
 
     return (
@@ -260,6 +313,11 @@ class LinodeRow extends React.Component<CombinedProps, State> {
         arial-label={linodeLabel}
       >
         {this.headCell()}
+        <TableCell>
+          {!typesLoading &&
+            <Typography variant="caption">{displayType(linodeType, typesData || [])} </Typography>
+          }
+        </TableCell>
         <TableCell className={classes.ipCell} data-qa-ips>
           <div className={classes.ipCellWrapper}>
             <IPAddress ips={linodeIpv4} copyRight />
