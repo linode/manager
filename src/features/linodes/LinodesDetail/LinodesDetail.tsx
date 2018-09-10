@@ -24,6 +24,7 @@ import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import Notice from 'src/components/Notice';
 import ProductNotification from 'src/components/ProductNotification';
+import Tag from 'src/components/Tag';
 import { events$ } from 'src/events';
 import { reportException } from 'src/exceptionReporting';
 import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawer';
@@ -860,6 +861,15 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                       />
                     </Grid>
                   </Grid>
+                  {linode.tags.map(eachTag => {
+                    return (
+                      <Tag
+                        key={eachTag}
+                        label={eachTag}
+                        variant="gray"
+                      />
+                    )
+                  })}
                   {linodeInTransition(linode.status, linode.recentEvent) &&
                     <LinodeBusyStatus status={linode.status} recentEvent={linode.recentEvent} />
                   }
