@@ -259,10 +259,14 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes } = this.props;
-    const { count, loading } = this.state;
+    const { errors, count, loading } = this.state;
 
     if(loading){
       return this.renderLoading();
+    }
+
+    if (errors) {
+      return this.renderErrors();
     }
 
     if (count === 0) {
@@ -338,7 +342,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
     const { errors, count, domains } = this.state;
 
     if (errors) {
-      return this.renderLoading();
+      return this.renderErrors();
     }
 
     if (count > 0) {
