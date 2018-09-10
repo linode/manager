@@ -31,6 +31,7 @@ const LinodesListView: React.StatelessComponent<Props> = (props) => {
             <TableHead data-qa-table-head>
               <TableRow>
                 <TableCell>Linode</TableCell>
+                <TableCell>Plan</TableCell>
                 <TableCell>IP Addresses</TableCell>
                 <TableCell>Region</TableCell>
                 <TableCell />
@@ -49,6 +50,7 @@ const LinodesListView: React.StatelessComponent<Props> = (props) => {
                   linodeNotification={linode.notification}
                   linodeLabel={linode.label}
                   linodeBackups={linode.backups}
+                  linodeTags={linode.tags}
                   linodeRecentEvent={linode.recentEvent}
                   openConfigDrawer={openConfigDrawer}
                   toggleConfirmation={toggleConfirmation}

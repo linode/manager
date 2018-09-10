@@ -10,7 +10,7 @@ interface Props {
   images: Linode.Image[];
   openConfigDrawer: (c: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
   toggleConfirmation: (bootOption: Linode.BootAction,
-     linodeId: number, linodeLabel: string) => void;
+    linodeId: number, linodeLabel: string) => void;
 }
 
 const safeGetImageLabel = (images: Linode.Image[], slug: string | null): string => {
@@ -37,6 +37,7 @@ const LinodesGridView: React.StatelessComponent<Props> = (props) => {
           linodeNotification={linode.notification}
           linodeLabel={linode.label}
           linodeBackups={linode.backups}
+          linodeTags={linode.tags}
           linodeRecentEvent={linode.recentEvent}
           imageLabel={safeGetImageLabel(images, linode.image)}
           openConfigDrawer={openConfigDrawer}

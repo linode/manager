@@ -1,4 +1,4 @@
-import { compose } from 'ramda';
+import { compose, take, takeLast } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -16,6 +16,8 @@ import Typography from '@material-ui/core/Typography';
 import Flag from 'src/assets/icons/flag.svg';
 import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/Grid';
+import ShowMore from 'src/components/ShowMore';
+import Tag from 'src/components/Tag';
 import { withTypes } from 'src/context/types';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
@@ -49,7 +51,9 @@ type CSSClasses =
   | 'flagContainer'
   | 'linkWrapper'
   | 'StatusIndicatorWrapper'
-  | 'link';
+  | 'link'
+  | 'row'
+  | 'tag';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   customeMQ: {
@@ -178,6 +182,14 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     alignItems: 'center',
     flex: 1,
   },
+  row: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  tag: {
+    color: theme.palette.text.primary,
+    fontSize: '.9rem',
+  },
 });
 
 interface State {
@@ -194,6 +206,7 @@ interface Props {
   linodeNotification?: string;
   linodeLabel: string;
   linodeBackups: Linode.LinodeBackups;
+  linodeTags: string[];
   linodeRecentEvent?: Linode.Event;
   linodeSpecDisk: number;
   linodeSpecMemory: number;
@@ -214,6 +227,8 @@ type CombinedProps =
   Props &
   TypesContextProps &
   WithStyles<CSSClasses>;
+
+const tagsToShow = 3;
 
 class LinodeCard extends React.Component<CombinedProps, State> {
   state: State = {
@@ -295,6 +310,7 @@ class LinodeCard extends React.Component<CombinedProps, State> {
       linodeSpecMemory,
       linodeSpecDisk,
       linodeSpecVcpus,
+      linodeTags,
       linodeType,
       typesData,
     } = this.props;
@@ -316,9 +332,47 @@ class LinodeCard extends React.Component<CombinedProps, State> {
           <div className={classes.cardSection} data-qa-image>
             {imageLabel}
           </div>
+          <div className={classes.cardSection}>
+            {
+              take(tagsToShow, linodeTags).map(eachTag => {
+                return (
+                  <Tag
+                    label={eachTag}
+                    key={eachTag}
+                    variant="gray"
+                  />
+                )
+              })
+            }
+            {linodeTags.length > 3 && this.renderMoreTags()}
+          </div>
         </div>
       </CardContent>
     );
+  }
+
+  renderTag = (tags: string[]) => {
+    const { classes } = this.props;
+    return tags.map(eachTag => {
+      return (
+        <div key={eachTag} className={classes.row}>
+          <div className={`${classes.tag}`}>{eachTag}</div>
+        </div>
+      )
+    })
+  }
+
+  renderMoreTags = () => {
+    const { linodeTags } = this.props;
+
+    const tagsToHide = takeLast(linodeTags.length - tagsToShow, linodeTags);
+
+    return (
+      <ShowMore
+        items={tagsToHide}
+        render={this.renderTag}
+      />
+    )
   }
 
   renderFlag = () => {
