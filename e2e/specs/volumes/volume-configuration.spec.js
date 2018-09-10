@@ -11,15 +11,15 @@ describe('Volume Configuration Panel', () => {
         region: 'us-east',
     }
 
-    afterAll(() => {
-        apiDeleteAllVolumes();
-    });
-
-    it('should create the test volume', () => {
+    beforeAll(() => {
         browser.url(constants.routes.volumes);
         Volumes.baseElemsDisplay(true);
         VolumeDetail.createVolume(testVolume, 'placeholder');
         VolumeDetail.volumeCellElem.waitForVisible(constants.wait.long);
+    });
+
+    afterAll(() => {
+        apiDeleteAllVolumes();
     });
 
     it('should display the configuration drawer', () => {
