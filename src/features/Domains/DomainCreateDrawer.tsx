@@ -209,7 +209,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
   }
 
   create = () => {
-    const { onClose, onSuccess } = this.props;
+    const { onSuccess } = this.props;
     const { domain, type, soaEmail, master_ips } = this.state;
 
     const finalMasterIPs = master_ips.filter(v => v !== '');
@@ -237,7 +237,6 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
         if (!this.mounted) { return; }
         this.reset();
         onSuccess(res.data);
-        onClose();
       })
       .catch((err) => {
         if (!this.mounted) { return; }
@@ -266,7 +265,6 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
         if (!this.mounted) { return; }
         this.reset();
         onSuccess(res.data)
-        onClose();
       })
       .catch((err) => {
         if (!this.mounted) { return; }
