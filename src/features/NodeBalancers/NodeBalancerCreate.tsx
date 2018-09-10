@@ -1,4 +1,3 @@
-import * as Joi from 'joi';
 import {
   append,
   clone,
@@ -34,7 +33,10 @@ import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPa
 import { dcDisplayCountry, dcDisplayNames } from 'src/constants';
 import { withRegions } from 'src/context/regions';
 import { getLinodes } from 'src/services/linodes';
-import { createNodeBalancer, createNodeBalancerSchema } from 'src/services/nodebalancers';
+import {
+  createNodeBalancer,
+  // createNodeBalancerSchema,
+} from 'src/services/nodebalancers';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -257,26 +259,26 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     /* Clear config errors */
     this.setState({ errors: undefined });
 
-    const { error } = Joi.validate(
-      nodeBalancerRequestData,
-      createNodeBalancerSchema,
-      { abortEarly: false },
-    );
+    // const { error } = Joi.validate(
+    //   nodeBalancerRequestData,
+    //   createNodeBalancerSchema,
+    //   { abortEarly: false },
+    // );
 
-    if (error) {
-      const errors = validationErrorsToFieldErrors(error);
+    // if (error) {
+    //   const errors = validationErrorsToFieldErrors(error);
 
-      /* Insert the node errors */
-      this.setNodeErrors(errors);
+    //   /* Insert the node errors */
+    //   this.setNodeErrors(errors);
 
-      /* Then update the config errors */
-      this.setState({
-        errors,
-      }, () => {
-        scrollErrorIntoView();
-      });
-      return;
-    }
+    //   /* Then update the config errors */
+    //   this.setState({
+    //     errors,
+    //   }, () => {
+    //     scrollErrorIntoView();
+    //   });
+    //   return;
+    // }
 
     this.setState({ submitting: true });
 
@@ -708,88 +710,88 @@ export const fieldErrorsToNodePathErrors = (errors: Linode.ApiFieldError[]) => {
 };
 
 /* @todo: move to own file */
-export const validationErrorsToFieldErrors = (error: Joi.ValidationError) => {
-  return error
-    .details
-    .map(detail => ({
-      key: detail.context && detail.context.key,
-      path: detail.path.join('_'),
-      message: detail.message,
-      type: detail.type.split('.').shift(),
-      constraint: detail.type.split('.').pop(),
-    }))
+// export const validationErrorsToFieldErrors = (error: Joi.ValidationError) => {
+//   return error
+//     .details
+//     .map(detail => ({
+//       key: detail.context && detail.context.key,
+//       path: detail.path.join('_'),
+//       message: detail.message,
+//       type: detail.type.split('.').shift(),
+//       constraint: detail.type.split('.').pop(),
+//     }))
 
-    /**
-     * This is a one-off solution for dealing with port uniqueness constraint on the configs.
-     */
-    .map((detail) => {
-      const path = detail.path.split('_');
+//     /**
+//      * This is a one-off solution for dealing with port uniqueness constraint on the configs.
+//      */
+//     .map((detail) => {
+//       const path = detail.path.split('_');
 
-      if (path.includes('configs') && detail.constraint === 'unique') {
-        return {
-          ...detail,
-          message: 'Port must be unique',
-          path: [...path, 'port'].join('_'),
-        };
-      }
+//       if (path.includes('configs') && detail.constraint === 'unique') {
+//         return {
+//           ...detail,
+//           message: 'Port must be unique',
+//           path: [...path, 'port'].join('_'),
+//         };
+//       }
 
-      if (path.includes('path')
-        && detail.constraint === 'base') {
-        return {
-          ...detail,
-          message: 'Path must start with a /',
-        };
-      }
+//       if (path.includes('path')
+//         && detail.constraint === 'base') {
+//         return {
+//           ...detail,
+//           message: 'Path must start with a /',
+//         };
+//       }
 
-      if (path.includes('nodes')
-        && path.includes('label')
-        && detail.constraint === 'min') {
-        return {
-          ...detail,
-          message: 'Label must be at least 3 characters',
-        };
-      }
+//       if (path.includes('nodes')
+//         && path.includes('label')
+//         && detail.constraint === 'min') {
+//         return {
+//           ...detail,
+//           message: 'Label must be at least 3 characters',
+//         };
+//       }
 
-      if (path.includes('nodes')
-        && path.includes('address')
-        && detail.constraint === 'base') {
-        return {
-          ...detail,
-          message: 'IP Address must be a Linode private address',
-        };
-      }
+//       if (path.includes('nodes')
+//         && path.includes('address')
+//         && detail.constraint === 'base') {
+//         return {
+//           ...detail,
+//           message: 'IP Address must be a Linode private address',
+//         };
+//       }
 
-      if (path.includes('nodes')
-        && path.includes('port')
-        && (detail.constraint === 'base'
-          || detail.constraint === 'min'
-          || detail.constraint === 'max')) {
-        return {
-          ...detail,
-          message: 'Port must be between 1 and 65535',
-        };
-      }
+//       if (path.includes('nodes')
+//         && path.includes('port')
+//         && (detail.constraint === 'base'
+//           || detail.constraint === 'min'
+//           || detail.constraint === 'max')) {
+//         return {
+//           ...detail,
+//           message: 'Port must be between 1 and 65535',
+//         };
+//       }
 
-      if (path.includes('nodes')
-        && path.includes('weight')
-        && (detail.constraint === 'base'
-          || detail.constraint === 'min'
-          || detail.constraint === 'max')) {
-        return {
-          ...detail,
-          message: 'Weight must be between 1 and 255',
-        };
-      }
+//       if (path.includes('nodes')
+//         && path.includes('weight')
+//         && (detail.constraint === 'base'
+//           || detail.constraint === 'min'
+//           || detail.constraint === 'max')) {
+//         return {
+//           ...detail,
+//           message: 'Weight must be between 1 and 255',
+//         };
+//       }
 
-      return detail;
-    })
-    .map((detail) => {
-      return {
-        field: detail.path,
-        reason: detail.message,
-      };
-    });
-};
+//       return detail;
+//     })
+//     .map((detail) => {
+//       return {
+//         field: detail.path,
+//         reason: detail.message,
+//       };
+//     });
+// };
 
 export default compose(
   regionsContext,

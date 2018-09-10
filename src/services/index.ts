@@ -1,33 +1,15 @@
 import * as Axios from 'axios';
-import { Schema, validate } from 'joi';
-import { compose, isEmpty, isNil, lensPath, lensProp, not, omit, path, pathOr, set, tap, when } from 'ramda';
-
-import { reportException } from 'src/exceptionReporting';
-
-const errorsMap: { [index: string]: string } = {
-  region_any_required: 'A region is required.',
-};
-
-const getErrorReason = compose(
-
-  pathOr('Please check your data and try again.', ['result']),
-
-  tap(({ key, result }) => {
-    if (result) {
-      return;
-    }
-
-    reportException('Unhandled validation error', key);
-  }),
-
-  (obj: { key: string }) => set(lensProp('result'), path([obj.key], errorsMap), obj),
-
-  (key: string) => ({ key }),
-);
-
-interface RequestConfig extends Axios.AxiosRequestConfig {
-  validationErrors?: { field?: string, response: string }[];
-}
+import {
+  compose,
+  isEmpty,
+  isNil,
+  lensPath,
+  not,
+  omit,
+  set,
+  when,
+} from 'ramda';
+import { ObjectSchema, ValidationError } from 'yup';
 
 const L = {
   url: lensPath(['url']),
@@ -53,29 +35,48 @@ export const setParams = (params: any = {}) => when(
 );
 
 /** Data */
-export const setData = (data: any) => set(L.data, data);
+export const setData = <T>(data: T, schema?: ObjectSchema<T>) => {
+  if (!schema) {
+    return set(L.data, data);
+  }
+
+  try {
+    schema.validateSync(data, { abortEarly: false });
+    return set(L.data, data);
+  } catch (error) {
+    return compose(
+      set(L.data, data),
+      set(L.validationErrors, convertYupToLinodeErrors(error)),
+    );
+  }
+};
+
+const convertYupToLinodeErrors = (validationError: ValidationError): Linode.ApiFieldError[] => {
+  const { inner } = validationError;
+
+  /** If aggregate errors */
+  if (inner && inner.length > 0) {
+    return inner.reduce((result, innerValidationError) => {
+      const err = convertYupToLinodeErrors(innerValidationError);
+      return Array.isArray(err)
+        ? [...result, ...err]
+        : [...result, err]
+    }, []);
+  }
+
+  return [mapYupToLinodeAPIError(validationError)]
+};
+
+const mapYupToLinodeAPIError = ({ message, path }: ValidationError): Linode.ApiFieldError => ({
+  reason: message,
+  ...(path && { field: path }),
+})
 
 /** X-Filter */
 export const setXFilter = (xFilter: any) => when(
   () => isNotEmpty(xFilter),
   set(L.xFilter, JSON.stringify(xFilter)),
 );
-
-export const validateRequestData = (data: any, schema: Schema) =>
-  (config: RequestConfig) => {
-    const { error } = validate(data, schema);
-
-    return error
-      ? set(L.validationErrors, error.details.map((detail) => {
-        const pathData = detail.path.join('_');
-        const type = detail.type.replace('.', '_');
-        return {
-          field: pathData,
-          reason: getErrorReason(`${pathData}_${type}`),
-        };
-      }), config)
-      : config;
-  };
 
 /** Generator */
 export default <T>(...fns: Function[]): Axios.AxiosPromise<T> => {
@@ -117,13 +118,14 @@ const createError = (message: string, response: Axios.AxiosResponse) => {
   error.response = response;
   return error;
 };
+
 /**
  *
  * Helper method to easily generate APIFieldError[] for a number of fields and a general error.
  */
 export const mockAPIFieldErrors = (fields: string[]): Linode.ApiFieldError[] => {
   return fields.reduce(
-    (result, field) => [ ...result, {field, reason: `${field} is incorrect.`, } ],
+    (result, field) => [...result, { field, reason: `${field} is incorrect.`, }],
     [{ reason: 'A general error has occured.' }],
   );
 };

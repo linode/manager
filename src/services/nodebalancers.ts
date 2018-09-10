@@ -1,4 +1,4 @@
-import * as Joi from 'joi';
+import { array, boolean, number, object, string } from 'yup';
 
 import { API_ROOT } from 'src/constants';
 
@@ -35,12 +35,12 @@ export const updateNodeBalancer = (id: number, data: Partial<NodeBalancer>) =>
     setData(data),
   ).then(response => response.data);
 
-export const createNodeBalancerConfigNodeSchema = Joi.object({
-  label: Joi.string().min(3).max(32).required(),
-  address: Joi.string().regex(/^192\.168\.\d{1,3}\.\d{1,3}$/).required(),
-  port: Joi.string().regex(/^\d{1,5}$/).required(),
-  weight: Joi.number().min(1).max(255),
-  mode: Joi.valid('accept', 'reject', 'drain'),
+export const createNodeBalancerConfigNodeSchema = object().shape({
+  label: string().min(3).max(32).required(),
+  address: string().matches(/^192\.168\.\d{1,3}\.\d{1,3}$/).required(),
+  port: string().matches(/^\d{1,5}$/).required(),
+  weight: number().min(1).max(255),
+  mode: string().oneOf(['accept', 'reject', 'drain'])
 });
 
 export const createNodeBalancerConfigNode = (
@@ -51,7 +51,7 @@ export const createNodeBalancerConfigNode = (
   Request<Linode.NodeBalancerConfigNode>(
     setMethod('POST'),
     setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes`),
-    setData(data),
+    setData(data, createNodeBalancerConfigNodeSchema),
   )
     .then(response => response.data);
 
@@ -90,33 +90,33 @@ export const getNodeBalancerConfigNodes = (
   )
     .then(response => response.data);
 
-export const createNodeBalancerConfigSchema = Joi.object({
-  algorithm: Joi.string(),
-  check_attempts: Joi.number(),
-  check_body: Joi.string()
-    .when('check', { is: 'http_body', then: Joi.required() }),
-  check_interval: Joi.number(),
-  check_passive: Joi.bool(),
-  check_path: Joi.string().regex(/\/.*/)
-    .when('check', { is: 'http', then: Joi.required() })
-    .when('check', { is: 'http_body', then: Joi.required() }),
-  check_timeout: Joi.number().integer(),
-  check: Joi.string(),
-  cipher_suite: Joi.string(),
-  port: Joi.number().integer().min(1).max(65535).required(),
-  protocol: Joi.valid('http', 'https', 'tcp'),
-  ssl_key: Joi.string().when('protocol', { is: 'https', then: Joi.required() }),
-  ssl_cert: Joi.string().when('protocol', { is: 'https', then: Joi.required() }),
-  stickiness: Joi.string(),
-  nodes: Joi.array()
-    .items(createNodeBalancerConfigNodeSchema).required().min(1),
+export const createNodeBalancerConfigSchema = object().shape({
+  algorithm: string(),
+  check_attempts: number(),
+  check_body: string()
+    .when('check', { is: 'http_body', then: string().required() }),
+  check_interval: number(),
+  check_passive: boolean(),
+  check_path: string().matches(/\/.*/)
+    .when('check', { is: 'http', then: string().required() })
+    .when('check', { is: 'http_body', then: string().required() }),
+  check_timeout: number().integer(),
+  check: string(),
+  cipher_suite: string(),
+  port: number().integer().min(1).max(65535).required(),
+  protocol: string().oneOf(['http', 'https', 'tcp']),
+  ssl_key: string().when('protocol', { is: 'https', then: string().required() }),
+  ssl_cert: string().when('protocol', { is: 'https', then: string().required() }),
+  stickiness: string(),
+  nodes: array()
+    .of(createNodeBalancerConfigNodeSchema).required().min(1),
 });
 
 export const createNodeBalancerConfig = (nodeBalancerId: number, data: any) =>
   Request<Linode.NodeBalancerConfig>(
     setMethod('POST'),
     setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs`),
-    setData(data),
+    setData(data, createNodeBalancerConfigSchema),
   )
     .then(response => response.data);
 
@@ -135,20 +135,21 @@ export const deleteNodeBalancerConfig = (nodeBalancerId: number, configId: numbe
   )
     .then(response => response.data);
 
-export const createNodeBalancerSchema = Joi.object({
-  label: Joi.string().regex(/^[a-zA-Z0-9-_]+$/).min(3).max(32),
-  client_conn_throttle: Joi.number(),
-  region: Joi.string().required(),
-  configs: Joi.array()
-    .items(createNodeBalancerConfigSchema)
-    .unique((a, b) => a.port === b.port),
+export const createNodeBalancerSchema = object({
+  label: string().matches(/^[a-zA-Z0-9-_]+$/).min(3).max(32),
+  client_conn_throttle: number(),
+  region: string().required(),
+  configs: array()
+    .of(createNodeBalancerConfigSchema)
+    /** How do I do unique... */
+    // .unique((a, b) => a.port === b.port),
 });
 
 export const createNodeBalancer = (data: any) =>
   Request<Linode.NodeBalancer>(
     setMethod('POST'),
     setURL(`${API_ROOT}/nodebalancers`),
-    setData(data),
+    setData(data, createNodeBalancerSchema),
   )
     .then(response => response.data);
 
