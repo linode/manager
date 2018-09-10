@@ -2,7 +2,12 @@ import * as React from 'react';
 
 import TextField from 'src/components/TextField';
 
-const inputComponent = ({ inputRef, ...props }) => {
+interface SelectProps {
+  inputRef: any;
+  props: any;
+}
+
+const inputComponent = ({ inputRef, ...props }:SelectProps) => {
   return <div ref={inputRef} {...props} />;
 }
 
