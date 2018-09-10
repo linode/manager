@@ -12,6 +12,11 @@ const mockProps = {
   getTypeInfo: jest.fn(),
   getRegionInfo: jest.fn(),
   userSSHKeys: [],
+  accountTags: [],
+  tagActions: {
+    addTag: jest.fn(),
+    createTag: jest.fn()
+  }
 };
 
 describe('FromImageContent', () => {

@@ -5,6 +5,7 @@ import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import RenderGuard from 'src/components/RenderGuard';
@@ -39,9 +40,12 @@ interface IsFormProps {
 }
 
 interface Props {
+  tags?: Item[];
   error?: string;
   labelFieldProps?: TextFieldProps;
   isForm?: IsFormProps;
+  addTag?: (s:Item) => void;
+  createTag?: (inputValue:string) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -55,8 +59,24 @@ class InfoPanel extends React.Component<CombinedProps> {
     },
   };
 
+  renderTagsPanel = () => {
+    const { addTag, createTag, tags } = this.props;
+    const options = tags ? tags : [];
+    if (!addTag || !createTag) { return; }
+    return (
+      <Select
+        isCreatable={true}
+        isMulti={true}
+        label={"Add Tags"}
+        options={options}
+        onChange={addTag}
+        createNew={createTag}
+      />
+    )
+  }
+
   render() {
-    const { classes, error, labelFieldProps, isForm } = this.props;
+    const { addTag, classes, error, labelFieldProps, isForm } = this.props;
 
     return (
       <React.Fragment>
@@ -74,6 +94,7 @@ class InfoPanel extends React.Component<CombinedProps> {
                 {error && <Notice text={error} error />}
                 <TextField data-qa-label-panel {...labelFieldProps} />
               </div>
+              {addTag && this.renderTagsPanel()}
               {!!isForm.action &&
                 <ActionsPanel
                   className={isForm ? classes.expPanelButton : ''}
@@ -93,6 +114,7 @@ class InfoPanel extends React.Component<CombinedProps> {
             <div className={classes.inner}>
               {error && <Notice text={error} error />}
               <TextField {...labelFieldProps} data-qa-label-input />
+              {addTag && this.renderTagsPanel()}
             </div>
           </Paper>
         }

@@ -6,6 +6,7 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 
 import AccessPanel, { UserSSHKeyObject } from 'src/components/AccessPanel';
 import CheckoutBar from 'src/components/CheckoutBar';
+import { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
@@ -21,6 +22,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import AddonsPanel from '../AddonsPanel';
 import SelectImagePanel from '../SelectImagePanel';
 import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
+import tagsHoc, { TagActionsObject } from '../tagsHoc';
 
 type ClassNames = 'root' | 'main' | 'sidebar';
 
@@ -52,6 +54,8 @@ interface Props {
 
   /** Comes from HOC */
   userSSHKeys: UserSSHKeyObject[];
+  accountTags: Item[];
+  tagActions: TagActionsObject;
 }
 
 interface State {
@@ -191,9 +195,10 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
     const { errors, backups, privateIP, label, selectedImageID,
       selectedRegionID, selectedTypeID, password, isMakingRequest, initTab } = this.state;
 
-    const { classes, notice, types, regions, images, getBackupsMonthlyPrice,
-      getRegionInfo, getTypeInfo, userSSHKeys } = this.props;
-
+      
+    const { accountTags, classes, notice, types, regions, images, getBackupsMonthlyPrice,
+      getRegionInfo, getTypeInfo, tagActions, userSSHKeys } = this.props;
+        
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
 
@@ -241,13 +246,16 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
             updateFor={[selectedTypeID, errors]}
           />
           <LabelAndTagsPanel
+            tags={accountTags}
+            addTag={tagActions.addTag}
+            createTag={tagActions.createTag}
             labelFieldProps={{
               label: 'Linode Label',
               value: label || '',
               onChange: this.handleTypeLabel,
               errorText: hasErrorFor('label'),
             }}
-            updateFor={[label, errors]}
+            updateFor={[accountTags, label, errors]}
           />
           <AccessPanel
             error={hasErrorFor('root_pass')}
@@ -321,6 +329,6 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const enhanced = compose(styled, userSSHKeyHoc);
+const enhanced = compose(styled, userSSHKeyHoc, tagsHoc);
 
 export default enhanced(FromImageContent) as any;
