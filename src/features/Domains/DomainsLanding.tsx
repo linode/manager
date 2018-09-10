@@ -98,8 +98,6 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
     },
   };
 
-  mounted: boolean = false;
-
   static docs: Linode.Doc[] = [
     {
       title: 'Getting Started',
@@ -154,7 +152,6 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
   };
 
   componentDidMount() {
-    this.mounted = true;
     this.getDomains(undefined, undefined, true);
   }
 
@@ -175,21 +172,18 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
   });
 
   openCreateDrawer = () => {
-    if (!this.mounted) { return; }
     this.setState({
       createDrawer: { open: true, mode: 'create' },
     });
   }
 
   openCloneDrawer = (domain: string, id: number) => {
-    if (!this.mounted) { return; }
     this.setState({
       createDrawer: { open: true, mode: 'clone', domain, cloneID: id },
     });
   }
 
   closeCreateDrawer = () => {
-    if (!this.mounted) { return; }
     this.setState({
       createDrawer: { open: false, mode: 'create' },
     });
