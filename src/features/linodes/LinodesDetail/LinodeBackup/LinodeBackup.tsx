@@ -1,7 +1,7 @@
 import * as moment from 'moment-timezone';
 import { compose, path, pathOr, sortBy } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
+import { connect, MapStateToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import 'rxjs/add/operator/filter';
 import { Subscription } from 'rxjs/Subscription';
@@ -97,10 +97,6 @@ interface ContextProps {
   linodeLabel: string;
 }
 
-interface ConnectedProps {
-  timezone: string;
-}
-
 interface PreloadedProps {
   backups: PromiseLoaderResponse<Linode.LinodeBackupsResponse>;
   type: PromiseLoaderResponse<Linode.LinodeType>;
@@ -127,10 +123,10 @@ interface State {
 }
 
 type CombinedProps = PreloadedProps
+  & StateProps
   & WithStyles<ClassNames>
   & RouteComponentProps<{}>
-  & ContextProps
-  & ConnectedProps;
+  & ContextProps;
 
 const evenize = (n: number): number => {
   if (n === 0) { return n; }
@@ -405,7 +401,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
               </TableRow>
             </TableHead>
             <TableBody>
-              {backups.map((backup:Linode.LinodeBackup, idx:number) => 
+              {backups.map((backup:Linode.LinodeBackup, idx:number) =>
                 <BackupTableRow
                   key={idx}
                   backup={backup}
@@ -653,9 +649,15 @@ const preloaded = PromiseLoader<ContextProps>({
 
 const styled = withStyles(styles, { withTheme: true });
 
-const connected = connect((state) => ({
-  timezone: pathOr(moment.tz.guess(), ['resources', 'profile', 'data', 'timezone'], state),
-}));
+interface StateProps {
+  timezone: string;
+}
+
+const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state) => ({
+  timezone: pathOr('GMT', ['data', 'timezone'], state.__resources.profile),
+});
+
+const connected = connect(mapStateToProps);
 
 const linodeContext = withLinode((context) => ({
   backupsEnabled: context.data!.backups.enabled,

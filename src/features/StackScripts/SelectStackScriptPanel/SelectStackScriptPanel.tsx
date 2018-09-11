@@ -1,16 +1,12 @@
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
+import { connect, MapStateToProps } from 'react-redux';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import RenderGuard from 'src/components/RenderGuard';
 import TabbedPanel from 'src/components/TabbedPanel';
-
-import {
-  getCommunityStackscripts,
-  getStackScriptsByUser,
-} from 'src/services/stackscripts';
+import { getCommunityStackscripts, getStackScriptsByUser } from 'src/services/stackscripts';
 
 import SelectStackScriptPanelContent from './SelectStackScriptPanelContent';
 
@@ -54,13 +50,10 @@ interface Props {
     userDefinedFields: Linode.StackScript.UserDefinedField[]) => void;
   publicImages: Linode.Image[];
   noHeader?: boolean;
-  profile: Linode.Profile;
   resetSelectedStackScript?: () => void;
 }
 
-type StyledProps = Props & WithStyles<ClassNames>;
-
-type CombinedProps = StyledProps;
+type CombinedProps = Props &  StateProps & WithStyles<ClassNames>;
 
 interface State {
   shouldPreSelectStackScript: boolean;
@@ -88,7 +81,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
       render: () => <SelectStackScriptPanelContent
         onSelect={this.props.onSelect}
         publicImages={this.props.publicImages}
-        currentUser={this.props.profile.username}
+        currentUser={this.props.username}
         request={getStackScriptsByUser}
         selectedStackScriptIDFromQuery={this.props.selectedId}
         shouldPreSelectStackScript={this.state.shouldPreSelectStackScript}
@@ -101,7 +94,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
       render: () => <SelectStackScriptPanelContent
         onSelect={this.props.onSelect}
         publicImages={this.props.publicImages}
-        currentUser={this.props.profile.username}
+        currentUser={this.props.username}
         request={getStackScriptsByUser}
         selectedStackScriptIDFromQuery={this.props.selectedId}
         key={1}
@@ -115,7 +108,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
       render: () => <SelectStackScriptPanelContent
         onSelect={this.props.onSelect}
         publicImages={this.props.publicImages}
-        currentUser={this.props.profile.username}
+        currentUser={this.props.username}
         request={getCommunityStackscripts}
         selectedStackScriptIDFromQuery={this.props.selectedId}
         shouldPreSelectStackScript={this.state.shouldPreSelectStackScript}
@@ -137,9 +130,9 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
   ** seeing the panel. Default to 0 index if no query string
   */
   getInitTab = () => {
-    const { profile, onSelect, selectedUsername } = this.props;
+    const { onSelect, selectedUsername, username } = this.props;
 
-    if (profile.username === selectedUsername) {
+    if (username === selectedUsername) {
       return this.myTabIndex;
     }
     if (selectedUsername === 'linode') {
@@ -147,7 +140,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
     }
     if (selectedUsername !== ''
       && selectedUsername !== 'linode'
-      && selectedUsername !== profile.username
+      && selectedUsername !== username
       && !!onSelect) {
       return this.communityTabIndex;
     }
@@ -189,14 +182,20 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
   }
 }
 
-const mapStateToProps = (state: Linode.AppState) => ({
-  profile: pathOr({}, ['resources', 'profile', 'data'], state),
+interface StateProps {
+  username: string;
+}
+
+const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state) => ({
+  username: pathOr('', ['data', 'username'], state.__resources.profile),
 });
+
+const connected = connect(mapStateToProps);
 
 const styled = withStyles(styles, { withTheme: true });
 
 export default compose<Linode.TodoAny, Linode.TodoAny, Linode.TodoAny, Linode.TodoAny>(
-  connect(mapStateToProps),
+  connected,
   RenderGuard,
   styled,
 )(SelectStackScriptPanel);
