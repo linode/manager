@@ -19,6 +19,7 @@ type ClassNames = 'root'
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
     maxWidth: 415,
+    position: 'relative',
     '& .react-select__value-container': {
       width: '100%',
       '& > div': {
@@ -32,11 +33,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       },
     },
     '& .react-select__menu': {
-      margin: 0,
+      margin: '-1px 0 0 0',
       borderRadius: 0,
       boxShadow: 'none',
       border: '1px solid #999',
-      borderTop: 0,
     },
     '& .react-select__menu-list': {
       padding: theme.spacing.unit / 2,
@@ -68,6 +68,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       '& svg': {
         color: '#999',
       },
+    },
+    '& [class*="MuiFormHelperText-error"]': {
+      paddingBottom: theme.spacing.unit,
     },
   },
   input: {
@@ -217,6 +220,7 @@ class Select extends React.PureComponent<CombinedProps,State> {
         placeholder={placeholder || 'Select a value...'}
         styles={styleOverrides}
         menuPlacement="auto"
+        menuIsOpen={true}
       />
     );
   }
