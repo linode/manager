@@ -59,34 +59,47 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
 interface Props extends ChipProps {
   label: string;
   variant?: Variants;
+  deletePayload?: any;
 }
 
 type PropsWithStyles = Props & WithStyles<CSSClasses>;
 
-const Tag: React.SFC<PropsWithStyles> = (props) => {
-  const {
-    variant,
-    classes,
-    theme,
-    className,
-    ...chipProps
-  } = props;
+class Tag extends React.Component<PropsWithStyles, {}> {
+  static defaultProps = {
+    variant: 'gray' as Variants,
+  };
 
-  return <Chip
-    className={classNames({
-      ...(className && { [className]: true }),
-      [classes[props.variant!]]: true,
-      [classes.root]: true,
-    })}
-    deleteIcon={<Close />}
-    classes={{ label: props.classes.label }}
-    data-qa-tag
-    {...chipProps}
-  />;
-};
+  handleDelete = () => {
+    const { deletePayload, onDelete } = this.props;
+    if (onDelete) {
+      return onDelete(deletePayload)
+    }
+    return;
+  }
 
-Tag.defaultProps = {
-  variant: 'gray',
+  render() {
+    const {
+      variant,
+      classes,
+      theme,
+      className,
+      deletePayload,
+      ...chipProps
+    } = this.props;
+
+    return <Chip
+      {...chipProps}
+      className={classNames({
+        ...(className && { [className]: true }),
+        [classes[variant!]]: true,
+        [classes.root]: true,
+      })}
+      deleteIcon={<Close />}
+      classes={{ label: classes.label }}
+      data-qa-tag
+      onDelete={this.handleDelete}
+    />;
+  }
 };
 
 export default withStyles(styles, { withTheme: true })<Props>(Tag);
