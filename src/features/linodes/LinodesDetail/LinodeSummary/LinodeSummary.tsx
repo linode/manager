@@ -13,12 +13,14 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 import LineGraph from 'src/components/LineGraph';
 import Select from 'src/components/Select';
 import { withTypes } from 'src/context/types';
-import { withImage, withLinode, withVolumes } from 'src/features/linodes/LinodesDetail/context';
+import { withImage, withLinode } from 'src/features/linodes/LinodesDetail/context';
 import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
 import { getLinodeStats } from 'src/services/linodes';
 import { setUpCharts } from 'src/utilities/charts';
 
 import SummaryPanel from './SummaryPanel';
+
+import { connect, MapStateToProps } from 'react-redux';
 
 setUpCharts();
 
@@ -479,18 +481,24 @@ const imageContext = withImage((context) => ({
   imageData: context.data!,
 }))
 
-const volumesContext = withVolumes((context) => ({
-  volumesData: context.data!,
-}))
-
 const typesContext = withTypes(({ data: typesData }) => ({ typesData }))
 
+interface StateProps {
+  volumesData?: Linode.Volume[]
+}
+
+const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state, ownProps) => ({
+  volumesData: state.features.linodeDetail.volumes.data,
+});
+
+const connected = connect(mapStateToProps);
+
 const enhanced = compose(
+  connected,
   styled,
   typesContext,
   linodeContext,
   imageContext,
-  volumesContext,
 );
 
 export default enhanced(LinodeSummary);
