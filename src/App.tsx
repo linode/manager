@@ -159,8 +159,8 @@ interface State {
 
 type CombinedProps = Props & DispatchProps & StateProps & WithStyles<ClassNames>;
 
-const typesContext = (path: string[]) => lensPath(['typesContext', ...path]);
-const regionsContext = (path: string[]) => lensPath(['regionsContext', ...path]);
+const typesContext = (pathCollection: string[]) => lensPath(['typesContext', ...pathCollection]);
+const regionsContext = (pathCollection: string[]) => lensPath(['regionsContext', ...pathCollection]);
 
 const L = {
   typesContext: {
