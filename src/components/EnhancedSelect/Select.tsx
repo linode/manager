@@ -9,33 +9,64 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 import MultiValue from './components/MultiValue';
 import NoOptionsMessage from './components/NoOptionsMessage';
 import Control from './components/SelectControl';
-import Menu from './components/SelectMenu';
 import Placeholder from './components/SelectPlaceholder';
 
 type ClassNames = 'root'
 | 'input'
 | 'noOptionsMessage'
-| 'paper'
-| 'divider'
+| 'divider';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
-    flexGrow: 1,
-    height: 250,
+    maxWidth: 415,
+    '& .react-select__menu': {
+      margin: 0,
+      borderRadius: 0,
+      boxShadow: 'none',
+      border: '1px solid #999',
+      borderTop: 0,
+    },
+    '& .react-select__menu-list': {
+      padding: theme.spacing.unit / 2,
+    },
+    '& .react-select__option': {
+      transition: theme.transitions.create(['background-color', 'color']),
+      color: theme.palette.text.primary,
+      backgroundColor: theme.bg.white,
+      cursor: 'pointer',
+      padding: '10px 8px',
+    },
+    '& .react-select__option--is-focused': {
+      backgroundColor: theme.palette.primary.main,
+      color: 'white',
+    },
+    '& .react-select__option--is-selected': {
+      color: theme.palette.primary.main,
+      '&.react-select__option--is-focused': {
+        backgroundColor: theme.bg.white,
+      },
+    },
+    '& .react-select__single-value': {
+      color: theme.palette.text.primary,
+    },
+    '& .react-select__indicator-separator': {
+      display: 'none',
+    },
+    '& .react-select__dropdown-indicator': {
+      '& svg': {
+        color: '#999',
+      },
+    },
   },
   input: {
-    display: 'flex',
+    fontSize: '1rem',
     padding: 0,
+    display: 'flex',
+    color: theme.palette.text.primary,
+    cursor: 'pointer',
   },
   noOptionsMessage: {
     padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
-  },
-  paper: {
-    position: 'absolute',
-    zIndex: 1,
-    marginTop: theme.spacing.unit,
-    left: 0,
-    right: 0,
   },
   divider: {
     height: theme.spacing.unit * 2,
@@ -93,7 +124,6 @@ const _components = {
   NoOptionsMessage,
   Placeholder,
   MultiValue,
-  Menu,
 };
 
 type CombinedProps = EnhancedSelectProps & WithStyles<ClassNames>;
@@ -156,7 +186,8 @@ class Select extends React.PureComponent<CombinedProps,State> {
         isSearchable
         isMulti={isMulti}
         classes={classes}
-        className={className}
+        className={`${classes.root} ${className}`}
+        classNamePrefix="react-select"
         textFieldProps={{
           label,
           errorText: internalError || errorText,
@@ -173,6 +204,7 @@ class Select extends React.PureComponent<CombinedProps,State> {
         onCreateOption={createNew}
         placeholder={placeholder || 'Select a value...'}
         styles={styleOverrides}
+        menuPlacement="auto"
       />
     );
   }
