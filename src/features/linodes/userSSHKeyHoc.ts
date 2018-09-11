@@ -49,18 +49,18 @@ export default (Component: React.ComponentType<any>) => {
           this.setState({
             userSSHKeys: [
               ...this.state.userSSHKeys,
-              ...users.reduce((users, user) => {
+              ...users.reduce((cleanedUsers, user) => {
                 const keys = user.ssh_keys;
                 if (
                   !keys || keys.length === 0 ||
                   /** We don't want the current user added again. */
                   user.username === this.props.username
                 ) {
-                  return users;
+                  return cleanedUsers;
                 }
 
                 return [
-                  ...users,
+                  ...cleanedUsers,
                   this.createUserObject(user.username, user.email, keys),
                 ];
               }, [])
