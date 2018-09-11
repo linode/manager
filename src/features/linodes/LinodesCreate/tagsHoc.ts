@@ -2,7 +2,7 @@ import { concat, lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 
 import { Item } from 'src/components/EnhancedSelect/Select';
-import { createTag as _createTag, getTags, Tag } from 'src/services/tags';
+import { getTags, Tag } from 'src/services/tags';
 import composeState from 'src/utilities/composeState';
 
 export interface TagActionsObject {
