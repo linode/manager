@@ -49,9 +49,7 @@ type CSSClasses =
   | 'flagContainer'
   | 'linkWrapper'
   | 'StatusIndicatorWrapper'
-  | 'link'
-  | 'row'
-  | 'tag';
+  | 'link';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   customeMQ: {
@@ -179,14 +177,6 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     display: 'flex',
     alignItems: 'center',
     flex: 1,
-  },
-  row: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  tag: {
-    color: theme.palette.text.primary,
-    fontSize: '.9rem',
   },
 });
 
