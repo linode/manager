@@ -144,7 +144,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     transition: theme.transitions.create(['transform']),
   },
   switchWrapper: {
-    padding: '16px 40px 4px 34px',
+    padding: '16px 40px 0 34px',
     alignItems: 'center',
     marginTop: 'auto',
     width: 'calc(100% - 20px)',
