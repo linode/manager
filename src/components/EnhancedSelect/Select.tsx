@@ -65,6 +65,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     },
     '& .react-select__single-value': {
       color: theme.palette.text.primary,
+      overflow: 'initial',
     },
     '& .react-select__indicator-separator': {
       display: 'none',
