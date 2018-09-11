@@ -20,7 +20,6 @@ const mockProps = {
     actions: {
       addTag: jest.fn(),
       createTag: jest.fn(),
-      addNewTagsToLinode: jest.fn(),
       getLinodeTagList: jest.fn(),
     }
   }

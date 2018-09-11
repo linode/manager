@@ -107,7 +107,25 @@ interface CreatableProps extends CCreatableProps<any> {
 
 }
 
-class Select extends React.PureComponent<CombinedProps,{}> {
+interface State {
+  internalError: string;
+}
+
+class Select extends React.PureComponent<CombinedProps,State> {
+  state: State = {
+    internalError: ''
+  }
+
+  handleInputChange = (inputValue:string) => {
+    if (inputValue.length > 25) {
+      this.setState({ internalError: 'Input must be less than 25 characters'});
+      return inputValue.slice(0,25);
+    } else {
+      this.setState({ internalError: '' });
+    return inputValue;
+    }
+  }
+
   render() {
     const {
       classes,
@@ -126,6 +144,8 @@ class Select extends React.PureComponent<CombinedProps,{}> {
       value
     } = this.props;
 
+    const { internalError } = this.state;
+
     const combinedComponents = merge(_components, components);
 
     const BaseSelect: React.ComponentClass<BaseSelectProps|CreatableProps> = isCreatable ? CreatableSelect : SSelect;
@@ -139,7 +159,7 @@ class Select extends React.PureComponent<CombinedProps,{}> {
         className={className}
         textFieldProps={{
           label,
-          errorText,
+          errorText: internalError || errorText,
           disabled,
           InputLabelProps: {
             shrink: true,
@@ -149,7 +169,7 @@ class Select extends React.PureComponent<CombinedProps,{}> {
         options={options}
         components={combinedComponents}
         onChange={onChange}
-        onInputChange={onInputChange}
+        onInputChange={onInputChange || this.handleInputChange}
         onCreateOption={createNew}
         placeholder={placeholder || 'Select a value...'}
         styles={styleOverrides}

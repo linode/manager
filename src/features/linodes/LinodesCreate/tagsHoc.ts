@@ -1,23 +1,20 @@
-import * as Bluebird from 'bluebird';
 import { concat, lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 
 import { Item } from 'src/components/EnhancedSelect/Select';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
-import { updateLinode } from 'src/services/linodes';
 import { createTag as _createTag, getTags, Tag } from 'src/services/tags';
 import composeState from 'src/utilities/composeState';
 
 export interface TagActionsObject {
   addTag: (selected:Item[]) => void;
-  addNewTagsToLinode: (linodeID:number) => void;
   createTag: (inputValue:string) => void;
   getLinodeTagList: () => string[];
 }
 
 export interface TagObject {
   actions: TagActionsObject;
-  errors: Linode.ApiFieldError[];
+  errors?: Linode.ApiFieldError[];
   accountTags: Item[];
   selectedTags: Item[];
   newTags: Item[];
@@ -39,11 +36,21 @@ export default (Component: React.ComponentType<any>) => {
     composeState = composeState;
 
     addTag = (selected:Item[]) => {
-      this.setState(set(L.selectedTags, selected))
+      this.composeState([
+        set(L.selectedTags, selected),
+        set(L.errors, undefined)
+      ]);
     }
 
     createTag = (inputValue:string) => {
       const { newTags, selectedTags } = this.state.tagObject;
+      this.setState(set(L.errors, undefined));
+      if (inputValue.length < 3 || inputValue.length > 25) {
+        this.setState(set(L.errors, 
+          [{'field': 'label', 'reason': 'Length must be 3-25 characters'}]
+        ));
+        return;
+      }
       const newTag: Item = this.tagToItem(inputValue);
       const tags = concat(newTags, [newTag]);
       const linodeTags = concat(selectedTags, [newTag]);
@@ -68,24 +75,6 @@ export default (Component: React.ComponentType<any>) => {
       sendToast('There was an error attaching tags to your Linode.');
     }
 
-    addNewTagsToLinode = (linodeID:number) => {
-      /* This method should only
-      * be called after a new Linode is successfully created.
-      */
-      const { newTags } = this.state.tagObject;
-      const newTagList = this.getTagList(newTags);
-      Bluebird.map(newTagList, (tag:string) => {
-        _createTag({ label: tag }).catch(this.handleTagCreateError);
-      })
-        .then(() => {
-          // Only if all tags were created successfully, attach
-          // the full list of tags to the Linode.
-          updateLinode(linodeID, { tags: this.getLinodeTagList() })
-            .catch(this.handleTagCreateError);
-        })
-        .catch(this.handleTagCreateError);
-    }
-
     state = {
       tagObject: {
         accountTags: [],
@@ -94,7 +83,6 @@ export default (Component: React.ComponentType<any>) => {
         errors: [],
         actions: {
           addTag: this.addTag,
-          addNewTagsToLinode: this.addNewTagsToLinode,
           createTag: this.createTag,
           getLinodeTagList: this.getLinodeTagList,
         }

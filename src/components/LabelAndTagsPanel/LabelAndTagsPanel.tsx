@@ -47,6 +47,7 @@ interface Props {
   labelFieldProps?: TextFieldProps;
   isForm?: IsFormProps;
   tagObject?: TagObject;
+  tagError?: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -63,17 +64,18 @@ class InfoPanel extends React.Component<CombinedProps> {
   renderTagsPanel = () => {
     if (!this.props.tagObject) { return; }
     const { accountTags, actions, errors, selectedTags } = this.props.tagObject;
-    const hasErrorFor = getAPIErrorFor({
-      tags: 'tags'
-    }, errors)
+    const hasErrorFor = getAPIErrorFor({ label: 'label' }, errors);
+    // Label refers to the tag label, not the Linode label
+    const labelError = hasErrorFor('label');
     const generalError = hasErrorFor('none');
+    const { tagError } = this.props;
     return (
       <Select
         isCreatable={true}
         isMulti={true}
         label={"Add Tags"}
         options={accountTags}
-        errorText={generalError}
+        errorText={labelError || tagError || generalError}
         value={selectedTags}
         onChange={actions.addTag}
         createNew={actions.createTag}
