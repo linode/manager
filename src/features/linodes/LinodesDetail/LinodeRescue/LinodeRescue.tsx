@@ -192,7 +192,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
             rescue
           />
           <AddNewLink
-            onClick={() => this.incrementCounter()}
+            onClick={this.incrementCounter}
             label="Add Disk"
             disabled={this.state.counter >= 6}
             left

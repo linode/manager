@@ -69,6 +69,10 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   },
 });
 
+const handleClick = (e: any) => {
+  e.stopPropogation();
+}
+
 type CombinedProps = MenuItemProps & Props & WithStyles<CSSClasses>;
 
 const WrapperMenuItem: React.StatelessComponent<CombinedProps> = (props) => {
@@ -81,7 +85,7 @@ const WrapperMenuItem: React.StatelessComponent<CombinedProps> = (props) => {
         {tooltip &&
           <IconButton
             className={classes.helpButton}
-            onClick={e => e.stopPropagation()}
+            onClick={handleClick}
             data-qa-tooltip-icon
           >
             <HelpOutline className={classes.helpIcon}/>

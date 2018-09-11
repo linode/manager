@@ -24,38 +24,14 @@ storiesOf('ExpansionPanel', module)
     <ExpansionPanel
       success="You did it!"
       heading="Why is Linode the best?"
-      actions={props => (
-          <ActionsPanel>
-            <Button variant="raised" color="primary">Save</Button>
-            <Button
-              variant="raised"
-              color="secondary"
-              className="cancel"
-            >
-              Cancel
-            </Button>
-          </ActionsPanel>
-        )
-      }
+      actions={renderActions}
     >
       <p>Customer service!</p>
     </ExpansionPanel>
     <ExpansionPanel
       success="You did it!"
       heading="Why is Linode the best?"
-      actions={props => (
-          <ActionsPanel>
-            <Button variant="raised" color="primary">Save</Button>
-            <Button
-              variant="raised"
-              color="secondary"
-              className="cancel"
-            >
-              Cancel
-            </Button>
-          </ActionsPanel>
-        )
-      }
+      actions={renderActions}
     >
       <p>Customer service!</p>
     </ExpansionPanel>
@@ -66,38 +42,14 @@ storiesOf('ExpansionPanel', module)
     <ExpansionPanel
       warning="Careful now..."
       heading="Why is Linode the best?"
-      actions={props => (
-          <ActionsPanel>
-            <Button variant="raised" color="primary">Save</Button>
-            <Button
-              variant="raised"
-              color="secondary"
-              className="cancel"
-            >
-              Cancel
-            </Button>
-          </ActionsPanel>
-        )
-      }
+      actions={renderActions}
     >
       <p>Customer service!</p>
     </ExpansionPanel>
     <ExpansionPanel
       warning="Careful now..."
       heading="Why is Linode the best?"
-      actions={props => (
-          <ActionsPanel>
-            <Button variant="raised" color="primary">Save</Button>
-            <Button
-              variant="raised"
-              color="secondary"
-              className="cancel"
-            >
-              Cancel
-            </Button>
-          </ActionsPanel>
-        )
-      }
+      actions={renderActions}
     >
       <p>Customer service!</p>
     </ExpansionPanel>
@@ -108,40 +60,31 @@ storiesOf('ExpansionPanel', module)
     <ExpansionPanel
       error="Oh no! Something broke!"
       heading="Why is Linode the best?"
-      actions={props => (
-          <ActionsPanel>
-            <Button variant="raised" color="primary">Save</Button>
-            <Button
-              variant="raised"
-              color="secondary"
-              className="cancel"
-            >
-              Cancel
-            </Button>
-          </ActionsPanel>
-        )
-      }
+      actions={renderActions}
     >
       <p>Customer service!</p>
     </ExpansionPanel>
     <ExpansionPanel
       error="Oh no! Something broke!"
       heading="Why is Linode the best?"
-      actions={props => (
-          <ActionsPanel>
-            <Button variant="raised" color="primary">Save</Button>
-            <Button
-              variant="raised"
-              color="secondary"
-              className="cancel"
-            >
-              Cancel
-            </Button>
-          </ActionsPanel>
-        )
-      }
+      actions={renderActions}
     >
       <p>Customer service!</p>
     </ExpansionPanel>
   </div>
 ));
+
+const renderActions = () => {
+  return (
+    <ActionsPanel>
+      <Button variant="raised" color="primary">Save</Button>
+      <Button
+        variant="raised"
+        color="secondary"
+        className="cancel"
+      >
+        Cancel
+    </Button>
+    </ActionsPanel>
+  )
+}

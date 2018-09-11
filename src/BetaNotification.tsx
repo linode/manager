@@ -56,6 +56,10 @@ type CombinedProps = SnackbarProps & WithStyles<ClassNames>;
 const BetaNotification: React.StatelessComponent<CombinedProps> = (props) => {
   const { classes, onClose, ...rest } = props;
 
+  const handleClose = (e: React.MouseEvent<HTMLElement>) => {
+    props.onClose!(e, '')
+  }
+
   return (<Snackbar
     {...rest}
     ContentProps={{
@@ -77,7 +81,7 @@ const BetaNotification: React.StatelessComponent<CombinedProps> = (props) => {
         { onClose &&
         <Grid item className={classes.actions} xs={3} lg={2}>
           <Button
-            onClick={e => onClose(e, '')}
+            onClick={handleClose}
             color="secondary"
             variant="raised"
             className={classes.button}

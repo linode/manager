@@ -186,6 +186,12 @@ class DomainRecords extends React.Component<CombinedProps, State> {
     this.updateConfirmDialog(c => ({ ...c, submitting: true }));
   }
 
+  handleOpenSOADrawer = (d: Linode.Domain) => {
+    d.type === 'master'
+      ? this.openForEditMasterDomain(d)
+      : this.openForEditSlaveDomain(d)
+  }
+
   generateTypes = () => [
     /** SOA Record */
     {
@@ -221,11 +227,8 @@ class DomainRecords extends React.Component<CombinedProps, State> {
           render: (d: Linode.Domain) => {
             return d.type === 'master'
               ? <ActionMenu
-                onEdit={() => {
-                  d.type === 'master'
-                    ? this.openForEditMasterDomain(d)
-                    : this.openForEditSlaveDomain(d);
-                }}
+                editPayload={d}
+                onEdit={this.handleOpenSOADrawer}
               />
               : <React.Fragment />;
           },
@@ -265,8 +268,17 @@ class DomainRecords extends React.Component<CombinedProps, State> {
           render: ({ id, name, target, ttl_sec }: Linode.Record) => /linode.com/.test(target)
             ? null
             : <ActionMenu
-              onEdit={() => this.openForEditNSRecord({ id, name, target, ttl_sec })}
-              onDelete={() => this.confirmDeletion(id)}
+              editPayload={{
+                id,
+                name,
+                target,
+                ttl_sec
+              }}
+              onEdit={this.openForEditNSRecord}
+              deleteData={{
+                recordID: id,
+                onDelete: this.confirmDeletion
+              }}
             />,
         },
       ],
@@ -298,8 +310,18 @@ class DomainRecords extends React.Component<CombinedProps, State> {
           title: '',
           render: ({ id, name, priority, target, ttl_sec }: Linode.Record) =>
             <ActionMenu
-              onEdit={() => this.openForEditMXRecord({ id, name, priority, target, ttl_sec })}
-              onDelete={() => this.confirmDeletion(id)}
+              onEdit={this.openForEditMXRecord}
+              editPayload={{
+                id,
+                name,
+                priority,
+                target,
+                ttl_sec
+              }}
+              deleteData={{
+                recordID: id,
+                onDelete: this.confirmDeletion
+              }}
             />,
         },
       ],
@@ -318,8 +340,17 @@ class DomainRecords extends React.Component<CombinedProps, State> {
           title: '',
           render: ({ id, name, target, ttl_sec }: Linode.Record) =>
             <ActionMenu
-              onEdit={() => this.openForEditARecord({ id, name, target, ttl_sec })}
-              onDelete={() => this.confirmDeletion(id)}
+              editPayload={{
+                id,
+                name,
+                target,
+                ttl_sec
+              }}
+              onEdit={this.openForEditARecord}
+              deleteData={{
+                recordID: id,
+                onDelete: this.confirmDeletion
+              }}
             />,
         },
       ],
@@ -338,8 +369,17 @@ class DomainRecords extends React.Component<CombinedProps, State> {
           title: '',
           render: ({ id, name, target, ttl_sec }: Linode.Record) =>
             <ActionMenu
-              onEdit={() => this.openForEditCNAMERecord({ id, name, target, ttl_sec })}
-              onDelete={() => this.confirmDeletion(id)}
+              editPayload={{
+                id,
+                name,
+                target,
+                ttl_sec
+              }}
+              onEdit={this.openForEditCNAMERecord}
+              deleteData={{
+                recordID: id,
+                onDelete: this.confirmDeletion
+              }}
             />,
         },
       ],
@@ -358,8 +398,17 @@ class DomainRecords extends React.Component<CombinedProps, State> {
           title: '',
           render: ({ id, target, name, ttl_sec }: Linode.Record) =>
             <ActionMenu
-              onEdit={() => this.openForEditTXTRecord({ id, target, name, ttl_sec })}
-              onDelete={() => this.confirmDeletion(id)}
+              editPayload={{
+                id,
+                name,
+                target,
+                ttl_sec
+              }}
+              onEdit={this.openForEditTXTRecord}
+              deleteData={{
+                recordID: id,
+                onDelete: this.confirmDeletion
+              }}
             />,
         },
       ],
@@ -381,8 +430,19 @@ class DomainRecords extends React.Component<CombinedProps, State> {
           title: '',
           render: ({ id, name, port, priority, target, weight }: Linode.Record) =>
             <ActionMenu
-              onEdit={() => this.openForEditSRVRecord({ id, name, port, priority, target, weight })}
-              onDelete={() => this.confirmDeletion(id)}
+              editPayload={{
+                id,
+                name,
+                port,
+                priority,
+                target,
+                weight
+              }}
+              onEdit={this.openForEditSRVRecord}
+              deleteData={{
+                recordID: id,
+                onDelete: this.confirmDeletion
+              }}
             />,
         },
       ],
@@ -402,14 +462,32 @@ class DomainRecords extends React.Component<CombinedProps, State> {
           title: '',
           render: ({ id, name, tag, target, ttl_sec }: Linode.Record) =>
             <ActionMenu
-              onEdit={() => this.openForEditCAARecord({ id, name, tag, target, ttl_sec })}
-              onDelete={() => this.confirmDeletion(id)}
+              editPayload={{
+                id,
+                name,
+                tag,
+                target,
+                ttl_sec
+              }}
+              onEdit={this.openForEditCAARecord}
+              deleteData={{
+                recordID: id,
+                onDelete: this.confirmDeletion
+              }}
             />,
         },
       ],
       link: () => createLink('Add a CAA Record', this.openForCreateCAARecord),
     },
-  ]
+  ];
+
+  handleCloseDialog = () => {
+    this.updateConfirmDialog(() => ({
+      open: false,
+      submitting: false,
+      recordId: undefined,
+    }))
+  }
 
   constructor(props: CombinedProps) {
     super(props);
@@ -429,6 +507,15 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       || !equals(prevProps.domain, this.props.domain)) {
       this.setState({ types: this.generateTypes() });
     }
+  }
+
+  renderDialogActions = () => {
+    return (
+      <ActionsPanel>
+        <Button type="cancel" onClick={this.handleCloseDialog} >Cancel</Button>
+        <Button type="secondary" destructive onClick={this.deleteDomainRecord}>Delete</Button>
+      </ActionsPanel>
+    )
   }
 
   render() {
@@ -492,18 +579,9 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         }
         <ConfirmationDialog
           open={confirmDialog.open}
-          onClose={() => this.updateConfirmDialog(() => ({
-            open: false,
-            submitting: false,
-            recordId: undefined,
-          }))}
+          onClose={this.handleCloseDialog}
           title="Confirm Deletion"
-          actions={({ onClose }) =>
-            <ActionsPanel>
-              <Button type="cancel" onClick={onClose} >Cancel</Button>
-              <Button type="secondary" destructive onClick={this.deleteDomainRecord}>Delete</Button>
-            </ActionsPanel>
-          }
+          actions={this.renderDialogActions}
         >
           Are you sure you want to delete this record?
         </ConfirmationDialog>
