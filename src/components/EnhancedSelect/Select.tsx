@@ -19,6 +19,18 @@ type ClassNames = 'root'
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
     maxWidth: 415,
+    '& .react-select__value-container': {
+      width: '100%',
+      '& > div': {
+        width: '100%',
+      },
+    },
+    '& .react-select__input': {
+      width: '100%',
+      '& input': {
+        width: '100% !important',
+      },
+    },
     '& .react-select__menu': {
       margin: 0,
       borderRadius: 0,
