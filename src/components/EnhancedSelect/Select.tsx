@@ -25,6 +25,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       '& > div': {
         width: '100%',
       },
+      '&.react-select__value-container--is-multi': {
+        '& > div, & .react-select__input': {
+          width: 'auto',
+        },
+      },
     },
     '& .react-select__input': {
       width: '100%',
@@ -220,7 +225,6 @@ class Select extends React.PureComponent<CombinedProps,State> {
         placeholder={placeholder || 'Select a value...'}
         styles={styleOverrides}
         menuPlacement="auto"
-        menuIsOpen={true}
       />
     );
   }
