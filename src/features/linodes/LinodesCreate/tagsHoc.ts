@@ -2,7 +2,6 @@ import { concat, lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 
 import { Item } from 'src/components/EnhancedSelect/Select';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { createTag as _createTag, getTags, Tag } from 'src/services/tags';
 import composeState from 'src/utilities/composeState';
 
@@ -67,12 +66,6 @@ export default (Component: React.ComponentType<any>) => {
 
     tagToItem = (tag:string) => {
       return { value: tag, label: tag }
-    }
-
-    handleTagCreateError = () => {
-      // If any step in the process failed, no tags are attached.
-      // Notify the user that an error has occurred.
-      sendToast('There was an error attaching tags to your Linode.');
     }
 
     state = {
