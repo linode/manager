@@ -24,15 +24,12 @@ import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
 import TableRow from 'src/components/TableRow';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
-import { deleteDomain, getDomains } from 'src/services/domains';
-import transformPromiseToCancellableObservable from 'src/utilities/promiseToObservable';
+import { deleteDomain, getDomains$ } from 'src/services/domains';
 import scrollToTop from 'src/utilities/scrollToTop';
 
 import ActionMenu from './DomainActionMenu';
 import DomainCreateDrawer from './DomainCreateDrawer';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
-
-import { Subscription } from 'rxjs/Subscription';
 
 type ClassNames = 'root'
   | 'title'
@@ -111,7 +108,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
     },
   ];
 
-  domainsSubscription = new Subscription;
+  cancelRequest: Function;
 
   getDomains = (
     page: number = this.state.page,
@@ -121,24 +118,26 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
 
     this.setState({ loading: initial });
 
-    this.domainsSubscription = transformPromiseToCancellableObservable(getDomains)
-      /* subscribe to successful and failed requets */
-      .subscribe(
-        (response) => {
-          this.setState({
-            count: response.results,
-            domains: response.data,
-            loading: false,
-            page: response.page,
-          });
-        },
-        (error) => {
-          this.setState({
-            errors: pathOr([{ reason: 'Unable to load domains.' }], ['response', 'data', 'errors'], error),
-            loading: false,
-          })
-        }
-      );
+    const { request, cancel } = getDomains$();
+
+    this.cancelRequest = cancel;
+
+    /* subscribe to successful and failed requets */
+    request()
+      .then((response) => {
+        this.setState({
+          count: response.results,
+          domains: response.data,
+          loading: false,
+          page: response.page,
+        });
+      })
+      .catch((error) => {
+        this.setState({
+          errors: pathOr([{ reason: 'Unable to load domains.' }], ['response', 'data', 'errors'], error),
+          loading: false,
+        })
+      });
   }
 
   handlePageChange = (page: number) => {
@@ -157,7 +156,9 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
   }
 
   componentWillUnmount() {
-    if (typeof this.domainsSubscription !== 'undefined') { this.domainsSubscription.unsubscribe() }
+    if (typeof this.cancelRequest === 'function') {
+      this.cancelRequest();
+    }
   }
 
   openImportZoneDrawer = () => this.setState({ importDrawer: { ...this.state.importDrawer, open: true } });
@@ -255,7 +256,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
     const { classes } = this.props;
     const { errors, count, loading } = this.state;
 
-    if(loading){
+    if (loading) {
       return this.renderLoading();
     }
 
