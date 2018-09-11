@@ -25,13 +25,13 @@ import Table from 'src/components/Table';
 import TableRow from 'src/components/TableRow';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { deleteDomain, getDomains } from 'src/services/domains';
+import transformPromiseToCancellableObservable from 'src/utilities/promiseToObservable';
 import scrollToTop from 'src/utilities/scrollToTop';
 
 import ActionMenu from './DomainActionMenu';
 import DomainCreateDrawer from './DomainCreateDrawer';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 
-import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs/Subscription';
 
 type ClassNames = 'root'
@@ -121,11 +121,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
 
     this.setState({ loading: initial });
 
-    this.domainsSubscription = Observable
-      /* convert the promise into an observable */
-      .fromPromise(getDomains())
-      /* use switchMap to cancel previous request */
-      .switchMap(() => getDomains())
+    this.domainsSubscription = transformPromiseToCancellableObservable(getDomains)
       /* subscribe to successful and failed requets */
       .subscribe(
         (response) => {
@@ -142,7 +138,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
             loading: false,
           })
         }
-      )
+      );
   }
 
   handlePageChange = (page: number) => {
@@ -161,7 +157,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
   }
 
   componentWillUnmount() {
-    this.domainsSubscription.unsubscribe();
+    if (typeof this.domainsSubscription !== 'undefined') { this.domainsSubscription.unsubscribe() }
   }
 
   openImportZoneDrawer = () => this.setState({ importDrawer: { ...this.state.importDrawer, open: true } });
