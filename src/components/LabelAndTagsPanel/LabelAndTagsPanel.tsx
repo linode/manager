@@ -11,6 +11,8 @@ import Notice from 'src/components/Notice';
 import RenderGuard from 'src/components/RenderGuard';
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 import { TagObject } from 'src/features/linodes/LinodesCreate/tagsHoc';
+import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+
 
 type ClassNames = 'root'
   | 'inner'
@@ -60,13 +62,18 @@ class InfoPanel extends React.Component<CombinedProps> {
 
   renderTagsPanel = () => {
     if (!this.props.tagObject) { return; }
-    const { accountTags, actions, selectedTags } = this.props.tagObject;
+    const { accountTags, actions, errors, selectedTags } = this.props.tagObject;
+    const hasErrorFor = getAPIErrorFor({
+      tags: 'tags'
+    }, errors)
+    const generalError = hasErrorFor('none');
     return (
       <Select
         isCreatable={true}
         isMulti={true}
         label={"Add Tags"}
         options={accountTags}
+        errorText={generalError}
         value={selectedTags}
         onChange={actions.addTag}
         createNew={actions.createTag}

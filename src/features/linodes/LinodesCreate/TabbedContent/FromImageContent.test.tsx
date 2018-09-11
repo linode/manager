@@ -15,11 +15,13 @@ const mockProps = {
   tagObject: {
     accountTags: [],
     selectedTags: [],
+    newTags: [],
     errors: [],
     actions: {
       addTag: jest.fn(),
       createTag: jest.fn(),
-      addTagsToNewLinode: jest.fn(),
+      addNewTagsToLinode: jest.fn(),
+      getLinodeTagList: jest.fn(),
     }
   }
 };

@@ -138,7 +138,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
 
   createNewLinode = () => {
     const { history, tagObject, userSSHKeys } = this.props;
-    const { addNewTagsToLinode, getLinodeTagList } = tagObject.actions;
+    const { addNewTagsToLinode } = tagObject.actions;
     const {
       selectedImageID,
       selectedRegionID,
@@ -160,7 +160,6 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
       backups_enabled: backups, /* optional */
       booted: true,
       authorized_users: userSSHKeys.filter(u => u.selected).map((u) => u.username),
-      tags: getLinodeTagList()
     })
       .then((linode) => {
         if (privateIP) { allocatePrivateIP(linode.id); }

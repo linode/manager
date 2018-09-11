@@ -1,8 +1,10 @@
 import * as Bluebird from 'bluebird';
-import { concat, lensPath, set } from 'ramda';
+import { concat, lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 
 import { Item } from 'src/components/EnhancedSelect/Select';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
+import { updateLinode } from 'src/services/linodes';
 import { createTag as _createTag, getTags, Tag } from 'src/services/tags';
 import composeState from 'src/utilities/composeState';
 
@@ -60,19 +62,28 @@ export default (Component: React.ComponentType<any>) => {
       return { value: tag, label: tag }
     }
 
+    handleTagCreateError = () => {
+      // If any step in the process failed, no tags are attached.
+      // Notify the user that an error has occurred.
+      sendToast('There was an error attaching tags to your Linode.');
+    }
+
     addNewTagsToLinode = (linodeID:number) => {
-      /* When creating a new tag in the database,
-      * we have the option of immediately attaching
-      * the tag to a Linode. This method should only
+      /* This method should only
       * be called after a new Linode is successfully created.
       */
       const { newTags } = this.state.tagObject;
       const newTagList = this.getTagList(newTags);
       Bluebird.map(newTagList, (tag:string) => {
-        _createTag({ label: tag, linodes: [linodeID]});
-      }).catch((errors) => {
-        this.setState(set(L.errors, errors));
-      });
+        _createTag({ label: tag }).catch(this.handleTagCreateError);
+      })
+        .then(() => {
+          // Only if all tags were created successfully, attach
+          // the full list of tags to the Linode.
+          updateLinode(linodeID, { tags: this.getLinodeTagList() })
+            .catch(this.handleTagCreateError);
+        })
+        .catch(this.handleTagCreateError);
     }
 
     state = {
@@ -99,7 +110,8 @@ export default (Component: React.ComponentType<any>) => {
           this.setState(set(L.accountTags, tags));
         })
         .catch((errors) => {
-          this.setState(set(L.errors, errors));
+          const defaultError = [{ reason: 'There was an error retrieving your tags.' }];
+          this.setState(set(L.errors, pathOr(defaultError, ['response', 'data', 'errors'], errors)));
         })
     }
 
