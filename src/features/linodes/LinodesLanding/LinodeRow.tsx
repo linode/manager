@@ -1,4 +1,4 @@
-import { compose, splitAt } from 'ramda';
+import { compose } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -10,9 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import Flag from 'src/assets/icons/flag.svg';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
-import ShowMore from 'src/components/ShowMore';
 import TableRow from 'src/components/TableRow';
-import Tag from 'src/components/Tag';
 import { withTypes } from 'src/context/types';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { displayType } from 'src/features/linodes/presentation';
@@ -28,7 +26,6 @@ import RegionIndicator from './RegionIndicator';
 
 type ClassNames = 'bodyRow'
   | 'linodeCell'
-  | 'tagsCell'
   | 'ipCell'
   | 'ipCellWrapper'
   | 'regionCell'
@@ -37,9 +34,7 @@ type ClassNames = 'bodyRow'
   | 'flag'
   | 'status'
   | 'link'
-  | 'linkButton'
-  | 'row'
-  | 'tag';
+  | 'linkButton';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => {
   return ({
@@ -51,9 +46,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       '& h3': {
         transition: theme.transitions.create(['color']),
       },
-    },
-    tagsCell: {
-      width: '15%',
     },
     ipCell: {
       width: '30%',
@@ -104,14 +96,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
         },
       },
     },
-    row: {
-      display: 'flex',
-      alignItems: 'center',
-    },
-    tag: {
-      color: theme.palette.text.primary,
-      fontSize: '.9rem',
-    },
   });
 };
 
@@ -134,6 +118,7 @@ interface Props {
   openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
   toggleConfirmation: (bootOption: Linode.BootAction,
     linodeId: number, linodeLabel: string) => void;
+  renderTagsAndMoreTags: (tags: string[]) => JSX.Element;
 }
 
 interface TypesContextProps {
@@ -145,8 +130,6 @@ type CombinedProps =
   Props &
   TypesContextProps &
   WithStyles<ClassNames>;
-
-const tagsToShow = 3;
 
 class LinodeRow extends React.Component<CombinedProps, State> {
   state: State = {
@@ -191,8 +174,6 @@ class LinodeRow extends React.Component<CombinedProps, State> {
   headCell = () => {
     const { linodeId, linodeStatus, linodeLabel, linodeTags, classes } = this.props;
 
-    const [visibleTags, additionalTags] = splitAt(tagsToShow, linodeTags);
-
     return (
       <TableCell className={classes.linodeCell}>
         <Link to={`/linodes/${linodeId}`} className={classes.link}>
@@ -204,18 +185,7 @@ class LinodeRow extends React.Component<CombinedProps, State> {
               <Typography role="header" variant="subheading" data-qa-label>
                 {linodeLabel}
               </Typography>
-              {
-                visibleTags.map(eachTag => {
-                  return (
-                    <Tag
-                      label={eachTag}
-                      key={eachTag}
-                      variant="gray"
-                    />
-                  )
-                })
-              }
-              {additionalTags && this.renderMoreTags(additionalTags)}
+              {this.props.renderTagsAndMoreTags(linodeTags)}
             </Grid>
           </Grid>
           </Link>
@@ -262,26 +232,6 @@ class LinodeRow extends React.Component<CombinedProps, State> {
       )
     }
     return null;
-  }
-
-  renderTag = (tags: string[]) => {
-    const { classes } = this.props;
-    return tags.map(eachTag => {
-      return (
-        <div key={eachTag} className={classes.row}>
-          <div className={`${classes.tag}`}>{eachTag}</div>
-        </div>
-      )
-    })
-  }
-
-  renderMoreTags = (tags: string[]) => {
-    return (
-      <ShowMore
-        items={tags}
-        render={this.renderTag}
-      />
-    )
   }
 
   loadedState = () => {
