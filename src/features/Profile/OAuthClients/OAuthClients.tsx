@@ -36,16 +36,18 @@ interface Props {
   data: PromiseLoaderResponse<Linode.OAuthClient[]>;
 }
 
+interface FormValues {
+  label?: string;
+  redirect_uri?: string;
+  public: boolean;
+}
+
 interface FormState {
   edit: boolean;
   open: boolean;
   errors?: Linode.ApiFieldError[];
   id?: string;
-  values: {
-    label?: string;
-    redirect_uri?: string;
-    public: boolean;
-  };
+  values: FormValues
 }
 
 interface SecretState {
@@ -287,7 +289,9 @@ class OAuthClients extends React.Component<CombinedProps, State> {
           label={this.state.form.values.label}
           redirect_uri={this.state.form.values.redirect_uri}
           onClose={this.reset}
-          onChange={this.onChange}
+          onChangeLabel={this.handleChangeLabel}
+          onChangeRedirectURI={this.handleChangeRedirectURI}
+          onChangePublic={this.handleChangePublic}
           onSubmit={this.state.form.edit ? this.editClient : this.createClient}
         />
       </React.Fragment>
@@ -298,6 +302,30 @@ class OAuthClients extends React.Component<CombinedProps, State> {
     ...form,
     values: { ...form.values, [key]: value },
   }));
+
+  handleChangeLabel = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState(this.createNewFormState('label', e.target.value))
+  }
+
+  handleChangeRedirectURI = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState(this.createNewFormState('redirect_uri', e.target.value))
+  }
+
+  handleChangePublic = () => {
+    this.setState(this.createNewFormState('public', !this.state.form.values.public))
+  }
+
+  createNewFormState = (newState: keyof FormValues, newValue: string | boolean) => {
+    return {
+      form: {
+        ...this.state.form,
+        values: {
+          ...this.state.form.values,
+          [newState]: newValue
+        }
+      }
+    }
+  }
 
   renderClientSecretActions = () => (
     <Button type="primary" onClick={this.reset} data-qa-close-dialog>Got it!</Button>
