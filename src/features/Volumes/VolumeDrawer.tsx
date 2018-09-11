@@ -672,7 +672,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
   dispatch,
 );
 
-const mapStateToProps = (state: Linode.AppState) => ({
+const mapStateToProps = (state: ApplicationState) => ({
   mode: path(['volumeDrawer', 'mode'], state),
   volumeID: path(['volumeDrawer', 'volumeID'], state),
   label: path(['volumeDrawer', 'label'], state),

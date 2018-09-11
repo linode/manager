@@ -1,6 +1,6 @@
-import { pathOr } from 'ramda';
+import { path } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
+import { connect, MapStateToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import Paper from '@material-ui/core/Paper';
@@ -57,17 +57,13 @@ interface Props {
   errors?: Linode.ApiFieldError[];
 }
 
-interface ConnectedProps {
-  profileUsername: string;
-}
-
 interface State {
   deleteConfirmDialogOpen: boolean;
   toDeleteUsername: string;
   userDeleteError: boolean;
 }
 
-type CombinedProps = Props & ConnectedProps & WithStyles<ClassNames> & RouteComponentProps<{}>;
+type CombinedProps = Props & StateProps & WithStyles<ClassNames> & RouteComponentProps<{}>;
 
 class UserProfile extends React.Component<CombinedProps> {
   state: State = {
@@ -148,7 +144,7 @@ class UserProfile extends React.Component<CombinedProps> {
   }
 
   onDeleteConfirm = (username: string) => {
-    const { history : { push } } = this.props;
+    const { history: { push } } = this.props;
     this.setState({
       userDeleteError: false,
       deleteConfirmDialogOpen: false,
@@ -245,8 +241,12 @@ class UserProfile extends React.Component<CombinedProps> {
   }
 }
 
-const mapStateToProps = (state: Linode.AppState) => ({
-  profileUsername: pathOr('', ['resources', 'profile', 'data', 'username'], state),
+interface StateProps {
+  profileUsername?: string;
+}
+
+const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state) => ({
+  profileUsername: path(['data', 'username'], state.__resources.profile),
 });
 
 export const connected = connect(mapStateToProps);

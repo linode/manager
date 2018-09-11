@@ -20,10 +20,11 @@ it('renders without crashing', () => {
               grid: '',
               switchWrapper: '',
             }}
-            longLivedLoaded
             userId={123456}
-            dispatchRequest={jest.fn()}
-            dispatchResponse={jest.fn()}
+            profileLoading={false}
+            actions={{
+              getProfile: jest.fn(),
+            }}
             documentation={[]}
             toggleTheme={jest.fn()}
           />

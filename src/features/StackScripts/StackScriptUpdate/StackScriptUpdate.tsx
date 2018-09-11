@@ -1,39 +1,28 @@
+import { clone, compose, path, pathOr } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
+import { connect, MapStateToProps } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 
-import { clone, compose, pathOr } from 'ramda';
-
-import {
-  StyleRulesCallback,
-  Theme,
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
-
 import IconButton from '@material-ui/core/IconButton';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import PromiseLoader from 'src/components/PromiseLoader';
-
-import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
-
+import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
+import ScriptForm from 'src/features/StackScripts/StackScriptForm';
 import { getLinodeImages } from 'src/services/images';
 import { getStackScript, updateStackScript } from 'src/services/stackscripts';
-
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-
-import ScriptForm from 'src/features/StackScripts/StackScriptForm';
-
-import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 
 type ClassNames = 'root'
   | 'backButton'
@@ -58,10 +47,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-interface Props {
-  profile: Linode.Profile;
-}
-
 interface PreloadedProps {
   images: { response: Linode.Image[] }
   stackScript: { response: Linode.StackScript.Response }
@@ -82,7 +67,7 @@ interface State {
   dialogOpen: boolean;
 }
 
-type CombinedProps = Props
+type CombinedProps = StateProps
   & SetDocsProps
   & WithStyles<ClassNames>
   & PreloadedProps
@@ -296,7 +281,7 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
           destructive
           onClick={this.resetAllFields}
           data-qa-confirm-cancel
-          >
+        >
           Reset
         </Button>
       </ActionsPanel>
@@ -319,13 +304,17 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, profile } = this.props;
+    const { classes, username } = this.props;
     const { availableImages, selectedImages, script,
       labelText, descriptionText, revisionNote, errors,
       isSubmitting } = this.state;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
+
+    if (!username) {
+      return <ErrorState errorText="An error has occured, please reload and try again." />
+    }
 
     return (
       <React.Fragment>
@@ -350,13 +339,13 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
               className={classes.createTitle}
               variant="headline"
               data-qa-edit-header
-              >
+            >
               Edit StackScript
             </Typography>
           </Grid>
         </Grid>
         <ScriptForm
-          currentUser={profile.username}
+          currentUser={username}
           images={{
             available: availableImages,
             selected: selectedImages,
@@ -395,9 +384,15 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
   }
 }
 
-const mapStateToProps = (state: Linode.AppState) => ({
-  profile: pathOr({}, ['resources', 'profile', 'data'], state),
+interface StateProps {
+  username?: string;
+}
+
+const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state) => ({
+  username: path(['data', 'username'], state.__resources.profile),
 });
+
+const connected = connect(mapStateToProps);
 
 const styled = withStyles(styles, { withTheme: true });
 
@@ -410,7 +405,7 @@ const reloaded = reloadableWithRouter<PreloadedProps, { stackScriptID?: number }
 export default compose(
   setDocs(StackScriptUpdate.docs),
   styled,
+  connected,
   reloaded,
-  connect(mapStateToProps),
   preloaded,
 )(StackScriptUpdate)

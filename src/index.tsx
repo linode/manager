@@ -79,9 +79,15 @@ const renderLish = () =>
     <Lish />
   </LinodeThemeWrapper>
 
+/**
+ * The way toggleTheme is set is all funked up. This gross hack
+ * needs to be removed in favor of (maybe) render children.
+ */
+const mock = () => null;
+
 const renderApp = () =>
   <LinodeThemeWrapper>
-    <App />
+    <App toggleTheme={mock} />
   </LinodeThemeWrapper>
 
 const renderAuthentication = () =>

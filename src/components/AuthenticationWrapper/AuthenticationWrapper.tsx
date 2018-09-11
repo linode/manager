@@ -1,13 +1,11 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
+import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'redux';
 
 import { redirectToLogin } from 'src/session';
 
 interface Props {
-  isAuthenticated: boolean;
-  loginRedirect: Function;
   location: {
     pathname: string,
     search: string,
@@ -17,7 +15,9 @@ interface Props {
   };
 }
 
-export class AuthenticationWrapper extends React.Component<Props> {
+type CombinedProps = Props & StateProps & DispatchProps;
+
+export class AuthenticationWrapper extends React.Component<CombinedProps> {
   state = {
     showChildren: false,
   };
@@ -27,7 +27,7 @@ export class AuthenticationWrapper extends React.Component<Props> {
   };
 
   componentWillMount() {
-    const { isAuthenticated, location: { pathname }, loginRedirect } = this.props;
+    const { isAuthenticated, location: { pathname }, actions } = this.props;
 
     if (this.isExcludedRoute(pathname) || isAuthenticated) {
       this.setState({ showChildren: true });
@@ -35,14 +35,14 @@ export class AuthenticationWrapper extends React.Component<Props> {
     }
 
     if (!isAuthenticated) {
-      return loginRedirect();
+      return actions.loginRedirect();
     }
   }
 
-  componentWillReceiveProps(nextProps: Props) {
-    const { isAuthenticated, location: { pathname }, loginRedirect } = nextProps;
+  componentWillReceiveProps(nextProps: CombinedProps) {
+    const { isAuthenticated, location: { pathname }, actions } = nextProps;
     if (!isAuthenticated && !this.isExcludedRoute(pathname)) {
-      return loginRedirect();
+      return actions.loginRedirect();
     }
   }
 
@@ -62,18 +62,32 @@ export class AuthenticationWrapper extends React.Component<Props> {
   }
 }
 
-const mapDispatchToProps = (state: Linode.AppState, ownProps: Props) => ({
-  loginRedirect() {
-    const { location: { pathname: path, search: querystring } } = ownProps;
-    redirectToLogin(path, querystring);
-  },
-});
+interface StateProps {
+  isAuthenticated: boolean;
+}
 
-const mapStateToProps = (state: Linode.AppState) => ({
+const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state) => ({
   isAuthenticated: Boolean(state.authentication.token),
 });
 
+interface DispatchProps {
+  actions: {
+    loginRedirect: () => void,
+  },
+}
+
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, ownProps) => ({
+  actions: {
+    loginRedirect: () => {
+      const { location: { pathname: path, search: querystring } } = ownProps;
+      redirectToLogin(path, querystring);
+    },
+  }
+});
+
+const connected = connect(mapStateToProps, mapDispatchToProps);
+
 export default compose<Linode.TodoAny, Linode.TodoAny, Linode.TodoAny>(
   withRouter,
-  connect(mapStateToProps, mapDispatchToProps as Linode.TodoAny),
+  connected,
 )(AuthenticationWrapper);

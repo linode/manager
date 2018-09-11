@@ -30,7 +30,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     marginTop: theme.spacing.unit * 3,
   },
   select: {
-    maxWidth: '30%',  
+    maxWidth: '30%',
   },
   title: {
     marginBottom: theme.spacing.unit * 2,

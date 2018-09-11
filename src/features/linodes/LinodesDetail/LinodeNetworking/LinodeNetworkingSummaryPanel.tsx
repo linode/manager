@@ -1,6 +1,6 @@
 import { path } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
+import { connect, MapStateToProps } from 'react-redux';
 
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
@@ -45,16 +45,12 @@ interface Props {
   sshIPAddress?: string;
 }
 
-interface ConnectedProps {
-  username: string;
-}
-
-type CombinedProps = Props & ConnectedProps & WithStyles<ClassNames>;
+type CombinedProps = Props & StateProps & WithStyles<ClassNames>;
 
 const SummarySection: React.StatelessComponent<any> = (props) => {
-  const { title, renderValue, classes, ...rest} = props;
+  const { title, renderValue, classes, ...rest } = props;
 
-  return(
+  return (
     <Grid container alignItems="baseline" className={classes.individualContainer}>
       <Grid item>
         <Typography variant="caption">
@@ -119,9 +115,15 @@ const LinodeNetworkingSummaryPanel: React.StatelessComponent<CombinedProps> = (p
 
 const restyled = withStyles(styles, { withTheme: true });
 
-const connected = connect((state: Linode.AppState) => ({
-  username: path(['resources', 'profile', 'data', 'username'], state),
-}));
+interface StateProps {
+  username?: string;
+}
+
+const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state) => ({
+  username: path(['data', 'username'], state.__resources.profile),
+});
+
+const connected = connect(mapStateToProps);
 
 export default restyled(connected(LinodeNetworkingSummaryPanel)) as React.ComponentType<Props>;
 
