@@ -123,23 +123,6 @@ export interface EnhancedSelectProps {
   onInputChange?: (inputValue:string) => void;
 }
 
-const styleOverrides = {
-  option: (base:any, { data, isDisabled, isFocused, isSelected }:SelectState) => {
-    return {
-      ...base,
-      backgroundColor: isDisabled
-        ? null
-        : isSelected ? data.color : isFocused ? 'blue' : null,
-      color: isDisabled
-        ? '#ccc'
-        : isSelected
-          ? 'black'
-          : 'black',
-      cursor: isDisabled ? 'not-allowed' : 'default',
-    };
-  },
-}
-
 const _components = {
   Control,
   NoOptionsMessage,
@@ -158,25 +141,7 @@ interface CreatableProps extends CCreatableProps<any> {
 
 }
 
-interface State {
-  internalError: string;
-}
-
-class Select extends React.PureComponent<CombinedProps,State> {
-  state: State = {
-    internalError: ''
-  }
-
-  handleInputChange = (inputValue:string) => {
-    if (inputValue.length > 25) {
-      this.setState({ internalError: 'Input must be less than 25 characters'});
-      return inputValue.slice(0,25);
-    } else {
-      this.setState({ internalError: '' });
-    return inputValue;
-    }
-  }
-
+class Select extends React.PureComponent<CombinedProps,{}> {
   render() {
     const {
       classes,
@@ -195,8 +160,6 @@ class Select extends React.PureComponent<CombinedProps,State> {
       value
     } = this.props;
 
-    const { internalError } = this.state;
-
     const combinedComponents = merge(_components, components);
 
     const BaseSelect: React.ComponentClass<BaseSelectProps|CreatableProps> = isCreatable ? CreatableSelect : SSelect;
@@ -211,7 +174,7 @@ class Select extends React.PureComponent<CombinedProps,State> {
         classNamePrefix="react-select"
         textFieldProps={{
           label,
-          errorText: internalError || errorText,
+          errorText,
           disabled,
           InputLabelProps: {
             shrink: true,
@@ -221,10 +184,9 @@ class Select extends React.PureComponent<CombinedProps,State> {
         options={options}
         components={combinedComponents}
         onChange={onChange}
-        onInputChange={onInputChange || this.handleInputChange}
+        onInputChange={onInputChange}
         onCreateOption={createNew}
         placeholder={placeholder || 'Select a value...'}
-        styles={styleOverrides}
         menuPlacement="auto"
       />
     );
