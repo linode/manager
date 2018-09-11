@@ -19,11 +19,20 @@ export const getTags = (params?: any, filter?: any) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filter),
-  ).then(response => response.data);
+  )
+    .then(response => response.data);
 
-export const createTag = (data:TagRequest) =>
+export const createTag = (data: TagRequest) =>
   Request<Tag>(
     setURL(`${API_ROOT}/tags`),
     setMethod('POST'),
     setData(data),
-  ).then(response => response.data)
+  )
+    .then(response => response.data)
+
+export const deleteTag = (label: string) =>
+  Request<Tag>(
+    setURL(`${API_ROOT}/tags/${label}`),
+    setMethod('DELETE'),
+  )
+    .then(response => response.data)
