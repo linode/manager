@@ -2,14 +2,7 @@ import { object, string } from 'yup';
 
 import { API_ROOT } from 'src/constants';
 
-import Request,
-{
-  setData,
-  setMethod,
-  setParams,
-  setURL,
-  setXFilter,
-} from './index';
+import Request, { RequestStream, setData, setMethod, setParams, setURL, setXFilter, validateRequestData } from './index';
 
 type Page<T> = Linode.ResourcePage<T>;
 type Domain = Linode.Domain;
@@ -25,6 +18,16 @@ export const getDomains = (
   setXFilter(filters),
 )
   .then(response => response.data);;
+
+export const getDomains$ = (
+  params: any = {},
+  filters: any = {},
+) => RequestStream<Page<Domain>>(
+  setURL(`${API_ROOT}/domains`),
+  setMethod('GET'),
+  setParams(params),
+  setXFilter(filters),
+);
 
 export const getDomain = (domainId: number) =>
   Request<Domain>(
