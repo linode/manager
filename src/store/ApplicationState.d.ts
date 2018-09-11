@@ -29,5 +29,6 @@ declare interface RequestableData<D> {
 declare interface FeaturesState {
   linodeDetail: {
     volumes: RequestableData<Linode.Volume[]>
-  }
+  },
+  linodes: RequestableData<Linode.Linode[]>
 }
