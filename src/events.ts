@@ -138,7 +138,9 @@ setInterval(
 
       if (DISABLE_EVENT_THROTTLE) {
         /* If throttling is disabled, don't use or update the multiplier */
-        eventRequestDeadline = Date.now() + initialPollInterval;
+        const mocksPollingInterval = 500;
+
+        eventRequestDeadline = Date.now() + mocksPollingInterval;
       } else {
         eventRequestDeadline = Date.now()
           + initialPollInterval * currentPollIntervalMultiplier;
