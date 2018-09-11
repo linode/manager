@@ -24,11 +24,6 @@ export const withLinode = createHOCForConsumer<Linode.Linode>(linodeContext.Cons
 export const LinodeProvider = linodeContext.Provider;
 export const LinodeConsumer = linodeContext.Consumer;
 
-const volumesContext = React.createContext<Requestable<Linode.Volume[]>>({...initialState});
-export const withVolumes = createHOCForConsumer<Linode.Volume[]>(volumesContext.Consumer, 'WithVolumes');
-export const VolumesProvider = volumesContext.Provider;
-export const VolumesConsumer = volumesContext.Consumer;
-
 const imageContext = React.createContext<Requestable<Linode.Image>>({...initialState});
 export const withImage = createHOCForConsumer<Linode.Image>(imageContext.Consumer, 'WithImage');
 export const ImageProvider = imageContext.Provider;

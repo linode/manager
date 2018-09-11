@@ -4,6 +4,7 @@ declare interface ApplicationState {
   },
   authentication: AuthState;
   documentation: DocumentationState;
+  features: FeaturesState;
   volumeDrawer: VolumeDrawerState;
 }
 
@@ -23,4 +24,10 @@ declare interface RequestableData<D> {
   loading: boolean;
   data?: D;
   error?: Error;
+}
+
+declare interface FeaturesState {
+  linodeDetail: {
+    volumes: RequestableData<Linode.Volume[]>
+  }
 }
