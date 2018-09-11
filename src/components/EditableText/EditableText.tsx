@@ -155,6 +155,15 @@ class EditableText extends React.Component<FinalProps, State> {
     this.props.onCancel();
   }
 
+  handleSaveEdit = () => {
+    this.finishEditing(this.state.text);
+  }
+
+  handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') { this.finishEditing(this.state.text); }
+    if (e.key === 'Escape' || e.key === 'Esc') { this.cancelEditing(); }
+  }
+
   render() {
     const { classes, onEdit, errorText, ...rest } = this.props;
     const { isEditing, text } = this.state;
@@ -192,10 +201,7 @@ class EditableText extends React.Component<FinalProps, State> {
                   className={classes.textField}
                   type="text"
                   onChange={this.onChange}
-                  onKeyDown={(e: any) => {
-                    if (e.key === 'Enter') { this.finishEditing(text); }
-                    if (e.key === 'Escape' || e.key === 'Esc') { this.cancelEditing(); }
-                  }}
+                  onKeyDown={this.handleKeyPress}
                   value={text}
                   errorText={this.props.errorText}
                   {...rest}
@@ -211,9 +217,7 @@ class EditableText extends React.Component<FinalProps, State> {
                 />
                 <Button
                   className={classes.button}
-                  onClick={() => {
-                    this.finishEditing(text);
-                  }}
+                  onClick={this.handleSaveEdit}
                   data-qa-save-edit
                 >
                   <Check

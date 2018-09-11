@@ -71,10 +71,6 @@ const maybeStyleSegment = (text: string, searchText: string, hlClass: string): R
   );
 };
 
-const onClick = (path: string, history: H.History) => {
-  history.push(path);
-};
-
 const SearchSuggestion: React.StatelessComponent<CombinedProps> = (props) => {
   const {
     title,
@@ -86,8 +82,16 @@ const SearchSuggestion: React.StatelessComponent<CombinedProps> = (props) => {
     history,
     classes,
   } = props;
+
+  const handleClick = () => {
+    history.push(path);
+  }
+
   return (
-    <div onClick={() => onClick(path, history)} className={root}>
+    <div
+      onClick={handleClick}
+      className={root}
+    >
       <div className={`
         ${classes.suggestionItem}
         ${classes.suggestionIcon}
