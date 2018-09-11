@@ -1,4 +1,4 @@
-import { compose, take, takeLast } from 'ramda';
+import { compose, splitAt } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -191,6 +191,8 @@ class LinodeRow extends React.Component<CombinedProps, State> {
   headCell = () => {
     const { linodeId, linodeStatus, linodeLabel, linodeTags, classes } = this.props;
 
+    const [visibleTags, additionalTags] = splitAt(tagsToShow, linodeTags);
+
     return (
       <TableCell className={classes.linodeCell}>
         <Link to={`/linodes/${linodeId}`} className={classes.link}>
@@ -203,7 +205,7 @@ class LinodeRow extends React.Component<CombinedProps, State> {
                 {linodeLabel}
               </Typography>
               {
-                take(tagsToShow, linodeTags).map(eachTag => {
+                visibleTags.map(eachTag => {
                   return (
                     <Tag
                       label={eachTag}
@@ -213,7 +215,7 @@ class LinodeRow extends React.Component<CombinedProps, State> {
                   )
                 })
               }
-              {linodeTags.length > 3 && this.renderMoreTags()}
+              {additionalTags && this.renderMoreTags(additionalTags)}
             </Grid>
           </Grid>
           </Link>
@@ -273,14 +275,10 @@ class LinodeRow extends React.Component<CombinedProps, State> {
     })
   }
 
-  renderMoreTags = () => {
-    const { linodeTags } = this.props;
-
-    const tagsToHide = takeLast(linodeTags.length - tagsToShow, linodeTags);
-
+  renderMoreTags = (tags: string[]) => {
     return (
       <ShowMore
-        items={tagsToHide}
+        items={tags}
         render={this.renderTag}
       />
     )

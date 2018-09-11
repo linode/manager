@@ -1,4 +1,4 @@
-import { compose, take, takeLast } from 'ramda';
+import { compose, splitAt } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -315,6 +315,8 @@ class LinodeCard extends React.Component<CombinedProps, State> {
       typesData,
     } = this.props;
 
+    const [visibleTags, additionalTags] = splitAt(tagsToShow, linodeTags);
+
     return (
       <CardContent className={`${classes.cardContent} ${classes.customeMQ}`}>
         <div>
@@ -334,7 +336,7 @@ class LinodeCard extends React.Component<CombinedProps, State> {
           </div>
           <div className={classes.cardSection}>
             {
-              take(tagsToShow, linodeTags).map(eachTag => {
+              visibleTags.map(eachTag => {
                 return (
                   <Tag
                     label={eachTag}
@@ -344,7 +346,7 @@ class LinodeCard extends React.Component<CombinedProps, State> {
                 )
               })
             }
-            {linodeTags.length > 3 && this.renderMoreTags()}
+            {additionalTags && this.renderMoreTags(additionalTags)}
           </div>
         </div>
       </CardContent>
@@ -362,14 +364,10 @@ class LinodeCard extends React.Component<CombinedProps, State> {
     })
   }
 
-  renderMoreTags = () => {
-    const { linodeTags } = this.props;
-
-    const tagsToHide = takeLast(linodeTags.length - tagsToShow, linodeTags);
-
+  renderMoreTags = (tags: string[]) => {
     return (
       <ShowMore
-        items={tagsToHide}
+        items={tags}
         render={this.renderTag}
       />
     )
