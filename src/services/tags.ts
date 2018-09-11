@@ -21,11 +21,9 @@ export const getTags = (params?: any, filter?: any) =>
     setXFilter(filter),
   ).then(response => response.data);
 
-export const createTag = (data:TagRequest, params?: any, filter?: any) =>
+export const createTag = (data:TagRequest) =>
   Request<Tag>(
     setURL(`${API_ROOT}/tags`),
     setMethod('POST'),
-    setParams(params),
-    setXFilter(filter),
     setData(data),
-  )
+  ).then(response => response.data)
