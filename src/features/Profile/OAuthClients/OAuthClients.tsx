@@ -202,10 +202,15 @@ class OAuthClients extends React.Component<CombinedProps, State> {
         <TableCell data-qa-oauth-callback>{redirect_uri}</TableCell>
         <TableCell>
           <ActionMenu
-            onDelete={() => this.deleteClient(id)}
-            onReset={() => this.resetSecret(id)}
-            onEdit={() => this.startEdit(id, label, redirect_uri, isPublic)}
-            id={id} />
+            id={id}
+            editPayload={{
+              label,
+              redirect_uri,
+              isPublic
+            }}
+            onDelete={this.deleteClient}
+            onReset={this.resetSecret}
+            onEdit={this.startEdit} />
         </TableCell>
       </TableRow>
     ));

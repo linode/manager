@@ -398,7 +398,7 @@ class PrimaryNav extends React.Component<Props, State> {
                 Light
               </span>
               <Toggle
-                onChange={() => toggleTheme()}
+                onChange={toggleTheme}
                 checked={themeName !== 'lightTheme'}
                 className={`
                   ${classes.toggle}

@@ -40,6 +40,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
+interface Helpers {
+  updatedb_disabled: boolean;
+  distro: boolean;
+  modules_dep: boolean;
+  network: boolean;
+  devtmpfs_automount: boolean;
+}
+
 interface EditableFields {
   open: boolean;
   useCustomRoot: boolean;
@@ -50,13 +58,7 @@ interface EditableFields {
   memory_limit?: number;
   run_level?: 'default' | 'single' | 'binbash';
   virt_mode?: 'fullvirt' | 'paravirt';
-  helpers: {
-    updatedb_disabled: boolean;
-    distro: boolean;
-    modules_dep: boolean;
-    network: boolean;
-    devtmpfs_automount: boolean;
-  };
+  helpers: Helpers;
   root_device: string;
 }
 
@@ -72,6 +74,12 @@ interface Props extends EditableFields {
   onClose: () => void;
   onSubmit: () => void;
   onChange: (k: keyof EditableFields, v: any) => void;
+  handleChangeLabel: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleChangeComments: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleChangeVirtMode: (e: any, value: 'paravirt' | 'fullvirt') => void;
+  handleChangeKernel: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleChangeRunLevel: (e: any, value: 'binbash' | 'default' | 'single') => void;
+  toggleBootHelpers: (stateToUpdate: keyof Helpers, value: boolean) => void;
 }
 
 interface State {
@@ -86,6 +94,26 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
   state: State = {
     loading: true,
   };
+
+  handleToggleDistroHelper = (e: any, value: boolean) => {
+    this.props.toggleBootHelpers('distro', value)
+  }
+
+  handleToggleUpdateDBHelper = (e: any, value: boolean) => {
+    this.props.toggleBootHelpers('updatedb_disabled', value)
+  }
+
+  handleToggleModulesDepHelper = (e: any, value: boolean) => {
+    this.props.toggleBootHelpers('modules_dep', value)
+  }
+
+  handleToggleAutoMountHelper = (e: any, value: boolean) => {
+    this.props.toggleBootHelpers('devtmpfs_automount', value)
+  }
+
+  handleToggleAutoConfigNetHelper = (e: any, value: boolean) => {
+    this.props.toggleBootHelpers('network', value)
+  }
 
   requestKernels = () => {
     this.setState({ loading: true });
@@ -171,7 +199,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               label="Label"
               required
               value={label}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange('label', e.target.value)}
+              onChange={this.props.handleChangeLabel}
               errorText={errorFor('label')}
               errorGroup="linode-config-drawer"
             />
@@ -179,7 +207,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             <TextField
               label="Comments"
               value={comments}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange('comments', e.target.value)}
+              onChange={this.props.handleChangeComments}
               multiline={true}
               rows={3}
               errorText={errorFor('comments')}
@@ -202,7 +230,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
                 aria-label="virt_mode"
                 name="virt_mode"
                 value={virt_mode}
-                onChange={(e, value: 'paravirt' | 'fullvirt') => onChange('virt_mode', value)}
+                onChange={this.props.handleChangeVirtMode}
               >
                 <FormControlLabel value="paravirt" label="Paravirtulization" control={<Radio />} />
                 <FormControlLabel value="fullvirt" label="Full-virtulization" control={<Radio />} />
@@ -218,7 +246,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               label="Kernel"
               select={true}
               value={kernel}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange('kernel', e.target.value)}
+              onChange={this.props.handleChangeKernel}
               errorText={errorFor('kernel')}
               errorGroup="linode-config-drawer"
             >
@@ -246,8 +274,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
                 aria-label="run_level"
                 name="run_level"
                 value={run_level}
-                onChange={(e, value: 'binbash' | 'default' | 'single') =>
-                  onChange('run_level', value)}
+                onChange={this.props.handleChangeRunLevel}
               >
                 <FormControlLabel value="default" label="Run Default Level" control={<Radio />} />
                 <FormControlLabel value="single" label="Single user mode" control={<Radio />} />
@@ -326,7 +353,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
                   control={
                     <Toggle
                       checked={helpers.distro}
-                      onChange={(e, v) => onChange('helpers', { ...helpers, distro: v })}
+                      onChange={this.handleToggleDistroHelper}
                     />
                   }
                 />
@@ -336,7 +363,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
                   control={
                     <Toggle
                       checked={helpers.updatedb_disabled}
-                      onChange={(e, v) => onChange('helpers', { ...helpers, updatedb_disabled: v })}
+                      onChange={this.handleToggleUpdateDBHelper}
                     />
                   }
                 />
@@ -346,7 +373,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
                   control={
                     <Toggle
                       checked={helpers.modules_dep}
-                      onChange={(e, v) => onChange('helpers', { ...helpers, modules_dep: v })}
+                      onChange={this.handleToggleModulesDepHelper}
                     />
                   }
                 />
@@ -356,8 +383,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
                   control={
                     <Toggle
                       checked={helpers.devtmpfs_automount}
-                      onChange={(e, v) =>
-                        onChange('helpers', { ...helpers, devtmpfs_automount: v })}
+                      onChange={this.handleToggleAutoMountHelper}
                     />
                   }
                 />
@@ -367,7 +393,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
                   control={
                     <Toggle
                       checked={helpers.network}
-                      onChange={(e, v) => onChange('helpers', { ...helpers, network: v })}
+                      onChange={this.handleToggleAutoMountHelper}
                     />
                   }
                 />

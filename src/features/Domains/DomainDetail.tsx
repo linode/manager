@@ -125,10 +125,34 @@ class DomainDetail extends React.Component<CombinedProps, State> {
       .catch(console.error);
   }
 
+  goToDomains = () => {
+    this.props.history.push('/domains');
+  }
+
+  renderDomainRecords = () => {
+    const { domain, records } = this.state;
+    return (
+      <DomainRecords
+        domain={domain}
+        domainRecords={records}
+        updateRecords={this.updateRecords}
+        updateDomain={this.updateDomain}
+      />
+    )
+  }
+
+  renderCheckZone = () => {
+    return <h1>Check Zone</h1>
+  }
+
+  renderZoneFile = () => {
+    return <h1>Zone File</h1>
+  }
+
   render() {
     const matches = (p: string) => Boolean(matchPath(p, { path: this.props.location.pathname }));
-    const { match: { path, url }, history, classes } = this.props;
-    const { error, domain, records } = this.state;
+    const { match: { path, url }, classes } = this.props;
+    const { error, domain } = this.state;
 
     /** Empty State */
     if (!domain) { return null; }
@@ -147,7 +171,7 @@ class DomainDetail extends React.Component<CombinedProps, State> {
         <Grid container justify="space-between">
           <Grid item className={classes.titleWrapper}>
             <IconButton
-              onClick={() => history.push('/domains')}
+              onClick={this.goToDomains}
               className={classes.backButton}
             >
               <KeyboardArrowLeft />
@@ -175,17 +199,10 @@ class DomainDetail extends React.Component<CombinedProps, State> {
           <Route
             exact
             path={`${path}/records`}
-            render={() =>
-              <DomainRecords
-                domain={domain}
-                domainRecords={records}
-                updateRecords={this.updateRecords}
-                updateDomain={this.updateDomain}
-              />
-            }
+            render={this.renderDomainRecords}
           />
-          <Route exact path={`${path}/check-zone`} render={() => <h1>Check Zone</h1>} />
-          <Route exact path={`${path}/zone-file`} render={() => <h1>Zone File</h1>} />
+          <Route exact path={`${path}/check-zone`} render={this.renderCheckZone} />
+          <Route exact path={`${path}/zone-file`} render={this.renderZoneFile} />
           {/* 404 */}
           < Redirect to={`${url}/records`} />
         </Switch>
