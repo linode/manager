@@ -16,7 +16,6 @@ import { DocumentTitleSegment, withDocumentTitleProvider } from 'src/components/
 import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import SideMenu from 'src/components/SideMenu';
-import { isProduction, isTest } from 'src/constants';
 import { RegionsProvider, WithRegionsContext } from 'src/context/regions';
 import { TypesProvider, WithTypesContext } from 'src/context/types';
 import Footer from 'src/features/Footer';
@@ -26,7 +25,6 @@ import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import { getDeprecatedLinodeTypes, getLinodeTypes } from 'src/services/linodes';
 import { getRegions } from 'src/services/misc';
 import { requestProfile } from 'src/store/reducers/resources/profile';
-import initSurvicate from 'src/survicate';
 import composeState from 'src/utilities/composeState';
 import { notifications, theme as themeStorage } from 'src/utilities/storage';
 
@@ -181,7 +179,6 @@ const L = {
 
 export class App extends React.Component<CombinedProps, State> {
   composeState = composeState;
-  surveyed: boolean = false;
 
   state: State = {
     menuOpen: false,
@@ -251,27 +248,6 @@ export class App extends React.Component<CombinedProps, State> {
 
     this.state.regionsContext.request();
     this.state.typesContext.request();
-  }
-
-  componentDidUpdate() {
-    const { userId } = this.props;
-    /* userId is a connected prop; if it's loaded
-    * (default value is 1) and we haven't already
-    * done this, initialize the survey. Also, shouldn't
-    * load the survey in development.
-    * */
-    if (isTest) {
-      // Temporary hack until we implement NODE_ENV=test
-      return;
-    }
-    if (userId && userId !== 1 && !this.surveyed && isProduction) {
-      /* Initialize Survicate
-      * Done here rather than in index.tsx so that
-      * we have access to the logged in user's ID
-      */
-      initSurvicate(window, userId);
-      this.surveyed = true;
-    }
   }
 
   closeMenu = () => { this.setState({ menuOpen: false }); }
