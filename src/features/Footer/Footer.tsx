@@ -6,7 +6,7 @@ import Grid from 'src/components/Grid';
 
 type CSSClasses = 'container'
   | 'link'
-  | 'navWrapper'
+  | 'version';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   container: {
@@ -20,19 +20,18 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
       paddingLeft: 275,
     },
   },
-  navWrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+  version: {
+    flex: 1,
   },
   link: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
     color: theme.palette.text.primary,
-    textDecoration: 'none',
     fontSize: '90%',
+    textDecoration: 'underline',
+    transition: theme.transitions.create('color'),
     '&:hover, &:focus': {
-      color: 'black',
+      color: theme.color.black,
     },
   },
 });
@@ -47,8 +46,10 @@ export class Footer extends React.PureComponent<CombinedProps> {
 
     return (
       <Grid container spacing={32} className={classes.container}>
-        <Grid item xs={12} className={classes.navWrapper}>
+        <Grid item className={classes.version}>
           {this.renderVersion(classes.link)}
+        </Grid>
+        <Grid item>
           <a
             className={classes.link}
             href="https://developers.linode.com"
@@ -56,6 +57,8 @@ export class Footer extends React.PureComponent<CombinedProps> {
           >
             API Reference
           </a>
+        </Grid>
+        <Grid item style={{ paddingLeft: 0 }}>
           <a
             className={classes.link}
             href="mailto:feedback@linode.com"
