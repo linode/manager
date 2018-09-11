@@ -6,7 +6,6 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 
 import AccessPanel, { UserSSHKeyObject } from 'src/components/AccessPanel';
 import CheckoutBar from 'src/components/CheckoutBar';
-import { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
@@ -22,7 +21,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import AddonsPanel from '../AddonsPanel';
 import SelectImagePanel from '../SelectImagePanel';
 import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
-import tagsHoc, { TagActionsObject } from '../tagsHoc';
+import tagsHoc, { TagObject } from '../tagsHoc';
 
 type ClassNames = 'root' | 'main' | 'sidebar';
 
@@ -54,8 +53,7 @@ interface Props {
 
   /** Comes from HOC */
   userSSHKeys: UserSSHKeyObject[];
-  accountTags: Item[];
-  tagActions: TagActionsObject;
+  tagObject: TagObject;
 }
 
 interface State {
@@ -139,7 +137,8 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
   }
 
   createNewLinode = () => {
-    const { history, userSSHKeys } = this.props;
+    const { history, tagObject, userSSHKeys } = this.props;
+    const { addNewTagsToLinode, getLinodeTagList } = tagObject.actions;
     const {
       selectedImageID,
       selectedRegionID,
@@ -161,9 +160,11 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
       backups_enabled: backups, /* optional */
       booted: true,
       authorized_users: userSSHKeys.filter(u => u.selected).map((u) => u.username),
+      tags: getLinodeTagList()
     })
       .then((linode) => {
         if (privateIP) { allocatePrivateIP(linode.id); }
+        addNewTagsToLinode(linode.id);
         resetEventsPolling();
         history.push('/linodes');
       })
@@ -196,8 +197,8 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
       selectedRegionID, selectedTypeID, password, isMakingRequest, initTab } = this.state;
 
       
-    const { accountTags, classes, notice, types, regions, images, getBackupsMonthlyPrice,
-      getRegionInfo, getTypeInfo, tagActions, userSSHKeys } = this.props;
+    const { classes, notice, types, regions, images, getBackupsMonthlyPrice,
+      getRegionInfo, getTypeInfo, tagObject, userSSHKeys } = this.props;
         
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
@@ -246,16 +247,14 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
             updateFor={[selectedTypeID, errors]}
           />
           <LabelAndTagsPanel
-            tags={accountTags}
-            addTag={tagActions.addTag}
-            createTag={tagActions.createTag}
+            tagObject={tagObject}
             labelFieldProps={{
               label: 'Linode Label',
               value: label || '',
               onChange: this.handleTypeLabel,
               errorText: hasErrorFor('label'),
             }}
-            updateFor={[accountTags, label, errors]}
+            updateFor={[tagObject, label, errors]}
           />
           <AccessPanel
             error={hasErrorFor('root_pass')}

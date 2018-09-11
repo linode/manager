@@ -5,11 +5,12 @@ import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import Select from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import RenderGuard from 'src/components/RenderGuard';
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
+import { TagObject } from 'src/features/linodes/LinodesCreate/tagsHoc';
 
 type ClassNames = 'root'
   | 'inner'
@@ -40,12 +41,10 @@ interface IsFormProps {
 }
 
 interface Props {
-  tags?: Item[];
   error?: string;
   labelFieldProps?: TextFieldProps;
   isForm?: IsFormProps;
-  addTag?: (s:Item) => void;
-  createTag?: (inputValue:string) => void;
+  tagObject?: TagObject;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -60,23 +59,23 @@ class InfoPanel extends React.Component<CombinedProps> {
   };
 
   renderTagsPanel = () => {
-    const { addTag, createTag, tags } = this.props;
-    const options = tags ? tags : [];
-    if (!addTag || !createTag) { return; }
+    if (!this.props.tagObject) { return; }
+    const { accountTags, actions, selectedTags } = this.props.tagObject;
     return (
       <Select
         isCreatable={true}
         isMulti={true}
         label={"Add Tags"}
-        options={options}
-        onChange={addTag}
-        createNew={createTag}
+        options={accountTags}
+        value={selectedTags}
+        onChange={actions.addTag}
+        createNew={actions.createTag}
       />
     )
   }
 
   render() {
-    const { addTag, classes, error, labelFieldProps, isForm } = this.props;
+    const { classes, error, labelFieldProps, isForm, tagObject } = this.props;
 
     return (
       <React.Fragment>
@@ -94,7 +93,7 @@ class InfoPanel extends React.Component<CombinedProps> {
                 {error && <Notice text={error} error />}
                 <TextField data-qa-label-panel {...labelFieldProps} />
               </div>
-              {addTag && this.renderTagsPanel()}
+              {tagObject && this.renderTagsPanel()}
               {!!isForm.action &&
                 <ActionsPanel
                   className={isForm ? classes.expPanelButton : ''}
@@ -114,7 +113,7 @@ class InfoPanel extends React.Component<CombinedProps> {
             <div className={classes.inner}>
               {error && <Notice text={error} error />}
               <TextField {...labelFieldProps} data-qa-label-input />
-              {addTag && this.renderTagsPanel()}
+              {tagObject && this.renderTagsPanel()}
             </div>
           </Paper>
         }

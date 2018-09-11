@@ -12,10 +12,15 @@ const mockProps = {
   getTypeInfo: jest.fn(),
   getRegionInfo: jest.fn(),
   userSSHKeys: [],
-  accountTags: [],
-  tagActions: {
-    addTag: jest.fn(),
-    createTag: jest.fn()
+  tagObject: {
+    accountTags: [],
+    selectedTags: [],
+    errors: [],
+    actions: {
+      addTag: jest.fn(),
+      createTag: jest.fn(),
+      addTagsToNewLinode: jest.fn(),
+    }
   }
 };
 
