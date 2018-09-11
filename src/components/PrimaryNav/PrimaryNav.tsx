@@ -59,7 +59,6 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     height: '100%',
     margin: 0,
     padding: 0,
-    paddingBottom: theme.spacing.unit * 3,
     [theme.breakpoints.up('sm')]: {
       minHeight: 72,
     },
@@ -145,7 +144,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     transition: theme.transitions.create(['transform']),
   },
   switchWrapper: {
-    padding: '16px 40px 16px 34px',
+    padding: '16px 40px 4px 34px',
     alignItems: 'center',
     marginTop: 'auto',
     width: 'calc(100% - 20px)',
