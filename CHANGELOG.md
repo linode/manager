@@ -4,6 +4,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+
+## [0.33.2] - 2018-09-11
+### Added:
+ - Profile
+     - Users can now add SSH keys to their profile
+ - Linodes
+     - Create or Rebuild Linodes with SSH keys that have been added to the user's profile
+ - Dashboard
+     - Notify users an upgrade is available for their Linode
+ - Support
+     - Search the Linode Docs for answers within the manager support section
+
+### Changed:
+  - Make tiles clickable site-wide
+  - Table rows are now clickable on instances where the row links to another page
+  - Linode disk resize free space calculation made more clear
+  - Support tickets now respect customer's timezone preference
+
+### Fixed:
+  - Bug where cloned domains failed to display until the page was manually refreshed
+  - Bug where image creation would return an error message
+  - Bug where revoked personal access tokens still displayed in the access token table
+  - Delete volume action being available while the Linode it was attached to was powered on
+
+
 ## [0.32.1] - 2018-08-27
 ### Added:
 - Project version link as been added to the global footer.
