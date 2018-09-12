@@ -13,6 +13,7 @@ type ClassNames = 'root'
   | 'switch'
   | 'copy'
   | 'usage'
+  | 'usageWrapper';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   '@keyframes fadeIn': {
@@ -53,10 +54,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
       width: 600,
     },
   },
+  usageWrapper: {
+    width: '100%',
+  },
   usage: {
     animation: 'fadeIn .3s ease-in-out forwards',
     marginTop: 0,
-    width: 200,
   },
 });
 
@@ -100,7 +103,7 @@ class AlertSection extends React.Component<CombinedProps> {
             <Grid item className={classes.copy}>
                 <Typography>{this.props.copy}</Typography>
             </Grid>
-            <Grid item>
+            <Grid item className={classes.usageWrapper}>
               <TextField
                 label={this.props.textTitle}
                 type="number"

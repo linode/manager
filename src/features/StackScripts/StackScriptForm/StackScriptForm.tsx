@@ -73,6 +73,7 @@ type ClassNames = 'root'
       maxWidth: '50%',
       [theme.breakpoints.down('sm')]: {
         maxWidth: '100%',
+        width: '100%',
       },
     },
     tips: {
