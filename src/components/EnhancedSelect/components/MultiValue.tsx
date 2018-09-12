@@ -1,24 +1,41 @@
-import * as React from 'react';
-
 import Chip from '@material-ui/core/Chip';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import * as React from 'react';
+import { MultiValueProps } from 'react-select/lib/components/MultiValue';
 
-const chipStyles = {
-  margin: '2px',
-}
+type ClassNames = 'root';
 
-const MultiValue = (props:any) => {
-  const onDelete = (event:React.SyntheticEvent<HTMLElement>) => {
-    props.removeProps.onClick();
-    props.removeProps.onMouseDown(event);
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+  root: {
+    margin: '2px',
+  },
+});
+
+interface Props extends MultiValueProps<any> { }
+
+type CombinedProps = Props & WithStyles<ClassNames>;
+
+class MultiValue extends React.PureComponent<CombinedProps> {
+  onDelete = (event: React.SyntheticEvent<HTMLElement>) => {
+    const { removeProps: { onClick, onMouseDown } } = this.props;
+    onClick(event);
+    onMouseDown(event);
   }
-  return (
-    <Chip
-      style={chipStyles}
-      tabIndex={-1}
-      label={props.children}
-      onDelete={onDelete}
-    />
-  );
+
+  render() {
+    const { classes, children } = this.props;
+
+    return (
+      <Chip
+        className={classes.root}
+        tabIndex={-1}
+        label={children}
+        onDelete={this.onDelete}
+      />
+    );
+  }
 }
 
-export default MultiValue;
+const styled = withStyles(styles, { withTheme: true });
+
+export default styled(MultiValue);

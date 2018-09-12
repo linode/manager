@@ -1,9 +1,9 @@
 import { merge } from 'ramda';
 import * as React from 'react';
-import SSelect from 'react-select';
+import ReactSelect from 'react-select';
 import Async, { AsyncProps } from 'react-select/lib/Async';
-import CreatableSelect, { Props as CCreatableProps } from 'react-select/lib/Creatable';
-import { Props as SProps } from 'react-select/lib/Select';
+import CreatableSelect, { Props as CreatableSelectProps } from 'react-select/lib/Creatable';
+import { Props as SelectProps } from 'react-select/lib/Select';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
@@ -136,12 +136,12 @@ const _components = {
 
 type CombinedProps = EnhancedSelectProps & WithStyles<ClassNames>;
 
-interface BaseSelectProps extends SProps<any> {
+interface BaseSelectProps extends SelectProps<any> {
   classes: any;
   textFieldProps: any;
 }
 
-interface CreatableProps extends CCreatableProps<any> {
+interface CreatableProps extends CreatableSelectProps<any> {
 
 }
 
@@ -169,18 +169,23 @@ class Select extends React.PureComponent<CombinedProps,{}> {
     * By default, we use the built-in Option component from React-Select, along with several Material-UI based
     * components (listed in the _components variable above). To customize the select in a particular instance
     * (for example, to render more complicated options for search bars), provide the component to use in a prop
-    * Object. Specify the name of the component to override as the object key, with the component to use in its 
+    * Object. Specify the name of the component to override as the object key, with the component to use in its
     * place as the value. Full list of available components to override is available at
     * http://react-select.com/components#replaceable-components. As an example, to provide a custom option component, use:
     * <Select components={{ Option: MyCustomOptionComponent }}.
-    * 
-    * The components passed in as props will be merged with the overrides we are already using, with the passed components 
+    *
+    * The components passed in as props will be merged with the overrides we are already using, with the passed components
     * taking precedence.
     */
     const combinedComponents = merge(_components, components);
 
     // If async, pass loadOptions instead of options. A Select can't be both Creatable and Async.
-    const BaseSelect: React.ComponentClass<BaseSelectProps|CreatableProps|AsyncProps<any>> = variant === 'creatable' ? CreatableSelect : variant === 'async' ? Async : SSelect;
+    type PossibleProps = BaseSelectProps | CreatableProps | AsyncProps<any>;
+    const BaseSelect: React.ComponentClass<PossibleProps> = variant === 'creatable'
+      ? CreatableSelect
+      : variant === 'async'
+        ? Async
+        : ReactSelect;
 
     return (
       <BaseSelect

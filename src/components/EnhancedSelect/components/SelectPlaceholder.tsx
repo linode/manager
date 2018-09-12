@@ -1,22 +1,34 @@
 import * as React from 'react';
+import { PlaceholderProps } from 'react-select/lib/components/Placeholder';
 
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
-const placeholderStyles = {
-  position: 'absolute',
-  left: '10px'
-}
+type ClassNames = 'root';
 
-const SelectPlaceholder: React.StatelessComponent = (props:any) => {
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+  root: {
+    position: 'absolute',
+    left: '10px'
+  },
+});
+
+interface Props extends PlaceholderProps<any> { }
+
+type CombinedProps = Props & WithStyles<ClassNames>;
+
+const SelectPlaceholder: React.StatelessComponent<CombinedProps> = (props) => {
   return (
     <Typography
-    style={placeholderStyles}
+      className={props.classes.root}
       color="textSecondary"
       {...props.innerProps}
     >
       {props.children}
     </Typography>
   );
-}
+};
 
-export default SelectPlaceholder;
+const styled = withStyles(styles, { withTheme: true });
+
+export default styled<Props>(SelectPlaceholder);
