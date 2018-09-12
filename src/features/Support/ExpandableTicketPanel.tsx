@@ -1,7 +1,6 @@
 import * as classNames from 'classnames';
 import { pathOr, take } from 'ramda';
 import * as React from 'react';
-import * as ReactMarkdown from 'react-markdown';
 
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
@@ -26,7 +25,8 @@ type ClassNames = 'root'
   | 'expCol'
   | 'expButton'
   | 'toggle'
-  | 'isCurrentUser';
+  | 'isCurrentUser'
+  | 'formattedText';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   '@keyframes fadeIn': {
@@ -42,6 +42,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     padding: theme.spacing.unit * 2,
     marginBottom: theme.spacing.unit,
     position: 'relative',
+    '& p': {
+      margin: 0,
+      padding: 0
+    }
   },
   userWrapper: {
     marginTop: theme.spacing.unit / 2,
@@ -101,6 +105,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   isCurrentUser: {
     backgroundColor: theme.color.grey2,
+  },
+  formattedText: {
+    whiteSpace: 'pre-line',
   },
 });
 
@@ -201,7 +208,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
 
     const truncatedText = this.getTruncatedText(data.description, 175);
     const text = open ? data.description : truncatedText;
-
+    
     return (
       <Grid item className={classes.root}>
         <Paper className={
@@ -237,7 +244,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
               md={truncatedText !== data.description ? 8 : 9}
               className={classes.descCol}
             >
-              <ReactMarkdown source={text} />
+              <Typography className={classes.formattedText}>{text}</Typography>
             </Grid>
             {truncatedText !== data.description &&
               <Grid

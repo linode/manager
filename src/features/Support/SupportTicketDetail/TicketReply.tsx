@@ -111,6 +111,17 @@ class TicketReply extends React.Component<CombinedProps, State> {
     const { onSuccess, ticketId } = this.props;
     const { value, files } = this.state;
 
+    /* A whitespace reply text (e.g. '    ') will pass the API,
+    * but we will filter out blank responses from the list. Prevent the user
+    * from submitting blank replies to avoid confusion.
+    */
+    if (value.trim() === '') {
+      this.setState({
+        errors: [{'field':'description', 'reason':'Description can\'t be blank.'}],
+      });
+      return;
+    }
+
     this.setState({
       submitting: true,
       errors: [],
