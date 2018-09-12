@@ -180,7 +180,10 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
   }
 
   handleDescriptionInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState(set(L.description, e.target.value));
+    this.composeState([
+      set(L.description, e.target.value),
+      set(L.errors, undefined)
+    ]);
   }
 
   handleEntityTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {

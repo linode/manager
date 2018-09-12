@@ -104,7 +104,7 @@ class TicketReply extends React.Component<CombinedProps, State> {
   inputRef = React.createRef<HTMLInputElement>();
 
   handleReplyInput = (e:React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ value: e.target.value });
+    this.setState({ value: e.target.value, errors: [] });
   }
 
   submitForm = () => {
