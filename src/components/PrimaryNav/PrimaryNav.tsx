@@ -350,7 +350,7 @@ class PrimaryNav extends React.Component<Props, State> {
                       [classes.sublink]: true,
                       [classes.sublinkActive]: this.linkIsActive('/billing') === true,
                     })}
-                    onClick={() => closeMenu()}
+                    onClick={closeMenu}
                   >
                     Account &amp; Billing
                 </Link>
@@ -362,7 +362,7 @@ class PrimaryNav extends React.Component<Props, State> {
                       [classes.sublink]: true,
                       [classes.sublinkActive]: this.linkIsActive('/users') === true,
                     })}
-                    onClick={() => closeMenu()}
+                    onClick={closeMenu}
                   >
                     Users
                 </Link>
