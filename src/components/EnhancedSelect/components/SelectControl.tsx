@@ -1,15 +1,14 @@
 import * as React from 'react';
 import { ControlProps } from 'react-select/lib/components/Control';
 
-import Select from 'react-select';
 import TextField from 'src/components/TextField';
 
-interface SelectProps extends Select<any> {
+interface SelectProps {
   inputRef: any;
   props: any;
 }
 
-const inputComponent = ({ inputRef, ...props }: SelectProps) => {
+const inputComponent: React.StatelessComponent<SelectProps> = ({ inputRef, ...props }) => {
   return <div ref={inputRef} {...props} />;
 }
 
