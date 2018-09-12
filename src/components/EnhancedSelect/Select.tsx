@@ -1,6 +1,7 @@
 import { merge } from 'ramda';
 import * as React from 'react';
 import SSelect from 'react-select';
+import Async, { AsyncProps } from 'react-select/lib/Async';
 import CreatableSelect, { Props as CCreatableProps } from 'react-select/lib/Creatable';
 import { Props as SProps } from 'react-select/lib/Select';
 
@@ -108,12 +109,12 @@ export interface SelectState {
 }
 
 export interface EnhancedSelectProps {
-  options: Item[];
+  options?: Item[];
   className?: string;
   components?: any;
   disabled?: boolean;
   isMulti?: boolean;
-  isCreatable?: boolean;
+  variant?: 'async' | 'creatable';
   value?: Item | Item[] | null;
   label?: string;
   placeholder?: string;
@@ -121,8 +122,11 @@ export interface EnhancedSelectProps {
   onChange: (selected:Item | Item[]) => void;
   createNew?: (inputValue:string) => void;
   onInputChange?: (inputValue:string) => void;
+  loadOptions?: (inputValue:string) => Promise<Item|Item[]> | undefined;
 }
 
+// Material-UI versions of several React-Select components.
+// Will override the RS defaults.
 const _components = {
   Control,
   NoOptionsMessage,
@@ -151,23 +155,40 @@ class Select extends React.PureComponent<CombinedProps,{}> {
       disabled,
       errorText,
       label,
-      isCreatable,
+      loadOptions,
       isMulti,
       placeholder,
       onChange,
       onInputChange,
       options,
-      value
+      value,
+      variant
     } = this.props;
 
+    /*
+    * By default, we use the built-in Option component from React-Select, along with several Material-UI based
+    * components (listed in the _components variable above). To customize the select in a particular instance
+    * (for example, to render more complicated options for search bars), provide the component to use in a prop
+    * Object. Specify the name of the component to override as the object key, with the component to use in its 
+    * place as the value. Full list of available components to override is available at
+    * http://react-select.com/components#replaceable-components. As an example, to provide a custom option component, use:
+    * <Select components={{ Option: MyCustomOptionComponent }}.
+    * 
+    * The components passed in as props will be merged with the overrides we are already using, with the passed components 
+    * taking precedence.
+    */
     const combinedComponents = merge(_components, components);
 
-    const BaseSelect: React.ComponentClass<BaseSelectProps|CreatableProps> = isCreatable ? CreatableSelect : SSelect;
+    // If async, pass loadOptions instead of options. A Select can't be both Creatable and Async.
+    const BaseSelect: React.ComponentClass<BaseSelectProps|CreatableProps|AsyncProps<any>> = variant === 'creatable' ? CreatableSelect : variant === 'async' ? Async : SSelect;
 
     return (
       <BaseSelect
         isClearable
         isSearchable
+        cacheOptions
+        defaultOptions
+        loadOptions={loadOptions}
         isMulti={isMulti}
         classes={classes}
         className={`${classes.root} ${className}`}

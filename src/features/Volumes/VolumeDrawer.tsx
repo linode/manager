@@ -432,9 +432,10 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
         '+contains': inputValue,
       }
     }
-    getLinodes({}, filterLinodes)
+    return getLinodes({}, filterLinodes)
       .then((response) => {
         this.setState({ linodes: response.data });
+        return this.renderLinodeOptions(response.data);
       })
   }
 
@@ -444,7 +445,8 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     this.debouncedSearch(inputValue);
   }
 
-  renderLinodeOptions = (linodes:Linode.Linode[], mode:string, region:string, linodeLabel:string) => {
+  renderLinodeOptions = (linodes:Linode.Linode[]) => {
+    const { linodeLabel, mode, region } = this.props;
     if (!linodes) { return []; }
     const options: Item[] = linodes.filter((linode) => {
       return (
@@ -469,9 +471,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
 
   render() {
     const { mode } = this.props;
-    const { linodes } = this.state;
     const regions = this.props.regionsData;
-    const linodeLabel = this.props.linodeLabel || '';
 
     const {
       cloneLabel,
@@ -603,6 +603,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
         {mode !== modes.CLONING &&
           <FormControl fullWidth>
             <EnhancedSelect
+              variant="async"
               label="Linode"
               placeholder="Select a Linode"
               errorText={linodeError}
@@ -611,9 +612,9 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
                 mode === modes.EDITING
                 || mode === modes.RESIZING
               }
+              loadOptions={this.searchLinodes}
               onChange={this.setSelectedLinode}
               onInputChange={this.onInputChange}
-              options={this.renderLinodeOptions(linodes, mode, region, linodeLabel)}
               data-qa-select-linode
             />
             {region !== 'none' &&
