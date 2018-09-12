@@ -273,7 +273,7 @@ class PrimaryNav extends React.Component<Props, State> {
   }
 
   render() {
-    const { classes, toggleTheme } = this.props;
+    const { classes, toggleTheme, closeMenu } = this.props;
     const { expandedMenus, userHasManaged } = this.state;
     const themeName = (this.props.theme as any).name;
 
@@ -350,6 +350,7 @@ class PrimaryNav extends React.Component<Props, State> {
                       [classes.sublink]: true,
                       [classes.sublinkActive]: this.linkIsActive('/billing') === true,
                     })}
+                    onClick={() => closeMenu()}
                   >
                     Account &amp; Billing
                 </Link>
@@ -361,6 +362,7 @@ class PrimaryNav extends React.Component<Props, State> {
                       [classes.sublink]: true,
                       [classes.sublinkActive]: this.linkIsActive('/users') === true,
                     })}
+                    onClick={() => closeMenu()}
                   >
                     Users
                 </Link>
