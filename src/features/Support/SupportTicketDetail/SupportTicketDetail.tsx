@@ -325,7 +325,8 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
   }
 
   renderReplies = (replies: Linode.SupportReply[]) => {
-    return replies.map((reply: Linode.SupportReply, idx: number) => {
+    return replies.filter((reply => reply.description.trim() !== ''))
+      .map((reply: Linode.SupportReply, idx: number) => {
       return <ExpandableTicketPanel
         key={idx}
         reply={reply}
