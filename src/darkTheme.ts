@@ -390,6 +390,9 @@ const LinodeTheme: Linode.Theme = {
         '&.copy > div': {
           backgroundColor: '#2F3236',
         },
+        [breakpoints.down('xs')]: {
+          width: '100%',
+        }
       },
     },
     MuiFormControlLabel: {
@@ -443,7 +446,7 @@ const LinodeTheme: Linode.Theme = {
         boxSizing: 'border-box',
         backgroundColor: '#444',
         [breakpoints.down('xs')]: {
-          maxWidth: 240,
+          maxWidth: '100%',
         },
         '& svg': {
           fontSize: 18,
