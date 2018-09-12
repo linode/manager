@@ -1,5 +1,5 @@
 import * as classNames from 'classnames';
-import { pathOr, take } from 'ramda';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 
 import Paper from '@material-ui/core/Paper';
@@ -12,6 +12,7 @@ import UserIcon from 'src/assets/icons/user.svg';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
 import IconButton from 'src/components/IconButton';
+import truncateText from 'src/utilities/truncateText'
 
 type ClassNames = 'root'
   | 'userWrapper'
@@ -183,12 +184,6 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
     return data!;
   }
 
-  getTruncatedText = (str: string, len: number) => {
-    return str.length > len
-      ? `${take(len, str)}...`
-      : str
-  }
-
   renderAvatar(url: string) {
     const { classes } = this.props;
 
@@ -206,7 +201,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
     const { data, open } = this.state;
     if (!data) { return };
 
-    const truncatedText = this.getTruncatedText(data.description, 175);
+    const truncatedText = truncateText(data.description, 175);
     const text = open ? data.description : truncatedText;
     
     return (
