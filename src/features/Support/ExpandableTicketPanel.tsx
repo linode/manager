@@ -1,6 +1,7 @@
 import * as classNames from 'classnames';
 import { pathOr, take } from 'ramda';
 import * as React from 'react';
+import * as ReactMarkdown from 'react-markdown';
 
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
@@ -236,7 +237,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
               md={truncatedText !== data.description ? 8 : 9}
               className={classes.descCol}
             >
-              <Typography>{text}</Typography>
+              <ReactMarkdown source={text} />
             </Grid>
             {truncatedText !== data.description &&
               <Grid
