@@ -679,6 +679,12 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     deleteTag(label)
       .then(() => {
         linode.request();
+        /*
+        * Remove this tag from the current list of tags that are queued for deletion 
+        */
+        this.setState({
+          listDeletingTags: this.state.listDeletingTags.filter(eachTag => eachTag === label)
+        })
       })
       .catch(e => {
         sendToast(`Could not delete Tag: ${label}`);
