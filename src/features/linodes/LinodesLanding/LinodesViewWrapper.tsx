@@ -14,12 +14,9 @@ import TableRow from 'src/components/TableRow';
 import Tag from 'src/components/Tag';
 
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
 
 import LinodeCard from './LinodeCard';
 import LinodeRow from './LinodeRow';
-
-import { deleteTag } from 'src/services/tags';
 
 interface Props {
   view: 'grid' | 'list';
@@ -57,14 +54,6 @@ const safeGetImageLabel = (images: Linode.Image[], slug: string | null): string 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class LinodesViewWrapper extends React.Component<CombinedProps, {}> {
-  handleDeleteTag = (label: string) => {
-    deleteTag(label)
-      .then(response => console.log)
-      .catch(e => {
-        sendToast(`Could not delete Tag: ${label}`)
-      })
-  }
-
   renderTag = (tags: string[]) => {
     const { classes } = this.props;
     return tags.map(eachTag => {
@@ -74,12 +63,7 @@ class LinodesViewWrapper extends React.Component<CombinedProps, {}> {
           label={eachTag}
           key={eachTag}
           variant="gray"
-          deletePayload={eachTag}
-          onDelete={this.handleDeleteTag}
         />
-        // <div key={eachTag} className={classes.row}>
-        //   <div className={`${classes.tag}`}>{eachTag}</div>
-        // </div>
       )
     })
   }
@@ -104,8 +88,6 @@ class LinodesViewWrapper extends React.Component<CombinedProps, {}> {
                 label={eachTag}
                 key={eachTag}
                 variant="gray"
-                deletePayload={eachTag}
-                onDelete={this.handleDeleteTag}
               />
             )
           })
