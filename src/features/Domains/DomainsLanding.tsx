@@ -78,7 +78,7 @@ type CombinedProps = WithStyles<ClassNames> & RouteComponentProps<{}>;
 class DomainsLanding extends React.Component<CombinedProps, State> {
   state: State = {
     domains: [],
-    page: 1,
+    page: 0,
     count: 0,
     pageSize: 25,
     loading: true,
@@ -118,7 +118,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
 
     this.setState({ loading: initial });
 
-    const { request, cancel } = getDomains$();
+    const { request, cancel } = getDomains$({page, page_size: pageSize});
 
     this.cancelRequest = cancel;
 
