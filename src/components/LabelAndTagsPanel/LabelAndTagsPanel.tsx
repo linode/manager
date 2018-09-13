@@ -5,7 +5,7 @@ import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import Select from 'src/components/EnhancedSelect/Select';
+import Select, { DefaultMessage } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import RenderGuard from 'src/components/RenderGuard';
@@ -61,6 +61,13 @@ class InfoPanel extends React.Component<CombinedProps> {
     },
   };
 
+  getEmptyMessage = (value:DefaultMessage) => {
+    const { getLinodeTagList } = this.props.tagObject!.actions;
+    const tags = getLinodeTagList();
+    if (tags.includes(value.inputValue)) { return "This tag is already selected."}
+    else { return "No results." }
+  }
+
   renderTagsPanel = () => {
     if (!this.props.tagObject) { return; }
     const { accountTags, actions, errors, selectedTags } = this.props.tagObject;
@@ -80,6 +87,7 @@ class InfoPanel extends React.Component<CombinedProps> {
         value={selectedTags}
         onChange={actions.addTag}
         createNew={actions.createTag}
+        noOptionsMessage={this.getEmptyMessage}
       />
     )
   }
