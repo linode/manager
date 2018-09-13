@@ -217,7 +217,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
 
         <Grid item xs={12} sm={6}>
           <Grid container className={classes.stateZip}>
-            <Grid item xs={7}>
+            <Grid item xs={12} sm={7}>
               <TextField
                 label="State / Province"
                 value={defaultTo(account.state, fields.state)}
@@ -225,7 +225,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
                 onChange={this.updateState}
               />
             </Grid>
-            <Grid item xs={5}>
+            <Grid item xs={12} sm={5}>
               <TextField
                 label="Zip / Postal Code"
                 value={defaultTo(account.zip, fields.zip)}

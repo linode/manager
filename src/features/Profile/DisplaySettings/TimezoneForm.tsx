@@ -29,6 +29,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     paddingBottom: theme.spacing.unit * 3,
     marginTop: theme.spacing.unit * 3,
   },
+  select: {},
   title: {
     marginBottom: theme.spacing.unit * 2,
   },
