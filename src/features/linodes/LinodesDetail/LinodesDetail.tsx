@@ -677,7 +677,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       ]
     })
     deleteTag(label)
-      .then(response => {
+      .then(() => {
         linode.request();
       })
       .catch(e => {
