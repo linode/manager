@@ -518,7 +518,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
             loading={this.state.submitting}
             onClick={this.submitForm}
           >
-            Confrm Payment
+            Confirm Payment
           </Button>
         }
         <Button

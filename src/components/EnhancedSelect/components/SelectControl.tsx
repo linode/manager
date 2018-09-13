@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ControlProps } from 'react-select/lib/components/Control';
 
 import TextField from 'src/components/TextField';
 
@@ -7,11 +8,13 @@ interface SelectProps {
   props: any;
 }
 
-const inputComponent = ({ inputRef, ...props }:SelectProps) => {
+const inputComponent: React.StatelessComponent<SelectProps> = ({ inputRef, ...props }) => {
   return <div ref={inputRef} {...props} />;
 }
 
-const SelectControl: React.StatelessComponent = (props:any) => {
+interface Props extends ControlProps<any> { }
+
+const SelectControl: React.StatelessComponent<Props> = (props) => {
   return (
     <TextField
       fullWidth

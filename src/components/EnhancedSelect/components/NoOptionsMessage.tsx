@@ -1,17 +1,34 @@
 import * as React from 'react';
+import { NoticeProps } from 'react-select/lib/components/Menu';
 
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
-const NoOptionsMessage: React.StatelessComponent = (props:any) => {
+
+type ClassNames = 'root';
+
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+  root: {},
+});
+
+interface Props extends NoticeProps<any> { }
+
+type CombinedProps = Props & WithStyles<ClassNames>;
+
+const NoOptionsMessage: React.StatelessComponent<CombinedProps> = (props) => {
+  const { selectProps, innerProps, children } = props;
+
   return (
     <Typography
       color="textSecondary"
-      className={props.selectProps.classes.noOptionsMessage}
-      {...props.innerProps}
+      className={selectProps.classes.noOptionsMessage}
+      {...innerProps}
     >
-      {props.children}
+      {children}
     </Typography>
   );
-}
+};
 
-export default NoOptionsMessage;
+const styled = withStyles(styles, { withTheme: true });
+
+export default styled<Props>(NoOptionsMessage);

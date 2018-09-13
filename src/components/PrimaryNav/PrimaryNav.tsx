@@ -59,7 +59,6 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     height: '100%',
     margin: 0,
     padding: 0,
-    paddingBottom: theme.spacing.unit * 3,
     [theme.breakpoints.up('sm')]: {
       minHeight: 72,
     },
@@ -145,7 +144,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     transition: theme.transitions.create(['transform']),
   },
   switchWrapper: {
-    padding: '16px 40px 16px 34px',
+    padding: '16px 40px 0 34px',
     alignItems: 'center',
     marginTop: 'auto',
     width: 'calc(100% - 20px)',
@@ -273,7 +272,7 @@ class PrimaryNav extends React.Component<Props, State> {
   }
 
   render() {
-    const { classes, toggleTheme } = this.props;
+    const { classes, toggleTheme, closeMenu } = this.props;
     const { expandedMenus, userHasManaged } = this.state;
     const themeName = (this.props.theme as any).name;
 
@@ -350,6 +349,7 @@ class PrimaryNav extends React.Component<Props, State> {
                       [classes.sublink]: true,
                       [classes.sublinkActive]: this.linkIsActive('/billing') === true,
                     })}
+                    onClick={closeMenu}
                   >
                     Account &amp; Billing
                 </Link>
@@ -361,6 +361,7 @@ class PrimaryNav extends React.Component<Props, State> {
                       [classes.sublink]: true,
                       [classes.sublinkActive]: this.linkIsActive('/users') === true,
                     })}
+                    onClick={closeMenu}
                   >
                     Users
                 </Link>

@@ -39,6 +39,7 @@ interface State {
   valueCreatable: Item[];
   valueMulti: Item[];
   valueSingle: Item | null;
+  valueAsync: Item | null;
 }
 
 class Example extends React.Component<{},State> {
@@ -47,6 +48,7 @@ class Example extends React.Component<{},State> {
     valueCreatable: [],
     valueMulti: [],
     valueSingle: null,
+    valueAsync: null,
   };
 
   toggleDrawer = (v: boolean) => (e: React.MouseEvent<any>) => {
@@ -71,6 +73,22 @@ class Example extends React.Component<{},State> {
     })
   }
 
+  handleChangeAsync = (valueAsync:Item) => {
+    this.setState({
+      valueAsync,
+    })
+  }
+
+  filterFruit = (value:string) => {
+    return fruit.filter((f) => f.label.toLowerCase().includes(value.toLowerCase()));
+  }
+
+  loadOptions = (inputValue:string) : Promise<Item[]> => {
+    return new Promise((resolve) => {
+      setTimeout(() => resolve(this.filterFruit(inputValue)), 2000);
+    })
+  }
+
   createNew = (inputValue:string) => {
     const { valueCreatable } = this.state;
     const newItem = {value:inputValue, label:inputValue};
@@ -80,7 +98,7 @@ class Example extends React.Component<{},State> {
   }
 
   render() {
-    const { valueCreatable, valueMulti, valueSingle } = this.state;
+    const { valueAsync, valueCreatable, valueMulti, valueSingle } = this.state;
     return (
       <React.Fragment>
         <Select
@@ -108,13 +126,20 @@ class Example extends React.Component<{},State> {
         />
         <Select
           label="Creatable Select"
-          isCreatable={true}
+          variant="creatable"
           isMulti={true}
           value={valueCreatable}
           placeholder="Choose some timezones"
           onChange={this.handleChangeCreatable}
           options={tz}
           createNew={this.createNew}
+        />
+        <Select
+          variant="async"
+          loadOptions={this.loadOptions}
+          label="Async Select"
+          value={valueAsync}
+          onChange={this.handleChangeAsync}
         />
       </React.Fragment>
     );
