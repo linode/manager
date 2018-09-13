@@ -37,7 +37,8 @@ type ClassNames =
   | 'section'
   | 'grantTable'
   | 'selectAll'
-  | 'tableSubheading';
+  | 'tableSubheading'
+  | 'permSelect';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   topGrid: {
@@ -51,6 +52,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
   toggle: {
     marginRight: 3,
+  },
+  permSelect: {
+    width: 'auto',
+    [theme.breakpoints.up('sm')]: {
+      justifyContent: 'flex-end',
+    },
   },
   unrestrictedRoot: {
     marginTop: theme.spacing.unit * 2,
@@ -643,7 +650,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             </Typography>
           </Grid>
           <Grid item>
-            <Grid container justify="flex-end" alignItems="center" style={{ width: 'auto' }}>
+            <Grid container alignItems="center" className={classes.permSelect}>
               <Grid item>
                 Set all permissions to:
               </Grid>
