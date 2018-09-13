@@ -48,7 +48,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     },
     [theme.breakpoints.up('md')]: {
       margin: `${theme.spacing.unit * 4}px ${theme.spacing.unit * 4}px 0`,
-      width: 300,
     },
     [theme.breakpoints.up('lg')]: {
       width: 600,
