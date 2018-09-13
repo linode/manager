@@ -42,7 +42,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   emptyState: {
     textAlign: 'center',
-    padding: '10em',
+    padding: '5em 2em',
+    [theme.breakpoints.up('sm')]: {
+      padding: '10em',
+    },
   },
   searchWrapper: {
     position: 'sticky',
