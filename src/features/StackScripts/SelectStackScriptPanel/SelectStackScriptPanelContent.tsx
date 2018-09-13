@@ -662,7 +662,7 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
         {!didSearch && listOfStackScripts.length === 0
           ? <div className={classes.emptyState} data-qa-stackscript-empty-msg>
             You do not have any StackScripts to select from. You must first
-          <Link to="/stackscripts/create"> create one</Link>
+          <Link to="/stackscripts/create"> create one.</Link>
           </div>
           : <React.Fragment>
             <div className={classes.searchWrapper}>
