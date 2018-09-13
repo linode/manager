@@ -10,7 +10,6 @@ describe('Timezone change form', () => {
     <TimezoneForm
       classes={{
         root: '',
-        select: '',
         title: '',
       }}
       timezone={'Pacific/Niue'}
