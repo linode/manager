@@ -32,7 +32,10 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 class LinodeTag extends React.Component<CombinedProps, {}> {
   handleDelete = () => {
     const { onDelete } = this.props;
-    if (!onDelete) { return }
+    /*
+     * checking loading prop to prevent user from clicking the button repeatedly
+     */
+    if (!onDelete || this.props.loading) { return }
     onDelete(this.props.tagLabel)
   }
 
