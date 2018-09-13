@@ -75,6 +75,7 @@ class InfoPanel extends React.Component<CombinedProps> {
         isMulti={true}
         label={"Add Tags"}
         options={accountTags}
+        placeholder={"Type to choose or create a tag."}
         errorText={labelError || tagError || generalError}
         value={selectedTags}
         onChange={actions.addTag}
