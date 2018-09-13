@@ -294,7 +294,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       .catch((errorResponse) => {
         const defaultError = [{ reason: `An unexpected error has occured.` }];
         const errors = pathOr(defaultError, ['response', 'data', 'errors'], errorResponse);
-        this.setNodeErrors(errors.map((e) => ({
+        this.setNodeErrors(errors.map((e:Linode.ApiFieldError) => ({
           ...e,
           ...(e.field && { field: e.field.replace(/(\[|\]\.)/g, '_') })
         })));
@@ -444,7 +444,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               Create a NodeBalancer
           </Typography>
 
-            {generalError && <Notice error>{generalError}</Notice>}
+            {generalError && <Notice spacingTop={8} error>{generalError}</Notice>}
 
             <LabelAndTagsPanel
               data-qa-label-input

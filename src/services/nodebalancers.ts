@@ -2,7 +2,7 @@ import * as Joi from 'joi';
 
 import { API_ROOT } from 'src/constants';
 
-import Request, { mockAPIError, setData, setMethod, setParams, setURL, setXFilter } from './index';
+import Request, { setData, setMethod, setParams, setURL, setXFilter } from './index';
 
 type Page<T> = Linode.ResourcePage<T>;
 type NodeBalancer = Linode.NodeBalancer;
@@ -144,13 +144,13 @@ export const createNodeBalancerSchema = Joi.object({
     .unique((a, b) => a.port === b.port),
 });
 
-export const createNodeBalancer = (data: any) => mockAPIError(400, 'error', { errors: [{ field: 'region', 'reason': "The selected region does not have any availability for the requested NodeBalancer."}]});
-  // Request<Linode.NodeBalancer>(
-  //   setMethod('POST'),
-  //   setURL(`${API_ROOT}/nodebalancers`),
-  //   setData(data),
-  // )
-  //   .then(response => response.data);
+export const createNodeBalancer = (data: any) =>
+  Request<Linode.NodeBalancer>(
+    setMethod('POST'),
+    setURL(`${API_ROOT}/nodebalancers`),
+    setData(data),
+  )
+    .then(response => response.data);
 
 export const deleteNodeBalancer = (id: number) => Request<NodeBalancer>(
   setMethod('DELETE'),
