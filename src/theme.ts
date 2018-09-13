@@ -437,9 +437,9 @@ const LinodeTheme: Linode.Theme = {
         color: primaryColors.text,
         boxSizing: 'border-box',
         backgroundColor: 'white',
-
         [breakpoints.down('xs')]: {
           maxWidth: '100%',
+          width: '100%',
         },
         '& svg': {
           fontSize: 18,
