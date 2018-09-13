@@ -80,7 +80,7 @@ interface StateProps {
   loading: boolean;
   username?: string;
   email?: string;
-  timezone?: string;
+  timezone: string;
 }
 
 const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state) => {
