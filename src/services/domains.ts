@@ -22,12 +22,14 @@ export const getDomains = (
 export const getDomains$ = (
   params: any = {},
   filters: any = {},
-) => RequestStream<Page<Domain>>(
-  setURL(`${API_ROOT}/domains`),
-  setMethod('GET'),
-  setParams(params),
-  setXFilter(filters),
-);
+) => {
+  return RequestStream<Page<Domain>>(
+    setURL(`${API_ROOT}/domains`),
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filters),
+  );
+}
 
 export const getDomain = (domainId: number) =>
   Request<Domain>(
