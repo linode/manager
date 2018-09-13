@@ -56,10 +56,9 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   });
 };
 
-interface Props extends ChipProps {
+export interface Props extends ChipProps {
   label: string;
   variant?: Variants;
-  deletePayload?: any;
 }
 
 type PropsWithStyles = Props & WithStyles<CSSClasses>;
@@ -69,21 +68,12 @@ class Tag extends React.Component<PropsWithStyles, {}> {
     variant: 'gray' as Variants,
   };
 
-  handleDelete = () => {
-    const { deletePayload, onDelete } = this.props;
-    if (onDelete) {
-      return onDelete(deletePayload)
-    }
-    return;
-  }
-
   render() {
     const {
       variant,
       classes,
       theme,
       className,
-      deletePayload,
       ...chipProps
     } = this.props;
 
@@ -94,10 +84,9 @@ class Tag extends React.Component<PropsWithStyles, {}> {
         [classes[variant!]]: true,
         [classes.root]: true,
       })}
-      deleteIcon={<Close />}
+      deleteIcon={this.props.deleteIcon || <Close />}
       classes={{ label: classes.label }}
       data-qa-tag
-      onDelete={this.handleDelete}
     />;
   }
 };
