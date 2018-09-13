@@ -139,7 +139,7 @@ interface CancellableRequest<T> {
   cancel: () => void;
 }
 
-export const RequestStream = <T>(...fns: Function[]): CancellableRequest<T> => {
+export const CancellableRequest = <T>(...fns: Function[]): CancellableRequest<T> => {
   const config = reduceRequestConfig(...fns);
   const source = Axios.CancelToken.source();
 

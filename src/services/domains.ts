@@ -2,7 +2,7 @@ import { object, string } from 'yup';
 
 import { API_ROOT } from 'src/constants';
 
-import Request, { RequestStream, setData, setMethod, setParams, setURL, setXFilter, validateRequestData } from './index';
+import Request, { CancellableRequest, setData, setMethod, setParams, setURL, setXFilter, validateRequestData } from './index';
 
 type Page<T> = Linode.ResourcePage<T>;
 type Domain = Linode.Domain;
@@ -23,7 +23,7 @@ export const getDomains$ = (
   params: any = {},
   filters: any = {},
 ) => {
-  return RequestStream<Page<Domain>>(
+  return CancellableRequest<Page<Domain>>(
     setURL(`${API_ROOT}/domains`),
     setMethod('GET'),
     setParams(params),
