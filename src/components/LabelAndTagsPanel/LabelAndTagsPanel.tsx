@@ -71,7 +71,7 @@ class InfoPanel extends React.Component<CombinedProps> {
     const { tagError } = this.props;
     return (
       <Select
-        isCreatable={true}
+        variant='creatable'
         isMulti={true}
         label={"Add Tags"}
         options={accountTags}
