@@ -108,7 +108,7 @@ export interface SelectState {
   isSelected: boolean;
 }
 
-export interface DefaultMessage {
+export interface NoOptionsMessageProps {
   inputValue: string;
 }
 
@@ -127,7 +127,7 @@ export interface EnhancedSelectProps {
   createNew?: (inputValue:string) => void;
   onInputChange?: (inputValue:string) => void;
   loadOptions?: (inputValue:string) => Promise<Item|Item[]> | undefined;
-  noOptionsMessage?: (inputValue:DefaultMessage) => string | null;
+  noOptionsMessage?: (inputValue:NoOptionsMessageProps) => string | null;
 }
 
 // Material-UI versions of several React-Select components.

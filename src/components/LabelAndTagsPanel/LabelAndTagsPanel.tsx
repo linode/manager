@@ -5,7 +5,7 @@ import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import Select, { DefaultMessage } from 'src/components/EnhancedSelect/Select';
+import Select, { NoOptionsMessageProps } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import RenderGuard from 'src/components/RenderGuard';
@@ -61,7 +61,7 @@ class InfoPanel extends React.Component<CombinedProps> {
     },
   };
 
-  getEmptyMessage = (value:DefaultMessage) => {
+  getEmptyMessage = (value:NoOptionsMessageProps) => {
     const { getLinodeTagList } = this.props.tagObject!.actions;
     const tags = getLinodeTagList();
     if (tags.includes(value.inputValue)) { return "This tag is already selected."}
