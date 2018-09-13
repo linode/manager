@@ -47,7 +47,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 });
 
 interface Props {
-  username?: string;
+  username: string;
   email?: string;
   changeUsername: (e: React.ChangeEvent<HTMLInputElement>) => void;
   save: () => void;
@@ -68,7 +68,7 @@ type CombinedProps = Props & StateProps & WithStyles<ClassNames> & RouteComponen
 class UserProfile extends React.Component<CombinedProps> {
   state: State = {
     deleteConfirmDialogOpen: false,
-    toDeleteUsername: '',
+    toDeleteUsername: this.props.username,
     userDeleteError: false,
   };
 
