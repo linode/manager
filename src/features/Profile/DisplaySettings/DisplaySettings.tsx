@@ -43,7 +43,7 @@ export class DisplaySettings extends React.Component<CombinedProps, State> {
   render() {
     const { email, loading, timezone, username, actions } = this.props;
 
-    if (!email || !username || !timezone) { return; }
+    if (!email || !username) { return null; }
 
     return (
       <React.Fragment>
@@ -80,7 +80,7 @@ interface StateProps {
   loading: boolean;
   username?: string;
   email?: string;
-  timezone?: string;
+  timezone: string;
 }
 
 const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state) => {
@@ -89,7 +89,7 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (stat
     loading: profile.loading,
     username: path(['data', 'username'], profile),
     email: path(['data', 'email'], profile),
-    timezone: pathOr('GMT', ['data', 'timezone'], profile),
+    timezone: defaultTimezone(profile),
   }
 };
 
@@ -104,6 +104,11 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch) => 
     updateProfile: (v: Linode.Profile) => dispatch(handleUpdate(v)),
   },
 });
+
+const defaultTimezone = compose(
+  tz => tz === '' ? 'GMT' : tz,
+  pathOr('GMT', ['data', 'timezone']),
+);
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 

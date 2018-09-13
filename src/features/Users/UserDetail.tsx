@@ -1,4 +1,4 @@
-import { clone, compose, path, pathOr } from 'ramda';
+import { clone, compose, path as pathRamda, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { matchPath, Route, RouteComponentProps, Switch } from 'react-router-dom';
@@ -212,7 +212,7 @@ class UserDetail extends React.Component<CombinedProps> {
   renderUserProfile = () => {
     const { username, email, profileSaving, profileSuccess, profileErrors } = this.state;
     return <UserProfile
-      username={username}
+      username={username || ''}
       email={email}
       changeUsername={this.onChangeUsername}
       save={this.onSave}
@@ -308,7 +308,7 @@ interface StateProps {
 }
 
 const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state) => ({
-  profileUsername: path(['data', 'username'], state.__resources.profile),
+  profileUsername: pathRamda(['data', 'username'], state.__resources.profile),
 });
 
 interface DispatchProps {
