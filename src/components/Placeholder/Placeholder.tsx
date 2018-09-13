@@ -39,13 +39,18 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => ({
   copy: {
     textAlign: 'center',
     maxWidth: 350,
+    marginTop: -theme.spacing.unit * 3,
   },
   icon: {
     '&.animate' : {
       animation: 'scaleIn .5s ease-in-out',
     },
-    width: '225px !important',
-    height: '225px !important',
+    width: '150px',
+    height: '150px',
+    [theme.breakpoints.up('md')]: {
+      width: '225px',
+      height: '225px',
+    },
     '& .outerCircle': {
       fill: theme.color.absWhite,
       stroke: theme.bg.offWhite,
@@ -62,8 +67,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => ({
   title: {
     textAlign: 'center',
     fontWeight: 700,
+    fontSize: '2.4rem',
+    [theme.breakpoints.up('md')]: {
+      fontSize: '3.21rem',
+    }
   },
-  button: {},
+  button: {
+    marginBottom: theme.spacing.unit * 4,
+  },
 });
 
 export interface Props {
@@ -94,7 +105,7 @@ const Placeholder: React.StatelessComponent<CombinedProps> = (props) => {
         }
       </Grid>
       <Grid item xs={12}>
-        <Typography variant="display2" className={classes.title} data-qa-placeholder-title>
+        <Typography className={classes.title} data-qa-placeholder-title>
           {title}
         </Typography>
       </Grid>
@@ -102,7 +113,7 @@ const Placeholder: React.StatelessComponent<CombinedProps> = (props) => {
         <Typography variant="body1">{copy}</Typography>
       </Grid>
       {buttonProps &&
-        <Grid item xs={12} lg={10} className={classes.copy}>
+        <Grid item xs={12} lg={10}>
           <Button
             variant="raised"
             type="primary"
