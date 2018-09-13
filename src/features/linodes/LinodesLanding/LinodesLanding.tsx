@@ -168,6 +168,9 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
               updatedLinodes[targetIndex].recentEvent = linodeEvent;
               return { linodes: updatedLinodes };
             });
+          })
+          .catch((error) => {
+            /* Nothing to do here; in most cases the subscriber is trying to retrieve a recently deleted Linode. */
           });
       });
 
