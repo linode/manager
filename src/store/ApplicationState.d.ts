@@ -30,5 +30,5 @@ declare interface FeaturesState {
   linodeDetail: {
     volumes: RequestableData<Linode.Volume[]>
   },
-  linodes: RequestableData<Linode.Linode[]>
+  linodes: RequestableData<Linode.ResourcePage<Linode.Linode>>
 }

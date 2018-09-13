@@ -2,7 +2,7 @@ import { ThunkAction } from 'redux-thunk';
 import { getLinodes } from 'src/services/linodes';
 
 // ACTIONS
-const actionTypeGenerator = (s: string) => `@manager/features/linodes`;
+const actionTypeGenerator = (s: string) => `@manager/features/linodes/${s}`;
 
 const LOAD = actionTypeGenerator('LOAD');
 const SUCCESS = actionTypeGenerator('SUCCESS');
@@ -20,18 +20,18 @@ export const defaultState: State = {
 // ACTION CREATORS
 export const load = () => ({ type: LOAD });
 
-export const handleSuccess = (payload: Linode.Linode[]) => ({ type: SUCCESS, payload });
+export const handleSuccess = (payload: Linode.ResourcePage<Linode.Linode>) => ({ type: SUCCESS, payload });
 
 export const handleError = (payload: Error) => ({ type: ERROR, payload });
 
-export const handleUpdate = (payload: Linode.Linode[]) => ({ type: UPDATE, payload });
+export const handleUpdate = (payload: Linode.ResourcePage<Linode.Linode>) => ({ type: UPDATE, payload });
 
 // REDUCER
 export default (state = defaultState, action: any) => {
   switch (action.type) {
 
     case LOAD:
-      return { ...state, loading: true };
+      return { ...state, loading: true, data: [] };
 
     case SUCCESS:
       return { ...state, loading: false, lastUpdated: Date.now(), data: action.payload };
@@ -52,7 +52,7 @@ export const _getLinodes = (params: any = {}, filter: any = {}): ThunkAction<voi
   dispatch(load());
 
   getLinodes(params, filter)
-    .then(response => dispatch(handleSuccess(response.data)))
+    .then(response => dispatch(handleSuccess(response)))
     .catch(error => dispatch(handleError(error)));
 };
 
