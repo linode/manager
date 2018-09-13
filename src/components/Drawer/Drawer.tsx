@@ -21,9 +21,10 @@ type ClassNames = 'drawer'
 const styles: StyleRulesCallback = (theme: Theme) => ({
   paper: {
     width: 300,
-    padding: theme.spacing.unit * 4,
+    padding: theme.spacing.unit * 2,
     [theme.breakpoints.up('sm')]: {
       width: 480,
+      padding: theme.spacing.unit * 4,
     },
     '& .actionPanel': {
       marginTop: theme.spacing.unit * 2,

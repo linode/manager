@@ -254,7 +254,6 @@ export class StackScriptForm extends React.Component<CombinedProps> {
             <Grid item className={classes.gridWithTips}>
               <Notice
                 className={classes.tips}
-                component="div"
               >
                 <Typography role="header" variant="title">Tips</Typography>
                 <Typography>There are four default environment variables provided to you:</Typography>
