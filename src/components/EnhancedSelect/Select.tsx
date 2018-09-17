@@ -112,6 +112,10 @@ interface ActionMeta {
   action: string;
 }
 
+interface ActionMeta {
+  action: string;
+}
+
 export interface EnhancedSelectProps {
   options?: Item[];
   className?: string;
@@ -140,7 +144,9 @@ const _components = {
   MultiValue,
 };
 
-type CombinedProps = EnhancedSelectProps & WithStyles<ClassNames>;
+type CombinedProps = EnhancedSelectProps
+  & WithStyles<ClassNames>
+  & BaseSelectProps;
 
 interface BaseSelectProps extends SelectProps<any> {
   classes: any;
@@ -171,7 +177,8 @@ class Select extends React.PureComponent<CombinedProps,{}> {
       onInputChange,
       options,
       value,
-      variant
+      variant,
+      onBlur,
     } = this.props;
 
     /*
@@ -220,6 +227,7 @@ class Select extends React.PureComponent<CombinedProps,{}> {
           },
         }}
         value={value}
+        onBlur={onBlur}
         options={options}
         components={combinedComponents}
         onChange={onChange}
