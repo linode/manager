@@ -603,7 +603,6 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
         {mode !== modes.CLONING &&
           <FormControl fullWidth>
             <EnhancedSelect
-              variant="async"
               label="Linode"
               placeholder="Select a Linode"
               errorText={linodeError}

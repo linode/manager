@@ -108,6 +108,10 @@ export interface SelectState {
   isSelected: boolean;
 }
 
+export interface NoOptionsMessageProps {
+  inputValue: string;
+}
+
 export interface EnhancedSelectProps {
   options?: Item[];
   className?: string;
@@ -123,6 +127,7 @@ export interface EnhancedSelectProps {
   createNew?: (inputValue:string) => void;
   onInputChange?: (inputValue:string) => void;
   loadOptions?: (inputValue:string) => Promise<Item|Item[]> | undefined;
+  noOptionsMessage?: (inputValue:NoOptionsMessageProps) => string | null;
 }
 
 // Material-UI versions of several React-Select components.
@@ -158,6 +163,7 @@ class Select extends React.PureComponent<CombinedProps,{}> {
       loadOptions,
       isMulti,
       placeholder,
+      noOptionsMessage,
       onChange,
       onInputChange,
       options,
@@ -213,6 +219,7 @@ class Select extends React.PureComponent<CombinedProps,{}> {
         onInputChange={onInputChange}
         onCreateOption={createNew}
         placeholder={placeholder || 'Select a value...'}
+        noOptionsMessage={noOptionsMessage}
         menuPlacement="auto"
       />
     );

@@ -5,10 +5,14 @@ import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import Select, { NoOptionsMessageProps } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import RenderGuard from 'src/components/RenderGuard';
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
+import { TagObject } from 'src/features/linodes/LinodesCreate/tagsHoc';
+import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+
 
 type ClassNames = 'root'
   | 'inner'
@@ -42,6 +46,8 @@ interface Props {
   error?: string;
   labelFieldProps?: TextFieldProps;
   isForm?: IsFormProps;
+  tagObject?: TagObject;
+  tagError?: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -55,8 +61,39 @@ class InfoPanel extends React.Component<CombinedProps> {
     },
   };
 
+  getEmptyMessage = (value:NoOptionsMessageProps) => {
+    const { getLinodeTagList } = this.props.tagObject!.actions;
+    const tags = getLinodeTagList();
+    if (tags.includes(value.inputValue)) { return "This tag is already selected."}
+    else { return "No results." }
+  }
+
+  renderTagsPanel = () => {
+    if (!this.props.tagObject) { return; }
+    const { accountTags, actions, errors, selectedTags } = this.props.tagObject;
+    const hasErrorFor = getAPIErrorFor({ label: 'label' }, errors);
+    // Label refers to the tag label, not the Linode label
+    const labelError = hasErrorFor('label');
+    const generalError = hasErrorFor('none');
+    const { tagError } = this.props;
+    return (
+      <Select
+        variant='creatable'
+        isMulti={true}
+        label={"Add Tags"}
+        options={accountTags}
+        placeholder={"Type to choose or create a tag."}
+        errorText={labelError || tagError || generalError}
+        value={selectedTags}
+        onChange={actions.addTag}
+        createNew={actions.createTag}
+        noOptionsMessage={this.getEmptyMessage}
+      />
+    )
+  }
+
   render() {
-    const { classes, error, labelFieldProps, isForm } = this.props;
+    const { classes, error, labelFieldProps, isForm, tagObject } = this.props;
 
     return (
       <React.Fragment>
@@ -74,6 +111,7 @@ class InfoPanel extends React.Component<CombinedProps> {
                 {error && <Notice text={error} error />}
                 <TextField data-qa-label-panel {...labelFieldProps} />
               </div>
+              {tagObject && this.renderTagsPanel()}
               {!!isForm.action &&
                 <ActionsPanel
                   className={isForm ? classes.expPanelButton : ''}
@@ -93,6 +131,7 @@ class InfoPanel extends React.Component<CombinedProps> {
             <div className={classes.inner}>
               {error && <Notice text={error} error />}
               <TextField {...labelFieldProps} data-qa-label-input />
+              {tagObject && this.renderTagsPanel()}
             </div>
           </Paper>
         }
