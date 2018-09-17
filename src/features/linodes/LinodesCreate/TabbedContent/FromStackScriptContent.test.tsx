@@ -14,6 +14,17 @@ const mockProps = {
   getTypeInfo: jest.fn(),
   history: null,
   userSSHKeys: [],
+  tagObject: {
+    accountTags: [],
+    selectedTags: [],
+    newTags: [],
+    errors: [],
+    actions: {
+      addTag: jest.fn(),
+      createTag: jest.fn(),
+      getLinodeTagList: jest.fn(),
+    }
+  }
 };
 
 describe('FromImageContent', () => {
