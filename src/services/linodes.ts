@@ -380,3 +380,12 @@ export const startMutation = (linodeID: number) => {
   )
     .then(response => response.data)
 }
+
+export const addTagsToLinode = (linodeID: number, tags: string[]) => {
+  return Request<Linode>(
+    setURL(`${API_ROOT}/linode/instances/${linodeID}`),
+    setMethod('PUT'),
+    setData({ tags })
+  )
+    .then(response => response.data)
+}
