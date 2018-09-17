@@ -58,6 +58,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    '& > div': {
+      margin: '2px',
+    }
   }
 });
 
@@ -67,6 +70,7 @@ export interface SearchSuggestionT {
   description: string;
   path: string;
   tags?: string[];
+  isHighlighted?: boolean;
 }
 
 interface Props extends SearchSuggestionT {
@@ -88,9 +92,15 @@ const maybeStyleSegment = (text: string, searchText: string, hlClass: string): R
   );
 };
 
-const renderTags = (tags:string[]) => {
+const renderTags = (tags:string[], selected:boolean) => {
   if (tags.length === 0) { return; }
-  return tags.map((tag:string) => <Tag key={`tag-${tag}`} label={tag} /> );
+  return tags.map((tag:string) =>
+    <Tag
+      key={`tag-${tag}`}
+      label={tag}
+      variant={selected ? 'blue' : 'lightGray'}
+    />
+  );
 }
 
 const SearchSuggestion: React.StatelessComponent<CombinedProps> = (props) => {
@@ -104,6 +114,7 @@ const SearchSuggestion: React.StatelessComponent<CombinedProps> = (props) => {
     history,
     classes,
     tags,
+    isHighlighted,
   } = props;
 
   const handleClick = () => {
@@ -135,7 +146,7 @@ const SearchSuggestion: React.StatelessComponent<CombinedProps> = (props) => {
         </div>
       </div>
       <div className={classes.tagContainer}>
-          {tags && renderTags(tags)}
+          {tags && renderTags(tags, Boolean(isHighlighted))}
       </div>
     </div>
   );

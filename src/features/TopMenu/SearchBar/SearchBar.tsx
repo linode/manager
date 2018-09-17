@@ -394,6 +394,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
           path={suggestion.path}
           history={history}
           tags={suggestion.tags}
+          isHighlighted={isHighlighted}
         />
       </MenuItem>
     );
