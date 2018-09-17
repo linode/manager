@@ -15,7 +15,7 @@ import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { cloneDomain, createDomain } from 'src/services/domains';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import { mapAPIErrorsToObject } from 'src/utilities/apiErrorHandling';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root' | 'masterIPErrorNotice';
@@ -93,10 +93,12 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
     const { classes, open, mode } = this.props;
     const { type, domain, soaEmail, cloneName, errors, submitting } = this.state;
 
-    const errorFor = getAPIErrorFor(this.errorResources, errors);
-
-    const generalError = errorFor('none');
-    const masterIPsError = errorFor('master_ips');
+    const {
+      __general: generalError,
+      domain: domainError,
+      soa_email: soaEmailError,
+      master_ips: masterIPsError,
+    } = mapAPIErrorsToObject(errors);
 
     return (
       <Drawer
@@ -121,7 +123,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
         </RadioGroup>
 
         <TextField
-          errorText={(mode === 'create' || '') && errorFor('domain')}
+          errorText={(mode === 'create' || '') && domainError}
           value={domain}
           disabled={mode === 'clone'}
           label="Domain"
@@ -130,7 +132,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
         />
         {mode === 'clone' &&
           <TextField
-            errorText={errorFor('domain')}
+            errorText={domainError}
             value={cloneName}
             label="New Domain"
             onChange={this.updateCloneLabel}
@@ -139,7 +141,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
         }
         {mode === 'create' && type === 'master' &&
           <TextField
-            errorText={errorFor('soa_email')}
+            errorText={soaEmailError}
             value={soaEmail}
             label="SOA Email Address"
             onChange={this.updateEmailAddress}
@@ -197,12 +199,6 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
       </Drawer>
     );
   }
-
-  errorResources = {
-    domain: 'Domain',
-    type: 'Type',
-    soa_email: 'SOA Email',
-  };
 
   reset = () => {
     if (this.mounted) { this.setState({ ...this.defaultState }); }

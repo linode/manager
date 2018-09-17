@@ -1,15 +1,9 @@
+import { API_ROOT } from 'src/constants';
 import { object, string } from 'yup';
 
-import { API_ROOT } from 'src/constants';
+import { updateAPIErrorResponse } from 'src/utilities/apiErrorHandling';
 
-import Request,
-{
-  setData,
-  setMethod,
-  setParams,
-  setURL,
-  setXFilter,
-} from './index';
+import Request, { setData, setMethod, setParams, setURL, setXFilter } from './index';
 
 type Page<T> = Linode.ResourcePage<T>;
 type Domain = Linode.Domain;
@@ -56,17 +50,20 @@ export const updateDomainRecord = (
 );
 
 export const deleteDomainRecord = (domainID: number, recordId: number) =>
-  Request<{}>(
-    setURL(`${API_ROOT}/domains/${domainID}/records/${recordId}`),
-    setMethod('DELETE'),
+Request<{}>(
+  setURL(`${API_ROOT}/domains/${domainID}/records/${recordId}`),
+  setMethod('DELETE'),
   );
+
+const updateDomainCreationErrors = updateAPIErrorResponse((errors) => errors);
 
 export const createDomain = (data: Partial<Linode.Domain>) =>
   Request<Domain>(
     setData(data),
     setURL(`${API_ROOT}/domains`),
     setMethod('POST'),
-  );
+  )
+  .catch((response) => Promise.reject(updateDomainCreationErrors(response)));
 
 export const updateDomain = (
   domainId: number,
