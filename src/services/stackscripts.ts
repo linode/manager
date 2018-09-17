@@ -61,7 +61,7 @@ interface StackScriptPayload {
 const stackScriptSchema = object({
   script: string().required('Script is required.'),
   label: string().required('Label is required.'),
-  images: array().of(string()).required('Images is required.'),
+  images: array().of(string()).required('An image is required.'),
   description: string(),
   is_public: boolean(),
   rev_note: string(),
