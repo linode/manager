@@ -3,20 +3,36 @@ import * as React from 'react';
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
-  onEditRecords: () => void;
-  onRemove: () => void;
-  onClone: () => void;
+  onRemove: (domain: string, id: number) => void;
+  onClone: (domain: string, id: number) => void;
+  domain: string;
+  id: number;
+  history: any;
 }
 
 type CombinedProps = Props;
 
 class LinodeActionMenu extends React.Component<CombinedProps> {
+  goToDomain = () => {
+    this.props.history.push(`/domains/${this.props.id}`)
+  }
+
+  handleRemove = () => {
+    const { domain, id, onRemove } = this.props;
+    onRemove(domain, id)
+  }
+
+  handleClone = () => {
+    const { domain, id, onClone } = this.props;
+    onClone(domain, id)
+  }
+
   createActions = () => (closeMenu: Function): Action[] => {
     return [
       {
         title: 'Edit DNS Records',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
-          this.props.onEditRecords();
+          this.goToDomain();
           closeMenu();
           e.preventDefault();
         },
@@ -40,7 +56,7 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
       {
         title: 'Clone',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
-          this.props.onClone();
+          this.handleClone();
           closeMenu();
           e.preventDefault();
         },
@@ -48,7 +64,7 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
       {
         title: 'Remove',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
-          this.props.onRemove();
+          this.handleRemove();
           closeMenu();
           e.preventDefault();
         },

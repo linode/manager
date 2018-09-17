@@ -1,23 +1,21 @@
 import { shim } from 'promise.prototype.finally';
-import { lensPath, pathOr, set } from 'ramda';
+import { lensPath, path, set } from 'ramda';
 import * as React from 'react';
-import { connect, Dispatch } from 'react-redux';
+import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { bindActionCreators, compose } from 'redux'
-
-import { Sticky, StickyContainer, StickyProps } from 'react-sticky';;
-
+import { Sticky, StickyContainer, StickyProps } from 'react-sticky';
+import { compose } from 'redux';
 import 'typeface-lato';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
+import BetaNotification from 'src/BetaNotification';
 import DefaultLoader from 'src/components/DefaultLoader';
 import DocsSidebar from 'src/components/DocsSidebar';
 import { DocumentTitleSegment, withDocumentTitleProvider } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import SideMenu from 'src/components/SideMenu';
-import { isProduction, isTest } from 'src/constants';
 import { RegionsProvider, WithRegionsContext } from 'src/context/regions';
 import { TypesProvider, WithTypesContext } from 'src/context/types';
 import Footer from 'src/features/Footer';
@@ -26,14 +24,9 @@ import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import { getDeprecatedLinodeTypes, getLinodeTypes } from 'src/services/linodes';
 import { getRegions } from 'src/services/misc';
-import { getProfile } from 'src/services/profile';
-import { request, response } from 'src/store/reducers/resources';
-import initSurvicate from 'src/survicate';
-
+import { requestProfile } from 'src/store/reducers/resources/profile';
 import composeState from 'src/utilities/composeState';
 import { notifications, theme as themeStorage } from 'src/utilities/storage';
-
-import BetaNotification from 'src/BetaNotification';
 
 shim(); // allows for .finally() usage
 
@@ -155,14 +148,6 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
 
 interface Props {
   toggleTheme: () => void;
-  longLivedLoaded: boolean;
-  userId: number | null;
-}
-
-interface ConnectedProps {
-  dispatchRequest: typeof request;
-  dispatchResponse: typeof response;
-  documentation: Linode.Doc[];
 }
 
 interface State {
@@ -172,10 +157,7 @@ interface State {
   regionsContext: WithRegionsContext;
 }
 
-type CombinedProps =
-  Props &
-  WithStyles<ClassNames> &
-  ConnectedProps;
+type CombinedProps = Props & DispatchProps & StateProps & WithStyles<ClassNames>;
 
 const typesContext = (path: string[]) => lensPath(['typesContext', ...path]);
 const regionsContext = (path: string[]) => lensPath(['regionsContext', ...path]);
@@ -197,7 +179,6 @@ const L = {
 
 export class App extends React.Component<CombinedProps, State> {
   composeState = composeState;
-  surveyed: boolean = false;
 
   state: State = {
     menuOpen: false,
@@ -257,42 +238,16 @@ export class App extends React.Component<CombinedProps, State> {
   };
 
   componentDidMount() {
-    const { dispatchRequest, dispatchResponse } = this.props;
+    const { getProfile } = this.props.actions;
 
     if (notifications.beta.get() === 'open') {
       this.setState({ betaNotification: true });
     }
 
-    dispatchRequest(['profile']);
-    getProfile()
-      .then(({ data }) => {
-        dispatchResponse(['profile'], data);
-      })
-      .catch(error => dispatchResponse(['profile'], error));
+    getProfile();
 
     this.state.regionsContext.request();
     this.state.typesContext.request();
-  }
-
-  componentDidUpdate() {
-    const { userId } = this.props;
-    /* userId is a connected prop; if it's loaded
-    * (default value is 1) and we haven't already
-    * done this, initialize the survey. Also, shouldn't
-    * load the survey in development.
-    * */
-    if (isTest) {
-      // Temporary hack until we implement NODE_ENV=test
-      return;
-    }
-    if (userId && userId !== 1 && !this.surveyed && isProduction) {
-      /* Initialize Survicate
-      * Done here rather than in index.tsx so that
-      * we have access to the logged in user's ID
-      */
-      initSurvicate(window, userId);
-      this.surveyed = true;
-    }
   }
 
   closeMenu = () => { this.setState({ menuOpen: false }); }
@@ -311,14 +266,16 @@ export class App extends React.Component<CombinedProps, State> {
 
   render() {
     const { menuOpen } = this.state;
-    const { classes, longLivedLoaded, documentation, toggleTheme } = this.props;
+    const { classes, documentation, toggleTheme, profileLoading, profileError } = this.props;
+
     const hasDoc = documentation.length > 0;
 
     return (
       <React.Fragment>
         <a href="#main-content" className="visually-hidden">Skip to main content</a>
         <DocumentTitleSegment segment="Linode Manager" />
-        {longLivedLoaded &&
+
+        {profileLoading === false && !profileError &&
           <React.Fragment>
             <TypesProvider value={this.state.typesContext}>
               <RegionsProvider value={this.state.regionsContext}>
@@ -327,47 +284,47 @@ export class App extends React.Component<CombinedProps, State> {
                   <main className={classes.content}>
                     <TopMenu openSideMenu={this.openMenu} />
                     <div className={classes.wrapper} id="main-content">
-                    <StickyContainer>
-                      <Grid container spacing={0} className={classes.grid}>
-                        <Grid item className={`${classes.switchWrapper} ${hasDoc ? 'mlMain' : ''}`}>
-                          <Switch>
-                            <Route path="/linodes" component={LinodesRoutes} />
-                            <Route path="/volumes" component={Volumes} />
-                            <Route path="/nodebalancers" component={NodeBalancers} />
-                            <Route path="/domains" component={Domains} />
-                            <Route exact path="/managed" component={Managed} />
-                            <Route exact path="/longview" component={Longview} />
-                            <Route exact path="/images" component={Images} />
-                            <Route path="/stackscripts" component={StackScripts} />
-                            <Route exact path="/billing" component={Account} />
-                            <Route exact path="/billing/invoices/:invoiceId" component={InvoiceDetail} />
-                            <Route path="/users" component={Users} />
-                            <Route exact path="/support/tickets" component={SupportTickets} />
-                            <Route path="/support/tickets/:ticketId" component={SupportTicketDetail} />
-                            <Route path="/profile" component={Profile} />
-                            <Route exact path="/support" component={Help} />
-                            <Route exact path="/support/search/" component={SupportSearchLanding} />
-                            <Route path="/dashboard" component={Dashboard} />
-                            <Redirect exact from="/" to="/dashboard" />
-                            <Route component={NotFound} />
-                          </Switch>
-                        </Grid>
-                        {hasDoc &&
-                          <Grid className='mlSidebar'>
-                            <Sticky topOffset={-24} disableCompensation>
-                              {(props: StickyProps) => {
-                                return (
-                                  <DocsSidebar
-                                    docs={documentation}
-                                    {...props}
-                                  />
-                                )
-                              }
-                              }
-                            </Sticky>
+                      <StickyContainer>
+                        <Grid container spacing={0} className={classes.grid}>
+                          <Grid item className={`${classes.switchWrapper} ${hasDoc ? 'mlMain' : ''}`}>
+                            <Switch>
+                              <Route path="/linodes" component={LinodesRoutes} />
+                              <Route path="/volumes" component={Volumes} />
+                              <Route path="/nodebalancers" component={NodeBalancers} />
+                              <Route path="/domains" component={Domains} />
+                              <Route exact path="/managed" component={Managed} />
+                              <Route exact path="/longview" component={Longview} />
+                              <Route exact path="/images" component={Images} />
+                              <Route path="/stackscripts" component={StackScripts} />
+                              <Route exact path="/billing" component={Account} />
+                              <Route exact path="/billing/invoices/:invoiceId" component={InvoiceDetail} />
+                              <Route path="/users" component={Users} />
+                              <Route exact path="/support/tickets" component={SupportTickets} />
+                              <Route path="/support/tickets/:ticketId" component={SupportTicketDetail} />
+                              <Route path="/profile" component={Profile} />
+                              <Route exact path="/support" component={Help} />
+                              <Route exact path="/support/search/" component={SupportSearchLanding} />
+                              <Route path="/dashboard" component={Dashboard} />
+                              <Redirect exact from="/" to="/dashboard" />
+                              <Route component={NotFound} />
+                            </Switch>
                           </Grid>
-                        }
-                      </Grid>
+                          {hasDoc &&
+                            <Grid className='mlSidebar'>
+                              <Sticky topOffset={-24} disableCompensation>
+                                {(props: StickyProps) => {
+                                  return (
+                                    <DocsSidebar
+                                      docs={documentation}
+                                      {...props}
+                                    />
+                                  )
+                                }
+                                }
+                              </Sticky>
+                            </Grid>
+                          }
+                        </Grid>
                       </StickyContainer>
                     </div>
 
@@ -400,17 +357,35 @@ const themeDataAttr = () => {
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
-  {
-    dispatchRequest: request,
-    dispatchResponse: response,
+interface DispatchProps {
+  actions: {
+    getProfile: () => void;
   },
-  dispatch,
-);
+}
 
-const mapStateToProps = (state: Linode.AppState) => ({
-  longLivedLoaded: Boolean(pathOr(false, ['resources', 'profile', 'data'], state)),
-  userId: pathOr(null,['resources', 'profile', 'data', 'uid'], state),
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, ownProps) => {
+  return {
+    actions: {
+      getProfile: () => dispatch(requestProfile()),
+    }
+  };
+};
+
+interface StateProps {
+  /** Profile */
+  profileLoading: boolean;
+  profileError?: Error;
+  userId?: number;
+
+  documentation: Linode.Doc[];
+}
+
+const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state, ownProps) => ({
+  /** Profile */
+  profileLoading: state.__resources.profile.loading,
+  profileError: state.__resources.profile.error,
+  userId: path(['data', 'uid'], state.__resources.profile),
+
   documentation: state.documentation,
 });
 

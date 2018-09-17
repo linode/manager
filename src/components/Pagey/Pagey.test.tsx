@@ -77,10 +77,6 @@ describe('Paginator 2: Pagement Day', () => {
   describe('when handlePageChange is called', () => {
 
     it('should update page with provided argument', () => {
-      const mockData: Linode.ResourcePage<any> = {
-        page: 1, pages: 1, results: 0, data: []
-      };
-
       const { wrapper } = setup(jest.fn((() => Promise.resolve(mockData))))
 
       const handlePageChange = wrapper.prop('handlePageChange');
@@ -93,10 +89,6 @@ describe('Paginator 2: Pagement Day', () => {
     });
 
     it('should result in the request being called with updated params', () => {
-      const mockData: Linode.ResourcePage<any> = {
-        page: 1, pages: 1, results: 0, data: []
-      };
-
       const { wrapper, mockRequest } = setup(jest.fn((() => Promise.resolve(mockData))))
 
       const handlePageChange = wrapper.prop('handlePageChange');
@@ -112,10 +104,6 @@ describe('Paginator 2: Pagement Day', () => {
   describe('when handlePageSizeChange is called', () => {
 
     it('should update pageSize with provided argument', () => {
-      const mockData: Linode.ResourcePage<any> = {
-        page: 1, pages: 1, results: 0, data: []
-      };
-
       const { wrapper } = setup(jest.fn((() => Promise.resolve(mockData))));
 
       const handlePageSizeChange = wrapper.prop('handlePageSizeChange');
@@ -129,10 +117,6 @@ describe('Paginator 2: Pagement Day', () => {
     });
 
     it('should result in the request being called with updated params', () => {
-      const mockData: Linode.ResourcePage<any> = {
-        page: 1, pages: 1, results: 0, data: []
-      };
-
       const { wrapper, mockRequest } = setup(jest.fn((() => Promise.resolve(mockData))));
 
       const handlePageSizeChange = wrapper.prop('handlePageSizeChange');
@@ -147,14 +131,14 @@ describe('Paginator 2: Pagement Day', () => {
 
   describe('when requesting data', () => {
     describe('and the promise resolves', () => {
-      const mockData = {
+      const mockDataWithData = {
         page: 2,
         pages: 2,
         data: [1, 2, 3, 4],
         results: 4
       };
 
-      const { wrapper } = setup(() => Promise.resolve(mockData));
+      const { wrapper } = setup(() => Promise.resolve(mockDataWithData));
 
       beforeAll(async () => {
         await wrapper.prop('request')();

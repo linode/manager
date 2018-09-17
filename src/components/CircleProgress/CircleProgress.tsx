@@ -31,8 +31,8 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   progress: {
     position: 'relative',
     [theme.breakpoints.down('xs')]: {
-      width: '86px !important',
-      height: '86px !important',
+      width: '72px !important',
+      height: '72px !important',
     },
   },
   top: {

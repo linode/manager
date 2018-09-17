@@ -4,20 +4,31 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
-  onEdit: () => void;
-  onDelete: () => void;
+  onEdit: (config: Linode.Config) => void;
+  onDelete: (id: number, label: string) => void;
+  config: Linode.Config;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
 class ConfigActionMenu extends React.Component<CombinedProps> {
+  handleEdit = () => {
+    const { config, onEdit } = this.props;
+    onEdit(config);
+  }
+
+  handleDelete = () => {
+    const { config: { id, label }, onDelete } = this.props;
+    onDelete(id, label)
+  }
+
   createConfigActions = () => (closeMenu: Function): Action[] => {
     const actions = [
       {
         title: 'Edit',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           e.preventDefault();
-          this.props.onEdit();
+          this.handleEdit();
           closeMenu();
         },
       },
@@ -25,7 +36,7 @@ class ConfigActionMenu extends React.Component<CombinedProps> {
         title: 'Delete',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           e.preventDefault();
-          this.props.onDelete();
+          this.handleDelete();
           closeMenu();
         },
       },

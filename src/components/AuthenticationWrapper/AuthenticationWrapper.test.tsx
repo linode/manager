@@ -22,7 +22,9 @@ describe('AuthenticationWrapper', () => {
       <StaticRouter context={{}}>
         <AuthenticationWrapper
           isAuthenticated={false}
-          loginRedirect={mockRedirect}
+          actions={{
+            loginRedirect: mockRedirect
+          }}
           location={location}
           history={mockHistory}
         />
@@ -42,7 +44,9 @@ describe('AuthenticationWrapper', () => {
       <StaticRouter context={{}}>
         <AuthenticationWrapper
           isAuthenticated={false}
-          loginRedirect={mockRedirect}
+          actions={{
+            loginRedirect: mockRedirect
+          }}
           location={location}
           history={mockHistory}
         >
@@ -64,7 +68,9 @@ describe('AuthenticationWrapper', () => {
       <StaticRouter context={{}}>
         <AuthenticationWrapper
           isAuthenticated
-          loginRedirect={mockRedirect}
+          actions={{
+            loginRedirect: mockRedirect
+          }}
           location={location}
           history={mockHistory}
         >

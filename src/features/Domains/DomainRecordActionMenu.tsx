@@ -4,21 +4,48 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
+interface EditPayload {
+  id?: number;
+  name?: string;
+  target?: string;
+  ttl_sec?: number;
+  priority?: number;
+  port?: number;
+  weight?: number;
+  tag?: string | null;
+}
+
+interface DeleteData {
+  recordID: number;
+  onDelete: (id: number) => void;
+}
+
 interface Props {
-  onEdit: () => void;
-  onDelete?: () => void;
+  onEdit: (data: Linode.Domain | EditPayload) => void;
+  deleteData?: DeleteData;
+  editPayload: Linode.Domain | EditPayload;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
 class DomainRecordActionMenu extends React.Component<CombinedProps> {
+  handleEdit = () => {
+    const { editPayload, onEdit } = this.props;
+    onEdit(editPayload);
+  }
+
+  handleDelete = () => {
+    const { deleteData } = this.props;
+    deleteData!.onDelete(deleteData!.recordID);
+  }
+  
   createActions = () => (closeMenu: Function): Action[] => compose<Action[], Action[], Action[]>(
     when(
-      () => has('onDelete', this.props),
+      () => has('deleteData', this.props),
       append({
         title: 'Delete',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
-          this.props.onDelete!();
+          this.handleDelete();
           closeMenu();
           e.preventDefault();
         },
@@ -27,7 +54,7 @@ class DomainRecordActionMenu extends React.Component<CombinedProps> {
     append({
       title: 'Edit',
       onClick: (e: React.MouseEvent<HTMLElement>) => {
-        this.props.onEdit();
+        this.handleEdit();
         closeMenu();
         e.preventDefault();
       },

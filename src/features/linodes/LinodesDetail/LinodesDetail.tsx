@@ -2,6 +2,7 @@ import { Location } from 'history';
 import * as moment from 'moment';
 import { allPass, compose, filter, has, Lens, lensPath, pathEq, pathOr, set } from 'ramda';
 import * as React from 'react';
+import { connect, MapDispatchToProps } from 'react-redux';
 import { Link, matchPath, Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/debounce';
@@ -34,16 +35,12 @@ import { sendToast } from 'src/features/ToastNotifications/toasts';
 import notifications$ from 'src/notifications';
 import { Requestable } from 'src/requestableContext';
 import { getImage } from 'src/services/images';
-import {
-  getLinode, getLinodeConfigs, getLinodeDisks,
-  getLinodeVolumes, getType, renameLinode, startMutation,
-} from 'src/services/linodes';
-
+import { getLinode, getLinodeConfigs, getLinodeDisks, getType, renameLinode, startMutation } from 'src/services/linodes';
+import { _getLinodeVolumes } from 'src/store/reducers/features/linodeDetail/volumes';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { notifications } from 'src/utilities/storage';
 
-import { ConfigsProvider, DisksProvider, ImageProvider, LinodeProvider, VolumesProvider } from './context';
+import { ConfigsProvider, DisksProvider, ImageProvider, LinodeProvider } from './context';
 import LinodeBackup from './LinodeBackup';
 import LinodeDetailErrorBoundary from './LinodeDetailErrorBoundary';
 import LinodeNetworking from './LinodeNetworking';
@@ -86,7 +83,6 @@ interface State {
     disks: Requestable<Linode.Disk[]>;
     image: Requestable<Linode.Image>;
     linode: Requestable<Linode.Linode>;
-    volumes: Requestable<Linode.Volume[]>;
   };
   configDrawer: ConfigDrawerState;
   labelInput: { label: string; errorText: string; };
@@ -153,14 +149,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   }
 });
 
-type CombinedProps = RouteProps & WithStyles<ClassNames>;
+type CombinedProps = DispatchProps & RouteProps & WithStyles<ClassNames>;
 
 const labelInputLens = lensPath(['labelInput']);
 const configsLens = lensPath(['context', 'configs']);
 const disksLens = lensPath(['context', 'disks']);
 const imageLens = lensPath(['context', 'image']);
 const linodeLens = lensPath(['context', 'linode']);
-const volumesLens = lensPath(['context', 'volumes']);
 
 const L = {
   configs: {
@@ -195,13 +190,6 @@ const L = {
     lastUpdated: compose(linodeLens, lensPath(['lastUpdated'])) as Lens,
     linode: linodeLens,
     loading: compose(linodeLens, lensPath(['loading'])) as Lens,
-  },
-  volumes: {
-    data: compose(volumesLens, lensPath(['data'])) as Lens,
-    errors: compose(volumesLens, lensPath(['errors'])) as Lens,
-    lastUpdated: compose(volumesLens, lensPath(['lastUpdated'])) as Lens,
-    loading: compose(volumesLens, lensPath(['loading'])) as Lens,
-    volumes: volumesLens,
   },
 };
 
@@ -370,38 +358,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
           );
         },
       },
-      volumes: {
-        lastUpdated: 0,
-        loading: true,
-        request: () => {
-          this.setState(set(L.volumes.loading, true));
-
-          return getLinodeVolumes(this.props.match.params.linodeId!)
-            .then(({ data }) => {
-              this.composeState(
-                set(L.volumes.loading, false),
-                set(L.volumes.data, data),
-                set(L.volumes.lastUpdated, Date.now()),
-              );
-              return data;
-            })
-            .catch((r) => {
-              this.composeState(
-                set(L.volumes.lastUpdated, Date.now()),
-                set(L.volumes.loading, false),
-                set(L.volumes.errors, r)
-              );
-            });
-        },
-        update: (updater) => {
-          const { data: volumes } = this.state.context.volumes;
-          if (!volumes) { return }
-
-          this.composeState(
-            set(L.volumes.data, updater(volumes)),
-          );
-        },
-      },
     },
     labelInput: {
       label: '',
@@ -451,13 +407,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     if (!!linode
       && prevState.context.linode.data !== linode
       && linode.type) {
-      /*
-      * Check local storage to see if user has opted out to upgrades on this specific Linode
-      */
-      const userHasOptedOut = notifications.linodeMutation.get().some((optedOutLinode) => {
-        return optedOutLinode === linode.id;
-      });
-      if (userHasOptedOut) { return; }
 
       getType(linode.type)
         .then((currentType: Linode.LinodeType) => {
@@ -500,9 +449,9 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
   componentDidMount() {
     this.mounted = true;
 
-    const { context: { configs, disks, image, linode, volumes } } = this.state;
+    const { context: { configs, disks, image, linode } } = this.state;
     const mountTime = moment().subtract(5, 'seconds');
-    const { match: { params: { linodeId } } } = this.props;
+    const { actions, match: { params: { linodeId } } } = this.props;
 
     this.diskResizeSubscription = events$
       .filter((e) => !e._initial)
@@ -517,7 +466,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       .subscribe((linodeEvent) => {
         configs.request();
         disks.request();
-        volumes.request();
+        actions.getLinodeVolumes();
         linode.request(linodeEvent)
           .then((l) => {
             if (l) { image.request(l.image) }
@@ -537,8 +486,9 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       ].includes(e.action))
       .filter(e => !e._initial)
       .subscribe((v) => {
-        volumes.request();
+        actions.getLinodeVolumes();
       });
+
     /** Get /notifications relevant to this Linode */
     this.notificationsSubscription = notifications$
       .map(filter(allPass([
@@ -550,7 +500,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
     configs.request();
     disks.request();
-    volumes.request();
+    actions.getLinodeVolumes();
     linode.request()
       .then((l) => {
         if (l) { image.request(l.image) }
@@ -667,14 +617,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     });
   }
 
-  optOut = (linodeId: number) => {
-    /* close the drawer, remove the warning, and set local storage */
-    this.closeMutateDrawer();
-    this.setState({ showPendingMutation: false });
-    notifications.linodeMutation.set(linodeId);
-    sendToast('You have successfully opted out of this Linode upgrade')
-  }
-
   initMutation = () => {
     const { mutateDrawer, context: { linode } } = this.state;
 
@@ -714,6 +656,11 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       });
   }
 
+  goToOldManager = () => {
+    const { context: { linode: { data: linode } } } = this.state;
+    window.open(`https://manager.linode.com/linodes/mutate/${linode!.label}`)
+  }
+
   render() {
     const { match: { url }, classes } = this.props;
     const {
@@ -722,11 +669,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       mutateDrawer,
       mutateInfo,
       context: {
-        volumes: {
-          data: volumes,
-          lastUpdated: volumesLastUpdated,
-          errors: volumesErrors,
-        },
         linode: {
           data: linode,
           lastUpdated: linodeLastUpdated,
@@ -749,7 +691,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
     const initialLoad =
       linodeLastUpdated === 0 ||
-      volumesLastUpdated === 0 ||
       configsLastUpdated === 0 ||
       disksLastUpdated === 0;
 
@@ -767,18 +708,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
         linodeErrors,
       )
       return <ErrorState errorText="Error while loading Linode." />;
-    }
-
-    if (!volumes) {
-      throw Error('Volumes undefined on LinodeLanding.');
-    }
-
-    if (volumesErrors) {
-      reportException(
-        Error('Error loading volumes data.'),
-        volumesErrors,
-      )
-      return <ErrorState errorText="Error while loading volumes." />;
     }
 
     if (!configs) {
@@ -811,13 +740,14 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
           <DisksProvider value={this.state.context.disks}>
             <ImageProvider value={this.state.context.image}>
               <LinodeProvider value={this.state.context.linode}>
-                <VolumesProvider value={this.state.context.volumes}>
+                <React.Fragment>
                   {this.state.showPendingMutation && linode &&
                     <Notice important warning>
                       {`This Linode has pending upgrades available. To learn more about
                       this upgrade and what it includes, `}
-                      <span className={classes.link} onClick={this.openMutateDrawer}>
-                        click here.
+                      {/** @todo change onClick to open mutate drawer once migrate exists */}
+                      <span className={classes.link} onClick={this.goToOldManager}>
+                        please visit the classic Linode Manager.
                       </span>
                     </Notice>
                   }
@@ -917,10 +847,9 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                         network_out: this.state.currentNetworkOut,
                       }}
                       initMutation={this.initMutation}
-                      optOut={this.optOut}
                     />
                   }
-                </VolumesProvider>
+                </React.Fragment>
               </LinodeProvider>
             </ImageProvider>
           </DisksProvider>
@@ -928,7 +857,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       </React.Fragment>
     );
   }
-
 }
 
 const styled = withStyles(styles, { withTheme: true });
@@ -937,7 +865,28 @@ const reloadable = reloadableWithRouter<CombinedProps, MatchProps>((routePropsOl
   return routePropsOld.match.params.linodeId !== routePropsNew.match.params.linodeId;
 });
 
+interface DispatchProps {
+  actions: {
+    getLinodeVolumes: () => void;
+  },
+}
+
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, RouteProps> = (dispatch, ownProps) => {
+  const { match: { params: { linodeId } } } = ownProps;
+
+  return {
+    actions: {
+      getLinodeVolumes: typeof linodeId === 'string'
+        ? () => dispatch(_getLinodeVolumes(linodeId))
+        : () => null
+    },
+  };
+};
+
+const connected = connect(undefined, mapDispatchToProps);
+
 const enhanced = compose(
+  connected,
   styled,
   reloadable,
   LinodeDetailErrorBoundary,
