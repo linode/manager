@@ -11,6 +11,8 @@ type ClassNames = 'root'
  | 'suggestionTitle'
  | 'suggestionDescription';
 
+ import Tag from 'src/components/Tag';
+
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
     cursor: 'pointer',
@@ -50,6 +52,7 @@ export interface SearchSuggestionT {
   title: string;
   description: string;
   path: string;
+  tags?: string[];
 }
 
 interface Props extends SearchSuggestionT {
@@ -71,6 +74,11 @@ const maybeStyleSegment = (text: string, searchText: string, hlClass: string): R
   );
 };
 
+const renderTags = (tags:string[]) => {
+  if (tags.length === 0) { return; }
+  return tags.map((tag:string) => <Tag key={`tag-${tag}`} label={tag} /> );
+}
+
 const SearchSuggestion: React.StatelessComponent<CombinedProps> = (props) => {
   const {
     title,
@@ -81,6 +89,7 @@ const SearchSuggestion: React.StatelessComponent<CombinedProps> = (props) => {
     path,
     history,
     classes,
+    tags,
   } = props;
 
   const handleClick = () => {
@@ -108,6 +117,9 @@ const SearchSuggestion: React.StatelessComponent<CombinedProps> = (props) => {
         <div className={classes.suggestionDescription} data-qa-suggestion-desc>
           {description}
         </div>
+        <span>
+          {tags && renderTags(tags)}
+        </span>
       </div>
     </div>
   );

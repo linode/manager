@@ -1,6 +1,6 @@
 import Downshift, { DownshiftState, StateChangeOptions } from 'downshift';
 import * as moment from 'moment';
-import { compose } from 'ramda';
+import { compose, or } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
@@ -232,7 +232,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
   getDomainsPage = (page: number) => getDomains({ page })
   getNodeBalancersPage = (page: number) => getNodeBalancers({ page })
 
-  updateData() {
+  updateData = () => {
     this.getAllPagesFor('linodes', getLinodesPage);
     this.getAllPagesFor('volumes', this.getVolumesPage);
     this.getAllPagesFor('nodebalancers', this.getNodeBalancersPage);
@@ -240,18 +240,30 @@ class SearchBar extends React.Component<CombinedProps, State> {
     this.getAllPagesFor('images', getImagesPage);
   }
 
-  getSearchSuggestions(query: string | null) {
+  // Helper can be extended to other entities once tags are supported for them
+  hasMatchingTag = (entity:Linode.Linode, query:string): boolean => {
+    return entity.tags.some((tag:string) => tag.toLowerCase().includes(query));
+  }
+
+  getSearchSuggestions = (query: string | null) => {
     const { typesData } = this.props;
     if (!this.dataAvailable() || !query) { return [] };
 
+    const queryLower = query.toLowerCase();
     const searchResults = [];
 
     if (this.state.linodes && typesData) {
       const linodesByLabel = this.state.linodes.filter(
-        linode => linode.label.toLowerCase().includes(query.toLowerCase()),
+        linode => {
+          return or(
+            linode.label.toLowerCase().includes(queryLower),
+            this.hasMatchingTag(linode, queryLower)
+          )
+        }
       );
       searchResults.push(...(linodesByLabel.map(linode => ({
         title: linode.label,
+        tags: linode.tags,
         description: this.linodeDescription(
           displayType(linode.type, typesData),
           linode.specs.memory,
@@ -266,7 +278,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
 
     if (this.state.volumes) {
       const volumesByLabel = this.state.volumes.filter(
-        volume => volume.label.toLowerCase().includes(query.toLowerCase()),
+        volume => volume.label.toLowerCase().includes(queryLower),
       );
       searchResults.push(...(volumesByLabel.map(volume => ({
         title: volume.label,
@@ -278,7 +290,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
 
     if (this.state.nodebalancers) {
       const nodebalancersByLabel = this.state.nodebalancers.filter(
-        nodebal => nodebal.label.toLowerCase().includes(query.toLowerCase()),
+        nodebal => nodebal.label.toLowerCase().includes(queryLower),
       );
       searchResults.push(...(nodebalancersByLabel.map(nodebal => ({
         title: nodebal.label,
@@ -290,7 +302,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
 
     if (this.state.domains) {
       const domainsByLabel = this.state.domains.filter(
-        domain => domain.domain.toLowerCase().includes(query.toLowerCase()),
+        domain => domain.domain.toLowerCase().includes(queryLower),
       );
       searchResults.push(...(domainsByLabel.map(domain => ({
         title: domain.domain,
@@ -306,7 +318,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
         image => (
           /* TODO: this should be a pre-filter at the API level */
           image.is_public === false
-          && image.label.toLowerCase().includes(query.toLowerCase())
+          && image.label.toLowerCase().includes(queryLower)
         ),
       );
       searchResults.push(...(imagesByLabel.map(image => ({
@@ -379,6 +391,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
           searchText={this.state.searchText}
           path={suggestion.path}
           history={history}
+          tags={suggestion.tags}
         />
       </MenuItem>
     );
