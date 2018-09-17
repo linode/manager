@@ -180,6 +180,7 @@ class Select extends React.PureComponent<CombinedProps,{}> {
     const combinedComponents = merge(_components, components);
 
     // If async, pass loadOptions instead of options. A Select can't be both Creatable and Async.
+    // (AsyncCreatable exists, but we have not adapted it.)
     type PossibleProps = BaseSelectProps | CreatableProps | AsyncProps<any>;
     const BaseSelect: React.ComponentClass<PossibleProps> = variant === 'creatable'
       ? CreatableSelect
@@ -194,6 +195,7 @@ class Select extends React.PureComponent<CombinedProps,{}> {
         defaultOptions
         loadOptions={loadOptions}
         isMulti={isMulti}
+        isDisabled={disabled}
         classes={classes}
         className={`${classes.root} ${className}`}
         classNamePrefix="react-select"
