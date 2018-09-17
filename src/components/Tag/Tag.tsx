@@ -56,37 +56,39 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   });
 };
 
-interface Props extends ChipProps {
+export interface Props extends ChipProps {
   label: string;
   variant?: Variants;
 }
 
 type PropsWithStyles = Props & WithStyles<CSSClasses>;
 
-const Tag: React.SFC<PropsWithStyles> = (props) => {
-  const {
-    variant,
-    classes,
-    theme,
-    className,
-    ...chipProps
-  } = props;
+class Tag extends React.Component<PropsWithStyles, {}> {
+  static defaultProps = {
+    variant: 'gray' as Variants,
+  };
 
-  return <Chip
-    className={classNames({
-      ...(className && { [className]: true }),
-      [classes[props.variant!]]: true,
-      [classes.root]: true,
-    })}
-    deleteIcon={<Close />}
-    classes={{ label: props.classes.label }}
-    data-qa-tag
-    {...chipProps}
-  />;
-};
+  render() {
+    const {
+      variant,
+      classes,
+      theme,
+      className,
+      ...chipProps
+    } = this.props;
 
-Tag.defaultProps = {
-  variant: 'gray',
+    return <Chip
+      {...chipProps}
+      className={classNames({
+        ...(className && { [className]: true }),
+        [classes[variant!]]: true,
+        [classes.root]: true,
+      })}
+      deleteIcon={this.props.deleteIcon || <Close />}
+      classes={{ label: classes.label }}
+      data-qa-tag
+    />;
+  }
 };
 
 export default withStyles(styles, { withTheme: true })<Props>(Tag);
