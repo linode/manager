@@ -81,24 +81,26 @@ export class OtherWays extends React.Component<CombinedProps, State> {
         >
           <Grid item xs={12} sm={6}>
             <Tile
-              title="View Documentation"
-              description="View Linode Documentation"
+              title="Guides and Tutorials"
+              description="View Linode and Linux guides and tutorials for all experience levels."
               icon={<Documentation />}
               link="https://linode.com/docs/"
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <Tile
-              title="Search the Community"
-              description="Find help from other Linode users in the Community"
+              title="Community Q&A"
+              description={`Ask questions, find answers, and connect with other members
+              of the Linode Community.`}
               icon={<Community />}
-              link="https://linode.com/community/"
+              link="https://linode.com/community/questions"
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <Tile
-              title="Talk to Ada"
-              description="Chat with the Linode Support bot to help troubleshoot"
+              title="Linode Support Bot"
+              description={`Chat with the Linode Support Bot, trained to help answer your
+              questions instantly, accurately, and completely.`}
               icon={<Chat />}
               link={this.handleAdaInit}
               errorText={this.state.error}
@@ -107,8 +109,7 @@ export class OtherWays extends React.Component<CombinedProps, State> {
           <Grid item xs={12} sm={6}>
             <Tile
               title="Customer Support"
-              description="If you are not able to solve an issue with the resources listed above,
-              you can contact Linode Support"
+              description="View or open Linode Support tickets."
               icon={<Support />}
               link="/support/tickets"
             />
