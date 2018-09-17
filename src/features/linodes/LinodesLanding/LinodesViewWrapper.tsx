@@ -14,6 +14,7 @@ import TableRow from 'src/components/TableRow';
 import Tag from 'src/components/Tag';
 
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
+
 import LinodeCard from './LinodeCard';
 import LinodeRow from './LinodeRow';
 
@@ -57,9 +58,12 @@ class LinodesViewWrapper extends React.Component<CombinedProps, {}> {
     const { classes } = this.props;
     return tags.map(eachTag => {
       return (
-        <div key={eachTag} className={classes.row}>
-          <div className={`${classes.tag}`}>{eachTag}</div>
-        </div>
+        <Tag
+          className={classes.row}
+          label={eachTag}
+          key={eachTag}
+          variant="gray"
+        />
       )
     })
   }
