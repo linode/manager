@@ -3,34 +3,20 @@ import * as moment from 'moment';
 import { allPass, compose, filter, has, Lens, lensPath, pathEq, pathOr, set } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
-import { Link, matchPath, Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/debounce';
 import 'rxjs/add/operator/filter';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import AppBar from '@material-ui/core/AppBar';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
-
 import CircleProgress from 'src/components/CircleProgress';
-import EditableText from 'src/components/EditableText';
 import ErrorState from 'src/components/ErrorState';
-import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
-import Notice from 'src/components/Notice';
-import ProductNotification from 'src/components/ProductNotification';
 import { events$ } from 'src/events';
 import { reportException } from 'src/exceptionReporting';
 import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawer';
 import { newLinodeEvents } from 'src/features/linodes/events';
-import { linodeInTransition } from 'src/features/linodes/transitions';
-import { lishLaunch } from 'src/features/Lish';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import notifications$ from 'src/notifications';
 import { Requestable } from 'src/requestableContext';
@@ -42,20 +28,11 @@ import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import { ConfigsProvider, DisksProvider, ImageProvider, LinodeProvider } from './context';
-import LinodeBackup from './LinodeBackup';
 import LinodeDetailErrorBoundary from './LinodeDetailErrorBoundary';
-import LinodeNetworking from './LinodeNetworking';
-import LinodePowerControl from './LinodePowerControl';
-import LinodeRebuild from './LinodeRebuild';
-import LinodeRescue from './LinodeRescue';
-import LinodeResize from './LinodeResize';
-import LinodeSettings from './LinodeSettings';
-import LinodeSummary from './LinodeSummary';
-import LinodeBusyStatus from './LinodeSummary/LinodeBusyStatus';
-import LinodeTag from './LinodeTag';
-import LinodeVolumes from './LinodeVolumes';
 import MutateDrawer from './MutateDrawer';
 import reloadableWithRouter from './reloadableWithRouter';
+
+import LinodesDetailHeader from './LinodesDetailHeader';
 
 interface ConfigDrawerState {
   open: boolean;
@@ -100,59 +77,7 @@ interface MatchProps { linodeId?: number };
 
 type RouteProps = RouteComponentProps<MatchProps>;
 
-type ClassNames = 'titleWrapper'
-  | 'backButton'
-  | 'cta'
-  | 'launchButton'
-  | 'link';
-
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
-  titleWrapper: {
-    display: 'flex',
-    marginTop: 5,
-  },
-  backButton: {
-    margin: '5px 0 0 -16px',
-    '& svg': {
-      width: 34,
-      height: 34,
-    },
-  },
-  cta: {
-    marginTop: theme.spacing.unit,
-    [theme.breakpoints.down('sm')]: {
-      margin: 0,
-      display: 'flex',
-      flexBasis: '100%',
-    },
-  },
-  launchButton: {
-    marginRight: theme.spacing.unit,
-    padding: '12px 16px 13px',
-    minHeight: 50,
-    transition: theme.transitions.create(['background-color', 'color']),
-    [theme.breakpoints.down('sm')]: {
-      backgroundColor: theme.color.white,
-      border: `1px solid ${theme.color.border1}`,
-      marginTop: 0,
-      minHeight: 51,
-    },
-    '&:hover': {
-      backgroundColor: theme.palette.primary.main,
-      color: 'white',
-      borderColor: theme.palette.primary.main,
-    },
-  },
-  link: {
-    color: theme.palette.primary.main,
-    cursor: 'pointer',
-    '&:hover': {
-      textDecoration: 'underline',
-    }
-  }
-});
-
-type CombinedProps = DispatchProps & RouteProps & WithStyles<ClassNames>;
+type CombinedProps = DispatchProps & RouteProps;
 
 const labelInputLens = lensPath(['labelInput']);
 const configsLens = lensPath(['context', 'configs']);
@@ -512,24 +437,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       .catch(console.error);
   }
 
-  handleTabChange = (event: React.ChangeEvent<HTMLDivElement>, value: number) => {
-    const { history } = this.props;
-    const routeName = this.tabs[value].routeName;
-    history.push(`${routeName}`);
-  }
-
-  tabs = [
-    /* NB: These must correspond to the routes inside the Switch */
-    { routeName: `${this.props.match.url}/summary`, title: 'Summary' },
-    { routeName: `${this.props.match.url}/volumes`, title: 'Volumes' },
-    { routeName: `${this.props.match.url}/networking`, title: 'Networking' },
-    { routeName: `${this.props.match.url}/resize`, title: 'Resize' },
-    { routeName: `${this.props.match.url}/rescue`, title: 'Rescue' },
-    { routeName: `${this.props.match.url}/rebuild`, title: 'Rebuild' },
-    { routeName: `${this.props.match.url}/backup`, title: 'Backups' },
-    { routeName: `${this.props.match.url}/settings`, title: 'Settings' },
-  ];
-
   openConfigDrawer = (configs: Linode.Config[], action: (id: number) => void) => {
     this.setState({
       configDrawer: {
@@ -602,11 +509,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     this.forceUpdate();
   }
 
-  launchLish = () => {
-    const { data: linode } = this.state.context.linode;
-    lishLaunch(linode!.id);
-  }
-
   openMutateDrawer = () => {
     this.setState({ mutateDrawer: { ...this.state.mutateDrawer, open: true } });
   }
@@ -660,11 +562,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       });
   }
 
-  goToOldManager = () => {
-    const { context: { linode: { data: linode } } } = this.state;
-    window.open(`https://manager.linode.com/linodes/mutate/${linode!.label}`)
-  }
-
   handleDeleteTag = (label: string) => {
     const { context: { linode } } = this.state;
     /*
@@ -698,7 +595,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { match: { url }, classes } = this.props;
+    const { match: { url } } = this.props;
     const {
       labelInput,
       configDrawer,
@@ -722,8 +619,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
         },
       },
     } = this.state;
-
-    const matches = (p: string) => Boolean(matchPath(p, { path: this.props.location.pathname }));
 
     const initialLoad =
       linodeLastUpdated === 0 ||
@@ -777,105 +672,28 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
             <ImageProvider value={this.state.context.image}>
               <LinodeProvider value={this.state.context.linode}>
                 <React.Fragment>
-                  {this.state.showPendingMutation && linode &&
-                    <Notice important warning>
-                      {`This Linode has pending upgrades available. To learn more about
-                      this upgrade and what it includes, `}
-                      {/** @todo change onClick to open mutate drawer once migrate exists */}
-                      <span className={classes.link} onClick={this.goToOldManager}>
-                        please visit the classic Linode Manager.
-                      </span>
-                    </Notice>
-                  }
-                  <Grid
-                    container
-                    justify="space-between"
-                  >
-                    <Grid item className={classes.titleWrapper}>
-                      <Link to={`/linodes`}>
-                        <IconButton
-                          className={classes.backButton}
-                        >
-                          <KeyboardArrowLeft />
-                        </IconButton>
-                      </Link>
-                      <EditableText
-                        role="header"
-                        variant="headline"
-                        text={labelInput.label}
-                        errorText={labelInput.errorText}
-                        onEdit={this.updateLabel}
-                        onCancel={this.cancelUpdate}
-                        data-qa-label
-                      />
-                    </Grid>
-                    <Grid item className={classes.cta}>
-                      <Button
-                        onClick={this.launchLish}
-                        className={classes.launchButton}
-                        data-qa-launch-console
-                      >
-                        Launch Console
-                      </Button>
-                      <LinodePowerControl
-                        status={linode.status}
-                        recentEvent={linode.recentEvent}
-                        id={linode.id}
-                        label={linode.label}
-                        openConfigDrawer={this.openConfigDrawer}
-                      />
-                    </Grid>
-                  </Grid>
-                  {linode.tags.map(eachTag => {
-                    return (
-                      <LinodeTag
-                        key={eachTag}
-                        label={eachTag}
-                        variant="gray"
-                        tagLabel={eachTag}
-                        onDelete={this.handleDeleteTag}
-                        loading={this.state.listDeletingTags.some((inProgressTag) => {
-                          /*
-                           * The tag is getting deleted if it appears in the state
-                           * which holds the list of tags queued for deletion 
-                           */
-                          return eachTag === inProgressTag;
-                        })}
-                      />
-                    )
-                  })}
-                  {linodeInTransition(linode.status, linode.recentEvent) &&
-                    <LinodeBusyStatus status={linode.status} recentEvent={linode.recentEvent} />
-                  }
-                  <AppBar position="static" color="default">
-                    <Tabs
-                      value={this.tabs.findIndex(tab => matches(tab.routeName))}
-                      onChange={this.handleTabChange}
-                      indicatorColor="primary"
-                      textColor="primary"
-                      scrollable
-                      scrollButtons="off"
-                    >
-                      {this.tabs.map(tab =>
-                        <Tab key={tab.title} label={tab.title} data-qa-tab={tab.title} />)}
-                    </Tabs>
-                  </AppBar>
-                  {
-                    (this.state.notifications || []).map((n, idx) =>
-                      <ProductNotification key={idx} severity={n.severity} text={n.message} />)
-                  }
-                  <Switch>
-                    <Route exact path={`${url}/summary`} component={LinodeSummary} />
-                    <Route exact path={`${url}/volumes`} component={LinodeVolumes} />
-                    <Route exact path={`${url}/networking`} component={LinodeNetworking} />
-                    <Route exact path={`${url}/resize`} component={LinodeResize} />
-                    <Route exact path={`${url}/rescue`} component={LinodeRescue} />
-                    <Route exact path={`${url}/rebuild`} component={LinodeRebuild} />
-                    <Route exact path={`${url}/backup`} component={LinodeBackup} />
-                    <Route exact path={`${url}/settings`} component={LinodeSettings} />
-                    {/* 404 */}
-                    <Redirect to={`${url}/summary`} />
-                  </Switch>
+                  <LinodesDetailHeader 
+                    showPendingMutation={this.state.showPendingMutation}
+                    labelInput={{
+                      label: labelInput.label,
+                      errorText: labelInput.errorText,
+                      onCancel: this.cancelUpdate,
+                      onEdit: this.updateLabel,
+                    }}
+                    linode={{
+                      id: linode.id,
+                      label: linode.label,
+                      status: linode.status,
+                      recentEvent: linode.recentEvent,
+                      tags: linode.tags
+                    }}
+                    url={url}
+                    history={this.props.history}
+                    openConfigDrawer={this.openConfigDrawer}
+                    notifications={this.state.notifications}
+                    handleDeleteTag={this.handleDeleteTag}
+                    listDeletingTags={this.state.listDeletingTags}
+                  />
                   <LinodeConfigSelectionDrawer
                     onClose={this.closeConfigDrawer}
                     onSubmit={this.submitConfigChoice}
@@ -913,8 +731,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
-
 const reloadable = reloadableWithRouter<CombinedProps, MatchProps>((routePropsOld, routePropsNew) => {
   return routePropsOld.match.params.linodeId !== routePropsNew.match.params.linodeId;
 });
@@ -941,7 +757,6 @@ const connected = connect(undefined, mapDispatchToProps);
 
 const enhanced = compose(
   connected,
-  styled,
   reloadable,
   LinodeDetailErrorBoundary,
 );
