@@ -685,7 +685,8 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                       label: linode.label,
                       status: linode.status,
                       recentEvent: linode.recentEvent,
-                      tags: linode.tags
+                      tags: linode.tags,
+                      update: this.state.context.linode.request,
                     }}
                     url={url}
                     history={this.props.history}

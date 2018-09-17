@@ -4,12 +4,15 @@ import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/debounce';
 import 'rxjs/add/operator/filter';
 
+import { pathOr } from 'ramda';
+
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
+import AddCircle from '@material-ui/icons/AddCircle';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 
 import EditableText from 'src/components/EditableText';
@@ -31,6 +34,11 @@ import LinodeSummary from './LinodeSummary';
 import LinodeBusyStatus from './LinodeSummary/LinodeBusyStatus';
 import LinodeTag from './LinodeTag';
 import LinodeVolumes from './LinodeVolumes';
+
+import Select from 'src/components/EnhancedSelect/Select';
+
+import { addTagsToLinode } from 'src/services/linodes';
+import { getTags } from 'src/services/tags';
 
 type ClassNames = 'link'
   | 'backButton'
@@ -97,10 +105,11 @@ interface ReducedLinode {
   status: Linode.LinodeStatus;
   recentEvent?: Linode.Event;
   tags: string[];
+  update: (...args: any[]) => Promise<any>;
 }
 
 interface Props {
-  showPendingMutation: boolean; // showPendingMutation && linode
+  showPendingMutation: boolean;
   labelInput: LabelInput;
   linode: ReducedLinode;
   url: string;
@@ -111,9 +120,63 @@ interface Props {
   listDeletingTags: string[];
 }
 
+interface Item {
+  label: string;
+  value: string;
+}
+
+interface Tag {
+  label: string
+}
+
+interface State {
+  tags?: Item[];
+  tagError: string;
+  isCreatingTag: boolean;
+}
+
+interface ActionMeta {
+  action: string;
+}
+
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class LinodesDetailHeader extends React.Component<CombinedProps, {}> {
+class LinodesDetailHeader extends React.Component<CombinedProps, State> {
+  state: State = {
+    tags: [],
+    tagError: '',
+    isCreatingTag: false,
+  }
+
+  componentDidMount() {
+    const { linode } = this.props;
+    getTags()
+      .then(response => {
+        /*
+         * The end goal is to display to the user a list of auto-suggestions
+         * when they start typing in a new tag, but we don't want to display
+         * tags that are already applied to this specific Linode because there cannot
+         * be duplicates on one Linode. 
+         */
+        const filteredTags = response.data.filter((eachTag: Tag) => {
+          return !linode.tags.some((alreadyAppliedTag: string) => {
+            return alreadyAppliedTag === eachTag.label;
+          })
+        })
+        /*
+         * reshaping them for the purposes of being passed to the Select component 
+         */
+        const reshapedTags = filteredTags.map((eachTag: Tag) => {
+          return {
+            label: eachTag.label,
+            value: eachTag.label
+          }
+        });
+        this.setState({ tags: reshapedTags })
+      })
+      .catch(e => e)
+  }
+
   launchLish = () => {
     const { linode } = this.props;
     lishLaunch(linode.id);
@@ -144,6 +207,45 @@ class LinodesDetailHeader extends React.Component<CombinedProps, {}> {
   goToOldManager = () => {
     const { linode } = this.props;
     window.open(`https://manager.linode.com/linodes/mutate/${linode.label}`)
+  }
+
+  handleToggleCreate = () => {
+    this.setState({ isCreatingTag: !this.state.isCreatingTag })
+  }
+
+  handleCreateTag = (value: Item, actionMeta: ActionMeta) => {
+    /*
+     * This comes from the react-select API
+     * basically, we only want to make a request if the user is either
+     * hitting the enter button or choosing a selection from the dropdown 
+     */
+    if (actionMeta.action !== 'select-option'
+      && actionMeta.action !== 'create-option') { return; }
+
+    this.setState({
+      tagError: '',
+    });
+
+    const { linode } = this.props;
+    addTagsToLinode(
+      linode.id,
+      [...linode.tags, value.label]
+    )
+      .then(() => {
+        linode.update();
+        /*
+         * Filter out the new tag out of the auto-suggestion list
+         * since we can't attach this tag to the Linode anymore 
+         */
+      })
+      .catch(e => {
+        const APIErrors = pathOr(
+          'Error while creating tag',
+          ['response', 'data', 'errors'],
+          e);
+        // display the first error in the array or a generic one
+        this.setState({ tagError: APIErrors[0].reason || 'Error while creating tag' })
+      })
   }
 
   render() {
@@ -227,6 +329,16 @@ class LinodesDetailHeader extends React.Component<CombinedProps, {}> {
             />
           )
         })}
+        {(this.state.isCreatingTag)
+          ? <Select
+            onChange={this.handleCreateTag}
+            options={this.state.tags}
+            variant='creatable'
+            errorText={this.state.tagError}
+            onBlur={this.handleToggleCreate}
+          />
+          : <AddCircle onClick={this.handleToggleCreate}/>
+        }
         {linodeInTransition(linode.status, linode.recentEvent) &&
           <LinodeBusyStatus status={linode.status} recentEvent={linode.recentEvent} />
         }
