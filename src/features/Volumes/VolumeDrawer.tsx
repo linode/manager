@@ -382,6 +382,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
         region: (e.target.value),
         linodeId: 0,
         configs: [],
+        value: null,
       });
     }
   }
