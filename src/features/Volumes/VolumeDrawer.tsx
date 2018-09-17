@@ -244,7 +244,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
 
   onSubmit = () => {
     const { mode, volumeID, handleClose } = this.props;
-    const { cloneLabel, label, size, region, linodeId, value } = this.state;
+    const { cloneLabel, label, size, region, linodeId } = this.state;
 
     switch (mode) {
       case modes.CREATING:
@@ -258,7 +258,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           label,
           size,
           region: region === 'none' ? undefined : region,
-          linode_id: value ? Number(value.value) : linodeId,
+          linode_id: linodeId === 0 ? undefined : linodeId,
         };
 
         createVolume(payload)
@@ -427,15 +427,23 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
   }
 
   searchLinodes = (inputValue:string) => {
+    const { region } = this.state;
     const filterLinodes = {
       label: {
         '+contains': inputValue,
-      }
+      },
     }
     return getLinodes({}, filterLinodes)
       .then((response) => {
-        this.setState({ linodes: response.data });
-        return this.renderLinodeOptions(response.data);
+        const linodes = response.data.filter((linode) => {
+          if (region && region !== 'none') {
+            return region === linode.region;
+          } else {
+            return true;
+          }
+        });
+        this.setState({ linodes });
+        return this.renderLinodeOptions(linodes);
       })
   }
 
@@ -446,17 +454,9 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
   }
 
   renderLinodeOptions = (linodes:Linode.Linode[]) => {
-    const { linodeLabel, mode, region } = this.props;
+    const { linodeLabel, mode } = this.props;
     if (!linodes) { return []; }
-    const options: Item[] = linodes.filter((linode) => {
-      return (
-        (region && region !== 'none')
-        /* if the user has selected a region above, limit linodes to that region */
-        ? linode.region === region
-        : true
-        );
-      })
-      .map((linode:Linode.Linode) => {
+    const options: Item[] = linodes.map((linode:Linode.Linode) => {
         return { value: linode.id, label: linode.label }
       });
     if (mode === modes.EDITING || mode === modes.RESIZING) {

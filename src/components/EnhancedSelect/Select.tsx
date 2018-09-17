@@ -191,7 +191,6 @@ class Select extends React.PureComponent<CombinedProps,{}> {
       <BaseSelect
         isClearable
         isSearchable
-        cacheOptions
         defaultOptions
         loadOptions={loadOptions}
         isMulti={isMulti}
