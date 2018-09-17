@@ -21,18 +21,19 @@ import { sendToast } from 'src/features/ToastNotifications/toasts';
 import notifications$ from 'src/notifications';
 import { Requestable } from 'src/requestableContext';
 import { getImage } from 'src/services/images';
-import { getLinode, getLinodeConfigs, getLinodeDisks, getType, renameLinode, startMutation } from 'src/services/linodes';
-import { deleteTag } from 'src/services/tags';
+import {
+  getLinode, getLinodeConfigs, getLinodeDisks,
+  getType, renameLinode, startMutation
+} from 'src/services/linodes';
 import { _getLinodeVolumes } from 'src/store/reducers/features/linodeDetail/volumes';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import { ConfigsProvider, DisksProvider, ImageProvider, LinodeProvider } from './context';
 import LinodeDetailErrorBoundary from './LinodeDetailErrorBoundary';
+import LinodesDetailHeader from './LinodesDetailHeader';
 import MutateDrawer from './MutateDrawer';
 import reloadableWithRouter from './reloadableWithRouter';
-
-import LinodesDetailHeader from './LinodesDetailHeader';
 
 interface ConfigDrawerState {
   open: boolean;
@@ -70,7 +71,6 @@ interface State {
   mutateInfo: MutateInfo | null;
   mutateDrawer: MutateDrawer
   currentNetworkOut: number | null;
-  listDeletingTags: string[];
 }
 
 interface MatchProps { linodeId?: number };
@@ -135,7 +135,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
 
   state: State = {
-    listDeletingTags: [],
     configDrawer: {
       action: (id: number) => null,
       configs: [],
@@ -562,38 +561,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       });
   }
 
-  handleDeleteTag = (label: string) => {
-    const { context: { linode } } = this.state;
-    /*
-     * Add this tag to the current list of tags that are queued for deletion 
-     */
-    this.setState({
-      listDeletingTags: [
-        ...this.state.listDeletingTags,
-        label
-      ]
-    })
-    deleteTag(label)
-      .then(() => {
-        linode.request();
-        /*
-        * Remove this tag from the current list of tags that are queued for deletion 
-        */
-        this.setState({
-          listDeletingTags: this.state.listDeletingTags.filter(eachTag => eachTag === label)
-        })
-      })
-      .catch(e => {
-        sendToast(`Could not delete Tag: ${label}`);
-        /*
-        * Remove this tag from the current list of tags that are queued for deletion 
-        */
-        this.setState({
-          listDeletingTags: this.state.listDeletingTags.filter(eachTag => eachTag === label)
-        })
-      })
-  }
-
   render() {
     const { match: { url } } = this.props;
     const {
@@ -692,8 +659,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                     history={this.props.history}
                     openConfigDrawer={this.openConfigDrawer}
                     notifications={this.state.notifications}
-                    handleDeleteTag={this.handleDeleteTag}
-                    listDeletingTags={this.state.listDeletingTags}
                   />
                   <LinodeConfigSelectionDrawer
                     onClose={this.closeConfigDrawer}
