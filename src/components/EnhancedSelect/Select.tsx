@@ -146,7 +146,8 @@ const _components = {
 
 type CombinedProps = EnhancedSelectProps
   & WithStyles<ClassNames>
-  & BaseSelectProps;
+  & BaseSelectProps
+  & CreatableProps;
 
 interface BaseSelectProps extends SelectProps<any> {
   classes: any;
@@ -179,6 +180,7 @@ class Select extends React.PureComponent<CombinedProps,{}> {
       value,
       variant,
       onBlur,
+      ...restOfProps
     } = this.props;
 
     /*
@@ -206,6 +208,7 @@ class Select extends React.PureComponent<CombinedProps,{}> {
 
     return (
       <BaseSelect
+        {...restOfProps}
         isClearable
         isSearchable
         isLoading={isLoading}

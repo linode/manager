@@ -1,10 +1,9 @@
+import { clone, pathOr } from 'ramda';
 import * as React from 'react';
 import { Link, matchPath, Redirect, Route, Switch } from 'react-router-dom';
 import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/debounce';
 import 'rxjs/add/operator/filter';
-
-import { pathOr } from 'ramda';
 
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
@@ -22,6 +21,7 @@ import ProductNotification from 'src/components/ProductNotification';
 
 import { linodeInTransition } from 'src/features/linodes/transitions';
 import { lishLaunch } from 'src/features/Lish';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
 
 import LinodeBackup from './LinodeBackup';
 import LinodeNetworking from './LinodeNetworking';
@@ -116,8 +116,6 @@ interface Props {
   history: any;
   openConfigDrawer: (config: Linode.Config[], action: (id: number) => void) => void;
   notifications?: Linode.Notification[];
-  handleDeleteTag: (label: string) => void;
-  listDeletingTags: string[];
 }
 
 interface Item {
@@ -130,9 +128,11 @@ interface Tag {
 }
 
 interface State {
-  tags?: Item[];
+  tagsToSuggest?: Item[];
   tagError: string;
   isCreatingTag: boolean;
+  tagInputValue: string;
+  listDeletingTags: string[];
 }
 
 interface ActionMeta {
@@ -143,9 +143,11 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 class LinodesDetailHeader extends React.Component<CombinedProps, State> {
   state: State = {
-    tags: [],
+    tagsToSuggest: [],
     tagError: '',
     isCreatingTag: false,
+    tagInputValue: '',
+    listDeletingTags: [],
   }
 
   componentDidMount() {
@@ -172,7 +174,7 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
             value: eachTag.label
           }
         });
-        this.setState({ tags: reshapedTags })
+        this.setState({ tagsToSuggest: reshapedTags })
       })
       .catch(e => e)
   }
@@ -213,7 +215,56 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
     this.setState({ isCreatingTag: !this.state.isCreatingTag })
   }
 
+  handleDeleteTag = (label: string) => {
+    const { linode } = this.props;
+    /*
+     * Add this tag to the current list of tags that are queued for deletion 
+     */
+    this.setState({
+      listDeletingTags: [
+        ...this.state.listDeletingTags,
+        label
+      ]
+    })
+    /*
+     * Bit of a misnomer here. We're not adding a new tag, but just filtering out the current
+     * list and doing a PUT request on the linode in question. The tag will still exist and is 
+     * not getting permananently deleted 
+     */
+    const linodeTagsWithoutDeletedTag = linode.tags.filter((eachTag: string) => {
+      return eachTag !== label
+    })
+    addTagsToLinode(linode.id, linodeTagsWithoutDeletedTag)
+      .then(() => {
+        linode.update();
+        /*
+        * Remove this tag from the current list of tags that are queued for deletion 
+        */
+       const cloneTagSuggestions = clone(this.state.tagsToSuggest) || [];
+        this.setState({
+          tagsToSuggest: [
+            {
+              value: label,
+              label,
+            },
+            ...cloneTagSuggestions
+          ],
+          listDeletingTags: this.state.listDeletingTags.filter(eachTag => eachTag !== label),
+        })
+      })
+      .catch(e => {
+        sendToast(`Could not delete Tag: ${label}`);
+        /*
+        * Remove this tag from the current list of tags that are queued for deletion 
+        */
+        this.setState({
+          listDeletingTags: this.state.listDeletingTags.filter(eachTag => eachTag !== label)
+        })
+      })
+  }
+
   handleCreateTag = (value: Item, actionMeta: ActionMeta) => {
+    const { tagsToSuggest } = this.state;
     /*
      * This comes from the react-select API
      * basically, we only want to make a request if the user is either
@@ -233,10 +284,19 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
     )
       .then(() => {
         linode.update();
+        // set the input value to blank on submit
+        this.setState({ tagInputValue: '' })
         /*
-         * Filter out the new tag out of the auto-suggestion list
-         * since we can't attach this tag to the Linode anymore 
-         */
+        * Filter out the new tag out of the auto-suggestion list
+        * since we can't attach this tag to the Linode anymore 
+        */
+        const cloneTagSuggestions = clone(tagsToSuggest) || [];
+        const filteredTags = cloneTagSuggestions.filter((eachTag: Item) => {
+          return eachTag.label !== value.label;
+        });
+        this.setState({
+          tagsToSuggest: filteredTags
+        })
       })
       .catch(e => {
         const APIErrors = pathOr(
@@ -256,8 +316,6 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
       linode,
       url,
       notifications,
-      handleDeleteTag,
-      listDeletingTags,
     } = this.props;
 
     return (
@@ -318,8 +376,8 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
               label={eachTag}
               variant="gray"
               tagLabel={eachTag}
-              onDelete={handleDeleteTag}
-              loading={listDeletingTags.some((inProgressTag) => {
+              onDelete={this.handleDeleteTag}
+              loading={this.state.listDeletingTags.some((inProgressTag) => {
                 /*
                  * The tag is getting deleted if it appears in the state
                  * which holds the list of tags queued for deletion 
@@ -332,10 +390,13 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
         {(this.state.isCreatingTag)
           ? <Select
             onChange={this.handleCreateTag}
-            options={this.state.tags}
+            options={this.state.tagsToSuggest}
             variant='creatable'
             errorText={this.state.tagError}
             onBlur={this.handleToggleCreate}
+            placeholder="Create or Select a Tag"
+            value={this.state.tagInputValue}
+            createOptionPosition="first"
           />
           : <AddCircle onClick={this.handleToggleCreate}/>
         }
