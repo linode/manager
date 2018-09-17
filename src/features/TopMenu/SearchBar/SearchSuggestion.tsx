@@ -9,7 +9,9 @@ type ClassNames = 'root'
  | 'suggestionIcon'
  | 'suggestionContent'
  | 'suggestionTitle'
- | 'suggestionDescription';
+ | 'suggestionDescription'
+ | 'resultContainer'
+ | 'tagContainer';
 
  import Tag from 'src/components/Tag';
 
@@ -17,6 +19,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   root: {
     cursor: 'pointer',
     display: 'flex',
+    width: '100%',
+    alignItems: 'space-between',
+    justifyContent: 'space-between',
   },
   highlight: {
     color: theme.palette.primary.main,
@@ -45,6 +50,15 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     fontWeight: 600,
     marginTop: 2,
   },
+  resultContainer: {
+    display: 'flex',
+    flexFlow: 'row nowrap'
+  },
+  tagContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
 });
 
 export interface SearchSuggestionT {
@@ -101,25 +115,27 @@ const SearchSuggestion: React.StatelessComponent<CombinedProps> = (props) => {
       onClick={handleClick}
       className={root}
     >
-      <div className={`
-        ${classes.suggestionItem}
-        ${classes.suggestionIcon}
-      `}>
-        <Icon />
+      <div className={classes.resultContainer}>
+        <div className={`
+          ${classes.suggestionItem}
+          ${classes.suggestionIcon}
+        `}>
+          <Icon />
+        </div>
+        <div className={`
+          ${classes.suggestionItem}
+          ${classes.suggestionContent}
+        `}>
+          <div className={classes.suggestionTitle} data-qa-suggestion-title>
+            {maybeStyleSegment(title, searchText, highlight)}
+          </div>
+          <div className={classes.suggestionDescription} data-qa-suggestion-desc>
+            {description}
+          </div>
+        </div>
       </div>
-      <div className={`
-        ${classes.suggestionItem}
-        ${classes.suggestionContent}
-      `}>
-        <div className={classes.suggestionTitle} data-qa-suggestion-title>
-          {maybeStyleSegment(title, searchText, highlight)}
-        </div>
-        <div className={classes.suggestionDescription} data-qa-suggestion-desc>
-          {description}
-        </div>
-        <span>
+      <div className={classes.tagContainer}>
           {tags && renderTags(tags)}
-        </span>
       </div>
     </div>
   );

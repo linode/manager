@@ -240,9 +240,10 @@ class SearchBar extends React.Component<CombinedProps, State> {
     this.getAllPagesFor('images', getImagesPage);
   }
 
-  // Helper can be extended to other entities once tags are supported for them
-  hasMatchingTag = (entity:Linode.Linode, query:string): boolean => {
-    return entity.tags.some((tag:string) => tag.toLowerCase().includes(query));
+  // Helper can be extended to other entities once tags are supported for them.
+  // @todo Inefficient to call this function twice for each search result. 
+  getMatchingTags = (entity:Linode.Linode, query:string): string[] => {
+    return entity.tags.filter((tag:string) => tag.toLowerCase().includes(query));
   }
 
   getSearchSuggestions = (query: string | null) => {
@@ -255,15 +256,16 @@ class SearchBar extends React.Component<CombinedProps, State> {
     if (this.state.linodes && typesData) {
       const linodesByLabel = this.state.linodes.filter(
         linode => {
+          const matchingTags = this.getMatchingTags(linode, queryLower);
           return or(
             linode.label.toLowerCase().includes(queryLower),
-            this.hasMatchingTag(linode, queryLower)
+            matchingTags.length > 0
           )
         }
       );
       searchResults.push(...(linodesByLabel.map(linode => ({
         title: linode.label,
-        tags: linode.tags,
+        tags: this.getMatchingTags(linode, queryLower),
         description: this.linodeDescription(
           displayType(linode.type, typesData),
           linode.specs.memory,
