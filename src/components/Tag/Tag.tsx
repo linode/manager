@@ -24,34 +24,61 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     root: {},
     white: {
       backgroundColor: theme.color.white,
+      '&:focus': {
+        backgroundColor: theme.color.white,
+      },
     },
     gray: {
       backgroundColor: '#939598',
       color: 'white',
+      '&:focus': {
+        backgroundColor: '#939598',
+      },
     },
     lightGray: {
       backgroundColor: '#C9CACB',
       color: 'white',
+      '&:focus': {
+        backgroundColor: '#C9CACB',
+      },
     },
     blue: {
       backgroundColor: theme.palette.primary.main,
       color: 'white',
+      '&:focus': {
+        backgroundColor: theme.palette.primary.main,
+      },
     },
     lightBlue: {
       backgroundColor: theme.bg.lightBlue,
+      '&:focus': {
+        backgroundColor: theme.bg.lightBlue,
+      },
     },
     green: {
       backgroundColor: '#61CD7B',
       color: 'white',
+      '&:focus': {
+        backgroundColor: '#61CD7B',
+      },
     },
     lightGreen: {
       backgroundColor: '#DFF3E7',
+      '&:focus': {
+        backgroundColor: '#DFF3E7',
+      },
     },
     yellow: {
       backgroundColor: '#F8D147',
+      '&:focus': {
+        backgroundColor: '#F8D147',
+      },
     },
     lightYellow: {
       backgroundColor: '#FCF4DD',
+      '&:focus': {
+        backgroundColor: '#FCF4DD',
+      },
     },
   });
 };
@@ -85,7 +112,7 @@ class Tag extends React.Component<PropsWithStyles, {}> {
         [classes.root]: true,
       })}
       deleteIcon={this.props.deleteIcon || <Close />}
-      classes={{ label: classes.label }}
+      classes={{ label: classes.label, deletable: classes[variant!]}}
       data-qa-tag
     />;
   }
