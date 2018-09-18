@@ -20,9 +20,4 @@ describe('Dashboard Suite', () => {
             expect(post.getAttribute('href')).toContain('https://blog.linode.com');
         });
     });
-
-    it('should display monthly bandwidth useage', () => {
-        expect(Dashboard.monthlyTransferQuota.isVisible()).toBe(true);
-        expect(Dashboard.monthlyTransferUsed.isVisible()).toBe(true);
-    });
 });
