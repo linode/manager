@@ -9,6 +9,27 @@ type ClassNames = 'root'
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
     overflowX: 'auto',
+    [theme.breakpoints.down('sm')]: {
+      '& thead': {
+        display: 'none',
+      },
+      '& tbody > tr': {
+        marginBottom: 0,
+        '& > td:first-child': {
+          backgroundColor: theme.bg.offWhite,
+          fontWeight: 700,
+        },
+      },
+      '& tr': {
+        display: 'block',
+        marginBottom: 20,
+        height: 'auto',
+      },
+      '& td': {
+        display: 'flex',
+        justifyContent: 'space-between',
+      },
+    },
   },
   border: {
     border: `1px solid ${theme.palette.divider}`,
