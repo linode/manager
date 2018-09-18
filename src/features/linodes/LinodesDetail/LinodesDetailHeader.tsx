@@ -1,29 +1,16 @@
 import { clone, pathOr } from 'ramda';
 import * as React from 'react';
-import { matchPath, Redirect, Route, Switch } from 'react-router-dom';
 import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/debounce';
 import 'rxjs/add/operator/filter';
 
-import AppBar from '@material-ui/core/AppBar';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
-
-import { linodeInTransition } from 'src/features/linodes/transitions';
 import { lishLaunch } from 'src/features/Lish';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 
 import LabelPowerAndConsolePanel from './HeaderSections/LabelPowerAndConsolePanel';
 import NotificationsAndUpgradePanel from './HeaderSections/NotificationsAndUpgradePanel';
-import LinodeBackup from './LinodeBackup';
-import LinodeNetworking from './LinodeNetworking';
-import LinodeRebuild from './LinodeRebuild';
-import LinodeRescue from './LinodeRescue';
-import LinodeResize from './LinodeResize';
-import LinodeSettings from './LinodeSettings';
-import LinodeSummary from './LinodeSummary';
-import LinodeBusyStatus from './LinodeSummary/LinodeBusyStatus';
-import LinodeVolumes from './LinodeVolumes';
+import TabsAndStatusBarPanel from './HeaderSections/TabsAndStatusBarPanel';
+import TagsPanel from './HeaderSections/TagsPanel';
 
 import { updateLinode } from 'src/services/linodes';
 import { getTags } from 'src/services/tags';
@@ -118,24 +105,6 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
   launchLish = () => {
     const { linode } = this.props;
     lishLaunch(linode.id);
-  }
-
-  tabs = [
-    /* NB: These must correspond to the routes inside the Switch */
-    { routeName: `${this.props.url}/summary`, title: 'Summary' },
-    { routeName: `${this.props.url}/volumes`, title: 'Volumes' },
-    { routeName: `${this.props.url}/networking`, title: 'Networking' },
-    { routeName: `${this.props.url}/resize`, title: 'Resize' },
-    { routeName: `${this.props.url}/rescue`, title: 'Rescue' },
-    { routeName: `${this.props.url}/rebuild`, title: 'Rebuild' },
-    { routeName: `${this.props.url}/backup`, title: 'Backups' },
-    { routeName: `${this.props.url}/settings`, title: 'Settings' },
-  ];
-
-  handleTabChange = (event: React.ChangeEvent<HTMLDivElement>, value: number) => {
-    const { history } = this.props;
-    const routeName = this.tabs[value].routeName;
-    history.push(`${routeName}`);
   }
 
   editLabel = (value: string) => {
@@ -277,47 +246,30 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
             onEdit: this.editLabel,
           }}
         />
-
-
-
-
-
-
-        {linodeInTransition(linode.status, linode.recentEvent) &&
-          <LinodeBusyStatus status={linode.status} recentEvent={linode.recentEvent} />
-        }
-        <AppBar position="static" color="default">
-          <Tabs
-            value={this.tabs.findIndex(tab => matches(tab.routeName))}
-            onChange={this.handleTabChange}
-            indicatorColor="primary"
-            textColor="primary"
-            scrollable
-            scrollButtons="off"
-          >
-            {this.tabs.map(tab =>
-              <Tab key={tab.title} label={tab.title} data-qa-tab={tab.title} />)}
-          </Tabs>
-        </AppBar>
-        <Switch>
-          <Route exact path={`${url}/summary`} component={LinodeSummary} />
-          <Route exact path={`${url}/volumes`} component={LinodeVolumes} />
-          <Route exact path={`${url}/networking`} component={LinodeNetworking} />
-          <Route exact path={`${url}/resize`} component={LinodeResize} />
-          <Route exact path={`${url}/rescue`} component={LinodeRescue} />
-          <Route exact path={`${url}/rebuild`} component={LinodeRebuild} />
-          <Route exact path={`${url}/backup`} component={LinodeBackup} />
-          <Route exact path={`${url}/settings`} component={LinodeSettings} />
-          {/* 404 */}
-          <Redirect to={`${url}/summary`} />
-        </Switch>
+        <TagsPanel
+          tags={{
+            tagsQueuedForDeletion: this.state.listDeletingTags,
+            tagsAlreadyAppliedToLinode: linode.tags,
+            tagsToSuggest: this.state.tagsToSuggest || []
+          }}
+          onDeleteTag={this.handleDeleteTag}
+          toggleCreateTag={this.handleToggleCreate}
+          onCreateTag={this.handleCreateTag}
+          tagInputValue={this.state.tagInputValue}
+          isCreatingTag={this.state.isCreatingTag}
+          tagError={this.state.tagError}
+        />
+        <TabsAndStatusBarPanel
+          url={url}
+          history={this.props.history}
+          linode={{
+            status: linode.status,
+            recentEvent: linode.recentEvent
+          }}
+        />
       </React.Fragment>
     );
   }
-}
-
-const matches = (p: string) => {
-  return Boolean(matchPath(p, { path: location.pathname }));
 }
 
 export default LinodesDetailHeader;
