@@ -376,8 +376,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
         linodeId: 0,
         configs: [],
         value: null,
-      });
-      this.searchLinodes();
+      }, this.searchLinodes);
     }
   }
 
@@ -421,13 +420,27 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     ]);
   }
 
+  getLinodeFilter = (inputValue:string) => {
+    const { region } = this.state;
+    if (region && region !== 'none') {
+      return {
+        label: {
+          '+contains': inputValue,
+        },
+        region: this.state.region
+      }
+    } else {
+      return {
+        label: {
+          '+contains': inputValue,
+        }
+      }
+    }
+  }
+
   searchLinodes = (inputValue:string = '') => {
     this.setState({ linodesLoading: true });
-    const filterLinodes = {
-      label: {
-        '+contains': inputValue,
-      },
-    }
+    const filterLinodes = this.getLinodeFilter(inputValue);
     getLinodes({}, filterLinodes)
       .then((response) => {
         const linodes = this.renderLinodeOptions(response.data);
@@ -436,15 +449,6 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
       .catch(() => {
         this.setState({ linodesLoading: false });
       })
-  }
-
-  filterOptions = (item:Item, inputValue:string) => {
-    const labelMatch = item.label.toLocaleLowerCase().includes(inputValue);
-    const { region } = this.state;
-    const linodeRegion = item.data.data.region;
-    if (region && region !== 'none') {
-      return labelMatch && (region === linodeRegion);
-    } else { return labelMatch }
   }
 
   debouncedSearch = debounce(400, false, this.searchLinodes);
@@ -619,7 +623,6 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
                 mode === modes.EDITING
                 || mode === modes.RESIZING
               }
-              filterOption={this.filterOptions}
               options={linodes}
               onChange={this.setSelectedLinode}
               onInputChange={this.onInputChange}
