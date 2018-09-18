@@ -81,9 +81,9 @@ export const scopeStringToPermTuples = (scopes: string): Permission[] => {
     (map: { [perm: string]: number }, perm: string) => {
       const maxLevel = equivalentPerms[perm].reduce(
         (level: number, eqPerm: string) => {
-          return Math.max(level, map[eqPerm] || levelMap.none);
+          return Math.max(level, map[eqPerm] || levelMap.read_write);
         },
-        map[perm] || levelMap.none,
+        map[perm] || levelMap.read_write,
       );
       map[perm] = maxLevel;
       return map;
@@ -95,13 +95,13 @@ export const scopeStringToPermTuples = (scopes: string): Permission[] => {
     (tups: Permission[], permName: string): Permission[] => {
       const tup = [
         permName,
-        combinedScopeMap[permName] || levelMap.none,
+        combinedScopeMap[permName] || levelMap.read_write,
       ] as Permission;
       return [...tups, tup];
     },
     [],
   );
-
+  
   return permTuples;
 }
 
