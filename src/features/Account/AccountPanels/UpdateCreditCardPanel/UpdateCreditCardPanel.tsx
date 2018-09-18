@@ -23,7 +23,8 @@ type ClassNames = 'root'
   | 'currentCCTitle'
   | 'currentccContainer'
   | 'newccContainer'
-  | 'cardNumber';
+  | 'cardNumber'
+  | 'fullWidthMobile';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {},
@@ -41,6 +42,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   cardNumber: {
     minWidth: 225,
+  },
+  fullWidthMobile: {
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+    },
   },
 });
 
@@ -193,7 +199,7 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
               {generalError && <Notice error spacingTop={24} spacingBottom={8}>{generalError}</Notice>}
               {success && <Notice success spacingTop={24} spacingBottom={8}>Credit card successfully updated.</Notice>}
               <Grid container>
-                <Grid item>
+                <Grid item xs={12}>
                   <TextField
                     required
                     label='New Card Number'
@@ -207,7 +213,7 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
                   />
                 </Grid>
 
-                <Grid item>
+                <Grid item className={classes.fullWidthMobile}>
                   <TextField
                     required
                     select
@@ -220,7 +226,7 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
                   </TextField>
                 </Grid>
 
-                <Grid item>
+                <Grid item className={classes.fullWidthMobile}>
                   <TextField
                     required
                     select
