@@ -304,7 +304,7 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
         <Typography 
           data-qa-support-ticket-helper-text
         >
-          We love your tickets and we love helping our customers.
+          We love helping our customers.
           Please keep in mind that not all topics are within the scope of our support.
           For overall system status, please see <a href="https://status.linode.com">status.linode.com</a>.
         </Typography>
