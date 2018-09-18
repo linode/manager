@@ -108,6 +108,10 @@ export interface SelectState {
   isSelected: boolean;
 }
 
+interface ActionMeta {
+  action: string;
+}
+
 export interface EnhancedSelectProps {
   options?: Item[];
   className?: string;
@@ -120,11 +124,11 @@ export interface EnhancedSelectProps {
   label?: string;
   placeholder?: string;
   errorText?: string;
-  onChange: (selected:Item | Item[]) => void;
-  createNew?: (inputValue:string) => void;
-  onInputChange?: (inputValue:string) => void;
-  loadOptions?: (inputValue:string) => Promise<Item|Item[]> | undefined;
-  filterOption?: (item:Item, inputValue:string) => boolean | null;
+  onChange: (selected: Item | Item[], actionMeta: ActionMeta) => void;
+  createNew?: (inputValue: string) => void;
+  onInputChange?: (inputValue: string, actionMeta: ActionMeta) => void;
+  loadOptions?: (inputValue: string) => Promise<Item| Item[]> | undefined;
+  filterOption?: (item: Item, inputValue:string) => boolean | null;
 }
 
 // Material-UI versions of several React-Select components.

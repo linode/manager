@@ -54,6 +54,10 @@ interface ActionCreatorProps {
   handleClose: typeof close;
 }
 
+interface ActionMeta {
+  action: string;
+}
+
 interface ReduxProps {
   mode: string;
   volumeID: number;
@@ -438,7 +442,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     }
   }
 
-  searchLinodes = (inputValue:string = '') => {
+  searchLinodes = (inputValue: string = '') => {
     this.setState({ linodesLoading: true });
     const filterLinodes = this.getLinodeFilter(inputValue);
     getLinodes({}, filterLinodes)
@@ -453,15 +457,16 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
 
   debouncedSearch = debounce(400, false, this.searchLinodes);
 
-  onInputChange = (inputValue:string) => {
+  onInputChange = (inputValue: string, actionMeta: ActionMeta) => {
+    if (actionMeta.action !== 'input-change') { return; }
     this.setState({ linodesLoading: true });
     this.debouncedSearch(inputValue);
   }
 
-  renderLinodeOptions = (linodes:Linode.Linode[]) => {
+  renderLinodeOptions = (linodes: Linode.Linode[]) => {
     const { linodeLabel, mode } = this.props;
     if (!linodes) { return []; }
-    const options: Item[] = linodes.map((linode:Linode.Linode) => {
+    const options: Item[] = linodes.map((linode: Linode.Linode) => {
         return {
           value: linode.id,
           label: linode.label,
