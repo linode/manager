@@ -30,11 +30,15 @@ interface Tags {
   tagsToSuggest: Item[];
 }
 
+interface ActionMeta {
+  action: string;
+}
+
 interface Props {
   tags: Tags;
-  onDeleteTag: () => void;
+  onDeleteTag: (value: string) => void;
   toggleCreateTag: () => void;
-  onCreateTag: () => void;
+  onCreateTag: (value: Item, actionMeta: ActionMeta) => void;
   tagInputValue: string;
   isCreatingTag: boolean;
   tagError: string;
