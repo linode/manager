@@ -104,14 +104,12 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
         <TableRow className={classes.tr}>
           {!!isSelecting &&
             <TableCell
-              parentColumn={false}
               className={classNames({
                 [classes.tableHead]: true,
                 [classes.stackscriptLabel]: true,
               })} />
           }
           <TableCell
-            parentColumn={false}
             className={classNames({
               [classes.tableHead]: true,
               [classes.stackscriptTitles]: true,
@@ -132,7 +130,6 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
             </Button>
           </TableCell>
           <TableCell
-            parentColumn={false}
             className={classNames({
               [classes.tableHead]: true,
               [classes.deploys]: true,
@@ -154,7 +151,6 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
             </Button>
           </TableCell>
           <TableCell
-            parentColumn={false}
             className={classNames({
               [classes.tableHead]: true,
               [classes.revisions]: true,
@@ -176,7 +172,6 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
             </Button>
           </TableCell>
           <TableCell
-            parentColumn={false}
             className={classes.tableHead}
             data-qa-stackscript-compatible-images
           >
@@ -184,7 +179,6 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
     </TableCell>
           {!isSelecting &&
             <TableCell
-              parentColumn={false}
               className={classNames({
                 [classes.tableHead]: true,
                 [classes.stackscriptLabel]: true,

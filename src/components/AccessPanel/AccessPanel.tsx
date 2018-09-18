@@ -116,9 +116,9 @@ class AccessPanel extends React.Component<CombinedProps> {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell parentColumn={false} className={classes.cellCheckbox} />
-              <TableCell parentColumn={false} className={classes.cellUser}>User</TableCell>
-              <TableCell parentColumn={false}>SSH Keys</TableCell>
+              <TableCell className={classes.cellCheckbox} />
+              <TableCell className={classes.cellUser}>User</TableCell>
+              <TableCell>SSH Keys</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -130,19 +130,19 @@ class AccessPanel extends React.Component<CombinedProps> {
               username,
             }) => (
                 <TableRow key={username} data-qa-ssh-public-key>
-                  <TableCell parentColumn={false} className={classes.cellCheckbox}>
+                  <TableCell className={classes.cellCheckbox}>
                     <CheckBox
                       checked={selected}
                       onChange={onChange}
                     />
                   </TableCell>
-                  <TableCell parentColumn="User" className={classes.cellUser}>
+                  <TableCell className={classes.cellUser}>
                     <div className={classes.userWrapper}>
                       <img src={gravatarUrl} className={classes.gravatar} />
                       {username}
                     </div>
                   </TableCell>
-                  <TableCell parentColumn="SSH Keys">{keys.join(', ')}</TableCell>
+                  <TableCell>{keys.join(', ')}</TableCell>
                 </TableRow>
               ))}
           </TableBody>
