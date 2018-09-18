@@ -222,7 +222,7 @@ export const getLinodeStats = (linodeId: number, year?: string, month?: string) 
   );
 };
 
-export const updateLinode = (id: number, values: any) =>
+export const updateLinode = (id: number, values: Partial<Linode>) =>
   Request<Linode>(
     setURL(`${API_ROOT}/linode/instances/${id}`),
     setMethod('PUT'),
