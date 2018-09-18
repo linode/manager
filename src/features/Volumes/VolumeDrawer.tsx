@@ -625,7 +625,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
               onInputChange={this.onInputChange}
               data-qa-select-linode
             />
-            {region !== 'none' &&
+            {region !== 'none' && mode !== modes.RESIZING &&
               <FormHelperText>
                 Only Linodes in the selected region are displayed.
               </FormHelperText>
