@@ -282,13 +282,13 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
           <Table aria-label="List of NodeBalancers">
             <TableHead>
               <TableRow>
-                <TableCell className={classes.nameCell}>Name</TableCell>
-                <TableCell className={classes.nodeStatus} noWrap>Node Status</TableCell>
-                <TableCell className={classes.transferred}>Transferred</TableCell>
-                <TableCell className={classes.ports}>Ports</TableCell>
-                <TableCell className={classes.ip} noWrap>IP Addresses</TableCell>
-                <TableCell>Region</TableCell>
-                <TableCell />
+                <TableCell parentColumn={false} className={classes.nameCell}>Name</TableCell>
+                <TableCell parentColumn={false} className={classes.nodeStatus} noWrap>Node Status</TableCell>
+                <TableCell parentColumn={false} className={classes.transferred}>Transferred</TableCell>
+                <TableCell parentColumn={false} className={classes.ports}>Ports</TableCell>
+                <TableCell parentColumn={false} className={classes.ip} noWrap>IP Addresses</TableCell>
+                <TableCell parentColumn={false}>Region</TableCell>
+                <TableCell parentColumn={false} />
               </TableRow>
             </TableHead>
             <TableBody>
@@ -397,32 +397,32 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
           className="fade-in-table"
           arial-label={nodeBalancer.label}
         >
-          <TableCell data-qa-nodebalancer-label>
+          <TableCell parentColumn="Name" data-qa-nodebalancer-label>
             <Link to={`/nodebalancers/${nodeBalancer.id}`}>
               {nodeBalancer.label}
             </Link>
           </TableCell>
-          <TableCell data-qa-node-status>
+          <TableCell parentColumn="Node Status" data-qa-node-status>
             <span>{nodeBalancer.up} up</span> <br />
             <span>{nodeBalancer.down} down</span>
           </TableCell>
-          <TableCell data-qa-transferred>
+          <TableCell parentColumn="Transferred" data-qa-transferred>
             {convertMegabytesTo(nodeBalancer.transfer.total)}
           </TableCell>
-          <TableCell data-qa-ports>
+          <TableCell parentColumn="Ports" data-qa-ports>
             {nodeBalancer.ports.length === 0 && 'None'}
             {nodeBalancer.ports.join(', ')}
           </TableCell>
-          <TableCell data-qa-nodebalancer-ips>
+          <TableCell parentColumn="IP Addresses" data-qa-nodebalancer-ips>
             <div className={classes.ipsWrapper}>
               <IPAddress ips={[nodeBalancer.ipv4]} copyRight />
               {nodeBalancer.ipv6 && <IPAddress ips={[nodeBalancer.ipv6]} copyRight />}
             </div>
           </TableCell>
-          <TableCell data-qa-region>
+          <TableCell parentColumn="Region" data-qa-region>
             <RegionIndicator region={nodeBalancer.region} />
           </TableCell>
-          <TableCell>
+          <TableCell parentColumn={false}>
             <NodeBalancerActionMenu
               nodeBalancerId={nodeBalancer.id}
               toggleDialog={this.toggleDialog}
