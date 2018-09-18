@@ -1,12 +1,14 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 
+import Hidden from '@material-ui/core/Hidden';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableCell, { TableCellProps } from '@material-ui/core/TableCell';
 
 type ClassNames = 'root'
   | 'noWrap'
-  | 'sortable';
+  | 'sortable'
+  | 'data';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {},
@@ -27,6 +29,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       top: 2,
       left: 10,
       color: theme.palette.primary.main,
+    },
+  },
+  data: {
+    [theme.breakpoints.down('sm')]: {
+      textAlign: 'right',
+      marginLeft: theme.spacing.unit * 3,
     },
   },
 });
@@ -59,13 +67,15 @@ class WrappedTableCell extends React.Component<CombinedProps> {
               [classes.noWrap]: noWrap,
               [classes.sortable]: sortable,
             })}
-          {...rest
-        }>
+          {...rest}
+        >
         {(!parentColumn)
           ? this.props.children
           : <React.Fragment>
-            <span>{parentColumn}</span>
-            <span>{this.props.children}</span>
+              <Hidden mdUp>
+                <span>{parentColumn}</span>
+              </Hidden>
+              <span className={classes.data}>{this.props.children}</span>
           </React.Fragment>
         }
         </TableCell>
