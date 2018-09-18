@@ -35,6 +35,12 @@ export interface Props extends TableCellProps {
   noWrap?: boolean;
   sortable?: boolean;
   className?: string;
+  /**
+   * parent column will either be the name of the column this
+   * TableCell is listed under or if this table cell is the 
+   * in the table header, set to false to disregard
+   */
+  parentColumn: false | string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -42,7 +48,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 class WrappedTableCell extends React.Component<CombinedProps> {
 
   render() {
-    const { classes, className, noWrap, sortable, ...rest } = this.props;
+    const { classes, className, parentColumn, noWrap, sortable, ...rest } = this.props;
 
     return (
         <TableCell
@@ -55,7 +61,13 @@ class WrappedTableCell extends React.Component<CombinedProps> {
             })}
           {...rest
         }>
-          {this.props.children}
+        {(!parentColumn)
+          ? this.props.children
+          : <React.Fragment>
+            <span>{parentColumn}</span>
+            <span>{this.props.children}</span>
+          </React.Fragment>
+        }
         </TableCell>
     );
   }

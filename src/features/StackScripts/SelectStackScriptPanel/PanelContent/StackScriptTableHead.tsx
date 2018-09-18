@@ -101,89 +101,97 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
 
     return (
       <TableHead>
-      <TableRow className={classes.tr}>
-        {!!isSelecting &&
-          <TableCell className={classNames({
-            [classes.tableHead]: true,
-            [classes.stackscriptLabel]: true,
-          })} />
-        }
-        <TableCell
-          className={classNames({
-            [classes.tableHead]: true,
-            [classes.stackscriptTitles]: true,
-          })}
-          sortable
-        >
-          <Button
-            type="secondary"
-            value='label'
-            className={classes.sortButton}
-            onClick={handleClickTableHeader}
-            data-qa-stackscript-table-header
+        <TableRow className={classes.tr}>
+          {!!isSelecting &&
+            <TableCell
+              parentColumn={false}
+              className={classNames({
+                [classes.tableHead]: true,
+                [classes.stackscriptLabel]: true,
+              })} />
+          }
+          <TableCell
+            parentColumn={false}
+            className={classNames({
+              [classes.tableHead]: true,
+              [classes.stackscriptTitles]: true,
+            })}
+            sortable
           >
-            StackScript
+            <Button
+              type="secondary"
+              value='label'
+              className={classes.sortButton}
+              onClick={handleClickTableHeader}
+              data-qa-stackscript-table-header
+            >
+              StackScript
         {currentFilterType === 'label' &&
-              this.renderIcon()
-            }
-          </Button>
-        </TableCell>
-        <TableCell
-          className={classNames({
-            [classes.tableHead]: true,
-            [classes.deploys]: true,
-          })}
-          noWrap
-          sortable
-        >
-          <Button
-            type="secondary"
-            value='deploys'
-            className={classes.sortButton}
-            onClick={handleClickTableHeader}
-            data-qa-stackscript-active-deploy-header
+                this.renderIcon()
+              }
+            </Button>
+          </TableCell>
+          <TableCell
+            parentColumn={false}
+            className={classNames({
+              [classes.tableHead]: true,
+              [classes.deploys]: true,
+            })}
+            noWrap
+            sortable
           >
-            Active Deploys
+            <Button
+              type="secondary"
+              value='deploys'
+              className={classes.sortButton}
+              onClick={handleClickTableHeader}
+              data-qa-stackscript-active-deploy-header
+            >
+              Active Deploys
         {currentFilterType !== 'label' && currentFilterType !== 'revision' &&
-              this.renderIcon()
-            }
-          </Button>
-        </TableCell>
-        <TableCell
-          className={classNames({
-            [classes.tableHead]: true,
-            [classes.revisions]: true,
-          })}
-          noWrap
-          sortable
-        >
-          <Button
-            type="secondary"
-            value='revision'
-            className={classes.sortButton}
-            onClick={handleClickTableHeader}
-            data-qa-stackscript-revision-header
+                this.renderIcon()
+              }
+            </Button>
+          </TableCell>
+          <TableCell
+            parentColumn={false}
+            className={classNames({
+              [classes.tableHead]: true,
+              [classes.revisions]: true,
+            })}
+            noWrap
+            sortable
           >
-            Last Revision
+            <Button
+              type="secondary"
+              value='revision'
+              className={classes.sortButton}
+              onClick={handleClickTableHeader}
+              data-qa-stackscript-revision-header
+            >
+              Last Revision
         {currentFilterType === 'revision' &&
-              this.renderIcon()
-            }
-          </Button>
-        </TableCell>
-        <TableCell
-          className={classes.tableHead}
-          data-qa-stackscript-compatible-images
-        >
-          Compatible Images
+                this.renderIcon()
+              }
+            </Button>
+          </TableCell>
+          <TableCell
+            parentColumn={false}
+            className={classes.tableHead}
+            data-qa-stackscript-compatible-images
+          >
+            Compatible Images
     </TableCell>
-        {!isSelecting &&
-          <TableCell className={classNames({
-            [classes.tableHead]: true,
-            [classes.stackscriptLabel]: true,
-          })} />
-        }
-      </TableRow>
-    </TableHead>
+          {!isSelecting &&
+            <TableCell
+              parentColumn={false}
+              className={classNames({
+                [classes.tableHead]: true,
+                [classes.stackscriptLabel]: true,
+              })} />
+          }
+        </TableRow>
+      </TableHead>
     );
   }
 }

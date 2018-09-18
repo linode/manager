@@ -143,12 +143,12 @@ class TicketList extends React.Component<CombinedProps, State> {
   renderRow = (ticket: Linode.SupportTicket) => {
     return (
       <TableRow data-qa-support-ticket={ticket.id} key={`ticket-${ticket.id}`} rowLink={`/support/tickets/${ticket.id}`}>
-        <TableCell data-qa-support-subject><Link to={`/support/tickets/${ticket.id}`}>{ticket.summary}</Link></TableCell>
-        <TableCell data-qa-support-id>{ticket.id}</TableCell>
-        <TableCell data-qa-support-entity>{this.renderEntityLink(ticket)}</TableCell>
-        <TableCell data-qa-support-date><DateTimeDisplay value={ticket.opened} format={ISO_FORMAT} /></TableCell>
-        <TableCell data-qa-support-updated><DateTimeDisplay value={ticket.updated} format={ISO_FORMAT} /></TableCell>
-        <TableCell />
+        <TableCell parentColumn="Subject" data-qa-support-subject><Link to={`/support/tickets/${ticket.id}`}>{ticket.summary}</Link></TableCell>
+        <TableCell parentColumn="Ticket ID" data-qa-support-id>{ticket.id}</TableCell>
+        <TableCell parentColumn="Regarding" data-qa-support-entity>{this.renderEntityLink(ticket)}</TableCell>
+        <TableCell parentColumn="Date Created" data-qa-support-date><DateTimeDisplay value={ticket.opened} format={ISO_FORMAT} /></TableCell>
+        <TableCell parentColumn="Last Updated" data-qa-support-updated><DateTimeDisplay value={ticket.updated} format={ISO_FORMAT} /></TableCell>
+        <TableCell parentColumn={false} />
       </TableRow>
     );
   };
@@ -162,12 +162,12 @@ class TicketList extends React.Component<CombinedProps, State> {
           <Table aria-label="List of Tickets">
             <TableHead>
               <TableRow>
-                <TableCell data-qa-support-subject-header style={{ minWidth: 200 }}>Subject</TableCell>
-                <TableCell data-qa-support-id-header>Ticket ID</TableCell>
-                <TableCell data-qa-support-regarding-header>Regarding</TableCell>
-                <TableCell data-qa-support-date-header noWrap>Date Created</TableCell>
-                <TableCell data-qa-support-updated-header noWrap>Last Updated</TableCell>
-                <TableCell />
+                <TableCell parentColumn={false} data-qa-support-subject-header style={{ minWidth: 200 }}>Subject</TableCell>
+                <TableCell parentColumn={false} data-qa-support-id-header>Ticket ID</TableCell>
+                <TableCell parentColumn={false} data-qa-support-regarding-header>Regarding</TableCell>
+                <TableCell parentColumn={false} data-qa-support-date-header noWrap>Date Created</TableCell>
+                <TableCell parentColumn={false} data-qa-support-updated-header noWrap>Last Updated</TableCell>
+                <TableCell parentColumn={false} />
               </TableRow>
             </TableHead>
             <TableBody>
