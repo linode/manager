@@ -242,8 +242,8 @@ class SearchBar extends React.Component<CombinedProps, State> {
 
   // Helper can be extended to other entities once tags are supported for them.
   // @todo Inefficient to call this function twice for each search result. 
-  getMatchingTags = (entity:Linode.Linode, query:string): string[] => {
-    return entity.tags.filter((tag:string) => tag.toLowerCase().includes(query));
+  getMatchingTags = (tags:string[], query:string): string[] => {
+    return tags.filter((tag:string) => tag.toLowerCase().includes(query));
   }
 
   getSearchSuggestions = (query: string | null) => {
@@ -256,7 +256,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
     if (this.state.linodes && typesData) {
       const linodesByLabel = this.state.linodes.filter(
         linode => {
-          const matchingTags = this.getMatchingTags(linode, queryLower);
+          const matchingTags = this.getMatchingTags(linode.tags, queryLower);
           return or(
             linode.label.toLowerCase().includes(queryLower),
             matchingTags.length > 0
@@ -265,7 +265,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
       );
       searchResults.push(...(linodesByLabel.map(linode => ({
         title: linode.label,
-        tags: this.getMatchingTags(linode, queryLower),
+        tags: this.getMatchingTags(linode.tags, queryLower),
         description: this.linodeDescription(
           displayType(linode.type, typesData),
           linode.specs.memory,
