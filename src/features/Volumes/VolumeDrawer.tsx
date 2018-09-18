@@ -15,6 +15,7 @@ import { debounce } from 'throttle-debounce';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
+import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import Select from 'src/components/Select';
@@ -30,10 +31,6 @@ import { formatRegion } from 'src/utilities';
 import composeState from 'src/utilities/composeState';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-
-import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
-
-import { createFilter } from 'react-select';
 
 type ClassNames = 'root'
   | 'actionPanel';
@@ -72,14 +69,14 @@ interface State {
   label: string;
   size: number;
   region: string;
-  linodes: Linode.Linode[];
+  linodes: Item[];
+  linodesLoading: boolean;
   linodeId: number;
   configs: string[][];
   selectedConfig?: string;
   errors?: Linode.ApiFieldError[];
   submitting: boolean;
   success?: string;
-  options: Item[];
   value: Item | null;
 }
 
@@ -131,9 +128,9 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     size: this.props.size,
     region: this.props.region,
     linodes: [],
+    linodesLoading: false,
     linodeId: this.props.linodeId,
     configs: [],
-    options: [],
     value: null,
   };
 
@@ -146,7 +143,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     this.mounted = true;
-
+    this.searchLinodes();
     this.eventsSub = events$
       .filter(event => (
         !event._initial
@@ -195,13 +192,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     /* If the drawer is opening */
     if ((this.props.mode === modes.CLOSED) && !(nextProps.mode === modes.CLOSED)) {
       /* re-request the list of Linodes */
-      getLinodes()
-        .then((response) => {
-          this.setState({ linodes: response.data });
-        })
-        .catch(() => {
-          /* keep the existing list of Linodes in the case that this call fails */
-        });
+      this.searchLinodes();
     }
   }
 
@@ -386,6 +377,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
         configs: [],
         value: null,
       });
+      this.searchLinodes();
     }
   }
 
@@ -429,24 +421,20 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     ]);
   }
 
-  searchLinodes = (inputValue:string) => {
-    const { region } = this.state;
+  searchLinodes = (inputValue:string = '') => {
+    this.setState({ linodesLoading: true });
     const filterLinodes = {
       label: {
         '+contains': inputValue,
       },
     }
-    return getLinodes({}, filterLinodes)
+    getLinodes({}, filterLinodes)
       .then((response) => {
-        const linodes = response.data.filter((linode) => {
-          if (region && region !== 'none') {
-            return region === linode.region;
-          } else {
-            return true;
-          }
-        });
-        this.setState({ linodes });
-        return this.renderLinodeOptions(linodes);
+        const linodes = this.renderLinodeOptions(response.data);
+        this.setState({ linodes, linodesLoading: false });
+      })
+      .catch(() => {
+        this.setState({ linodesLoading: false });
       })
   }
 
@@ -497,6 +485,8 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
       configs,
       selectedConfig,
       errors,
+      linodes,
+      linodesLoading,
       value,
     } = this.state;
 
@@ -619,17 +609,17 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
         {mode !== modes.CLONING &&
           <FormControl fullWidth>
             <EnhancedSelect
-              variant="async"
               label="Linode"
               placeholder="Select a Linode"
+              isLoading={linodesLoading}
               errorText={linodeError}
               value={value}
               disabled={
                 mode === modes.EDITING
                 || mode === modes.RESIZING
               }
-              loadOptions={this.searchLinodes}
               filterOption={this.filterOptions}
+              options={linodes}
               onChange={this.setSelectedLinode}
               onInputChange={this.onInputChange}
               data-qa-select-linode
