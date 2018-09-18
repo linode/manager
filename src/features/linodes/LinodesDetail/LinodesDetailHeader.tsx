@@ -1,96 +1,32 @@
 import { clone, pathOr } from 'ramda';
 import * as React from 'react';
-import { Link, matchPath, Redirect, Route, Switch } from 'react-router-dom';
+import { matchPath, Redirect, Route, Switch } from 'react-router-dom';
 import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/debounce';
 import 'rxjs/add/operator/filter';
 
 import AppBar from '@material-ui/core/AppBar';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
-import AddCircle from '@material-ui/icons/AddCircle';
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
-
-import EditableText from 'src/components/EditableText';
-import Grid from 'src/components/Grid';
-import Notice from 'src/components/Notice';
-import ProductNotification from 'src/components/ProductNotification';
 
 import { linodeInTransition } from 'src/features/linodes/transitions';
 import { lishLaunch } from 'src/features/Lish';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 
+import LabelPowerAndConsolePanel from './HeaderSections/LabelPowerAndConsolePanel';
+import NotificationsAndUpgradePanel from './HeaderSections/NotificationsAndUpgradePanel';
 import LinodeBackup from './LinodeBackup';
 import LinodeNetworking from './LinodeNetworking';
-import LinodePowerControl from './LinodePowerControl';
 import LinodeRebuild from './LinodeRebuild';
 import LinodeRescue from './LinodeRescue';
 import LinodeResize from './LinodeResize';
 import LinodeSettings from './LinodeSettings';
 import LinodeSummary from './LinodeSummary';
 import LinodeBusyStatus from './LinodeSummary/LinodeBusyStatus';
-import LinodeTag from './LinodeTag';
 import LinodeVolumes from './LinodeVolumes';
-
-import Select from 'src/components/EnhancedSelect/Select';
 
 import { updateLinode } from 'src/services/linodes';
 import { getTags } from 'src/services/tags';
-
-type ClassNames = 'link'
-  | 'backButton'
-  | 'titleWrapper'
-  | 'cta'
-  | 'launchButton';
-
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
-  titleWrapper: {
-    display: 'flex',
-    marginTop: 5,
-  },
-  backButton: {
-    margin: '5px 0 0 -16px',
-    '& svg': {
-      width: 34,
-      height: 34,
-    },
-  },
-  cta: {
-    marginTop: theme.spacing.unit,
-    [theme.breakpoints.down('sm')]: {
-      margin: 0,
-      display: 'flex',
-      flexBasis: '100%',
-    },
-  },
-  launchButton: {
-    marginRight: theme.spacing.unit,
-    padding: '12px 16px 13px',
-    minHeight: 50,
-    transition: theme.transitions.create(['background-color', 'color']),
-    [theme.breakpoints.down('sm')]: {
-      backgroundColor: theme.color.white,
-      border: `1px solid ${theme.color.border1}`,
-      marginTop: 0,
-      minHeight: 51,
-    },
-    '&:hover': {
-      backgroundColor: theme.palette.primary.main,
-      color: 'white',
-      borderColor: theme.palette.primary.main,
-    },
-  },
-  link: {
-    color: theme.palette.primary.main,
-    cursor: 'pointer',
-    '&:hover': {
-      textDecoration: 'underline',
-    }
-  }
-});
 
 interface LabelInput {
   label: string;
@@ -139,7 +75,7 @@ interface ActionMeta {
   action: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 class LinodesDetailHeader extends React.Component<CombinedProps, State> {
   state: State = {
@@ -202,8 +138,8 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
     history.push(`${routeName}`);
   }
 
-  editLabel = (e: any) => {
-    this.props.labelInput.onEdit(e.target.value)
+  editLabel = (value: string) => {
+    this.props.labelInput.onEdit(value)
   }
 
   goToOldManager = () => {
@@ -227,9 +163,9 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
       ]
     })
     /*
-     * Bit of a misnomer here. We're not adding a new tag, but just filtering out the current
-     * list and doing a PUT request on the linode in question. The tag will still exist and is 
-     * not getting permananently deleted 
+     * Update the linode with the new list of tags (which is the previous list but
+     * with the deleted tag filtered out). It's important to note that the Tag is *not*
+     * being deleted here - it's just being removed from the Linode
      */
     const linodeTagsWithoutDeletedTag = linode.tags.filter((eachTag: string) => {
       return eachTag !== label
@@ -311,96 +247,42 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
   render() {
     const {
       showPendingMutation,
-      classes,
       labelInput,
       linode,
       url,
       notifications,
+      openConfigDrawer,
     } = this.props;
 
     return (
       <React.Fragment>
-        {showPendingMutation &&
-          <Notice important warning>
-            {`This Linode has pending upgrades available. To learn more about
-          this upgrade and what it includes, `}
-            {/** @todo change onClick to open mutate drawer once migrate exists */}
-            <span className={classes.link} onClick={this.goToOldManager}>
-              please visit the classic Linode Manager.
-          </span>
-          </Notice>
-        }
-        <Grid
-          container
-          justify="space-between"
-        >
-          <Grid item className={classes.titleWrapper}>
-            <Link to={`/linodes`}>
-              <IconButton
-                className={classes.backButton}
-              >
-                <KeyboardArrowLeft />
-              </IconButton>
-            </Link>
-            <EditableText
-              role="header"
-              variant="headline"
-              text={labelInput.label}
-              errorText={labelInput.errorText}
-              onEdit={this.editLabel}
-              onCancel={labelInput.onCancel}
-              data-qa-label
-            />
-          </Grid>
-          <Grid item className={classes.cta}>
-            <Button
-              onClick={this.launchLish}
-              className={classes.launchButton}
-              data-qa-launch-console
-            >
-              Launch Console
-          </Button>
-            <LinodePowerControl
-              status={linode.status}
-              recentEvent={linode.recentEvent}
-              id={linode.id}
-              label={linode.label}
-              openConfigDrawer={this.props.openConfigDrawer}
-            />
-          </Grid>
-        </Grid>
-        {linode.tags.map(eachTag => {
-          return (
-            <LinodeTag
-              key={eachTag}
-              label={eachTag}
-              variant="gray"
-              tagLabel={eachTag}
-              onDelete={this.handleDeleteTag}
-              loading={this.state.listDeletingTags.some((inProgressTag) => {
-                /*
-                 * The tag is getting deleted if it appears in the state
-                 * which holds the list of tags queued for deletion 
-                 */
-                return eachTag === inProgressTag;
-              })}
-            />
-          )
-        })}
-        {(this.state.isCreatingTag)
-          ? <Select
-            onChange={this.handleCreateTag}
-            options={this.state.tagsToSuggest}
-            variant='creatable'
-            errorText={this.state.tagError}
-            onBlur={this.handleToggleCreate}
-            placeholder="Create or Select a Tag"
-            value={this.state.tagInputValue}
-            createOptionPosition="first"
-            autoFocus
-          />
-          : <AddCircle onClick={this.handleToggleCreate} />
-        }
+        <NotificationsAndUpgradePanel
+          notifications={notifications}
+          showPendingMutation={showPendingMutation}
+          handleUpgrade={this.goToOldManager}
+        />
+        <LabelPowerAndConsolePanel
+          launchLish={this.launchLish}
+          linode={{
+            id: linode.id,
+            label: linode.label,
+            recentEvent: linode.recentEvent,
+            status: linode.status
+          }}
+          openConfigDrawer={openConfigDrawer}
+          labelInput={{
+            label: labelInput.label,
+            errorText: labelInput.errorText,
+            onCancel: labelInput.onCancel,
+            onEdit: this.editLabel,
+          }}
+        />
+
+
+
+
+
+
         {linodeInTransition(linode.status, linode.recentEvent) &&
           <LinodeBusyStatus status={linode.status} recentEvent={linode.recentEvent} />
         }
@@ -417,10 +299,6 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
               <Tab key={tab.title} label={tab.title} data-qa-tab={tab.title} />)}
           </Tabs>
         </AppBar>
-        {
-          (notifications || []).map((n, idx) =>
-            <ProductNotification key={idx} severity={n.severity} text={n.message} />)
-        }
         <Switch>
           <Route exact path={`${url}/summary`} component={LinodeSummary} />
           <Route exact path={`${url}/volumes`} component={LinodeVolumes} />
@@ -442,6 +320,4 @@ const matches = (p: string) => {
   return Boolean(matchPath(p, { path: location.pathname }));
 }
 
-const styled = withStyles(styles, { withTheme: true });
-
-export default styled(LinodesDetailHeader);
+export default LinodesDetailHeader;
