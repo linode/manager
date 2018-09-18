@@ -282,13 +282,13 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
           <Table aria-label="List of NodeBalancers">
             <TableHead>
               <TableRow>
-                <TableCell parentColumn={false} className={classes.nameCell}>Name</TableCell>
-                <TableCell parentColumn={false} className={classes.nodeStatus} noWrap>Node Status</TableCell>
-                <TableCell parentColumn={false} className={classes.transferred}>Transferred</TableCell>
-                <TableCell parentColumn={false} className={classes.ports}>Ports</TableCell>
-                <TableCell parentColumn={false} className={classes.ip} noWrap>IP Addresses</TableCell>
-                <TableCell parentColumn={false}>Region</TableCell>
-                <TableCell parentColumn={false} />
+                <TableCell className={classes.nameCell}>Name</TableCell>
+                <TableCell className={classes.nodeStatus} noWrap>Node Status</TableCell>
+                <TableCell className={classes.transferred}>Transferred</TableCell>
+                <TableCell className={classes.ports}>Ports</TableCell>
+                <TableCell className={classes.ip} noWrap>IP Addresses</TableCell>
+                <TableCell>Region</TableCell>
+                <TableCell />
               </TableRow>
             </TableHead>
             <TableBody>
@@ -422,7 +422,7 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
           <TableCell parentColumn="Region" data-qa-region>
             <RegionIndicator region={nodeBalancer.region} />
           </TableCell>
-          <TableCell parentColumn={false}>
+          <TableCell>
             <NodeBalancerActionMenu
               nodeBalancerId={nodeBalancer.id}
               toggleDialog={this.toggleDialog}

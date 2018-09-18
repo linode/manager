@@ -111,12 +111,12 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
             <Table border aria-label="Invoice Details">
               <TableHead>
                 <TableRow>
-                  <TableCell parentColumn={false}>Description</TableCell>
-                  <TableCell parentColumn={false}>From</TableCell>
-                  <TableCell parentColumn={false}>To</TableCell>
-                  <TableCell parentColumn={false}>Quantity</TableCell>
-                  <TableCell parentColumn={false} noWrap>Unit Price</TableCell>
-                  <TableCell parentColumn={false}>Amount</TableCell>
+                  <TableCell>Description</TableCell>
+                  <TableCell>From</TableCell>
+                  <TableCell>To</TableCell>
+                  <TableCell>Quantity</TableCell>
+                  <TableCell noWrap>Unit Price</TableCell>
+                  <TableCell>Amount</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>

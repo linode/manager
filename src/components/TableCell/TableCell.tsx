@@ -48,7 +48,7 @@ export interface Props extends TableCellProps {
    * TableCell is listed under or if this table cell is the 
    * in the table header, set to false to disregard
    */
-  parentColumn: false | string;
+  parentColumn?: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -59,26 +59,26 @@ class WrappedTableCell extends React.Component<CombinedProps> {
     const { classes, className, parentColumn, noWrap, sortable, ...rest } = this.props;
 
     return (
-        <TableCell
-          className={classNames(
+      <TableCell
+        className={classNames(
           className,
-            {
-              [classes.root]: true,
-              [classes.noWrap]: noWrap,
-              [classes.sortable]: sortable,
-            })}
-          {...rest}
-        >
-        {(!parentColumn)
-          ? this.props.children
-          : <React.Fragment>
-              <Hidden mdUp>
-                <span>{parentColumn}</span>
-              </Hidden>
-              <span className={classes.data}>{this.props.children}</span>
+          {
+            [classes.root]: true,
+            [classes.noWrap]: noWrap,
+            [classes.sortable]: sortable,
+          })}
+        {...rest}
+      >
+        {(!!parentColumn)
+          ? <React.Fragment>
+            <Hidden mdUp>
+              <span>{parentColumn}</span>
+            </Hidden>
+            <span className={classes.data}>{this.props.children}</span>
           </React.Fragment>
+          : this.props.children
         }
-        </TableCell>
+      </TableCell>
     );
   }
 }
