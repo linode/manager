@@ -114,6 +114,7 @@ export interface EnhancedSelectProps {
   components?: any;
   disabled?: boolean;
   isMulti?: boolean;
+  isLoading?: boolean;
   variant?: 'async' | 'creatable';
   value?: Item | Item[] | null;
   label?: string;
@@ -123,6 +124,7 @@ export interface EnhancedSelectProps {
   createNew?: (inputValue:string) => void;
   onInputChange?: (inputValue:string) => void;
   loadOptions?: (inputValue:string) => Promise<Item|Item[]> | undefined;
+  filterOption?: (item:Item, inputValue:string) => boolean | null;
 }
 
 // Material-UI versions of several React-Select components.
@@ -139,6 +141,7 @@ type CombinedProps = EnhancedSelectProps & WithStyles<ClassNames>;
 interface BaseSelectProps extends SelectProps<any> {
   classes: any;
   textFieldProps: any;
+  filterOption: any;
 }
 
 interface CreatableProps extends CreatableSelectProps<any> {
@@ -154,9 +157,11 @@ class Select extends React.PureComponent<CombinedProps,{}> {
       createNew,
       disabled,
       errorText,
+      filterOption,
       label,
       loadOptions,
       isMulti,
+      isLoading,
       placeholder,
       onChange,
       onInputChange,
@@ -192,7 +197,10 @@ class Select extends React.PureComponent<CombinedProps,{}> {
       <BaseSelect
         isClearable
         isSearchable
+        isLoading={isLoading}
         defaultOptions
+        cacheOptions={false}
+        filterOption={filterOption}
         loadOptions={loadOptions}
         isMulti={isMulti}
         isDisabled={disabled}

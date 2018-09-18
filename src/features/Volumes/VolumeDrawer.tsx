@@ -33,6 +33,8 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 
+import { createFilter } from 'react-select';
+
 type ClassNames = 'root'
   | 'actionPanel';
 
@@ -448,6 +450,15 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
       })
   }
 
+  filterOptions = (item:Item, inputValue:string) => {
+    const labelMatch = item.label.toLocaleLowerCase().includes(inputValue);
+    const { region } = this.state;
+    const linodeRegion = item.data.data.region;
+    if (region && region !== 'none') {
+      return labelMatch && (region === linodeRegion);
+    } else { return labelMatch }
+  }
+
   debouncedSearch = debounce(400, false, this.searchLinodes);
 
   onInputChange = (inputValue:string) => {
@@ -458,14 +469,18 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     const { linodeLabel, mode } = this.props;
     if (!linodes) { return []; }
     const options: Item[] = linodes.map((linode:Linode.Linode) => {
-        return { value: linode.id, label: linode.label }
+        return {
+          value: linode.id,
+          label: linode.label,
+          data: { region: linode.region }
+        }
       });
     if (mode === modes.EDITING || mode === modes.RESIZING) {
       /*
       * We optimize the lookup of the linodeLabel by providing it
       * explicitly when editing or resizing
       */
-        return [{ value: 'none', label: linodeLabel }];
+        return [{ value: 'none', label: linodeLabel, data: { region: 'none'} }];
     }
     return options;
   }
@@ -614,6 +629,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
                 || mode === modes.RESIZING
               }
               loadOptions={this.searchLinodes}
+              filterOption={this.filterOptions}
               onChange={this.setSelectedLinode}
               onInputChange={this.onInputChange}
               data-qa-select-linode
