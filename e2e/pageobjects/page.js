@@ -36,12 +36,12 @@ export default class Page {
     }
 
     logout() {
-        this.userMenu.waitForVisible();
+        this.userMenu.waitForVisible(constants.wait.normal);
         this.userMenu.click();
-        this.logoutButton.waitForVisible();
+        this.logoutButton.waitForVisible(constants.wait.normal);
         this.logoutButton.click();
-        this.logoutButton.waitForVisible(constants.wait.short, true);
-        this.globalCreate.waitForVisible(constants.wait.short, true);
+        this.logoutButton.waitForVisible(constants.wait.normal, true);
+        this.globalCreate.waitForVisible(constants.wait.normal, true);
 
         browser.waitUntil(function() {
             return browser.getUrl().includes('/login');
