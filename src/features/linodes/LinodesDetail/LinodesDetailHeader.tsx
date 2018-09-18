@@ -37,7 +37,7 @@ import LinodeVolumes from './LinodeVolumes';
 
 import Select from 'src/components/EnhancedSelect/Select';
 
-import { addTagsToLinode } from 'src/services/linodes';
+import { updateLinode } from 'src/services/linodes';
 import { getTags } from 'src/services/tags';
 
 type ClassNames = 'link'
@@ -234,7 +234,7 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
     const linodeTagsWithoutDeletedTag = linode.tags.filter((eachTag: string) => {
       return eachTag !== label
     })
-    addTagsToLinode(linode.id, linodeTagsWithoutDeletedTag)
+    updateLinode(linode.id, { tags: linodeTagsWithoutDeletedTag })
       .then(() => {
         linode.update();
         /*
@@ -278,9 +278,9 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
     });
 
     const { linode } = this.props;
-    addTagsToLinode(
+    updateLinode(
       linode.id,
-      [...linode.tags, value.label]
+      { tags: [...linode.tags, value.label] }
     )
       .then(() => {
         linode.update();
@@ -397,8 +397,9 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
             placeholder="Create or Select a Tag"
             value={this.state.tagInputValue}
             createOptionPosition="first"
+            autoFocus
           />
-          : <AddCircle onClick={this.handleToggleCreate}/>
+          : <AddCircle onClick={this.handleToggleCreate} />
         }
         {linodeInTransition(linode.status, linode.recentEvent) &&
           <LinodeBusyStatus status={linode.status} recentEvent={linode.recentEvent} />
