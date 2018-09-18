@@ -450,6 +450,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
   debouncedSearch = debounce(400, false, this.searchLinodes);
 
   onInputChange = (inputValue:string) => {
+    this.setState({ linodesLoading: true });
     this.debouncedSearch(inputValue);
   }
 
