@@ -11,7 +11,6 @@ import { Subscription } from 'rxjs/Subscription';
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
@@ -26,6 +25,7 @@ import LinearProgress from 'src/components/LinearProgress';
 import PaginationFooter, { PaginationProps } from 'src/components/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
 import TableRowError from 'src/components/TableRowError';
 import { events$, generateInFilter, resetEventsPolling } from 'src/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
@@ -445,16 +445,16 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
         )
         : (
           <TableRow key={volume.id} data-qa-volume-cell={volume.id} className="fade-in-table">
-            <TableCell data-qa-volume-cell-label>{volume.label}</TableCell>
-            <TableCell data-qa-volume-cell-attachment={linodeLabel}>
+            <TableCell parentColumn="Label" data-qa-volume-cell-label>{volume.label}</TableCell>
+            <TableCell parentColumn="Attached To" data-qa-volume-cell-attachment={linodeLabel}>
               {linodeLabel &&
                 <Link to={`/linodes/${volume.linode_id}`}>
                   {linodeLabel}
                 </Link>
               }</TableCell>
-            <TableCell data-qa-volume-size>{size} GB</TableCell>
-            <TableCell data-qa-fs-path>{filesystemPath}</TableCell>
-            <TableCell data-qa-volume-region>{region}</TableCell>
+            <TableCell parentColumn="Size" data-qa-volume-size>{size} GB</TableCell>
+            <TableCell parentColumn="File System Path" data-qa-fs-path>{filesystemPath}</TableCell>
+            <TableCell parentColumn="Region" data-qa-volume-region>{region}</TableCell>
             <TableCell>
               <VolumesActionMenu
                 onShowConfig={this.handleShowConfig}

@@ -1,14 +1,18 @@
+import * as classNames from 'classnames';
 import * as React from 'react';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Table, { TableProps } from '@material-ui/core/Table';
 
 type ClassNames = 'root'
-  | 'border';
+  | 'border'
+  | 'responsive';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
     overflowX: 'auto',
+  },
+  responsive: {
     [theme.breakpoints.down('sm')]: {
       '& thead': {
         display: 'none',
@@ -42,6 +46,7 @@ interface Props {
   noOverflow?: boolean;
   tableClass?: string;
   border?: boolean;
+  isResponsive?: boolean; // back-door for tables that don't need to be responsive
 }
 
 type CombinedProps = Props & TableProps & WithStyles<ClassNames>;
@@ -49,13 +54,26 @@ type CombinedProps = Props & TableProps & WithStyles<ClassNames>;
 class WrappedTable extends React.Component<CombinedProps> {
 
   render() {
-    const { classes, className, tableClass, border, noOverflow, ...rest } = this.props;
-
-    const tableWrapperClasses = 
-      (noOverflow) ? className : `${classes.root} ${className}`;
+    const {
+      classes,
+      className,
+      isResponsive,
+      tableClass,
+      border,
+      noOverflow,
+      ...rest
+    } = this.props;
 
     return (
-      <div className={`${tableWrapperClasses} ${border && classes.border}`}>
+      <div
+        className={classNames(
+          {
+            [classes.root]: !noOverflow,
+            [classes.responsive]: !(isResponsive === false) // must be explicity set to false
+          },
+          className
+        )}
+      >
         <Table className={tableClass} {...rest}>{this.props.children}</Table>
       </div>
     );

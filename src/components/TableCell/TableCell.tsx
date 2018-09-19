@@ -43,10 +43,9 @@ export interface Props extends TableCellProps {
   noWrap?: boolean;
   sortable?: boolean;
   className?: string;
-  /**
+  /*
    * parent column will either be the name of the column this
-   * TableCell is listed under or if this table cell is the 
-   * in the table header, set to false to disregard
+   * TableCell is listed under 
    */
   parentColumn?: string;
 }

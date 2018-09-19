@@ -343,7 +343,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
 
   linodeConfigsTable = () => {
     return (
-      <Table aria-label="List of Configurations">
+      <Table isResponsive={false} aria-label="List of Configurations">
         <TableHead>
           <TableRow>
             <TableCell>Label</TableCell>
