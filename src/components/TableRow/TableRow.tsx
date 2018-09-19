@@ -16,6 +16,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       width: '0.01%',
       height: '100%',
       borderLeft: '5px solid transparent',
+      borderBottom: `1px solid ${theme.palette.divider}`,
       transition: theme.transitions.create(['border-color']),
     },
     '& > td:first-child, & > th:first-child': {
