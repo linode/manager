@@ -19,7 +19,8 @@ describe('LinodeResize', () => {
       }}
       linodeId={12}
       linodeType={null}
-      typesData={mockTypes}
+      currentTypesData={mockTypes}
+      deprecatedTypesData={mockTypes}
       linodeLabel=""
     />,
   );
@@ -36,7 +37,8 @@ describe('LinodeResize', () => {
           }}
           linodeId={12}
           linodeType={null}
-          typesData={mockTypes}
+          currentTypesData={mockTypes}
+          deprecatedTypesData={mockTypes}
           linodeLabel=""
         />
       </LinodeThemeWrapper>,
@@ -63,7 +65,8 @@ describe('LinodeResize', () => {
               }}
               linodeId={12}
               linodeType={null}
-              typesData={mockTypes}
+              currentTypesData={mockTypes}
+              deprecatedTypesData={mockTypes}
               linodeLabel=""
             />
           </LinodeThemeWrapper>,
@@ -92,7 +95,8 @@ describe('LinodeResize', () => {
               }}
               linodeId={12}
               linodeType={'_something_unexpected_'}
-              typesData={mockTypes}
+              currentTypesData={mockTypes}
+              deprecatedTypesData={mockTypes}
               linodeLabel=""
             />
           </LinodeThemeWrapper>,
