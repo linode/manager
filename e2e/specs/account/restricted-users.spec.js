@@ -33,8 +33,13 @@ describe('Account - Restricted User Suite', () => {
     });
 
     it('should display user as restricted in users table', () => {
-       const restrictedUser = Users.userRow(userConfig.username);
-       expect(restrictedUser.$(Users.userRestriction.selector).getText()).toMatch(/Restricted/ig);
+        browser.waitUntil(function() {
+            return Users.userRows.length > 1;
+        }, constants.wait.long);
+
+
+        const restrictedUser = Users.userRow(userConfig.username);
+        expect(restrictedUser.$(Users.userRestriction.selector).getText()).toMatch(/Restricted/ig);
     });
 
     it('should view restricted user profile', () => {
