@@ -42,7 +42,6 @@ export class Dashboard extends Page {
         expect(this.volumesCard.isVisible()).toBe(true);
         expect(this.nodebalancerCard.isVisible()).toBe(true);
         expect(this.domainsCard.isVisible()).toBe(true);
-        expect(this.monthlyTransferCard.isVisible()).toBe(true);
         expect(this.blogCard.isVisible()).toBe(true);
         expect(this.readMore.isVisible()).toBe(true);
     }

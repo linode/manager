@@ -14,8 +14,13 @@ const specsToRun = () => {
     if (argv.file) {
         return ['./e2e/setup/setup.spec.js', argv.file];
     }
+    
     if (argv.dir || argv.d) {
         return ['./e2e/setup/setup.spec.js', `./e2e/specs/${argv.dir || argv.d}/**/*.spec.js`]
+    }
+
+    if (argv.smoke) {
+        return ['./e2e/setup/setup.spec.js', './e2e/specs/**/smoke-*spec.js'];
     }
     return ['./e2e/setup/setup.spec.js', './e2e/specs/**/*.js'];
 }
