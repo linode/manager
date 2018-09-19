@@ -1,4 +1,4 @@
-import * as Axios from 'axios';
+import Axios, { AxiosError, AxiosPromise, AxiosResponse } from 'axios';
 import {
   compose,
   isEmpty,
@@ -105,9 +105,11 @@ export const setXFilter = (xFilter: any) => when(
   set(L.xFilter, JSON.stringify(xFilter)),
 );
 
+const reduceRequestConfig = (...fns: Function[]) => fns.reduceRight((result, fn) => fn(result), {});
+
 /** Generator */
-export default <T>(...fns: Function[]): Axios.AxiosPromise<T> => {
-  const config = fns.reverse().reduce((result, currentFn) => currentFn(result), {});
+export default <T>(...fns: Function[]): AxiosPromise<T> => {
+  const config = reduceRequestConfig(...fns);
   if (config.validationErrors) {
     return Promise.reject({
       config: omit(['validationErrors'], config),
@@ -115,7 +117,7 @@ export default <T>(...fns: Function[]): Axios.AxiosPromise<T> => {
     });
   }
 
-  return Axios.default(config);
+  return Axios(config);
 };
 
 /**
@@ -132,7 +134,7 @@ export const mockAPIError = (
   status: number = 400,
   statusText: string = 'Internal Server Error',
   data: any = {},
-): Promise<Axios.AxiosError> =>
+): Promise<AxiosError> =>
   new Promise((resolve, reject) => setTimeout(() => reject(
     createError(
       `Request failed with a status of ${status}`,
@@ -140,7 +142,7 @@ export const mockAPIError = (
     )
   ), process.env.NODE_ENV === 'test' ? 0 : 250));
 
-const createError = (message: string, response: Axios.AxiosResponse) => {
+const createError = (message: string, response: AxiosResponse) => {
   const error = new Error(message) as any;
   error.response = response;
   return error;
@@ -155,4 +157,34 @@ export const mockAPIFieldErrors = (fields: string[]): Linode.ApiFieldError[] => 
     (result, field) => [...result, { field, reason: `${field} is incorrect.`, }],
     [{ reason: 'A general error has occured.' }],
   );
+};
+
+/**
+ * POC * POC * POC * POC * POC * POC * POC *
+ */
+interface CancellableRequest<T> {
+  request: () => Promise<T>;
+  cancel: () => void;
+}
+
+export const CancellableRequest = <T>(...fns: Function[]): CancellableRequest<T> => {
+  const config = reduceRequestConfig(...fns);
+  const source = Axios.CancelToken.source();
+
+  if (config.validationErrors) {
+    return {
+      cancel: () => null,
+      request: () => Promise.reject({
+        config: omit(['validationErrors'], config),
+        response: { data: { errors: config.validationErrors } },
+      }),
+    };
+  }
+
+  return {
+    cancel: source.cancel,
+    request: () => Axios({ ...config, cancelToken: source.token })
+      .then(response => response.data)
+  }
+
 };
