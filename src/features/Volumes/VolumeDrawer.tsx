@@ -476,7 +476,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
       * We optimize the lookup of the linodeLabel by providing it
       * explicitly when editing or resizing
       */
-        return [{ value: 'none', label: linodeLabel, data: { region: 'none'} }];
+      return [{ value: 'none', label: linodeLabel, data: { region: 'none'} }];
     }
     return options;
   }
