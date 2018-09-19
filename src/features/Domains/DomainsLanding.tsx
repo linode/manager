@@ -5,7 +5,6 @@ import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import Typography from '@material-ui/core/Typography';
 
@@ -22,6 +21,7 @@ import Grid from 'src/components/Grid';
 import PaginationFooter, { PaginationProps } from 'src/components/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { deleteDomain, getDomains$ } from 'src/services/domains';
@@ -390,12 +390,12 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
           className={`${classes.domainRow} ${'fade-in-table'}`}
           rowLink={`/domains/${domain.id}`}
         >
-          <TableCell data-qa-domain-label>
+          <TableCell parentColumn="Domain" data-qa-domain-label>
             <Link to={`/domains/${domain.id}`}>
               {domain.domain}
             </Link>
           </TableCell>
-          <TableCell data-qa-domain-type>{domain.type}</TableCell>
+          <TableCell parentColumn="Type" data-qa-domain-type>{domain.type}</TableCell>
           <TableCell>
             <ActionMenu
               domain={domain.domain}

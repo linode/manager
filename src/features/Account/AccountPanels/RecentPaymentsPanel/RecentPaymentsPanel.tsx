@@ -2,15 +2,15 @@ import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import PaginationFooter, { PaginationProps } from 'src/components/PaginationFooter';
+import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
@@ -132,9 +132,9 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
   renderRow = (item: Linode.Payment) => {
     return (
       <TableRow key={`payment-${item.id}`}>
-        <TableCell><DateTimeDisplay value={item.date} /></TableCell>
-        <TableCell>Payment #{item.id}</TableCell>
-        <TableCell>${item.usd}</TableCell>
+        <TableCell parentColumn="Date Created"><DateTimeDisplay value={item.date} /></TableCell>
+        <TableCell parentColumn="Description">Payment #{item.id}</TableCell>
+        <TableCell parentColumn="Amount">${item.usd}</TableCell>
       </TableRow>
     );
   };

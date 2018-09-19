@@ -8,7 +8,6 @@ import { Subscription } from 'rxjs/Subscription';
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
@@ -27,6 +26,7 @@ import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoad
 import renderGuard from 'src/components/RenderGuard';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
 import { events$, resetEventsPolling } from 'src/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { getLinodeConfigs, getLinodeVolumes } from 'src/services/linodes';
@@ -811,9 +811,11 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
                   );
 
                   return <TableRow key={volume.id} data-qa-volume-cell={volume.id}>
-                    <TableCell data-qa-volume-cell-label>{label}</TableCell>
-                    <TableCell data-qa-volume-size>{size} GiB</TableCell>
-                    <TableCell data-qa-fs-path>{filesysPath}</TableCell>
+                    <TableCell parentColumn="Label" data-qa-volume-cell-label>{label}</TableCell>
+                    <TableCell parentColumn="Size" data-qa-volume-size>{size} GiB</TableCell>
+                    <TableCell parentColumn="File System Path" data-qa-fs-path>
+                      {filesysPath}
+                    </TableCell>
                     <TableCell>
                       <ActionMenu
                         data-qa-linode-volume-actions

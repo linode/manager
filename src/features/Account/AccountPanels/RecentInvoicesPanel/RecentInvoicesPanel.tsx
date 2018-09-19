@@ -3,14 +3,14 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import PaginationFooter, { PaginationProps } from 'src/components/PaginationFooter';
+import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
@@ -141,9 +141,9 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
   renderRow = (item: Linode.Invoice) => {
     return (
       <TableRow key={`invoice-${item.id}`} rowLink={`billing/invoices/${item.id}`}>
-        <TableCell><DateTimeDisplay value={item.date}/></TableCell>
-        <TableCell><Link to={`billing/invoices/${item.id}`}>Invoice #{item.id}</Link></TableCell>
-        <TableCell>${item.total}</TableCell>
+        <TableCell parentColumn="Date Created"><DateTimeDisplay value={item.date}/></TableCell>
+        <TableCell parentColumn="Description"><Link to={`billing/invoices/${item.id}`}>Invoice #{item.id}</Link></TableCell>
+        <TableCell parentColumn="Amount">${item.total}</TableCell>
       </TableRow>
     );
   };
