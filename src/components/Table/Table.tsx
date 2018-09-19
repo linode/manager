@@ -33,6 +33,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
+        minHeight: 32,
       },
     },
   },
