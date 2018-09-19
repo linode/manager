@@ -610,15 +610,16 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
     updateAccountInfo(this.state.fields)
       .then((updatedAccount) => {
         this.props.update((existingAccount) => {
-          const account = {...existingAccount, ...updatedAccount}
           /* API returns:
           * credit_card: {"expiry": null, "last_four": null}
           * rather than credit_card = null. The merge will therefore
           * overwrite the previous values for expiration/last 4 digits
           * with null, so we need to manually set them here.
           */
-          account.credit_card = existingAccount.credit_card;
-          return account;
+          return {...existingAccount,
+                  ...updatedAccount,
+                  credit_card: existingAccount.credit_card
+                 }
         });
 
         this.setState({
