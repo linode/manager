@@ -425,7 +425,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
         label: {
           '+contains': inputValue,
         },
-        region: this.state.region
+        region
       }
     } else {
       return {
@@ -442,10 +442,12 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     const filterLinodes = this.getLinodeFilter(inputValue);
     getLinodes({}, filterLinodes)
       .then((response) => {
+        if (!this.mounted) { return; }
         const linodes = this.renderLinodeOptions(response.data);
         this.setState({ linodes, linodesLoading: false });
       })
       .catch(() => {
+        if (!this.mounted) { return; }
         this.setState({ linodesLoading: false });
       })
   }
@@ -453,6 +455,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
   debouncedSearch = debounce(400, false, this.searchLinodes);
 
   onInputChange = (inputValue: string, actionMeta: ActionMeta) => {
+    if (!this.mounted) { return; }
     if (actionMeta.action !== 'input-change') { return; }
     this.setState({ linodesLoading: true });
     this.debouncedSearch(inputValue);
