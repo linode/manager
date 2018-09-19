@@ -231,7 +231,7 @@ const LinodeTheme: Linode.Theme = {
         color: '#555',
         '&:hover': {
           '& $deleteIcon': {
-            color: '#222',
+            color: primaryColors.text,
           },
         },
       },

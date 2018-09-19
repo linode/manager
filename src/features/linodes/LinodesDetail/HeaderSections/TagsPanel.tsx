@@ -1,21 +1,43 @@
 import * as React from 'react';
 
+import IconButton from '@material-ui/core/IconButton';
 import {
   StyleRulesCallback,
   Theme,
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
+import Tooltip from '@material-ui/core/Tooltip';
 import AddCircle from '@material-ui/icons/AddCircle';
 
 import LinodeTag from './LinodeTag';
 
 import Select from 'src/components/EnhancedSelect/Select';
 
-type ClassNames = 'root';
+type ClassNames = 'root'
+  | 'tag'
+  | 'addButton';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+  root: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  tag: {
+    position: 'relative',
+    top: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    padding: theme.spacing.unit / 2,
+    backgroundColor: theme.color.grey2,
+    color: theme.palette.text.primary,
+    '& > span': {
+      position: 'relative',
+      top: -2,
+    },
+  },
+  addButton: {
+    marginTop: theme.spacing.unit * 2,
+  },
 });
 
 interface Item {
@@ -54,19 +76,20 @@ const TagsPanel: React.StatelessComponent<CombinedProps> = (props) => {
     toggleCreateTag,
     onDeleteTag,
     tagInputValue,
-    isCreatingTag
+    isCreatingTag,
+    classes
   } = props;
 
   return (
-    <React.Fragment>
+    <div className={classes.root}>
       {tagsAlreadyAppliedToLinode.map(eachTag => {
         return (
           <LinodeTag
             key={eachTag}
             label={eachTag}
-            variant="gray"
             tagLabel={eachTag}
             onDelete={onDeleteTag}
+            className={classes.tag}
             loading={tagsQueuedForDeletion.some((inProgressTag) => {
               /*
                * The tag is getting deleted if it appears in the state
@@ -89,9 +112,17 @@ const TagsPanel: React.StatelessComponent<CombinedProps> = (props) => {
           createOptionPosition="first"
           autoFocus
         />
-        : <AddCircle onClick={toggleCreateTag} />
+        :
+        <Tooltip
+          title="Add New Tag"
+          placement="right"
+        >
+          <IconButton onClick={toggleCreateTag} className={classes.addButton}>
+            <AddCircle  />
+          </IconButton>
+        </Tooltip> 
       }
-    </React.Fragment>
+    </div>
   );
 };
 
