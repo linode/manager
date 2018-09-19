@@ -103,6 +103,7 @@ class Example extends React.Component<{},State> {
       <React.Fragment>
         <Select
           label="Basic Select"
+          isLoading
           value={valueSingle}
           placeholder="Choose one fruit"
           onChange={this.handleChangeSingle}
