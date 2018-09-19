@@ -230,7 +230,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                 editPayload={d}
                 onEdit={this.handleOpenSOADrawer}
               />
-              : <React.Fragment />;
+              : null;
           },
         },
       ],

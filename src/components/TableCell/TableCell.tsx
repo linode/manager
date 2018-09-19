@@ -6,12 +6,18 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 import TableCell, { TableCellProps } from '@material-ui/core/TableCell';
 
 type ClassNames = 'root'
+  | 'emptyCell'
   | 'noWrap'
   | 'sortable'
   | 'data';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {},
+  emptyCell: {
+    [theme.breakpoints.down('sm')]: {
+      display: 'none !important'
+    },
+  },
   noWrap: {
     whiteSpace: 'nowrap',
   },
@@ -65,6 +71,8 @@ class WrappedTableCell extends React.Component<CombinedProps> {
             [classes.root]: true,
             [classes.noWrap]: noWrap,
             [classes.sortable]: sortable,
+            // hide the cell at small breakpoints if it's empty with no parent column 
+            [classes.emptyCell]: !parentColumn && !this.props.children
           })}
         {...rest}
       >
