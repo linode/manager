@@ -135,7 +135,7 @@ const circleProgressComponent: React.StatelessComponent<CombinedProps> = (props)
           value={value}
           variant={variant}
           thickness={green ? 4 : 2}
-          data-qa-circle-progress
+          data-qa-circle-progress={value}
         />
       </div>
       : <CircularProgress 
