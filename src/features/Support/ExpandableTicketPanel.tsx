@@ -117,6 +117,7 @@ interface Props {
   ticket?: Linode.SupportTicket;
   open?: boolean;
   isCurrentUser: boolean;
+  parentTicket?: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -133,6 +134,8 @@ interface Data {
   description: string;
   username: string;
   from_linode: boolean;
+  ticket_id: string;
+  reply_id: string;
 }
 
 export class ExpandableTicketPanel extends React.Component<CombinedProps, State> {
@@ -158,11 +161,13 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
   }
 
   getData = () => {
-    const { ticket, reply } = this.props;
+    const { parentTicket, ticket, reply } = this.props;
     if (!ticket && !reply) { return; }
     let data: Data;
     if (ticket) {
       data = {
+        ticket_id: String(ticket.id),
+        reply_id: '',
         gravatar_id: ticket.gravatar_id,
         gravatarUrl: pathOr('not found',['gravatarUrl'],ticket),
         date: ticket.opened,
@@ -172,6 +177,8 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
       }
     } else if (reply) {
       data = {
+        ticket_id: parentTicket ? parentTicket : '',
+        reply_id: String(reply.id),
         gravatar_id: reply.gravatar_id,
         gravatarUrl: pathOr('not found',['gravatarUrl'],reply),
         date: reply.created,
@@ -184,8 +191,18 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
     return data!;
   }
 
-  insertHively = () => {
-    return '<h4 style="font-family:Helvetica,Arial,sans-serif;font-size:14px;color:#111;padding:0px;margin:0 0 8px;">How did I do?</h4><p style="padding:0px;margin:0 0 8px;text-decoration:none;"><a href="https://secure.teamhively.com/ratings/add/user/80992/rating/3" target="_blank"><img style="border:none;font-size:9px;text-decoration:none;margin-right:15px;font-weight:bold;color:#5b723f;" alt="Happy" src="https://secure.teamhively.com/system/smileys/icons/000/000/001/px_45/happy_base.png?1468984347"></a><a href="https://secure.teamhively.com/ratings/add/user/80992/rating/2" target="_blank"><img style="border:none;font-size:9px;text-decoration:none;margin-right:15px;font-weight:bold;color:#0e88b6" alt="Satisfied" src="https://secure.teamhively.com/system/smileys/icons/000/000/002/px_45/satisfied_base.png?1468984347"></a><a href="https://secure.teamhively.com/ratings/add/user/80992/rating/1" target="_blank"><img style="border:none;font-size:9px;text-decoration:none;font-weight:bold;color:#e2644f" alt="Unhappy" src="https://secure.teamhively.com/system/smileys/icons/000/000/003/px_45/unhappy_base.png?1468984347"></a></p> <p style="padding:0px;margin:0 0 8px;"><a href="https://secure.teamhively.com/ratings/new/user/80992" target="_blank" style="font-family:Helvetica,Arial,sans-serif;font-size:12px;text-decoration:underline;font-weight:bold;color:#58A9D2;">Click on a face to provide feedback on my performance!</a></p>'
+  renderHively = (linodeUsername: string, ticketId: string, replyId: string) => {
+    const href = `https://secure.teamhively.com/ratings/add/account/587/source/hs/ext/${linodeUsername}/ticket/${ticketId}-${replyId}/rating/`;
+    return (
+      <div>
+        <h4>How did I do?</h4>
+        <p>
+          <a href={href + '3'}><img src={"https://secure.teamhively.com/system/smileys/icons/000/000/001/px_45/happy_base.png?1468984347"} /></a>
+          <a href={href + '2'}><img src={"https://secure.teamhively.com/system/smileys/icons/000/000/002/px_45/satisfied_base.png?1468984347"} /></a>
+          <a href={href + '1'}><img src={"https://secure.teamhively.com/system/smileys/icons/000/000/003/px_45/unhappy_base.png?1468984347"} /></a>
+        </p>
+      </div>
+    )
   }
 
   renderAvatar(url: string) {
@@ -259,7 +276,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
             }
           </Grid>
           {data.from_linode && 
-            <div dangerouslySetInnerHTML={{__html: this.insertHively()}}/>
+            this.renderHively(data.username, data.ticket_id, data.reply_id)
           }
         </Paper>
       </Grid>
