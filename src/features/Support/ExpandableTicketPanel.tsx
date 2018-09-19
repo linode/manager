@@ -184,6 +184,10 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
     return data!;
   }
 
+  insertHively = () => {
+    return '<h4 style="font-family:Helvetica,Arial,sans-serif;font-size:14px;color:#111;padding:0px;margin:0 0 8px;">How did I do?</h4><p style="padding:0px;margin:0 0 8px;text-decoration:none;"><a href="https://secure.teamhively.com/ratings/add/user/80992/rating/3" target="_blank"><img style="border:none;font-size:9px;text-decoration:none;margin-right:15px;font-weight:bold;color:#5b723f;" alt="Happy" src="https://secure.teamhively.com/system/smileys/icons/000/000/001/px_45/happy_base.png?1468984347"></a><a href="https://secure.teamhively.com/ratings/add/user/80992/rating/2" target="_blank"><img style="border:none;font-size:9px;text-decoration:none;margin-right:15px;font-weight:bold;color:#0e88b6" alt="Satisfied" src="https://secure.teamhively.com/system/smileys/icons/000/000/002/px_45/satisfied_base.png?1468984347"></a><a href="https://secure.teamhively.com/ratings/add/user/80992/rating/1" target="_blank"><img style="border:none;font-size:9px;text-decoration:none;font-weight:bold;color:#e2644f" alt="Unhappy" src="https://secure.teamhively.com/system/smileys/icons/000/000/003/px_45/unhappy_base.png?1468984347"></a></p> <p style="padding:0px;margin:0 0 8px;"><a href="https://secure.teamhively.com/ratings/new/user/80992" target="_blank" style="font-family:Helvetica,Arial,sans-serif;font-size:12px;text-decoration:underline;font-weight:bold;color:#58A9D2;">Click on a face to provide feedback on my performance!</a></p>'
+  }
+
   renderAvatar(url: string) {
     const { classes } = this.props;
 
@@ -254,6 +258,9 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
               </Grid>
             }
           </Grid>
+          {data.from_linode && 
+            <div dangerouslySetInnerHTML={{__html: this.insertHively()}}/>
+          }
         </Paper>
       </Grid>
     )
