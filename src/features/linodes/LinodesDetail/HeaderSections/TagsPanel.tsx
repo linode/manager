@@ -22,6 +22,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   root: {
     display: 'flex',
     alignItems: 'center',
+    flexWrap: 'wrap',
   },
   tag: {
     position: 'relative',
