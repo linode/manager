@@ -44,26 +44,37 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     marginBottom: theme.spacing.unit * 2,
   },
   userButton: {
-    padding: 8,
     borderRadius: 30,
     fontWeight: 400,
+    padding: 0,
     color: theme.palette.text.primary,
     '&:hover': {
       color: theme.palette.primary.main,
     },
+    [theme.breakpoints.up('md')]: {
+      padding: 8,
+    },
   },
   avatar: {
     borderRadius: '50%',
-    width: 50,
-    height: 50,
+    width: 30,
+    height: 30,
     marginRight: theme.spacing.unit * 2,
     animation: 'fadeIn 150ms linear forwards',
+    [theme.breakpoints.up('md')]: {
+      width: 50,
+      height: 50,
+    },
   },
   emptyImage: {
     display: 'inline',
-    width: 50,
-    height: 50,
+    width: 30,
+    height: 30,
     marginRight: theme.spacing.unit * 2,
+    [theme.breakpoints.up('md')]: {
+      width: 50,
+      height: 50,
+    },
   }
 });
 
