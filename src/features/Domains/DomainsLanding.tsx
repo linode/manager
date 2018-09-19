@@ -24,7 +24,7 @@ import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
 import TableRow from 'src/components/TableRow';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
-import { deleteDomain, getDomains } from 'src/services/domains';
+import { deleteDomain, getDomains$ } from 'src/services/domains';
 import scrollToTop from 'src/utilities/scrollToTop';
 
 import ActionMenu from './DomainActionMenu';
@@ -78,7 +78,7 @@ type CombinedProps = WithStyles<ClassNames> & RouteComponentProps<{}>;
 class DomainsLanding extends React.Component<CombinedProps, State> {
   state: State = {
     domains: [],
-    page: 1,
+    page: 0,
     count: 0,
     pageSize: 25,
     loading: true,
@@ -95,8 +95,6 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
     },
   };
 
-  mounted: boolean = false;
-
   static docs: Linode.Doc[] = [
     {
       title: 'Getting Started',
@@ -110,18 +108,23 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
     },
   ];
 
+  cancelRequest: Function;
+
   getDomains = (
     page: number = this.state.page,
     pageSize: number = this.state.pageSize,
     initial: boolean = false,
   ) => {
-    if (!this.mounted) { return; }
+
     this.setState({ loading: initial });
 
-    getDomains({ page, page_size: pageSize })
-      .then((response) => {
-        if (!this.mounted) { return; }
+    const { request, cancel } = getDomains$({page, page_size: pageSize});
 
+    this.cancelRequest = cancel;
+
+    /* subscribe to successful and failed requets */
+    request()
+      .then((response) => {
         this.setState({
           count: response.results,
           domains: response.data,
@@ -130,7 +133,6 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
         });
       })
       .catch((error) => {
-        if (!this.mounted) { return; }
         this.setState({
           errors: pathOr([{ reason: 'Unable to load domains.' }], ['response', 'data', 'errors'], error),
           loading: false,
@@ -150,12 +152,13 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
   };
 
   componentDidMount() {
-    this.mounted = true;
     this.getDomains(undefined, undefined, true);
   }
 
   componentWillUnmount() {
-    this.mounted = false
+    if (typeof this.cancelRequest === 'function') {
+      this.cancelRequest();
+    }
   }
 
   openImportZoneDrawer = () => this.setState({ importDrawer: { ...this.state.importDrawer, open: true } });
@@ -171,33 +174,29 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
   });
 
   openCreateDrawer = () => {
-    if (!this.mounted) { return; }
     this.setState({
       createDrawer: { open: true, mode: 'create' },
     });
   }
 
   openCloneDrawer = (domain: string, id: number) => {
-    if (!this.mounted) { return; }
     this.setState({
       createDrawer: { open: true, mode: 'clone', domain, cloneID: id },
     });
   }
 
   closeCreateDrawer = () => {
-    if (!this.mounted) { return; }
     this.setState({
       createDrawer: { open: false, mode: 'create' },
     });
   }
 
-  handleSuccess = (domain:Linode.Domain) => {
+  handleSuccess = (domain: Linode.Domain) => {
     if (domain.id) {
       this.props.history.push(`/domains/${domain.id}`);
+      return;
     }
-    else {
-      this.getDomains();
-    }
+    this.getDomains();
   }
 
   getActions = () => {
@@ -255,10 +254,14 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes } = this.props;
-    const { count, loading } = this.state;
+    const { errors, count, loading } = this.state;
 
-    if(loading){
+    if (loading) {
       return this.renderLoading();
+    }
+
+    if (errors) {
+      return this.renderErrors();
     }
 
     if (count === 0) {
@@ -334,7 +337,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
     const { errors, count, domains } = this.state;
 
     if (errors) {
-      return this.renderLoading();
+      return this.renderErrors();
     }
 
     if (count > 0) {
