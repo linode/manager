@@ -34,7 +34,8 @@ type ClassNames = 'bodyRow'
   | 'flag'
   | 'status'
   | 'link'
-  | 'linkButton';
+  | 'linkButton'
+  | 'tagWrapper';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => {
   return ({
@@ -95,6 +96,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
           color: theme.palette.primary.main,
         },
       },
+    },
+    tagWrapper: {
+      marginTop: theme.spacing.unit / 2,
+      marginLeft: theme.spacing.unit * 4,
     },
   });
 };
@@ -185,10 +190,12 @@ class LinodeRow extends React.Component<CombinedProps, State> {
               <Typography role="header" variant="subheading" data-qa-label>
                 {linodeLabel}
               </Typography>
-              {this.props.renderTagsAndMoreTags(linodeTags)}
             </Grid>
           </Grid>
           </Link>
+          <div className={classes.tagWrapper}>
+            {this.props.renderTagsAndMoreTags(linodeTags)}
+            </div>
       </TableCell>
     );
   }

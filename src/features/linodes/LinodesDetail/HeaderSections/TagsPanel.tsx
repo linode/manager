@@ -34,6 +34,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       position: 'relative',
       top: -2,
     },
+    '&:focus': {
+      backgroundColor: theme.color.grey2,
+    },
   },
   addButton: {
     marginTop: theme.spacing.unit * 2,
