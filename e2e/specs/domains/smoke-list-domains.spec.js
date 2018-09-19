@@ -53,9 +53,7 @@ describe('Domains - List Suite', () => {
         const actionMenuItems = $$(ListDomains.actionMenuItem.selector);
         actionMenuItems.forEach(i => expect(expectedMenuItems).toContain(i.getText()));
 
-        // Hit escape to get rid of action menu
-        // Refactor once Chrome implements actions api
-        browser.keys('\uE00C');
+        browser.click('body');
         ListDomains.actionMenuItem.waitForVisible(constants.wait.short, true);
     });
 
