@@ -192,12 +192,6 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
       set(L.linodeId, nextProps.linodeId),
       set(L.errors, undefined),
     ]);
-
-    /* If the drawer is opening */
-    if ((this.props.mode === modes.CLOSED) && !(nextProps.mode === modes.CLOSED)) {
-      /* re-request the list of Linodes */
-      this.searchLinodes();
-    }
   }
 
   updateConfigs(linodeID: number) {
@@ -443,6 +437,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
   }
 
   searchLinodes = (inputValue: string = '') => {
+    if (!this.mounted) { return; }
     this.setState({ linodesLoading: true });
     const filterLinodes = this.getLinodeFilter(inputValue);
     getLinodes({}, filterLinodes)
