@@ -8,7 +8,6 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
@@ -18,6 +17,7 @@ import Drawer from 'src/components/Drawer';
 import Radio from 'src/components/Radio';
 import Select from 'src/components/Select';
 import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
 import TextField from 'src/components/TextField';
 import { dateFormat } from 'src/time';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
@@ -52,15 +52,27 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   accessCell: {
     width: '31%',
+    [theme.breakpoints.down('sm')]: {
+      width: '100%'
+    },
   },
   noneCell: {
     width: '23%',
+    [theme.breakpoints.down('sm')]: {
+      width: '100%'
+    },
   },
   readOnlyCell: {
     width: '23%',
+    [theme.breakpoints.down('sm')]: {
+      width: '100%'
+    },
   },
   readWritecell: {
     width: '23%',
+    [theme.breakpoints.down('sm')]: {
+      width: '100%'
+    },
   },
 });
 
@@ -165,7 +177,10 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
     const { scopes, selectAllSelectedScope } = this.state;
 
     return (
-      <Table aria-label="Personnal Acccess Token Permissions" className={classes.permsTable}>
+      <Table
+        aria-label="Personnal Acccess Token Permissions"
+        className={classes.permsTable}
+      >
         <TableHead>
           <TableRow>
             <TableCell padding="checkbox" data-qa-perm-access>Access</TableCell>
@@ -177,10 +192,10 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
         <TableBody>
           {mode === 'create' &&
             <TableRow data-qa-row="Select All">
-              <TableCell padding="checkbox" className={classes.selectCell}>
+              <TableCell parentColumn="Access" padding="checkbox" className={classes.selectCell}>
                 Select All
               </TableCell>
-              <TableCell padding="checkbox" className={classes.noneCell}>
+              <TableCell parentColumn="None" padding="checkbox" className={classes.noneCell}>
                 <Radio
                   name="Select All"
                   checked={selectAllSelectedScope === 0 && this.allScopesIdentical()}
@@ -189,7 +204,11 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
                   data-qa-perm-none-radio
                 />
               </TableCell>
-              <TableCell padding="checkbox" className={classes.readOnlyCell}>
+            <TableCell
+              parentColumn="Read Only"
+              padding="checkbox"
+              className={classes.readOnlyCell}
+            >
                 <Radio
                   name="Select All"
                   checked={selectAllSelectedScope === 1 && this.allScopesIdentical()}
@@ -198,7 +217,11 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
                   data-qa-perm-read-radio
                 />
               </TableCell>
-              <TableCell padding="checkbox" className={classes.readWritecell}>
+            <TableCell
+              parentColumn="Read/Write"
+              padding="checkbox"
+              className={classes.readWritecell}
+            >
                 <Radio
                   name="Select All"
                   checked={selectAllSelectedScope === 2 && this.allScopesIdentical()}
@@ -213,10 +236,10 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
             (scopeTup) => {
               return (
                 <TableRow key={scopeTup[0]} data-qa-row={this.permNameMap[scopeTup[0]]}>
-                  <TableCell padding="checkbox" className={classes.accessCell}>
+                  <TableCell parentColumn="Access" padding="checkbox" className={classes.accessCell}>
                     {this.permNameMap[scopeTup[0]]}
                   </TableCell>
-                  <TableCell padding="checkbox" className={classes.noneCell}>
+                  <TableCell parentColumn="None" padding="checkbox" className={classes.noneCell}>
                     <Radio
                       name={scopeTup[0]}
                       disabled={mode !== 'create' && scopeTup[1] !== 0}
@@ -226,7 +249,11 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
                       data-qa-perm-none-radio
                     />
                   </TableCell>
-                  <TableCell padding="checkbox" className={classes.readOnlyCell}>
+                  <TableCell
+                    parentColumn="Read Only"
+                    padding="checkbox"
+                    className={classes.readOnlyCell}
+                  >
                     <Radio
                       name={scopeTup[0]}
                       disabled={mode !== 'create' && scopeTup[1] !== 1}
@@ -236,7 +263,11 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
                       data-qa-perm-read-radio
                     />
                   </TableCell>
-                  <TableCell padding="checkbox" className={classes.readWritecell}>
+                  <TableCell
+                    parentColumn="Read/Write"
+                    padding="checkbox"
+                    className={classes.readWritecell}
+                  >
                     <Radio
                       name={scopeTup[0]}
                       disabled={mode !== 'create' && scopeTup[1] !== 2}

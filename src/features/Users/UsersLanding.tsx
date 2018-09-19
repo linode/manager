@@ -5,7 +5,6 @@ import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import Typography from '@material-ui/core/Typography';
 
@@ -19,6 +18,7 @@ import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { deleteUser, getUsers } from 'src/services/account';
 import { getGravatarUrl } from 'src/utilities/gravatar';
@@ -216,7 +216,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
     const { classes } = this.props;
     return (
       <TableRow key={user.username} data-qa-user-row rowLink={`/users/${user.username}`}>
-        <TableCell data-qa-username>
+        <TableCell parentColumn="Username" data-qa-username>
           <Link to={`/users/${user.username}`} title={user.username}>
             <Button className={classes.userButton} tabIndex={-1}>
               {user.gravatarUrl === undefined
@@ -233,8 +233,8 @@ class UsersLanding extends React.Component<CombinedProps, State> {
             </Button>
           </Link>
         </TableCell>
-        <TableCell data-qa-user-email>{user.email}</TableCell>
-        <TableCell data-qa-user-restriction>
+        <TableCell parentColumn="Email Address" data-qa-user-email>{user.email}</TableCell>
+        <TableCell parentColumn="Restricted" data-qa-user-restriction>
           {user.restricted ? 'Restricted' : 'Unrestricted'}
         </TableCell>
         <TableCell>
