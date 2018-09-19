@@ -14,4 +14,7 @@ export {
   updatePersonalAccessToken,
   deletePersonalAccessToken,
   getPersonalAccessTokens,
+  getSSHKeys,
+  createSSHKey,
+  deleteSSHKey
 } from './profile';
