@@ -116,6 +116,10 @@ interface ActionMeta {
   action: string;
 }
 
+export interface NoOptionsMessageProps {
+  inputValue: string;
+}
+
 export interface EnhancedSelectProps {
   options?: Item[];
   className?: string;
@@ -132,7 +136,6 @@ export interface EnhancedSelectProps {
   createNew?: (inputValue: string) => void;
   onInputChange?: (inputValue: string, actionMeta: ActionMeta) => void;
   loadOptions?: (inputValue: string) => Promise<Item| Item[]> | undefined;
-  filterOption?: (item: Item, inputValue:string) => boolean | null;
 }
 
 // Material-UI versions of several React-Select components.
@@ -151,8 +154,7 @@ type CombinedProps = EnhancedSelectProps
 
 interface BaseSelectProps extends SelectProps<any> {
   classes: any;
-  textFieldProps: any;
-  filterOption: any;
+  textFieldProps?: any;
 }
 
 interface CreatableProps extends CreatableSelectProps<any> {
@@ -179,6 +181,7 @@ class Select extends React.PureComponent<CombinedProps,{}> {
       options,
       value,
       variant,
+      noOptionsMessage,
       onBlur,
       ...restOfProps
     } = this.props;
@@ -237,6 +240,7 @@ class Select extends React.PureComponent<CombinedProps,{}> {
         onInputChange={onInputChange}
         onCreateOption={createNew}
         placeholder={placeholder || 'Select a value...'}
+        noOptionsMessage={noOptionsMessage}
         menuPlacement="auto"
       />
     );
