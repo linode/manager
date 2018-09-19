@@ -32,6 +32,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       '& td': {
         display: 'flex',
         justifyContent: 'space-between',
+        alignItems: 'center',
       },
     },
   },
