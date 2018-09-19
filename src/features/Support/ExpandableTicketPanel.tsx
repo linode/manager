@@ -2,6 +2,7 @@ import * as classNames from 'classnames';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 
+import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -27,7 +28,10 @@ type ClassNames = 'root'
   | 'expButton'
   | 'toggle'
   | 'isCurrentUser'
-  | 'formattedText';
+  | 'formattedText'
+  | 'hivelyContainer'
+  | 'hivelyLink'
+  | 'hivelyImage';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   '@keyframes fadeIn': {
@@ -110,6 +114,20 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   formattedText: {
     whiteSpace: 'pre-line',
   },
+  hivelyLink: {
+    textDecoration: 'none',
+    color: theme.color.black,
+    marginRight: theme.spacing.unit * 2,
+  },
+  hivelyImage: {
+    width: '25px',
+  },
+  hivelyContainer: {
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'center',
+    marginTop: theme.spacing.unit * 2,
+  }
 });
 
 interface Props {
@@ -117,6 +135,7 @@ interface Props {
   ticket?: Linode.SupportTicket;
   open?: boolean;
   isCurrentUser: boolean;
+  parentTicket?: number;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -133,6 +152,8 @@ interface Data {
   description: string;
   username: string;
   from_linode: boolean;
+  ticket_id: string;
+  reply_id: string;
 }
 
 export class ExpandableTicketPanel extends React.Component<CombinedProps, State> {
@@ -158,11 +179,13 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
   }
 
   getData = () => {
-    const { ticket, reply } = this.props;
+    const { parentTicket, ticket, reply } = this.props;
     if (!ticket && !reply) { return; }
     let data: Data;
     if (ticket) {
       data = {
+        ticket_id: String(ticket.id),
+        reply_id: '',
         gravatar_id: ticket.gravatar_id,
         gravatarUrl: pathOr('not found',['gravatarUrl'],ticket),
         date: ticket.opened,
@@ -172,6 +195,8 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
       }
     } else if (reply) {
       data = {
+        ticket_id: parentTicket ? String(parentTicket) : '',
+        reply_id: String(reply.id),
         gravatar_id: reply.gravatar_id,
         gravatarUrl: pathOr('not found',['gravatarUrl'],reply),
         date: reply.created,
@@ -182,6 +207,37 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
     }
 
     return data!;
+  }
+
+  renderHively = (linodeUsername: string, ticketId: string, replyId: string) => {
+    const { classes } = this.props;
+    const href = `https://secure.teamhively.com/ratings/add/account/587/source/hs/ext/${linodeUsername}/ticket/${ticketId}-${replyId}/rating/`;
+    return (
+      <div className={classes.hivelyContainer}>
+        <Divider />
+        <a className={classes.hivelyLink} href={href + '3'}>How did I do?</a>
+        <span>
+          <a href={href + '3'}>
+            <img
+              className={classes.hivelyImage}
+              src={"https://secure.teamhively.com/system/smileys/icons/000/000/001/px_45/happy_base.png?1468984347"}
+            />
+          </a>
+          <a href={href + '2'}>
+            <img
+              className={classes.hivelyImage}
+              src={"https://secure.teamhively.com/system/smileys/icons/000/000/002/px_45/satisfied_base.png?1468984347"}
+            />
+          </a>
+          <a href={href + '1'}>
+            <img
+              className={classes.hivelyImage}
+              src={"https://secure.teamhively.com/system/smileys/icons/000/000/003/px_45/unhappy_base.png?1468984347"}
+            />
+          </a>
+        </span>
+      </div>
+    )
   }
 
   renderAvatar(url: string) {
@@ -254,6 +310,9 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
               </Grid>
             }
           </Grid>
+          {data.from_linode &&
+            this.renderHively(data.username, data.ticket_id, data.reply_id)
+          }
         </Paper>
       </Grid>
     )
