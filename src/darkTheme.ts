@@ -762,7 +762,9 @@ const LinodeTheme: Linode.Theme = {
       },
     },
     MuiTable: {
-      root: {},
+      root: {
+        borderCollapse: 'initial',
+      },
     },
     MuiTableCell: {
       root: {
@@ -784,6 +786,11 @@ const LinodeTheme: Linode.Theme = {
     MuiTableHead: {
       root: {
         backgroundColor: '#32363C',
+        '& > tr': {
+          '&:before': {
+            borderLeftColor: 'rgba(0, 0, 0, 0.15)',
+          },
+        },
       },
     },
     MuiTableRow: {
@@ -793,7 +800,9 @@ const LinodeTheme: Linode.Theme = {
         '&:hover': {
           '&$hover': {
             backgroundColor: 'rgba(0, 0, 0, 0.1)',
-            borderLeftColor: primaryColors.main,
+            '&:before': {
+              borderLeftColor: primaryColors.main,
+            },
           },
         },
       },

@@ -757,7 +757,9 @@ const LinodeTheme: Linode.Theme = {
       },
     },
     MuiTable: {
-      root: {},
+      root: {
+        borderCollapse: 'initial',
+      },
     },
     MuiTableCell: {
       root: {
@@ -796,7 +798,9 @@ const LinodeTheme: Linode.Theme = {
         '&:hover': {
           '&$hover': {
             backgroundColor: '#fbfbfb',
-            borderLeftColor: primaryColors.main,
+            '&:before': {
+              borderLeftColor: primaryColors.main,
+            },
           },
         },
       },

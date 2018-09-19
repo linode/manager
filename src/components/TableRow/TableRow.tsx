@@ -9,11 +9,18 @@ type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
-    borderLeft: '5px solid transparent',
+    transition: theme.transitions.create(['background-color']),
+    '&:before': {
+      content: "''",
+      display: 'table-cell',
+      width: '0.01%',
+      height: '100%',
+      borderLeft: '5px solid transparent',
+      transition: theme.transitions.create(['border-color']),
+    },
     '& > td:first-child, & > th:first-child': {
       paddingLeft: 13,
     },
-    transition: theme.transitions.create(['background-color', 'border-left-color']),
     '& .secondaryLink': {
       transition: theme.transitions.create('color'),
       '&:hover': {
