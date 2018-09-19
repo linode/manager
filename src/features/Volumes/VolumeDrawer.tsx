@@ -147,7 +147,6 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     this.mounted = true;
-    this.searchLinodes();
     this.eventsSub = events$
       .filter(event => (
         !event._initial
@@ -192,6 +191,12 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
       set(L.linodeId, nextProps.linodeId),
       set(L.errors, undefined),
     ]);
+
+    /* If the drawer is opening */	
+    if ((this.props.mode === modes.CLOSED) && !(nextProps.mode === modes.CLOSED)) {	
+      /* re-request the list of Linodes */	
+      this.searchLinodes();	
+    }
   }
 
   updateConfigs(linodeID: number) {
