@@ -81,7 +81,6 @@ interface State {
   errors?: Linode.ApiFieldError[];
   submitting: boolean;
   success?: string;
-  value: Item | null;
 }
 
 type CombinedProps =
@@ -135,7 +134,6 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     linodesLoading: false,
     linodeId: this.props.linodeId,
     configs: [],
-    value: null,
   };
 
   handleAPIErrorResponse = (errorResponse: any) => this.composeState([
@@ -361,13 +359,11 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     if (selected) { 
       this.setState({ 
         linodeId: Number(selected.value),
-        value: selected,
       });
     }
     else {
       this.setState({
         linodeId: 0,
-        value: null
       })
     }
   }
@@ -378,7 +374,6 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
         region: (e.target.value),
         linodeId: 0,
         configs: [],
-        value: null,
       }, this.searchLinodes);
     }
   }
@@ -500,7 +495,6 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
       errors,
       linodes,
       linodesLoading,
-      value,
     } = this.state;
 
     const hasErrorFor = getAPIErrorFor({
@@ -626,7 +620,6 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
               placeholder="Select a Linode"
               isLoading={linodesLoading}
               errorText={linodeError}
-              value={value}
               disabled={
                 mode === modes.EDITING
                 || mode === modes.RESIZING
