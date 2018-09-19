@@ -27,18 +27,26 @@ interface Props {
     linodeId: number, linodeLabel: string) => void;
 }
 
-type ClassNames = 'row'
+type ClassNames = 'root'
   | 'tag';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => {
   return ({
-    row: {
-      display: 'flex',
-      alignItems: 'center',
-    },
+    root: {},
     tag: {
+      marginTop: theme.spacing.unit / 2,
+      marginRight: theme.spacing.unit,
+      padding: theme.spacing.unit / 2,
+      backgroundColor: theme.color.grey2,
       color: theme.palette.text.primary,
-      fontSize: '.9rem',
+      fontWeight: 400,
+      '&:focus': {
+        backgroundColor: theme.color.grey2,
+      },
+      '& > span': {
+        position: 'relative',
+        top: -2,
+      },
     },
   });
 };
@@ -59,10 +67,10 @@ class LinodesViewWrapper extends React.Component<CombinedProps, {}> {
     return tags.map(eachTag => {
       return (
         <Tag
-          className={classes.row}
+          className={classes.tag}
           label={eachTag}
           key={eachTag}
-          variant="gray"
+          clickable={false}
         />
       )
     })
@@ -79,6 +87,7 @@ class LinodesViewWrapper extends React.Component<CombinedProps, {}> {
 
   renderTagsAndMoreTags = (linodeTags: string[]) => {
     const [visibleTags, additionalTags] = splitAt(3, linodeTags);
+    const { classes } = this.props;
     return (
       <React.Fragment>
         {
@@ -87,7 +96,8 @@ class LinodesViewWrapper extends React.Component<CombinedProps, {}> {
               <Tag
                 label={eachTag}
                 key={eachTag}
-                variant="gray"
+                className={classes.tag}
+                clickable={false}
               />
             )
           })
