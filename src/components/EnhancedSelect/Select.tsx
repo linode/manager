@@ -108,21 +108,27 @@ export interface SelectState {
   isSelected: boolean;
 }
 
+interface ActionMeta {
+  action: string;
+}
+
 export interface EnhancedSelectProps {
   options?: Item[];
   className?: string;
   components?: any;
   disabled?: boolean;
   isMulti?: boolean;
+  isLoading?: boolean;
   variant?: 'async' | 'creatable';
   value?: Item | Item[] | null;
   label?: string;
   placeholder?: string;
   errorText?: string;
-  onChange: (selected:Item | Item[]) => void;
-  createNew?: (inputValue:string) => void;
-  onInputChange?: (inputValue:string) => void;
-  loadOptions?: (inputValue:string) => Promise<Item|Item[]> | undefined;
+  onChange: (selected: Item | Item[], actionMeta: ActionMeta) => void;
+  createNew?: (inputValue: string) => void;
+  onInputChange?: (inputValue: string, actionMeta: ActionMeta) => void;
+  loadOptions?: (inputValue: string) => Promise<Item| Item[]> | undefined;
+  filterOption?: (item: Item, inputValue:string) => boolean | null;
 }
 
 // Material-UI versions of several React-Select components.
@@ -139,6 +145,7 @@ type CombinedProps = EnhancedSelectProps & WithStyles<ClassNames>;
 interface BaseSelectProps extends SelectProps<any> {
   classes: any;
   textFieldProps: any;
+  filterOption: any;
 }
 
 interface CreatableProps extends CreatableSelectProps<any> {
@@ -154,9 +161,11 @@ class Select extends React.PureComponent<CombinedProps,{}> {
       createNew,
       disabled,
       errorText,
+      filterOption,
       label,
       loadOptions,
       isMulti,
+      isLoading,
       placeholder,
       onChange,
       onInputChange,
@@ -180,6 +189,7 @@ class Select extends React.PureComponent<CombinedProps,{}> {
     const combinedComponents = merge(_components, components);
 
     // If async, pass loadOptions instead of options. A Select can't be both Creatable and Async.
+    // (AsyncCreatable exists, but we have not adapted it.)
     type PossibleProps = BaseSelectProps | CreatableProps | AsyncProps<any>;
     const BaseSelect: React.ComponentClass<PossibleProps> = variant === 'creatable'
       ? CreatableSelect
@@ -191,10 +201,13 @@ class Select extends React.PureComponent<CombinedProps,{}> {
       <BaseSelect
         isClearable
         isSearchable
-        cacheOptions
+        isLoading={isLoading}
         defaultOptions
+        cacheOptions={false}
+        filterOption={filterOption}
         loadOptions={loadOptions}
         isMulti={isMulti}
+        isDisabled={disabled}
         classes={classes}
         className={`${classes.root} ${className}`}
         classNamePrefix="react-select"
