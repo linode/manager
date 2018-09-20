@@ -32,28 +32,6 @@ namespace Linode {
     images?: ResourcePage<Linode.Image>;
   }
 
-  interface AuthState {
-    token: NullableString;
-    scopes: NullableString;
-  }
-
-  export interface ResourcesState {
-    profile: { loading: boolean; data: Linode.Profile };
-  }
-
-  export type DocumentationState = Linode.Doc[];
-
-  export interface VolumeDrawerState {
-    mode: string;
-  };
-
-  export interface AppState {
-    authentication: AuthState;
-    resources: ResourcesState;
-    documentation: DocumentationState;
-    volumeDrawer: VolumeDrawerState;
-  }
-
   export interface LinodeSpecs {
     disk: number;
     memory: number;

@@ -25,7 +25,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   helpWrapperTextField: {
     width: 415,
     [theme.breakpoints.down('xs')]: {
-      width: 240,
+      width: '100%',
     },
   },
   expand: {

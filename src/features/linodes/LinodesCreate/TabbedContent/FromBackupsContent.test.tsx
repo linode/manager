@@ -13,6 +13,17 @@ const mockProps = {
   getTypeInfo: jest.fn(),
   getRegionInfo: jest.fn(),
   history: null,
+  tagObject: {
+    accountTags: [],
+    selectedTags: [],
+    newTags: [],
+    errors: [],
+    actions: {
+      addTag: jest.fn(),
+      createTag: jest.fn(),
+      getLinodeTagList: jest.fn(),
+    }
+  }
 };
 
 const mockPropsWithNotice = {
@@ -27,6 +38,17 @@ const mockPropsWithNotice = {
   getTypeInfo: jest.fn(),
   getRegionInfo: jest.fn(),
   history: null,
+  tagObject: {
+    accountTags: [],
+    selectedTags: [],
+    newTags: [],
+    errors: [],
+    actions: {
+      addTag: jest.fn(),
+      createTag: jest.fn(),
+      getLinodeTagList: jest.fn(),
+    }
+  }
 };
 
 describe('FromBackupsContent', () => {

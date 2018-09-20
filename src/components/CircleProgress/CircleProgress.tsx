@@ -31,8 +31,8 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   progress: {
     position: 'relative',
     [theme.breakpoints.down('xs')]: {
-      width: '86px !important',
-      height: '86px !important',
+      width: '72px !important',
+      height: '72px !important',
     },
   },
   top: {
@@ -135,7 +135,7 @@ const circleProgressComponent: React.StatelessComponent<CombinedProps> = (props)
           value={value}
           variant={variant}
           thickness={green ? 4 : 2}
-          data-qa-circle-progress
+          data-qa-circle-progress={value}
         />
       </div>
       : <CircularProgress 

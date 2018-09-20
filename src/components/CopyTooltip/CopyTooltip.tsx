@@ -78,12 +78,12 @@ class CopyTooltip extends React.Component<CombinedProps, State> {
     copied: false,
   };
 
-  clickIcon = (value: string) => {
+  clickIcon = () => {
     this.setState({
       copied: true,
     });
     window.setTimeout(() => this.setState({ copied: false }), 1500);
-    copy(value);
+    copy(this.props.text);
   }
 
   render() {
@@ -94,7 +94,7 @@ class CopyTooltip extends React.Component<CombinedProps, State> {
       <a
         aria-label={text}
         title={text}
-        onClick={() => this.clickIcon(text)}
+        onClick={this.clickIcon}
         href="javascript:void(0)"
         className={classNames(
           className,

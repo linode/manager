@@ -180,7 +180,10 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
   }
 
   handleDescriptionInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState(set(L.description, e.target.value));
+    this.composeState([
+      set(L.description, e.target.value),
+      set(L.errors, undefined)
+    ]);
   }
 
   handleEntityTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -226,6 +229,16 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
     if (!['none','general'].includes(entity_type) && !entity_id) {
       this.setState({ 
         errors: [{ field: 'input', reason: `Please select a ${entityIdtoNameMap[entity_type]}.`}]
+      });
+      return;
+    }
+    /* A whitespace reply text (e.g. '    ') will pass the API,
+    * but we will filter out blank responses from the list. Prevent the user
+    * from submitting blank replies to avoid confusion.
+    */
+    if (description.trim() === '') {
+      this.setState({
+        errors: [{'field':'description', 'reason':'Description can\'t be blank.'}],
       });
       return;
     }
@@ -291,7 +304,7 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
         <Typography 
           data-qa-support-ticket-helper-text
         >
-          We love your tickets and we love helping our customers.
+          We love helping our customers.
           Please keep in mind that not all topics are within the scope of our support.
           For overall system status, please see <a href="https://status.linode.com">status.linode.com</a>.
         </Typography>

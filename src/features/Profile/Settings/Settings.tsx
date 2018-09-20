@@ -1,7 +1,6 @@
-import { compose } from 'ramda';
+import { compose, path } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators, Dispatch } from 'redux';
+import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 
 import { Paper } from '@material-ui/core';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -12,7 +11,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Toggle from 'src/components/Toggle';
 import { updateProfile } from 'src/services/profile';
-import { response } from 'src/store/reducers/resources';
+import { handleUpdate } from 'src/store/reducers/resources/profile';
 
 type ClassNames = 'root'
   | 'title'
@@ -31,16 +30,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface ConnectedProps {
-  status: boolean;
-  response: (p: Linode.Profile) => void;
-}
-
 interface State {
   submitting: boolean;
 }
 
-type CombinedProps = ConnectedProps & WithStyles<ClassNames>;
+type CombinedProps = StateProps & DispatchProps & WithStyles<ClassNames>;
 
 class ProfileSettings extends React.Component<CombinedProps, State> {
   state: State = {
@@ -64,7 +58,7 @@ class ProfileSettings extends React.Component<CombinedProps, State> {
                 <Toggle onChange={this.toggle} checked={status} />
               }
               label={`
-                Email alerts if a Linode exceeds its configurated thresholds are ${status ? 'enabled' : 'disabled'}
+                Email alerts if a Linode exceeds its configurated thresholds are ${status === true ? 'enabled' : 'disabled'}
               `}
               disabled={this.state.submitting}
             />
@@ -79,7 +73,7 @@ class ProfileSettings extends React.Component<CombinedProps, State> {
 
     updateProfile({ email_notifications: !this.props.status })
       .then((profile) => {
-        this.props.response(profile)
+        this.props.actions.updateProfile(profile)
         this.setState({ submitting: false });
       })
       .catch(() => { /* Couldnt really imagine this being an issue... 1*/ });
@@ -88,15 +82,26 @@ class ProfileSettings extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators({
-  response: (p: Linode.Profile) => response(['profile'], p),
-}, dispatch);
+interface DispatchProps {
+  actions: {
+    updateProfile: (p: Linode.Profile) => void;
+  }
+}
 
-const mapStateToProps = (state: Linode.AppState) => {
-  return ({
-    status: state.resources.profile!.data.email_notifications,
-  })
-};
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch) => ({
+  actions: {
+    updateProfile: (p: Linode.Profile) => dispatch(handleUpdate(p)),
+  }
+});
+
+interface StateProps {
+  status?: boolean;
+}
+
+const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state) => ({
+  status: path(['data', 'email_notifications'], state.__resources.profile),
+});
+
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 

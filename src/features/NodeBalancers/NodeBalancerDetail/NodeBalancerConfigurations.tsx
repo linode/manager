@@ -1,5 +1,4 @@
 import * as Promise from 'bluebird';
-import * as Joi from 'joi';
 import { append, clone, compose, defaultTo, Lens, lensPath, over, path, pathOr, set, view } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -18,7 +17,6 @@ import { getLinodes } from 'src/services/linodes';
 import {
   createNodeBalancerConfig,
   createNodeBalancerConfigNode,
-  createNodeBalancerConfigSchema,
   deleteNodeBalancerConfig,
   deleteNodeBalancerConfigNode,
   getNodeBalancerConfigNodes,
@@ -29,12 +27,13 @@ import {
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import NodeBalancerConfigPanel from '../NodeBalancerConfigPanel';
-import { lensFrom, validationErrorsToFieldErrors } from '../NodeBalancerCreate';
+import {
+  lensFrom,
+ } from '../NodeBalancerCreate';
 import {
   clampNumericString,
   createNewNodeBalancerConfig,
   createNewNodeBalancerConfigNode,
-  formatAddress,
   NodeBalancerConfigFields,
   nodeForRequest,
   parseAddress,
@@ -424,23 +423,6 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
     this.clearMessages();
 
-    // first, validate client-side
-    const { error: validationErrors } = Joi.validate(
-      configPayload,
-      createNodeBalancerConfigSchema,
-      { abortEarly: false },
-    );
-
-    if (validationErrors) {
-      const newErrors = clone(this.state.configErrors);
-      newErrors[idx] = validationErrorsToFieldErrors(validationErrors);
-      this.setState({ configErrors: newErrors }, () => {
-        scrollErrorIntoView(`${idx}`);
-      });
-      this.setNodeErrors(idx, newErrors[idx]);
-      return;
-    }
-
     const newSubmitting = clone(this.state.configSubmitting);
     newSubmitting[idx] = true;
     this.setState({
@@ -591,7 +573,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
     const nodeData = nodeForRequest(node);
 
-    return createNodeBalancerConfigNode(nodeBalancerId!, config.id!, formatAddress(nodeData))
+    return createNodeBalancerConfigNode(nodeBalancerId!, config.id!, nodeData)
       .then((responseNode) => {
         /* Set the new Node data including the ID
            This also clears the errors and modify status. */
@@ -641,7 +623,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     const nodeData = nodeForRequest(node);
 
     return (
-      updateNodeBalancerConfigNode(nodeBalancerId!, config.id!, node!.id!, formatAddress(nodeData))
+      updateNodeBalancerConfigNode(nodeBalancerId!, config.id!, node!.id!, nodeData)
       .then((responseNode) => {
         /* Set the new Node data including the ID
            This also clears the errors and modify status. */
@@ -697,7 +679,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       ),
     );
   }
-  
+
   afterHealthCheckTypeUpdate = (L: { [key: string]: Lens }) => () => {
     this.setState(compose(
       set(L.checkBodyLens,
@@ -709,7 +691,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       set(L.healthCheckTimeoutLens,
         NodeBalancerConfigurations.defaultFieldsStates.configs[0].check_timeout),
     ));
-  }            
+  }
 
   onCloseConfirmation = () => this.setState({
     deleteConfigConfirmDialog:

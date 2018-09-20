@@ -852,7 +852,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             <Divider style={{ marginTop: forEdit ? 8 : 24 }} />
                           </Grid>
                         }
-                        <Grid item xs={11} sm={forEdit ? 4 : 3} xl={2} className="py0">
+                        <Grid item xs={12} sm={forEdit ? 4 : 3} xl={2} className="py0">
                           <TextField
                             label="Label"
                             value={node.label}
@@ -863,7 +863,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             data-qa-backend-ip-label
                           />
                         </Grid>
-                        <Grid item xs={11} sm={forEdit ? 4 : 3} xl={2} className="py0">
+                        <Grid item xs={12} sm={forEdit ? 4 : 3} xl={2} className="py0">
                           <Downshift
                             onSelect={this.handleSelectSuggestion}
                             stateReducer={this.downshiftStateReducer}
@@ -940,7 +940,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             }
                           </Downshift>
                         </Grid>
-                        <Grid item xs={11} sm={forEdit ? 4 : 2} xl={2} className="py0">
+                        <Grid item xs={12} sm={forEdit ? 4 : 2} xl={2} className="py0">
                           <TextField
                             type="number"
                             label="Port"
@@ -953,7 +953,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             style={{ minWidth: 'auto' }}
                           />
                         </Grid>
-                        <Grid item xs={11} sm={forEdit ? 4 : 2} xl={2} className="py0">
+                        <Grid item xs={12} sm={forEdit ? 4 : 2} xl={2} className="py0">
                           <TextField
                             type="number"
                             label="Weight"

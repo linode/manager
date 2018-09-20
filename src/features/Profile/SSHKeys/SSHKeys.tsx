@@ -1,7 +1,6 @@
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
@@ -13,6 +12,7 @@ import setDocs from 'src/components/DocsSidebar/setDocs';
 import paginate, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
 import TableHeader from 'src/components/TableHeader';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
@@ -172,12 +172,12 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
   renderData = (keys: ExtendedSSHKey[]) => {
     return keys.map(key =>
       <TableRow data-qa-content-row={key.label} key={key.id}>
-        <TableCell>{key.label}</TableCell>
-        <TableCell data-qa-public-key>
+        <TableCell parentColumn="Label">{key.label}</TableCell>
+        <TableCell parentColumn="Key" data-qa-public-key>
           <Typography variant="caption">{key.ssh_key.slice(0, 26)}</Typography>
           <Typography variant="caption">Fingerprint: {key.fingerprint}</Typography>
         </TableCell>
-        <TableCell data-qa-key-created>{key.created}</TableCell>
+        <TableCell parentColumn="Created" data-qa-key-created>{key.created}</TableCell>
         <TableCell>
           <SSHKeyActionMenu
             id={key.id}

@@ -52,7 +52,7 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
     });
   }
 
-  save() {
+  save = () => {
     const { onClose } = this.props;
     const { rdns, address } = this.state;
     updateIP(address!, { rdns: (!rdns || rdns === '') ? null : rdns })
@@ -66,6 +66,10 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
           scrollErrorIntoView();
         });
       });
+  }
+
+  handleChangeDomain = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ rdns: e.target.value });
   }
 
   render() {
@@ -85,7 +89,7 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
             placeholder="Enter a domain name"
             value={rdns || ''}
             errorText={hasErrorFor('rdns')}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => this.setState({ rdns: e.target.value })}
+            onChange={this.handleChangeDomain}
             data-qa-domain-name
           />
           <Typography variant="caption">
@@ -102,7 +106,7 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
             <Button
               variant="raised"
               color="primary"
-              onClick={() => this.save()}
+              onClick={this.save}
               data-qa-submit
             >
               Save

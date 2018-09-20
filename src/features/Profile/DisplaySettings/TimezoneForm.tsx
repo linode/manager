@@ -15,13 +15,13 @@ import Typography from '@material-ui/core/Typography';
 import timezones from 'src/assets/timezones/timezones';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import EnhancedSelect, { Item } from 'src/components/EnhancedSelect';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
 import { updateProfile } from 'src/services/profile';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-type ClassNames = 'root' | 'select' | 'title';
+type ClassNames = 'root' | 'title';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
@@ -29,9 +29,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     paddingBottom: theme.spacing.unit * 3,
     marginTop: theme.spacing.unit * 3,
   },
-  select: {
-    maxWidth: '30%',  
-  },
+  select: {},
   title: {
     marginBottom: theme.spacing.unit * 2,
   },
@@ -43,7 +41,7 @@ interface Props {
 }
 
 interface State {
-  updatedTimezone: string;
+  updatedTimezone: Item | null;
   inputValue: string;
   errors?: Linode.ApiFieldError[];
   submitting: boolean;
@@ -62,7 +60,7 @@ const renderTimezoneOffset = (tz:Timezone) => {
   return `\(GMT ${offset}\) ${tz.label}`;
 }
 
-const renderTimeZonesList = () => {
+const renderTimeZonesList = () : Item[] => {
   return timezones.map((tz:Timezone) => {
     const label = renderTimezoneOffset(tz);
     return { label, value: tz.name}
@@ -73,7 +71,7 @@ const timezoneList = renderTimeZonesList();
 
 export class TimezoneForm extends React.Component<CombinedProps, State> {
   state: State = {
-    updatedTimezone: '',
+    updatedTimezone: null,
     inputValue: '',
     errors: undefined,
     submitting: false,
@@ -88,27 +86,16 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
   }
 
   handleTimezoneChange = (timezone: Item) => {
-    if (timezone) { this.setState(set(lensPath(['updatedTimezone']), timezone.value)); }
-  }
-
-  onCancel = () => {
-    this.setState({
-      submitting: false,
-      errors: undefined,
-      success: undefined,
-      updatedTimezone: this.props.timezone || '',
-    })
-  }
-
-  onInputValueChange = (inputValue:string) => {
-    this.setState({ inputValue });
+    if (timezone) { this.setState(set(lensPath(['updatedTimezone']), timezone)); }
+    else { this.setState({ errors: undefined, success: undefined }); }
   }
 
   onSubmit = () => {
     const { updatedTimezone } = this.state;
+    if (!updatedTimezone) { return; }
     this.setState({ errors: undefined, submitting: true });
 
-    updateProfile({ timezone: updatedTimezone, })
+    updateProfile({ timezone: updatedTimezone.value, })
       .then((response) => {
         this.props.updateProfile(response);
         this.setState({
@@ -130,7 +117,7 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes, timezone } = this.props;
-    const { errors, inputValue, submitting, success, updatedTimezone } = this.state;
+    const { errors, submitting, success } = this.state;
     const timezoneDisplay = pathOr(timezone, ['label'], this.getTimezone(timezone));
 
     const hasErrorFor = getAPIErrorFor({
@@ -153,17 +140,11 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
             Your current timezone is: <strong>{timezoneDisplay}</strong>.
           </Typography>
           <React.Fragment>
-            <EnhancedSelect
-              className={classes.select}
+            <Select
               options={timezoneList}
-              errorText={timezoneError}
-              label='Timezone'
-              onSubmit={this.onSubmit}
-              value={updatedTimezone}
               placeholder={"Choose a timezone."}
-              handleSelect={this.handleTimezoneChange}
-              inputValue={inputValue}
-              onInputValueChange={this.onInputValueChange}
+              errorText={timezoneError}
+              onChange={this.handleTimezoneChange}
               data-qa-tz-select
             />
             <ActionsPanel>
@@ -174,13 +155,6 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
                 data-qa-tz-submit
               >
                 Save
-              </Button>
-              <Button
-                type="cancel"
-                onClick={this.onCancel}
-                data-qa-tz-cancel
-              >
-                Cancel
               </Button>
             </ActionsPanel>
           </React.Fragment>

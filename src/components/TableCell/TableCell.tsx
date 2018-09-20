@@ -1,15 +1,23 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 
+import Hidden from '@material-ui/core/Hidden';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableCell, { TableCellProps } from '@material-ui/core/TableCell';
 
 type ClassNames = 'root'
+  | 'emptyCell'
   | 'noWrap'
-  | 'sortable';
+  | 'sortable'
+  | 'data';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {},
+  emptyCell: {
+    [theme.breakpoints.down('sm')]: {
+      display: 'none !important'
+    },
+  },
   noWrap: {
     whiteSpace: 'nowrap',
   },
@@ -29,12 +37,23 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       color: theme.palette.primary.main,
     },
   },
+  data: {
+    [theme.breakpoints.down('sm')]: {
+      textAlign: 'right',
+      marginLeft: theme.spacing.unit * 3,
+    },
+  },
 });
 
 export interface Props extends TableCellProps {
   noWrap?: boolean;
   sortable?: boolean;
   className?: string;
+  /*
+   * parent column will either be the name of the column this
+   * TableCell is listed under 
+   */
+  parentColumn?: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -42,21 +61,31 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 class WrappedTableCell extends React.Component<CombinedProps> {
 
   render() {
-    const { classes, className, noWrap, sortable, ...rest } = this.props;
+    const { classes, className, parentColumn, noWrap, sortable, ...rest } = this.props;
 
     return (
-        <TableCell
-          className={classNames(
+      <TableCell
+        className={classNames(
           className,
-            {
-              [classes.root]: true,
-              [classes.noWrap]: noWrap,
-              [classes.sortable]: sortable,
-            })}
-          {...rest
-        }>
-          {this.props.children}
-        </TableCell>
+          {
+            [classes.root]: true,
+            [classes.noWrap]: noWrap,
+            [classes.sortable]: sortable,
+            // hide the cell at small breakpoints if it's empty with no parent column 
+            [classes.emptyCell]: !parentColumn && !this.props.children
+          })}
+        {...rest}
+      >
+        {(!!parentColumn)
+          ? <React.Fragment>
+            <Hidden mdUp>
+              <span>{parentColumn}</span>
+            </Hidden>
+            <span className={classes.data}>{this.props.children}</span>
+          </React.Fragment>
+          : this.props.children
+        }
+      </TableCell>
     );
   }
 }

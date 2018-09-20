@@ -12,6 +12,6 @@ storiesOf('Circle Progress Indicator', module)
   ))
   .add('Data inside', () => (
     <CircleProgress noTopMargin green variant="static" value={50}>
-      <span>Some data</span>
+      <span data-qa-progress-label>Some data</span>
     </CircleProgress>
   ));

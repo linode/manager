@@ -14,8 +14,13 @@ const specsToRun = () => {
     if (argv.file) {
         return ['./e2e/setup/setup.spec.js', argv.file];
     }
+    
     if (argv.dir || argv.d) {
         return ['./e2e/setup/setup.spec.js', `./e2e/specs/${argv.dir || argv.d}/**/*.spec.js`]
+    }
+
+    if (argv.smoke) {
+        return ['./e2e/setup/setup.spec.js', './e2e/specs/**/smoke-*spec.js'];
     }
     return ['./e2e/setup/setup.spec.js', './e2e/specs/**/*.js'];
 }
@@ -102,7 +107,7 @@ exports.config = {
     baseUrl: process.env.DOCKER ? 'https://manager-local:3000' : process.env.REACT_APP_APP_ROOT,
     //
     // Default timeout for all waitFor* commands.
-    waitforTimeout: process.env.DOCKER ? 30000 : 10000,
+    waitforTimeout: process.env.DOCKER || process.env.BROWSERSTACK_USERNAME ? 30000 : 10000,
     //
     // Default timeout in milliseconds for request
     // if Selenium Grid doesn't send response

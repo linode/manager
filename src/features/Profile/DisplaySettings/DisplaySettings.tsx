@@ -1,14 +1,12 @@
-import { compose } from 'ramda';
+import { compose, path, pathOr } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators, Dispatch } from 'redux';
+import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-
-import { response } from 'src/store/reducers/resources';
+import { handleUpdate } from 'src/store/reducers/resources/profile';
 
 import EmailChangeForm from './EmailChangeForm';
 import TimezoneForm from './TimezoneForm';
@@ -25,14 +23,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface ConnectedProps {
-  loading: boolean;
-  username: string;
-  email: string;
-  timezone: string;
-  updateProfile: (v: Linode.Profile) => void;
-}
-
 interface State {
   submitting: boolean;
   updatedEmail: string;
@@ -40,7 +30,7 @@ interface State {
   success?: any;
 }
 
-type CombinedProps = ConnectedProps & WithStyles<ClassNames>;
+type CombinedProps = StateProps & DispatchProps & WithStyles<ClassNames>;
 
 export class DisplaySettings extends React.Component<CombinedProps, State> {
   state: State = {
@@ -51,7 +41,9 @@ export class DisplaySettings extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { email, loading, timezone, updateProfile, username } = this.props;
+    const { email, loading, timezone, username, actions } = this.props;
+
+    if (!email || !username) { return null; }
 
     return (
       <React.Fragment>
@@ -59,14 +51,14 @@ export class DisplaySettings extends React.Component<CombinedProps, State> {
         {!loading &&
           <React.Fragment>
             <EmailChangeForm
-              email={email} 
+              email={email}
               username={username}
-              updateProfile={updateProfile}
+              updateProfile={actions.updateProfile}
               data-qa-email-change
             />
             <TimezoneForm
               timezone={timezone}
-              updateProfile={updateProfile}
+              updateProfile={actions.updateProfile}
             />
           </React.Fragment>
         }
@@ -84,26 +76,38 @@ export class DisplaySettings extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const mapStateToProps = (state: Linode.AppState) => {
-  const { loading, data } = state.resources.profile!;
+interface StateProps {
+  loading: boolean;
+  username?: string;
+  email?: string;
+  timezone: string;
+}
 
-  if (loading) {
-    return { loading: true }
-  }
-
+const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state) => {
+  const { profile } = state.__resources;
   return {
-    loading: false,
-    username: data.username,
-    email: data.email,
-    timezone: data.timezone,
-  };
+    loading: profile.loading,
+    username: path(['data', 'username'], profile),
+    email: path(['data', 'email'], profile),
+    timezone: defaultTimezone(profile),
+  }
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
-  {
-    updateProfile: (v: Linode.Profile) => response(['profile'], v),
+interface DispatchProps {
+  actions: {
+    updateProfile: (v: Linode.Profile) => void;
   },
-  dispatch,
+}
+
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch) => ({
+  actions: {
+    updateProfile: (v: Linode.Profile) => dispatch(handleUpdate(v)),
+  },
+});
+
+const defaultTimezone = compose(
+  tz => tz === '' ? 'GMT' : tz,
+  pathOr('GMT', ['data', 'timezone']),
 );
 
 const connected = connect(mapStateToProps, mapDispatchToProps);

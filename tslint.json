@@ -16,7 +16,7 @@
     "jsdoc-format": { "severity": "warning" },
     "jsx-boolean-value": false,
     "jsx-key": { "severity": "warning" },
-    "jsx-no-lambda": { "severity": "warning" },
+    "jsx-no-lambda": false,
     "jsx-self-close": { "severity": "warning" },
     "max-classes-per-file": { "severity": "warning" },
     "member-access": false,
@@ -25,7 +25,7 @@
     "no-console": { "severity": "warning" },
     "no-empty-interface": { "severity": "warning" },
     "no-empty": { "severity": "warning" },
-    "no-namespace": { "severity": "none" },
+    "no-namespace": false,
     "no-shadowed-variable": { "severity": "warning"},
     "no-string-literal": { "severity": "warning" },
     "no-unused-expression": { "severity": "warning" },
@@ -33,6 +33,6 @@
     "only-arrow-functions": { "severity": "warning" },
     "prefer-for-of": {"severity": "warning"},
     "trailing-comma": { "severity": "warning" },
-    "variable-name": { "severity": "none" }
+    "variable-name": false
   }
 }

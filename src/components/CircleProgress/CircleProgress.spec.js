@@ -5,28 +5,58 @@ describe('Circle Progress Indicator Component Suite', () => {
     const component = 'Circle Progress Indicator';
     const childStory = [
         'Indefinite',
-    ]
+        'Data inside',
+    ];
 
-    beforeAll(() => {
-        navigateToStory(component, childStory[0]);
+    describe('Indefinite Progress Suite', () => {
+        beforeAll(() => {
+            navigateToStory(component, childStory[0]);
+        });
+
+        it('should display indefinite progress indicator', () => {
+            browser.waitForVisible('[data-qa-circle-progress]');
+
+            const progressIndicator = $('[data-qa-circle-progress]');
+            const role = progressIndicator.getAttribute('role');
+
+            expect(role).toBe('progressbar');
+            expect(progressIndicator.isVisible()).toBe(true)
+        });
+
+        it('should contain an svg child element', () => {
+            const svg = $('[data-qa-circle-progress] > svg' );
+            expect(svg.isVisible()).toBe(true);
+        });
+
+        it('should be indefinite variant', () => {
+            const svgClasses = $('[data-qa-circle-progress] > svg' ).getAttribute('class');
+        });
     });
 
-    it('should display indefinite progress indicator', () => {
-        browser.waitForVisible('[data-qa-circle-progress]');
+    describe('Data Inside Suite', () => {
+        let progressBar;
 
-        const progressIndicator = $('[data-qa-circle-progress]');
-        const role = progressIndicator.getAttribute('role');
+        beforeAll(() => {
+            navigateToStory(component, childStory[1]);
+        });
 
-        expect(role).toBe('progressbar');
-        expect(progressIndicator.isVisible()).toBe(true)
-    });
+        it('should display the data inside progress indicator', () => {
+            browser.waitForVisible('[data-qa-circle-progress]');
+            progressbar = $('[data-qa-circle-progress]');
 
-    it('should contain an svg child element', () => {
-        const svg = $('[data-qa-circle-progress] > svg' );
-        expect(svg.isVisible()).toBe(true);
-    });
+            expect(progressbar.getAttribute('data-qa-circle-progress')).toBe('50');
+        });
 
-    it('should be indefinite variant', () => {
-        const svgClasses = $('[data-qa-circle-progress] > svg' ).getAttribute('class');
+        it('should display the progress label', () => {
+            const labelText = 'Some data';
+
+            expect($('[data-qa-progress-label]').getText()).toBe(labelText);
+        });
+
+        it('should display the progress bar as green', () => {
+            const colorCode = 'rgb(0,177,89)';
+
+            expect(progressbar.$('circle').getCssProperty('stroke').value).toBe(colorCode);
+        });
     });
 });

@@ -1,33 +1,15 @@
-import * as Axios from 'axios';
-import { Schema, validate } from 'joi';
-import { compose, isEmpty, isNil, lensPath, lensProp, not, omit, path, pathOr, set, tap, when } from 'ramda';
-
-import { reportException } from 'src/exceptionReporting';
-
-const errorsMap: { [index: string]: string } = {
-  region_any_required: 'A region is required.',
-};
-
-const getErrorReason = compose(
-
-  pathOr('Please check your data and try again.', ['result']),
-
-  tap(({ key, result }) => {
-    if (result) {
-      return;
-    }
-
-    reportException('Unhandled validation error', key);
-  }),
-
-  (obj: { key: string }) => set(lensProp('result'), path([obj.key], errorsMap), obj),
-
-  (key: string) => ({ key }),
-);
-
-interface RequestConfig extends Axios.AxiosRequestConfig {
-  validationErrors?: { field?: string, response: string }[];
-}
+import Axios, { AxiosError, AxiosPromise, AxiosResponse } from 'axios';
+import {
+  compose,
+  isEmpty,
+  isNil,
+  lensPath,
+  not,
+  omit,
+  set,
+  when,
+} from 'ramda';
+import { ObjectSchema, ValidationError } from 'yup';
 
 const L = {
   url: lensPath(['url']),
@@ -52,8 +34,70 @@ export const setParams = (params: any = {}) => when(
   set(L.params, params),
 );
 
-/** Data */
-export const setData = (data: any) => set(L.data, data);
+/**
+ * Validate and set data in the request configuration object.
+ */
+export const setData = <T>(
+  data: T,
+
+  /**
+   * If a schema is provided, execute it's validate method. If the validation fails the
+   * errors will be set at L.validationError's path.
+   */
+  schema?: ObjectSchema<T>,
+
+  /**
+   * postValidationTransform will be applied to the data just before it's set on the configuration
+   * object, after the validation has happened. Use with caution It was created as a trap door for
+   * merging IPv4 addresses and ports in the NodeBalancer creation flow.
+   */
+  postValidationTransform?: (v: any) => any,
+) => {
+
+  if (!schema) {
+    return set(L.data, data);
+  }
+
+  const updatedData = typeof postValidationTransform === 'function'
+    ? postValidationTransform(data)
+    : data;
+
+  try {
+    schema.validateSync(data, { abortEarly: false });
+    return set(L.data, updatedData);
+  } catch (error) {
+    return compose(
+      set(L.data, updatedData),
+      set(L.validationErrors, convertYupToLinodeErrors(error)),
+    );
+  }
+};
+
+/**
+ * Attempt to convert a Yup error to our pattern. The only magic here is the recursive call
+ * to itself since we have nested structures (think NodeBalacners).
+ */
+const convertYupToLinodeErrors = (validationError: ValidationError): Linode.ApiFieldError[] => {
+  const { inner } = validationError;
+
+  /** If aggregate errors */
+  if (inner && inner.length > 0) {
+    return inner.reduce((result, innerValidationError) => {
+      const err = convertYupToLinodeErrors(innerValidationError);
+      return Array.isArray(err)
+        ? [...result, ...err]
+        : [...result, err]
+    }, []);
+  }
+
+  /** If single error.  */
+  return [mapYupToLinodeAPIError(validationError)]
+};
+
+const mapYupToLinodeAPIError = ({ message, path }: ValidationError): Linode.ApiFieldError => ({
+  reason: message,
+  ...(path && { field: path }),
+})
 
 /** X-Filter */
 export const setXFilter = (xFilter: any) => when(
@@ -61,25 +105,11 @@ export const setXFilter = (xFilter: any) => when(
   set(L.xFilter, JSON.stringify(xFilter)),
 );
 
-export const validateRequestData = (data: any, schema: Schema) =>
-  (config: RequestConfig) => {
-    const { error } = validate(data, schema);
-
-    return error
-      ? set(L.validationErrors, error.details.map((detail) => {
-        const pathData = detail.path.join('_');
-        const type = detail.type.replace('.', '_');
-        return {
-          field: pathData,
-          reason: getErrorReason(`${pathData}_${type}`),
-        };
-      }), config)
-      : config;
-  };
+const reduceRequestConfig = (...fns: Function[]) => fns.reduceRight((result, fn) => fn(result), {});
 
 /** Generator */
-export default <T>(...fns: Function[]): Axios.AxiosPromise<T> => {
-  const config = fns.reverse().reduce((result, currentFn) => currentFn(result), {});
+export default <T>(...fns: Function[]): AxiosPromise<T> => {
+  const config = reduceRequestConfig(...fns);
   if (config.validationErrors) {
     return Promise.reject({
       config: omit(['validationErrors'], config),
@@ -87,7 +117,7 @@ export default <T>(...fns: Function[]): Axios.AxiosPromise<T> => {
     });
   }
 
-  return Axios.default(config);
+  return Axios(config);
 };
 
 /**
@@ -104,7 +134,7 @@ export const mockAPIError = (
   status: number = 400,
   statusText: string = 'Internal Server Error',
   data: any = {},
-): Promise<Axios.AxiosError> =>
+): Promise<AxiosError> =>
   new Promise((resolve, reject) => setTimeout(() => reject(
     createError(
       `Request failed with a status of ${status}`,
@@ -112,18 +142,49 @@ export const mockAPIError = (
     )
   ), process.env.NODE_ENV === 'test' ? 0 : 250));
 
-const createError = (message: string, response: Axios.AxiosResponse) => {
+const createError = (message: string, response: AxiosResponse) => {
   const error = new Error(message) as any;
   error.response = response;
   return error;
 };
+
 /**
  *
  * Helper method to easily generate APIFieldError[] for a number of fields and a general error.
  */
 export const mockAPIFieldErrors = (fields: string[]): Linode.ApiFieldError[] => {
   return fields.reduce(
-    (result, field) => [ ...result, {field, reason: `${field} is incorrect.`, } ],
+    (result, field) => [...result, { field, reason: `${field} is incorrect.`, }],
     [{ reason: 'A general error has occured.' }],
   );
+};
+
+/**
+ * POC * POC * POC * POC * POC * POC * POC *
+ */
+interface CancellableRequest<T> {
+  request: () => Promise<T>;
+  cancel: () => void;
+}
+
+export const CancellableRequest = <T>(...fns: Function[]): CancellableRequest<T> => {
+  const config = reduceRequestConfig(...fns);
+  const source = Axios.CancelToken.source();
+
+  if (config.validationErrors) {
+    return {
+      cancel: () => null,
+      request: () => Promise.reject({
+        config: omit(['validationErrors'], config),
+        response: { data: { errors: config.validationErrors } },
+      }),
+    };
+  }
+
+  return {
+    cancel: source.cancel,
+    request: () => Axios({ ...config, cancelToken: source.token })
+      .then(response => response.data)
+  }
+
 };

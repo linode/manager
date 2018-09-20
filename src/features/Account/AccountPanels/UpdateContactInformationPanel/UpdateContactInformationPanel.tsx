@@ -217,7 +217,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
 
         <Grid item xs={12} sm={6}>
           <Grid container className={classes.stateZip}>
-            <Grid item xs={7}>
+            <Grid item xs={12} sm={7}>
               <TextField
                 label="State / Province"
                 value={defaultTo(account.state, fields.state)}
@@ -225,7 +225,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
                 onChange={this.updateState}
               />
             </Grid>
-            <Grid item xs={5}>
+            <Grid item xs={12} sm={5}>
               <TextField
                 label="Zip / Postal Code"
                 value={defaultTo(account.zip, fields.zip)}
@@ -609,7 +609,18 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
 
     updateAccountInfo(this.state.fields)
       .then((updatedAccount) => {
-        this.props.update((existingAccount) => ({ ...existingAccount, ...updatedAccount }));
+        this.props.update((existingAccount) => {
+          /* API returns:
+          * credit_card: {"expiry": null, "last_four": null}
+          * rather than credit_card = null. The merge will therefore
+          * overwrite the previous values for expiration/last 4 digits
+          * with null, so we need to manually set them here.
+          */
+          return {...existingAccount,
+                  ...updatedAccount,
+                  credit_card: existingAccount.credit_card
+                 }
+        });
 
         this.setState({
           success: 'Contact information successfully updated.',

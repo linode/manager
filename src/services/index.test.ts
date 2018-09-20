@@ -1,43 +1,20 @@
-import * as Joi from 'joi';
+import { object, string } from 'yup';
 
-import Request, { validateRequestData } from './index';
+import Request, { setData } from './index';
 
 describe('services', () => {
   describe('Request', () => {
     describe('validateRequestData', async () => {
       /**
-       * This tests that a generic error message is returned
-       * in the event a mapped error message could not be found.
-       */
-      it('should return generic message', () => {
-        const data = { label: 1234 };
-        const schema = Joi.object().keys({
-          label: Joi.string().required(),
-        });
-
-        return Request(
-          validateRequestData(data, schema),
-        )
-          .catch((response) => {
-            expect(response.response.data.errors).toEqual([{
-              field: 'label',
-              reason: `Please check your data and try again.`,
-            }]);
-          });
-      });
-
-      /**
        * This is testing that a specific error is being returned.
        */
       it('should return specific error message', () => {
         const data = { label: 1234 };
-        const schema = Joi.object().keys({
-          region: Joi.string().required(),
+        const schema = object().shape({
+          region: string().required('A region is required.'),
         });
 
-        return Request(
-          validateRequestData(data, schema),
-        )
+        return Request(setData(data, schema))
           .catch((response) => {
             expect(response.response.data.errors).toEqual([{
               field: 'region',

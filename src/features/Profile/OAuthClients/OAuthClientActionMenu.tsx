@@ -7,11 +7,17 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 
+interface EditPayload {
+  label: string;
+  redirect_uri: string;
+  isPublic: boolean;
+}
 interface Props {
   id: string;
-  onDelete: () => void;
-  onReset: () => void;
-  onEdit: () => void;
+  editPayload: EditPayload;
+  onDelete: (id: string) => void;
+  onReset: (id: string) => void;
+  onEdit: (id: string, label: string, redirect_uri: string, isPublic: boolean) => void;
 }
 
 type CombinedProps = Props;
@@ -23,13 +29,28 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
     createDrawerOpen: false,
   };
 
+  handleDelete = () => {
+    const { id, onDelete } = this.props;
+    onDelete(id)
+  }
+
+  handleResetSecret = () => {
+    const { id, onReset } = this.props;
+    onReset(id)
+  }
+
+  handleEdit = () => {
+    const { editPayload: { label, redirect_uri, isPublic }, id, onEdit } = this.props;
+    onEdit(id, label, redirect_uri, isPublic)
+  }
+
   toggleConfirmDelete = (v: Boolean) => this.setState({ confirmDeleteOpen: v });
   openConfirmDelete = () => this.toggleConfirmDelete(true);
   closeConfirmDelete = () => this.toggleConfirmDelete(false);
 
   onDeleteConfirm = () => {
     this.toggleConfirmDelete(false);
-    this.props.onDelete();
+    this.handleDelete();
   };
 
   deleteDialogActions = () => {
@@ -61,7 +82,7 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
 
   onResetConfirm = () => {
     this.toggleConfirmReset(false);
-    this.props.onReset();
+    this.handleResetSecret();
   }
 
   resetDialogActions = () => {
@@ -94,7 +115,7 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
         {
           title: 'Edit',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            this.props.onEdit();
+            this.handleEdit();
             closeMenu();
           },
         },

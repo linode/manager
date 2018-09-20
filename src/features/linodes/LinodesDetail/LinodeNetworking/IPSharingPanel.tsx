@@ -37,8 +37,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
    marginTop: theme.spacing.unit,
   },
   ipField: {
+    width: '100%',
     marginTop: 0,
-    width: 260,
   },
   ipFieldLabel: {
     width: '100%',
@@ -159,7 +159,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
         <Grid item xs={12}>
           <Divider className={classes.containerDivider} />
         </Grid>
-        <Grid item>
+        <Grid item xs={12}>
           <TextField disabled value={ip} className={classes.ipField} />
         </Grid>
       </Grid>
@@ -200,7 +200,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
         <Grid item xs={12}>
           <Divider className={classes.containerDivider} />
         </Grid>
-        <Grid item>
+        <Grid item xs={12} sm={10}>
           <Select
             value={ip}
             onChange={this.onIPSelect(idx)}

@@ -91,9 +91,7 @@ storiesOf('SelectionCard', module)
 .add('Default with SvgIcon', () => (
   <Grid container wrap="wrap" className="m0">
     <SelectionCard
-      renderIcon={() => {
-        return <InsertPhoto />;
-      }}
+      renderIcon={renderPhoto}
       heading="Photos"
       subheadings={[
         'Use a photo',
@@ -101,9 +99,7 @@ storiesOf('SelectionCard', module)
       ]}
     />
     <SelectionCard
-      renderIcon={() => {
-        return <Alarm />;
-      }}
+      renderIcon={renderAlarm}
       heading="Alarm"
       subheadings={[
         'Set an alarm',
@@ -116,9 +112,7 @@ storiesOf('SelectionCard', module)
   <React.Fragment>
     <Grid container wrap="wrap" className="m0">
       <SelectionCard
-        renderIcon={() => {
-          return <US width="32" height="24" viewBox="0 0 720 480" />;
-        }}
+        renderIcon={renderUS}
         heading="United States"
         subheadings={[ // fdafds
           'The United States of America',
@@ -127,9 +121,7 @@ storiesOf('SelectionCard', module)
       />
       <br /><br />
       <SelectionCard
-        renderIcon={() => {
-          return <DE width="32" height="24" viewBox="0 0 640 480" />;
-        }}
+        renderIcon={renderDelaware}
         heading="Germany"
         subheadings={[
           'Germany',
@@ -137,9 +129,7 @@ storiesOf('SelectionCard', module)
         ]}
       />
       <SelectionCard
-        renderIcon={() => {
-          return <FR width="32" height="24" viewBox="0 0 640 480" />;
-        }}
+        renderIcon={renderFrance}
         heading="France"
         subheadings={[
           'France',
@@ -152,27 +142,21 @@ storiesOf('SelectionCard', module)
 .add('Default with font Icon', () => (
   <Grid container wrap="wrap" className="m0">
     <SelectionCard
-      renderIcon={() => {
-        return <span className="fl-archlinux"/>;
-      }}
+      renderIcon={renderArch}
       heading="Arch Linix"
       subheadings={[
         'Almost as difficult to use as Gentoo!',
       ]}
     />
     <SelectionCard
-      renderIcon={() => {
-        return <span className="fl-devuan"/>;
-      }}
+      renderIcon={renderDevuan}
       heading="Devuan Linix"
       subheadings={[
         'It\'s Debian with a sane init system!',
       ]}
     />
     <SelectionCard
-      renderIcon={() => {
-        return <span className="fl-coreos"/>;
-      }}
+      renderIcon={renderCoreOS}
       heading="CoreOs"
       subheadings={[
         'Container Linux',
@@ -209,9 +193,7 @@ storiesOf('SelectionCard', module)
   <Grid container wrap="wrap" className="m0">
     <SelectionCard
       checked
-      renderIcon={() => {
-        return <InsertPhoto />;
-      }}
+      renderIcon={renderPhoto}
       heading="Photos"
       subheadings={[
         'Use a photo',
@@ -220,9 +202,7 @@ storiesOf('SelectionCard', module)
     />
     <SelectionCard
       checked
-      renderIcon={() => {
-        return <Alarm />;
-      }}
+      renderIcon={renderAlarm}
       heading="Alarm"
       subheadings={[
         'Set an alarm',
@@ -236,9 +216,7 @@ storiesOf('SelectionCard', module)
     <Grid container wrap="wrap" className="m0">
       <SelectionCard
         checked
-        renderIcon={() => {
-          return <US width="32" height="24" viewBox="0 0 720 480" />;
-        }}
+        renderIcon={renderUS}
         heading="United States"
         subheadings={[
           'The United States of America',
@@ -247,9 +225,7 @@ storiesOf('SelectionCard', module)
       />
       <SelectionCard
         checked
-        renderIcon={() => {
-          return <DE width="32" height="24" viewBox="0 0 640 480" />;
-        }}
+        renderIcon={renderDelaware}
         heading="Germany"
         subheadings={[
           'Germany',
@@ -263,9 +239,7 @@ storiesOf('SelectionCard', module)
   <Grid container wrap="wrap" className="m0">
     <SelectionCard
       checked
-      renderIcon={() => {
-        return <span className="fl-archlinux"/>;
-      }}
+      renderIcon={renderArch}
       heading="Arch Linix"
       subheadings={[
         'Almost as difficult to use as Gentoo!',
@@ -273,9 +247,7 @@ storiesOf('SelectionCard', module)
     />
     <SelectionCard
       checked
-      renderIcon={() => {
-        return <span className="fl-devuan"/>;
-      }}
+      renderIcon={renderDevuan}
       heading="Devuan Linix"
       subheadings={[
         'It\'s Debian with a sane init system!',
@@ -310,5 +282,36 @@ storiesOf('SelectionCard', module)
       ]}
     />
   </Grid>
-))
-;
+));
+
+const renderDevuan = () => {
+  return <span className="fl-devuan" />;
+}
+
+const renderArch = () => {
+  return <span className="fl-archlinux" />
+}
+
+const renderDelaware = () => {
+  return <DE width="32" height="24" viewBox="0 0 640 480" />;
+}
+
+const renderUS = () => {
+  return <US width="32" height="24" viewBox="0 0 720 480" />
+}
+
+const renderFrance = () => {
+  return <FR width="32" height="24" viewBox="0 0 640 480" />;
+}
+
+const renderPhoto = () => {
+  return <InsertPhoto />
+}
+
+const renderAlarm = () => {
+  return <Alarm />
+}
+
+const renderCoreOS = () => {
+  return <span className="fl-coreos" />;
+}

@@ -42,7 +42,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   emptyState: {
     textAlign: 'center',
-    padding: '10em',
+    padding: '5em 2em',
+    [theme.breakpoints.up('sm')]: {
+      padding: '10em',
+    },
   },
   searchWrapper: {
     position: 'sticky',
@@ -659,7 +662,7 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
         {!didSearch && listOfStackScripts.length === 0
           ? <div className={classes.emptyState} data-qa-stackscript-empty-msg>
             You do not have any StackScripts to select from. You must first
-          <Link to="/stackscripts/create"> create one</Link>
+          <Link to="/stackscripts/create"> create one.</Link>
           </div>
           : <React.Fragment>
             <div className={classes.searchWrapper}>
@@ -669,7 +672,11 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
                 actionBeingPerfomed={isSearching}
               />
             </div>
-            <Table aria-label="List of StackScripts" noOverflow={true} tableClass={classes.table}>
+            <Table 
+              isResponsive={false}
+              aria-label="List of StackScripts"
+              noOverflow={true}
+              tableClass={classes.table}>
               <StackScriptTableHead
                 handleClickTableHeader={this.handleClickTableHeader}
                 sortOrder={sortOrder}

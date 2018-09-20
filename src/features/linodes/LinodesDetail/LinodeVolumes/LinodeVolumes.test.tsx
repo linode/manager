@@ -12,7 +12,6 @@ import { LinodeVolumes } from './LinodeVolumes';
 
 describe('Linode Volumes', () => {
   const linodeConfigsAsPromiseResponse = createPromiseLoaderResponse(linodeConfigs);
-  const volumesAsPromiseResponse = createPromiseLoaderResponse(volumes);
 
   const mockLocation = {
     pathname: 'localhost',
@@ -23,15 +22,16 @@ describe('Linode Volumes', () => {
 
   const component = shallow(
     <LinodeVolumes
-      updateVolumes={jest.fn()}
       classes={{ title: '' }}
-      volumes={volumesAsPromiseResponse}
       linodeConfigs={linodeConfigsAsPromiseResponse}
       linodeVolumes={volumes}
       linodeLabel="test"
       linodeRegion="us-east"
       linodeStatus="running"
       linodeID={100}
+      actions={{
+        updateVolumes: jest.fn()
+      }}
       history={{
         length: 2,
         action: 'PUSH',
@@ -65,9 +65,10 @@ describe('Linode Volumes', () => {
       <StaticRouter context={{}}>
         <LinodeThemeWrapper>
           <LinodeVolumes
-            updateVolumes={jest.fn()}
+            actions={{
+              updateVolumes: jest.fn()
+            }}
             classes={{ title: '' }}
-            volumes={volumesAsPromiseResponse}
             linodeConfigs={createPromiseLoaderResponse([])}
             linodeVolumes={[]}
             linodeLabel="test"
@@ -89,9 +90,10 @@ describe('Linode Volumes', () => {
       <StaticRouter context={{}}>
         <LinodeThemeWrapper>
           <LinodeVolumes
-            updateVolumes={jest.fn()}
+            actions={{
+              updateVolumes: jest.fn()
+            }}
             classes={{ title: '' }}
-            volumes={volumesAsPromiseResponse}
             linodeConfigs={linodeConfigsAsPromiseResponse}
             linodeVolumes={[]}
             linodeLabel="test"
@@ -116,9 +118,10 @@ describe('Linode Volumes', () => {
         <StaticRouter context={{}}>
           <LinodeThemeWrapper>
             <LinodeVolumes
-              updateVolumes={jest.fn()}
+              actions={{
+                updateVolumes: jest.fn()
+              }}
               classes={{ title: '' }}
-              volumes={volumesAsPromiseResponse}
               linodeConfigs={linodeConfigsAsPromiseResponse}
               linodeVolumes={volumes}
               linodeLabel="test"

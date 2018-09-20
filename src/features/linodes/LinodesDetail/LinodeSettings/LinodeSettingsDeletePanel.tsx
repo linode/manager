@@ -35,7 +35,7 @@ class LinodeSettingsDeletPanel extends React.Component<CombinedProps, State> {
     this.setState(set(lensPath(['submitting']), true));
     deleteLinode(this.props.linodeId)
       .then((response) => {
-        this.props.history.push('/');
+        this.props.history.push('/linodes');
       })
       .catch((error) => {
         this.setState(set(lensPath(['errors']), error.response.data.errors), () => {

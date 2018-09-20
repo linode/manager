@@ -1,22 +1,17 @@
 import { path } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
+import { connect, MapStateToProps } from 'react-redux';
 import { UserSSHKeyObject } from 'src/components/AccessPanel';
 import { getUsers } from 'src/services/account';
 import { getSSHKeys } from 'src/services/profile';
 import { getEmailHash } from 'src/utilities/gravatar';
-
-interface Props {
-  username: string;
-  userEmailAddress: string;
-}
 
 interface State {
   userSSHKeys: UserSSHKeyObject[];
 }
 
 export default (Component: React.ComponentType<any>) => {
-  class WrappedComponent extends React.PureComponent<Props, State> {
+  class WrappedComponent extends React.PureComponent<StateProps, State> {
     state = {
       userSSHKeys: [],
     }
@@ -54,18 +49,18 @@ export default (Component: React.ComponentType<any>) => {
           this.setState({
             userSSHKeys: [
               ...this.state.userSSHKeys,
-              ...users.reduce((users, user) => {
+              ...users.reduce((cleanedUsers, user) => {
                 const keys = user.ssh_keys;
                 if (
                   !keys || keys.length === 0 ||
                   /** We don't want the current user added again. */
                   user.username === this.props.username
                 ) {
-                  return users;
+                  return cleanedUsers;
                 }
 
                 return [
-                  ...users,
+                  ...cleanedUsers,
                   this.createUserObject(user.username, user.email, keys),
                 ];
               }, [])
@@ -96,10 +91,16 @@ export default (Component: React.ComponentType<any>) => {
     })
   }
 
-  return connected<Props>(WrappedComponent);
+  return connected(WrappedComponent);
 }
 
-const connected = connect((state: Linode.AppState) => ({
-  username: path<string>(['data', 'username'], state.resources.profile),
-  userEmailAddress: path<string>(['data', 'email'], state.resources.profile),
-}))
+interface StateProps {
+  username?: string;
+  userEmailAddress?: string;
+}
+
+const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state) => ({
+  username: path<string>(['data', 'username'], state.__resources.profile),
+  userEmailAddress: path<string>(['data', 'email'], state.__resources.profile),
+});
+const connected = connect(mapStateToProps)

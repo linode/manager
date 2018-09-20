@@ -28,7 +28,7 @@ class APITokenMenu extends React.Component<CombinedProps> {
             },
           },
           {
-            title: 'Edit',
+            title: 'Rename Token',
             onClick: (e: React.MouseEvent<HTMLElement>) => {
               openEditDrawer(token);
               closeMenu();

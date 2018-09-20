@@ -281,6 +281,7 @@ export class VolumeDetail extends Page {
     }
 
     assertConfig() {
+        this.drawerTitle.waitForVisible(constants.wait.normal);
         expect(this.drawerTitle.getText()).toBe('Volume Configuration');
         expect(this.cancel.isVisible()).toBe(true);
         expect(this.cancel.getTagName()).toBe('button');

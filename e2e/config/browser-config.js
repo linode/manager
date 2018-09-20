@@ -20,11 +20,13 @@ exports.browserConf = {
     edge: {
         'browserName': 'edge',
         'acceptSslCerts': true,
-        'os': 'Windows',
-        'os_version': '10',
-        'browser': 'Edge',
-        'browser_version': '17.0',
-        'resolution': '1440x900'
+        'os' : 'Windows',
+        'os_version' : '10',
+        'browserName' : 'Edge',
+        'browser_version' : 'insider preview',
+        'resolution' : '1440x900',
+        'browserstack.local' : 'true',
+        'browserstack.selenium_version' : '3.13.0', 
     },
     headlessChrome: {
         browserName: 'chrome',
@@ -59,7 +61,7 @@ exports.browserConf = {
         browserName: 'firefox',
         marionette: true,
         'moz:firefoxOptions' : {
-            'binary': '/Applications/Firefox Nightly.app/Contents/MacOS/firefox-bin',
+            'binary': '/Applications/Firefox.app/Contents/MacOS/firefox-bin',
             'args': ['-headless']
         },
         maxInstances: 5,

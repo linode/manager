@@ -5,7 +5,6 @@ import * as React from 'react';
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
@@ -19,6 +18,7 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
 import { createPersonalAccessToken, deleteAppToken, deletePersonalAccessToken, getAppTokens, getPersonalAccessTokens, updatePersonalAccessToken } from 'src/services/profile';
 import isPast from 'src/utilities/isPast';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -173,22 +173,22 @@ export class APITokens extends React.Component<CombinedProps, State> {
             <TableBody>
               {tokens.map((token: Linode.Token) =>
                 <TableRow key={token.id} data-qa-table-row={token.label}>
-                  <TableCell>
+                  <TableCell parentColumn="Label">
                     <Typography role="header" variant="subheading" data-qa-token-label>
                       {token.label}
                     </Typography>
                   </TableCell>
-                  <TableCell>
+                  <TableCell parentColumn="Type">
                     <Typography variant="body1" data-qa-token-type>
                       {type}
                     </Typography>
                   </TableCell>
-                  <TableCell>
+                  <TableCell parentColumn="Created">
                     <Typography variant="body1" data-qa-token-created>
                       {token.created}
                     </Typography>
                   </TableCell>
-                  <TableCell>
+                  <TableCell parentColumn="Expires">
                     <Typography variant="body1" data-qa-token-expiry>
                       {token.expiry}
                     </Typography>
