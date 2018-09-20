@@ -332,7 +332,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
         key={idx}
         reply={reply}
         open={idx === replies.length - 1}
-        parentTicket={ticket ? String(ticket.id) : ''}
+        parentTicket={ticket ? ticket.id : undefined}
         isCurrentUser={this.props.profileUsername === reply.created_by}
       />
     });

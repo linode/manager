@@ -135,7 +135,7 @@ interface Props {
   ticket?: Linode.SupportTicket;
   open?: boolean;
   isCurrentUser: boolean;
-  parentTicket?: string;
+  parentTicket?: number;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -195,7 +195,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
       }
     } else if (reply) {
       data = {
-        ticket_id: parentTicket ? parentTicket : '',
+        ticket_id: parentTicket ? String(parentTicket) : '',
         reply_id: String(reply.id),
         gravatar_id: reply.gravatar_id,
         gravatarUrl: pathOr('not found',['gravatarUrl'],reply),
