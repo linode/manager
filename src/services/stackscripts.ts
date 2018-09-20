@@ -1,4 +1,4 @@
-import * as Joi from 'joi';
+import { array, boolean, object, string } from 'yup'
 
 import { API_ROOT } from 'src/constants';
 import Request, {
@@ -7,7 +7,6 @@ import Request, {
   setParams,
   setURL,
   setXFilter,
-  validateRequestData,
 } from './index';
 
 type Page<T> = Linode.ResourcePage<T>;
@@ -59,30 +58,28 @@ interface StackScriptPayload {
   rev_note?: string;
 }
 
-const stackScriptSchema = Joi.object({
-  script: Joi.string().required(),
-  label: Joi.string().required(),
-  images: Joi.array().items(Joi.string()).required(),
-  description: Joi.string().allow(""),
-  is_public: Joi.boolean(),
-  rev_note: Joi.string().allow(""),
+const stackScriptSchema = object({
+  script: string().required('Script is required.'),
+  label: string().required('Label is required.'),
+  images: array().of(string()).required('An image is required.'),
+  description: string(),
+  is_public: boolean(),
+  rev_note: string(),
 });
 
 export const createStackScript = (payload: StackScriptPayload) =>
   Request(
-    validateRequestData(payload, stackScriptSchema),
     setURL(`${API_ROOT}/linode/stackscripts`),
     setMethod('POST'),
-    setData(payload)
+    setData(payload, stackScriptSchema)
   )
   .then(response => response.data);
 
 export const updateStackScript = (id: number, payload: StackScriptPayload) =>
   Request(
-    validateRequestData(payload, stackScriptSchema),
     setURL(`${API_ROOT}/linode/stackscripts/${id}`),
     setMethod('PUT'),
-    setData(payload)
+    setData(payload, stackScriptSchema)
   )
   .then(response => response.data);
 

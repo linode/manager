@@ -7,12 +7,14 @@ describe('Email change form', () => {
   const update = jest.fn();
 
   const component = shallow(
-    <DisplaySettings 
-      loading={false} 
-      username="exampleuser" 
+    <DisplaySettings
+      loading={false}
+      username="exampleuser"
       email="me@this.com"
       timezone="America/Barbados"
-      updateProfile={update}
+      actions={{
+        updateProfile: update
+      }}
       classes={{
         root: '',
         title: '',

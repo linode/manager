@@ -1,2 +1,3 @@
-import Tag from './Tag';
+import Tag, { Props } from './Tag';
+export { Props }
 export default Tag;

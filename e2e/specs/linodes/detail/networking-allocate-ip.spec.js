@@ -62,7 +62,7 @@ describe('Linode Detail - Networking - Allocate IP Suite', () => {
             expect(Networking.cancel.isVisible()).toBe(true);
 
             Networking.cancel.click();
-            Networking.drawerTitle.waitForExist(constants.wait.normal);
+            Networking.drawerTitle.waitForExist(constants.wait.normal, true);
         });
     });
 });

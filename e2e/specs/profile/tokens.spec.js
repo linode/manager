@@ -93,7 +93,7 @@ describe('View - Personal Access Tokens', () => {
 
         describe('Edit - Personal Access Tokens', () => {
             it('should display edit drawer', () => {
-                profile.selectActionMenuItem($(newToken), 'Edit')
+                profile.selectActionMenuItem($(newToken), 'Rename Token')
                 
                 expect(tokenCreateDrawer.label.waitForVisible()).toBe(true);
                 expect(tokenCreateDrawer.title.getText()).toBe('Edit this Personal Access Token');

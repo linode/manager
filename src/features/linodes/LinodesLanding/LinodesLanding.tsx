@@ -32,8 +32,7 @@ import { getLinode, getLinodes } from 'src/services/linodes';
 import scrollToTop from 'src/utilities/scrollToTop';
 import { views } from 'src/utilities/storage';
 
-import LinodesGridView from './LinodesGridView';
-import LinodesListView from './LinodesListView';
+import LinodesViewWrapper from './LinodesViewWrapper'
 import ListLinodesEmptyState from './ListLinodesEmptyState';
 import { powerOffLinode, rebootLinode } from './powerActions';
 import ToggleBox from './ToggleBox';
@@ -168,6 +167,9 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
               updatedLinodes[targetIndex].recentEvent = linodeEvent;
               return { linodes: updatedLinodes };
             });
+          })
+          .catch((error) => {
+            /* Nothing to do here; in most cases the subscriber is trying to retrieve a recently deleted Linode. */
           });
       });
 
@@ -297,32 +299,20 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     this.setState({ powerAlertOpen: false });
   }
 
-  renderListView = (
+  renderContent = (
     linodes: Linode.Linode[],
     images: Linode.Image[],
+    view: 'grid' | 'list'
   ) => {
     return (
-      <LinodesListView
+      <LinodesViewWrapper
+        view={view}
         linodes={linodes}
         images={images}
         openConfigDrawer={this.openConfigDrawer}
         toggleConfirmation={this.toggleDialog}
       />
-    );
-  }
-
-  renderGridView = (
-    linodes: Linode.Linode[],
-    images: Linode.Image[],
-  ) => {
-    return (
-      <LinodesGridView
-        linodes={linodes}
-        images={images}
-        openConfigDrawer={this.openConfigDrawer}
-        toggleConfirmation={this.toggleDialog}
-      />
-    );
+    )
   }
 
   render() {
@@ -380,12 +370,12 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
         </Grid>
         <Grid item xs={12}>
           <Hidden mdUp>
-            {this.renderGridView(linodes, images)}
+            {this.renderContent(linodes, images, 'grid')}
           </Hidden>
           <Hidden smDown>
             {displayGrid === 'grid'
-              ? this.renderGridView(linodes, images)
-              : this.renderListView(linodes, images)
+              ? this.renderContent(linodes, images, 'grid')
+              : this.renderContent(linodes, images, 'list')
             }
           </Hidden>
         </Grid>

@@ -8,13 +8,15 @@ type CSSClasses =  'chip' | 'label' | 'popover';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   chip: {
+    top: -2,
     position: 'relative',
-    top: -1,
-    height: 20,
     marginLeft: theme.spacing.unit / 2,
+    paddingLeft: theme.spacing.unit / 2,
+    paddingRight: theme.spacing.unit / 2,
     backgroundColor: theme.bg.lightBlue,
     fontWeight: 500,
     lineHeight: 1,
+    fontSize: '.9rem',
     '&:hover, &.active': {
       backgroundColor: theme.palette.primary.main,
       color: 'white',

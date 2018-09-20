@@ -164,12 +164,12 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
   renderData = (items: Linode.InvoiceItem[]) => {
     return items.map(({ label, from, to, quantity, unit_price, amount }) => (
       <TableRow key={`${label}-${from}-${to}`}>
-        <TableCell>{label}</TableCell>
-        <TableCell>{this.renderDate(from)}</TableCell>
-        <TableCell>{this.renderDate(to)}</TableCell>
-        <TableCell>{this.renderQuantity(quantity)}</TableCell>
-        <TableCell>{this.renderUnitPrice(unit_price)}</TableCell>
-        <TableCell>${amount}</TableCell>
+        <TableCell parentColumn="Description">{label}</TableCell>
+        <TableCell parentColumn="From">{this.renderDate(from)}</TableCell>
+        <TableCell parentColumn="To">{this.renderDate(to)}</TableCell>
+        <TableCell parentColumn="Quantity">{this.renderQuantity(quantity)}</TableCell>
+        <TableCell parentColumn="Unit Price">{this.renderUnitPrice(unit_price)}</TableCell>
+        <TableCell parentColumn="Amount">${amount}</TableCell>
       </TableRow>
     ));
   };

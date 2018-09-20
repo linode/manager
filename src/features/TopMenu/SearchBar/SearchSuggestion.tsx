@@ -9,12 +9,19 @@ type ClassNames = 'root'
  | 'suggestionIcon'
  | 'suggestionContent'
  | 'suggestionTitle'
- | 'suggestionDescription';
+ | 'suggestionDescription'
+ | 'resultContainer'
+ | 'tagContainer';
+
+ import Tag from 'src/components/Tag';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
     cursor: 'pointer',
     display: 'flex',
+    width: '100%',
+    alignItems: 'space-between',
+    justifyContent: 'space-between',
   },
   highlight: {
     color: theme.palette.primary.main,
@@ -43,6 +50,18 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     fontWeight: 600,
     marginTop: 2,
   },
+  resultContainer: {
+    display: 'flex',
+    flexFlow: 'row nowrap'
+  },
+  tagContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    '& > div': {
+      margin: '2px',
+    }
+  }
 });
 
 export interface SearchSuggestionT {
@@ -50,6 +69,8 @@ export interface SearchSuggestionT {
   title: string;
   description: string;
   path: string;
+  tags?: string[];
+  isHighlighted?: boolean;
 }
 
 interface Props extends SearchSuggestionT {
@@ -71,9 +92,16 @@ const maybeStyleSegment = (text: string, searchText: string, hlClass: string): R
   );
 };
 
-const onClick = (path: string, history: H.History) => {
-  history.push(path);
-};
+const renderTags = (tags:string[], selected:boolean) => {
+  if (tags.length === 0) { return; }
+  return tags.map((tag:string) =>
+    <Tag
+      key={`tag-${tag}`}
+      label={tag}
+      variant={selected ? 'blue' : 'lightGray'}
+    />
+  );
+}
 
 const SearchSuggestion: React.StatelessComponent<CombinedProps> = (props) => {
   const {
@@ -85,25 +113,40 @@ const SearchSuggestion: React.StatelessComponent<CombinedProps> = (props) => {
     path,
     history,
     classes,
+    tags,
+    isHighlighted,
   } = props;
+
+  const handleClick = () => {
+    history.push(path);
+  }
+
   return (
-    <div onClick={() => onClick(path, history)} className={root}>
-      <div className={`
-        ${classes.suggestionItem}
-        ${classes.suggestionIcon}
-      `}>
-        <Icon />
+    <div
+      onClick={handleClick}
+      className={root}
+    >
+      <div className={classes.resultContainer}>
+        <div className={`
+          ${classes.suggestionItem}
+          ${classes.suggestionIcon}
+        `}>
+          <Icon />
+        </div>
+        <div className={`
+          ${classes.suggestionItem}
+          ${classes.suggestionContent}
+        `}>
+          <div className={classes.suggestionTitle} data-qa-suggestion-title>
+            {maybeStyleSegment(title, searchText, highlight)}
+          </div>
+          <div className={classes.suggestionDescription} data-qa-suggestion-desc>
+            {description}
+          </div>
+        </div>
       </div>
-      <div className={`
-        ${classes.suggestionItem}
-        ${classes.suggestionContent}
-      `}>
-        <div className={classes.suggestionTitle} data-qa-suggestion-title>
-          {maybeStyleSegment(title, searchText, highlight)}
-        </div>
-        <div className={classes.suggestionDescription} data-qa-suggestion-desc>
-          {description}
-        </div>
+      <div className={classes.tagContainer}>
+          {tags && renderTags(tags, Boolean(isHighlighted))}
       </div>
     </div>
   );

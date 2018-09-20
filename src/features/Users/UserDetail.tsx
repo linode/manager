@@ -1,8 +1,7 @@
-import { clone, compose, pathOr } from 'ramda';
+import { clone, compose, path as pathRamda, pathOr } from 'ramda';
 import * as React from 'react';
-import { connect, Dispatch } from 'react-redux';
+import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { matchPath, Route, RouteComponentProps, Switch } from 'react-router-dom';
-import { bindActionCreators } from 'redux';
 
 import AppBar from '@material-ui/core/AppBar';
 import IconButton from '@material-ui/core/IconButton';
@@ -18,8 +17,7 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import { getUser, updateUser } from 'src/services/account';
-import { getProfile } from 'src/services/profile';
-import { request, response } from 'src/store/reducers/resources';
+import { handleUpdate } from 'src/store/reducers/resources/profile';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 
 import UserPermissions from './UserPermissions';
@@ -63,14 +61,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface ConnectedProps {
-  dispatchRequest: typeof request;
-  dispatchResponse: typeof response;
-  profileUsername: string;
-}
-
 interface MatchProps { username: string };
-type CombinedProps = WithStyles<ClassNames> & RouteComponentProps<MatchProps> & ConnectedProps;
+
+type CombinedProps = WithStyles<ClassNames> & RouteComponentProps<MatchProps> & StateProps & DispatchProps;
 
 interface State {
   gravatarUrl?: string;
@@ -160,29 +153,49 @@ class UserDetail extends React.Component<CombinedProps> {
   }
 
   onSave = () => {
-    const { history, match: { path }, profileUsername, dispatchRequest, dispatchResponse } = this.props;
-    const { originalUsername, username, restricted } = this.state;
+    const {
+      history,
+      match: { path },
+      profileUsername,
+      actions: { updateCurrenUser }
+    } = this.props;
+
+    const {
+      originalUsername,
+      username,
+      restricted,
+    } = this.state;
+
     if (!originalUsername) { return; }
+
     this.setState({
       profileSuccess: false,
       profileSaving: true,
       profileErrors: [],
     })
+
     updateUser(originalUsername, { username, restricted })
       .then((user) => {
+
+        /**
+         * Update the state of the component with the updated information.
+         */
         this.setState({
           originalUsername: user.username,
           username: user.username,
           profileSaving: false,
         })
+
+        /**
+         * If the user we updated is the current user, we need to reflec that change at the global level.
+         */
         if (profileUsername === originalUsername) {
-          dispatchRequest(['profile']);
-          getProfile()
-            .then(({ data }) => {
-              dispatchResponse(['profile'], data);
-            })
-            .catch(error => dispatchResponse(['profile'], error));
+          updateCurrenUser(user);
         }
+
+        /**
+         * I really have no idea whats going on here.
+         */
         history.push(path.replace(':username', user.username), { success: true });
       })
       .catch((errResponse) => {
@@ -199,7 +212,7 @@ class UserDetail extends React.Component<CombinedProps> {
   renderUserProfile = () => {
     const { username, email, profileSaving, profileSuccess, profileErrors } = this.state;
     return <UserProfile
-      username={username}
+      username={username || ''}
       email={email}
       changeUsername={this.onChangeUsername}
       save={this.onSave}
@@ -209,7 +222,7 @@ class UserDetail extends React.Component<CombinedProps> {
       errors={profileErrors}
     />
   }
-  
+
   renderUserPermissions = () => {
     const { username } = this.state;
     return <UserPermissions
@@ -279,7 +292,7 @@ class UserDetail extends React.Component<CombinedProps> {
           </Tabs>
         </AppBar>
         {createdUsername &&
-          <Notice success text={`User ${createdUsername} created successfully`} /> 
+          <Notice success text={`User ${createdUsername} created successfully`} />
         }
         <Switch>
           <Route exact path={`${url}/permissions`} component={this.renderUserPermissions} />
@@ -290,17 +303,29 @@ class UserDetail extends React.Component<CombinedProps> {
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
-  {
-    dispatchResponse: response,
-    dispatchRequest: request,
-  },
-  dispatch,
-);
+interface StateProps {
+  profileUsername?: string;
+}
 
-const mapStateToProps = (state: Linode.AppState) => ({
-  profileUsername: pathOr('', ['resources', 'profile', 'data', 'username'], state),
+const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state) => ({
+  profileUsername: pathRamda(['data', 'username'], state.__resources.profile),
 });
+
+interface DispatchProps {
+  actions: {
+    updateCurrenUser: (user: Linode.User) => void;
+  }
+}
+
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch) => ({
+  actions: {
+    updateCurrenUser: (u: Linode.User) =>
+      dispatch(
+        handleUpdate(u)
+      ),
+  }
+});
+
 
 const reloadable = reloadableWithRouter<CombinedProps, MatchProps>((routePropsOld, routePropsNew) => {
   return routePropsOld.match.params.username !== routePropsNew.match.params.username;

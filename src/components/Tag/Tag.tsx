@@ -24,69 +24,98 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     root: {},
     white: {
       backgroundColor: theme.color.white,
+      '&:focus': {
+        backgroundColor: theme.color.white,
+      },
     },
     gray: {
       backgroundColor: '#939598',
       color: 'white',
+      '&:focus': {
+        backgroundColor: '#939598',
+      },
     },
     lightGray: {
       backgroundColor: '#C9CACB',
       color: 'white',
+      '&:focus': {
+        backgroundColor: '#C9CACB',
+      },
     },
     blue: {
       backgroundColor: theme.palette.primary.main,
       color: 'white',
+      '&:focus': {
+        backgroundColor: theme.palette.primary.main,
+      },
     },
     lightBlue: {
       backgroundColor: theme.bg.lightBlue,
+      '&:focus': {
+        backgroundColor: theme.bg.lightBlue,
+      },
     },
     green: {
       backgroundColor: '#61CD7B',
       color: 'white',
+      '&:focus': {
+        backgroundColor: '#61CD7B',
+      },
     },
     lightGreen: {
       backgroundColor: '#DFF3E7',
+      '&:focus': {
+        backgroundColor: '#DFF3E7',
+      },
     },
     yellow: {
       backgroundColor: '#F8D147',
+      '&:focus': {
+        backgroundColor: '#F8D147',
+      },
     },
     lightYellow: {
       backgroundColor: '#FCF4DD',
+      '&:focus': {
+        backgroundColor: '#FCF4DD',
+      },
     },
   });
 };
 
-interface Props extends ChipProps {
+export interface Props extends ChipProps {
   label: string;
   variant?: Variants;
 }
 
 type PropsWithStyles = Props & WithStyles<CSSClasses>;
 
-const Tag: React.SFC<PropsWithStyles> = (props) => {
-  const {
-    variant,
-    classes,
-    theme,
-    className,
-    ...chipProps
-  } = props;
+class Tag extends React.Component<PropsWithStyles, {}> {
+  static defaultProps = {
+    variant: 'gray' as Variants,
+  };
 
-  return <Chip
-    className={classNames({
-      ...(className && { [className]: true }),
-      [classes[props.variant!]]: true,
-      [classes.root]: true,
-    })}
-    deleteIcon={<Close />}
-    classes={{ label: props.classes.label }}
-    data-qa-tag
-    {...chipProps}
-  />;
-};
+  render() {
+    const {
+      variant,
+      classes,
+      theme,
+      className,
+      ...chipProps
+    } = this.props;
 
-Tag.defaultProps = {
-  variant: 'gray',
+    return <Chip
+      {...chipProps}
+      className={classNames({
+        ...(className && { [className]: true }),
+        [classes[variant!]]: true,
+        [classes.root]: true,
+      })}
+      deleteIcon={this.props.deleteIcon || <Close />}
+      classes={{ label: classes.label, deletable: classes[variant!]}}
+      data-qa-tag
+    />;
+  }
 };
 
 export default withStyles(styles, { withTheme: true })<Props>(Tag);

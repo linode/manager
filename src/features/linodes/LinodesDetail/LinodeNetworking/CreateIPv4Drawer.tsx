@@ -45,7 +45,7 @@ class CreateIPv4Drawer extends React.Component<CombinedProps, State> {
     });
   }
 
-  create() {
+  create = () => {
     const { onClose, linodeID } = this.props;
     const allocateFn = this.state.forPublic
       ? allocatePublicIP
@@ -105,7 +105,7 @@ class CreateIPv4Drawer extends React.Component<CombinedProps, State> {
             <Button
               variant="raised"
               color="primary"
-              onClick={() => this.create()}
+              onClick={this.create}
               data-qa-submit
             >
               Allocate

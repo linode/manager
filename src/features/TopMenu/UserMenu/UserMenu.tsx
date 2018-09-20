@@ -1,6 +1,6 @@
-import { pathOr } from 'ramda';
+import { path } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
+import { connect, MapStateToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'redux';
 
@@ -23,13 +23,13 @@ const menuLinks: MenuLink[] = [
 ];
 
 type CSSClasses =
-| 'menu'
-| 'button'
-| 'userWrapper'
-| 'leftIcon'
-| 'username'
-| 'menuItem'
-| 'hidden';
+  | 'menu'
+  | 'button'
+  | 'userWrapper'
+  | 'leftIcon'
+  | 'username'
+  | 'menuItem'
+  | 'hidden';
 
 const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   menu: {
@@ -89,32 +89,21 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   },
 });
 
-const mapStateToProps = (state: Linode.AppState) => ({
-  profile: pathOr({}, ['resources', 'profile', 'data'], state),
-});
-
-interface Props {
-  profile: Linode.Profile;
-}
-
-type PropsWithStylesAndRoutes = Props & WithStyles<CSSClasses> & RouteComponentProps<{}>;
+type CombinedProps = StateProps & WithStyles<CSSClasses> & RouteComponentProps<{}>;
 
 interface State {
   anchorEl?: HTMLElement;
   gravatarUrl: string | undefined;
 }
 
-export class UserMenu extends React.Component<PropsWithStylesAndRoutes, State> {
+export class UserMenu extends React.Component<CombinedProps, State> {
   state = {
     anchorEl: undefined,
     gravatarUrl: undefined,
   };
 
-  constructor(props: PropsWithStylesAndRoutes) {
+  constructor(props: CombinedProps) {
     super(props);
-    if (props.profile && props.profile.email) {
-      this.setGravatarUrl(props.profile.email);
-    }
   }
 
   mounted: boolean = false;
@@ -154,9 +143,13 @@ export class UserMenu extends React.Component<PropsWithStylesAndRoutes, State> {
       });
   }
 
-  componentWillReceiveProps(nextProps: Props) {
-    if (nextProps.profile && nextProps.profile.email) {
-      this.setGravatarUrl(nextProps.profile.email);
+  componentWillReceiveProps(nextProps: StateProps) {
+    /** 2018-09-06: Should this be in componentDidUpdate? */
+    const { userEmail: currentUserEmail } = this.props;
+    const { userEmail } = nextProps;
+
+    if (userEmail && userEmail !== currentUserEmail) {
+      this.setGravatarUrl(userEmail);
     }
   }
 
@@ -166,16 +159,22 @@ export class UserMenu extends React.Component<PropsWithStylesAndRoutes, State> {
     if (!gravatarUrl) { return null; }
     return (gravatarUrl !== 'not found'
       ? <div className={classes.userWrapper}>
-          <img src={gravatarUrl} className={classes.leftIcon} />
-        </div>
+        <img src={gravatarUrl} className={classes.leftIcon} />
+      </div>
       : <div className={classes.userWrapper}>
-          <UserIcon className={classes.leftIcon} />
-        </div>
+        <UserIcon className={classes.leftIcon} />
+      </div>
     );
   }
 
   componentDidMount() {
     this.mounted = true;
+
+    const { userEmail } = this.props;
+
+    if (userEmail) {
+      this.setGravatarUrl(userEmail);
+    }
   }
 
   componentWillUnmount() {
@@ -183,7 +182,7 @@ export class UserMenu extends React.Component<PropsWithStylesAndRoutes, State> {
   }
 
   render() {
-    const { profile, classes } = this.props;
+    const { classes, username } = this.props;
     const { anchorEl } = this.state;
     const open = Boolean(anchorEl);
 
@@ -194,11 +193,11 @@ export class UserMenu extends React.Component<PropsWithStylesAndRoutes, State> {
           className={` ${classes.button} ${anchorEl && 'active'}`}
           data-qa-user-menu
         >
-          {profile.username &&
+          {username &&
             <React.Fragment>
               {this.renderAvatar()}
               <span className={classes.username}>
-                {profile.username && profile.username}
+                {username && username}
               </span>
             </React.Fragment>
           }
@@ -218,7 +217,7 @@ export class UserMenu extends React.Component<PropsWithStylesAndRoutes, State> {
           onClose={this.handleClose}
           className={classes.menu}
         >
-        <MenuItem key="placeholder" className={classes.hidden} />
+          <MenuItem key="placeholder" className={classes.hidden} />
           {menuLinks.map(menuLink => this.renderMenuLink(menuLink))}
         </Menu>
       </React.Fragment>
@@ -226,8 +225,18 @@ export class UserMenu extends React.Component<PropsWithStylesAndRoutes, State> {
   }
 }
 
+interface StateProps {
+  userEmail?: string;
+  username?: string;
+}
+
+const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state, ownProps) => ({
+  userEmail: path(['data', 'email'], state.__resources.profile),
+  username: path(['data', 'username'], state.__resources.profile),
+});
+
 export default compose<Linode.TodoAny, Linode.TodoAny, Linode.TodoAny, Linode.TodoAny>(
-  connect<Props>(mapStateToProps),
+  connect(mapStateToProps),
   withStyles(styles, { withTheme: true }),
   withRouter,
 )(UserMenu);

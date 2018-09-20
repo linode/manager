@@ -1,8 +1,16 @@
-import * as Joi from 'joi';
+import { object, string } from 'yup';
 
 import { API_ROOT } from 'src/constants';
 
-import Request, { setData, setMethod, setParams, setURL, setXFilter, validateRequestData } from './index';
+import Request,
+{
+  CancellableRequest,
+  setData,
+  setMethod,
+  setParams,
+  setURL,
+  setXFilter,
+} from './index';
 
 type Page<T> = Linode.ResourcePage<T>;
 type Domain = Linode.Domain;
@@ -18,6 +26,18 @@ export const getDomains = (
   setXFilter(filters),
 )
   .then(response => response.data);;
+
+export const getDomains$ = (
+  params: any = {},
+  filters: any = {},
+) => {
+  return CancellableRequest<Page<Domain>>(
+    setURL(`${API_ROOT}/domains`),
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filters),
+  );
+}
 
 export const getDomain = (domainId: number) =>
   Request<Domain>(
@@ -46,7 +66,7 @@ export const updateDomainRecord = (
   setURL(`${API_ROOT}/domains/${domainId}/records/${recordId}`),
   setMethod('PUT'),
   setData(data),
-  );
+);
 
 export const deleteDomainRecord = (domainID: number, recordId: number) =>
   Request<{}>(
@@ -68,7 +88,7 @@ export const updateDomain = (
   setURL(`${API_ROOT}/domains/${domainId}`),
   setMethod('PUT'),
   setData({ status: 'active', ...data }), // remove ability for user to change status
-  );
+);
 
 export const deleteDomain = (domainID: number) =>
   Request<{}>(
@@ -83,15 +103,14 @@ export const cloneDomain = (domainID: number, cloneName: string) =>
     setMethod('POST'),
   );
 
-const importZoneSchema = Joi.object({
-  domain: Joi.string().required(),
-  remote_nameserver: Joi.string().required(),
+const importZoneSchema = object({
+  domain: string().required(),
+  remote_nameserver: string().required(),
 });
 
 export const importZone = (domain?: string, remote_nameserver?: string) =>
   Request<Domain>(
-    validateRequestData({ domain, remote_nameserver }, importZoneSchema),
-    setData({ domain, remote_nameserver }),
+    setData({ domain, remote_nameserver }, importZoneSchema),
     setURL(`${API_ROOT}/domains/import`),
     setMethod('POST'),
   );

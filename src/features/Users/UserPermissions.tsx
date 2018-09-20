@@ -7,7 +7,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
@@ -22,6 +21,7 @@ import Radio from 'src/components/Radio';
 import Select from 'src/components/Select';
 import SelectionCard from 'src/components/SelectionCard';
 import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
 import Toggle from 'src/components/Toggle';
 import { getGrants, updateGrants, updateUser } from 'src/services/account';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
@@ -37,7 +37,8 @@ type ClassNames =
   | 'section'
   | 'grantTable'
   | 'selectAll'
-  | 'tableSubheading';
+  | 'tableSubheading'
+  | 'permSelect';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   topGrid: {
@@ -51,6 +52,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
   toggle: {
     marginRight: 3,
+  },
+  permSelect: {
+    width: 'auto',
+    [theme.breakpoints.up('sm')]: {
+      justifyContent: 'flex-end',
+    },
   },
   unrestrictedRoot: {
     marginTop: theme.spacing.unit * 2,
@@ -577,10 +584,11 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             {entityGrants.map((grant, idx) => {
               return (
                 <TableRow key={grant.id} data-qa-specific-grant={grant.label}>
-                  <TableCell>
+                  <TableCell parentColumn="Label">
                     {grant.label}
                   </TableCell>
                   <TableCell
+                    parentColumn="None"
                     padding="checkbox"
                   >
                     <Radio
@@ -592,6 +600,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                     />
                   </TableCell>
                   <TableCell
+                    parentColumn="Read Only"
                     padding="checkbox"
                   >
                     <Radio
@@ -603,6 +612,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                     />
                   </TableCell>
                   <TableCell
+                    parentColumn="Read-Write"
                     padding="checkbox"
                   >
                     <Radio
@@ -643,7 +653,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             </Typography>
           </Grid>
           <Grid item>
-            <Grid container justify="flex-end" alignItems="center" style={{ width: 'auto' }}>
+            <Grid container alignItems="center" className={classes.permSelect}>
               <Grid item>
                 Set all permissions to:
               </Grid>

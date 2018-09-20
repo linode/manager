@@ -390,6 +390,9 @@ const LinodeTheme: Linode.Theme = {
         '&.copy > div': {
           backgroundColor: '#2F3236',
         },
+        [breakpoints.down('xs')]: {
+          width: '100%',
+        }
       },
     },
     MuiFormControlLabel: {
@@ -443,7 +446,8 @@ const LinodeTheme: Linode.Theme = {
         boxSizing: 'border-box',
         backgroundColor: '#444',
         [breakpoints.down('xs')]: {
-          maxWidth: 240,
+          maxWidth: '100%',
+          width: '100%',
         },
         '& svg': {
           fontSize: 18,
@@ -758,7 +762,9 @@ const LinodeTheme: Linode.Theme = {
       },
     },
     MuiTable: {
-      root: {},
+      root: {
+        borderCollapse: 'initial',
+      },
     },
     MuiTableCell: {
       root: {
@@ -780,6 +786,11 @@ const LinodeTheme: Linode.Theme = {
     MuiTableHead: {
       root: {
         backgroundColor: '#32363C',
+        '& > tr': {
+          '&:before': {
+            borderLeftColor: 'rgba(0, 0, 0, 0.15)',
+          },
+        },
       },
     },
     MuiTableRow: {
@@ -789,13 +800,14 @@ const LinodeTheme: Linode.Theme = {
         '&:hover': {
           '&$hover': {
             backgroundColor: 'rgba(0, 0, 0, 0.1)',
-            borderLeftColor: primaryColors.main,
+            '&:before': {
+              borderLeftColor: primaryColors.main,
+            },
           },
         },
       },
       hover: {
         cursor: 'pointer',
-        borderLeft: '5px solid transparent',
         '& > td:first-child': {
           paddingLeft: 13,
         },

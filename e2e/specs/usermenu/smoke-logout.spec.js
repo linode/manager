@@ -16,7 +16,7 @@ describe('Log out Suite', () => {
         browser.url(constants.routes.volumes);
         browser.waitUntil(function() {
             return browser.getUrl().includes('returnTo%253D%252Fvolumes');
-        }, 10000);
+        }, constants.wait.normal);
     });
 
     it('should not contain a token in local storage', () => {

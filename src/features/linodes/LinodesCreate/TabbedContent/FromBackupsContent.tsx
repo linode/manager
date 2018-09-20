@@ -23,6 +23,7 @@ import AddonsPanel from '../AddonsPanel';
 import SelectBackupPanel from '../SelectBackupPanel';
 import SelectLinodePanel, { ExtendedLinode } from '../SelectLinodePanel';
 import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
+import tagsHoc, { TagObject } from '../tagsHoc';
 
 type ClassNames = 'root' | 'main' | 'sidebar';
 
@@ -54,6 +55,9 @@ interface Props {
   history: any;
   selectedBackupFromQuery?: number;
   selectedLinodeFromQuery?: number;
+
+  /* From HOC */
+  tagObject: TagObject;
 }
 
 interface State {
@@ -196,7 +200,8 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
   }
 
   createLinode = () => {
-    const { history } = this.props;
+    const { history, tagObject } = this.props;
+    const { getLinodeTagList } = tagObject.actions;
     const {
       selectedRegionID,
       selectedTypeID,
@@ -215,6 +220,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       label, /* optional */
       backups_enabled: backups, /* optional */
       booted: true,
+      tags: getLinodeTagList(),
     })
       .then((linode) => {
         if (privateIP) { allocatePrivateIP(linode.id) };
@@ -249,7 +255,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       selectedTypeID, selectedRegionID, label, backups, linodesWithBackups, privateIP,
     selectedBackupInfo, isMakingRequest } = this.state;
     const { extendLinodes, getBackupsMonthlyPrice, classes,
-       notice, types, getRegionInfo, getTypeInfo } = this.props;
+       notice, types, getRegionInfo, getTypeInfo, tagObject } = this.props;
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
 
@@ -314,13 +320,15 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
           updateFor={[selectedTypeID, selectedDiskSize, errors]}
         />
         <LabelAndTagsPanel
+          tagObject={tagObject}
+          tagError={hasErrorFor('tag')}
           labelFieldProps={{
             label: 'Linode Label',
             value: label || '',
             onChange: this.handleSelectLabel,
             errorText: hasErrorFor('label'),
           }}
-          updateFor={[label]}
+          updateFor={[label, tagObject, errors]}
         />
         <AddonsPanel
           backups={backups}
@@ -392,4 +400,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(FromBackupsContent);
+export default compose<any,any,any>(
+  styled,
+  tagsHoc)
+  (FromBackupsContent);

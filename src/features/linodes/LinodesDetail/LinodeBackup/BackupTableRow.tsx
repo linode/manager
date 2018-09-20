@@ -1,8 +1,9 @@
 import * as moment from 'moment-timezone';
 import * as React from 'react';
 
-import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
+
+import TableCell from 'src/components/TableCell';
 
 import { formatBackupDate } from './LinodeBackup';
 import LinodeBackupActionMenu from './LinodeBackupActionMenu';
@@ -25,25 +26,25 @@ const BackupTableRow:React.StatelessComponent<Props> = (props) => {
   const { backup, handleRestore } = props;
   return (
     <TableRow key={backup.id} data-qa-backup>
-      <TableCell>
+      <TableCell parentColumn="Date Created">
         {formatBackupDate(backup.created)}
       </TableCell>
-      <TableCell data-qa-backup-name>
+      <TableCell parentColumn="Label" data-qa-backup-name>
         {backup.label || typeMap[backup.type]}
       </TableCell>
-      <TableCell>
+      <TableCell parentColumn="Duration">
         {moment.duration(
           moment(backup.finished).diff(moment(backup.created)),
         ).humanize()}
       </TableCell>
-      <TableCell data-qa-backup-disks>
+      <TableCell parentColumn="Disks" data-qa-backup-disks>
         {backup.disks.map((disk, idx) => (
           <div key={idx}>
             {disk.label} ({disk.filesystem}) - {disk.size}MB
           </div>
         ))}
       </TableCell>
-      <TableCell data-qa-space-required>
+      <TableCell parentColumn="Space Required" data-qa-space-required>
         {backup.disks.reduce((acc, disk) => (
           acc + disk.size
         ), 0)}MB

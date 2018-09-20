@@ -1,6 +1,6 @@
-import { compose } from 'ramda';
+import { compose, path } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
+import { connect, MapStateToProps } from 'react-redux';
 
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
@@ -29,17 +29,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface ConnectedProps {
-  profileLoading: boolean;
-  code?: string;
-  url?: string;
-  total?: number;
-  completed?: number;
-  pending?: number;
-  credit?: number;
-}
-
-type CombinedProps = ConnectedProps & WithStyles<ClassNames>;
+type CombinedProps = StateProps & WithStyles<ClassNames>;
 
 class Referrals extends React.Component<CombinedProps, {}> {
   render() {
@@ -96,25 +86,35 @@ class Referrals extends React.Component<CombinedProps, {}> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const connected = connect((state: Linode.AppState) => {
-  const {
-    loading: profileLoading,
-    data: { referrals },
-  } = state.resources.profile;
+interface StateProps {
+  profileLoading: boolean;
+  code?: string;
+  url?: string;
+  total?: number;
+  completed?: number;
+  pending?: number;
+  credit?: number;
+}
 
-  return profileLoading
-    ? { profileLoading: true }
-    : {
-      profileLoading: false,
-      code: referrals.code,
-      url: referrals.url,
-      total: referrals.total,
-      pending: referrals.pending,
-      completed: referrals.completed,
-      credit: referrals.credit,
-    };
-});
+const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state) => {
+  const { profile } = state.__resources;
 
-const enhanced = compose(styled, connected);
+  return {
+    profileLoading: profile.loading,
+    code: path(['data', 'referrals', 'code'], profile),
+    url: path(['data', 'referrals', 'url'], profile),
+    total: path(['data', 'referrals', 'total'], profile),
+    completed: path(['data', 'referrals', 'completed'], profile),
+    pending: path(['data', 'referrals', 'pending'], profile),
+    credit: path(['data', 'referrals', 'credit'], profile),
+  };
+}
+
+const connected = connect(mapStateToProps);
+
+const enhanced = compose(
+  styled,
+  connected,
+);
 
 export default enhanced(Referrals);

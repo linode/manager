@@ -18,6 +18,7 @@ namespace Linode {
     specs: LinodeSpecs;
     watchdog_enabled: boolean;
     recentEvent?: Linode.Event;
+    tags: string[];
   }
 
   export interface EnhancedLinode extends Linode.Linode {

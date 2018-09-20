@@ -11,7 +11,6 @@ import { Subscription } from 'rxjs/Subscription';
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
@@ -26,6 +25,7 @@ import LinearProgress from 'src/components/LinearProgress';
 import PaginationFooter, { PaginationProps } from 'src/components/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
 import TableRowError from 'src/components/TableRowError';
 import { events$, generateInFilter, resetEventsPolling } from 'src/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
@@ -206,6 +206,97 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     this.setState({ attachmentDrawer: { open: false } });
   }
 
+  handleShowConfig = (volumePath: string, volumeLabel: string) => {
+    this.setState({
+      configDrawer: {
+        open: true,
+        volumePath,
+        volumeLabel,
+      }
+    })
+  }
+
+  handleEdit = (
+    volumeID: number,
+    label: string,
+    size: number,
+    regionID: string,
+    linodeLabel: string,
+  ) => {
+    this.props.openForEdit(
+      volumeID,
+      label,
+      size,
+      regionID,
+      linodeLabel
+    )
+  }
+
+  handleResize = (
+    volumeID: number,
+    label: string,
+    size: number,
+    regionID: string,
+    linodeLabel: string,
+  ) => {
+    this.props.openForResize(
+      volumeID,
+      label,
+      size,
+      regionID,
+      linodeLabel
+    )
+  }
+
+  handleClone = (
+    volumeID: number,
+    label: string,
+    size: number,
+    regionID: string,
+  ) => {
+    this.props.openForClone(
+      volumeID,
+      label,
+      size,
+      regionID
+    )
+  }
+
+  handleAttach = (
+    volumeID: number,
+    label: string,
+    regionID: string
+  ) => {
+    this.setState({
+      attachmentDrawer: {
+        open: true,
+        volumeID,
+        volumeLabel: label,
+        linodeRegion: regionID,
+      }
+    })
+  }
+
+  handleDetach = (volumeID: number) => {
+    this.setState({
+      destructiveDialog: {
+        open: true,
+        mode: 'detach',
+        volumeID,
+      }
+    })
+  }
+
+  handleDelete = (volumeID: number) => {
+    this.setState({
+      destructiveDialog: {
+        open: true,
+        mode: 'delete',
+        volumeID,
+      }
+    })
+  }
+
   render() {
     const { classes } = this.props;
     const { count, loading, labelsLoading } = this.state;
@@ -354,77 +445,33 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
         )
         : (
           <TableRow key={volume.id} data-qa-volume-cell={volume.id} className="fade-in-table">
-            <TableCell data-qa-volume-cell-label>{volume.label}</TableCell>
-            <TableCell data-qa-volume-cell-attachment={linodeLabel}>
+            <TableCell parentColumn="Label" data-qa-volume-cell-label>{volume.label}</TableCell>
+            <TableCell parentColumn="Attached To" data-qa-volume-cell-attachment={linodeLabel}>
               {linodeLabel &&
                 <Link to={`/linodes/${volume.linode_id}`}>
                   {linodeLabel}
                 </Link>
               }</TableCell>
-            <TableCell data-qa-volume-size>{size} GB</TableCell>
-            <TableCell data-qa-fs-path>{filesystemPath}</TableCell>
-            <TableCell data-qa-volume-region>{region}</TableCell>
+            <TableCell parentColumn="Size" data-qa-volume-size>{size} GB</TableCell>
+            <TableCell parentColumn="File System Path" data-qa-fs-path>{filesystemPath}</TableCell>
+            <TableCell parentColumn="Region" data-qa-volume-region>{region}</TableCell>
             <TableCell>
               <VolumesActionMenu
-                onShowConfig={() => {
-                  this.setState({
-                    configDrawer: {
-                      open: true,
-                      volumePath: filesystemPath,
-                      volumeLabel: label,
-                    },
-                  });
-                }}
-                onEdit={() => this.props.openForEdit(
-                  volume.id,
-                  label,
-                  size,
-                  regionID,
-                  linodeLabel,
-                )}
-                onResize={() => this.props.openForResize(
-                  volume.id,
-                  label,
-                  size,
-                  regionID,
-                  linodeLabel,
-                )}
-                onClone={() => this.props.openForClone(
-                  volume.id,
-                  label,
-                  size,
-                  regionID,
-                )}
+                onShowConfig={this.handleShowConfig}
+                filesystemPath={filesystemPath}
+                linodeLabel={linodeLabel}
+                regionID={regionID}
+                volumeID={volume.id}
+                size={size}
+                label={label}
+                onEdit={this.handleEdit}
+                onResize={this.handleResize}
+                onClone={this.handleClone}
                 attached={Boolean(linodeLabel)}
-                onAttach={() => {
-                  this.setState({
-                    attachmentDrawer: {
-                      open: true,
-                      volumeID: volume.id,
-                      volumeLabel: label,
-                      linodeRegion: regionID,
-                    },
-                  });
-                }}
-                onDetach={() => {
-                  this.setState({
-                    destructiveDialog: {
-                      open: true,
-                      mode: 'detach',
-                      volumeID: volume.id,
-                    },
-                  });
-                }}
+                onAttach={this.handleAttach}
+                onDetach={this.handleDetach}
                 poweredOff={linodeStatus === 'offline'}
-                onDelete={() => {
-                  this.setState({
-                    destructiveDialog: {
-                      open: true,
-                      mode: 'delete',
-                      volumeID: volume.id,
-                    },
-                  });
-                }}
+                onDelete={this.handleDelete}
               />
             </TableCell>
           </TableRow>

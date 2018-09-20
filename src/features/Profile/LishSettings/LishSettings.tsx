@@ -1,7 +1,6 @@
-import { compose, dec, lensPath, pathOr, remove, set } from 'ramda';
+import { compose, dec, lensPath, path, pathOr, remove, set } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators, Dispatch } from 'redux';
+import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 
 import { FormHelperText } from '@material-ui/core';
 import FormControl from '@material-ui/core/FormControl';
@@ -20,7 +19,7 @@ import Notice from 'src/components/Notice';
 import Select from 'src/components/Select';
 import TextField from 'src/components/TextField';
 import { updateProfile } from 'src/services/profile';
-import { response } from 'src/store/reducers/resources';
+import { handleUpdate } from 'src/store/reducers/resources/profile';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -75,28 +74,21 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface ConnectedProps {
-  lishAuthMethod: string;
-  authorizedKeys: string[];
-  loading: boolean;
-  updateProfile: (v: Linode.Profile) => void;
-}
-
 interface State {
   submitting: boolean;
   errors?: Linode.ApiFieldError[];
   success?: string;
-  lishAuthMethod: string;
+  lishAuthMethod?: string;
   authorizedKeys: string[];
   authorizedKeysCount: number;
 }
 
-type CombinedProps = ConnectedProps & WithStyles<ClassNames>;
+type CombinedProps = StateProps & DispatchProps & WithStyles<ClassNames>;
 
 class LishSettings extends React.Component<CombinedProps, State> {
   state: State = {
     submitting: false,
-    lishAuthMethod: this.props.lishAuthMethod,
+    lishAuthMethod: this.props.lishAuthMethod || 'password_keys',
     authorizedKeys: this.props.authorizedKeys || [],
     authorizedKeysCount: this.props.authorizedKeys ? this.props.authorizedKeys.length : 1,
   };
@@ -111,6 +103,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
     const generalError = hasErrorFor('none');
     const authMethodError = hasErrorFor('lish_auth_method');
     const authorizedKeysError = hasErrorFor('authorized_keys');
+
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Lish" />
@@ -210,6 +203,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
 
   onSubmit = () => {
     const { authorizedKeys, lishAuthMethod } = this.state;
+    const { actions } = this.props;
     const keys = authorizedKeys.filter((v) => v !== '');
 
     this.setState({ errors: undefined, submitting: true });
@@ -219,23 +213,27 @@ class LishSettings extends React.Component<CombinedProps, State> {
       ...(lishAuthMethod !== 'disabled' && { authorized_keys: keys }),
     })
       .then((profileData) => {
-        this.props.updateProfile(profileData);
-        this.setState({
-          submitting: false,
-          success: 'LISH authentication settings have been updated.',
-          authorizedKeys: profileData.authorized_keys || [],
-          authorizedKeysCount: profileData.authorized_keys ? profileData.authorized_keys.length : 1,
-        })
+        this.setState(
+          {
+            submitting: false,
+            success: 'LISH authentication settings have been updated.',
+            authorizedKeys: profileData.authorized_keys || [],
+            authorizedKeysCount: profileData.authorized_keys ? profileData.authorized_keys.length : 1,
+          },
+          () => actions.updateProfile(profileData),
+        );
       })
       .catch((error) => {
         const fallbackError = [{ reason: 'An unexpected error has occured.' }];
-        this.setState({
-          submitting: false,
-          errors: pathOr(fallbackError, ['response', 'data', 'errors'], error),
-          success: undefined,
-        }, () => {
-          scrollErrorIntoView();
-        })
+        this.setState(
+          {
+            submitting: false,
+            errors: pathOr(fallbackError, ['response', 'data', 'errors'], error),
+            success: undefined,
+          },
+          () => {
+            scrollErrorIntoView();
+          })
       });
   };
 
@@ -258,26 +256,32 @@ class LishSettings extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const mapStateToProps = (state: Linode.AppState) => {
-  const { loading, data } = state.resources.profile!;
+interface StateProps {
+  lishAuthMethod?: string;
+  authorizedKeys?: string[];
+  loading: boolean;
+}
 
-  if (loading) {
-    return { loading: true }
-  }
-
+const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state) => {
+  const { profile } = state.__resources;
   return {
-    loading: false,
-    lishAuthMethod: data.lish_auth_method,
-    authorizedKeys: data.authorized_keys,
+    loading: profile.loading,
+    lishAuthMethod: path(['data', 'lish_auth_method'], profile),
+    authorizedKeys: path(['data', 'authorized_keys'], profile),
   };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
-  {
-    updateProfile: (v: Linode.Profile) => response(['profile'], v),
+interface DispatchProps {
+  actions: {
+    updateProfile: (v: Linode.Profile) => void;
   },
-  dispatch,
-);
+}
+
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch) => ({
+  actions: {
+    updateProfile: (v: Linode.Profile) => dispatch(handleUpdate(v)),
+  },
+});
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 

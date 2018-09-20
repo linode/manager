@@ -1,5 +1,6 @@
 import { append, compose, equals, filter, lensPath, over, pathOr, set, when } from 'ramda';
 import * as React from 'react';
+import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import 'rxjs/add/operator/filter';
 import { Subscription } from 'rxjs/Subscription';
@@ -7,7 +8,6 @@ import { Subscription } from 'rxjs/Subscription';
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
@@ -26,14 +26,16 @@ import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoad
 import renderGuard from 'src/components/RenderGuard';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
 import { events$, resetEventsPolling } from 'src/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { getLinodeConfigs, getLinodeVolumes } from 'src/services/linodes';
 import { attachVolume, cloneVolume, createVolume, deleteVolume, detachVolume, resizeVolume, updateVolume } from 'src/services/volumes';
+import { handleUpdate } from 'src/store/reducers/features/linodeDetail/volumes';
 import composeState from 'src/utilities/composeState';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-import { withLinode, withVolumes } from '../context';
+import { withLinode } from '../context';
 import ActionMenu from './LinodeVolumesActionMenu';
 import VolumeDrawer, { Modes, Props as VolumeDrawerProps } from './VolumeDrawer';
 
@@ -48,13 +50,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 interface Props {
   /** PromiseLoader */
-  volumes: PromiseLoaderResponse<Linode.Volume[]>;
   linodeConfigs: PromiseLoaderResponse<Linode.Config[]>;
-}
-
-interface VolumesContextProps {
-  linodeVolumes: Linode.Volume[];
-  updateVolumes: (update: (volumes: Linode.Volume[]) => Linode.Volume[]) => void;
 }
 
 interface LinodeContextProps {
@@ -84,7 +80,7 @@ interface State {
 }
 
 type CombinedProps = Props
-  & VolumesContextProps
+  & StateProps & DispatchProps
   & LinodeContextProps
   & RouteComponentProps<{}>
   & WithStyles<ClassNames>;
@@ -201,7 +197,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
 
   /** Attachment */
   attachVolume = () => {
-    const { linodeID, updateVolumes } = this.props;
+    const { linodeID, actions } = this.props;
     const { volumeDrawer: { selectedVolume } } = this.state;
 
     /** This should be handled by Joi */
@@ -220,7 +216,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
     attachVolume(Number(selectedVolume), { linode_id: Number(linodeID) })
       .then(({ data }) => {
         this.closeUpdatingDrawer();
-        updateVolumes((volumes) => ([...volumes, data]));
+        actions.updateVolumes((volumes) => ([...volumes, data]));
       })
       .catch((errorResponse) => {
         const fallbackError = [{ reason: 'Unable to attach volume.' }];
@@ -253,7 +249,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
     const fallbackError = [{ reason: 'Unable to detach volume.' }];
     const apiError = pathOr(fallbackError, ['response', 'data', 'errors'], errorResponse);
     const error = apiError[0].reason;
-    this.setState({ 
+    this.setState({
       updateDialog: {
         ...updateDialog,
         error,
@@ -815,9 +811,11 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
                   );
 
                   return <TableRow key={volume.id} data-qa-volume-cell={volume.id}>
-                    <TableCell data-qa-volume-cell-label>{label}</TableCell>
-                    <TableCell data-qa-volume-size>{size} GiB</TableCell>
-                    <TableCell data-qa-fs-path>{filesysPath}</TableCell>
+                    <TableCell parentColumn="Label" data-qa-volume-cell-label>{label}</TableCell>
+                    <TableCell parentColumn="Size" data-qa-volume-size>{size} GiB</TableCell>
+                    <TableCell parentColumn="File System Path" data-qa-fs-path>
+                      {filesysPath}
+                    </TableCell>
                     <TableCell>
                       <ActionMenu
                         data-qa-linode-volume-actions
@@ -862,7 +860,6 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
    */
   render() {
     const {
-      volumes: { error: volumesError },
       linodeConfigs: { error: linodeConfigsError },
       linodeLabel,
     } = this.props;
@@ -870,7 +867,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
     const { volumeDrawer } = this.state;
 
 
-    if (volumesError || linodeConfigsError) {
+    if (linodeConfigsError) {
       return (
         <React.Fragment>
           <DocumentTitleSegment segment={`${linodeLabel} - Volumes`} />
@@ -893,13 +890,9 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const preloaded = PromiseLoader<Props & LinodeContextProps & VolumesContextProps>({
+const preloaded = PromiseLoader<Props & LinodeContextProps>({
   linodeConfigs: (props) => getLinodeConfigs(props.linodeID)
     .then(response => response.data),
-
-  volumes: (props) => getLinodeVolumes(props.linodeID)
-    .then(response => response.data
-      .filter(volume => volume.region === props.linodeRegion && volume.linode_id === null)),
 });
 
 const linodeContext = withLinode((context) => ({
@@ -909,14 +902,31 @@ const linodeContext = withLinode((context) => ({
   linodeStatus: context.data!.status
 }));
 
-const volumesContext = withVolumes((context) => ({
-  linodeVolumes: context.data,
-  updateVolumes: context.update,
-}));
+interface StateProps {
+  linodeVolumes?: Linode.Volume[];
+}
+
+const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state, ownProps) => ({
+  linodeVolumes: state.features.linodeDetail.volumes.data
+});
+
+interface DispatchProps {
+  actions: {
+    updateVolumes: (fn: (v: Linode.Volume[])=> Linode.Volume[]) => void;
+  },
+}
+
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, ownProps) => ({
+  actions: {
+    updateVolumes: (fn) => dispatch(handleUpdate(fn)),
+  }
+});
+
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose<any, any, any, any, any, any, any>(
+  connected,
   linodeContext,
-  volumesContext,
   styled,
   withRouter,
   SectionErrorBoundary,

@@ -32,7 +32,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     width: '100%',
     bottom: 0,
     [theme.breakpoints.down('xs')]: {
-      maxWidth: 240 + theme.spacing.unit * 2,
+      maxWidth: '100%',
     },
   },
 });

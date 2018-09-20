@@ -20,6 +20,9 @@ type ClassNames = 'root'
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     maxWidth: `calc(415px + ${theme.spacing.unit}px)`,
+    [theme.breakpoints.down('xs')]: {
+      maxWidth: `calc(100% + ${theme.spacing.unit}px)`,
+    },
   },
   block: {
     backgroundColor: '#C9CACB',

@@ -3,13 +3,13 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import TableCell from '@material-ui/core/TableCell';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 
 import Flag from 'src/assets/icons/flag.svg';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
+import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { withTypes } from 'src/context/types';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
@@ -26,7 +26,6 @@ import RegionIndicator from './RegionIndicator';
 
 type ClassNames = 'bodyRow'
   | 'linodeCell'
-  | 'tagsCell'
   | 'ipCell'
   | 'ipCellWrapper'
   | 'regionCell'
@@ -35,7 +34,8 @@ type ClassNames = 'bodyRow'
   | 'flag'
   | 'status'
   | 'link'
-  | 'linkButton';
+  | 'linkButton'
+  | 'tagWrapper';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => {
   return ({
@@ -47,12 +47,15 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       '& h3': {
         transition: theme.transitions.create(['color']),
       },
-    },
-    tagsCell: {
-      width: '15%',
+      [theme.breakpoints.down('sm')]: {
+        width: '100%'
+      },
     },
     ipCell: {
       width: '30%',
+      [theme.breakpoints.down('sm')]: {
+        width: '100%'
+      },
     },
     ipCellWrapper: {
       display: 'inline-flex',
@@ -60,12 +63,18 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     },
     regionCell: {
       width: '15%',
+      [theme.breakpoints.down('sm')]: {
+        width: '100%'
+      },
     },
     actionCell: {
       width: '10%',
       textAlign: 'right',
       '& button': {
         width: 30,
+      },
+      [theme.breakpoints.down('sm')]: {
+        width: '100%'
       },
     },
     actionInner: {
@@ -100,6 +109,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
         },
       },
     },
+    tagWrapper: {
+      marginTop: theme.spacing.unit / 2,
+      marginLeft: theme.spacing.unit * 4,
+    },
   });
 };
 
@@ -117,10 +130,12 @@ interface Props {
   linodeNotification?: string;
   linodeLabel: string;
   linodeBackups: Linode.LinodeBackups;
+  linodeTags: string[];
   linodeRecentEvent?: Linode.Event;
   openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
   toggleConfirmation: (bootOption: Linode.BootAction,
     linodeId: number, linodeLabel: string) => void;
+  renderTagsAndMoreTags: (tags: string[]) => JSX.Element;
 }
 
 interface TypesContextProps {
@@ -174,10 +189,10 @@ class LinodeRow extends React.Component<CombinedProps, State> {
   }
 
   headCell = () => {
-    const { linodeId, linodeStatus, linodeLabel, linodeType, typesData, typesLoading, classes } = this.props;
+    const { linodeId, linodeStatus, linodeLabel, linodeTags, classes } = this.props;
 
     return (
-      <TableCell className={classes.linodeCell}>
+      <TableCell parentColumn="Linode" className={classes.linodeCell}>
         <Link to={`/linodes/${linodeId}`} className={classes.link}>
           <Grid container wrap="nowrap" alignItems="center">
             <Grid item className="py0">
@@ -187,10 +202,12 @@ class LinodeRow extends React.Component<CombinedProps, State> {
               <Typography role="header" variant="subheading" data-qa-label>
                 {linodeLabel}
               </Typography>
-              {!typesLoading && <Typography variant="caption">{displayType(linodeType, typesData || [])} </Typography>}
             </Grid>
           </Grid>
           </Link>
+          <div className={classes.tagWrapper}>
+            {this.props.renderTagsAndMoreTags(linodeTags)}
+            </div>
       </TableCell>
     );
   }
@@ -248,6 +265,9 @@ class LinodeRow extends React.Component<CombinedProps, State> {
       classes,
       openConfigDrawer,
       toggleConfirmation,
+      typesLoading,
+      typesData,
+      linodeType,
     } = this.props;
 
     return (
@@ -260,13 +280,18 @@ class LinodeRow extends React.Component<CombinedProps, State> {
         arial-label={linodeLabel}
       >
         {this.headCell()}
-        <TableCell className={classes.ipCell} data-qa-ips>
+        <TableCell parentColumn="Plan">
+          {!typesLoading &&
+            <Typography variant="caption">{displayType(linodeType, typesData || [])} </Typography>
+          }
+        </TableCell>
+        <TableCell parentColumn="IP Addresses" className={classes.ipCell} data-qa-ips>
           <div className={classes.ipCellWrapper}>
             <IPAddress ips={linodeIpv4} copyRight />
             <IPAddress ips={[linodeIpv6]} copyRight />
           </div>
         </TableCell>
-        <TableCell className={classes.regionCell} data-qa-region>
+        <TableCell parentColumn="Region" className={classes.regionCell} data-qa-region>
           <RegionIndicator region={linodeRegion} />
         </TableCell>
         <TableCell className={classes.actionCell} data-qa-notifications>

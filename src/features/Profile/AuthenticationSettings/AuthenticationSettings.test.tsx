@@ -7,12 +7,15 @@ describe('Authentication settings profile tab', () => {
   const update = jest.fn();
 
   const component = shallow(
-    <AuthenticationSettings 
-      loading={false} 
+    <AuthenticationSettings
+      loading={false}
       ipWhitelisting={true}
       twoFactor={true}
       username={'username'}
-      updateProfile={update}
+      actions={{
+        updateProfile: update
+      }}
+
       classes={{
         root: '',
         title: '',

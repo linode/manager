@@ -47,7 +47,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 });
 
 interface TypesContextProps {
-  typesData: ExtendedType[];
+  currentTypesData: ExtendedType[];
+  deprecatedTypesData: ExtendedType[];
 }
 
 interface LinodeContextProps {
@@ -114,8 +115,8 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { typesData, linodeType, linodeLabel, classes } = this.props;
-    const type = typesData.find(t => t.id === linodeType);
+    const { currentTypesData, deprecatedTypesData, linodeType, linodeLabel, classes } = this.props;
+    const type = [...currentTypesData, ...deprecatedTypesData].find(t => t.id === linodeType);
 
     const currentPlanHeading = linodeType
       ? type
@@ -169,7 +170,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         </Paper>
         <SelectPlanPanel
           currentPlanHeading={currentPlanHeading}
-          types={this.props.typesData}
+          types={this.props.currentTypesData}
           onSelect={this.handleSelectPlan}
           selectedID={this.state.selectedId}
         />
@@ -192,13 +193,12 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles, { withTheme: true });
 
 const typesContext = withTypes(({ data }) => ({
-  typesData: (data || []).map(LinodeResize.extendType).filter((eachType) => {
-    /* filter out all the deprecated types because we don't to display them */
-    if (!eachType.successor) {
-      return true;
-    }
+  currentTypesData: (data || []).map(LinodeResize.extendType).filter((eachType) => {
     return eachType.successor === null
   }),
+  deprecatedTypesData: (data || []).map(LinodeResize.extendType).filter((eachType) => {
+    return eachType.successor !== null;
+  })
 }));
 
 const linodeContext = withLinode((context) => ({

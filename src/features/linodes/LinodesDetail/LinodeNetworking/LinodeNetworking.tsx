@@ -4,7 +4,6 @@ import * as React from 'react';
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -15,6 +14,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
 import { ZONES } from 'src/constants';
 import { getLinodeIPs } from 'src/services/linodes';
 
@@ -184,12 +184,12 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
     return (
       <TableRow key={range.range}>
-        <TableCell>
+        <TableCell parentColumn="Address">
           {range.range}
         </TableCell>
         <TableCell />
         <TableCell />
-        <TableCell>
+        <TableCell parentColumn="Type">
           {type}
         </TableCell>
         <TableCell className={classes.action}>
@@ -214,16 +214,16 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
     return (
       <TableRow key={ip.address} data-qa-ip={ip.address}>
-        <TableCell data-qa-ip-address>
+        <TableCell parentColumn="Address" data-qa-ip-address>
           {ip.address}
         </TableCell>
-        <TableCell>
+        <TableCell parentColumn="Default Gateway">
           {ip.gateway}
         </TableCell>
-        <TableCell data-qa-rdns>
+        <TableCell parentColumn="Reverse DNS" data-qa-rdns>
           {ip.rdns}
         </TableCell>
-        <TableCell data-qa-type>
+        <TableCell parentColumn="Type" data-qa-type>
           {type}
         </TableCell>
         <TableCell className={classes.action} data-qa-action>

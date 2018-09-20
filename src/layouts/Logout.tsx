@@ -6,7 +6,7 @@ import * as session from 'src/session';
 import { logout } from 'src/store/reducers/authentication';
 
 interface Props {
-  dispatch: Dispatch<Linode.AppState>;
+  dispatch: Dispatch<ApplicationState>;
 }
 
 export class Logout extends Component<Props> {
