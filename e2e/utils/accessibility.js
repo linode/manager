@@ -10,7 +10,13 @@ export const axeTest = () => {
         });
     });
 
-    const criticalErrors = testResults.value.violations.filter(v => v.impact === 'critical');
+    const sortedViolations =
+        testResults.value.violations.sort(function(a,b) {
+            if (a.impact < b.impact) {
+                return -1;
+            } 
+            return 0;
+        });
 
-    return criticalErrors;
+    return sortedViolations;
 }
