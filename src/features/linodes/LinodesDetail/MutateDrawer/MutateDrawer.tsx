@@ -62,7 +62,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 class MutateDrawer extends React.Component<CombinedProps, State> {
   constructor(props: CombinedProps) {
     super(props);
-    
+
     this.state = {
       extendedUpgradeInfo: {
         vcpus: {
@@ -151,7 +151,7 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
           </Typography>
         </ol>
         <ActionsPanel style={{ marginTop: 32 }}>
-          <Button 
+          <Button
             loading={loading}
             onClick={this.props.initMutation}
             type="primary"
