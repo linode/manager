@@ -26,7 +26,6 @@ import RegionIndicator from './RegionIndicator';
 
 type ClassNames = 'bodyRow'
   | 'linodeCell'
-  | 'tagsCell'
   | 'ipCell'
   | 'ipCellWrapper'
   | 'regionCell'
@@ -35,7 +34,8 @@ type ClassNames = 'bodyRow'
   | 'flag'
   | 'status'
   | 'link'
-  | 'linkButton';
+  | 'linkButton'
+  | 'tagWrapper';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => {
   return ({
@@ -47,9 +47,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       '& h3': {
         transition: theme.transitions.create(['color']),
       },
-    },
-    tagsCell: {
-      width: '15%',
     },
     ipCell: {
       width: '30%',
@@ -100,6 +97,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
         },
       },
     },
+    tagWrapper: {
+      marginTop: theme.spacing.unit / 2,
+      marginLeft: theme.spacing.unit * 4,
+    },
   });
 };
 
@@ -117,10 +118,12 @@ interface Props {
   linodeNotification?: string;
   linodeLabel: string;
   linodeBackups: Linode.LinodeBackups;
+  linodeTags: string[];
   linodeRecentEvent?: Linode.Event;
   openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
   toggleConfirmation: (bootOption: Linode.BootAction,
     linodeId: number, linodeLabel: string) => void;
+  renderTagsAndMoreTags: (tags: string[]) => JSX.Element;
 }
 
 interface TypesContextProps {
@@ -174,7 +177,7 @@ class LinodeRow extends React.Component<CombinedProps, State> {
   }
 
   headCell = () => {
-    const { linodeId, linodeStatus, linodeLabel, linodeType, typesData, typesLoading, classes } = this.props;
+    const { linodeId, linodeStatus, linodeLabel, linodeTags, classes } = this.props;
 
     return (
       <TableCell className={classes.linodeCell}>
@@ -187,10 +190,12 @@ class LinodeRow extends React.Component<CombinedProps, State> {
               <Typography role="header" variant="subheading" data-qa-label>
                 {linodeLabel}
               </Typography>
-              {!typesLoading && <Typography variant="caption">{displayType(linodeType, typesData || [])} </Typography>}
             </Grid>
           </Grid>
           </Link>
+          <div className={classes.tagWrapper}>
+            {this.props.renderTagsAndMoreTags(linodeTags)}
+            </div>
       </TableCell>
     );
   }
@@ -248,6 +253,9 @@ class LinodeRow extends React.Component<CombinedProps, State> {
       classes,
       openConfigDrawer,
       toggleConfirmation,
+      typesLoading,
+      typesData,
+      linodeType,
     } = this.props;
 
     return (
@@ -260,6 +268,11 @@ class LinodeRow extends React.Component<CombinedProps, State> {
         arial-label={linodeLabel}
       >
         {this.headCell()}
+        <TableCell>
+          {!typesLoading &&
+            <Typography variant="caption">{displayType(linodeType, typesData || [])} </Typography>
+          }
+        </TableCell>
         <TableCell className={classes.ipCell} data-qa-ips>
           <div className={classes.ipCellWrapper}>
             <IPAddress ips={linodeIpv4} copyRight />
