@@ -143,11 +143,11 @@ class TicketList extends React.Component<CombinedProps, State> {
   renderRow = (ticket: Linode.SupportTicket) => {
     return (
       <TableRow data-qa-support-ticket={ticket.id} key={`ticket-${ticket.id}`} rowLink={`/support/tickets/${ticket.id}`}>
-        <TableCell data-qa-support-subject><Link to={`/support/tickets/${ticket.id}`}>{ticket.summary}</Link></TableCell>
-        <TableCell data-qa-support-id>{ticket.id}</TableCell>
-        <TableCell data-qa-support-entity>{this.renderEntityLink(ticket)}</TableCell>
-        <TableCell data-qa-support-date><DateTimeDisplay value={ticket.opened} format={ISO_FORMAT} /></TableCell>
-        <TableCell data-qa-support-updated><DateTimeDisplay value={ticket.updated} format={ISO_FORMAT} /></TableCell>
+        <TableCell parentColumn="Subject" data-qa-support-subject><Link to={`/support/tickets/${ticket.id}`}>{ticket.summary}</Link></TableCell>
+        <TableCell parentColumn="Ticket ID" data-qa-support-id>{ticket.id}</TableCell>
+        <TableCell parentColumn="Regarding" data-qa-support-entity>{this.renderEntityLink(ticket)}</TableCell>
+        <TableCell parentColumn="Date Created" data-qa-support-date><DateTimeDisplay value={ticket.opened} format={ISO_FORMAT} /></TableCell>
+        <TableCell parentColumn="Last Updated" data-qa-support-updated><DateTimeDisplay value={ticket.updated} format={ISO_FORMAT} /></TableCell>
         <TableCell />
       </TableRow>
     );

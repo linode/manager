@@ -2,7 +2,6 @@ import { compose, path } from 'ramda';
 import * as React from 'react';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
@@ -17,6 +16,7 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
+import Table from 'src/components/Table';
 import { resetEventsPolling } from 'src/events';
 import ImagesDrawer, { modes } from 'src/features/Images/ImagesDrawer';
 import { withDisks, withLinode } from 'src/features/linodes/LinodesDetail/context';
@@ -160,7 +160,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
 
   table = (disks: Linode.Disk[], status: string) => {
     return (
-      <Table aria-label="List of Disks">
+      <Table isResponsive={false} aria-label="List of Disks">
         <TableHead>
           <TableRow>
             <TableCell>Label</TableCell>
