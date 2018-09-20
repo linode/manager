@@ -156,7 +156,6 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     this.mounted = true;
-
     this.eventSubscription = events$
       /** @todo filter on mount time. */
       .filter(e => [
@@ -601,7 +600,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
     }
 
     updateVolume(id, label)
-      .then(() => {
+      .then((response) => {
         this.closeUpdatingDrawer();
         this.getVolumes();
       })
@@ -860,9 +859,11 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
     const {
       linodeConfigs: { error: linodeConfigsError },
       linodeLabel,
+      linodeVolumes,
+      linodeStatus,
     } = this.props;
 
-    const { volumeDrawer } = this.state;
+    const { attachedVolumes, volumeDrawer } = this.state;
 
 
     if (linodeConfigsError) {
@@ -878,7 +879,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <DocumentTitleSegment segment={`${linodeLabel} - Volumes`} />
         <this.placeholder />
-        <this.table updateFor={[this.props.linodeVolumes, this.props.linodeStatus]} />
+        <this.table updateFor={[attachedVolumes, linodeVolumes, linodeStatus]} />
         <VolumeDrawer {...volumeDrawer} />
         <this.updateDialog />
       </React.Fragment>
