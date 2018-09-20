@@ -16,11 +16,16 @@ export interface PaginationParams {
 
 export type FilterParams = any;
 
-export type PaginatedRequest<T = {}> = (
+interface CancellableRequest {
+  cancel: () => void
+  request: () => Promise<Linode.ResourcePage<{}>>;
+}
+
+type RequestPayload = (
   ownProps?: any,
   p?: PaginationParams,
-  f?: FilterParams,
-) => Promise<Linode.ResourcePage<T>>;
+  f?: FilterParams
+) => CancellableRequest;
 
 interface State<T={}> {
   count: number;
@@ -44,7 +49,7 @@ export interface PaginationProps<T> extends State<T> {
 
 const asc: 'asc' = 'asc';
 
-export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<any>) => {
+export default (requestFn: RequestPayload) => (Component: React.ComponentType<any>) => {
   return class WrappedComponent extends React.PureComponent<any, State> {
     state: State = {
       count: 0,
@@ -54,6 +59,14 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
       error: undefined,
       orderBy: undefined,
       order: asc,
+    }
+    
+    cancelRequest: Function | null;
+
+    componentWillUnmount() {
+      if (typeof this.cancelRequest === 'function') {
+        this.cancelRequest();
+      }
     }
 
     private onDelete = () => {
@@ -86,7 +99,13 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
         filters['+order_by'] = this.state.orderBy;
         filters['+order'] = this.state.order;
       }
-      return requestFn(this.props, { page: this.state.page, page_size: this.state.pageSize }, filters)
+
+      const { request, cancel } =
+        requestFn(this.props, { page: this.state.page, page_size: this.state.pageSize }, filters);
+
+      this.cancelRequest = cancel;
+
+      request()
         .then((response) => {
           this.setState({
             count: response.results,
@@ -100,6 +119,7 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
           this.setState({ loading: false, error: response });
         });
     };
+
 
     public handlePageSizeChange = (pageSize: number) => {
       this.setState({ pageSize, page: 1 }, () => { this.request() });

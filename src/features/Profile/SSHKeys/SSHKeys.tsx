@@ -19,7 +19,7 @@ import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import DeleteSSHKeyDialog from 'src/features/Profile/SSHKeys/DeleteSSHKeyDialog';
 import SSHKeyActionMenu from 'src/features/Profile/SSHKeys/SSHKeyActionMenu';
-import { getSSHKeys } from 'src/services/profile';
+import { getSSHKeys$ } from 'src/services/profile';
 import fingerprint from 'src/utilities/ssh-fingerprint';
 import SSHKeyCreationDrawer from './SSHKeyCreationDrawer';
 
@@ -230,11 +230,24 @@ const styled = withStyles(styles, { withTheme: true });
 
 const documented = setDocs(SSHKeys.docs);
 
-const updatedRequest = (ownProps: any, params: any, filters: any) => getSSHKeys(params, filters)
-  .then((response) => ({
-    ...response,
-    data: updateResponseData(response.data),
-  }));
+interface CancellableRequest {
+  cancel: () => void
+  request: () => Promise<Linode.ResourcePage<Linode.SSHKey>>;
+}
+
+const updatedRequest = (ownProps: any, params: any, filters: any): CancellableRequest => {
+  const { request, cancel } = getSSHKeys$(params, filters);
+  return {
+    request: () => request()
+      .then((response) => {
+        return {
+          ...response,
+          data: updateResponseData(response.data),
+        }
+      }),
+    cancel
+  }
+}
 
 const paginated = paginate(updatedRequest);
 

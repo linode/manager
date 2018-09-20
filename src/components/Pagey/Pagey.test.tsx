@@ -6,13 +6,18 @@ const mockData: Linode.ResourcePage<any> = {
   page: 1, pages: 1, results: 0, data: []
 };
 
-const mockFn = jest.fn(() => Promise.resolve(mockData));
+const cancelRequest = jest.fn((data: any = mockData) => {
+  return {
+    request: jest.fn(() => Promise.resolve(data)),
+    cancel: jest.fn(),
+  }
+})
 
-const setup = (mockRequest: any = mockFn) => {
+const setup = (mockRequest = cancelRequest) => {
   const MyComponent = paginate(mockRequest)(() => <div />);
 
   return {
-    mockRequest,
+    mockRequest, 
     wrapper: shallow(<MyComponent />)
   };
 };
@@ -119,7 +124,7 @@ describe('Paginator 2: Pagement Day', () => {
   describe('when handlePageChange is called', () => {
 
     it('should update page with provided argument', () => {
-      const { wrapper } = setup(jest.fn((() => Promise.resolve(mockData))))
+      const { wrapper } = setup()
 
       const handlePageChange = wrapper.prop('handlePageChange');
 
@@ -131,7 +136,7 @@ describe('Paginator 2: Pagement Day', () => {
     });
 
     it('should result in the request being called with updated params', () => {
-      const { wrapper, mockRequest } = setup(jest.fn((() => Promise.resolve(mockData))))
+      const { wrapper, mockRequest } = setup()
 
       const handlePageChange = wrapper.prop('handlePageChange');
 
@@ -146,7 +151,7 @@ describe('Paginator 2: Pagement Day', () => {
   describe('when handlePageSizeChange is called', () => {
 
     it('should update pageSize with provided argument', () => {
-      const { wrapper } = setup(jest.fn((() => Promise.resolve(mockData))));
+      const { wrapper } = setup();
 
       const handlePageSizeChange = wrapper.prop('handlePageSizeChange');
 
@@ -159,7 +164,7 @@ describe('Paginator 2: Pagement Day', () => {
     });
 
     it('should result in the request being called with updated params', () => {
-      const { wrapper, mockRequest } = setup(jest.fn((() => Promise.resolve(mockData))));
+      const { wrapper, mockRequest } = setup();
 
       const handlePageSizeChange = wrapper.prop('handlePageSizeChange');
 
@@ -180,7 +185,14 @@ describe('Paginator 2: Pagement Day', () => {
         results: 4
       };
 
-      const { wrapper } = setup(() => Promise.resolve(mockDataWithData));
+      const cancelRequestWithData = jest.fn(() => {
+        return {
+          request: jest.fn(() => Promise.resolve(mockDataWithData)),
+          cancel: jest.fn(),
+        }
+      })
+
+      const { wrapper } = setup(cancelRequestWithData);
 
       beforeAll(async () => {
         await wrapper.prop('request')();
@@ -208,7 +220,13 @@ describe('Paginator 2: Pagement Day', () => {
     });
 
     describe('and the promise rejects', async () => {
-      const { wrapper } = setup(() => Promise.reject(new Error()));
+      const cancelRequestReject = jest.fn(() => {
+        return {
+          request: jest.fn(() => Promise.reject(new Error())),
+          cancel: jest.fn(),
+        }
+      })
+      const { wrapper } = setup(cancelRequestReject);
 
       beforeAll(async () => {
         await wrapper.prop('request')();
