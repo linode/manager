@@ -4,7 +4,6 @@ import * as React from 'react';
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
@@ -17,6 +16,7 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import Preload, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
 import { createOAuthClient, deleteOAuthClient, getOAuthClients, resetOAuthClientSecret, updateOAuthClient } from 'src/services/account';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -198,10 +198,10 @@ class OAuthClients extends React.Component<CombinedProps, State> {
 
     return data.map(({ id, label, redirect_uri, public: isPublic, status }) => (
       <TableRow key={id} data-qa-table-row={label}>
-        <TableCell data-qa-oauth-label>{label}</TableCell>
-        <TableCell data-qa-oauth-access>{isPublic ? 'Public' : 'Private'}</TableCell>
-        <TableCell data-qa-oauth-id>{id}</TableCell>
-        <TableCell data-qa-oauth-callback>{redirect_uri}</TableCell>
+        <TableCell parentColumn="Label" data-qa-oauth-label>{label}</TableCell>
+        <TableCell parentColumn="Access" data-qa-oauth-access>{isPublic ? 'Public' : 'Private'}</TableCell>
+        <TableCell parentColumn="ID" data-qa-oauth-id>{id}</TableCell>
+        <TableCell parentColumn="Callback URL" data-qa-oauth-callback>{redirect_uri}</TableCell>
         <TableCell>
           <ActionMenu
             id={id}

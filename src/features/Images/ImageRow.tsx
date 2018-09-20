@@ -1,10 +1,10 @@
 import * as React from 'react';
 
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
-import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 
 import RenderGuard from 'src/components/RenderGuard';
+import TableCell from 'src/components/TableCell';
 import { formatDate } from 'src/utilities/format-date-iso8601';
 
 import ActionMenu from './ImagesActionMenu';
@@ -15,6 +15,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
   label: {
     width: '30%',
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+    },
   },
 });
 
@@ -32,11 +35,13 @@ const ImageRow: React.StatelessComponent<CombinedProps> = (props) => {
     const { classes, image, ...rest } = props;
     return (
         <TableRow key={image.id} data-qa-image-cell={image.id}>
-            <TableCell className={classes.label} data-qa-image-label>
+            <TableCell parentColumn="Label" className={classes.label} data-qa-image-label>
             {image.label}
             </TableCell>
-            <TableCell data-qa-image-date>{formatDate(image.created)}</TableCell>
-            <TableCell data-qa-image-size>{image.size} MB</TableCell>
+            <TableCell parentColumn="Date Created" data-qa-image-date>
+                {formatDate(image.created)}
+            </TableCell>
+            <TableCell parentColumn="Size" data-qa-image-size>{image.size} MB</TableCell>
             <TableCell>
                 <ActionMenu
                     image={image}

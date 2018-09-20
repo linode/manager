@@ -3,13 +3,13 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import TableCell from '@material-ui/core/TableCell';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 
 import Flag from 'src/assets/icons/flag.svg';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
+import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { withTypes } from 'src/context/types';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
@@ -47,9 +47,15 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       '& h3': {
         transition: theme.transitions.create(['color']),
       },
+      [theme.breakpoints.down('sm')]: {
+        width: '100%'
+      },
     },
     ipCell: {
       width: '30%',
+      [theme.breakpoints.down('sm')]: {
+        width: '100%'
+      },
     },
     ipCellWrapper: {
       display: 'inline-flex',
@@ -57,12 +63,18 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     },
     regionCell: {
       width: '15%',
+      [theme.breakpoints.down('sm')]: {
+        width: '100%'
+      },
     },
     actionCell: {
       width: '10%',
       textAlign: 'right',
       '& button': {
         width: 30,
+      },
+      [theme.breakpoints.down('sm')]: {
+        width: '100%'
       },
     },
     actionInner: {
@@ -180,7 +192,7 @@ class LinodeRow extends React.Component<CombinedProps, State> {
     const { linodeId, linodeStatus, linodeLabel, linodeTags, classes } = this.props;
 
     return (
-      <TableCell className={classes.linodeCell}>
+      <TableCell parentColumn="Linode" className={classes.linodeCell}>
         <Link to={`/linodes/${linodeId}`} className={classes.link}>
           <Grid container wrap="nowrap" alignItems="center">
             <Grid item className="py0">
@@ -268,18 +280,18 @@ class LinodeRow extends React.Component<CombinedProps, State> {
         arial-label={linodeLabel}
       >
         {this.headCell()}
-        <TableCell>
+        <TableCell parentColumn="Plan">
           {!typesLoading &&
             <Typography variant="caption">{displayType(linodeType, typesData || [])} </Typography>
           }
         </TableCell>
-        <TableCell className={classes.ipCell} data-qa-ips>
+        <TableCell parentColumn="IP Addresses" className={classes.ipCell} data-qa-ips>
           <div className={classes.ipCellWrapper}>
             <IPAddress ips={linodeIpv4} copyRight />
             <IPAddress ips={[linodeIpv6]} copyRight />
           </div>
         </TableCell>
-        <TableCell className={classes.regionCell} data-qa-region>
+        <TableCell parentColumn="Region" className={classes.regionCell} data-qa-region>
           <RegionIndicator region={linodeRegion} />
         </TableCell>
         <TableCell className={classes.actionCell} data-qa-notifications>

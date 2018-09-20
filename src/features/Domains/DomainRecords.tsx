@@ -5,7 +5,6 @@ import { Subscription } from 'rxjs/Subscription';
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
@@ -17,6 +16,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
 import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
 import { deleteDomainRecord } from 'src/services/domains';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -230,7 +230,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                 editPayload={d}
                 onEdit={this.handleOpenSOADrawer}
               />
-              : <React.Fragment />;
+              : null;
           },
         },
       ],
@@ -546,7 +546,9 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                       <TableRow>
                         {type.columns.length > 0 && type.columns.map((col, columnIndex) => {
                           return (
-                            <TableCell key={columnIndex}>{col.title}</TableCell>
+                            <TableCell key={columnIndex}>
+                              {col.title}
+                            </TableCell>
                           );
                         })}
                       </TableRow>
@@ -560,6 +562,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                                 && type.columns.map(({ title, render }, columnIndex) => {
                                   return (
                                     <TableCell
+                                      parentColumn={title}
                                       key={columnIndex}
                                       data-qa-column={title}
                                     >

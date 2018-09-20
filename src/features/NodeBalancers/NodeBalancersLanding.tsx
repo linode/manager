@@ -397,29 +397,29 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
           className="fade-in-table"
           arial-label={nodeBalancer.label}
         >
-          <TableCell data-qa-nodebalancer-label>
+          <TableCell parentColumn="Name" data-qa-nodebalancer-label>
             <Link to={`/nodebalancers/${nodeBalancer.id}`}>
               {nodeBalancer.label}
             </Link>
           </TableCell>
-          <TableCell data-qa-node-status>
+          <TableCell parentColumn="Node Status" data-qa-node-status>
             <span>{nodeBalancer.up} up</span> <br />
             <span>{nodeBalancer.down} down</span>
           </TableCell>
-          <TableCell data-qa-transferred>
+          <TableCell parentColumn="Transferred" data-qa-transferred>
             {convertMegabytesTo(nodeBalancer.transfer.total)}
           </TableCell>
-          <TableCell data-qa-ports>
+          <TableCell parentColumn="Ports" data-qa-ports>
             {nodeBalancer.ports.length === 0 && 'None'}
             {nodeBalancer.ports.join(', ')}
           </TableCell>
-          <TableCell data-qa-nodebalancer-ips>
+          <TableCell parentColumn="IP Addresses" data-qa-nodebalancer-ips>
             <div className={classes.ipsWrapper}>
               <IPAddress ips={[nodeBalancer.ipv4]} copyRight />
               {nodeBalancer.ipv6 && <IPAddress ips={[nodeBalancer.ipv6]} copyRight />}
             </div>
           </TableCell>
-          <TableCell data-qa-region>
+          <TableCell parentColumn="Region" data-qa-region>
             <RegionIndicator region={nodeBalancer.region} />
           </TableCell>
           <TableCell>
