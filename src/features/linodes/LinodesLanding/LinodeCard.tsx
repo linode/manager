@@ -194,6 +194,7 @@ interface Props {
   linodeNotification?: string;
   linodeLabel: string;
   linodeBackups: Linode.LinodeBackups;
+  linodeTags: string[];
   linodeRecentEvent?: Linode.Event;
   linodeSpecDisk: number;
   linodeSpecMemory: number;
@@ -203,6 +204,7 @@ interface Props {
   openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
   toggleConfirmation: (bootOption: Linode.BootAction,
     linodeId: number, linodeLabel: string) => void;
+  renderTagsAndMoreTags: (tags: string[]) => JSX.Element;
 }
 
 interface TypesContextProps {
@@ -295,6 +297,7 @@ class LinodeCard extends React.Component<CombinedProps, State> {
       linodeSpecMemory,
       linodeSpecDisk,
       linodeSpecVcpus,
+      linodeTags,
       linodeType,
       typesData,
     } = this.props;
@@ -315,6 +318,9 @@ class LinodeCard extends React.Component<CombinedProps, State> {
           </div>
           <div className={classes.cardSection} data-qa-image>
             {imageLabel}
+          </div>
+          <div className={classes.cardSection}>
+            {this.props.renderTagsAndMoreTags(linodeTags)}
           </div>
         </div>
       </CardContent>

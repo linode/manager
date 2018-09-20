@@ -25,6 +25,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import AddonsPanel from '../AddonsPanel';
 import SelectImagePanel from '../SelectImagePanel';
 import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
+import tagsHoc, { TagObject } from '../tagsHoc';
 
 type ClassNames = 'root'
   | 'main'
@@ -75,6 +76,7 @@ interface Props {
 
   /** Comes from HOC */
   userSSHKeys: UserSSHKeyObject[];
+  tagObject: TagObject;
 }
 
 interface State {
@@ -229,7 +231,8 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
   }
 
   createLinode = () => {
-    const { history, userSSHKeys } = this.props;
+    const { history, tagObject, userSSHKeys } = this.props;
+    const { getLinodeTagList } = tagObject.actions;
     const {
       selectedImageID,
       selectedRegionID,
@@ -255,6 +258,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
       backups_enabled: backups, /* optional */
       booted: true,
       authorized_users: userSSHKeys.filter(u => u.selected).map((u) => u.username),
+      tags: getLinodeTagList(),
     })
       .then((linode) => {
         if (privateIP) { allocatePrivateIP(linode.id) };
@@ -299,7 +303,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
       selectedStackScriptUsername } = this.state;
 
     const { notice, getBackupsMonthlyPrice, regions, types, classes,
-      getRegionInfo, getTypeInfo, images, userSSHKeys } = this.props;
+      getRegionInfo, getTypeInfo, images, tagObject, userSSHKeys } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
@@ -407,13 +411,15 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
             selectedID={selectedTypeID}
           />
           <LabelAndTagsPanel
+            tagObject={tagObject}
+            tagError={hasErrorFor('tag')}
             labelFieldProps={{
               label: 'Linode Label',
               value: label || '',
               onChange: this.handleTypeLabel,
               errorText: hasErrorFor('label'),
             }}
-            updateFor={[label]}
+            updateFor={[label, tagObject, errors]}
           />
           <AccessPanel
             error={hasErrorFor('root_pass')}
@@ -487,6 +493,6 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
 
 const styled = withStyles(styles, { withTheme: true });
 
-const enhanced = compose(styled, userSSHKeyHoc);
+const enhanced = compose(styled, userSSHKeyHoc, tagsHoc);
 
 export default enhanced(FromStackScriptContent) as any;

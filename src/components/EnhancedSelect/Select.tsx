@@ -112,6 +112,14 @@ interface ActionMeta {
   action: string;
 }
 
+interface ActionMeta {
+  action: string;
+}
+
+export interface NoOptionsMessageProps {
+  inputValue: string;
+}
+
 export interface EnhancedSelectProps {
   options?: Item[];
   className?: string;
@@ -128,7 +136,6 @@ export interface EnhancedSelectProps {
   createNew?: (inputValue: string) => void;
   onInputChange?: (inputValue: string, actionMeta: ActionMeta) => void;
   loadOptions?: (inputValue: string) => Promise<Item| Item[]> | undefined;
-  filterOption?: (item: Item, inputValue:string) => boolean | null;
 }
 
 // Material-UI versions of several React-Select components.
@@ -140,12 +147,14 @@ const _components = {
   MultiValue,
 };
 
-type CombinedProps = EnhancedSelectProps & WithStyles<ClassNames>;
+type CombinedProps = EnhancedSelectProps
+  & WithStyles<ClassNames>
+  & BaseSelectProps
+  & CreatableProps;
 
 interface BaseSelectProps extends SelectProps<any> {
   classes: any;
-  textFieldProps: any;
-  filterOption: any;
+  textFieldProps?: any;
 }
 
 interface CreatableProps extends CreatableSelectProps<any> {
@@ -171,7 +180,10 @@ class Select extends React.PureComponent<CombinedProps,{}> {
       onInputChange,
       options,
       value,
-      variant
+      variant,
+      noOptionsMessage,
+      onBlur,
+      ...restOfProps
     } = this.props;
 
     /*
@@ -199,6 +211,7 @@ class Select extends React.PureComponent<CombinedProps,{}> {
 
     return (
       <BaseSelect
+        {...restOfProps}
         isClearable
         isSearchable
         isLoading={isLoading}
@@ -220,12 +233,14 @@ class Select extends React.PureComponent<CombinedProps,{}> {
           },
         }}
         value={value}
+        onBlur={onBlur}
         options={options}
         components={combinedComponents}
         onChange={onChange}
         onInputChange={onInputChange}
         onCreateOption={createNew}
         placeholder={placeholder || 'Select a value...'}
+        noOptionsMessage={noOptionsMessage}
         menuPlacement="auto"
       />
     );
