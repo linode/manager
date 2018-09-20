@@ -142,7 +142,6 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
 
   static getDerivedStateFromProps(props: CombinedProps, state: State) {
     const attachedVolumesUpdate = !equals(props.linodeVolumes, state.attachedVolumes);
-    console.log("checking some things here", props.linodeVolumes);
 
     if (attachedVolumesUpdate) {
       return {
@@ -181,7 +180,6 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
   }
 
   getVolumes = () => {
-
     getLinodeVolumes(this.props.linodeID)
       .then((response) => {
         this.setState({
@@ -604,11 +602,11 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
       .then((response) => {
         this.closeUpdatingDrawer();
         this.props.actions.updateVolumes((volumes) => {
+          const newVolumes = [...volumes];
           const idx = volumes.findIndex((volume) => volume.id === response.data.id);
-          volumes[idx] = response.data;
-          return volumes;
+          newVolumes[idx] = response.data;
+          return newVolumes;
         });
-        // this.getVolumes();
       })
       .catch((errorResponse: any) => {
         this.setState({
@@ -776,8 +774,6 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
     if (attachedVolumes.length === 0) {
       return null;
     }
-
-    console.log('rendering with', attachedVolumes[0]);
 
     return (
       <React.Fragment>
