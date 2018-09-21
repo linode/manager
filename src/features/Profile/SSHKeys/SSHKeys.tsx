@@ -230,12 +230,7 @@ const styled = withStyles(styles, { withTheme: true });
 
 const documented = setDocs(SSHKeys.docs);
 
-interface CancellableRequest {
-  cancel: () => void
-  request: () => Promise<Linode.ResourcePage<Linode.SSHKey>>;
-}
-
-const updatedRequest = (ownProps: any, params: any, filters: any): CancellableRequest => {
+const updatedRequest = (ownProps: any, params: any, filters: any)=> {
   const { request, cancel } = getSSHKeys$(params, filters);
   return {
     request: () => request()
