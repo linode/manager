@@ -109,7 +109,7 @@ export const updateNodeBalancer = (id: number, data: Partial<NodeBalancer>) =>
   Request<NodeBalancer>(
     setURL(`${API_ROOT}/nodebalancers/${id}`),
     setMethod('PUT'),
-    setData(data, NodeBalancerSchema),
+    setData(data, UpdateNodeBalancerSchema),
   ).then(response => response.data);
 
 export const createNodeBalancerConfigNode = (
@@ -217,6 +217,17 @@ export const NodeBalancerSchema = object({
     .of(createNodeBalancerConfigSchema)
   /** How do I do unique... */
   // .unique((a, b) => a.port === b.port),
+});
+
+export const UpdateNodeBalancerSchema = object({
+  label: string()
+    .matches(/^[a-zA-Z0-9-_]+$/)
+    .min(3)
+    .max(32),
+
+  client_conn_throttle: number(),
+
+  region: string(),
 });
 
 export const combineNodeBalancerConfigNodeAddressAndPort = (data: any) => ({
