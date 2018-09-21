@@ -1,15 +1,47 @@
 import { API_ROOT } from 'src/constants';
 
 import Request, { setData, setMethod, setURL } from '..';
+import { createPersonalAccessTokenSchema } from './profile.schema';
 
 type Page<T> = Linode.ResourcePage<T>;
 type Token = Linode.Token;
 
 export interface TokenRequest {
-  scope: string;
+  scopes: string;
   expiry?: string | null;
   label: string;
 }
+
+/**
+ * getPersonalAccessTokens
+ *
+ * Returns a paginated list of Personal Access Tokens currently active for your User.
+ * 
+ * 
+ * @example getPersonalAccessTokens();
+ */
+export const getPersonalAccessTokens = () =>
+  Request<Page<Token>>(
+    setMethod('GET'),
+    setURL(`${API_ROOT}/profile/tokens`),
+  )
+    .then(response => response.data);
+
+/**
+ * getPersonalAccessToken
+ *
+ * Retrieve a single Personal Access Token.
+ * 
+ * @param ticketId { number } the ID of the token to view
+ * 
+ * @example getPersonalAccessToken(123456);
+ */
+export const getPersonalAccessToken = (id: number) =>
+  Request<Token>(
+    setMethod('GET'),
+    setURL(`${API_ROOT}/profile/tokens/${id}`),
+  )
+    .then(response => response.data);
 
 /**
  * createPersonalAccessToken
@@ -33,31 +65,14 @@ export const createPersonalAccessToken = (data: TokenRequest) =>
   Request<Token>(
     setMethod('POST'),
     setURL(`${API_ROOT}/profile/tokens`),
-    setData(data),
-  )
-    .then(response => response.data);
-
-/**
- * getPersonalAccessToken
- *
- * Retrieve a single Personal Access Token.
- * 
- * @param ticketId { number } the ID of the token to view
- * 
- * @example getPersonalAccessToken(123456);
- */
-export const getPersonalAccessToken = (id: number) =>
-  Request<Token>(
-    setMethod('GET'),
-    setURL(`${API_ROOT}/profile/tokens/${id}`),
+    setData(data, createPersonalAccessTokenSchema),
   )
     .then(response => response.data);
 
 /**
  * updatePersonalAccessToken
  *
- * Base function for retrieving a page of support ticket objects.
- * You should not need to call this function directly.
+ * Change the label or expiry date of a Personal Access Token
  * 
  * @param tokenId { number } the ID of the token to be updated.
  * @param data { Object } JSON object to be sent as the X-Filter header.
@@ -70,7 +85,7 @@ export const updatePersonalAccessToken = (tokenId: number, data: Partial<TokenRe
   Request<Token>(
     setURL(`${API_ROOT}/profile/tokens/${tokenId}`),
     setMethod('PUT'),
-    setData(data),
+    setData(data, createPersonalAccessTokenSchema),
   )
     .then(response => response.data);
 
@@ -88,18 +103,3 @@ export const deletePersonalAccessToken = (tokenId: number) =>
     setURL(`${API_ROOT}/profile/tokens/${tokenId}`),
     setMethod('DELETE'),
   );
-
-/**
- * getPersonalAccessTokens
- *
- * Returns a paginated list of Personal Access Tokens currently active for your User.
- * 
- * 
- * @example getPersonalAccessTokens();
- */
-export const getPersonalAccessTokens = () =>
-  Request<Page<Token>>(
-    setMethod('GET'),
-    setURL(`${API_ROOT}/profile/tokens`),
-  )
-    .then(response => response.data);
