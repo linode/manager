@@ -325,12 +325,14 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
   }
 
   renderReplies = (replies: Linode.SupportReply[]) => {
+    const { ticket } = this.state;
     return replies.filter((reply => reply.description.trim() !== ''))
       .map((reply: Linode.SupportReply, idx: number) => {
       return <ExpandableTicketPanel
         key={idx}
         reply={reply}
         open={idx === replies.length - 1}
+        parentTicket={ticket ? ticket.id : undefined}
         isCurrentUser={this.props.profileUsername === reply.created_by}
       />
     });
