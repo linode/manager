@@ -1,4 +1,4 @@
-import { createSupportTicketSchema } from './support.schema';
+import { createReplySchema, createSupportTicketSchema } from './support.schema';
 
 import { API_ROOT } from 'src/constants';
 
@@ -111,7 +111,7 @@ export const createReply = (data: ReplyRequest) =>
   Request<Linode.SupportReply>(
     setURL(`${API_ROOT}/support/tickets/${data.ticket_id}/replies`),
     setMethod('POST'),
-    setData(data),
+    setData(data, createReplySchema),
 ).then(response => response.data)
 
 /**

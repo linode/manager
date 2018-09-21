@@ -1,19 +1,27 @@
-import * as Yup from 'yup';
+import { number, object, string } from 'yup';
 
-export const createSupportTicketSchema = Yup.object({
-  summary: Yup.string()
-    .required('Summary is required')
+export const createSupportTicketSchema = object({
+  summary: string()
+    .required('Summary is required.')
     .min(1, 'Summary must be between 1 and 64 characters.')
     .max(64, 'Summary must be between 1 and 64 characters.')
     .trim(),
-  description: Yup.string()
-    .required('Description is required')
+  description: string()
+    .required('Description is required.')
     .min(1, 'Description must be between 1 and 64,000 characters.')
     .max(64000, 'Description must be between 1 and 64,000 characters.')
     .trim(),
-  domain_id: Yup.number(),
-  linode_id: Yup.number(),
-  longviewclient_id: Yup.number(),
-  nodebalancer_id: Yup.number(),
-  volume_id: Yup.number(),
+  domain_id: number(),
+  linode_id: number(),
+  longviewclient_id: number(),
+  nodebalancer_id: number(),
+  volume_id: number(),
+});
+
+export const createReplySchema = object({
+  description: string()
+    .required('Description is required.')
+    .min(1, 'Description must be between 1 and 65,535 characters.')
+    .max(65535, 'Description must be between 1 and 65,535 characters.')
+    .trim()
 });
