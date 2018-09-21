@@ -16,7 +16,8 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import { ISO_FORMAT } from 'src/constants';
-import { getTicketsPage } from 'src/services/support';
+
+import { getTicketsPage } from './ticketUtils';
 
 interface Props {
   filterStatus: 'open' | 'closed';

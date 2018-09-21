@@ -1,4 +1,4 @@
-import { merge } from 'ramda';
+import { createSupportTicketSchema } from './support.schema';
 
 import { API_ROOT } from 'src/constants';
 
@@ -42,50 +42,6 @@ export const getTickets = (params?: any, filter?: any) =>
   )
 
 /**
- * getStatusFilter
- *
- * Private helper function to generate an X-Filter object based on a status string.
- * 
- * @param ticketStatus { string } status of the tickets to return (open, closed, or all).
- * 
- * @example getTicketStatus('closed');
- */
-const getStatusFilter = (ticketStatus: 'open' | 'closed' | 'all') => {
-  switch (ticketStatus) {
-    case 'open':
-      return { '+or': [
-        {'status': 'open'},
-        {'status': 'new'}
-      ]};
-    case 'closed':
-      return { 'status': 'closed'};
-    case 'all':
-      return {};
-    default:
-      return new Error('Argument must be "open", "closed", or "null"');
-  }
-}
-
-/**
- * getTicketsPage
- *
- * Retrieve a single page of support tickets.
- * 
- * @param pagination { Object } any parameters to be sent with the request
- * @param pagination.page { number } the page number to be returned
- * @param pagination.pageSize { number } the number of results to include in the page
- * @param ticketStatus { string } status of the tickets to return (open, closed, or all).
- * 
- * @example getTicketsPage({page: 1, pageSize: 25}, false);
- */
-export const getTicketsPage = (pagination: Linode.PaginationOptions = {}, ticketStatus: 'open' | 'closed' | 'all') => {
-  const status = getStatusFilter(ticketStatus);
-  const ordering = {'+order_by': 'updated', '+order': 'desc'};
-  const filter = merge(status, ordering);
-  return getTickets(pagination, filter).then((response) => response.data);
-}
-
-/**
  * getTicket
  *
  * Retrieve a single support ticket.
@@ -96,12 +52,10 @@ export const getTicketsPage = (pagination: Linode.PaginationOptions = {}, ticket
  * 
  * @example getTicket(123456);
  */
-export const getTicket = (ticketID:number, params?: any, filter?: any) =>
+export const getTicket = (ticketID:number) =>
   Request<SupportTicket>(
     setURL(`${API_ROOT}/support/tickets/${ticketID}`),
     setMethod('GET'),
-    setParams(params),
-    setXFilter(filter),
   ).then((response) => response.data);
 
 /**
@@ -125,23 +79,6 @@ export const getTicketReplies = (ticketId:number, params?: any, filter?: any) =>
   ).then((response) => response.data);
 
 /**
- * getTicketRepliesPage
- *
- * Get a single page of replies to a ticket.
- * 
- * @param ticketID { Number } the ID of the ticket
- * @param pagination { Object } Set of pagination options
- * @param pagination.page { number } the page number to retrieve
- * @param pagination.pageSize { number } the number of replies to include in the page 
- * 
- * @example getTicketReplies(123456. { page: 1, pageSize: 25 });
- */
-export const getTicketRepliesPage = (ticketId:number, pagination: Linode.PaginationOptions = {}) => {
-  return getTicketReplies(ticketId, pagination);
-}
-
-
-/**
  * createSupportTicket
  *
  * Add a new support ticket.
@@ -156,7 +93,7 @@ export const createSupportTicket = (data: TicketRequest) =>
   Request<SupportTicket>(
     setURL(`${API_ROOT}/support/tickets`),
     setMethod('POST'),
-    setData(data),
+    setData(data, createSupportTicketSchema),
   ).then(response => response.data)
 
 /**

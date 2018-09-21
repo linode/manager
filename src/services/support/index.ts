@@ -1,9 +1,7 @@
 export {
   getTickets,
-  getTicketsPage,
   getTicket,
   getTicketReplies,
-  getTicketRepliesPage,
   createSupportTicket,
   createReply,
   uploadAttachment,
