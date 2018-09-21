@@ -300,7 +300,7 @@ class TicketReply extends React.Component<CombinedProps, State> {
             loading={submitting}
             onClick={this.submitForm}
           >
-            Send
+            Add Update
           </Button>
         </ActionsPanel>
       </Grid>
