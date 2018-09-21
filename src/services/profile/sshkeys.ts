@@ -35,9 +35,9 @@ export const getSSHKey = (keyId:number) =>
     .then(response => response.data);
 
 /**
- * getSSHKeys
+ * createSSHKey
  *
- * Returns a collection of SSH Keys you've added to your Profile.
+ * Add an SSH key to your account.
  * 
  */
 export const createSSHKey = (data: { label: string, ssh_key: string }) =>
@@ -53,7 +53,6 @@ export const createSSHKey = (data: { label: string, ssh_key: string }) =>
  *
  * Remove a single SSH key from your Profile.
  * 
- * @param keyId { number } the ID of the key to be deleted
  */
 export const deleteSSHKey = (keyId: number) =>
   Request<{}>(

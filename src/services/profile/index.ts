@@ -5,28 +5,29 @@ export {
 
 export {
   createPersonalAccessToken,
-  getPersonalAccessToken,
-  updatePersonalAccessToken,
   deletePersonalAccessToken,
+  getPersonalAccessToken,
   getPersonalAccessTokens,
+  updatePersonalAccessToken,
 } from './accessTokens';
 
 export {
   createAppToken,
-  getAppToken,
-  updateAppToken,
   deleteAppToken,
+  getAppToken,
   getAppTokens,
+  updateAppToken,
 } from './appTokens';
 
 export {
   getSSHKeys,
+  getSSHKey,
   createSSHKey,
   deleteSSHKey
 } from './sshkeys';
 
 export {
-  getTFAToken,
-  disableTwoFactor,
   confirmTwoFactor,
+  disableTwoFactor,
+  getTFAToken,
 } from './twoFactor';

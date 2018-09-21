@@ -14,3 +14,13 @@ export const createSSHKeySchema = Yup.object({
     .trim(),
   ssh_key: Yup.string(),
 });
+
+export const updateProfileSchema = Yup.object({
+  email: Yup.string().email(),
+  timezone: Yup.string(),
+  email_notifications: Yup.boolean(),
+  authorized_keys: Yup.array().of(Yup.string()),
+  restricted: Yup.boolean(),
+  two_factor_auth: Yup.boolean(),
+  lish_auth_method: Yup.string() // @todo does Yup support Enums?
+});

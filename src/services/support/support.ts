@@ -30,7 +30,6 @@ export interface TicketRequest {
  * @param params { Object } any parameters to be sent with the request
  * @param filter { Object } JSON object to be sent as the X-Filter header
  * 
- * @example getTickets(pagination, filter);
  */
 export const getTickets = (params?: any, filter?: any) =>
   Request<Page<SupportTicket>>(
@@ -49,7 +48,6 @@ export const getTickets = (params?: any, filter?: any) =>
  * @param params { Object } any parameters to be sent with the request
  * @param filter { Object } JSON object to be sent as the X-Filter header
  * 
- * @example getTicket(123456);
  */
 export const getTicket = (ticketID:number) =>
   Request<SupportTicket>(
@@ -67,7 +65,6 @@ export const getTicket = (ticketID:number) =>
  * @param params { Object } any parameters to be sent with the request
  * @param filter { Object } JSON object to be sent as the X-Filter header
  * 
- * @example getTicketReplies(123456);
  */
 export const getTicketReplies = (ticketId:number, params?: any, filter?: any) =>
   Request<Page<Linode.SupportReply>>(
@@ -86,7 +83,6 @@ export const getTicketReplies = (ticketId:number, params?: any, filter?: any) =>
  * @param data.summary { string } a summary (or title) for the support ticket
  * @param data.description { string } body text of the support ticket
  * 
- * @example createSupportTicket({ summary: "This is a ticket", description: "I'm having a problem with my Linode." });
  */
 export const createSupportTicket = (data: TicketRequest) =>
   Request<SupportTicket>(
@@ -104,7 +100,6 @@ export const createSupportTicket = (data: TicketRequest) =>
  * @param data.ticket_id { number } the ID of the ticket
  * @param data.description { string } the text of the reply
  * 
- * @example createReply({ ticket_id: 123456, description: 'This is a reply.' });
  */
 export const createReply = (data: ReplyRequest) =>
   Request<Linode.SupportReply>(
@@ -121,7 +116,6 @@ export const createReply = (data: ReplyRequest) =>
  * @param ticketID { Number } the ID of the ticket to be retrieved
  * @param formData { Object } any parameters to be sent with the request
  * 
- * @example uploadAttachment(123456, {file: file});
  */
 export const uploadAttachment = (ticketId: number, formData: FormData) =>
   Request<{}>(

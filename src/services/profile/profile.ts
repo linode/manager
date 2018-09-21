@@ -1,6 +1,7 @@
 import { API_ROOT } from 'src/constants';
 
-import Request, { setData, setMethod, setURL } from '..';
+import Request, { setData, setMethod, setURL } from '../index';
+import { updateProfileSchema } from './profile.schema';
 
 type Profile = Linode.Profile;
 
@@ -9,9 +10,7 @@ type Profile = Linode.Profile;
  *
  * Return the current (logged in) user's profile.
  * 
- * @returns { Promise }
  * 
- * @example getProfile() => 
  */
 export const getProfile = () => Request<Profile>(
   setURL(`${API_ROOT}/profile`),
@@ -25,18 +24,11 @@ export const getProfile = () => Request<Profile>(
  * data param will be updated by the API; omitted fields will remain
  * unchanged.
  * 
- * @param data { Object }
- * 
- * @returns { Promise }
- * 
- * @example updateProfile({"email_notifications": "true"});
  */
-export const updateProfile = (data: any) => Request<Linode.Profile>(
+export const updateProfile = (data: any) => Request<Profile>(
   setURL(`${API_ROOT}/profile`),
   setMethod('PUT'),
-  /** @todo */
-  // validateRequestData(data, ProfileUpdateSchema)
-  setData(data),
+  setData(data, updateProfileSchema),
 )
   .then(response => response.data);
 
