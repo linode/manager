@@ -25,8 +25,7 @@ export interface TicketRequest {
 /**
  * getTickets
  *
- * Base function for retrieving a page of support ticket objects.
- * You should not need to call this function directly.
+ * Base function for retrieving a page of support ticket objects..
  * 
  * @param params { Object } any parameters to be sent with the request
  * @param filter { Object } JSON object to be sent as the X-Filter header
