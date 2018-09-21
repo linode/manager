@@ -1,4 +1,5 @@
 import Axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { path, pathSatisfies } from 'ramda';
 
 import { expire } from 'src/session';
 import store from 'src/store';
@@ -13,12 +14,17 @@ const handleSuccess = (response: AxiosResponse) => {
 };
 
 const handleError = (error: AxiosError) => {
-  if (!!error.config.headers['x-maintenance-mode']
-    || (error.response && error.response.status === 401)) {
+  const hasMaintenanceHeader = path(['config', 'headers', 'x-maintenance-mode'], error);
+  const isUnauthorized = pathSatisfies((status) => status === 401, ['response', 'status'], error);
+  // const isNotFound = pathSatisfies((status) => status === 404, ['response', 'status'], error);
+  // const isStatsRequest = pathSatisfies((url: string = '') => url.includes('/stats'), ['response', 'config', 'url'], error);
+  const isCancelled = Axios.isCancel(error);
+
+  if (hasMaintenanceHeader || isUnauthorized) {
     expire();
   }
 
-  return Promise.reject(error);
+  return Promise.reject({...error, isCancelled });
 }
 
 Axios.interceptors.request.use((config: AxiosRequestConfig): AxiosRequestConfig => {

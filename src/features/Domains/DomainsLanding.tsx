@@ -354,8 +354,13 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
   }
 }
 
-const updatedRequest = (ownProps: any, params: any, filters: any) => getDomains(params, filters)
-  .then(response => response);
+const updatedRequest = (ownProps: any, params: any, filters: any) => {
+  return {
+    request: () => getDomains(params, filters)
+      .then(response => response),
+    cancel: null,
+  }
+}
 
 const paginated = Pagey(updatedRequest);
 
