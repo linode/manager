@@ -41,7 +41,7 @@ export const nodeBalancerConfigNodeSchema = object().shape({
     .oneOf(['accept', 'reject', 'drain'])
 });
 
-export const createNodeBalancerConfigSchema = object().shape({
+export const createNodeBalancerConfigSchema = object({
   algorithm: string(),
   check_attempts: number(),
   check_body: string()
@@ -63,7 +63,26 @@ export const createNodeBalancerConfigSchema = object().shape({
     .of(nodeBalancerConfigNodeSchema).required().min(1),
 });
 
-
+export const UpdateNodeBalancerConfigSchema = object({
+  algorithm: string(),
+  check_attempts: number(),
+  check_body: string()
+    .when('check', { is: 'http_body', then: string().required() }),
+  check_interval: number(),
+  check_passive: boolean(),
+  check_path: string().matches(/\/.*/)
+    .when('check', { is: 'http', then: string().required() })
+    .when('check', { is: 'http_body', then: string().required() }),
+  check_timeout: number().integer(),
+  check: string(),
+  cipher_suite: string(),
+  port: number().integer().min(1).max(65535),
+  protocol: string().oneOf(['http', 'https', 'tcp']),
+  ssl_key: string().when('protocol', { is: 'https', then: string().required() }),
+  ssl_cert: string().when('protocol', { is: 'https', then: string().required() }),
+  stickiness: string(),
+  nodes: array().of(nodeBalancerConfigNodeSchema),
+});
 
 /** Requests */
 export const getNodeBalancers = (pagination: any = {}, filters: any = {}) =>
@@ -90,7 +109,7 @@ export const updateNodeBalancer = (id: number, data: Partial<NodeBalancer>) =>
   Request<NodeBalancer>(
     setURL(`${API_ROOT}/nodebalancers/${id}`),
     setMethod('PUT'),
-    setData(data, NodeBalancerSchema),
+    setData(data, UpdateNodeBalancerSchema),
   ).then(response => response.data);
 
 export const createNodeBalancerConfigNode = (
@@ -173,7 +192,7 @@ export const updateNodeBalancerConfig = (nodeBalancerId: number, configId: numbe
   Request<Linode.NodeBalancerConfig>(
     setMethod('PUT'),
     setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}`),
-    setData(data, nodeBalancerConfigNodeSchema),
+    setData(data, UpdateNodeBalancerConfigSchema),
   )
     .then(response => response.data);
 
@@ -198,6 +217,17 @@ export const NodeBalancerSchema = object({
     .of(createNodeBalancerConfigSchema)
   /** How do I do unique... */
   // .unique((a, b) => a.port === b.port),
+});
+
+export const UpdateNodeBalancerSchema = object({
+  label: string()
+    .matches(/^[a-zA-Z0-9-_]+$/)
+    .min(3)
+    .max(32),
+
+  client_conn_throttle: number(),
+
+  region: string(),
 });
 
 export const combineNodeBalancerConfigNodeAddressAndPort = (data: any) => ({
