@@ -106,10 +106,11 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
     const { linode } = this.props; 
     startMigration(linode.id)
       .then((_) => {
-        sendToast("Your Linode has been put in the migration queue.");
+        sendToast("Your Linode has been entered into the migration queue.");
       })
       .catch((_) => {
-        sendToast("There was an error starting your migration.");
+        // @todo: use new error handling pattern here after merge.
+        sendToast("There was an error starting your migration.", "error");
       })
   }
 
