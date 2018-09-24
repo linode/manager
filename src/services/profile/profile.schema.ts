@@ -1,26 +1,27 @@
-import * as Yup from 'yup';
+import { array, boolean, object, string } from 'yup';
 
-export const createPersonalAccessTokenSchema = Yup.object({
-  scopes: Yup.string(),
-  expiry: Yup.string(),
-  label: Yup.string(),
+export const createPersonalAccessTokenSchema = object({
+  scopes: string(),
+  expiry: string(),
+  label: string(),
 });
 
-export const createSSHKeySchema = Yup.object({
-  label: Yup.string()
+export const createSSHKeySchema = object({
+  label: string()
     .required('Label is required.')
     .min(1, 'Label must be between 1 and 64 characters.')
     .max(64, 'Label must be between 1 and 64 characters.')
     .trim(),
-  ssh_key: Yup.string(),
+  ssh_key: string(),
 });
 
-export const updateProfileSchema = Yup.object({
-  email: Yup.string().email(),
-  timezone: Yup.string(),
-  email_notifications: Yup.boolean(),
-  authorized_keys: Yup.array().of(Yup.string()),
-  restricted: Yup.boolean(),
-  two_factor_auth: Yup.boolean(),
-  lish_auth_method: Yup.string() // @todo does Yup support Enums?
+export const updateProfileSchema = object({
+  email: string().email(),
+  timezone: string(),
+  email_notifications: boolean(),
+  authorized_keys: array().of(string()),
+  restricted: boolean(),
+  two_factor_auth: boolean(),
+  lish_auth_method: string()
+    .oneOf(["password_keys", "keys_only", "disabled"])
 });
