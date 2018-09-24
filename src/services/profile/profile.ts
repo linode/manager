@@ -10,7 +10,6 @@ type Profile = Linode.Profile;
  *
  * Return the current (logged in) user's profile.
  * 
- * 
  */
 export const getProfile = () => Request<Profile>(
   setURL(`${API_ROOT}/profile`),
