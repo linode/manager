@@ -12,7 +12,7 @@ import NotificationsAndUpgradePanel from './HeaderSections/NotificationsAndUpgra
 import TabsAndStatusBarPanel from './HeaderSections/TabsAndStatusBarPanel';
 import TagsPanel from './HeaderSections/TagsPanel';
 
-import { updateLinode } from 'src/services/linodes';
+import { startMigration, updateLinode } from 'src/services/linodes';
 import { getTags } from 'src/services/tags';
 
 interface LabelInput {
@@ -100,6 +100,17 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
         this.setState({ tagsToSuggest: reshapedTags })
       })
       .catch(e => e)
+  }
+
+  enterMigrationQueue = () => {
+    const { linode } = this.props; 
+    startMigration(linode.id)
+      .then((_) => {
+        sendToast("Your Linode has been put in the migration queue.");
+      })
+      .catch((_) => {
+        sendToast("There was an error starting your migration.");
+      })
   }
 
   launchLish = () => {
@@ -229,6 +240,7 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
           notifications={notifications}
           showPendingMutation={showPendingMutation}
           handleUpgrade={this.goToOldManager}
+          handleMigration={this.enterMigrationQueue}
         />
         <LabelPowerAndConsolePanel
           launchLish={this.launchLish}

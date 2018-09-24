@@ -10,6 +10,8 @@ import {
 import Notice from 'src/components/Notice';
 import ProductNotification from 'src/components/ProductNotification';
 
+import MigrationNotification from './MigrationNotification';
+
 type ClassNames = 'root' | 'link';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
@@ -25,6 +27,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 interface Props {
   handleUpgrade: () => void;
+  handleMigration: () => void;
   showPendingMutation: boolean;
   notifications?: Linode.Notification[];
 }
@@ -46,7 +49,9 @@ const NotificationsAndUpgradePanel = (props: CombinedProps) => {
       }
       {
         (props.notifications || []).map((n, idx) =>
-          <ProductNotification key={idx} severity={n.severity} text={n.message} />)
+          n.type === 'migration_scheduled'
+          ? <MigrationNotification key={idx} text={n.message} when={n.when} onClick={props.handleMigration} />
+          : <ProductNotification key={idx} severity={n.severity} text={n.message} />)
       }
     </React.Fragment>
   );

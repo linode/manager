@@ -1,6 +1,6 @@
 import { Location } from 'history';
 import * as moment from 'moment';
-import { allPass, compose, filter, has, Lens, lensPath, pathEq, pathOr, set } from 'ramda';
+import { allPass, any, compose, filter, has, Lens, lensPath, pathEq, pathOr, set } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
@@ -420,11 +420,12 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     /** Get /notifications relevant to this Linode */
     this.notificationsSubscription = notifications$
       .map(filter(allPass([
-        pathEq(['entity', 'id'], linodeId),
+        pathEq(['entity', 'id'], Number(linodeId)),
         has('message'),
       ])))
-      .subscribe((notifications: Linode.Notification[]) =>
-        this.setState({ notifications }));
+      .subscribe((notifications: Linode.Notification[]) => {
+        this.setState({ notifications });
+      })
 
     configs.request();
     disks.request();
