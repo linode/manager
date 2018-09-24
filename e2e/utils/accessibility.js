@@ -10,13 +10,5 @@ export const axeTest = () => {
         });
     });
 
-    const sortedViolations =
-        testResults.value.violations.sort(function(a,b) {
-            if (a.impact < b.impact) {
-                return -1;
-            } 
-            return 0;
-        });
-
-    return sortedViolations;
+    return testResults.value.violations;
 }
