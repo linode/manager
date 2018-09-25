@@ -180,19 +180,27 @@ class TicketReply extends React.Component<CombinedProps, State> {
   }
 
   handleFileSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length) {
+    const { files } = e.target;
+    if (files && files.length) {
+      const reshapedFiles = [];
+
+      /* tslint:disable-next-line */
+      for (let i = 0; i < files.length; i++) {
+        reshapedFiles.push({
+          name: files[i].name,
+          /* The file! These can be quite big */
+          file: files[i],
+          /* Used to keep track of initial upload status */
+          uploading: false,
+          /* Used to ensure that the file doesn't get uploaded again */
+          uploaded: false,
+        });
+      }
+
       this.setState({
         files: [
           ...this.state.files,
-          {
-            name: e.target.files[0].name,
-            /* The file! These can be quite big */
-            file: e.target.files[0],
-            /* Used to keep track of initial upload status */
-            uploading: false,
-            /* Used to ensure that the file doesn't get uploaded again */
-            uploaded: false,
-          }
+          ...reshapedFiles
         ]
       }, () => {
         if (this.inputRef.current) {
@@ -245,6 +253,7 @@ class TicketReply extends React.Component<CombinedProps, State> {
         <input
             ref={this.inputRef}
             type="file"
+            multiple
             id="attach-file"
             style={{ display: 'none' }}
             onChange={this.handleFileSelected}
