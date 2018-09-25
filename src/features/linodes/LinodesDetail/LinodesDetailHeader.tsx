@@ -106,6 +106,7 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
     const { linode } = this.props; 
     startMigration(linode.id)
       .then((_) => {
+        // A 200 response indicates that the mqueue was successful.
         sendToast("Your Linode has been entered into the migration queue.");
       })
       .catch((_) => {
