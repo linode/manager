@@ -101,6 +101,7 @@
     "zxcvbn": "^4.4.2"
   },
   "scripts": {
+    "axe": "npx wdio ./e2e/config/wdio.axe.conf.js",
     "docker:e2e": "docker-compose -f integration-test.yml up --build --exit-code-from manager-e2e",
     "docker:test": "docker build -f Dockerfile . -t 'manager' && docker run -it --rm -v $(pwd)/src:/src/src manager test",
     "docker:local": "docker build -f Dockerfile . -t 'manager' && docker run -it --rm -p 3000:3000 -v $(pwd)/src:/src/src manager start",
@@ -162,6 +163,7 @@
     "@types/xml2js": "^0.4.3",
     "@types/yup": "^0.24.9",
     "@types/zxcvbn": "^4.4.0",
+    "axe-core": "^3.1.1",
     "babel-core": "^6.26.0",
     "babel-preset-react-app": "^3.1.1",
     "csstype": "^2.5.5",
