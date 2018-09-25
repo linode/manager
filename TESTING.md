@@ -136,3 +136,20 @@ live in `src/components/ComponentName/ComponentName.spec.js`. The WDIO config li
     # OR if Yarn is installed:
 
     yarn docker:e2e
+
+
+# Accessibility Testing
+
+The axe-core accessibility testing script has been integrated into the webdriverIO-based testing framework to enable automated accessibility testing. At present, the script merely navigates to all routes described in `e2e/constants.js`, loads the page and runs the accessibility tests. 
+
+##### Dependencies
+
+* Same as E2E Manager tests
+
+#### Run Suite
+
+     yarn && yarn start # Starts the local development environment
+     yarn axe
+
+The test results will be saved as a JSON file with Critical accessibility violations appearing at the top of the list.
+
