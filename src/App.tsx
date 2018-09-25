@@ -9,7 +9,6 @@ import 'typeface-lato';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-import BetaNotification from 'src/BetaNotification';
 import DefaultLoader from 'src/components/DefaultLoader';
 import DocsSidebar from 'src/components/DocsSidebar';
 import { DocumentTitleSegment, withDocumentTitleProvider } from 'src/components/DocumentTitle';
@@ -27,6 +26,7 @@ import { getRegions } from 'src/services/misc';
 import { requestProfile } from 'src/store/reducers/resources/profile';
 import composeState from 'src/utilities/composeState';
 import { notifications, theme as themeStorage } from 'src/utilities/storage';
+import WelcomeBanner from 'src/WelcomeBanner';
 
 shim(); // allows for .finally() usage
 
@@ -152,7 +152,7 @@ interface Props {
 
 interface State {
   menuOpen: boolean;
-  betaNotification: boolean;
+  welcomeBanner: boolean;
   typesContext: WithTypesContext;
   regionsContext: WithRegionsContext;
 }
@@ -182,7 +182,7 @@ export class App extends React.Component<CombinedProps, State> {
 
   state: State = {
     menuOpen: false,
-    betaNotification: false,
+    welcomeBanner: false,
     typesContext: {
       lastUpdated: 0,
       loading: false,
@@ -240,8 +240,8 @@ export class App extends React.Component<CombinedProps, State> {
   componentDidMount() {
     const { getProfile } = this.props.actions;
 
-    if (notifications.beta.get() === 'open') {
-      this.setState({ betaNotification: true });
+    if (notifications.welcome.get() === 'open') {
+      this.setState({ welcomeBanner: true });
     }
 
     getProfile();
@@ -259,9 +259,9 @@ export class App extends React.Component<CombinedProps, State> {
     });
   }
 
-  closeBetaNotice = () => {
-    this.setState({ betaNotification: false });
-    notifications.beta.set('closed');
+  closeWelcomeBanner = () => {
+    this.setState({ welcomeBanner: false });
+    notifications.welcome.set('closed');
   }
 
   render() {
@@ -330,9 +330,9 @@ export class App extends React.Component<CombinedProps, State> {
 
                   </main>
                   <Footer />
-                  <BetaNotification
-                    open={this.state.betaNotification}
-                    onClose={this.closeBetaNotice}
+                  <WelcomeBanner
+                    open={this.state.welcomeBanner}
+                    onClose={this.closeWelcomeBanner}
                     data-qa-beta-notice />
                   <ToastNotifications />
                   <VolumeDrawer />
