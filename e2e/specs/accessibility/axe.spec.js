@@ -2,7 +2,7 @@ const { constants } = require('../../constants');
 
 import { flatten, sortBy } from 'lodash';
 import { axeTest } from '../../utils/accessibility';
-import { writeFileSync } from 'fs';
+import { writeFileSync, existsSync, mkdirSync } from 'fs';
 
 describe('Example Accessibility Test', () => {
     it('should run an axe-core accessibility test', () => {
@@ -14,7 +14,8 @@ describe('Example Accessibility Test', () => {
         }
 
         const routesArray = removeDuplicateRoutes(flatten(Object.values(constants.routes).map(el => {if (typeof el === "object") { return Object.values(el) } return el;})));
-        const resultsFilePath = `./e2e/test-results/${new Date().getTime()}-axe-results.json`;
+        const resultsPath = './e2e/test-results/';
+        const resultsFile = `${new Date().getTime()}-axe-results.json`;
         
         let results = [];
 
@@ -28,7 +29,12 @@ describe('Example Accessibility Test', () => {
 
         results = sortBy(sortBy(results, o => o.impact), o => o.impact !== 'critical');
 
-        writeFileSync(resultsFilePath, JSON.stringify(results));
-        console.log(`\nAccessibility test results saved to ${resultsFilePath} !`);
+
+        if (!existsSync(resultsPath)) {
+            mkdirSync(resultsPath);
+        }
+
+        writeFileSync(resultsPath+resultsFile, JSON.stringify(results));
+        console.log(`\nAccessibility test results saved to ${resultsPath+resultsFile} !`);
     });
 });
