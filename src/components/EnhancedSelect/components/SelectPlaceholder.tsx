@@ -23,6 +23,7 @@ const SelectPlaceholder: React.StatelessComponent<CombinedProps> = (props) => {
       data-qa-multi-select={props.isMulti ? props.selectProps.placeholder : false}
       className={props.classes.root}
       {...props.innerProps}
+      data-qa-enhanced-select
     >
       {props.children}
     </Typography>
