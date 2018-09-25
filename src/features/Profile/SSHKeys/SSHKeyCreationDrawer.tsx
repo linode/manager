@@ -134,7 +134,7 @@ export class SSHKeyCreationDrawer extends React.PureComponent<CombinedProps, Sta
   };
 
   handleKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ sshKey: e.target.value || '' });
+    this.setState({ sshKey: e.target.value.trim() || '' });
   };
 }
 
