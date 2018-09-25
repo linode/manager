@@ -1,6 +1,6 @@
 import { Location } from 'history';
 import * as moment from 'moment';
-import { allPass, any, compose, filter, has, Lens, lensPath, pathEq, pathOr, set } from 'ramda';
+import { allPass, compose, filter, has, Lens, lensPath, pathEq, pathOr, set } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
