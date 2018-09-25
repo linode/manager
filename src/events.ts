@@ -17,6 +17,8 @@ let filterDatestamp = createInitialDatestamp();
 const pollIDs: { [key: string]: boolean } = {};
 
 const initialPollInterval = 2000;
+
+
 export let eventRequestDeadline = Date.now();
 export let currentPollIntervalMultiplier = 1;
 
@@ -36,6 +38,10 @@ export const generateInFilter = (keyName: string, arr: any[]) => {
 }
 
 export const generatePollingFilter = (datestamp: string, pollIDsAsArr: string[]) => {
+  /**
+   * If we have events that we are polling for
+   * do an "or" X-Filter
+   */
   return pollIDsAsArr.length ?
     {
       '+or': [
@@ -64,15 +70,39 @@ export const setInitialEvents = when(
     try {
       return when(
         compose(
+          /**
+           * checking if the datestamp returned below is null
+           */
           ifElse(
             isNil,
             () => false,
+            /**
+             * condition to check whether the X-Filter
+             * time stamp is past the beginning of time.
+             * If this condition returns true (AKA is the beginning of time)
+             * add the _ititial flag to each event
+             */
             compose(not, isPasttheBeginningOfTime),
           ),
+          /**
+           * Get the current dateTime filter, again depending on what is returned
+           * from generatePollingFilter
+           */
           either(path(['created', '+gt']) as any, path(['+or', 0, 'created', '+gt']) as any),
+          /**
+           * If the X-Filter is not empty, parse the filter as an object
+           * dictated by what is returned by generatePollingFilter
+           */
           when(compose(not, isEmpty), v => JSON.parse(v)),
+          /**
+           * we're looking at the current /event filter
+           */
           path(['config', 'headers', 'X-Filter']),
         ),
+        /**
+         * set an _ititial property on each event if the above
+         * condition is satisfied
+         */
         over(lensPath(['data', 'data']), map(assoc('_initial', true))),
       )(response);
 
@@ -96,9 +126,16 @@ export const requestEvents = () => {
         */
 
       if (data[0]) {
+        /**
+         * Get the created date of the most recent event
+         */
         const newDatestamp = moment(data[0].created);
         const currentDatestamp = moment(filterDatestamp);
         if (newDatestamp > currentDatestamp) {
+          /**
+           * set the X-Filter timeStamp to the most recent event's
+           * created timestamp so that we're getting more recent events
+           */
           filterDatestamp = newDatestamp.format(dateFormat);
         }
       }
@@ -115,7 +152,8 @@ export const requestEvents = () => {
           linodeEvent.percent_complete !== null
           && linodeEvent.percent_complete < 100
 
-          /** If a Linode is deleted the /events end-points sends updated regarding shutting down
+          /** 
+           * If a Linode is deleted the /events end-points sends updated regarding shutting down
            * and eventuallly deletion. Subscribers of this stream want active Linodes only, and
            * if provided a "deleted" Linode ID will result in 404s until the events stop.
            */
@@ -131,8 +169,19 @@ export const requestEvents = () => {
     });
 }
 
+/**
+ * Executes every 999 ms, as per described by the
+ * initialPollInterval / 2 - 1
+ */
 setInterval(
   () => {
+    /**
+     * The events request deadline is a time limit for the events to re-poll
+     * the deadline is updated every interval (dictated by the currentPollIntervalMultiplier)
+     * 
+     * example: if the multiplier is 16, the deadline will be 32 seconds in the future
+     * as dictated by initialPollInterval * currentPollIntervalMultiplier (the initialPollInterval will not change)
+     */
     if (Date.now() > eventRequestDeadline) {
       requestEvents();
 
