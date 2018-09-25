@@ -539,7 +539,7 @@ const accountContext = withAccount((context) => ({
   accountLoading: context.loading,
   balance: context.data && context.data.balance,
   request: context.request,
-  lastFour: context.data && context.data.credit_card.last_four,
+  lastFour: context.data && context.data.credit_card.last_four || '',
 }));
 
 const enhanced = compose(styled, accountContext);
