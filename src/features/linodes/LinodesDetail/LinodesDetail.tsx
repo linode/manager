@@ -22,14 +22,18 @@ import notifications$ from 'src/notifications';
 import { Requestable } from 'src/requestableContext';
 import { getImage } from 'src/services/images';
 import {
-  getLinode, getLinodeConfigs, getLinodeDisks,
-  getType, renameLinode, startMutation
+  getLinode,
+  getLinodeConfigs,
+  getType,
+  renameLinode,
+  startMutation,
 } from 'src/services/linodes';
+import { _getLinodeDisks } from 'src/store/reducers/features/linodeDetail/disks';
 import { _getLinodeVolumes } from 'src/store/reducers/features/linodeDetail/volumes';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-import { ConfigsProvider, DisksProvider, ImageProvider, LinodeProvider } from './context';
+import { ConfigsProvider, ImageProvider, LinodeProvider } from './context';
 import LinodeDetailErrorBoundary from './LinodeDetailErrorBoundary';
 import LinodesDetailHeader from './LinodesDetailHeader';
 import MutateDrawer from './MutateDrawer';
@@ -60,7 +64,6 @@ interface MutateDrawer {
 interface State {
   context: {
     configs: Requestable<Linode.Config[]>;
-    disks: Requestable<Linode.Disk[]>;
     image: Requestable<Linode.Image>;
     linode: Requestable<Linode.Linode>;
   };
@@ -81,7 +84,6 @@ type CombinedProps = DispatchProps & RouteProps;
 
 const labelInputLens = lensPath(['labelInput']);
 const configsLens = lensPath(['context', 'configs']);
-const disksLens = lensPath(['context', 'disks']);
 const imageLens = lensPath(['context', 'image']);
 const linodeLens = lensPath(['context', 'linode']);
 
@@ -92,13 +94,6 @@ const L = {
     errors: compose(configsLens, lensPath(['errors'])) as Lens,
     lastUpdated: compose(configsLens, lensPath(['lastUpdated'])) as Lens,
     loading: compose(configsLens, lensPath(['loading'])) as Lens,
-  },
-  disks: {
-    data: compose(disksLens, lensPath(['data'])) as Lens,
-    disks: disksLens,
-    errors: compose(disksLens, lensPath(['errors'])) as Lens,
-    lastUpdated: compose(disksLens, lensPath(['lastUpdated'])) as Lens,
-    loading: compose(disksLens, lensPath(['loading'])) as Lens,
   },
   image: {
     data: compose(imageLens, lensPath(['data'])) as Lens,
@@ -172,38 +167,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
           this.composeState(
             set(L.configs.data, updater(configs)),
-          );
-        },
-      },
-      disks: {
-        lastUpdated: 0,
-        loading: true,
-        request: () => {
-          this.setState(set(L.disks.loading, true));
-
-          return getLinodeDisks(this.props.match.params.linodeId!)
-            .then(({ data }) => {
-              this.composeState(
-                set(L.disks.loading, false),
-                set(L.disks.data, data),
-                set(L.disks.lastUpdated, Date.now()),
-              );
-              return data;
-            })
-            .catch((r) => {
-              this.composeState(
-                set(L.disks.lastUpdated, Date.now()),
-                set(L.disks.loading, false),
-                set(L.disks.errors, r)
-              );
-            });
-        },
-        update: (updater) => {
-          const { data: disks } = this.state.context.disks;
-          if (!disks) { return }
-
-          this.composeState(
-            set(L.disks.data, updater(disks)),
           );
         },
       },
@@ -377,7 +340,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
   componentDidMount() {
     this.mounted = true;
 
-    const { context: { configs, disks, image, linode } } = this.state;
+    const { context: { configs, image, linode } } = this.state;
     const mountTime = moment().subtract(5, 'seconds');
     const { actions, match: { params: { linodeId } } } = this.props;
 
@@ -385,7 +348,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       .filter((e) => !e._initial)
       .filter(pathEq(['entity', 'id'], Number(this.props.match.params.linodeId)))
       .filter((e) => e.status === 'finished' && e.action === 'disk_resize')
-      .subscribe((e) => disks.request())
+      .subscribe((e) => actions.getLinodeDisks())
 
     this.eventsSubscription = events$
       .filter(pathEq(['entity', 'id'], Number(this.props.match.params.linodeId)))
@@ -393,7 +356,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       .debounce(() => Observable.timer(1000))
       .subscribe((linodeEvent) => {
         configs.request();
-        disks.request();
+        actions.getLinodeDisks();
         actions.getLinodeVolumes();
         linode.request(linodeEvent)
           .then((l) => {
@@ -427,7 +390,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
         this.setState({ notifications }));
 
     configs.request();
-    disks.request();
     actions.getLinodeVolumes();
     linode.request()
       .then((l) => {
@@ -579,18 +541,10 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
           lastUpdated: configsLastUpdated,
           errors: configsErrors,
         },
-        disks: {
-          data: disks,
-          lastUpdated: disksLastUpdated,
-          errors: disksErrors,
-        },
       },
     } = this.state;
 
-    const initialLoad =
-      linodeLastUpdated === 0 ||
-      configsLastUpdated === 0 ||
-      disksLastUpdated === 0;
+    const initialLoad = linodeLastUpdated === 0 || configsLastUpdated === 0;
 
     if (initialLoad) {
       return <CircleProgress />
@@ -620,26 +574,14 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       return <ErrorState errorText="Error while loading configurations." />;
     }
 
-    if (!disks) {
-      throw Error('Disks undefined on LinodeLanding.');
-    }
-
-    if (disksErrors) {
-      reportException(
-        Error('Error loading disks data.'),
-        disksErrors,
-      )
-      return <ErrorState errorText="Error while loading disks." />;
-    }
-
     return (
       <React.Fragment>
         <ConfigsProvider value={this.state.context.configs}>
-          <DisksProvider value={this.state.context.disks}>
+          <React.Fragment>
             <ImageProvider value={this.state.context.image}>
               <LinodeProvider value={this.state.context.linode}>
                 <React.Fragment>
-                  <LinodesDetailHeader 
+                  <LinodesDetailHeader
                     showPendingMutation={this.state.showPendingMutation}
                     labelInput={{
                       label: labelInput.label,
@@ -690,7 +632,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                 </React.Fragment>
               </LinodeProvider>
             </ImageProvider>
-          </DisksProvider>
+          </React.Fragment>
         </ConfigsProvider>
       </React.Fragment>
     );
@@ -704,6 +646,7 @@ const reloadable = reloadableWithRouter<CombinedProps, MatchProps>((routePropsOl
 interface DispatchProps {
   actions: {
     getLinodeVolumes: () => void;
+    getLinodeDisks: () => void;
   },
 }
 
@@ -714,7 +657,10 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, RouteProps> = (dispa
     actions: {
       getLinodeVolumes: typeof linodeId === 'string'
         ? () => dispatch(_getLinodeVolumes(linodeId))
-        : () => null
+        : () => null,
+      getLinodeDisks: typeof linodeId === 'string'
+        ? () => dispatch(_getLinodeDisks(linodeId))
+        : () => null,
     },
   };
 };

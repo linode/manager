@@ -14,11 +14,6 @@ export const withConfigs = createHOCForConsumer<Linode.Config[]>(configsContext.
 export const ConfigsProvider = configsContext.Provider;
 export const ConfigsConsumer = configsContext.Consumer;
 
-const disksContext = React.createContext<Requestable<Linode.Disk[]>>({...initialState});
-export const withDisks = createHOCForConsumer<Linode.Disk[]>(disksContext.Consumer, 'WithDisks');
-export const DisksProvider = disksContext.Provider;
-export const DisksConsumer = disksContext.Consumer;
-
 const linodeContext = React.createContext<Requestable<Linode.Linode>>({...initialState});
 export const withLinode = createHOCForConsumer<Linode.Linode>(linodeContext.Consumer, 'WithLinode');
 export const LinodeProvider = linodeContext.Provider;

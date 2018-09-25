@@ -1,5 +1,6 @@
 import { compose, lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
+import { connect, MapStateToProps } from 'react-redux';
 
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
@@ -27,7 +28,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 interface Props {
   linodeId: number;
   linodeLabel: string;
-  linodeDisks: Linode.Disk[];
   linodeStatus: string;
 }
 
@@ -40,7 +40,9 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props
+  & StateProps
+  & WithStyles<ClassNames>;
 
 class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> {
   constructor(props: CombinedProps) {
@@ -187,7 +189,18 @@ const styled = withStyles(styles, { withTheme: true });
 
 const errorBoundary = PanelErrorBoundary({ heading: 'Reset Root Password' });
 
+interface StateProps {
+  linodeDisks: Linode.Disk[]
+}
+
+const mapStateToProps: MapStateToProps<StateProps, never, ApplicationState> = (state) => ({
+  linodeDisks: state.features.linodeDetail.disks.data || [],
+});
+
+const connected = connect(mapStateToProps);
+
 export default compose(
   errorBoundary,
   styled,
+  connected,
 )(LinodeSettingsPasswordPanel) as React.ComponentType<Props>;

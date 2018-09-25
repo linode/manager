@@ -1,5 +1,6 @@
 import { compose, path } from 'ramda';
 import * as React from 'react';
+import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
@@ -19,9 +20,10 @@ import Notice from 'src/components/Notice';
 import Table from 'src/components/Table';
 import { resetEventsPolling } from 'src/events';
 import ImagesDrawer, { modes } from 'src/features/Images/ImagesDrawer';
-import { withDisks, withLinode } from 'src/features/linodes/LinodesDetail/context';
+import { withLinode } from 'src/features/linodes/LinodesDetail/context';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { createLinodeDisk, deleteLinodeDisk, resizeLinodeDisk, updateLinodeDisk } from 'src/services/linodes';
+import { handleUpdate } from 'src/store/reducers/features/linodeDetail/disks';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import LinodeDiskActionMenu from './LinodeDiskActionMenu';
@@ -36,13 +38,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     marginBottom: theme.spacing.unit * 2,
   },
 });
-
-interface DiskContextProps {
-  disksUpdate: (fn: (disks: Linode.Disk[]) => Linode.Disk[]) => void,
-  disks: Linode.Disk[];
-  disksErrors: Linode.ApiFieldError[];
-  disksLoading: boolean;
-}
 
 interface LinodeContextProps {
   linodeError: Linode.ApiFieldError[],
@@ -87,7 +82,9 @@ interface State {
   confirmDelete: ConfirmDeleteState,
 }
 
-type CombinedProps = DiskContextProps
+type CombinedProps =
+  StateProps
+  & DispatchProps
   & LinodeContextProps
   & WithStyles<ClassNames>;
 
@@ -378,7 +375,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
   }
 
   resizeDisk = () => {
-    const { linodeId, disksUpdate } = this.props;
+    const { actions, linodeId } = this.props;
     const { diskId, fields: { size } } = this.state.drawer;
     if (!linodeId || !diskId) { return; }
 
@@ -389,7 +386,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
         this.setDrawer(LinodeDisks.defaultDrawerState);
         sendToast(`Disk scheduled for resizing.`);
         resetEventsPolling();
-        disksUpdate((disks) => disks.map((disk) => disk.id === data.id ? data : disk));
+        actions.disksUpdate((disks) => disks.map((disk) => disk.id === data.id ? data : disk));
       })
       .catch((error) => {
         const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'], error);
@@ -402,7 +399,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
   };
 
   createDisk = () => {
-    const { linodeId, disksUpdate } = this.props;
+    const { actions, linodeId } = this.props;
     const { label, size, filesystem } = this.state.drawer.fields;
     if (!linodeId) { return; }
 
@@ -415,7 +412,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     })
       .then(({ data }) => {
         this.setDrawer(LinodeDisks.defaultDrawerState);
-        disksUpdate((disks) => ([...disks, data]));
+        actions.disksUpdate((disks) => ([...disks, data]));
       })
       .catch((error) => {
         const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'], error);
@@ -428,7 +425,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
   }
 
   renameDisk = () => {
-    const { linodeId, disksUpdate } = this.props;
+    const { actions, linodeId } = this.props;
     const { diskId, fields: { label } } = this.state.drawer;
     if (!linodeId || !diskId) { return; }
 
@@ -437,7 +434,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     updateLinodeDisk(linodeId, diskId, { label })
       .then(({ data }) => {
         this.setDrawer(LinodeDisks.defaultDrawerState);
-        disksUpdate((disks) => disks.map((disk) => disk.id === data.id ? data : disk));
+        actions.disksUpdate((disks) => disks.map((disk) => disk.id === data.id ? data : disk));
       })
       .catch((error) => {
         const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'], error);
@@ -452,14 +449,14 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
   deleteDisk = () => {
     this.setConfirmDelete({ submitting: true, errors: undefined, });
 
-    const { linodeId, disksUpdate } = this.props;
+    const { actions, linodeId } = this.props;
     const { id: diskId } = this.state.confirmDelete;
     if (!linodeId || !diskId) { return; }
 
     deleteLinodeDisk(linodeId, diskId)
       .then(() => {
         this.setConfirmDelete({ open: false, errors: undefined });
-        disksUpdate((disks) => disks.filter((v) => v.id !== diskId));
+        actions.disksUpdate((disks) => disks.filter((v) => v.id !== diskId));
       })
       .catch((error) => {
         const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'], error);
@@ -534,26 +531,35 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const diskContext = withDisks((context) => {
-  const {
-    data: disks,
-    loading,
-    errors,
-    lastUpdated,
-    update,
-  } = context;
+interface DispatchProps {
+  actions: {
+    disksUpdate: (fn: (disks: Linode.Disk[]) => Linode.Disk[]) => void,
+  },
+}
 
-  if (lastUpdated === 0 && loading) {
-    return { disksLoading: true, }
-  }
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, never> = (dispatch) => ({
+  actions: {
+    disksUpdate: (fn) => dispatch(handleUpdate(fn)),
+  },
+});
+
+interface StateProps {
+  disks: Linode.Disk[];
+  disksErrors?: Linode.ApiFieldError[] | Error;
+  disksLoading: boolean;
+}
+
+const mapStateToProps: MapStateToProps<StateProps, never, ApplicationState> = (state) => {
+  const { data, error, loading } = state.features.linodeDetail.disks;
 
   return {
-    disksLoading: false,
-    diskErrors: errors,
-    disks,
-    disksUpdate: update,
+    disks: data || [],
+    disksErrors: error,
+    disksLoading: loading,
   };
-});
+};
+
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
 const linodeContext = withLinode((context) => ({
   linodeLoading: context.loading,
@@ -563,6 +569,10 @@ const linodeContext = withLinode((context) => ({
   linodeStatus: path(['data', 'status'], context)
 }));
 
-const enhanced = compose(styled, linodeContext, diskContext);
+const enhanced = compose(
+  styled,
+  linodeContext,
+  connected,
+);
 
 export default enhanced(LinodeDisks);

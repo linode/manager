@@ -1,5 +1,6 @@
 import { allPass, append, assoc, compose, defaultTo, filter, findIndex, lensPath, map, prop, propEq, set } from 'ramda';
 import * as React from 'react';
+import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import 'typeface-lato';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
@@ -8,6 +9,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
@@ -17,11 +19,12 @@ import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import Table from 'src/components/Table';
 import { events$ } from 'src/events';
-import { withConfigs, withDisks, withLinode } from 'src/features/linodes/LinodesDetail/context';
+import { withConfigs, withLinode } from 'src/features/linodes/LinodesDetail/context';
 import { ExtendedDisk, ExtendedVolume } from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
 import { genEvent } from 'src/features/linodes/LinodesLanding/powerActions';
 import { createLinodeConfig, deleteLinodeConfig, updateLinodeConfig } from 'src/services/linodes';
 import { getVolumes } from 'src/services/volumes';
+import { _getLinodeDisks } from 'src/store/reducers/features/linodeDetail/disks';
 import createDevicesFromStrings, { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
 import createStringsFromDevices from 'src/utilities/createStringsFromDevices';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -44,8 +47,9 @@ interface PromiseLoaderProps {
 }
 
 type CombinedProps = PromiseLoaderProps
+  & StateProps
+  & DispatchProps
   & LinodeContext
-  & DiskContext
   & ConfigsContext
   & WithStyles<ClassNames>;
 
@@ -127,10 +131,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
     linodeConfigs: this.props.linodeConfigs,
     linodeStatus: this.props.linodeStatus,
     devices: {
-      disks: compose(
-        map<Linode.Disk, ExtendedDisk>(disk => assoc('_id', `disk-${disk.id}`, disk)),
-        defaultTo([]),
-      )(this.props.linodeDisks),
+      disks: this.props.linodeDisks,
       volumes: this.props.volumes.response || [],
     },
     confirmDelete: {
@@ -159,7 +160,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
     const { configDrawer } = this.state;
     this.setState({ configDrawer: { ...configDrawer, kernel: e.target.value } })
   }
-  
+
   handleChangeRunLevel = (e: any, value: 'binbash' | 'default' | 'single') => {
     const { configDrawer } = this.state;
     this.setState({ configDrawer: { ...configDrawer, run_level: value } })
@@ -200,20 +201,20 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
           </Grid>
         </Grid>
         <this.linodeConfigsTable />
-          <LinodeConfigDrawer
-            mode={'create'}
-            availableDevices={this.state.devices}
-            {...configDrawer}
-            onChange={(key, value) => this.setConfigDrawer({ [key]: value })}
-            handleChangeLabel={this.handleChangeLabel}
-            handleChangeComments={this.handleChangeComments}
-            handleChangeVirtMode={this.handleChangeVirtMode}
-            handleChangeKernel={this.handleChangeKernel}
-            handleChangeRunLevel={this.handleChangeRunLevel}
-            toggleBootHelpers={this.handleToggleBootHelpers}
-            onClose={this.resetConfigDrawer}
-            onSubmit={this.onConfigSubmit}
-          />
+        <LinodeConfigDrawer
+          mode={'create'}
+          availableDevices={this.state.devices}
+          {...configDrawer}
+          onChange={(key, value) => this.setConfigDrawer({ [key]: value })}
+          handleChangeLabel={this.handleChangeLabel}
+          handleChangeComments={this.handleChangeComments}
+          handleChangeVirtMode={this.handleChangeVirtMode}
+          handleChangeKernel={this.handleChangeKernel}
+          handleChangeRunLevel={this.handleChangeRunLevel}
+          toggleBootHelpers={this.handleToggleBootHelpers}
+          onClose={this.resetConfigDrawer}
+          onSubmit={this.onConfigSubmit}
+        />
 
         <ConfirmationDialog
           title="Confirm Delete"
@@ -227,6 +228,10 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
         </ConfirmationDialog>
       </React.Fragment>
     );
+  }
+
+  componentDidMount() {
+    this.props.actions.getLinodeDisks();
   }
 
   componentWillReceiveProps(nextProps: CombinedProps) {
@@ -259,7 +264,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
 
   openConfigDrawerForCreation = () => this.setConfigDrawer({
     open: true,
-  });;
+  });
 
   resetConfigDrawer = () => this.setConfigDrawer(this.defaultConfigDrawerState);
 
@@ -475,8 +480,8 @@ const preloaded = PromiseLoader<LinodeContext>({
           ])),
           map(volume => assoc('_id', `volume-${volume.id}`, volume)),
           prop('data'),
-      ),
-  ),
+        ),
+    ),
 });
 
 interface LinodeContext {
@@ -497,14 +502,6 @@ const linodeContext = withLinode<LinodeContext>((context) => ({
   linodeStatus: context.data!.status,
 }));
 
-interface DiskContext {
-  linodeDisks: Linode.Disk[];
-};
-
-const disksContext = withDisks<DiskContext>((context) => ({
-  linodeDisks: context.data,
-}));
-
 interface ConfigsContext {
   linodeConfigs: Linode.Config[];
 }
@@ -513,17 +510,51 @@ const configsContext = withConfigs<ConfigsContext>((context) => ({
   linodeConfigs: context.data,
 }));
 
-const contexts = compose<any, any, any, any>(
+const contexts = compose<any, any, any>(
   linodeContext,
-  disksContext,
   configsContext,
 );
 
-const enhanced = compose<any, any, any, any, any>(
+interface DispatchProps {
+  actions: {
+    getLinodeDisks: () => void;
+  },
+}
+
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, LinodeContext> = (dispatch, ownProps) => {
+  return {
+    actions: {
+      getLinodeDisks: () => dispatch(_getLinodeDisks(ownProps.linodeId))
+    },
+  };
+};
+
+interface StateProps {
+  linodeDisks: ExtendedDisk[];
+  linodeDisksError?: Error | Linode.ApiFieldError[];
+  linodeDisksLoading: boolean;
+  linodeDisksLastUpdated: number;
+};
+
+const mapStateToProps: MapStateToProps<StateProps, LinodeContext, ApplicationState> = (state) => {
+  const { data, error, loading, lastUpdated } = state.features.linodeDetail.disks;
+
+  return {
+    linodeDisks: extendLinodeDisks(data),
+    linodeDisksError: error,
+    linodeDisksLoading: loading,
+    linodeDisksLastUpdated: lastUpdated,
+  }
+};
+
+const connected = connect(mapStateToProps, mapDispatchToProps);
+
+const enhanced = compose(
   errorBoundary,
-  preloaded,
-  styled,
   contexts,
+  preloaded,
+  connected,
+  styled,
 );
 
 export default enhanced(LinodeConfigs);
@@ -535,3 +566,9 @@ function replaceById<T>(data: T, id: number | string, list: T[]): T[] {
 
   return set(lensPath([idx]), data, list);
 }
+
+const extendLinodeDisks: (d?: Linode.Disk[]) => ExtendedDisk[] =
+  compose(
+    map<Linode.Disk, ExtendedDisk>(disk => assoc('_id', `disk-${disk.id}`, disk)),
+    defaultTo([]),
+  );
