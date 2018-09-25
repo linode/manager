@@ -50,7 +50,7 @@ const NotificationsAndUpgradePanel = (props: CombinedProps) => {
       {
         (props.notifications || []).map((n, idx) =>
           n.type === 'migration_scheduled'
-          ? <MigrationNotification key={idx} text={n.message} when={n.when} onClick={props.handleMigration} />
+          ? <MigrationNotification key={idx} text={n.message} onClick={props.handleMigration} />
           : <ProductNotification key={idx} severity={n.severity} text={n.message} />)
       }
     </React.Fragment>
