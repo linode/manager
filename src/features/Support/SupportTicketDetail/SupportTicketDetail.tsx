@@ -1,6 +1,6 @@
 import * as Bluebird from 'bluebird';
 import * as classNames from 'classnames';
-import { compose, concat, path, pathOr } from 'ramda';
+import { compose, concat, path, pathOr, slice } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
@@ -127,6 +127,7 @@ interface State {
   errors?: Linode.ApiFieldError[];
   replies?: Linode.SupportReply[];
   ticket?: Linode.SupportTicket;
+  showMoreAttachments: boolean;
 }
 
 type CombinedProps = RouteProps & StateProps & WithStyles<ClassNames>;
@@ -143,6 +144,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
   mounted: boolean = false;
   state: State = {
     loading: true,
+    showMoreAttachments: false,
   }
 
   static docs: Linode.Doc[] = [
@@ -296,32 +298,57 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
     return (
       <React.Fragment>
         {attachments.length !== 0 &&
-        <Grid item xs={12} container justify="flex-start" className="px0">
-          <Grid item xs={12}>
-            <Typography variant="subheading">Attachments</Typography>
+          <Grid item xs={12} container justify="flex-start" className="px0">
+            <Grid item xs={12}>
+              <Typography variant="subheading">Attachments</Typography>
+            </Grid>
+            <Grid item xs={12} className={classes.attachmentPaperWrapper}>
+              {this.renderAttachmentsRows(slice(0, 5, attachments), icons)}
+              {
+                (attachments.length > 5) &&
+                <Typography
+                  onClick={this.toggleShowMoreAttachments}
+                  variant="subheading">
+                  {!this.state.showMoreAttachments
+                    ? "Show More Files"
+                    : "Show Less Files"
+                  }
+                </Typography>
+              }
+              {(this.state.showMoreAttachments) &&
+                this.renderAttachmentsRows(slice(5, Infinity, attachments), icons)
+              }
+            </Grid>
           </Grid>
-          <Grid item xs={12} className={classes.attachmentPaperWrapper}>
-            <Paper className={classes.attachmentPaper}>
-                {attachments.map((attachment, idx) => {
-                  return (
-                    <Grid container wrap="nowrap" key={idx} className={classes.attachmentRow}>
-                      <Grid item className={classes.attachmentIcon}>
-                        {icons[idx]}
-                      </Grid>
-                      <Grid item>
-                        <Typography component="span">
-                          {attachment}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  )
-                })}
-            </Paper>
-          </Grid>
-        </Grid>
         }
       </React.Fragment>
     );
+  }
+
+  toggleShowMoreAttachments = () => {
+    this.setState({ showMoreAttachments: !this.state.showMoreAttachments });
+  }
+
+  renderAttachmentsRows = (attachments: string[], icons: JSX.Element[]) => {
+    const { classes } = this.props;
+    return (
+      <Paper className={classes.attachmentPaper}>
+        {attachments.map((attachment, idx) => {
+          return (
+            <Grid container wrap="nowrap" key={idx} className={classes.attachmentRow}>
+              <Grid item className={classes.attachmentIcon}>
+                {icons[idx]}
+              </Grid>
+              <Grid item>
+                <Typography component="span">
+                  {attachment}
+                </Typography>
+              </Grid>
+            </Grid>
+          )
+        })}
+      </Paper>
+    )
   }
 
   renderReplies = (replies: Linode.SupportReply[]) => {
