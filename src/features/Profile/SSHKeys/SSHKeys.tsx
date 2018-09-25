@@ -95,7 +95,7 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
               <TableRow>
                 <TableCell data-qa-label-column>Label</TableCell>
                 <TableCell data-qa-key-column>Key</TableCell>
-                <TableCell data-qa-created-column>Created</TableCell> 
+                <TableCell data-qa-created-column>Created</TableCell>
                 <TableCell />
               </TableRow>
             </TableHead>
@@ -230,7 +230,7 @@ const styled = withStyles(styles, { withTheme: true });
 
 const documented = setDocs(SSHKeys.docs);
 
-const updatedRequest = (p: any, f: any) => getSSHKeys(p, f)
+const updatedRequest = (ownProps: any, params: any, filters: any) => getSSHKeys(params, filters)
   .then((response) => ({
     ...response,
     data: updateResponseData(response.data),
