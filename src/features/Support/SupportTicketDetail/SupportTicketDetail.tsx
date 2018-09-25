@@ -23,6 +23,7 @@ import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
 import { getTicket, getTicketReplies, SupportTicket } from 'src/services/support';
 import { getGravatarUrlFromHash } from 'src/utilities/gravatar';
 
@@ -99,9 +100,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   attachmentPaper: {
     padding: `
-      ${theme.spacing.unit * 2}px
+      12px
       ${theme.spacing.unit * 3}px
-      ${theme.spacing.unit}px
+      0
     `,
     overflowX: 'auto',
     width: 500,
@@ -306,17 +307,14 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
               {this.renderAttachmentsRows(slice(0, 5, attachments), icons)}
               {
                 (attachments.length > 5) &&
-                <Typography
-                  onClick={this.toggleShowMoreAttachments}
-                  variant="subheading">
-                  {!this.state.showMoreAttachments
+                <ShowMoreExpansion
+                  name={!this.state.showMoreAttachments
                     ? "Show More Files"
                     : "Show Less Files"
                   }
-                </Typography>
-              }
-              {(this.state.showMoreAttachments) &&
-                this.renderAttachmentsRows(slice(5, Infinity, attachments), icons)
+                >
+                  {this.renderAttachmentsRows(slice(5, Infinity, attachments), icons)}
+                </ShowMoreExpansion>
               }
             </Grid>
           </Grid>
