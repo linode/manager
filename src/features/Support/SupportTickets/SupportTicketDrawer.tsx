@@ -368,7 +368,7 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
             color="primary"
             data-qa-submit
           >
-            Submit
+            Open Ticket
           </Button>
           <Button
             onClick={this.close}
