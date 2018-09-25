@@ -92,7 +92,7 @@ interface AccountContextProps {
   accountLoading: boolean;
   balance: false | number;
   request: () => Promise<void>;
-  lastFour: boolean;
+  lastFour: boolean | '';
 }
 
 type CombinedProps = AccountContextProps
@@ -423,7 +423,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
               onChange={this.handleTypeChange}
               row
             >
-              <FormControlLabel value="CREDIT_CARD" label={`Creidt Card - ${lastFour}`} control={<Radio />} />
+              <FormControlLabel value="CREDIT_CARD" label={`Credit Card - ${lastFour}`} control={<Radio />} />
               {
                 !!PaypalButton && this.state.paypalLoaded &&
                 <FormControlLabel value="PAYPAL" label="Paypal" control={<Radio />} />
