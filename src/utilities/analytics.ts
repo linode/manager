@@ -3,7 +3,7 @@ import { event } from 'react-ga';
 interface AnalyticsEvent {
   category: string,
   action: string,
-  label: string,
+  label?: string,
 }
 
 /*
