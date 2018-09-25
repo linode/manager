@@ -304,9 +304,10 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
         <Typography 
           data-qa-support-ticket-helper-text
         >
-          We love helping our customers.
+          {`We love our customers, and we're here to help if you need us.
           Please keep in mind that not all topics are within the scope of our support.
-          For overall system status, please see <a href="https://status.linode.com">status.linode.com</a>.
+          For overall system status, please see `}
+          <a href="https://status.linode.com">status.linode.com</a>.
         </Typography>
 
         <TextField
@@ -367,7 +368,7 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
             color="primary"
             data-qa-submit
           >
-            Submit
+            Open Ticket
           </Button>
           <Button
             onClick={this.close}
