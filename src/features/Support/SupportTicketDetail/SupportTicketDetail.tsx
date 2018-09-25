@@ -307,14 +307,16 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
               {this.renderAttachmentsRows(slice(0, 5, attachments), icons)}
               {
                 (attachments.length > 5) &&
-                <ShowMoreExpansion
-                  name={!this.state.showMoreAttachments
-                    ? "Show More Files"
-                    : "Show Less Files"
-                  }
-                >
-                  {this.renderAttachmentsRows(slice(5, Infinity, attachments), icons)}
-                </ShowMoreExpansion>
+                <div onClick={this.toggleShowMoreAttachments} style={{ display: 'inline-block' }}>
+                  <ShowMoreExpansion
+                    name={!this.state.showMoreAttachments
+                      ? "Show More Files"
+                      : "Show Less Files"
+                    }
+                  >
+                    {this.renderAttachmentsRows(slice(5, Infinity, attachments), icons)}
+                  </ShowMoreExpansion>
+                </div>
               }
             </Grid>
           </Grid>
