@@ -92,7 +92,7 @@ interface AccountContextProps {
   accountLoading: boolean;
   balance: false | number;
   request: () => Promise<void>;
-  lastFour: boolean | '';
+  lastFour: string;
 }
 
 type CombinedProps = AccountContextProps
