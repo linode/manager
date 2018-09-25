@@ -214,7 +214,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
             notice={{
               level: 'warning',
               text: `This newly created Linode wil be created with
-                the same password as the original Linode`,
+                      the same password and SSH Keys (if any) as the original Linode`,
             }}
             selectedBackupFromQuery={this.state.selectedBackupIDFromQueryString}
             selectedLinodeFromQuery={this.state.selectedLinodeIDFromQueryString}
@@ -237,7 +237,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
             notice={{
               level: 'warning',
               text: `This newly created Linode wil be created with
-                      the same password as the original Linode`,
+                      the same password and SSH Keys (if any) as the original Linode`,
             }}
             getBackupsMonthlyPrice={this.getBackupsMonthlyPrice}
             regions={this.props.regionsData}

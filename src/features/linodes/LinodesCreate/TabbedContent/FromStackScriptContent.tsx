@@ -423,7 +423,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
           />
           <AccessPanel
             error={hasErrorFor('root_pass')}
-            updateFor={[password, errors]}
+            updateFor={[password, errors, userSSHKeys, selectedImageID]}
             password={password}
             handleChange={this.handleTypePassword}
             users={userSSHKeys.length > 0 && selectedImageID ? userSSHKeys : []}
