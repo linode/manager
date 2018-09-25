@@ -1,6 +1,5 @@
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
-import { connect, MapStateToProps } from 'react-redux';
 
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 
@@ -171,7 +170,6 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
         onChange={this.handlePanelChange}
       >
         {generalError && <Notice text={generalError} error />}
-
           <EnhancedSelect
             label="Disk"
             placeholder="Find a Disk"
@@ -182,7 +180,6 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
             onInputChange={this.onInputChange}
             data-qa-select-linode
           />
-
         <PasswordInput
           label="Password"
           value={this.state.value}
@@ -200,18 +197,7 @@ const styled = withStyles(styles, { withTheme: true });
 
 const errorBoundary = PanelErrorBoundary({ heading: 'Reset Root Password' });
 
-interface StateProps {
-  linodeDisks: Linode.Disk[]
-}
-
-const mapStateToProps: MapStateToProps<StateProps, never, ApplicationState> = (state) => ({
-  linodeDisks: state.features.linodeDetail.disks.data || [],
-});
-
-const connected = connect(mapStateToProps);
-
 export default compose(
   errorBoundary,
   styled,
-  connected,
 )(LinodeSettingsPasswordPanel) as React.ComponentType<Props>;
