@@ -17,6 +17,13 @@ const initGTM = (w: any, d: any, s: any, l: any, i: any) => {
 }
 /* tslint:enable */
 
+/**
+ * Initiates Google Analytics Tracking Script.
+ * Should be called when the app loads
+ * 
+ * @param gaId Your Google Analytics Tracking ID
+ * @param production current environment of the app
+ */
 export const initAnalytics = (gaId?: string, production: boolean = false) => {
   if (!gaId) {
     return;
@@ -32,6 +39,12 @@ export const initAnalytics = (gaId?: string, production: boolean = false) => {
   (window as any).ga('send', 'pageview');
 }
 
+/**
+ * Initiates Google Tag Manager Tracking Script.
+ * Should be called when the app loads
+ * 
+ * @param gtmId Your Google Tag Manager Tracking ID
+ */
 export const initTagManager = (gtmId?: string) => {
   if (!gtmId) {
     return;
