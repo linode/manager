@@ -9,6 +9,7 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 
 import MultiValue from './components/MultiValue';
 import NoOptionsMessage from './components/NoOptionsMessage';
+import Option from './components/Option';
 import Control from './components/SelectControl';
 import Placeholder from './components/SelectPlaceholder';
 
@@ -145,6 +146,7 @@ const _components = {
   NoOptionsMessage,
   Placeholder,
   MultiValue,
+  Option,
 };
 
 type CombinedProps = EnhancedSelectProps
