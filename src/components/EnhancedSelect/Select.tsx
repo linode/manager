@@ -46,6 +46,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     },
     '& .react-select__menu-list': {
       padding: theme.spacing.unit / 2,
+      backgroundColor: theme.bg.white,
     },
     '& .react-select__option': {
       transition: theme.transitions.create(['background-color', 'color']),

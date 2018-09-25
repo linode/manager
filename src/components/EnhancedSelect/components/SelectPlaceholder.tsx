@@ -21,7 +21,6 @@ const SelectPlaceholder: React.StatelessComponent<CombinedProps> = (props) => {
   return (
     <Typography
       className={props.classes.root}
-      color="textSecondary"
       {...props.innerProps}
     >
       {props.children}
