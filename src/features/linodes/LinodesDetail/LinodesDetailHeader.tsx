@@ -1,4 +1,4 @@
-import { clone, pathOr } from 'ramda';
+import { any, clone, pathEq, pathOr } from 'ramda';
 import * as React from 'react';
 import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/debounce';
@@ -56,6 +56,7 @@ interface State {
   isCreatingTag: boolean;
   tagInputValue: string;
   listDeletingTags: string[];
+  hasPendingMigration: boolean;
 }
 
 interface ActionMeta {
@@ -71,10 +72,11 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
     isCreatingTag: false,
     tagInputValue: '',
     listDeletingTags: [],
+    hasPendingMigration: false,
   }
 
   componentDidMount() {
-    const { linode } = this.props;
+    const { linode, notifications } = this.props;
     getTags()
       .then(response => {
         /*
@@ -100,6 +102,10 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
         this.setState({ tagsToSuggest: reshapedTags })
       })
       .catch(e => e)
+    const hasPendingMigration = any(
+      pathEq(['type'], "migration_scheduled"),
+    )(notifications || []);
+    this.setState({ hasPendingMigration });
   }
 
   enterMigrationQueue = () => {
@@ -108,6 +114,7 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
       .then((_) => {
         // A 200 response indicates that the mqueue was successful.
         sendToast("Your Linode has been entered into the migration queue.");
+        this.setState({ hasPendingMigration: false });
       })
       .catch((_) => {
         // @todo: use new error handling pattern here after merge.
@@ -236,6 +243,8 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
       openConfigDrawer,
     } = this.props;
 
+    const { hasPendingMigration } = this.state;
+
     return (
       <React.Fragment>
         <NotificationsAndUpgradePanel
@@ -243,6 +252,7 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
           showPendingMutation={showPendingMutation}
           handleUpgrade={this.goToOldManager}
           handleMigration={this.enterMigrationQueue}
+          hasPendingMigration={hasPendingMigration}
         />
         <LabelPowerAndConsolePanel
           launchLish={this.launchLish}
