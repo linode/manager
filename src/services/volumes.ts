@@ -47,7 +47,7 @@ export const resizeVolume = (volumeId: number, size: number) => Request<{}>(
   setData({ size }),
 );
 
-export const updateVolume = (volumeId: number, label: string) => Request<{}>(
+export const updateVolume = (volumeId: number, label: string) => Request<Linode.Volume>(
   setURL(`${API_ROOT}/volumes/${volumeId}`),
   setMethod('PUT'),
   setData({ label }),
