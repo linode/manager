@@ -23,6 +23,7 @@ const SelectPlaceholder: React.StatelessComponent<CombinedProps> = (props) => {
       className={props.classes.root}
       color="textSecondary"
       {...props.innerProps}
+      data-qa-enhanced-select
     >
       {props.children}
     </Typography>
