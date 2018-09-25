@@ -34,6 +34,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     },
     '& .react-select__input': {
       width: '100%',
+      color: theme.palette.text.primary,
       '& input': {
         width: '100% !important',
       },
