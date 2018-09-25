@@ -839,7 +839,7 @@ const LinodeTheme: Linode.Theme = {
         width: 0,
         height: 0,
         [breakpoints.up('sm')]: {
-          padding: '12px  16px',
+          padding: '8px 10px',
           fontSize: '.9rem',
         },
         '&$open': {
