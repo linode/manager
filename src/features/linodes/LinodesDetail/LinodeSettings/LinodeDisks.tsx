@@ -161,6 +161,8 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
 
     if (!disks) { return null; }
 
+    if (!disks) { return; }
+
     return (
       <React.Fragment>
         <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 16 }}>
