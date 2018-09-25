@@ -1,5 +1,6 @@
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
+import { connect, MapStateToProps } from 'react-redux';
 
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 
@@ -199,7 +200,18 @@ const styled = withStyles(styles, { withTheme: true });
 
 const errorBoundary = PanelErrorBoundary({ heading: 'Reset Root Password' });
 
+interface StateProps {
+  linodeDisks: Linode.Disk[]
+}
+
+const mapStateToProps: MapStateToProps<StateProps, never, ApplicationState> = (state) => ({
+  linodeDisks: state.features.linodeDetail.disks.data || [],
+});
+
+const connected = connect(mapStateToProps);
+
 export default compose(
   errorBoundary,
   styled,
+  connected,
 )(LinodeSettingsPasswordPanel) as React.ComponentType<Props>;
