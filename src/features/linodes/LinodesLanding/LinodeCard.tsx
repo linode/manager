@@ -20,6 +20,8 @@ import { withTypes } from 'src/context/types';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
 import { lishLaunch } from 'src/features/Lish';
+
+import { sendEvent } from 'src/utilities/analytics';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 
 import { getType } from 'src/services/linodes';
@@ -258,11 +260,19 @@ class LinodeCard extends React.Component<CombinedProps, State> {
   }
 
   handleConsoleButtonClick = () => {
+    sendEvent({
+      category: 'Linode Action Menu Item',
+      action: 'Launch Console',
+    })
     const { linodeId } = this.props;
     lishLaunch(linodeId);
   }
 
   handleRebootButtonClick = () => {
+    sendEvent({
+      category: 'Linode Action Menu Item',
+      action: 'Reboot Linode',
+    })
     const { linodeId, linodeLabel, toggleConfirmation} = this.props;
     toggleConfirmation('reboot', linodeId, linodeLabel);
   }
