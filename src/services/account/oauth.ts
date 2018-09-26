@@ -1,19 +1,21 @@
 import { API_ROOT } from 'src/constants';
-import Request, { setData, setMethod, setURL } from 'src/services';
+import Request, { setData, setMethod, setParams, setURL, setXFilter } from 'src/services';
 
 type OAuthClient = Linode.OAuthClient;
 type Page<T> = Linode.ResourcePage<T>;
 
-export const getOAuthClient = (id: number) =>
-  Request<string>(
-    setURL(`${API_ROOT}/account/oauth-clients/${id}`),
+export const getOAuthClients = (params?: any, filter?: any) =>
+  Request<Page<OAuthClient>>(
+    setURL(`${API_ROOT}/account/oauth-clients`),
     setMethod('GET'),
+    setParams(params),
+    setXFilter(filter)
   )
     .then(response => response.data);
 
-export const getOAuthClients = () =>
-  Request<Page<OAuthClient>>(
-    setURL(`${API_ROOT}/account/oauth-clients`),
+export const getOAuthClient = (clientId: number) =>
+  Request<string>(
+    setURL(`${API_ROOT}/account/oauth-clients/${clientId}`),
     setMethod('GET'),
   )
     .then(response => response.data);
@@ -26,23 +28,23 @@ export const createOAuthClient = (data: any) =>
   )
     .then(response => response.data);
 
-export const resetOAuthClientSecret = (id: number | string) =>
+export const resetOAuthClientSecret = (clientId: number | string) =>
   Request<Linode.OAuthClient & { secret: string }>(
-    setURL(`${API_ROOT}/account/oauth-clients/${id}/reset-secret`),
+    setURL(`${API_ROOT}/account/oauth-clients/${clientId}/reset-secret`),
     setMethod('POST'),
   )
     .then(response => response.data);
 
-export const updateOAuthClient = (id: number, data: any) =>
+export const updateOAuthClient = (clientId: number, data: any) =>
   Request<OAuthClient>(
-    setURL(`${API_ROOT}/account/oauth-clients/${id}`),
+    setURL(`${API_ROOT}/account/oauth-clients/${clientId}`),
     setMethod('PUT'),
     setData(data),
   )
     .then(response => response.data);
 
-export const deleteOAuthClient = (id: number | string) =>
+export const deleteOAuthClient = (clientId: number | string) =>
   Request<{}>(
-    setURL(`${API_ROOT}/account/oauth-clients/${id}`),
+    setURL(`${API_ROOT}/account/oauth-clients/${clientId}`),
     setMethod('DELETE'),
   );

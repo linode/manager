@@ -7,8 +7,8 @@ type Page<T> = Linode.ResourcePage<T>;
 type Token = Linode.Token;
 
 export interface TokenRequest {
-  scopes: string;
-  expiry?: string | null;
+  scopes?: string;
+  expiry?: string;
   label: string;
 }
 
