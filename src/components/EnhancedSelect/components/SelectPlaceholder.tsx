@@ -20,6 +20,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 const SelectPlaceholder: React.StatelessComponent<CombinedProps> = (props) => {
   return (
     <Typography
+      data-qa-enhanced-select
       className={props.classes.root}
       color="textSecondary"
       {...props.innerProps}
