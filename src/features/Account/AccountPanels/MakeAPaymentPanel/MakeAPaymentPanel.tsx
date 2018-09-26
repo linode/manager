@@ -92,6 +92,7 @@ interface AccountContextProps {
   accountLoading: boolean;
   balance: false | number;
   request: () => Promise<void>;
+  lastFour: string;
 }
 
 type CombinedProps = AccountContextProps
@@ -362,7 +363,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
   }
 
   renderForm = () => {
-    const { accountLoading, balance, classes } = this.props;
+    const { accountLoading, balance, classes, lastFour } = this.props;
     const { errors, success } = this.state;
 
     const hasErrorFor = getAPIErrorFor({
@@ -422,7 +423,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
               onChange={this.handleTypeChange}
               row
             >
-              <FormControlLabel value="CREDIT_CARD" label="Credit Card" control={<Radio />} />
+              <FormControlLabel value="CREDIT_CARD" label={`Credit Card - ${lastFour}`} control={<Radio />} />
               {
                 !!PaypalButton && this.state.paypalLoaded &&
                 <FormControlLabel value="PAYPAL" label="Paypal" control={<Radio />} />
@@ -538,6 +539,7 @@ const accountContext = withAccount((context) => ({
   accountLoading: context.loading,
   balance: context.data && context.data.balance,
   request: context.request,
+  lastFour: context.data && context.data.credit_card.last_four || '',
 }));
 
 const enhanced = compose(styled, accountContext);
