@@ -7,7 +7,9 @@ export {
 
 export {
   getEvents,
-  markEventsSeen,
+  getEvent,
+  markEventSeen,
+  markEventRead,
   getNotifications,
 } from './events';
 
