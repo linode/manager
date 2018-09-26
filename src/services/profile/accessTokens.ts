@@ -17,8 +17,6 @@ export interface TokenRequest {
  *
  * Returns a paginated list of Personal Access Tokens currently active for your User.
  * 
- * 
- * @example getPersonalAccessTokens();
  */
 export const getPersonalAccessTokens = () =>
   Request<Page<Token>>(
@@ -34,7 +32,6 @@ export const getPersonalAccessTokens = () =>
  * 
  * @param ticketId { number } the ID of the token to view
  * 
- * @example getPersonalAccessToken(123456);
  */
 export const getPersonalAccessToken = (id: number) =>
   Request<Token>(
@@ -59,7 +56,6 @@ export const getPersonalAccessToken = (id: number) =>
  * If omitted, the new token will be valid until it is manually revoked.
  * @param data.label { string } String to identify this token. Used for organizational purposes only.
  * 
- * @example createPersonalAccessToken({scopes: '*', expiry: null, label: 'myToken'});
  */
 export const createPersonalAccessToken = (data: TokenRequest) =>
   Request<Token>(
@@ -79,7 +75,6 @@ export const createPersonalAccessToken = (data: TokenRequest) =>
  * @param data.label { string } update the Token's label.
  * @param data.expiry { string } Datetime string to update when the token should expire.
  * 
- * @example updatePersonalAccessToken(123456)
  */
 export const updatePersonalAccessToken = (tokenId: number, data: Partial<TokenRequest>) =>
   Request<Token>(
@@ -96,7 +91,6 @@ export const updatePersonalAccessToken = (tokenId: number, data: Partial<TokenRe
  * 
  * @param tokenId { number } the ID of the token to be deleted.
  * 
- * @example deletePersonalAccessToken(123456);
  */
 export const deletePersonalAccessToken = (tokenId: number) =>
   Request<{}>(

@@ -11,6 +11,12 @@ export interface OAuthClientRequest {
   redirect_uri: string;
 }
 
+/**
+ * getOAuthClients
+ *
+ * Returns a paginated list of OAuth apps authorized on your account.
+ * 
+ */
 export const getOAuthClients = (params?: any, filter?: any) =>
   Request<Page<OAuthClient>>(
     setURL(`${API_ROOT}/account/oauth-clients`),
@@ -20,12 +26,27 @@ export const getOAuthClients = (params?: any, filter?: any) =>
   )
     .then(response => response.data);
 
+/**
+ * getOAuthClient
+ *
+ * Returns a single authorized OAuth app
+ * 
+ * @param clientId { number } the ID of the OAuth client to retrieve
+ * 
+ */
 export const getOAuthClient = (clientId: number) =>
   Request<string>(
     setURL(`${API_ROOT}/account/oauth-clients/${clientId}`),
     setMethod('GET'),
   )
     .then(response => response.data);
+
+/**
+ * getPersonalAccessTokens
+ *
+ * Returns a paginated list of Personal Access Tokens currently active for your User.
+ * 
+ */
 
 export const createOAuthClient = (data: OAuthClientRequest) =>
   Request<OAuthClient & { secret: string }>(
@@ -35,6 +56,12 @@ export const createOAuthClient = (data: OAuthClientRequest) =>
   )
     .then(response => response.data);
 
+/**
+ * getPersonalAccessTokens
+ *
+ * Returns a paginated list of Personal Access Tokens currently active for your User.
+ * 
+ */
 export const resetOAuthClientSecret = (clientId: number | string) =>
   Request<OAuthClient & { secret: string }>(
     setURL(`${API_ROOT}/account/oauth-clients/${clientId}/reset-secret`),
@@ -42,6 +69,12 @@ export const resetOAuthClientSecret = (clientId: number | string) =>
   )
     .then(response => response.data);
 
+/**
+ * getPersonalAccessTokens
+ *
+ * Returns a paginated list of Personal Access Tokens currently active for your User.
+ * 
+ */
 export const updateOAuthClient = (clientId: number, data: Partial<OAuthClientRequest>) =>
   Request<OAuthClient>(
     setURL(`${API_ROOT}/account/oauth-clients/${clientId}`),
@@ -50,6 +83,12 @@ export const updateOAuthClient = (clientId: number, data: Partial<OAuthClientReq
   )
     .then(response => response.data);
 
+/**
+ * getPersonalAccessTokens
+ *
+ * Returns a paginated list of Personal Access Tokens currently active for your User.
+ * 
+ */
 export const deleteOAuthClient = (clientId: number | string) =>
   Request<{}>(
     setURL(`${API_ROOT}/account/oauth-clients/${clientId}`),
