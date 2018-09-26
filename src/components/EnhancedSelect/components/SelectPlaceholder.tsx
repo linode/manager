@@ -18,12 +18,13 @@ interface Props extends PlaceholderProps<any> { }
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const SelectPlaceholder: React.StatelessComponent<CombinedProps> = (props) => {
+  console.log(props)
   return (
     <Typography
+      data-qa-multi-select={props.isMulti ? props.selectProps.placeholder : false}
       className={props.classes.root}
       color="textSecondary"
       {...props.innerProps}
-      data-qa-enhanced-select
     >
       {props.children}
     </Typography>
