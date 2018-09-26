@@ -420,7 +420,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     /** Get /notifications relevant to this Linode */
     this.notificationsSubscription = notifications$
       .map(filter(allPass([
-        pathEq(['entity', 'id'], linodeId),
+        pathEq(['entity', 'id'], Number(linodeId)),
         has('message'),
       ])))
       .subscribe((notifications: Linode.Notification[]) =>
