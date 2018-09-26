@@ -20,10 +20,10 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 const SelectPlaceholder: React.StatelessComponent<CombinedProps> = (props) => {
   return (
     <Typography
-      data-qa-multi-select={props.isMulti ? props.selectProps.placeholder : false}
       className={props.classes.root}
       {...props.innerProps}
       data-qa-enhanced-select
+      data-qa-multi-select={props.isMulti ? props.selectProps.placeholder : false}
     >
       {props.children}
     </Typography>
