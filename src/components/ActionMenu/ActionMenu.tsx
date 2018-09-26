@@ -66,6 +66,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
 
 interface Props {
   createActions: (closeMenu: Function) => Action[];
+  toggleOpenCallback?: () => void;
 }
 
 interface State {
@@ -98,6 +99,7 @@ class ActionMenu extends React.Component<CombinedProps, State> {
   }
 
   handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (this.props.toggleOpenCallback) { this.props.toggleOpenCallback() };
     this.setState({ anchorEl: event.currentTarget });
   }
 
