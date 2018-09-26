@@ -50,7 +50,7 @@ export const stagePaypalPayment = (data: Paypal) =>
     .then(response => response.data);
 
 export const executePaypalPayment = (data: ExecutePayload) =>
-  Request<any>(
+  Request<{}>(
     setURL(`${API_ROOT}/account/payments/paypal/execute`),
     setMethod('POST'),
     setData(data),

@@ -27,3 +27,21 @@ export const updateAccountSchema = object({
   zip: string()
     .max(16, "Zip code must be 16 characters or less.")
 });
+
+export const createOAuthClientSchema = object({
+  label: string()
+    .required("Label is required.")
+    .min(1, "Label must be between 1 and 512 characters.")
+    .max(1, "Label must be between 1 and 512 characters."),
+  redirect_uri: string()
+    .required("Redirect URI is required.")
+    .url("Must be a valid URL.")
+});
+
+export const updateOAuthClientSchema = object({
+  label: string()
+    .min(1, "Label must be between 1 and 512 characters.")
+    .max(1, "Label must be between 1 and 512 characters."),
+  redirect_uri: string()
+    .url("Must be a valid URL.")
+});
