@@ -6,7 +6,7 @@ const mockData: Linode.ResourcePage<any> = {
   page: 1, pages: 1, results: 0, data: []
 };
 
-const cancelRequest = jest.fn((data: any = mockData) => {
+const cancelRequest = jest.fn(({}, data: any = mockData) => {
   return {
     request: jest.fn(() => Promise.resolve(data)),
     cancel: jest.fn(),
@@ -90,14 +90,17 @@ describe('Paginator 2: Pagement Day', () => {
        * We need to test if Pagey is currently viewing a page of one, and we call onDelete, it requests
        * the following page, not the current page.
        */
-      const mockRequest = jest
-        .fn(() => Promise.resolve())
-        .mockImplementationOnce((() => Promise.resolve({
-          data: [101],
-          page: 6,
-          pages: 5,
-          results: 101,
-        })));
+      const mockRequest = jest.fn(() => {
+        return {
+          request: jest.fn(() => Promise.resolve({
+            data: [101],
+            page: 6,
+            pages: 5,
+            results: 101,
+          })),
+          cancel: jest.fn(),
+        }
+      })
 
       const { wrapper } = setup(mockRequest);
       const request = wrapper.prop('request');

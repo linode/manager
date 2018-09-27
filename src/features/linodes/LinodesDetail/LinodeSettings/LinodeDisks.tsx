@@ -593,7 +593,10 @@ const linodeContext = withLinode((context) => ({
 }));
 
 const paginated = Pagey((ownProps, params, filters) => {
-  return getLinodeDisks(ownProps.linodeId, params, filters);
+  return {
+    request: () => getLinodeDisks(ownProps.linodeId, params, filters),
+    cancel: null
+  }
 });
 
 const enhanced = compose<any, any, any, any>(
