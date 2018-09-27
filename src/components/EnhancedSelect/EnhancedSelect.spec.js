@@ -40,35 +40,95 @@ describe('Enhanced Select Suite', () => {
         });
     });
 
-    xdescribe('Basic Select with Error Suite', () => {
+    describe('Basic Select with Error Suite', () => {
         it('should display the error', () => {
             const errorMsg = "You didn't choose the correct fruit.";
+            const basicSelectWithError = $('[data-qa-enhanced-select="Choose one fruit"]');
+            const error = basicSelectWithError.$$('p').filter(p => p.getText().includes(errorMsg));
+            
+            expect(error.length).toBe(1);
+            expect(error[0].isVisible()).toBe(true);
         });
     });
 
-    xdescribe('Multi Select Suite', () => {
-        
-    });
-    xit('should display placeholder text in the select', () => {
-        selectElement = $('[data-qa-enhanced-select] input');
-        expect(selectElement.getAttribute('placeholder')).toBe('Enter a value');
+    describe('Multi Select Suite', () => {
+        let multiSelect, options, selectedOption;
+
+        it('should display the multi select with placeholder text', () => {
+            multiSelect = $('[data-qa-multi-select="Choose some fruit"]');
+            expect(multiSelect.getText()).toBe('Choose some fruit');        
+        });
+
+        it('should display options on click', () => {
+            multiSelect.click();
+            browser.waitForVisible('[data-qa-option]', constants.wait.normal);
+
+            options = $$('[data-qa-option');
+            expect(options.length).toBe(5);
+        });
+
+        it('should add a chip to the select on selection of an option', () => {
+            selectedOption = options[0].getText();
+            options[0].click();
+            browser.waitForVisible(`[data-qa-multi-option="${selectedOption}"]`, constants.wait.normal);
+        });
+
+        it('should remove the chip from the select options', () => {
+            browser.click('[data-qa-multi-option]');
+            browser.waitForVisible('[data-qa-option]', constants.wait.normal);
+            const remainingOptions = $$('[data-qa-option]').map(opt => opt.getText());
+
+            expect(remainingOptions.length).toBe(4);
+            expect(remainingOptions).not.toContain(selectedOption);
+        });
+
+        it('should remove the chip on click of the remove icon', () => {
+            browser.click(`[data-qa-multi-option="${selectedOption}"] svg`);
+            browser.waitForVisible(`[data-qa-multi-option="${selectedOption}"]`, constants.wait.true, true);
+        });
     });
 
-    xit('should display select options on click', () => {
-        selectElement.click();
-        browser.debug();
-        browser.waitForVisible('[data-qa-option]');
-    });
+    describe('Creatable Select', () => {
+        let creatableSelect, newOption;
 
-    xit('should select an option on click', () => {
-        selectOptions = $$('[data-qa-option]');
-        selectOptions[0].click();
-        expect(selectElement.getValue()).toBe('Apple');
-    });
+        beforeAll(() => {
+            // Close any potentially open select menus
+            browser.click('body');
+        });
 
-    xit('should display only the matching option', () => {
-        selectElement.setValue('Pea');
-        const menuItems = $$('[data-qa-option]');
-        expect(menuItems.length).toBe(1);
+        it('should display the creatable select with placeholder text', () => {
+            creatableSelect = $('[data-qa-multi-select="Choose some timezones"]');
+
+            expect(creatableSelect.isVisible()).toBe(true);
+            expect(creatableSelect.getText()).toBe('Choose some timezones');
+        });
+
+        it('should display the create menu option', () => {
+            newOption = 'fooooo';
+            creatableSelect.$('..').$('input').setValue(newOption);
+
+            browser.waitForVisible(`[data-qa-option="${newOption}"]`, constants.wait.normal);
+            expect($(`[data-qa-option="${newOption}"]`).getText()).toBe(`Create "${newOption}"`);
+        });
+
+        it('should add a created option to the select', () => {
+            $(`[data-qa-option="${newOption}"]`).click();
+            browser.waitForVisible(`[data-qa-multi-option=${newOption}]`, constants.wait.normal);
+        });
+
+        it('should select an already defined list option', () => {
+            browser.click(`[data-qa-multi-option="${newOption}"]`);
+            
+            const optionToSelect = $$('[data-qa-option]')
+            const optionName = optionToSelect[0].getText();
+            optionToSelect[0].click();
+
+            browser.waitForVisible(`[data-qa-multi-option="${optionName}"]`, constants.wait.normal);
+        });
+
+        it('should remove the created option on click of remove icon', () => {
+            browser.click(`[data-qa-multi-option="${newOption}"] svg`);
+            browser.waitForVisible(`[data-qa-multi-option="${newOption}"]`, constants.wait.normal, true);
+        });
     });
 });
