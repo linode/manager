@@ -6,7 +6,9 @@ type Page<T> = Linode.ResourcePage<T>;
 /**
  * getInvoices
  *
- * Retrieve a list of invoices on your account.
+ * Retrieve a paginated list of invoices on your account. If 
+ * pagination props are not supplied in the params object,
+ * the first 100 invoices will be returned.
  * 
  */
 export const getInvoices = (params?: any, filter?: any) =>
@@ -39,6 +41,10 @@ export const getInvoice = (invoiceId: number) =>
  * Returns a paginated list of invoice items
  * 
  * @param invoiceId { number } return items for an invoice with this ID
+ * 
+ * If 
+ * pagination props are not supplied in the params object,
+ * the first 100 invoice items will be returned.
  * 
  */
 export const getInvoiceItems = (invoiceId: number, params?: any, filter?: any) =>
