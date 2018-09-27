@@ -259,7 +259,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
 
     const truncatedText = truncateText(data.description, 175);
     const text = open ? data.description : truncatedText;
-    
+
     return (
       <Grid item className={classes.root}>
         <Paper className={

@@ -141,7 +141,7 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
       loading: false,
     })
   }
-  
+
   loadSelectedEntities = () => {
     this.setState({ loading: true });
     const entity = this.state.ticket.entity_type;
@@ -222,12 +222,12 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
   onInputValueChange = (inputValue:string) => {
     this.setState({ inputValue });
   }
-  
+
   onSubmit = () => {
     const { description, entity_type, entity_id, summary } = this.state.ticket;
     const { onSuccess } = this.props;
     if (!['none','general'].includes(entity_type) && !entity_id) {
-      this.setState({ 
+      this.setState({
         errors: [{ field: 'input', reason: `Please select a ${entityIdtoNameMap[entity_type]}.`}]
       });
       return;
@@ -301,7 +301,7 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
           />
         }
 
-        <Typography 
+        <Typography
           data-qa-support-ticket-helper-text
         >
           {`We love our customers, and we're here to help if you need us.
@@ -322,7 +322,7 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
           {this.renderEntityTypes()}
           <MenuItem key={'general'} value={'general'}>None/General</MenuItem>
         </TextField>
-        
+
         {!['none','general'].includes(ticket.entity_type) &&
           <EnhancedSelect
             options={data}
