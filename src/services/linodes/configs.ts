@@ -30,6 +30,13 @@ export const getLinodeConfigs = (id: number) =>
   )
     .then(response => response.data);
 
+export const getLinodeConfig = (linodeId: number, configId: number) =>
+  Request<Config>(
+    setURL(`${API_ROOT}/linode/instances/${linodeId}/configs/${configId}`),
+    setMethod('GET'),
+  )
+    .then(response => response.data);
+
 export const createLinodeConfig = (linodeId: number, data: LinodeConfigCreationData) =>
   Request<Config>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}/configs`),

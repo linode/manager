@@ -12,6 +12,7 @@ export {
 
 export {
   getLinodeConfigs,
+  getLinodeConfig,
   createLinodeConfig,
   updateLinodeConfig,
   deleteLinodeConfig,
@@ -61,6 +62,7 @@ export {
 export {
   getLinodeStats,
   getLinodeKernels,
+  getAllKernels,
   getLinodeTypes,
   getDeprecatedLinodeTypes,
   getType
