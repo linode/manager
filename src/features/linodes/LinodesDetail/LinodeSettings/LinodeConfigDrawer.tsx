@@ -210,12 +210,12 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { open, onClose } = this.props;
+    const { open, onClose, linodeConfigId } = this.props;
     const { errors } = this.state;
     const loading = Object.values(this.state.loading).some(v => v === true);
 
     return (
-      <Drawer title="Add Linode Configuration" open={open} onClose={onClose}>
+      <Drawer title={`${ linodeConfigId ? 'Edit' : 'Add'} Linode Configuration`} open={open} onClose={onClose}>
         <Grid container direction="row">
           {this.renderContent(errors, loading)}
         </Grid>
