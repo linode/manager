@@ -125,8 +125,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
   notificationsSubscription: Subscription;
 
-  diskResizeSubscription: Subscription;
-
   mounted: boolean = false;
 
   state: State = {
@@ -282,7 +280,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
   componentWillUnmount() {
     this.mounted = false;
     this.eventsSubscription.unsubscribe();
-    this.diskResizeSubscription.unsubscribe();
     this.notificationsSubscription.unsubscribe();
     this.volumeEventsSubscription.unsubscribe();
   }
@@ -343,12 +340,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     const { context: { configs, image, linode } } = this.state;
     const mountTime = moment().subtract(5, 'seconds');
     const { actions, match: { params: { linodeId } } } = this.props;
-
-    this.diskResizeSubscription = events$
-      .filter((e) => !e._initial)
-      .filter(pathEq(['entity', 'id'], Number(this.props.match.params.linodeId)))
-      .filter((e) => e.status === 'finished' && e.action === 'disk_resize')
-      .subscribe((e) => actions.getLinodeDisks())
 
     this.eventsSubscription = events$
       .filter(pathEq(['entity', 'id'], Number(this.props.match.params.linodeId)))

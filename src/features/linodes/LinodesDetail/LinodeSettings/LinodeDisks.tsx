@@ -1,15 +1,17 @@
+import { compose, path, pathEq } from 'ramda';
+import * as React from 'react';
+import { Subscription } from 'rxjs/Subscription';
+
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
-import { compose, path } from 'ramda';
-import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
-import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
@@ -17,12 +19,13 @@ import Notice from 'src/components/Notice';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
-import { resetEventsPolling } from 'src/events';
+import { events$, resetEventsPolling } from 'src/events';
 import ImagesDrawer, { modes } from 'src/features/Images/ImagesDrawer';
 import { withLinode } from 'src/features/linodes/LinodesDetail/context';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { createLinodeDisk, deleteLinodeDisk, getLinodeDisks, resizeLinodeDisk, updateLinodeDisk } from 'src/services/linodes';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+
 import LinodeDiskActionMenu from './LinodeDiskActionMenu';
 import LinodeDiskDrawer from './LinodeDiskDrawer';
 
@@ -120,8 +123,24 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     confirmDelete: LinodeDisks.defaultConfirmDeleteState,
   };
 
+  eventsSubscription: Subscription;
+
   componentDidMount() {
+    const { linodeId } = this.props;
+
     this.props.request();
+
+    this.eventsSubscription = events$
+      .filter((e) => !e._initial)
+      .filter(pathEq(['entity', 'id'], linodeId))
+      .filter((e) => e.status === 'finished' && ['disk_resize', 'disk_delete'].includes(e.action))
+      .subscribe((e) => this.props.request());
+  }
+
+  componentWillUnmount() {
+    if (this.eventsSubscription.unsubscribe) {
+      this.eventsSubscription.unsubscribe();
+    }
   }
 
   render() {
@@ -130,10 +149,8 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
 
       result: disks,
       error: disksErrors,
-      loading: disksLoading,
 
       linodeError,
-      linodeLoading,
       linodeStatus,
     } = this.props;
 
@@ -142,11 +159,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       return <ErrorState errorText="There was an error loading disk images." />
     }
 
-    if (disksLoading || linodeLoading) {
-      return <CircleProgress />
-    }
-
-    if (!disks) { return; }
+    if (!disks) { return null; }
 
     return (
       <React.Fragment>
@@ -412,7 +425,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     resizeLinodeDisk(linodeId, diskId, size)
       .then(({ data }) => {
         this.setDrawer(LinodeDisks.defaultDrawerState);
-        sendToast(`Disk scheduled for resizing.`);
+        sendToast(`Disk queued for resizing.`);
         resetEventsPolling();
         this.props.request();
       })
@@ -484,6 +497,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     deleteLinodeDisk(linodeId, diskId)
       .then(() => {
         this.setConfirmDelete({ open: false, errors: undefined });
+        sendToast(`Disk queued for deletion.`);
         this.props.request();
       })
       .catch((error) => {
