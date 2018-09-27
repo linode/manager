@@ -42,9 +42,12 @@ export const getOAuthClient = (clientId: number) =>
     .then(response => response.data);
 
 /**
- * getPersonalAccessTokens
+ * createOAuthClient
  *
- * Returns a paginated list of Personal Access Tokens currently active for your User.
+ * Create a new authorized OAuth client. The creation endpoint
+ * will return a secret used for authenticating with the new app.
+ * This secret will not be returned on subsequent requests 
+ * (e.g. using getOAuthClient)
  * 
  */
 
