@@ -60,9 +60,13 @@ export const createOAuthClient = (data: OAuthClientRequest) =>
     .then(response => response.data);
 
 /**
- * getPersonalAccessTokens
+ * resetOAuthClientSecret
  *
- * Returns a paginated list of Personal Access Tokens currently active for your User.
+ * Resets the OAuth Client secret for a client you own, and returns the OAuth Client
+ * with the new secret in plaintext. This secret is not supposed to be publicly known
+ * or disclosed anywhere. This can be used to generate a new secret in case the one
+ * you have has been leaked, or to get a new secret if you lost the original.
+ * The old secret is expired immediately, and logins to your client with the old secret will fail.
  * 
  */
 export const resetOAuthClientSecret = (clientId: number | string) =>
@@ -73,10 +77,11 @@ export const resetOAuthClientSecret = (clientId: number | string) =>
     .then(response => response.data);
 
 /**
- * getPersonalAccessTokens
+ * updateOAuthClient
  *
- * Returns a paginated list of Personal Access Tokens currently active for your User.
+ * Update the label and/or redirect uri of your OAuth client.
  * 
+ * @param clientId { number } the ID of the client to be updated
  */
 export const updateOAuthClient = (clientId: number, data: Partial<OAuthClientRequest>) =>
   Request<OAuthClient>(
@@ -87,9 +92,15 @@ export const updateOAuthClient = (clientId: number, data: Partial<OAuthClientReq
     .then(response => response.data);
 
 /**
- * getPersonalAccessTokens
+ * deleteOAuthClient
  *
- * Returns a paginated list of Personal Access Tokens currently active for your User.
+ * Deletes an OAuth Client registered with Linode.
+ * The Client ID and Client secret will no longer be accepted by
+ * https://login.linode.com, and all tokens issued to this client
+ * will be invalidated (meaning that if your application was using
+ * a token, it will no longer work).
+ * 
+ * @param clientId { number } ID of the client to be deleted
  * 
  */
 export const deleteOAuthClient = (clientId: number | string) =>

@@ -1,5 +1,3 @@
-import { object, string } from 'yup';
-
 import { API_ROOT } from 'src/constants';
 
 import Request,
@@ -10,11 +8,12 @@ import Request,
   setParams,
   setURL,
   setXFilter,
-} from './index';
+} from '../index';
+
+import { importZoneSchema } from './domains.schema';
 
 type Page<T> = Linode.ResourcePage<T>;
 type Domain = Linode.Domain;
-type Record = Linode.Record;
 
 export const getDomains = (
   params: any = {},
@@ -45,35 +44,6 @@ export const getDomain = (domainId: number) =>
     setMethod('GET'),
   );
 
-export const getDomainRecords = (domainId: number) =>
-  Request<Page<Record>>(
-    setURL(`${API_ROOT}/domains/${domainId}/records`),
-    setMethod('GET'),
-  );
-
-export const createDomainRecord = (domainId: number, data: Partial<Linode.Record>) =>
-  Request<Record>(
-    setURL(`${API_ROOT}/domains/${domainId}/records`),
-    setMethod('POST'),
-    setData(data),
-  ).then(response => response.data);
-
-export const updateDomainRecord = (
-  domainId: number,
-  recordId: number,
-  data: Partial<Linode.Record>,
-) => Request<Record>(
-  setURL(`${API_ROOT}/domains/${domainId}/records/${recordId}`),
-  setMethod('PUT'),
-  setData(data),
-);
-
-export const deleteDomainRecord = (domainID: number, recordId: number) =>
-  Request<{}>(
-    setURL(`${API_ROOT}/domains/${domainID}/records/${recordId}`),
-    setMethod('DELETE'),
-  );
-
 export const createDomain = (data: Partial<Linode.Domain>) =>
   Request<Domain>(
     setData(data),
@@ -102,11 +72,6 @@ export const cloneDomain = (domainID: number, cloneName: string) =>
     setURL(`${API_ROOT}/domains/${domainID}/clone`),
     setMethod('POST'),
   );
-
-const importZoneSchema = object({
-  domain: string().required(),
-  remote_nameserver: string().required(),
-});
 
 export const importZone = (domain?: string, remote_nameserver?: string) =>
   Request<Domain>(
