@@ -321,26 +321,27 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
 
         <Grid item xs={12} className={classes.section}>
           <Typography role="header" variant="subheading">Boot Settings</Typography>
-          <TextField
-            label="Kernel"
-            select={true}
-            value={kernel || ''}
-            onChange={this.handleChangeKernel}
-            errorText={errorFor('kernel')}
-            errorGroup="linode-config-drawer"
-          >
-            <MenuItem value="none" disabled><em>Select a Kernel</em></MenuItem>
-            {kernels &&
-              kernels.map(eachKernel =>
-                <MenuItem
-                  // Can't use ID for key until DBA-162 is closed.
-                  key={`${eachKernel.id}-${eachKernel.label}`}
-                  value={eachKernel.id}
-                >
-                  {eachKernel.label}
-                </MenuItem>)
-            }
-          </TextField>
+          {kernels &&
+            <TextField
+              label="Kernel"
+              select={true}
+              value={kernel || 'linode/latest-64bit'}
+              onChange={this.handleChangeKernel}
+              errorText={errorFor('kernel')}
+              errorGroup="linode-config-drawer"
+            >
+              <MenuItem value="none" disabled><em>Select a Kernel</em></MenuItem>
+              {
+                kernels.map(eachKernel =>
+                  <MenuItem
+                    // Can't use ID for key until DBA-162 is closed.
+                    key={`${eachKernel.id}-${eachKernel.label}`}
+                    value={eachKernel.id}
+                  >
+                    {eachKernel.label}
+                  </MenuItem>)
+              }
+            </TextField>}
 
           <FormControl fullWidth component="fieldset">
             <FormLabel
