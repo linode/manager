@@ -68,7 +68,7 @@ export class VolumeDetail extends Page {
         expect(this.region.getText()).toBe('Select a Region');
         expect(this.submit.isVisible()).toBe(true);
         expect(this.cancel.isVisible()).toBe(true);
-        expect(this.attachToLinode.getText()).toBe('Select a Linode');
+        expect(this.attachToLinode.getText()).toContain('Select a Linode');
     }
 
     getVolumeId(label) {
@@ -227,7 +227,7 @@ export class VolumeDetail extends Page {
                 return browser.isExisting('[data-qa-volume-cell-attachment]') &&
                     browser.getText('[data-qa-volume-cell-attachment]') === '' &&
                     volumeElement.$('[data-qa-action-menu]').isVisible();
-            }, constants.wait.minute, 'Remove Volume: Failed to detach volume');
+            }, constants.wait.minute * 2, 'Remove Volume: Failed to detach volume');
         }
         const numberOfVolumes = this.volumeCell.length;
         volumeElement.$('[data-qa-action-menu]').click();
