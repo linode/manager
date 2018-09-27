@@ -1,4 +1,5 @@
 const { navigateToStory } = require('../../../e2e/utils/storybook');
+const { constants } = require('../../../e2e/constants');
 
 describe('Enhanced Select Suite', () => {
     let selectElement, selectOptions;
@@ -12,26 +13,40 @@ describe('Enhanced Select Suite', () => {
     });
 
     describe('Basic Select Suite', () => {
+        let basicSelect, options;
+
         it('should display the placeholder text in the select', () => {
-            
+            basicSelects = $$('[data-qa-enhanced-select="Choose one fruit"]');
+            const placeholderMsg = 'Choose one fruit';
+
+            expect(basicSelects[0].getText()).toContain('Basic Select');
+            expect(basicSelects[0].getText()).toContain(placeholderMsg);
         });
 
         it('should display options on click', () => {
-            
+            basicSelects[0].click();
+            browser.waitForVisible('[data-qa-option]', constants.wait.normal);
+
+            options = $$('[data-qa-option]');
+            expect(options.length).toBe(5);
         });
 
         it('should update the select value on selection', () => {
-            
+            const optionValue = options[0].getText();
+
+            options[0].click();
+            options[0].waitForVisible(constants.wait.normal, true);
+            browser.waitForVisible(`[data-qa-enhanced-select="${optionValue}"]`, constants.wait.normal);
         });
     });
 
-    describe('Basic Select with Error Suite', () => {
+    xdescribe('Basic Select with Error Suite', () => {
         it('should display the error', () => {
             const errorMsg = "You didn't choose the correct fruit.";
         });
     });
 
-    describe('Multi Select Suite', () => {
+    xdescribe('Multi Select Suite', () => {
         
     });
     xit('should display placeholder text in the select', () => {
@@ -39,7 +54,7 @@ describe('Enhanced Select Suite', () => {
         expect(selectElement.getAttribute('placeholder')).toBe('Enter a value');
     });
 
-    it('should display select options on click', () => {
+    xit('should display select options on click', () => {
         selectElement.click();
         browser.debug();
         browser.waitForVisible('[data-qa-option]');
