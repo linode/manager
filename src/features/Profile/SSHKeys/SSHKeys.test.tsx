@@ -27,7 +27,7 @@ describe('SSHKeys', () => {
         page={1}
         pageSize={25}
         request={request}
-        result={[
+        data={[
           { id: 1, label: '', ssh_key: '', created: '', fingerprint: '', },
           { id: 2, label: '', ssh_key: '', created: '', fingerprint: '', },
           { id: 3, label: '', ssh_key: '', created: '', fingerprint: '', },
@@ -68,7 +68,7 @@ describe('SSHKeys', () => {
         page={1}
         pageSize={25}
         request={request}
-        result={undefined}
+        data={undefined}
         timezone={'GMT'}
         updateOrderBy={updateOrderBy}
       />
@@ -91,7 +91,7 @@ describe('SSHKeys', () => {
         page={1}
         pageSize={25}
         request={request}
-        result={undefined}
+        data={undefined}
         timezone={'GMT'}
         updateOrderBy={updateOrderBy}
       />
@@ -114,7 +114,7 @@ describe('SSHKeys', () => {
         page={1}
         pageSize={25}
         request={request}
-        result={undefined}
+        data={undefined}
         timezone={'GMT'}
         updateOrderBy={updateOrderBy}
       />

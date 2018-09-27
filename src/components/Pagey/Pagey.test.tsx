@@ -97,7 +97,7 @@ describe('Paginator 2: Pagement Day', () => {
 
       wrapper.update();
 
-      expect(mockRequest).toBeCalledWith({ page: 9, page_size: 25 }, {});
+      expect(mockRequest).toBeCalledWith({}, { page: 9, page_size: 25 }, {});
     });
   });
 
@@ -125,7 +125,7 @@ describe('Paginator 2: Pagement Day', () => {
 
       wrapper.update();
 
-      expect(mockRequest).toBeCalledWith({ page: 1, page_size: 100 }, {});
+      expect(mockRequest).toBeCalledWith({}, { page: 1, page_size: 100 }, {});
     });
   })
 
@@ -146,7 +146,7 @@ describe('Paginator 2: Pagement Day', () => {
       });
 
       it('should set data to response.data', () => {
-        expect(wrapper.prop('result')).toEqual([1, 2, 3, 4]);
+        expect(wrapper.prop('data')).toEqual([1, 2, 3, 4]);
       });
 
       it('should set page to response.page', () => {
@@ -161,7 +161,7 @@ describe('Paginator 2: Pagement Day', () => {
         const fn = (numbers: number[]) => numbers.map((n) => n + 1);
         await wrapper.prop('request')(fn);
         wrapper.update();
-        expect(wrapper.prop('result')).toEqual([2, 3, 4, 5]);
+        expect(wrapper.prop('data')).toEqual([2, 3, 4, 5]);
       });
     });
 
@@ -195,25 +195,25 @@ describe('Paginator 2: Pagement Day', () => {
     it('should send request with sort by prop asecending on first call', () => {
       updateOrderBy('label');
 
-      expect(mockRequest).toHaveBeenCalledWith({ page: 1, page_size: 25 }, { '+order_by': 'label', '+order': 'asc' })
+      expect(mockRequest).toHaveBeenCalledWith({}, { page: 1, page_size: 25 }, { '+order_by': 'label', '+order': 'asc' })
     });
 
     it('should send request with sort by prop descending on second call', () => {
       updateOrderBy('label');
 
-      expect(mockRequest).toHaveBeenCalledWith({ page: 1, page_size: 25 }, { '+order_by': 'label', '+order': 'desc' })
+      expect(mockRequest).toHaveBeenCalledWith({}, { page: 1, page_size: 25 }, { '+order_by': 'label', '+order': 'desc' })
     });
 
     it('should send request with sort by prop ascending on third call', () => {
       updateOrderBy('label');
 
-      expect(mockRequest).toHaveBeenCalledWith({ page: 1, page_size: 25 }, { '+order_by': 'label', '+order': 'asc' })
+      expect(mockRequest).toHaveBeenCalledWith({}, { page: 1, page_size: 25 }, { '+order_by': 'label', '+order': 'asc' })
     });
 
     it('should send request with sort by prop ascending on first call of new label', () => {
       updateOrderBy('other');
 
-      expect(mockRequest).toHaveBeenCalledWith({ page: 1, page_size: 25 }, { '+order_by': 'other', '+order': 'asc' })
+      expect(mockRequest).toHaveBeenCalledWith({}, { page: 1, page_size: 25 }, { '+order_by': 'other', '+order': 'asc' })
     });
   });
 });

@@ -374,7 +374,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, 
 interface StateProps {
   /** Profile */
   profileLoading: boolean;
-  profileError?: Error;
+  profileError?: Error | Linode.ApiFieldError[];
   userId?: number;
 
   documentation: Linode.Doc[];

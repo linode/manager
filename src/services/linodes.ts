@@ -63,10 +63,12 @@ export const getLinodeVolumes = (id: number) =>
   )
     .then(response => response.data);
 
-export const getLinodeDisks = (id: number) =>
+export const getLinodeDisks = (id: number, params: any = {}, filters: any = {}) =>
   Request<Page<Linode.Disk>>(
     setURL(`${API_ROOT}/linode/instances/${id}/disks`),
     setMethod('GET'),
+    setParams(params),
+    setXFilter(filters),
   )
     .then(response => response.data);
 
