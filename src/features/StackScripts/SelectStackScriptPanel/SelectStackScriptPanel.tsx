@@ -6,7 +6,7 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 
 import RenderGuard from 'src/components/RenderGuard';
 import TabbedPanel from 'src/components/TabbedPanel';
-import { getCommunityStackscripts, getStackScriptsByUser } from 'src/services/stackscripts';
+import { getCommunityStackscripts, getStackScriptsByUser } from './stackScriptUtils';
 
 import SelectStackScriptPanelContent from './SelectStackScriptPanelContent';
 
