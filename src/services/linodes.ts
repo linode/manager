@@ -213,7 +213,7 @@ export const getAllKernels: (params?: any, filters?: any) => Promise<Linode.Kern
           .map(remainingPages, nextPage =>
             getLinodeKernels({ ...pagination, page: nextPage }, filters).then(response => response.data),
           )
-          .then(pages => pages.reduce((result, nextPage) => [...result, ...nextPage], firstPageData));
+          .then(allPages => allPages.reduce((result, nextPage) => [...result, ...nextPage], firstPageData));
       });
   }
 
@@ -368,7 +368,7 @@ export const getAllLinodeDisks: (linodeId: number, params?: any, filters?: any) 
             listLinodeDisks(linodeId, { ...pagination, page: nextPage }, filters).then(response => response.data.data),
           )
           /** We're given Linode.Volume[][], so we flatten that, and append the first page response. */
-          .then(pages => pages.reduce((result, nextPage) => [...result, ...nextPage], firstPageData));
+          .then(allPages => allPages.reduce((result, nextPage) => [...result, ...nextPage], firstPageData));
       });
   }
 

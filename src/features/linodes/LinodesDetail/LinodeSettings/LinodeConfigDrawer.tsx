@@ -115,10 +115,10 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
         network: true,
         updatedb_disabled: true,
       },
-      kernel: '',
+      kernel: 'linode/latest-64bit',
       label: '',
       memory_limit: maxMemory,
-      root_device: '/dev/sba',
+      root_device: '/dev/sda',
       run_level: 'default',
       useCustomRoot: false,
       virt_mode: 'paravirt',
@@ -298,7 +298,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             <TextField
               label="Kernel"
               select={true}
-              value={kernel || 'linode/latest-64bit'}
+              value={kernel}
               onChange={this.handleChangeKernel}
               errorText={errorFor('kernel')}
               errorGroup="linode-config-drawer"
@@ -609,7 +609,6 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
   requestKernels = () => {
     this.setState({ loading: { ...this.state.loading, kernels: true } });
 
-    // Get first page of kernels.
     return getAllKernels()
       .then((kernels) => {
         this.setState({
