@@ -170,7 +170,6 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
         onChange={this.handlePanelChange}
       >
         {generalError && <Notice text={generalError} error />}
-
           <EnhancedSelect
             label="Disk"
             placeholder="Find a Disk"
@@ -181,7 +180,6 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
             onInputChange={this.onInputChange}
             data-qa-select-linode
           />
-
         <PasswordInput
           label="Password"
           value={this.state.value}

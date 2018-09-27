@@ -1,6 +1,9 @@
-import { omit } from 'ramda';
-import { API_ROOT } from 'src/constants';
+import * as Bluebird from 'bluebird';
+import { omit, range } from 'ramda';
 import { number, object, string } from 'yup';
+
+import { API_ROOT } from 'src/constants';
+
 import Request, { setData, setMethod, setParams, setURL, setXFilter } from '.';
 
 type Page<T> = Linode.ResourcePage<T>;
@@ -21,6 +24,13 @@ export const rescueLinode = (linodeId: number, devices: RescueRequestObject): Pr
 export const getLinodeConfigs = (id: number) =>
   Request<Page<Config>>(
     setURL(`${API_ROOT}/linode/instances/${id}/configs`),
+    setMethod('GET'),
+  )
+    .then(response => response.data);
+
+export const getLinodeConfig = (linodeId: number, configId: number) =>
+  Request<Config>(
+    setURL(`${API_ROOT}/linode/instances/${linodeId}/configs/${configId}`),
     setMethod('GET'),
   )
     .then(response => response.data);
@@ -176,13 +186,36 @@ export const createLinode = (data: any) =>
   )
     .then(response => response.data);
 
-export const getLinodeKernels = (page: number = 0) =>
+export const getLinodeKernels = (params: any = {}, filters: any = {}) =>
   Request<Page<Linode.Kernel>>(
     setURL(`${API_ROOT}/linode/kernels`),
     setMethod('GET'),
-    setParams({ page }),
+    setParams(params),
+    setXFilter(filters),
   )
     .then(response => response.data);
+
+export const getAllKernels: (params?: any, filters?: any) => Promise<Linode.Kernel[]> =
+  (linodeId, params = {}, filters = {}) => {
+    const pagination = { ...params, page_size: 100 };
+
+    return getLinodeKernels(params, filters)
+      .then(({ data: firstPageData, page, pages }) => {
+
+        // If we only have one page, return it.
+        if (page === pages) { return firstPageData; }
+
+        // Create an iterable list of the remaining pages.
+        const remainingPages = range(page + 1, pages + 1);
+
+        //
+        return Bluebird
+          .map(remainingPages, nextPage =>
+            getLinodeKernels({ ...pagination, page: nextPage }, filters).then(response => response.data),
+          )
+          .then(allPages => allPages.reduce((result, nextPage) => [...result, ...nextPage], firstPageData));
+      });
+  }
 
 export const getLinodeTypes = () =>
   Request<Page<Type>>(
@@ -293,14 +326,11 @@ export const deleteLinodeConfig = (linodeId: number, configId: number) =>
     setURL(`${API_ROOT}/linode/instances/${linodeId}/configs/${configId}`),
   );
 
-export const updateLinodeConfig = (
-  linodeId: number,
-  configId: number,
-  data: LinodeConfigCreationData,
-) => Request<Config>(
-  setURL(`${API_ROOT}/linode/instances/${linodeId}/configs/${configId}`),
-  setMethod('PUT'),
-  setData(data),
+export const updateLinodeConfig = (linodeId: number, configId: number, data: LinodeConfigCreationData) =>
+  Request<Config>(
+    setURL(`${API_ROOT}/linode/instances/${linodeId}/configs/${configId}`),
+    setMethod('PUT'),
+    setData(data),
   );
 
 export interface LinodeDiskCreationData {
@@ -309,12 +339,39 @@ export interface LinodeDiskCreationData {
   filesystem?: string;
 }
 
-export const listLinodeDisks = (
-  linodeId: number,
-) => Request<Page<Disk>>(
-  setURL(`${API_ROOT}/linode/instances/${linodeId}/disks`),
-  setMethod('GET'),
+export const listLinodeDisks = (linodeId: number, params: any = {}, filters: any = {}) =>
+  Request<Page<Disk>>(
+    setURL(`${API_ROOT}/linode/instances/${linodeId}/disks`),
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filters),
   );
+
+
+export const getAllLinodeDisks: (linodeId: number, params?: any, filters?: any) => Promise<Linode.Disk[]> =
+  (linodeId, params = {}, filters = {}) => {
+    const pagination = { ...params, page_size: 100 };
+
+    return listLinodeDisks(linodeId, pagination, filters)
+      .then(response => response.data)
+      .then(({ data: firstPageData, page, pages }) => {
+
+        // If we only have one page, return it.
+        if (page === pages) { return firstPageData; }
+
+        // Create an iterable list of the remaining pages.
+        const remainingPages = range(page + 1, pages + 1);
+
+        //
+        return Bluebird
+          .map(remainingPages, nextPage =>
+            listLinodeDisks(linodeId, { ...pagination, page: nextPage }, filters).then(response => response.data.data),
+          )
+          /** We're given Linode.Volume[][], so we flatten that, and append the first page response. */
+          .then(allPages => allPages.reduce((result, nextPage) => [...result, ...nextPage], firstPageData));
+      });
+  }
+
 
 export const createLinodeDisk = (
   linodeId: number,
@@ -323,7 +380,7 @@ export const createLinodeDisk = (
   setURL(`${API_ROOT}/linode/instances/${linodeId}/disks`),
   setMethod('POST'),
   setData(data),
-  );
+);
 
 export const getLinodeDisk = (
   linodeId: number,
@@ -331,7 +388,7 @@ export const getLinodeDisk = (
 ) => Request<Disk>(
   setURL(`${API_ROOT}/linode/instances/${linodeId}/disks/${diskId}`),
   setMethod('GET'),
-  );
+);
 
 export const updateLinodeDisk = (
   linodeId: number,
@@ -341,7 +398,7 @@ export const updateLinodeDisk = (
   setURL(`${API_ROOT}/linode/instances/${linodeId}/disks/${diskId}`),
   setMethod('PUT'),
   setData(data),
-  );
+);
 
 const resizeLinodeDiskSchema = object({
   size: number().required().min(1),
@@ -360,7 +417,7 @@ export const deleteLinodeDisk = (
 ) => Request<{}>(
   setURL(`${API_ROOT}/linode/instances/${linodeId}/disks/${diskId}`),
   setMethod('DELETE'),
-  );
+);
 
 export interface LinodeCloneData {
   // linode_id is missing here beacuse we removed the ability
