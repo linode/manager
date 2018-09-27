@@ -6,6 +6,10 @@ const rdx = (
   result: DevicesAsStrings,
   [key, device]: [string, null | Linode.DiskDevice | Linode.VolumeDevice]) => {
 
+  if (device === null) {
+    return result;
+  }
+
   if (isDisk(device)) {
     return { ...result, [key]: `disk-${device.disk_id}` };
   }
@@ -17,11 +21,11 @@ const rdx = (
   return result;
 };
 
-const isDisk = (d: null | Linode.DiskDevice | Linode.VolumeDevice): d is Linode.DiskDevice => {
-  return d !== null && (d as Linode.DiskDevice).disk_id !== undefined;
+const isDisk = (device: Linode.DiskDevice | Linode.VolumeDevice): device is Linode.DiskDevice => {
+  return typeof (device as Linode.DiskDevice).disk_id === 'number';
 }
-const isVolume = (d: null | Linode.DiskDevice | Linode.VolumeDevice): d is Linode.VolumeDevice => {
-  return d !== null && (d as Linode.VolumeDevice).volume_id !== undefined;
+const isVolume = (device: Linode.DiskDevice | Linode.VolumeDevice): device is Linode.VolumeDevice => {
+  return typeof (device as Linode.VolumeDevice).volume_id === 'number';
 }
 
 export default compose(
