@@ -66,6 +66,6 @@ class Example extends React.Component {
     );
   }
 }
-storiesOf('Dialogs', module)
+storiesOf('Confirmation Dialogs', module)
   .addDecorator(ThemeDecorator)
   .add('Simple Confirmation', () => (<Example />));
