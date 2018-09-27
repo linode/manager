@@ -9,9 +9,6 @@ import Request, { setData, setMethod, setParams, setURL, setXFilter } from '../i
 type Page<T> = Linode.ResourcePage<T>;
 type Volume = Linode.Volume;
 
-<<<<<<< HEAD:src/services/volumes.ts
-export const getVolumes = (params: any = {}, filters: any = {}) =>
-=======
 export interface VolumeRequestPayload {
   label: string,
   size: number,
@@ -19,8 +16,7 @@ export interface VolumeRequestPayload {
   linode_id?: number,
 };
 
-export const getVolumes = (pagination: any = {}, filters: any = {}) =>
->>>>>>> Refactor linodes and volumes:src/services/volumes/volumes.ts
+export const getVolumes = (params: any = {}, filters: any = {}) =>
   Request<Page<Volume>>(
     setURL(`${API_ROOT}/volumes`),
     setMethod('GET'),
@@ -51,7 +47,7 @@ export const getAllVolumes: (params?: any, filters?: any) => Promise<Linode.Volu
           .then(volumePages => volumePages.reduce((result, nextPage) => [...result, ...nextPage], firstPageData));
       });
   }
-
+  
 export const attachVolume = (volumeId: number, payload: {
   linode_id: number,
   config_id?: number,

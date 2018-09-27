@@ -1,6 +1,9 @@
+import * as Bluebird from 'bluebird';
+import { range } from 'ramda';
+
 import { API_ROOT } from 'src/constants';
 
-import Request, { setData, setMethod, setURL } from '../index';
+import Request, { setData, setMethod, setParams, setURL, setXFilter } from '../index';
 
 import { resizeLinodeDiskSchema } from './linode.schema';
 
@@ -13,12 +16,37 @@ export interface LinodeDiskCreationData {
   filesystem?: string;
 }
 
-export const getLinodeDisks = (id: number) =>
-  Request<Page<Linode.Disk>>(
+export const getLinodeDisks = (id: number, params?: any, filter?: any) =>
+  Request<Page<Disk>>(
     setURL(`${API_ROOT}/linode/instances/${id}/disks`),
     setMethod('GET'),
+    setParams(params),
+    setXFilter(filter)
   )
     .then(response => response.data);
+
+export const getAllLinodeDisks: (linodeId: number) => Promise<Linode.Disk[]> =
+  (linodeId, params = {}, filters = {}) => {
+    const pagination = { ...params, page_size: 100 };
+
+    return getLinodeDisks(linodeId, pagination, filters)
+      .then(({ data: firstPageData, page, pages }) => {
+
+        // If we only have one page, return it.
+        if (page === pages) { return firstPageData; }
+
+        // Create an iterable list of the remaining pages.
+        const remainingPages = range(page + 1, pages + 1);
+
+        //
+        return Bluebird
+          .map(remainingPages, nextPage =>
+            getLinodeDisks(linodeId, { ...pagination, page: nextPage }, filters).then(response => response.data),
+          )
+          /** We're given Linode.Volume[][], so we flatten that, and append the first page response. */
+          .then(allPages => allPages.reduce((result, nextPage) => [...result, ...nextPage], firstPageData));
+      });
+  }
 
 export const createLinodeDisk = (
   linodeId: number,

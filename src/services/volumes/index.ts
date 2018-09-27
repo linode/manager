@@ -1,5 +1,6 @@
 export {
   getVolumes,
+  getAllVolumes,
   createVolume,
   updateVolume,
   deleteVolume,
