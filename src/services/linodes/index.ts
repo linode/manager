@@ -29,6 +29,7 @@ export {
 
 export {
   getLinodeDisks,
+  getAllLinodeDisks,
   getLinodeDisk,
   createLinodeDisk,
   updateLinodeDisk,
