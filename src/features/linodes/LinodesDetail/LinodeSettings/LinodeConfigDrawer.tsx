@@ -124,10 +124,8 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
       virt_mode: 'paravirt',
     });
 
-  isOpening = (prevState: boolean, currentState: boolean) => prevState === false && currentState === true;
-
   componentDidUpdate(prevProps: CombinedProps, prevState: State) {
-    const { linodeId, linodeRegion, linodeConfigId } = this.props;
+    const { linodeId, linodeConfigId } = this.props;
 
     if (this.isOpening(prevProps.open, this.props.open)) {
 
@@ -146,38 +144,8 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
         this.requestKernels();
       }
 
-      /** Get all volumes for usage in the block device assignment. */
-      getAllVolumes()
-        .then((volumes) => volumes.reduce((result, volume) => {
-          /**
-           * This is a combination of filter and map. Filter out irrelevant volumes, and update
-           * volumes with the special _id property.
-           */
-          const isAttachedToLinode = volume.linode_id === linodeId;
-          const isUnattached = volume.linode_id === null;
-          const isInRegion = volume.region === linodeRegion;
+      this.getAvailableDevices()
 
-          if (isAttachedToLinode || (isUnattached && isInRegion)) {
-            const extendedVolume = { ...volume, _id: `volume-${volume.id}` };
-
-            return [...result, extendedVolume];
-          }
-
-          return result;
-        }, []))
-        .then(volumes => this.setState({ availableDevices: { ...this.state.availableDevices, volumes } }))
-        .catch(console.error);
-
-      /** Get all Linode disks for usage in the block device assignment. */
-      getAllLinodeDisks(linodeId)
-        .then(disks => disks.map((disk) => ({ ...disk, _id: `disk-${disk.id}` })))
-        .then(disks => this.setState({ availableDevices: { ...this.state.availableDevices, disks } }))
-        .catch(console.error);
-
-      /**
-       * If the linodeConfigId is set, we're editting, so we query to get the config data and
-       * fill out the form with the data.
-       */
       if (linodeConfigId !== undefined) {
         this.setState({ loading: { ...this.state.loading, config: true } });
 
@@ -206,6 +174,10 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             this.setState({ errors: Error(), loading: { ...this.state.loading, config: false } })
           });
       }
+      /**
+       * If the linodeConfigId is set, we're editting, so we query to get the config data and
+       * fill out the form with the data.
+       */
     }
   }
 
@@ -215,7 +187,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
     const loading = Object.values(this.state.loading).some(v => v === true);
 
     return (
-      <Drawer title={`${ linodeConfigId ? 'Edit' : 'Add'} Linode Configuration`} open={open} onClose={onClose}>
+      <Drawer title={`${linodeConfigId ? 'Edit' : 'Add'} Linode Configuration`} open={open} onClose={onClose}>
         <Grid container direction="row">
           {this.renderContent(errors, loading)}
         </Grid>
@@ -234,6 +206,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
 
     return this.renderForm(errors);
   }
+
   renderLoading = () => < CircleProgress />
 
   renderErrorState = () => <ErrorState errorText="Unable to loading configurations." />;
@@ -497,6 +470,40 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
       </React.Fragment>
     );
   };
+
+  isOpening = (prevState: boolean, currentState: boolean) => prevState === false && currentState === true;
+
+  getAvailableDevices = () => {
+    const { linodeId, linodeRegion } = this.props;
+
+    /** Get all volumes for usage in the block device assignment. */
+    getAllVolumes()
+      .then((volumes) => volumes.reduce((result, volume) => {
+        /**
+         * This is a combination of filter and map. Filter out irrelevant volumes, and update
+         * volumes with the special _id property.
+         */
+        const isAttachedToLinode = volume.linode_id === linodeId;
+        const isUnattached = volume.linode_id === null;
+        const isInRegion = volume.region === linodeRegion;
+
+        if (isAttachedToLinode || (isUnattached && isInRegion)) {
+          const extendedVolume = { ...volume, _id: `volume-${volume.id}` };
+
+          return [...result, extendedVolume];
+        }
+
+        return result;
+      }, []))
+      .then(volumes => this.setState({ availableDevices: { ...this.state.availableDevices, volumes } }))
+      .catch(console.error);
+
+    /** Get all Linode disks for usage in the block device assignment. */
+    getAllLinodeDisks(linodeId)
+      .then(disks => disks.map((disk) => ({ ...disk, _id: `disk-${disk.id}` })))
+      .then(disks => this.setState({ availableDevices: { ...this.state.availableDevices, disks } }))
+      .catch(console.error);
+  }
 
   onSubmit = () => {
     const { linodeId, linodeConfigId } = this.props;
