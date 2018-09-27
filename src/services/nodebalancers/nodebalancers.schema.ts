@@ -37,8 +37,12 @@ export const createNodeBalancerConfigSchema = object({
   cipher_suite: string(),
   port: number().integer().min(1).max(65535).required(),
   protocol: string().oneOf(['http', 'https', 'tcp']),
-  ssl_key: string().when('protocol', { is: 'https', then: string().required() }),
-  ssl_cert: string().when('protocol', { is: 'https', then: string().required() }),
+  ssl_key: string()
+    .when('protocol', { is: 'https', then: string()
+      .required('SSL key is required when using HTTPS.') }),
+  ssl_cert: string()
+    .when('protocol', { is: 'https', then: string()
+      .required('SSL certificate is required when using HTTPS.') }),
   stickiness: string(),
   nodes: array()
     .of(nodeBalancerConfigNodeSchema).required().min(1),
