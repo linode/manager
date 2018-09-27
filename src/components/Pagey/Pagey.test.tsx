@@ -146,7 +146,7 @@ describe('Paginator 2: Pagement Day', () => {
       });
 
       it('should set data to response.data', () => {
-        expect(wrapper.prop('result')).toEqual([1, 2, 3, 4]);
+        expect(wrapper.prop('data')).toEqual([1, 2, 3, 4]);
       });
 
       it('should set page to response.page', () => {
@@ -161,7 +161,7 @@ describe('Paginator 2: Pagement Day', () => {
         const fn = (numbers: number[]) => numbers.map((n) => n + 1);
         await wrapper.prop('request')(fn);
         wrapper.update();
-        expect(wrapper.prop('result')).toEqual([2, 3, 4, 5]);
+        expect(wrapper.prop('data')).toEqual([2, 3, 4, 5]);
       });
     });
 

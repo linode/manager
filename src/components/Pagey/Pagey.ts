@@ -28,7 +28,7 @@ interface State<T={}> {
   loading: boolean;
   page: number;
   pageSize: number;
-  result?: T[];
+  data?: T[];
   orderBy?: string;
   order: 'asc' | 'desc';
 }
@@ -67,7 +67,7 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
           this.setState({
             count: response.results,
             page: response.page,
-            result: map ? map(response.data) : response.data,
+            data: map ? map(response.data) : response.data,
             loading: false,
           });
         })

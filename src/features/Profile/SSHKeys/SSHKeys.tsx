@@ -128,7 +128,7 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
   }
 
   renderContent = () => {
-    const { loading, error, result, count } = this.props;
+    const { loading, error, data, count } = this.props;
 
     if (loading) {
       return SSHKeys.renderLoading();
@@ -138,8 +138,8 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
       return SSHKeys.renderError(error);
     }
 
-    if (result && count > 0) {
-      return this.renderData(result);
+    if (data && count > 0) {
+      return this.renderData(data);
     }
 
     return SSHKeys.renderEmptyState();

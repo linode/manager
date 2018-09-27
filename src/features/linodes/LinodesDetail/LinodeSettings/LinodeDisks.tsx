@@ -147,7 +147,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     const {
       classes,
 
-      result: disks,
+      data: disks,
       error: disksErrors,
 
       linodeError,
@@ -563,11 +563,11 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     /**
      * So if there's more than 100 disks, then this count will be off.
      */
-    const { linodeTotalDisk, result, } = this.props;
-    if (!linodeTotalDisk || !result) {
+    const { linodeTotalDisk, data, } = this.props;
+    if (!linodeTotalDisk || !data) {
       return 0;
     }
-    return linodeTotalDisk - result.reduce((acc: number, disk: Linode.Disk) => {
+    return linodeTotalDisk - data.reduce((acc: number, disk: Linode.Disk) => {
       return diskId === disk.id ? acc : acc + disk.size
     }, 0);
   }
