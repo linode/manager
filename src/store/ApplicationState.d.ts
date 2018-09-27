@@ -23,11 +23,12 @@ declare interface RequestableData<D> {
   lastUpdated: number;
   loading: boolean;
   data?: D;
-  error?: Error;
+  error?: Error | Linode.ApiFieldError[];
 }
 
 declare interface FeaturesState {
   linodeDetail: {
     volumes: RequestableData<Linode.Volume[]>
+    disks: RequestableData<Linode.Disk[]>
   }
 }

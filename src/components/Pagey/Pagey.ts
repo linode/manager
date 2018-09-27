@@ -17,6 +17,7 @@ export interface PaginationParams {
 export type FilterParams = any;
 
 export type PaginatedRequest<T = {}> = (
+  ownProps?: any,
   p?: PaginationParams,
   f?: FilterParams,
 ) => Promise<Linode.ResourcePage<T>>;
@@ -27,7 +28,7 @@ interface State<T={}> {
   loading: boolean;
   page: number;
   pageSize: number;
-  result?: T[];
+  data?: T[];
   orderBy?: string;
   order: 'asc' | 'desc';
 }
@@ -61,13 +62,12 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
         filters['+order_by'] = this.state.orderBy;
         filters['+order'] = this.state.order;
       }
-
-      return requestFn({ page: this.state.page, page_size: this.state.pageSize }, filters)
+      return requestFn(this.props, { page: this.state.page, page_size: this.state.pageSize }, filters)
         .then((response) => {
           this.setState({
             count: response.results,
             page: response.page,
-            result: map ? map(response.data) : response.data,
+            data: map ? map(response.data) : response.data,
             loading: false,
           });
         })
