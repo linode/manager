@@ -8,8 +8,6 @@ describe('Enhanced Select Suite', () => {
 
     beforeAll(() => {
         navigateToStory(component, childComponents[0]);
-        browser.waitForVisible('[data-qa-enhanced-select]');
-        browser.waitForVisible('[data-qa-multi-select]');
     });
 
     describe('Basic Select Suite', () => {
@@ -61,7 +59,6 @@ describe('Enhanced Select Suite', () => {
 
         it('should display options on click', () => {
             multiSelect.click();
-            browser.waitForVisible('[data-qa-option]', constants.wait.normal);
 
             options = $$('[data-qa-option');
             expect(options.length).toBe(5);
@@ -104,10 +101,10 @@ describe('Enhanced Select Suite', () => {
         });
 
         it('should display the create menu option', () => {
-            newOption = 'fooooo';
+            newOption = 'foo';
             creatableSelect.$('..').$('input').setValue(newOption);
 
-            browser.waitForVisible(`[data-qa-option="${newOption}"]`, constants.wait.normal);
+            expect($(`[data-qa-option="${newOption}"]`).isVisible()).toBe(true);
             expect($(`[data-qa-option="${newOption}"]`).getText()).toBe(`Create "${newOption}"`);
         });
 
@@ -119,7 +116,7 @@ describe('Enhanced Select Suite', () => {
         it('should select an already defined list option', () => {
             browser.click(`[data-qa-multi-option="${newOption}"]`);
             
-            const optionToSelect = $$('[data-qa-option]')
+            const optionToSelect = $$('[data-qa-option]');
             const optionName = optionToSelect[0].getText();
             optionToSelect[0].click();
 
