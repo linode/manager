@@ -17,7 +17,7 @@ export interface PaginationParams {
 export type FilterParams = any;
 
 interface CancellableRequest {
-  cancel: () => void
+  cancel: (() => void) | null;
   request: () => Promise<Linode.ResourcePage<{}>>;
 }
 
@@ -116,6 +116,10 @@ export default (requestFn: RequestPayload) => (Component: React.ComponentType<an
           });
         })
         .catch((response) => {
+          /* isCancelled is added to the rejection data in the inteceptor in request.ts */
+          if (response.isCancelled) {
+            return;
+          }
           this.setState({ loading: false, error: response });
         });
     };
