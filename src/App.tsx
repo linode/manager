@@ -5,6 +5,7 @@ import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { Sticky, StickyContainer, StickyProps } from 'react-sticky';
 import { compose } from 'redux';
+import { Subscription } from 'rxjs/Subscription';
 import 'typeface-lato';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
@@ -18,15 +19,22 @@ import NotFound from 'src/components/NotFound';
 import SideMenu from 'src/components/SideMenu';
 import { RegionsProvider, WithRegionsContext } from 'src/context/regions';
 import { TypesProvider, WithTypesContext } from 'src/context/types';
+
 import Footer from 'src/features/Footer';
 import ToastNotifications from 'src/features/ToastNotifications';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
+
 import { getDeprecatedLinodeTypes, getLinodeTypes } from 'src/services/linodes';
 import { getRegions } from 'src/services/misc';
+
 import { requestProfile } from 'src/store/reducers/resources/profile';
+
 import composeState from 'src/utilities/composeState';
 import { notifications, theme as themeStorage } from 'src/utilities/storage';
+
+import { events$ } from 'src/events';
 
 shim(); // allows for .finally() usage
 
@@ -180,6 +188,8 @@ const L = {
 export class App extends React.Component<CombinedProps, State> {
   composeState = composeState;
 
+  eventsSub: Subscription;
+
   state: State = {
     menuOpen: false,
     betaNotification: false,
@@ -240,9 +250,43 @@ export class App extends React.Component<CombinedProps, State> {
   componentDidMount() {
     const { getProfile } = this.props.actions;
 
+    /*
+     * We want to listen for migration events side-wide
+     * It's unpredictable when a migration is going to happen. It could take
+     * hours and it could take days. We want to notify to the user when it happens
+     * and then update the Linodes in LinodesDetail and LinodesLanding
+     */
+    this.eventsSub = events$
+      .filter(event => (
+        !event._initial
+        && [
+          'linode_migrate',
+        ].includes(event.action)
+      ))
+      .subscribe((event) => {
+        const { entity: migratedLinode } = event;
+        if (event.action === 'linode_migrate' && event.status === 'finished') {
+          sendToast(`Linode ${migratedLinode!.label} migrated successfully.`);
+        }
+
+        if (event.action === 'linode_migrate' && event.status === 'failed') {
+          sendToast(`Linode ${migratedLinode!.label} migration failed.`, 'error');
+        }
+
+        if (event.action === 'linode_migrate' && event.status === 'scheduled') {
+          sendToast(`Linode ${migratedLinode!.label} scheduled for migration.`);
+        }
+
+        if (event.action === 'linode_migrate' && event.status === 'started') {
+          sendToast(`Linode ${migratedLinode!.label} migration started.`);
+        }
+      });
+
     if (notifications.beta.get() === 'open') {
       this.setState({ betaNotification: true });
     }
+
+
 
     getProfile();
 
