@@ -660,7 +660,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                     url={url}
                     history={this.props.history}
                     openConfigDrawer={this.openConfigDrawer}
-                    notifications={this.state.notifications}
                   />
                   <LinodeConfigSelectionDrawer
                     onClose={this.closeConfigDrawer}

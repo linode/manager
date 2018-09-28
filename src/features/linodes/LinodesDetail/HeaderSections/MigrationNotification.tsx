@@ -24,23 +24,24 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 interface Props {
   text: string;
-  queued: boolean;
-  onClick: () => void;
+  type: string;
+  onClick: (type: string) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const MigrationNotification : React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, onClick, queued, text } = props;
+  const { classes, onClick, text, type } = props;
 
-  // If the migration has already been successfully queued, hide this notification.
-  if (queued) { return null; }
+  const handleClick = () => {
+    onClick(type);
+  }
   
   return (
     <Notice flag warning>
       {text}
       {' To enter the migration queue right now, please '}
-      <span className={classes.link} onClick={onClick}>click here</span>.
+      <span className={classes.link} onClick={handleClick}>click here</span>.
     </Notice>
   );
 };

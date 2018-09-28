@@ -27,8 +27,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 interface Props {
   handleUpgrade: () => void;
-  handleMigration: () => void;
-  hasPendingMigration: boolean;
+  handleMigration: (type: string) => void;
   showPendingMutation: boolean;
   notifications?: Linode.Notification[];
 }
@@ -50,12 +49,12 @@ const NotificationsAndUpgradePanel = (props: CombinedProps) => {
       }
       {
         (props.notifications || []).map((n, idx) =>
-          n.type === 'migration_scheduled'
+          ['migration_scheduled', 'migration_pending'].includes(n.type)
           ? <MigrationNotification
               key={idx}
               text={n.message}
+              type={n.type}
               onClick={props.handleMigration}
-              queued={!props.hasPendingMigration}
             />
           : <ProductNotification key={idx} severity={n.severity} text={n.message} />)
       }
