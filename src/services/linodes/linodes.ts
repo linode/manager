@@ -54,20 +54,13 @@ export const createLinode = (data: any) =>
   )
     .then(response => response.data);
 
-export const renameLinode = (linodeId: number, label: string) =>
-  Request<Linode>(
-    setURL(`${API_ROOT}/linode/instances/${linodeId}`),
-    setMethod('PUT'),
-    setData({ label }),
-  )
-    .then(response => response.data);
-
 export const updateLinode = (id: number, values: Partial<Linode>) =>
   Request<Linode>(
     setURL(`${API_ROOT}/linode/instances/${id}`),
     setMethod('PUT'),
     setData(values),
-  );
+  )
+    .then(response => response.data);
 
 export const deleteLinode = (linodeId: number) =>
   Request<{}>(

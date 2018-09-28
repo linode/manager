@@ -25,8 +25,8 @@ import {
   getLinode,
   getLinodeConfigs,
   getType,
-  renameLinode,
   startMutation,
+  updateLinode,
 } from 'src/services/linodes';
 import { _getLinodeDisks } from 'src/store/reducers/features/linodeDetail/disks';
 import { _getLinodeVolumes } from 'src/store/reducers/features/linodeDetail/volumes';
@@ -436,7 +436,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     const { data: linode } = this.state.context.linode;
     if (!linode) { return; }
 
-    renameLinode(linode.id, label)
+    updateLinode(linode.id, { label })
       .then((linodeResponse) => {
         this.composeState(
           set(L.linode.data, linodeResponse),

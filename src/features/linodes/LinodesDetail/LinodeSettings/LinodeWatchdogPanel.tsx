@@ -52,7 +52,7 @@ class LinodeWatchdogPanel extends React.Component<CombinedProps, State> {
         this.setState(compose(
           setSubmitting(false),
           setSuccess(`Watchdog succesfully ${value ? 'enabled' : 'disabled.'}`),
-          setCurrentStatus(response.data.watchdog_enabled),
+          setCurrentStatus(response.watchdog_enabled),
         ));
       })
       .catch(() => {

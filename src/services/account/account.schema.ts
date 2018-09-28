@@ -35,7 +35,6 @@ export const createOAuthClientSchema = object({
     .max(512, "Label must be between 1 and 512 characters."),
   redirect_uri: string()
     .required("Redirect URI is required.")
-    .url("Must be a valid URL.")
 });
 
 export const updateOAuthClientSchema = object({
@@ -43,5 +42,4 @@ export const updateOAuthClientSchema = object({
     .min(1, "Label must be between 1 and 512 characters.")
     .max(512, "Label must be between 1 and 512 characters."),
   redirect_uri: string()
-    .url("Must be a valid URL.")
 });

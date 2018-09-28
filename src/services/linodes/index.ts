@@ -7,7 +7,6 @@ export {
   createLinode,
   updateLinode,
   deleteLinode,
-  renameLinode,
 } from './linodes';
 
 export {

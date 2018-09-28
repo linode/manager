@@ -45,7 +45,7 @@ export const createNodeBalancerConfigSchema = object({
       .required('SSL certificate is required when using HTTPS.') }),
   stickiness: string(),
   nodes: array()
-    .of(nodeBalancerConfigNodeSchema).required().min(1),
+    .of(nodeBalancerConfigNodeSchema).required().min(1, "You must provide at least one back end node."),
 });
 
 export const UpdateNodeBalancerConfigSchema = object({

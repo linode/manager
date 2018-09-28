@@ -30,8 +30,6 @@ export interface TicketRequest {
  * @param params { Object } any parameters to be sent with the request
  * @param filter { Object } JSON object to be sent as the X-Filter header
  * 
- * If pagination props are not included (in params), all tickets will be returned
- * (or the first 100 if the account has more than 100 tickets).
  * 
  */
 export const getTickets = (params?: any, filter?: any) =>
@@ -68,8 +66,6 @@ export const getTicket = (ticketID:number) =>
  * @param params { Object } any parameters to be sent with the request
  * @param filter { Object } JSON object to be sent as the X-Filter header
  * 
- * If pagination props are not included in the params, all ticket replies will
- * be returned (or the first 100 if the ticket has more than 100 replies).
  * 
  */
 export const getTicketReplies = (ticketId:number, params?: any, filter?: any) =>
