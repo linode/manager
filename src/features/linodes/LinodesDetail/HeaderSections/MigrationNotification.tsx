@@ -31,7 +31,7 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const MigrationNotification : React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, onClick, hidden, text, type } = props;
+  const { classes, onClick, text, type } = props;
 
   const handleClick = () => {
     onClick(type);
