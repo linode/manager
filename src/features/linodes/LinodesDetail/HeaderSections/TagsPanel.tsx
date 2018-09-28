@@ -121,8 +121,11 @@ const TagsPanel: React.StatelessComponent<CombinedProps> = (props) => {
           title="Add New Tag"
           placement="right"
         >
-          <IconButton onClick={toggleCreateTag} className={classes.addButton}>
-            <AddCircle  />
+          <IconButton
+            onClick={toggleCreateTag}
+            className={classes.addButton}
+          >
+            <AddCircle data-qa-add-tag />
           </IconButton>
         </Tooltip> 
       }
