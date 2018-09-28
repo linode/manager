@@ -39,6 +39,7 @@ const LinodeTheme: Linode.Theme = {
     border1: '#ABADAF',
     border2: '#C5C6C8',
     border3: '#eee',
+    borderQR: '#fff',
     borderPagination: '#ccc',
     grey1: '#abadaf',
     grey2: '#E7E7E7',
