@@ -251,6 +251,7 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
           showPendingMutation={showPendingMutation}
           handleUpgrade={this.props.openMutateDrawer}
           handleMigration={this.migrate}
+          status={linode.status}
         />
         <LabelPowerAndConsolePanel
           launchLish={this.launchLish}

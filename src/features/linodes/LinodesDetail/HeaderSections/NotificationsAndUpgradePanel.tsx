@@ -29,6 +29,7 @@ interface Props {
   handleUpgrade: () => void;
   handleMigration: (type: string) => void;
   showPendingMutation: boolean;
+  status: Linode.LinodeStatus;
   notifications?: Linode.Notification[];
 }
 
@@ -50,12 +51,14 @@ const NotificationsAndUpgradePanel = (props: CombinedProps) => {
       {
         (props.notifications || []).map((n, idx) =>
           ['migration_scheduled', 'migration_pending'].includes(n.type)
-          ? <MigrationNotification
-              key={idx}
-              text={n.message}
-              type={n.type}
-              onClick={props.handleMigration}
-            />
+          ? (props.status !== 'migrating' &&
+              <MigrationNotification
+                key={idx}
+                text={n.message}
+                type={n.type}
+                onClick={props.handleMigration}
+              />
+            )
           : <ProductNotification key={idx} severity={n.severity} text={n.message} />)
       }
     </React.Fragment>
