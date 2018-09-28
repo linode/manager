@@ -4,6 +4,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.34.1] - 2018-09-24
+### Added:
+ - Linodes
+     - Users can now add tags to a Linode on creation or on the detail page
+     - Tags display on Linode list, grid and detail views
+     - Tags can be managed on Linode detail view
+ - Search
+     - Tags are searchable. The main Search bar will return a list of Linodes with a tag or tags that match the search term
+ - Small Screen Enhancements
+     - Tables on small screens are now useable and beautiful
+     - Expanded all inputs to full width on small screens
+
+### Changed:
+  - Copy updates
+  - Create header icon on small screens
+  - Updated profile timezone and volume creation selects to be searchable
+
+### Fixed:
+  - Search issue affecting small screens using the dark theme
+  - Bug where deleting a linode erroneously routed the user to the dashboard, now routes to linodes
+  - Issue where updating contact information results in a blank credit card
+  - Issue where changing tabs on the user profile would enable the Delete button for your own user
+  - "Unknown Plan" would display during Linode resizing
+  - Prevent user from submitting empty replies in support tickets
+
 
 ## [0.33.2] - 2018-09-11
 ### Added:
