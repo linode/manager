@@ -28,7 +28,7 @@ import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 
 import { getDeprecatedLinodeTypes, getLinodeTypes } from 'src/services/linodes';
 import { getRegions } from 'src/services/misc';
-
+import { requestNotifications } from 'src/store/reducers/notifications';
 import { requestProfile } from 'src/store/reducers/resources/profile';
 
 import composeState from 'src/utilities/composeState';
@@ -411,6 +411,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, 
   return {
     actions: {
       getProfile: () => dispatch(requestProfile()),
+      getNotifications: () => dispatch(requestNotifications()),
     }
   };
 };

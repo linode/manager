@@ -1,6 +1,6 @@
 import { Location } from 'history';
 import * as moment from 'moment';
-import { allPass, compose, filter, has, Lens, lensPath, pathEq, pathOr, set } from 'ramda';
+import { compose, Lens, lensPath, pathEq, pathOr, set } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
@@ -18,7 +18,6 @@ import { reportException } from 'src/exceptionReporting';
 import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawer';
 import { newLinodeEvents } from 'src/features/linodes/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
-import notifications$ from 'src/notifications';
 import { Requestable } from 'src/requestableContext';
 import { getImage } from 'src/services/images';
 import {
@@ -66,7 +65,6 @@ interface State {
   };
   configDrawer: ConfigDrawerState;
   labelInput: { label: string; errorText: string; };
-  notifications?: Linode.Notification[];
   showPendingMutation: boolean;
   mutateInfo: MutateInfo | null;
   mutateDrawer: MutateDrawer
@@ -127,8 +125,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
   eventsSubscription: Subscription;
 
   volumeEventsSubscription: Subscription;
-
-  notificationsSubscription: Subscription;
 
   diskResizeSubscription: Subscription;
 
@@ -319,8 +315,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
   componentWillUnmount() {
     this.mounted = false;
     this.eventsSubscription.unsubscribe();
-    this.diskResizeSubscription.unsubscribe();
-    this.notificationsSubscription.unsubscribe();
     this.volumeEventsSubscription.unsubscribe();
   }
 
@@ -383,12 +377,12 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
     this.diskResizeSubscription = events$
       .filter((e) => !e._initial)
-      .filter(pathEq(['entity', 'id'], Number(this.props.match.params.linodeId)))
+      .filter(pathEq(['entity', 'id'], Number(linodeId)))
       .filter((e) => e.status === 'finished' && e.action === 'disk_resize')
       .subscribe((e) => disks.request())
 
     this.eventsSubscription = events$
-      .filter(pathEq(['entity', 'id'], Number(this.props.match.params.linodeId)))
+      .filter(pathEq(['entity', 'id'], Number(linodeId)))
       .filter(newLinodeEvents(mountTime))
       .debounce(() => Observable.timer(1000))
       .subscribe((linodeEvent) => {
@@ -416,16 +410,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       .subscribe((v) => {
         actions.getLinodeVolumes();
       });
-
-    /** Get /notifications relevant to this Linode */
-    this.notificationsSubscription = notifications$
-      .map(filter(allPass([
-        pathEq(['entity', 'id'], Number(linodeId)),
-        has('message'),
-      ])))
-      .subscribe((notifications: Linode.Notification[]) => {
-        this.setState({ notifications });
-      })
 
     configs.request();
     disks.request();
