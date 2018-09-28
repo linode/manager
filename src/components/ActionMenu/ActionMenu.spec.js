@@ -45,11 +45,12 @@ describe('Action Menu Suite', () => {
         browser.click(actionMenu);
         
         $(disabledMenuItem).waitForVisible();
+
+        // HACK** REPLACE WITH ACTIONS API
+        browser.moveToObject(tooltipIcon);
+
         expect($(disabledMenuItem).getAttribute('class')).toContain('disabled');
-
         expect($(tooltipIcon).isVisible()).toBe(true);
-        browser.click(tooltipIcon);
-
         expect($(tooltipIcon).getTagName()).toBe('button');
         expect($(tooltip).getText()).toBe('An explanation as to why this item is disabled');
     });
