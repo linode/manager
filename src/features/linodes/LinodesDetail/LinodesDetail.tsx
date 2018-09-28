@@ -639,7 +639,8 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
             <ImageProvider value={this.state.context.image}>
               <LinodeProvider value={this.state.context.linode}>
                 <React.Fragment>
-                  <LinodesDetailHeader 
+                  <LinodesDetailHeader
+                    openMutateDrawer={this.openMutateDrawer} 
                     showPendingMutation={this.state.showPendingMutation}
                     labelInput={{
                       label: labelInput.label,

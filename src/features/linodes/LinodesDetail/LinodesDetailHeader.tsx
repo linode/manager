@@ -33,6 +33,7 @@ interface ReducedLinode {
 
 interface Props {
   showPendingMutation: boolean;
+  openMutateDrawer: () => void;
   labelInput: LabelInput;
   linode: ReducedLinode;
   url: string;
@@ -109,11 +110,6 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
 
   editLabel = (value: string) => {
     this.props.labelInput.onEdit(value)
-  }
-
-  goToOldManager = () => {
-    const { linode } = this.props;
-    window.open(`https://manager.linode.com/linodes/mutate/${linode.label}`)
   }
 
   handleToggleCreate = () => {
@@ -228,7 +224,7 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
         <NotificationsAndUpgradePanel
           notifications={notifications}
           showPendingMutation={showPendingMutation}
-          handleUpgrade={this.goToOldManager}
+          handleUpgrade={this.props.openMutateDrawer}
         />
         <LabelPowerAndConsolePanel
           launchLish={this.launchLish}
