@@ -40,7 +40,7 @@ const NotificationsAndUpgradePanel = (props: CombinedProps) => {
           this upgrade and what it includes, `}
           {/** @todo change onClick to open mutate drawer once migrate exists */}
           <span className={props.classes.link} onClick={props.handleUpgrade}>
-            please visit the classic Linode Manager.
+            click here.
           </span>
         </Notice>
       }
