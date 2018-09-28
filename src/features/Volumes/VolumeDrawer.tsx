@@ -461,6 +461,12 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     this.debouncedSearch(inputValue);
   }
 
+  getSelectedLinode = (linodeId: number) => {
+    const { linodes } = this.state;
+    const idx = linodes.findIndex((linode) => Number(linodeId) === Number(linode.value));
+    return idx > -1 ? linodes[idx] : 0;
+  }
+
   renderLinodeOptions = (linodes: Linode.Linode[]) => {
     const { linodeLabel, mode } = this.props;
     if (!linodes) { return []; }
@@ -495,6 +501,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
       errors,
       linodes,
       linodesLoading,
+      linodeId,
     } = this.state;
 
     const hasErrorFor = getAPIErrorFor({
@@ -618,6 +625,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
             <EnhancedSelect
               label="Linode"
               placeholder="Select a Linode"
+              value={this.getSelectedLinode(linodeId)}
               isLoading={linodesLoading}
               errorText={linodeError}
               disabled={
