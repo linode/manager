@@ -209,6 +209,16 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
     this.setState({ privateIP: !this.state.privateIP });
   }
 
+  handleDisablePasswordField = () => {
+    if (!this.state.selectedImageID) {
+      return {
+        disabled: true,
+        reason: 'You must first select an image to enter a root password',
+      }
+    }
+    return;
+  }
+
   getImageInfo = (image: Linode.Image | undefined): Info => {
     return image && {
       title: `${image.vendor || image.label}`,
@@ -422,6 +432,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
             updateFor={[label, tagObject, errors]}
           />
           <AccessPanel
+            passwordFieldDisabled={this.handleDisablePasswordField()}
             error={hasErrorFor('root_pass')}
             updateFor={[password, errors, userSSHKeys, selectedImageID]}
             password={password}
