@@ -31,22 +31,26 @@ const durationMap = {
   'never': () => moment.duration(1000,'years'),
 }
 
-const shouldCutoff = (time: any, cutoff?: TimeInterval): boolean => {
+const shouldHumanize = (time: any, cutoff?: TimeInterval): boolean => {
+  // If cutoff is not provided, use the default ISO output.
   if (!cutoff) { return false; }
   const duration = durationMap[cutoff]();
   const diff =  moment.duration(moment().diff(time));
+  // Humanize the date if it is earlier than the cutoff:
   return diff <= duration;
 }
 
 export const DateTimeDisplay: React.StatelessComponent<CombinedProps> = (props) => {
   let time;
   try {
+    // Unknown error was causing this to crash in rare situations.
     time = moment.utc(props.value).tz(props.timezone);
   }
   catch {
+    // Better to return a blank date than an error or incorrect information.
     return null;
   }
-  const formattedTime = shouldCutoff(time, props.humanizeCutoff)
+  const formattedTime = shouldHumanize(time, props.humanizeCutoff)
     ? time.fromNow()
     : time.format(props.format || ISO_FORMAT)
     return (
