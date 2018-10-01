@@ -23,7 +23,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   qrcode: {
     margin: `${theme.spacing.unit * 2}px 0`,
-    border: `5px solid ${theme.color.borderQR}`,
+    border: `5px solid #fff`,
   }
 });
 
