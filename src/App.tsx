@@ -248,7 +248,7 @@ export class App extends React.Component<CombinedProps, State> {
   };
 
   componentDidMount() {
-    const { getProfile } = this.props.actions;
+    const { getNotifications, getProfile } = this.props.actions;
 
     /*
      * We want to listen for migration events side-wide
@@ -289,6 +289,7 @@ export class App extends React.Component<CombinedProps, State> {
 
 
     getProfile();
+    getNotifications();
 
     this.state.regionsContext.request();
     this.state.typesContext.request();
@@ -404,6 +405,7 @@ const themeDataAttr = () => {
 interface DispatchProps {
   actions: {
     getProfile: () => void;
+    getNotifications: () => void;
   },
 }
 

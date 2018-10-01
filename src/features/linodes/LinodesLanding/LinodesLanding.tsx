@@ -486,7 +486,6 @@ interface StateProps {
 
 const mapStateToProps: MapStateToProps<StateProps, never, ApplicationState> = (state) => ({
   notifications: (state.notifications.data || [])
-
 });
 
 const connected = connect(mapStateToProps);

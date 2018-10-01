@@ -51,7 +51,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 
 interface State {
   anchorEl?: HTMLElement;
-  notifications: Linode.Notification[];
   privacyPolicyModalOpen: boolean;
   UserAgentNotification: boolean;
   UserAgentNotificationWarning: any;
@@ -90,7 +89,6 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
   ];
 
   state: State = {
-    notifications: [],
     anchorEl: undefined,
     privacyPolicyModalOpen: false,
     UserAgentNotification: true,
@@ -125,8 +123,8 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
   closeUserAgentNotification = () => this.setState({ UserAgentNotification: false })
 
   render() {
-    const { anchorEl, notifications, UserAgentNotificationWarning } = this.state;
-    const { classes } = this.props;
+    const { anchorEl, UserAgentNotificationWarning } = this.state;
+    const { classes, notifications } = this.props;
     const severity = notifications.reduce(reduceSeverity, null);
 
     return (
