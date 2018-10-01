@@ -118,7 +118,7 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
     }
     this.searchIndex.search({
       query: inputValue,
-      hitsPerPage: 5,
+      hitsPerPage: 20,
     }, this.searchSuccess);
   }
 
