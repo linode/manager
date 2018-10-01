@@ -32,7 +32,7 @@ class Example extends React.Component<{},State> {
       <React.Fragment>
         <p>{'Default display: '}
           <DateTimeDisplay
-            value={this.state.time}
+            value={"2018-07-20T04:23:17"}
             timezone={'America/New_York'}
             classes={{root:''}}
           />
