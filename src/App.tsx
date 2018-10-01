@@ -28,7 +28,7 @@ import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 
 import { getDeprecatedLinodeTypes, getLinodeTypes } from 'src/services/linodes';
 import { getRegions } from 'src/services/misc';
-
+import { requestNotifications } from 'src/store/reducers/notifications';
 import { requestProfile } from 'src/store/reducers/resources/profile';
 
 import composeState from 'src/utilities/composeState';
@@ -248,7 +248,7 @@ export class App extends React.Component<CombinedProps, State> {
   };
 
   componentDidMount() {
-    const { getProfile } = this.props.actions;
+    const { getNotifications, getProfile } = this.props.actions;
 
     /*
      * We want to listen for migration events side-wide
@@ -279,6 +279,7 @@ export class App extends React.Component<CombinedProps, State> {
     }
 
     getProfile();
+    getNotifications();
 
     this.state.regionsContext.request();
     this.state.typesContext.request();
@@ -394,6 +395,7 @@ const themeDataAttr = () => {
 interface DispatchProps {
   actions: {
     getProfile: () => void;
+    getNotifications: () => void;
   },
 }
 
@@ -401,6 +403,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, 
   return {
     actions: {
       getProfile: () => dispatch(requestProfile()),
+      getNotifications: () => dispatch(requestNotifications()),
     }
   };
 };

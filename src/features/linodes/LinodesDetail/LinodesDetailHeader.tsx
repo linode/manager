@@ -1,5 +1,6 @@
 import { clone, pathOr } from 'ramda';
 import * as React from 'react';
+import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/debounce';
 import 'rxjs/add/operator/filter';
@@ -12,8 +13,10 @@ import NotificationsAndUpgradePanel from './HeaderSections/NotificationsAndUpgra
 import TabsAndStatusBarPanel from './HeaderSections/TabsAndStatusBarPanel';
 import TagsPanel from './HeaderSections/TagsPanel';
 
-import { updateLinode } from 'src/services/linodes';
+import { scheduleOrQueueMigration, updateLinode } from 'src/services/linodes';
 import { getTags } from 'src/services/tags';
+
+import { requestNotifications } from 'src/store/reducers/notifications';
 
 interface LabelInput {
   label: string;
@@ -57,13 +60,14 @@ interface State {
   isCreatingTag: boolean;
   tagInputValue: string;
   listDeletingTags: string[];
+  hasScheduledMigration: boolean;
 }
 
 interface ActionMeta {
   action: string;
 }
 
-type CombinedProps = Props;
+type CombinedProps = Props & StateProps & DispatchProps;
 
 class LinodesDetailHeader extends React.Component<CombinedProps, State> {
   state: State = {
@@ -72,10 +76,13 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
     isCreatingTag: false,
     tagInputValue: '',
     listDeletingTags: [],
+    hasScheduledMigration: false,
   }
 
   componentDidMount() {
     const { linode } = this.props;
+    const { getNotifications } = this.props.actions;
+    getNotifications();
     getTags()
       .then(response => {
         /*
@@ -101,6 +108,24 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
         this.setState({ tagsToSuggest: reshapedTags })
       })
       .catch(e => e)
+  }
+
+  migrate = (type: string) => {
+    const { linode } = this.props;
+    const { getNotifications } = this.props.actions;
+    scheduleOrQueueMigration(linode.id)
+      .then((_) => {
+        // A 200 response indicates that the operation was successful.
+        const successMessage = type === 'migration_scheduled'
+          ? "Your Linode has been entered into the migration queue."
+          : "Your migration has been scheduled."
+        sendToast(successMessage);
+        getNotifications()
+      })
+      .catch((_) => {
+        // @todo: use new error handling pattern here after merge.
+        sendToast("There was an error starting your migration.", "error");
+      })
   }
 
   launchLish = () => {
@@ -225,6 +250,8 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
           notifications={notifications}
           showPendingMutation={showPendingMutation}
           handleUpgrade={this.props.openMutateDrawer}
+          handleMigration={this.migrate}
+          status={linode.status}
         />
         <LabelPowerAndConsolePanel
           launchLish={this.launchLish}
@@ -268,4 +295,32 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
   }
 }
 
-export default LinodesDetailHeader;
+interface DispatchProps {
+  actions: {
+    getNotifications: () => void;
+  },
+}
+
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, ownProps) => {
+  return {
+    actions: {
+      getNotifications: () => dispatch(requestNotifications()),
+    }
+  };
+};
+
+const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state, ownProps) => ({
+  notificationsLoading: state.notifications.loading,
+  notificationsError: state.notifications.error,
+  notifications: state.notifications.data,
+});
+
+interface StateProps {
+  notificationsLoading: boolean;
+  notificationError?: Error;
+  notifications?: Linode.Notification[];
+}
+
+export const connected = connect(mapStateToProps, mapDispatchToProps);
+
+export default connected(LinodesDetailHeader);

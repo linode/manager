@@ -24,6 +24,7 @@ it('renders without crashing', () => {
             profileLoading={false}
             actions={{
               getProfile: jest.fn(),
+              getNotifications: jest.fn(),
             }}
             documentation={[]}
             toggleTheme={jest.fn()}

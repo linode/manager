@@ -6,6 +6,7 @@ declare interface ApplicationState {
   documentation: DocumentationState;
   features: FeaturesState;
   volumeDrawer: VolumeDrawerState;
+  notifications: RequestableData<Linode.Notification[]>;
 }
 
 declare interface AuthState {
