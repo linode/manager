@@ -44,10 +44,10 @@ export const createLinodeIfNone = () => {
     }
 }
 
-export const apiCreateLinode = (linodeLabel=false, privateIp=false) => {
+export const apiCreateLinode = (linodeLabel=false, privateIp=false, tags=[]) => {
     const token = readToken();
     const newLinodePass = crypto.randomBytes(20).toString('hex');
-    const linode = browser.createLinode(token, newLinodePass, linodeLabel);
+    const linode = browser.createLinode(token, newLinodePass, linodeLabel, tags);
 
     browser.url(constants.routes.linodes);
     browser.waitForVisible('[data-qa-add-new-menu-button]', constants.wait.normal);

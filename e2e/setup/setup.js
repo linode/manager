@@ -1,6 +1,7 @@
 const https = require('https');
 const axios = require('axios');
 const API_ROOT = process.env.REACT_APP_API_ROOT;
+const { isEmpty } = require('lodash');
 
 const getAxiosInstance = function(token) {
   let axiosInstance;
@@ -122,7 +123,7 @@ exports.removeAllLinodes = token => {
     });
 }
 
-exports.createLinode = (token, password, linodeLabel) => {
+exports.createLinode = (token, password, linodeLabel, tags) => {
     return new Promise((resolve, reject) => {
         const linodesEndpoint = '/linode/instances';
         
@@ -137,6 +138,10 @@ exports.createLinode = (token, password, linodeLabel) => {
 
         if (linodeLabel !== false) {
             linodeConfig['label'] = linodeLabel;
+        }
+
+        if (!isEmpty(tags)) {
+            linodeConfig['tags'] = tags;
         }
 
         return getAxiosInstance(token).post(linodesEndpoint, linodeConfig)
