@@ -75,13 +75,13 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
           label: 'RAM',
           newAmount: props.mutateInfo.memory,
           currentAmount: props.currentTypeInfo.memory,
-          unit: 'GB'
+          unit: 'MB     '
         },
         disk: {
           label: 'Storage',
           newAmount: props.mutateInfo.disk,
           currentAmount: props.currentTypeInfo.disk,
-          unit: 'GB'
+          unit: 'MB'
         },
         transfer: {
           label: 'Transfer',
