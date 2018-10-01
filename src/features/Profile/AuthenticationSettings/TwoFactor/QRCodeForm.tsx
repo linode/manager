@@ -15,9 +15,8 @@ import CopyableTextField from 'src/features/Volumes/CopyableTextField';
 
 type ClassNames = 'root' | 'instructions' | 'qrcode';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
-  root: {
-  },
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+  root: {},
   instructions: {
     marginTop: theme.spacing.unit * 2,
   },
