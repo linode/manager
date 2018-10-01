@@ -30,6 +30,7 @@ const LinodeTheme: Linode.Theme = {
     navy: '#32363C',
     lightBlue: '#444',
     white: '#32363C',
+    pureWhite: '#000',
   },
   color: {
     headline: primaryColors.headline,

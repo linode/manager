@@ -33,7 +33,8 @@ export const storage = {
     set: (whichTheme: Theme) => setStorage(THEME, whichTheme),
   },
   notifications: {
-    beta: {
+    welcome: {
+      /** Leaving the LS key alone so it's not popping for those who've dismissed it. */
       get: (): Beta => getStorage(BETA_NOTIFICATION, 'open'),
       set: (open: Beta) => setStorage(BETA_NOTIFICATION, open),
     }
