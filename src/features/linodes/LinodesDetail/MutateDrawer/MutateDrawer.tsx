@@ -75,13 +75,13 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
           label: 'RAM',
           newAmount: props.mutateInfo.memory,
           currentAmount: props.currentTypeInfo.memory,
-          unit: 'MB'
+          unit: 'GB'
         },
         disk: {
           label: 'Storage',
           newAmount: props.mutateInfo.disk,
           currentAmount: props.currentTypeInfo.disk,
-          unit: 'MB'
+          unit: 'GB'
         },
         transfer: {
           label: 'Transfer',
@@ -133,8 +133,9 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
             }
             return (
               <ListItem key={label}>
-                {`${label} goes from ${currentAmount} ${unit} to
-                ${newAmount} ${unit}`}
+                <Typography>
+                  {label} goes from {currentAmount} {unit} to <strong>{newAmount} {unit}</strong>
+                </Typography>
               </ListItem>
             )
           })}
