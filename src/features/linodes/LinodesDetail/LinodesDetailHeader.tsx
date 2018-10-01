@@ -239,10 +239,12 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
       showPendingMutation,
       labelInput,
       linode,
-      url,
       notifications,
+      url,
       openConfigDrawer,
     } = this.props;
+
+    
 
     return (
       <React.Fragment>
@@ -309,10 +311,17 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, 
   };
 };
 
+const filterNotifications = (linodeId: number, notifications: Linode.Notification[] = []) => {
+    return notifications.filter((notification) =>
+      pathOr(0, ['entity','id'], notification) === linodeId
+    )
+}
+
 const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state, ownProps) => ({
   notificationsLoading: state.notifications.loading,
   notificationsError: state.notifications.error,
-  notifications: state.notifications.data,
+  // Only use notifications for this Linode.
+  notifications: filterNotifications(ownProps.linode.id, state.notifications.data),
 });
 
 interface StateProps {
