@@ -272,10 +272,6 @@ export class App extends React.Component<CombinedProps, State> {
         if (event.action === 'linode_migrate' && event.status === 'failed') {
           sendToast(`Linode ${migratedLinode!.label} migration failed.`, 'error');
         }
-
-        if (event.action === 'linode_migrate' && event.status === 'scheduled') {
-          sendToast(`Linode ${migratedLinode!.label} scheduled for migration.`);
-        }
       });
 
     if (notifications.beta.get() === 'open') {
