@@ -10,15 +10,10 @@ import { Props as TextFieldProps } from 'src/components/TextField';
 import StrengthIndicator from '../PasswordInput/StrengthIndicator';
 import HideShowText from './HideShowText';
 
-interface Disabled {
-  disabled: boolean;
-  reason: string;
-}
-
 interface Props extends TextFieldProps {
   value?: string;
   required?: boolean;
-  disabledWithReason?: Disabled;
+  disabledReason?: string;
 }
 
 interface State {
@@ -64,7 +59,7 @@ class PasswordInput extends React.Component<CombinedProps, State> {
 
   render() {
     const { strength } = this.state;
-    const { classes, value, required, disabled, disabledWithReason, ...rest } = this.props;
+    const { classes, value, required, disabledReason, ...rest } = this.props;
 
     return (
       <Grid container className={classes.container}>
@@ -73,8 +68,7 @@ class PasswordInput extends React.Component<CombinedProps, State> {
         >
           <HideShowText
             {...rest}
-            tooltipText={(disabledWithReason) && disabledWithReason.reason}
-            disabled={(disabledWithReason) ? disabledWithReason.disabled : disabled}
+            tooltipText={disabledReason}
             value={value}
             onChange={this.onChange}
             fullWidth

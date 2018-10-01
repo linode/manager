@@ -6,7 +6,7 @@ import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
-import AccessPanel, { UserSSHKeyObject } from 'src/components/AccessPanel';
+import AccessPanel, { Disabled, UserSSHKeyObject } from 'src/components/AccessPanel';
 import CheckoutBar from 'src/components/CheckoutBar';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
@@ -77,6 +77,7 @@ interface Props {
   /** Comes from HOC */
   userSSHKeys: UserSSHKeyObject[];
   tagObject: TagObject;
+  handleDisablePasswordField: (imageSelected: boolean) => Disabled | undefined;
 }
 
 interface State {
@@ -207,16 +208,6 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
 
   handleTogglePrivateIP = () => {
     this.setState({ privateIP: !this.state.privateIP });
-  }
-
-  handleDisablePasswordField = () => {
-    if (!this.state.selectedImageID) {
-      return {
-        disabled: true,
-        reason: 'You must first select an image to enter a root password',
-      }
-    }
-    return;
   }
 
   getImageInfo = (image: Linode.Image | undefined): Info => {
@@ -432,7 +423,8 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
             updateFor={[label, tagObject, errors]}
           />
           <AccessPanel
-            passwordFieldDisabled={this.handleDisablePasswordField()}
+            /* disable the password field if we haven't selected an image */
+            passwordFieldDisabled={this.props.handleDisablePasswordField(!!selectedImageID)}
             error={hasErrorFor('root_pass')}
             updateFor={[password, errors, userSSHKeys, selectedImageID]}
             password={password}
