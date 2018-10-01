@@ -276,17 +276,11 @@ export class App extends React.Component<CombinedProps, State> {
         if (event.action === 'linode_migrate' && event.status === 'scheduled') {
           sendToast(`Linode ${migratedLinode!.label} scheduled for migration.`);
         }
-
-        if (event.action === 'linode_migrate' && event.status === 'started') {
-          sendToast(`Linode ${migratedLinode!.label} migration started.`);
-        }
       });
 
     if (notifications.beta.get() === 'open') {
       this.setState({ betaNotification: true });
     }
-
-
 
     getProfile();
 
