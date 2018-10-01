@@ -149,6 +149,8 @@ class ConfigureLinode extends Page {
         expect(this.labelHeader.isVisible()).toBe(true);
         expect(this.label.isVisible()).toBe(true);
 
+        expect(this.multiSelect.isVisible()).toBe(true);
+
         expect(this.passwordHeader.isVisible()).toBe(true);
         expect(this.password.isVisible()).toBe(true);
         
