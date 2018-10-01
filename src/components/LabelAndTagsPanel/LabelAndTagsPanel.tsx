@@ -64,7 +64,7 @@ class InfoPanel extends React.Component<CombinedProps> {
   getEmptyMessage = (value:NoOptionsMessageProps) => {
     const { getLinodeTagList } = this.props.tagObject!.actions;
     const tags = getLinodeTagList();
-    if (tags.includes(value.inputValue)) { return "This tag is already selected."}
+    if (tags.includes(value.inputValue)) { return 'This tag is already selected.'}
     else { return "No results." }
   }
 

@@ -22,7 +22,6 @@ const SelectPlaceholder: React.StatelessComponent<CombinedProps> = (props) => {
     <Typography
       data-qa-multi-select={props.isMulti ? props.selectProps.placeholder : false}
       className={props.classes.root}
-      color="textSecondary"
       {...props.innerProps}
     >
       {props.children}
