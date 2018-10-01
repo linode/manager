@@ -70,7 +70,7 @@ class LinodeSettingsDeletPanel extends React.Component<CombinedProps, State> {
           actions={this.renderConfirmationActions}
           open={this.state.open}
         >
-          Deleting a Linode will result in permanent data loss. Are you sure?
+          <Typography>Deleting a Linode will result in permanent data loss. Are you sure?</Typography>
         </ConfirmationDialog>
       </React.Fragment>
     );
