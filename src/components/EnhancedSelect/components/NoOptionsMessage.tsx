@@ -20,7 +20,6 @@ const NoOptionsMessage: React.StatelessComponent<CombinedProps> = (props) => {
 
   return (
     <Typography
-      color="textSecondary"
       className={selectProps.classes.noOptionsMessage}
       {...innerProps}
     >

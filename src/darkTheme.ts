@@ -231,13 +231,13 @@ const LinodeTheme: Linode.Theme = {
     },
     MuiChip: {
       root: {
-        backgroundColor: '#f4f4f4',
+        backgroundColor: 'rgba(0, 0, 0, 0.2)',
         height: 24,
         borderRadius: 4,
         color: '#fff',
         '&:hover': {
           '& $deleteIcon': {
-            color: '#222',
+            color: '#fff',
           },
         },
       },
