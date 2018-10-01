@@ -1,7 +1,7 @@
 const { navigateToStory } = require('../../../e2e/utils/storybook');
 
 describe('Confirmation Dialog Suite', () => {
-    const component = 'Dialogs';
+    const component = 'Confirmation Dialogs';
     const childStories = [
         'Simple Confirmation',
     ];
