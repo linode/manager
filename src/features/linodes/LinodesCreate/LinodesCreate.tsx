@@ -266,6 +266,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
             history={this.props.history}
             selectedStackScriptFromQuery={this.state.selectedStackScriptIDFromQueryString}
             selectedTabFromQuery={this.state.selectedStackScriptTabFromQueryString}
+            handleDisablePasswordField={this.handleDisablePasswordField}
           />
         );
       },
