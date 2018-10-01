@@ -5,11 +5,11 @@ import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { Sticky, StickyContainer, StickyProps } from 'react-sticky';
 import { compose } from 'redux';
+import { Subscription } from 'rxjs/Subscription';
 import 'typeface-lato';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-import BetaNotification from 'src/BetaNotification';
 import DefaultLoader from 'src/components/DefaultLoader';
 import DocsSidebar from 'src/components/DocsSidebar';
 import { DocumentTitleSegment, withDocumentTitleProvider } from 'src/components/DocumentTitle';
@@ -18,15 +18,23 @@ import NotFound from 'src/components/NotFound';
 import SideMenu from 'src/components/SideMenu';
 import { RegionsProvider, WithRegionsContext } from 'src/context/regions';
 import { TypesProvider, WithTypesContext } from 'src/context/types';
+
 import Footer from 'src/features/Footer';
 import ToastNotifications from 'src/features/ToastNotifications';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
+
 import { getDeprecatedLinodeTypes, getLinodeTypes } from 'src/services/linodes';
 import { getRegions } from 'src/services/misc';
+import { requestNotifications } from 'src/store/reducers/notifications';
 import { requestProfile } from 'src/store/reducers/resources/profile';
+
 import composeState from 'src/utilities/composeState';
 import { notifications, theme as themeStorage } from 'src/utilities/storage';
+import WelcomeBanner from 'src/WelcomeBanner';
+
+import { events$ } from 'src/events';
 
 shim(); // allows for .finally() usage
 
@@ -152,7 +160,7 @@ interface Props {
 
 interface State {
   menuOpen: boolean;
-  betaNotification: boolean;
+  welcomeBanner: boolean;
   typesContext: WithTypesContext;
   regionsContext: WithRegionsContext;
 }
@@ -180,9 +188,11 @@ const L = {
 export class App extends React.Component<CombinedProps, State> {
   composeState = composeState;
 
+  eventsSub: Subscription;
+
   state: State = {
     menuOpen: false,
-    betaNotification: false,
+    welcomeBanner: false,
     typesContext: {
       lastUpdated: 0,
       loading: false,
@@ -238,13 +248,38 @@ export class App extends React.Component<CombinedProps, State> {
   };
 
   componentDidMount() {
-    const { getProfile } = this.props.actions;
+    const { getNotifications, getProfile } = this.props.actions;
 
-    if (notifications.beta.get() === 'open') {
-      this.setState({ betaNotification: true });
+    /*
+     * We want to listen for migration events side-wide
+     * It's unpredictable when a migration is going to happen. It could take
+     * hours and it could take days. We want to notify to the user when it happens
+     * and then update the Linodes in LinodesDetail and LinodesLanding
+     */
+    this.eventsSub = events$
+      .filter(event => (
+        !event._initial
+        && [
+          'linode_migrate',
+        ].includes(event.action)
+      ))
+      .subscribe((event) => {
+        const { entity: migratedLinode } = event;
+        if (event.action === 'linode_migrate' && event.status === 'finished') {
+          sendToast(`Linode ${migratedLinode!.label} migrated successfully.`);
+        }
+
+        if (event.action === 'linode_migrate' && event.status === 'failed') {
+          sendToast(`Linode ${migratedLinode!.label} migration failed.`, 'error');
+        }
+      });
+
+    if (notifications.welcome.get() === 'open') {
+      this.setState({ welcomeBanner: true });
     }
 
     getProfile();
+    getNotifications();
 
     this.state.regionsContext.request();
     this.state.typesContext.request();
@@ -259,9 +294,9 @@ export class App extends React.Component<CombinedProps, State> {
     });
   }
 
-  closeBetaNotice = () => {
-    this.setState({ betaNotification: false });
-    notifications.beta.set('closed');
+  closeWelcomeBanner = () => {
+    this.setState({ welcomeBanner: false });
+    notifications.welcome.set('closed');
   }
 
   render() {
@@ -330,9 +365,9 @@ export class App extends React.Component<CombinedProps, State> {
 
                   </main>
                   <Footer />
-                  <BetaNotification
-                    open={this.state.betaNotification}
-                    onClose={this.closeBetaNotice}
+                  <WelcomeBanner
+                    open={this.state.welcomeBanner}
+                    onClose={this.closeWelcomeBanner}
                     data-qa-beta-notice />
                   <ToastNotifications />
                   <VolumeDrawer />
@@ -360,6 +395,7 @@ const themeDataAttr = () => {
 interface DispatchProps {
   actions: {
     getProfile: () => void;
+    getNotifications: () => void;
   },
 }
 
@@ -367,6 +403,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, 
   return {
     actions: {
       getProfile: () => dispatch(requestProfile()),
+      getNotifications: () => dispatch(requestNotifications()),
     }
   };
 };
