@@ -16,16 +16,12 @@ class AsyncContentExample extends React.Component {
   handleToggleExpand = (e: any, expanded: boolean) => {
     if (expanded && !this.state.data) {
       this.setState({ loading: true });
-      setTimeout(() => {
-        const myPromise = () => new Promise((resolve, reject) => {
-          resolve();
-        });
-        myPromise().then(() =>
-          this.setState({
-            data: 'Your patience has been rewarded',
-            loading: false,
-          }))
-      }, 2000);
+      const myPromise = () => new Promise((resolve) => setTimeout(() => resolve(), 2000));
+      myPromise().then(() =>
+        this.setState({
+          data: 'Your patience has been rewarded',
+          loading: false,
+        }))
     }
   }
 
