@@ -69,8 +69,8 @@ exports.browserCommands = () => {
         return token;
     });
 
-    browser.addCommand('createLinode', function async(token, password, linodeLabel=false) {
-        return createLinode(token, password, linodeLabel)
+    browser.addCommand('createLinode', function async(token, password, linodeLabel=false, tags=[]) {
+        return createLinode(token, password, linodeLabel, tags)
             .then(res => res)
             .catch(err => err);
     });

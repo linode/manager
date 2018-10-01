@@ -26,6 +26,9 @@ export default class Page {
     get progressBar() { return $('[data-qa-circle-progress]'); }
     get actionMenu() { return $('[data-qa-action-menu]'); }
     get actionMenuItem() { return $('[data-qa-action-menu-item]'); }
+    get selectOptions() { return $$('[data-qa-option]'); }
+    get selectOption() { return $('[data-qa-option]'); }
+    get tag() { return $('[data-qa-tag]'); }
 
     constructor() {
         this.pageTitle = 'Base page';
