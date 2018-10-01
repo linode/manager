@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
