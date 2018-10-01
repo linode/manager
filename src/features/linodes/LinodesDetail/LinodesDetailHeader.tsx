@@ -13,7 +13,7 @@ import NotificationsAndUpgradePanel from './HeaderSections/NotificationsAndUpgra
 import TabsAndStatusBarPanel from './HeaderSections/TabsAndStatusBarPanel';
 import TagsPanel from './HeaderSections/TagsPanel';
 
-import { startMigration, updateLinode } from 'src/services/linodes';
+import { scheduleOrQueueMigration, updateLinode } from 'src/services/linodes';
 import { getTags } from 'src/services/tags';
 
 import { requestNotifications } from 'src/store/reducers/notifications';
@@ -113,7 +113,7 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
   migrate = (type: string) => {
     const { linode } = this.props;
     const { getNotifications } = this.props.actions;
-    startMigration(linode.id)
+    scheduleOrQueueMigration(linode.id)
       .then((_) => {
         // A 200 response indicates that the operation was successful.
         const successMessage = type === 'migration_scheduled'

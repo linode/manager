@@ -386,7 +386,7 @@ export const startMutation = (linodeID: number) => {
     .then(response => response.data)
 }
 
-export const startMigration = (linodeID: number) => {
+export const scheduleOrQueueMigration = (linodeID: number) => {
   return Request<{}>(
     setURL(`${API_ROOT}/linode/instances/${linodeID}/migrate`),
     setMethod('POST'),
