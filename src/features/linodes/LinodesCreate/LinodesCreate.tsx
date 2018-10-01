@@ -202,6 +202,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
             getTypeInfo={this.getTypeInfo}
             getRegionInfo={this.getRegionInfo}
             history={this.props.history}
+            handleDisablePasswordField={this.handleDisablePasswordField}
           />
         );
       },
@@ -311,6 +312,16 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
       title: selectedRegion.country.toUpperCase(),
       details: selectedRegion.display,
     }
+  }
+
+  handleDisablePasswordField = (imageSelected: boolean) => {
+    if (!imageSelected) {
+      return {
+        disabled: true,
+        reason: 'You must first select an image to enter a root password',
+      }
+    }
+    return;
   }
 
   render() {

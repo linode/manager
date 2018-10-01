@@ -30,6 +30,7 @@ const mockProps = {
 describe('FromImageContent', () => {
   const componentWithNotice = shallow(
     <FromStackScriptContent
+      handleDisablePasswordField={jest.fn()}
       classes={{
         root: '',
         main: '',
@@ -47,6 +48,7 @@ describe('FromImageContent', () => {
 
   const component = shallow(
     <FromStackScriptContent
+      handleDisablePasswordField={jest.fn()}
       classes={{
         root: '',
         main: '',

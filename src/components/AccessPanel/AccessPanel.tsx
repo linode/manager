@@ -56,9 +56,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 
 const styled = withStyles(styles, { withTheme: true });
 
-interface Disabled {
+export interface Disabled {
   disabled: boolean;
-  reason: string;
+  reason?: string;
 }
 
 interface Props {
@@ -94,6 +94,7 @@ class AccessPanel extends React.Component<CombinedProps> {
       required,
       placeholder,
       users,
+      passwordFieldDisabled,
     } = this.props;
 
     return (
@@ -102,7 +103,8 @@ class AccessPanel extends React.Component<CombinedProps> {
           {error && <Notice text={error} error />}
           <PasswordInput
             required={required}
-            disabledWithReason={this.props.passwordFieldDisabled}
+            disabled={passwordFieldDisabled && passwordFieldDisabled.disabled}
+            disabledReason={passwordFieldDisabled && passwordFieldDisabled.reason}
             value={this.props.password || ''}
             label={label || 'Root Password'}
             placeholder={placeholder || "Enter a password."}
