@@ -40,42 +40,58 @@ interface State {
   valueMulti: Item[];
   valueSingle: Item | null;
   valueAsync: Item | null;
+  valueError: Item | null;
+  valueLoading: Item | null;
 }
 
 class Example extends React.Component<{},State> {
   state:State = { 
     open: false,
     valueCreatable: [],
+    valueError: null,
     valueMulti: [],
     valueSingle: null,
     valueAsync: null,
+    valueLoading: null,
   };
 
   toggleDrawer = (v: boolean) => (e: React.MouseEvent<any>) => {
     this.setState({ open: v });
   }
 
-  handleChangeSingle = (valueSingle:Item) => {
+  handleChangeSingle = (valueSingle: Item) => {
     this.setState({ 
       valueSingle,
     })
   }
 
-  handleChangeCreatable = (valueCreatable:Item[]) => {
+  handleChangeCreatable = (valueCreatable: Item[]) => {
     this.setState({
       valueCreatable,
     });
   };
 
-  handleChangeMulti = (valueMulti:Item[]) => {
+  handleChangeMulti = (valueMulti: Item[]) => {
     this.setState({
       valueMulti,
     })
   }
 
-  handleChangeAsync = (valueAsync:Item) => {
+  handleChangeAsync = (valueAsync: Item) => {
     this.setState({
       valueAsync,
+    })
+  }
+
+  handleChangeError = (valueError: Item) => {
+    this.setState({
+      valueError,
+    })
+  }
+
+  handleChangeLoading = (valueLoading: Item) => {
+    this.setState({
+      valueLoading,
     })
   }
 
@@ -98,23 +114,38 @@ class Example extends React.Component<{},State> {
   }
 
   render() {
-    const { valueAsync, valueCreatable, valueMulti, valueSingle } = this.state;
+    const { 
+      valueAsync,
+      valueCreatable,
+      valueMulti,
+      valueSingle,
+      valueError,
+      valueLoading,
+    } = this.state;
+
     return (
       <React.Fragment>
         <Select
           label="Basic Select"
-          isLoading
           value={valueSingle}
           placeholder="Choose one fruit"
           onChange={this.handleChangeSingle}
           options={fruit}
         />
         <Select
+          label="Always Loading"
+          isLoading
+          value={valueLoading}
+          placeholder="Please wait while we load the fruit."
+          onChange={this.handleChangeLoading}
+          options={fruit}
+        />
+        <Select
           label="Basic Select with Error"
           errorText="You didn't choose the correct fruit."
-          value={valueSingle}
+          value={valueError}
           placeholder="Choose one fruit"
-          onChange={this.handleChangeSingle}
+          onChange={this.handleChangeError}
           options={fruit}
         />
         <Select

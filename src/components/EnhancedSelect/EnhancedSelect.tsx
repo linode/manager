@@ -148,7 +148,6 @@ class EnhancedSelect extends React.Component<CombinedProps, {}> {
     return (
       <div className={`${classes.root} ${className}`}>
         <TextField
-          data-qa-enhanced-select
           InputProps={search && {
             startAdornment: <InputAdornment position="end">
               <Search className={classes.searchIcon} />

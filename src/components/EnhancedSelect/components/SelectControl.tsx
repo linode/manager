@@ -17,6 +17,7 @@ interface Props extends ControlProps<any> { }
 const SelectControl: React.StatelessComponent<Props> = (props) => {
   return (
     <TextField
+      data-qa-enhanced-select={props.selectProps.value ? props.selectProps.value.label : props.selectProps.placeholder}
       fullWidth
       InputProps={{
         inputComponent,

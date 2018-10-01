@@ -26,12 +26,13 @@ class MultiValue extends React.PureComponent<CombinedProps> {
     const { classes, children } = this.props;
 
     return (
-      <Chip
-        className={classes.root}
-        tabIndex={-1}
-        label={children}
-        onDelete={this.onDelete}
-      />
+        <Chip
+          data-qa-multi-option={children}
+          className={classes.root}
+          tabIndex={-1}
+          label={children}
+          onDelete={this.onDelete}
+        />
     );
   }
 }
