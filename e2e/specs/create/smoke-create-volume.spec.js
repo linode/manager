@@ -1,10 +1,6 @@
 const { constants } = require('../../constants');
 
-import {
-    apiCreateLinode,
-    apiDeleteAllLinodes,
-    apiDeleteAllVolumes,
-} from '../../utils/common';
+import { apiDeleteAllVolumes } from '../../utils/common';
 import ListLinodes from '../../pageobjects/list-linodes';
 import VolumeDetail from '../../pageobjects/linode-detail/linode-detail-volume.page';
 
@@ -17,13 +13,10 @@ describe('Create - Volume Suite', () => {
 
     beforeAll(() => {
         browser.url(constants.routes.linodes);
-        apiCreateLinode();
-        ListLinodes.linodesDisplay();
-        linodeLabel = ListLinodes.linode[0].$(ListLinodes.linodeLabel.selector).getText();
+        ListLinodes.globalCreate.waitForVisible(constants.wait.normal);
     });
 
     afterAll(() => {
-        apiDeleteAllLinodes();
         try {
             // attempt to remove all volumes, in case the ui failed
             apiDeleteAllVolumes();
@@ -67,16 +60,6 @@ describe('Create - Volume Suite', () => {
         browser.waitUntil(function() {
             return VolumeDetail.getVolumeId(testVolume.label).length > 0;
         }, constants.wait.normal);
-
-        VolumeDetail.volumeCellElem.waitForVisible(constants.wait.normal);
-        VolumeDetail.removeAllVolumes();
-    });
-
-    it('should create attached to a linode', () => {
-        testVolume['label'] = `ASD${new Date().getTime()}`,
-        testVolume['attachedLinode'] = linodeLabel;
-
-        VolumeDetail.createVolume(testVolume, 'header');
 
         VolumeDetail.volumeCellElem.waitForVisible(constants.wait.normal);
         VolumeDetail.removeAllVolumes();
