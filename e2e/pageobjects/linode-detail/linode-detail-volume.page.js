@@ -12,7 +12,7 @@ export class VolumeDetail extends Page {
     get size() { return $('[data-qa-size]'); }
     get region() { return $('[data-qa-select-region]'); }
     get regionField() { return $('[data-qa-region]'); }
-    get attachToLinode() { return $('[data-qa-select-linode]'); }
+    get attachToLinode() { return $('[data-qa-enhanced-select]'); }
     get attachedTo() { return $('[data-qa-attach-to]'); }
     get attachRegions() { return $$('[data-qa-attach-to-region]'); }
     get submit() { return $('[data-qa-submit]'); }
@@ -68,7 +68,7 @@ export class VolumeDetail extends Page {
         expect(this.region.getText()).toBe('Select a Region');
         expect(this.submit.isVisible()).toBe(true);
         expect(this.cancel.isVisible()).toBe(true);
-        expect(this.attachToLinode.getText()).toBe('Select a Linode');
+        expect(this.attachToLinode.getText()).toContain('Select a Linode');
     }
 
     getVolumeId(label) {
@@ -116,10 +116,12 @@ export class VolumeDetail extends Page {
 
         if (volume.hasOwnProperty('attachedLinode')) {
             this.attachToLinode.click();
-            browser.waitForVisible('[data-qa-attached-linode]', constants.wait.normal);
-            const linodeToAttach = this.volumeAttachedLinodes.filter(v => v.getText() === volume.attachedLinode);
-            linodeToAttach[0].click();
-            browser.waitForVisible('[data-qa-attached-linode]', constants.wait.short, true);
+            this.selectOption.waitForVisible(constants.wait.normal);
+
+            const optionToSelect =
+                this.selectOptions.filter(opt => opt.getText().includes(volume.attachedLinode));
+
+            optionToSelect[0].click();
         }
         // this.region.setValue(volume.region); 
         this.submit.click();
@@ -225,7 +227,7 @@ export class VolumeDetail extends Page {
                 return browser.isExisting('[data-qa-volume-cell-attachment]') &&
                     browser.getText('[data-qa-volume-cell-attachment]') === '' &&
                     volumeElement.$('[data-qa-action-menu]').isVisible();
-            }, constants.wait.minute, 'Remove Volume: Failed to detach volume');
+            }, constants.wait.minute * 2, 'Remove Volume: Failed to detach volume');
         }
         const numberOfVolumes = this.volumeCell.length;
         volumeElement.$('[data-qa-action-menu]').click();

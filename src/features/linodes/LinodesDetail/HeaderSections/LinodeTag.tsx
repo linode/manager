@@ -41,7 +41,7 @@ class LinodeTag extends React.Component<CombinedProps, {}> {
 
   renderIcon = () => {
     return (!this.props.loading)
-      ? <Close />
+      ? <Close data-qa-delete-tag />
       : <CircleProgress mini />
   }
 

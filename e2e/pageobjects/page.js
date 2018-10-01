@@ -26,6 +26,15 @@ export default class Page {
     get progressBar() { return $('[data-qa-circle-progress]'); }
     get actionMenu() { return $('[data-qa-action-menu]'); }
     get actionMenuItem() { return $('[data-qa-action-menu-item]'); }
+    get selectOptions() { return $$('[data-qa-option]'); }
+    get selectOption() { return $('[data-qa-option]') };
+    get multiOption() { return $('[data-qa-multi-option]'); }
+    get multiSelect() { return $('[data-qa-multi-select]'); }
+
+    get tag() { return $('[data-qa-tag]'); }
+    get tags() { return $$('[data-qa-tag]'); }
+    get addTag() { return $('[data-qa-add-tag]'); }
+    get deleteTag() { return $('[data-qa-delete-tag]'); }
 
     constructor() {
         this.pageTitle = 'Base page';
@@ -156,5 +165,15 @@ export default class Page {
         }, constants.wait.normal, 'Failed to change tab');
         browser.waitForVisible('[data-qa-circle-progress]', constants.wait.normal, true);
         return this;
+    }
+
+    removeTag(label) {
+        const matchingTags = this.tags.filter(t => t.getAttribute('data-qa-tag').includes(label));
+        
+        matchingTags.forEach(t => {
+            const tagName = t.getText();
+            t.$(this.deleteTag.selector).click();
+            browser.waitForVisible(`[data-qa-tag="${tagName}"]`, constants.wait.normal, true);
+        });
     }
 }
