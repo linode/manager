@@ -43,7 +43,7 @@ class AsyncContentExample extends React.Component {
         }}
       >
         <ExpansionPanel
-          heading="Open to Reveal Asyncronously Loaded Content"
+          heading="Open to Reveal Asynchronously Loaded Content"
           onChange={this.handleToggleExpand}
         >
           {this.renderContent()}
@@ -119,7 +119,7 @@ storiesOf('ExpansionPanel', module)
       </ExpansionPanel>
     </div>
   ))
-  .add('Asyncronous Content', () => <AsyncContentExample />);
+  .add('Asynchronous Content', () => <AsyncContentExample />);
 
 const renderActions = () => {
   return (
