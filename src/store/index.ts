@@ -4,6 +4,7 @@ import thunk from 'redux-thunk';
 import authentication, { defaultState as defaultAuthenticationState } from './reducers/authentication';
 import documentation, { defaultState as defaultDocumentationState } from './reducers/documentation';
 import features, { defaultState as defaultFeaturesState } from './reducers/features';
+import notifications, { DEFAULT_STATE as defaultNotificationState } from './reducers/notifications';
 import resources, { defaultState as defaultResourcesState } from './reducers/resources';
 import volumeDrawer, { defaultState as defaultVolumeDrawerState } from './reducers/volumeDrawer';
 
@@ -13,6 +14,7 @@ const defaultState: ApplicationState = {
   documentation: defaultDocumentationState,
   features: defaultFeaturesState,
   volumeDrawer: defaultVolumeDrawerState,
+  notifications: defaultNotificationState,
 };
 
 const reduxDevTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__;
@@ -23,6 +25,7 @@ const reducers = combineReducers<ApplicationState>({
   documentation,
   features,
   volumeDrawer,
+  notifications,
 });
 
 const enhancers = compose(

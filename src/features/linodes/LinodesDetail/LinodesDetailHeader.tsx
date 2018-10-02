@@ -1,5 +1,6 @@
 import { clone, pathOr } from 'ramda';
 import * as React from 'react';
+import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/debounce';
 import 'rxjs/add/operator/filter';
@@ -12,8 +13,10 @@ import NotificationsAndUpgradePanel from './HeaderSections/NotificationsAndUpgra
 import TabsAndStatusBarPanel from './HeaderSections/TabsAndStatusBarPanel';
 import TagsPanel from './HeaderSections/TagsPanel';
 
-import { updateLinode } from 'src/services/linodes';
+import { scheduleOrQueueMigration, updateLinode } from 'src/services/linodes';
 import { getTags } from 'src/services/tags';
+
+import { requestNotifications } from 'src/store/reducers/notifications';
 
 interface LabelInput {
   label: string;
@@ -33,6 +36,7 @@ interface ReducedLinode {
 
 interface Props {
   showPendingMutation: boolean;
+  openMutateDrawer: () => void;
   labelInput: LabelInput;
   linode: ReducedLinode;
   url: string;
@@ -56,13 +60,14 @@ interface State {
   isCreatingTag: boolean;
   tagInputValue: string;
   listDeletingTags: string[];
+  hasScheduledMigration: boolean;
 }
 
 interface ActionMeta {
   action: string;
 }
 
-type CombinedProps = Props;
+type CombinedProps = Props & StateProps & DispatchProps;
 
 class LinodesDetailHeader extends React.Component<CombinedProps, State> {
   state: State = {
@@ -71,17 +76,20 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
     isCreatingTag: false,
     tagInputValue: '',
     listDeletingTags: [],
+    hasScheduledMigration: false,
   }
 
   componentDidMount() {
     const { linode } = this.props;
+    const { getNotifications } = this.props.actions;
+    getNotifications();
     getTags()
       .then(response => {
         /*
          * The end goal is to display to the user a list of auto-suggestions
          * when they start typing in a new tag, but we don't want to display
          * tags that are already applied to this specific Linode because there cannot
-         * be duplicates on one Linode. 
+         * be duplicates on one Linode.
          */
         const filteredTags = response.data.filter((eachTag: Tag) => {
           return !linode.tags.some((alreadyAppliedTag: string) => {
@@ -89,7 +97,7 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
           })
         })
         /*
-         * reshaping them for the purposes of being passed to the Select component 
+         * reshaping them for the purposes of being passed to the Select component
          */
         const reshapedTags = filteredTags.map((eachTag: Tag) => {
           return {
@@ -102,6 +110,24 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
       .catch(e => e)
   }
 
+  migrate = (type: string) => {
+    const { linode } = this.props;
+    const { getNotifications } = this.props.actions;
+    scheduleOrQueueMigration(linode.id)
+      .then((_) => {
+        // A 200 response indicates that the operation was successful.
+        const successMessage = type === 'migration_scheduled'
+          ? "Your Linode has been entered into the migration queue."
+          : "Your migration has been scheduled."
+        sendToast(successMessage);
+        getNotifications()
+      })
+      .catch((_) => {
+        // @todo: use new error handling pattern here after merge.
+        sendToast("There was an error starting your migration.", "error");
+      })
+  }
+
   launchLish = () => {
     const { linode } = this.props;
     lishLaunch(linode.id);
@@ -111,11 +137,6 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
     this.props.labelInput.onEdit(value)
   }
 
-  goToOldManager = () => {
-    const { linode } = this.props;
-    window.open(`https://manager.linode.com/linodes/mutate/${linode.label}`)
-  }
-
   handleToggleCreate = () => {
     this.setState({ isCreatingTag: !this.state.isCreatingTag })
   }
@@ -123,7 +144,7 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
   handleDeleteTag = (label: string) => {
     const { linode } = this.props;
     /*
-     * Add this tag to the current list of tags that are queued for deletion 
+     * Add this tag to the current list of tags that are queued for deletion
      */
     this.setState({
       listDeletingTags: [
@@ -143,7 +164,7 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
       .then(() => {
         linode.update();
         /*
-        * Remove this tag from the current list of tags that are queued for deletion 
+        * Remove this tag from the current list of tags that are queued for deletion
         */
        const cloneTagSuggestions = clone(this.state.tagsToSuggest) || [];
         this.setState({
@@ -160,7 +181,7 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
       .catch(e => {
         sendToast(`Could not delete Tag: ${label}`);
         /*
-        * Remove this tag from the current list of tags that are queued for deletion 
+        * Remove this tag from the current list of tags that are queued for deletion
         */
         this.setState({
           listDeletingTags: this.state.listDeletingTags.filter(eachTag => eachTag !== label)
@@ -173,7 +194,7 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
     /*
      * This comes from the react-select API
      * basically, we only want to make a request if the user is either
-     * hitting the enter button or choosing a selection from the dropdown 
+     * hitting the enter button or choosing a selection from the dropdown
      */
     if (actionMeta.action !== 'select-option'
       && actionMeta.action !== 'create-option') { return; }
@@ -193,7 +214,7 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
         this.setState({ tagInputValue: '' })
         /*
         * Filter out the new tag out of the auto-suggestion list
-        * since we can't attach this tag to the Linode anymore 
+        * since we can't attach this tag to the Linode anymore
         */
         const cloneTagSuggestions = clone(tagsToSuggest) || [];
         const filteredTags = cloneTagSuggestions.filter((eachTag: Item) => {
@@ -218,17 +239,21 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
       showPendingMutation,
       labelInput,
       linode,
-      url,
       notifications,
+      url,
       openConfigDrawer,
     } = this.props;
+
+
 
     return (
       <React.Fragment>
         <NotificationsAndUpgradePanel
           notifications={notifications}
           showPendingMutation={showPendingMutation}
-          handleUpgrade={this.goToOldManager}
+          handleUpgrade={this.props.openMutateDrawer}
+          handleMigration={this.migrate}
+          status={linode.status}
         />
         <LabelPowerAndConsolePanel
           launchLish={this.launchLish}
@@ -272,4 +297,39 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
   }
 }
 
-export default LinodesDetailHeader;
+interface DispatchProps {
+  actions: {
+    getNotifications: () => void;
+  },
+}
+
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, ownProps) => {
+  return {
+    actions: {
+      getNotifications: () => dispatch(requestNotifications()),
+    }
+  };
+};
+
+const filterNotifications = (linodeId: number, notifications: Linode.Notification[] = []) => {
+    return notifications.filter((notification) =>
+      pathOr(0, ['entity','id'], notification) === linodeId
+    )
+}
+
+const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state, ownProps) => ({
+  notificationsLoading: state.notifications.loading,
+  notificationsError: state.notifications.error,
+  // Only use notifications for this Linode.
+  notifications: filterNotifications(ownProps.linode.id, state.notifications.data),
+});
+
+interface StateProps {
+  notificationsLoading: boolean;
+  notificationError?: Error;
+  notifications?: Linode.Notification[];
+}
+
+export const connected = connect(mapStateToProps, mapDispatchToProps);
+
+export default connected(LinodesDetailHeader);
