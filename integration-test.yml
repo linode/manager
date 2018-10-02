@@ -4,13 +4,10 @@ services:
     image: selenium/standalone-chrome:3.13.0-argon
     volumes:
       - /dev/shm:/dev/shm #Mitigates the Chromium issue described at https://code.google.com/p/chromium/issues/detail?id=519952
-    networks:
-      - backend
     environment:
       - SCREEN_HEIGHT=1080
       - SCREEN_WIDTH=1600
   manager-local:
-    container_name: manager_local
     environment:
       - HTTPS=true
       - REACT_APP_APP_ROOT=https://manager-local:3000
@@ -21,15 +18,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    volumes:
-      - ./src:/src/src
     entrypoint: ["/src/scripts/start_manager.sh"]
     depends_on:
       - selenium-standalone
-    networks:
-      - backend
   manager-e2e:
-    container_name: manager_e2e
     environment:
       - DOCKER=true
       - REACT_APP_API_ROOT=${REACT_APP_API_ROOT}
@@ -39,12 +31,8 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./src:/src/src
-      - ./e2e:/src/e2e
+      - ./e2e/test-results:/src/e2e/test-results
     entrypoint: ["./scripts/wait-for-it.sh", "-t", "250", "-s", "manager-local:3000", "--", "yarn","e2e", "--log"]
     depends_on:
       - manager-local
-    networks:
-      - backend
-networks:
-  backend:
+

@@ -48,6 +48,7 @@ exports.config = {
         specsToRun(),
     // Patterns to exclude.
     exclude: [
+        './e2e/specs/accessibility/*.spec.js'
         // 'path/to/excluded/files'
     ],
     //
@@ -256,8 +257,8 @@ exports.config = {
      */
     beforeSuite: function (suite) {
         // Click beta notice button
-        browser.waitForVisible('[data-qa-beta-notice]');
-        browser.click('[data-qa-beta-notice] button');
+        browser.waitForVisible('[data-qa-dialog-content] button');
+        browser.click('[data-qa-dialog-content] button');
     },
     /**
      * Function to be executed before a test (in Mocha/Jasmine) or a step (in Cucumber) starts.
