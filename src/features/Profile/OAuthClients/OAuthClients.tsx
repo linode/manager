@@ -37,8 +37,8 @@ interface Props {
 }
 
 interface FormValues {
-  label?: string;
-  redirect_uri?: string;
+  label: string;
+  redirect_uri: string;
   public: boolean;
 }
 
@@ -75,8 +75,8 @@ class OAuthClients extends React.Component<CombinedProps, State> {
       edit: false,
       errors: undefined,
       values: {
-        label: undefined,
-        redirect_uri: undefined,
+        label: '',
+        redirect_uri: '',
         public: false,
       },
     },
@@ -150,8 +150,8 @@ class OAuthClients extends React.Component<CombinedProps, State> {
             open: false,
             edit: false,
             values: {
-              label: undefined,
-              redirect_uri: undefined,
+              label: '',
+              redirect_uri: '',
               public: false,
             },
           },

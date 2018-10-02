@@ -23,7 +23,7 @@ import Table from 'src/components/Table';
 import {
   deleteStackScript,
   getStackScript,
-  makeStackScriptPublic
+  updateStackScript
 } from 'src/services/stackscripts';
 
 import StackScriptTableHead from './PanelContent/StackScriptTableHead';
@@ -437,7 +437,7 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
   handleMakePublic = () => {
     const { dialog, currentFilter } = this.state;
 
-    makeStackScriptPublic(dialog.stackScriptID!)
+    updateStackScript(dialog.stackScriptID!, { is_public: true })
       .then(response => {
         if (!this.mounted) { return; }
         this.setState({

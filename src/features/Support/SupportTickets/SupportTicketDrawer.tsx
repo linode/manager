@@ -249,7 +249,7 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
       [entity_type]: Number(entity_id)
     })
       .then((response) => {
-        onSuccess(response.data);
+        onSuccess(response);
         if (!this.mounted) { return; }
         this.setState({
           errors: undefined,

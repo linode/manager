@@ -16,7 +16,8 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import { ISO_FORMAT } from 'src/constants';
-import { getTicketsPage } from 'src/services/support';
+
+import { getTicketsPage } from './ticketUtils';
 
 interface Props {
   filterStatus: 'open' | 'closed';
@@ -86,7 +87,7 @@ class TicketList extends React.Component<CombinedProps, State> {
     const { tickets } = this.state;
     this.setState({ errors: undefined, loading: tickets === undefined});
 
-    getTicketsPage({ page_size: pageSize, page }, this.props.filterStatus === 'open')
+    getTicketsPage({ page_size: pageSize, page }, this.props.filterStatus)
       .then((response) => {
         if (!this.mounted) { return; }
         

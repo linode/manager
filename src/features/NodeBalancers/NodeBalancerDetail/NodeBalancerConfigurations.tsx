@@ -329,6 +329,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
      * If the config creation succeeds here, the UpdatePath will be used upon
      * subsequent saves.
     */
+
     const { match: { params: { nodeBalancerId } } } = this.props;
     createNodeBalancerConfig(nodeBalancerId!, configPayload)
       .then((nodeBalancerConfig) => {
