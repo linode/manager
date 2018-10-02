@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.35.0] - 2018-10.01
+### Added:
+  - Users can now provide feedback on Linode support in tickets.
+  - Added a welcome banner describing new features.
+  - Users can now migrate/mutate Linodes.
+
 ## [0.34.1] - 2018-09-24
 ### Added:
  - Linodes
@@ -28,14 +34,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   - Issue where changing tabs on the user profile would enable the Delete button for your own user
   - "Unknown Plan" would display during Linode resizing
   - Prevent user from submitting empty replies in support tickets
-
-
-
-## [0.35.0] - 2018-10.01
-### Added:
-  - Users can now provide feedback on Linode support in tickets.
-  - Added a welcome banner describing new features.
-  - Users can now migrate/mutate Linodes.
 
 ## [0.33.2] - 2018-09-11
 ### Added:
