@@ -22,6 +22,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
   qrcode: {
     margin: `${theme.spacing.unit * 2}px 0`,
+    border: `5px solid #fff`,
   }
 });
 
