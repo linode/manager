@@ -404,6 +404,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           title={(bootOption === 'reboot') ? 'Confirm Reboot' : 'Powering Off'}
           actions={this.renderConfirmationActions}
           open={powerAlertOpen}
+          onClose={this.closePowerAlert}
         >
           <Typography>
             {bootOption === 'reboot'

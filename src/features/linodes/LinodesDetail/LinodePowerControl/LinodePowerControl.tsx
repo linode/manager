@@ -250,6 +250,7 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
           title={(bootOption === 'reboot') ? 'Confirm Reboot' : 'Powering Off'}
           actions={this.renderActions}
           open={powerAlertOpen}
+          onClose={this.closePowerAlert}
         >
           {bootOption === 'reboot'
             ? <Typography>Are you sure you want to reboot your Linode?</Typography>
