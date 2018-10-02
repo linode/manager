@@ -12,6 +12,7 @@ interface State {
 
 interface Props extends TextFieldProps {
   required?: boolean;
+  tooltipText?: string;
  }
 
 class HideShowText extends React.Component<Props, State> {

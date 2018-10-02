@@ -13,6 +13,7 @@ import HideShowText from './HideShowText';
 interface Props extends TextFieldProps {
   value?: string;
   required?: boolean;
+  disabledReason?: string;
 }
 
 interface State {
@@ -58,14 +59,17 @@ class PasswordInput extends React.Component<CombinedProps, State> {
 
   render() {
     const { strength } = this.state;
-    const { classes, value, required, ...rest } = this.props;
+    const { classes, value, required, disabledReason, ...rest } = this.props;
 
     return (
       <Grid container className={classes.container}>
-        <Grid item xs={12}>
+        <Grid
+          item xs={12}
+        >
           <HideShowText
-            value={value}
             {...rest}
+            tooltipText={disabledReason}
+            value={value}
             onChange={this.onChange}
             fullWidth
             required={required}
