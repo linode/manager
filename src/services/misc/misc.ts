@@ -1,6 +1,6 @@
 import { API_ROOT } from 'src/constants';
 
-import Request, { setMethod, setURL } from './index';
+import Request, { setMethod, setURL } from '../index';
 
 type Page<T> = Linode.ResourcePage<T>;
 type Region = Linode.Region;

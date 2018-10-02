@@ -47,7 +47,7 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
     initial: boolean = false,
   ) => {
 
-    return getInvoices({ page, page_size: pageSize })
+    return getInvoices({ page, page_size: pageSize }, { '+order_by': 'date', '+order': 'desc' })
       .then(({ data, results }) => {
         if (!this.mounted) { return; }
 

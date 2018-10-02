@@ -4,6 +4,14 @@ import Request, { setData, setMethod, setParams, setURL, setXFilter } from 'src/
 type Page<T> = Linode.ResourcePage<T>;
 type Image = Linode.Image;
 
+/**
+ * Get a single page of images.
+ *
+ * @param page { Number } the page to retrieve
+ * @param filter { Object } JSON object to pass as the X-Filter header
+ *
+ * @example getImagesPage(1, {"is_public": true})
+ */
 export const getImagesPage = (page: number, filter: object = {}) =>
   Request<Page<Image>>(
     setURL(`${API_ROOT}/images`),

@@ -24,7 +24,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
-import { getTicket, getTicketReplies, SupportTicket } from 'src/services/support';
+import { getTicket, getTicketReplies } from 'src/services/support';
 import { getGravatarUrlFromHash } from 'src/utilities/gravatar';
 
 import ExpandableTicketPanel from '../ExpandableTicketPanel';
@@ -179,9 +179,8 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
     const ticketId = this.props.match.params.ticketId;
     if (!ticketId) { return null; }
     return getTicketReplies(ticketId)
-      .then((response) => {
-        return response.data;
-      });
+      // This is a paginated method but here we only need the list of replies
+      .then(response => response.data);
   }
 
   reloadAttachments = () => {
@@ -196,7 +195,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
       });
   }
 
-  handleJoinedPromise = (ticketResponse: SupportTicket, replyResponse: Linode.SupportReply[]) => {
+  handleJoinedPromise = (ticketResponse: Linode.SupportTicket, replyResponse: Linode.SupportReply[]) => {
     /** Gets a unique list of gravatar IDs */
     const uniqueGravatarIDs = replyResponse.reduce(reduceToUniqueGravatarIDs, [ticketResponse.gravatar_id]);
 

@@ -75,7 +75,7 @@ interface FormState {
   values: {
     scopes?: string;
     expiry?: string;
-    label?: string;
+    label: string;
   };
 }
 
@@ -109,7 +109,7 @@ export class APITokens extends React.Component<CombinedProps, State> {
       values: {
         scopes: undefined,
         expiry: genExpiryTups()[0][1],
-        label: undefined,
+        label: '',
       },
     },
     dialog: {

@@ -48,7 +48,7 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
     this.setState(set(lensPath(['errors']), undefined));
 
     updateLinode(this.props.linodeId, { label: this.state.updatedValue })
-      .then(response => response.data)
+      .then(response => response)
       .then((linode) => {
         this.props.updateLinode((existingLinode) => ({
           ...existingLinode,

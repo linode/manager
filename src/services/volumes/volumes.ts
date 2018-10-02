@@ -3,11 +3,18 @@ import { range } from 'ramda';
 
 import { API_ROOT } from 'src/constants';
 
-import Request, { setData, setMethod, setParams, setURL, setXFilter } from './index';
+import Request, { setData, setMethod, setParams, setURL, setXFilter } from '../index';
 
 /** Alises for short lines. */
 type Page<T> = Linode.ResourcePage<T>;
 type Volume = Linode.Volume;
+
+export interface VolumeRequestPayload {
+  label: string,
+  size: number,
+  region?: string,
+  linode_id?: number,
+};
 
 export const getVolumes = (params: any = {}, filters: any = {}) =>
   Request<Page<Volume>>(
@@ -40,7 +47,7 @@ export const getAllVolumes: (params?: any, filters?: any) => Promise<Linode.Volu
           .then(volumePages => volumePages.reduce((result, nextPage) => [...result, ...nextPage], firstPageData));
       });
   }
-
+  
 export const attachVolume = (volumeId: number, payload: {
   linode_id: number,
   config_id?: number,
@@ -55,7 +62,6 @@ export const detachVolume = (volumeId: number) => Request<{}>(
   setMethod('POST'),
 );
 
-// delete is a reserve word
 export const deleteVolume = (volumeId: number) => Request<{}>(
   setURL(`${API_ROOT}/volumes/${volumeId}`),
   setMethod('DELETE'),
@@ -78,13 +84,6 @@ export const updateVolume = (volumeId: number, label: string) => Request<Linode.
   setMethod('PUT'),
   setData({ label }),
 );
-
-export interface VolumeRequestPayload {
-  label: string,
-  size: number,
-  region?: string,
-  linode_id?: number,
-};
 
 export const createVolume = (payload: VolumeRequestPayload) => Request<{}>(
   setURL(`${API_ROOT}/volumes`),

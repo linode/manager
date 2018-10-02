@@ -17,7 +17,7 @@ import Menu from '@material-ui/core/Menu';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import { events$, init } from 'src/events';
-import { markEventsSeen } from 'src/services/account';
+import { markEventSeen } from 'src/services/account';
 
 import UserEventsButton from './UserEventsButton';
 import UserEventsList from './UserEventsList';
@@ -116,7 +116,7 @@ class UserEventsMenu extends React.Component<CombinedProps, State> {
           .map(e => e.id),
     )
       .subscribe(([e, id]) => {
-        markEventsSeen(id)
+        markEventSeen(id)
           .then(() => init())
           .catch(console.error);
       });
