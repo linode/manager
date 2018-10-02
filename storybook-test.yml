@@ -12,7 +12,7 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./src:/src/src
+      - ./src/components:/src/src/components
     entrypoint: yarn storybook
     depends_on:
       - selenium-standalone
@@ -26,8 +26,7 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./src:/src/src
-      - ./e2e:/src/e2e
+      - ./src/components:/src/src/components
       - ./storybook-test-results:/src/storybook-test-results
       - /etc/passwd:/etc/passwd
       - /etc/group:/etc/group

@@ -2,5 +2,4 @@ node_modules
 dist
 build
 localStorage.json
-src
-e2e
+e2e/test-results
