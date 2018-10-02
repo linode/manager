@@ -11,6 +11,7 @@ import Volumes from '../../pageobjects/volumes.page';
 
 describe('Create - Volume Suite', () => {
     let linodeLabel;
+    let volumeId;
     const testVolume = {
         label: ``,
         size: '10',
@@ -42,7 +43,23 @@ describe('Create - Volume Suite', () => {
 
         VolumeDetail.createVolume(testVolume, 'header');
 
+        VolumeDetail.dismissToast();
+
+        browser.url(constants.routes.volumes);
+        Volumes.baseElemsDisplay();
+
+        volumeId = VolumeDetail.getVolumeId(testVolume.label);
+
         VolumeDetail.volumeCellElem.waitForVisible(constants.wait.normal);
+    });
+
+    xit('should detach from linode', () => {
+        const volumeElement = $(`[data-qa-volume-cell="${volumeId}"]`);
+        VolumeDetail.detachVolume(volumeElement);
+        Volumes.detachConfirm(volumeId, linodeLabel);
+    });
+
+    xit('should remove the volume', () => {
         VolumeDetail.removeAllVolumes();
     });
 });

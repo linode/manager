@@ -124,9 +124,9 @@ export default class Page {
         expect(sidebarTitle).toBe('Linode Docs');
     }
 
-    toastDisplays(expectedMessage) {
-        this.toast.waitForVisible(constants.wait.normal);
-        this.toastMsg.waitForVisible(constants.wait.normal);
+    toastDisplays(expectedMessage, timeout=constants.wait.normal) {
+        this.toast.waitForVisible(timeout);
+        this.toastMsg.waitForVisible(timeout);
         
         const displayedMsg = browser.getText('[data-qa-toast-message]');
         expect(displayedMsg).toBe(expectedMessage);
