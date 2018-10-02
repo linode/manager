@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
 import LinearProgress from 'src/components/LinearProgress';
 import { transitionText } from 'src/features/linodes/transitions';
@@ -32,7 +33,9 @@ const LinodeBusyStatus: React.StatelessComponent<CombinedProps> = (props) => {
   return (
     <Paper className={classes.root}>
       <div className={classes.status}>
-        {transitionText(status, recentEvent)}: {value}%
+        <Typography>
+          {transitionText(status, recentEvent)}: {value}%
+        </Typography>
       </div>
       <LinearProgress value={value} />
     </Paper>
