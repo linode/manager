@@ -4,7 +4,7 @@ import { Sticky, StickyProps } from 'react-sticky';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-import AccessPanel, { UserSSHKeyObject } from 'src/components/AccessPanel';
+import AccessPanel, { Disabled, UserSSHKeyObject } from 'src/components/AccessPanel';
 import CheckoutBar from 'src/components/CheckoutBar';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
@@ -54,6 +54,7 @@ interface Props {
   /** Comes from HOC */
   userSSHKeys: UserSSHKeyObject[];
   tagObject: TagObject;
+  handleDisablePasswordField: (imageSelected: boolean) => Disabled | undefined;
 }
 
 interface State {
@@ -257,6 +258,8 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
             updateFor={[tagObject, label, errors]}
           />
           <AccessPanel
+           /* disable the password field if we haven't selected an image */
+            passwordFieldDisabled={this.props.handleDisablePasswordField(!!selectedImageID)}
             error={hasErrorFor('root_pass')}
             password={password}
             handleChange={this.handleTypePassword}
