@@ -67,7 +67,3 @@ export const deleteLinode = (linodeId: number) =>
     setURL(`${API_ROOT}/linode/instances/${linodeId}`),
     setMethod('DELETE'),
   );
-
-
-
-

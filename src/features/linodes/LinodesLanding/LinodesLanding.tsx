@@ -1,6 +1,7 @@
 import * as moment from 'moment';
 import { clone, compose, defaultTo, lensPath, map, over, path, pathEq, pathOr } from 'ramda';
 import * as React from 'react';
+import { connect, MapStateToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/observable/of';
@@ -25,14 +26,12 @@ import { withTypes } from 'src/context/types';
 import { events$ } from 'src/events';
 import LinodeConfigSelectionDrawer, { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { newLinodeEvents } from 'src/features/linodes/events';
-import notifications$ from 'src/notifications';
 import { getImages } from 'src/services/images';
 import { getLinode, getLinodes } from 'src/services/linodes';
-
 import scrollToTop from 'src/utilities/scrollToTop';
 import { views } from 'src/utilities/storage';
 
-import LinodesViewWrapper from './LinodesViewWrapper'
+import LinodesViewWrapper from './LinodesViewWrapper';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
 import { powerOffLinode, rebootLinode } from './powerActions';
 import ToggleBox from './ToggleBox';
@@ -61,7 +60,7 @@ interface ConfigDrawerState {
 
 interface State {
   linodes: Linode.EnhancedLinode[];
-  notifications?: Linode.Notification[];
+
   page: number;
   pages: number;
   results: number;
@@ -86,6 +85,7 @@ interface TypesContextProps {
 }
 
 type CombinedProps = TypesContextProps
+  & StateProps
   & PreloadedProps
   & RouteComponentProps<{}>
   & WithStyles<ClassNames>
@@ -175,7 +175,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
     this.notificationSub = Observable
       .combineLatest(
-        notifications$
+        Observable.of(this.props.notifications)
           .map(notifications => notifications.filter(pathEq(['entity', 'type'], 'linode'))),
         Observable.of(this.props.linodes),
     )
@@ -480,12 +480,23 @@ const typesContext = withTypes(({
   typesLastUpdated,
 }));
 
+interface StateProps {
+  notifications: Linode.Notification[]
+}
+
+const mapStateToProps: MapStateToProps<StateProps, never, ApplicationState> = (state) => ({
+  notifications: (state.notifications.data || [])
+});
+
+const connected = connect(mapStateToProps);
+
 export const enhanced = compose(
   withRouter,
   typesContext,
   styled,
   preloaded,
   setDocs(ListLinodes.docs),
+  connected,
 );
 
 export default enhanced(ListLinodes) as typeof ListLinodes;

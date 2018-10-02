@@ -56,6 +56,7 @@ export {
   rescueLinode,
   resizeLinode,
   startMutation,
+  scheduleOrQueueMigration,
 } from './linodeActions';
 
 export {

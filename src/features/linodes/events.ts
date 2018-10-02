@@ -13,6 +13,7 @@ export const newLinodeEvents = (mountTime: moment.Moment) =>
     'linode_rebuild',
     'linode_resize',
     'disk_resize',
+    'linode_migrate',
   ];
 
   const statusWhitelist = [
