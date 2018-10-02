@@ -122,7 +122,7 @@ class TabbedPanel extends React.Component<CombinedProps, State> {
                 {tabs.map((tab, idx) => <Tab key={idx} label={tab.title} data-qa-tab={tab.title} />)}
               </Tabs>
             </Hidden>
-            <Hidden smUp>
+            <Hidden mdUp>
               <Button
                 variant="raised"
                 color="primary"
