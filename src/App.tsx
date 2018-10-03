@@ -7,8 +7,6 @@ import { Sticky, StickyContainer, StickyProps } from 'react-sticky';
 import { compose } from 'redux';
 import { Subscription } from 'rxjs/Subscription';
 
-// import 'typeface-lato';
-
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import DefaultLoader from 'src/components/DefaultLoader';
