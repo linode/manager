@@ -1,16 +1,17 @@
+import { Form, Formik } from 'formik';
+import { append, contains, filter, lensPath, over, path, set, view, when } from 'ramda';
+import * as React from 'react';
+import { connect, Dispatch } from 'react-redux';
+import { bindActionCreators, compose } from 'redux';
+import 'rxjs/add/operator/filter';
+import { Subscription } from 'rxjs/Subscription';
+
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import { append, filter, lensPath, over, path, set, view, when } from 'ramda';
-import * as React from 'react';
-import { connect, Dispatch } from 'react-redux';
-import { bindActionCreators, compose } from 'redux';
-import 'rxjs/add/operator/filter';
-import { Subscription } from 'rxjs/Subscription';
-import { debounce } from 'throttle-debounce';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -31,6 +32,9 @@ import { formatRegion } from 'src/utilities';
 import composeState from 'src/utilities/composeState';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { debounce } from 'throttle-debounce';
+import { number, object, string } from 'yup';
+
 
 type ClassNames = 'root'
   | 'actionPanel';
@@ -78,7 +82,7 @@ interface State {
   linodeId: number;
   configs: string[][];
   selectedConfig?: string;
-  errors?: Linode.ApiFieldError[];
+  apiErrors?: Linode.ApiFieldError[];
   submitting: boolean;
   success?: string;
 }
@@ -109,7 +113,7 @@ const titleMap = {
 const L = {
   cloneLabel: lensPath(['cloneLabel']),
   configs: lensPath(['configs']),
-  errors: lensPath(['errors']),
+  apiErrors: lensPath(['apiErrors']),
   label: lensPath(['label']),
   linodeId: lensPath(['linodeId']),
   linodes: lensPath(['linodes']),
@@ -137,7 +141,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
   };
 
   handleAPIErrorResponse = (errorResponse: any) => this.composeState([
-    set(L.errors, path(['response', 'data', 'errors'], errorResponse)),
+    set(L.apiErrors, path(['response', 'data', 'errors'], errorResponse)),
     set(L.submitting, false)
   ], () => scrollErrorIntoView());
 
@@ -187,13 +191,13 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
       set(L.size, nextProps.size),
       set(L.region, nextProps.region),
       set(L.linodeId, nextProps.linodeId),
-      set(L.errors, undefined),
+      set(L.apiErrors, undefined),
     ]);
 
-    /* If the drawer is opening */	
-    if ((this.props.mode === modes.CLOSED) && !(nextProps.mode === modes.CLOSED)) {	
-      /* re-request the list of Linodes */	
-      this.searchLinodes();	
+    /* If the drawer is opening */
+    if ((this.props.mode === modes.CLOSED) && !(nextProps.mode === modes.CLOSED)) {
+      /* re-request the list of Linodes */
+      this.searchLinodes();
     }
   }
 
@@ -221,7 +225,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
 
   reset = () => this.composeState([
     set(L.cloneLabel, ''),
-    set(L.errors, undefined),
+    set(L.apiErrors, undefined),
     set(L.label, ''),
     set(L.linodeId, 0),
     set(L.region, 'none'),
@@ -245,7 +249,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
 
         this.composeState([
           set(L.submitting, true),
-          set(L.errors, undefined),
+          set(L.apiErrors, undefined),
         ]);
 
         const payload: VolumeRequestPayload = {
@@ -278,7 +282,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
 
         if (!label) {
           this.composeState([
-            set(L.errors, [{ field: 'label', reason: 'Label cannot be blank.' }])
+            set(L.apiErrors, [{ field: 'label', reason: 'Label cannot be blank.' }])
           ], () => scrollErrorIntoView());
 
           return;
@@ -299,7 +303,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
         if (!label) {
           if (this.mounted) {
             this.setState({
-              errors: [{ field: 'size', reason: 'Size cannot be blank.' }],
+              apiErrors: [{ field: 'size', reason: 'Size cannot be blank.' }],
             }, () => {
               scrollErrorIntoView();
             });
@@ -322,7 +326,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
         if (!cloneLabel) {
           if (this.mounted) {
             this.setState({
-              errors: [{ field: 'label', reason: 'Label cannot be blank.' }],
+              apiErrors: [{ field: 'label', reason: 'Label cannot be blank.' }],
             }, () => {
               scrollErrorIntoView();
             });
@@ -355,9 +359,9 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
   }
 
   setSelectedLinode = (selected:Item) => {
-    if (!this.mounted) { return; } 
-    if (selected) { 
-      this.setState({ 
+    if (!this.mounted) { return; }
+    if (selected) {
+      this.setState({
         linodeId: Number(selected.value),
       });
     }
@@ -381,8 +385,8 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
   setSize = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.composeState([
       when<State, State>(
-        (prevState) => prevState.size <= 10240 && Boolean(prevState.errors),
-        over(L.errors, filter((event: Linode.ApiFieldError) => event.field !== 'size')),
+        (prevState) => prevState.size <= 10240 && Boolean(prevState.apiErrors),
+        over(L.apiErrors, filter((event: Linode.ApiFieldError) => event.field !== 'size')),
       ),
 
       // (prevState: State) => {
@@ -399,7 +403,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
 
       when<State, State>(
         (prevState) => prevState.size > 10240,
-        over(L.errors, append({ field: 'size', reason: 'Size cannot be over 10240.' })),
+        over(L.apiErrors, append({ field: 'size', reason: 'Size cannot be over 10240.' })),
       ),
 
       // (prevState: State) => {
@@ -493,15 +497,14 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
 
     const {
       cloneLabel,
-      label,
-      size,
+      // label,
+      // size,
       region,
       configs,
       selectedConfig,
-      errors,
+      apiErrors,
       linodes,
-      linodesLoading,
-      linodeId,
+      linodesLoading
     } = this.state;
 
     const hasErrorFor = getAPIErrorFor({
@@ -510,7 +513,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
       region: 'Region',
       size: 'Size',
       label: 'Label',
-    }, errors);
+    }, apiErrors);
     const success = view<State, string>(L.success, this.state);
     const submitting = view<State, boolean>(L.submitting, this.state);
     const labelError = hasErrorFor('label');
@@ -519,6 +522,52 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     const linodeError = hasErrorFor('linode_id');
     const configError = hasErrorFor('config_id');
     const generalError = hasErrorFor('none');
+
+    // Collect linodeIds for use in validation schema
+    const linodeIds: number[] = linodes
+    ? linodes.map(l => l.value as number)
+    : [];
+
+    // See: https://developers.dev.linode.com/api/v4#operation/createVolume
+    const volumeLabelNameRegex: RegExp = /^[a-zA-Z]((?!--|__)[a-zA-Z0-9-_])+$/;
+
+    // FORM VALIDATION SCHEMA
+    const ValidationSchema = object().shape({
+      label: string()
+        .min(1, 'Length must be 1-32 characters.')
+        .max(32, 'Length must be 1-32 characters.')
+        .matches(volumeLabelNameRegex, 'Invalid label name.')
+        .required('Label name is required.'),
+      size: number()
+        .typeError('Size must be a number')
+        .positive('Size must be a positive number')
+        .max(10240, 'Size cannot be over 10240.')
+        .required(),
+      region: string()
+        .when('linode', {
+          is: (val: Item) => {
+            return val && contains(val.value, linodeIds)
+          },
+          then: string().required(),
+          otherwise: string().matches(/[^none]/, 'You must select a Region, Linode, or both.')
+      }),
+      linode: object()
+        .nullable(true)
+    });
+
+    const formValueDefaults = {
+      label: '',
+      size: 20,
+      region: 'none',
+      linode: null
+    };
+
+    const formikOptions = {
+      initialValues: formValueDefaults,
+      onSubmit:  this.onSubmit,
+      validateOnChange: false,
+      validationSchema: ValidationSchema,
+    }
 
     return (
       <Drawer
@@ -541,6 +590,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           />
         }
 
+        {/* TODO: This should be a child of the Formik component  */}
         {mode === modes.CLONING &&
           <TextField
             label="Cloned Label"
@@ -552,142 +602,206 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           />
         }
 
-        <TextField
-          label="Label"
-          required
-          value={label}
-          onChange={this.setLabel}
-          error={Boolean(labelError)}
-          errorText={labelError}
-          disabled={mode === modes.RESIZING || mode === modes.CLONING}
-          data-qa-volume-label
-        />
+        <Formik
+          {...formikOptions}
 
-        <TextField
-          label="Size"
-          required
-          value={size}
-          onChange={this.setSize}
-          error={Boolean(sizeError)}
-          errorText={sizeError}
-          disabled={mode === modes.CLONING || mode === modes.EDITING}
-          helperText={'Maximum: 10240 GB'}
-          InputProps={{
-            endAdornment:
-              <InputAdornment position="end">
-                GB
-              </InputAdornment>,
+          render={({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            setFieldValue,
+            submitForm
+          }): React.ReactNode => {
+
+            // Returns the Formik error text IF:
+            // 1) The form element has been touched
+            // 2) There is an error
+            // Otherwise returns an empty string
+            const getFormikError = (type: string): string => {
+              return touched[type] && errors[type]
+                ? errors[type]
+                : '';
+            }
+
+            // FINAL ERRORS: use EITHER the validation error from Formik OR the error from the API. Use Formik error
+            // first because this is validated onBlur, instead of on API request.
+            type finalError = string | undefined;
+            const finalLabelError: finalError = getFormikError('label') || labelError;
+            const finalSizeError: finalError = getFormikError('size') || sizeError;
+            const finalRegionError: finalError = getFormikError('region') || regionError;
+            const finalLinodeError: finalError = getFormikError('linode') || linodeError;
+
+            return (
+              <Form>
+                <TextField
+                  label="Label"
+                  name="label"
+                  // TODO: Why isn't the maxLength property working?
+                  maxLength="32"
+                  required
+                  value={values.label}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
+                    this.setLabel(e);
+                    handleChange(e); // <-- handles Formik state
+                  }}
+                  onBlur={handleBlur}
+                  error={finalLabelError}
+                  errorText={finalLabelError}
+                  disabled={mode === modes.RESIZING || mode === modes.CLONING}
+                  data-qa-volume-label
+                />
+
+                <TextField
+                  label="Size"
+                  name="size"
+                  required
+                  value={values.size}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
+                    this.setSize(e);
+                    handleChange(e);
+                  }}
+                  onBlur={handleBlur}
+                  error={finalSizeError}
+                  errorText={finalSizeError}
+                  disabled={mode === modes.CLONING || mode === modes.EDITING}
+                  helperText={'Maximum: 10240 GB'}
+                  InputProps={{
+                    endAdornment:
+                      <InputAdornment position="end">
+                        GB
+                      </InputAdornment>,
+                  }}
+                  data-qa-size
+                />
+
+                <FormControl fullWidth>
+                  <InputLabel
+                    htmlFor="region"
+                    disableAnimation
+                    shrink={true}
+                    error={Boolean(regionError)}
+                  >
+                    Region
+                  </InputLabel>
+                  <Select
+                    value={values.region}
+                    name="region"
+                    placeholder='Select a Region'
+                    disabled={
+                      mode === modes.CLONING
+                      || mode === modes.EDITING
+                      || mode === modes.RESIZING
+                    }
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>): void => {
+                      this.setSelectedRegion(e);
+                      handleChange(e);
+                    }}
+                    inputProps={{ name: 'region', id: 'region' }}
+                    error={Boolean(finalRegionError)}
+                    data-qa-select-region
+                  >
+                    <MenuItem key="none" value="none">Select a Region</MenuItem>,
+                    {regions && regions.map(eachRegion =>
+                      <MenuItem
+                        key={eachRegion.id}
+                        value={eachRegion.id}
+                        data-qa-attach-to-region={eachRegion.id}
+                      >
+                        {formatRegion('' + eachRegion.id)}
+                      </MenuItem>,
+                    )}
+                  </Select>
+                  {finalRegionError &&
+                    <FormHelperText error={Boolean(finalRegionError)}>
+                      {finalRegionError}
+                    </FormHelperText>
+                  }
+                </FormControl>
+
+                {mode !== modes.CLONING &&
+                  <FormControl fullWidth>
+                    <EnhancedSelect
+                      label="Linode"
+                      name="linode"
+                      placeholder="Select a Linode"
+                      value={values.linode}
+                      isLoading={linodesLoading}
+                      errorText={finalLinodeError}
+                      disabled={
+                        mode === modes.EDITING
+                        || mode === modes.RESIZING
+                      }
+                      options={linodes}
+                      onChange={(linode: Item) => {
+                        this.setSelectedLinode(linode);
+                        setFieldValue('linode', linode);
+                      }}
+                      // onInputChange={this.onInputChange}
+                      data-qa-select-linode
+                    />
+                    {region !== 'none' && mode !== modes.RESIZING &&
+                      <FormHelperText>
+                        Only Linodes in the selected region are displayed.
+                      </FormHelperText>
+                    }
+                  {finalLinodeError &&
+                    <FormHelperText error={Boolean(finalLinodeError)}>
+                      {finalLinodeError}
+                    </FormHelperText>
+                  }
+                  </FormControl>
+                }
+
+                {configs.length > 1 &&
+                  <FormControl fullWidth>
+                    <InputLabel
+                      htmlFor="config"
+                      disableAnimation
+                      shrink={true}
+                      error={Boolean(configError)}
+                    >
+                      Config
+                    </InputLabel>
+                    <Select
+                      value={selectedConfig || ''}
+                      onChange={this.setSelectedConfig}
+                      inputProps={{ name: 'config', id: 'config' }}
+                      error={Boolean(configError)}
+                    >
+                      {
+                        configs && configs.map((el) => {
+                          return <MenuItem key={el[0]} value={el[0]}>{el[1]}</MenuItem>;
+                        })
+                      }
+                    </Select>
+                    {Boolean(configError) && <FormHelperText error>{configError}</FormHelperText>}
+                  </FormControl>
+                }
+
+                <ActionsPanel style={{ marginTop: 16 }}>
+                  <Button
+                    onClick={submitForm}
+                    type="primary"
+                    loading={submitting}
+                    data-qa-submit
+                  >
+                    Submit
+                  </Button>
+                  <Button
+                    onClick={this.onClose}
+                    type="cancel"
+                    data-qa-cancel
+                  >
+                    Cancel
+                  </Button>
+                </ActionsPanel>
+              </Form>
+            );
           }}
-          data-qa-size
+
         />
-
-        <FormControl fullWidth>
-          <InputLabel
-            htmlFor="region"
-            disableAnimation
-            shrink={true}
-            error={Boolean(regionError)}
-          >
-            Region
-          </InputLabel>
-          <Select
-            value={region}
-            disabled={
-              mode === modes.CLONING
-              || mode === modes.EDITING
-              || mode === modes.RESIZING
-            }
-            onChange={this.setSelectedRegion}
-            inputProps={{ name: 'region', id: 'region' }}
-            error={Boolean(regionError)}
-            data-qa-select-region
-          >
-            <MenuItem key="none" value="none">Select a Region</MenuItem>,
-            {regions && regions.map(eachRegion =>
-              <MenuItem
-                key={eachRegion.id}
-                value={eachRegion.id}
-                data-qa-attach-to-region={eachRegion.id}
-              >
-                {formatRegion('' + eachRegion.id)}
-              </MenuItem>,
-            )}
-          </Select>
-          {regionError &&
-            <FormHelperText error={Boolean(regionError)}>
-              {regionError}
-            </FormHelperText>
-          }
-        </FormControl>
-
-        {mode !== modes.CLONING &&
-          <FormControl fullWidth>
-            <EnhancedSelect
-              label="Linode"
-              placeholder="Select a Linode"
-              value={this.getSelectedLinode(linodeId)}
-              isLoading={linodesLoading}
-              errorText={linodeError}
-              disabled={
-                mode === modes.EDITING
-                || mode === modes.RESIZING
-              }
-              options={linodes}
-              onChange={this.setSelectedLinode}
-              onInputChange={this.onInputChange}
-              data-qa-select-linode
-            />
-            {region !== 'none' && mode !== modes.RESIZING &&
-              <FormHelperText>
-                Only Linodes in the selected region are displayed.
-              </FormHelperText>
-            }
-          </FormControl>
-        }
-
-        {configs.length > 1 &&
-          <FormControl fullWidth>
-            <InputLabel
-              htmlFor="config"
-              disableAnimation
-              shrink={true}
-              error={Boolean(configError)}
-            >
-              Config
-            </InputLabel>
-            <Select
-              value={selectedConfig || ''}
-              onChange={this.setSelectedConfig}
-              inputProps={{ name: 'config', id: 'config' }}
-              error={Boolean(configError)}
-            >
-              {
-                configs && configs.map((el) => {
-                  return <MenuItem key={el[0]} value={el[0]}>{el[1]}</MenuItem>;
-                })
-              }
-            </Select>
-            {Boolean(configError) && <FormHelperText error>{configError}</FormHelperText>}
-          </FormControl>
-        }
-
-        <ActionsPanel style={{ marginTop: 16 }}>
-          <Button
-            onClick={this.onSubmit}
-            type="primary"
-            loading={submitting}
-            data-qa-submit
-          >
-            Submit
-          </Button>
-          <Button
-            onClick={this.onClose}
-            type="cancel"
-            data-qa-cancel
-          >
-            Cancel
-          </Button>
-        </ActionsPanel>
       </Drawer>
     );
   }
