@@ -159,7 +159,7 @@ const themeDefaults: ThemeOptions = {
     },
   },
   typography: {
-    fontFamily: '"Lato", sans-serif',
+    fontFamily: '"LatoWeb", sans-serif',
     fontSize: 16,
     headline: {
       color: primaryColors.headline,
