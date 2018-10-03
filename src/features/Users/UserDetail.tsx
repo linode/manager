@@ -213,7 +213,7 @@ class UserDetail extends React.Component<CombinedProps> {
     const { username, email, profileSaving, profileSuccess, profileErrors } = this.state;
     return <UserProfile
       username={username || ''}
-      email={email}
+      email={email || ''}
       changeUsername={this.onChangeUsername}
       save={this.onSave}
       reset={this.onReset}
