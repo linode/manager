@@ -133,6 +133,7 @@ const themeDefaults: ThemeOptions = {
     focusBorder: '#999',
     absWhite: '#fff',
     blueDTwhite: '#3683DC',
+    borderRow: 'white',
   },
   notificationList: {
     padding: '16px 32px 16px 23px',
@@ -861,12 +862,6 @@ const themeDefaults: ThemeOptions = {
         fontSize: '.9rem',
       },
     },
-    /** @todo */
-    // MuiTableHead: {
-    //   root: {
-    //     backgroundColor: '#fbfbfb',
-    //   },
-    // },
     MuiTabs: {
       root: {
         margin: '16px 0',
@@ -881,6 +876,11 @@ const themeDefaults: ThemeOptions = {
         backfaceVisibility: 'hidden',
         position: 'relative',
         zIndex: 1,
+        '&$hover': {
+          '&:before': {
+            borderLeftColor: 'white',
+          },
+        },
         '&:hover': {
           '&$hover': {
             backgroundColor: '#fbfbfb',
@@ -888,6 +888,12 @@ const themeDefaults: ThemeOptions = {
               borderLeftColor: primaryColors.main,
             },
           },
+        },
+      },
+      head: {
+        backgroundColor: '#fbfbfb',
+        '&:before': {
+          borderLeftColor: '#fbfbfb',
         },
       },
       hover: {

@@ -55,6 +55,7 @@ export const dark = createTheme({
     focusBorder: '#999',
     absWhite: '#000',
     blueDTwhite: '#fff',
+    borderRow: 'rgba(0, 0, 0, 0.15)',
   },
   notificationList: {
     borderBottom: '1px solid #f4f4f4',
@@ -455,17 +456,6 @@ export const dark = createTheme({
         backgroundColor: 'rgba(0, 0, 0, 0.15)',
       },
     },
-    /** @todo */
-    // MuiTableHead: {
-    //   root: {
-    //     backgroundColor: '#32363C',
-    //     '& > tr': {
-    //       '&:before': {
-    //         borderLeftColor: 'rgba(0, 0, 0, 0.15)',
-    //       },
-    //     },
-    //   },
-    // },
     MuiTabs: {
       root: {
         boxShadow: 'inset 0 -1px 0 #222',
@@ -473,6 +463,11 @@ export const dark = createTheme({
     },
     MuiTableRow: {
       root: {
+        '&$hover': {
+          '&:before': {
+            borderLeftColor: '#32363C',
+          },
+        },
         '&:hover': {
           '&$hover': {
             backgroundColor: 'rgba(0, 0, 0, 0.1)',
@@ -480,6 +475,12 @@ export const dark = createTheme({
               borderLeftColor: primaryColors.main,
             },
           },
+        },
+      },
+      head: {
+        backgroundColor: '#32363C',
+        '&:before': {
+          borderLeftColor: 'rgba(0, 0, 0, 0.15)',
         },
       },
       hover: {
