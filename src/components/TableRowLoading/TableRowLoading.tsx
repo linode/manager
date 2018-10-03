@@ -1,8 +1,9 @@
 import * as React from 'react';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
+
+import TableCell from 'src/components/TableCell';
 
 import CircleProgress from 'src/components/CircleProgress';
 

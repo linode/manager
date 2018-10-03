@@ -44,14 +44,11 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
   requestInvoices = (
     page: number = this.state.page,
     pageSize: number = this.state.pageSize,
-    initial: boolean = false,
   ) => {
 
     return getInvoices({ page, page_size: pageSize }, { '+order_by': 'date', '+order': 'desc' })
       .then(({ data, results }) => {
         if (!this.mounted) { return; }
-
-        this.setState({ loading: initial });
 
         this.setState({
           loading: false,
@@ -65,6 +62,7 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
 
         const fallbackError = [{ reason: 'Unable to retrieve invoices.' }];
         this.setState({
+          loading: false,
           errors: pathOr(fallbackError, ['response', 'data', 'errors'], response),
         })
       });
@@ -120,11 +118,11 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
     const { data, errors, loading } = this.state;
 
     if (loading) {
-      return <TableRowLoading colSpan={3} />
+      return <TableRowLoading colSpan={4} />
     }
 
     if (errors) {
-      return <TableRowError colSpan={3} message="We were unable to load your invoices." />
+      return <TableRowError colSpan={4} message="We were unable to load your invoices." />
     }
 
     return data && data.length > 0 ? this.renderItems(data) : <TableRowEmptyState colSpan={3} />
@@ -132,7 +130,8 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
 
   handleExpansion = (e: any, expanded: boolean) => {
     if (expanded && !this.state.data) {
-      this.requestInvoices(undefined, undefined, true);
+      this.setState({ loading: true });
+      this.requestInvoices(undefined, undefined);
     }
   };
 
