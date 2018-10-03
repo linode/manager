@@ -4,7 +4,7 @@ import * as Raven from 'raven-js';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import eventMessageGenerator from 'src/eventMessageGenerator';
 
@@ -23,7 +23,7 @@ const reportEventError = (e: Linode.Event, err: Error) =>
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
 });
 

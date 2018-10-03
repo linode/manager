@@ -8,7 +8,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormLabel from '@material-ui/core/FormLabel';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -32,7 +32,7 @@ type ClassNames = 'root'
   | 'section'
   | 'divider';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   section: {
     marginTop: theme.spacing.unit * 2,

@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import Divider from '@material-ui/core/Divider';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 type CSSClasses = 'root'
@@ -10,7 +10,7 @@ type CSSClasses = 'root'
 | 'body'
 | 'iconWrapper';
 
-const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback = (theme) => ({
   '@keyframes dash': {
     to: {
       'stroke-dashoffset': 0,

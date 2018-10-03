@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import Grid from 'src/components/Grid';
 
@@ -8,7 +8,7 @@ type CSSClasses = 'container'
   | 'link'
   | 'version';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   container: {
     width: '100%',
     backgroundColor: theme.bg.main,

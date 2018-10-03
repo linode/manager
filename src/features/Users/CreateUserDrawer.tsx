@@ -3,7 +3,7 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -16,7 +16,7 @@ import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
 });
 

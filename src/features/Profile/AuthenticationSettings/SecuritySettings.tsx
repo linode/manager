@@ -6,7 +6,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Paper from '@material-ui/core/Paper';
 import {
   StyleRulesCallback,
-  Theme,
+  
   WithStyles,
   withStyles,
 } from '@material-ui/core/styles';
@@ -20,7 +20,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root' | 'title';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     root: {
       padding: theme.spacing.unit * 3,
       paddingBottom: theme.spacing.unit * 3,

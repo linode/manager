@@ -1,14 +1,8 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-
 import Waypoint from 'react-waypoint';
 
-import {
-  StyleRulesCallback,
-  Theme,
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -35,7 +29,7 @@ type ClassNames = 'root'
   | 'searchWrapper'
   | 'searchBar';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   table: {
     overflow: 'scroll',
@@ -672,7 +666,7 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
                 actionBeingPerfomed={isSearching}
               />
             </div>
-            <Table 
+            <Table
               isResponsive={false}
               aria-label="List of StackScripts"
               noOverflow={true}
@@ -704,15 +698,15 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
             }
           </React.Fragment>
         }
-        {/* 
+        {/*
         * if we're sorting, or if we already loaded all results
         * or if we're in the middle of getting more results, don't render
         * the lazy load trigger
         */}
         {!isSorting && !allStackScriptsLoaded && !gettingMoreStackScripts &&
           <div style={{ textAlign: 'center' }}>
-            {/* 
-            * If the lazy-load failed (marked by the catch in getNext), 
+            {/*
+            * If the lazy-load failed (marked by the catch in getNext),
             * show the "Show more StackScripts button
             * Otherwise, try to lazy load some more dang stackscripts
             */}
@@ -720,7 +714,7 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
               ? <Waypoint
                 onEnter={this.getNext}
               >
-                {/* 
+                {/*
                 * The reason for this empty div is that there was some wonkiness when
                 * scrolling to the waypoint with trackpads. For some reason, the Waypoint
                 * would never be scrolled into view no matter how much you scrolled on the

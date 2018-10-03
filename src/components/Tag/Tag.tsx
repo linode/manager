@@ -2,7 +2,7 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 
 import Chip, { ChipProps } from '@material-ui/core/Chip';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Close from '@material-ui/icons/Close';
 
 type Variants =
@@ -18,7 +18,7 @@ type Variants =
 
 type CSSClasses = 'label' | 'root' | Variants;
 
-const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => {
+const styles: StyleRulesCallback<CSSClasses> = (theme) => {
   return ({
     label: {},
     root: {},

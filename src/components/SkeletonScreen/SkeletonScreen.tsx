@@ -1,12 +1,12 @@
 import * as React from 'react';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 type ClassNames = 'root'
   | 'tableCol1'
   | 'tableCol2';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   '@keyframes shine': {
     '0%': {
       backgroundPosition: -100,

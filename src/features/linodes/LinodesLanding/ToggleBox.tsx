@@ -2,7 +2,7 @@ import * as React from 'react';
 import { compose } from 'redux';
 
 import Button from '@material-ui/core/Button';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import ViewList from '@material-ui/icons/ViewList';
 import ViewModule from '@material-ui/icons/ViewModule';
 
@@ -14,7 +14,7 @@ type CSSClasses =
   | 'buttonRight'
   | 'icon';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   root: {
     margin: `${theme.spacing.unit}px`,
     [theme.breakpoints.up('sm')]: {

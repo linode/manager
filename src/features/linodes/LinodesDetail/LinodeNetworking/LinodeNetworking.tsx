@@ -2,7 +2,7 @@ import { compose, equals, head, path, pathOr } from 'ramda';
 import * as React from 'react';
 
 import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
@@ -42,7 +42,7 @@ type ClassNames =
   | 'ipv4TitleContainer'
   | 'netActionsTitle';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   title: {
     marginTop: `${theme.spacing.unit}px`,

@@ -1,16 +1,15 @@
 import * as React from 'react';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
-
-import TableCell from 'src/components/TableCell';
 
 import CircleProgress from 'src/components/CircleProgress';
 
 type ClassNames = 'root'
   | 'tableCell';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   tableCell: {
     padding: 17,

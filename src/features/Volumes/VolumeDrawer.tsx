@@ -3,7 +3,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import { append, filter, lensPath, over, path, set, view, when } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
@@ -35,7 +35,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 type ClassNames = 'root'
   | 'actionPanel';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   actionPanel: {
     marginTop: theme.spacing.unit * 2,
@@ -190,10 +190,10 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
       set(L.errors, undefined),
     ]);
 
-    /* If the drawer is opening */	
-    if ((this.props.mode === modes.CLOSED) && !(nextProps.mode === modes.CLOSED)) {	
-      /* re-request the list of Linodes */	
-      this.searchLinodes();	
+    /* If the drawer is opening */
+    if ((this.props.mode === modes.CLOSED) && !(nextProps.mode === modes.CLOSED)) {
+      /* re-request the list of Linodes */
+      this.searchLinodes();
     }
   }
 
@@ -355,9 +355,9 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
   }
 
   setSelectedLinode = (selected:Item) => {
-    if (!this.mounted) { return; } 
-    if (selected) { 
-      this.setState({ 
+    if (!this.mounted) { return; }
+    if (selected) {
+      this.setState({
         linodeId: Number(selected.value),
       });
     }

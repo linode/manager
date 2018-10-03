@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import Collapse from 'src/assets/icons/minus-square.svg';
@@ -33,7 +33,7 @@ type ClassNames = 'root'
   | 'hivelyLink'
   | 'hivelyImage';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   '@keyframes fadeIn': {
     from: {
       opacity: 0,

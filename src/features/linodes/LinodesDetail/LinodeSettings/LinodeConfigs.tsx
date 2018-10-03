@@ -2,7 +2,7 @@ import { compose } from 'ramda';
 import * as React from 'react';
 import 'typeface-lato';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
@@ -27,7 +27,7 @@ import LinodeConfigDrawer from './LinodeConfigDrawer';
 
 type ClassNames = 'root' | 'headline';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   headline: {
     marginTop: theme.spacing.unit * 2,

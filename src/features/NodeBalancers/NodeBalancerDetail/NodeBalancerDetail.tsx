@@ -4,7 +4,7 @@ import { matchPath, Redirect, Route, RouteComponentProps, Switch } from 'react-r
 
 import AppBar from '@material-ui/core/AppBar';
 import IconButton from '@material-ui/core/IconButton';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import  KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
@@ -27,7 +27,7 @@ type ClassNames = 'root'
   | 'titleWrapper'
   | 'backButton';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   titleWrapper: {
     display: 'flex',

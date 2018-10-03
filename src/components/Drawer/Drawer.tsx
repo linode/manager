@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import Button from '@material-ui/core/Button';
 import Drawer, { DrawerProps } from '@material-ui/core/Drawer';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Close from '@material-ui/icons/Close';
 
@@ -18,7 +18,7 @@ type ClassNames = 'drawer'
 | 'drawerContent'
 | 'backDrop';
 
-const styles: StyleRulesCallback = (theme: Theme) => ({
+const styles: StyleRulesCallback = (theme) => ({
   paper: {
     width: 300,
     padding: theme.spacing.unit * 2,

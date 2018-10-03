@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import * as ClassNames from 'classnames';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Search from '@material-ui/icons/Search';
@@ -15,7 +15,7 @@ import TextField from 'src/components/TextField';
 
 type ClassNames = 'root' | 'searchIcon';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   searchIcon: {
     color: `${theme.color.grey1} !important`,

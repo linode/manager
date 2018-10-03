@@ -2,14 +2,14 @@ import { compose, path } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import UserNotificationListItem from './UserNotificationListItem';
 
 type ClassNames = 'emptyText';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   emptyText: {
     padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px`,
     fontWeight: 700,

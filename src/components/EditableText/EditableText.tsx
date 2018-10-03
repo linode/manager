@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import Button from '@material-ui/core/Button';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import { TextFieldProps } from '@material-ui/core/TextField';
 import Typography, { TypographyProps } from '@material-ui/core/Typography';
 import Check from '@material-ui/icons/Check';
@@ -26,7 +26,7 @@ type ClassNames = 'root'
 | 'headline'
 | 'title';
 
-const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback = (theme) => ({
   '@keyframes fadeIn': {
     from: {
       opacity: 0,

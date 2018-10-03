@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
 
 import AccessPanel from 'src/components/AccessPanel';
 import RenderGuard from 'src/components/RenderGuard';
@@ -8,7 +8,7 @@ import TextField from 'src/components/TextField';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     margin: `${theme.spacing.unit * 3}px 0`,
     paddingBottom: theme.spacing.unit * 3,

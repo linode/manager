@@ -1,13 +1,13 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import Notice from 'src/components/Notice';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
 });
 

@@ -9,7 +9,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 
@@ -53,7 +53,7 @@ type CSSClasses =
   | 'StatusIndicatorWrapper'
   | 'link';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   customeMQ: {
     '@media (min-width: 600px) and (max-width: 680px)': {
       paddingLeft: theme.spacing.unit * 2,
@@ -134,7 +134,8 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   },
   consoleButton: {
     width: '50%',
-    borderColor: theme.pale,
+    /** @todo This was theme.pale, which doesnt exist. */
+    // borderColor: theme.pale,
     borderRight: '1px solid ' + theme.palette.divider,
   },
   rebootButton: {

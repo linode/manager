@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import truncateText from 'src/utilities/truncateText';
@@ -16,7 +16,7 @@ type CSSClasses = 'root'
 | 'titleLink'
 | 'body';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   root: {
     marginTop: theme.spacing.unit * 2,
   },

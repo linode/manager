@@ -16,7 +16,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Sticky, StickyContainer, StickyProps } from 'react-sticky';
 
 import Paper from '@material-ui/core/Paper';
-import { StyleRules, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -44,13 +44,13 @@ import {
   transformConfigsForRequest
 } from './utils';
 
-type Styles =
+type ClassNames =
   'root'
   | 'main'
   | 'sidebar'
   | 'title';
 
-const styles = (theme: Theme & Linode.Theme): StyleRules => ({
+  const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
   },
   main: {
@@ -69,7 +69,7 @@ interface RegionsContextProps {
 
 type CombinedProps = RegionsContextProps
   & RouteComponentProps<{}>
-  & WithStyles<Styles>;
+  & WithStyles<ClassNames>;
 
 interface NodeBalancerFieldsState {
   label?: string;

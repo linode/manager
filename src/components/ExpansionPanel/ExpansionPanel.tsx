@@ -18,7 +18,7 @@ type ClassNames = 'root'
   | 'warning'
   | 'error';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
+const styles: StyleRulesCallback<ClassNames> = (theme) => {
   const { palette: { status } } = theme;
   return {
     root: {},

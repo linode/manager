@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import AppBar from '@material-ui/core/AppBar';
 import IconButton from '@material-ui/core/IconButton';
-import { StyleRules, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import MenuIcon from '@material-ui/icons/Menu';
 
@@ -12,13 +12,13 @@ import UserEventsMenu from './UserEventsMenu';
 import UserMenu from './UserMenu';
 import UserNotificationsMenu from './UserNotificationsMenu';
 
-type ClassNames = 'appBar'
-  | 'navIconHide'
+type ClassNames = 'root'
   | 'flex'
-  | 'leftIcon'
-  | 'toolbar';
+  | 'appBar'
+  | 'toolbar'
+  | 'navIconHide';
 
-const styles = (theme: Linode.Theme): StyleRules => ({
+  const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     color: theme.palette.text.primary,
   },

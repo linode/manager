@@ -19,7 +19,7 @@ type ClassNames = 'chart'
   | 'header'
   | 'graphWrapper';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
+const styles: StyleRulesCallback<ClassNames> = (theme) => {
   return {
     header: {
       padding: theme.spacing.unit * 2,

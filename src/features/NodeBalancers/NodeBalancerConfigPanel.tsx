@@ -7,7 +7,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -28,7 +28,7 @@ type ClassNames = 'root'
   | 'suggestionItem'
   | 'selectedSuggestionItem';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
   },
   inner: {},

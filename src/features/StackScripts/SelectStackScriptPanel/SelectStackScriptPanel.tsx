@@ -2,7 +2,7 @@ import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import RenderGuard from 'src/components/RenderGuard';
 import TabbedPanel from 'src/components/TabbedPanel';
@@ -19,7 +19,7 @@ type ClassNames = 'root'
   | 'creating'
   | 'selecting';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     marginBottom: theme.spacing.unit * 3,
   },

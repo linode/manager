@@ -9,8 +9,6 @@ declare module '*.png';
 namespace Linode {
   export type TodoAny = any;
 
-  export type Theme = TodoAny;
-
   export type NullableString = string | null;
 
   export type Hypervisor = 'kvm' | 'zen';

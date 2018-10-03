@@ -8,7 +8,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import Chip from '@material-ui/core/Chip';
 import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import InsertDriveFile from '@material-ui/icons/InsertDriveFile';
 import InsertPhoto from '@material-ui/icons/InsertPhoto';
@@ -47,7 +47,7 @@ type ClassNames = 'root'
   | 'attachmentRow'
   | 'attachmentIcon';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   title: {
     display: 'flex',

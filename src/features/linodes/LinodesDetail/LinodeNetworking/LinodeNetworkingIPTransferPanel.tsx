@@ -2,7 +2,7 @@ import { both, compose, equals, isNil, lensPath, over, path, set, uniq, view, wh
 import * as React from 'react';
 
 import Divider from '@material-ui/core/Divider';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -27,7 +27,7 @@ type ClassNames =
   | 'emptyStateText'
   | 'autoGridsm';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   containerDivider: {
    marginTop: theme.spacing.unit,
   },

@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 
 import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
 import Typography from '@material-ui/core/Typography';
@@ -31,7 +31,7 @@ import ActionMenu from './UsersActionMenu';
 
 type ClassNames = 'title' | 'avatar' | 'userButton' | 'emptyImage';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   '@keyframes fadeIn': {
     from: {
       opacity: 0,

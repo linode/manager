@@ -1,12 +1,7 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 
-import {
-  StyleRulesCallback,
-  Theme,
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableHead from '@material-ui/core/TableHead';
 
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
@@ -26,7 +21,7 @@ type ClassNames = 'root'
   | 'sortButton'
   | 'sortIcon';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   stackscriptLabel: {
     width: 84,

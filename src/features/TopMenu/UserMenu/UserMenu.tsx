@@ -7,7 +7,7 @@ import { compose } from 'redux';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import { StyleRules, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import UserIcon from 'src/assets/icons/user.svg';
 import { getGravatarUrl } from 'src/utilities/gravatar';
@@ -31,7 +31,7 @@ type CSSClasses =
   | 'menuItem'
   | 'hidden';
 
-const styles = (theme: Theme & Linode.Theme): StyleRules => ({
+const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   menu: {
     transform: `translateY(${theme.spacing.unit}px)`,
   },

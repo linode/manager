@@ -8,7 +8,7 @@ import { compose } from 'redux';
 import { Subscription } from 'rxjs/Subscription';
 import 'typeface-lato';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import DefaultLoader from 'src/components/DefaultLoader';
 import DocsSidebar from 'src/components/DocsSidebar';
@@ -112,7 +112,7 @@ type ClassNames = 'appFrame'
   | 'grid'
   | 'switchWrapper';
 
-const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback = (theme) => ({
   appFrame: {
     position: 'relative',
     display: 'flex',

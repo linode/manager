@@ -14,7 +14,6 @@ import Close from '@material-ui/icons/Close';
 
 import Grid from 'src/components/Grid';
 import { events$ } from 'src/events';
-
 import toasts$, { createToast, Toast } from './toasts';
 
 type ClassNames = 'root'
@@ -25,7 +24,7 @@ type ClassNames = 'root'
   | 'warning'
   | 'success';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
+const styles: StyleRulesCallback<ClassNames> = (theme) => {
   const { palette: { status } } = theme;
 
   return {

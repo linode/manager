@@ -7,7 +7,7 @@ import SupportTicketDrawer from 'src/features/Support/SupportTickets/SupportTick
 
 import {
   StyleRulesCallback,
-  Theme,
+  
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
@@ -28,7 +28,7 @@ type ClassNames = 'root'
 | 'icon'
 | 'ada';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   wrapper: {
     marginTop: theme.spacing.unit * 4,

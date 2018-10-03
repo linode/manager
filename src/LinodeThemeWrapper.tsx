@@ -1,31 +1,18 @@
 import * as React from 'react';
 
-import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 
-import LinodeDarkTheme from 'src/darkTheme';
-import { init } from 'src/events';
-import LinodeLightTheme from 'src/theme';
-
+import { dark, light } from 'src/themes';
 import { theme as themeStorage } from 'src/utilities/storage';
+
+import { init } from './events';
 
 interface State {
   themeChoice: 'light' | 'dark';
   render: boolean;
 }
 
-const lightTheme = createMuiTheme(LinodeLightTheme);
-const darkTheme = createMuiTheme({
-  ...LinodeLightTheme,
-  ...LinodeDarkTheme,
-});
-
-const themes = {
-  light: lightTheme,
-  dark: darkTheme,
-}
-
-themes.light.shadows.fill('none');
-themes.dark.shadows.fill('none');
+const themes = { light, dark }
 
 class LinodeThemeWrapper extends React.Component<{}, State> {
   state: State = {

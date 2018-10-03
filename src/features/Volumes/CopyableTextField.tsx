@@ -1,7 +1,7 @@
 import * as copy from 'copy-to-clipboard';
 import * as React from 'react';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import CopyTooltip from 'src/components/CopyTooltip';
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
@@ -10,7 +10,7 @@ type ClassNames = 'root'
 | 'input'
 | 'copyIcon';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   input: {
     backgroundColor: theme.bg.offWhite,

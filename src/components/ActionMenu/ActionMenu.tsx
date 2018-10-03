@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import MoreHoriz from '@material-ui/icons/MoreHoriz';
 
 import MenuItem from 'src/components/MenuItem';
@@ -20,7 +20,7 @@ type CSSClasses = 'root'
   | 'actionSingleLink'
   | 'hidden';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   root: {
     display: 'flex',
     alignItems: 'center',

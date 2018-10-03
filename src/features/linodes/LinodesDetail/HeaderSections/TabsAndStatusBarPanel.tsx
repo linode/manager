@@ -4,7 +4,7 @@ import { matchPath, Redirect, Route, Switch } from 'react-router-dom';
 import AppBar from '@material-ui/core/AppBar';
 import {
   StyleRulesCallback,
-  Theme,
+  
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
@@ -25,7 +25,7 @@ import LinodeVolumes from '../LinodeVolumes';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
 });
 

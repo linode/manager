@@ -2,7 +2,7 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Terminal } from 'xterm';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import CircleProgress from 'src/components/CircleProgress';
 import ErrorState from 'src/components/ErrorState';
@@ -11,7 +11,7 @@ import { getLishSchemeAndHostname, resizeViewPort } from '.';
 
 type ClassNames = 'progress' | 'message' | 'errorState';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   progress: {
     height: 'auto',
   },

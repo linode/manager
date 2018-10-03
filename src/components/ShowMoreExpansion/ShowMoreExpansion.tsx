@@ -2,13 +2,13 @@ import * as React from 'react';
 
 import Button from '@material-ui/core/Button';
 import Collapse from '@material-ui/core/Collapse';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 
 type CSSClasses = 'root' 
 | 'caret';
 
-const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback = (theme) => ({
   root: {
     paddingLeft: 0,
     paddingRight: 0,

@@ -3,7 +3,7 @@ import * as React from 'react';
 import Paper from '@material-ui/core/Paper';
 import {
   StyleRulesCallback,
-  Theme,
+  
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
@@ -17,7 +17,7 @@ type ClassNames = 'root'
   | 'bgIcon'
   | 'searchHeading';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     padding: theme.spacing.unit * 4,
     backgroundColor: theme.color.green,

@@ -1,11 +1,6 @@
 import * as React from 'react';
 
-import {
-  StyleRulesCallback,
-  Theme,
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import FormControl from '@material-ui/core/FormControl';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -42,7 +37,7 @@ type ClassNames = 'root'
   | 'warning'
   | 'targetTag';
 
-  const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+  const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     root: {
       padding: theme.spacing.unit * 2,
     },

@@ -1,7 +1,7 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography, { TypographyProps } from '@material-ui/core/Typography';
 
 import Grid, { GridProps } from 'src/components/Grid';
@@ -24,7 +24,7 @@ type ClassNames = 'root'
   | 'flag'
   | 'icon';
 
-const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => {
+const styles: StyleRulesCallback = (theme) => {
   const { palette: { status } } = theme;
 
   return {

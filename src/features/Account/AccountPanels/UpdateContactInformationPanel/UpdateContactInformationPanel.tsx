@@ -1,7 +1,7 @@
 import { compose, defaultTo, lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -21,7 +21,7 @@ type ClassNames = 'root'
   | 'mainFormContainer'
   | 'stateZip';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   mainFormContainer: {
     maxWidth: 860,

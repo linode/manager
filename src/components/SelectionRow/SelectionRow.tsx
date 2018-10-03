@@ -2,7 +2,7 @@ import * as invariant from 'invariant';
 import { compose, isEmpty, lensIndex, map, over, splitAt, unless } from 'ramda';
 import * as React from 'react';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableCell from '@material-ui/core/TableCell';
 import Typography from '@material-ui/core/Typography';
 
@@ -27,7 +27,7 @@ type ClassNames = 'root'
   | 'stackScriptUsername'
   | 'deployButton';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     padding: theme.spacing.unit * 2,
     borderBottom: `solid 1px ${theme.palette.grey['200']}`,

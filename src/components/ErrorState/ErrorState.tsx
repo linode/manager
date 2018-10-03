@@ -14,7 +14,7 @@ interface Props {
 
 type CSSClasses = 'root' | 'iconContainer' | 'icon' | 'compact';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme: Linode.Theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   root: {
     padding: theme.spacing.unit * 10,
   },

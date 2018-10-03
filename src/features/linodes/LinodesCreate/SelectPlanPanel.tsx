@@ -1,7 +1,7 @@
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import Grid from 'src/components/Grid';
 import RenderGuard from 'src/components/RenderGuard';
@@ -16,7 +16,7 @@ export interface ExtendedType extends Linode.LinodeType {
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     marginTop: theme.spacing.unit * 3,
   },

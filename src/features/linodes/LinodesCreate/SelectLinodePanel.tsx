@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import Grid from 'src/components/Grid';
@@ -19,7 +19,7 @@ type ClassNames =
   | 'inner'
   | 'panelBody';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     flexGrow: 1,
     width: '100%',

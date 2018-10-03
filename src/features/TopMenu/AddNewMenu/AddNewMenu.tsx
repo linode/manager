@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button';
 import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import AddCircle from '@material-ui/icons/AddCircle';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
@@ -28,7 +28,7 @@ type CSSClasses = 'wrapper'
   | 'mobileCreate'
   | 'mobileButton';
 
-const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback = (theme) => ({
   wrapper: {
     [theme.breakpoints.down('sm')]: {
       flex: 1,

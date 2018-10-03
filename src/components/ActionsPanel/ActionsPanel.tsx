@@ -2,13 +2,13 @@ import * as classNames from 'classnames';
 import { compose } from 'ramda';
 import * as React from 'react';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import RenderGuard from 'src/components/RenderGuard';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     paddingTop: 16,
     paddingBottom: 8,

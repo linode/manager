@@ -7,7 +7,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
-import { StyleRules, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Close from '@material-ui/icons/Close';
 import Search from '@material-ui/icons/Search';
 
@@ -25,7 +25,7 @@ import { getVolumes } from 'src/services/volumes';
 
 import SearchSuggestion, { SearchSuggestionT } from './SearchSuggestion';
 
-type Styles =
+type ClassNames =
   'root'
   | 'navIconHide'
   | 'close'
@@ -37,7 +37,7 @@ type Styles =
   | 'item'
   | 'selectedMenuItem';
 
-const styles = (theme: Theme & Linode.Theme): StyleRules => ({
+  const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     position: 'relative', /* for search results */
     height: 50,
@@ -165,7 +165,7 @@ interface State {
 }
 
 type CombinedProps = TypesContextProps
-  & WithStyles<Styles>
+  & WithStyles<ClassNames>
   & RouteComponentProps<{}>;
 
 class SearchBar extends React.Component<CombinedProps, State> {
@@ -241,7 +241,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
   }
 
   // Helper can be extended to other entities once tags are supported for them.
-  // @todo Inefficient to call this function twice for each search result. 
+  // @todo Inefficient to call this function twice for each search result.
   getMatchingTags = (tags:string[], query:string): string[] => {
     return tags.filter((tag:string) => tag.toLowerCase().includes(query));
   }
@@ -359,12 +359,12 @@ class SearchBar extends React.Component<CombinedProps, State> {
     *  keyboard disappears on mobile.
     *  This is a known issue with Downshift (https://github.com/paypal/downshift/issues/32),
     *  hopefully this kludge won't be needed with React-Select.
-    */ 
+    */
     const node = document.getElementById('searchbar-simple');
     if (node) { node.blur(); }
     this.toggleSearch();
     history.push(item.path);
-  } 
+  }
 
   renderSuggestion(
     suggestion: SearchSuggestionT,

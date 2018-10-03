@@ -2,13 +2,13 @@ import * as React from 'react';
 
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import PrimaryNav from 'src/components/PrimaryNav';
 
 type CSSClasses = 'menuPaper' | 'menuDocked';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   menuPaper: {
     height: '100%',
     width: 215,

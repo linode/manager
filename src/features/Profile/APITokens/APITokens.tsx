@@ -3,7 +3,7 @@ import { compose, filter, path, pathOr, sort } from 'ramda';
 import * as React from 'react';
 
 import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
@@ -32,7 +32,7 @@ type ClassNames = 'headline'
   | 'typeCell'
   | 'createdCell';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
+const styles: StyleRulesCallback<ClassNames> = (theme) => {
   return ({
     headline: {
       marginTop: theme.spacing.unit * 2,

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -15,7 +15,7 @@ import LinodeWatchdogPanel from './LinodeWatchdogPanel';
 
 type ClassNames = 'root' | 'title';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   title: {
     marginBottom: theme.spacing.unit * 2,

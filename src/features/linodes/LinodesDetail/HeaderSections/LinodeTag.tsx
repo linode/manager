@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import {
   StyleRulesCallback,
-  Theme,
+  
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
@@ -13,7 +13,7 @@ import Tag, { Props as TagProps } from 'src/components/Tag';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
 });
 

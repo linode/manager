@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import {
   StyleRulesCallback,
-  Theme,
+  
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
@@ -18,7 +18,7 @@ import LinodePowerControl from '../LinodePowerControl';
 
 type ClassNames = 'root' | 'titleWrapper' | 'backButton' | 'cta' | 'launchButton';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   titleWrapper: {
     display: 'flex',

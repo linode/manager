@@ -2,7 +2,7 @@ import { compose, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -13,7 +13,7 @@ import TimezoneForm from './TimezoneForm';
 
 type ClassNames = 'root' | 'title';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     padding: theme.spacing.unit * 3,
     paddingBottom: theme.spacing.unit * 3,

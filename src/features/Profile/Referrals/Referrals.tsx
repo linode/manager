@@ -3,7 +3,7 @@ import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 
 import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -15,7 +15,7 @@ type ClassNames = 'root'
   | 'title'
   | 'copyField';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     padding: theme.spacing.unit * 3,
   },

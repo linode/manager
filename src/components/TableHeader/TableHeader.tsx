@@ -1,11 +1,11 @@
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
 import Grid from 'src/components/Grid';
 
 type ClassNames = 'root' | 'title';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   title: {
     marginTop: theme.spacing.unit * 2,

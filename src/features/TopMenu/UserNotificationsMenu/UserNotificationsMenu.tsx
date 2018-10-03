@@ -4,7 +4,7 @@ import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 
 import Menu from '@material-ui/core/Menu';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import MenuItem from 'src/components/MenuItem';
@@ -18,7 +18,7 @@ type ClassNames = 'root'
   | 'dropDown'
   | 'hidden';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     transform: `translate(-${theme.spacing.unit}px, ${theme.spacing.unit}px)`,
   },

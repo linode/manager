@@ -2,14 +2,8 @@ import * as moment from 'moment-timezone';
 import { lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 
-import {
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-  withStyles,
-} from '@material-ui/core/styles';
-
 import Paper from '@material-ui/core/Paper';
+import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import timezones from 'src/assets/timezones/timezones';
@@ -23,7 +17,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root' | 'title';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     padding: theme.spacing.unit * 3,
     paddingBottom: theme.spacing.unit * 3,

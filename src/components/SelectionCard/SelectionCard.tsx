@@ -2,7 +2,7 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 
 import Fade from '@material-ui/core/Fade';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 import Check from '@material-ui/icons/Check';
 
@@ -19,7 +19,7 @@ type CSSClasses =
   | 'disabled'
   | 'showCursor';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   '@keyframes fadeIn': {
     from: {
       opacity: 0,

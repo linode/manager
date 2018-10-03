@@ -4,7 +4,7 @@ import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 
 import { Paper } from '@material-ui/core';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -17,7 +17,7 @@ type ClassNames = 'root'
   | 'title'
   | 'label';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     padding: theme.spacing.unit * 3,
     marginTop: theme.spacing.unit * 2,

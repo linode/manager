@@ -2,7 +2,7 @@ import { clone, flatten, pathOr, uniq } from 'ramda';
 import * as React from 'react';
 
 import Divider from '@material-ui/core/Divider';
-import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -28,7 +28,7 @@ type ClassNames =
   | 'removeCont'
   | 'remove';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   addNewButton: {
     marginTop: theme.spacing.unit * 3,
     marginBottom: -theme.spacing.unit * 2,

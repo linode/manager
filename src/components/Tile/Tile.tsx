@@ -2,7 +2,7 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import ExternalLink from 'src/components/ExternalLink';
@@ -14,7 +14,7 @@ type ClassNames = 'root'
   | 'icon'
   | 'tileTitle';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   card: {
     display: 'flex',

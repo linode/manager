@@ -34,7 +34,7 @@ type ClassNames = 'chart'
   | 'red'
   | 'yellow';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
+const styles: StyleRulesCallback<ClassNames> = (theme) => {
   return {
     chart: {
       position: 'relative',
