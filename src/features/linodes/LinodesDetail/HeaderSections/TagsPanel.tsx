@@ -16,9 +16,18 @@ import Select from 'src/components/EnhancedSelect/Select';
 
 type ClassNames = 'root'
   | 'tag'
-  | 'addButton';
+  | 'addButton'
+  | 'selectTag';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+  '@keyframes fadeIn': {
+    from: {
+      opacity: 0,
+    },
+    to: {
+      opacity: 1,
+    },
+  },
   root: {
     display: 'flex',
     alignItems: 'center',
@@ -40,7 +49,30 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     },
   },
   addButton: {
-    marginTop: theme.spacing.unit * 2,
+    marginTop: theme.spacing.unit / 2,
+    position: 'relative',
+    top: 6,
+  },
+  selectTag: {
+    position: 'relative',
+    zIndex: 3,
+    animation: 'fadeIn .3s ease-in-out forwards',
+    '& [class*="MuiInput-formControl"]': {
+      minHeight: 'auto',
+      border: 0,
+      backgroundColor: 'transparent',
+      '& p': {
+        fontSize: '.9rem',
+        color: theme.color.grey1,
+      },
+    },
+    '& .react-select__input': {
+      fontSize: '.9rem',
+      color: theme.palette.text.primary,
+    },
+    '& .react-select__value-container': {
+      width: 150,
+    },
   },
 });
 
@@ -106,15 +138,16 @@ const TagsPanel: React.StatelessComponent<CombinedProps> = (props) => {
       })}
       {(isCreatingTag)
         ? <Select
-          onChange={onCreateTag}
-          options={tagsToSuggest}
-          variant='creatable'
-          errorText={tagError}
-          onBlur={toggleCreateTag}
-          placeholder="Create or Select a Tag"
-          value={tagInputValue}
-          createOptionPosition="first"
-          autoFocus
+            onChange={onCreateTag}
+            options={tagsToSuggest}
+            variant='creatable'
+            errorText={tagError}
+            onBlur={toggleCreateTag}
+            placeholder="Create or Select a Tag"
+            value={tagInputValue}
+            createOptionPosition="first"
+            autoFocus
+            className={classes.selectTag}
         />
         :
         <Tooltip
