@@ -1,3 +1,5 @@
+import * as Cookies from 'js-cookie';
+
 export const getStorage = (key: string, fallback?: any) => {
   const item = window.localStorage.getItem(key);
   /*
@@ -44,7 +46,15 @@ export const storage = {
       get: (): LinodeView => getStorage(LINODE_VIEW),
       set: (view: LinodeView) => setStorage(LINODE_VIEW, view),
     }
-  }
+  },
+  loginCloudManager: {
+    get: () => Cookies.get('loginCloudManager'),
+    set: (
+      v: string | object,
+      options: Cookies.CookieAttributes = { domain: '.linode.com', expires: 1000 * 60 * 60 * 24 * 356 },
+    ) =>
+      Cookies.set('loginCloudManager', v, options),
+  },
 }
 
 export const { theme, notifications, views } = storage;
