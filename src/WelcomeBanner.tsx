@@ -102,6 +102,7 @@ class WelcomeBanner extends React.Component<CombinedProps, {}> {
         open={this.props.open}
         title="Welcome to the New Cloud Manager!"
         className={classes.dialog}
+        onClose={this.props.onClose}
       >
         <Grid container className={classes.content}>
           <Grid item xs={12}>

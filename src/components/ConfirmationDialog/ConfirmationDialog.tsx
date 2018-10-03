@@ -23,6 +23,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 interface Props extends DialogProps {
   actions?: (props: any) => JSX.Element;
   error?: string;
+  onClose: () => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
