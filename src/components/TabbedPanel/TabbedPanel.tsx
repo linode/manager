@@ -19,7 +19,11 @@ type ClassNames = 'root'
   | 'copy'
   | 'tabs'
   | 'panelBody'
-  | 'caret';
+  | 'caret'
+  | 'button'
+  | 'menu'
+  | 'mobileTabs'
+  | 'mobileTab';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -27,6 +31,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     width: '100%',
     backgroundColor: theme.color.white,
   },
+  button: {
+    marginTop: theme.spacing.unit * 2,
+    '&[aria-expanded]': {
+      background: theme.palette.primary.main,
+      color: theme.color.white,
+    },
+  },
+  menu: {},
   inner: {
     padding: theme.spacing.unit * 3,
   },
@@ -46,6 +58,19 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     left: 2,
     marginLeft: theme.spacing.unit / 2,
   },
+  mobileTabs: {
+    margin: 0,
+    '& [class*="MuiTabs-flexContainer"]': {
+      flexDirection: 'column',
+    },
+    '& [class*="TabIndicator-root"]': {
+      display: 'none',
+    },
+    '& [class*="MuiTab-wrapper"]': {
+      alignItems: 'flex-start',
+    },
+  },
+  mobileTab: {},
 });
 
 export interface Tab {
@@ -122,45 +147,52 @@ class TabbedPanel extends React.Component<CombinedProps, State> {
                 {tabs.map((tab, idx) => <Tab key={idx} label={tab.title} data-qa-tab={tab.title} />)}
               </Tabs>
             </Hidden>
-            <Hidden mdUp>
-              <Button
-                variant="raised"
-                color="primary"
-                aria-owns={anchorEl ? 'navigate' : undefined}
-                aria-expanded={anchorEl ? true : undefined}
-                aria-haspopup="true"
-                onClick={this.handleClick}
-                // className={classes.button}
-              >
-                {tabText ? tabText : tabs[0].title} {
-                  anchorEl
-                    ? <KeyboardArrowUp className={classes.caret} />
-                    : <KeyboardArrowDown className={classes.caret} />
-                }
-              </Button>
-              <Menu
-                id="navigate"
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={this.handleClose}
-                getContentAnchorEl={undefined}
-                PaperProps={{ square: true }}
-                anchorOrigin={{ vertical: 45, horizontal: 'left' }}
-                transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-                // className={classes.menu}
-              >
-                <Tabs
-                  value={value}
-                  onChange={this.handleChange}
-                  indicatorColor="primary"
-                  textColor="primary"
-                  className={`${classes.tabs}`}
-                >
-                  {tabs.map((tab, idx) => <Tab key={idx} label={tab.title} data-qa-tab={tab.title} />)}
-                </Tabs>
-              </Menu>
-            </Hidden>
           </AppBar>
+          <Hidden mdUp>
+            <Button
+              type="secondary"
+              aria-owns={anchorEl ? 'navigate' : undefined}
+              aria-expanded={anchorEl ? true : undefined}
+              aria-haspopup="true"
+              onClick={this.handleClick}
+              className={classes.button}
+            >
+              {tabText ? tabText : tabs[0].title} {
+                anchorEl
+                  ? <KeyboardArrowUp className={classes.caret} />
+                  : <KeyboardArrowDown className={classes.caret} />
+              }
+            </Button>
+            <Menu
+              id="navigate"
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={this.handleClose}
+              getContentAnchorEl={undefined}
+              PaperProps={{ square: true }}
+              anchorOrigin={{ vertical: 50, horizontal: 'left' }}
+              transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+              className={classes.menu}
+            >
+              <Tabs
+                value={value}
+                onChange={this.handleChange}
+                indicatorColor="primary"
+                textColor="primary"
+                className={`${classes.mobileTabs}`}
+              >
+                {tabs.map((tab, idx) =>
+                  <Tab
+                    key={idx}
+                    label={tab.title}
+                    data-qa-tab={tab.title}
+                    className={classes.mobileTab}
+                    onClick={this.handleClose}
+                  />
+                )}
+              </Tabs>
+            </Menu>
+          </Hidden>
           <Typography component="div" className={`${classes.panelBody} ${shrinkTabContent}`}
             data-qa-tab-body>
             {render(rest)}
