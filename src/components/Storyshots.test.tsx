@@ -8,10 +8,11 @@ const getMatchOptions = ({context : {kind, story}, url}) => ({
 jest.setTimeout(30000);
 
 const beforeScreenshot = (page, {context : {kind, story}, url}) => {
+  const timeout = story.includes('async') ? 2000 : 600
   return new Promise(resolve =>
       setTimeout(() => {
           resolve();
-      }, 600)
+      }, timeout)
   )
 }
 
