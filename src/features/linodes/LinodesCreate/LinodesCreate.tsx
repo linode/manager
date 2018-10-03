@@ -4,7 +4,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { StickyContainer } from 'react-sticky';
 
 import AppBar from '@material-ui/core/AppBar';
-import { StyleRules, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
@@ -38,11 +38,11 @@ export type TypeInfo = {
   backupsMonthly: number | null,
 } | undefined;
 
-type Styles =
+type ClassNames =
   'root'
   | 'main';
 
-const styles = (theme: Theme & Linode.Theme): StyleRules => ({
+  const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
   },
   main: {
@@ -66,7 +66,7 @@ interface PreloadedProps {
 
 type CombinedProps = TypesContextProps
   & RegionsContextProps
-  & WithStyles<Styles>
+  & WithStyles<ClassNames>
   & PreloadedProps
   & RouteComponentProps<{}>;
 

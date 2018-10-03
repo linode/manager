@@ -4,7 +4,7 @@ import * as React from 'react';
 import Divider from '@material-ui/core/Divider';
 import {
     StyleRulesCallback,
-    Theme,
+    
     WithStyles,
     withStyles,
 } from '@material-ui/core/styles';
@@ -20,7 +20,7 @@ import QRCodeForm from './QRCodeForm';
 
 type ClassNames = 'root' | 'divider';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     root: {
     },
     divider: {

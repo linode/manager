@@ -3,7 +3,7 @@ import * as React from 'react';
 import Paper from '@material-ui/core/Paper';
 import {
   StyleRulesCallback,
-  Theme,
+  
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
@@ -18,7 +18,7 @@ type ClassNames = 'root'
   | 'post'
   | 'withSeparator';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     paddingTop: theme.spacing.unit * 3,
     paddingBottom: theme.spacing.unit * 3,

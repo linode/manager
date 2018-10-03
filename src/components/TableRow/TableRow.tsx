@@ -2,12 +2,12 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableRow, { TableRowProps } from '@material-ui/core/TableRow';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     transition: theme.transitions.create(['background-color']),
     [theme.breakpoints.up('md')]: {
@@ -16,7 +16,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
         display: 'table-cell',
         width: '0.01%',
         height: '100%',
-        borderLeft: '5px solid transparent',
+        borderLeftWidth: 5,
+        borderLeftStyle: 'solid',
         borderBottom: `1px solid ${theme.palette.divider}`,
         transition: theme.transitions.create(['border-color']),
       },

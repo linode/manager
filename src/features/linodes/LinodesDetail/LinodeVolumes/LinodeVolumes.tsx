@@ -6,7 +6,7 @@ import 'rxjs/add/operator/filter';
 import { Subscription } from 'rxjs/Subscription';
 
 import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
@@ -41,7 +41,7 @@ import VolumeDrawer, { Modes, Props as VolumeDrawerProps } from './VolumeDrawer'
 
 type ClassNames = 'title';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   title: {
     marginTop: theme.spacing.unit,
     marginBottom: theme.spacing.unit * 2,

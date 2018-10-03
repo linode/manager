@@ -3,7 +3,7 @@ import * as React from 'react';
 import { StickyProps } from 'react-sticky';
 
 import Button from '@material-ui/core/Button';
-import { StyleRules, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 
@@ -15,7 +15,7 @@ type ClassNames = 'root'
   | 'price'
   | 'per';
 
-const styles = (theme: Theme & Linode.Theme): StyleRules => ({
+  const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   '@keyframes fadeIn': {
     from: {
       opacity: 0,

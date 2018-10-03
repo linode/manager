@@ -2,7 +2,7 @@ import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import AccessPanel, { Disabled, UserSSHKeyObject } from 'src/components/AccessPanel';
 import CheckoutBar from 'src/components/CheckoutBar';
@@ -25,7 +25,7 @@ import tagsHoc, { TagObject } from '../tagsHoc';
 
 type ClassNames = 'root' | 'main' | 'sidebar';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   main: {},
   sidebar: {

@@ -2,7 +2,7 @@ import { compose, lensPath, pathOr,  set } from 'ramda';
 import * as React from 'react';
 
 import InputAdornment from '@material-ui/core/InputAdornment';
-import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import AttachFile from '@material-ui/icons/AttachFile';
 import CloudUpload from '@material-ui/icons/CloudUpload';
@@ -25,7 +25,7 @@ type ClassNames =
   | 'replyField'
   | 'uploadProgress'
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     width: '100%',
   },

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Cached from '@material-ui/icons/Cached';
 
 import { linodeInTransition } from 'src/features/linodes/transitions';
@@ -12,7 +12,7 @@ interface Props {
 
 type CSSClasses = 'grey' | 'dot' | 'green' | 'red' | 'transition';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   '@keyframes rotate': {
     from: {
       transform: 'rotate(0deg)',

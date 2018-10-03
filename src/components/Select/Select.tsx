@@ -6,7 +6,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import Input, { InputProps } from '@material-ui/core/Input';
 import { MenuProps } from '@material-ui/core/Menu';
 import Select, { SelectProps } from '@material-ui/core/Select';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 
 import HelpIcon from 'src/components/HelpIcon';
@@ -18,7 +18,7 @@ type ClassNames = 'inputSucess'
   | 'helpWrapperSelectField'
   | 'pagination';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   inputError: {
     borderColor: theme.color.red,
     '&[class*="focused"]': {

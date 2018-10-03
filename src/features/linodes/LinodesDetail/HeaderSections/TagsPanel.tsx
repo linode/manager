@@ -3,7 +3,7 @@ import * as React from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import {
   StyleRulesCallback,
-  Theme,
+  
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
@@ -19,7 +19,7 @@ type ClassNames = 'root'
   | 'addButton'
   | 'selectTag';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   '@keyframes fadeIn': {
     from: {
       opacity: 0,

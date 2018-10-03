@@ -6,7 +6,7 @@ import { compose } from 'redux';
 import Collapse from '@material-ui/core/Collapse';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import { StyleRules, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 
 import Logo from 'src/assets/logo/logo-text.svg';
@@ -52,7 +52,7 @@ type ClassNames =
   | 'switchText'
   | 'spacer';
 
-const styles = (theme: Theme & Linode.Theme): StyleRules => ({
+  const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   menuGrid: {
     minHeight: 64,
     width: '100%',

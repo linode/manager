@@ -2,11 +2,11 @@ import * as React from 'react';
 
 import Chip, { ChipProps } from '@material-ui/core/Chip';
 import Popover from '@material-ui/core/Popover';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 type CSSClasses =  'chip' | 'label' | 'popover';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   chip: {
     top: -2,
     position: 'relative',

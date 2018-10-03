@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import Button from '@material-ui/core/Button';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -11,7 +11,7 @@ import { formatRegion } from 'src/utilities';
 type ClassNames = 'root'
   | 'section';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   section: {
     marginBottom: theme.spacing.unit * 2,
