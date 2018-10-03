@@ -137,8 +137,9 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
             }
             return (
               <ListItem key={label}>
-                {`${label} goes from ${currentAmount} ${unit} to
-                ${newAmount} ${unit}`}
+                <Typography>
+                  {label} goes from {currentAmount} {unit} to <strong>{newAmount} {unit}</strong>
+                </Typography>
               </ListItem>
             )
           })}
