@@ -121,7 +121,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     height: '100%',
     margin: 0,
     borderTop: `1px solid ${theme.palette.divider}`,
-    fontWeight: 400,
+    fontFamily: 'LatoWeb',
     fontSize: '.9rem',
     transition: theme.transitions.create(['background-color', 'color']),
     '&:hover': {
