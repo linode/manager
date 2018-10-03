@@ -1,5 +1,6 @@
 export {
   getImages,
+  getAllImages,
   getImage,
   getImagesPage,
   getLinodeImages,

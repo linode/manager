@@ -1,3 +1,4 @@
+import * as Bluebird from 'bluebird';
 import Downshift, { DownshiftState, StateChangeOptions } from 'downshift';
 import * as moment from 'moment';
 import { compose, or } from 'ramda';
@@ -17,11 +18,11 @@ import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import TextField from 'src/components/TextField';
 import { withTypes } from 'src/context/types';
 import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
-import { getDomains } from 'src/services/domains';
-import { getImagesPage } from 'src/services/images';
-import { getLinodesPage } from 'src/services/linodes';
-import { getNodeBalancers } from 'src/services/nodebalancers';
-import { getVolumes } from 'src/services/volumes';
+import { getAllDomains } from 'src/services/domains';
+import { getAllImages } from 'src/services/images';
+import { getAllLinodes } from 'src/services/linodes';
+import { getAllNodeBalancers } from 'src/services/nodebalancers';
+import { getAllVolumes } from 'src/services/volumes';
 
 import SearchSuggestion, { SearchSuggestionT } from './SearchSuggestion';
 
@@ -200,44 +201,31 @@ class SearchBar extends React.Component<CombinedProps, State> {
     return `${imageDesc}, ${typeDesc}`;
   }
 
-  getAllPagesFor_(
-    name: string,
-    fetchFn: (page: number) => Promise<any>,
-    page: number,
-    pageCount: number,
-  ) {
-    if (!page || !pageCount) { return; }
-    if (page > pageCount) { return; }
-    fetchFn(page)
-      .then((response) => {
-        this.setState(prevState => ({
-          [name]: [...prevState[name], ...response.data],
-        }));
-        this.getAllPagesFor_(name, fetchFn, page + 1, pageCount);
-      });
-  }
-
-  getAllPagesFor(name: string, fetchFn: (page: number) => Promise<any>) {
-    /* fetch the first page and get the page count */
-    fetchFn(1)
-      .then((response) => {
-        this.setState({ [name]: response.data });
-        /* fetch the rest of the pages */
-        const pageCount = response.pages;
-        this.getAllPagesFor_(name, fetchFn, 2, pageCount);
-      });
-  }
-
-  getVolumesPage = (page: number) => getVolumes({ page })
-  getDomainsPage = (page: number) => getDomains({ page })
-  getNodeBalancersPage = (page: number) => getNodeBalancers({ page })
-
   updateData = () => {
-    this.getAllPagesFor('linodes', getLinodesPage);
-    this.getAllPagesFor('volumes', this.getVolumesPage);
-    this.getAllPagesFor('nodebalancers', this.getNodeBalancersPage);
-    this.getAllPagesFor('domains', this.getDomainsPage);
-    this.getAllPagesFor('images', getImagesPage);
+    Bluebird.join(
+      getAllLinodes(),
+      getAllNodeBalancers(),
+      getAllVolumes(),
+      getAllDomains(),
+      getAllImages(),
+      this.setEntitiesToState
+    )
+  }
+
+  setEntitiesToState = (
+    linodes: Linode.Linode[],
+    nodebalancers: Linode.NodeBalancer[],
+    volumes: Linode.Volume[],
+    domains: Linode.Domain[],
+    images: Linode.Image[]
+  ) => {
+    this.setState({
+      linodes,
+      nodebalancers,
+      volumes,
+      domains,
+      images
+    })
   }
 
   // Helper can be extended to other entities once tags are supported for them.

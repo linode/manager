@@ -3,6 +3,7 @@ import { API_ROOT } from 'src/constants';
 import Request,
 {
   CancellableRequest,
+  getAll,
   setData,
   setMethod,
   setParams,
@@ -25,6 +26,9 @@ export const getDomains = (
   setXFilter(filters),
 )
   .then(response => response.data);;
+
+export const getAllDomains = (params?: any, filter?: any): Promise<Domain[]> =>
+  getAll(getDomains, params, filter)
 
 export const getDomains$ = (
   params: any = {},

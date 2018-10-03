@@ -1,6 +1,6 @@
 import { API_ROOT } from 'src/constants';
 
-import Request, { setData, setMethod, setParams, setURL, setXFilter } from '../index';
+import Request, { getAll, setData, setMethod, setParams, setURL, setXFilter } from '../index';
 
 import {
   CreateLinodeSchema,
@@ -37,6 +37,9 @@ export const getLinodes = (params: any = {}, filter: any = {}) =>
     setParams(params),
   )
     .then(response => response.data);
+
+export const getAllLinodes = (params?: any, filter?: any): Promise<Linode[]> =>
+  getAll(getLinodes, params, filter)
 
 export const getLinodesPage = (page: number) =>
   Request<Page<Linode>>(

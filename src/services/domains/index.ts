@@ -1,6 +1,7 @@
 export {
   getDomains,
   getDomains$,
+  getAllDomains,
   getDomain,
   createDomain,
   updateDomain,

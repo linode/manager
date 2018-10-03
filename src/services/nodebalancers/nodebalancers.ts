@@ -1,6 +1,6 @@
 import { API_ROOT } from 'src/constants';
 
-import Request, { setData, setMethod, setParams, setURL, setXFilter } from '../index';
+import Request, { getAll, setData, setMethod, setParams, setURL, setXFilter } from '../index';
 
 import {
   NodeBalancerSchema,
@@ -11,7 +11,6 @@ import { combineNodeBalancerConfigNodeAddressAndPort } from './utils';
 type Page<T> = Linode.ResourcePage<T>;
 type NodeBalancer = Linode.NodeBalancer;
 
-/** Requests */
 export const getNodeBalancers = (pagination: any = {}, filters: any = {}) =>
   Request<Page<NodeBalancer>>(
     setURL(`${API_ROOT}/nodebalancers/`),
@@ -20,6 +19,9 @@ export const getNodeBalancers = (pagination: any = {}, filters: any = {}) =>
     setXFilter(filters),
   )
     .then(response => response.data);
+
+export const getAllNodeBalancers = (params?: any, filters?: any): Promise<NodeBalancer[]> =>
+  getAll(getNodeBalancers, params, filters)
 
 export const getNodeBalancer = (id: number) => Request<NodeBalancer>(
   setURL(`${API_ROOT}/nodebalancers/${id}`),
