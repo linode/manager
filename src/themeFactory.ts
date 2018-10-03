@@ -347,7 +347,6 @@ const themeDefaults: ThemeOptions = {
     MuiDialog: {
       paper: {
         boxShadow: '0 0 5px #bbb',
-        // background: '#fff',
       },
     },
     MuiDialogActions: {
@@ -682,6 +681,11 @@ const themeDefaults: ThemeOptions = {
         },
       },
     },
+    MuiPaper: {
+      rounded: {
+        borderRadius: 0,
+      },
+    },
     MuiPopover: {
       paper: {
         boxShadow: '0 0 5px #ddd',
@@ -829,19 +833,11 @@ const themeDefaults: ThemeOptions = {
         },
       },
       textColorPrimary: {
-
         '&$selected': {
           color: '#32363C',
         },
       },
     },
-    /** @todo */
-    // MuiTabIndicator: {
-    //   root: {
-    //     bottom: 0,
-    //     backgroundColor: primaryColors.main,
-    //   },
-    // },
     MuiTable: {
       root: {
         borderCollapse: 'initial',
@@ -927,18 +923,6 @@ const themeDefaults: ThemeOptions = {
         },
       },
     },
-    /** @todo */
-    // Popover: {
-    //   root: {
-    //     borderRadius: 0,
-    //   },
-    // },
-    /** @todo */
-    // Notice: {
-    //   root: {
-    //     marginTop: 0,
-    //   },
-    // },
   },
 };
 

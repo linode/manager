@@ -201,8 +201,6 @@ export const dark = createTheme({
     MuiDrawer: {
       paper: {
         boxShadow: '0 0 5px #222',
-        /** @todo this is breaking typing. */
-        // overflowY: 'overlay',
       },
     },
     MuiExpansionPanel: {
@@ -441,12 +439,6 @@ export const dark = createTheme({
         },
       },
     },
-    /** @todo */
-    // MuiTabIndicator: {
-    //   root: {
-    //     backgroundColor: primaryColors.main,
-    //   },
-    // },
     MuiTableCell: {
       root: {
         borderBottom: `1px solid ${primaryColors.divider}`,
