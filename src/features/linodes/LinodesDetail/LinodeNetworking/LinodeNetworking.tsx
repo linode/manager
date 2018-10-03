@@ -1,4 +1,4 @@
-import { compose, equals, head, path, pathOr } from 'ramda';
+import { compose, equals, head, isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
 
 import Paper from '@material-ui/core/Paper';
@@ -11,6 +11,7 @@ import Typography from '@material-ui/core/Typography';
 
 import AddNewLink from 'src/components/AddNewLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import Table from 'src/components/Table';
@@ -102,6 +103,7 @@ interface PreloadedProps {
 
 interface State {
   linodeIPs?: Linode.LinodeIPsResponse;
+  IPRequestError?: string;
   viewIPDrawer: {
     open: boolean;
     ip?: Linode.IPAddress;
@@ -160,10 +162,11 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
   }
 
   refreshIPs = () => {
+    this.setState({ IPRequestError: undefined });
     return getLinodeIPs(this.props.linodeID)
       .then(ips => this.setState({ linodeIPs: ips }))
-      .catch(() => {
-        /* @todo: we need a pattern for handling these errors */
+      .catch((errors) => {
+        this.setState({ IPRequestError: errors[0].reason })
       });
   }
 
@@ -267,10 +270,28 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     return privateIPs.length > 0;
   }
 
+  shouldRenderErrorState = () => {
+    const { linodeIPs, IPRequestError } = this.state;
+    return (!linodeIPs || isEmpty(linodeIPs) || IPRequestError);
+  }
+
+  renderErrorState = () => {
+    const { IPRequestError } = this.state;
+    const errorText = IPRequestError
+      ? IPRequestError
+      : "There was an error retrieving your networking information."
+    return (
+      <ErrorState errorText={errorText} />
+    )
+  }
+
   render() {
     const { linodeID, linodeLabel, linodeRegion } = this.props;
     const { linodeIPs } = this.state;
     const firstPublicIPAddress = getFirstPublicIPv4FromResponse(linodeIPs);
+
+    /* Error state */
+    if  (this.shouldRenderErrorState()) { return this.renderErrorState(); }
 
     return (
       <React.Fragment>
@@ -440,11 +461,15 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     )
   }
 
+
+
   renderNetworkActions = () => {
     const { classes, linodeID, linodeRegion } = this.props;
     const { linodeIPs } = this.state;
 
-    if (!linodeIPs) { return null; }
+    const publicIPs = pathOr([], ['ipv4', 'public'], linodeIPs).map((i: Linode.IPAddress) => i.address);
+    const privateIPs = pathOr([], ['ipv4','private'], linodeIPs).map((i: Linode.IPAddress) => i.address);
+    const sharedIPs = pathOr([], ['ipv4','shared'], linodeIPs).map((i: Linode.IPAddress) => i.address);
 
     return (
       <Grid container>
@@ -462,20 +487,17 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
             linodeRegion={linodeRegion}
             refreshIPs={this.refreshIPs}
             ipAddresses={[
-              ...linodeIPs.ipv4.public.map(i => i.address),
-              ...linodeIPs.ipv4.private.map(i => i.address),
+              ...publicIPs,
+              ...privateIPs,
             ]}
           />
           <IPSharingPanel
             linodeID={linodeID}
-            linodeIPs={[
-              ...linodeIPs.ipv4.public.map(i => i.address),
-            ]}
-            linodeSharedIPs={[
-              ...linodeIPs.ipv4.shared.map(i => i.address),
-            ]}
+            linodeIPs={publicIPs}
+            linodeSharedIPs={sharedIPs}
             linodeRegion={linodeRegion}
             refreshIPs={this.refreshIPs}
+            updateFor={[publicIPs,sharedIPs,linodeID,linodeRegion]}
           />
         </Grid>
       </Grid>
