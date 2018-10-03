@@ -872,10 +872,8 @@ const themeDefaults: ThemeOptions = {
         backfaceVisibility: 'hidden',
         position: 'relative',
         zIndex: 1,
-        '&$hover': {
-          '&:before': {
-            borderLeftColor: 'white',
-          },
+        '&:before': {
+          borderLeftColor: 'white',
         },
         '&:hover': {
           '&$hover': {

@@ -455,10 +455,8 @@ export const dark = createTheme({
     },
     MuiTableRow: {
       root: {
-        '&$hover': {
-          '&:before': {
-            borderLeftColor: '#32363C',
-          },
+        '&:before': {
+          borderLeftColor: '#32363C',
         },
         '&:hover': {
           '&$hover': {
