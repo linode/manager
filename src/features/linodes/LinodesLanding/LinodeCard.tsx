@@ -83,7 +83,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     },
   },
   cardHeader: {
-    fontWeight: 700,
+    fontFamily: 'LatoWebBold',
     color: 'black',
     marginLeft: theme.spacing.unit,
   },

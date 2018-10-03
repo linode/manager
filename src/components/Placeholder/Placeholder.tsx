@@ -66,7 +66,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   title: {
     textAlign: 'center',
-    fontWeight: 700,
+    fontFamily: 'LatoWebBold',
     fontSize: '2.4rem',
     [theme.breakpoints.up('md')]: {
       fontSize: '3.21rem',
