@@ -39,7 +39,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => {
       padding: theme.spacing.unit / 2,
       backgroundColor: theme.color.grey2,
       color: theme.palette.text.primary,
-      fontWeight: 400,
+      fontFamily: 'LatoWeb',
       '&:focus': {
         backgroundColor: theme.color.grey2,
       },

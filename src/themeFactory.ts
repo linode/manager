@@ -657,7 +657,7 @@ const themeDefaults: ThemeOptions = {
     MuiMenuItem: {
       root: {
         height: 'auto',
-        fontWeight: 400,
+        fontFamily: 'LatoWeb',
         fontSize: '.9rem',
         whiteSpace: 'initial',
         textOverflow: 'initial',
@@ -808,7 +808,7 @@ const themeDefaults: ThemeOptions = {
         color: '#C5C6C8',
         minWidth: 50,
         textTransform: 'inherit',
-        fontWeight: 400,
+        fontFamily: 'LatoWeb',
         [breakpoints.up('md')]: {
           minWidth: 75,
         },

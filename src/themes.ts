@@ -328,6 +328,14 @@ export const dark = createTheme({
     },
     MuiMenuItem: {
       root: {
+<<<<<<< HEAD:src/themes.ts
+=======
+        height: 'auto',
+        fontFamily: 'LatoWeb',
+        fontSize: '.9rem',
+        whiteSpace: 'initial',
+        textOverflow: 'initial',
+>>>>>>> remove remaining hard coded font-weights:src/darkTheme.ts
         color: primaryColors.main,
         '&:hover, &:focus': {
           backgroundColor: '#444',

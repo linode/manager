@@ -45,7 +45,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   userButton: {
     borderRadius: 30,
-    fontWeight: 400,
+    fontFamily: 'LatoWeb',
     padding: 0,
     color: theme.palette.text.primary,
     '&:hover': {

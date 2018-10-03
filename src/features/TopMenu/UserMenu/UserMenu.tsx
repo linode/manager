@@ -77,7 +77,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   },
   menuItem: {
     fontSize: '.9rem',
-    fontWeight: 400,
+    fontFamily: 'LatoWeb',
     '&:hover, &:focus': {
       backgroundColor: theme.palette.primary.main,
       color: 'white',

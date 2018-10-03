@@ -31,7 +31,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     paddingRight: theme.spacing.unit * 2,
     paddingTop: theme.spacing.unit * 1.5,
     paddingBottom: theme.spacing.unit * 1.5,
-    fontWeight: 400,
+    fontFamily: 'LatoWeb',
     fontSize: '.9rem',
     color: theme.color.blueDTwhite,
     transition: `
