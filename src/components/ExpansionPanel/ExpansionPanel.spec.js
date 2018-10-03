@@ -1,3 +1,4 @@
+const { constants } = require('../../../e2e/constants');
 const { navigateToStory, executeInAllStories } = require('../../../e2e/utils/storybook');
 
 describe('Expansion Panel Suite', () => {
@@ -7,6 +8,7 @@ describe('Expansion Panel Suite', () => {
         'Success!',
         'Warning!',
         'Error!',
+        'Asynchronous Content',
     ];
 
     const panel = '[data-qa-panel]';
@@ -26,21 +28,19 @@ describe('Expansion Panel Suite', () => {
         browser.waitForVisible(gridItem, 5000, opposite)
     }
 
-    it('should display expansion panels', () => {
-        executeInAllStories(component, childStories, () => {
-            browser.waitForVisible(panel);
+    function panelDisplays() {
+        browser.waitForVisible(panel, constants.wait.normal);
 
-            const expansionPanel = $(panel);
-            const expansionPanelText = $(panelSubheading);
-            expect(expansionPanel.isVisible()).toBe(true);
-            expect(expansionPanelText.getText()).toMatch(/([a-z])/ig);
-        });
-    });
+        const expansionPanel = $(panel);
+        const expansionPanelText = $(panelSubheading);
+        expect(expansionPanel.isVisible()).toBe(true);
+        expect(expansionPanelText.getText()).toMatch(/([a-z])/ig);
+    }
 
     describe('Interactive Suite', () => {
         beforeAll(() => {
             navigateToStory(component, childStories[0]);
-            browser.waitForVisible(panel);
+            panelDisplays();
         });
 
         it('should expand and display message text', () => {
@@ -55,7 +55,7 @@ describe('Expansion Panel Suite', () => {
     describe('Success Suite', () => {
         beforeAll(() => {
             navigateToStory(component, childStories[1]);
-            browser.waitForVisible(panel);
+            panelDisplays();
         });
 
         it('should expand on click and display message text', () => {
@@ -79,8 +79,8 @@ describe('Expansion Panel Suite', () => {
 
     describe('Warning Suite', () => {
         beforeAll(() => {
-            navigateToStory(component, childStories[1]);
-            browser.waitForVisible(panel);
+            navigateToStory(component, childStories[2]);
+            panelDisplays();
         });
 
         it('should expand on click and display message text', () => {
@@ -104,8 +104,8 @@ describe('Expansion Panel Suite', () => {
 
     describe('Error Suite', () => {
         beforeAll(() => {
-            navigateToStory(component, childStories[2]);
-            browser.waitForVisible(panel);
+            navigateToStory(component, childStories[3]);
+            panelDisplays();
         });
 
         it('should expand on click and display message text', () => {
@@ -124,6 +124,29 @@ describe('Expansion Panel Suite', () => {
 
         it('should collapse on click', () => {
             expandAssertGridItem(true);
+        });
+    });
+
+    describe('Asynchronous Content Suite', () => {
+        beforeAll(() => {
+            navigateToStory(component, childStories[4]);
+            panelDisplays();
+        });
+
+        it('should expand on click and display loading text', () => {
+            const loadingMsg = 'Loading...';
+            expandAssertGridItem();
+            
+            browser.waitUntil(function() {
+                return browser.getText(gridItem).includes(loadingMsg);
+            }, constants.wait.normal);
+        });
+
+        it('should display message after loaded', () => {
+            const loadedMsg = 'Your patience has been rewarded';
+            browser.waitUntil(function() {
+                return browser.getText(gridItem).includes(loadedMsg);
+            }, constants.wait.normal);
         });
     });
 });
