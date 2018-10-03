@@ -69,7 +69,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   userName: {
     whiteSpace: 'nowrap',
-    fontWeight: 700,
+    fontFamily: 'LatoWebBold',
     color: theme.color.headline,
   },
   paper: {

@@ -10,18 +10,6 @@
     text-rendering: optimizeLegibility;
 }
 
-/* Webfont: Lato-Medium */@font-face {
-    font-family: 'LatoWebMedium';
-    src: url('fonts/Lato-Medium.eot'); /* IE9 Compat Modes */
-    src: url('fonts/Lato-Medium.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-         url('fonts/Lato-Medium.woff2') format('woff2'), /* Modern Browsers */
-         url('fonts/Lato-Medium.woff') format('woff'), /* Modern Browsers */
-         url('fonts/Lato-Medium.ttf') format('truetype');
-    font-style: normal;
-    font-weight: normal;
-    text-rendering: optimizeLegibility;
-}
-
 /* Webfont: Lato-Regular */@font-face {
     font-family: 'LatoWeb';
     src: url('fonts/Lato-Regular.eot'); /* IE9 Compat Modes */

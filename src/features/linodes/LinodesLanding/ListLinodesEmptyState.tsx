@@ -59,7 +59,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     },
   },
   title: {
-    fontWeight: 700,
+    fontFamily: 'LatoWebBold',
   },
 });
 

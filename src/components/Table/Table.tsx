@@ -21,7 +21,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
         marginBottom: 0,
         '& > td:first-child': {
           backgroundColor: theme.bg.offWhite,
-          fontWeight: 700,
+          fontFamily: 'LatoWebBold',
         },
       },
       '& tr': {

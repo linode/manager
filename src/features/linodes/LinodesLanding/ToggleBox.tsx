@@ -28,7 +28,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     borderStyle: 'solid',
     borderColor: theme.color.border1,
     borderRadius: 0,
-    fontWeight: 700,
+    fontFamily: 'LatoWebBold',
     textTransform: 'inherit',
     width: 80,
     minWidth: 80,
