@@ -2,7 +2,7 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 
 import IconButton, { IconButtonProps } from '@material-ui/core/IconButton';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 type ClassNames = 'root'
   | 'destructive'
@@ -15,7 +15,7 @@ interface Props extends IconButtonProps {
   disabled?: boolean;
 }
 
-const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback = (theme) => ({
   root: {
     transition: theme.transitions.create(['opacity']),
   },

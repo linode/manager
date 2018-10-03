@@ -2,7 +2,7 @@ import * as classNames from 'classnames';
 import * as copy from 'copy-to-clipboard';
 import * as React from 'react';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import ContentCopy from '@material-ui/icons/ContentCopy';
 
 interface Props {
@@ -19,7 +19,7 @@ type CSSClasses =  'root'
 | 'copied'
 | 'standAlone';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   '@keyframes popUp': {
     from: {
       opacity: 0,

@@ -2,7 +2,7 @@ import { clone } from 'ramda';
 import * as React from 'react';
 import { Line } from 'react-chartjs-2';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import { setUpCharts } from 'src/utilities/charts';
 
@@ -10,7 +10,7 @@ setUpCharts();
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
 });
 

@@ -1,4 +1,61 @@
 import createBreakpoints from '@material-ui/core/styles/createBreakpoints';
+import createMuiTheme, { ThemeOptions } from '@material-ui/core/styles/createMuiTheme';
+import { mergeDeepRight } from 'ramda';
+/**
+ * Augmenting Palette and Palette Options
+ * @todo Move status out of the palette and add it as a custom ThemeOption.
+ */
+
+declare module '@material-ui/core/styles/createPalette' {
+
+  interface Palette {
+    status: {
+      success: string,
+      successDark: string,
+      warning: string,
+      warningDark: string,
+      error: string,
+      errorDark: string,
+    };
+  }
+
+  interface PaletteOptions {
+    status?: {
+      success?: string,
+      successDark?: string,
+      warning?: string,
+      warningDark?: string,
+      error?: string,
+      errorDark?: string,
+    };
+  }
+}
+
+/**
+ * Augmenting the Theme and ThemeOptions.
+ */
+declare module '@material-ui/core/styles/createMuiTheme' {
+
+  interface Theme {
+    name: string;
+    '@keyframes rotate': any;
+    bg: any;
+    color: any;
+    notificationList: any;
+    status: any;
+  }
+
+  interface ThemeOptions {
+    name?: string;
+    '@keyframes rotate'?: any;
+    bg?: any;
+    color?: any;
+    notificationList?: any;
+    status?: any;
+  }
+}
+
+
 
 const breakpoints = createBreakpoints({});
 
@@ -12,9 +69,35 @@ const primaryColors = {
   offBlack: '#444',
 }
 
-const LinodeTheme: Linode.Theme = {
-  name: 'lightTheme',
-  breakpoints: { breakpoints },
+const themeDefaults: ThemeOptions = {
+  breakpoints,
+  shadows: [
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+  ],
   '@keyframes rotate': {
     from: {
       transform: 'rotate(0deg)',
@@ -62,6 +145,9 @@ const LinodeTheme: Linode.Theme = {
   palette: {
     divider: primaryColors.divider,
     primary: primaryColors,
+    text: {
+      primary: primaryColors.text,
+    },
     status: {
       success: '#d7e3EF',
       successDark: '#3682dd',
@@ -69,9 +155,6 @@ const LinodeTheme: Linode.Theme = {
       warningDark: '#ffd002',
       error: '#f8dedf',
       errorDark: '#cd2227',
-    },
-    text: {
-      primary: primaryColors.text,
     },
   },
   typography: {
@@ -291,7 +374,8 @@ const LinodeTheme: Linode.Theme = {
     MuiDrawer: {
       paper: {
         boxShadow: '0 0 5px #bbb',
-        overflowY: 'overlay',
+        /** @todo This is breaking typing. */
+        // overflowY: 'overlay',
         display: 'block',
         fallbacks: {
           overflowY: 'auto',
@@ -365,7 +449,7 @@ const LinodeTheme: Linode.Theme = {
         '& svg': {
           fill: '#fff',
           transition: `${'stroke 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, '}
-          ${'fill 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'}`,
+            ${'fill 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'}`,
           width: 22,
           height: 22,
         },
@@ -579,7 +663,7 @@ const LinodeTheme: Linode.Theme = {
         textOverflow: 'initial',
         color: primaryColors.main,
         transition: `${'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), '}
-        ${'color .2s cubic-bezier(0.4, 0, 0.2, 1)'}`,
+          ${'color .2s cubic-bezier(0.4, 0, 0.2, 1)'}`,
         '&:hover, &:focus': {
           backgroundColor: primaryColors.main,
           color: 'white',
@@ -608,7 +692,6 @@ const LinodeTheme: Linode.Theme = {
       },
     },
     MuiSelect: {
-      root: {},
       selectMenu: {
         padding: '5px 32px 5px 16px',
         color: primaryColors.text,
@@ -745,18 +828,19 @@ const LinodeTheme: Linode.Theme = {
         },
       },
       textColorPrimary: {
-        // color: primaryColors.text,
+
         '&$selected': {
           color: '#32363C',
         },
       },
     },
-    MuiTabIndicator: {
-      root: {
-        bottom: 0,
-        backgroundColor: primaryColors.main,
-      },
-    },
+    /** @todo */
+    // MuiTabIndicator: {
+    //   root: {
+    //     bottom: 0,
+    //     backgroundColor: primaryColors.main,
+    //   },
+    // },
     MuiTable: {
       root: {
         borderCollapse: 'initial',
@@ -777,11 +861,12 @@ const LinodeTheme: Linode.Theme = {
         fontSize: '.9rem',
       },
     },
-    MuiTableHead: {
-      root: {
-        backgroundColor: '#fbfbfb',
-      },
-    },
+    /** @todo */
+    // MuiTableHead: {
+    //   root: {
+    //     backgroundColor: '#fbfbfb',
+    //   },
+    // },
     MuiTabs: {
       root: {
         margin: '16px 0',
@@ -836,17 +921,19 @@ const LinodeTheme: Linode.Theme = {
         },
       },
     },
-    Popover: {
-      root: {
-        borderRadius: 0,
-      },
-    },
-    Notice: {
-      root: {
-        marginTop: 0,
-      },
-    },
+    /** @todo */
+    // Popover: {
+    //   root: {
+    //     borderRadius: 0,
+    //   },
+    // },
+    /** @todo */
+    // Notice: {
+    //   root: {
+    //     marginTop: 0,
+    //   },
+    // },
   },
 };
 
-export default LinodeTheme;
+export default (options: ThemeOptions) => createMuiTheme(mergeDeepRight(themeDefaults, options));

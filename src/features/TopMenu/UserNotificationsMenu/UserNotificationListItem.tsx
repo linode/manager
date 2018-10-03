@@ -2,7 +2,7 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 
 import ListItem from '@material-ui/core/ListItem';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 type ClassNames =
@@ -17,7 +17,7 @@ type ClassNames =
   | 'pointer'
   | 'root';
 
-const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => {
+const styles: StyleRulesCallback = (theme) => {
   const { palette: { status } } = theme;
 
   return {

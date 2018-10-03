@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky'
 
 import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import AccessPanel, { Disabled, UserSSHKeyObject } from 'src/components/AccessPanel';
@@ -33,7 +33,7 @@ type ClassNames = 'root'
   | 'emptyImagePanel'
   | 'emptyImagePanelText';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   main: {},
   sidebar: {

@@ -2,7 +2,7 @@ import { compose } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 
@@ -37,7 +37,7 @@ type ClassNames = 'bodyRow'
   | 'linkButton'
   | 'tagWrapper';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => {
+const styles: StyleRulesCallback<ClassNames> = (theme) => {
   return ({
     bodyRow: {
       height: 77,

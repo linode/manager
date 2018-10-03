@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import IconButton from '@material-ui/core/IconButton';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import NotificationIcon from 'src/assets/icons/bell.svg';
 
@@ -10,7 +10,7 @@ type ClassNames = 'root'
   | 'new'
   | 'count';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   '@keyframes fadeIn': {
     from: {
       opacity: 0,

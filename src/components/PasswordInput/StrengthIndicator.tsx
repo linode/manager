@@ -2,7 +2,7 @@ import * as classNames from 'classnames';
 import { isNil } from 'ramda';
 import * as React from 'react';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import Grid from 'src/components/Grid';
 
@@ -17,7 +17,7 @@ type ClassNames = 'root'
   | 'strength-3'
   | 'strength-4';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     maxWidth: `calc(415px + ${theme.spacing.unit}px)`,
     [theme.breakpoints.down('xs')]: {

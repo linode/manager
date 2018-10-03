@@ -2,7 +2,7 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'redux';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import LinodeSvg from 'src/assets/addnewmenu/linode.svg';
@@ -14,7 +14,7 @@ type CSSClasses = 'root'
   | 'icon' 
   | 'title';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   '@keyframes scaleIn': {
     from: {
       transform: 'translateX( -10px ) rotateY( -180deg )',

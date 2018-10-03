@@ -1,12 +1,12 @@
 import * as React from 'react';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import Arrow from 'src/assets/icons/diagonalArrow.svg';
 
 type ClassNames = 'root' | 'icon';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     display: 'inline-flex',
     alignItems: 'baseline',

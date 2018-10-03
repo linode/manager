@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import {
     StyleRulesCallback,
-    Theme,
+    
     WithStyles,
     withStyles,
   } from '@material-ui/core/styles';  
@@ -17,7 +17,7 @@ import TextField from 'src/components/TextField';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
 });
 
