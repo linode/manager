@@ -16,9 +16,8 @@ class Volumes extends Page {
         if (initial) {
             this.placeholderText.waitForVisible();
         } else {
-            this.sidebarTitle.waitForVisible();
-            expect(this.volumeCell.isVisible()).toBe(true);
-            expect(this.volumeCellElem.isVisible()).toBe(true);
+            this.sidebarTitle.waitForVisible(constants.wait.normal);
+            this.volumeCellElem.waitForVisible(constants.wait.normal);
         }
     }
 
@@ -58,6 +57,18 @@ class Volumes extends Page {
         browser.waitUntil(function(volumeElement) {
             return $$('[data-qa-volume-cell]').length === (numberOfVolumes-1)
         }, constants.wait.long);
+    }
+
+    detachConfirm(linodeLabel) {
+        this.dialogTitle.waitForVisible(constants.wait.normal);
+        browser.click('[data-qa-confirm]');
+
+        this.dialogTitle.waitForVisible(constants.wait.normal, true);
+
+        // Wait for progress bars to not display on volume detail pages
+        if (!browser.getUrl().includes('/linodes')) {
+            browser.waitForVisible(`[data-qa-volume-cell-attachment="${linodeLabel}"]`,constants.wait.minute, true);
+        }
     }
 
     isAttached(volumeElement) {
