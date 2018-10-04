@@ -1,13 +1,12 @@
 import * as Bluebird from 'bluebird';
-import Downshift, { DownshiftState, StateChangeOptions } from 'downshift';
 import * as moment from 'moment';
 import { compose, or } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import _Control from 'react-select/lib/components/Control';
 
 import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
-import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Close from '@material-ui/icons/Close';
 import Search from '@material-ui/icons/Search';
@@ -15,7 +14,7 @@ import Search from '@material-ui/icons/Search';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
-import TextField from 'src/components/TextField';
+import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { withTypes } from 'src/context/types';
 import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
 import { getDomains } from 'src/services/domains';
@@ -163,6 +162,7 @@ interface State {
   nodebalancers?: Linode.NodeBalancer[];
   domains?: Linode.Domain[];
   images?: Linode.Image[];
+  options: Item[];
   [resource: string]: any;
 }
 
@@ -176,10 +176,23 @@ const getAllVolumes = getAll(getVolumes);
 const getAllDomains = getAll(getDomains);
 const getAllImages = getAll(getImages);
 
+const Control = (props: any) =>
+  <_Control {...props} />
+
+const selectStyles = {
+  control: (base: any) => ({ ...base, backgroundColor: '#f4f4f4', margin: 0, width: '100%', border: 0 }),
+  input: (base: any) => ({ ...base, margin: 0, width: '100%', border: 0 }),
+  selectContainer: (base: any) => ({ ...base, width: '100%', margin: 0, border: 0 }),
+  dropdownIndicator: (base: any) => ({ ...base, display: 'none' }),
+  placeholder: (base: any) => ({ ...base, color: 'blue' }),
+  menu: (base: any) => ({ ...base, maxWidth: '100% !important' })
+};
+
 class SearchBar extends React.Component<CombinedProps, State> {
   state: State = {
     searchText: '',
     searchActive: false,
+    options: []
   };
 
   lastFetch = moment.utc('1970-01-01T00:00:00');
@@ -395,21 +408,9 @@ class SearchBar extends React.Component<CombinedProps, State> {
     );
   }
 
-  downshiftStateReducer(state: DownshiftState, changes: StateChangeOptions) {
-    switch (changes.type) {
-      case Downshift.stateChangeTypes.blurInput:
-        return {
-          ...changes,
-          inputValue: '',
-        };
-      default:
-        return changes;
-    }
-  }
-
   render() {
     const { classes } = this.props;
-    const { searchActive } = this.state;
+    const { searchActive, options } = this.state;
 
     return (
       <React.Fragment>
@@ -431,50 +432,14 @@ class SearchBar extends React.Component<CombinedProps, State> {
             className={classes.icon}
             data-qa-search-icon
           />
-          <Downshift
-            onSelect={this.onSelect}
-            stateReducer={this.downshiftStateReducer}
-            itemToString={(item: SearchSuggestionT) => (item && item.title) || ''}
-            render={({
-              getInputProps,
-              getItemProps,
-              isOpen,
-              inputValue,
-              highlightedIndex,
-            }) => (
-                <div className={classes.textfieldContainer}>
-                  <TextField
-                    fullWidth
-                    className={classes.textfield}
-                    autoFocus={searchActive}
-                    InputProps={{
-                      classes: {
-                        root: classes.input,
-                      },
-                      ...getInputProps({
-                        placeholder: 'Go to Linodes, Volumes, NodeBalancers, Domains...',
-                        id: 'searchbar-simple',
-                        onChange: this.handleSearchChange,
-                      }),
-                    }}
-                    data-qa-search
-                  />
-                  {isOpen &&
-                    <Paper
-                      className={classes.searchSuggestions}
-                    >
-                      {this.getSearchSuggestions(inputValue).map((suggestion, index) => {
-                        return this.renderSuggestion(
-                          suggestion,
-                          index,
-                          highlightedIndex,
-                          getItemProps({ item: suggestion }),
-                        );
-                      })}
-                    </Paper>
-                  }
-                </div>
-              )}
+          <EnhancedSelect
+            options={options}
+            onChange={() => null}
+            placeholder={"Search for Linodes, Volumes, Nodebalancers, Domains, Tags..."}
+            components={{ Control }}
+            styleOverrides={selectStyles}
+
+
           />
           <IconButton
             color="inherit"

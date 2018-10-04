@@ -20,7 +20,7 @@ type ClassNames = 'root'
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
-    maxWidth: 415,
+    width: '100%',
     position: 'relative',
     '& .react-select__value-container': {
       width: '100%',
@@ -45,6 +45,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       borderRadius: 0,
       boxShadow: 'none',
       border: '1px solid #999',
+      maxWidth: 415,
     },
     '& .react-select__menu-list': {
       padding: theme.spacing.unit / 2,
@@ -128,6 +129,7 @@ export interface EnhancedSelectProps {
   className?: string;
   components?: any;
   disabled?: boolean;
+  isClearable?: boolean;
   isMulti?: boolean;
   isLoading?: boolean;
   variant?: 'async' | 'creatable';
@@ -135,6 +137,7 @@ export interface EnhancedSelectProps {
   label?: string;
   placeholder?: string;
   errorText?: string;
+  styleOverrides?: any;
   onChange: (selected: Item | Item[], actionMeta: ActionMeta) => void;
   createNew?: (inputValue: string) => void;
   onInputChange?: (inputValue: string, actionMeta: ActionMeta) => void;
@@ -177,12 +180,14 @@ class Select extends React.PureComponent<CombinedProps,{}> {
       filterOption,
       label,
       loadOptions,
+      isClearable,
       isMulti,
       isLoading,
       placeholder,
       onChange,
       onInputChange,
       options,
+      styleOverrides,
       value,
       variant,
       noOptionsMessage,
@@ -217,7 +222,7 @@ class Select extends React.PureComponent<CombinedProps,{}> {
     return (
       <BaseSelect
         {...restOfProps}
-        isClearable
+        isClearable={isClearable  || true }
         isSearchable
         isLoading={isLoading}
         defaultOptions
@@ -229,6 +234,7 @@ class Select extends React.PureComponent<CombinedProps,{}> {
         classes={classes}
         className={`${classes.root} ${className}`}
         classNamePrefix="react-select"
+        styles={styleOverrides}
         textFieldProps={{
           label,
           errorText,
