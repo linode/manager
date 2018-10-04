@@ -12,8 +12,8 @@
       "<rootDir>/src/**/__tests__/**/*.ts?(x)",
       "<rootDir>/src/**/?(*.)(spec|test).ts?(x)"
     ],
-    "testEnvironment": "node",
-    "testURL": "http://localhost",
+    "testEnvironment": "jest-environment-jsdom",
+    "testURL": "http://manager-storybook",
     "transform": {
       "^.+\\.tsx?$": "<rootDir>/config/jest/typescriptTransform.js",
       "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
