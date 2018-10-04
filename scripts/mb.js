@@ -23,6 +23,9 @@ yargs
           }).option('d', {
             alias: ['delete', 'rm'],
             describe: 'Remove all mocks from Mountebank',
+          }).option('base', {
+            describe: 'API Base Url',
+            default: 'https://api.linode.com/v4',
           })
     },
     function (argv) {
@@ -30,7 +33,7 @@ yargs
             imposterPort: '8088',
             imposterProtocol: 'https',
             imposterName: 'Linode-API',
-            proxyHost: argv.base ? argv.base : 'https://api.linode.com/v4',
+            proxyHost: argv.base,
             mutualAuth: true,
         }
 
@@ -53,6 +56,6 @@ yargs
 
     }
   )
-  .help()
+  .help('h')
   .argv
 
