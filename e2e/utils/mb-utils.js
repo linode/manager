@@ -91,8 +91,15 @@ exports.loadImposter = (imposter) => {
 exports.getImposters = (removeProxies, file) => {
     return new Promise((resolve, reject) => {
         const removeProxyParam = '&removeProxies=true';
+
         instance.get(removeProxies ? mountebankEndpoint + removeProxyParam : mountebankEndpoint)
             .then(response => {
+                if (!removeProxies) {
+                    // Move proxies to the last array 
+                    const stubsArray = response.data.imposters[0].stubs;
+                    stubsArray.push(stubsArray.shift());
+                }
+
                 resolve(writeFileSync(file, JSON.stringify(response.data)));
             })
             .catch(error => reject(console.error(error)));
