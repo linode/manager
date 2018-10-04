@@ -69,9 +69,9 @@ interface State {
   gravatarUrl?: string;
   error?: Error,
   originalUsername?: string;
-  username?: string;
+  username: string;
   createdUsername?: string;
-  email?: string;
+  email: string;
   restricted?: boolean;
   profileSaving: boolean;
   profileErrors?: Linode.ApiFieldError[];
@@ -81,6 +81,8 @@ interface State {
 class UserDetail extends React.Component<CombinedProps> {
   state: State = {
     profileSaving: false,
+    email: '',
+    username: ''
   };
 
   tabs = [
@@ -212,7 +214,7 @@ class UserDetail extends React.Component<CombinedProps> {
   renderUserProfile = () => {
     const { username, email, profileSaving, profileSuccess, profileErrors } = this.state;
     return <UserProfile
-      username={username || ''}
+      username={username}
       email={email}
       changeUsername={this.onChangeUsername}
       save={this.onSave}
