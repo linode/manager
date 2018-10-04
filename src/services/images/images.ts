@@ -1,5 +1,5 @@
 import { API_ROOT } from 'src/constants';
-import Request, { getAll, setData, setMethod, setParams, setURL, setXFilter } from 'src/services';
+import Request, { setData, setMethod, setParams, setURL, setXFilter } from 'src/services';
 
 type Page<T> = Linode.ResourcePage<T>;
 type Image = Linode.Image;
@@ -28,10 +28,7 @@ export const getImages = (pagination: any = {}, filters: any = {}) =>
     setParams(pagination),
     setXFilter(filters),
   )
-  .then(response => response.data);
-
-export const getAllImages = (params?: any, filter?: any): Promise<Image[]> =>
-  getAll(getImages, params, filter)  
+  .then(response => response.data); 
 
 export const getLinodeImages = () =>
   getImagesPage(1, { "is_public": true });

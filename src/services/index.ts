@@ -1,6 +1,4 @@
 import Axios, { AxiosError, AxiosPromise, AxiosResponse } from 'axios';
-import * as Bluebird from 'bluebird';
-import { range } from 'ramda';
 import {
   compose,
   isEmpty,
@@ -230,35 +228,3 @@ export const CancellableRequest = <T>(...fns: Function[]): CancellableRequest<T>
   }
 
 };
-
-export interface APIResponsePage<T> {
-  page: number,
-  pages: number,
-  data: T,
-  results: number,
-}
-
-export type GetFunction = (params?: any, filters?: any) => Promise<APIResponsePage<any>>;
-
-export const getAll: (getter: GetFunction, params?: any, filters?: any) => Promise<any> =
-  (getter, params = {}, filters = {}) => {
-    const pagination = { ...params, page_size: 100 };
-
-    return getter(pagination, filters)
-      .then(({ data: firstPageData, page, pages }) => {
-
-        // If we only have one page, return it.
-        if (page === pages) { return firstPageData; }
-
-        // Create an iterable list of the remaining pages.
-        const remainingPages = range(page + 1, pages + 1);
-
-        //
-        return Bluebird
-          .map(remainingPages, nextPage =>
-            getter({ ...pagination, page: nextPage }, filters).then(response => response.data),
-          )
-          /** We're given Linode.NodeBalancer[][], so we flatten that, and append the first page response. */
-          .then(resultPages => resultPages.reduce((result, nextPage) => [...result, ...nextPage], firstPageData));
-      });
-  }

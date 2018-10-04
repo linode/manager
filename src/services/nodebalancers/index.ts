@@ -1,6 +1,5 @@
 export {
   getNodeBalancers,
-  getAllNodeBalancers,
   getNodeBalancer,
   getNodeBalancerStats,
   createNodeBalancer,

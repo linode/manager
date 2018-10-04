@@ -18,11 +18,12 @@ import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import TextField from 'src/components/TextField';
 import { withTypes } from 'src/context/types';
 import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
-import { getAllDomains } from 'src/services/domains';
-import { getAllImages } from 'src/services/images';
-import { getAllLinodes } from 'src/services/linodes';
-import { getAllNodeBalancers } from 'src/services/nodebalancers';
-import { getAllVolumes } from 'src/services/volumes';
+import { getDomains } from 'src/services/domains';
+import { getImages } from 'src/services/images';
+import { getLinodes } from 'src/services/linodes';
+import { getNodeBalancers } from 'src/services/nodebalancers';
+import { getVolumes } from 'src/services/volumes';
+import { getAll } from 'src/utilities/getAll';
 
 import SearchSuggestion, { SearchSuggestionT } from './SearchSuggestion';
 
@@ -168,6 +169,12 @@ interface State {
 type CombinedProps = TypesContextProps
   & WithStyles<ClassNames>
   & RouteComponentProps<{}>;
+
+const getAllLinodes = getAll(getLinodes);
+const getAllNodeBalancers = getAll(getNodeBalancers);
+const getAllVolumes = getAll(getVolumes);
+const getAllDomains = getAll(getDomains);
+const getAllImages = getAll(getImages);
 
 class SearchBar extends React.Component<CombinedProps, State> {
   state: State = {

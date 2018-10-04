@@ -1,6 +1,5 @@
 export {
   getLinodes,
-  getAllLinodes,
   getLinodesPage,
   getLinode,
   getLinodeLishToken,
@@ -63,7 +62,6 @@ export {
 export {
   getLinodeStats,
   getLinodeKernels,
-  getAllKernels,
   getLinodeTypes,
   getDeprecatedLinodeTypes,
   getType
