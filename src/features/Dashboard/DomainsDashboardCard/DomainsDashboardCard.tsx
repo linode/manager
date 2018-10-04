@@ -24,7 +24,7 @@ type ClassNames =
   'root'
   | 'labelCol'
   | 'actionsCol'
-  | 'domainHeading';
+  | 'wrapHeader';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
@@ -34,7 +34,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   actionsCol: {
     width: '10%',
   },
-  domainHeading: {
+  wrapHeader: {
     wordBreak: 'break-all',
   }
 });
@@ -150,7 +150,7 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
           <Link to={`/domains/${id}/records`} className={'black nu block'}>
             <Grid container direction="column" spacing={8}>
               <Grid item className="py0">
-                <Typography className={classes.domainHeading} variant="subheading" data-qa-domain-name>
+                <Typography className={classes.wrapHeader} variant="subheading" data-qa-domain-name>
                   {domain}
                 </Typography>
               </Grid>

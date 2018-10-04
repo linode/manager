@@ -40,6 +40,7 @@ const styles: StyleRulesCallback = (theme) => ({
     display: 'inline-block',
     borderBottom: '2px dotted transparent',
     transition: theme.transitions.create(['opacity']),
+    wordBreak: 'break-all',
   },
   container: {
     display: 'inline-flex',

@@ -26,7 +26,8 @@ type ClassNames =
   'root'
   | 'labelCol'
   | 'moreCol'
-  | 'actionsCol';
+  | 'actionsCol'
+  | 'wrapHeader';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
@@ -38,6 +39,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   actionsCol: {
     width: '10%',
+  },
+  wrapHeader: {
+    wordBreak: 'break-all',
   },
 });
 
@@ -149,7 +153,7 @@ class VolumesDashboardCard extends React.Component<CombinedProps, State> {
         <TableCell className={classes.labelCol}>
           <Grid container direction="column" spacing={8}>
             <Grid item className="py0">
-              <Typography variant="subheading">
+              <Typography className={classes.wrapHeader} variant="subheading">
                 {label}
               </Typography>
             </Grid>
