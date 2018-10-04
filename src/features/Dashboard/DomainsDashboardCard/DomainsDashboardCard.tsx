@@ -23,7 +23,8 @@ import DashboardCard from '../DashboardCard';
 type ClassNames =
   'root'
   | 'labelCol'
-  | 'actionsCol';
+  | 'actionsCol'
+  | 'domainHeading';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
@@ -33,6 +34,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   actionsCol: {
     width: '10%',
   },
+  domainHeading: {
+    wordBreak: 'break-all',
+  }
 });
 
 interface State {
@@ -146,7 +150,7 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
           <Link to={`/domains/${id}/records`} className={'black nu block'}>
             <Grid container direction="column" spacing={8}>
               <Grid item className="py0">
-                <Typography variant="subheading" data-qa-domain-name>
+                <Typography className={classes.domainHeading} variant="subheading" data-qa-domain-name>
                   {domain}
                 </Typography>
               </Grid>
