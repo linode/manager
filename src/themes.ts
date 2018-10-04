@@ -417,7 +417,7 @@ export const dark = createTheme({
         boxSizing: 'content-box',
       },
       switchBase: {
-        color: primaryColors.main,
+        color: '#abadaf !important',
       },
     },
     MuiTab: {
