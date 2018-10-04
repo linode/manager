@@ -10,7 +10,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import Hidden from '@material-ui/core/Hidden';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -38,7 +38,7 @@ import ToggleBox from './ToggleBox';
 
 type ClassNames = 'root' | 'title';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   title: {
     marginbottom: theme.spacing.unit * 2,
@@ -404,6 +404,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           title={(bootOption === 'reboot') ? 'Confirm Reboot' : 'Powering Off'}
           actions={this.renderConfirmationActions}
           open={powerAlertOpen}
+          onClose={this.closePowerAlert}
         >
           <Typography>
             {bootOption === 'reboot'

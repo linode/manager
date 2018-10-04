@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import Menu from '@material-ui/core/Menu';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
@@ -26,7 +26,7 @@ type ClassNames = 'root'
   | 'fadeIn'
   | 'hidden';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   '@keyframes fadeIn': {
     from: {
       opacity: 0,
@@ -250,6 +250,7 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
           title={(bootOption === 'reboot') ? 'Confirm Reboot' : 'Powering Off'}
           actions={this.renderActions}
           open={powerAlertOpen}
+          onClose={this.closePowerAlert}
         >
           {bootOption === 'reboot'
             ? <Typography>Are you sure you want to reboot your Linode?</Typography>

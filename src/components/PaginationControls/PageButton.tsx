@@ -6,7 +6,7 @@ import Button, { ButtonProps } from 'src/components/Button';
 
 type CSSClasses = 'root';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme: Linode.Theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   root: {
     backgroundColor: theme.bg.offWhiteDT,
     border: '1px solid ' + `${theme.color.borderPagination}`,

@@ -1,7 +1,7 @@
 import * as H from 'history';
 import * as React from 'react';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 type ClassNames = 'root'
  | 'highlight'
@@ -15,7 +15,7 @@ type ClassNames = 'root'
 
  import Tag from 'src/components/Tag';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     cursor: 'pointer',
     display: 'flex',

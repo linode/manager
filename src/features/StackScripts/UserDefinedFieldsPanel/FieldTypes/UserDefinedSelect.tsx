@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import Radio from 'src/components/Radio';
@@ -9,7 +9,7 @@ import RenderGuard from 'src/components/RenderGuard';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     margin: `${theme.spacing.unit * 3}px 0`,
     paddingBottom: theme.spacing.unit * 3,

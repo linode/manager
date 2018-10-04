@@ -4,7 +4,7 @@ import { equals } from 'ramda';
 
 import * as classNames from 'classnames';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import TextField, { TextFieldProps } from '@material-ui/core/TextField';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
@@ -16,7 +16,7 @@ type ClassNames = 'root'
   | 'helpWrapperTextField'
   | 'expand';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   helpWrapper: {
     display: 'flex',

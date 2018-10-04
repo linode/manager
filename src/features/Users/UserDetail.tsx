@@ -5,7 +5,7 @@ import { matchPath, Route, RouteComponentProps, Switch } from 'react-router-dom'
 
 import AppBar from '@material-ui/core/AppBar';
 import IconButton from '@material-ui/core/IconButton';
-import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
@@ -25,7 +25,7 @@ import UserProfile from './UserProfile';
 
 type ClassNames = 'titleWrapper' | 'avatar' | 'backButton' | 'emptyImage';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   '@keyframes fadeIn': {
     from: {
       opacity: 0,
@@ -69,9 +69,9 @@ interface State {
   gravatarUrl?: string;
   error?: Error,
   originalUsername?: string;
-  username?: string;
+  username: string;
   createdUsername?: string;
-  email?: string;
+  email: string;
   restricted?: boolean;
   profileSaving: boolean;
   profileErrors?: Linode.ApiFieldError[];
@@ -81,6 +81,8 @@ interface State {
 class UserDetail extends React.Component<CombinedProps> {
   state: State = {
     profileSaving: false,
+    email: '',
+    username: ''
   };
 
   tabs = [
@@ -212,7 +214,7 @@ class UserDetail extends React.Component<CombinedProps> {
   renderUserProfile = () => {
     const { username, email, profileSaving, profileSuccess, profileErrors } = this.state;
     return <UserProfile
-      username={username || ''}
+      username={username}
       email={email}
       changeUsername={this.onChangeUsername}
       save={this.onSave}

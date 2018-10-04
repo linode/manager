@@ -3,7 +3,7 @@ import { always, cond, propEq } from 'ramda';
 import * as React from 'react';
 
 import Button, { ButtonProps } from '@material-ui/core/Button';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import HelpIcon from 'src/components/HelpIcon';
 
@@ -25,7 +25,7 @@ export interface Props extends ButtonProps {
   compact?: boolean;
 }
 
-const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback = (theme) => ({
   '@keyframes rotate': {
     from: {
       transform: 'rotate(0deg)',

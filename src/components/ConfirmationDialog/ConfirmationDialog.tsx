@@ -5,11 +5,11 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 type ClassNames = 'root' | 'error' | 'actions';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   error: {
     color: '#C44742',
@@ -23,6 +23,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 interface Props extends DialogProps {
   actions?: (props: any) => JSX.Element;
   error?: string;
+  onClose: () => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
 import TableRow from '@material-ui/core/TableRow';
 
 import RenderGuard from 'src/components/RenderGuard';
@@ -11,7 +11,7 @@ import ActionMenu from './ImagesActionMenu';
 
 type ClassNames = 'root' | 'label';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   label: {
     width: '30%',

@@ -1,7 +1,7 @@
 import { compose, lensPath, set, view } from 'ramda';
 import * as React from 'react';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
@@ -20,7 +20,7 @@ import { AccountProvider } from './context';
 
 type ClassNames = 'root' | 'heading';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   heading: {
     marginTop: theme.spacing.unit * 4,
