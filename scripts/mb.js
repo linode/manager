@@ -56,6 +56,6 @@ yargs
 
     }
   )
-  .help('h')
+  .help()
   .argv
 
