@@ -112,6 +112,7 @@
     "lint": "tslint 'src/**/*.ts' 'src/**/*.tsx'",
     "build": "node scripts/build.js",
     "precommit": "./scripts/pre-commit.sh",
+    "mock": "./scripts/mb.js",
     "test": "node scripts/test.js --env=jsdom",
     "storybook": "start-storybook -p 6006",
     "storybook-static": "build-storybook -c .storybook -o .out",
