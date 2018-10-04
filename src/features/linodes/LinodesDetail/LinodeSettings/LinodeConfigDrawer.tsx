@@ -94,7 +94,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 const getAllKernels = getAll(getLinodeKernels);
 const getAllVolumes = getAll(getVolumes);
-const getAllLinodeDisks = getAll(getLinodeKernels);
+const getAllLinodeDisks = getAll(getLinodeDisks);
 
 class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
   state: State = {
