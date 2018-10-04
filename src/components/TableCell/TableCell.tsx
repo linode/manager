@@ -15,7 +15,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   root: {},
   emptyCell: {
     [theme.breakpoints.down('sm')]: {
-      display: 'none !important'
+      display: 'table-cell'
     },
   },
   noWrap: {
