@@ -1,7 +1,9 @@
 import initStoryshots, { imageSnapshot } from '@storybook/addon-storyshots';
 
+const higherThresholdComponents = ['Skeleton Screen'];
+
 const getMatchOptions = ({context : {kind, story}, url}) => ({
-    failureThreshold: 0.02,
+    failureThreshold: higherThresholdComponents.includes(kind) ? 0.05 :  0.02,
     failureThresholdType: 'percent',
 });
 
