@@ -2,7 +2,7 @@ import { shim } from 'promise.prototype.finally';
 import { lensPath, path, set } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Redirect, Route, RouteProps, Switch } from 'react-router-dom';
 import { Sticky, StickyContainer, StickyProps } from 'react-sticky';
 import { compose } from 'redux';
 import { Subscription } from 'rxjs/Subscription';
@@ -156,6 +156,7 @@ const styles: StyleRulesCallback = (theme) => ({
 
 interface Props {
   toggleTheme: () => void;
+  location: RouteProps['location'];
 }
 
 interface State {

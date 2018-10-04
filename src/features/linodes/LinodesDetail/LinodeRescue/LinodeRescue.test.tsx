@@ -9,7 +9,7 @@ import { createPromiseLoaderResponse } from 'src/utilities/testHelpers';
 import { ExtendedVolume } from './DeviceSelection';
 import { LinodeRescue } from './LinodeRescue';
 
-describe('LinodeRescue', () => {
+describe.skip('LinodeRescue', () => {
   describe('volumes', () => {
 
     const extendedDisks = disks.map(disk => {
