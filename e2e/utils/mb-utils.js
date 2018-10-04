@@ -6,7 +6,8 @@ const proxyImposter = config => {
         "port": config.imposterPort,
         "protocol": config.imposterProtocol,
         "name": config.imposterName,
-        "useCORS": true,
+        "allowCORS": true,
+        "addWaitBehavior": true,
         "stubs": [{
             "responses": [
             {
