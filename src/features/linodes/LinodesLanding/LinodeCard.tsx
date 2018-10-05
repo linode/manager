@@ -51,7 +51,8 @@ type CSSClasses =
   | 'flagContainer'
   | 'linkWrapper'
   | 'StatusIndicatorWrapper'
-  | 'link';
+  | 'link'
+  | 'wrapHeader';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   customeMQ: {
@@ -78,7 +79,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     height: '100%',
     position: 'relative',
     '& .title': {
-      height: 48,
+      minHeight: 48,
       padding: `0 ${theme.spacing.unit * 3}px`,
     },
   },
@@ -180,6 +181,10 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     display: 'flex',
     alignItems: 'center',
     flex: 1,
+  },
+  wrapHeader: {
+    wordBreak: 'break-all',
+    padding: '20px',
   },
 });
 
@@ -377,7 +382,7 @@ class LinodeCard extends React.Component<CombinedProps, State> {
             <LinodeStatusIndicator status={linodeStatus} />
           </Grid>
           <Grid item className={classes.cardHeader + ' py0'}>
-            <Typography role="header" variant="subheading" data-qa-label>
+            <Typography role="header" className={classes.wrapHeader} variant="subheading" data-qa-label>
               {linodeLabel}
             </Typography>
           </Grid>
