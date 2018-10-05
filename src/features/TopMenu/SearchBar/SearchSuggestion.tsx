@@ -1,5 +1,5 @@
-import * as H from 'history';
 import * as React from 'react';
+import { OptionProps } from 'react-select/lib/components/Option';
 
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
@@ -66,16 +66,19 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 
 export interface SearchSuggestionT {
   Icon: React.ComponentClass<any>;
-  title: string;
   description: string;
   path: string;
+  searchText: string;
+  history: any;
   tags?: string[];
   isHighlighted?: boolean;
 }
 
-interface Props extends SearchSuggestionT {
-  searchText: string;
-  history: H.History;
+interface Props extends OptionProps<any> {
+  data: {
+    label: string;
+    data: SearchSuggestionT;
+  }
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -104,27 +107,19 @@ const renderTags = (tags:string[], selected:boolean) => {
 }
 
 const SearchSuggestion: React.StatelessComponent<CombinedProps> = (props) => {
-  const {
-    title,
-    description,
-    Icon,
-    searchText,
-    classes: { highlight, root },
-    path,
-    history,
-    classes,
-    tags,
-    isHighlighted,
-  } = props;
+  const suggestion = props.data.data;
+  const { classes } = props;
+  const { Icon } = suggestion;
 
   const handleClick = () => {
+    const { history, path } = suggestion;
     history.push(path);
   }
 
   return (
     <div
       onClick={handleClick}
-      className={root}
+      className={classes.root}
     >
       <div className={classes.resultContainer}>
         <div className={`
@@ -138,15 +133,15 @@ const SearchSuggestion: React.StatelessComponent<CombinedProps> = (props) => {
           ${classes.suggestionContent}
         `}>
           <div className={classes.suggestionTitle} data-qa-suggestion-title>
-            {maybeStyleSegment(title, searchText, highlight)}
+            {maybeStyleSegment(props.data.label, suggestion.searchText, classes.highlight)}
           </div>
           <div className={classes.suggestionDescription} data-qa-suggestion-desc>
-            {description}
+            {suggestion.description}
           </div>
         </div>
       </div>
       <div className={classes.tagContainer}>
-          {tags && renderTags(tags, Boolean(isHighlighted))}
+          {suggestion.tags && renderTags(suggestion.tags, Boolean(props.isFocused))}
       </div>
     </div>
   );

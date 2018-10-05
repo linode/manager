@@ -1,12 +1,11 @@
 import * as Bluebird from 'bluebird';
 import * as moment from 'moment';
-import { compose, or } from 'ramda';
+import { compose, isEmpty, or } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import _Control from 'react-select/lib/components/Control';
 
 import IconButton from '@material-ui/core/IconButton';
-import MenuItem from '@material-ui/core/MenuItem';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Close from '@material-ui/icons/Close';
 import Search from '@material-ui/icons/Search';
@@ -24,7 +23,7 @@ import { getNodeBalancers } from 'src/services/nodebalancers';
 import { getVolumes } from 'src/services/volumes';
 import { getAll } from 'src/utilities/getAll';
 
-import SearchSuggestion, { SearchSuggestionT } from './SearchSuggestion';
+import SearchSuggestion from './SearchSuggestion';
 
 type ClassNames =
   'root'
@@ -179,6 +178,7 @@ const getAllImages = getAll(getImages);
 const Control = (props: any) =>
   <_Control {...props} />
 
+// Style overrides for React Select
 const selectStyles = {
   control: (base: any) => ({ ...base, backgroundColor: '#f4f4f4', margin: 0, width: '100%', border: 0 }),
   input: (base: any) => ({ ...base, margin: 0, width: '100%', border: 0 }),
@@ -189,6 +189,7 @@ const selectStyles = {
 };
 
 class SearchBar extends React.Component<CombinedProps, State> {
+  mounted: boolean = false;
   state: State = {
     searchText: '',
     searchActive: false,
@@ -196,6 +197,15 @@ class SearchBar extends React.Component<CombinedProps, State> {
   };
 
   lastFetch = moment.utc('1970-01-01T00:00:00');
+
+  componentDidMount() {
+    this.mounted = true;
+    this.updateData();
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
+  }
 
   dataAvailable() {
     return (
@@ -239,6 +249,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
     domains: Linode.Domain[],
     images: Linode.Image[]
   ) => {
+    if (!this.mounted) { return; }
     this.setState({
       linodes,
       nodebalancers,
@@ -251,12 +262,15 @@ class SearchBar extends React.Component<CombinedProps, State> {
   // Helper can be extended to other entities once tags are supported for them.
   // @todo Inefficient to call this function twice for each search result.
   getMatchingTags = (tags:string[], query:string): string[] => {
-    return tags.filter((tag:string) => tag.toLowerCase().includes(query));
+    return tags.filter((tag:string) => tag.toLocaleLowerCase().includes(query));
   }
 
   getSearchSuggestions = (query: string | null) => {
     const { typesData } = this.props;
-    if (!this.dataAvailable() || !query) { return [] };
+    if (!this.dataAvailable() || !query) { 
+      this.setState({ options: [] });
+      return;
+    };
 
     const queryLower = query.toLowerCase();
     const searchResults = [];
@@ -265,24 +279,30 @@ class SearchBar extends React.Component<CombinedProps, State> {
       const linodesByLabel = this.state.linodes.filter(
         linode => {
           const matchingTags = this.getMatchingTags(linode.tags, queryLower);
-          return or(
+          const bool = or(
             linode.label.toLowerCase().includes(queryLower),
             matchingTags.length > 0
           )
+          return bool;
         }
       );
       searchResults.push(...(linodesByLabel.map(linode => ({
-        title: linode.label,
-        tags: this.getMatchingTags(linode.tags, queryLower),
-        description: this.linodeDescription(
-          displayType(linode.type, typesData),
-          linode.specs.memory,
-          linode.specs.disk,
-          linode.specs.vcpus,
-          linode.image!,
-        ),
-        Icon: LinodeIcon,
-        path: `/linodes/${linode.id}`,
+        label: linode.label,
+        value: linode.id,
+        data: {
+          tags: this.getMatchingTags(linode.tags, queryLower),
+          description: this.linodeDescription(
+            displayType(linode.type, typesData),
+            linode.specs.memory,
+            linode.specs.disk,
+            linode.specs.vcpus,
+            linode.image!,
+          ),
+          Icon: LinodeIcon,
+          path: `/linodes/${linode.id}`,
+          history,
+          searchText: query,
+        }
       }))));
     }
 
@@ -291,10 +311,16 @@ class SearchBar extends React.Component<CombinedProps, State> {
         volume => volume.label.toLowerCase().includes(queryLower),
       );
       searchResults.push(...(volumesByLabel.map(volume => ({
-        title: volume.label,
-        description: volume.size + ' G',
-        Icon: VolumeIcon,
-        path: `/volumes/${volume.id}`,
+        label: volume.label,
+        value: volume.id,
+        data: {
+          tags: [],
+          description: volume.size + ' G',
+          Icon: VolumeIcon,
+          path: `/volumes/${volume.id}`,
+          history,
+          searchText: query,
+        }
       }))));
     }
 
@@ -303,10 +329,16 @@ class SearchBar extends React.Component<CombinedProps, State> {
         nodebal => nodebal.label.toLowerCase().includes(queryLower),
       );
       searchResults.push(...(nodebalancersByLabel.map(nodebal => ({
-        title: nodebal.label,
-        description: nodebal.hostname,
-        Icon: NodebalIcon,
-        path: `/nodebalancers/${nodebal.id}`,
+        label: nodebal.label,
+        value: nodebal.id,
+        data: {
+          tags: [],
+          description: nodebal.hostname,
+          Icon: NodebalIcon,
+          path: `/nodebalancers/${nodebal.id}`,
+          history,
+          searchText: query,
+        }
       }))));
     }
 
@@ -315,11 +347,17 @@ class SearchBar extends React.Component<CombinedProps, State> {
         domain => domain.domain.toLowerCase().includes(queryLower),
       );
       searchResults.push(...(domainsByLabel.map(domain => ({
-        title: domain.domain,
-        description: domain.description || domain.status,
-        /* TODO: Update this with the Domains icon! */
-        Icon: NodebalIcon,
-        path: `/domains/${domain.id}`,
+        label: domain.domain,
+        value: domain.id,
+        data: {
+          tags: [],
+          description: domain.description || domain.status,
+          /* TODO: Update this with the Domains icon! */
+          Icon: NodebalIcon,
+          path: `/domains/${domain.id}`,
+          history,
+          searchText: query
+        }
       }))));
     }
 
@@ -332,28 +370,33 @@ class SearchBar extends React.Component<CombinedProps, State> {
         ),
       );
       searchResults.push(...(imagesByLabel.map(image => ({
-        title: image.label,
-        description: image.description || '',
-        /* TODO: Update this with the Images icon! */
-        Icon: VolumeIcon,
-        /* TODO: Choose a real location for this to link to */
-        path: `/images`,
+        label: image.label,
+        value: image.id,
+        data: {
+          tags: [],
+          description: image.description || '',
+          /* TODO: Update this with the Images icon! */
+          Icon: VolumeIcon,
+          /* TODO: Choose a real location for this to link to */
+          path: `/images`,
+          history,
+          searchText: query,
+        }
       }))));
     }
-
-    return searchResults;
+    this.setState({ options: searchResults });
   }
 
-  handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    this.setState({
-      searchText: e.target.value,
-    }, () => {
-      if (moment.utc().diff(this.lastFetch) > 60000) {
-        this.lastFetch = moment.utc();
-        this.updateData();
-      }
-    });
-  }
+  // handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  //   this.setState({
+  //     searchText: e.target.value,
+  //   }, () => {
+  //     if (moment.utc().diff(this.lastFetch) > 60000) {
+  //       this.lastFetch = moment.utc();
+  //       this.updateData();
+  //     }
+  //   });
+  // }
 
   toggleSearch = () => {
     this.setState({
@@ -361,51 +404,49 @@ class SearchBar extends React.Component<CombinedProps, State> {
     });
   }
 
-  onSelect = (item: SearchSuggestionT) => {
+  onSelect = (item: Item) => {
+    if (!item || isEmpty(item)) { return; }
     const { history } = this.props;
-    /* Need to unfocus the search bar so the
-    *  keyboard disappears on mobile.
-    *  This is a known issue with Downshift (https://github.com/paypal/downshift/issues/32),
-    *  hopefully this kludge won't be needed with React-Select.
-    */
-    const node = document.getElementById('searchbar-simple');
-    if (node) { node.blur(); }
     this.toggleSearch();
-    history.push(item.path);
+    history.push(item.data.path);
   }
 
-  renderSuggestion(
-    suggestion: SearchSuggestionT,
-    index: number,
-    highlightedIndex: number | null,
-    itemProps: any,
-  ) {
-    const { classes, history } = this.props;
-    const isHighlighted = highlightedIndex === index;
+  // renderSuggestion(
+  //   suggestion: SearchSuggestionT,
+  //   index: number,
+  //   highlightedIndex: number | null,
+  //   itemProps: any,
+  // ) {
+  //   const { classes, history } = this.props;
+  //   const isHighlighted = highlightedIndex === index;
 
-    return (
-      <MenuItem
-        {...itemProps}
-        key={suggestion.title + suggestion.description}
-        selected={isHighlighted}
-        component="div"
-        className={classes.item}
-        classes={{ selected: classes.selectedMenuItem }}
-        data-qa-suggestion={suggestion.title}
-        data-qa-selected={isHighlighted}
-      >
-        <SearchSuggestion
-          Icon={suggestion.Icon}
-          title={suggestion.title}
-          description={suggestion.description}
-          searchText={this.state.searchText}
-          path={suggestion.path}
-          history={history}
-          tags={suggestion.tags}
-          isHighlighted={isHighlighted}
-        />
-      </MenuItem>
-    );
+  //   return (
+  //     <MenuItem
+  //       {...itemProps}
+  //       key={suggestion.title + suggestion.description}
+  //       selected={isHighlighted}
+  //       component="div"
+  //       className={classes.item}
+  //       classes={{ selected: classes.selectedMenuItem }}
+  //       data-qa-suggestion={suggestion.title}
+  //       data-qa-selected={isHighlighted}
+  //     >
+  //       <SearchSuggestion
+  //         Icon={suggestion.Icon}
+  //         title={suggestion.title}
+  //         description={suggestion.description}
+  //         searchText={this.state.searchText}
+  //         path={suggestion.path}
+  //         history={history}
+  //         tags={suggestion.tags}
+  //         isHighlighted={isHighlighted}
+  //       />
+  //     </MenuItem>
+  //   );
+  // }
+
+  filterResults = (inputValue: string) => {
+    return true;
   }
 
   render() {
@@ -434,12 +475,15 @@ class SearchBar extends React.Component<CombinedProps, State> {
           />
           <EnhancedSelect
             options={options}
-            onChange={() => null}
+            onChange={this.onSelect}
+            onInputChange={this.getSearchSuggestions}
             placeholder={"Search for Linodes, Volumes, Nodebalancers, Domains, Tags..."}
-            components={{ Control }}
+            components={{ Control, Option: SearchSuggestion }}
             styleOverrides={selectStyles}
-
-
+            filterOption={this.filterResults}
+            isClearable={false}
+            isMulti={false}
+            value={null}
           />
           <IconButton
             color="inherit"

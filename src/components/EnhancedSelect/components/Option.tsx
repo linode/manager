@@ -6,6 +6,7 @@ interface Props extends OptionProps<any> {
  }
 
 const Option: React.StatelessComponent<Props> = (props) => {
+  console.log(props);
   return (
     <div data-qa-option={String(props.value)}><_Option {...props} /></div>
   )

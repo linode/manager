@@ -11,18 +11,19 @@ describe('Enhanced Select Suite', () => {
     });
 
     describe('Basic Select Suite', () => {
-        let basicSelect, options;
+        let basicSelect, basicSelects, options;
 
         it('should display the placeholder text in the select', () => {
             basicSelects = $$('[data-qa-enhanced-select="Choose one fruit"]');
-            const placeholderMsg = 'Choose one fruit';
+            let placeholderMsg = 'Choose one fruit';
 
             expect(basicSelects[0].getText()).toContain('Basic Select');
             expect(basicSelects[0].getText()).toContain(placeholderMsg);
         });
 
         it('should display options on click', () => {
-            basicSelects[0].click();
+            const basicSelectInputs = basicSelects.map((s) => s.$("div"));
+            basicSelectInputs[0].click();
             browser.waitForVisible('[data-qa-option]', constants.wait.normal);
 
             options = $$('[data-qa-option]');

@@ -142,6 +142,7 @@ export interface EnhancedSelectProps {
   createNew?: (inputValue: string) => void;
   onInputChange?: (inputValue: string, actionMeta: ActionMeta) => void;
   loadOptions?: (inputValue: string) => Promise<Item| Item[]> | undefined;
+  filterOption?: (inputValue: string) => boolean | null;
 }
 
 // Material-UI versions of several React-Select components.
@@ -224,6 +225,7 @@ class Select extends React.PureComponent<CombinedProps,{}> {
         {...restOfProps}
         isClearable={isClearable  || true }
         isSearchable
+        blurInputOnSelect
         isLoading={isLoading}
         defaultOptions
         cacheOptions={false}
