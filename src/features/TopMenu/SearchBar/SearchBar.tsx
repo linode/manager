@@ -160,9 +160,9 @@ interface State {
   volumes?: Linode.Volume[];
   nodebalancers?: Linode.NodeBalancer[];
   domains?: Linode.Domain[];
-  images?: Linode.Image[];
-  options: Item[];
+  resultsLoading: boolean;
   [resource: string]: any;
+  options: Item[];
 }
 
 type CombinedProps = TypesContextProps
@@ -193,6 +193,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
   state: State = {
     searchText: '',
     searchActive: false,
+    resultsLoading: false,
     options: []
   };
 
@@ -200,7 +201,6 @@ class SearchBar extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     this.mounted = true;
-    this.updateData();
   }
 
   componentWillUnmount() {
@@ -256,7 +256,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
       volumes,
       domains,
       images
-    })
+    }, this.getSearchSuggestions)
   }
 
   // Helper can be extended to other entities once tags are supported for them.
@@ -265,10 +265,11 @@ class SearchBar extends React.Component<CombinedProps, State> {
     return tags.filter((tag:string) => tag.toLocaleLowerCase().includes(query));
   }
 
-  getSearchSuggestions = (query: string | null) => {
+  getSearchSuggestions = () => {
+    const query = this.state.searchText;
     const { typesData } = this.props;
-    if (!this.dataAvailable() || !query) { 
-      this.setState({ options: [] });
+    if (!this.dataAvailable() || !query) {
+      this.setState({ options: [], resultsLoading: false });
       return;
     };
 
@@ -363,13 +364,13 @@ class SearchBar extends React.Component<CombinedProps, State> {
 
     if (this.state.images) {
       const imagesByLabel = this.state.images.filter(
-        image => (
+        (image: Linode.Image) => (
           /* TODO: this should be a pre-filter at the API level */
           image.is_public === false
           && image.label.toLowerCase().includes(queryLower)
         ),
       );
-      searchResults.push(...(imagesByLabel.map(image => ({
+      searchResults.push(...(imagesByLabel.map((image: Linode.Image) => ({
         label: image.label,
         value: image.id,
         data: {
@@ -384,19 +385,23 @@ class SearchBar extends React.Component<CombinedProps, State> {
         }
       }))));
     }
-    this.setState({ options: searchResults });
+    this.setState({ options: searchResults, resultsLoading: false });
   }
 
-  // handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-  //   this.setState({
-  //     searchText: e.target.value,
-  //   }, () => {
-  //     if (moment.utc().diff(this.lastFetch) > 60000) {
-  //       this.lastFetch = moment.utc();
-  //       this.updateData();
-  //     }
-  //   });
-  // }
+  handleSearchChange = (searchText: string): void => {
+    this.setState({
+      searchText,
+      resultsLoading: true,
+    }, () => {
+      if (moment.utc().diff(this.lastFetch) > 60000) {
+        this.lastFetch = moment.utc();
+        // This will run getSearchSuggestions as a callback
+        this.updateData();
+      } else {
+        this.getSearchSuggestions();
+      }
+    });
+  }
 
   toggleSearch = () => {
     this.setState({
@@ -411,47 +416,13 @@ class SearchBar extends React.Component<CombinedProps, State> {
     history.push(item.data.path);
   }
 
-  // renderSuggestion(
-  //   suggestion: SearchSuggestionT,
-  //   index: number,
-  //   highlightedIndex: number | null,
-  //   itemProps: any,
-  // ) {
-  //   const { classes, history } = this.props;
-  //   const isHighlighted = highlightedIndex === index;
-
-  //   return (
-  //     <MenuItem
-  //       {...itemProps}
-  //       key={suggestion.title + suggestion.description}
-  //       selected={isHighlighted}
-  //       component="div"
-  //       className={classes.item}
-  //       classes={{ selected: classes.selectedMenuItem }}
-  //       data-qa-suggestion={suggestion.title}
-  //       data-qa-selected={isHighlighted}
-  //     >
-  //       <SearchSuggestion
-  //         Icon={suggestion.Icon}
-  //         title={suggestion.title}
-  //         description={suggestion.description}
-  //         searchText={this.state.searchText}
-  //         path={suggestion.path}
-  //         history={history}
-  //         tags={suggestion.tags}
-  //         isHighlighted={isHighlighted}
-  //       />
-  //     </MenuItem>
-  //   );
-  // }
-
-  filterResults = (inputValue: string) => {
+  filterResults = (option: Item, inputValue: string) => {
     return true;
   }
 
   render() {
     const { classes } = this.props;
-    const { searchActive, options } = this.state;
+    const { searchActive, options, resultsLoading } = this.state;
 
     return (
       <React.Fragment>
@@ -476,11 +447,12 @@ class SearchBar extends React.Component<CombinedProps, State> {
           <EnhancedSelect
             options={options}
             onChange={this.onSelect}
-            onInputChange={this.getSearchSuggestions}
+            onInputChange={this.handleSearchChange}
             placeholder={"Search for Linodes, Volumes, Nodebalancers, Domains, Tags..."}
             components={{ Control, Option: SearchSuggestion }}
             styleOverrides={selectStyles}
             filterOption={this.filterResults}
+            isLoading={resultsLoading}
             isClearable={false}
             isMulti={false}
             value={null}

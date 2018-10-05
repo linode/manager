@@ -142,7 +142,7 @@ export interface EnhancedSelectProps {
   createNew?: (inputValue: string) => void;
   onInputChange?: (inputValue: string, actionMeta: ActionMeta) => void;
   loadOptions?: (inputValue: string) => Promise<Item| Item[]> | undefined;
-  filterOption?: (inputValue: string) => boolean | null;
+  filterOption?: (option: Item, inputValue: string) => boolean | null;
 }
 
 // Material-UI versions of several React-Select components.
