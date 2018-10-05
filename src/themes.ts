@@ -391,7 +391,7 @@ export const dark = createTheme({
       },
       checked: {
         transform: 'translateX(20px)',
-        color: `${primaryColors.main} !important`,
+        color: `#abadaf !important`,
         '& input': {
           left: -20,
         },
@@ -417,7 +417,7 @@ export const dark = createTheme({
         boxSizing: 'content-box',
       },
       switchBase: {
-        color: primaryColors.main,
+        color: '#abadaf !important',
       },
     },
     MuiTab: {
