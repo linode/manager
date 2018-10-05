@@ -14,6 +14,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   responsive: {
     [theme.breakpoints.down('sm')]: {
+      '& .emptyCell': {
+        display: 'none',
+      },
       '& thead': {
         display: 'none',
       },
