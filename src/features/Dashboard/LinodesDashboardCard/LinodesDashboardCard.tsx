@@ -30,7 +30,8 @@ type ClassNames =
   | 'linodeWrapper'
   | 'labelCol'
   | 'moreCol'
-  | 'actionsCol';
+  | 'actionsCol'
+  | 'wrapHeader';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
@@ -46,6 +47,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   actionsCol: {
     width: '10%',
+  },
+  wrapHeader: {
+    wordBreak: 'break-all',
   },
 });
 
@@ -173,7 +177,7 @@ class LinodesDashboardCard extends React.Component<CombinedProps, State> {
               <Grid item>
                 <Grid container direction="column" spacing={8}>
                   <Grid item className="py0">
-                    <Typography variant="subheading">
+                    <Typography className={classes.wrapHeader} variant="subheading">
                       {label}
                     </Typography>
                   </Grid>

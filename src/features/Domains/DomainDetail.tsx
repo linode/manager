@@ -41,6 +41,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   titleWrapper: {
     display: 'flex',
     alignItems: 'center',
+    wordBreak: 'break-all',
   },
   backButton: {
     margin: '2px 0 0 -16px',
