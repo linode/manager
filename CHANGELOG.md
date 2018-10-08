@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.36.0] - 2018-10.08
+
+### Changed:
+  - Support
+    - Allow selecting multiple files when attaching to a ticket
+    - Auto-collapse attachments when a ticket contains more than 5 attachments
+    - Increase support search results to display up to 20 results
+  - Profile
+    - Truncate whitespace when adding SSH keys
+  - Billing
+    - Display last four credit card digits when submitting payment
+
+### Fixed:
+  - Volumes
+    - Issue where creating a volume would potentially display the wrong region for the attached linode
+  - Stackscripts
+    - When creating a linode from Stackscript, the SSH Key access panel failed to display on image selection
+  - Misc.
+    - Issue where certain modals could not be dismissed with the escape key
+    - On Linode creation, the password field now appears disabled until an image is selected
+    - Two-factor authentication QR code border visibility in dark theme
+
 ## [0.35.0] - 2018-10.01
 ### Added:
   - Users can now provide feedback on Linode support in tickets.
