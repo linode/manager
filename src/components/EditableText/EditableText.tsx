@@ -24,7 +24,8 @@ type ClassNames = 'root'
 | 'save'
 | 'close'
 | 'headline'
-| 'title';
+| 'title'
+| 'editIcon';
 
 const styles: StyleRulesCallback = (theme) => ({
   '@keyframes fadeIn': {
@@ -36,7 +37,7 @@ const styles: StyleRulesCallback = (theme) => ({
     },
   },
   root: {
-    padding: '12px 12px 10px 0',
+    padding: '12px 12px 10px',
     display: 'inline-block',
     borderBottom: '2px dotted transparent',
     transition: theme.transitions.create(['opacity']),
@@ -46,19 +47,32 @@ const styles: StyleRulesCallback = (theme) => ({
     display: 'inline-flex',
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
+    border: '1px solid transparent',
+    '&:hover, &:focus': {
+      border: '1px solid #abadaf',
+    },
   },
   initial: {
     '&:hover, &:focus': {
       '& $root': {
         opacity: .5,
       },
+      '& $editIcon': {
+        visibility: 'visible',
+      },
       '& $icon': {
-        color: theme.palette.primary.light,
+        color: theme.color.grey1,
       },
     },
   },
   edit: {
     fontSize: 22,
+    '& $inputRoot': {
+      borderColor: `${theme.palette.primary.main} !important`,
+    },
+    '&:hover, &:focus': {
+      border: '1px solid transparent',
+    },
   },
   textField: {
     opacity: 0,
@@ -94,13 +108,16 @@ const styles: StyleRulesCallback = (theme) => ({
     fontSize: 26,
   },
   input: {
-    padding: '12px 12px 10px 0',
+    padding: '12px 12px 10px',
   },
   headline: {
     ...theme.typography.headline,
   },
   title: {
     ...theme.typography.title,
+  },
+  editIcon: {
+    visibility: 'hidden',
   },
 });
 
@@ -183,7 +200,7 @@ class EditableText extends React.Component<FinalProps, State> {
                   {text}
                 </Typography>
                 <Button
-                  className={classes.button}
+                  className={`${classes.button} ${classes.editIcon}`}
                   onClick={this.toggleEditing}
                   data-qa-edit-button
                 >
