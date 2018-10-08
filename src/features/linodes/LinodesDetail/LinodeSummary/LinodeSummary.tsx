@@ -25,7 +25,6 @@ import AsyncExpansionPanel from './AsyncExpansionPanel';
 setUpCharts();
 
 type ClassNames = 'chart'
-  | 'loadingSpinner'
   | 'leftLegend'
   | 'bottomLegend'
   | 'graphTitle'
@@ -47,11 +46,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => {
       [theme.breakpoints.up('xl')]: {
         width: 'calc(100vw - 370px)',
       },
-    },
-    loadingSpinner: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
     },
     leftLegend: {
       position: 'absolute',
@@ -145,7 +139,7 @@ const chartHeight = 300;
 
 const statsFetchInterval = 30000;
 
-class LinodeSummary extends React.Component<CombinedProps, State> {
+export class LinodeSummary extends React.Component<CombinedProps, State> {
   statsInterval?: number = undefined;
   mounted: boolean = false;
 
@@ -496,8 +490,6 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
           </div>
 
           <AsyncExpansionPanel 
-            rangeSelection={rangeSelection}
-            chartHeight={chartHeight}
             heading={"CPU %"}
             onChange={this.handleToggleExpand}
             renderMainContent={this.renderCPUChart}
@@ -506,8 +498,6 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
           />
 
           <AsyncExpansionPanel
-            rangeSelection={rangeSelection}
-            chartHeight={chartHeight}
             heading={"IPv4 Traffic"}
             onChange={this.handleToggleExpand}
             renderMainContent={this.renderIPv4TrafficChart}
@@ -516,8 +506,6 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
           />
 
           <AsyncExpansionPanel
-            rangeSelection={rangeSelection}
-            chartHeight={chartHeight}
             heading={"IPv6 Traffic"}
             onChange={this.handleToggleExpand}
             renderMainContent={this.renderIPv6TrafficChart}
@@ -526,8 +514,6 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
           />
 
           <AsyncExpansionPanel
-            rangeSelection={rangeSelection}
-            chartHeight={chartHeight}
             heading={"Disk I/O"}
             onChange={this.handleToggleExpand}
             renderMainContent={this.renderDiskIOChart}
