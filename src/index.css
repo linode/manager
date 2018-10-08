@@ -181,3 +181,9 @@ a.black:not(.nu):active {
 .fade-in-table {
   animation: fadeIn .3s ease-in-out;
 }
+
+.no-transition *,
+.no-transition *::before,
+.no-transition *::after {
+  transition: none !important;
+}

@@ -16,6 +16,12 @@ class LinodeThemeWrapper extends React.Component<{}, State> {
     themeChoice: 'light',
   };
 
+  componentDidUpdate() {
+    setTimeout(() => {
+      document.body.classList.remove('no-transition');
+    }, 500)
+  }
+
   componentDidMount() {
     if (themeStorage.get() === 'dark') {
       return this.setState({ themeChoice: 'dark' });
@@ -25,6 +31,7 @@ class LinodeThemeWrapper extends React.Component<{}, State> {
   }
 
   toggleTheme = () => {
+    document.body.classList.add('no-transition');
     if (this.state.themeChoice === 'light') {
       this.setState({ themeChoice: 'dark' });
       themeStorage.set('dark');
