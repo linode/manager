@@ -25,6 +25,7 @@ import ExtendedExpansionPanel from './ExtendedExpansionPanel';
 setUpCharts();
 
 type ClassNames = 'chart'
+  | 'loadingSpinner'
   | 'leftLegend'
   | 'bottomLegend'
   | 'graphTitle'
@@ -46,6 +47,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => {
       [theme.breakpoints.up('xl')]: {
         width: 'calc(100vw - 370px)',
       },
+    },
+    loadingSpinner: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     leftLegend: {
       position: 'absolute',
