@@ -8,7 +8,6 @@ describe('Editable Text Suite', () => {
 
     const editableTextSelector = '[data-qa-editable-text]';
     const editField = '[data-qa-edit-field]';
-    //const editButtonSelector = '[data-qa-edit-button]';
     const saveEdit = '[data-qa-save-edit]';
     const cancelEdit = '[data-qa-cancel-edit]';
     const newLabel = 'someNewValue!';
