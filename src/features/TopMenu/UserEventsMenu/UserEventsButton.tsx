@@ -60,7 +60,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   count: {
     color: 'white',
-    fontWeight: 700,
+    fontFamily: 'LatoWebBold',
     display: 'block',
     fontSize: '.7rem',
     lineHeight: 0,

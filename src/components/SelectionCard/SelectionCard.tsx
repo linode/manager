@@ -85,7 +85,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     },
   },
   heading: {
-    fontWeight: 700,
+    fontFamily: 'LatoWebBold',
     fontSize: '1em',
     color: theme.color.headline,
   },
