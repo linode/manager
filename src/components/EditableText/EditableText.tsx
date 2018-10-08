@@ -67,8 +67,8 @@ const styles: StyleRulesCallback = (theme) => ({
   },
   edit: {
     fontSize: 22,
-    '& $input': {
-      border: `1px solid ${theme.palette.primary.main} !important`,
+    '& $inputRoot': {
+      borderColor: `${theme.palette.primary.main} !important`,
     },
     '&:hover, &:focus': {
       border: '1px solid transparent',
