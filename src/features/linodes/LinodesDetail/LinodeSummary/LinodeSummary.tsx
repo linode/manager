@@ -498,7 +498,6 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
           <AsyncExpansionPanel 
             rangeSelection={rangeSelection}
             chartHeight={chartHeight}
-            classes={classes}
             heading={"CPU %"}
             onChange={this.handleToggleExpand}
             renderMainContent={this.renderCPUChart}
@@ -509,7 +508,6 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
           <AsyncExpansionPanel
             rangeSelection={rangeSelection}
             chartHeight={chartHeight}
-            classes={classes}
             heading={"IPv4 Traffic"}
             onChange={this.handleToggleExpand}
             renderMainContent={this.renderIPv4TrafficChart}
@@ -520,7 +518,6 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
           <AsyncExpansionPanel
             rangeSelection={rangeSelection}
             chartHeight={chartHeight}
-            classes={classes}
             heading={"IPv6 Traffic"}
             onChange={this.handleToggleExpand}
             renderMainContent={this.renderIPv6TrafficChart}
@@ -531,7 +528,6 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
           <AsyncExpansionPanel
             rangeSelection={rangeSelection}
             chartHeight={chartHeight}
-            classes={classes}
             heading={"Disk I/O"}
             onChange={this.handleToggleExpand}
             renderMainContent={this.renderDiskIOChart}

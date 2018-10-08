@@ -7,7 +7,6 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 interface Props {
   chartHeight: number;
   rangeSelection: string;
-  classes: any;
   heading: string;
   isLoading: boolean;
   error: boolean;
@@ -15,38 +14,46 @@ interface Props {
   renderMainContent: () => JSX.Element;
 }
 
-class AsyncExpansionPanel extends React.PureComponent<Props, {}> {
-  renderContent = () => {
-    const { error, isLoading } = this.props;
+/*
+ * onChange: function that will be called whenever the panel is opened
+ * or closed.
+ * 
+ * renderMainContent: This abstraction provides loading and error
+ * states based on props. If there are no errors and loading is false,
+ * this function will be called to render the actual content of the panel.
+ * 
+ */
 
-    if (error) {
-      return (
-        <ErrorState errorText="Unable to load data for this Linode" />
-      )
-    }
+const renderContent = (error: boolean, isLoading: boolean, renderMainContent: () => JSX.Element) => {
 
-    if (isLoading) {
-      return (
-        <div className={this.props.classes.loadingSpinner} >
-          <CircleProgress mini />
-        </div>
-      )
-    }
-
-    return this.props.renderMainContent();
-  }
-
-  render() {
-    const { heading, onChange } = this.props;
+  if (error) {
     return (
-      <ExpansionPanel
-        heading={heading}
-        onChange={onChange}
-      >
-        {this.renderContent()}
-      </ExpansionPanel>
-    );
+      <ErrorState errorText="Unable to load data for this Linode." />
+    )
   }
+
+  if (isLoading) {
+    return (
+      <div style={{'display':'flex', 'justifyContent': 'center', 'alignItems': 'center'}} >
+        <CircleProgress mini />
+      </div>
+    )
+  }
+
+  return renderMainContent();
+}
+
+const AsyncExpansionPanel: React.StatelessComponent<Props> = (props) => {
+
+  const { error, heading, isLoading, onChange, renderMainContent } = props;
+  return (
+    <ExpansionPanel
+      heading={heading}
+      onChange={onChange}
+    >
+      {renderContent(error, isLoading, renderMainContent)}
+    </ExpansionPanel>
+  );
 }
 
 export default AsyncExpansionPanel;
