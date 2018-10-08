@@ -367,15 +367,16 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   }
 
   renderContent = () => {
-    const { error, data } = this.props;
+    const { error } = this.props;
+    const { volumes } = this.state;
 
     if (error) {
       return this.renderErrors(error);
     }
 
 
-    if (data && this.props.count > 0) {
-      return this.renderData(data);
+    if (volumes && this.props.count > 0) {
+      return this.renderData(volumes);
     }
 
     return null;
@@ -514,7 +515,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
 const isVolumeUpdating = (e?: Linode.Event) => {
   return e
     && ['volume_attach', 'volume_detach', 'volume_create'].includes(e.action)
-    && ['scheculed', 'started'].includes(e.status);
+    && ['scheduled', 'started'].includes(e.status);
 };
 
 const progressFromEvent = (e?: Linode.Event) => {
