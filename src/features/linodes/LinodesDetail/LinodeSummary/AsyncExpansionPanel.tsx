@@ -5,8 +5,6 @@ import ErrorState from 'src/components/ErrorState';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 
 interface Props {
-  chartHeight: number;
-  rangeSelection: string;
   heading: string;
   isLoading: boolean;
   error: boolean;
@@ -18,7 +16,7 @@ interface Props {
  * onChange: function that will be called whenever the panel is opened
  * or closed.
  * 
- * renderMainContent: This abstraction provides loading and error
+ * renderMainContent: This component provides loading and error
  * states based on props. If there are no errors and loading is false,
  * this function will be called to render the actual content of the panel.
  * 
@@ -34,7 +32,7 @@ const renderContent = (error: boolean, isLoading: boolean, renderMainContent: ()
 
   if (isLoading) {
     return (
-      <div style={{'display':'flex', 'justifyContent': 'center', 'alignItems': 'center'}} >
+      <div style={{'display': 'flex', 'justifyContent': 'center', 'alignItems': 'center'}} >
         <CircleProgress mini />
       </div>
     )
