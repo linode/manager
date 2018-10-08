@@ -33,7 +33,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     borderRadius: '50%',
     backgroundColor: theme.color.grey3,
     fontSize: 17,
-    fontWeight: 700,
+    fontFamily: 'LatoWebBold',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',

@@ -35,7 +35,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   source: {
     marginTop: theme.spacing.unit / 2,
-    fontWeight: 700,
+    fontFamily: 'LatoWebBold',
   },
   row: {
     display: 'flex',

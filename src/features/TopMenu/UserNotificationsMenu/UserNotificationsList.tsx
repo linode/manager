@@ -12,7 +12,7 @@ type ClassNames = 'emptyText';
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   emptyText: {
     padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px`,
-    fontWeight: 700,
+    fontFamily: 'LatoWebBold',
   },
 });
 

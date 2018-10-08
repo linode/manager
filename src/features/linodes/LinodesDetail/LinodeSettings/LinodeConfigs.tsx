@@ -1,6 +1,5 @@
 import { compose } from 'ramda';
 import * as React from 'react';
-import 'typeface-lato';
 
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';

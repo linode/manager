@@ -58,7 +58,7 @@ const styles: StyleRulesCallback = (theme) => {
     },
     noticeText: {
       color: theme.palette.text.primary,
-      fontWeight: 700,
+      fontFamily: 'LatoWebBold',
       lineHeight: 1.2,
     },
     error: {

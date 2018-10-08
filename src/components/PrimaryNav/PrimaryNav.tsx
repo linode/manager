@@ -100,7 +100,7 @@ type ClassNames =
   linkItem: {
     transition: theme.transitions.create(['color']),
     color: '#C9CACB',
-    fontWeight: 700,
+    fontFamily: 'LatoWebBold',
   },
   active: {
     transition: 'border-color .7s ease-in-out',

@@ -159,23 +159,23 @@ const themeDefaults: ThemeOptions = {
     },
   },
   typography: {
-    fontFamily: '"Lato", sans-serif',
+    fontFamily: '"LatoWeb", sans-serif',
     fontSize: 16,
     headline: {
       color: primaryColors.headline,
       fontSize: '1.5rem',
-      fontWeight: 700,
+      fontFamily: 'LatoWebBold',
     },
     title: {
       color: primaryColors.headline,
       fontSize: '1.125rem',
-      fontWeight: 700,
+      fontFamily: 'LatoWebBold',
       lineHeight: '1.35417em',
     },
     subheading: {
       color: primaryColors.headline,
       fontSize: '1rem',
-      fontWeight: 700,
+      fontFamily: 'LatoWebBold',
       lineHeight: '1.2em',
     },
     body1: {
@@ -210,7 +210,7 @@ const themeDefaults: ThemeOptions = {
         textTransform: 'inherit',
         borderRadius: 0,
         fontSize: '1rem',
-        fontWeight: 700,
+        fontFamily: 'LatoWebBold',
         color: primaryColors.main,
         padding: '12px 28px 14px',
         '&:hover': {
@@ -484,7 +484,7 @@ const themeDefaults: ThemeOptions = {
     MuiFormLabel: {
       root: {
         color: '#555',
-        fontWeight: 700,
+        fontFamily: 'LatoWebBold',
         fontSize: '.9rem',
         marginBottom: 2,
         '&$focused': {
@@ -612,7 +612,7 @@ const themeDefaults: ThemeOptions = {
         color: primaryColors.text,
         '&.selectHeader': {
           opacity: 1,
-          fontWeight: 700,
+          fontFamily: 'LatoWebBold',
           fontSize: '1rem',
           color: primaryColors.text,
         },
@@ -657,7 +657,7 @@ const themeDefaults: ThemeOptions = {
     MuiMenuItem: {
       root: {
         height: 'auto',
-        fontWeight: 400,
+        fontFamily: 'LatoWeb',
         fontSize: '.9rem',
         whiteSpace: 'initial',
         textOverflow: 'initial',
@@ -808,12 +808,12 @@ const themeDefaults: ThemeOptions = {
         color: '#C5C6C8',
         minWidth: 50,
         textTransform: 'inherit',
-        fontWeight: 400,
+        fontFamily: 'LatoWeb',
         [breakpoints.up('md')]: {
           minWidth: 75,
         },
         '&$selected': {
-          fontWeight: 700,
+          fontFamily: 'LatoWebBold',
         },
         '&:hover': {
           color: primaryColors.main,
@@ -894,7 +894,7 @@ const themeDefaults: ThemeOptions = {
         cursor: 'pointer',
         '& a': {
           color: primaryColors.offBlack,
-          fontWeight: 700,
+          fontFamily: 'LatoWebBold',
         },
       },
     },
