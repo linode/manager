@@ -67,8 +67,8 @@ const styles: StyleRulesCallback = (theme) => ({
   },
   edit: {
     fontSize: 22,
-    '& $inputRoot': {
-      borderColor: `${theme.palette.primary.main} !important`,
+    '& $input': {
+      border: `1px solid ${theme.palette.primary.main} !important`,
     },
     '&:hover, &:focus': {
       border: '1px solid transparent',
@@ -202,7 +202,6 @@ class EditableText extends React.Component<FinalProps, State> {
                 <Button
                   className={`${classes.button} ${classes.editIcon}`}
                   onClick={this.toggleEditing}
-                  data-qa-edit-button
                 >
                   <ModeEdit className={`${classes.icon} ${classes.edit}`}/>
                 </Button>
