@@ -6,7 +6,6 @@ import ExpansionPanel, { ExpansionPanelProps } from 'src/components/ExpansionPan
 
 interface Props extends ExpansionPanelProps {
   height?: number;
-  onChange: (e: any, expanded: boolean) => void;
   renderMainContent: () => JSX.Element;
 }
 
