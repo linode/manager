@@ -417,12 +417,14 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
         </Grid>
         {ticket.entity && this.renderEntityLabelWithIcon()}
         <Grid container direction="column" justify="center" alignItems="center" className={classes.listParent} >
-          {/* Display the contents of the ticket, followed by replies (if any) */}
-          <ExpandableTicketPanel
-            key={ticket!.id}
-            ticket={ticket}
-            isCurrentUser={profileUsername === ticket.opened_by}
-          />
+          {/* If the ticket isn't blank, display it, followed by replies (if any). */}
+          {ticket.description &&
+            <ExpandableTicketPanel
+              key={ticket!.id}
+              ticket={ticket}
+              isCurrentUser={profileUsername === ticket.opened_by}
+            />
+          }
           {replies && this.renderReplies(replies)}
           {ticket.attachments.length > 0 && this.renderAttachments(ticket.attachments)}
           {/* If the ticket is open, allow users to reply to it. */}
