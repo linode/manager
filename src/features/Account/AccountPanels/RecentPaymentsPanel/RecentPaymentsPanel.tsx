@@ -84,7 +84,7 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, {}> {
       return <TableRowError colSpan={4} message="We were unable to load your payments." />
     }
 
-    return data && data.length > 0 ? this.renderItems(data) : <TableRowEmptyState colSpan={4} />
+    return data && data.length > 0 ? this.renderItems(data) : <TableRowEmptyState colSpan={3} />
   };
 
   renderItems = (items: Linode.Payment[]) => items.map(this.renderRow);
