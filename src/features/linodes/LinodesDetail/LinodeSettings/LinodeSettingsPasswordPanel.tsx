@@ -156,7 +156,17 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
     }
   };
 
+  getSelectedDisk = (diskId: number) => {
+    const { disks } = this.state;
+    const idx = disks.findIndex(disk => disk.value === diskId );
+    if (idx > -1) { return disks[idx]; }
+    else { return null; }
+  }
+
   render() {
+    const { diskId, disks, disksError, disksLoading } = this.state;
+    const selectedDisk = diskId ? this.getSelectedDisk(diskId) : null;
+
     const hasErrorFor = getAPIErrorFor({}, this.state.errors);
     const passwordError = hasErrorFor('password');
     const diskIdError = hasErrorFor('diskId');
@@ -170,16 +180,17 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
         onChange={this.handlePanelChange}
       >
         {generalError && <Notice text={generalError} error />}
-          <EnhancedSelect
-            label="Disk"
-            placeholder="Find a Disk"
-            isLoading={this.state.disksLoading}
-            errorText={this.state.disksError || diskIdError}
-            options={this.state.disks}
-            onChange={this.handleDiskSelection}
-            onInputChange={this.onInputChange}
-            data-qa-select-linode
-          />
+        <EnhancedSelect
+          label="Disk"
+          placeholder="Find a Disk"
+          isLoading={disksLoading}
+          errorText={disksError || diskIdError}
+          options={disks}
+          onChange={this.handleDiskSelection}
+          onInputChange={this.onInputChange}
+          value={selectedDisk}
+          data-qa-select-linode
+        />
         <PasswordInput
           label="Password"
           value={this.state.value}
