@@ -1,8 +1,12 @@
+import { clone } from 'ramda';
 import * as React from 'react';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
 
 import { events$ } from 'src/events';
+
+import { getLinode } from 'src/services/linodes';
+import { getVolume } from 'src/services/volumes';
 
 export const updateVolumes$ = new Subject<boolean>();
 
@@ -34,27 +38,79 @@ export default () => (WrappedComponent: React.ComponentType<any>) => {
           ].includes(event.action)
         ))
         .merge(updateVolumes$)
-        .subscribe((event) => {
-          this.props.request()
-            .then(() => {
+        .subscribe((event: Linode.Event) => {
+          const entityId = event.entity!.id
+          getVolume(entityId)
+            .then((volume: Linode.Volume) => {
               if (!this.mounted || !this.props.data) { return; }
 
-              this.setState({
-                volumes: this.props.data.map((eachVolume: Linode.Volume) => ({
-                  ...eachVolume,
-                  ...maybeAddEvent(event, eachVolume),
-                }))
+              // find the index of the volume we have to update/replace
+              const targetIndex = this.props.data.findIndex((eachVolume: Linode.Volume) => {
+                return eachVolume.id === entityId;
               })
+
+              // make a clone of it
+              const clonedVolumes = clone(this.props.data);
+
+              // if the volume never appeared in original list of Linodes, no updating needed
+              if (targetIndex === -1) {
+                return;
+              }
+
+              /*
+               * If the volume has a Linode ID, it means that it's just been
+               * attached. So, now we have to make a request to the Linode
+               * that it was just attached to, so that we can display that in
+               * the table row 
+               */
+              if (!!volume.linode_id) {
+                return getLinode(volume.linode_id)
+                  .then((response) => {
+                    const linode = response.data;
+
+                    /*
+                     * Now add our new volume, include the newly attached
+                     * Linode data to the master list 
+                     */
+                    clonedVolumes[targetIndex] = {
+                      ...volume,
+                      ...maybeAddEvent(event, volume),
+                      linodeLabel: linode.label,
+                      linodeStatus: linode.status,
+                    }
+
+                    // finally update the master list of volumes in state
+                    this.setState({
+                      volumes: clonedVolumes
+                    })
+                  })
+              }
+
+              // now add our new volume with the event data to the master list of volumes
+              clonedVolumes[targetIndex] = {
+                ...volume,
+                ...maybeAddEvent(event, volume)
+              }
+
+              // finally update the master list of volumes
+              this.setState({
+                volumes: clonedVolumes
+              });
+              return;
             })
         });
     }
 
-    componentWillMount() {
+    componentWillUnmount() {
       this.mounted = false;
     }
 
     render() {
       return (
+        /* 
+         * Either return this.props.data that comes from Pagey or
+         * return the altered data from the event stream
+         */
         <WrappedComponent {...this.props} data={this.state.volumes || this.props.data} />
       )
     }

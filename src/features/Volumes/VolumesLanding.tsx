@@ -498,12 +498,6 @@ const progressFromEvent = (e?: Linode.Event) => {
   return undefined;
 }
 
-const maybeAddEvent = (e: boolean | Linode.Event, volume: Linode.Volume) => {
-  if (typeof e === 'boolean') { return {} };
-  if (!e.entity || e.entity.id !== volume.id) { return {} }
-  return { recentEvent: e };
-};
-
 const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
   { openForEdit, openForResize, openForClone, openForCreating },
   dispatch,

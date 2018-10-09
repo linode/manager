@@ -16,6 +16,13 @@ export interface VolumeRequestPayload {
   linode_id?: number,
 };
 
+export const getVolume = (id: number) =>
+  Request<Volume>(
+    setURL(`${API_ROOT}/volumes/${id}`),
+    setMethod('GET'),
+  )
+    .then(response => response.data);
+
 export const getVolumes = (params: any = {}, filters: any = {}) =>
   Request<Page<Volume>>(
     setURL(`${API_ROOT}/volumes`),
