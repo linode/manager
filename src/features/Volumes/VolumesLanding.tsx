@@ -28,7 +28,7 @@ import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRowError from 'src/components/TableRowError';
-import { events$, generateInFilter, resetEventsPolling } from 'src/events';
+import { generateInFilter, resetEventsPolling } from 'src/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { getLinodes } from 'src/services/linodes';
 import { deleteVolume, detachVolume, getVolumes } from 'src/services/volumes';
@@ -39,6 +39,9 @@ import DestructiveVolumeDialog from './DestructiveVolumeDialog';
 import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
 import VolumeConfigDrawer from './VolumeConfigDrawer';
 import VolumesActionMenu from './VolumesActionMenu';
+
+
+import WithEvents from './WithEvents';
 
 export const updateVolumes$ = new Subject<boolean>();
 
@@ -143,39 +146,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   componentDidMount() {
     this.mounted = true;
 
-    this.props.request()
-      .then(() => {
-        this.setState({
-          volumes: this.props.data,
-        })
-      });
-
-    this.eventsSub = events$
-      .filter(event => (
-        !event._initial
-        && [
-          'volume_create',
-          'volume_attach',
-          'volume_delete',
-          'volume_detach',
-          'volume_resize',
-          'volume_clone',
-        ].includes(event.action)
-      ))
-      .merge(updateVolumes$)
-      .subscribe((event) => {
-        this.props.request()
-          .then(() => {
-            if (!this.mounted || !this.props.data) { return; }
-
-            this.setState({
-              volumes: this.props.data.map((eachVolume) => ({
-                ...eachVolume,
-                ...maybeAddEvent(event, eachVolume),
-              }))
-            })
-          })
-      });
+    this.props.request();
   }
 
   componentWillUnmount() {
@@ -367,8 +338,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   }
 
   renderContent = () => {
-    const { error } = this.props;
-    const { volumes } = this.state;
+    const { error, data: volumes } = this.props;
 
     if (error) {
       return this.renderErrors(error);
@@ -597,10 +567,13 @@ const updatedRequest = (ownProps: any, params: any, filters: any) => {
 
 const paginated = paginate(updatedRequest);
 
+const withEvents = WithEvents();
+
 export default
-  compose<Linode.TodoAny, Linode.TodoAny, Linode.TodoAny, Linode.TodoAny, Linode.TodoAny>(
+  compose<Linode.TodoAny, Linode.TodoAny, Linode.TodoAny, Linode.TodoAny, Linode.TodoAny, Linode.TodoAny>(
     connected,
     documented,
     paginated,
     styled,
+    withEvents
   )(VolumesLanding);
