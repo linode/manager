@@ -1,4 +1,4 @@
-import { compose, equals, head, isEmpty, path, pathOr } from 'ramda';
+import { compose, head, isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
 
 import Paper from '@material-ui/core/Paper';
@@ -10,10 +10,10 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 
 import AddNewLink from 'src/components/AddNewLink';
+import CircleProgress from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
-import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import { ZONES } from 'src/constants';
@@ -97,12 +97,9 @@ interface ContextProps {
   linodeLabel: string;
 }
 
-interface PreloadedProps {
-  linodeIPs: PromiseLoaderResponse<Linode.LinodeIPsResponse>;
-}
-
 interface State {
   linodeIPs?: Linode.LinodeIPsResponse;
+  initialLoading: boolean;
   IPRequestError?: string;
   viewIPDrawer: {
     open: boolean;
@@ -126,7 +123,7 @@ interface State {
   };
 }
 
-type CombinedProps = PreloadedProps & ContextProps & WithStyles<ClassNames>;
+type CombinedProps = ContextProps & WithStyles<ClassNames>;
 
 class LinodeNetworking extends React.Component<CombinedProps, State> {
   state: State = {
@@ -140,35 +137,27 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     editRDNSDrawer: {
       open: false,
     },
-    linodeIPs: path<Linode.LinodeIPsResponse>(['linodeIPs', 'response'], this.props),
     viewIPDrawer: {
       open: false,
     },
     viewRangeDrawer: {
       open: false,
     },
+    initialLoading: true,
   };
 
-  componentDidUpdate(prevProps: CombinedProps, prevState: State) {
-    const maybeNewLinodeIPs =
-      path<Linode.LinodeIPsResponse>(['linodeIPs', 'response'], this.props);
-    const oldLinodeIPs =
-      path<Linode.LinodeIPsResponse>(['linodeIPs', 'response'], prevProps); 
-    if (!equals(maybeNewLinodeIPs, oldLinodeIPs)) {
-      this.setState({
-        linodeIPs: maybeNewLinodeIPs,
-      });
-    }
+  componentDidMount() {
+    this.refreshIPs().then(() => this.setState({ initialLoading: false }));
   }
 
   refreshIPs = () => {
     this.setState({ IPRequestError: undefined });
     return getLinodeIPs(this.props.linodeID)
-      .then(ips => this.setState({ linodeIPs: ips }))
+      .then(ips => this.setState({ linodeIPs: ips, initialLoading: false }))
       .catch((errors) => {
         const IPRequestError = pathOr('There was an error retrieving your network information.',
           ['reason'], errors[0]);
-        this.setState({ IPRequestError });
+        this.setState({ IPRequestError, initialLoading: false });
       });
   }
 
@@ -272,11 +261,6 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     return privateIPs.length > 0;
   }
 
-  shouldRenderErrorState = () => {
-    const { linodeIPs, IPRequestError } = this.state;
-    return (!linodeIPs || isEmpty(linodeIPs) || IPRequestError);
-  }
-
   renderErrorState = () => {
     const { IPRequestError } = this.state;
     const errorText = IPRequestError
@@ -287,13 +271,25 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     )
   }
 
+  renderLoadingState = () => {
+    return (
+      <CircleProgress />
+    )
+  }
+
   render() {
     const { linodeID, linodeLabel, linodeRegion } = this.props;
-    const { linodeIPs } = this.state;
+    const { linodeIPs, initialLoading, IPRequestError } = this.state;
     const firstPublicIPAddress = getFirstPublicIPv4FromResponse(linodeIPs);
 
+    /* Loading state */
+    if (initialLoading) { return this.renderLoadingState();}
+
     /* Error state */
-    if  (this.shouldRenderErrorState()) { return this.renderErrorState(); }
+    if  (IPRequestError) { return this.renderErrorState(); }
+
+    /* Empty state */
+    if (!linodeIPs || isEmpty(linodeIPs)) { return null; }
 
     return (
       <React.Fragment>
@@ -507,10 +503,6 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
   }
 }
 
-const preloaded = PromiseLoader<CombinedProps & ContextProps>({
-  linodeIPs: props => getLinodeIPs(props.linodeID),
-});
-
 const styled = withStyles(styles, { withTheme: true });
 
 const getFirstPublicIPv4FromResponse = compose(
@@ -525,9 +517,8 @@ const linodeContext = withLinode((context) => ({
   linodeRegion: context.data!.region,
 }));
 
-const enhanced = compose<any, any, any, any>(
+const enhanced = compose<any, any, any>(
   linodeContext,
-  preloaded,
   styled,
 );
 
