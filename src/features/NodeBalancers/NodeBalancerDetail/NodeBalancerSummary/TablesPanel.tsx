@@ -104,11 +104,14 @@ interface Props {
 
 interface State {
   stats: Linode.NodeBalancerStats | null;
+  loadingStats: boolean;
+  openPanels: number;
+  statsError?: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const statsFetchInterval = 30000;
+const statsFetchInterval = 3000;
 
 class TablesPanel extends React.Component<CombinedProps, State> {
   statsInterval?: number = undefined;
@@ -116,24 +119,52 @@ class TablesPanel extends React.Component<CombinedProps, State> {
 
   state: State = {
     stats: null,
+    loadingStats: false,
+    openPanels: 0,
   };
+
+  handleToggleExpand = (e: any, expanded: boolean) => {
+    const { openPanels, stats } = this.state;
+    if (expanded && !stats) {
+      /* Only set loading state on initial load
+      *  so the graphs are not disrupted on future updates. */
+      this.setState({ loadingStats: true });
+      this.getStats();
+    }
+
+    if (expanded && openPanels <= 0) {
+      /* We will regularly update the stats as long as at least one panel is open. */
+      this.statsInterval = window.setInterval(() => this.getStats(), statsFetchInterval);
+    }
+
+    /* If the panel is opening, increment the number of open panels. Otherwise decrement.
+    *  This allows us to keep track of when all of the panels are closed.
+    */ 
+    const updatedOpenPanels = expanded ? openPanels + 1 : openPanels - 1;
+    this.setState({ openPanels: updatedOpenPanels });
+
+    /* If all panels are closed, stop updating the stats. */
+    if (!expanded && updatedOpenPanels <= 0) {
+      window.clearInterval(this.statsInterval as number);
+    }
+  }
 
   getStats = () => {
     const { nodeBalancer } = this.props;
     getNodeBalancerStats(nodeBalancer.id)
       .then((response: Linode.NodeBalancerStats) => {
         if (!this.mounted) { return; }
-        this.setState({ stats: response });
+        this.setState({ stats: response, loadingStats: false, statsError: undefined });
       })
       .catch((errorResponse) => {
         if (!this.mounted) { return; }
+        const statsError = pathOr("There was an error loading stats for this NodeBalancer.", ['reason'], errorResponse[0]);
+        this.setState({ loadingStats: false, statsError });
       });
   }
 
   componentDidMount() {
     this.mounted = true;
-    this.getStats();
-    this.statsInterval = window.setInterval(() => this.getStats(), statsFetchInterval);
   }
 
   componentWillUnmount() {
@@ -226,27 +257,31 @@ class TablesPanel extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes } = this.props;
-    const { stats } = this.state;
+    const { statsError, loadingStats } = this.state;
     return (
       <React.Fragment>
-        {stats &&
-          <React.Fragment>
-            <div className={classes.graphControls}>
-              <Typography role="header" variant="title" className={classes.graphTitle}>Graphs</Typography>
-            </div>
-            
+        <React.Fragment>
+          <div className={classes.graphControls}>
+            <Typography role="header" variant="title" className={classes.graphTitle}>Graphs</Typography>
+          </div>
+          
           <ExtendedExpansionPanel
             renderMainContent={this.renderConnectionsChart}
             heading={"Connections"}
+            error={statsError}
+            loading={loadingStats}
+            onChange={this.handleToggleExpand}
           />
-          
+
           <ExtendedExpansionPanel
             className={classes.graphWrapper}
             heading={"Traffic"}
             renderMainContent={this.renderTrafficChart}
+            error={statsError}
+            loading={loadingStats}
+            onChange={this.handleToggleExpand}
           />
         </React.Fragment>
-        }
       </React.Fragment>
     );
   }
