@@ -19,13 +19,6 @@ class Example extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    const extendedList = props.list.map((eachItem: string) => {
-      return {
-        value: eachItem,
-        label: eachItem,
-      }
-    });
-
     this.state = {
       list: [],
       isSearching: false,
