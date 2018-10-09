@@ -37,26 +37,22 @@ const styles: StyleRulesCallback = (theme) => ({
     },
   },
   root: {
-    padding: '12px 12px 10px',
+    padding: '5px 10px',
     display: 'inline-block',
-    borderBottom: '2px dotted transparent',
+    border: '1px solid transparent',
     transition: theme.transitions.create(['opacity']),
     wordBreak: 'break-all',
   },
   container: {
-    display: 'inline-flex',
+    display: 'flex',
     justifyContent: 'flex-start',
-    alignItems: 'flex-start',
+    alignItems: 'center',
+    maxHeight: '48px',
+  },
+  initial: {
     border: '1px solid transparent',
     '&:hover, &:focus': {
       border: '1px solid #abadaf',
-    },
-  },
-  initial: {
-    '&:hover, &:focus': {
-      '& $root': {
-        opacity: .5,
-      },
       '& $editIcon': {
         visibility: 'visible',
       },
@@ -67,30 +63,21 @@ const styles: StyleRulesCallback = (theme) => ({
   },
   edit: {
     fontSize: 22,
-    '& $input': {
-      border: `1px solid ${theme.palette.primary.main} !important`,
-    },
-    '&:hover, &:focus': {
-      border: '1px solid transparent',
-    },
+    border: '1px solid transparent',
+    
+  },
+  inputRoot: {
+    borderColor: `${theme.palette.primary.main} !important`,
   },
   textField: {
     opacity: 0,
     animation: 'fadeIn .3s ease-in-out forwards',
     margin: 0,
   },
-  inputRoot: {
-    borderTop: 0,
-    borderLeft: 0,
-    borderRight: 0,
-    borderBottomWidth: 2,
-    borderBottomStyle: 'dotted',
-    backgroundColor: 'transparent',
-  },
   button: {
     minWidth: 'auto',
     padding: 0,
-    marginTop: 10,
+    marginTop: 0,
     background: 'transparent !important',
   },
   icon: {
@@ -99,7 +86,7 @@ const styles: StyleRulesCallback = (theme) => ({
     transition: theme.transitions.create(['color']),
     '&:hover, &:focus': {
       color: theme.palette.primary.light,
-    },
+    }
   },
   save: {
     fontSize: 26,
@@ -108,7 +95,7 @@ const styles: StyleRulesCallback = (theme) => ({
     fontSize: 26,
   },
   input: {
-    padding: '12px 12px 10px',
+    padding: '5px 10px',
   },
   headline: {
     ...theme.typography.headline,
