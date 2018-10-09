@@ -15,6 +15,7 @@ describe('NodeBalancer - Settings Suite', () => {
     });
 
     it('should display base elements', () => {
+        NodeBalancerDetail.baseElemsDisplay();
         NodeBalancerDetail.changeTab('Settings');
         NodeBalancerSettings.baseElemsDisplay();
     });
