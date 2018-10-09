@@ -2,12 +2,10 @@ import * as React from 'react';
 
 import CircleProgress from 'src/components/CircleProgress';
 import ErrorState from 'src/components/ErrorState';
-import ExpansionPanel from 'src/components/ExpansionPanel';
+import ExpansionPanel, { ExpansionPanelProps } from 'src/components/ExpansionPanel';
 
-interface Props {
-  heading: string;
-  isLoading: boolean;
-  error: boolean;
+interface Props extends ExpansionPanelProps {
+  height?: number;
   onChange: (e: any, expanded: boolean) => void;
   renderMainContent: () => JSX.Element;
 }
@@ -22,17 +20,25 @@ interface Props {
  * 
  */
 
-const renderContent = (error: boolean, isLoading: boolean, renderMainContent: () => JSX.Element) => {
-
+const renderContent = (error: string | undefined, isLoading: boolean, height: number, renderMainContent: () => JSX.Element) => {
   if (error) {
     return (
-      <ErrorState errorText="Unable to load data for this Linode." />
+      <ErrorState errorText={error} />
     )
   }
 
   if (isLoading) {
     return (
-      <div style={{'display': 'flex', 'justifyContent': 'center', 'alignItems': 'center'}} >
+      <div
+        style={
+          {
+            'display': 'flex', 
+            'justifyContent': 'center',
+            'alignItems': 'center',
+            'minHeight': height
+          }
+        }
+      >
         <CircleProgress mini />
       </div>
     )
@@ -41,17 +47,17 @@ const renderContent = (error: boolean, isLoading: boolean, renderMainContent: ()
   return renderMainContent();
 }
 
-const AsyncExpansionPanel: React.StatelessComponent<Props> = (props) => {
+const ExtendedExpansionPanel: React.StatelessComponent<Props> = (props) => {
 
-  const { error, heading, isLoading, onChange, renderMainContent } = props;
+  const { error, heading, height, loading, onChange, renderMainContent } = props;
   return (
     <ExpansionPanel
       heading={heading}
       onChange={onChange}
     >
-      {renderContent(error, isLoading, renderMainContent)}
+      {renderContent(error, Boolean(loading), height || 300, renderMainContent)}
     </ExpansionPanel>
   );
 }
 
-export default AsyncExpansionPanel;
+export default ExtendedExpansionPanel;

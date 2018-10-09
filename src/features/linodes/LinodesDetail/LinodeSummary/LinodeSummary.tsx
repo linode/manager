@@ -20,7 +20,7 @@ import { setUpCharts } from 'src/utilities/charts';
 
 import SummaryPanel from './SummaryPanel';
 
-import AsyncExpansionPanel from './AsyncExpansionPanel';
+import ExtendedExpansionPanel from './ExtendedExpansionPanel';
 
 setUpCharts();
 
@@ -127,7 +127,7 @@ interface State {
   rangeSelection: string;
   statsLoadError?: string;
   dataIsLoading: boolean;
-  statsError: boolean;
+  statsError?: string;
   openPanels: number;
 }
 
@@ -147,7 +147,6 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     stats: undefined,
     rangeSelection: '24',
     dataIsLoading: false,
-    statsError: false,
     openPanels: 0,
   };
 
@@ -237,7 +236,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     const { linodeId } = this.props;
     const { rangeSelection } = this.state;
     if (!linodeId) { return; }
-    this.setState({ statsError: false, });
+    this.setState({ statsError: undefined, });
     let req;
     if (rangeSelection === '24') {
       req = getLinodeStats(linodeId);
@@ -254,7 +253,9 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       })
       .catch((errorResponse) => {
         if (!this.mounted) { return; }
-        this.setState({ dataIsLoading: false, statsError: true, })
+        const errorText = pathOr("There was an error retrieving information for this Linode.", 
+          ['reason'], errorResponse[0]);
+        this.setState({ dataIsLoading: false, statsError: errorText, })
       });
   }
 
@@ -489,35 +490,39 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             </FormControl>
           </div>
 
-          <AsyncExpansionPanel 
+          <ExtendedExpansionPanel
             heading={"CPU %"}
+            height={chartHeight}
             onChange={this.handleToggleExpand}
             renderMainContent={this.renderCPUChart}
-            isLoading={dataIsLoading}
+            loading={dataIsLoading}
             error={statsError}
           />
 
-          <AsyncExpansionPanel
+          <ExtendedExpansionPanel
             heading={"IPv4 Traffic"}
+            height={chartHeight}
             onChange={this.handleToggleExpand}
             renderMainContent={this.renderIPv4TrafficChart}
-            isLoading={dataIsLoading}
+            loading={dataIsLoading}
             error={statsError}
           />
 
-          <AsyncExpansionPanel
+          <ExtendedExpansionPanel
             heading={"IPv6 Traffic"}
+            height={chartHeight}
             onChange={this.handleToggleExpand}
             renderMainContent={this.renderIPv6TrafficChart}
-            isLoading={dataIsLoading}
+            loading={dataIsLoading}
             error={statsError}
           />
 
-          <AsyncExpansionPanel
+          <ExtendedExpansionPanel
             heading={"Disk I/O"}
+            height={chartHeight}
             onChange={this.handleToggleExpand}
             renderMainContent={this.renderDiskIOChart}
-            isLoading={dataIsLoading}
+            loading={dataIsLoading}
             error={statsError}
           />
         </React.Fragment>
