@@ -24,7 +24,8 @@ type ClassNames = 'root'
 | 'save'
 | 'close'
 | 'headline'
-| 'title';
+| 'title'
+| 'editIcon';
 
 const styles: StyleRulesCallback = (theme) => ({
   '@keyframes fadeIn': {
@@ -36,29 +37,33 @@ const styles: StyleRulesCallback = (theme) => ({
     },
   },
   root: {
-    padding: '12px 12px 10px 0',
+    padding: '5px 10px',
     display: 'inline-block',
-    borderBottom: '2px dotted transparent',
+    border: '1px solid transparent',
     transition: theme.transitions.create(['opacity']),
     wordBreak: 'break-all',
   },
   container: {
-    display: 'inline-flex',
+    display: 'flex',
     justifyContent: 'flex-start',
-    alignItems: 'flex-start',
+    alignItems: 'center',
+    maxHeight: 48,
   },
   initial: {
+    border: '1px solid transparent',
     '&:hover, &:focus': {
-      '& $root': {
-        opacity: .5,
+      border: '1px solid #abadaf',
+      '& $editIcon': {
+        visibility: 'visible',
       },
       '& $icon': {
-        color: theme.palette.primary.light,
+        color: theme.color.grey1,
       },
     },
   },
   edit: {
     fontSize: 22,
+    border: '1px solid transparent',
   },
   textField: {
     opacity: 0,
@@ -66,17 +71,12 @@ const styles: StyleRulesCallback = (theme) => ({
     margin: 0,
   },
   inputRoot: {
-    borderTop: 0,
-    borderLeft: 0,
-    borderRight: 0,
-    borderBottomWidth: 2,
-    borderBottomStyle: 'dotted',
-    backgroundColor: 'transparent',
+    borderColor: `${theme.palette.primary.main} !important`,
   },
   button: {
     minWidth: 'auto',
     padding: 0,
-    marginTop: 10,
+    marginTop: 0,
     background: 'transparent !important',
   },
   icon: {
@@ -94,13 +94,16 @@ const styles: StyleRulesCallback = (theme) => ({
     fontSize: 26,
   },
   input: {
-    padding: '12px 12px 10px 0',
+    padding: '5px 10px',
   },
   headline: {
     ...theme.typography.headline,
   },
   title: {
     ...theme.typography.title,
+  },
+  editIcon: {
+    visibility: 'hidden',
   },
 });
 
@@ -183,7 +186,7 @@ class EditableText extends React.Component<FinalProps, State> {
                   {text}
                 </Typography>
                 <Button
-                  className={classes.button}
+                  className={`${classes.button} ${classes.editIcon}`}
                   onClick={this.toggleEditing}
                   data-qa-edit-button
                 >
