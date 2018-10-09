@@ -6,8 +6,7 @@ import { apiDeleteAllLinodes } from '../../utils/common';
 describe('Create Linode - Create from StackScript Suite', () => {
 
     beforeAll(() => {
-        browser.url(constants.routes.linodes);
-        ConfigureLinode.selectGlobalCreateItem('Linode');
+        browser.url(constants.routes.create.linode);
         ConfigureLinode.baseDisplay();
     });
 
@@ -21,7 +20,7 @@ describe('Create Linode - Create from StackScript Suite', () => {
     });
 
     it('should display stackscript table', () => {
-        ConfigureLinode.changeTab('Community StackScripts');
+        ConfigureLinode.changeTab('Linode StackScripts');
         ConfigureLinode.stackScriptTableDisplay();
     });
 
@@ -37,15 +36,17 @@ describe('Create Linode - Create from StackScript Suite', () => {
     });
 
     it('should display an error when creating without selecting a region', () => {
-        const noticeMsg = 'A region selection is required';
+        const linodeScript = 'StackScript Bash Library';
+        const noticeMsg = 'Region is required.';
 
-        ConfigureLinode.stackScriptRows[0].$('[data-qa-radio]').click();
+        $$(ConfigureLinode.stackScriptTitle.selector)
+            .filter(el => el.getText().includes(linodeScript))[0].click();
         ConfigureLinode.deploy.click();
         ConfigureLinode.waitForNotice(noticeMsg);
     });
 
     it('should display an error when creating without selecting a plan', () => {
-        const noticeMsg = 'A plan selection is required';
+        const noticeMsg = 'Plan is required.';
 
         ConfigureLinode.regions[0].click();
         ConfigureLinode.deploy.click();
@@ -54,31 +55,34 @@ describe('Create Linode - Create from StackScript Suite', () => {
 
     it('should display user-defined fields on selection of a stackscript containing UD fields', () => {
         let i = 0;
-        const stackScripts = ConfigureLinode.stackScriptRows;
+        const stackScripts = ConfigureLinode.stackScriptRows
+            .map(s => s.getAttribute('data-qa-table-row'));
         
         while (!ConfigureLinode.userDefinedFieldsHeader.isVisible()) {
-            stackScripts[i].$('[data-qa-radio]').click();
+            browser.jsClick(`[data-qa-table-row="${stackScripts[i]}"]`);
             i++;
         }
     });
 
     it('should create from stackscript', () => {
         ConfigureLinode.plans[0].click();
-        ConfigureLinode.randomPassword();
 
-        const stackScripts = ConfigureLinode.stackScriptRows;
+        const stackScripts = ConfigureLinode.stackScriptRows
+            .map(s => s.getAttribute('data-qa-table-row'));
         let i = 0;
 
         // Select a stackscript that does not have user-defined fields
         while (ConfigureLinode.userDefinedFieldsHeader.isVisible()) {
-            stackScripts[i].$('[data-qa-radio]').click();
+            browser.jsClick(`[data-qa-table-row="${stackScripts[i]}"]`);
             i++;
         }
 
         ConfigureLinode.images[0].click();
         const imageName = ConfigureLinode.images[0].$('[data-qa-select-card-subheading]').getText();
 
+        ConfigureLinode.randomPassword();
         ConfigureLinode.deploy.click();
+        
         browser.waitForVisible('[data-qa-linode]');
         browser.waitForVisible('[data-qa-image]', constants.wait.minute * 3);
 
