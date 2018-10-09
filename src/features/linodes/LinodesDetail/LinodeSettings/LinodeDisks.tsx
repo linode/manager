@@ -160,6 +160,8 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     }
   }
 
+  errorState = <ErrorState errorText="There was an error loading disk images." />;
+
   render() {
     const {
       classes,
@@ -173,13 +175,9 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
 
     const { loadingDisks } = this.state;
 
-    // If we have finished loading disks, but disks is still undefined,
-    // return null to avoid a crash.
-    if (!loadingDisks && !disks) { return null; }
+    if (!loadingDisks && !disks) { return this.errorState; } // Could alternatively return null here
 
-    if (disksErrors || linodeError) {
-      return <ErrorState errorText="There was an error loading disk images." />
-    }
+    if (disksErrors || linodeError) { return this.errorState; }
 
     return (
       <React.Fragment>
