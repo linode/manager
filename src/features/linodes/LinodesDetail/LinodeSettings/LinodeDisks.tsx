@@ -12,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
+import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
@@ -29,7 +30,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import LinodeDiskActionMenu from './LinodeDiskActionMenu';
 import LinodeDiskDrawer from './LinodeDiskDrawer';
 
-type ClassNames = 'root' | 'headline';
+type ClassNames = 'root' | 'headline' | 'loadingContainer';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
@@ -37,6 +38,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     marginTop: theme.spacing.unit * 2,
     marginBottom: theme.spacing.unit * 2,
   },
+  loadingContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
 });
 
 interface LinodeContextProps {
@@ -80,6 +86,7 @@ interface State {
   drawer: DrawerState,
   imagizeDrawer: ImagizeDrawerState,
   confirmDelete: ConfirmDeleteState,
+  loadingDisks: boolean;
 }
 
 interface DisksProps extends PaginationProps<Linode.Disk> {
@@ -123,6 +130,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     drawer: LinodeDisks.defaultDrawerState,
     imagizeDrawer: LinodeDisks.defaultImagizeDrawerState,
     confirmDelete: LinodeDisks.defaultConfirmDeleteState,
+    loadingDisks: false,
   };
 
   eventsSubscription: Subscription;
@@ -141,7 +149,8 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     const disks = pathOr(undefined, ['data'], this.props);
     const activating = (!prevProps.active && this.props.active);
     if (activating && !disks) {
-      this.props.request();
+      this.setState({ loadingDisks: true });
+      this.props.request().then(() => this.setState({ loadingDisks: false }));
     }
   }
 
@@ -162,12 +171,15 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       linodeStatus,
     } = this.props;
 
+    const { loadingDisks } = this.state;
+
+    // If we have finished loading disks, but disks is still undefined,
+    // return null to avoid a crash.
+    if (!loadingDisks && !disks) { return null; }
 
     if (disksErrors || linodeError) {
       return <ErrorState errorText="There was an error loading disk images." />
     }
-
-    if (!disks) { return null; }
 
     return (
       <React.Fragment>
@@ -179,10 +191,17 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
             <AddNewLink onClick={this.openDrawerForCreation} label="Add a Disk" />
           </Grid>
         </Grid>
-        {
-          (disks!.length === 0 || !linodeStatus)
-            ? this.emptyState()
-            : this.table(disks!, linodeStatus!)
+        {loadingDisks
+          ? (
+              <Grid container alignItems={'center'} justify={'center'} >
+                <Grid item><CircleProgress mini /></Grid>
+              </Grid>
+            )
+          : (
+              (disks!.length === 0 || !linodeStatus)
+              ? this.emptyState()
+              : this.table(disks!, linodeStatus!)
+            )
         }
         <this.confirmationDialog />
         <this.drawer />
