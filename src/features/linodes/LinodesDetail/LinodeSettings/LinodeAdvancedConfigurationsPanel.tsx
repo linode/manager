@@ -15,14 +15,27 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 
 type CombinedProps = WithStyles<ClassNames>;
 
-class LinodeAdvancedConfigurationsPanel extends React.Component<CombinedProps, {}> {
+interface State {
+  disksActive: boolean;
+}
+
+class LinodeAdvancedConfigurationsPanel extends React.Component<CombinedProps, State> {
+  state: State = {
+    disksActive: false,
+  }
+
+  handlePanelChange = (e: React.ChangeEvent<{}>, open: boolean) => {
+    this.setState({ disksActive: open });
+  };
+
   render() {
+    const { disksActive } = this.state;
     return (
       <React.Fragment>
         {
-          <ExpansionPanel heading="Advanced Configurations">
+          <ExpansionPanel heading="Advanced Configurations" onChange={this.handlePanelChange}>
             <LinodeConfigs />
-            <LinodeDisks />
+            <LinodeDisks active={disksActive} />
           </ExpansionPanel>
         }
       </React.Fragment>

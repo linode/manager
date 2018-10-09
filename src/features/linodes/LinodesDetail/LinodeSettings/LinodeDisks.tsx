@@ -1,4 +1,4 @@
-import { compose, path, pathEq } from 'ramda';
+import { compose, path, pathEq, pathOr } from 'ramda';
 import * as React from 'react';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -82,7 +82,9 @@ interface State {
   confirmDelete: ConfirmDeleteState,
 }
 
-type DisksProps = PaginationProps<Linode.Disk>
+interface DisksProps extends PaginationProps<Linode.Disk> {
+  active: boolean;
+}
 
 type CombinedProps =
   DisksProps
@@ -128,13 +130,19 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
   componentDidMount() {
     const { linodeId } = this.props;
 
-    this.props.request();
-
     this.eventsSubscription = events$
       .filter((e) => !e._initial)
       .filter(pathEq(['entity', 'id'], linodeId))
       .filter((e) => e.status === 'finished' && ['disk_resize', 'disk_delete'].includes(e.action))
       .subscribe((e) => this.props.request());
+  }
+
+  componentDidUpdate(prevProps: CombinedProps, prevState: State) {
+    const disks = pathOr(undefined, ['data'], this.props);
+    const activating = (!prevProps.active && this.props.active);
+    if (activating && !disks) {
+      this.props.request();
+    }
   }
 
   componentWillUnmount() {
@@ -587,7 +595,7 @@ const paginated = Pagey((ownProps, params, filters) => {
   return getLinodeDisks(ownProps.linodeId, params, filters);
 });
 
-const enhanced = compose(
+const enhanced = compose<any,any,any,any>(
   styled,
   linodeContext,
   paginated,
