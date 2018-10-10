@@ -71,7 +71,12 @@ const styles: StyleRulesCallback = (theme) => ({
     margin: 0,
   },
   inputRoot: {
+    maxWidth: 170,
     borderColor: `${theme.palette.primary.main} !important`,
+    [theme.breakpoints.up('md')]: {
+      maxWidth: 415,
+      width: '100%',
+    },
   },
   button: {
     minWidth: 'auto',
