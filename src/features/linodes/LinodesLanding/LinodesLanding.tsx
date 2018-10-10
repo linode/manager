@@ -279,7 +279,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
         </Grid>
         <Grid item xs={12}>
           {
-            this.props.count > 25 &&
             <PaginationFooter
               count={this.props.count}
               handlePageChange={this.props.handlePageChange}
