@@ -27,12 +27,27 @@ const resourcePage = (data: any[], pages = 0, page = 0, results = 0) => {
   };
 }
 
+const order: 'asc' = 'asc';
+
+const paginationProps = {
+  count: 0,
+  data: [],
+  loading: false,
+  order,
+  page: 1,
+  pageSize: 100,
+  handlePageChange: jest.fn(),
+  handlePageSizeChange: jest.fn(),
+  request: jest.fn(),
+  updateOrderBy: jest.fn(),
+};
+
 describe('ListLinodes', () => {
-  let linodes: PromiseLoaderResponse<Linode.ResourcePage<Linode.Linode>>;
+  let linodes: Linode.Linode[];
   let images: PromiseLoaderResponse<Linode.ResourcePage<Linode.Image>>;
 
   beforeEach(() => {
-    linodes = promiseLoaderType(resourcePage(mockLinodes));
+    linodes = mockLinodes;
     images = promiseLoaderType(resourcePage(mockImages));
   });
 
@@ -41,8 +56,11 @@ describe('ListLinodes', () => {
       <LinodeThemeWrapper>
         <StaticRouter location="/" context={{}}>
           <RoutedListLinodes
-            notifications={[]}
-            linodes={linodes}
+            /** Pagination */
+            {...paginationProps}
+            count={linodes.length}
+            data={linodes}
+            /** Preloaded Props */
             images={images}
             classes={{ root: '', title: '' }}
             setDocs={setDocs}
@@ -57,13 +75,16 @@ describe('ListLinodes', () => {
   });
 
   it.skip('renders an empty state with no linodes', () => {
-    linodes = promiseLoaderType(resourcePage([]));
+
     const component = shallow(
       <LinodeThemeWrapper>
         <StaticRouter location="/" context={{}}>
           <RoutedListLinodes
-            notifications={[]}
-            linodes={linodes}
+            /** Pagination Props */
+            {...paginationProps}
+            count={0}
+            data={[]}
+            /** Preloaded Props */
             images={images}
             classes={{ root: '', title: '' }}
             setDocs={setDocs}
@@ -87,8 +108,11 @@ describe('ListLinodes', () => {
       <LinodeThemeWrapper>
         <StaticRouter location="/" context={{}}>
           <RoutedListLinodes
-            notifications={[]}
-            linodes={linodes}
+            /** Pagination Props */
+            {...paginationProps}
+            count={linodes.length}
+            data={linodes}
+            /** Preloader Props */
             images={images}
             classes={{ root: '', title: '' }}
             setDocs={setDocs}
