@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const { readFileSync } = require('fs');
 const { argv } = require('yargs');
-const { login } = require('../utils/config-utils');
+const { login, getCreds, checkInCreds, resetCreds } = require('../utils/config-utils');
 const { browserCommands } = require('./custom-commands');
 const { browserConf } = require('./browser-config');
 const { constants } = require('../constants');
@@ -67,7 +67,7 @@ exports.config = {
     // and 30 processes will get spawned. The property handles how many capabilities
     // from the same test should run tests.
     //
-    maxInstances: 1,
+    maxInstances: 2,
     //
     // If you have trouble getting all important capabilities together, check out the
     // Sauce Labs platform configurator - a great tool to configure your capabilities:
@@ -182,7 +182,8 @@ exports.config = {
             mutualAuth: true,
         }
     },
-    
+
+    testUser: '', // SET IN THE BEFORE HOOK PRIOR TO EACH TEST
     //
     // =====
     // Hooks
@@ -241,7 +242,9 @@ exports.config = {
             browser.windowHandleMaximize();
         }
 
-        login(username, password);
+        const testCreds = getCreds('./e2e/creds.js', specs[0]);
+
+        login(testCreds.username, testCreds.password, './e2e/creds.js');
     },
     /**
      * Runs before a WebdriverIO command gets executed.
@@ -317,6 +320,8 @@ exports.config = {
         if (argv.replay) {
             browser.deleteImposters();
         }
+
+        checkInCreds('./e2e/creds.js', specs[0]);
     },
     /**
      * Gets executed right after terminating the webdriver session.
@@ -332,6 +337,7 @@ exports.config = {
      * @param {Object} config wdio configuration object
      * @param {Array.<Object>} capabilities list of capabilities details
      */
-    // onComplete: function(exitCode, config, capabilities) {
-    // }
+    onComplete: function(exitCode, config, capabilities) {
+        resetCreds('./e2e/creds.js');
+    }
 }

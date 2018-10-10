@@ -13,7 +13,7 @@ describe('Nodebalancer - Create Suite', () => {
         token;
 
     beforeAll(() => {
-        token = browser.readToken();
+        token = browser.readToken(browser.options.testUser);
         linode = apiCreateLinode();
         linode['privateIp'] = browser.allocatePrivateIp(token, linode.id).address;
         browser.url(constants.routes.nodeBalancers);

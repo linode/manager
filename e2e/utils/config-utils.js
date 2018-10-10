@@ -1,5 +1,5 @@
 const moment = require('moment');
-const { existsSync, statSync, writeFileSync } = require('fs');
+const { existsSync, statSync, writeFileSync, readFileSync } = require('fs');
 const { constants } = require('../constants');
 
 /*
@@ -7,32 +7,31 @@ const { constants } = require('../constants');
 * and write them out to a file for use in other tests
 * @returns { String } stringified local storage object
 */
-exports.saveTokenIfNeeded = (username, password) => {
-    let expirationTime, currentTime;
-    const tokenPath = './localStorage.json';
-    const tokenExists = existsSync(tokenPath);
+exports.storeToken = (credFilePath, username) => {
+    const browserLocalStorage = browser.execute(function() {
+        return JSON.stringify(localStorage);
+    });
+    const parsedLocalStorage = JSON.parse(browserLocalStorage.value);
+    const token = parsedLocalStorage['authentication/oauth-token'];
+    let credCollection = JSON.parse(readFileSync(credFilePath));
 
-    if (tokenExists)  {
-        const lastModifiedTime = new Date(statSync(tokenPath).mtime);
-        expirationTime = moment(lastModifiedTime).add('2', 'hours').format();
-        currentTime = moment().format();
-    }
-    
-    const getNewToken = tokenExists ? expirationTime < currentTime : true;
-
-    if (getNewToken) {
-        const localStorageObj = browser.execute(function() {
-            return JSON.stringify(localStorage);
-        });
-        writeFileSync(tokenPath, localStorageObj.value);
-    }
+    return credCollection.find((cred, i) => {
+        if (cred.username === username) {
+            credCollection[i].token = token;
+            writeFileSync(credFilePath, JSON.stringify(credCollection));
+            return cred;
+        }
+    });
 }
 
-exports.readToken = () => {
-    const localStorage = require('../../localStorage.json');
+exports.readToken = (username) => {
+    console.log(process.cwd());
+    const credCollection = JSON.parse(readFileSync('./e2e/creds.js'));
+    const currentUserCreds = credCollection.find(cred => cred.username === username);
 
-    return localStorage['authentication/oauth-token'];
+    return currentUserCreds['token'];
 }
+
 /*
 * Navigates to baseUrl, inputs username and password
 * And attempts to login
@@ -40,7 +39,7 @@ exports.readToken = () => {
 * @param { String } password
 * @returns {null} returns nothing
 */
-exports.login = (username, password) => {
+exports.login = (username, password, credFilePath) => {
     browser.url(constants.routes.linodes);
     try {
         browser.waitForVisible('#username', constants.wait.long);
@@ -71,7 +70,44 @@ exports.login = (username, password) => {
     browser.waitForVisible('[data-qa-add-new-menu-button]', constants.wait.long);
     browser.waitForVisible('[data-qa-circle-progress]', constants.wait.long, true);
 
-    exports.saveTokenIfNeeded(username, password);
+    exports.storeToken(credFilePath, username);
+}
+
+exports.getCreds = (credFilePath, specFile) => {
+    let credCollection = JSON.parse(readFileSync(credFilePath));
+    console.log(credCollection);
+    return credCollection.find((cred, i) => {
+        if (!cred.inUse) {
+            credCollection[i].inUse = true;
+            credCollection[i].spec = specFile;
+            // browser.options.testUser = credCollection[i].username;
+            writeFileSync(credFilePath, JSON.stringify(credCollection));
+            return cred;
+        }
+    });
+}
+
+
+exports.checkInCreds = (credFilePath, specFile) => {
+    let credCollection = JSON.parse(readFileSync(credFilePath));
+
+    return credCollection.find((cred, i) => {
+        if (cred.spec === specFile) {
+            credCollection[i].inUse = false;
+            credCollection[i].spec = '';
+            credCollection[i].token = '';
+            writeFileSync(credFilePath, JSON.stringify(credCollection));
+            console.log('written!');
+            return cred;
+        }
+        return;
+    });
+}
+
+exports.resetCreds = (credFilePath) => {
+    const credCollection = JSON.parse(readFileSync(credFilePath));
+    const cleanCreds = credCollection.map(el => { return {...el, spec: '', inUse: 'false', token: ''} });
+    writeFileSync(credFilePath, JSON.stringify(cleanCreds));
 }
 
 /*
