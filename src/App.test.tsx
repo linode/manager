@@ -13,6 +13,12 @@ it('renders without crashing', () => {
       <Provider store={store}>
         <StaticRouter location="/" context={{}}>
           <App
+            location={{
+              pathname: '',
+              hash: '',
+              search: '',
+              state: {},
+            }}
             classes={{
               appFrame: '',
               content: '',

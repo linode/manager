@@ -4,7 +4,7 @@ import { equals } from 'ramda';
 
 import * as classNames from 'classnames';
 
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles, WithTheme } from '@material-ui/core/styles';
 
 import TextField, { TextFieldProps } from '@material-ui/core/TextField';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
@@ -43,10 +43,12 @@ export interface Props extends TextFieldProps {
   expand?: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props
+  & WithTheme
+  & WithStyles<ClassNames>;
 
 class LinodeTextField extends React.Component<CombinedProps> {
-  shouldComponentUpdate(nextProps: Props) {
+  shouldComponentUpdate(nextProps: CombinedProps) {
     return nextProps.value !== this.props.value
       || nextProps.error !== this.props.error
       || nextProps.errorText !== this.props.errorText
@@ -56,7 +58,8 @@ class LinodeTextField extends React.Component<CombinedProps> {
       || nextProps.disabled !== this.props.disabled
       || nextProps.helperText !== this.props.helperText
       || Boolean(this.props.select && nextProps.children !== this.props.children)
-      || !equals(nextProps.InputProps, this.props.InputProps);
+      || !equals(nextProps.InputProps, this.props.InputProps)
+      || nextProps.theme.name !== this.props.theme.name;
   }
 
   render() {

@@ -57,26 +57,26 @@ describe('FromImageContent', () => {
 
   it('should render SelectLinode panel', () => {
     expect(componentWithLinodes
-      .find('WithStyles(WithRenderGuard(SelectLinodePanel))')).toHaveLength(1);
-  });
+      .find('WithStyles(WithTheme(WithRenderGuard(SelectLinodePanel)))')).toHaveLength(1);
+    });
 
-  it('should render SelectRegion panel', () => {
+    it('should render SelectRegion panel', () => {
     expect(componentWithLinodes.
-      find('WithStyles(WithRenderGuard(SelectRegionPanel))')).toHaveLength(1);
+      find('WithStyles(WithTheme(WithRenderGuard(SelectRegionPanel)))')).toHaveLength(1);
   });
 
   it('should render SelectPlan panel', () => {
     expect(componentWithLinodes
-      .find('WithStyles(WithRenderGuard(SelectPlanPanel))')).toHaveLength(1);
+      .find('WithStyles(WithTheme(WithRenderGuard(SelectPlanPanel)))')).toHaveLength(1);
   });
 
   it('should render SelectLabel panel', () => {
     expect(componentWithLinodes
-      .find('WithStyles(WithRenderGuard(InfoPanel))')).toHaveLength(1);
+      .find('WithStyles(WithTheme(WithRenderGuard(InfoPanel)))')).toHaveLength(1);
   });
 
   it('should render SelectAddOns panel', () => {
     expect(componentWithLinodes
-      .find('WithStyles(WithRenderGuard(AddonsPanel))')).toHaveLength(1);
+      .find('WithStyles(WithTheme(WithRenderGuard(AddonsPanel)))')).toHaveLength(1);
   });
 });
