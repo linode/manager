@@ -101,6 +101,17 @@ exports.checkInCreds = (credFilePath, specFile) => {
     });
 }
 
+exports.generateCreds = (credFilePath) => {
+    const credCollection = [];
+
+    for (const [key, value] of Object.entries(process.env)) {
+        if (key.includes('MANAGER_USER')) {
+            const pass = // GET EQUIVALENT USER PASSWORD HERE, SET AS A VARIABLE
+            credCollection.push({username: value, password: pass token: '', spec: ''});
+        }
+    }
+}
+
 exports.resetCreds = (credFilePath) => {
     const credCollection = JSON.parse(readFileSync(credFilePath));
     const cleanCreds = credCollection.map(el => { return {...el, spec: '', inUse: false, token: ''} });
