@@ -65,7 +65,8 @@ interface EditableFields {
 }
 
 interface Props {
-  linodeId: number
+  linodeHypervisor: string;
+  linodeId: number;
   linodeRegion: string;
   maxMemory: number;
   open: boolean;
@@ -212,7 +213,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
   renderErrorState = () => <ErrorState errorText="Unable to loading configurations." />;
 
   renderForm = (errors?: Linode.ApiFieldError[]) => {
-    const { onClose, maxMemory, classes } = this.props;
+    const { onClose, maxMemory, classes, linodeHypervisor } = this.props;
 
     const {
       kernels,
@@ -305,14 +306,16 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             >
               <MenuItem value="none" disabled><em>Select a Kernel</em></MenuItem>
               {
-                kernels.map(eachKernel =>
-                  <MenuItem
-                    // Can't use ID for key until DBA-162 is closed.
-                    key={`${eachKernel.id}-${eachKernel.label}`}
-                    value={eachKernel.id}
-                  >
-                    {eachKernel.label}
-                  </MenuItem>)
+                kernels
+                  .filter(eachKernel => linodeHypervisor === 'kvm' ? eachKernel.kvm : eachKernel.xen)
+                  .map(eachKernel =>
+                    <MenuItem
+                      // Can't use ID for key until DBA-162 is closed.
+                      key={`${eachKernel.id}-${eachKernel.label}`}
+                      value={eachKernel.id}
+                    >
+                      {eachKernel.label}
+                    </MenuItem>)
               }
             </TextField>}
 
