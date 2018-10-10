@@ -105,6 +105,17 @@ export default () => (WrappedComponent: React.ComponentType<any>) => {
       this.mounted = false;
     }
 
+    componentDidUpdate(prevProps: any, prevState: any) {
+      /*
+       * If our data returned from Pagey is different from the original data,
+       * it means we either changed pages or page size. In this case, override
+       * whatever state we might have set in the events stream logic 
+       */
+      if (prevProps.data !== this.props.data) {
+        this.setState({ volumes: this.props.data })
+      }
+    }
+
     render() {
       return (
         /* 
