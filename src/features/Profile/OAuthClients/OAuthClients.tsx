@@ -65,7 +65,7 @@ interface State {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class OAuthClients extends React.Component<CombinedProps, State> {
+export class OAuthClients extends React.Component<CombinedProps, State> {
   static defaultState = {
     secret: {
       open: false,
