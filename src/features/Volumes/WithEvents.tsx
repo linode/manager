@@ -44,13 +44,22 @@ export default () => (WrappedComponent: React.ComponentType<any>) => {
             .then((volume: Linode.Volume) => {
               if (!this.mounted || !this.props.data) { return; }
 
-              // find the index of the volume we have to update/replace
-              const targetIndex = this.props.data.findIndex((eachVolume: Linode.Volume) => {
-                return eachVolume.id === entityId;
-              })
+              /*
+               * find the index of the volume we have to update/replace, depending on whether if
+               * state exists. This solves the problem where the component would
+               * be updating old data
+               */
+              const targetIndex = (this.state.volumes || this.props.data)
+                .findIndex((eachVolume: Linode.Volume) => {
+                  return eachVolume.id === entityId;
+                })
 
-              // make a clone of it
-              const clonedVolumes = clone(this.props.data);
+              /*
+               * make a clone of state or prop data, depending on whether if
+               * state exists. This solves the problem where the component would
+               * be updating old data
+               */
+              const clonedVolumes = clone(this.state.volumes || this.props.data);
 
               // if the volume never appeared in original list of Linodes, no updating needed
               if (targetIndex === -1) {
