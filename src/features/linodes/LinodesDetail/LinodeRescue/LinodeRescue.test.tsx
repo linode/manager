@@ -3,7 +3,6 @@ import * as React from 'react';
 
 import { disks } from 'src/__data__/disks';
 import { volumes } from 'src/__data__/volumes';
-import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 import { createPromiseLoaderResponse } from 'src/utilities/testHelpers';
 
 import { ExtendedVolume } from './DeviceSelection';
@@ -28,30 +27,27 @@ describe('LinodeRescue', () => {
     const volumesAsPromise = createPromiseLoaderResponse(extendedVolumes);
 
     const component = shallow(
-      <LinodeThemeWrapper>
-        <LinodeRescue
-          classes={{
-            root: '',
-            title: '',
-            intro: '',
-          }}
-          disks={disksAsPromise}
-          linodeId={7843027}
-          linodeRegion="us-east"
-          volumes={volumesAsPromise}
-          linodeLabel=""
-        />
-      </LinodeThemeWrapper>,
+      <LinodeRescue
+        classes={{
+          root: '',
+          title: '',
+          intro: '',
+        }}
+        disks={disksAsPromise}
+        linodeId={7843027}
+        linodeRegion="us-east"
+        volumes={volumesAsPromise}
+        linodeLabel=""
+      />
     );
-    const rescueComponent: any = component.find('LinodeRescue').dive();
-    const rescueComponentProps = component.props().children.props.children.props;
+    const rescueComponentProps = component.instance().props;
     it(
       `volumes in the rescue dropdowns should only display volumes
       that are in the same region as the Linode`,
       () => {
         const linodeRegion = rescueComponentProps.linodeRegion;
         let volumesAndLinodeSameRegion = true;
-        rescueComponent
+        component
           .state()
           .devices
           .volumes
@@ -69,7 +65,7 @@ describe('LinodeRescue', () => {
       () => {
         const linodeId = rescueComponentProps.linodeId;
         let volumeCanBeRescued = true;
-        rescueComponent
+        component
           .state()
           .devices
           .volumes

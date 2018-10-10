@@ -2,7 +2,7 @@ import { compose } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles, WithTheme } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 
@@ -144,9 +144,10 @@ interface TypesContextProps {
 }
 
 type CombinedProps =
-  Props &
-  TypesContextProps &
-  WithStyles<ClassNames>;
+  & Props
+  & TypesContextProps
+  & WithTheme
+  & WithStyles<ClassNames>;
 
 class LinodeRow extends React.Component<CombinedProps, State> {
   state: State = {
@@ -174,6 +175,7 @@ class LinodeRow extends React.Component<CombinedProps, State> {
         this.state,
         ['mutationAvailable']
       )
+      || this.props.theme.name !== nextProps.theme.name
   }
 
   componentDidMount() {

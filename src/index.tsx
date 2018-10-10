@@ -3,7 +3,7 @@ import createBrowserHistory from 'history/createBrowserHistory';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, RouteProps, Switch } from 'react-router-dom';
 
 import { initAnalytics } from 'src/analytics';
 import AuthenticationWrapper from 'src/components/AuthenticationWrapper';
@@ -13,7 +13,6 @@ import 'src/exceptionReporting';
 import Logout from 'src/layouts/Logout';
 import OAuthCallbackPage from 'src/layouts/OAuth';
 import store from 'src/store';
-
 import { sendEvent } from 'src/utilities/analytics';
 import 'src/utilities/createImageBitmap';
 import 'src/utilities/request';
@@ -25,9 +24,6 @@ import './events';
 import './index.css';
 import LinodeThemeWrapper from './LinodeThemeWrapper';
 import { initialize as sessionInitialize, refreshOAuthOnUserInteraction, refreshOAuthToken } from './session';
-
-// import { whyDidYouUpdate } from 'why-did-you-update';
-// whyDidYouUpdate(React);
 
 const Lish = DefaultLoader({
   loader: () => import('src/features/Lish'),
@@ -85,9 +81,9 @@ const renderLish = () =>
  */
 const mock = () => null;
 
-const renderApp = () =>
+const renderApp = (props: RouteProps) =>
   <LinodeThemeWrapper>
-    <App toggleTheme={mock} />
+    <App toggleTheme={mock} location={props.location} />
   </LinodeThemeWrapper>
 
 const renderAuthentication = () =>
