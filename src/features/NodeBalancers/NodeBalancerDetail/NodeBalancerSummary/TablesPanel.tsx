@@ -111,7 +111,7 @@ interface State {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const statsFetchInterval = 3000;
+const statsFetchInterval = 30000;
 
 class TablesPanel extends React.Component<CombinedProps, State> {
   statsInterval?: number = undefined;
