@@ -9,7 +9,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles, WithTheme } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 
@@ -221,9 +221,10 @@ interface TypesContextProps {
 }
 
 type CombinedProps =
-  Props &
-  TypesContextProps &
-  WithStyles<CSSClasses>;
+  & Props
+  & TypesContextProps
+  & WithTheme
+  & WithStyles<CSSClasses>;
 
 class LinodeCard extends React.Component<CombinedProps, State> {
   state: State = {
@@ -251,6 +252,7 @@ class LinodeCard extends React.Component<CombinedProps, State> {
         this.state,
         ['mutationAvailable']
       )
+      || this.props.theme.name !== nextProps.theme.name
   }
 
   componentDidMount() {
@@ -279,7 +281,7 @@ class LinodeCard extends React.Component<CombinedProps, State> {
       category: 'Linode Action Menu Item',
       action: 'Reboot Linode',
     })
-    const { linodeId, linodeLabel, toggleConfirmation} = this.props;
+    const { linodeId, linodeLabel, toggleConfirmation } = this.props;
     toggleConfirmation('reboot', linodeId, linodeLabel);
   }
 
@@ -322,7 +324,7 @@ class LinodeCard extends React.Component<CombinedProps, State> {
       <CardContent className={`${classes.cardContent} ${classes.customeMQ}`}>
         <div>
           <div className={classes.cardSection} data-qa-linode-summary>
-            { typesData && `${displayType(linodeType, typesData || [])}: ` }
+            {typesData && `${displayType(linodeType, typesData || [])}: `}
             {typeLabelDetails(linodeSpecMemory, linodeSpecDisk, linodeSpecVcpus)}
           </div>
           <div className={classes.cardSection} data-qa-region>

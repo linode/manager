@@ -2,10 +2,9 @@ import { shallow } from 'enzyme';
 import * as React from 'react';
 import { clearDocs, setDocs } from 'src/store/reducers/documentation';
 
-import { StackScriptsLanding } from './StackScriptsLanding';
-
 import { images } from 'src/__data__/images';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
+import { StackScriptsLanding } from './StackScriptsLanding';
 
 describe('StackScripts Landing', () => {
   const component = shallow(
@@ -34,7 +33,7 @@ describe('StackScripts Landing', () => {
   });
 
   it('should render SelectStackScriptPanel', () => {
-    expect(component.find('Connect(WithRenderGuard(WithStyles(SelectStackScriptPanel)))'))
+    expect(component.find('Connect(WithTheme(WithRenderGuard(WithStyles(SelectStackScriptPanel))))'))
       .toHaveLength(1);
   });
 });
