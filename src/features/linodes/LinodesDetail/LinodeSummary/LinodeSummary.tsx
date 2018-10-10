@@ -1,6 +1,7 @@
 import * as moment from 'moment';
-import { compose } from 'ramda';
+import { compose, pathOr } from 'ramda';
 import * as React from 'react';
+import { connect, MapStateToProps } from 'react-redux';
 
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -9,7 +10,6 @@ import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/st
 import Typography from '@material-ui/core/Typography';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import ExpansionPanel from 'src/components/ExpansionPanel';
 import LineGraph from 'src/components/LineGraph';
 import Select from 'src/components/Select';
 import { withTypes } from 'src/context/types';
@@ -20,7 +20,7 @@ import { setUpCharts } from 'src/utilities/charts';
 
 import SummaryPanel from './SummaryPanel';
 
-import { connect, MapStateToProps } from 'react-redux';
+import ExtendedExpansionPanel from './ExtendedExpansionPanel';
 
 setUpCharts();
 
@@ -126,6 +126,9 @@ interface State {
   stats: Linode.TodoAny;
   rangeSelection: string;
   statsLoadError?: string;
+  dataIsLoading: boolean;
+  statsError?: string;
+  openPanels: number;
 }
 
 type CombinedProps = LinodeContextProps &
@@ -136,13 +139,15 @@ const chartHeight = 300;
 
 const statsFetchInterval = 30000;
 
-class LinodeSummary extends React.Component<CombinedProps, State> {
+export class LinodeSummary extends React.Component<CombinedProps, State> {
   statsInterval?: number = undefined;
   mounted: boolean = false;
 
   state: State = {
     stats: undefined,
     rangeSelection: '24',
+    dataIsLoading: false,
+    openPanels: 0,
   };
 
   rangeSelectOptions: (typeof MenuItem)[] = [];
@@ -192,11 +197,46 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
 
   }
 
-  getStats() {
+  componentDidMount() {
+    this.mounted = true;
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
+    window.clearInterval(this.statsInterval as number);
+  }
+
+  handleToggleExpand = (e: any, expanded: boolean) => {
+    const { openPanels, stats } = this.state;
+    if (expanded && !stats) {
+      /* Only set loading state on initial load
+      *  so the graphs are not disrupted on future updates. */
+      this.setState({ dataIsLoading: true });
+      this.getStats();
+    }
+
+    if (expanded && openPanels <= 0) {
+      /* We will regularly update the stats as long as at least one panel is open. */
+      this.statsInterval = window.setInterval(() => this.getStats(), statsFetchInterval);
+    }
+
+    /* If the panel is opening, increment the number of open panels. Otherwise decrement.
+    *  This allows us to keep track of when all of the panels are closed.
+    */ 
+    const updatedOpenPanels = expanded ? openPanels + 1 : openPanels - 1;
+    this.setState({ openPanels: updatedOpenPanels });
+
+    /* If all panels are closed, stop updating the stats. */
+    if (!expanded && updatedOpenPanels <= 0) {
+      window.clearInterval(this.statsInterval as number);
+    }
+  }
+
+  getStats = () => {
     const { linodeId } = this.props;
     const { rangeSelection } = this.state;
     if (!linodeId) { return; }
-
+    this.setState({ statsError: undefined, });
     let req;
     if (rangeSelection === '24') {
       req = getLinodeStats(linodeId);
@@ -209,34 +249,14 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
         if (!this.mounted) { return; }
 
         this.setState({ statsLoadError: undefined });
-        this.setState({ stats: response.data });
+        this.setState({ stats: response.data, dataIsLoading: false });
       })
       .catch((errorResponse) => {
         if (!this.mounted) { return; }
-        /** disabling toast messages because they're annoying. */
-        // if (pathOr(undefined, ['response', 'status'], errorResponse) === 429) {
-        //   sendToast('Rate limit exceeded when fetching performance statistics', 'error');
-        //   this.setState({ statsLoadError: 'rateLimited' });
-        // } else {
-        //   pathOr(
-        //     [{ reason: 'Network Error when fetching performance statistics' }],
-        //     ['response', 'data', 'errors'], errorResponse)
-        //     .forEach((err: Linode.ApiFieldError) => sendToast(err.reason, 'error'));
-        //   this.setState({ statsLoadError: 'error' });
-        // }
-
+        const errorText = pathOr("There was an error retrieving information for this Linode.", 
+          ['reason'], errorResponse[0]);
+        this.setState({ dataIsLoading: false, statsError: errorText, })
       });
-  }
-
-  componentDidMount() {
-    this.mounted = true;
-    this.getStats();
-    this.statsInterval = window.setInterval(() => this.getStats(), statsFetchInterval);
-  }
-
-  componentWillUnmount() {
-    this.mounted = false;
-    window.clearInterval(this.statsInterval as number);
   }
 
   handleChartRangeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -244,6 +264,184 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
     this.setState({ rangeSelection: value }, () => {
       this.getStats();
     });
+  }
+
+  renderCPUChart = () => {
+    const { rangeSelection, stats } = this.state;
+    const { classes } = this.props;
+    const data = pathOr([[]], ['data','cpu'], stats);
+    return (
+      <React.Fragment>
+        <div className={classes.chart}>
+          <div className={classes.leftLegend}>
+            CPU %
+          </div>
+          <LineGraph
+            chartHeight={chartHeight}
+            showToday={rangeSelection === '24'}
+            suggestedMax={100}
+            data={[
+              {
+                borderColor: '#428ade',
+                data,
+                label: 'CPU %',
+              },
+            ]}
+          />
+        </div>
+        <div className={classes.bottomLegend}>
+          <div className={classes.blue}>
+            CPU %
+          </div>
+        </div>
+      </React.Fragment>
+    )
+  }
+
+  renderIPv4TrafficChart = () => {
+    const { classes } = this.props;
+    const { rangeSelection, stats } = this.state;
+    return (
+      <React.Fragment>
+        <div className={classes.chart}>
+          <div className={classes.leftLegend}>
+            bits/sec
+          </div>
+          <LineGraph
+            chartHeight={chartHeight}
+            showToday={rangeSelection === '24'}
+            data={[
+              {
+                borderColor: '#3683dc',
+                data: pathOr([[]], ['data','netv4','in'], stats),
+                label: 'Public Traffic In',
+              },
+              {
+                borderColor: '#01b159',
+                data: pathOr([[]], ['data','netv4','out'], stats),
+                label: 'Public Traffic Out',
+              },
+              {
+                borderColor: '#d01e1e',
+                data: pathOr([[]], ['data','netv4','private_in'], stats),
+                label: 'Private Traffic In',
+              },
+              {
+                borderColor: '#ffd100',
+                data: pathOr([[]], ['data','netv4','private_out'], stats),
+                label: 'Private Traffic Out',
+              },
+            ]}
+          />
+        </div>
+        <div className={classes.bottomLegend}>
+          <div className={classes.blue}>
+            Public IPv4 Inbound
+          </div>
+          <div className={classes.green}>
+            Public IPv4 Outbound
+          </div>
+          <div className={classes.red}>
+            Private IPv4 Inbound
+          </div>
+          <div className={classes.yellow}>
+            Private IPv4 Outbound
+          </div>
+        </div>
+      </React.Fragment>
+    )
+  }
+
+  renderIPv6TrafficChart = () => {
+    const { classes } = this.props;
+    const { rangeSelection, stats } = this.state;
+    return (
+      <React.Fragment>
+        <div className={classes.chart}>
+          <div className={classes.leftLegend}>
+            bits/sec
+          </div>
+          <LineGraph
+            chartHeight={chartHeight}
+            showToday={rangeSelection === '24'}
+            data={[
+              {
+                borderColor: '#3683dc',
+                data: pathOr([[]], ['data','netv6','in'], stats),
+                label: 'Public Traffic In',
+              },
+              {
+                borderColor: '#01b159',
+                data: pathOr([[]], ['data','netv6','out'], stats),
+                label: 'Public Traffic Out',
+              },
+              {
+                borderColor: '#d01e1e',
+                data: pathOr([[]], ['data','netv6','private_in'], stats),
+                label: 'Private Traffic In',
+              },
+              {
+                borderColor: '#ffd100',
+                data: pathOr([[]], ['data','netv6','private_out'], stats),
+                label: 'Private Traffic Out',
+              },
+            ]}
+          />
+        </div>
+        <div className={classes.bottomLegend}>
+          <div className={classes.blue}>
+            Public IPv6 Inbound
+          </div>
+          <div className={classes.green}>
+            Public IPv6 Outbound
+          </div>
+          <div className={classes.red}>
+            Private IPv6 Inbound
+          </div>
+          <div className={classes.yellow}>
+            Private IPv6 Outbound
+          </div>
+        </div>
+      </React.Fragment>
+    )
+  }
+
+  renderDiskIOChart = () => {
+    const { classes } = this.props;
+    const { rangeSelection, stats } = this.state;
+    return (
+      <React.Fragment>
+        <div className={classes.chart}>
+          <div className={classes.leftLegend} style={{ left: -18, bottom: 48 }}>
+            blocks/sec
+            </div>
+          <LineGraph
+            chartHeight={chartHeight}
+            showToday={rangeSelection === '24'}
+            data={[
+              {
+                borderColor: '#d01e1e',
+                data: pathOr([[]], ['data','io','io'], stats),
+                label: 'Disk I/O',
+              },
+              {
+                borderColor: '#ffd100',
+                data: pathOr([[]], ['data','io','swap'], stats),
+                label: 'Swap I/O',
+              },
+            ]}
+          />
+        </div>
+        <div className={classes.bottomLegend}>
+          <div className={classes.red}>
+            I/O Rate
+            </div>
+          <div className={classes.yellow}>
+            Swap Rate
+            </div>
+        </div>
+      </React.Fragment>
+    )
   }
 
   render() {
@@ -255,7 +453,7 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
       typesData,
     } = this.props;
 
-    const { stats, rangeSelection } = this.state;
+    const { dataIsLoading, statsError, rangeSelection } = this.state;
 
     if (!linode || !image || !volumes) {
       return null;
@@ -273,196 +471,61 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
         <DocumentTitleSegment segment={`${linode.label} - Summary`} />
         <SummaryPanel linode={linode} image={image} volumes={volumes} typesLongLabel={longLabel} />
 
-        {stats &&
-          <React.Fragment>
-            <div className={classes.graphControls}>
-              <Typography role="header" variant="title" className={classes.graphTitle}>
-                Graphs
-              </Typography>
-              <FormControl style={{ marginTop: 0 }}>
-                <InputLabel htmlFor="chartRange" disableAnimation hidden>
-                  Select Time Range
-                </InputLabel>
-                <Select
-                  value={rangeSelection}
-                  onChange={this.handleChartRangeChange}
-                  inputProps={{ name: 'chartRange', id: 'chartRange' }}
-                >
-                  {this.rangeSelectOptions}
-                </Select>
-              </FormControl>
-            </div>
+        <React.Fragment>
+          <div className={classes.graphControls}>
+            <Typography role="header" variant="title" className={classes.graphTitle}>
+              Graphs
+            </Typography>
+            <FormControl style={{ marginTop: 0 }}>
+              <InputLabel htmlFor="chartRange" disableAnimation hidden>
+                Select Time Range
+              </InputLabel>
+              <Select
+                value={rangeSelection}
+                onChange={this.handleChartRangeChange}
+                inputProps={{ name: 'chartRange', id: 'chartRange' }}
+              >
+                {this.rangeSelectOptions}
+              </Select>
+            </FormControl>
+          </div>
 
-            <ExpansionPanel
-              heading="CPU %"
-            >
-              <React.Fragment>
-                <div className={classes.chart}>
-                  <div className={classes.leftLegend}>
-                    CPU %
-                  </div>
-                  <LineGraph
-                    chartHeight={chartHeight}
-                    showToday={rangeSelection === '24'}
-                    suggestedMax={100}
-                    data={[
-                      {
-                        borderColor: '#428ade',
-                        data: stats.data.cpu,
-                        label: 'CPU %',
-                      },
-                    ]}
-                  />
-                </div>
-                <div className={classes.bottomLegend}>
-                  <div className={classes.blue}>
-                    CPU %
-                  </div>
-                </div>
-              </React.Fragment>
-            </ExpansionPanel>
+          <ExtendedExpansionPanel
+            heading={"CPU %"}
+            height={chartHeight}
+            onChange={this.handleToggleExpand}
+            renderMainContent={this.renderCPUChart}
+            loading={dataIsLoading}
+            error={statsError}
+          />
 
-            <ExpansionPanel
-              heading="IPv4 Traffic"
-            >
-              <React.Fragment>
-                <div className={classes.chart}>
-                  <div className={classes.leftLegend}>
-                    bits/sec
-                  </div>
-                  <LineGraph
-                    chartHeight={chartHeight}
-                    showToday={rangeSelection === '24'}
-                    data={[
-                      {
-                        borderColor: '#3683dc',
-                        data: stats.data.netv4.in,
-                        label: 'Public Traffic In',
-                      },
-                      {
-                        borderColor: '#01b159',
-                        data: stats.data.netv4.out,
-                        label: 'Public Traffic Out',
-                      },
-                      {
-                        borderColor: '#d01e1e',
-                        data: stats.data.netv4.private_in,
-                        label: 'Private Traffic In',
-                      },
-                      {
-                        borderColor: '#ffd100',
-                        data: stats.data.netv4.private_out,
-                        label: 'Private Traffic Out',
-                      },
-                    ]}
-                  />
-                </div>
-                <div className={classes.bottomLegend}>
-                  <div className={classes.blue}>
-                    Public IPv4 Inbound
-                  </div>
-                  <div className={classes.green}>
-                    Public IPv4 Outbound
-                  </div>
-                  <div className={classes.red}>
-                    Private IPv4 Inbound
-                  </div>
-                  <div className={classes.yellow}>
-                    Private IPv4 Outbound
-                  </div>
-                </div>
-              </React.Fragment>
-            </ExpansionPanel>
+          <ExtendedExpansionPanel
+            heading={"IPv4 Traffic"}
+            height={chartHeight}
+            onChange={this.handleToggleExpand}
+            renderMainContent={this.renderIPv4TrafficChart}
+            loading={dataIsLoading}
+            error={statsError}
+          />
 
-            <ExpansionPanel
-              heading="IPv6 Traffic"
-            >
-              <React.Fragment>
-                <div className={classes.chart}>
-                  <div className={classes.leftLegend}>
-                    bits/sec
-                  </div>
-                  <LineGraph
-                    chartHeight={chartHeight}
-                    showToday={rangeSelection === '24'}
-                    data={[
-                      {
-                        borderColor: '#3683dc',
-                        data: stats.data.netv6.in,
-                        label: 'Public Traffic In',
-                      },
-                      {
-                        borderColor: '#01b159',
-                        data: stats.data.netv6.out,
-                        label: 'Public Traffic Out',
-                      },
-                      {
-                        borderColor: '#d01e1e',
-                        data: stats.data.netv6.private_in,
-                        label: 'Private Traffic In',
-                      },
-                      {
-                        borderColor: '#ffd100',
-                        data: stats.data.netv6.private_out,
-                        label: 'Private Traffic Out',
-                      },
-                    ]}
-                  />
-                </div>
-                <div className={classes.bottomLegend}>
-                  <div className={classes.blue}>
-                    Public IPv6 Inbound
-                  </div>
-                  <div className={classes.green}>
-                    Public IPv6 Outbound
-                  </div>
-                  <div className={classes.red}>
-                    Private IPv6 Inbound
-                  </div>
-                  <div className={classes.yellow}>
-                    Private IPv6 Outbound
-                  </div>
-                </div>
-              </React.Fragment>
-            </ExpansionPanel>
+          <ExtendedExpansionPanel
+            heading={"IPv6 Traffic"}
+            height={chartHeight}
+            onChange={this.handleToggleExpand}
+            renderMainContent={this.renderIPv6TrafficChart}
+            loading={dataIsLoading}
+            error={statsError}
+          />
 
-            <ExpansionPanel
-              heading="Disk I/O"
-            >
-              <React.Fragment>
-                <div className={classes.chart}>
-                  <div className={classes.leftLegend} style={{ left: -18, bottom: 48 }}>
-                    blocks/sec
-                    </div>
-                  <LineGraph
-                    chartHeight={chartHeight}
-                    showToday={rangeSelection === '24'}
-                    data={[
-                      {
-                        borderColor: '#d01e1e',
-                        data: stats.data.io.io,
-                        label: 'Disk I/O',
-                      },
-                      {
-                        borderColor: '#ffd100',
-                        data: stats.data.io.swap,
-                        label: 'Swap I/O',
-                      },
-                    ]}
-                  />
-                </div>
-                <div className={classes.bottomLegend}>
-                  <div className={classes.red}>
-                    I/O Rate
-                    </div>
-                  <div className={classes.yellow}>
-                    Swap Rate
-                    </div>
-                </div>
-              </React.Fragment>
-            </ExpansionPanel>
-          </React.Fragment>
-        }
+          <ExtendedExpansionPanel
+            heading={"Disk I/O"}
+            height={chartHeight}
+            onChange={this.handleToggleExpand}
+            renderMainContent={this.renderDiskIOChart}
+            loading={dataIsLoading}
+            error={statsError}
+          />
+        </React.Fragment>
       </React.Fragment>
     );
   }

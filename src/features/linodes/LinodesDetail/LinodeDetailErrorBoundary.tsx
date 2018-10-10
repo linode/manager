@@ -20,7 +20,7 @@ export default <T extends {}>(Component: React.ComponentType) => {
     render() {
       if (this.state.error) {
         return (
-          <ErrorState errorText="Opps! There was an unexpected error loading your Linode. Don't worry, we're looking into it." />
+          <ErrorState errorText="Oops! There was an unexpected error loading your Linode. Don't worry, we're looking into it." />
         );
       }
 
