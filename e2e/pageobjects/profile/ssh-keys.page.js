@@ -60,7 +60,7 @@ export class SshKeys extends Page {
         this.dialogConfirmDelete.click();
         this.dialogTitle.waitForExist(constants.wait.normal, true);
 
-        $(`[data-qa-content-row="${label}"]`).waitForVisible(constants.wait.normal, true);
+        $(`[data-qa-content-row="${label}"]`).waitForVisible(constants.wait.long, true);
     }
 }
 

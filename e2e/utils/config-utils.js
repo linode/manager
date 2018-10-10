@@ -25,7 +25,6 @@ exports.storeToken = (credFilePath, username) => {
 }
 
 exports.readToken = (username) => {
-    console.log(process.cwd());
     const credCollection = JSON.parse(readFileSync('./e2e/creds.js'));
     const currentUserCreds = credCollection.find(cred => cred.username === username);
 
@@ -73,20 +72,18 @@ exports.login = (username, password, credFilePath) => {
     exports.storeToken(credFilePath, username);
 }
 
-exports.getCreds = (credFilePath, specFile) => {
+exports.checkoutCreds = (credFilePath, specFile) => {
     let credCollection = JSON.parse(readFileSync(credFilePath));
-    console.log(credCollection);
     return credCollection.find((cred, i) => {
         if (!cred.inUse) {
             credCollection[i].inUse = true;
             credCollection[i].spec = specFile;
-            // browser.options.testUser = credCollection[i].username;
+            browser.options.testUser = credCollection[i].username;
             writeFileSync(credFilePath, JSON.stringify(credCollection));
             return cred;
         }
     });
 }
-
 
 exports.checkInCreds = (credFilePath, specFile) => {
     let credCollection = JSON.parse(readFileSync(credFilePath));
@@ -97,7 +94,6 @@ exports.checkInCreds = (credFilePath, specFile) => {
             credCollection[i].spec = '';
             credCollection[i].token = '';
             writeFileSync(credFilePath, JSON.stringify(credCollection));
-            console.log('written!');
             return cred;
         }
         return;
@@ -106,7 +102,7 @@ exports.checkInCreds = (credFilePath, specFile) => {
 
 exports.resetCreds = (credFilePath) => {
     const credCollection = JSON.parse(readFileSync(credFilePath));
-    const cleanCreds = credCollection.map(el => { return {...el, spec: '', inUse: 'false', token: ''} });
+    const cleanCreds = credCollection.map(el => { return {...el, spec: '', inUse: false, token: ''} });
     writeFileSync(credFilePath, JSON.stringify(cleanCreds));
 }
 

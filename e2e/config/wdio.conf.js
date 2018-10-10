@@ -1,8 +1,8 @@
-require('dotenv').config();
+ require('dotenv').config();
 
 const { readFileSync } = require('fs');
 const { argv } = require('yargs');
-const { login, getCreds, checkInCreds, resetCreds } = require('../utils/config-utils');
+const { login, checkoutCreds, checkInCreds, resetCreds } = require('../utils/config-utils');
 const { browserCommands } = require('./custom-commands');
 const { browserConf } = require('./browser-config');
 const { constants } = require('../constants');
@@ -12,11 +12,11 @@ const password = process.env.MANAGER_PASS;
 
 const specsToRun = () => {
     if (argv.file) {
-        return ['./e2e/setup/setup.spec.js', argv.file];
+        return [argv.file];
     }
     
     if (argv.dir || argv.d) {
-        return ['./e2e/setup/setup.spec.js', `./e2e/specs/${argv.dir || argv.d}/**/*.spec.js`]
+        return [`./e2e/specs/${argv.dir || argv.d}/**/*.spec.js`]
     }
 
     if (argv.smoke) {
@@ -67,7 +67,7 @@ exports.config = {
     // and 30 processes will get spawned. The property handles how many capabilities
     // from the same test should run tests.
     //
-    maxInstances: 2,
+    maxInstances: 1,
     //
     // If you have trouble getting all important capabilities together, check out the
     // Sauce Labs platform configurator - a great tool to configure your capabilities:
@@ -242,7 +242,7 @@ exports.config = {
             browser.windowHandleMaximize();
         }
 
-        const testCreds = getCreds('./e2e/creds.js', specs[0]);
+        const testCreds = checkoutCreds('./e2e/creds.js', specs[0]);
 
         login(testCreds.username, testCreds.password, './e2e/creds.js');
     },
@@ -338,6 +338,10 @@ exports.config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      */
     onComplete: function(exitCode, config, capabilities) {
+        // Run delete all, on every credential
+        // teardownAll('./e2e/creds.js');
+
+        // Reset creds
         resetCreds('./e2e/creds.js');
     }
 }
