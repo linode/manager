@@ -1,4 +1,4 @@
-import { compose, path, pathEq, pathOr } from 'ramda';
+import { compose, path, pathEq } from 'ramda';
 import * as React from 'react';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -146,7 +146,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
   }
 
   componentDidUpdate(prevProps: CombinedProps, prevState: State) {
-    const disks = pathOr(undefined, ['data'], this.props);
+    const disks = path(['data'], this.props);
     const activating = (!prevProps.active && this.props.active);
     if (activating && !disks) {
       this.setState({ loadingDisks: true });
