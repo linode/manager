@@ -65,7 +65,8 @@ interface EditableFields {
 }
 
 interface Props {
-  linodeId: number
+  linodeHypervisor: string;
+  linodeId: number;
   linodeRegion: string;
   maxMemory: number;
   open: boolean;
@@ -607,9 +608,14 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
     this.updateField({ label: e.target.value || '' });
 
   requestKernels = () => {
+    const { linodeHypervisor } = this.props;
+
     this.setState({ loading: { ...this.state.loading, kernels: true } });
 
     return getAllKernels()
+      .then((kernels) => {
+        return kernels.filter(eachKernel => eachKernel[linodeHypervisor])
+      })
       .then((kernels) => {
         this.setState({
           kernels,
@@ -619,7 +625,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
       .catch(error => {
         this.setState({
           loading: { ...this.state.loading, kernels: false },
-          errors: pathOr([{ reason: 'Unable to load kernesl.' }], ['response', 'data', 'errors'], error),
+          errors: pathOr([{ reason: 'Unable to load kernels.' }], ['response', 'data', 'errors'], error),
         })
       });
   };
