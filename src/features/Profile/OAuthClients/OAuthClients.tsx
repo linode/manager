@@ -195,7 +195,7 @@ class OAuthClients extends React.Component<CombinedProps, State> {
       return <TableRowError colSpan={6} message="We were unable to load your OAuth Clients." />
     }
 
-    return data && data.length > 0 ? this.renderRows(data) : <TableRowEmptyState colSpan={1} />
+    return data && data.length > 0 ? this.renderRows(data) : <TableRowEmptyState colSpan={6} />
   }
 
   renderRows = (data: Linode.OAuthClient[]) => {
