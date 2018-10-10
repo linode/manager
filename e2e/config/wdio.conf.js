@@ -2,7 +2,7 @@
 
 const { readFileSync } = require('fs');
 const { argv } = require('yargs');
-const { login, checkoutCreds, checkInCreds, resetCreds } = require('../utils/config-utils');
+const { login, checkoutCreds, checkInCreds, resetCreds, cleanupAccounts } = require('../utils/config-utils');
 const { browserCommands } = require('./custom-commands');
 const { browserConf } = require('./browser-config');
 const { constants } = require('../constants');
@@ -67,7 +67,7 @@ exports.config = {
     // and 30 processes will get spawned. The property handles how many capabilities
     // from the same test should run tests.
     //
-    maxInstances: 1,
+    maxInstances: 2,
     //
     // If you have trouble getting all important capabilities together, check out the
     // Sauce Labs platform configurator - a great tool to configure your capabilities:
@@ -339,7 +339,7 @@ exports.config = {
      */
     onComplete: function(exitCode, config, capabilities) {
         // Run delete all, on every credential
-        // teardownAll('./e2e/creds.js');
+        cleanupAccounts('./e2e/creds.js');
 
         // Reset creds
         resetCreds('./e2e/creds.js');

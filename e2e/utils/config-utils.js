@@ -1,6 +1,7 @@
 const moment = require('moment');
 const { existsSync, statSync, writeFileSync, readFileSync } = require('fs');
 const { constants } = require('../constants');
+const { deleteAll } = require('../setup/setup');
 
 /*
 * Get localStorage after landing on homepage
@@ -104,6 +105,13 @@ exports.resetCreds = (credFilePath) => {
     const credCollection = JSON.parse(readFileSync(credFilePath));
     const cleanCreds = credCollection.map(el => { return {...el, spec: '', inUse: false, token: ''} });
     writeFileSync(credFilePath, JSON.stringify(cleanCreds));
+}
+
+exports.cleanupAccounts = (credFilePath) => {
+    const credCollection = JSON.parse(readFileSync(credFilePath));
+    credCollection.forEach(cred => {
+        return deleteAll(cred.token).then(() => {});
+    });
 }
 
 /*
