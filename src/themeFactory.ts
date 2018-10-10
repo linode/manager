@@ -513,7 +513,7 @@ const themeDefaults: ThemeOptions = {
     },
     MuiInput: {
       root: {
-        maxWidth: 415,
+        maxWidth: 170,
         border: '1px solid #ccc',
         alignItems: 'center',
         transition: 'border-color 225ms ease-in-out',
@@ -521,8 +521,8 @@ const themeDefaults: ThemeOptions = {
         minHeight: 48,
         color: primaryColors.text,
         boxSizing: 'border-box',
-        [breakpoints.down('xs')]: {
-          maxWidth: '100%',
+        [breakpoints.up('md')]: {
+          maxWidth: 415,
           width: '100%',
         },
         '& svg': {
