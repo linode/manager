@@ -26,7 +26,9 @@ class Example extends React.Component<Props, State> {
     }
   }
 
-  handleSearch = (value: string) => {
+  handleSearch = (value: string, actionMeta: { action: string }) => {
+    /* Don't want to make a request unless we're typing something */
+    if (actionMeta.action !== 'input-change') { return; }
     this.setState({ isSearching: true });
     action('searching')(value);
     setTimeout(
@@ -52,8 +54,10 @@ class Example extends React.Component<Props, State> {
   }
 
   handleChooseOption = (value: Item) => {
-    this.setState({ selectedItem: value.label })
-  } 
+    if (value) {
+      return this.setState({ selectedItem: value.label })
+    }
+  }
 
   debouncedSearch = debounce(400, false, this.handleSearch);
 
@@ -69,6 +73,10 @@ class Example extends React.Component<Props, State> {
           onInputChange={this.handleSearch}
           data-qa-select-linode
         />
+        <p><i>Note: The field is intentionally not pre-populated with data to
+          better demonstrate the async functionality</i></p>
+          <p><i>This component utilizes React-Select which has the added
+            functionality of filtering as you type and is not debounced</i></p>
         <div style={{ marginTop: '2em' }}>You selected: {this.state.selectedItem}</div>
       </React.Fragment>
     );
