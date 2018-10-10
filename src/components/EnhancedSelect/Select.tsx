@@ -186,6 +186,7 @@ class Select extends React.PureComponent<CombinedProps,{}> {
       value,
       variant,
       noOptionsMessage,
+      onMenuClose,
       onBlur,
       ...restOfProps
     } = this.props;
@@ -241,6 +242,7 @@ class Select extends React.PureComponent<CombinedProps,{}> {
         options={options}
         components={combinedComponents}
         onChange={onChange}
+        onMenuClose={onMenuClose}
         onInputChange={onInputChange}
         onCreateOption={createNew}
         placeholder={placeholder || 'Select a value...'}
