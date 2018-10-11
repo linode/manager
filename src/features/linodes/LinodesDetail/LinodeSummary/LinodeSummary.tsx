@@ -10,6 +10,7 @@ import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/st
 import Typography from '@material-ui/core/Typography';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import ExtendedExpansionPanel from 'src/components/ExtendedExpansionPanel';
 import LineGraph from 'src/components/LineGraph';
 import Select from 'src/components/Select';
 import { withTypes } from 'src/context/types';
@@ -19,8 +20,6 @@ import { getLinodeStats } from 'src/services/linodes';
 import { setUpCharts } from 'src/utilities/charts';
 
 import SummaryPanel from './SummaryPanel';
-
-import ExtendedExpansionPanel from './ExtendedExpansionPanel';
 
 setUpCharts();
 
