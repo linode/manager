@@ -41,8 +41,11 @@ export default () => (WrappedComponent: React.ComponentType<any>) => {
         .subscribe((event: Linode.Event) => {
           const entityId = event.entity!.id
 
+          /*
+           * If we're deleting a Volume, don't do anything fancy.
+           * Just re-request the page of Volumes 
+           */
           if (event.action === 'volume_delete') {
-            console.log('deleting')
             return this.props.request();
           }
           
