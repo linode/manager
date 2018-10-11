@@ -1,14 +1,19 @@
  require('dotenv').config();
 
-const { readFileSync } = require('fs');
+const { readFileSync, unlinkSync } = require('fs');
 const { argv } = require('yargs');
-const { login, checkoutCreds, checkInCreds, resetCreds, cleanupAccounts } = require('../utils/config-utils');
+const {
+    login,
+    generateCreds,
+    checkoutCreds,
+    checkInCreds,
+    removeCreds,
+    cleanupAccounts
+} = require('../utils/config-utils');
 const { browserCommands } = require('./custom-commands');
 const { browserConf } = require('./browser-config');
 const { constants } = require('../constants');
 const selectedBrowser = argv.browser ? browserConf[argv.browser] : browserConf['chrome'];
-const username = process.env.MANAGER_USER;
-const password = process.env.MANAGER_PASS;
 
 const specsToRun = () => {
     if (argv.file) {
@@ -197,8 +202,10 @@ exports.config = {
      * @param {Object} config wdio configuration object
      * @param {Array.<Object>} capabilities list of capabilities details
      */
-    // onPrepare: function (config, capabilities) {
-    // },
+    onPrepare: function (config, capabilities) {
+        // Generate our temporary test credentials file
+        generateCreds('./e2e/creds.js');
+    },
     /**
      * Gets executed just before initialising the webdriver session and test framework. It allows you
      * to manipulate configurations depending on the capability or spec.
@@ -242,6 +249,9 @@ exports.config = {
             browser.windowHandleMaximize();
         }
 
+        /* Get test credentials from temporary creds file
+           Set "inUse:true" for account under test
+        */
         const testCreds = checkoutCreds('./e2e/creds.js', specs[0]);
 
         login(testCreds.username, testCreds.password, './e2e/creds.js');
@@ -321,7 +331,8 @@ exports.config = {
             browser.deleteImposters();
         }
 
-        checkInCreds('./e2e/creds.js', specs[0]);
+        // Set "inUse:false" on the account under test in the credentials file
+        checkInCreds('./e2e/creds.js', specs[0]);  
     },
     /**
      * Gets executed right after terminating the webdriver session.
@@ -338,10 +349,10 @@ exports.config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      */
     onComplete: function(exitCode, config, capabilities) {
-        // Run delete all, on every credential
+        // Run delete all, on every test account
         cleanupAccounts('./e2e/creds.js');
 
-        // Reset creds
-        resetCreds('./e2e/creds.js');
+        // Remove our temporary test credentials
+        unlinkSync('./e2e/creds.js');
     }
 }

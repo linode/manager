@@ -105,17 +105,18 @@ exports.generateCreds = (credFilePath) => {
     const credCollection = [];
 
     for (const [key, value] of Object.entries(process.env)) {
-        if (key.includes('MANAGER_USER')) {
-            const pass = // GET EQUIVALENT USER PASSWORD HERE, SET AS A VARIABLE
-            credCollection.push({username: value, password: pass token: '', spec: ''});
+        if (key === 'MANAGER_USER') {
+            const pass = process.env.MANAGER_PASS;
+            credCollection.push({username: value, password: pass, inUse: false, token: '', spec: ''});
+        }
+
+        if (key === 'MANAGER_USER_2') {
+            const pass = process.env.MANAGER_PASS_2;
+            credCollection.push({username: value, password: pass, inUse: false, token: '', spec: ''});
         }
     }
-}
 
-exports.resetCreds = (credFilePath) => {
-    const credCollection = JSON.parse(readFileSync(credFilePath));
-    const cleanCreds = credCollection.map(el => { return {...el, spec: '', inUse: false, token: ''} });
-    writeFileSync(credFilePath, JSON.stringify(cleanCreds));
+    return writeFileSync(credFilePath, JSON.stringify(credCollection));
 }
 
 exports.cleanupAccounts = (credFilePath) => {

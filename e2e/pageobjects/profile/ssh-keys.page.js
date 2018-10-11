@@ -48,6 +48,7 @@ export class SshKeys extends Page {
     }
 
     removeKey(label) {
+        browser.waitForVisible(`[data-qa-content-row="${label}"]`, constants.wait.normal);
         const keyToRemove = $(`[data-qa-content-row="${label}"]`);
         this.selectActionMenuItem(keyToRemove, 'Delete');
         
