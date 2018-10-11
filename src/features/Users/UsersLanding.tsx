@@ -289,14 +289,14 @@ class UsersLanding extends React.Component<CombinedProps, State> {
               {this.renderTableContent(loading, error, users)}
             </TableBody>
           </Table>
-          <PaginationFooter
-            count={this.props.count}
-            page={this.props.page}
-            pageSize={this.props.pageSize}
-            handlePageChange={this.props.handlePageChange}
-            handleSizeChange={this.props.handlePageSizeChange}
-          />
         </Paper>
+        <PaginationFooter
+          count={this.props.count}
+          page={this.props.page}
+          pageSize={this.props.pageSize}
+          handlePageChange={this.props.handlePageChange}
+          handleSizeChange={this.props.handlePageSizeChange}
+        />
         <CreateUserDrawer
           open={createDrawerOpen}
           onClose={this.userCreateOnClose}
