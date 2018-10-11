@@ -83,11 +83,6 @@ describe('OAuth Clients', () => {
     expect(testRow.find('WithStyles(WrappedTableCell)[data-qa-oauth-callback]').children().text()).toEqual('http://localhost:3000')
   });
 
-  it('should display TableRowLoading if props.loading is true.', () => {
-    wrapper.setProps({ loading: true });
-    expect(wrapper.find(`WithStyles(tableRowLoading)`).exists()).toBeTruthy();
-  });
-
   it('should display TableRowError if error if state.error is set.', () => {
     wrapper.setProps({ error: Error('Test Error') });
     expect(wrapper.find(`WithStyles(TableRowError)`).exists()).toBeTruthy();
