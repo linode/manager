@@ -80,13 +80,19 @@ class BlogDashboardCard extends React.Component<CombinedProps, State> {
   renderItem = (item: BlogItem, idx: number) => {
     const { classes } = this.props;
 
+    /* 
+     * simple fix. Sometimes the description would come back with [&#8230;]
+     * instead of an ellipses
+     */
+    const cleanedDescription = item.description.replace(' [&#8230;]', '...');
+
     return (
       <Paper key={idx} className={classes.root}>
         <Typography variant="subheading" className={classes.itemTitle}>
           <a href={item.link} className="blue" target="_blank" data-qa-blog-post>{item.title}</a>
         </Typography>
         <Typography variant="caption" data-qa-post-desc>
-          {item.description}
+          {cleanedDescription}
         </Typography>
       </Paper>
     );
