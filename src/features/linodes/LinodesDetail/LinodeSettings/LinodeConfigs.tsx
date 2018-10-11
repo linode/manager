@@ -224,7 +224,7 @@ const styled = withStyles(styles, { withTheme: true });
 const errorBoundary = PanelErrorBoundary({ heading: 'Advanced Configurations' });
 
 interface LinodeContext {
-  linodeHypervisor: string;
+  linodeHypervisor: 'kvm' | 'xen';
   linodeId: number;
   linodeLabel: string;
   linodeMemory: number;
