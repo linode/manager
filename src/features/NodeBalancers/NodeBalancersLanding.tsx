@@ -85,9 +85,6 @@ interface Props extends PaginationProps<Linode.ExtendedNodeBalancer> { };
 
 interface State {
   deleteConfirmDialog: DeleteConfirmDialogState;
-  errors?: Linode.ApiFieldError[];
-  loading: boolean;
-  nodeBalancers: Linode.ExtendedNodeBalancer[];
   selectedNodeBalancerId?: number;
 }
 
@@ -107,8 +104,6 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
 
   state: State = {
     deleteConfirmDialog: NodeBalancersLanding.defaultDeleteConfirmDialogState,
-    loading: true,
-    nodeBalancers: [],
   };
 
   static docs = [
@@ -155,8 +150,8 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
 
     deleteNodeBalancer(selectedNodeBalancerId!)
       .then((response) => {
+        this.props.request();
         this.setState({
-          nodeBalancers: this.state.nodeBalancers.filter((nodebalancer) => nodebalancer.id !== selectedNodeBalancerId),
           deleteConfirmDialog: {
             open: false,
             submitting: false,
