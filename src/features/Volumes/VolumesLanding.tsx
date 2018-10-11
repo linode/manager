@@ -3,10 +3,6 @@ import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/merge';
-import { Subject } from 'rxjs/Subject';
-import { Subscription } from 'rxjs/Subscription';
 
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
@@ -39,11 +35,7 @@ import DestructiveVolumeDialog from './DestructiveVolumeDialog';
 import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
 import VolumeConfigDrawer from './VolumeConfigDrawer';
 import VolumesActionMenu from './VolumesActionMenu';
-
-
 import WithEvents from './WithEvents';
-
-export const updateVolumes$ = new Subject<boolean>();
 
 type ClassNames = 'root'
   | 'title'
@@ -89,7 +81,6 @@ interface Props extends PaginationProps<ExtendedVolume> {
 }
 
 interface State {
-  volumes?: ExtendedVolume[];
   configDrawer: {
     open: boolean;
     volumePath?: string;
@@ -112,7 +103,6 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 class VolumesLanding extends React.Component<CombinedProps, State> {
   state: State = {
-    volumes: [],
     configDrawer: {
       open: false,
     },
@@ -124,8 +114,6 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       mode: 'detach',
     },
   };
-
-  eventsSub: Subscription;
 
   mounted: boolean = false;
 
