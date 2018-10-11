@@ -5,10 +5,10 @@ import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route, RouteProps, Switch } from 'react-router-dom';
 
-import { initAnalytics } from 'src/analytics';
+import { initAnalytics, initTagManager } from 'src/analytics';
 import AuthenticationWrapper from 'src/components/AuthenticationWrapper';
 import DefaultLoader from 'src/components/DefaultLoader';
-import { GA_ID, isProduction } from 'src/constants';
+import { GA_ID, GTM_ID, isProduction } from 'src/constants';
 import 'src/exceptionReporting';
 import Logout from 'src/layouts/Logout';
 import OAuthCallbackPage from 'src/layouts/OAuth';
@@ -33,6 +33,7 @@ const Lish = DefaultLoader({
  * Initialize Analytic and Google Tag Manager
  */
 initAnalytics(GA_ID, isProduction);
+initTagManager(GTM_ID);
 
 if (theme.get() === 'dark') {
   sendEvent({
