@@ -233,7 +233,7 @@ class OAuthClients extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <DocumentTitleSegment segment="OAuth Clients" />
+        <DocumentTitleSegment segment="My Apps" />
         <Grid
           container
           justify="space-between"
@@ -241,7 +241,7 @@ class OAuthClients extends React.Component<CombinedProps, State> {
         >
           <Grid item>
             <Typography role="header" className={classes.title} variant="title" data-qa-table={classes.title}>
-              OAuth Clients
+              My Apps
             </Typography>
           </Grid>
           <Grid item>
@@ -253,7 +253,7 @@ class OAuthClients extends React.Component<CombinedProps, State> {
           </Grid>
         </Grid>
         <Paper>
-          <Table aria-label="List of OAuth Clients">
+          <Table aria-label="List of My Apps">
             <TableHead data-qa-table-head>
               <TableRow>
                 <TableCell>Label</TableCell>
