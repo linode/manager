@@ -1,5 +1,5 @@
 import * as Promise from 'bluebird';
-import { compose, path, pathOr } from 'ramda';
+import { compose, path } from 'ramda';
 import * as React from 'react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 
@@ -18,7 +18,8 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
-import PaginationFooter, { PaginationProps } from 'src/components/PaginationFooter';
+import paginate, { PaginationProps } from 'src/components/Pagey';
+import PaginationFooter from 'src/components/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import Table from 'src/components/Table';
@@ -30,7 +31,6 @@ import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator
 import { deleteNodeBalancer, getNodeBalancerConfigs, getNodeBalancers } from 'src/services/nodebalancers';
 import { convertMegabytesTo } from 'src/utilities/convertMegabytesTo';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import scrollToTop from 'src/utilities/scrollToTop';
 
 import NodeBalancerActionMenu from './NodeBalancerActionMenu';
 
@@ -81,15 +81,15 @@ interface DeleteConfirmDialogState {
   errors?: Linode.ApiFieldError[];
 }
 
-interface State extends PaginationProps {
+interface Props extends PaginationProps<Linode.ExtendedNodeBalancer> { };
+
+interface State {
   deleteConfirmDialog: DeleteConfirmDialogState;
-  errors?: Linode.ApiFieldError[];
-  loading: boolean;
-  nodeBalancers: Linode.ExtendedNodeBalancer[];
   selectedNodeBalancerId?: number;
 }
 
-type CombinedProps = WithStyles<ClassNames>
+type CombinedProps = Props
+  & WithStyles<ClassNames>
   & RouteComponentProps<{}>
   & SetDocsProps;
 
@@ -103,12 +103,7 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
   };
 
   state: State = {
-    count: 0,
     deleteConfirmDialog: NodeBalancersLanding.defaultDeleteConfirmDialogState,
-    loading: true,
-    nodeBalancers: [],
-    page: 1,
-    pageSize: 25,
   };
 
   static docs = [
@@ -126,68 +121,11 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
 
   componentDidMount() {
     this.mounted = true;
-    this.requestNodeBalancers(undefined, undefined, true);
+    this.props.request();
   }
 
   componentWillUnmount() {
     this.mounted = false;
-  }
-
-  requestNodeBalancers = (
-    page: number = this.state.page,
-    pageSize: number = this.state.pageSize,
-    initial: boolean = false,
-  ) => {
-
-    this.setState({ loading: initial });
-    // this is pretty tricky. we need to make a call to get the configs for each nodebalancer
-    // because the up and down time data lives in the configs along with the ports
-    //
-    // after we get that data, we have to add each config's up time together
-    // and each down time together
-    return getNodeBalancers({ page, page_size: pageSize })
-      .then((response) => {
-        return new Promise((resolve, reject) => {
-          Promise.map(response.data, (nodeBalancer) => getNodeBalancerConfigs(nodeBalancer.id)
-            .then(({ data: configs }) => ({
-              ...nodeBalancer,
-              // add the downtime for each config together
-              down: configs.reduce((acc: number, config) => acc + config.nodes_status.down, 0),
-              // add the uptime for each config together
-              up: configs.reduce((acc: number, config) => acc + config.nodes_status.up, 0),
-              // generate a list of ports.
-              ports: configs.reduce((acc: [number], config) => [...acc, config.port], []),
-            })))
-            .then((data) => resolve({ ...response, data }))
-            .catch((error) => reject(error));
-        });
-      })
-      .then((response: Linode.ResourcePage<Linode.ExtendedNodeBalancer>) => {
-        this.setState({
-          nodeBalancers: response.data,
-          count: response.results,
-          page: response.page,
-          loading: false
-        });
-      })
-      .catch((error) => {
-        this.setState({
-          loading: false,
-          errors: pathOr([{ reason: 'Unable to load NodeBalancer data.' }], ['response', 'data', 'errors'], error),
-        })
-      });
-  };
-
-  handlePageChange = (page: number) => {
-    this.setState({ page });
-    this.requestNodeBalancers(page);
-    scrollToTop();
-  }
-
-  handlePageSizeChange = (pageSize: number) => {
-    this.setState({ pageSize });
-    this.requestNodeBalancers(this.state.page, pageSize);
-    scrollToTop();
   }
 
   toggleDialog = (nodeBalancerId: number) => {
@@ -212,8 +150,8 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
 
     deleteNodeBalancer(selectedNodeBalancerId!)
       .then((response) => {
+        this.props.request();
         this.setState({
-          nodeBalancers: this.state.nodeBalancers.filter((nodebalancer) => nodebalancer.id !== selectedNodeBalancerId),
           deleteConfirmDialog: {
             open: false,
             submitting: false,
@@ -241,14 +179,17 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
     const { classes, history } = this.props;
 
     const {
-      count,
       deleteConfirmDialog: {
         open: deleteConfirmAlertOpen,
       },
+    } = this.state;
+
+    const {
+      count,
       loading,
       page,
-      pageSize,
-    } = this.state;
+      pageSize
+    } = this.props;
 
     if(loading){
       return this.renderLoading();
@@ -300,8 +241,8 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
           count={count}
           page={page}
           pageSize={pageSize}
-          handlePageChange={this.handlePageChange}
-          handleSizeChange={this.handlePageSizeChange}
+          handlePageChange={this.props.handlePageChange}
+          handleSizeChange={this.props.handlePageSizeChange}
         />
         <ConfirmationDialog
           onClose={this.closeConfirmationDialog}
@@ -342,18 +283,18 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
   closeConfirmationDialog = () => this.setState({
     deleteConfirmDialog: NodeBalancersLanding.defaultDeleteConfirmDialogState,
   });
+
   renderContent = () => {
     const {
-      count,
-      errors,
-      nodeBalancers,
-    } = this.state;
+      error,
+      data: nodeBalancers
+    } = this.props;
 
-    if (errors) {
-      return this.renderErrors(errors);
+    if (error) {
+      return this.renderErrors(error);
     }
 
-    if (nodeBalancers && count > 0) {
+    if (nodeBalancers && this.props.count > 0) {
       return this.renderData(nodeBalancers);
     }
 
@@ -364,7 +305,7 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
     return (<CircleProgress />);
   };
 
-  renderErrors = (errors: Linode.ApiFieldError[]) => {
+  renderErrors = (errors: Error) => {
     return <TableRowError message="There was an error loading your NodeBalancers. Please try again later." colSpan={7} />;
   };
 
@@ -436,11 +377,50 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
 
 const styled = withStyles(styles, { withTheme: true });
 
+const updatedRequest = (ownProps: any, params: any, filter: any) => {
+  /*
+   * this is pretty tricky. we need to make a call to get the configs for each nodebalancer
+   * because the up and down time data lives in the configs along with the ports
+   * 
+   * after we get that data, we have to add each config's up time together
+   * and each down time together
+   */
+  return getNodeBalancers(params, filter)
+    .then((response) => {
+      return new Promise((resolve, reject) => {
+        /*
+         * Iterate over each nodebalancer and get it's configs 
+         */
+        Promise.map(response.data, (nodeBalancer) => getNodeBalancerConfigs(nodeBalancer.id)
+          .then(({ data: configs }) => ({
+            ...nodeBalancer,
+            // add the nodes_status down from each config together
+            down: configs.reduce((acc: number, config) => acc + config.nodes_status.down, 0),
+            // add the nodes_status up from each config together
+            up: configs.reduce((acc: number, config) => acc + config.nodes_status.up, 0),
+            // concat all the ports on each config
+            ports: configs.reduce((acc: [number], config) => [...acc, config.port], []),
+          })))
+          .then((data) => resolve({ ...response, data }))
+          .catch((error) => reject(error));
+      });
+    })
+    .then((response: Linode.ResourcePage<Linode.ExtendedNodeBalancer>) => {
+      return response;
+    })
+    .catch((error) => {
+      return error;
+    });
+} 
+
+const paginated = paginate(updatedRequest);
+
 export const enhanced = compose(
   styled,
   withRouter,
   SectionErrorBoundary,
   setDocs(NodeBalancersLanding.docs),
+  paginated
 );
 
 export default enhanced(NodeBalancersLanding);
