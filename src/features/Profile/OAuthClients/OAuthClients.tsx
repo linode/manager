@@ -10,7 +10,6 @@ import Typography from '@material-ui/core/Typography';
 
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
-import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
@@ -22,6 +21,7 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
+import TableRowLoading from 'src/components/TableRowLoading';
 import { createOAuthClient, deleteOAuthClient, getOAuthClients, resetOAuthClientSecret, updateOAuthClient } from 'src/services/account';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -37,7 +37,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
 });
 
-interface Props extends PaginationProps<Linode.OAuthClient> {}
+interface Props extends PaginationProps<Linode.OAuthClient> { }
 
 interface FormValues {
   label: string;
@@ -185,10 +185,14 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
   toggleCreateDrawer = (v: boolean) => this.setForm(form => ({ ...form, open: v }));
 
   renderContent = () => {
-    const { data, error } = this.props;
+    const { data, error, loading } = this.props;
 
     if (error) {
       return <TableRowError colSpan={6} message="We were unable to load your OAuth Clients." />
+    }
+
+    if (loading) {
+      return <TableRowLoading colSpan={6} />
     }
 
     return data && data.length > 0 ? this.renderRows(data) : <TableRowEmptyState colSpan={6} />
@@ -229,11 +233,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
   openCreateDrawer = () => this.toggleCreateDrawer(true);
 
   render() {
-    const { classes, loading } = this.props;
-
-    if (loading) {
-      return <CircleProgress />;
-    }
+    const { classes } = this.props;
 
     return (
       <React.Fragment>
@@ -260,11 +260,11 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
           <Table aria-label="List of OAuth Clients">
             <TableHead data-qa-table-head>
               <TableRow>
-                <TableCell>Label</TableCell>
-                <TableCell>Access</TableCell>
-                <TableCell>ID</TableCell>
-                <TableCell>Callback URL</TableCell>
-                <TableCell />
+                <TableCell style={{ width: '20%' }}>Label</TableCell>
+                <TableCell style={{ width: '20%' }}>Access</TableCell>
+                <TableCell style={{ width: '20%' }}>ID</TableCell>
+                <TableCell style={{ width: '20%' }}>Callback URL</TableCell>
+                <TableCell style={{ width: '20%' }} />
               </TableRow>
             </TableHead>
             <TableBody>
