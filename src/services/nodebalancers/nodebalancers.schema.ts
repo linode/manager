@@ -35,7 +35,7 @@ export const createNodeBalancerConfigSchema = object({
   check_timeout: number().integer(),
   check: string(),
   cipher_suite: string(),
-  port: number().integer().min(1).max(65535).required(),
+  port: number().integer().min(1).max(65535).required('Port is required'),
   protocol: string().oneOf(['http', 'https', 'tcp']),
   ssl_key: string()
     .when('protocol', { is: 'https', then: string()

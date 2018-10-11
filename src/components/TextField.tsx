@@ -79,16 +79,14 @@ class LinodeTextField extends React.Component<CombinedProps> {
 
     const finalProps: TextFieldProps = { ...textFieldProps };
 
+    let errorScrollClassName = '';
+
     if (errorText) {
       finalProps.error = true;
       finalProps.helperText = errorText;
-      const errorScrollClassName = errorGroup
+      errorScrollClassName = errorGroup
         ? `error-for-scroll-${errorGroup}`
         : `error-for-scroll`;
-      finalProps.InputProps = {
-        className: errorScrollClassName,
-        ...finalProps.InputProps
-      };
     }
 
     if (affirmative) {
@@ -104,6 +102,7 @@ class LinodeTextField extends React.Component<CombinedProps> {
     return (
       <div className={classNames({
         [classes.helpWrapper]: Boolean(tooltipText),
+        [errorScrollClassName]: !!errorText,
       })}
       >
         <TextField
