@@ -1,58 +1,48 @@
-import { mount } from 'enzyme';
+import { shallow } from 'enzyme';
 import * as moment from 'moment';
 import * as React from 'react';
 
-import { appTokens } from 'src/__data__/appTokens';
+import { paginationProps } from 'src/__data__/paginationProps';
 import { personalAccessTokens } from 'src/__data__/personalAccessTokens';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
-import { createPromiseLoaderResponse } from 'src/utilities/testHelpers';
 
-import { APITokens } from './APITokens';
-
-const patsAsPromise = createPromiseLoaderResponse(personalAccessTokens);
-const appTokensAsPromise = createPromiseLoaderResponse(appTokens);
+import { APITokenTable } from './APITokenTable';
 
 describe('APITokens', () => {
 
-  const component = mount(
-    <LinodeThemeWrapper>
-      <APITokens
-        classes={{
-          headline: '',
-          paper: '',
-          labelCell: '',
-          typeCell: '',
-          createdCell: '',
-        }}
-        pats={patsAsPromise}
-        appTokens={appTokensAsPromise}
-      />
-    </LinodeThemeWrapper>,
+  const component = shallow(
+    <APITokenTable
+      {...paginationProps}
+      count={4}
+      classes={{
+        headline: '',
+        paper: '',
+        labelCell: '',
+        typeCell: '',
+        createdCell: '',
+      }}
+      title="Personal Access Tokens"
+      type="Personal Access Token"
+      data={personalAccessTokens}
+    />
   );
 
   it('should find a row for non-expired tokens', () => {
-    expect(component.find('tr[data-qa-table-row="test-1"]').exists()).toBeFalsy();
-    expect(component.find('tr[data-qa-table-row="test-2"]').exists()).toBeTruthy();
-    expect(component.find('tr[data-qa-table-row="test-3"]').exists()).toBeTruthy();
-    expect(component.find('tr[data-qa-table-row="test-app-1"]').exists()).toBeFalsy();
-    expect(component.find('tr[data-qa-table-row="test-app-2"]').exists()).toBeTruthy();
-    expect(component.find('tr[data-qa-table-row="test-app-3"]').exists()).toBeTruthy();
+    expect(component.find('withRouter(WithStyles(WrappedTableRow))[data-qa-table-row="test-1"]').exists()).toBeFalsy();
+    expect(component.find('withRouter(WithStyles(WrappedTableRow))[data-qa-table-row="test-2"]').exists()).toBeTruthy();
+    expect(component.find('withRouter(WithStyles(WrappedTableRow))[data-qa-table-row="test-3"]').exists()).toBeTruthy();
   });
 
   it('should expect tokens to show in ascending order by created date', () => {
-    const find = component.find('tr[data-qa-table-row]');
+    const find = component.find('withRouter(WithStyles(WrappedTableRow))[data-qa-table-row]');
     expect(find.at(0).prop('data-qa-table-row')).toEqual('test-3');
     expect(find.at(1).prop('data-qa-table-row')).toEqual('test-2');
     expect(find.at(2).prop('data-qa-table-row')).toEqual('test-4');
-    expect(find.at(3).prop('data-qa-table-row')).toEqual('');
-    expect(find.at(4).prop('data-qa-table-row')).toEqual('test-app-3');
-    expect(find.at(5).prop('data-qa-table-row')).toEqual('test-app-2');
-
   });
 });
 
 describe('create and edit tokens', () => {
-  const pats = createPromiseLoaderResponse<Linode.Token[]>([
+  const pats = [
     {
       created: '2018-04-09T20:00:00',
       expiry: moment.utc().subtract(1, 'day').format(),
@@ -61,11 +51,13 @@ describe('create and edit tokens', () => {
       scopes: 'account:read_write',
       label: 'test-1',
     },
-  ]);
+  ];
 
-  const component = mount(
+  const component = shallow(
     <LinodeThemeWrapper>
-      <APITokens
+      <APITokenTable
+        {...paginationProps}
+        count={4}
         classes={{
           headline: '',
           paper: '',
@@ -73,22 +65,23 @@ describe('create and edit tokens', () => {
           typeCell: '',
           createdCell: '',
         }}
-        pats={pats}
-        appTokens={appTokensAsPromise}
+        title="Personal Access Tokens"
+        type="Personal Access Token"
+        data={pats}
       />
-    </LinodeThemeWrapper>,
+    </LinodeThemeWrapper>
   );
 
   /* Skipping until we can figure out how to call instance methods on nested component */
   it.skip('create token submit form should return false if label is blank', () => {
-    (component.instance() as APITokens).createToken('*');
+    (component.instance() as APITokenTable).createToken('*');
     const errorsExist = (!!component.state().form.errors);
     expect(errorsExist).toBeTruthy();
   });
 
   /* Skipping until we can figure out how to call instance methods on nested component */
   it.skip('edit token submit form should return false if label is blank', () => {
-    (component.instance() as APITokens).editToken();
+    (component.instance() as APITokenTable).editToken();
     const errorsExist = (!!component.state().form.errors);
     expect(errorsExist).toBeTruthy();
   });
@@ -105,14 +98,14 @@ describe('create and edit tokens', () => {
         },
       },
     });
-    (component.instance() as APITokens).createToken('*');
+    (component.instance() as APITokenTable).createToken('*');
     const errorsExist = (!!component.state().form.errors);
     expect(errorsExist).toBeFalsy();
   });
 
   /* Skipping until we can figure out how to call instance methods on nested component */
   it.skip('edit token submit form should return no error state if label exists', () => {
-    (component.instance() as APITokens).editToken();
+    (component.instance() as APITokenTable).editToken();
     const errorsExist = (!!component.state().form.errors);
     expect(errorsExist).toBeFalsy();
   });
