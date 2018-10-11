@@ -40,6 +40,12 @@ export default () => (WrappedComponent: React.ComponentType<any>) => {
         .merge(updateVolumes$)
         .subscribe((event: Linode.Event) => {
           const entityId = event.entity!.id
+
+          if (event.action === 'volume_delete') {
+            console.log('deleting')
+            return this.props.request();
+          }
+          
           getVolume(entityId)
             .then((volume: Linode.Volume) => {
               if (!this.mounted || !this.props.data) { return; }
@@ -52,7 +58,12 @@ export default () => (WrappedComponent: React.ComponentType<any>) => {
               const targetIndex = (this.state.volumes || this.props.data)
                 .findIndex((eachVolume: Linode.Volume) => {
                   return eachVolume.id === entityId;
-                })
+                });
+
+              // if the volume never appeared in original list of Linodes, no updating needed
+              if (targetIndex === -1) {
+                return;
+              }
 
               /*
                * make a clone of state or prop data, depending on whether if
@@ -60,11 +71,6 @@ export default () => (WrappedComponent: React.ComponentType<any>) => {
                * be updating old data
                */
               const clonedVolumes = clone(this.state.volumes || this.props.data);
-
-              // if the volume never appeared in original list of Linodes, no updating needed
-              if (targetIndex === -1) {
-                return;
-              }
 
               /*
                * If the volume has a Linode ID, it means that it's just been

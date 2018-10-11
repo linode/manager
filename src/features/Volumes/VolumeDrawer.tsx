@@ -23,7 +23,7 @@ import TextField from 'src/components/TextField';
 import { withRegions } from 'src/context/regions';
 import { events$, resetEventsPolling } from 'src/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
-import { updateVolumes$ } from 'src/features/Volumes/VolumesLanding';
+import { updateVolumes$ } from 'src/features/Volumes/WithEvents';
 import { getLinodeConfigs, getLinodes } from 'src/services/linodes';
 import { cloneVolume, createVolume, resizeVolume, updateVolume, VolumeRequestPayload } from 'src/services/volumes';
 import { close } from 'src/store/reducers/volumeDrawer';
