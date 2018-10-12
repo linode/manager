@@ -38,22 +38,31 @@ export interface PaginationProps<T> extends State<T> {
   handlePageSizeChange: (v: number) => void;
   request: <U={}>(update?: (v: T[]) => U) => Promise<void>;
   handleOrderChange: (key: string, order?: 'asc' | 'desc') => void;
+  onDelete: () => void;
 }
 
 const asc: 'asc' = 'asc';
 
 export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<any>) => {
   return class WrappedComponent extends React.PureComponent<any, State> {
-    state = {
+    state: State = {
       count: 0,
       loading: true,
       page: 1,
       pageSize: 25,
       error: undefined,
-      result: undefined,
       orderBy: undefined,
       order: asc,
     }
+
+    private onDelete = () => {
+      const { data, page } = this.state;
+      if (data && data.length === 1) {
+        return this.handlePageChange(page - 1);
+      }
+
+      return this.request();
+    };
 
     private request = (map?: Function) => {
       const filters = {};
@@ -96,6 +105,7 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
         handlePageSizeChange: this.handlePageSizeChange,
         request: this.request,
         handleOrderChange: this.handleOrderChange,
+        onDelete: this.onDelete,
       });
     }
   }

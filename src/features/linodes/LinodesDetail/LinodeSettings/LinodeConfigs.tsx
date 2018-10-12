@@ -84,7 +84,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
 
   componentDidUpdate(prevProps: CombinedProps) {
     if (prevProps.active === false && this.props.active === true) {
-      this.props.updateOrderBy('label');
+      this.props.handleOrderChange('label');
     }
   }
 
@@ -184,16 +184,13 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
 
   deleteConfig = () => {
     this.setConfirmDelete({ submitting: true });
-    const { linodeId, linodeLabel } = this.props;
+    const { linodeId } = this.props;
     const { confirmDelete: { id: configId } } = this.state;
     if (!configId) { return; }
 
     deleteLinodeConfig(linodeId, configId)
+      .then(this.props.onDelete)
       .then(() => {
-        this.props.request();
-
-        events$.next(genEvent('linode_reboot', linodeId, linodeLabel));
-
         this.setConfirmDelete({
           submitting: false,
         }, () => { this.setConfirmDelete({ submitting: false, open: false, id: undefined }); });

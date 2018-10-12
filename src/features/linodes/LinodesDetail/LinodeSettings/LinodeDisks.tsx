@@ -149,7 +149,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     const disks = path(['data'], this.props);
     const activating = (!prevProps.active && this.props.active);
     if (activating && !disks) {
-      this.props.updateOrderBy('label');
+      this.props.handleOrderChange('label');
     }
   }
 
