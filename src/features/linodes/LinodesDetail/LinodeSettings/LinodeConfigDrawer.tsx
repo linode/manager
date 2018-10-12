@@ -65,7 +65,8 @@ interface EditableFields {
 }
 
 interface Props {
-  linodeId: number
+  linodeHypervisor: 'kvm' | 'xen';
+  linodeId: number;
   linodeRegion: string;
   maxMemory: number;
   open: boolean;
@@ -125,7 +126,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
     });
 
   componentDidUpdate(prevProps: CombinedProps, prevState: State) {
-    const { linodeId, linodeConfigId } = this.props;
+    const { linodeId, linodeConfigId, linodeHypervisor } = this.props;
 
     if (this.isOpening(prevProps.open, this.props.open)) {
 
@@ -141,7 +142,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
        * @todo We could (should?) put this back into Redux.
        */
       if (prevState.kernels.length === 0) {
-        this.requestKernels();
+        this.requestKernels(linodeHypervisor);
       }
 
       this.getAvailableDevices()
@@ -606,10 +607,10 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
   handleChangeLabel = (e: React.ChangeEvent<HTMLInputElement>) =>
     this.updateField({ label: e.target.value || '' });
 
-  requestKernels = () => {
+  requestKernels = (linodeHypervisor: 'kvm' | 'xen') => {
     this.setState({ loading: { ...this.state.loading, kernels: true } });
 
-    return getAllKernels()
+    return getAllKernels({}, { [linodeHypervisor]: true })
       .then((kernels) => {
         this.setState({
           kernels,
@@ -619,7 +620,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
       .catch(error => {
         this.setState({
           loading: { ...this.state.loading, kernels: false },
-          errors: pathOr([{ reason: 'Unable to load kernesl.' }], ['response', 'data', 'errors'], error),
+          errors: pathOr([{ reason: 'Unable to load kernels.' }], ['response', 'data', 'errors'], error),
         })
       });
   };
