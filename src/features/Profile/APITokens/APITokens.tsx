@@ -11,7 +11,7 @@ export const APITokens: React.StatelessComponent = () => {
 
       <PersonalTokenTable title="Personal Access Tokens" type="Personal Access Token" />
 
-      <AppTokenTable title="App Tokens" type="OAuth Client Tokens" />
+      <AppTokenTable title="Apps" type="OAuth Client Tokens" />
     </React.Fragment>
   )
 }
