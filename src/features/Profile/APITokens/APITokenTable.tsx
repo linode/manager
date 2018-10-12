@@ -1,12 +1,12 @@
+import * as moment from 'moment';
+import { path } from 'ramda';
+import * as React from 'react';
+
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
 import Typography from '@material-ui/core/Typography';
-
-import * as moment from 'moment';
-import { compose, filter, path, pathOr, sort } from 'ramda';
-import * as React from 'react';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
@@ -124,20 +124,6 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
     ...APITokenTable.defaultState,
   };
 
-  formatDates(tokens: Linode.Token[]): Linode.Token[] {
-    const aLongTimeFromNow = moment.utc().add(100, 'year');
-    return tokens.map((token) => {
-      const created = moment.utc(token.created).local();
-      const expiry = moment.utc(token.expiry).local();
-
-      return {
-        ...token,
-        created: created > aLongTimeFromNow ? 'never' : created.fromNow(),
-        expiry: expiry > aLongTimeFromNow ? 'never' : expiry.fromNow(),
-      };
-    });
-  }
-
   openCreateDrawer = () => {
     this.setState({
       form: {
@@ -192,8 +178,8 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
     });
   }
 
-  openRevokeDialog = (token:Linode.Token, type:string) => {
-    const { label, id} = token;
+  openRevokeDialog = (token: Linode.Token, type: string) => {
+    const { label, id } = token;
     this.setState({ dialog: { open: true, label, id, type } });
   }
 
@@ -223,11 +209,11 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
       .then(() => this.props.request());
   }
 
-  handleDrawerChange = (key:string, value:string) => {
+  handleDrawerChange = (key: string, value: string) => {
     const { form } = this.state;
     this.setState({
       form:
-      { ...form, values: { ...form.values, [key]: value } },
+        { ...form, values: { ...form.values, [key]: value } },
     });
   }
 
@@ -331,7 +317,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     this.mounted = true;
-    this.props.request();
+    this.props.handleOrderChange('created');
   }
 
   componentWillUnmount() {
@@ -353,22 +339,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
   }
 
   renderRows() {
-    const { title, type } = this.props;
-
-    const now = moment.utc().add(10,'s').format();
-    const isPastNow = isPast(now);
-
-    const tokens = compose<
-      Props,
-      Linode.Token[],
-      Linode.Token[],
-      Linode.Token[],
-      Linode.Token[]>(
-        this.formatDates,
-        sortCreatedDateAscending,
-        filter<Linode.Token>(t => isPastNow(t.expiry)),
-        pathOr([], ['data']),
-    )(this.props);
+    const { title, type, data: tokens = [] } = this.props;
 
     return tokens.map((token: Linode.Token) =>
       <TableRow key={token.id} data-qa-table-row={token.label}>
@@ -536,17 +507,42 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
     </Button>
 }
 
-const sortCreatedDateAscending = sort((a: Linode.Token, b: Linode.Token) => {
-  return moment.utc(b.created).diff(moment.utc(a.created));
-});
+const formatDates = (aLongTimeFromNow: any) => (token: Linode.Token): Linode.Token => {
+  const created = moment.utc(token.created).local();
+  const expiry = moment.utc(token.expiry).local();
+
+  return {
+    ...token,
+    created: created > aLongTimeFromNow ? 'never' : created.fromNow(),
+    expiry: expiry > aLongTimeFromNow ? 'never' : expiry.fromNow(),
+  };
+}
+
+const updateTokensResponse = (response: Linode.ResourcePage<Linode.Token>) => {
+  const now = moment.utc().add(10, 's').format();
+  const isPastNow = isPast(now);
+  const aLongTimeFromNow = moment.utc().add(100, 'year');
+
+  return {
+    ...response,
+    data: response
+      .data
+      .filter((token) => isPastNow(token.expiry))
+      .map(formatDates(aLongTimeFromNow))
+  }
+}
 
 const styled = withStyles(styles, { withTheme: true })<Props>(APITokenTable);
 
-const personalTokenUpdatedRequest = (ownProps: any, params: any, filters: any) => getPersonalAccessTokens(params, filters)
-  .then((response: any) => response);
+const personalTokenUpdatedRequest = (ownProps: any, params: any, filters: any) =>
+  getPersonalAccessTokens(params, filters)
+  .then(response => response)
+    .then(updateTokensResponse)
 
-const appTokenUpdatedRequest = (ownProps: any, params: any, filters: any) => getAppTokens(params, filters)
-  .then((response: any) => response);
+const appTokenUpdatedRequest = (ownProps: any, params: any, filters: any) =>
+  getAppTokens(params, filters)
+    .then(updateTokensResponse)
+
 
 export const PersonalTokenTable = paginate(personalTokenUpdatedRequest)(styled);
 export const AppTokenTable = paginate(appTokenUpdatedRequest)(styled);
