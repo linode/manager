@@ -1,6 +1,6 @@
 const { constants } = require('../../../constants');
 
-import { apiCreateLinode, apiDeleteAllLinodes } from '../../../utils/common';
+import { apiCreateLinode, apiDeleteAllLinodes, generatePassword } from '../../../utils/common';
 import Rebuild from '../../../pageobjects/linode-detail/linode-detail-rebuild.page';
 import ListLinodes from '../../../pageobjects/list-linodes';
 import LinodeDetail from '../../../pageobjects/linode-detail/linode-detail.page';
@@ -17,11 +17,6 @@ describe('Linode Detail - Rebuild Suite', () => {
         LinodeDetail.changeTab('Rebuild');
     });
 
-    beforeEach(() => {
-        browser.refresh();
-        Rebuild.title.waitForText();
-    });
-
     afterAll(() => {
         apiDeleteAllLinodes();
     });
@@ -32,9 +27,7 @@ describe('Linode Detail - Rebuild Suite', () => {
 
     it('should display a help icon with tooltip on click', () => {
         Rebuild.help.moveToObject();
-        Rebuild.popoverMsg.waitForVisible();
-
-        expect(Rebuild.popoverMsg.getText()).toBe('Choosing a 64-bit distro is recommended.');
+        Rebuild.popoverMsg.waitForVisible(constants.wait.normal);
     });
 
     it('should display image options in the select', () => {
@@ -45,11 +38,12 @@ describe('Linode Detail - Rebuild Suite', () => {
     });
 
     it('should display error on create an image without selecting an image', () => {
+        browser.click('body'); // click the body to dismiss the opened select
         browser.waitForVisible('[data-qa-image-option]', constants.wait.normal, true);
         
         Rebuild.submit.click();
 
-        browser.waitForVisible('[data-qa-image-error]');
+        browser.waitForVisible('[data-qa-image-error]', constants.wait.normal);
         const error = Rebuild.imageError;
 
         expect(error.getText()).toBe('Image cannot be blank.');
@@ -62,7 +56,7 @@ describe('Linode Detail - Rebuild Suite', () => {
     });
 
     it('should rebuild linode on valid image and password', () => {
-        const testPassword = '~/4gNgmV$_J3vREN'
+        const testPassword = generatePassword();
         Rebuild.selectImage();
         Rebuild.imageOptions.forEach(opt => opt.waitForVisible(constants.wait.short, true));
         Rebuild.password.setValue(testPassword);
