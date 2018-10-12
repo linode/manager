@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import { path } from 'ramda';
+import { compose, path } from 'ramda';
 import * as React from 'react';
 
 import Paper from '@material-ui/core/Paper';
@@ -14,7 +14,7 @@ import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import paginate, { PaginationProps } from 'src/components/Pagey';
+import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
@@ -56,9 +56,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => {
   });
 };
 
+export type APITokenType = 'OAuth Client Token' | 'Personal Access Token';
+export type APITokenTitle = 'Apps' | 'Personal Access Tokens';
+
 interface Props extends PaginationProps<Linode.Token> {
-  type: string;
-  title: string;
+  type: APITokenType;
+  title: APITokenTitle;
 }
 
 interface FormState {
@@ -77,6 +80,8 @@ interface DialogState {
   open: boolean;
   id?: number;
   label?: string;
+  errors?: Linode.ApiFieldError[];
+  type: string;
 }
 
 interface TokenState {
@@ -85,7 +90,6 @@ interface TokenState {
 }
 
 interface State {
-  // pats: Linode.Token[];
   form: FormState;
   dialog: DialogState;
   token?: TokenState;
@@ -94,7 +98,7 @@ interface State {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 export class APITokenTable extends React.Component<CombinedProps, State> {
-  static defaultState = {
+  static defaultState: State = {
     form: {
       mode: 'view' as DrawerMode,
       open: false,
@@ -110,6 +114,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
       open: false,
       id: 0,
       label: undefined,
+      errors: undefined,
       type: '',
     },
     token: {
@@ -178,9 +183,9 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
     });
   }
 
-  openRevokeDialog = (token: Linode.Token, type: string) => {
+  openRevokeDialog = (token:Linode.Token, type:string) => {
     const { label, id } = token;
-    this.setState({ dialog: { open: true, label, id, type } });
+    this.setState({ dialog: { ...this.state.dialog, open: true, label, id, type, errors: undefined } });
   }
 
   closeRevokeDialog = () => {
@@ -197,16 +202,33 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
 
   revokePersonalAccessToken = () => {
     const { dialog } = this.state;
-    deletePersonalAccessToken(dialog.id)
-      .then(() => { this.closeRevokeDialog(); })
-      .then(() => this.props.request());
+    deletePersonalAccessToken(dialog.id as number)
+      .then(() => this.props.request())
+      .then(() => this.closeRevokeDialog())
+      .catch((err: any) => this.showDialogError(err))
   }
 
   revokeAppToken = () => {
     const { dialog } = this.state;
-    deleteAppToken(dialog.id)
-      .then(() => { this.closeRevokeDialog(); })
-      .then(() => this.props.request());
+    deleteAppToken(dialog.id as number)
+    .then(() => this.props.request())
+    .then(() => { this.closeRevokeDialog(); })
+    .catch((err: any) => this.showDialogError(err))
+  }
+
+  showDialogError(err: any) {
+    const apiError = path<Linode.ApiFieldError[]>(['response', 'data', 'error'], err);
+
+    return this.setState({
+      dialog: {
+        ...this.state.dialog,
+        open: true,
+        submitting: false,
+        errors: apiError
+        ? apiError
+        : [{ field: 'none', reason: 'Unable to complete your request at this time.' }],
+      }
+    });
   }
 
   handleDrawerChange = (key: string, value: string) => {
@@ -443,6 +465,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
         <ConfirmationDialog
           title={`Revoking ${dialog.label}`}
           open={dialog.open}
+          error={(this.state.dialog.errors || []).map(e => e.reason).join(',')}
           actions={this.renderRevokeConfirmationActions}
           onClose={this.closeRevokeDialog}
         >
@@ -451,23 +474,22 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
 
         <ConfirmationDialog
           title="Personal Access Token"
+          error={(this.state.dialog.errors || []).map(e => e.reason).join(',')}
           actions={this.renderPersonalAccessTokenDisplayActions}
-          open={this.state.token.open}
+          open={Boolean(this.state.token && this.state.token.open)}
           onClose={this.closeTokenDialog}
         >
           <Typography variant="body1">
             {`Your personal access token has been created.
               Store this secret. It won't be shown again.`}
           </Typography>
-          <Notice typeProps={{ variant: 'caption' }} warning text={this.state.token.value!} />
+          <Notice typeProps={{ variant: 'caption' }} warning text={this.state.token && this.state.token.value!} />
         </ConfirmationDialog>
       </React.Fragment>
     );
   }
   revokeAction = () => {
     const { dialog: { type } } = this.state;
-
-    this.closeRevokeDialog();
 
     type === 'OAuth Client Token'
       ? this.revokeAppToken()
@@ -532,17 +554,25 @@ const updateTokensResponse = (response: Linode.ResourcePage<Linode.Token>) => {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true })<Props>(APITokenTable);
+const styled = withStyles(styles, { withTheme: true });
 
-const personalTokenUpdatedRequest = (ownProps: any, params: any, filters: any) =>
-  getPersonalAccessTokens(params, filters)
-  .then(response => response)
-    .then(updateTokensResponse)
+const updatedRequest = (ownProps: Props, params: any, filters: any) => {
+  if (ownProps.type === 'OAuth Client Token') {
+    return getAppTokens(params, filters)
+      .then(updateTokensResponse);
+  } else {
+    return getPersonalAccessTokens(params, filters)
+      .then(response => response)
+      .then(updateTokensResponse)
+  }
+}
 
-const appTokenUpdatedRequest = (ownProps: any, params: any, filters: any) =>
-  getAppTokens(params, filters)
-    .then(updateTokensResponse)
+const paginated = Pagey(updatedRequest);
 
+const enhanced = compose<any, any, any>(
+  paginated,
+  styled
+);
 
-export const PersonalTokenTable = paginate(personalTokenUpdatedRequest)(styled);
-export const AppTokenTable = paginate(appTokenUpdatedRequest)(styled);
+export default enhanced(APITokenTable);
+
