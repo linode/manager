@@ -1,12 +1,14 @@
 import { API_ROOT } from 'src/constants';
-import Request, { setData, setMethod, setURL } from 'src/services';
+import Request, { setData, setMethod, setParams, setURL, setXFilter } from 'src/services';
 
 type Page<T> = Linode.ResourcePage<T>;
 
-export const getUsers = () =>
+export const getUsers = (params: any = {}, filters: any = {}) =>
   Request<Page<Linode.User>>(
     setURL(`${API_ROOT}/account/users`),
     setMethod('GET'),
+    setParams(params),
+    setXFilter(filters),
   )
     .then(response => response.data);
 
@@ -46,7 +48,7 @@ export const getGrants = (username: string) =>
     setMethod('GET'),
   )
     .then(response => response.data);
-  
+
 export const updateGrants = (username: string, data: Partial<Linode.Grants>) =>
   Request<Linode.Grants>(
     setURL(`${API_ROOT}/account/users/${username}/grants`),
