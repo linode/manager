@@ -37,7 +37,7 @@ export interface PaginationProps<T> extends State<T> {
   handlePageChange: (v: number) => void;
   handlePageSizeChange: (v: number) => void;
   request: <U={}>(update?: (v: T[]) => U) => Promise<void>;
-  updateOrderBy: (key: string) => void;
+  handleOrderChange: (key: string, order?: 'asc' | 'desc') => void;
 }
 
 const asc: 'asc' = 'asc';
@@ -84,16 +84,9 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
       this.setState({ page }, () => { this.request() });
     };
 
-    public updateOrderBy = (orderBy: string) => {
-      this.setState({
-        orderBy,
-        order: orderBy === this.state.orderBy ? this.reverseOrder(this.state.order) : 'asc',
-      }, () => this.request());
+    public handleOrderChange = (orderBy: string, order: 'asc' | 'desc' = 'asc') => {
+      this.setState({ orderBy, order }, () => this.request());
     };
-
-    private reverseOrder(order: 'asc' | 'desc') {
-      return order === 'asc' ? 'desc' : 'asc';
-    }
 
     public render() {
       return React.createElement(Component, {
@@ -102,7 +95,7 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
         handlePageChange: this.handlePageChange,
         handlePageSizeChange: this.handlePageSizeChange,
         request: this.request,
-        updateOrderBy: this.updateOrderBy,
+        handleOrderChange: this.handleOrderChange,
       });
     }
   }
