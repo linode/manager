@@ -10,5 +10,5 @@ export const paginationProps: PaginationProps<any> = {
   handlePageChange: jest.fn(),
   handlePageSizeChange: jest.fn(),
   request: jest.fn(),
-  updateOrderBy: jest.fn(),
+  handleOrderChange: jest.fn(),
 };

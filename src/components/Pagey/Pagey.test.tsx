@@ -181,39 +181,26 @@ describe('Paginator 2: Pagement Day', () => {
 
   describe('sorting', () => {
     const { wrapper, mockRequest } = setup();
-    const updateOrderBy = wrapper.prop('updateOrderBy');
+    const handleOrderChange = wrapper.prop('handleOrderChange');
 
     beforeEach(() => {
       mockRequest.mockClear();
     })
 
-    it('should provide a updateOrderBy handler prop', () => {
-      expect(updateOrderBy).toBeDefined();
-      expect(updateOrderBy).toBeInstanceOf(Function);
+    it('should provide a handleOrderChange handler prop', () => {
+      expect(handleOrderChange).toBeDefined();
+      expect(handleOrderChange).toBeInstanceOf(Function);
     });
 
-    it('should send request with sort by prop asecending on first call', () => {
-      updateOrderBy('label');
+    it('should send request with sort by ascending', () => {
+      handleOrderChange('label');
 
       expect(mockRequest).toHaveBeenCalledWith({}, { page: 1, page_size: 25 }, { '+order_by': 'label', '+order': 'asc' })
     });
-
-    it('should send request with sort by prop descending on second call', () => {
-      updateOrderBy('label');
+    it('should send request with sort by descending', () => {
+      handleOrderChange('label', 'desc');
 
       expect(mockRequest).toHaveBeenCalledWith({}, { page: 1, page_size: 25 }, { '+order_by': 'label', '+order': 'desc' })
-    });
-
-    it('should send request with sort by prop ascending on third call', () => {
-      updateOrderBy('label');
-
-      expect(mockRequest).toHaveBeenCalledWith({}, { page: 1, page_size: 25 }, { '+order_by': 'label', '+order': 'asc' })
-    });
-
-    it('should send request with sort by prop ascending on first call of new label', () => {
-      updateOrderBy('other');
-
-      expect(mockRequest).toHaveBeenCalledWith({}, { page: 1, page_size: 25 }, { '+order_by': 'other', '+order': 'asc' })
     });
   });
 });
