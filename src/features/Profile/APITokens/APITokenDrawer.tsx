@@ -309,8 +309,8 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
       <Drawer
         title={
           mode === 'view' && label
-          || mode === 'create' && 'Add a Personal Access Token'
-          || mode === 'edit' && 'Edit this Personal Access Token'
+          || mode === 'create' && 'Add Personal Access Token'
+          || mode === 'edit' && 'Edit Personal Access Token'
           || ''
         }
         open={open}
