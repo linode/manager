@@ -247,7 +247,7 @@ class OAuthClients extends React.Component<CombinedProps, State> {
           <Grid item>
             <AddNewLink
               onClick={this.openCreateDrawer}
-              label="Create an OAuth Client"
+              label="Create My App"
               data-qa-oauth-create
             />
           </Grid>

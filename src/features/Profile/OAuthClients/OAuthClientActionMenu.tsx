@@ -150,7 +150,7 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
           onClose={this.closeConfirmDelete}
         >
           <Typography>
-            Are you sure you want to permanently delete this OAuth client?
+            Are you sure you want to permanently delete this app?
           </Typography>
         </ConfirmationDialog>
         <ConfirmationDialog
@@ -160,7 +160,7 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
           onClose={this.closeConfirmReset}
         >
           <Typography>
-            Are you sure you want to permanently reset the secret of this OAuth client?
+            Are you sure you want to permanently reset the secret of this app?
           </Typography>
         </ConfirmationDialog>
       </React.Fragment>
