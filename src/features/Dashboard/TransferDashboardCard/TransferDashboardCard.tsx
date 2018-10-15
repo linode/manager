@@ -149,7 +149,7 @@ class TransferDashboardCard extends React.Component<CombinedProps, State> {
             </Grid>
             <Grid item>
               <Typography variant='title'>This Month's Network Transfer Pool</Typography>
-              <Typography>Network bandwith during the current billing cycle.</Typography>
+              <Typography>Network bandwidth during the current billing cycle.</Typography>
             </Grid>
           </Grid>
         </Paper>

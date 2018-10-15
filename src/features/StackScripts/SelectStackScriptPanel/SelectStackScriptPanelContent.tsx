@@ -9,7 +9,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import DebouncedSearch from 'src/components/DebouncedSearch';
+import DebouncedSearch from 'src/components/DebouncedSearchTextField';
 import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import Table from 'src/components/Table';
@@ -661,9 +661,10 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
           : <React.Fragment>
             <div className={classes.searchWrapper}>
               <DebouncedSearch
+                placeholderText='Search for StackScript by Label or Description'
                 onSearch={this.handleSearch}
                 className={classes.searchBar}
-                actionBeingPerfomed={isSearching}
+                isSearching={isSearching}
               />
             </div>
             <Table

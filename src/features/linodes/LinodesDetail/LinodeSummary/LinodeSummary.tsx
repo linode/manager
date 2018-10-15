@@ -10,6 +10,7 @@ import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/st
 import Typography from '@material-ui/core/Typography';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import ExtendedExpansionPanel from 'src/components/ExtendedExpansionPanel';
 import LineGraph from 'src/components/LineGraph';
 import Select from 'src/components/Select';
 import { withTypes } from 'src/context/types';
@@ -19,8 +20,6 @@ import { getLinodeStats } from 'src/services/linodes';
 import { setUpCharts } from 'src/utilities/charts';
 
 import SummaryPanel from './SummaryPanel';
-
-import ExtendedExpansionPanel from './ExtendedExpansionPanel';
 
 setUpCharts();
 
@@ -222,7 +221,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
     /* If the panel is opening, increment the number of open panels. Otherwise decrement.
     *  This allows us to keep track of when all of the panels are closed.
-    */ 
+    */
     const updatedOpenPanels = expanded ? openPanels + 1 : openPanels - 1;
     this.setState({ openPanels: updatedOpenPanels });
 
@@ -253,7 +252,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       })
       .catch((errorResponse) => {
         if (!this.mounted) { return; }
-        const errorText = pathOr("There was an error retrieving information for this Linode.", 
+        const errorText = pathOr("There was an error retrieving information for this Linode.",
           ['reason'], errorResponse[0]);
         this.setState({ dataIsLoading: false, statsError: errorText, })
       });
@@ -455,7 +454,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
     const { dataIsLoading, statsError, rangeSelection } = this.state;
 
-    if (!linode || !image || !volumes) {
+    if (!linode || !volumes) {
       return null;
     }
 

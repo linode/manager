@@ -8,7 +8,7 @@ describe('Setup Tests Suite', () => {
     });
 
     it('should remove all account data', () => {
-        const token = readToken();
+        const token = readToken(browser.options.testUser);
         browser.deleteAll(token);
     });
 

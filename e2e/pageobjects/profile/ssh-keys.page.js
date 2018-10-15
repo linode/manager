@@ -48,6 +48,7 @@ export class SshKeys extends Page {
     }
 
     removeKey(label) {
+        browser.waitForVisible(`[data-qa-content-row="${label}"]`, constants.wait.normal);
         const keyToRemove = $(`[data-qa-content-row="${label}"]`);
         this.selectActionMenuItem(keyToRemove, 'Delete');
         
@@ -60,7 +61,7 @@ export class SshKeys extends Page {
         this.dialogConfirmDelete.click();
         this.dialogTitle.waitForExist(constants.wait.normal, true);
 
-        $(`[data-qa-content-row="${label}"]`).waitForVisible(constants.wait.normal, true);
+        $(`[data-qa-content-row="${label}"]`).waitForVisible(constants.wait.long, true);
     }
 }
 

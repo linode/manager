@@ -7,13 +7,16 @@ import { clearDocs, setDocs } from 'src/store/reducers/documentation';
 
 import { NodeBalancersLanding as _NodeBalancersLanding } from './NodeBalancersLanding';
 
+import { paginationProps } from 'src/__data__/paginationProps';
+
 describe.skip('NodeBalancers', () => {
   const NodeBalancersLanding = withRouter(_NodeBalancersLanding);
 
-    const component = mount(
+  const component = mount(
     <StaticRouter context={{}}>
       <LinodeThemeWrapper>
         <NodeBalancersLanding
+          {...paginationProps}
           classes={{
             root: '',
             title: '',
