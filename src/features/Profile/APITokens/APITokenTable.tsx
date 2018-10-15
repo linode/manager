@@ -193,7 +193,19 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
   }
 
   openTokenDialog = (token: string) => {
-    this.setState({ token: { open: true, value: token } });
+    this.setState({
+      dialog: {
+        ...this.state.dialog,
+        errors: undefined
+      },
+      form: {
+        ...this.state.form,
+        errors: undefined
+      },
+      token: {
+        open: true,
+        value: token }
+    });
   }
 
   closeTokenDialog = () => {
