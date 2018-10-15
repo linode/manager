@@ -24,12 +24,20 @@ interface Props extends TableCellProps {
   active: boolean;
   label: string;
   direction: 'asc' | 'desc';
-  handleClick: (v: string) => void;
+  handleClick: (key: string, order?: 'asc' | 'desc') => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class TableSortCell extends React.PureComponent<CombinedProps, {}> {
+  handleClick = () => {
+    const { label, direction, handleClick } = this.props;
+    const nextOrder = (direction === 'asc')
+      ? 'desc'
+      : 'asc';
+    return handleClick(label.toLowerCase(), nextOrder);
+  }
+
   render() {
     const { classes, children, direction, label, active, handleClick, ...rest } = this.props;
 
@@ -45,8 +53,6 @@ class TableSortCell extends React.PureComponent<CombinedProps, {}> {
       </TableCell>
     );
   }
-
-  handleClick = (v: React.MouseEvent<HTMLElement>) => this.props.handleClick(this.props.label);
 }
 
 const styled = withStyles(styles, { withTheme: true });

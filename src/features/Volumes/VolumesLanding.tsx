@@ -21,10 +21,10 @@ import LinearProgress from 'src/components/LinearProgress';
 import paginate, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
-import SortableTableCell from 'src/components/SortableTableCell';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRowError from 'src/components/TableRowError';
+import TableSortCell from 'src/components/TableSortCell';
 import { generateInFilter, resetEventsPolling } from 'src/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { getLinodes } from 'src/services/linodes';
@@ -282,13 +282,15 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           <Table aria-label="List of Volumes">
             <TableHead>
               <TableRow>
-                <SortableTableCell
+                <TableSortCell
                   label="Label"
                   className={classes.labelCol}
-                  isActive={this.props.orderBy === 'label'}
-                  order={this.props.order}
-                  handleSorting={this.props.handleOrderChange}
-                />
+                  active={this.props.orderBy === 'label'}
+                  direction={this.props.order}
+                  handleClick={this.props.handleOrderChange}
+                >
+                  Label
+                </TableSortCell>
                 <TableCell className={classes.attachmentCol}>Attached To</TableCell>
                 <TableCell className={classes.sizeCol}>Size</TableCell>
                 <TableCell className={classes.pathCol}>File System Path</TableCell>
