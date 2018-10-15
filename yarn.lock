@@ -541,12 +541,6 @@
   dependencies:
     regenerator-runtime "^0.12.0"
 
-"@babel/runtime@^7.0.0":
-  version "7.1.2"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.1.2.tgz#81c89935f4647706fc54541145e6b4ecfef4b8e3"
-  dependencies:
-    regenerator-runtime "^0.12.0"
-
 "@babel/runtime@^7.0.0-beta.42":
   version "7.0.0-beta.51"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.0.0-beta.51.tgz#48b8ed18307034c6620f643514650ca2ccc0165a"
@@ -1126,12 +1120,6 @@
   resolved "https://registry.yarnpkg.com/@types/react/-/react-16.4.0.tgz#f7f639837bf1f8635f57616b12a1b0d193b6343a"
   dependencies:
     csstype "^2.2.0"
-
-"@types/recompose@^0.27.0":
-  version "0.27.0"
-  resolved "https://registry.yarnpkg.com/@types/recompose/-/recompose-0.27.0.tgz#66955b8ea4d477c3c03f09a571380ca82549cdac"
-  dependencies:
-    "@types/react" "*"
 
 "@types/redux-thunk@^2.1.0":
   version "2.1.0"
@@ -9579,17 +9567,6 @@ rechoir@^0.6.2:
   resolved "https://registry.yarnpkg.com/recompose/-/recompose-0.27.1.tgz#1a49e931f183634516633bbb4f4edbfd3f38a7ba"
   dependencies:
     babel-runtime "^6.26.0"
-    change-emitter "^0.1.2"
-    fbjs "^0.8.1"
-    hoist-non-react-statics "^2.3.1"
-    react-lifecycles-compat "^3.0.2"
-    symbol-observable "^1.0.4"
-
-recompose@^0.30.0:
-  version "0.30.0"
-  resolved "https://registry.yarnpkg.com/recompose/-/recompose-0.30.0.tgz#82773641b3927e8c7d24a0d87d65aeeba18aabd0"
-  dependencies:
-    "@babel/runtime" "^7.0.0"
     change-emitter "^0.1.2"
     fbjs "^0.8.1"
     hoist-non-react-statics "^2.3.1"
