@@ -256,7 +256,7 @@ exports.getMyStackScripts = token => {
         getAxiosInstance(token).get(endpoint, {
             headers: {
                 'Authorization': `Bearer ${token}`,
-                'X-Filter': `{"username":"${process.env.MANAGER_USER}","+order_by":"deployments_total","+order":"desc"}`
+                'X-Filter': `{"username":"${browser.options.testUser}","+order_by":"deployments_total","+order":"desc"}`
             }
         })
         .then(response => resolve(response.data))

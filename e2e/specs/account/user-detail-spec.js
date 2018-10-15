@@ -49,7 +49,7 @@ describe('Account - User Detail - Username Suite', () => {
         });
 
         it('should fail to update when submitting an existing username', () => {
-            UserDetail.usernameField.$('input').setValue(process.env.MANAGER_USER);
+            UserDetail.usernameField.$('input').setValue(browser.options.testUser);
             UserDetail.saveButton.click();
             UserDetail.usernameField.$('p').waitForVisible(constants.wait.normal);
             expect(UserDetail.usernameField.$('p').getText()).toContain('Username taken');

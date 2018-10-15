@@ -11,7 +11,7 @@ describe('NodeBalancer - Negative Tests Suite', () => {
     let linode;
 
     beforeAll(() => {
-        const token = browser.readToken();
+        const token = browser.readToken(browser.options.testUser);
         linode = apiCreateLinode();
         linode['privateIp'] = browser.allocatePrivateIp(token, linode.id).address;
         browser.url(constants.routes.nodeBalancers);
