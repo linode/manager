@@ -42,8 +42,8 @@ describe('NodeBalancer - Configurations Suite', () => {
     it('should display error on save configuration without a cert and private key', () => {
         NodeBalancers.saveButton.click();
 
-        expect(NodeBalancers.certTextField.$('p').getText()).toBe('"SSL certificate" is required');
-        expect(NodeBalancers.privateKeyTextField.$('p').getText()).toBe('"SSL private key" is required');
+        expect(NodeBalancers.certTextField.$('p').getText()).toBe('SSL certificate is a required field');
+        expect(NodeBalancers.privateKeyTextField.$('p').getText()).toBe('SSL private key is a required field');
 
         // Revert choice to HTTP
         NodeBalancers.selectMenuOption(NodeBalancers.protocolSelect, 'http');

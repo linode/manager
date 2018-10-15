@@ -64,8 +64,8 @@ exports.browserCommands = () => {
             .catch(error => console.error(error));
     });
 
-    browser.addCommand('readToken', function() {
-        const token = readToken();
+    browser.addCommand('readToken', function(username) {
+        const token = readToken(username);
         return token;
     });
 

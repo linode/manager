@@ -10,6 +10,10 @@ describe('Create Linode - Clone from Existing Suite', () => {
         ConfigureLinode.selectGlobalCreateItem('Linode');
     });
 
+    afterAll(() => {
+        apiDeleteAllLinodes();
+    });
+
     it('should display clone elements', () => {
         ConfigureLinode.baseDisplay();
         ConfigureLinode.createFromExisting.click();
@@ -46,9 +50,5 @@ describe('Create Linode - Clone from Existing Suite', () => {
         ConfigureLinode.regions[0].click();
         ConfigureLinode.deploy.click();
         ConfigureLinode.waitForNotice(noticeMsg);
-    });
-
-    afterAll(() => {
-        apiDeleteAllLinodes();
     });
 });
