@@ -1,6 +1,6 @@
 import { configure } from '@storybook/react';
 
-import 'typeface-lato';
+import '../public/fonts/fonts.css'
 import '../src/index.css';
 import '../.storybook/storybook.css';
 
