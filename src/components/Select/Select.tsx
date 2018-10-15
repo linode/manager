@@ -104,7 +104,7 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
   const c = classNames({
     [classes.inputSucess]: success === true,
     [classes.inputError]: error === true,
-    [errorScrollClassName]: !!errorScrollClassName,
+    [errorScrollClassName]: !!errorText && !!errorScrollClassName,
     [classes.helpWrapperSelectField]: Boolean(tooltipText),
     [classes.pagination]: Boolean(pagination),
   });
