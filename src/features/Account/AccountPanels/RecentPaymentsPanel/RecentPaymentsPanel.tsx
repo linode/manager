@@ -1,4 +1,4 @@
-import { compose, pathOr } from 'ramda';
+import { compose } from 'ramda';
 import * as React from 'react';
 
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
@@ -8,7 +8,8 @@ import TableRow from '@material-ui/core/TableRow';
 
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import ExpansionPanel from 'src/components/ExpansionPanel';
-import PaginationFooter, { PaginationProps } from 'src/components/PaginationFooter';
+import paginate, { PaginationProps } from 'src/components/Pagey';
+import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
@@ -22,53 +23,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
 });
 
-interface State extends PaginationProps {
-  errors?: Linode.ApiFieldError[];
-  loading: boolean;
-  data?: Linode.Payment[],
-}
+interface Props extends PaginationProps<Linode.Payment> { }
 
-type CombinedProps = WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
-class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
-  state: State = {
-    loading: true,
-    page: 1,
-    count: 1,
-    pageSize: 25,
-  };
-
+class RecentPaymentsPanel extends React.Component<CombinedProps, {}> {
   mounted: boolean = false;
-
-  requestPayments = (
-    whichPage: number = this.state.page,
-    pageSize: number = this.state.pageSize,
-    initial: boolean = false,
-  ) => {
-    if (!this.mounted) { return; }
-
-    this.setState({ loading: initial });
-
-    return getPayments({ page: whichPage, page_size: pageSize })
-      .then(({ data, page, results }) => {
-        if (!this.mounted) { return; }
-
-        this.setState({
-          loading: false,
-          page,
-          count: results,
-          data,
-        });
-      })
-      .catch((response) => {
-        if (!this.mounted) { return; }
-
-        const fallbackError = [{ reason: 'Unable to retrieve payments.' }];
-        this.setState({
-          errors: pathOr(fallbackError, ['response', 'data', 'errors'], response),
-        })
-      });
-  }
 
   componentDidMount() {
     this.mounted = true;
@@ -84,7 +44,7 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
       page,
       pageSize,
       count,
-    } = this.state;
+    } = this.props;
 
     return (
       <ExpansionPanel onChange={this.handleExpansion} heading="Recent Payments">
@@ -105,8 +65,8 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
             count={count}
             page={page}
             pageSize={pageSize}
-            handlePageChange={this.handlePageChange}
-            handleSizeChange={this.handlePageSizeChange}
+            handlePageChange={this.props.handlePageChange}
+            handleSizeChange={this.props.handlePageSizeChange}
           />
         }
       </ExpansionPanel>
@@ -114,14 +74,14 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
   }
 
   renderContent = () => {
-    const { data, errors, loading } = this.state;
+    const { data, error, loading } = this.props;
 
     if (loading) {
       return <TableRowLoading colSpan={3} />
     }
 
-    if (errors) {
-      return <TableRowError colSpan={3} message="We were unable to load your payments." />
+    if (error) {
+      return <TableRowError colSpan={4} message="We were unable to load your payments." />
     }
 
     return data && data.length > 0 ? this.renderItems(data) : <TableRowEmptyState colSpan={3} />
@@ -140,22 +100,22 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
   };
 
   handleExpansion = (e: any, expanded: boolean) => {
-    if (expanded && !this.state.data) {
-      this.requestPayments();
+    if (expanded && !this.props.data) {
+      this.props.request();
     }
-  }
-
-  handlePageChange = (page: number) => {
-    this.setState({ page }, () => this.requestPayments())
-  };
-
-  handlePageSizeChange = (pageSize: number) => {
-    this.setState({ pageSize, page: 1 }, () => this.requestPayments())
   }
 }
 
 const styled = withStyles(styles, { withTheme: true });
 
-const enhanced = compose(styled);
+const updatedRequest = (ownProps: any, params: any) => getPayments(params)
+  .then((response) => response);
+
+const paginated = paginate(updatedRequest);
+
+const enhanced = compose(
+  paginated,
+  styled,
+);
 
 export default enhanced(RecentPaymentsPanel);

@@ -97,6 +97,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
         <this.linodeConfigsTable />
         <LinodeConfigDrawer
           linodeConfigId={this.state.configDrawer.linodeConfigId}
+          linodeHypervisor={this.props.linodeHypervisor}
           linodeId={this.props.linodeId}
           linodeRegion={this.props.linodeRegion}
           maxMemory={this.props.linodeMemory}
@@ -223,6 +224,7 @@ const styled = withStyles(styles, { withTheme: true });
 const errorBoundary = PanelErrorBoundary({ heading: 'Advanced Configurations' });
 
 interface LinodeContext {
+  linodeHypervisor: 'kvm' | 'xen';
   linodeId: number;
   linodeLabel: string;
   linodeMemory: number;
@@ -232,6 +234,7 @@ interface LinodeContext {
 };
 
 const linodeContext = withLinode<LinodeContext>((context) => ({
+  linodeHypervisor: context.data!.hypervisor,
   linodeId: context.data!.id,
   linodeLabel: context.data!.label,
   linodeMemory: context.data!.specs.memory,

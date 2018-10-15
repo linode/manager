@@ -13,7 +13,7 @@ describe('Nodebalancer - Create Suite', () => {
         token;
 
     beforeAll(() => {
-        token = browser.readToken();
+        token = browser.readToken(browser.options.testUser);
         linode = apiCreateLinode();
         linode['privateIp'] = browser.allocatePrivateIp(token, linode.id).address;
         browser.url(constants.routes.nodeBalancers);
@@ -33,14 +33,14 @@ describe('Nodebalancer - Create Suite', () => {
     });
 
     it('should fail to create without selecting a region', () => {
-        const noticeMsg = '"region" is required';
+        const noticeMsg = 'Region is required.';
         browser.jsClick('[data-qa-deploy-linode]');
         NodeBalancers.waitForNotice(noticeMsg);
     });
 
     it('should fail to create without choosing a backend ip', () => {
-        const labelError = 'Label must be at least 3 characters';
-        const addressError = 'IP Address must be a Linode private address';
+        const labelError = 'Label is required.';
+        const addressError = 'IP address is required.';
 
         NodeBalancers.regionCards[0].click();
         browser.jsClick('[data-qa-deploy-linode]');

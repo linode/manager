@@ -74,11 +74,16 @@ describe('FromBackupsContent', () => {
   });
 
   describe('FromBackupsContent When Valid Backups Exist', () => {
+    beforeAll(async () => {
+      componentWithNotice.setState({ linodesWithBackups: LinodesWithBackups });
+      await componentWithNotice.update();
+
+      component.setState({ linodesWithBackups: LinodesWithBackups });
+      await component.update();
+    });
 
     it('should render a notice when passed a Notice prop', () => {
       // give our components a Linode with a valid backup
-      componentWithNotice.setState({ linodesWithBackups: LinodesWithBackups });
-      component.setState({ linodesWithBackups: LinodesWithBackups });
       expect(componentWithNotice.find('WithStyles(Notice)')).toHaveLength(1);
     });
 
@@ -87,23 +92,23 @@ describe('FromBackupsContent', () => {
     });
 
     it('should render SelectLinode panel', () => {
-      expect(component.find('WithStyles(WithRenderGuard(SelectLinodePanel))')).toHaveLength(1);
+      expect(component.find('WithStyles(WithTheme(WithRenderGuard(SelectLinodePanel)))')).toHaveLength(1);
     });
 
     it('should render SelectBackup panel', () => {
-      expect(component.find('WithStyles(WithRenderGuard(SelectBackupPanel))')).toHaveLength(1);
+      expect(component.find('WithStyles(WithTheme(WithRenderGuard(SelectBackupPanel)))')).toHaveLength(1);
     });
 
     it('should render SelectPlan panel', () => {
-      expect(component.find('WithStyles(WithRenderGuard(SelectPlanPanel))')).toHaveLength(1);
+      expect(component.find('WithStyles(WithTheme(WithRenderGuard(SelectPlanPanel)))')).toHaveLength(1);
     });
 
     it('should render SelectLabel panel', () => {
-      expect(component.find('WithStyles(WithRenderGuard(InfoPanel))')).toHaveLength(1);
+      expect(component.find('WithStyles(WithTheme(WithRenderGuard(InfoPanel)))')).toHaveLength(1);
     });
 
     it('should render SelectAddOns panel', () => {
-      expect(component.find('WithStyles(WithRenderGuard(AddonsPanel))')).toHaveLength(1);
+      expect(component.find('WithStyles(WithTheme(WithRenderGuard(AddonsPanel)))')).toHaveLength(1);
     });
   });
 });

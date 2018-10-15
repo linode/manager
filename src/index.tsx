@@ -3,17 +3,16 @@ import createBrowserHistory from 'history/createBrowserHistory';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, RouteProps, Switch } from 'react-router-dom';
 
-import { initAnalytics } from 'src/analytics';
+import { initAnalytics, initTagManager } from 'src/analytics';
 import AuthenticationWrapper from 'src/components/AuthenticationWrapper';
 import DefaultLoader from 'src/components/DefaultLoader';
-import { GA_ID, isProduction } from 'src/constants';
+import { GA_ID, GTM_ID, isProduction } from 'src/constants';
 import 'src/exceptionReporting';
 import Logout from 'src/layouts/Logout';
 import OAuthCallbackPage from 'src/layouts/OAuth';
 import store from 'src/store';
-
 import { sendEvent } from 'src/utilities/analytics';
 import 'src/utilities/createImageBitmap';
 import 'src/utilities/request';
@@ -26,9 +25,6 @@ import './index.css';
 import LinodeThemeWrapper from './LinodeThemeWrapper';
 import { initialize as sessionInitialize, refreshOAuthOnUserInteraction, refreshOAuthToken } from './session';
 
-// import { whyDidYouUpdate } from 'why-did-you-update';
-// whyDidYouUpdate(React);
-
 const Lish = DefaultLoader({
   loader: () => import('src/features/Lish'),
 });
@@ -37,6 +33,7 @@ const Lish = DefaultLoader({
  * Initialize Analytic and Google Tag Manager
  */
 initAnalytics(GA_ID, isProduction);
+initTagManager(GTM_ID);
 
 if (theme.get() === 'dark') {
   sendEvent({
@@ -85,9 +82,9 @@ const renderLish = () =>
  */
 const mock = () => null;
 
-const renderApp = () =>
+const renderApp = (props: RouteProps) =>
   <LinodeThemeWrapper>
-    <App toggleTheme={mock} />
+    <App toggleTheme={mock} location={props.location} />
   </LinodeThemeWrapper>
 
 const renderAuthentication = () =>

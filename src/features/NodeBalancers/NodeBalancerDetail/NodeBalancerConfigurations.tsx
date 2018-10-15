@@ -172,7 +172,15 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     */
     const nodePathErrors = errors.reduce(
       (acc: any, error: Linode.ApiFieldError) => {
-        const match = /^nodes_(\d+)_(\w+)$/.exec(error.field!);
+        /**
+         * Regex conditions are as follows:
+         * 
+         * must match "nodes["
+         * must have a digit 0-9
+         * then have "]"
+         * must end with ".anywordhere"
+         */
+        const match = /^nodes\[(\d+)\].(\w+)$/.exec(error.field!);
         if (match && match[1] && match[2]) {
           return [
             ...acc,
@@ -395,6 +403,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'], errorResponse);
         const newErrors = clone(this.state.configErrors);
         newErrors[idx] = errors || [];
+        this.setNodeErrors(idx, newErrors[idx]);
         this.setState({
           configErrors: newErrors,
         }, () => {

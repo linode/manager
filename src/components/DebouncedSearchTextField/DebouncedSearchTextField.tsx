@@ -12,7 +12,6 @@ import { debounce } from 'throttle-debounce';
 import CircleProgress from 'src/components/CircleProgress';
 import TextField from 'src/components/TextField';
 
-
 type ClassNames = 'root' | 'searchIcon';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
@@ -23,9 +22,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 });
 
 interface Props {
-  onSearch: any;
+  placeholderText: string;
+  onSearch: (value: string) => void;
   className?: string;
-  actionBeingPerfomed?: boolean;
+  isSearching?: boolean;
 }
 
 interface State {
@@ -35,14 +35,14 @@ interface State {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class DebouncedSearch extends React.Component<CombinedProps, State> {
+class DebouncedSearchTextField extends React.Component<CombinedProps, State> {
 
   public state: State = {
     query: '',
     debouncedSearch: debounce(400, false, this.props.onSearch)
   };
 
-  handleChangeQuery = (e: any) => {
+  handleChangeQuery = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { debouncedSearch } = this.state;
     this.setState({ query: e.target.value });
     debouncedSearch(e.target.value);
@@ -50,14 +50,19 @@ class DebouncedSearch extends React.Component<CombinedProps, State> {
 
   render() {
     const { query } = this.state;
-    const { classes, className, actionBeingPerfomed } = this.props;
+    const {
+      classes,
+      className,
+      placeholderText,
+      isSearching
+    } = this.props;
 
     return (
       <React.Fragment>
         <TextField
           fullWidth
           InputProps={{
-            placeholder: 'Search for StackScript by Label or Description',
+            placeholder: placeholderText,
             value: query,
             onChange: this.handleChangeQuery,
             startAdornment:
@@ -65,7 +70,7 @@ class DebouncedSearch extends React.Component<CombinedProps, State> {
                 <Search className={classes.searchIcon} />
               </InputAdornment>,
             endAdornment:
-              actionBeingPerfomed
+              isSearching
                 ? <InputAdornment position="end">
                   <CircleProgress mini={true} />
                 </InputAdornment>
@@ -82,4 +87,4 @@ class DebouncedSearch extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(DebouncedSearch);
+export default styled(DebouncedSearchTextField);

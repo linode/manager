@@ -18,7 +18,7 @@ describe('Account - Users Suite', () => {
     });
 
     it('should display root user in the table', () => {
-        expect(Users.userRows[0].$(Users.username.selector).getText()).toBe(process.env.MANAGER_USER);
+        expect(Users.userRows[0].$(Users.username.selector).getText()).toBe(browser.options.testUser);
         expect(Users.userRows[0].$(Users.userRestriction.selector).getText()).toMatch(/unrestricted/ig);
     });
 

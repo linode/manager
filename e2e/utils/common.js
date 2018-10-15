@@ -45,7 +45,7 @@ export const createLinodeIfNone = () => {
 }
 
 export const apiCreateLinode = (linodeLabel=false, privateIp=false, tags=[]) => {
-    const token = readToken();
+    const token = readToken(browser.options.testUser);
     const newLinodePass = crypto.randomBytes(20).toString('hex');
     const linode = browser.createLinode(token, newLinodePass, linodeLabel, tags);
 
@@ -67,31 +67,31 @@ export const apiCreateLinode = (linodeLabel=false, privateIp=false, tags=[]) => 
 }
 
 export const apiDeleteAllLinodes = () => {
-    const token = readToken();
+    const token = readToken(browser.options.testUser);
     const removeAll = browser.removeAllLinodes(token);
     return removeAll;
 }
 
 
 export const apiDeleteAllVolumes = () => {
-    const token = readToken();
+    const token = readToken(browser.options.testUser);
     browser.removeAllVolumes(token);
 }
 
 export const apiDeleteAllDomains = () => {
-    const token = readToken();
+    const token = readToken(browser.options.testUser);
     const domains = browser.getDomains(token);
     domains.data.forEach(domain => browser.removeDomain(token, domain.id));
 }
 
 export const apiDeleteMyStackScripts = () => {
-    const token = readToken();
+    const token = readToken(browser.options.testUser);
     const stackScripts = browser.getMyStackScripts(token);
     stackScripts.data.forEach(script => browser.removeStackScript(token, script.id));
 }
 
 export const createNodeBalancer = () => {
-    const token = readToken();
+    const token = readToken(browser.options.testUser);
     const linode = apiCreateLinode();
     linode['privateIp'] = browser.allocatePrivateIp(token, linode.id).address;
     browser.url(constants.routes.nodeBalancers);
@@ -102,7 +102,7 @@ export const createNodeBalancer = () => {
 }
 
 export const removeNodeBalancers = () => {
-    const token = readToken();
+    const token = readToken(browser.options.testUser);
     apiDeleteAllLinodes();
     const availableNodeBalancers = browser.getNodeBalancers(token);
     availableNodeBalancers.data.forEach(nb => browser.removeNodeBalancer(token, nb.id));
@@ -114,7 +114,7 @@ export const apiDeletePrivateImages = token => {
 }
 
 export const apiRemoveSshKeys = () => {
-    const token = readToken();
+    const token = readToken(browser.options.testUser);
     const userKeys = getPublicKeys(token).data;
 
     userKeys.forEach(key => removePublicKey(token, key.id));

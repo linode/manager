@@ -1,4 +1,4 @@
-import { compose, pathOr } from 'ramda';
+import { compose } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -8,7 +8,8 @@ import TableHead from '@material-ui/core/TableHead';
 
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import ExpansionPanel from 'src/components/ExpansionPanel';
-import PaginationFooter, { PaginationProps } from 'src/components/PaginationFooter';
+import paginate, { PaginationProps } from 'src/components/Pagey';
+import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
@@ -23,50 +24,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
 });
 
-interface State extends PaginationProps {
-  errors?: Linode.ApiFieldError[];
-  loading: boolean;
-  data?: Linode.Invoice[],
-}
+interface Props extends PaginationProps<Linode.Invoice> {}
 
-type CombinedProps = WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
-class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
-  state: State = {
-    loading: true,
-    page: 1,
-    count: 0,
-    pageSize: 25,
-  };
-
+class RecentInvoicesPanel extends React.Component<CombinedProps, {}> {
   mounted: boolean = false;
-
-  requestInvoices = (
-    page: number = this.state.page,
-    pageSize: number = this.state.pageSize,
-  ) => {
-
-    return getInvoices({ page, page_size: pageSize }, { '+order_by': 'date', '+order': 'desc' })
-      .then(({ data, results }) => {
-        if (!this.mounted) { return; }
-
-        this.setState({
-          loading: false,
-          page,
-          count: results,
-          data,
-        });
-      })
-      .catch((response) => {
-        if (!this.mounted) { return; }
-
-        const fallbackError = [{ reason: 'Unable to retrieve invoices.' }];
-        this.setState({
-          loading: false,
-          errors: pathOr(fallbackError, ['response', 'data', 'errors'], response),
-        })
-      });
-  }
 
   componentDidMount() {
     this.mounted = true;
@@ -82,7 +45,7 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
       page,
       pageSize,
       count,
-    } = this.state;
+    } = this.props;
 
     return (
       <ExpansionPanel
@@ -106,8 +69,8 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
             count={count}
             page={page}
             pageSize={pageSize}
-            handlePageChange={this.handlePageChange}
-            handleSizeChange={this.handlePageSizeChange}
+            handlePageChange={this.props.handlePageChange}
+            handleSizeChange={this.props.handlePageSizeChange}
           />
         }
       </ExpansionPanel>
@@ -115,23 +78,23 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
   }
 
   renderContent = () => {
-    const { data, errors, loading } = this.state;
+    const { data, error, loading } = this.props;
 
     if (loading) {
       return <TableRowLoading colSpan={4} />
     }
 
-    if (errors) {
+    if (error) {
       return <TableRowError colSpan={4} message="We were unable to load your invoices." />
     }
 
-    return data && data.length > 0 ? this.renderItems(data) : <TableRowEmptyState colSpan={3} />
+    return data && data.length > 0 ? this.renderItems(data) : <TableRowEmptyState colSpan={4} />
   };
 
   handleExpansion = (e: any, expanded: boolean) => {
-    if (expanded && !this.state.data) {
+    if (expanded && !this.props.data) {
       this.setState({ loading: true });
-      this.requestInvoices(undefined, undefined);
+      this.props.request();
     }
   };
 
@@ -146,19 +109,17 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
       </TableRow>
     );
   };
-
-  handlePageChange = (page: number) => {
-    this.setState({ page}, () => this.requestInvoices() )
-  };
-
-  handlePageSizeChange = (pageSize: number) => {
-    this.setState({ pageSize, page: 1 }, () => this.requestInvoices() )
-  }
 }
 
 const styled = withStyles(styles, { withTheme: true });
 
+const updatedRequest = (ownProps: any, params: any, filters: any) => getInvoices(params, filters)
+  .then((response) => response);
+
+const paginated = paginate(updatedRequest);
+
 const enhanced = compose(
+  paginated,
   styled,
 );
 

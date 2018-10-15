@@ -1,4 +1,6 @@
-import { clone, compose, lensPath, set } from 'ramda';
+import { map as mapPromise } from 'bluebird';
+import * as memoize from 'memoizee';
+import { compose } from 'ramda';
 import * as React from 'react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 
@@ -11,15 +13,18 @@ import Typography from '@material-ui/core/Typography';
 import UserIcon from 'src/assets/icons/user.svg';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
-import CircleProgress from 'src/components/CircleProgress';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
+import Pagey, { PaginationProps } from 'src/components/Pagey';
+import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
+import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import TableRowError from 'src/components/TableRowError';
+import TableRowLoading from 'src/components/TableRowLoading';
 import { deleteUser, getUsers } from 'src/services/account';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -79,8 +84,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 });
 
 interface State {
-  users?: Linode.User[];
-  error?: Error;
   createDrawerOpen: boolean;
   newUsername?: string;
   deleteConfirmDialogOpen: boolean;
@@ -89,7 +92,10 @@ interface State {
   userDeleteError?: boolean;
 }
 
-type CombinedProps = WithStyles<ClassNames> & RouteComponentProps<{}>;
+type CombinedProps =
+  WithStyles<ClassNames>
+  & PaginationProps<Linode.User>
+  & RouteComponentProps<{}>;
 
 class UsersLanding extends React.Component<CombinedProps, State> {
   state: State = {
@@ -123,17 +129,9 @@ class UsersLanding extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     const { location: { state: locationState } } = this.props;
-    getUsers()
-      .then(({ data: users }) => {
-        this.setState({
-          users,
-        }, this.setUserAvatars);
-      })
-      .catch((errResponse) => {
-        this.setState({
-          error: new Error('Error when fetching user list'),
-        })
-      })
+    this.props.request();
+    // this.setUserAvatars()
+
     if (locationState && locationState.deletedUsername) {
       this.setState({
         deletedUsername: locationState.deletedUsername,
@@ -141,26 +139,8 @@ class UsersLanding extends React.Component<CombinedProps, State> {
     }
   }
 
-  addUser = (user: Linode.User) => {
-    if (this.state.users) {
-      this.setState({
-        users: [...this.state.users, user],
-        newUsername: user.username,
-      });
-      this.setUserAvatars();
-    }
-  }
-
-  setUserAvatars = () => {
-    if (!this.state.users) { return; }
-    this.state.users.map((user, idx) => {
-      if (!user.gravatarUrl) {
-        getGravatarUrl(user.email)
-          .then((url) => {
-            this.setState(set(lensPath(['users', idx, 'gravatarUrl']), url));
-          })
-      }
-    })
+  addUser = () => {
+    this.props.request();
   }
 
   openForCreate = () => {
@@ -182,24 +162,13 @@ class UsersLanding extends React.Component<CombinedProps, State> {
       userDeleteError: false,
       deleteConfirmDialogOpen: false,
     });
+
     deleteUser(username)
       .then(() => {
-        if (this.state.users) {
-          const deletedUserIdx = this.state.users.findIndex(user => user.username === username);
-          const newUsers = clone(this.state.users);
-          newUsers.splice(deletedUserIdx, 1);
-          this.setState({
-            users: newUsers,
-            deletedUsername: username,
-            toDeleteUsername: '',
-          })
-        } else {
-          this.setState({
-            deletedUsername: username,
-            toDeleteUsername: '',
-          })
-        }
-        scrollToTop();
+        this.props.request()
+          .then(() => {
+            scrollToTop();
+          });
       })
       .catch(() => {
         this.setState({
@@ -239,7 +208,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
                     src={user.gravatarUrl}
                     className={classes.avatar}
                   />
-               }
+              }
               {user.username}
             </Button>
           </Link>
@@ -259,10 +228,8 @@ class UsersLanding extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, data: users, error, loading } = this.props;
     const {
-      users,
-      error,
       createDrawerOpen,
       newUsername,
       toDeleteUsername,
@@ -271,74 +238,65 @@ class UsersLanding extends React.Component<CombinedProps, State> {
       userDeleteError
     } = this.state;
 
-    if (error) {
-      return (
-        <React.Fragment>
-          <DocumentTitleSegment segment="Users" />
-          <ErrorState
-            errorText="There was an error retrieving the user list. Please reload and try again."
-          />
-        </React.Fragment>
-      );
-    }
-
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Users" />
-        {users
-          ? <React.Fragment>
-              <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }} >
-                <Grid item>
-                  <Typography role="header" variant="headline" data-qa-title className={classes.title}>
-                    Users
+        <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }} >
+          <Grid item>
+            <Typography role="header" variant="headline" data-qa-title className={classes.title}>
+              Users
                   </Typography>
-                </Grid>
-                <Grid item>
-                  <Grid container alignItems="flex-end">
-                    <Grid item>
-                      <AddNewLink
-                        onClick={this.openForCreate}
-                        label="Add a User"
-                      />
-                    </Grid>
-                  </Grid>
-                </Grid>
+          </Grid>
+          <Grid item>
+            <Grid container alignItems="flex-end">
+              <Grid item>
+                <AddNewLink
+                  onClick={this.openForCreate}
+                  label="Add a User"
+                />
               </Grid>
-              {newUsername &&
-                <Notice success text={`User ${newUsername} created successfully`} />
-              }
-              {deletedUsername &&
-                <Notice
-                  style={{ marginTop: newUsername ? 16 : 0 }}
-                  success
-                  text={`User ${deletedUsername} deleted successfully`}
-                />
-              }
-              {userDeleteError &&
-                <Notice
-                  style={{ marginTop: (newUsername || deletedUsername) ? 16 : 0 }}
-                  error
-                  text={`Error when deleting user, please try again later`}
-                />
-              }
-              <Paper>
-                <Table aria-label="List of Users">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell data-qa-username-column>Username</TableCell>
-                      <TableCell data-qa-email-column>Email Address</TableCell>
-                      <TableCell data-qa-restriction-column>Restricted</TableCell>
-                      <TableCell/>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {users.map(user => this.renderUserRow(user))}
-                  </TableBody>
-                </Table>
-              </Paper>
-            </React.Fragment>
-          : <CircleProgress />
+            </Grid>
+          </Grid>
+        </Grid>
+        {newUsername &&
+          <Notice success text={`User ${newUsername} created successfully`} />
         }
+        {deletedUsername &&
+          <Notice
+            style={{ marginTop: newUsername ? 16 : 0 }}
+            success
+            text={`User ${deletedUsername} deleted successfully`}
+          />
+        }
+        {userDeleteError &&
+          <Notice
+            style={{ marginTop: (newUsername || deletedUsername) ? 16 : 0 }}
+            error
+            text={`Error when deleting user, please try again later`}
+          />
+        }
+        <Paper>
+          <Table aria-label="List of Users">
+            <TableHead>
+              <TableRow>
+                <TableCell data-qa-username-column>Username</TableCell>
+                <TableCell data-qa-email-column>Email Address</TableCell>
+                <TableCell data-qa-restriction-column>Restricted</TableCell>
+                <TableCell />
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {this.renderTableContent(loading, error, users)}
+            </TableBody>
+          </Table>
+        </Paper>
+        <PaginationFooter
+          count={this.props.count}
+          page={this.props.page}
+          pageSize={this.props.pageSize}
+          handlePageChange={this.props.handlePageChange}
+          handleSizeChange={this.props.handlePageSizeChange}
+        />
         <CreateUserDrawer
           open={createDrawerOpen}
           onClose={this.userCreateOnClose}
@@ -353,12 +311,41 @@ class UsersLanding extends React.Component<CombinedProps, State> {
       </React.Fragment>
     );
   }
+
+  renderTableContent = (loading: boolean, error?: Error, data?: Linode.User[]) => {
+
+    if (loading) {
+      return <TableRowLoading colSpan={4} />
+    }
+
+    if (error) {
+      return <TableRowError colSpan={4} message={`Unable to load user data.`} />
+    }
+
+    if (!data || data.length === 0) {
+      return <TableRowEmptyState colSpan={4} />
+    }
+
+    return data.map(user => this.renderUserRow(user));
+  };
 }
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default compose(
+const memoizedGetGravatarURL = memoize(getGravatarUrl);
+
+const paginated = Pagey((ownProps, params, filters) => getUsers(params, filters)
+  .then(({ data, page, pages, results }) =>
+    mapPromise(
+      data,
+      (user) => memoizedGetGravatarURL(user.email)
+        .then((gravatarUrl: string) => ({ ...user, gravatarUrl }))
+    )
+      .then((updatedUsers) => ({ page, pages, results, data: updatedUsers }))));
+
+export default compose<any, any, any, any, any>(
   withRouter,
   setDocs(UsersLanding.docs),
   styled,
+  paginated
 )(UsersLanding);

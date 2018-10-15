@@ -29,7 +29,7 @@ export const getLinodeKernels = (params?: any, filter?: any) =>
     .then(response => response.data);
 
 export const getAllKernels: (params?: any, filters?: any) => Promise<Linode.Kernel[]> =
-  (linodeId, params = {}, filters = {}) => {
+  (params = {}, filters = {}) => {
     const pagination = { ...params, page_size: 100 };
 
     return getLinodeKernels(params, filters)
