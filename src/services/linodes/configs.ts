@@ -1,6 +1,6 @@
 import { API_ROOT } from 'src/constants';
 
-import Request, { setData, setMethod, setURL } from '../index';
+import Request, { setData, setMethod, setParams, setURL, setXFilter } from '../index';
 
 type Page<T> = Linode.ResourcePage<T>;
 type Config = Linode.Config;
@@ -23,10 +23,12 @@ export interface LinodeConfigCreationData {
   root_device: string;
 }
 
-export const getLinodeConfigs = (id: number) =>
+export const getLinodeConfigs = (id: number, params: any = {}, filters: any = {}) =>
   Request<Page<Config>>(
     setURL(`${API_ROOT}/linode/instances/${id}/configs`),
     setMethod('GET'),
+    setParams(params),
+    setXFilter(filters),
   )
     .then(response => response.data);
 
