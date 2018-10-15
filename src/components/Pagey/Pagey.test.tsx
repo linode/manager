@@ -89,7 +89,7 @@ describe('Paginator 2: Pagement Day', () => {
         .fn(() => Promise.resolve())
         .mockImplementationOnce((() => Promise.resolve({
           data: [101],
-          page: 5,
+          page: 6,
           pages: 5,
           results: 101,
         })));
@@ -112,7 +112,7 @@ describe('Paginator 2: Pagement Day', () => {
       wrapper.update();
 
       /** We need to check that the second call to our request function is for the preceeding page. */
-      expect(mockRequest.mock.calls[1][1]).toEqual({ page: 4, page_size: 25 });
+      expect(mockRequest.mock.calls[1][1]).toEqual({ page: 5, page_size: 25 });
     });
   });
 
