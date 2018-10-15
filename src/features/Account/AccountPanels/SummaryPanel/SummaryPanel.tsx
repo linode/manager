@@ -46,7 +46,7 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
     const { classes, data, loading, errors, lastUpdated } = this.props;
 
     return (
-      <Paper className={classes.root}>
+      <Paper className={classes.root} data-qa-contact-summary>
         <Grid container>
           <Grid item xs={12}>
             <Typography role="header" variant="title">
@@ -111,7 +111,7 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
         <Grid item md={7}>
           <Grid container>
             <Grid item xs={12}>
-              <Typography role="header" variant="subheading" data-qa-contact-summary>
+              <Typography role="header" variant="subheading">
                 Contact Information
               </Typography>
               </Grid>

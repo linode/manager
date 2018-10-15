@@ -17,8 +17,8 @@ class Billing extends Page {
     // Update contact info
     get updateContact() { return $('[data-qa-update-contact]'); }
     get updateCompany() { return $('[data-qa-update-contact] [data-qa-company]'); }
-    get updateFirstName() { return $('[data-qa-update-contact] [data-qa-first-name]'); }
-    get updateLastName() { return $('[data-qa-update-contact] [data-qa-last-name]'); }
+    get updateFirstName() { return $('[data-qa-update-contact] [data-qa-contact-first-name]'); }
+    get updateLastName() { return $('[data-qa-update-contact] [data-qa-contact-last-name]'); }
     get updateAddress1() { return $('[data-qa-update-contact] [data-qa-contact-address-1]'); }
     get updateAddress2() { return $('[data-qa-update-contact] [data-qa-contact-address-2]'); }
     get updateEmail() { return $('[data-qa-update-contact] [data-qa-contact-email]'); }
@@ -30,6 +30,13 @@ class Billing extends Page {
     get updateTaxId() { return $('[data-qa-update-contact] [data-qa-contact-tax-id]'); }
     get updateButton() { return $('[data-qa-save-contact-info]'); }
     get resetButton() { return $('[data-qa-reset-contact-info]'); }
+
+    // Invoice Table
+
+    get invoice() { return $('[data-qa-invoice]'); }
+    get dateCreated() { return $('[data-qa-invoice-date]'); }
+    get description() { return $('[data-qa-invoice-desc]'); }
+    get amount() { return $('[data-qa-invoice-amount]'); }
 
     contactSummaryDisplay() {
         this.contactSummary.waitForVisible(constants.wait.normal);
@@ -51,7 +58,7 @@ class Billing extends Page {
     updateElemsDisplay() {
         this.updateContact.waitForVisible(constants.wait.normal);
 
-        expect(this.updateCompany.isVisible()).toBe(true);
+        // expect(this.updateCompany.isVisible()).toBe(true);
         expect(this.updateFirstName.isVisible()).toBe(true);
         expect(this.updateLastName.isVisible()).toBe(true);
         expect(this.updateAddress1.isVisible()).toBe(true);
@@ -67,11 +74,33 @@ class Billing extends Page {
         expect(this.resetButton.isVisible()).toBe(true);
         expect(this.resetButton.getTagName()).toBe('button');
     }
+
+    invoicesDisplay() {
+        const dateRegex = /^(19[0-9]{2}|2[0-9]{3})-(0[1-9]|1[012])-([123]0|[012][1-9]|31) ([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$/g;
+
+        this.invoice.waitForVisible(constants.wait.normal);
+        expect($$(this.invoice.selector).length).toBeGreaterThan(0);
+
+        $$(this.invoice.selector).forEach(inv => {
+            expect(inv.$(this.dateCreated.selector).isVisible()).toBe(true);
+            expect(inv.$(this.dateCreated.selector).getText()).toMatch(dateRegex);
+            expect(inv.$(this.description.selector).getText()).toMatch(/\d/);
+            expect(inv.$(this.amount.selector).getText()).toMatch(/\$\d/);
+        });
+    }
     
     expandUpdateContact() {
         this.expandPanel('Update Contact Information');
         this.updateElemsDisplay();
     }
 
-
+    expandInvoices() {
+        this.expandPanel('Recent Invoices');
+        this.invoicesDisplay();
+    }
 }
+
+
+
+
+export default new Billing();
