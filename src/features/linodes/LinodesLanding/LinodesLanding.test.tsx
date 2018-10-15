@@ -23,7 +23,8 @@ const paginationProps = {
   handlePageChange: jest.fn(),
   handlePageSizeChange: jest.fn(),
   request: jest.fn(),
-  updateOrderBy: jest.fn(),
+  handleOrderChange: jest.fn(),
+  onDelete: jest.fn(),
 };
 
 describe('ListLinodes', () => {
