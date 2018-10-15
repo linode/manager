@@ -52,7 +52,7 @@ describe('OAuth Clients', () => {
         pageSize={25}
         request={request}
         data={mockData}
-        updateOrderBy={updateOrderBy}
+        handleOrderChange={updateOrderBy}
       />
     );
   })

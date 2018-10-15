@@ -8,7 +8,7 @@ import { SSHKeys } from './SSHKeys';
  */
 
 describe('SSHKeys', () => {
-  const updateOrderBy = jest.fn();
+  const handleOrderChange = jest.fn();
   const handlePageChange = jest.fn();
   const handlePageSizeChange = jest.fn();
   const request = jest.fn();
@@ -33,7 +33,7 @@ describe('SSHKeys', () => {
           { id: 3, label: '', ssh_key: '', created: '', fingerprint: '', },
         ]}
         timezone={'GMT'}
-        updateOrderBy={updateOrderBy}
+        handleOrderChange={handleOrderChange}
       />
     );
 
@@ -70,7 +70,7 @@ describe('SSHKeys', () => {
         request={request}
         data={undefined}
         timezone={'GMT'}
-        updateOrderBy={updateOrderBy}
+        handleOrderChange={handleOrderChange}
       />
     );
 
@@ -93,7 +93,7 @@ describe('SSHKeys', () => {
         request={request}
         data={undefined}
         timezone={'GMT'}
-        updateOrderBy={updateOrderBy}
+        handleOrderChange={handleOrderChange}
       />
     );
 
@@ -116,7 +116,7 @@ describe('SSHKeys', () => {
         request={request}
         data={undefined}
         timezone={'GMT'}
-        updateOrderBy={updateOrderBy}
+        handleOrderChange={handleOrderChange}
       />
     );
 
