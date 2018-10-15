@@ -20,9 +20,7 @@ import Table from 'src/components/Table';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
-import { events$ } from 'src/events';
 import { withLinode } from 'src/features/linodes/LinodesDetail/context';
-import { genEvent } from 'src/features/linodes/LinodesLanding/powerActions';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { deleteLinodeConfig, getLinodeConfigs } from 'src/services/linodes';
 
