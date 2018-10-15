@@ -132,7 +132,7 @@ exports.promptAndSanitize = (stubPath) => {
             ,/(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\./        // second octet
             ,/(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\./        // third octet
             ,/(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)/g         // fourth octet
-          ].map(function(r) { return r.source; }).join(''));
+          ].map(function(r) { return r.source; }).join(''), 'g');
 
         const usernameRegex = new RegExp(username, 'g');
 

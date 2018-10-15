@@ -1958,7 +1958,7 @@
                                     "X-XSS-Protection": "1; mode=block",
                                     "Strict-Transport-Security": "max-age=31536000"
                                 },
-                                "body": "{\"region\": \"us-central\", \"created\": \"2018-10-03T19:04:11\", \"type\": \"g5-nanode-1\", \"label\": \"testLinode1424\", \"ipv4\": [\"104.237.138.205\"], \"hypervisor\": \"kvm\", \"image\": \"linode/debian9\", \"updated\": \"2018-10-03T19:04:11\", \"ipv6\": \"fe80::ab8/64\", \"status\": \"running\", \"watchdog_enabled\": true, \"id\": 10655166, \"backups\": {\"enabled\": false, \"schedule\": {\"day\": null, \"window\": null}}, \"tags\": [\"demoTag1\"], \"group\": \"\", \"specs\": {\"disk\": 25600, \"memory\": 1024, \"transfer\": 1000, \"vcpus\": 1}, \"alerts\": {\"cpu\": 90, \"network_in\": 10, \"transfer_quota\": 80, \"io\": 10000, \"network_out\": 10}}",
+                                "body": "{\"region\": \"us-central\", \"created\": \"2018-10-03T19:04:11\", \"type\": \"g5-nanode-1\", \"label\": \"testLinode1424\", \"ipv4\": [\"127.0.0.1\"], \"hypervisor\": \"kvm\", \"image\": \"linode/debian9\", \"updated\": \"2018-10-03T19:04:11\", \"ipv6\": \"fe80::ab8/64\", \"status\": \"running\", \"watchdog_enabled\": true, \"id\": 10655166, \"backups\": {\"enabled\": false, \"schedule\": {\"day\": null, \"window\": null}}, \"tags\": [\"demoTag1\"], \"group\": \"\", \"specs\": {\"disk\": 25600, \"memory\": 1024, \"transfer\": 1000, \"vcpus\": 1}, \"alerts\": {\"cpu\": 90, \"network_in\": 10, \"transfer_quota\": 80, \"io\": 10000, \"network_out\": 10}}",
                                 "_mode": "text"
                             }
                         }
