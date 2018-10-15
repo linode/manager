@@ -1,12 +1,13 @@
 import Hidden from '@material-ui/core/Hidden';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import { compose, pathOr } from 'ramda';
+import { compose } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -14,7 +15,6 @@ import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
-import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import { withTypes } from 'src/context/types';
 import LinodeConfigSelectionDrawer, { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { getImages } from 'src/services/images';
@@ -35,10 +35,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
 });
 
-interface PreloadedProps {
-  images: PromiseLoaderResponse<Linode.ResourcePage<Linode.Image>>;
-}
-
 interface ConfigDrawerState {
   open: boolean;
   configs: Linode.Config[];
@@ -53,11 +49,12 @@ interface State {
   bootOption: Linode.BootAction;
   selectedLinodeId: number | null;
   selectedLinodeLabel: string;
+  images: {
+    loading: boolean;
+    data: Linode.Image[];
+    error?: Error;
+  },
 }
-
-const preloaded = PromiseLoader<{}>({
-  images: () => getImages(),
-});
 
 interface TypesContextProps {
   typesRequest: () => void;
@@ -69,7 +66,6 @@ type CombinedProps =
   TypesContextProps
   & PaginationProps<Linode.Linode>
   & StateProps
-  & PreloadedProps
   & RouteComponentProps<{}>
   & WithStyles<ClassNames>
   & SetDocsProps;
@@ -84,6 +80,10 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       error: undefined,
       selected: undefined,
       action: (id: number) => null,
+    },
+    images: {
+      loading: true,
+      data: [],
     },
     powerAlertOpen: false,
     bootOption: null,
@@ -107,13 +107,37 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
   ];
 
+  getImages = () => {
+    if (this.state.images.loading === false) {
+      this.setState({ images: { ...this.state.images, loading: true } });
+    }
+
+    getImages()
+      .then(response => this.setState({
+        images: {
+          ...this.state.images,
+          loading: false,
+          data: response.data,
+        }
+      }))
+      .catch(response => this.setState({
+        images: {
+          ...this.state.images,
+          loading: false,
+          error: new Error('Unable to load image data.'),
+        }
+      }))
+  }
+
   componentDidMount() {
-    /** Get the Linodes using the request handler provided by Pagey. */
-    this.props.request();
+    const { typesLastUpdated, typesLoading, typesRequest } = this.props;
 
     this.mounted = true;
 
-    const { typesLastUpdated, typesLoading, typesRequest } = this.props;
+    /** Get the Linodes using the request handler provided by Pagey. */
+    this.props.request();
+
+    this.getImages()
 
     if (typesLastUpdated === 0 && !typesLoading) {
       typesRequest();
@@ -210,12 +234,27 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { location: { hash }, count, data: linodes, error: linodesError, loading: linodesLoading } = this.props;
-    const { configDrawer, bootOption, powerAlertOpen } = this.state;
-    const images = pathOr([], ['response', 'data'], this.props.images);
+    const {
+      location: { hash },
+      count,
+      data: linodes,
+      error: linodesError,
+      loading: linodesLoading,
+    } = this.props;
 
-    if (linodesLoading) {
-      return null;
+    const {
+      configDrawer,
+      bootOption,
+      powerAlertOpen,
+      images: {
+        error: imagesError,
+        loading: imagesLoading,
+        data: imagesData,
+      },
+    } = this.state;
+
+    if (linodesLoading || imagesLoading) {
+      return <CircleProgress />;
     }
 
     if (linodes.length === 0) {
@@ -236,7 +275,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       );
     }
 
-    if (this.props.images.error) {
+    if (imagesError) {
       return (
         <React.Fragment>
           <DocumentTitleSegment segment="Linodes" />
@@ -268,12 +307,12 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
         </Grid>
         <Grid item xs={12}>
           <Hidden mdUp>
-            {this.renderContent(linodes, images, 'grid')}
+            {this.renderContent(linodes, imagesData, 'grid')}
           </Hidden>
           <Hidden smDown>
             {displayGrid === 'grid'
-              ? this.renderContent(linodes, images, 'grid')
-              : this.renderContent(linodes, images, 'list')
+              ? this.renderContent(linodes, imagesData, 'grid')
+              : this.renderContent(linodes, imagesData, 'list')
             }
           </Hidden>
         </Grid>
@@ -397,7 +436,6 @@ const paginated = Pagey((ownProps, params, filters) =>
 const data = compose(
   paginated,
   typesContext,
-  preloaded,
   connected,
   withUpdatingLinodes,
 );

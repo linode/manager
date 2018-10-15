@@ -2,8 +2,7 @@ import { shallow } from 'enzyme';
 import * as React from 'react';
 import { StaticRouter, withRouter } from 'react-router-dom';
 
-import { images as mockImages, linodes as mockLinodes } from 'src/__data__';
-import { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
+import { linodes as mockLinodes } from 'src/__data__';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 import { clearDocs, setDocs } from 'src/store/reducers/documentation';
 
@@ -11,21 +10,6 @@ import { ListLinodes } from './LinodesLanding';
 
 const RoutedListLinodes = withRouter(ListLinodes);
 
-const promiseLoaderType = (response: any, error?: Error) => {
-  return {
-    error,
-    response,
-  };
-}
-
-const resourcePage = (data: any[], pages = 0, page = 0, results = 0) => {
-  return {
-    pages,
-    page,
-    results,
-    data,
-  };
-}
 
 const order: 'asc' = 'asc';
 
@@ -44,11 +28,9 @@ const paginationProps = {
 
 describe('ListLinodes', () => {
   let linodes: Linode.Linode[];
-  let images: PromiseLoaderResponse<Linode.ResourcePage<Linode.Image>>;
 
   beforeEach(() => {
     linodes = mockLinodes;
-    images = promiseLoaderType(resourcePage(mockImages));
   });
 
   it('renders without error', () => {
@@ -60,8 +42,6 @@ describe('ListLinodes', () => {
             {...paginationProps}
             count={linodes.length}
             data={linodes}
-            /** Preloaded Props */
-            images={images}
             classes={{ root: '', title: '' }}
             setDocs={setDocs}
             clearDocs={clearDocs}
@@ -84,8 +64,6 @@ describe('ListLinodes', () => {
             {...paginationProps}
             count={0}
             data={[]}
-            /** Preloaded Props */
-            images={images}
             classes={{ root: '', title: '' }}
             setDocs={setDocs}
             clearDocs={clearDocs}
@@ -112,8 +90,6 @@ describe('ListLinodes', () => {
             {...paginationProps}
             count={linodes.length}
             data={linodes}
-            /** Preloader Props */
-            images={images}
             classes={{ root: '', title: '' }}
             setDocs={setDocs}
             clearDocs={clearDocs}
