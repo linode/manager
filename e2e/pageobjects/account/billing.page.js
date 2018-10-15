@@ -28,6 +28,8 @@ class Billing extends Page {
     get updatePostCode() { return $('[data-qa-update-contact] [data-qa-contact-post-code]'); }
     get updateCountry() { return $('[data-qa-update-contact] [data-qa-contact-country]'); }
     get updateTaxId() { return $('[data-qa-update-contact] [data-qa-contact-tax-id]'); }
+    get updateButton() { return $('[data-qa-save-contact-info]'); }
+    get resetButton() { return $('[data-qa-reset-contact-info]'); }
 
     contactSummaryDisplay() {
         this.contactSummary.waitForVisible(constants.wait.normal);
@@ -49,7 +51,21 @@ class Billing extends Page {
     updateElemsDisplay() {
         this.updateContact.waitForVisible(constants.wait.normal);
 
-        
+        expect(this.updateCompany.isVisible()).toBe(true);
+        expect(this.updateFirstName.isVisible()).toBe(true);
+        expect(this.updateLastName.isVisible()).toBe(true);
+        expect(this.updateAddress1.isVisible()).toBe(true);
+        expect(this.updateAddress2.isVisible()).toBe(true);
+        expect(this.updateEmail.isVisible()).toBe(true);
+        expect(this.updatePhone.isVisible()).toBe(true);
+        expect(this.updateCity.isVisible()).toBe(true);
+        expect(this.updateStateProvince.isVisible()).toBe(true);
+        expect(this.updatePostCode.isVisible()).toBe(true);
+        expect(this.updateTaxId.isVisible()).toBe(true);
+        expect(this.updateButton.isVisible()).toBe(true);
+        expect(this.updateButton.getTagName()).toBe('button');
+        expect(this.resetButton.isVisible()).toBe(true);
+        expect(this.resetButton.getTagName()).toBe('button');
     }
     
     expandUpdateContact() {

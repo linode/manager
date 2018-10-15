@@ -532,8 +532,8 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
 
     return (
       <ActionsPanel>
-        <Button type="primary" onClick={this.submitForm} loading={this.state.submitting}>Save</Button>
-        <Button type="secondary" onClick={this.resetForm}>Reset</Button>
+        <Button type="primary" onClick={this.submitForm} loading={this.state.submitting} data-qa-save-contact-info>Save</Button>
+        <Button type="secondary" onClick={this.resetForm} data-qa-reset-contact-info>Reset</Button>
       </ActionsPanel>
     );
   };
