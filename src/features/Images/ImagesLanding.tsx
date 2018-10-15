@@ -137,7 +137,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
         if (event.action === 'image_delete' && event.status === 'notification') {
           sendToast('Image has been deleted successfully.');
           /* generated request by Pagey HOC */
-          this.props.request();
+          this.props.onDelete();
         }
       });
   }
