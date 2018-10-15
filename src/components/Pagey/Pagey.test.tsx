@@ -23,7 +23,7 @@ describe('Paginator 2: Pagement Day', () => {
     const { wrapper } = setup();
 
     const {
-      count, handlePageChange, handlePageSizeChange, loading, page, pageSize, request,
+      count, handlePageChange, handlePageSizeChange, loading, page, pageSize, request, onDelete
     } = wrapper.props();
 
     it('should provide a count prop', () => {
@@ -71,6 +71,48 @@ describe('Paginator 2: Pagement Day', () => {
     it('should provide a request handler prop', () => {
       expect(request).toBeDefined();
       expect(request).toBeInstanceOf(Function);
+    });
+
+    it('should provide a onDelete handler prop', () => {
+      expect(onDelete).toBeDefined();
+      expect(onDelete).toBeInstanceOf(Function);
+    });
+  });
+
+  describe('when onDelete is called', () => {
+    it('should request the previous page if we deleted the last item', async () => {
+      /**
+       * We need to test if Pagey is currently viewing a page of one, and we call onDelete, it requests
+       * the following page, not the current page.
+       */
+      const mockRequest = jest
+        .fn(() => Promise.resolve())
+        .mockImplementationOnce((() => Promise.resolve({
+          data: [101],
+          page: 5,
+          pages: 5,
+          results: 101,
+        })));
+
+      const { wrapper } = setup(mockRequest);
+      const request = wrapper.prop('request');
+      const onDelete = wrapper.prop('onDelete');
+
+      /**
+       * This triggers the first call to mockRequest and sets our state to
+       * { data: [6], page: 2, pages: 2, results: 6 }
+       */
+      await request();
+      wrapper.update();
+
+      /**
+       * This triggers the second call to mockRequest.
+       */
+      await onDelete();
+      wrapper.update();
+
+      /** We need to check that the second call to our request function is for the preceeding page. */
+      expect(mockRequest.mock.calls[1][1]).toEqual({ page: 4, page_size: 25 });
     });
   });
 

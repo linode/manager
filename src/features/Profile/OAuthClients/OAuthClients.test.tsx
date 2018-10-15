@@ -7,6 +7,7 @@ describe('OAuth Clients', () => {
   const updateOrderBy = jest.fn();
   const handlePageChange = jest.fn();
   const handlePageSizeChange = jest.fn();
+  const onDelete = jest.fn();
   const request = jest.fn();
 
   const mockData: Linode.OAuthClient[] = [
@@ -45,6 +46,7 @@ describe('OAuth Clients', () => {
         handlePageChange={handlePageChange}
         error={undefined}
         handlePageSizeChange={handlePageSizeChange}
+        onDelete={onDelete}
         loading={false}
         order={'asc'}
         orderBy={undefined}
