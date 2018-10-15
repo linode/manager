@@ -21,6 +21,7 @@ import LinearProgress from 'src/components/LinearProgress';
 import paginate, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
+import SortableTableCell from 'src/components/SortableTableCell';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRowError from 'src/components/TableRowError';
@@ -281,7 +282,13 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           <Table aria-label="List of Volumes">
             <TableHead>
               <TableRow>
-                <TableCell className={classes.labelCol}>Label</TableCell>
+                <SortableTableCell
+                  label="Label"
+                  className={classes.labelCol}
+                  isActive={this.props.orderBy === 'label'}
+                  order={this.props.order}
+                  handleSorting={this.props.handleOrderChange}
+                />
                 <TableCell className={classes.attachmentCol}>Attached To</TableCell>
                 <TableCell className={classes.sizeCol}>Size</TableCell>
                 <TableCell className={classes.pathCol}>File System Path</TableCell>
