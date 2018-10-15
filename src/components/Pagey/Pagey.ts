@@ -85,7 +85,7 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
     };
 
     public handleOrderChange = (orderBy: string, order: 'asc' | 'desc' = 'asc') => {
-      this.setState({ orderBy, order }, () => this.request());
+      this.setState({ orderBy, order, page: 1 }, () => this.request());
     };
 
     public render() {
