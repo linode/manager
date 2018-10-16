@@ -96,6 +96,8 @@ interface FilterInfo {
 
 type SortOrder = 'asc' | 'desc';
 
+type AcceptedFilters = 'username' | 'description' | 'label'
+
 interface State {
   currentPage: number;
   selected?: number;
@@ -553,23 +555,34 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
     const { currentFilter } = this.state;
     const filteredUser = (isLinodeStackScripts) ? 'linode' : currentUser;
 
-    /*
-    * Search by label or description of the StackScript
-    */
-    const filter = {
-      ["+or"]: [
-        {
-          "label": {
-            ["+contains"]: value
-          },
-        },
-        {
-          "description": {
-            ["+contains"]: value
-          },
-        },
-      ],
-    };
+    const lowerCaseValue = value.toLowerCase();
+
+    let filter: any;
+
+    if (lowerCaseValue.includes('username:')
+      || lowerCaseValue.includes('label:')
+      || lowerCaseValue.includes('description:')) {
+      /**
+       * In this case, we have a search term that looks similar to the
+       * following: "username:hello world"
+       * 
+       * In this case, we need to craft the filter so that the request is
+       * aware that we only want to search by username
+       */
+
+      const indexOfColon = lowerCaseValue.indexOf(':');
+      // everything before the colon is what we want to filter by
+      const filterKey = lowerCaseValue.substr(0, indexOfColon);
+      // everything after the colon is the term we want to search for
+      const searchTerm = lowerCaseValue.substr(indexOfColon + 1);
+      filter = generateSpecificFilter(filterKey as AcceptedFilters, searchTerm)
+    } else {
+      /**
+       * Otherwise, just generate a catch-all filter for
+       * username, description, and label
+       */
+      filter = generateCatchAllFilter(lowerCaseValue)
+    }
 
     this.setState({
       isSearching: true, // wether to show the loading spinner in search bar
@@ -662,10 +675,12 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
           : <React.Fragment>
             <div className={classes.searchWrapper}>
               <DebouncedSearch
-                placeholderText='Search for StackScript by Label or Description'
+                placeholderText='Search for StackScript by Label, Userrname, or Description'
                 onSearch={this.handleSearch}
                 className={classes.searchBar}
                 isSearching={isSearching}
+                toolTipText={`Hint: try searching for a specific item by prepending your
+                search term with "username:", "label:", or "description:"`}
               />
             </div>
             <Table
@@ -742,7 +757,39 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
       </React.Fragment>
     );
   }
+}
 
+const generateSpecificFilter = (
+  key: AcceptedFilters,
+  searchTerm: string
+) => {
+  return {
+    [key]: {
+      ["+contains"]: searchTerm
+    }
+  }
+}
+
+const generateCatchAllFilter = (searchTerm: string) => {
+  return {
+    ["+or"]: [
+      {
+        "label": {
+          ["+contains"]: searchTerm
+        },
+      },
+      {
+        "username": {
+          ["+contains"]: searchTerm
+        },
+      },
+      {
+        "description": {
+          ["+contains"]: searchTerm
+        },
+      },
+    ],
+  };
 }
 
 const styled = withStyles(styles, { withTheme: true });
