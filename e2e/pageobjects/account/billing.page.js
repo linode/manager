@@ -100,7 +100,4 @@ class Billing extends Page {
     }
 }
 
-
-
-
 export default new Billing();
