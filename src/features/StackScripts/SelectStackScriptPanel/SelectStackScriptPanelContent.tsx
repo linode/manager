@@ -555,7 +555,7 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
     const { currentFilter } = this.state;
     const filteredUser = (isLinodeStackScripts) ? 'linode' : currentUser;
 
-    const lowerCaseValue = value.toLowerCase();
+    const lowerCaseValue = value.toLowerCase().trim();
 
     let filter: any;
 
