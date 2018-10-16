@@ -675,7 +675,7 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
           : <React.Fragment>
             <div className={classes.searchWrapper}>
               <DebouncedSearch
-                placeholderText='Search for StackScript by Label, Userrname, or Description'
+                placeholderText='Search by Label, Username, or Description'
                 onSearch={this.handleSearch}
                 className={classes.searchBar}
                 isSearching={isSearching}
