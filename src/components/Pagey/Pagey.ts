@@ -59,14 +59,14 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
     private onDelete = () => {
       const { page, pages } = this.state;
       /*
-       * Basically, if we're on page 3, but the API data
-       * only has 2 pages of data, we need to request
-       * the "pages" data from the API, which is the max number of pages. 
+       * Basically, if we're on page 3, but the API response
+       * only has 2 pages of data, we need to make a new request
+       * with the "pages" property from the API, which is the max number of pages. 
        * To the user, we're just automatically sending them to the previous page.
        * 
        * This solves the issue where the user deletes the last entity
        * on a page and then sees an empty state instead of going to the
-       * previous page
+       * last page available
        */
       if (pages && page > pages) {
         return this.handlePageChange(page - 1);
