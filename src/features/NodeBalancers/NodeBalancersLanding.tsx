@@ -150,7 +150,7 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
 
     deleteNodeBalancer(selectedNodeBalancerId!)
       .then((response) => {
-        this.props.request();
+        this.props.onDelete();
         this.setState({
           deleteConfirmDialog: {
             open: false,

@@ -187,7 +187,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
     if (!configId) { return; }
 
     deleteLinodeConfig(linodeId, configId)
-      .then(this.props.onDelete)
+      .then(() => this.props.onDelete())
       .then(() => {
         this.setConfirmDelete({
           submitting: false,
