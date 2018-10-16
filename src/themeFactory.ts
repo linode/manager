@@ -521,6 +521,7 @@ const themeDefaults: ThemeOptions = {
         minHeight: 48,
         color: primaryColors.text,
         boxSizing: 'border-box',
+        backgroundColor: '#fff',
         [breakpoints.down('xs')]: {
           maxWidth: '100%',
           width: '100%',
