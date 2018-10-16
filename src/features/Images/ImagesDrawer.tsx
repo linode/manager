@@ -268,7 +268,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
 
     const hasErrorFor = getAPIErrorFor({
       linode_id: 'Linode',
-      config_id: 'Config',
+      disk_id: 'Disk',
       region: 'Region',
       size: 'Size',
       label: 'Label',
