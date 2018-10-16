@@ -1,40 +1,30 @@
-import * as moment from 'moment';
-import { clone, compose, defaultTo, lensPath, map, over, path, pathEq, pathOr } from 'ramda';
-import * as React from 'react';
-import { connect, MapStateToProps } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
-import 'rxjs/add/observable/combineLatest';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/filter';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
-
 import Hidden from '@material-ui/core/Hidden';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-
+import { compose } from 'ramda';
+import * as React from 'react';
+import { connect, MapStateToProps } from 'react-redux';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
-import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import { withTypes } from 'src/context/types';
-import { events$ } from 'src/events';
 import LinodeConfigSelectionDrawer, { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
-import { newLinodeEvents } from 'src/features/linodes/events';
 import { getImages } from 'src/services/images';
-import { getLinode, getLinodes } from 'src/services/linodes';
-import scrollToTop from 'src/utilities/scrollToTop';
+import { getLinodes } from 'src/services/linodes';
 import { views } from 'src/utilities/storage';
-
 import LinodesViewWrapper from './LinodesViewWrapper';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
 import { powerOffLinode, rebootLinode } from './powerActions';
 import ToggleBox from './ToggleBox';
+import withUpdatingLinodes from './withUpdatingLinodes';
 
 type ClassNames = 'root' | 'title';
 
@@ -45,11 +35,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
 });
 
-interface PreloadedProps {
-  linodes: PromiseLoaderResponse<Linode.ResourcePage<Linode.EnhancedLinode>>;
-  images: PromiseLoaderResponse<Linode.ResourcePage<Linode.Image>>;
-}
-
 interface ConfigDrawerState {
   open: boolean;
   configs: Linode.Config[];
@@ -59,24 +44,17 @@ interface ConfigDrawerState {
 }
 
 interface State {
-  linodes: Linode.EnhancedLinode[];
-
-  page: number;
-  pages: number;
-  results: number;
-  pageSize: number;
   configDrawer: ConfigDrawerState;
   powerAlertOpen: boolean;
   bootOption: Linode.BootAction;
   selectedLinodeId: number | null;
   selectedLinodeLabel: string;
+  images: {
+    loading: boolean;
+    data: Linode.Image[];
+    error?: Error;
+  },
 }
-
-const preloaded = PromiseLoader<{}>({
-  linodes: () => getLinodes({ page_size: 25 }),
-
-  images: () => getImages(),
-});
 
 interface TypesContextProps {
   typesRequest: () => void;
@@ -84,29 +62,18 @@ interface TypesContextProps {
   typesLastUpdated: number;
 }
 
-type CombinedProps = TypesContextProps
+type CombinedProps =
+  TypesContextProps
+  & PaginationProps<Linode.Linode>
   & StateProps
-  & PreloadedProps
   & RouteComponentProps<{}>
   & WithStyles<ClassNames>
   & SetDocsProps;
 
-const L = {
-  response: {
-    data: lensPath(['response', 'data']),
-  }
-};
-
 export class ListLinodes extends React.Component<CombinedProps, State> {
-  eventsSub: Subscription;
-  notificationSub: Subscription;
   mounted: boolean = false;
 
   state: State = {
-    linodes: pathOr([], ['response', 'data'], this.props.linodes),
-    page: pathOr(-1, ['response', 'page'], this.props.linodes),
-    pages: pathOr(-1, ['response', 'pages'], this.props.linodes),
-    results: pathOr(0, ['response', 'results'], this.props.linodes),
     configDrawer: {
       open: false,
       configs: [],
@@ -114,7 +81,10 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       selected: undefined,
       action: (id: number) => null,
     },
-    pageSize: 25,
+    images: {
+      loading: true,
+      data: [],
+    },
     powerAlertOpen: false,
     bootOption: null,
     selectedLinodeId: null,
@@ -137,67 +107,45 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
   ];
 
-  componentDidMount() {
-    this.mounted = true;
-    const mountTime = moment().subtract(5, 'seconds');
+  getImages = () => {
+    if (this.state.images.loading === false) {
+      this.setState({ images: { ...this.state.images, loading: true } });
+    }
 
+    getImages()
+      .then(response => this.setState({
+        images: {
+          ...this.state.images,
+          loading: false,
+          data: response.data,
+        }
+      }))
+      .catch(response => this.setState({
+        images: {
+          ...this.state.images,
+          loading: false,
+          error: new Error('Unable to load image data.'),
+        }
+      }))
+  }
+
+  componentDidMount() {
     const { typesLastUpdated, typesLoading, typesRequest } = this.props;
+
+    this.mounted = true;
+
+    /** Get the Linodes using the request handler provided by Pagey. */
+    this.props.request();
+
+    this.getImages()
 
     if (typesLastUpdated === 0 && !typesLoading) {
       typesRequest();
     }
-
-    this.eventsSub = events$
-      .filter(newLinodeEvents(mountTime))
-      .filter(e => !e._initial)
-      .subscribe((linodeEvent) => {
-        const linodeId = path<number>(['entity', 'id'], linodeEvent);
-        if (!linodeId) { return; }
-
-        getLinode(linodeId)
-          .then(response => response.data)
-          .then((linode) => {
-            if (!this.mounted) { return; }
-
-            return this.setState((prevState) => {
-              const targetIndex = prevState.linodes.findIndex(
-                _linode => _linode.id === (linodeEvent.entity as Linode.Entity).id);
-              const updatedLinodes = clone(prevState.linodes);
-              updatedLinodes[targetIndex] = linode;
-              updatedLinodes[targetIndex].recentEvent = linodeEvent;
-              return { linodes: updatedLinodes };
-            });
-          })
-          .catch((error) => {
-            /* Nothing to do here; in most cases the subscriber is trying to retrieve a recently deleted Linode. */
-          });
-      });
-
-    this.notificationSub = Observable
-      .combineLatest(
-        Observable.of(this.props.notifications)
-          .map(notifications => notifications.filter(pathEq(['entity', 'type'], 'linode'))),
-        Observable.of(this.props.linodes),
-    )
-      .map(([notifications, linodes]) => over(
-        L.response.data,
-        compose(
-          map(addNotificationToLinode(notifications)),
-          defaultTo([]),
-        ),
-        linodes,
-      ))
-      .subscribe((response) => {
-        if (!this.mounted) { return; }
-
-        return this.setState({ linodes: response.response.data });
-      });
   }
 
   componentWillUnmount() {
     this.mounted = false;
-    this.eventsSub.unsubscribe();
-    this.notificationSub.unsubscribe();
   }
 
   openConfigDrawer = (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => {
@@ -233,35 +181,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     }
   }
 
-  getLinodes = (page = 1, pageSize = 25) => {
-    const lastPage = Math.ceil(this.state.results / pageSize);
-    getLinodes({
-      page: Math.min(lastPage, page),
-      page_size: pageSize,
-    })
-      .then((response) => {
-        if (!this.mounted) { return; }
-
-        this.setState(prevResults => ({
-          ...prevResults,
-          linodes: pathOr([], ['data'], response),
-          page: pathOr(0, ['page'], response),
-          pageSize,
-          pages: pathOr(0, ['pages'], response),
-          results: pathOr(0, ['results'], response),
-        }));
-      });
-  }
-
-  handlePageSelection = (page: number) => {
-    scrollToTop();
-    this.getLinodes(Math.min(page), this.state.pageSize);
-  }
-
-  handlePageSizeChange = (pageSize: number) => {
-    this.getLinodes(this.state.page, pageSize);
-  }
-
   selectConfig = (id: number) => {
     this.setState(prevState => ({
       configDrawer: {
@@ -279,8 +198,11 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     }
   }
 
-  toggleDialog = (bootOption: Linode.BootAction,
-    selectedLinodeId: number, selectedLinodeLabel: string) => {
+  toggleDialog = (
+    bootOption: Linode.BootAction,
+    selectedLinodeId: number,
+    selectedLinodeLabel: string,
+  ) => {
     this.setState({
       powerAlertOpen: !this.state.powerAlertOpen,
       selectedLinodeId,
@@ -299,11 +221,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     this.setState({ powerAlertOpen: false });
   }
 
-  renderContent = (
-    linodes: Linode.Linode[],
-    images: Linode.Image[],
-    view: 'grid' | 'list'
-  ) => {
+  renderContent = (linodes: Linode.Linode[], images: Linode.Image[], view: 'grid' | 'list') => {
     return (
       <LinodesViewWrapper
         view={view}
@@ -316,9 +234,28 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { location: { hash } } = this.props;
-    const { linodes, configDrawer, bootOption, powerAlertOpen, results } = this.state;
-    const images = pathOr([], ['response', 'data'], this.props.images);
+    const {
+      location: { hash },
+      count,
+      data: linodes,
+      error: linodesError,
+      loading: linodesLoading,
+    } = this.props;
+
+    const {
+      configDrawer,
+      bootOption,
+      powerAlertOpen,
+      images: {
+        error: imagesError,
+        loading: imagesLoading,
+        data: imagesData,
+      },
+    } = this.state;
+
+    if (linodesLoading || imagesLoading) {
+      return <CircleProgress />;
+    }
 
     if (linodes.length === 0) {
       return (
@@ -329,7 +266,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       );
     }
 
-    if (this.props.linodes.error) {
+    if (linodesError) {
       return (
         <React.Fragment>
           <DocumentTitleSegment segment="Linodes" />
@@ -338,7 +275,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       );
     }
 
-    if (this.props.images.error) {
+    if (imagesError) {
       return (
         <React.Fragment>
           <DocumentTitleSegment segment="Linodes" />
@@ -347,7 +284,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       );
     }
 
-    const displayGrid: 'grid' | 'list' = getDisplayFormat({ hash, length: results });
+    const displayGrid: 'grid' | 'list' = getDisplayFormat({ hash, length: count });
 
     return (
       <Grid container>
@@ -370,24 +307,23 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
         </Grid>
         <Grid item xs={12}>
           <Hidden mdUp>
-            {this.renderContent(linodes, images, 'grid')}
+            {this.renderContent(linodes, imagesData, 'grid')}
           </Hidden>
           <Hidden smDown>
             {displayGrid === 'grid'
-              ? this.renderContent(linodes, images, 'grid')
-              : this.renderContent(linodes, images, 'list')
+              ? this.renderContent(linodes, imagesData, 'grid')
+              : this.renderContent(linodes, imagesData, 'list')
             }
           </Hidden>
         </Grid>
         <Grid item xs={12}>
           {
-            this.state.results > 25 &&
             <PaginationFooter
-              count={this.state.results}
-              handlePageChange={this.handlePageSelection}
-              handleSizeChange={this.handlePageSizeChange}
-              pageSize={this.state.pageSize}
-              page={this.state.page}
+              count={this.props.count}
+              handlePageChange={this.props.handlePageChange}
+              handleSizeChange={this.props.handlePageSizeChange}
+              pageSize={this.props.pageSize}
+              page={this.props.page}
             />
           }
           <LinodeConfigSelectionDrawer
@@ -442,17 +378,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   closePowerAlert = () => this.setState({ powerAlertOpen: false });
 }
 
-
-const getNotificationMessageByEntityId = (id: number, notifications: Linode.Notification[]): undefined | string => {
-  const found = notifications.find((n) => n.entity !== null && n.entity.id === id);
-  return found ? found.message : undefined;
-}
-
-const addNotificationToLinode = (notifications: Linode.Notification[]) => (linode: Linode.Linode) => ({
-  ...linode,
-  notification: getNotificationMessageByEntityId(linode.id, notifications)
-});
-
 const getDisplayFormat = ({ hash, length }: { hash?: string, length: number }): 'grid' | 'list' => {
 
   if (hash) {
@@ -481,23 +406,55 @@ const typesContext = withTypes(({
   typesLastUpdated,
 }));
 
-interface StateProps {
-  notifications: Linode.Notification[]
+interface LinodeWithNotifications extends Linode.Linode {
+  notifications?: Linode.Notification[];
 }
 
-const mapStateToProps: MapStateToProps<StateProps, never, ApplicationState> = (state) => ({
-  notifications: (state.notifications.data || [])
-});
+interface StateProps {
+  data: LinodeWithNotifications[];
+}
+
+/**
+ * 'linodes' are provided by pagination and 'notifications' are provided by redux. We're using MSTP
+ * to join the Notifications to the appropriate Linode and provide that to the component.
+ */
+let mapStateToProps: MapStateToProps<StateProps, PaginationProps<Linode.Linode>, ApplicationState>;
+mapStateToProps = (state, ownProps) => {
+  const notifications = state.notifications.data || [];
+  const linodes = (ownProps.data || []);
+
+  return {
+    data: linodes.map(addNotificationToLinode(notifications)),
+  }
+};
 
 const connected = connect(mapStateToProps);
 
+const paginated = Pagey((ownProps, params, filters) =>
+  getLinodes(params, filters));
+
+const data = compose(
+  paginated,
+  typesContext,
+  connected,
+  withUpdatingLinodes,
+);
+
 export const enhanced = compose(
   withRouter,
-  typesContext,
   styled,
-  preloaded,
   setDocs(ListLinodes.docs),
-  connected,
+  data,
 );
+
+const getNotificationMessageByEntityId = (id: number, notifications: Linode.Notification[]): undefined | string => {
+  const found = notifications.find((n) => n.entity !== null && n.entity.id === id);
+  return found ? found.message : undefined;
+}
+
+const addNotificationToLinode = (notifications: Linode.Notification[]) => (linode: Linode.Linode) => ({
+  ...linode,
+  notification: getNotificationMessageByEntityId(linode.id, notifications)
+});
 
 export default enhanced(ListLinodes) as typeof ListLinodes;

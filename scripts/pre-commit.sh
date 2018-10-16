@@ -8,6 +8,11 @@ yarn lint
 echo $? >| .tmp.lint.status
 ) &
 (
+# Run TSC to check for type errors, does not emit files.
+yarn tsc --noEmit
+echo $? >| .tmp.test.status
+) &
+(
 yarn test
 echo $? >| .tmp.test.status
 ) &
@@ -21,7 +26,7 @@ if [[ $changes =~ .*src\/components.* ]]; then
 
     if [[ $storybookRunning -eq "0" ]]; then
         yarn storybook:e2e
-    else 
+    else
         yarn storybook > /dev/null 2>&1 &
         yarn storybook:e2e
     fi
@@ -29,12 +34,12 @@ if [[ $changes =~ .*src\/components.* ]]; then
 
     # Ensure we cleanup any leftover processes
     $( pkill -f selenium-standalone || : )
-    
+
     if [[ $storybookRunning -eq "1" ]]; then
         $( pkill -f storybook )
     fi
 ) &
-else 
+else
     storybookStatus=0
 fi
 
