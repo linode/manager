@@ -6,24 +6,24 @@
 
   Update your `REACT_APP_API_ROOT` environment variable to the following:
 
-  ```
+  ``` bash
   REACT_APP_API_ROOT=https://localhost:8088/v4
   ```
 
-  This will update the API base url to the mock service (powered by Mountebank). After doing this, be sure to restart your local manager client. Run `yarn start` again.
+  This will update the API base URL to the mock service (powered by Mountebank). After doing this, be sure to restart your local manager client by running `yarn && yarn start`.
 
 ## Running the Mock API Service
 
   After configuring your `.env` file you are ready to start running a mock Linode API Service instance. Mock services are created using [Mountebank](http://mbtest.org). Run Mountebank via the following command from the Manager project directory:
 
-  ```
+  ``` bash
   yarn mb
   ```
 
 
-  Mountebank acts as an orchestrator of mock services or "Imposter services" as it calls them. Mountebank controls the creation/tear down of our mock api service.
+  Mountebank acts as an orchestrator of mock services or "Imposter services" as it calls them. Mountebank controls the creation/tear down of our mock API service.
 
-  We also use the Mountebank API to configure these services and give them a way to reason about the requests we give it. Mountebank's API allows us to configure "stubs." Stubs take a request with a certain Method,Path,Body,Query string and return something from it. To learn more, please familiarize yourself with [Mountebank's API docs](http://www.mbtest.org/docs/api/overview). There are many ways to create stub predicates (ways to match a request). This is helpful if you want to capture requests for say, a specific linode and return a specific response or capture requests for some linodes and return a specific response.
+  We also use the Mountebank API to configure these services and give them a way to reason about the requests we give it. Mountebank's API allows us to configure **stubs.** Stubs take a request with a certain Method, Path, Body, and Query string and return something from it. To learn more, please familiarize yourself with [Mountebank's API docs](http://www.mbtest.org/docs/api/overview). There are many ways to create stub predicates (ways to match a request). This is helpful if you want to capture requests for e.g. a specific Linode or set of Linodes and return a specific response.
 
 
 ## Recording a Mock Session
@@ -34,9 +34,9 @@
   yarn mock --record # -r is also an avaialable flag
   ```
 
-  Now refresh your manager in your browser.  You should see the app load as it normally would. If it does not, see the Common issues section below.
+Refresh your Manager in your browser. You should see the app load as it normally would. If it does not, see the Common Issues section below.
 
-  You are now using moutebank's imposter to "record" all API calls made by the manager. To verify your Mountebank API Imposter is receiving the requests, you can visit [this page](http://localhost:2525/imposters/8088). In it, you will see a "stub" that looks like this:
+  You are now using Mountebank's imposter to record all API calls made by the Manager. To verify your Mountebank API Imposter is receiving the requests, you can visit [this page](http://localhost:2525/imposters/8088). In it, you will see a **stub** that looks like this:
 
   ```JSON
       {
@@ -70,14 +70,13 @@
 
   To save the requests/responses made during your session, you can use our mock tool again:
 
-  ```
+  ``` bash
   yarn mock --save nameOfMockFile.json
   ```
 
-  This will send a GET request to `http://localhost:2525/imposters` on your Moutebank instance. It will then take the JSON payload returned and write them to a file called `nameOfMockFile.json` and save it to the directory `src/__data__/mocks`. Once saved, you can view this file, verify it's contents, and manipulate any API calls that you wish to have return differently when running your manager app against a mock session file. 
+  This will send a GET request to `http://localhost:2525/imposters` on your Moutebank instance. It will then take the JSON payload returned and write them to a file called `nameOfMockFile.json` and save it to the directory `src/__data__/mocks`. Once saved, you can view this file, verify its contents, and manipulate any API calls that you wish to return differently when running your manager app against a mock session file.
 
-
-  * **NOTE: If you are committing the mock session to the repo, FIND/REPLACE ANY mention of your username in the saved mock session file**. 
+  **NOTE**: If you are committing the mock session to the repo, FIND/REPLACE ANY mention of your username in the saved mock session file.
 
 ## Using Saved Mock Sessions
 
@@ -85,10 +84,9 @@
 
   To load a mock file, run the following command:
 
-  ```
+  ``` bash
   yarn mock --load nameOfMockFile.json
   ```
-
 
   This will look for the file `nameOfMockFile.json` in `src/__data__/mocks` and send a PUT request to `https://localhost:2525/imposters` (the Mountebank service) with the configuration provided for your imposter in `nameOfMockFile.json` this includes the stubbed requests/responses.
 
@@ -102,21 +100,20 @@
   yarn mock --rm
   ```
 
-  This will send a DELETE request to ``http://localhost:2525/imposters` removing all imposter services and their configurations.
+  This will send a DELETE request to `http://localhost:2525/imposters` removing all imposter services and their configurations.
 
-  * Note: if you ran Mountebank in record mode, you must first remove the "record" configuration by running `yarn mock --rm` before running `yarn mock --load nameOfMockFile.json`. 
-
+  **NOTE**: if you ran Mountebank in record mode, you must first remove the "record" configuration by running `yarn mock --rm` before running `yarn mock --load nameOfMockFile.json`.
 
 ## Common Issues
 
 > I ran `yarn mock --record` or `yarn mock --load nameOfMockFile.json` and now when i load my manager, nothing happens.
 
-  First, check that you've configured your `.env` file as mentioned above and that you have restarted your Manager Client. 
+  First, check that you've configured your `.env` file as mentioned above and that you have restarted your Manager Client.
 
-  If the problem persists, it's likely a SSL certificate issue. Open the developer tools in Chrome or whatever your browser of choice and navigate to the Network Activity tab. Check out the requests being made localhost:8088. Navigate to one of these requests in a browser tab, like `https://localhost:8088/v4/linodes/894889`.. It may prompt you about the request being made to an address with an unverified certificate.. Proceed anway.
+  If the problem persists, it's likely a SSL certificate issue. Open the developer tools in Chrome or whatever your browser of choice and navigate to the Network Activity tab. Check out the requests being made localhost:8088. Navigate to one of these requests in a browser tab, like `https://localhost:8088/v4/linodes/894889`. It may prompt you about the request being made to an address with an unverified certificate. Proceed anyway.
 
   Once you opt to "proceed anyway" go back to your local manager client that was giving you trouble. Refresh the page and you should see it load as expected.
 
 > There's lots of junk in these mock files that do not pertain to the API calls I wish to manipulate for my mock session. Can I remove some of this junk?
 
-That depends. Some API calls are needed and may affect the APP and give unexpected results when running on via the mock session. But other information is not essential. When running via a saved mock, any unmatched API calls will proxy to the production environment. So it's definitely possible to have a mock containing only the small number of calls you wish to manipulate, but this will take some trial/error of loading a mock, testing it on the front end,removing the mock,tweaking the mock file, then loading it again and checking the front end.
+That depends. Some API calls are needed and may affect the APP and give unexpected results when running on via the mock session. But other information is not essential. When running via a saved mock, any unmatched API calls will proxy to the production environment. So it's definitely possible to have a mock containing only the small number of calls you wish to manipulate, but this will take some trial/error of loading a mock, testing it on the front end, removing the mock, tweaking the mock file, then loading it again and checking the front end.
