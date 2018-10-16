@@ -1,3 +1,7 @@
+/*
+In the context of profile, the term 'Oauth Client(s)' is referred to as 'app' or 'My Apps' for user-facing displays.
+*/
+
 import { compose, path } from 'ramda';
 import * as React from 'react';
 
