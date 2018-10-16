@@ -104,7 +104,10 @@ export class TokenCreateDrawer {
 export class Profile extends Page {
     get profileHeader() { return $('[data-qa-profile-header]'); }
     get apiTokensTab() { return $('[data-qa-tab="API Tokens"]'); }
-    get oauthClientsTab() { return $('[data-qa-tab="OAuth Clients"]'); }
+    
+    // TODO Need to unify internal & external usage of 'OAuth Clients'/'My Apps'.
+    // Currently in the context of profile, the term 'Oauth Client(s)' is referred to as 'app' or 'My Apps' for user-facing displays.
+    get oauthClientsTab() { return $('[data-qa-tab="My Apps"]'); }
     get tableHeader() { return $$('[data-qa-table]'); }
     get tableHead() { return $$('[data-qa-table-head]'); }
     get tableRow() { return $$('[data-qa-table-row]'); }
@@ -135,7 +138,7 @@ export class Profile extends Page {
 
     oauthBaseElems() {
         browser.waitForVisible('[data-qa-profile-header]', constants.wait.normal);
-        const oauthSelected = browser.getAttribute('[data-qa-tab="OAuth Clients"]', 'aria-selected').includes('true');
+        const oauthSelected = browser.getAttribute('[data-qa-tab="My Apps"]', 'aria-selected').includes('true');
         expect(oauthSelected).toBe(true);
 
         browser.waitForVisible('[data-qa-oauth-label]', constants.wait.normal);
