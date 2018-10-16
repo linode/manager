@@ -420,8 +420,12 @@ mapStateToProps = (state, ownProps) => {
 
 const connected = connect(mapStateToProps);
 
-const paginated = Pagey((ownProps, params, filters) =>
-  getLinodes(params, filters));
+const paginated = Pagey((ownProps, params, filters) => {
+  return {
+    request: () => getLinodes(params, filters),
+    cancel: null,
+  }
+})
 
 const data = compose(
   paginated,

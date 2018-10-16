@@ -402,8 +402,11 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
 }
 
 const updatedRequest = (ownProps: any, params: any, filter: any) => {
-  return getImages(params, { is_public: false })
-    .then(response => response)
+  return {
+    request: () => getImages(params, { is_public: false })
+      .then(response => response),
+    cancel: null
+  }
 }
 
 const paginated = paginate(updatedRequest);
