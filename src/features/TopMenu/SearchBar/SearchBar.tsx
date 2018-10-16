@@ -301,7 +301,6 @@ class SearchBar extends React.Component<CombinedProps, State> {
           ),
           Icon: LinodeIcon,
           path: `/linodes/${linode.id}`,
-          history,
           searchText: query,
         }
       }))));
@@ -319,7 +318,6 @@ class SearchBar extends React.Component<CombinedProps, State> {
           description: volume.size + ' G',
           Icon: VolumeIcon,
           path: `/volumes/${volume.id}`,
-          history,
           searchText: query,
         }
       }))));
@@ -337,7 +335,6 @@ class SearchBar extends React.Component<CombinedProps, State> {
           description: nodebal.hostname,
           Icon: NodebalIcon,
           path: `/nodebalancers/${nodebal.id}`,
-          history,
           searchText: query,
         }
       }))));
@@ -356,7 +353,6 @@ class SearchBar extends React.Component<CombinedProps, State> {
           /* TODO: Update this with the Domains icon! */
           Icon: NodebalIcon,
           path: `/domains/${domain.id}`,
-          history,
           searchText: query
         }
       }))));
@@ -380,7 +376,6 @@ class SearchBar extends React.Component<CombinedProps, State> {
           Icon: VolumeIcon,
           /* TODO: Choose a real location for this to link to */
           path: `/images`,
-          history,
           searchText: query,
         }
       }))));

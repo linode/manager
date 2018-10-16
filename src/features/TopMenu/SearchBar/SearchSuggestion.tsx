@@ -83,68 +83,69 @@ interface Props extends OptionProps<any> {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const maybeStyleSegment = (text: string, searchText: string, hlClass: string): React.ReactNode => {
-  const idx = text.toLocaleLowerCase().indexOf(searchText.toLocaleLowerCase());
-  if (idx === -1) { return text; }
-  return (
-    <React.Fragment>
-      {`${text.substr(0, idx)}`}
-        <span className={hlClass}>{`${text.substr(idx, searchText.length)}`}</span>
-      {`${text.slice(idx + searchText.length)}`}
-    </React.Fragment>
-  );
-};
+class SearchSuggestion extends React.Component<CombinedProps> {
+  maybeStyleSegment = (text: string, searchText: string, hlClass: string): React.ReactNode => {
+    const idx = text.toLocaleLowerCase().indexOf(searchText.toLocaleLowerCase());
+    if (idx === -1) { return text; }
+    return (
+      <React.Fragment>
+        {`${text.substr(0, idx)}`}
+          <span className={hlClass}>{`${text.substr(idx, searchText.length)}`}</span>
+        {`${text.slice(idx + searchText.length)}`}
+      </React.Fragment>
+    );
+  };
 
-const renderTags = (tags:string[], selected:boolean) => {
-  if (tags.length === 0) { return; }
-  return tags.map((tag:string) =>
-    <Tag
-      key={`tag-${tag}`}
-      label={tag}
-      variant={selected ? 'blue' : 'lightGray'}
-    />
-  );
-}
-
-const SearchSuggestion: React.StatelessComponent<CombinedProps> = (props) => {
-  const suggestion = props.data.data;
-  const { classes } = props;
-  const { Icon } = suggestion;
-
-  const handleClick = () => {
-    const { history, path } = suggestion;
-    history.push(path);
+  renderTags = (tags:string[], selected:boolean) => {
+    if (tags.length === 0) { return; }
+    return tags.map((tag:string) =>
+      <Tag
+        key={`tag-${tag}`}
+        label={tag}
+        variant={selected ? 'blue' : 'lightGray'}
+      />
+    );
   }
 
-  return (
-    <div
-      onClick={handleClick}
-      className={classes.root}
-    >
-      <div className={classes.resultContainer}>
-        <div className={`
-          ${classes.suggestionItem}
-          ${classes.suggestionIcon}
-        `}>
-          <Icon />
+  handleClick = () => {
+    const suggestion = this.props.data;
+    this.props.selectOption(suggestion);
+  }
+
+  render() {
+    const suggestion = this.props.data.data;
+    const { classes } = this.props;
+    const { Icon } = suggestion;
+    return (
+      <div
+        className={classes.root}
+        onClick={this.handleClick}
+      >
+        <div className={classes.resultContainer}>
+          <div className={`
+            ${classes.suggestionItem}
+            ${classes.suggestionIcon}
+          `}>
+            <Icon />
+          </div>
+          <div className={`
+            ${classes.suggestionItem}
+            ${classes.suggestionContent}
+          `}>
+            <div className={classes.suggestionTitle} data-qa-suggestion-title>
+              {this.maybeStyleSegment(this.props.data.label, suggestion.searchText, classes.highlight)}
+            </div>
+            <div className={classes.suggestionDescription} data-qa-suggestion-desc>
+              {suggestion.description}
+            </div>
+          </div>
         </div>
-        <div className={`
-          ${classes.suggestionItem}
-          ${classes.suggestionContent}
-        `}>
-          <div className={classes.suggestionTitle} data-qa-suggestion-title>
-            {maybeStyleSegment(props.data.label, suggestion.searchText, classes.highlight)}
-          </div>
-          <div className={classes.suggestionDescription} data-qa-suggestion-desc>
-            {suggestion.description}
-          </div>
+        <div className={classes.tagContainer}>
+            {suggestion.tags && this.renderTags(suggestion.tags, Boolean(this.props.isFocused))}
         </div>
       </div>
-      <div className={classes.tagContainer}>
-          {suggestion.tags && renderTags(suggestion.tags, Boolean(props.isFocused))}
-      </div>
-    </div>
-  );
+    );
+  }
 };
 
 const styled = withStyles(styles, { withTheme: true });
