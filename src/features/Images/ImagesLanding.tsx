@@ -213,7 +213,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
          * will not return the image scheduled for deletion. This request
          * is ensuring the image is removed from the list, to prevent the user
          * from taking any action on the Image.
-         * */
+         */
         this.props.request();
         sendToast('Image has been scheduled for deletion.');
       })
