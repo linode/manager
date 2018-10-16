@@ -63,3 +63,23 @@ export const LinodeAPI: Linode.Doc = {
   body: 'The Linode API allows you to automate any task that can be performed by the Linode Manager, such as creating Linodes, managing IP addresses and DNS, and opening support tickets.',
   src: 'https://linode.com/docs/platform/api/getting-started-with-the-linode-api-new-manager/'
 }
+
+export const LISH: Linode.Doc = {
+  title: 'Using the Linode Shell (Lish)',
+  src: 'https://www.linode.com/docs/networking/using-the-linode-shell-lish/',
+  body: 'Learn how to use Lish as a shell for managing or rescuing your Linode.',
+}
+
+export const LinodeGettingStarted: Linode.Doc = {
+  title: 'Getting Started with Linode',
+  src: 'https://linode.com/docs/getting-started/',
+  body: `This guide will help you set up your first Linode.`,
+}
+
+export const SecuringYourServer: Linode.Doc = {
+  title: 'How to Secure your Server',
+  src: 'https://linode.com/docs/security/securing-your-server/',
+  body: `This guide covers basic best practices for securing a production server,
+  including setting up user accounts, configuring a firewall, securing SSH,
+  and disabling unused network services.`,
+}
