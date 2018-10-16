@@ -40,7 +40,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     position: 'sticky',
     top: 72,
     backgroundColor: theme.bg.offWhite,
-    zIndex: 10,
     paddingTop: 0,
     paddingBottom: 0,
     height: 48,
