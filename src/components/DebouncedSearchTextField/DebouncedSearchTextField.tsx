@@ -26,6 +26,7 @@ interface Props {
   onSearch: (value: string) => void;
   className?: string;
   isSearching?: boolean;
+  toolTipText?: string;
 }
 
 interface State {
@@ -54,12 +55,14 @@ class DebouncedSearchTextField extends React.Component<CombinedProps, State> {
       classes,
       className,
       placeholderText,
-      isSearching
+      isSearching,
+      toolTipText
     } = this.props;
 
     return (
       <React.Fragment>
         <TextField
+          tooltipText={toolTipText}
           fullWidth
           InputProps={{
             placeholder: placeholderText,
