@@ -175,6 +175,7 @@
     "eslint": "4.19.1",
     "hapi": "^17.5.3",
     "inert": "^5.1.0",
+    "inquirer": "^6.2.0",
     "mountebank": "^1.14.1",
     "selenium-standalone": "^6.13.0",
     "svgr": "^1.9.0",
