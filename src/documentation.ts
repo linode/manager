@@ -1,3 +1,21 @@
+/**
+ * The docs in this file are intended for reuse throughout the app by means of the setDocs function.
+ * In a component that will use the Docs sidebar, import as many of the objects below as needed, then
+ * pass them as an array to the setDocs method. The usual pattern is:
+ * 
+ * import { Domains } from 'src/documentation';
+ * 
+ * ...
+ * 
+ * static docs = [ Domains ]
+ * 
+ * compose(
+ *  ...
+ *  setDocs(Domains.docs)
+ * )
+ */
+
+
 export const Domains: Linode.Doc = {
   title: 'DNS Manager',
   body: 'The Domains section of the Linode Manger is a comprehensive DNS management interface that allows you to add DNS records for all of your domain names. This guide covers the use of the Domains section and basic domain zone setup. For an introduction to DNS in general, see our Introduction to DNS Records guide.',
