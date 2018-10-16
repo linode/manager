@@ -1,7 +1,3 @@
-/*
-In the context of profile, the term 'Oauth Client(s)' is referred to as 'app' or 'My Apps' for user-facing displays.
-*/
-
 import { compose, path } from 'ramda';
 import * as React from 'react';
 
@@ -234,7 +230,9 @@ class OAuthClients extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes } = this.props;
-
+    
+    // TODO Need to unify internal & external usage of 'OAuth Clients'/'My Apps'.
+    // Currently in the context of profile, the term 'Oauth Client(s)' is referred to as 'app' or 'My Apps' for user-facing displays.
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="My Apps" />
