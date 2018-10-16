@@ -46,10 +46,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     width: '100%',
     top: 0,
     zIndex: 11,
+    marginBottom: theme.spacing.unit * 3,
   },
   searchBar: {
     marginTop: 0,
-    paddingBottom: theme.spacing.unit * 3,
     backgroundColor: theme.color.white,
   },
 });
@@ -325,11 +325,11 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
     }
   }
 
-  handleClickTableHeader= (e: any) => {
+  handleClickTableHeader= (value: string) => {
     const { currentSearchFilter, sortOrder } = this.state;
 
     const nextSortOrder = (sortOrder === 'asc') ? 'desc' : 'asc';
-    const targetFilter = e.currentTarget.value;
+    const targetFilter = value as CurrentFilter;
     const filterInfo = this.generateFilterInfo(targetFilter);
 
     /*
