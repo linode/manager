@@ -104,6 +104,15 @@ Refresh your Manager in your browser. You should see the app load as it normally
 
   **NOTE**: if you ran Mountebank in record mode, you must first remove the "record" configuration by running `yarn mock --rm` before running `yarn mock --load nameOfMockFile.json`.
 
+## Mock Utility Help
+
+  For usage information and a list of available commands for the `yarn mock` utility script, run the following command:
+
+  ```bash
+  yarn mock --help
+  ```
+
+
 ## Common Issues
 
 > I ran `yarn mock --record` or `yarn mock --load nameOfMockFile.json` and now when i load my manager, nothing happens.
