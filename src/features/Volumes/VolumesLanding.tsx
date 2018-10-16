@@ -494,53 +494,56 @@ const styled = withStyles(styles, { withTheme: true });
 const documented = setDocs(VolumesLanding.docs);
 
 const updatedRequest = (ownProps: any, params: any, filters: any) => {
-  return getVolumes(params, filters)
-    .then((volumesResponse) => {
-      /*
-       * Iterate over all the volumes data and find the ones that
-       * have a linodeId property that is not null and create an X-Filter
-       * that we can use in the getLinodes() request
-       */
-      const linodeIDs = volumesResponse.data.map(volume => volume.linode_id).filter(Boolean);
-      const xFilter = generateInFilter('id', linodeIDs);
+  return {
+    request: () => getVolumes(params, filters)
+      .then((volumesResponse) => {
+        /*
+         * Iterate over all the volumes data and find the ones that
+         * have a linodeId property that is not null and create an X-Filter
+         * that we can use in the getLinodes() request
+         */
+        const linodeIDs = volumesResponse.data.map(volume => volume.linode_id).filter(Boolean);
+        const xFilter = generateInFilter('id', linodeIDs);
 
-      return getLinodes(undefined, xFilter)
-        .then((linodesResponse) => {
-          const volumesWithLinodeData = volumesResponse.data.map(eachVolume => {
-            /*
-             * Iterate over all the linode data and find a match between
-             * the volumes linode ID and the Linode data id. If there's a match
-             * it means that the Linode is attached to the volume and the Linode
-             * status and label needs needs to be appended to the result data 
-             */
-            for (const eachLinode of linodesResponse.data) {
-              if (eachLinode.id === eachVolume.linode_id) {
-                return {
-                  ...eachVolume,
-                  linodeLabel: eachLinode.label,
-                  linodeStatus: eachLinode.status
+        return getLinodes(undefined, xFilter)
+          .then((linodesResponse) => {
+            const volumesWithLinodeData = volumesResponse.data.map(eachVolume => {
+              /*
+               * Iterate over all the linode data and find a match between
+               * the volumes linode ID and the Linode data id. If there's a match
+               * it means that the Linode is attached to the volume and the Linode
+               * status and label needs needs to be appended to the result data 
+               */
+              for (const eachLinode of linodesResponse.data) {
+                if (eachLinode.id === eachVolume.linode_id) {
+                  return {
+                    ...eachVolume,
+                    linodeLabel: eachLinode.label,
+                    linodeStatus: eachLinode.status
+                  }
                 }
               }
-            }
-            /*
-             * Otherwise, this volume is not attached to a Linode 
-             */
-            return eachVolume;
-          });
+              /*
+               * Otherwise, this volume is not attached to a Linode 
+               */
+              return eachVolume;
+            });
 
-          return {
-            ...volumesResponse,
-            data: volumesWithLinodeData,
-          }
-        })
-        .catch((err) => {
-          /*
-           * If getting the Linode data fails, no problem.
-           * Just return the volumes 
-           */
-          return volumesResponse;
-        });
-    });
+            return {
+              ...volumesResponse,
+              data: volumesWithLinodeData,
+            }
+          })
+          .catch((err) => {
+            /*
+             * If getting the Linode data fails, no problem.
+             * Just return the volumes 
+             */
+            return volumesResponse;
+          });
+      }),
+    cancel: null
+  }
 }
 
 const paginated = paginate(updatedRequest);

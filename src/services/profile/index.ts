@@ -20,6 +20,7 @@ export {
 
 export {
   getSSHKeys,
+  getSSHKeys$,
   getSSHKey,
   createSSHKey,
   updateSSHKey,

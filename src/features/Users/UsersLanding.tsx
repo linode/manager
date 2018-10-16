@@ -330,14 +330,21 @@ const styled = withStyles(styles, { withTheme: true });
 
 const memoizedGetGravatarURL = memoize(getGravatarUrl);
 
-const paginated = Pagey((ownProps, params, filters) => getUsers(params, filters)
-  .then(({ data, page, pages, results }) =>
-    mapPromise(
-      data,
-      (user) => memoizedGetGravatarURL(user.email)
-        .then((gravatarUrl: string) => ({ ...user, gravatarUrl }))
-    )
-      .then((updatedUsers) => ({ page, pages, results, data: updatedUsers }))));
+const paginated = Pagey((ownProps, params, filters) => {
+  return {
+    request: () => {
+      return getUsers(params, filters)
+        .then(({ data, page, pages, results }) =>
+          mapPromise(
+            data,
+            (user) => memoizedGetGravatarURL(user.email)
+              .then((gravatarUrl: string) => ({ ...user, gravatarUrl }))
+          )
+            .then((updatedUsers) => ({ page, pages, results, data: updatedUsers })));
+    },
+    cancel: null,
+  }
+})
 
 export default compose<any, any, any, any, any>(
   withRouter,

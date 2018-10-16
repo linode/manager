@@ -569,13 +569,18 @@ const updateTokensResponse = (response: Linode.ResourcePage<Linode.Token>) => {
 const styled = withStyles(styles, { withTheme: true });
 
 const updatedRequest = (ownProps: Props, params: any, filters: any) => {
-  if (ownProps.type === 'OAuth Client Token') {
-    return getAppTokens(params, filters)
-      .then(updateTokensResponse);
-  } else {
-    return getPersonalAccessTokens(params, filters)
-      .then(response => response)
-      .then(updateTokensResponse)
+  return {
+    request: () => {
+      if (ownProps.type === 'OAuth Client Token') {
+        return getAppTokens(params, filters)
+          .then(updateTokensResponse);
+      } else {
+        return getPersonalAccessTokens(params, filters)
+          .then(response => response)
+          .then(updateTokensResponse)
+      }
+    },
+    cancel: null,
   }
 }
 

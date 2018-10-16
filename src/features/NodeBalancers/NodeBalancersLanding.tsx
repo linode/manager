@@ -371,39 +371,44 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
 const styled = withStyles(styles, { withTheme: true });
 
 const updatedRequest = (ownProps: any, params: any, filter: any) => {
-  /*
-   * this is pretty tricky. we need to make a call to get the configs for each nodebalancer
-   * because the up and down time data lives in the configs along with the ports
-   * 
-   * after we get that data, we have to add each config's up time together
-   * and each down time together
-   */
-  return getNodeBalancers(params, filter)
-    .then((response) => {
-      return new Promise((resolve, reject) => {
-        /*
-         * Iterate over each nodebalancer and get it's configs 
-         */
-        Promise.map(response.data, (nodeBalancer) => getNodeBalancerConfigs(nodeBalancer.id)
-          .then(({ data: configs }) => ({
-            ...nodeBalancer,
-            // add the nodes_status down from each config together
-            down: configs.reduce((acc: number, config) => acc + config.nodes_status.down, 0),
-            // add the nodes_status up from each config together
-            up: configs.reduce((acc: number, config) => acc + config.nodes_status.up, 0),
-            // concat all the ports on each config
-            ports: configs.reduce((acc: [number], config) => [...acc, config.port], []),
-          })))
-          .then((data) => resolve({ ...response, data }))
-          .catch((error) => reject(error));
-      });
-    })
-    .then((response: Linode.ResourcePage<Linode.ExtendedNodeBalancer>) => {
-      return response;
-    })
-    .catch((error) => {
-      return error;
-    });
+  return {
+    request: () => {
+      /*
+       * this is pretty tricky. we need to make a call to get the configs for each nodebalancer
+       * because the up and down time data lives in the configs along with the ports
+       * 
+       * after we get that data, we have to add each config's up time together
+       * and each down time together
+       */
+      return getNodeBalancers(params, filter)
+        .then((response) => {
+          return new Promise((resolve, reject) => {
+            /*
+             * Iterate over each nodebalancer and get it's configs 
+             */
+            Promise.map(response.data, (nodeBalancer) => getNodeBalancerConfigs(nodeBalancer.id)
+              .then(({ data: configs }) => ({
+                ...nodeBalancer,
+                // add the nodes_status down from each config together
+                down: configs.reduce((acc: number, config) => acc + config.nodes_status.down, 0),
+                // add the nodes_status up from each config together
+                up: configs.reduce((acc: number, config) => acc + config.nodes_status.up, 0),
+                // concat all the ports on each config
+                ports: configs.reduce((acc: [number], config) => [...acc, config.port], []),
+              })))
+              .then((data) => resolve({ ...response, data }))
+              .catch((error) => reject(error));
+          });
+        })
+        .then((response: Linode.ResourcePage<Linode.ExtendedNodeBalancer>) => {
+          return response;
+        })
+        .catch((error) => {
+          return error;
+        });
+    },
+    cancel: null
+  }
 } 
 
 const paginated = paginate(updatedRequest);

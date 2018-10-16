@@ -277,7 +277,10 @@ const linodeContext = withLinode<LinodeContext>((context) => ({
 }));
 
 const paginated = Pagey((ownProps: LinodeContext, params, filters) => {
-  return getLinodeConfigs(ownProps.linodeId, params, filters)
+  return {
+    request: () => getLinodeConfigs(ownProps.linodeId, params, filters),
+    cancel: null,
+  }
 });
 
 const enhanced = compose<any, any, any, any, any>(

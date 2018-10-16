@@ -354,8 +354,13 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const updatedRequest = (ownProps: any, params: any, filters: any) => getOAuthClients(params, filters)
-  .then((response) => response);
+const updatedRequest = (ownProps: any, params: any, filters: any) => {
+  return {
+    request: () => getOAuthClients(params, filters)
+      .then((response) => response),
+    cancel: null,
+  }
+}
 
 const paginated = paginate(updatedRequest);
 

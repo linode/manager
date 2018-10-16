@@ -108,8 +108,13 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, {}> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const updatedRequest = (ownProps: any, params: any) => getPayments(params, { '+order_by': 'date', '+order': 'desc' })
-  .then((response) => response);
+const updatedRequest = (ownProps: any, params: any) => {
+  return {
+    request: () => getPayments(params, { '+order_by': 'date', '+order': 'desc' })
+      .then((response) => response),
+    cancel: null,
+  }
+}
 
 const paginated = paginate(updatedRequest);
 

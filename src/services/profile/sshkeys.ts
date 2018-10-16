@@ -1,6 +1,6 @@
 import { API_ROOT } from 'src/constants';
 
-import Request, { setData, setMethod, setParams, setURL, setXFilter } from '..';
+import Request, { CancellableRequest, setData, setMethod, setParams, setURL, setXFilter } from '..';
 import { createSSHKeySchema } from './profile.schema';
 
 type Page<T> = Linode.ResourcePage<T>;
@@ -33,6 +33,15 @@ export const getSSHKey = (keyId:number) =>
     setURL(`${API_ROOT}/profile/sshkeys/${keyId}`),
   )
     .then(response => response.data);
+
+export const getSSHKeys$ = (pagination: any = {}, filters: any = {}) => {
+  return CancellableRequest<Page<SSHKey>>(
+    setMethod('GET'),
+    setParams(pagination),
+    setXFilter(filters),
+    setURL(`${API_ROOT}/profile/sshkeys`),
+  )
+}
 
 /**
  * createSSHKey

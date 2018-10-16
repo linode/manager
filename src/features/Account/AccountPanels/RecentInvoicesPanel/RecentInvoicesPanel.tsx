@@ -113,8 +113,13 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, {}> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const updatedRequest = (ownProps: any, params: any, filters: any) => getInvoices(params, filters)
-  .then((response) => response);
+const updatedRequest = (ownProps: any, params: any, filters: any) => {
+  return {
+    request: () => getInvoices(params, filters)
+      .then((response) => response),
+    cancel: null,
+  }
+}
 
 const paginated = paginate(updatedRequest);
 
