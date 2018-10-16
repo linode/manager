@@ -26,6 +26,7 @@ import PaginationFooter from 'src/components/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
+import { Images } from 'src/documentation';
 import { events$ } from 'src/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { deleteImage, getImages } from 'src/services/images';
@@ -84,15 +85,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
   };
 
   static docs: Linode.Doc[] = [
-    {
-      title: 'Linode Images',
-      src: 'https://linode.com/docs/platform/linode-images/',
-      body: `Linode Images allows you to take snapshots of your disks,
-      and then deploy them to any Linode under your account.
-      This can be useful for bootstrapping a master image for a large deployment,
-      or retaining a disk for a configuration that you may not need running,
-      but wish to return to in the future.`,
-    },
+    Images,
     {
       title: 'Deploy an Image to a Linode',
       src: 'https://linode.com/docs/quick-answers/linode-platform/deploy-an-image-to-a-linode/',
@@ -213,7 +206,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
          * will not return the image scheduled for deletion. This request
          * is ensuring the image is removed from the list, to prevent the user
          * from taking any action on the Image.
-         * */
+         */
         this.props.request();
         sendToast('Image has been scheduled for deletion.');
       })

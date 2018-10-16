@@ -7,6 +7,7 @@ import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/st
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Notice from 'src/components/Notice';
+import { AccountsAndPasswords, SecurityControls } from 'src/documentation';
 import { handleUpdate } from 'src/store/reducers/resources/profile';
 
 import SecuritySettings from './SecuritySettings';
@@ -80,11 +81,10 @@ export class AuthenticationSettings extends React.Component<CombinedProps, State
     );
   }
 
-  static docs = [{
-    title: 'Accounts and Passwords',
-    src: 'https://linode.com/docs/platform/accounts-and-passwords/',
-    body: 'Maintaining your user accounts, passwords, and contact information is just as important as administering your Linode.'
-  }];
+  static docs = [
+    AccountsAndPasswords,
+    SecurityControls,
+  ];
 
 }
 
