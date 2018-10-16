@@ -160,7 +160,7 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
           onClose={this.closeConfirmReset}
         >
           <Typography>
-            Are you sure you want to permanently reset the secret of this app?
+            Are you sure you want to permanently reset the secret for this app?
           </Typography>
         </ConfirmationDialog>
       </React.Fragment>
