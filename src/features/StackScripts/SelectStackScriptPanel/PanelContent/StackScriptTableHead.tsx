@@ -14,9 +14,7 @@ type ClassNames = 'root'
   | 'deploys'
   | 'revisions'
   | 'tr'
-  | 'tableHead'
-  | 'sortButton'
-  | 'sortIcon';
+  | 'tableHead';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
@@ -45,17 +43,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     zIndex: 10,
     paddingTop: 0,
     paddingBottom: 0,
-  },
-  sortButton: {
-    marginLeft: -26,
-    border: 0,
-    width: '100%',
-    justifyContent: 'flex-start',
-  },
-  sortIcon: {
-    position: 'relative',
-    top: 2,
-    left: 10,
+    height: 48,
   },
 });
 

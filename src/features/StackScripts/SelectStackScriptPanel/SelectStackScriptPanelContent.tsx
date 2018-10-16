@@ -46,7 +46,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     width: '100%',
     top: 0,
     zIndex: 11,
-    marginBottom: theme.spacing.unit * 3,
+    paddingBottom: theme.spacing.unit * 3,
+    backgroundColor: theme.bg.white,
   },
   searchBar: {
     marginTop: 0,
