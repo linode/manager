@@ -32,9 +32,11 @@ describe('Linode Detail - Rebuild Suite', () => {
 
     it('should display image options in the select', () => {
         Rebuild.imagesSelect.click();
+        Rebuild.imageSelectHeader.waitForVisible(constants.wait.normal);
 
-        expect(Rebuild.imageSelectHeader.isVisible()).toBe(true);
-        Rebuild.imageOptions.forEach(option => expect(option.isVisible()).toBe(true));
+        // Only check two image Options for visibility
+        expect(Rebuild.imageOptions[0].isVisible()).toBe(true);
+        expect(Rebuild.imageOptions[1].isVisible()).toBe(true);
     });
 
     it('should display error on create an image without selecting an image', () => {
@@ -50,15 +52,21 @@ describe('Linode Detail - Rebuild Suite', () => {
     });
 
     it('should display error on create image without setting a password', () => {
+        const errorMsg = 'Password cannot be blank.';
         Rebuild.selectImage();
-        Rebuild.imageOptions.forEach(opt => opt.waitForVisible(constants.wait.short, true));
+        
+        // Use manual waitUntil polling due to chromedriver request throttle issue.
+        browser.waitUntil(function() {
+            return !$('[data-qa-image-option]').isVisible();
+        }, constants.wait.normal);
+
         Rebuild.submit.click();
+        Rebuild.waitForNotice(errorMsg, constants.wait.normal);
     });
 
     it('should rebuild linode on valid image and password', () => {
         const testPassword = generatePassword();
-        Rebuild.selectImage();
-        Rebuild.imageOptions.forEach(opt => opt.waitForVisible(constants.wait.short, true));
+
         Rebuild.password.setValue(testPassword);
         Rebuild.rebuild();
     });
