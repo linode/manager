@@ -1,5 +1,6 @@
-const { writeFileSync } = require('fs');
+const { writeFileSync, readFileSync } = require('fs');
 const axios = require('axios');
+const inquirer = require('inquirer');
 
 const proxyImposter = config => {
     const imposter = {
@@ -118,4 +119,42 @@ exports.deleteImposters = () => {
             .then(response => resolve(response.data))
             .catch(error => reject(console.error(error)));
     });
+}
+
+
+exports.promptAndSanitize = (stubPath) => {
+    const sanitizeStub = (stubPath, username) => {
+        const stubFile = readFileSync(stubPath, 'utf8');
+
+        const ipv4ModifiedRegex = new RegExp([
+            // Ignore 2. 3. and 4. addresses because they match Linux kernel versions!
+            /(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]|[015-9])\./  // first octet
+            ,/(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\./        // second octet
+            ,/(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\./        // third octet
+            ,/(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)/g         // fourth octet
+          ].map(function(r) { return r.source; }).join(''), 'g');
+
+        const usernameRegex = new RegExp(username, 'g');
+
+        const ipv6Regex = /([0-9A-Fa-f]{1,4}:([0-9A-Fa-f]{1,4}:([0-9A-Fa-f]{1,4}:([0-9A-Fa-f]{1,4}:([0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{0,4}|:[0-9A-Fa-f]{1,4})?|(:[0-9A-Fa-f]{1,4}){0,2})|(:[0-9A-Fa-f]{1,4}){0,3})|(:[0-9A-Fa-f]{1,4}){0,4})|:(:[0-9A-Fa-f]{1,4}){0,5})((:[0-9A-Fa-f]{1,4}){2}|:(25[0-5]|(2[0-4]|1[0-9]|[1-9])?[0-9])(\.(25[0-5]|(2[0-4]|1[0-9]|[1-9])?[0-9])){3})|(([0-9A-Fa-f]{1,4}:){1,6}|:):[0-9A-Fa-f]{0,4}|([0-9A-Fa-f]{1,4}:){7}:/g
+
+        const sanitized = stubFile
+            .replace(ipv4ModifiedRegex, '127.0.0.1')
+            .replace(ipv6Regex, 'fe80::ab8')
+            .replace(usernameRegex, 'test-user');
+
+        JSON.parse(sanitized);
+
+        return writeFileSync(stubPath, sanitized);
+    }
+
+    return inquirer
+    .prompt([
+        {
+            name: 'Username',
+            type: 'input',
+            message: 'Enter the username used to record this mock session:',
+        }
+    ])
+    .then(answers => sanitizeStub(stubPath, answers.Username));
 }

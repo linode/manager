@@ -3,7 +3,13 @@
 const { readFileSync } = require('fs');
 const yargs = require('yargs');
 
-const { loadProxyImposter, loadImposter, getImposters, deleteImposters } = require('../e2e/utils/mb-utils');
+const {
+  loadProxyImposter,
+  loadImposter,
+  getImposters,
+  deleteImposters,
+  promptAndSanitize,
+} = require('../e2e/utils/mb-utils');
 
 yargs
   .command(
@@ -42,7 +48,8 @@ yargs
         }
 
         if (argv.s) {
-            return getImposters(false, `src/__data__/mocks/${argv.save}`);
+            getImposters(false, `src/__data__/mocks/${argv.save}`);
+            return promptAndSanitize(`src/__data__/mocks/${argv.save}`);
         }
 
         if (argv.l) {
