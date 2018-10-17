@@ -679,8 +679,9 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
                 onSearch={this.handleSearch}
                 className={classes.searchBar}
                 isSearching={isSearching}
-                toolTipText={`Hint: try searching for a specific item by prepending your
-                search term with "username:", "label:", or "description:"`}
+                /** uncomment when we upgrade to MUI v3 */
+                // toolTipText={`Hint: try searching for a specific item by prepending your
+                // search term with "username:", "label:", or "description:"`}
               />
             </div>
             <Table
