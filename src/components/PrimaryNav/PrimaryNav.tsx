@@ -431,6 +431,6 @@ export const connected = connect(mapStateToProps, undefined);
 
 export default compose<Linode.TodoAny, Linode.TodoAny, Linode.TodoAny, Linode.TodoAny>(
   withStyles(styles, { withTheme: true }),
-  connected,
   withRouter,
+  connected,
 )(PrimaryNav);
