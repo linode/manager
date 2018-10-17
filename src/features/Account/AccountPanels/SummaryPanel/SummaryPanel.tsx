@@ -46,7 +46,7 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
     const { classes, data, loading, errors, lastUpdated } = this.props;
 
     return (
-      <Paper className={classes.root}>
+      <Paper className={classes.root} data-qa-contact-summary>
         <Grid container>
           <Grid item xs={12}>
             <Typography role="header" variant="title">
@@ -116,16 +116,16 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
               </Typography>
               </Grid>
               <Grid item sm={6}>
-                <Typography variant="caption" className={classes.item}>
+                <Typography variant="caption" className={classes.item} data-qa-company>
                   <strong>Company Name: </strong>
                   {company ? company : 'None'}
               </Typography>
-                <Typography variant="caption" className={classes.item}>
+                <Typography variant="caption" className={classes.item} data-qa-contact-name>
                   <strong>Name: </strong>
                   {!(first_name || last_name) && 'None'}
                   {`${first_name} ${last_name}`}
               </Typography>
-              <Typography variant="caption" className={classes.item}>
+              <Typography variant="caption" className={classes.item} data-qa-contact-address>
                 <strong>Address: </strong>
                 {!(address_1 || address_2 || city || state || zip) && 'None'}
                 <span>{address_1}</span>
@@ -136,11 +136,11 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
               </Typography>
             </Grid>
             <Grid item sm={6}>
-              <Typography variant="caption" className={classes.item}>
+              <Typography variant="caption" className={classes.item} data-qa-contact-email>
                 <strong>Email: </strong>
                 {email}
               </Typography>
-                <Typography variant="caption" className={classes.item}>
+                <Typography variant="caption" className={classes.item} data-qa-contact-phone>
                   <strong>Phone Number: </strong>
                   {phone ? phone : 'None'}
               </Typography>
@@ -157,14 +157,14 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
                   </Typography>
               </Grid>
               <Grid item xs={12}>
-                <Typography variant="caption" className={classes.item}>
+                <Typography variant="caption" className={classes.item} data-qa-contact-cc>
                   <strong>Credit Card: </strong>
                   {(last_four)
                     ? `xxxx-xxxx-xxxx-${last_four}`
                     : 'None'
                   }
                 </Typography>
-                <Typography variant="caption" className={classes.item}>
+                <Typography variant="caption" className={classes.item} data-qa-contact-cc-exp-date>
                   <strong>Expiration Date: </strong>
                   {(expiry)
                     ? `${expiry} `
