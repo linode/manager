@@ -416,6 +416,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
             data-qa-search-icon
           />
           <EnhancedSelect
+            id="search-bar"
             options={options}
             onChange={this.onSelect}
             onInputChange={this.handleSearchChange}

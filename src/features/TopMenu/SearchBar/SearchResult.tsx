@@ -57,8 +57,6 @@ const Option: React.StatelessComponent<CombinedProps> = (props) => {
       component="div"
       className={props.classes.item}
       classes={{ selected: props.classes.selectedMenuItem }}
-      data-qa-suggestion={suggestion.title}
-      data-qa-selected={props.isSelected}
     >
       <SearchSuggestion {...props} />
     </MenuItem>

@@ -62,6 +62,8 @@ class SearchSuggestion extends React.Component<CombinedProps> {
           ${classes.suggestionRoot}
           ${Boolean(this.props.isFocused) && classes.selectedMenuItem}
         `}
+        data-qa-suggestion
+        data-qa-selected={Boolean(this.props.isFocused)}
         ref={innerRef}
         onClick={this.handleClick}
         {...innerProps}
