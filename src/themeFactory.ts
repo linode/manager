@@ -555,6 +555,7 @@ const themeDefaults: ThemeOptions = {
       },
       focused: {
         borderColor: primaryColors.main,
+        boxShadow: '0 0 2px 1px #e1edfa',
       },
       error: {
         borderColor: '#CA0813',

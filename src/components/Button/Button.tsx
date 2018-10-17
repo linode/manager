@@ -15,7 +15,8 @@ type ClassNames = 'root'
   | 'cancel'
   | 'remove'
   | 'compact'
-  | 'hidden';
+  | 'hidden'
+  | 'reg';
 
 export interface Props extends ButtonProps {
   loading?: boolean;
@@ -103,6 +104,10 @@ const styles: StyleRulesCallback = (theme) => ({
   hidden: {
     visibility: 'hidden',
   },
+  reg: {
+    display: 'flex',
+    alignItems: 'center',
+  },
 });
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -157,7 +162,7 @@ const wrappedButton: React.StatelessComponent<CombinedProps> = (props) => {
         )}
       >
         {loading && <Reload />} 
-        <span className={loading ? classes.hidden : ''}>{props.children}</span>
+        <span className={loading ? classes.hidden : classes.reg}>{props.children}</span>
         {type === 'remove' && 'Remove'}
       </Button>
       {tooltipText && <HelpIcon text={tooltipText} />}
