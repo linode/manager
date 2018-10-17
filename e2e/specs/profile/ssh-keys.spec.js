@@ -57,6 +57,7 @@ describe('Profile - SSH Keys Suite', () => {
     it('should remove the ssh key', () => {
         browser.url(constants.routes.profile.sshKeys);
         SshKeys.baseElemsDisplay();
+        SshKeys.publicKeyRow.waitForVisible(constants.wait.normal);
         SshKeys.removeKey(testKey.label);
     });
 
