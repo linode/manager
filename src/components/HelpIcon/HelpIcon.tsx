@@ -56,19 +56,19 @@ class HelpIcon extends React.Component<CombinedProps, State> {
     const { text, className } = this.props;
     return (
       <React.Fragment>
-        <Tooltip
-          title={text}
-          data-qa-help-tooltip
-          enterTouchDelay={0}
-          leaveTouchDelay={5000}
-        >
-          <IconButton
-            className={className}
-            data-qa-help-button
+          <Tooltip
+            title={text}
+            data-qa-help-tooltip
+            enterTouchDelay={0}
+            leaveTouchDelay={5000}
           >
+            <IconButton
+              className={className}
+              data-qa-help-button
+            >
             <HelpOutline />
-          </IconButton>
-        </Tooltip>
+            </IconButton>
+          </Tooltip>
       </React.Fragment>
     );
   }
