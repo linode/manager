@@ -16,6 +16,7 @@ import Grid from 'src/components/Grid';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
 import { withTypes } from 'src/context/types';
+import { LinodeGettingStarted, SecuringYourServer } from 'src/documentation';
 import LinodeConfigSelectionDrawer, { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { getImages } from 'src/services/images';
 import { getLinodes } from 'src/services/linodes';
@@ -92,19 +93,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   };
 
   static docs = [
-    {
-      title: 'Getting Started with Linode',
-      src: 'https://linode.com/docs/getting-started/',
-      body: `This guide will help you set up your first Linode.`,
-    },
-    {
-      title: 'How to Secure your Server',
-      src: 'https://linode.com/docs/security/securing-your-server/',
-      body: `This guide covers basic best practices for securing a production server,
-      including setting up user accounts, configuring a firewall, securing SSH,
-      and disabling unused network services.`,
-    },
-
+    LinodeGettingStarted,
+    SecuringYourServer,
   ];
 
   getImages = () => {
