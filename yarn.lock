@@ -7768,6 +7768,10 @@ moment-timezone@^0.5.16:
   version "2.22.2"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.2.tgz#3c257f9839fc0e93ff53149632239eb90783ff66"
 
+monet@^0.8.10:
+  version "0.8.10"
+  resolved "http://registry.npmjs.org/monet/-/monet-0.8.10.tgz#af82af50591466f78baf97c053e2ffe5e9108224"
+
 mountebank@^1.14.1:
   version "1.14.1"
   resolved "https://registry.yarnpkg.com/mountebank/-/mountebank-1.14.1.tgz#2706b87cc1d9c8fee52f89ca429e04f7ed3abf42"

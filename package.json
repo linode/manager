@@ -53,6 +53,7 @@
     "memoizee": "^0.4.14",
     "moment": "^2.21.0",
     "moment-timezone": "^0.5.16",
+    "monet": "^0.8.10",
     "novnc-node": "^0.5.3",
     "postcss-flexbugs-fixes": "3.2.0",
     "postcss-loader": "2.0.8",

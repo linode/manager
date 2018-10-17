@@ -1,12 +1,15 @@
+import * as moment from 'moment-timezone';
+import { Either } from 'monet';
+import { compose } from 'ramda';
+import * as React from 'react';
+
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
-import * as moment from 'moment-timezone';
-import { compose } from 'ramda';
-import * as React from 'react';
+
 import AddNewLink from 'src/components/AddNewLink';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import paginate, { PaginationProps } from 'src/components/Pagey';
@@ -21,6 +24,7 @@ import DeleteSSHKeyDialog from 'src/features/Profile/SSHKeys/DeleteSSHKeyDialog'
 import SSHKeyActionMenu from 'src/features/Profile/SSHKeys/SSHKeyActionMenu';
 import { getSSHKeys } from 'src/services/profile';
 import fingerprint from 'src/utilities/ssh-fingerprint';
+
 import SSHKeyCreationDrawer from './SSHKeyCreationDrawer';
 
 type ClassNames = 'root';
@@ -100,7 +104,7 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
               </TableRow>
             </TableHead>
             <TableBody>
-              {this.renderContent()}
+              {this.maybeRenderError(this.props)}
             </TableBody>
           </Table>
         </Paper>
@@ -127,23 +131,24 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
     );
   }
 
-  renderContent = () => {
-    const { loading, error, data, count } = this.props;
-
-    if (loading) {
-      return SSHKeys.renderLoading();
-    }
-
-    if (error) {
-      return SSHKeys.renderError(error);
-    }
-
-    if (data && count > 0) {
-      return this.renderData(data);
-    }
-
-    return SSHKeys.renderEmptyState();
+  maybeRenderError = (props: CombinedProps) => {
+    return Either
+      .Right(props)
+      .flatMap((p) => p.error ? Either.Left(p.error) : Either.Right(p))
+      .cata(SSHKeys.renderError, this.maybeRenderLoading)
   };
+
+  maybeRenderLoading = (props: CombinedProps) =>
+    Either
+      .Right(props)
+      .flatMap((p) => p.loading ? Either.Left(true) : Either.Right(p))
+      .cata(SSHKeys.renderLoading, this.maybeRenderEmptyState);
+
+  maybeRenderEmptyState = (props: CombinedProps) =>
+    Either
+      .Right(props)
+      .flatMap((p) => !p.data || p.data.length === 0 ? Either.Left(true) : Either.Right(p.data))
+      .cata(SSHKeys.renderEmptyState, this.renderData);
 
   headerAction = () => {
     return (
@@ -170,22 +175,28 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
   };
 
   renderData = (keys: ExtendedSSHKey[]) => {
-    return keys.map(key =>
-      <TableRow data-qa-content-row={key.label} key={key.id}>
-        <TableCell parentColumn="Label">{key.label}</TableCell>
-        <TableCell parentColumn="Key" data-qa-public-key>
-          <Typography variant="caption">{key.ssh_key.slice(0, 26)}</Typography>
-          <Typography variant="caption">Fingerprint: {key.fingerprint}</Typography>
-        </TableCell>
-        <TableCell parentColumn="Created" data-qa-key-created>{key.created}</TableCell>
-        <TableCell>
-          <SSHKeyActionMenu
-            id={key.id}
-            label={key.label}
-            onDelete={this.displayConfirmDeleteDialog}
-          />
-        </TableCell>
-      </TableRow>
+    return (
+      <React.Fragment>
+        {
+          keys.map(key =>
+            <TableRow data-qa-content-row={key.label} key={key.id}>
+              <TableCell parentColumn="Label">{key.label}</TableCell>
+              <TableCell parentColumn="Key" data-qa-public-key>
+                <Typography variant="caption">{key.ssh_key.slice(0, 26)}</Typography>
+                <Typography variant="caption">Fingerprint: {key.fingerprint}</Typography>
+              </TableCell>
+              <TableCell parentColumn="Created" data-qa-key-created>{key.created}</TableCell>
+              <TableCell>
+                <SSHKeyActionMenu
+                  id={key.id}
+                  label={key.label}
+                  onDelete={this.displayConfirmDeleteDialog}
+                />
+              </TableCell>
+            </TableRow>
+          )
+        }
+      </React.Fragment>
     );
   };
 
