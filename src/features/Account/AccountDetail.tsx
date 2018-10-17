@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { AccountsAndPasswords, BillingAndPayments } from 'src/documentation';
 import { Requestable } from 'src/requestableContext';
 import { getAccountInfo } from 'src/services/account';
 import composeState from 'src/utilities/composeState';
@@ -53,16 +54,8 @@ const L = {
 
 export class AccountDetail extends React.Component<CombinedProps, State> {
   static docs = [
-    {
-      title: 'Billing and Payments',
-      src: 'https://www.linode.com/docs/platform/billing-and-payments/',
-      body: `Our guide to billing and payments.`,
-    },
-    {
-      title: 'Accounts and Passwords',
-      src: 'https://www.linode.com/docs/platform/accounts-and-passwords/',
-      body: `Our guide to managing accounts and passwords.`,
-    },
+    BillingAndPayments,
+    AccountsAndPasswords,
   ];
 
   composeState = composeState;
