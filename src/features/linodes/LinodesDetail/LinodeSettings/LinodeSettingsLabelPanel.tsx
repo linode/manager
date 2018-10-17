@@ -1,23 +1,32 @@
-import { compose, lensPath, set } from 'ramda';
+import { FormikBag, FormikProps, withFormik } from 'formik';
+import { compose, isEmpty } from 'ramda';
 import * as React from 'react';
+import { object, string } from 'yup';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ExpansionPanel from 'src/components/ExpansionPanel';
+import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import TextField from 'src/components/TextField';
 import { withLinode } from 'src/features/linodes/LinodesDetail/context';
 import { updateLinode } from 'src/services/linodes';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { defaultOptions, GeneralAPIError, handleFormChange, handleFormSubmission } from 'src/utilities/formikUtil';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = () => ({
   root: {},
 });
+
+interface Props {
+  linodeLabel: string;
+}
+
+interface FormValues {
+  label: string;
+}
 
 interface ContextProps {
   linodeLabel: string;
@@ -25,85 +34,84 @@ interface ContextProps {
   updateLinode: (f: (t: Linode.Linode) => Linode.Linode) => void;
 }
 
-interface State {
-  initialValue: string;
-  updatedValue: string;
-  submitting: boolean;
-  success?: string;
-  errors?: Linode.ApiFieldError[];
+type CombinedProps = Props
+  & FormikProps<FormValues & GeneralAPIError>
+  & ContextProps
+  & WithStyles<ClassNames>;
+
+export const LinodeSettingsLabelPanel: React.StatelessComponent<CombinedProps> = (props) => {
+  return (
+    <ExpansionPanel
+      heading="Linode Label"
+      success={props.status && props.status.success && props.status.message}
+      actions={() =>
+        <ActionsPanel>
+          <Button
+            onClick={props.submitForm}
+            type="primary"
+            disabled={props.isSubmitting || !isEmpty(props.errors)}
+            loading={props.isSubmitting}
+            data-qa-label-save
+          >
+            Save
+          </Button>
+        </ActionsPanel>
+      }
+    >
+      {props.status && !props.status.success &&
+        <Notice text={props.status.message} error />
+      }
+
+      <TextField
+        label="Label"
+        name="label"
+        value={props.values.label}
+        onChange={(e: any) => handleFormChange(e, props)}
+        onBlur={props.handleBlur}
+        errorText={props.errors.label}
+        errorGroup="linode-settings-label"
+        error={Boolean(props.errors.label)}
+        data-qa-label
+      />
+    </ExpansionPanel>
+  );
 }
 
-type CombinedProps = ContextProps & WithStyles<ClassNames>;
+const validated = withFormik<Props, FormValues>({
 
-class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
-  state: State = {
-    initialValue: this.props.linodeLabel,
-    updatedValue: this.props.linodeLabel,
-    submitting: false,
-  };
+  ...defaultOptions,
 
-  changeLabel = () => {
-    this.setState(set(lensPath(['submitting']), true));
-    this.setState(set(lensPath(['success']), undefined));
-    this.setState(set(lensPath(['errors']), undefined));
+  isInitialValid: true,
 
-    updateLinode(this.props.linodeId, { label: this.state.updatedValue })
-      .then(response => response.data)
-      .then((linode) => {
-        this.props.updateLinode((existingLinode) => ({
+  mapPropsToValues: (props: Props) => ({
+    label: props.linodeLabel
+  }),
+
+  validationSchema: () => {
+    return object().shape({
+      label: string()
+        .required('Label is required')
+        .matches(/^((?!--|__).)*$/, 'Label must not include two dashes or underscores in a row')
+        .matches(/^[a-zA-Z0-9].+[a-zA-Z0-9]$/, 'Label must begin and end with a letter or number')
+    });
+  },
+
+  handleSubmit: (values: FormValues, formikBag: FormikBag<CombinedProps, FormValues>) => {
+    const { linodeId } = formikBag.props;
+    const { label } = values;
+
+    const successMessage: string = 'Linode label changed successfully.';
+    const request = () => updateLinode(linodeId, { label });
+
+    handleFormSubmission<CombinedProps, FormValues>(request, successMessage, formikBag)
+      .then((linode: Linode.Linode) => {
+        formikBag.props.updateLinode((existingLinode) => ({
           ...existingLinode,
           ...linode,
         }));
-
-        this.setState(compose(
-          set(lensPath(['success']), `Linode label changed successfully.`),
-          set(lensPath(['submitting']), false),
-        ));
-      })
-      .catch((error) => {
-        this.setState(set(lensPath(['errors']), error.response.data.errors), () => {
-          scrollErrorIntoView('linode-settings-label');
-        });
       });
   }
-
-  render() {
-    const hasErrorFor = getAPIErrorFor({}, this.state.errors);
-    const labelError = hasErrorFor('label');
-    const { submitting } = this.state;
-
-    return (
-      <ExpansionPanel
-        heading="Linode Label"
-        success={this.state.success}
-        actions={() =>
-          <ActionsPanel>
-            <Button
-              onClick={this.changeLabel}
-              type="primary"
-              disabled={submitting && !labelError}
-              loading={submitting && !labelError}
-              data-qa-label-save
-            >
-              Save
-            </Button>
-          </ActionsPanel>
-        }
-      >
-        <TextField
-          label="Label"
-          value={this.state.updatedValue}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            this.setState(set(lensPath(['updatedValue']), e.target.value))}
-          errorText={labelError}
-          errorGroup="linode-settings-label"
-          error={Boolean(labelError)}
-          data-qa-label
-        />
-      </ExpansionPanel>
-    );
-  }
-}
+});
 
 const styled = withStyles(styles, { withTheme: true });
 
@@ -118,5 +126,6 @@ const linodeContext = withLinode((context) => ({
 export default compose(
   errorBoundary,
   styled,
- linodeContext
+  linodeContext,
+  validated
 )(LinodeSettingsLabelPanel) as React.ComponentType<{}>;

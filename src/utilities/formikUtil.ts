@@ -6,7 +6,7 @@ export interface GeneralAPIError {
 }
 
 export const defaultOptions = {
-  enableReinitialize: true,
+  enableReinitialize: false,
   validateOnBlur: true,
   validateOnChange: false
 };
@@ -23,24 +23,29 @@ export const handleFormChange = <T extends {}>(e: any, props: FormikProps<T>) =>
   }
 }
 
-// Makes a request and handles the appropriate success and failure actions
-export const handleFormSubmission = <T, P>(request: any, successMessage: string, formikBag: FormikBag<T, P>,) => {
-  request()
-    .then(() => {
-      formikBag.setSubmitting(false);
-      formikBag.setStatus({ success: true, message: successMessage });
-    })
-    .catch((error: any) => {
-      formikBag.setSubmitting(false);
-      formikBag.setStatus(undefined);
+// Makes a request and handles the appropriate success and failure actions. On success, returns response object
+export const handleFormSubmission = <T, P>(request: any, successMessage: string, formikBag: FormikBag<T, P>): any => {
+  return new Promise((resolve, reject) => {
+    formikBag.setStatus(undefined);
+    request()
+      .then((response: any) => {
+        formikBag.setSubmitting(false);
+        formikBag.setStatus({ success: true, message: successMessage });
+        resolve(response.data);
+      })
+      .catch((error: any) => {
+        formikBag.setSubmitting(false);
+        formikBag.setStatus(undefined);
 
-      if (path(['response', 'data', 'errors'], error)) {
-        const formErrors = createFormErrors<P>(error.response.data.errors);
-        formikBag.setErrors(formErrors);
-      } else {
-        formikBag.setStatus({ success: false, message: 'An error occurred'});
-      }
-    });
+        if (path(['response', 'data', 'errors'], error)) {
+          const formErrors = createFormErrors<P>(error.response.data.errors);
+          formikBag.setErrors(formErrors);
+        } else {
+          formikBag.setStatus({ success: false, message: 'An error occurred'});
+        }
+        reject(error);
+      });
+  });
 }
 
 // Transforms API errors to a format that Formik understands
