@@ -30,7 +30,7 @@ export const SecurityControls: Linode.Doc = {
 
 export const BillingAndPayments: Linode.Doc = {
   title: 'Billing and Payments',
-  body: 'We’ve done our best to create straightforward billing and payment policies. Still have questions? Use this guide to learn how our hosrcy billing works and how to make payments, update your billing information, get referral credits, and remove services. If you have a question that isn’t answered here, please feel free to contact support.',
+  body: 'We’ve done our best to create straightforward billing and payment policies. Still have questions? Use this guide to learn how our hourly billing works and how to make payments, update your billing information, get referral credits, and remove services. If you have a question that isn’t answered here, please feel free to contact support.',
   src: 'https://linode.com/docs/platform/billing-and-support/billing-and-payments-new-manager/'
 }
 
