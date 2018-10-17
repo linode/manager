@@ -1,0 +1,53 @@
+.root {
+  cursor: pointer;
+  display: flex;
+  width: 100%;
+  align-items: space-between;
+  justify-content: space-between;
+}
+
+.highlight {
+  color: blue;
+}
+
+.suggestionItem {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.suggestionIcon svg {
+  width: 40px;
+  height: 40px;
+}
+
+.suggestionContent {
+  margin-left: 5px;
+}
+
+.suggestionTitle {
+  font-size: 1 rem;
+  color: black;
+}
+
+.suggestionDescription {
+  color: purple;
+  font-size: .8rem;
+  font-weight: 600;
+  margin-top: 2;
+}
+
+.resultContainer {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.tagContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tagContainer > div {
+  margin: 2px;
+}

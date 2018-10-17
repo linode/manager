@@ -113,13 +113,17 @@ class SearchSuggestion extends React.Component<CombinedProps> {
   }
 
   render() {
+    console.log(this.props);
     const suggestion = this.props.data.data;
     const { classes } = this.props;
     const { Icon } = suggestion;
+    const { innerRef, innerProps } = this.props;
     return (
       <div
         className={classes.root}
+        ref={innerRef}
         onClick={this.handleClick}
+        {...innerProps}
       >
         <div className={classes.resultContainer}>
           <div className={`
