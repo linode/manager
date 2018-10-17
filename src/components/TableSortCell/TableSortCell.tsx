@@ -4,20 +4,10 @@ import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/st
 import TableCell, { TableCellProps } from '@material-ui/core/TableCell';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 
-type ClassNames = 'sortButton' | 'sortIcon';
+type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  sortButton: {
-    marginLeft: -26,
-    border: 0,
-    width: '100%',
-    justifyContent: 'flex-start',
-  },
-  sortIcon: {
-    position: 'relative',
-    top: 2,
-    left: 10,
-  },
+  root: {}
 });
 
 interface Props extends TableCellProps {
