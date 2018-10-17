@@ -898,6 +898,18 @@ const themeDefaults: ThemeOptions = {
         },
       },
     },
+    MuiTableSortLabel: {
+      root: {
+        fontSize: '.9rem',
+        color: '#111',
+      },
+      active: {
+        color: primaryColors.main,
+        '&:focus': {
+          color: primaryColors.main,
+        },
+      },
+    },
     MuiTooltip: {
       tooltip: {
         borderRadius: 0,
