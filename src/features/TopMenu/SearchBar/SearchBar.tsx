@@ -33,8 +33,6 @@ type ClassNames =
   | 'textfield'
   | 'input'
   | 'icon'
-  | 'searchSuggestions'
-  | 'item';
 
   const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
@@ -65,6 +63,12 @@ type ClassNames =
     [theme.breakpoints.down('xs')]: {
       width: '100%',
     },
+    '& .react-select__menu': {
+      marginTop: 16,
+      boxShadow: `0 0 5px ${theme.color.boxShadow}`,
+      maxHeight: 325,
+      overflowY: 'auto',
+    }
   },
   navIconHide: {
     '& > span': {
@@ -110,25 +114,6 @@ type ClassNames =
       transition: theme.transitions.create(['opacity']),
       fontSize: '1.0em',
       [theme.breakpoints.down('sm')]: {},
-    },
-  },
-  searchSuggestions: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 60,
-    padding: 0,
-    boxShadow: `0 0 5px ${theme.color.boxShadow}`,
-    maxHeight: 325,
-    overflowY: 'auto',
-  },
-  item: {
-    borderBottom: `1px solid ${theme.palette.divider}`,
-    '&:hover, &:focus': {
-      backgroundColor: `${theme.bg.offWhite} !important`,
-    },
-    '&:last-item': {
-      border: 0,
     },
   },
 });

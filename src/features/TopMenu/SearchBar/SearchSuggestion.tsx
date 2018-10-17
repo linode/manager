@@ -58,7 +58,10 @@ class SearchSuggestion extends React.Component<CombinedProps> {
     const { innerRef, innerProps } = this.props;
     return (
       <div
-        className={classes.suggestionRoot}
+        className={`
+          ${classes.suggestionRoot}
+          ${Boolean(this.props.isFocused) && classes.selectedMenuItem}
+        `}
         ref={innerRef}
         onClick={this.handleClick}
         {...innerProps}
@@ -67,7 +70,6 @@ class SearchSuggestion extends React.Component<CombinedProps> {
           <div className={`
             ${classes.suggestionItem}
             ${classes.suggestionIcon}
-            ${Boolean(this.props.isFocused) && classes.selectedMenuItem}
           `}>
             <Icon />
           </div>

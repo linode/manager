@@ -21,7 +21,6 @@ type ClassNames = 'root'
 | 'highlight'
 | 'suggestionItem'
 | 'suggestionIcon'
-| 'suggestionContent'
 | 'suggestionTitle'
 | 'suggestionDescription'
 | 'resultContainer'
@@ -32,6 +31,18 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     width: '100%',
     position: 'relative',
+    '& .react-select__control': {
+      borderRadius: 0,
+      boxShadow: 'none',
+      border: `1px solid transparent`,
+      '&:hover': {
+        border: `1px dotted #ccc`,
+        cursor: 'text',
+      },
+      '&--is-focused, &--is-focused:hover': {
+        border: `1px dotted #999`
+      },
+    },
     '& .react-select__value-container': {
       width: '100%',
       '& > div': {
@@ -54,7 +65,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       margin: '-1px 0 0 0',
       borderRadius: 0,
       boxShadow: 'none',
-      border: '1px solid #999',
+      border: `1px solid ${theme.palette.divider}`,
       maxWidth: 415,
     },
     '& .react-select__menu-list': {
@@ -110,17 +121,19 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   suggestionRoot: {
     cursor: 'pointer',
     display: 'flex',
-    width: '100%',
+    width: 'calc(100% + 2px)',
     alignItems: 'space-between',
     justifyContent: 'space-between',
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    '&:last-child': {
+      borderBottom: 0,
+    }
   },
   highlight: {
     color: theme.palette.primary.main,
   },
   suggestionItem: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
+    padding: theme.spacing.unit,
   },
   suggestionIcon: {
     '& svg': {
@@ -128,16 +141,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       height: '40px',
     },
   },
-  suggestionContent: {
-    marginLeft: theme.spacing.unit * 2,
-  },
   suggestionTitle: {
     fontSize: '1rem',
     color: theme.palette.text.primary,
   },
   suggestionDescription: {
     color: theme.color.headline,
-    fontSize: '.8rem',
+    fontSize: '.75rem',
     fontWeight: 600,
     marginTop: 2,
   },
