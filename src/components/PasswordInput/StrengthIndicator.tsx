@@ -78,7 +78,7 @@ const StrengthIndicator: React.StatelessComponent<CombinedProps> = (props) => {
       }
        <Grid item xs={3} className="py0">
         <Typography variant="caption" className={classes.strengthText}>
-          <span className={classes.strengthLabel}>Strenght:</span>
+          <span className={classes.strengthLabel}>Strength:</span>
           {strength
             ?
             strength === 1 && ' Weak' ||
