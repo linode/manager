@@ -43,6 +43,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     paddingTop: 0,
     paddingBottom: 0,
     height: 48,
+    zIndex: 5,
   },
 });
 
