@@ -1,4 +1,3 @@
-import { merge } from 'ramda';
 import * as React from 'react';
 import ReactSelect from 'react-select';
 import Async, { AsyncProps } from 'react-select/lib/Async';
@@ -291,7 +290,7 @@ class Select extends React.PureComponent<CombinedProps,{}> {
     * The components passed in as props will be merged with the overrides we are already using, with the passed components
     * taking precedence.
     */
-    const combinedComponents = merge(_components, components);
+    const combinedComponents = {..._components, ...components};
 
     // If async, pass loadOptions instead of options. A Select can't be both Creatable and Async.
     // (AsyncCreatable exists, but we have not adapted it.)
