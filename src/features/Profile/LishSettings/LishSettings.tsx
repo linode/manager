@@ -18,6 +18,7 @@ import MenuItem from 'src/components/MenuItem';
 import Notice from 'src/components/Notice';
 import Select from 'src/components/Select';
 import TextField from 'src/components/TextField';
+import { LISH } from 'src/documentation';
 import { updateProfile } from 'src/services/profile';
 import { handleUpdate } from 'src/store/reducers/resources/profile';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
@@ -192,11 +193,9 @@ class LishSettings extends React.Component<CombinedProps, State> {
     );
   }
 
-  static docs = [{
-    title: 'Using the Linode Shell (Lish)',
-    src: 'https://www.linode.com/docs/networking/using-the-linode-shell-lish/',
-    body: 'Learn how to use Lish as a shell for managing or rescuing your Linode.',
-  }];
+  static docs = [
+    LISH,
+  ];
 
   addSSHPublicKeyField = () =>
     this.setState({ authorizedKeysCount: this.state.authorizedKeysCount + 1 });

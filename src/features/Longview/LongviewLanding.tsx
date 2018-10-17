@@ -12,6 +12,7 @@ import {
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Placeholder from 'src/components/Placeholder';
+import { MonitoringYourServer } from 'src/documentation';
 
 type ClassNames = 'root';
 
@@ -28,11 +29,7 @@ export class LongviewLanding extends React.Component<CombinedProps, {}> {
       src: 'https://www.linode.com/docs/platform/longview/longview/',
       body: `This guide shows how to install and use Linode Longview.`,
     },
-    {
-      title: 'Monitoring and Maintaining Your Server',
-      src: 'https://www.linode.com/docs/uptime/monitoring-and-maintaining-your-server/',
-      body: `This guide introdues concepts and tools for monitoring and maintaining your server.`,
-    },
+    MonitoringYourServer,
   ];
 
   render() {

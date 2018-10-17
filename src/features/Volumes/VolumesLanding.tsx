@@ -24,6 +24,7 @@ import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRowError from 'src/components/TableRowError';
+import { BlockStorage } from 'src/documentation';
 import { generateInFilter, resetEventsPolling } from 'src/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { getLinodes } from 'src/services/linodes';
@@ -118,12 +119,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
 
   static docs: Linode.Doc[] = [
-    {
-      title: 'How to Use Block Storage with Your Linode',
-      /* tslint:disable-next-line */
-      src: `https://www.linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode`,
-      body: `This tutorial explains how to use Linode's block storage service.`,
-    },
+    BlockStorage,
     {
       title: 'Boot a Linode from a Block Storage Volume',
       src: `https://www.linode.com/docs/platform/block-storage/boot-from-block-storage-volume/`,

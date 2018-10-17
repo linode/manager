@@ -26,6 +26,7 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowError from 'src/components/TableRowError';
+import { NodeBalancerGettingStarted, NodeBalancerReference } from 'src/documentation';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
 import { deleteNodeBalancer, getNodeBalancerConfigs, getNodeBalancers } from 'src/services/nodebalancers';
@@ -107,16 +108,8 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
   };
 
   static docs = [
-    {
-      title: 'Getting Started with NodeBalancers',
-      src: 'https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers/',
-      body: `Using a NodeBalancer to begin managing a simple web application`,
-    },
-    {
-      title: 'NodeBalancer Reference Guide',
-      src: 'https://www.linode.com/docs/platform/nodebalancer/nodebalancer-reference-guide/',
-      body: `NodeBalancer Reference Guide`,
-    },
+    NodeBalancerGettingStarted,
+    NodeBalancerReference,
   ];
 
   componentDidMount() {
@@ -415,12 +408,12 @@ const updatedRequest = (ownProps: any, params: any, filter: any) => {
 
 const paginated = paginate(updatedRequest);
 
-export const enhanced = compose(
+export const enhanced = compose<any, any, any, any, any, any>(
   styled,
   withRouter,
   SectionErrorBoundary,
+  paginated,
   setDocs(NodeBalancersLanding.docs),
-  paginated
 );
 
 export default enhanced(NodeBalancersLanding);

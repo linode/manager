@@ -11,6 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -22,6 +23,7 @@ import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
+import { LinodeAPI } from 'src/documentation';
 import { createOAuthClient, deleteOAuthClient, getOAuthClients, resetOAuthClientSecret, updateOAuthClient } from 'src/services/account';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -63,7 +65,7 @@ interface State {
   form: FormState;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames> & SetDocsProps;
 
 export class OAuthClients extends React.Component<CombinedProps, State> {
   static defaultState = {
@@ -93,6 +95,10 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
   static defaultProps = {
     data: [],
   };
+
+  static docs = [
+    LinodeAPI,
+  ]
 
   reset = () => {
     this.setState({ ...OAuthClients.defaultState });
@@ -353,9 +359,10 @@ const updatedRequest = (ownProps: any, params: any, filters: any) => getOAuthCli
 
 const paginated = paginate(updatedRequest);
 
-const enhanced = compose<any, any, any>(
+const enhanced = compose<any, any, any, any>(
   styled,
   paginated,
+  setDocs(OAuthClients.docs),
 );
 
 export default enhanced(OAuthClients);

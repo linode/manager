@@ -17,6 +17,7 @@ import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import PromiseLoader from 'src/components/PromiseLoader';
+import { StackScripts } from 'src/documentation';
 import ScriptForm from 'src/features/StackScripts/StackScriptForm';
 import { getLinodeImages } from 'src/services/images';
 import { createStackScript } from 'src/services/stackscripts';
@@ -95,11 +96,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
   };
 
   static docs = [
-    {
-      title: 'Automate Deployment with StackScripts',
-      src: 'https://www.linode.com/docs/platform/stackscripts/',
-      body: `Create Custom Instances and Automate Deployment with StackScripts.`,
-    },
+    StackScripts,
   ];
 
   mounted: boolean = false;

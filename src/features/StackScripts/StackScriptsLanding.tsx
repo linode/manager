@@ -12,6 +12,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import PromiseLoader from 'src/components/PromiseLoader';
+import { StackScripts } from 'src/documentation';
 import { getLinodeImages } from 'src/services/images';
 
 import SelectStackScriptPanel from './SelectStackScriptPanel';
@@ -41,11 +42,7 @@ type CombinedProps = SetDocsProps
 
 export class StackScriptsLanding extends React.Component<CombinedProps, {}> {
   static docs = [
-    {
-      title: 'Automate Deployment with StackScripts',
-      src: 'https://www.linode.com/docs/platform/stackscripts/',
-      body: `Create Custom Instances and Automate Deployment with StackScripts.`,
-    },
+    StackScripts,
   ];
 
   goToCreateStackScript = () => {

@@ -1,6 +1,8 @@
 import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
 
+import { clearDocs, setDocs } from 'src/store/reducers/documentation';
+
 import { OAuthClients } from './OAuthClients';
 
 describe('OAuth Clients', () => {
@@ -55,6 +57,8 @@ describe('OAuth Clients', () => {
         request={request}
         data={mockData}
         handleOrderChange={updateOrderBy}
+        setDocs={setDocs}
+        clearDocs={clearDocs}
       />
     );
   })
