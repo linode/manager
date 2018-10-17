@@ -50,7 +50,7 @@ type ClassNames =
       backgroundColor: theme.bg.white,
       position: 'absolute',
       width: 'calc(100% - 118px)',
-      zIndex: 2,
+      zIndex: -1,
       left: 0,
       visibility: 'hidden',
       opacity: 0,
@@ -58,10 +58,17 @@ type ClassNames =
       '&.active': {
         visibility: 'visible',
         opacity: 1,
+        zIndex: 2,
       },
     },
     [theme.breakpoints.down('xs')]: {
       width: '100%',
+    },
+    '& .react-select__control': {
+      backgroundColor: 'transparent',
+    },
+    '& .react-select__value-container': {
+      overflow: 'hidden',
     },
     '& .react-select__menu': {
       marginTop: 16,

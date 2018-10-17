@@ -35,6 +35,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       borderRadius: 0,
       boxShadow: 'none',
       border: `1px solid transparent`,
+      backgroundColor: theme.bg.white,
       '&:hover': {
         border: `1px dotted #ccc`,
         cursor: 'text',
@@ -164,7 +165,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     }
   },
   selectedMenuItem: {
-    backgroundColor: `${theme.bg.offWhite} !important`,
+    backgroundColor: `${theme.bg.main} !important`,
     '& .circle': {
       transition: theme.transitions.create(['fill']),
       fill: theme.palette.primary.main,
