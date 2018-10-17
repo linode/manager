@@ -16,7 +16,17 @@ import Placeholder from './components/SelectPlaceholder';
 type ClassNames = 'root'
 | 'input'
 | 'noOptionsMessage'
-| 'divider';
+| 'divider'
+| 'suggestionRoot'
+| 'highlight'
+| 'suggestionItem'
+| 'suggestionIcon'
+| 'suggestionContent'
+| 'suggestionTitle'
+| 'suggestionDescription'
+| 'resultContainer'
+| 'tagContainer'
+| 'selectedMenuItem';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
@@ -96,6 +106,67 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   divider: {
     height: theme.spacing.unit * 2,
+  },
+  suggestionRoot: {
+    cursor: 'pointer',
+    display: 'flex',
+    width: '100%',
+    alignItems: 'space-between',
+    justifyContent: 'space-between',
+  },
+  highlight: {
+    color: theme.palette.primary.main,
+  },
+  suggestionItem: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+  },
+  suggestionIcon: {
+    '& svg': {
+      width: '40px',
+      height: '40px',
+    },
+  },
+  suggestionContent: {
+    marginLeft: theme.spacing.unit * 2,
+  },
+  suggestionTitle: {
+    fontSize: '1rem',
+    color: theme.palette.text.primary,
+  },
+  suggestionDescription: {
+    color: theme.color.headline,
+    fontSize: '.8rem',
+    fontWeight: 600,
+    marginTop: 2,
+  },
+  resultContainer: {
+    display: 'flex',
+    flexFlow: 'row nowrap'
+  },
+  tagContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    '& > div': {
+      margin: '2px',
+    }
+  },
+  selectedMenuItem: {
+    backgroundColor: `${theme.bg.offWhite} !important`,
+    '& .circle': {
+      transition: theme.transitions.create(['fill']),
+      fill: theme.palette.primary.main,
+    },
+    '& .outerCircle': {
+      transition: theme.transitions.create(['stroke']),
+      stroke: '#2967B1',
+    },
+    '& .insidePath *': {
+      transition: theme.transitions.create(['stroke']),
+      stroke: 'white',
+    },
   },
 });
 

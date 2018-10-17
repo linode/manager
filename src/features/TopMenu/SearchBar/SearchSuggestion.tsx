@@ -1,68 +1,7 @@
 import * as React from 'react';
 import { OptionProps } from 'react-select/lib/components/Option';
 
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
-type ClassNames = 'root'
- | 'highlight'
- | 'suggestionItem'
- | 'suggestionIcon'
- | 'suggestionContent'
- | 'suggestionTitle'
- | 'suggestionDescription'
- | 'resultContainer'
- | 'tagContainer';
-
- import Tag from 'src/components/Tag';
-
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {
-    cursor: 'pointer',
-    display: 'flex',
-    width: '100%',
-    alignItems: 'space-between',
-    justifyContent: 'space-between',
-  },
-  highlight: {
-    color: theme.palette.primary.main,
-  },
-  suggestionItem: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-  },
-  suggestionIcon: {
-    '& svg': {
-      width: '40px',
-      height: '40px',
-    },
-  },
-  suggestionContent: {
-    marginLeft: theme.spacing.unit * 2,
-  },
-  suggestionTitle: {
-    fontSize: '1rem',
-    color: theme.palette.text.primary,
-  },
-  suggestionDescription: {
-    color: theme.color.headline,
-    fontSize: '.8rem',
-    fontWeight: 600,
-    marginTop: 2,
-  },
-  resultContainer: {
-    display: 'flex',
-    flexFlow: 'row nowrap'
-  },
-  tagContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    '& > div': {
-      margin: '2px',
-    }
-  }
-});
+import Tag from 'src/components/Tag';
 
 export interface SearchSuggestionT {
   Icon: React.ComponentClass<any>;
@@ -81,7 +20,7 @@ interface Props extends OptionProps<any> {
   }
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 class SearchSuggestion extends React.Component<CombinedProps> {
   maybeStyleSegment = (text: string, searchText: string, hlClass: string): React.ReactNode => {
@@ -113,14 +52,13 @@ class SearchSuggestion extends React.Component<CombinedProps> {
   }
 
   render() {
-    console.log(this.props);
     const suggestion = this.props.data.data;
-    const { classes } = this.props;
+    const { classes } = this.props.selectProps;
     const { Icon } = suggestion;
     const { innerRef, innerProps } = this.props;
     return (
       <div
-        className={classes.root}
+        className={classes.suggestionRoot}
         ref={innerRef}
         onClick={this.handleClick}
         {...innerProps}
@@ -129,6 +67,7 @@ class SearchSuggestion extends React.Component<CombinedProps> {
           <div className={`
             ${classes.suggestionItem}
             ${classes.suggestionIcon}
+            ${Boolean(this.props.isFocused) && classes.selectedMenuItem}
           `}>
             <Icon />
           </div>
@@ -152,6 +91,5 @@ class SearchSuggestion extends React.Component<CombinedProps> {
   }
 };
 
-const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(SearchSuggestion);
+export default SearchSuggestion;

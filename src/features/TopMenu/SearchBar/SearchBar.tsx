@@ -34,8 +34,7 @@ type ClassNames =
   | 'input'
   | 'icon'
   | 'searchSuggestions'
-  | 'item'
-  | 'selectedMenuItem';
+  | 'item';
 
   const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
@@ -130,21 +129,6 @@ type ClassNames =
     },
     '&:last-item': {
       border: 0,
-    },
-  },
-  selectedMenuItem: {
-    backgroundColor: `${theme.bg.offWhite} !important`,
-    '& .circle': {
-      transition: theme.transitions.create(['fill']),
-      fill: theme.palette.primary.main,
-    },
-    '& .outerCircle': {
-      transition: theme.transitions.create(['stroke']),
-      stroke: '#2967B1',
-    },
-    '& .insidePath *': {
-      transition: theme.transitions.create(['stroke']),
-      stroke: 'white',
     },
   },
 });
