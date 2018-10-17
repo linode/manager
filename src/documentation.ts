@@ -18,7 +18,7 @@
 
 export const Domains: Linode.Doc = {
   title: 'DNS Manager',
-  body: 'The Domains section of the Linode Manger is a comprehensive DNS management interface that allows you to add DNS records for all of your domain names. This guide covers the use of the Domains section and basic domain zone setup. For an introduction to DNS in general, see our Introduction to DNS Records guide.',
+  body: 'The Domains section of the Linode Manager is a comprehensive DNS management interface that allows you to add DNS records for all of your domain names. This guide covers the use of the Domains section and basic domain zone setup. For an introduction to DNS in general, see our Introduction to DNS Records guide.',
   src: 'https://linode.com/docs/platform/manager/dns-manager-new-manager/'
 }
 
