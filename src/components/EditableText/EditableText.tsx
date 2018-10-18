@@ -108,7 +108,9 @@ const styles: StyleRulesCallback = (theme) => ({
     ...theme.typography.title,
   },
   editIcon: {
-    visibility: 'hidden',
+    [theme.breakpoints.up('lg')]: {
+      visibility: 'hidden',
+    },
   },
 });
 
