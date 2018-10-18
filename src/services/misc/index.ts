@@ -1,3 +1,4 @@
 export {
-  getRegions
+  getRegions,
+  getRegion,
 } from './misc';
