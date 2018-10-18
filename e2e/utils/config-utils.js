@@ -93,7 +93,7 @@ exports.checkInCreds = (credFilePath, specFile) => {
         if (cred.spec === specFile) {
             credCollection[i].inUse = false;
             credCollection[i].spec = '';
-            credCollection[i].token = '';
+            // credCollection[i].token = '';
             writeFileSync(credFilePath, JSON.stringify(credCollection));
             return cred;
         }

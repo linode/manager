@@ -8,8 +8,11 @@ const {
     checkoutCreds,
     checkInCreds,
     removeCreds,
-    cleanupAccounts
+    cleanupAccounts,
 } = require('../utils/config-utils');
+
+const { getUsers, deleteAll, deleteUser, removeAllLinodes, removeAllVolumes } = require('../setup/setup');
+
 const { browserCommands } = require('./custom-commands');
 const { browserConf } = require('./browser-config');
 const { constants } = require('../constants');
@@ -350,6 +353,36 @@ exports.config = {
      */
     onComplete: function(exitCode, config, capabilities) {
         // Run delete all, on every test account
+
+        const credsCollection = JSON.parse(readFileSync('./e2e/creds.js'));
+
+        /* We wait an arbitrary amount of time here for linodes to be removed
+           Otherwise, attempting to remove attached volumes will fail
+        */
+        const timeout = new Promise(function(resolve, reject) {  
+            setTimeout(() => resolve(true), 15000);
+        });
+
+
+        return new Promise((resolve, reject) => {
+            credsCollection.forEach(cred => {
+                return removeAllLinodes(cred.token)
+                    .then(res => {
+                        timeout.then(res => {
+                            return Promise.all([removeAllVolumes(cred.token), deleteAll(cred.token, cred.username)])
+                                .then(values => {
+                                    resolve(values);
+                                })
+                                .catch(error => reject(error));
+                        });
+                    })
+                    .catch(error => { reject(error) });
+            });
+        });
+
+        // return getUsers(creds[0].token).then(res => {
+            // console.log(res.data);
+        // });
         cleanupAccounts('./e2e/creds.js');
 
         // Remove our temporary test credentials

@@ -22,22 +22,27 @@ const getAxiosInstance = function(token) {
   }
 }()
 
-exports.deleteAll = (token) => {
+exports.deleteAll = (token, user) => {
     return new Promise((resolve, reject) => {
-        const linodesEndpoint = '/linode/instances';
         const endpoints = [
-            '/volumes',
             '/domains',
             '/nodebalancers',
             '/images',
+            '/account/users',
         ];
 
-        const getEndpoint = (endpoint) => {
+        const getEndpoint = (endpoint, user) => {
             return getAxiosInstance(token).get(`${API_ROOT}${endpoint}`)
                 .then(res => {
                     if (endpoint.includes('images')) {
                         privateImages = res.data.data.filter(i => i['is_public'] === false);
                         res.data['data'] = privateImages;
+                        return res.data;
+                    }
+
+                    if(endpoint.includes('users')) {
+                        const nonRootUsers = res.data.data.filter(u => u.username !== user);
+                        res.data['data'] = nonRootUsers;
                         return res.data;
                     }
                     return res.data;
@@ -49,24 +54,21 @@ exports.deleteAll = (token) => {
         }
 
         const removeInstance = (res, endpoint) => {
-            return getAxiosInstance(token).delete(`${endpoint}/${res.id}`)
-                .then(res => {
-                    return res;
-                })
+            return getAxiosInstance(token).delete(`${endpoint}/${res.id ? res.id : res.username}`)
+                .then(res => res)
                 .catch((error) => {
-                    console.error('Error', error);
-                    return error
+                    console.error(error);
                 });
         }
 
         const iterateEndpointsAndRemove = () => {
             return endpoints.map(ep => {
-                return getEndpoint(ep)
+                return getEndpoint(ep, user)
                     .then(res => {
                         if (res.results > 0) {
                             res.data.forEach(i => {
-                                return removeInstance(i, ep)
-                                .then(res => res);
+                                removeInstance(i, ep)
+                                    .then(res => res);
                             });
                         }
                     })
@@ -75,23 +77,10 @@ exports.deleteAll = (token) => {
         }
 
         // Remove linodes, then remove all instances
-        return getEndpoint(linodesEndpoint)
-            .then(res => {
-                if (res.results > 0) {
-                    res.data.forEach(linode => {
-                        return removeInstance(linode, linodesEndpoint)
-                            .then(() => new Promise(resolve => setTimeout(resolve,  25000))
-                            .then(res => {
-                                resolve(iterateEndpointsAndRemove());
-                            }))
-                        })
-                } else {
-                    return Promise.all(iterateEndpointsAndRemove())
-                        .then(() => resolve());
-                }
-            })
+        return Promise.all(iterateEndpointsAndRemove())
+            .then((values) => resolve(values))
             .catch(error => {
-                console.error('Error', error);
+                console.error('Error', reject(error));
             });
     });
 }
@@ -345,4 +334,34 @@ exports.removePublicKey = (token, id) => {
                 });
         });
     })
+}
+
+
+exports.getUsers = (token) => {
+    return new Promise((resolve, reject) => {
+        const endpoint = '/account/users';
+
+        return getAxiosInstance(token)
+            .get(endpoint)
+            .then(response => resolve(response.data))
+            .catch(error => {
+                console.error('Error', error);
+                reject(error);
+            });
+    });
+}
+
+
+exports.deleteUser = (token, username) => {
+    return new Promise((resolve, reject) => {
+        const endpoint = `/account/users/${username}`;
+
+        return getAxiosInstance(token)
+            .delete(endpoint)
+            .then(response => resolve(response.data))
+            .catch(error => {
+                console.error('Error', error);
+                reject(error);
+            });
+    });
 }
