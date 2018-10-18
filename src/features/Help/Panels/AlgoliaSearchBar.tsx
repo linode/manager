@@ -69,6 +69,16 @@ interface State {
   error?: string; 
 }
 
+interface SearchHit {
+  title?: string;
+  description: string;
+  keywords: string;
+  objectID: string;
+  href?: string;
+  _highlightResult?: any;
+  _rankingInfo?: any;
+}
+
 type CombinedProps = WithStyles<ClassNames> & RouteComponentProps<{}>;
 class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
   searchIndex: any = null;
@@ -163,13 +173,13 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
 
   sortByRank = (a: Item, b: Item) => {
     if (a.data.rank > b.data.rank) { return 1; }
-    else if (a.data.rank === b.data.rank) { return -1;}
+    else if (a.data.rank < b.data.rank) { return -1;}
     return 0;
   }
 
-  convertDocsToItems = (hits: any) : Item[] => {
+  convertDocsToItems = (hits: SearchHit[]) : Item[] => {
     if (!hits) { return []; }
-    return hits.map((hit: any, idx: number) => {
+    return hits.map((hit: SearchHit, idx: number) => {
       return { value: idx, label: hit._highlightResult.title.value, data: {
         source: 'Linode documentation',
         href: DOCS_BASE_URL + hit.href,
@@ -178,9 +188,9 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
     })
   }
 
-  convertCommunityToItems = (hits: any) : Item[] => {
+  convertCommunityToItems = (hits: SearchHit[]) : Item[] => {
     if (!hits) { return []; }
-    return hits.map((hit: any, idx: number) => {
+    return hits.map((hit: SearchHit, idx: number) => {
       return { value: idx, label: this.getCommunityResultLabel(hit), data: {
         source: 'Linode Community Site',
         href: this.getCommunityUrl(hit.objectID),
@@ -200,12 +210,11 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
 
   getCommunityResultLabel = (hit: any) => {
     /* If a word in the title matched the search query, return a string
-    * with the matched word highlighted. Otherwise, this isn't defined,
-    * so return the title.
-    * 
+    * with the matched word highlighted.
+    *
     * NOTE: It's currently planned to add the title of the parent question
-    * to the index entry for each answer. When that is done, the second
-    * ternary below can be removed. In the meantime, answers don't include
+    * to the index entry for each answer. When that is done, the ternaries
+    * below can be removed. In the meantime, answers don't include
     * a title, so use the truncated description.
     */
     return hit._highlightResult.title
