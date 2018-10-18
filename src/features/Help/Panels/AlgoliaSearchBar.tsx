@@ -1,5 +1,5 @@
 import * as Algolia from 'algoliasearch';
-import { compose, concat, pathOr } from 'ramda';
+import { compose, concat, pathOr, sort } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
@@ -12,8 +12,9 @@ import {
 
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect';
 import Notice from 'src/components/Notice';
-import { ALGOLIA_APPLICATION_ID, ALGOLIA_SEARCH_KEY, DOCS_BASE_URL } from 'src/constants';
+import { ALGOLIA_APPLICATION_ID, ALGOLIA_SEARCH_KEY, COMMUNITY_BASE_URL, DOCS_BASE_URL } from 'src/constants';
 import windowIsNarrowerThan from 'src/utilities/breakpoints';
+import truncate from 'src/utilities/truncateText';
 
 import SearchItem from './SearchItem';
 
@@ -68,10 +69,7 @@ interface State {
   error?: string; 
 }
 
-type index = 'linode-docs';
-
 type CombinedProps = WithStyles<ClassNames> & RouteComponentProps<{}>;
-
 class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
   searchIndex: any = null;
   mounted: boolean = false;
@@ -90,10 +88,17 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
       this.isMobile = windowIsNarrowerThan(theme.breakpoints.values.sm);
     }
     // initialize Algolia API Client
+    this.initializeSearchIndices();
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
+  }
+
+  initializeSearchIndices = () => {
     try {
       const client = Algolia(ALGOLIA_APPLICATION_ID, ALGOLIA_SEARCH_KEY);
-      const idx: index = 'linode-docs';
-      this.searchIndex = client.initIndex(idx);
+      this.searchIndex = client;
     }
     catch {
       // Credentials were incorrect or couldn't be found;
@@ -101,10 +106,6 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
       this.setState({ enabled: false, error: "Search could not be enabled." });
       return;
     }
-  }
-
-  componentWillUnmount() {
-    this.mounted = false;
   }
 
   getDataFromOptions = () => {
@@ -122,10 +123,23 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
       this.setState({ options: [], error: "Search could not be enabled."});
       return;
     }
-    this.searchIndex.search({
+    this.searchIndex.search([{
+      indexName: 'linode-docs',
       query: inputValue,
-      hitsPerPage: this.isMobile ? 5 : 20,
-    }, this.searchSuccess);
+      params: {
+        hitsPerPage: 10,
+        getRankingInfo: true
+      }
+    }, {
+      // Change to linode-community when it goes to production
+      indexName: 'linode-community_dev',
+      query: inputValue,
+      params: {
+        hitsPerPage: 10,
+        distinct: true,
+        getRankingInfo: true
+      }
+    }], this.searchSuccess);
   }
 
   searchSuccess = (err:any, content:any) => {
@@ -139,21 +153,67 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
       this.setState({ error: "There was an error retrieving your search results." });
       return;
     }
-    const options = this.convertHitsToItems(content.hits);
-    this.setState({ options, error: undefined });
+
+    const { results } = content;
+    const docsResults = this.convertDocsToItems(results[0].hits);
+    const commResults = this.convertCommunityToItems(results[1].hits);
+    const combinedResults = sort(this.sortByRank, [...docsResults, ...commResults]);
+    this.setState({ options: combinedResults, error: undefined });
   }
 
-  convertHitsToItems = (hits:any) : Item[] => {
+  sortByRank = (a: Item, b: Item) => {
+    if (a.data.rank > b.data.rank) { return 1; }
+    else if (a.data.rank === b.data.rank) { return -1;}
+    return 0;
+  }
+
+  convertDocsToItems = (hits: any) : Item[] => {
     if (!hits) { return []; }
-    return hits.map((hit:any, idx:number) => {
+    return hits.map((hit: any, idx: number) => {
       return { value: idx, label: hit._highlightResult.title.value, data: {
         source: 'Linode documentation',
         href: DOCS_BASE_URL + hit.href,
+        rank: hit._rankingInfo.userScore
       } }
     })
   }
 
-  onInputValueChange = (inputValue:string) => {
+  convertCommunityToItems = (hits: any) : Item[] => {
+    if (!hits) { return []; }
+    return hits.map((hit: any, idx: number) => {
+      return { value: idx, label: this.getCommunityResultLabel(hit), data: {
+        source: 'Linode Community Site',
+        href: this.getCommunityUrl(hit.objectID),
+        rank: hit._rankingInfo.userScore
+      }}
+    })
+  }
+
+  getCommunityUrl = (id: string) => {
+    // Rather than crash here, better to redirect to the base community site.
+    if (!id) { return COMMUNITY_BASE_URL; }
+    const [prefix, value] = id.split('_');
+    return prefix === 'q' // Prefix is q for question, a for answer.
+    ? `${COMMUNITY_BASE_URL}questions/${value}`
+    : `${COMMUNITY_BASE_URL}questions/answer/${value}`;
+  }
+
+  getCommunityResultLabel = (hit: any) => {
+    /* If a word in the title matched the search query, return a string
+    * with the matched word highlighted. Otherwise, this isn't defined,
+    * so return the title.
+    * 
+    * NOTE: It's currently planned to add the title of the parent question
+    * to the index entry for each answer. When that is done, the second
+    * ternary below can be removed. In the meantime, answers don't include
+    * a title, so use the truncated description.
+    */
+    return hit._highlightResult.title
+    ? hit._highlightResult.title.value
+    : hit.title ? hit.title : truncate(hit.description, 30)
+  }
+
+  onInputValueChange = (inputValue: string) => {
     if (!this.mounted) { return; }
     this.setState({ inputValue });
     this.searchAlgolia(inputValue);
