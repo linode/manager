@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.37.0] - 2018-10.22
+
+### Added:
+  - Pagination!
+    - Users can now page through large lists of entities thoughout the app, including: Nodebalancers/Images/Oauth Clients(Apps)/Tokens/Users/Volumes/Invoices/LinodeConfigs
+  - Documentation!
+    - The documentation panel has received some updates, including Docs for volumes, domains and stackscripts 
+
+### Changed:
+  - Eliminate pencil icon site-wide, using hover/edit state instead.
+  - Defer API requests on Linode summary, settings and Nodebalancer summary until user action is taken
+
+### Fixed:
+
+  - Error reporting when creating a new Nodebalancer config
+  - Ellipsis being truncated on blog texts incorrectly
+  - Text overflow in the dashboard of entities with long names
+  - Linodes with flags/long names breaking the layout on list linodes
+  - Issue where a users settings are erroneously requested multiple times
+  - Linodes with unknown images failing to display in the linode summary panel
+
 ## [0.36.0] - 2018-10.08
 
 ### Changed:
