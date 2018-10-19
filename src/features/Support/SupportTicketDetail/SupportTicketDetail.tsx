@@ -30,7 +30,6 @@ import { getGravatarUrlFromHash } from 'src/utilities/gravatar';
 import ExpandableTicketPanel from '../ExpandableTicketPanel';
 import TicketReply from './TicketReply';
 
-
 type ClassNames = 'root'
   | 'title'
   | 'titleWrapper'
@@ -434,6 +433,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
               closable={ticket.closable}
               onSuccess={this.onCreateReplySuccess}
               reloadAttachments={this.reloadAttachments}
+              reloadTicket={this.loadTicketAndReplies}
             />
           }
         </Grid>

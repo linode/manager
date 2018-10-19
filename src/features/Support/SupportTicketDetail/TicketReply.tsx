@@ -9,12 +9,14 @@ import CloudUpload from '@material-ui/icons/CloudUpload';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { closeSupportTicket, createReply, uploadAttachment } from 'src/services/support';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import scrollToTop from 'src/utilities/scrollToTop';
 
 type ClassNames =
   'root'
@@ -72,6 +74,7 @@ interface Props {
   ticketId: number;
   closable: boolean;
   onSuccess: (newReply: Linode.SupportReply) => void;
+  reloadTicket: () => void;
   reloadAttachments: () => void;
 }
 
@@ -90,19 +93,33 @@ interface State {
   value: string;
   submitting: boolean;
   files: FileAttachment[];
+  dialogOpen: boolean;
+  isClosingTicket: boolean;
+  ticketCloseError?: string;
   errors?: Linode.ApiFieldError[];
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class TicketReply extends React.Component<CombinedProps, State> {
+  mounted: boolean = false;
   state: State = {
     value: '',
     submitting: false,
     files: [],
+    dialogOpen: false,
+    isClosingTicket: false,
   }
 
   inputRef = React.createRef<HTMLInputElement>();
+
+  componentDidMount() {
+    this.mounted = true;
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
+  }
 
   handleReplyInput = (e:React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ value: e.target.value, errors: [] });
@@ -165,6 +182,7 @@ class TicketReply extends React.Component<CombinedProps, State> {
         })
       })
       .catch((errors) => {
+        if (!this.mounted) { return; }
         const error = [{ 'reason': 'There was an error creating your reply. Please try again.' }];
         const newErrors = pathOr(error, ['response', 'data', 'errors'], errors);
         this.setState({
@@ -225,21 +243,59 @@ class TicketReply extends React.Component<CombinedProps, State> {
     });
   }
 
+  openConfirmationDialog = () => {
+    if (!this.mounted) { return; }
+    this.setState({ dialogOpen: true, isClosingTicket: false, ticketCloseError: undefined, });
+  }
+
+  closeConfirmationDialog = () => {
+    if (!this.mounted) { return; }
+    this.setState({ dialogOpen: false });
+  }
+
   closeTicket = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    const { ticketId } = this.props;
+    const { reloadTicket, ticketId } = this.props;
+    this.setState({ isClosingTicket: true });
     closeSupportTicket(ticketId)
       .then(() => {
-        console.log('deleted successfully');
+        this.setState({ isClosingTicket: false, dialogOpen: false });
+        reloadTicket();
+        scrollToTop();
     })
-      .catch(() => {
-        console.log("A horrible error occurred!")
+      .catch((errorResponse) => {
+        const defaultError = [{'reason': 'Your ticket could not be closed.'}];
+        const errors = pathOr(defaultError, ['response', 'data', 'errors'], errorResponse);
+        this.setState({
+          isClosingTicket: false,
+          ticketCloseError: errors[0].reason,
+        });
     })
+  }
+
+  dialogActions = () => {
+    return (
+      <ActionsPanel>
+        <Button
+          type="cancel"
+          onClick={this.closeConfirmationDialog}
+          data-qa-dialog-cancel>
+          Cancel
+        </Button>
+        <Button
+          type="secondary"
+          loading={this.state.isClosingTicket}
+          onClick={this.closeTicket}
+          data-qa-dialog-submit>
+          Confirm
+        </Button>
+      </ActionsPanel>
+    )
   }
 
   render() {
     const { classes, closable } = this.props;
-    const { errors, submitting, value, files } = this.state;
+    const { errors, submitting, value, files, ticketCloseError } = this.state;
 
     const hasErrorFor = getAPIErrorFor({
       description: 'description',
@@ -249,88 +305,100 @@ class TicketReply extends React.Component<CombinedProps, State> {
     const generalError = hasErrorFor('none');
 
     return (
-      <Grid className={classes.root} item>
-        <Typography variant="headline" className={classes.root} data-qa-title >
-          Reply
-        </Typography>
-        {generalError && <Notice error spacingBottom={8} spacingTop={16} text={generalError} />}
-        <TextField
-          className={classes.replyField}
-          multiline
-          rows={5}
-          value={value}
-          placeholder="Enter your reply"
-          onChange={this.handleReplyInput}
-          errorText={replyError}
-        />
-        <input
-            ref={this.inputRef}
-            type="file"
-            multiple
-            id="attach-file"
-            style={{ display: 'none' }}
-            onChange={this.handleFileSelected}
-          />
-          <Button
-            component="span"
-            className={classes.attachFileButton}
-            type="secondary"
-            onClick={this.clickAttachButton}
-          >
-            <AttachFile />
-            Attach a file
-          </Button>
-        {files.map((file, idx) => (
-          file.uploaded
-            ? null /* this file has already been uploaded so don't show it */
-            : (
-              <React.Fragment key={idx}>
-                <Grid container className={classes.attachmentsContainer}>
-                  <Grid item>
-                    <TextField
-                      className={classes.attachmentField}
-                      value={file.name}
-                      errorText={file.errors && file.errors.length && file.errors[0].reason}
-                      InputProps={{
-                        startAdornment:
-                        <InputAdornment position="end">
-                          <CloudUpload />
-                        </InputAdornment>
-                      }}
-                    />
-                    
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      type="remove"
-                      data-file-idx={idx}
-                      onClick={this.removeFile}
-                    />
-                  </Grid>
-                  {file.uploading &&
-                    <Grid item xs={12}>
-                      <LinearProgress className={classes.uploadProgress} variant="indeterminate"/>
-                    </Grid>
-                  }
-                </Grid>
-              </React.Fragment>
-            )
-        ))}
-        <ActionsPanel style={{ marginTop: 16 }}>
-          <Button
-            type="primary"
-            loading={submitting}
-            onClick={this.submitForm}
-          >
-            Add Update
-          </Button>
-        </ActionsPanel>
-        {closable && 
-          <Typography>{`If everything is resolved, you can `} 
-            <a onClick={this.closeTicket}>close this ticket</a>.
+      <React.Fragment>
+        <Grid className={classes.root} item>
+          <Typography variant="headline" className={classes.root} data-qa-title >
+            Reply
           </Typography>
-        }
-      </Grid>
+          {generalError && <Notice error spacingBottom={8} spacingTop={16} text={generalError} />}
+          <TextField
+            className={classes.replyField}
+            multiline
+            rows={5}
+            value={value}
+            placeholder="Enter your reply"
+            onChange={this.handleReplyInput}
+            errorText={replyError}
+          />
+          <input
+              ref={this.inputRef}
+              type="file"
+              multiple
+              id="attach-file"
+              style={{ display: 'none' }}
+              onChange={this.handleFileSelected}
+            />
+            <Button
+              component="span"
+              className={classes.attachFileButton}
+              type="secondary"
+              onClick={this.clickAttachButton}
+            >
+              <AttachFile />
+              Attach a file
+            </Button>
+          {files.map((file, idx) => (
+            file.uploaded
+              ? null /* this file has already been uploaded so don't show it */
+              : (
+                <React.Fragment key={idx}>
+                  <Grid container className={classes.attachmentsContainer}>
+                    <Grid item>
+                      <TextField
+                        className={classes.attachmentField}
+                        value={file.name}
+                        errorText={file.errors && file.errors.length && file.errors[0].reason}
+                        InputProps={{
+                          startAdornment:
+                          <InputAdornment position="end">
+                            <CloudUpload />
+                          </InputAdornment>
+                        }}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <Button
+                        type="remove"
+                        data-file-idx={idx}
+                        onClick={this.removeFile}
+                      />
+                    </Grid>
+                    {file.uploading &&
+                      <Grid item xs={12}>
+                        <LinearProgress className={classes.uploadProgress} variant="indeterminate"/>
+                      </Grid>
+                    }
+                  </Grid>
+                </React.Fragment>
+              )
+          ))}
+          <ActionsPanel style={{ marginTop: 16 }}>
+            <Button
+              type="primary"
+              loading={submitting}
+              onClick={this.submitForm}
+            >
+              Add Update
+            </Button>
+          </ActionsPanel>
+          {closable && 
+            <Typography>{`If everything is resolved, you can `} 
+              <a onClick={this.openConfirmationDialog}>close this ticket</a>.
+            </Typography>
+          }
+        </Grid>
+        <ConfirmationDialog
+          open={this.state.dialogOpen}
+          title={`Confirm Ticket Close`}
+          onClose={this.closeConfirmationDialog}
+          actions={this.dialogActions}
+        >
+          {ticketCloseError && <Notice error text={ticketCloseError} data-qa-confirmation-error />}
+          <Typography>
+            {`Are you sure you want to close this ticket?`}
+          </Typography>
+        </ConfirmationDialog>
+      </React.Fragment>
     )
   }
 }
