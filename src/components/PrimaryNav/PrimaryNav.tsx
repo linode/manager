@@ -81,7 +81,6 @@ type ClassNames =
     transition: theme.transitions.create(['background-color', 'border-left-color']),
     flexShrink: 0,
     '&:hover': {
-      borderLeftColor: 'rgba(0, 0, 0, 0.1)',
       '& $linkItem': {
         color: 'white',
       },
