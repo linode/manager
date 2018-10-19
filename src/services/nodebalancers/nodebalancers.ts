@@ -11,7 +11,6 @@ import { combineNodeBalancerConfigNodeAddressAndPort } from './utils';
 type Page<T> = Linode.ResourcePage<T>;
 type NodeBalancer = Linode.NodeBalancer;
 
-/** Requests */
 export const getNodeBalancers = (pagination: any = {}, filters: any = {}) =>
   Request<Page<NodeBalancer>>(
     setURL(`${API_ROOT}/nodebalancers/`),

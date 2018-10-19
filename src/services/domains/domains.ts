@@ -24,7 +24,7 @@ export const getDomains = (
   setParams(params),
   setXFilter(filters),
 )
-  .then(response => response.data);;
+  .then(response => response.data);
 
 export const getDomains$ = (
   params: any = {},

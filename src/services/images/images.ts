@@ -28,7 +28,7 @@ export const getImages = (pagination: any = {}, filters: any = {}) =>
     setParams(pagination),
     setXFilter(filters),
   )
-  .then(response => response.data);
+  .then(response => response.data); 
 
 export const getLinodeImages = () =>
   getImagesPage(1, { "is_public": true });

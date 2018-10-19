@@ -9,7 +9,10 @@ type ClassNames = 'root';
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     position: 'absolute',
-    left: '10px'
+    left: '10px',
+    wordWrap: 'normal',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
   },
 });
 

@@ -62,7 +62,6 @@ export {
 export {
   getLinodeStats,
   getLinodeKernels,
-  getAllKernels,
   getLinodeTypes,
   getDeprecatedLinodeTypes,
   getType

@@ -22,10 +22,11 @@ import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
 import DeviceSelection, { ExtendedDisk, ExtendedVolume } from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
-import { createLinodeConfig, getAllKernels, getAllLinodeDisks, getLinodeConfig, updateLinodeConfig } from 'src/services/linodes';
-import { getAllVolumes } from 'src/services/volumes';
+import { createLinodeConfig, getLinodeConfig, getLinodeDisks, getLinodeKernels, updateLinodeConfig } from 'src/services/linodes';
+import { getVolumes } from 'src/services/volumes';
 import createDevicesFromStrings, { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
 import createStringsFromDevices from 'src/utilities/createStringsFromDevices';
+import { getAll } from 'src/utilities/getAll';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
 type ClassNames = 'root'
@@ -90,6 +91,10 @@ interface State {
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
+
+const getAllKernels = getAll(getLinodeKernels);
+const getAllVolumes = getAll(getVolumes);
+const getAllLinodeDisks = getAll(getLinodeDisks);
 
 class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
   state: State = {
@@ -479,7 +484,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
 
     /** Get all volumes for usage in the block device assignment. */
     getAllVolumes()
-      .then((volumes) => volumes.reduce((result, volume) => {
+      .then((volumes) => volumes.reduce((result: Linode.Volume[], volume: Linode.Volume) => {
         /**
          * This is a combination of filter and map. Filter out irrelevant volumes, and update
          * volumes with the special _id property.
@@ -501,7 +506,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
 
     /** Get all Linode disks for usage in the block device assignment. */
     getAllLinodeDisks(linodeId)
-      .then(disks => disks.map((disk) => ({ ...disk, _id: `disk-${disk.id}` })))
+      .then(disks => disks.map((disk:Linode.Disk) => ({ ...disk, _id: `disk-${disk.id}` })))
       .then(disks => this.setState({ availableDevices: { ...this.state.availableDevices, disks } }))
       .catch(console.error);
   }
