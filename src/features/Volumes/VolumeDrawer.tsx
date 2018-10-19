@@ -162,10 +162,6 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
          * If a volume is created, but not attached, the event is volume_create with a status of notification.
          * If a volume is created and attached, the event is volume_create with status of scheduled, started, failed, finished.
          */
-        if (event.action === 'volume_create' && event.status === 'scheduled') {
-          sendToast(`Volume ${event.entity && event.entity.label} scheduled for creation.`);
-        }
-
         if (event.action === 'volume_create' && (event.status === 'notification' || event.status === 'finished')) {
           sendToast(`Volume ${event.entity && event.entity.label} has been created successfully.`);
         }
