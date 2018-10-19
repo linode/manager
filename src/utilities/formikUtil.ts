@@ -1,6 +1,8 @@
 import { FormikBag, FormikErrors, FormikProps } from 'formik';
 import { path, reduce,} from 'ramda';
 
+import { Item } from 'src/components/EnhancedSelect/Select';
+
 export interface GeneralAPIError {
   none: string;
 }
@@ -12,14 +14,26 @@ export const defaultOptions = {
 };
 
 // Only validate the form onChange if the field has already been touched
-export const handleFormChange = <T extends {}>(e: any, props: FormikProps<T>) => {
-
+export const handleTextFieldChange = <T extends {}>(e: any, props: FormikProps<T>) => {
+  console.log('props: ' + JSON.stringify(props, null, 2));
   const { name, value } = e.target;
 
   props.setFieldValue(name, value);
 
   if (props.touched[name]) {
-    props.validateForm({ ...(props.values as {}), [name]: value });
+    console.log('name: ' + name);
+    console.log('value: ' + value);
+    props.validateField(name);
+    // props.validateForm({ ...(props.values as {}), [name]: value });
+  }
+}
+
+export const handleSelectFieldChange = <T extends {}>(item: Item, name: string, props: FormikProps<T>) => {
+
+  props.setFieldValue(name, item);
+
+  if (props.touched[name]) {
+    props.validateField(name);
   }
 }
 
@@ -54,4 +68,10 @@ export const createFormErrors = <T>(errors: any): FormikErrors<T & GeneralAPIErr
     const key = apiError.field || 'none';
     return { ...formErrors, [key]: apiError.reason }
   }, {}, errors);
+}
+
+export const maybeGetErrorText = (fieldName: string, touched: any, errors: any) => {
+  return touched[fieldName] && errors[fieldName]
+    ? errors[fieldName]
+    : undefined;
 }

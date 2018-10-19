@@ -12,7 +12,7 @@ import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import TextField from 'src/components/TextField';
 import { withLinode } from 'src/features/linodes/LinodesDetail/context';
 import { updateLinode } from 'src/services/linodes';
-import { defaultOptions, GeneralAPIError, handleFormChange, handleFormSubmission } from 'src/utilities/formikUtil';
+import { defaultOptions, GeneralAPIError, handleFormSubmission, handleTextFieldChange } from 'src/utilities/formikUtil';
 
 type ClassNames = 'root';
 
@@ -66,7 +66,7 @@ export const LinodeSettingsLabelPanel: React.StatelessComponent<CombinedProps> =
         label="Label"
         name="label"
         value={props.values.label}
-        onChange={(e: any) => handleFormChange(e, props)}
+        onChange={(e: any) => handleTextFieldChange(e, props)}
         onBlur={props.handleBlur}
         errorText={props.errors.label}
         errorGroup="linode-settings-label"

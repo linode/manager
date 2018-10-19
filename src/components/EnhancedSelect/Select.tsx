@@ -177,6 +177,7 @@ class Select extends React.PureComponent<CombinedProps,{}> {
       loadOptions,
       isMulti,
       isLoading,
+      name,
       placeholder,
       onChange,
       onInputChange,
@@ -234,6 +235,7 @@ class Select extends React.PureComponent<CombinedProps,{}> {
             shrink: true,
           },
         }}
+        name={name}
         value={value}
         onBlur={onBlur}
         options={options}
