@@ -13,7 +13,7 @@ import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import { createReply, uploadAttachment } from 'src/services/support';
+import { closeSupportTicket, createReply, uploadAttachment } from 'src/services/support';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 type ClassNames =
@@ -70,6 +70,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 
 interface Props {
   ticketId: number;
+  closable: boolean;
   onSuccess: (newReply: Linode.SupportReply) => void;
   reloadAttachments: () => void;
 }
@@ -224,8 +225,19 @@ class TicketReply extends React.Component<CombinedProps, State> {
     });
   }
 
+  closeTicket = () => {
+    const { ticketId } = this.props;
+    closeSupportTicket(ticketId)
+      .then(() => {
+        console.log('deleted successfully');
+    })
+      .catch(() => {
+        console.log("A horrible error occurred!")
+    })
+  }
+
   render() {
-    const { classes } = this.props;
+    const { classes, closable } = this.props;
     const { errors, submitting, value, files } = this.state;
 
     const hasErrorFor = getAPIErrorFor({
@@ -303,6 +315,11 @@ class TicketReply extends React.Component<CombinedProps, State> {
               </React.Fragment>
             )
         ))}
+        {closable && 
+          <Typography>If everything is resolved, you can
+            <a href="#" onClick={this.closeTicket}>close this ticket</a>.
+          </Typography>
+        }
         <ActionsPanel style={{ marginTop: 16 }}>
           <Button
             type="primary"

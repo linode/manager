@@ -420,7 +420,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
           {/* If the ticket isn't blank, display it, followed by replies (if any). */}
           {ticket.description &&
             <ExpandableTicketPanel
-              key={ticket!.id}
+              key={ticket.id}
               ticket={ticket}
               isCurrentUser={profileUsername === ticket.opened_by}
             />
@@ -430,7 +430,8 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
           {/* If the ticket is open, allow users to reply to it. */}
           {['open','new'].includes(ticket.status) &&
             <TicketReply
-              ticketId={ticketId!}
+              ticketId={ticket.id}
+              closable={ticket.closable}
               onSuccess={this.onCreateReplySuccess}
               reloadAttachments={this.reloadAttachments}
             />
