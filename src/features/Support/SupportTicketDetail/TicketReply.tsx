@@ -9,14 +9,14 @@ import CloudUpload from '@material-ui/icons/CloudUpload';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import { closeSupportTicket, createReply, uploadAttachment } from 'src/services/support';
+import { createReply, uploadAttachment } from 'src/services/support';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import scrollToTop from 'src/utilities/scrollToTop';
+
+import CloseTicketLink from './CloseTicketLink';
 
 type ClassNames =
   'root'
@@ -93,9 +93,6 @@ interface State {
   value: string;
   submitting: boolean;
   files: FileAttachment[];
-  dialogOpen: boolean;
-  isClosingTicket: boolean;
-  ticketCloseError?: string;
   errors?: Linode.ApiFieldError[];
 }
 
@@ -107,8 +104,6 @@ class TicketReply extends React.Component<CombinedProps, State> {
     value: '',
     submitting: false,
     files: [],
-    dialogOpen: false,
-    isClosingTicket: false,
   }
 
   inputRef = React.createRef<HTMLInputElement>();
@@ -243,59 +238,9 @@ class TicketReply extends React.Component<CombinedProps, State> {
     });
   }
 
-  openConfirmationDialog = () => {
-    if (!this.mounted) { return; }
-    this.setState({ dialogOpen: true, isClosingTicket: false, ticketCloseError: undefined, });
-  }
-
-  closeConfirmationDialog = () => {
-    if (!this.mounted) { return; }
-    this.setState({ dialogOpen: false });
-  }
-
-  closeTicket = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    const { closeTicketSuccess, ticketId } = this.props;
-    this.setState({ isClosingTicket: true });
-    closeSupportTicket(ticketId)
-      .then(() => {
-        this.setState({ isClosingTicket: false, dialogOpen: false });
-        closeTicketSuccess();
-        scrollToTop();
-    })
-      .catch((errorResponse) => {
-        const defaultError = [{'reason': 'Your ticket could not be closed.'}];
-        const errors = pathOr(defaultError, ['response', 'data', 'errors'], errorResponse);
-        this.setState({
-          isClosingTicket: false,
-          ticketCloseError: errors[0].reason,
-        });
-    })
-  }
-
-  dialogActions = () => {
-    return (
-      <ActionsPanel>
-        <Button
-          type="cancel"
-          onClick={this.closeConfirmationDialog}
-          data-qa-dialog-cancel>
-          Cancel
-        </Button>
-        <Button
-          type="secondary"
-          loading={this.state.isClosingTicket}
-          onClick={this.closeTicket}
-          data-qa-dialog-submit>
-          Confirm
-        </Button>
-      </ActionsPanel>
-    )
-  }
-
   render() {
-    const { classes, closable } = this.props;
-    const { errors, submitting, value, files, ticketCloseError } = this.state;
+    const { classes, closable, closeTicketSuccess, ticketId } = this.props;
+    const { errors, submitting, value, files } = this.state;
 
     const hasErrorFor = getAPIErrorFor({
       description: 'description',
@@ -381,23 +326,13 @@ class TicketReply extends React.Component<CombinedProps, State> {
               Add Update
             </Button>
           </ActionsPanel>
-          {closable && 
-            <Typography>{`If everything is resolved, you can `} 
-              <a onClick={this.openConfirmationDialog}>close this ticket</a>.
-            </Typography>
+          {closable &&
+            <CloseTicketLink
+              ticketId={ticketId}
+              closeTicketSuccess={closeTicketSuccess}  
+            />
           }
         </Grid>
-        <ConfirmationDialog
-          open={this.state.dialogOpen}
-          title={`Confirm Ticket Close`}
-          onClose={this.closeConfirmationDialog}
-          actions={this.dialogActions}
-        >
-          {ticketCloseError && <Notice error text={ticketCloseError} data-qa-confirmation-error />}
-          <Typography>
-            {`Are you sure you want to close this ticket?`}
-          </Typography>
-        </ConfirmationDialog>
       </React.Fragment>
     )
   }

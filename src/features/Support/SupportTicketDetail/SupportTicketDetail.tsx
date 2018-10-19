@@ -417,6 +417,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
           </Grid>
         </Grid>
         {ticket.entity && this.renderEntityLabelWithIcon()}
+        {/* Show message if the ticket has been closed through the link on this page. */}
         {ticketCloseSuccess && <Notice success text={"Ticket has been closed."}/>}
         <Grid container direction="column" justify="center" alignItems="center" className={classes.listParent} >
           {/* If the ticket isn't blank, display it, followed by replies (if any). */}
