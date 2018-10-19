@@ -74,7 +74,7 @@ interface Props {
   ticketId: number;
   closable: boolean;
   onSuccess: (newReply: Linode.SupportReply) => void;
-  reloadTicket: () => void;
+  closeTicketSuccess: () => void;
   reloadAttachments: () => void;
 }
 
@@ -255,12 +255,12 @@ class TicketReply extends React.Component<CombinedProps, State> {
 
   closeTicket = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    const { reloadTicket, ticketId } = this.props;
+    const { closeTicketSuccess, ticketId } = this.props;
     this.setState({ isClosingTicket: true });
     closeSupportTicket(ticketId)
       .then(() => {
         this.setState({ isClosingTicket: false, dialogOpen: false });
-        reloadTicket();
+        closeTicketSuccess();
         scrollToTop();
     })
       .catch((errorResponse) => {
