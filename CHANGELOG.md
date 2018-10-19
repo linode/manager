@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   - Linodes with flags/long names breaking the layout on list linodes
   - Issue where a users settings are erroneously requested multiple times
   - Linodes with unknown images failing to display in the linode summary panel
+  - Backup restore not restoring to destination Linode
 
 ## [0.36.0] - 2018-10.08
 
