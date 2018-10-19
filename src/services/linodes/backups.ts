@@ -38,7 +38,7 @@ export const restoreBackup = (
   Request<{}>(
     setURL(`${API_ROOT}/linode/instances/${linodeID}/backups/${backupID}/restore`),
     setMethod('POST'),
-    setData({ linodeId: targetLinodeID, overwrite }),
+    setData({ linode_id: targetLinodeID, overwrite }),
   )
     .then(response => response.data);
 
