@@ -21,7 +21,8 @@ describe('Header - Search Suite', () => {
     describe('Search Displays Suite', () => {
         it('should display search elements on all routes', () => {
             const routes = [
-                constants.routes.dashboard, constants.routes.linodes,
+                constants.routes.dashboard,
+                 constants.routes.linodes,
                 constants.routes.volumes, constants.routes.nodebalancers,
                 constants.routes.domains, constants.routes.managed,
                 constants.routes.longview, constants.routes.stackscripts,

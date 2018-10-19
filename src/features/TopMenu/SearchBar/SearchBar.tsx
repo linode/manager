@@ -1,12 +1,11 @@
-import Downshift, { DownshiftState, StateChangeOptions } from 'downshift';
+import * as Bluebird from 'bluebird';
 import * as moment from 'moment';
-import { compose, or } from 'ramda';
+import { compose, isEmpty, or } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import _Control from 'react-select/lib/components/Control';
 
 import IconButton from '@material-ui/core/IconButton';
-import MenuItem from '@material-ui/core/MenuItem';
-import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Close from '@material-ui/icons/Close';
 import Search from '@material-ui/icons/Search';
@@ -14,16 +13,17 @@ import Search from '@material-ui/icons/Search';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
-import TextField from 'src/components/TextField';
+import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { withTypes } from 'src/context/types';
 import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
 import { getDomains } from 'src/services/domains';
-import { getImagesPage } from 'src/services/images';
-import { getLinodesPage } from 'src/services/linodes';
+import { getImages } from 'src/services/images';
+import { getLinodes } from 'src/services/linodes';
 import { getNodeBalancers } from 'src/services/nodebalancers';
 import { getVolumes } from 'src/services/volumes';
+import { getAll } from 'src/utilities/getAll';
 
-import SearchSuggestion, { SearchSuggestionT } from './SearchSuggestion';
+import SearchSuggestion from './SearchSuggestion';
 
 type ClassNames =
   'root'
@@ -33,9 +33,6 @@ type ClassNames =
   | 'textfield'
   | 'input'
   | 'icon'
-  | 'searchSuggestions'
-  | 'item'
-  | 'selectedMenuItem';
 
   const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
@@ -53,7 +50,7 @@ type ClassNames =
       backgroundColor: theme.bg.white,
       position: 'absolute',
       width: 'calc(100% - 118px)',
-      zIndex: 2,
+      zIndex: -1,
       left: 0,
       visibility: 'hidden',
       opacity: 0,
@@ -61,11 +58,24 @@ type ClassNames =
       '&.active': {
         visibility: 'visible',
         opacity: 1,
+        zIndex: 2,
       },
     },
     [theme.breakpoints.down('xs')]: {
       width: '100%',
     },
+    '& .react-select__control': {
+      backgroundColor: 'transparent',
+    },
+    '& .react-select__value-container': {
+      overflow: 'hidden',
+    },
+    '& .react-select__menu': {
+      marginTop: 16,
+      boxShadow: `0 0 5px ${theme.color.boxShadow}`,
+      maxHeight: 325,
+      overflowY: 'auto',
+    }
   },
   navIconHide: {
     '& > span': {
@@ -113,40 +123,6 @@ type ClassNames =
       [theme.breakpoints.down('sm')]: {},
     },
   },
-  searchSuggestions: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 60,
-    padding: 0,
-    boxShadow: `0 0 5px ${theme.color.boxShadow}`,
-    maxHeight: 325,
-    overflowY: 'auto',
-  },
-  item: {
-    borderBottom: `1px solid ${theme.palette.divider}`,
-    '&:hover, &:focus': {
-      backgroundColor: `${theme.bg.offWhite} !important`,
-    },
-    '&:last-item': {
-      border: 0,
-    },
-  },
-  selectedMenuItem: {
-    backgroundColor: `${theme.bg.offWhite} !important`,
-    '& .circle': {
-      transition: theme.transitions.create(['fill']),
-      fill: theme.palette.primary.main,
-    },
-    '& .outerCircle': {
-      transition: theme.transitions.create(['stroke']),
-      stroke: '#2967B1',
-    },
-    '& .insidePath *': {
-      transition: theme.transitions.create(['stroke']),
-      stroke: 'white',
-    },
-  },
 });
 
 interface TypesContextProps {
@@ -160,21 +136,52 @@ interface State {
   volumes?: Linode.Volume[];
   nodebalancers?: Linode.NodeBalancer[];
   domains?: Linode.Domain[];
-  images?: Linode.Image[];
+  resultsLoading: boolean;
   [resource: string]: any;
+  options: Item[];
 }
 
 type CombinedProps = TypesContextProps
   & WithStyles<ClassNames>
   & RouteComponentProps<{}>;
 
+const getAllLinodes = getAll(getLinodes);
+const getAllNodeBalancers = getAll(getNodeBalancers);
+const getAllVolumes = getAll(getVolumes);
+const getAllDomains = getAll(getDomains);
+const getAllImages = getAll(getImages);
+
+const Control = (props: any) =>
+  <_Control {...props} />
+
+// Style overrides for React Select
+const selectStyles = {
+  control: (base: any) => ({ ...base, backgroundColor: '#f4f4f4', margin: 0, width: '100%', border: 0 }),
+  input: (base: any) => ({ ...base, margin: 0, width: '100%', border: 0 }),
+  selectContainer: (base: any) => ({ ...base, width: '100%', margin: 0, border: 0 }),
+  dropdownIndicator: (base: any) => ({ ...base, display: 'none' }),
+  placeholder: (base: any) => ({ ...base, color: 'blue' }),
+  menu: (base: any) => ({ ...base, maxWidth: '100% !important' })
+};
+
 class SearchBar extends React.Component<CombinedProps, State> {
+  mounted: boolean = false;
   state: State = {
     searchText: '',
     searchActive: false,
+    resultsLoading: false,
+    options: []
   };
 
   lastFetch = moment.utc('1970-01-01T00:00:00');
+
+  componentDidMount() {
+    this.mounted = true;
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
+  }
 
   dataAvailable() {
     return (
@@ -200,55 +207,47 @@ class SearchBar extends React.Component<CombinedProps, State> {
     return `${imageDesc}, ${typeDesc}`;
   }
 
-  getAllPagesFor_(
-    name: string,
-    fetchFn: (page: number) => Promise<any>,
-    page: number,
-    pageCount: number,
-  ) {
-    if (!page || !pageCount) { return; }
-    if (page > pageCount) { return; }
-    fetchFn(page)
-      .then((response) => {
-        this.setState(prevState => ({
-          [name]: [...prevState[name], ...response.data],
-        }));
-        this.getAllPagesFor_(name, fetchFn, page + 1, pageCount);
-      });
-  }
-
-  getAllPagesFor(name: string, fetchFn: (page: number) => Promise<any>) {
-    /* fetch the first page and get the page count */
-    fetchFn(1)
-      .then((response) => {
-        this.setState({ [name]: response.data });
-        /* fetch the rest of the pages */
-        const pageCount = response.pages;
-        this.getAllPagesFor_(name, fetchFn, 2, pageCount);
-      });
-  }
-
-  getVolumesPage = (page: number) => getVolumes({ page })
-  getDomainsPage = (page: number) => getDomains({ page })
-  getNodeBalancersPage = (page: number) => getNodeBalancers({ page })
-
   updateData = () => {
-    this.getAllPagesFor('linodes', getLinodesPage);
-    this.getAllPagesFor('volumes', this.getVolumesPage);
-    this.getAllPagesFor('nodebalancers', this.getNodeBalancersPage);
-    this.getAllPagesFor('domains', this.getDomainsPage);
-    this.getAllPagesFor('images', getImagesPage);
+    Bluebird.join(
+      getAllLinodes(),
+      getAllNodeBalancers(),
+      getAllVolumes(),
+      getAllDomains(),
+      getAllImages(),
+      this.setEntitiesToState
+    )
+  }
+
+  setEntitiesToState = (
+    linodes: Linode.Linode[],
+    nodebalancers: Linode.NodeBalancer[],
+    volumes: Linode.Volume[],
+    domains: Linode.Domain[],
+    images: Linode.Image[]
+  ) => {
+    if (!this.mounted) { return; }
+    this.setState({
+      linodes,
+      nodebalancers,
+      volumes,
+      domains,
+      images
+    }, this.getSearchSuggestions)
   }
 
   // Helper can be extended to other entities once tags are supported for them.
   // @todo Inefficient to call this function twice for each search result.
   getMatchingTags = (tags:string[], query:string): string[] => {
-    return tags.filter((tag:string) => tag.toLowerCase().includes(query));
+    return tags.filter((tag:string) => tag.toLocaleLowerCase().includes(query));
   }
 
-  getSearchSuggestions = (query: string | null) => {
+  getSearchSuggestions = () => {
+    const query = this.state.searchText;
     const { typesData } = this.props;
-    if (!this.dataAvailable() || !query) { return [] };
+    if (!this.dataAvailable() || !query) {
+      this.setState({ options: [], resultsLoading: false });
+      return;
+    };
 
     const queryLower = query.toLowerCase();
     const searchResults = [];
@@ -257,24 +256,29 @@ class SearchBar extends React.Component<CombinedProps, State> {
       const linodesByLabel = this.state.linodes.filter(
         linode => {
           const matchingTags = this.getMatchingTags(linode.tags, queryLower);
-          return or(
+          const bool = or(
             linode.label.toLowerCase().includes(queryLower),
             matchingTags.length > 0
           )
+          return bool;
         }
       );
       searchResults.push(...(linodesByLabel.map(linode => ({
-        title: linode.label,
-        tags: this.getMatchingTags(linode.tags, queryLower),
-        description: this.linodeDescription(
-          displayType(linode.type, typesData),
-          linode.specs.memory,
-          linode.specs.disk,
-          linode.specs.vcpus,
-          linode.image!,
-        ),
-        Icon: LinodeIcon,
-        path: `/linodes/${linode.id}`,
+        label: linode.label,
+        value: linode.id,
+        data: {
+          tags: this.getMatchingTags(linode.tags, queryLower),
+          description: this.linodeDescription(
+            displayType(linode.type, typesData),
+            linode.specs.memory,
+            linode.specs.disk,
+            linode.specs.vcpus,
+            linode.image!,
+          ),
+          Icon: LinodeIcon,
+          path: `/linodes/${linode.id}`,
+          searchText: query,
+        }
       }))));
     }
 
@@ -283,10 +287,15 @@ class SearchBar extends React.Component<CombinedProps, State> {
         volume => volume.label.toLowerCase().includes(queryLower),
       );
       searchResults.push(...(volumesByLabel.map(volume => ({
-        title: volume.label,
-        description: volume.size + ' G',
-        Icon: VolumeIcon,
-        path: `/volumes/${volume.id}`,
+        label: volume.label,
+        value: volume.id,
+        data: {
+          tags: [],
+          description: volume.size + ' G',
+          Icon: VolumeIcon,
+          path: `/volumes/${volume.id}`,
+          searchText: query,
+        }
       }))));
     }
 
@@ -295,10 +304,15 @@ class SearchBar extends React.Component<CombinedProps, State> {
         nodebal => nodebal.label.toLowerCase().includes(queryLower),
       );
       searchResults.push(...(nodebalancersByLabel.map(nodebal => ({
-        title: nodebal.label,
-        description: nodebal.hostname,
-        Icon: NodebalIcon,
-        path: `/nodebalancers/${nodebal.id}`,
+        label: nodebal.label,
+        value: nodebal.id,
+        data: {
+          tags: [],
+          description: nodebal.hostname,
+          Icon: NodebalIcon,
+          path: `/nodebalancers/${nodebal.id}`,
+          searchText: query,
+        }
       }))));
     }
 
@@ -307,42 +321,55 @@ class SearchBar extends React.Component<CombinedProps, State> {
         domain => domain.domain.toLowerCase().includes(queryLower),
       );
       searchResults.push(...(domainsByLabel.map(domain => ({
-        title: domain.domain,
-        description: domain.description || domain.status,
-        /* TODO: Update this with the Domains icon! */
-        Icon: NodebalIcon,
-        path: `/domains/${domain.id}`,
+        label: domain.domain,
+        value: domain.id,
+        data: {
+          tags: [],
+          description: domain.description || domain.status,
+          /* TODO: Update this with the Domains icon! */
+          Icon: NodebalIcon,
+          path: `/domains/${domain.id}`,
+          searchText: query
+        }
       }))));
     }
 
     if (this.state.images) {
       const imagesByLabel = this.state.images.filter(
-        image => (
+        (image: Linode.Image) => (
           /* TODO: this should be a pre-filter at the API level */
           image.is_public === false
           && image.label.toLowerCase().includes(queryLower)
         ),
       );
-      searchResults.push(...(imagesByLabel.map(image => ({
-        title: image.label,
-        description: image.description || '',
-        /* TODO: Update this with the Images icon! */
-        Icon: VolumeIcon,
-        /* TODO: Choose a real location for this to link to */
-        path: `/images`,
+      searchResults.push(...(imagesByLabel.map((image: Linode.Image) => ({
+        label: image.label,
+        value: image.id,
+        data: {
+          tags: [],
+          description: image.description || '',
+          /* TODO: Update this with the Images icon! */
+          Icon: VolumeIcon,
+          /* TODO: Choose a real location for this to link to */
+          path: `/images`,
+          searchText: query,
+        }
       }))));
     }
-
-    return searchResults;
+    this.setState({ options: searchResults, resultsLoading: false });
   }
 
-  handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  handleSearchChange = (searchText: string): void => {
     this.setState({
-      searchText: e.target.value,
+      searchText,
+      resultsLoading: true,
     }, () => {
       if (moment.utc().diff(this.lastFetch) > 60000) {
         this.lastFetch = moment.utc();
+        // This will run getSearchSuggestions as a callback
         this.updateData();
+      } else {
+        this.getSearchSuggestions();
       }
     });
   }
@@ -353,68 +380,20 @@ class SearchBar extends React.Component<CombinedProps, State> {
     });
   }
 
-  onSelect = (item: SearchSuggestionT) => {
+  onSelect = (item: Item) => {
+    if (!item || isEmpty(item)) { return; }
     const { history } = this.props;
-    /* Need to unfocus the search bar so the
-    *  keyboard disappears on mobile.
-    *  This is a known issue with Downshift (https://github.com/paypal/downshift/issues/32),
-    *  hopefully this kludge won't be needed with React-Select.
-    */
-    const node = document.getElementById('searchbar-simple');
-    if (node) { node.blur(); }
     this.toggleSearch();
-    history.push(item.path);
+    history.push(item.data.path);
   }
 
-  renderSuggestion(
-    suggestion: SearchSuggestionT,
-    index: number,
-    highlightedIndex: number | null,
-    itemProps: any,
-  ) {
-    const { classes, history } = this.props;
-    const isHighlighted = highlightedIndex === index;
-
-    return (
-      <MenuItem
-        {...itemProps}
-        key={suggestion.title + suggestion.description}
-        selected={isHighlighted}
-        component="div"
-        className={classes.item}
-        classes={{ selected: classes.selectedMenuItem }}
-        data-qa-suggestion={suggestion.title}
-        data-qa-selected={isHighlighted}
-      >
-        <SearchSuggestion
-          Icon={suggestion.Icon}
-          title={suggestion.title}
-          description={suggestion.description}
-          searchText={this.state.searchText}
-          path={suggestion.path}
-          history={history}
-          tags={suggestion.tags}
-          isHighlighted={isHighlighted}
-        />
-      </MenuItem>
-    );
-  }
-
-  downshiftStateReducer(state: DownshiftState, changes: StateChangeOptions) {
-    switch (changes.type) {
-      case Downshift.stateChangeTypes.blurInput:
-        return {
-          ...changes,
-          inputValue: '',
-        };
-      default:
-        return changes;
-    }
+  filterResults = (option: Item, inputValue: string) => {
+    return true;
   }
 
   render() {
     const { classes } = this.props;
-    const { searchActive } = this.state;
+    const { searchActive, options, resultsLoading } = this.state;
 
     return (
       <React.Fragment>
@@ -436,50 +415,21 @@ class SearchBar extends React.Component<CombinedProps, State> {
             className={classes.icon}
             data-qa-search-icon
           />
-          <Downshift
-            onSelect={this.onSelect}
-            stateReducer={this.downshiftStateReducer}
-            itemToString={(item: SearchSuggestionT) => (item && item.title) || ''}
-            render={({
-              getInputProps,
-              getItemProps,
-              isOpen,
-              inputValue,
-              highlightedIndex,
-            }) => (
-                <div className={classes.textfieldContainer}>
-                  <TextField
-                    fullWidth
-                    className={classes.textfield}
-                    autoFocus={searchActive}
-                    InputProps={{
-                      classes: {
-                        root: classes.input,
-                      },
-                      ...getInputProps({
-                        placeholder: 'Go to Linodes, Volumes, NodeBalancers, Domains...',
-                        id: 'searchbar-simple',
-                        onChange: this.handleSearchChange,
-                      }),
-                    }}
-                    data-qa-search
-                  />
-                  {isOpen &&
-                    <Paper
-                      className={classes.searchSuggestions}
-                    >
-                      {this.getSearchSuggestions(inputValue).map((suggestion, index) => {
-                        return this.renderSuggestion(
-                          suggestion,
-                          index,
-                          highlightedIndex,
-                          getItemProps({ item: suggestion }),
-                        );
-                      })}
-                    </Paper>
-                  }
-                </div>
-              )}
+          <EnhancedSelect
+            id="search-bar"
+            options={options}
+            onChange={this.onSelect}
+            onInputChange={this.handleSearchChange}
+            placeholder={"Search for Linodes, Volumes, Nodebalancers, Domains, Tags..."}
+            components={{ Control, Option: SearchSuggestion }}
+            styleOverrides={selectStyles}
+            openMenuOnFocus={false}
+            openMenuOnClick={false}
+            filterOption={this.filterResults}
+            isLoading={resultsLoading}
+            isClearable={false}
+            isMulti={false}
+            value={null}
           />
           <IconButton
             color="inherit"

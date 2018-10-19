@@ -1,6 +1,3 @@
-import * as Bluebird from 'bluebird';
-import { range } from 'ramda';
-
 import { API_ROOT } from 'src/constants';
 
 import Request, { setData, setMethod, setParams, setURL, setXFilter } from '../index';
@@ -31,29 +28,6 @@ export const getVolumes = (params: any = {}, filters: any = {}) =>
     setXFilter(filters),
   )
     .then(response => response.data);
-
-export const getAllVolumes: (params?: any, filters?: any) => Promise<Linode.Volume[]> =
-  (params = {}, filters = {}) => {
-    const pagination = { ...params, page_size: 100 };
-
-    return getVolumes(pagination, filters)
-      .then(({ data: firstPageData, page, pages }) => {
-
-        // If we only have one page, return it.
-        if (page === pages) { return firstPageData; }
-
-        // Create an iterable list of the remaining pages.
-        const remainingPages = range(page + 1, pages + 1);
-
-        //
-        return Bluebird
-          .map(remainingPages, nextPage =>
-            getVolumes({ ...pagination, page: nextPage }, filters).then(response => response.data),
-          )
-          /** We're given Linode.Volume[][], so we flatten that, and append the first page response. */
-          .then(volumePages => volumePages.reduce((result, nextPage) => [...result, ...nextPage], firstPageData));
-      });
-  }
   
 export const attachVolume = (volumeId: number, payload: {
   linode_id: number,
