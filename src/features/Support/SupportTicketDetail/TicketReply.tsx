@@ -225,7 +225,8 @@ class TicketReply extends React.Component<CombinedProps, State> {
     });
   }
 
-  closeTicket = () => {
+  closeTicket = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
     const { ticketId } = this.props;
     closeSupportTicket(ticketId)
       .then(() => {
@@ -315,11 +316,6 @@ class TicketReply extends React.Component<CombinedProps, State> {
               </React.Fragment>
             )
         ))}
-        {closable && 
-          <Typography>If everything is resolved, you can
-            <a href="#" onClick={this.closeTicket}>close this ticket</a>.
-          </Typography>
-        }
         <ActionsPanel style={{ marginTop: 16 }}>
           <Button
             type="primary"
@@ -329,6 +325,11 @@ class TicketReply extends React.Component<CombinedProps, State> {
             Add Update
           </Button>
         </ActionsPanel>
+        {closable && 
+          <Typography>{`If everything is resolved, you can `} 
+            <a onClick={this.closeTicket}>close this ticket</a>.
+          </Typography>
+        }
       </Grid>
     )
   }
