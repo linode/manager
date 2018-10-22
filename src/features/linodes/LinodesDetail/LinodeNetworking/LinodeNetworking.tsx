@@ -155,7 +155,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     return getLinodeIPs(this.props.linodeID)
       .then(ips => this.setState({ linodeIPs: ips, initialLoading: false }))
       .catch((errorResponse) => {
-        const defaultError = [{'reason': 'Your ticket could not be closed.'}];
+        const defaultError = [{'reason': 'There was an error retrieving your network information.'}];
         const errors = pathOr(defaultError, ['response', 'data', 'errors'], errorResponse);
         this.setState({ IPRequestError: errors[0].reason, initialLoading: false });
       });
