@@ -1,3 +1,4 @@
+import { compose } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -8,7 +9,8 @@ import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
 
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
-import PaginationFooter, { PaginationProps } from 'src/components/PaginationFooter';
+import Pagey, { PaginationProps } from 'src/components/Pagey';
+import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
@@ -19,15 +21,9 @@ import { ISO_FORMAT } from 'src/constants';
 
 import { getTicketsPage } from './ticketUtils';
 
-interface Props {
+interface Props extends PaginationProps<Linode.SupportTicket> {
   filterStatus: 'open' | 'closed';
   newTicket?: Linode.SupportTicket;
-}
-
-interface State extends PaginationProps {
-  errors?: Linode.ApiFieldError[];
-  tickets?: Linode.SupportTicket[];
-  loading: boolean;
 }
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
@@ -38,27 +34,20 @@ type ClassNames = 'root';
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class TicketList extends React.Component<CombinedProps, State> {
+class TicketList extends React.Component<CombinedProps, {}> {
   mounted: boolean = false;
-  state: State = {
-    errors: undefined,
-    loading: true,
-    page: 1,
-    count: 0,
-    pageSize: 25,
-  }
 
   componentDidMount() {
     this.mounted = true;
-    this.getTickets();
+    this.props.request();
   }
 
-  componentDidUpdate(prevProps:Props, prevState:State) {
+  componentDidUpdate(prevProps: Props, prevState: {}) {
     if (prevProps.filterStatus !== this.props.filterStatus) {
-      this.getTickets();
+      this.props.handlePageChange(1)
     }
     if (prevProps.newTicket !== this.props.newTicket) {
-      this.getTickets();
+      this.props.request();
     }
   }
 
@@ -83,50 +72,14 @@ class TicketList extends React.Component<CombinedProps, State> {
     }
   }
 
-  getTickets = (page:number = this.state.page, pageSize:number = this.state.pageSize) => {
-    const { tickets } = this.state;
-    this.setState({ errors: undefined, loading: tickets === undefined});
-
-    getTicketsPage({ page_size: pageSize, page }, this.props.filterStatus)
-      .then((response) => {
-        if (!this.mounted) { return; }
-        
-        this.setState({
-          loading: false,
-          tickets: response.data,
-          errors: undefined,
-          count: response.results,
-          page: response.page,
-        });
-      })
-      .catch((errors) => {
-        if (!this.mounted) { return; }
-        this.setState({ errors, loading: false, });
-      })
-  }
-
-  handlePageChange = (page: number) => {
-    if (!this.mounted) { return; }
-    this.setState({ page }, () => { this.getTickets(page)});
-  }
-
-  handlePageSizeChange = (pageSize: number) => {
-    if (!this.mounted) { return; }
-
-    this.setState(
-      { pageSize },
-      () => { this.getTickets(this.state.page, pageSize) },
-    );
-  }
-
   renderContent = () => {
-    const { tickets, errors, loading } = this.state;
+    const { data: tickets, error, loading } = this.props;
 
     if (loading) {
       return <TableRowLoading colSpan={12} />
     }
 
-    if (errors) {
+    if (error) {
       return <TableRowError colSpan={6} message="We were unable to load your support tickets." />
     }
     
@@ -155,8 +108,8 @@ class TicketList extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { count, tickets, page, pageSize, } = this.state;
-    
+    const { count, page, pageSize, } = this.props;
+
     return (
       <React.Fragment>
         <Paper>
@@ -175,22 +128,30 @@ class TicketList extends React.Component<CombinedProps, State> {
               {this.renderContent()}
             </TableBody>
           </Table>
-          {tickets && tickets.length > 0 &&
-            <PaginationFooter
-              count={count}
-              page={page}
-              pageSize={pageSize}
-              handlePageChange={this.handlePageChange}
-              handleSizeChange={this.handlePageSizeChange}
-              padded
-            />
-          }
+          <PaginationFooter
+            count={count}
+            page={page}
+            pageSize={pageSize}
+            handlePageChange={this.props.handlePageChange}
+            handleSizeChange={this.props.handlePageSizeChange}
+            padded
+          />
         </Paper>
       </React.Fragment>
     );
   }
 }
 
+const updatedRequest = (ownProps: Props, params: any, filters: any) => {
+  return getTicketsPage(params, ownProps.filterStatus)
+    .then(response => response)
+}
+
+const paginated = Pagey(updatedRequest);
+
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(TicketList);
+export default compose(
+  paginated,
+  styled
+)(TicketList)
