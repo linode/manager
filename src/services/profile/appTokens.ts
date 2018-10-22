@@ -3,16 +3,7 @@ import { API_ROOT } from 'src/constants';
 import Request, { setMethod, setParams, setURL, setXFilter } from '../index';
 
 type Page<T> = Linode.ResourcePage<T>;
-export interface Token {
-  id: number,
-  scopes: string,
-  label: string,
-  created: string,
-  token?: string,
-  expiry: string,
-  website?: string,
-  thumbnail_url?: null | string;
-};
+type Token = Linode.Token
 
 /**
  * getAppTokens

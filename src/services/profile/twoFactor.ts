@@ -2,10 +2,7 @@ import { API_ROOT } from 'src/constants';
 
 import Request, { setData, setMethod, setURL } from '..';
 
-export interface Secret {
-  secret: string;
-  expiry: Date;
-}
+type Secret = Linode.Secret;
 
 /**
  * getTFAToken
