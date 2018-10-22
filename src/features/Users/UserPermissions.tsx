@@ -751,7 +751,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           <Grid item>
             <Toggle
               tooltipText={(username === currentUser)
-                ? 'You cannot restrict yourself'
+                ? 'You cannot restrict the current active user.'
                 : ''}
               disabled={username === currentUser}
               checked={restricted}
