@@ -1,4 +1,4 @@
-import { number, object, string } from 'yup';
+import { boolean, number, object, string } from 'yup';
 
 export const updateAccountSchema = object({
   email: string()
@@ -73,4 +73,16 @@ export const CreditCardSchema = object({
     .required("Expiration month is required.")
     .min(1, "Expiration month must be a number from 1 to 12.")
     .max(12, "Expiration month must be a number from 1 to 12."),
-})
+});
+
+export const CreateUserSchema = object({
+  username: string()
+    .required("Username is required.")
+    .min(3, "Username must be between 3 and 32 characters.")
+    .max(32, "Username must be between 3 and 32 characters."),
+  email: string()
+    .required("Email address is required.")
+    .email("Must be a valid email address."),
+  restricted: boolean()
+    .required("You must indicate if this user should have restricted access.")
+});

@@ -108,3 +108,34 @@ export const deleteOAuthClient = (clientId: number | string) =>
     setURL(`${API_ROOT}/account/oauth-clients/${clientId}`),
     setMethod('DELETE'),
   );
+
+/**
+ * getOauthClientThumbnail
+ *
+ * Returns the thumbnail for this OAuth Client.
+ * This is a publicly-viewable endpoint, and can be accessed without authentication.
+ * 
+ * @param clientId { number } ID of the client to be viewed.
+ * 
+ */
+export const getOauthClientThumbnail = (clientId: number | string) =>
+  Request<{}>(
+    setURL(`${API_ROOT}/account/oauth-clients/${clientId}/thumbnail`),
+    setMethod('GET'),
+  );
+
+/**
+ * updateOAuthClientThumbnail
+ *
+ * Upload a thumbnail for a client you own. You must upload an image file that will be
+ * returned when the thumbnail is retrieved. This image will be publicly-viewable.
+ * 
+ * @param clientId { number } ID of the client to be updated.
+ * @param formData { Image file } the image file to use as a thumbnail.
+ */  
+export const updateOAuthClientThumbnail = (clientId: number | string, formData: FormData) =>
+  Request<{}>(
+    setURL(`${API_ROOT}/account/oauth-clients/${clientId}/thumbnail`),
+    setMethod('PUT'),
+    setData(formData)
+  );
