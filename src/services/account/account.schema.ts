@@ -1,4 +1,4 @@
-import { object, string } from 'yup';
+import { number, object, string } from 'yup';
 
 export const updateAccountSchema = object({
   email: string()
@@ -43,3 +43,34 @@ export const updateOAuthClientSchema = object({
     .max(512, "Label must be between 1 and 512 characters."),
   redirect_uri: string()
 });
+
+export const StagePaypalPaymentSchema = object({
+  cancel_url: string().required("You must provide a URL to redirect on cancel."),
+  redirect_url: string().required("You must provide a redirect URL."),
+  usd: string().required("USD payment amount is required.")
+});
+
+export const ExecutePaypalPaymentSchema = object({
+  payer_id: string().required("You must provide a payer ID."),
+  payment_id: string().required("You must provide a payment ID (from Paypal)."),
+});
+
+export const PaymentSchema = object({
+  usd: string().required("USD payment amount is required."),
+  ccv: string().required("CVV code is required.")
+});
+
+export const CreditCardSchema = object({
+  card_number: string()
+    .required("Credit card number is required.")
+    .min(13, "Credit card number must be between 13 and 23 characters.")
+    .max(23, "Credit card number must be between 13 and 23 characters."),
+  expiry_year: number()
+    .required("Expiration year is required.")
+    .min(1970, "Expiration year must be four digits.")
+    .max(2050, "Expiration year must be four digits."),
+  expiry_month: number()
+    .required("Expiration month is required.")
+    .min(1, "Expiration month must be a number from 1 to 12.")
+    .max(12, "Expiration month must be a number from 1 to 12."),
+})

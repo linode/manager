@@ -1,6 +1,12 @@
 import { API_ROOT } from 'src/constants';
 import Request, { setData, setMethod, setParams, setURL, setXFilter } from 'src/services';
 
+import {
+  CreditCardSchema,
+  ExecutePaypalPaymentSchema,
+  PaymentSchema,
+  StagePaypalPaymentSchema } from './account.schema';
+
 type Page<T> = Linode.ResourcePage<T>;
 
 interface Paypal {
@@ -56,7 +62,7 @@ export const makePayment = (data: { usd: string, ccv: string }) =>
   Request<Linode.Payment>(
     setURL(`${API_ROOT}/account/payments`),
     setMethod('POST'),
-    setData(data),
+    setData(data, PaymentSchema),
   )
     .then(response => response.data)
 
@@ -77,7 +83,7 @@ export const stagePaypalPayment = (data: Paypal) =>
   Request<PaymentID>(
     setURL(`${API_ROOT}/account/payments/paypal`),
     setMethod('POST'),
-    setData(data),
+    setData(data, StagePaypalPaymentSchema),
   )
     .then(response => response.data);
 
@@ -98,7 +104,7 @@ export const executePaypalPayment = (data: ExecutePayload) =>
   Request<{}>(
     setURL(`${API_ROOT}/account/payments/paypal/execute`),
     setMethod('POST'),
-    setData(data),
+    setData(data, ExecutePaypalPaymentSchema),
   )
     .then(response => response.data);
 
@@ -113,6 +119,6 @@ export const executePaypalPayment = (data: ExecutePayload) =>
 export const saveCreditCard = (data: SaveCreditCardData) => Request<{}>(
   setURL(`${API_ROOT}/account/credit-card`),
   setMethod('POST'),
-  setData(data),
+  setData(data, CreditCardSchema),
 )
   .then(response => response.data);
