@@ -6,13 +6,14 @@ import { object, string } from 'yup';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import withEnhancedValidation, { EnhancedValidationProps } from 'src/components/EnhancedValidation';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import TextField from 'src/components/TextField';
 import { withLinode } from 'src/features/linodes/LinodesDetail/context';
 import { updateLinode } from 'src/services/linodes';
-import { defaultOptions, GeneralAPIError, handleFormSubmission, handleTextFieldChange } from 'src/utilities/formikUtil';
+
 
 type ClassNames = 'root';
 
@@ -35,22 +36,34 @@ interface ContextProps {
 }
 
 type CombinedProps = Props
-  & FormikProps<FormValues & GeneralAPIError>
+  & FormikProps<FormValues>
   & ContextProps
-  & WithStyles<ClassNames>;
+  & WithStyles<ClassNames>
+  & EnhancedValidationProps;
 
 export const LinodeSettingsLabelPanel: React.StatelessComponent<CombinedProps> = (props) => {
+
+  const {
+    isSubmitting,
+    handleBlur,
+    handleFormSubmission,
+    handleTextFieldChange,
+    maybeGetErrorText,
+    status,
+    values
+  } = props;
+
   return (
     <ExpansionPanel
       heading="Linode Label"
-      success={props.status && props.status.success && props.status.message}
+      success={status && status.success && status.message}
       actions={() =>
         <ActionsPanel>
           <Button
-            onClick={props.submitForm}
+            onClick={handleFormSubmission}
             type="primary"
-            disabled={props.isSubmitting || !isEmpty(props.errors)}
-            loading={props.isSubmitting}
+            disabled={isSubmitting}
+            loading={isSubmitting}
             data-qa-label-save
           >
             Save
@@ -58,60 +71,49 @@ export const LinodeSettingsLabelPanel: React.StatelessComponent<CombinedProps> =
         </ActionsPanel>
       }
     >
-      {props.status && !props.status.success &&
-        <Notice text={props.status.message} error />
+      {status && !status.success &&
+        <Notice text={status.message} error />
       }
 
       <TextField
         label="Label"
         name="label"
-        value={props.values.label}
-        onChange={(e: any) => handleTextFieldChange(e, props)}
-        onBlur={props.handleBlur}
-        errorText={props.errors.label}
+        value={values.label}
+        onChange={handleTextFieldChange}
+        onBlur={handleBlur}
+        errorText={maybeGetErrorText('label')}
         errorGroup="linode-settings-label"
-        error={Boolean(props.errors.label)}
+        error={!!maybeGetErrorText('label')}
         data-qa-label
       />
     </ExpansionPanel>
   );
 }
 
-const validated = withFormik<Props, FormValues>({
-
-  ...defaultOptions,
-
-  isInitialValid: true,
-
-  mapPropsToValues: (props: Props) => ({
-    label: props.linodeLabel
-  }),
-
-  validationSchema: () => {
-    return object().shape({
-      label: string()
-        .required('Label is required')
-        .matches(/^((?!--|__).)*$/, 'Label must not include two dashes or underscores in a row')
-        .matches(/^[a-zA-Z0-9].+[a-zA-Z0-9]$/, 'Label must begin and end with a letter or number')
-    });
-  },
-
-  handleSubmit: (values: FormValues, formikBag: FormikBag<CombinedProps, FormValues>) => {
-    const { linodeId } = formikBag.props;
-    const { label } = values;
-
-    const successMessage: string = 'Linode label changed successfully.';
-    const request = () => updateLinode(linodeId, { label });
-
-    handleFormSubmission<CombinedProps, FormValues>(request, successMessage, formikBag)
-      .then((linode: Linode.Linode) => {
-        formikBag.props.updateLinode((existingLinode) => ({
-          ...existingLinode,
-          ...linode,
-        }));
-      });
-  }
+const mapPropsToValues = (props: Props) => ({
+  label: props.linodeLabel
 });
+
+const validationSchema = object().shape({
+  label: string()
+    .required('Label is required')
+    .matches(/^((?!--|__).)*$/, 'Label must not include two dashes or underscores in a row')
+    .matches(/^[a-zA-Z0-9].+[a-zA-Z0-9]$/, 'Label must begin and end with a letter or number')
+});
+
+const successMessage = 'Linode label changed successfully.';
+
+const request = (ownProps: any) => updateLinode(
+  ownProps.linodeId,
+  ownProps.values.label)
+  .then(response => response);
+
+  const validated = withEnhancedValidation(
+    mapPropsToValues,
+    validationSchema,
+    request,
+    successMessage
+  );
 
 const styled = withStyles(styles, { withTheme: true });
 

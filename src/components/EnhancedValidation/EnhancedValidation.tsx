@@ -105,11 +105,23 @@ export default (
     }
   }
 
-  return withFormik({
+  const withFormikParams = {
     mapPropsToValues,
-    validate,
     validateOnChange: false,
     isInitialValid: true,
     ...formikOptions
-  })(WrappedComponent as any);
+  };
+
+  // Use Formik's "validate" function if a function was passed in
+  if (typeof validate === 'function') {
+    withFormikParams.validate = validate;
+
+  // Also support accepting a Yup schema
+  } else if (typeof validate === 'object') {
+    withFormikParams.validationSchema = validate;
+  }
+
+  return withFormik(
+    withFormikParams
+  )(WrappedComponent as any);
 }
