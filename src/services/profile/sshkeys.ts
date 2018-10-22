@@ -49,9 +49,27 @@ export const createSSHKey = (data: { label: string, ssh_key: string }) =>
     .then(response => response.data);
 
 /**
- * deleteSSHKeys
+ * updateSSHKey
+ *
+ * Update an existing SSH key. Currently, only the label field can be updated.
+ * 
+ * @param keyId { number } the ID of the key to be updated.
+ * 
+ */
+export const updateSSHKey = (keyId: number, data: Partial<Linode.SSHKey>) =>
+  Request<SSHKey>(
+    setMethod('DELETE'),
+    setURL(`${API_ROOT}/profile/sshkeys/${keyId}`),
+    setData(data, createSSHKeySchema)
+  )
+    .then(response => response.data);
+
+/**
+ * deleteSSHKey
  *
  * Remove a single SSH key from your Profile.
+ * 
+ * @param keyId { number } the ID of the key to be deleted.
  * 
  */
 export const deleteSSHKey = (keyId: number) =>

@@ -1,5 +1,6 @@
 export {
   getProfile,
+  listGrants,
   updateProfile,
 } from './profile';
 
