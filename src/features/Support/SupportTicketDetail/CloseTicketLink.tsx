@@ -59,10 +59,11 @@ class CloseTicketLink extends React.Component<CombinedProps, State> {
     if (this.mounted) { this.setState({ isClosingTicket: true }); }
     closeSupportTicket(ticketId)
       .then(() => {
-        if (!this.mounted) { return; }
-        this.setState({ isClosingTicket: false, dialogOpen: false });
+        if (this.mounted) { 
+          this.setState({ isClosingTicket: false, dialogOpen: false });
+          scrollToTop();
+        }
         closeTicketSuccess();
-        scrollToTop();
     })
       .catch((errorResponse) => {
         const defaultError = [{'reason': 'Your ticket could not be closed.'}];

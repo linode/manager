@@ -7,13 +7,8 @@ import { API_ROOT } from 'src/constants';
 import CloseTicketLink from './CloseTicketLink';
 
 const mockFn = jest.fn(() => Promise.resolve());
-const success = jest.fn();
+const success = jest.fn(() => Promise.resolve());
 const ticketId = 12345;
-
-// mockFn
-//   .mockReturnValueOnce(Promise.resolve({'data':'none'}))
-//   .mockReturnValueOnce(Promise.reject({'errors':[{'reason':'some reason'}]}))
-//   .mockReturnValue(Promise.resolve({'data':'none'}))
 
 jest.mock('axios', () => ({
   default: (config:AxiosRequestConfig) => mockFn(config),
@@ -38,7 +33,7 @@ describe("Ticket reply panel", () => {
     expect(link.text()).toBe('close this ticket');
   })
 
-  it("should open a dropdown when the link is clicked", () => {
+  it("should open a modal when the link is clicked", () => {
     expect(component.state().dialogOpen).toBe(false);
     component.find('[data-qa-close-ticket-link]').simulate('click', {target: {name: 0}});
     expect(component.state().dialogOpen).toBe(true);
@@ -52,7 +47,7 @@ describe("Ticket reply panel", () => {
     });
   });
 
-  it("should display an error message if the request fails", () => {
+  it("should display an error message within the modal", () => {
     component.setState({ ticketCloseError: 'This is an error.' });
     expect(component.find('[data-qa-confirmation-error]')).toHaveLength(1);
   });
