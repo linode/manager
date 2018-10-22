@@ -121,6 +121,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   hivelyImage: {
     width: '25px',
+    margin: 3,
   },
   hivelyContainer: {
     display: 'flex',
@@ -220,19 +221,19 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
           <a href={href + '3'}>
             <img
               className={classes.hivelyImage}
-              src={"https://secure.teamhively.com/system/smileys/icons/000/000/001/px_45/happy_base.png?1468984347"}
+              src={"https://secure.teamhively.com/system/smileys/icons/000/000/541/px_25/icon_positive.png"}
             />
           </a>
           <a href={href + '2'}>
             <img
               className={classes.hivelyImage}
-              src={"https://secure.teamhively.com/system/smileys/icons/000/000/002/px_45/satisfied_base.png?1468984347"}
+              src={"https://secure.teamhively.com/system/smileys/icons/000/000/542/px_25/icon_indifferent.png"}
             />
           </a>
           <a href={href + '1'}>
             <img
               className={classes.hivelyImage}
-              src={"https://secure.teamhively.com/system/smileys/icons/000/000/003/px_45/unhappy_base.png?1468984347"}
+              src={"https://secure.teamhively.com/system/smileys/icons/000/000/543/px_25/icon_negative.png"}
             />
           </a>
         </span>
