@@ -1,4 +1,6 @@
-import { boolean, number, object, string } from 'yup';
+import { array, boolean, mixed, number, object, string } from 'yup';
+
+
 
 export const updateAccountSchema = object({
   email: string()
@@ -85,4 +87,22 @@ export const CreateUserSchema = object({
     .email("Must be a valid email address."),
   restricted: boolean()
     .required("You must indicate if this user should have restricted access.")
+});
+
+const GrantSchema = object({
+  id: number().required("ID is required."),
+  permissions: mixed()
+    .oneOf([null, 'read_only', 'read_write'],
+    "Permissions must be null, read_only, or read_write.")
+})
+
+export const UpdateGrantSchema = object({
+  global: object(),
+  linode: array().of(GrantSchema),
+  domain: array().of(GrantSchema),
+  nodebalancer: array().of(GrantSchema),
+  image: array().of(GrantSchema),
+  longview: array().of(GrantSchema),
+  stackscript: array().of(GrantSchema),
+  volume: array().of(GrantSchema),
 });

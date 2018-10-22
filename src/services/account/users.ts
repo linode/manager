@@ -87,10 +87,12 @@ export const deleteUser = (username: string) =>
 /**
  * getGrants
  *
- * Returns the thumbnail for this OAuth Client.
- * This is a publicly-viewable endpoint, and can be accessed without authentication.
+ * Returns the full grants structure for this User. This includes all entities on
+ * the Account alongside what level of access this User has to each of them. Individual
+ * users may view their own grants at the /profile/grants endpoint,
+ * but will not see entities that they have no access to.
  * 
- * @param clientId { number } ID of the client to be viewed.
+ * @param username { number } the username to look up.
  * 
  */
 export const getGrants = (username: string) =>
@@ -103,10 +105,13 @@ export const getGrants = (username: string) =>
 /**
  * updateGrants
  *
- * Returns the thumbnail for this OAuth Client.
- * This is a publicly-viewable endpoint, and can be accessed without authentication.
+ * Update the grants a User has. This can be used to give a User access
+ * to new entities or actions, or take access away. You do not need to include
+ * the grant for every entity on the Account in this request;
+ * any that are not included will remain unchanged.
  * 
- * @param clientId { number } ID of the client to be viewed.
+ * @param username { number } ID of the client to be viewed.
+ * @param data { object } the Grants object to update.
  * 
  */
 export const updateGrants = (username: string, data: Partial<Linode.Grants>) =>
