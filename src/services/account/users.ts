@@ -55,10 +55,10 @@ export const createUser = (data: Partial<User>) =>
 /**
  * updateUser
  *
- * Returns the thumbnail for this OAuth Client.
- * This is a publicly-viewable endpoint, and can be accessed without authentication.
+ * Update a user's information.
  * 
- * @param clientId { number } ID of the client to be viewed.
+ * @param username { string } username of the user to be updated.
+ * @param data { object } The fields of the user object to be updated.
  * 
  */    
 export const updateUser = (username: string, data: Partial<User>) =>
@@ -72,10 +72,9 @@ export const updateUser = (username: string, data: Partial<User>) =>
 /**
  * deleteUser
  *
- * Returns the thumbnail for this OAuth Client.
- * This is a publicly-viewable endpoint, and can be accessed without authentication.
+ * Remove a single user from your account.
  * 
- * @param clientId { number } ID of the client to be viewed.
+ * @param username { string } username of the user to be deleted.
  * 
  */    
 export const deleteUser = (username: string) =>
