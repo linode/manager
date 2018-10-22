@@ -216,7 +216,7 @@ const validated = withEnhancedValidation(
   successMessage
 );
 
-export default compose<any, any, any, any, any>(
+export default compose(
   errorBoundary,
   styled,
   validated

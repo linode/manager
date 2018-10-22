@@ -15,11 +15,11 @@ export interface EnhancedValidationProps {
 export type ValidationRequest = (ownProps?: any) => any;
 
 export default (
-  mapPropsToValues,
-  validate,
+  mapPropsToValues: any,
+  validate: any,
   requestFn: ValidationRequest,
   successMessage: string,
-  ...formikOptions
+  ...formikOptions: any
   ) => (Component: any) => {
 
   class WrappedComponent extends React.Component<any> {
@@ -111,5 +111,5 @@ export default (
     validateOnChange: false,
     isInitialValid: true,
     ...formikOptions
-  })(WrappedComponent);
+  })(WrappedComponent as any);
 }
