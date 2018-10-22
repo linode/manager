@@ -1,4 +1,5 @@
 import * as classNames from 'classnames';
+import * as moment from 'moment';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 
@@ -137,6 +138,7 @@ interface Props {
   open?: boolean;
   isCurrentUser: boolean;
   parentTicket?: number;
+  ticketUpdated?: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -155,6 +157,7 @@ interface Data {
   from_linode: boolean;
   ticket_id: string;
   reply_id: string;
+  updated: string;
 }
 
 export class ExpandableTicketPanel extends React.Component<CombinedProps, State> {
@@ -180,7 +183,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
   }
 
   getData = () => {
-    const { parentTicket, ticket, reply } = this.props;
+    const { parentTicket, ticket, reply, ticketUpdated } = this.props;
     if (!ticket && !reply) { return; }
     let data: Data;
     if (ticket) {
@@ -193,6 +196,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
         description: ticket.description,
         username: ticket.opened_by,
         from_linode: false,
+        updated: ticket.updated,
       }
     } else if (reply) {
       data = {
@@ -204,10 +208,28 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
         description: reply.description,
         username: reply.created_by,
         from_linode: reply.from_linode,
+        updated: ticketUpdated!,
       }
     }
 
     return data!;
+  }
+
+  shouldRenderHively = (fromLinode: boolean, updated: string) => {
+    /* Render Hively only for replies marked as from_linode,
+    * and are on tickets less than 7 days old.
+    * Defaults to showing Hively if there are any errors parsing dates
+    * or the date is invalid.
+    */ 
+    try {
+      const lastUpdated = moment(updated);
+      if (!lastUpdated.isValid()) { return true; }
+      const diff = moment.duration(moment().diff(lastUpdated));
+      return fromLinode && diff <= moment.duration(7, 'days');
+    }
+    catch {
+      return true;
+    }
   }
 
   renderHively = (linodeUsername: string, ticketId: string, replyId: string) => {
@@ -311,7 +333,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
               </Grid>
             }
           </Grid>
-          {data.from_linode &&
+          {this.shouldRenderHively(data.from_linode, data.updated) &&
             this.renderHively(data.username, data.ticket_id, data.reply_id)
           }
         </Paper>
