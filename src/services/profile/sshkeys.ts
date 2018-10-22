@@ -12,7 +12,7 @@ type SSHKey = Linode.SSHKey;
  * Returns a collection of SSH Keys you've added to your Profile.
  * 
  */
-export const getSSHKeys = (params: any = {}, filters: any = {}) =>
+export const getSSHKeys = (params?: any, filters?: any) =>
   Request<Page<SSHKey>>(
     setMethod('GET'),
     setParams(params),
@@ -24,7 +24,7 @@ export const getSSHKeys = (params: any = {}, filters: any = {}) =>
 /**
  * getSSHKey
  *
- * View a single SSH key by ID
+ * View a single SSH key by ID.
  * 
  */
 export const getSSHKey = (keyId:number) =>

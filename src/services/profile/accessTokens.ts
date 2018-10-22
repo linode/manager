@@ -18,7 +18,7 @@ export interface TokenRequest {
  * Returns a paginated list of Personal Access Tokens currently active for your User.
  *
  */
-export const getPersonalAccessTokens = (params: any = {}, filters: any = {}) =>
+export const getPersonalAccessTokens = (params?: any, filters?: any) =>
   Request<Page<Token>>(
     setMethod('GET'),
     setParams(params),
