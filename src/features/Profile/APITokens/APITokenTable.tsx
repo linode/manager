@@ -215,7 +215,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
   revokePersonalAccessToken = () => {
     const { dialog } = this.state;
     deletePersonalAccessToken(dialog.id as number)
-      .then(() => this.props.request())
+      .then(() => this.props.onDelete())
       .then(() => this.closeRevokeDialog())
       .catch((err: any) => this.showDialogError(err))
   }
@@ -223,7 +223,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
   revokeAppToken = () => {
     const { dialog } = this.state;
     deleteAppToken(dialog.id as number)
-    .then(() => this.props.request())
+    .then(() => this.props.onDelete())
     .then(() => { this.closeRevokeDialog(); })
     .catch((err: any) => this.showDialogError(err))
   }

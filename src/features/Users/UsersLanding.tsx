@@ -28,7 +28,6 @@ import TableRowLoading from 'src/components/TableRowLoading';
 import { deleteUser, getUsers } from 'src/services/account';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import scrollToTop from 'src/utilities/scrollToTop';
 
 import CreateUserDrawer from './CreateUserDrawer';
 import UserDeleteConfirmationDialog from './UserDeleteConfirmationDialog';
@@ -165,10 +164,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
 
     deleteUser(username)
       .then(() => {
-        this.props.request()
-          .then(() => {
-            scrollToTop();
-          });
+        this.props.onDelete();
       })
       .catch(() => {
         this.setState({
