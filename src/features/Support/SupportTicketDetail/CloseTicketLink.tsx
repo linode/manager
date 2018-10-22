@@ -36,7 +36,7 @@ class CloseTicketLink extends React.Component<CombinedProps, State> {
   }
 
   componentWillUnmount() {
-    this.mounted = true;
+    this.mounted = false;
   }
 
   openConfirmationDialog = () => {
