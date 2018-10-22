@@ -21,7 +21,7 @@ const getStatusFilter = (ticketStatus: 'open' | 'closed' | 'all') => {
     case 'all':
       return {};
     default:
-      return new Error('Argument must be "open", "closed", or "null"');
+      return new Error('Argument must be "open", "closed", or "all"');
   }
 }
 
@@ -30,16 +30,15 @@ const getStatusFilter = (ticketStatus: 'open' | 'closed' | 'all') => {
  *
  * Retrieve a single page of support tickets.
  * 
- * @param pagination { Object } any parameters to be sent with the request
- * @param pagination.page { number } the page number to be returned
- * @param pagination.pageSize { number } the number of results to include in the page
+ * @param params { Object } parameters to pass to the API; in most cases these will be pagination parameters
+ * @param filters { Object } filters to be passed as the X-Filter header to the API.
  * @param ticketStatus { string } status of the tickets to return (open, closed, or all).
  * 
  * @example getTicketsPage({page: 1, pageSize: 25}, false);
  */
-export const getTicketsPage = (pagination: Linode.PaginationOptions = {}, ticketStatus: 'open' | 'closed' | 'all') => {
+export const getTicketsPage = (params: any, filters: any, ticketStatus: 'open' | 'closed' | 'all') => {
   const status = getStatusFilter(ticketStatus);
   const ordering = {'+order_by': 'updated', '+order': 'desc'};
-  const filter = { ...status, ...ordering};
-  return getTickets(pagination, filter).then((response) => response.data);
+  const filter = { ...status, ...ordering, ...filters};
+  return getTickets(params, filter).then((response) => response.data);
 }
