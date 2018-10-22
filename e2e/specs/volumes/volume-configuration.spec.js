@@ -25,7 +25,7 @@ describe('Volume Configuration Panel', () => {
     it('should display the configuration drawer', () => {
         const volumeElement = VolumeDetail.volumeCell[0];
         VolumeDetail.selectActionMenuItem(volumeElement, 'Show Configuration');
-        VolumeDetail.drawerTitle.waitForVisible();
+        VolumeDetail.drawerTitle.waitForVisible(constants.wait.normal);
     });
 
     it('should show the volume configuration', () => {
