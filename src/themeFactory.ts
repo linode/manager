@@ -163,8 +163,11 @@ const themeDefaults: ThemeOptions = {
     fontSize: 16,
     headline: {
       color: primaryColors.headline,
-      fontSize: '1.5rem',
+      fontSize: '1rem',
       fontFamily: 'LatoWebBold',
+      [breakpoints.up('lg')]: {
+        fontSize: '1.5rem',
+      },
     },
     title: {
       color: primaryColors.headline,

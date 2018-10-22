@@ -1,5 +1,5 @@
-import { storiesOf } from '@storybook/react';
 import * as React from 'react';
+import { storiesOf } from '@storybook/react';
 
 import ThemeDecorator from '../utilities/storybookDecorators';
 import Typography from '@material-ui/core/Typography';
