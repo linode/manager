@@ -39,7 +39,17 @@ export default () => (WrappedComponent: React.ComponentType<any>) => {
         ))
         .merge(updateVolumes$)
         .subscribe((event: Linode.Event) => {
-          const entityId = event.entity!.id
+          /**
+           * This solves for one scenario - we're editing the Volume label
+           * and we want to force a refresh after submitting the form
+           * 
+           * @todo remove/refactor this functionality once a unified volumes platform is developed
+           */
+          if (!event.entity) {
+            return this.props.request();
+          }
+
+          const entityId = event.entity.id;
 
           /*
            * If we're deleting a Volume, don't do anything fancy.
