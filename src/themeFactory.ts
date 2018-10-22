@@ -206,6 +206,9 @@ const themeDefaults: ThemeOptions = {
       },
     },
     MuiButton: {
+      label: {
+        position: 'relative',
+      },
       root: {
         textTransform: 'inherit',
         borderRadius: 0,
@@ -225,6 +228,9 @@ const themeDefaults: ThemeOptions = {
         '&$disabled': {
           color: '#bbb',
         },
+        '&.loading': {
+          color: primaryColors.text,
+        },
       },
       flat: {
         '&.cancel:hover': {
@@ -240,6 +246,9 @@ const themeDefaults: ThemeOptions = {
         },
         '&$disabled': {
           color: 'white',
+        },
+        '&.loading': {
+          backgroundColor: primaryColors.text,
         },
         '&.cancel': {
           '&:hover, &:focus': {
@@ -289,6 +298,8 @@ const themeDefaults: ThemeOptions = {
           },
         },
         '&.loading': {
+          borderColor: primaryColors.text,
+          color: primaryColors.text,
           minWidth: 100,
           '& svg': {
             width: 22,
@@ -543,7 +554,8 @@ const themeDefaults: ThemeOptions = {
         lineHeight: 1.4,
       },
       focused: {
-        borderColor: '#999',
+        borderColor: primaryColors.main,
+        boxShadow: '0 0 2px 1px #e1edfa',
       },
       error: {
         borderColor: '#CA0813',
@@ -633,18 +645,22 @@ const themeDefaults: ThemeOptions = {
           boxShadow: 'none',
           position: 'absolute',
           boxSizing: 'content-box',
-          border: '1px solid #999',
+          border: `1px solid ${primaryColors.main}`,
           margin: '0 0 0 -1px',
           outline: 0,
+          borderRadius: 0,
         },
         '& .selectMenuList': {
           maxHeight: 250,
           overflowY: 'auto',
           overflowX: 'hidden',
           boxSizing: 'content-box',
+          padding: 4,
           '& li': {
             color: primaryColors.text,
-            '&:hover, &:focus': {
+            paddingLeft: 12,
+            paddingRight: 12,
+            '&:hover': {
               color: 'white',
             },
           },
@@ -663,8 +679,8 @@ const themeDefaults: ThemeOptions = {
         textOverflow: 'initial',
         color: primaryColors.main,
         transition: `${'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), '}
-          ${'color .2s cubic-bezier(0.4, 0, 0.2, 1)'}`,
-        '&:hover, &:focus': {
+        ${'color .2s cubic-bezier(0.4, 0, 0.2, 1)'}`,
+        '&:hover': {
           backgroundColor: primaryColors.main,
           color: 'white',
         },
@@ -676,9 +692,6 @@ const themeDefaults: ThemeOptions = {
         backgroundColor: 'white !important',
         color: `${primaryColors.main} !important`,
         opacity: 1,
-        '&:focus': {
-          backgroundColor: '#f4f4f4 !important',
-        },
       },
     },
     MuiPaper: {
@@ -698,7 +711,7 @@ const themeDefaults: ThemeOptions = {
     },
     MuiSelect: {
       selectMenu: {
-        padding: '5px 32px 5px 16px',
+        padding: '6px 32px 5px 16px',
         color: primaryColors.text,
         backgroundColor: '#fff',
         lineHeight: 2.3,

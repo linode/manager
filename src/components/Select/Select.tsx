@@ -20,7 +20,7 @@ type ClassNames = 'inputSucess'
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   inputError: {
-    borderColor: theme.color.red,
+    borderColor: `${theme.color.red} !important`,
     '&[class*="focused"]': {
       borderColor: theme.color.red,
     },
@@ -33,7 +33,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     lineHeight: '1em',
   },
   inputSucess: {
-    borderColor: theme.color.green,
+    borderColor: `${theme.color.green} !important`,
     '&[class*="focused"]': {
       borderColor: theme.color.green,
     },
@@ -92,7 +92,14 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
     anchorOrigin: { vertical: 'bottom', horizontal: 'left' },
     transformOrigin: { vertical: 'top', horizontal: 'left' },
     MenuListProps: { className: 'selectMenuList' },
-    PaperProps: { className: 'selectMenuDropdown' },
+    PaperProps: {
+      className: classNames(
+        'selectMenuDropdown',
+        {
+          [classes.inputSucess]: success === true,
+          [classes.inputError]: error === true,
+        })
+    },
     TransitionComponent: Fade,
   };
 

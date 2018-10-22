@@ -35,7 +35,7 @@ describe('Password Input Suite', () => {
     });
 
     it('should update the strength when complexity of password increases', () => {
-        const testPasswords = ['weak', 'stronger1233', 'Stronger123#!', 'StrongesT#123.Thing#24'];
+        const testPasswords = ['weak', 'stronger1233', 'Stronger123#!'];
         testPasswords.forEach((pass, index) => {
             browser.setValue(passwordInput, pass);
             const strengthDisplays = $(strengthIndicator).isVisible();

@@ -99,6 +99,9 @@ export const dark = createTheme({
       },
     },
     MuiButton: {
+      label: {
+        position: 'relative',
+      },
       root: {
         color: primaryColors.main,
         '&:hover': {
@@ -110,6 +113,9 @@ export const dark = createTheme({
         '&$disabled': {
           color: '#888',
         },
+        '&.loading': {
+          color: primaryColors.text,
+        },
       },
       raisedPrimary: {
         '&:hover, &:focus': {
@@ -120,6 +126,9 @@ export const dark = createTheme({
         },
         '&$disabled': {
           color: '#888',
+        },
+        '&.loading': {
+          backgroundColor: primaryColors.text,
         },
         '&.cancel': {
           '&:hover, &:focus': {
@@ -161,6 +170,21 @@ export const dark = createTheme({
             borderColor: '#963530',
           },
         },
+        '&.loading': {
+          borderColor: primaryColors.text,
+          color: primaryColors.text,
+          minWidth: 100,
+          '& svg': {
+            width: 22,
+            height: 22,
+            animation: 'rotate 2s linear infinite',
+          },
+        },
+      },
+    },
+    MuiButtonBase: {
+      root: {
+        fontSize: '1rem',
       },
     },
     MuiCardHeader: {
@@ -291,7 +315,7 @@ export const dark = createTheme({
         },
       },
       focused: {
-        borderColor: '#606469',
+        borderColor: primaryColors.main,
       },
       disabled: {
         borderColor: '#606469',
@@ -317,11 +341,30 @@ export const dark = createTheme({
     MuiMenu: {
       paper: {
         '&.selectMenuDropdown': {
-          border: '1px solid #606469',
+          boxShadow: 'none',
+          position: 'absolute',
+          boxSizing: 'content-box',
+          border: `1px solid ${primaryColors.main}`,
+          margin: '0 0 0 -1px',
+          outline: 0,
+          borderRadius: 0,
         },
         '& .selectMenuList': {
+          maxHeight: 250,
+          overflowY: 'auto',
+          overflowX: 'hidden',
+          boxSizing: 'content-box',
+          padding: 4,
           '& li': {
             color: primaryColors.text,
+            paddingLeft: 12,
+            paddingRight: 12,
+            '&:hover, &:focus': {
+              color: 'white',
+            },
+          },
+          [breakpoints.down('xs')]: {
+            minWidth: 200,
           },
         },
       },
@@ -355,6 +398,7 @@ export const dark = createTheme({
     },
     MuiSelect: {
       selectMenu: {
+        padding: '6px 32px 5px 16px',
         color: primaryColors.text,
         backgroundColor: '#444',
         '&:focus': {
