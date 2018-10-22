@@ -1,6 +1,6 @@
 import { API_ROOT } from 'src/constants';
 
-import Request, { setData, setMethod, setParams, setURL, setXFilter } from '../index';
+import Request, { setMethod, setParams, setURL, setXFilter } from '../index';
 
 type Page<T> = Linode.ResourcePage<T>;
 export interface Token {
@@ -40,35 +40,6 @@ export const getAppToken = (tokenId: number) =>
   Request<Token>(
     setMethod('GET'),
     setURL(`${API_ROOT}/profile/apps/${tokenId}`),
-  )
-    .then(response => response.data);
-
-
-/**
- * createAppToken
- *
- * Generate an App Token to authorize an external app to access your account.
- *
- */
-export const createAppToken = (data: Token) =>
-  Request<Token>(
-    setMethod('POST'),
-    setURL(`${API_ROOT}/profile/apps`),
-    setData(data),
-  )
-    .then(response => response.data);
-
-/**
- * updateAppToken
- *
- * @todo I don't think this is really a thing either.
- *
- */
-export const updateAppToken = (tokenId: number, data: Partial<Token>) =>
-  Request<Token>(
-    setURL(`${API_ROOT}/profile/apps/${tokenId}`),
-    setMethod('PUT'),
-    setData(data),
   )
     .then(response => response.data);
 
