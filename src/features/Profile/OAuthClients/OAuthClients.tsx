@@ -112,7 +112,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
 
   deleteClient = (id: string) => {
     deleteOAuthClient(id)
-      .then(() => this.props.request());
+      .then(() => this.props.onDelete());
   }
 
   resetSecret = (id: string) => {
