@@ -14,7 +14,6 @@ import TextField from 'src/components/TextField';
 import { withLinode } from 'src/features/linodes/LinodesDetail/context';
 import { updateLinode } from 'src/services/linodes';
 
-
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = () => ({
@@ -108,12 +107,12 @@ const request = (ownProps: any) => updateLinode(
   ownProps.values.label)
   .then(response => response);
 
-  const validated = withEnhancedValidation(
-    mapPropsToValues,
-    validationSchema,
-    request,
-    successMessage
-  );
+const validated = withEnhancedValidation(
+  mapPropsToValues,
+  validationSchema,
+  request,
+  successMessage
+);
 
 const styled = withStyles(styles, { withTheme: true });
 
