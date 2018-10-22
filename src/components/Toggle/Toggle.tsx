@@ -7,10 +7,9 @@ import Switch, { SwitchProps } from '@material-ui/core/Switch';
 import ToggleOff from 'src/assets/icons/toggleOff.svg';
 import ToggleOn from 'src/assets/icons/toggleOn.svg';
 
+import HelpIcon from 'src/components/HelpIcon';
+
 import './toggle.css';
-
-
-
 
 type CSSClasses =
   'root'
@@ -25,10 +24,14 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   disabled: {},
 });
 
-type CombinedProps = SwitchProps & WithStyles<CSSClasses>;
+interface Props {
+  tooltipText?: string;
+}
+
+type CombinedProps = Props & SwitchProps & WithStyles<CSSClasses>;
 
 const LinodeSwitchControl: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, ...rest } = props;
+  const { classes, tooltipText, ...rest } = props;
 
   const classnames = classNames({
     [classes.root]: true,
@@ -37,12 +40,15 @@ const LinodeSwitchControl: React.StatelessComponent<CombinedProps> = (props) => 
   });
 
   return (
-    <Switch
-      className={classnames}
-      icon={<ToggleOff />}
-      checkedIcon={<ToggleOn />}
-      {...rest}
-    />
+    <React.Fragment>
+      <Switch
+        className={classnames}
+        icon={<ToggleOff />}
+        checkedIcon={<ToggleOn />}
+        {...rest}
+      />
+      {tooltipText && <HelpIcon text={tooltipText} />}
+    </React.Fragment>
   );
 };
 

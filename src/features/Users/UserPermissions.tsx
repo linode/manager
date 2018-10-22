@@ -91,6 +91,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 
 interface Props {
   username?: string;
+  currentUser?: string;
   clearNewUser: () => void;
 }
 
@@ -723,7 +724,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   }
 
   renderBody = () => {
-    const { classes } = this.props;
+    const { classes, currentUser, username } = this.props;
     const { restricted, errors } = this.state;
     const hasErrorFor = getAPIErrorsFor({ restricted: "Restricted" }, errors,)
     const generalError = hasErrorFor('none');
@@ -733,28 +734,32 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         {generalError &&
           <Notice error text={generalError} spacingTop={8} />
         }
-          <Grid container alignItems="center" style={{ width: 'auto' }}>
-            <Grid item>
-              <Typography role="header" variant="title" data-qa-restrict-access={restricted}>
-                Restrict Access:
+        <Grid container alignItems="center" style={{ width: 'auto' }}>
+          <Grid item>
+            <Typography role="header" variant="title" data-qa-restrict-access={restricted}>
+              Restrict Access:
               </Typography>
-            </Grid>
-            <Grid item>
-              <Typography role="header" variant="title">
-                {restricted
-                  ? 'On'
-                  : 'Off'
-                }
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Toggle
-                checked={restricted}
-                onChange={this.onChangeRestricted}
-                className={classes.toggle}
-              />
-            </Grid>
           </Grid>
+          <Grid item>
+            <Typography role="header" variant="title">
+              {restricted
+                ? 'On'
+                : 'Off'
+              }
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Toggle
+              tooltipText={(username === currentUser)
+                ? 'You cannot restrict yourself'
+                : ''}
+              disabled={username === currentUser}
+              checked={restricted}
+              onChange={this.onChangeRestricted}
+              className={classes.toggle}
+            />
+          </Grid>
+        </Grid>
         {restricted
           ? this.renderPermissions()
           : this.renderUnrestricted()
