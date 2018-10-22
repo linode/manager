@@ -49,7 +49,8 @@ type ClassNames =
   | 'switchWrapper'
   | 'toggle'
   | 'switchText'
-  | 'spacer';
+  | 'spacer'
+  | 'listItemAccount';
 
   const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   menuGrid: {
@@ -81,6 +82,7 @@ type ClassNames =
     transition: theme.transitions.create(['background-color', 'border-left-color']),
     flexShrink: 0,
     '&:hover': {
+      borderLeftColor: 'rgba(0, 0, 0, 0.1)',
       '& $linkItem': {
         color: 'white',
       },
@@ -90,6 +92,11 @@ type ClassNames =
         color: 'white',
         zIndex: 2,
       },
+    },
+  },
+  listItemAccount: {
+    '&:hover': {
+      borderLeftColor: 'transparent',
     },
   },
   collapsible: {
@@ -306,6 +313,7 @@ class PrimaryNav extends React.Component<CombinedProps, State> {
                 onClick={this.expandMenutItem}
                 className={classNames({
                   [classes.listItem]: true,
+                  [classes.listItemAccount]: true,
                   [classes.collapsible]: true,
                 })}
               >
