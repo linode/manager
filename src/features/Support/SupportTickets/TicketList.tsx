@@ -143,8 +143,11 @@ class TicketList extends React.Component<CombinedProps, {}> {
 }
 
 const updatedRequest = (ownProps: Props, params: any, filters: any) => {
-  return getTicketsPage(params, filters, ownProps.filterStatus)
-    .then(response => response)
+  return {
+    request: () => getTicketsPage(params, filters, ownProps.filterStatus)
+      .then(response => response),
+    cancel: null,
+  }
 }
 
 const paginated = Pagey(updatedRequest);
