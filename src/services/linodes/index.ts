@@ -1,6 +1,5 @@
 export {
   getLinodes,
-  getLinodesPage,
   getLinode,
   getLinodeLishToken,
   getLinodeVolumes,
