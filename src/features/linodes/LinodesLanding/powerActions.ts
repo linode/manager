@@ -36,7 +36,7 @@ export const genEvent = (
 export type LinodePowerAction = (id: string | number, label: string, config_id?: number) => void;
 
 const _rebootLinode: LinodePowerAction = (id, label, config_id) => {
-  linodeReboot(id, { config_id })
+  linodeReboot(id, config_id)
   .then((response) => {
     events$.next(genEvent('linode_reboot', id, label));
     resetEventsPolling();

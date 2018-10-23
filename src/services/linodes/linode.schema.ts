@@ -57,4 +57,24 @@ export const UpdateLinodeSchema = object({
   watchdog_enabled: boolean().notRequired(),
   alerts: alerts.notRequired(),
   backups: backups.notRequired(),
-})
+});
+
+const SSHKeySchema = object({
+  id: number(),
+  label: string(),
+  ssh_key: string(),
+  created: string(),
+});
+
+export const RebuildLinodeSchema = object({
+  image: string().required('An image is required.'),
+  root_pass: string()
+    .required('Root password is required.')
+    .min(6, "Password must be between 6 and 128 characters.")
+    .max(128, "Password must be between 6 and 128 characters."),
+  authorized_keys: array().of(SSHKeySchema),
+  authorized_users: array().of(string()),
+  stackscript_id: number().notRequired(),
+  stackscript_data: array().of(object()),
+  booted: boolean().notRequired()
+});
