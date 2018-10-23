@@ -215,7 +215,9 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
             notice={{
               level: 'warning',
               text: `This newly created Linode wil be created with
-                      the same password and SSH Keys (if any) as the original Linode`,
+                      the same password and SSH Keys (if any) as the original Linode.
+                      Also note that this Linode will need to be manual booted after it finishes
+                      provisioning`,
             }}
             selectedBackupFromQuery={this.state.selectedBackupIDFromQueryString}
             selectedLinodeFromQuery={this.state.selectedLinodeIDFromQueryString}
