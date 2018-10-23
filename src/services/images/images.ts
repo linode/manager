@@ -1,26 +1,29 @@
 import { API_ROOT } from 'src/constants';
 import Request, { setData, setMethod, setParams, setURL, setXFilter } from 'src/services';
+import { createImageSchema, updateImageSchema } from './image.schema';
 
 type Page<T> = Linode.ResourcePage<T>;
 type Image = Linode.Image;
 
 /**
- * Get a single page of images.
+ * Get information about a single Image.
  *
- * @param page { Number } the page to retrieve
- * @param filter { Object } JSON object to pass as the X-Filter header
- *
- * @example getImagesPage(1, {"is_public": true})
+ * @param imageId { string } ID of the Image to look up.
  */
-export const getImagesPage = (page: number, filter: object = {}) =>
-  Request<Page<Image>>(
-    setURL(`${API_ROOT}/images`),
+export const getImage = (imageId: string) =>
+  Request<Image>(
+    setURL(`${API_ROOT}/images/${imageId}`),
     setMethod('GET'),
-    setParams({ page }),
-    setXFilter(filter),
   )
-    .then(response => response.data);
+  .then(response => response.data);
 
+/**
+ * Returns a paginated list of Images.
+ *
+ * @param pagination { Object }
+ * @param pagination.page { number }
+ * @param pagination.pageSize { number }
+ */
 export const getImages = (pagination: any = {}, filters: any = {}) =>
   Request<Page<Image>>(
     setURL(`${API_ROOT}/images`),
@@ -28,37 +31,68 @@ export const getImages = (pagination: any = {}, filters: any = {}) =>
     setParams(pagination),
     setXFilter(filters),
   )
-  .then(response => response.data); 
+  .then(response => response.data);
 
+// Convenience method
 export const getLinodeImages = () =>
-  getImagesPage(1, { "is_public": true });
+  getImages({ page: 1 }, { "is_public": true });
 
-export const getImage = (imageId: string) =>
-  Request<Image>(
-    setURL(`${API_ROOT}/images/${imageId}`),
-    setMethod('GET'),
-  )
-    .then(response => response.data);
+/**
+ * Create a private gold-master Image from a Linode Disk.
+ *
+ * @param diskId { number } The ID of the Linode Disk that this Image will be created from.
+ * @param label { string } A short description of the Image. Labels cannot contain special characters.
+ * @param description { string } A detailed description of this Image.
+ */
+export const createImage = (
+  diskId: number,
+  label?: string,
+  description?: string
+) => {
 
-export const updateImage = (imageId: string, label: string, description: string) =>
-  Request<Image>(
+  const data = {
+    disk_id: diskId,
+    ...(label && { label }),
+    ...(description && { description: getSafeDescription(description) })
+  };
+
+  return Request<Image>(
+    setURL(`${API_ROOT}/images`),
+    setMethod('POST'),
+    setData(data, createImageSchema)
+  );
+};
+
+/**
+ * Updates a private Image that you have permission to read_write.
+ *
+ * @param imageId { string } ID of the Image to look up.
+ * @param label { string } A short description of the Image. Labels cannot contain special characters.
+ * @param description { string } A detailed description of this Image.
+ */
+export const updateImage = (
+  imageId: string,
+  label?: string,
+  description?: string
+) => {
+
+  const data = {
+    ...(label && { label }),
+    ...(description && { description: getSafeDescription(description) })
+  };
+
+  return Request<Image>(
     setURL(`${API_ROOT}/images/${imageId}`),
     setMethod('PUT'),
-    setData({ label, description: getSafeDescription(description) }),
+    setData(data, updateImageSchema)
   );
+};
 
-export const createImage = (
-  diskID: number,
-  label: string,
-  description: string,
-) => Request<Image>(
-  setURL(`${API_ROOT}/images`),
-  setMethod('POST'),
-  setData({ disk_id: diskID,
-            label,
-            description: getSafeDescription(description) }),
-  );
-
+/**
+ * Delete a private Image you have permission to read_write.
+ *
+ * @param imageId { string } the ID of the image to delete
+ */
 export const deleteImage = (imageId: string) => {
   return Request<{}>(
     setURL(`${API_ROOT}/images/${imageId}`),
