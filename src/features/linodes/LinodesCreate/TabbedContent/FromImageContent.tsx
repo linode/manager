@@ -13,8 +13,9 @@ import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPa
 import { resetEventsPolling } from 'src/events';
 import { Info } from 'src/features/linodes/LinodesCreate/LinodesCreate';
 import userSSHKeyHoc from 'src/features/linodes/userSSHKeyHoc';
-import { allocatePrivateIP, createLinode } from 'src/services/linodes';
+import { createLinode } from 'src/services/linodes';
 
+import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 

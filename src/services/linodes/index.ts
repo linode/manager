@@ -39,9 +39,8 @@ export {
 } from './linodeDisks';
 
 export {
+  allocateIPAddress,
   getLinodeIPs,
-  allocatePrivateIP,
-  allocatePublicIP,
 } from './linodeIPs';
 
 export {
