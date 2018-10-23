@@ -163,7 +163,9 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
             if(!this.mounted){ return; }
 
             this.setState({
-              errors: [{ field: 'label', reason: 'Label cannot be blank.' }],
+              errors: pathOr([
+                { reason: 'Unable to edit image' }],
+                ['response', 'data', 'errors'], errorResponse),
             });
           });
         return;
@@ -356,7 +358,8 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
             color="primary"
             data-qa-submit
           >
-            Create
+            {mode === modes.CREATING && 'Create'}
+            {mode === modes.EDITING && 'Submit'}
           </Button>
           <Button
             onClick={this.close}

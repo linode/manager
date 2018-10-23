@@ -6,9 +6,9 @@ export const createImageSchema = object().shape({
     .required('Disk is required'),
   label: string()
     .notRequired()
-    .min(1)
-    .max(50)
-    .matches(/^[a-zA-Z0-9,.?\-_']+$/),
+    .min(1, 'Length must be 1-50 characters')
+    .max(50, 'Length must be 1-50 characters')
+    .matches(/^[a-zA-Z0-9,.?\-_']+$/, 'Image labels can not contain special characters.'),
   description: string()
     .notRequired()
     .min(1)
@@ -18,11 +18,11 @@ export const createImageSchema = object().shape({
 export const updateImageSchema = object().shape({
   label: string()
     .notRequired()
-    .min(1)
-    .max(50)
-    .matches(/^[a-zA-Z0-9,.?\-_']+$/),
+    .min(1, 'Length must be 1-50 characters')
+    .max(50, 'Length must be 1-50 characters')
+    .matches(/^[a-zA-Z0-9,.?\-_']+$/, 'Image labels can not contain special characters.'),
   description: string()
     .notRequired()
-    .min(1)
-    .max(65000)
+    .min(1, 'Length must be 1-50 characters')
+    .max(65000, 'Length must be 1-65000 characters')
 });
