@@ -1,7 +1,7 @@
 import { API_ROOT } from 'src/constants';
 import Request, { setData, setMethod, setParams, setURL, setXFilter } from 'src/services';
 
-import { CreateUserSchema } from './account.schema';
+import { CreateUserSchema, UpdateUserSchema } from './account.schema';
 
 type Page<T> = Linode.ResourcePage<T>;
 type User = Linode.User;
@@ -48,7 +48,7 @@ export const createUser = (data: Partial<User>) =>
   Request<User>(
     setURL(`${API_ROOT}/account/users`),
     setMethod('POST'),
-    setData(data),
+    setData(data, CreateUserSchema),
   )
     .then(response => response.data);
 
@@ -65,7 +65,7 @@ export const updateUser = (username: string, data: Partial<User>) =>
   Request<User>(
     setURL(`${API_ROOT}/account/users/${username}`),
     setMethod('PUT'),
-    setData(data, CreateUserSchema),
+    setData(data, UpdateUserSchema),
   )
     .then(response => response.data);
 

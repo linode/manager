@@ -1,7 +1,5 @@
 import { array, boolean, mixed, number, object, string } from 'yup';
 
-
-
 export const updateAccountSchema = object({
   email: string()
     .max(128, "Email must be 128 characters or less."),
@@ -87,6 +85,15 @@ export const CreateUserSchema = object({
     .email("Must be a valid email address."),
   restricted: boolean()
     .required("You must indicate if this user should have restricted access.")
+});
+
+export const UpdateUserSchema = object({
+  username: string()
+  .min(3, "Username must be between 3 and 32 characters.")
+  .max(32, "Username must be between 3 and 32 characters."),
+  email: string()
+    .email("Must be a valid email address."),
+  restricted: boolean()
 });
 
 const GrantSchema = object({
