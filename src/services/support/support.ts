@@ -94,6 +94,22 @@ export const createSupportTicket = (data: TicketRequest) =>
   ).then(response => response.data)
 
 /**
+ * closeSupportTicket
+ *
+ * Close a single support ticket. This will only succeed if the ticket 
+ * is marked as "closable," which is a field on the ticket object. Tickets 
+ * opened by Linode are generally not closable through the API.
+ * 
+ * @param ticketID { Number } the ID of the ticket to be closed
+ * 
+ */
+export const closeSupportTicket = (ticketId: number) =>
+  Request<{}>(
+  setURL(`${API_ROOT}/support/tickets/${ticketId}/close`),
+  setMethod('POST'),
+).then(response => response.data);
+
+/**
  * createReply
  *
  * Reply to a support ticket.

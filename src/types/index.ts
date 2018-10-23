@@ -143,6 +143,7 @@ namespace Linode {
     opened: string;
     id: number;
     closed: string | null;
+    closable: boolean;
     description: string;
     entity: any | null;
     gravatar_id: string;
