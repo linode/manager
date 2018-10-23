@@ -178,7 +178,7 @@ class Example extends React.Component<{},State> {
   }
 }
 
-storiesOf('Enhanced Select', module)
+storiesOf('Forms/Enhanced Select', module)
   .addDecorator(ThemeDecorator)
   .add('Example', () => (
     <Example />

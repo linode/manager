@@ -63,7 +63,7 @@ class Example extends React.Component<any, State> {
   }
 }
 
-storiesOf('Select', module)
+storiesOf('Forms/Select', module)
   .addDecorator(ThemeDecorator)
   .add('Example', () => (
     <Grid container style={{ padding: 16 }}>

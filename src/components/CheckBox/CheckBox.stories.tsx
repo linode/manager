@@ -87,7 +87,7 @@ class InteractiveCheckboxes extends React.Component {
   }
 }
 
-storiesOf('CheckBox', module)
+storiesOf('Forms/CheckBox', module)
 .addDecorator(ThemeDecorator)
 .add('Interactive', () => (
   <InteractiveCheckboxes />
