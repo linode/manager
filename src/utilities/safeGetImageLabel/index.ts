@@ -1,0 +1,1 @@
+export { safeGetImageLabel } from './safeGetImageLabel';

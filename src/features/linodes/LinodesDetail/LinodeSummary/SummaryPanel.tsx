@@ -6,9 +6,14 @@ import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
+import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/Grid';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
+
 import { formatRegion } from 'src/utilities';
+import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
+
+import { getImages } from 'src/services/images';
 
 type ClassNames = 'root'
   | 'title'
@@ -54,67 +59,122 @@ interface Props {
   typesLongLabel: string;
 }
 
+interface State {
+  images: {
+    loading: boolean;
+    data?: Linode.Image[];
+    error?: Error;
+  }
+}
+
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const SummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, linode, image, volumes, typesLongLabel } = props;
-  return (
-    <Paper className={classes.root}>
-      <Grid container>
-        <Grid item xs={12}>
-          <Typography
-            role="header"
-            variant="headline"
-            className={classes.title}
-            data-qa-title
-          >
-            Summary
-          </Typography>
-        </Grid>
-        <Grid item xs={12} sm={6} lg={4}>
-          <Typography className={classes.section} variant="caption">
-            {image
-              ? <span>{image.label} {image.description}</span>
-              : linode.image
-                ? <span>{linode.image}</span>
-                : <span>Unknown Image</span>
-            }
-          </Typography>
-          <Typography className={classes.section} variant="caption">
-            {<span>
-              {typesLongLabel}
-            </span>}
-          </Typography>
-        </Grid>
-        <Grid item xs={12} sm={6} lg={4}>
-          <Typography className={classes.section} variant="caption">
-            <IPAddress ips={linode.ipv4} copyRight />
-          </Typography>
-          {
-            linode.ipv6 &&
-            <Typography className={classes.section} variant="caption">
-              <IPAddress ips={[linode.ipv6]} copyRight />
+class SummaryPanel extends React.Component<CombinedProps, State> {
+  state: State = {
+    images: {
+      loading: false,
+    }
+  }
+
+  componentDidMount() {
+    this.getImages();
+  }
+
+  getImages = () => {
+    if (this.state.images.loading === false) {
+      this.setState({ images: { ...this.state.images, loading: true } });
+    }
+
+    return getImages()
+      .then(response => this.setState({
+        images: {
+          ...this.state.images,
+          loading: false,
+          data: response.data,
+        }
+      }))
+      .catch(response => this.setState({
+        images: {
+          ...this.state.images,
+          loading: false,
+          error: new Error('Unable to load image data.'),
+        }
+      }))
+  }
+
+  renderImage = () => {
+    const { images } = this.state;
+    const { linode } = this.props;
+
+    if (images.loading) {
+      return <CircleProgress mini />
+    }
+
+    if (images.error) {
+      return <span>Unknown Image</span>
+    }
+
+    return (!!images.data && !!linode)
+      ? <span>{safeGetImageLabel(images.data, linode.image)}</span>
+      : <span>Unknown Image</span>
+  }
+
+  render() {
+    const { classes, linode, volumes, typesLongLabel } = this.props;
+
+    return (
+      <Paper className={classes.root}>
+        <Grid container>
+          <Grid item xs={12}>
+            <Typography
+              role="header"
+              variant="headline"
+              className={classes.title}
+              data-qa-title
+            >
+              Summary
             </Typography>
-          }
+          </Grid>
+          <Grid item xs={12} sm={6} lg={4}>
+            <Typography className={classes.section} variant="caption">
+              {this.renderImage()}
+            </Typography>
+            <Typography className={classes.section} variant="caption">
+              {<span>
+                {typesLongLabel}
+              </span>}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={6} lg={4}>
+            <Typography className={classes.section} variant="caption">
+              <IPAddress ips={linode.ipv4} copyRight />
+            </Typography>
+            {
+              linode.ipv6 &&
+              <Typography className={classes.section} variant="caption">
+                <IPAddress ips={[linode.ipv6]} copyRight />
+              </Typography>
+            }
+          </Grid>
+          <Grid item xs={12} sm={6} lg={4} className={classes.region}>
+            <Typography className={`${classes.section}`} variant="caption">
+              {formatRegion(linode.region)}
+            </Typography>
+            <Typography
+              className={classes.section}
+              variant="caption"
+              data-qa-volumes={volumes.length}
+            >
+              Volumes: <Link
+                className={classes.volumeLink}
+                to={`/linodes/${linode.id}/volumes`}>{volumes.length}</Link>
+            </Typography>
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={6} lg={4} className={classes.region}>
-          <Typography className={`${classes.section}`} variant="caption">
-            {formatRegion(linode.region)}
-          </Typography>
-          <Typography
-            className={classes.section}
-            variant="caption"
-            data-qa-volumes={volumes.length}
-        >
-            Volumes: <Link
-              className={classes.volumeLink}
-              to={`/linodes/${linode.id}/volumes`}>{volumes.length}</Link>
-          </Typography>
-        </Grid>
-      </Grid>
-    </Paper>
-  );
-};
+      </Paper>
+    );
+  }
+}
 
 const styled = withStyles(styles, { withTheme: true });
 
