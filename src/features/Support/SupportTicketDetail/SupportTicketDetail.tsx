@@ -23,13 +23,13 @@ import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
 import { getTicket, getTicketReplies } from 'src/services/support';
 import { getGravatarUrlFromHash } from 'src/utilities/gravatar';
 
 import ExpandableTicketPanel from '../ExpandableTicketPanel';
 import TicketReply from './TicketReply';
-
 
 type ClassNames = 'root'
   | 'title'
@@ -128,24 +128,18 @@ interface State {
   errors?: Linode.ApiFieldError[];
   replies?: Linode.SupportReply[];
   ticket?: Linode.SupportTicket;
+  ticketCloseSuccess: boolean;
   showMoreAttachments: boolean;
 }
 
 type CombinedProps = RouteProps & StateProps & WithStyles<ClassNames>;
-
-const scrollToBottom = () => {
-  window.scroll({
-    behavior: 'smooth',
-    left: 0,
-    top: document.body.scrollHeight,
-  });
-}
 
 export class SupportTicketDetail extends React.Component<CombinedProps,State> {
   mounted: boolean = false;
   state: State = {
     loading: true,
     showMoreAttachments: false,
+    ticketCloseSuccess: false,
   }
 
   static docs: Linode.Doc[] = [
@@ -164,7 +158,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
 
   componentDidUpdate(prevProps:CombinedProps, prevState:State) {
     if (prevProps.match.params.ticketId !== this.props.match.params.ticketId) {
-      this.setState({ loading: true });
+      this.setState({ loading: true, ticketCloseSuccess: false });
       this.loadTicketAndReplies();
     }
   }
@@ -190,9 +184,15 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
           ticket: {
             ...this.state.ticket!,
             attachments: ticket.attachments,
+            ticketCloseSuccess: false,
           },
         });
       });
+  }
+
+  closeTicketSuccess = () => {
+    this.setState({ ticketCloseSuccess: true });
+    this.loadTicketAndReplies();
   }
 
   handleJoinedPromise = (ticketResponse: Linode.SupportTicket, replyResponse: Linode.SupportReply[]) => {
@@ -209,7 +209,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
           replies: replyResponse.map(matchGravatarURLToReply(gravatarMap)),
           ticket: {...ticketResponse, gravatarUrl: gravatarMap[ticketResponse.gravatar_id]},
           loading: false,
-        }, scrollToBottom)
+        })
       });
   };
 
@@ -240,6 +240,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
         const updatedReplies = concat(replies, [newReply]);
         this.setState({
           replies: updatedReplies,
+          ticketCloseSuccess: false,
         })
       })
   }
@@ -325,7 +326,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
   }
 
   toggleShowMoreAttachments = () => {
-    this.setState({ showMoreAttachments: !this.state.showMoreAttachments });
+    this.setState({ showMoreAttachments: !this.state.showMoreAttachments, ticketCloseSuccess: false });
   }
 
   renderAttachmentsRows = (attachments: string[], icons: JSX.Element[]) => {
@@ -367,7 +368,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
 
   render() {
     const { classes, profileUsername } = this.props;
-    const { errors, loading, replies, ticket } = this.state;
+    const { errors, loading, replies, ticket, ticketCloseSuccess } = this.state;
     const ticketId = this.props.match.params.ticketId;
     /*
     * Including loading/error states here (rather than in a
@@ -417,11 +418,13 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
           </Grid>
         </Grid>
         {ticket.entity && this.renderEntityLabelWithIcon()}
+        {/* Show message if the ticket has been closed through the link on this page. */}
+        {ticketCloseSuccess && <Notice success text={"Ticket has been closed."}/>}
         <Grid container direction="column" justify="center" alignItems="center" className={classes.listParent} >
           {/* If the ticket isn't blank, display it, followed by replies (if any). */}
           {ticket.description &&
             <ExpandableTicketPanel
-              key={ticket!.id}
+              key={ticket.id}
               ticket={ticket}
               isCurrentUser={profileUsername === ticket.opened_by}
             />
@@ -431,9 +434,11 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
           {/* If the ticket is open, allow users to reply to it. */}
           {['open','new'].includes(ticket.status) &&
             <TicketReply
-              ticketId={ticketId!}
+              ticketId={ticket.id}
+              closable={ticket.closable}
               onSuccess={this.onCreateReplySuccess}
               reloadAttachments={this.reloadAttachments}
+              closeTicketSuccess={this.closeTicketSuccess}
             />
           }
         </Grid>

@@ -2,6 +2,7 @@ export {
   getTickets,
   getTicket,
   getTicketReplies,
+  closeSupportTicket,
   createSupportTicket,
   createReply,
   uploadAttachment,
