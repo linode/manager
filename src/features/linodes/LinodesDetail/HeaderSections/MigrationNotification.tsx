@@ -38,7 +38,7 @@ const MigrationNotification : React.StatelessComponent<CombinedProps> = (props) 
   }
   
   return (
-    <Notice flag warning>
+    <Notice important warning>
       {text}
       {type === 'migration_scheduled'
         ? ' To enter the migration queue right now, please '
