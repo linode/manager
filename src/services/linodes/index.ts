@@ -60,7 +60,9 @@ export {
 
 export {
   getLinodeStats,
+  getLinodeStatsByDate,
   getLinodeKernels,
+  getLinodeKernel,
   getLinodeTypes,
   getDeprecatedLinodeTypes,
   getType

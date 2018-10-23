@@ -183,4 +183,21 @@ namespace Linode {
 
   export type BootAction = 'reboot' | 'power_down' | null;
 
+  interface NetStats {
+    in: number[][];
+    out: number[][];
+    private_in: number[][];
+    private_out: number[][];
+  }
+
+  export interface Stats {
+    title: string;
+    cpu: number[][];
+    io: {
+      io: number[][];
+      swap: number[][];
+    }
+    netv4: NetStats;
+    netv6: NetStats;
+  }
 }
