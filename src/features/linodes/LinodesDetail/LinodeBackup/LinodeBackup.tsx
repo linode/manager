@@ -286,6 +286,18 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
   saveSettings = () => {
     const { linodeID } = this.props;
     const { settingsForm } = this.state;
+    /* The api will set a default day of week if none is provided, but if a day is
+    * provided without a window, it will return an error.
+    */
+    if (settingsForm.day && settingsForm.window) {
+      this.setState({
+        settingsForm: {
+          ...settingsForm,
+          errors: [{'reason': 'If a day of the week is provided, you must specify a time.'}]
+        }
+      });
+      return;
+    }
     updateBackupsWindow(linodeID, settingsForm.day, settingsForm.window)
       .then(() => {
         sendToast('Backup settings saved');

@@ -60,10 +60,10 @@ const alerts = object({
 }).nullable(true);
 
 const schedule = object({
-  day: mixed().oneOf(["Scheduling", "W0", "W2", "W4", "W8", "W10",
-  "W12", "W14", "W16", "W18", "W20", "W22"]),
-  window: mixed().oneOf(["Scheduling", "Sunday", "Monday", "Tuesday",
+  day: mixed().oneOf(["Scheduling", "Sunday", "Monday", "Tuesday",
   "Wednesday", "Thursday", "Friday", "Saturday"]),
+  window: mixed().oneOf(["Scheduling", "W0", "W2", "W4", "W8", "W10",
+  "W12", "W14", "W16", "W18", "W20", "W22"]),
 });
 
 const backups = object({
