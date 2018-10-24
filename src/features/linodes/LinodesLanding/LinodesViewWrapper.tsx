@@ -63,14 +63,14 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 class LinodesViewWrapper extends React.Component<CombinedProps, {}> {
   renderTag = (tags: string[]) => {
-    const { classes } = this.props;
+    const { classes, view } = this.props;
     return tags.map(eachTag => {
       return (
         <Tag
           className={classes.tag}
           label={eachTag}
           key={eachTag}
-          clickable={false}
+          clickable={view === 'grid' ? false : true}
         />
       )
     })
@@ -87,7 +87,7 @@ class LinodesViewWrapper extends React.Component<CombinedProps, {}> {
 
   renderTagsAndMoreTags = (linodeTags: string[]) => {
     const [visibleTags, additionalTags] = splitAt(3, linodeTags);
-    const { classes } = this.props;
+    const { classes, view } = this.props;
     return (
       <React.Fragment>
         {
@@ -97,7 +97,7 @@ class LinodesViewWrapper extends React.Component<CombinedProps, {}> {
                 label={eachTag}
                 key={eachTag}
                 className={classes.tag}
-                clickable={false}
+                clickable={view === 'grid' ? false : true}
               />
             )
           })
