@@ -261,7 +261,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
 
     this.setState({ submitting: true });
     cloneDomain(cloneID, cloneName)
-      .then((data: Linode.Domain) => {
+      .then((data) => {
         if (!this.mounted) { return; }
         this.reset();
         onSuccess(data)

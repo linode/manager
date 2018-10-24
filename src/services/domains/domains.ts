@@ -28,8 +28,7 @@ export const getDomains = (pagination: any = {}, filters: any = {}) =>
     setMethod('GET'),
     setParams(pagination),
     setXFilter(filters),
-  )
-  .then(response => response.data);
+  ).then(response => response.data);
 
 /**
  * Returns all of the information about a specified Domain.
