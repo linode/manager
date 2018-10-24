@@ -1,6 +1,8 @@
 import { array, boolean, mixed, number, object, string } from 'yup';
 
-export const resizeLinodeDiskSchema = object({
+const stackscript_data = array().of(object());
+
+export const ResizeLinodeDiskSchema = object({
   size: number().required().min(1),
 });
 
@@ -18,7 +20,7 @@ export const CreateLinodeSchema = object({
   root_pass: string().notRequired(),
   authorized_keys: array().of(string()).notRequired(),
   backups_enabled: boolean().notRequired(),
-  stackscript_data: object().notRequired(),
+  stackscript_data,
   booted: boolean().notRequired(),
   label: string().notRequired()
     .min(3, "Label must contain between 3 and 32 characters.")
@@ -70,16 +72,18 @@ const SSHKeySchema = object({
   created: string(),
 });
 
+const root_pass = string()
+.required('Root password is required.')
+.min(6, "Password must be between 6 and 128 characters.")
+.max(128, "Password must be between 6 and 128 characters.")
+
 export const RebuildLinodeSchema = object({
   image: string().required('An image is required.'),
-  root_pass: string()
-    .required('Root password is required.')
-    .min(6, "Password must be between 6 and 128 characters.")
-    .max(128, "Password must be between 6 and 128 characters."),
+  root_pass,
   authorized_keys: array().of(SSHKeySchema),
   authorized_users: array().of(string()),
   stackscript_id: number().notRequired(),
-  stackscript_data: array().of(object()),
+  stackscript_data,
   booted: boolean().notRequired()
 });
 
@@ -93,7 +97,76 @@ export const IPAllocationSchema = object({
 
 export const CreateSnapshotSchema = object({
   label: string()
-    .required("A snapshot label is required.")
-    .min(1, "Label must be between 1 and 255 characters.")
-    .max(255, "Label must be between 1 and 255 characters.")
+  .required("A snapshot label is required.")
+  .min(1, "Label must be between 1 and 255 characters.")
+  .max(255, "Label must be between 1 and 255 characters.")
+}); 
+
+const device = object({
+  disk_id: mixed().oneOf([number(), null]),
+  volume_id: mixed().oneOf([number(), null])
+});
+
+const devices = object({
+  sda: device,
+  sdb: device,
+  sdc: device,
+  sdd: device,
+  sde: device,
+  sdf: device,
+  sdg: device,
+  sdh: device
+});
+
+const helpers = object({
+  updatedb_disabled: boolean(),
+  distro: boolean(),
+  modules_dep: boolean(),
+  network: boolean(),
+  devtmpfs_automount: boolean(),
+});
+
+export const CreateLinodeConfigSchema = object({
+  label: string()
+    .required("Label is required.")
+    .min(1, "Label must be between 1 and 48 characters.")
+    .max(48, "Label must be between 1 and 48 characters."),
+  devices: devices.required("A list of devices is required."),
+  kernel: string(),
+  comments: string(),
+  memory_limit: number(),
+  run_level: mixed().oneOf(["default", "single", "binbash"]),
+  virt_mode: mixed().oneOf(["paravirt", "fullvirt"]),
+  helpers,
+  root_device: string()
+});
+
+export const UpdateLinodeConfigSchema = object({
+  label: string()
+    .min(1, "Label must be between 1 and 48 characters.")
+    .max(48, "Label must be between 1 and 48 characters."),
+  devices,
+  kernel: string(),
+  comments: string(),
+  memory_limit: number(),
+  run_level: mixed().oneOf(["default", "single", "binbash"]),
+  virt_mode: mixed().oneOf(["paravirt", "fullvirt"]),
+  helpers,
+  root_device: string()
+});
+
+export const CreateLinodeDiskSchema = object({
+  size: number().required("Disk size is required."),
+  label: string()
+    .required("A disk label is required.")
+    .min(1, "Label must be between 1 and 48 characters.")
+    .max(48, "Label must be between 1 and 48 characters."),
+  filesystem: mixed().oneOf(["raw", "swap", "ext3", "ext4", "initrd"]),
+  read_only: boolean(),
+  image: string(),
+  authorized_keys: array().of(string()),
+  authorized_users: array().of(string()),
+  root_pass,
+  stackscript_id: number(),
+  stackscript_data, 
 });

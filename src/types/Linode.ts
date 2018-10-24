@@ -165,6 +165,8 @@ namespace Linode {
     volume_id: null | number;
   }
 
+  export type Filesystem = "raw" | "swap" | "ext3" | "ext4" | "initrd";
+
   export interface Devices {
     sda: null | DiskDevice | VolumeDevice;
     sdb: null | DiskDevice | VolumeDevice;
@@ -174,7 +176,6 @@ namespace Linode {
     sdf: null | DiskDevice | VolumeDevice;
     sdg: null | DiskDevice | VolumeDevice;
     sdh: null | DiskDevice | VolumeDevice;
-    [index: string]: null | DiskDevice | VolumeDevice;
   }
 
   export interface Kernel {

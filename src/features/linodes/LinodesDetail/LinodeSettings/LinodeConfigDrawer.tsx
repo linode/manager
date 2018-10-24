@@ -517,7 +517,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
     /** Editing */
     if (linodeConfigId) {
       return updateLinodeConfig(linodeId, linodeConfigId, this.convertStateToData(this.state.fields))
-        .then(({ data }) => {
+        .then((_) => {
           this.props.onClose();
           this.props.onSuccess();
         })
