@@ -111,8 +111,6 @@ const reduceRequestConfig = (...fns: Function[]) => fns.reduceRight((result, fn)
 export default <T>(...fns: Function[]): AxiosPromise<T> => {
   const config = reduceRequestConfig(...fns);
   if (config.validationErrors) {
-    console.log(config);
-    console.log(config.validationErrors);
     return Promise.reject({
       config: omit(['validationErrors'], config),
       response: { data: { errors: config.validationErrors } },
