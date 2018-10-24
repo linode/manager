@@ -34,7 +34,7 @@ export const getDomains = (pagination: any = {}, filters: any = {}) =>
 /**
  * Returns all of the information about a specified Domain.
  *
- * @param domainId { number } ID of the Image to look up.
+ * @param domainId { number } The ID of the Domain to access.
  */
 export const getDomain = (domainId: number) =>
   Request<Domain>(
@@ -66,11 +66,12 @@ export const updateDomain = (domainId: number, data: Partial<Linode.Domain>
     setMethod('PUT'),
     setData({ status: 'active', ...data }), // remove ability for user to change status
   ).then(response => response.data);
+
 /**
  * Deletes a Domain from Linode's DNS Manager. The Domain will be removed from Linode's nameservers shortly after this
  * operation completes. This also deletes all associated Domain Records.
  *
- * @param domainId { number } The ID of the Domain to delete
+ * @param domainId { number } The ID of the Domain to delete.
  */
 export const deleteDomain = (domainID: number) =>
   Request<{}>(
@@ -79,8 +80,10 @@ export const deleteDomain = (domainID: number) =>
   ).then(response => response.data);
 
 /**
- * @param domainID { number } The ID of the Domain to clone
- * @param cloneName { string } The name of the new domain
+ * Clones a Domain.
+ *
+ * @param domainID { number } The ID of the Domain to clone.
+ * @param cloneName { string } The name of the new domain.
  */
 export const cloneDomain = (domainID: number, cloneName: string) =>
   Request<Domain>(
