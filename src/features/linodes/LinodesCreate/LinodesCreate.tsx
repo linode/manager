@@ -214,10 +214,10 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
           <FromBackupsContent
             notice={{
               level: 'warning',
-              text: `This newly created Linode wil be created with
+              text: `This newly created Linode will be created with
                       the same password and SSH Keys (if any) as the original Linode.
-                      Also note that this Linode will need to be manual booted after it finishes
-                      provisioning`,
+                      Also note that this Linode will need to be manually booted after it finishes
+                      provisioning.`,
             }}
             selectedBackupFromQuery={this.state.selectedBackupIDFromQueryString}
             selectedLinodeFromQuery={this.state.selectedLinodeIDFromQueryString}
@@ -239,8 +239,8 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
           <FromLinodeContent
             notice={{
               level: 'warning',
-              text: `This newly created Linode wil be created with
-                      the same password and SSH Keys (if any) as the original Linode`,
+              text: `This newly created Linode will be created with
+                      the same password and SSH Keys (if any) as the original Linode.`,
             }}
             getBackupsMonthlyPrice={this.getBackupsMonthlyPrice}
             regions={this.props.regionsData}

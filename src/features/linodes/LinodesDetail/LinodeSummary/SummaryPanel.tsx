@@ -6,7 +6,6 @@ import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
-import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/Grid';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 
@@ -107,7 +106,7 @@ class SummaryPanel extends React.Component<CombinedProps, State> {
     const { linode } = this.props;
 
     if (images.loading) {
-      return <CircleProgress mini />
+      return <span>Loading image...</span>
     }
 
     if (images.error) {

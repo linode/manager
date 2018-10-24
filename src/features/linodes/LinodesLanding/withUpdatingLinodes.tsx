@@ -91,6 +91,7 @@ export default withUpdatingLinodes;
 const isWhitelistedAction = (v: string) => [
   'linode_boot',
   'linode_create', // needed because creating from a backup doesn't auto boot the linode
+  'backups_restore',
   'linode_reboot',
   'linode_shutdown',
   'linode_snapshot',
