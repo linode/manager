@@ -1,6 +1,16 @@
 import { array, boolean, mixed, number, object, string } from 'yup';
+import * as zxcvbn from 'zxcvbn';
 
 const stackscript_data = array().of(object());
+
+/* First validate password using the regex used by the API. Then make sure the password also has a zxcvbn score >= 3. */
+const root_pass = string()
+  .required('Root password is required.')
+  .min(6, "Password must be between 6 and 128 characters.")
+  .max(128, "Password must be between 6 and 128 characters.")
+  .matches(/^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[a-z])(?=.*[!"#$%&'()*+,-.\/:;<=>?@\[\]^_`{|}~\\]))|((?=.*[A-Z])(?=.*[!"#$%&'()*+,-.\/:;<=>?@\[\]^_`{|}~\\]))|((?=.*[0-9])(?=.*[!"#$%&'()*+,-.\/:;<=>?@\[\]^_`{|}~\\])))/,
+  "Password must contain at least 2 of the following classes: uppercase letters, lowercase letters, numbers, and punctuation.")
+  .test('is-strong-password', 'Please choose a stronger password.', value => zxcvbn(value).score > 3);
 
 export const ResizeLinodeDiskSchema = object({
   size: number().required().min(1),
@@ -16,8 +26,8 @@ export const CreateLinodeSchema = object({
   stackscript_id: number().notRequired(),
   backup_id: number().notRequired(),
   swap_size: number().notRequired(),
-  image: string().notRequired(),
-  root_pass: string().notRequired(),
+  image: string().nullable(true),
+  root_pass,
   authorized_keys: array().of(string()).notRequired(),
   backups_enabled: boolean().notRequired(),
   stackscript_data,
@@ -72,11 +82,6 @@ const SSHKeySchema = object({
   created: string(),
 });
 
-const root_pass = string()
-.required('Root password is required.')
-.min(6, "Password must be between 6 and 128 characters.")
-.max(128, "Password must be between 6 and 128 characters.")
-
 export const RebuildLinodeSchema = object({
   image: string().required('An image is required.'),
   root_pass,
@@ -103,8 +108,8 @@ export const CreateSnapshotSchema = object({
 }); 
 
 const device = object({
-  disk_id: mixed().oneOf([number(), null]),
-  volume_id: mixed().oneOf([number(), null])
+  disk_id: number().nullable(true),
+  volume_id: number().nullable(true)
 });
 
 const devices = object({
