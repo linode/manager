@@ -11,7 +11,7 @@ const {
     cleanupAccounts,
 } = require('../utils/config-utils');
 
-const { getUsers, deleteAll, deleteUser, removeAllLinodes, removeAllVolumes } = require('../setup/setup');
+const { resetAccounts } = require('../setup/cleanup');
 
 const { browserCommands } = require('./custom-commands');
 const { browserConf } = require('./browser-config');
@@ -20,11 +20,11 @@ const selectedBrowser = argv.browser ? browserConf[argv.browser] : browserConf['
 
 const specsToRun = () => {
     if (argv.file) {
-        return [argv.file];
+        return ['./e2e/setup/setup.spec.js', argv.file];
     }
     
     if (argv.dir || argv.d) {
-        return [`./e2e/specs/${argv.dir || argv.d}/**/*.spec.js`]
+        return ['./e2e/setup/setup.spec.js',`./e2e/specs/${argv.dir || argv.d}/**/*.spec.js`]
     }
 
     if (argv.smoke) {
@@ -207,7 +207,10 @@ exports.config = {
      */
     onPrepare: function (config, capabilities) {
         // Generate our temporary test credentials file
-        generateCreds('./e2e/creds.js');
+        // generateCreds('./e2e/creds.js');
+        return resetAccounts(JSON.parse(readFileSync('./e2e/creds.js')))
+            .then(res => console.log('we got in the final then'))
+            .catch(error => console.log('shit, we errored', error));
     },
     /**
      * Gets executed just before initialising the webdriver session and test framework. It allows you
@@ -354,38 +357,16 @@ exports.config = {
     onComplete: function(exitCode, config, capabilities) {
         // Run delete all, on every test account
 
-        const credsCollection = JSON.parse(readFileSync('./e2e/creds.js'));
-
         /* We wait an arbitrary amount of time here for linodes to be removed
            Otherwise, attempting to remove attached volumes will fail
         */
-        const timeout = new Promise(function(resolve, reject) {  
-            setTimeout(() => resolve(true), 15000);
-        });
+        // return resetAccounts(JSON.parse(readFileSync('./e2e/creds.js')))
+        //     .then(res => console.log('we got in the final then'))
+        //     .catch(error => console.log('shit, we errored', error));
 
-
-        return new Promise((resolve, reject) => {
-            credsCollection.forEach(cred => {
-                return removeAllLinodes(cred.token)
-                    .then(res => {
-                        timeout.then(res => {
-                            return Promise.all([removeAllVolumes(cred.token), deleteAll(cred.token, cred.username)])
-                                .then(values => {
-                                    resolve(values);
-                                })
-                                .catch(error => reject(error));
-                        });
-                    })
-                    .catch(error => { reject(error) });
-            });
-        });
-
-        // return getUsers(creds[0].token).then(res => {
-            // console.log(res.data);
-        // });
-        cleanupAccounts('./e2e/creds.js');
+        // cleanupAccounts('./e2e/creds.js');
 
         // Remove our temporary test credentials
-        unlinkSync('./e2e/creds.js');
+        // unlinkSync('./e2e/creds.js');
     }
 }
