@@ -90,8 +90,8 @@ class DomainZoneImportDrawer extends React.Component<CombinedProps, State> {
     this.setState({ submitting: true });
 
     importZone(domain, remote_nameserver)
-      .then((response) => {
-        this.props.onSuccess(response.data);
+      .then((data: Linode.Domain) => {
+        this.props.onSuccess(data);
       })
       .catch((error:Linode.ApiFieldError) => {
         const err: Linode.ApiFieldError[] = [{ field: 'none', reason: 'An unexpected error has ocurred.' }];
