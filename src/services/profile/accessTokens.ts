@@ -54,7 +54,7 @@ export const getPersonalAccessToken = (id: number) =>
  * @param data.scope { string } The scopes to create the token with. These cannot be changed after creation,
  * and may not exceed the scopes of the acting token. If omitted, the new token will have the same
  * scopes as the acting token.
- * @param data.expiry { string } Datetime string indictating when this token should be valid until.
+ * @param data.expiry { string } Datetime string indicating when this token should be valid until.
  * If omitted, the new token will be valid until it is manually revoked.
  * @param data.label { string } String to identify this token. Used for organizational purposes only.
  *
