@@ -57,7 +57,7 @@ const alerts = object({
   network_out: number(),
   transfer_quota: number(),
   io: number(),
-});
+}).nullable(true);
 
 const schedule = object({
   day: mixed().oneOf(["Scheduling", "W0", "W2", "W4", "W8", "W10",
@@ -72,8 +72,7 @@ const backups = object({
 })
 
 export const UpdateLinodeSchema = object({
-  label: string().notRequired()
-    .ensure()
+  label: string()
     .min(3, "Label must contain between 3 and 32 characters.")
     .max(32,"Label must contain between 3 and 32 characters.")
     .matches(/^[a-zA-Z]((?!--|__)[a-zA-Z0-9-_])+$/,
