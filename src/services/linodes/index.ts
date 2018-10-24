@@ -23,7 +23,6 @@ export {
   cancelBackups,
   takeSnapshot,
   restoreBackup,
-  updateBackupsWindow,
 } from './backups';
 
 export {

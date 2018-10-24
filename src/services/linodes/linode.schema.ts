@@ -1,4 +1,4 @@
-import { array, boolean, number, object, string } from 'yup';
+import { array, boolean, mixed, number, object, string } from 'yup';
 
 export const resizeLinodeDiskSchema = object({
   size: number().required().min(1),
@@ -38,11 +38,15 @@ const alerts = object({
   io: number(),
 });
 
+const schedule = object({
+  day: mixed().oneOf(["Scheduling", "W0", "W2", "W4", "W8", "W10",
+  "W12", "W14", "W16", "W18", "W20", "W22"]),
+  window: mixed().oneOf(["Scheduling", "Sunday", "Monday", "Tuesday",
+  "Wednesday", "Thursday", "Friday", "Saturday"]),
+});
+
 const backups = object({
-  schedule: object({
-    day: string(),
-    window: string(),
-  }),
+  schedule,
   enabled: boolean(),
 })
 
@@ -55,8 +59,8 @@ export const UpdateLinodeSchema = object({
       "Label can only use alphanumeric characters, dashes, or underscores."),
   tags: array().of(string()).notRequired(),
   watchdog_enabled: boolean().notRequired(),
-  alerts: alerts.notRequired(),
-  backups: backups.notRequired(),
+  alerts,
+  backups,
 });
 
 const SSHKeySchema = object({
@@ -85,4 +89,11 @@ export const IPAllocationSchema = object({
     .oneOf(['ipv4'], "Only IPv4 addresses can be allocated."),
   public: boolean()
     .required("Must specify public or private IP address.")
-})
+});
+
+export const CreateSnapshotSchema = object({
+  label: string()
+    .required("A snapshot label is required.")
+    .min(1, "Label must be between 1 and 255 characters.")
+    .max(255, "Label must be between 1 and 255 characters.")
+});

@@ -35,15 +35,21 @@ namespace Linode {
   }
 
   export interface LinodeBackups {
-    enabled: boolean;
+    enabled?: boolean;
     schedule: LinodeBackupSchedule;
     last_backup?: LinodeBackup;
     snapshot?: LinodeBackup;
   }
 
+  export type Window = "Scheduling" | "W0" | "W2" | "W4" | "W8" | "W10" |
+    "W12" | "W14" | "W16" | "W18" | "W20" | "W22";
+
+  export type Day = "Scheduling" | "Sunday" | "Monday" | "Tuesday" |
+    "Wednesday" | "Thursday" | "Friday" | "Saturday";
+
   export interface LinodeBackupSchedule {
-    window: string | null;
-    day: string | null;
+    window: Window | null;
+    day: Day | null;
   }
 
   export interface LinodeBackupsResponse {
