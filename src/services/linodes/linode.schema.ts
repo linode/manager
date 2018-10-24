@@ -1,7 +1,7 @@
 import { array, boolean, mixed, number, object, string } from 'yup';
 // import * as zxcvbn from 'zxcvbn';
 
-const stackscript_data = array().of(object());
+const stackscript_data = array().of(object()).nullable(true);
 
 /* @todo add more comprehensive validation.
 *  First validate password using the regex used by the API. Then make sure the password also has a zxcvbn score >= 3. 
