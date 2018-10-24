@@ -11,6 +11,7 @@ export {
 
 export {
   getDomainRecords,
+  getDomainRecord,
   createDomainRecord,
   updateDomainRecord,
   deleteDomainRecord,
