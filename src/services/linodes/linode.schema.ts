@@ -1,17 +1,26 @@
 import { array, boolean, mixed, number, object, string } from 'yup';
-import * as zxcvbn from 'zxcvbn';
+// import * as zxcvbn from 'zxcvbn';
 
 const stackscript_data = array().of(object());
 
-/* First validate password using the regex used by the API. Then make sure the password also has a zxcvbn score >= 3. */
+/* @todo add more comprehensive validation.
+*  First validate password using the regex used by the API. Then make sure the password also has a zxcvbn score >= 3. 
+*  Only run validation tests if image is provided (as otherwise the value passed is an empty string, which will fail
+*  validation.)
+*/
 const root_pass = string()
-  .required('Root password is required.')
-  .min(6, "Password must be between 6 and 128 characters.")
-  .max(128, "Password must be between 6 and 128 characters.")
-  .matches(/^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[a-z])(?=.*[!"#$%&'()*+,-.\/:;<=>?@\[\]^_`{|}~\\]))|((?=.*[A-Z])(?=.*[!"#$%&'()*+,-.\/:;<=>?@\[\]^_`{|}~\\]))|((?=.*[0-9])(?=.*[!"#$%&'()*+,-.\/:;<=>?@\[\]^_`{|}~\\])))/,
-  "Password must contain at least 2 of the following classes: uppercase letters, lowercase letters, numbers, and punctuation.")
-  .test('is-strong-password', 'Please choose a stronger password.', value => zxcvbn(value).score > 3);
-
+  // .required('Root password is required.')
+  // .when('image', {
+  //   is: (value) => Boolean(value),
+  //   then: string().min(0),
+  //   otherwise: string()
+  //     .min(6, "Password must be between 6 and 128 characters.")
+  //     .max(128, "Password must be between 6 and 128 characters.")
+  //     .matches(/^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[a-z])(?=.*[!"#$%&'()*+,-.\/:;<=>?@\[\]^_`{|}~\\]))|((?=.*[A-Z])(?=.*[!"#$%&'()*+,-.\/:;<=>?@\[\]^_`{|}~\\]))|((?=.*[0-9])(?=.*[!"#$%&'()*+,-.\/:;<=>?@\[\]^_`{|}~\\])))/,
+  //       "Password must contain at least 2 of the following classes: uppercase letters, lowercase letters, numbers, and punctuation.")
+  //     .test('is-strong-password', 'Please choose a stronger password.', value => zxcvbn(value).score > 3)
+  // });
+  
 export const ResizeLinodeDiskSchema = object({
   size: number().required().min(1),
 });
@@ -27,7 +36,7 @@ export const CreateLinodeSchema = object({
   backup_id: number().notRequired(),
   swap_size: number().notRequired(),
   image: string().nullable(true),
-  root_pass,
+  root_pass: root_pass.notRequired(),
   authorized_keys: array().of(string()).notRequired(),
   backups_enabled: boolean().notRequired(),
   stackscript_data,
@@ -110,7 +119,7 @@ export const CreateSnapshotSchema = object({
 const device = object({
   disk_id: number().nullable(true),
   volume_id: number().nullable(true)
-});
+}).nullable(true);
 
 const devices = object({
   sda: device,
