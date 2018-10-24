@@ -325,6 +325,7 @@ const themeDefaults: ThemeOptions = {
         height: 24,
         borderRadius: 4,
         color: '#555',
+        cursor: 'pointer',
         '&:hover': {
           '& $deleteIcon': {
             color: primaryColors.text,

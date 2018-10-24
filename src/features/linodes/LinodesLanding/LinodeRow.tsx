@@ -206,10 +206,10 @@ class LinodeRow extends React.Component<CombinedProps, State> {
               </Typography>
             </Grid>
           </Grid>
-          </Link>
           <div className={classes.tagWrapper}>
             {this.props.renderTagsAndMoreTags(linodeTags)}
-            </div>
+          </div>
+          </Link>
       </TableCell>
     );
   }
