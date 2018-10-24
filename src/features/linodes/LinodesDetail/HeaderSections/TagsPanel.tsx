@@ -54,21 +54,36 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     top: 6,
   },
   selectTag: {
+    width: 'auto',
     position: 'relative',
     zIndex: 3,
     animation: 'fadeIn .3s ease-in-out forwards',
+    '& [class*="MuiFormControl"]': {
+      width: 'auto',
+    },
     '& [class*="MuiInput-formControl"]': {
       minHeight: 'auto',
       border: 0,
       backgroundColor: 'transparent',
+      boxShadow: 'none',
       '& p': {
         fontSize: '.9rem',
         color: theme.color.grey1,
       },
     },
+    '& [class*="MuiFormHelperText-error"]': {
+      padding: theme.spacing.unit,
+      marginLeft: 12,
+      position: 'absolute',
+      top: theme.spacing.unit * 4,
+      boxShadow: '0 0 5px #ddd',
+      backgroundColor: theme.bg.offWhite,
+      lineHeight: 1.2,
+    },
     '& .react-select__input': {
       fontSize: '.9rem',
       color: theme.palette.text.primary,
+      backgroundColor: 'transparent',
     },
     '& .react-select__value-container': {
       width: 150,
