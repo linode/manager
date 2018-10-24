@@ -6,6 +6,7 @@ export {
   createLinode,
   updateLinode,
   deleteLinode,
+  CreateLinodeRequest,
 } from './linodes';
 
 export {
@@ -39,6 +40,7 @@ export {
 export {
   allocateIPAddress,
   getLinodeIPs,
+  IPAllocationRequest,
 } from './linodeIPs';
 
 export {
@@ -53,6 +55,7 @@ export {
   resizeLinode,
   startMutation,
   scheduleOrQueueMigration,
+  RebuildRequest,
 } from './linodeActions';
 
 export {
