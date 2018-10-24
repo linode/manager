@@ -233,7 +233,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
 
     this.setState({ submitting: true });
     createDomain(data)
-      .then((domainData: Linode.Domain) => {
+      .then((domainData) => {
         if (!this.mounted) { return; }
         this.reset();
         onSuccess(domainData);
