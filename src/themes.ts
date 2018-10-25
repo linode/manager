@@ -485,7 +485,7 @@ export const dark = createTheme({
     },
     MuiTableCell: {
       root: {
-        borderBottom: `1px solid ${primaryColors.divider}`,
+        borderBottom: `2px solid ${primaryColors.divider}`,
       },
       head: {
         color: primaryColors.text,
@@ -514,7 +514,7 @@ export const dark = createTheme({
       head: {
         backgroundColor: '#32363C',
         '&:before': {
-          borderLeftColor: 'rgba(0, 0, 0, 0.15)',
+          backgroundColor: 'rgba(0, 0, 0, 0.15) !important',
         },
       },
       hover: {
