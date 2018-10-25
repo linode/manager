@@ -9,7 +9,7 @@ import Request,
   setXFilter,
 } from '../index';
 
-import { importZoneSchema } from './domains.schema';
+import { createDomainSchema, importZoneSchema, updateDomainSchema } from './domains.schema';
 
 type Page<T> = Linode.ResourcePage<T>;
 type Domain = Linode.Domain;
@@ -48,7 +48,7 @@ export const getDomain = (domainId: number) =>
  */
 export const createDomain = (data: Partial<Linode.Domain>) =>
   Request<Domain>(
-    setData(data),
+    setData(data, createDomainSchema),
     setURL(`${API_ROOT}/domains`),
     setMethod('POST'),
   ).then(response => response.data);
@@ -63,7 +63,7 @@ export const updateDomain = (domainId: number, data: Partial<Linode.Domain>
   ) => Request<Domain>(
     setURL(`${API_ROOT}/domains/${domainId}`),
     setMethod('PUT'),
-    setData({ status: 'active', ...data }), // remove ability for user to change status
+    setData({ status: 'active', ...data }, updateDomainSchema), // remove ability for user to change status
   ).then(response => response.data);
 
 /**

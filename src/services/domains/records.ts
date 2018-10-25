@@ -8,6 +8,8 @@ import Request,
   setURL,
 } from '../index';
 
+import { createRecordSchema, updateRecordSchema } from './records.schema';
+
 type Page<T> = Linode.ResourcePage<T>;
 type Record = Linode.Record;
 
@@ -48,7 +50,7 @@ export const createDomainRecord = (domainId: number, data: Partial<Record>) =>
   Request<Record>(
     setURL(`${API_ROOT}/domains/${domainId}/records`),
     setMethod('POST'),
-    setData(data),
+    setData(data, createRecordSchema),
   ).then(response => response.data);
 
 /**
@@ -65,7 +67,7 @@ export const updateDomainRecord = (
   ) => Request<Record>(
     setURL(`${API_ROOT}/domains/${domainId}/records/${recordId}`),
     setMethod('PUT'),
-    setData(data),
+    setData(data, updateRecordSchema),
   ).then(response => response.data);
 
 /**
