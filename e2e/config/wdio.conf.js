@@ -20,7 +20,7 @@ const selectedBrowser = argv.browser ? browserConf[argv.browser] : browserConf['
 
 const specsToRun = () => {
     if (argv.file) {
-        return ['./e2e/setup/setup.spec.js', argv.file];
+        return [argv.file];
     }
     
     if (argv.dir || argv.d) {
@@ -28,9 +28,9 @@ const specsToRun = () => {
     }
 
     if (argv.smoke) {
-        return ['./e2e/setup/setup.spec.js', './e2e/specs/**/smoke-*spec.js'];
+        return ['./e2e/specs/**/smoke-*spec.js'];
     }
-    return ['./e2e/setup/setup.spec.js', './e2e/specs/**/*.js'];
+    return ['./e2e/specs/**/*.js'];
 }
 
 const selectedReporters = ['dot'];
