@@ -227,7 +227,9 @@ class UserDetail extends React.Component<CombinedProps> {
 
   renderUserPermissions = () => {
     const { username } = this.state;
+    const { profileUsername } = this.props;
     return <UserPermissions
+      currentUser={profileUsername}
       username={username}
       clearNewUser={this.clearNewUser}
     />
