@@ -24,15 +24,12 @@ interface StackScriptPayload {
 /**
  * Returns a paginated list of StackScripts.
  *
- * @param pagination { Object }
- * @param pagination.page { number }
- * @param pagination.pageSize { number }
  */
-export const getStackscripts = (pagination?: any, filter?: any) =>
+export const getStackscripts = (params?: any, filter?: any) =>
   Request<Page<StackScript>>(
     setURL(`${API_ROOT}/linode/stackscripts`),
     setMethod('GET'),
-    setParams(pagination),
+    setParams(params),
     setXFilter(filter),
   )
     .then(response => response.data);
@@ -64,12 +61,12 @@ export const getStackScript = (stackscriptId: number) =>
  * made to this StackScript.
  */
 export const createStackScript = (payload: StackScriptPayload) =>
-  Request(
+  Request<StackScript>(
     setURL(`${API_ROOT}/linode/stackscripts`),
     setMethod('POST'),
     setData(payload, stackScriptSchema)
   )
-  .then(response => response.data);
+    .then(response => response.data);
 
 /**
  * Updates a StackScript.
@@ -87,12 +84,12 @@ export const createStackScript = (payload: StackScriptPayload) =>
  * made to this StackScript.
  */
 export const updateStackScript = (stackscriptId: number, payload: Partial<StackScriptPayload>) =>
-  Request(
+  Request<StackScript>(
     setURL(`${API_ROOT}/linode/stackscripts/${stackscriptId}`),
     setMethod('PUT'),
     setData(payload, updateStackScriptSchema)
   )
-  .then(response => response.data);
+    .then(response => response.data);
 
 /**
  * Deletes a private StackScript you have permission to read_write. You cannot delete a public StackScript.
@@ -100,7 +97,7 @@ export const updateStackScript = (stackscriptId: number, payload: Partial<StackS
  * @param stackscriptId { string } The ID of the StackScript to delete.
  */
 export const deleteStackScript = (stackscriptId: number) =>
-  Request(
+  Request<{}>(
     setURL(`${API_ROOT}/linode/stackscripts/${stackscriptId}`),
     setMethod('DELETE'),
   )
