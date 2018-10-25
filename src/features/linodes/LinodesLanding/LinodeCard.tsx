@@ -183,8 +183,10 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     flex: 1,
   },
   wrapHeader: {
-    wordBreak: 'break-all',
-    padding: '20px',
+    width: 170,
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
 });
 
