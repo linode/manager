@@ -1,8 +1,7 @@
 import { compose } from 'ramda';
 import * as React from 'react';
-import 'typeface-lato';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
@@ -14,20 +13,23 @@ import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Grid from 'src/components/Grid';
+import Pagey, { PaginationProps } from 'src/components/Pagey';
+import PaginationFooter from 'src/components/PaginationFooter';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import Table from 'src/components/Table';
-import { events$ } from 'src/events';
-import { withConfigs, withLinode } from 'src/features/linodes/LinodesDetail/context';
-import { genEvent } from 'src/features/linodes/LinodesLanding/powerActions';
+import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import TableRowError from 'src/components/TableRowError';
+import TableRowLoading from 'src/components/TableRowLoading';
+import { withLinode } from 'src/features/linodes/LinodesDetail/context';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
-import { deleteLinodeConfig } from 'src/services/linodes';
+import { deleteLinodeConfig, getLinodeConfigs } from 'src/services/linodes';
 
 import LinodeConfigActionMenu from './LinodeConfigActionMenu';
 import LinodeConfigDrawer from './LinodeConfigDrawer';
 
 type ClassNames = 'root' | 'headline';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   headline: {
     marginTop: theme.spacing.unit * 2,
@@ -35,9 +37,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
+interface Props {
+  active: boolean;
+}
+
 type CombinedProps =
+  Props
   & LinodeContext
-  & ConfigsContext
+  & PaginationProps<Linode.Config>
   & WithStyles<ClassNames>;
 
 interface State {
@@ -73,6 +80,12 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
     configDrawer: this.defaultConfigDrawerState,
   };
 
+  componentDidUpdate(prevProps: CombinedProps) {
+    if (prevProps.active === false && this.props.active === true) {
+      this.props.handleOrderChange('label');
+    }
+  }
+
   render() {
     const { classes } = this.props;
 
@@ -98,11 +111,12 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
         <this.linodeConfigsTable />
         <LinodeConfigDrawer
           linodeConfigId={this.state.configDrawer.linodeConfigId}
+          linodeHypervisor={this.props.linodeHypervisor}
           linodeId={this.props.linodeId}
           linodeRegion={this.props.linodeRegion}
           maxMemory={this.props.linodeMemory}
           onClose={this.resetConfigDrawer}
-          onSuccess={this.props.linodeConfigsRequest}
+          onSuccess={this.props.request}
           open={this.state.configDrawer.open}
         />
         <ConfirmationDialog
@@ -128,7 +142,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
       </Button>
       <Button type="secondary" destructive onClick={this.deleteConfig} data-qa-confirm-delete>
         Delete
-    </Button>
+      </Button>
     </ActionsPanel>
   );
 
@@ -168,16 +182,13 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
 
   deleteConfig = () => {
     this.setConfirmDelete({ submitting: true });
-    const { linodeId, linodeLabel } = this.props;
+    const { linodeId } = this.props;
     const { confirmDelete: { id: configId } } = this.state;
     if (!configId) { return; }
 
     deleteLinodeConfig(linodeId, configId)
+      .then(() => this.props.onDelete())
       .then(() => {
-        this.props.linodeConfigsRequest();
-
-        events$.next(genEvent('linode_reboot', linodeId, linodeLabel));
-
         this.setConfirmDelete({
           submitting: false,
         }, () => { this.setConfirmDelete({ submitting: false, open: false, id: undefined }); });
@@ -190,33 +201,55 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
 
   linodeConfigsTable = () => {
     return (
-      <Table isResponsive={false} aria-label="List of Configurations">
-        <TableHead>
-          <TableRow>
-            <TableCell>Label</TableCell>
-            <TableCell />
-          </TableRow>
-        </TableHead>
-
-        <TableBody>
-          {
-            this.props.linodeConfigs.map(config => (
-              <TableRow key={config.id} data-qa-config={config.label}>
-                <TableCell>{config.label}</TableCell>
-                <TableCell>
-                  <LinodeConfigActionMenu
-                    config={config}
-                    onEdit={this.openForEditing}
-                    onDelete={this.confirmDelete}
-                  />
-                </TableCell>
-              </TableRow>
-            ))
-          }
-        </TableBody>
-      </Table>
+      <React.Fragment>
+        <Table isResponsive={false} aria-label="List of Configurations">
+          <TableHead>
+            <TableRow>
+              <TableCell>Label</TableCell>
+              <TableCell />
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {this.renderConfigTableContent(this.props.loading, this.props.error, this.props.data)}
+          </TableBody>
+        </Table>
+        <PaginationFooter
+          count={this.props.count}
+          page={this.props.page}
+          pageSize={this.props.pageSize}
+          handlePageChange={this.props.handlePageChange}
+          handleSizeChange={this.props.handlePageSizeChange}
+        />
+      </React.Fragment>
     );
   }
+
+  renderConfigTableContent = (loading: boolean, error?: Error, data?: Linode.Config[]) => {
+    if (error) {
+      return <TableRowError colSpan={2} message={`Unable to load configurations.`} />
+    }
+
+    if (loading) {
+      return <TableRowLoading colSpan={2} />
+    }
+
+    if (!data || data.length === 0) {
+      return <TableRowEmptyState colSpan={2} />
+    }
+
+    return data.map(config => (
+      <TableRow key={config.id} data-qa-config={config.label}>
+        <TableCell>{config.label}</TableCell>
+        <TableCell>
+          <LinodeConfigActionMenu
+            config={config}
+            onEdit={this.openForEditing}
+            onDelete={this.confirmDelete}
+          />
+        </TableCell>
+      </TableRow>
+    ));
+  };
 }
 
 const styled = withStyles(styles, { withTheme: true });
@@ -224,6 +257,7 @@ const styled = withStyles(styles, { withTheme: true });
 const errorBoundary = PanelErrorBoundary({ heading: 'Advanced Configurations' });
 
 interface LinodeContext {
+  linodeHypervisor: 'kvm' | 'xen';
   linodeId: number;
   linodeLabel: string;
   linodeMemory: number;
@@ -233,6 +267,7 @@ interface LinodeContext {
 };
 
 const linodeContext = withLinode<LinodeContext>((context) => ({
+  linodeHypervisor: context.data!.hypervisor,
   linodeId: context.data!.id,
   linodeLabel: context.data!.label,
   linodeMemory: context.data!.specs.memory,
@@ -241,25 +276,15 @@ const linodeContext = withLinode<LinodeContext>((context) => ({
   linodeStatus: context.data!.status,
 }));
 
-interface ConfigsContext {
-  linodeConfigs: Linode.Config[];
-  linodeConfigsRequest: () => void;
-}
+const paginated = Pagey((ownProps: LinodeContext, params, filters) => {
+  return getLinodeConfigs(ownProps.linodeId, params, filters)
+});
 
-const configsContext = withConfigs<ConfigsContext>((context) => ({
-  linodeConfigs: context.data,
-  linodeConfigsRequest: context.request,
-}));
-
-const contexts = compose<any, any, any>(
+const enhanced = compose<any, any, any, any, any>(
   linodeContext,
-  configsContext,
-);
-
-const enhanced = compose(
-  errorBoundary,
-  contexts,
+  paginated,
   styled,
+  errorBoundary,
 );
 
 export default enhanced(LinodeConfigs);

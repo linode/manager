@@ -1,6 +1,6 @@
 import { Location } from 'history';
 import * as moment from 'moment';
-import { allPass, compose, filter, has, Lens, lensPath, pathEq, pathOr, set } from 'ramda';
+import { compose, Lens, lensPath, pathEq, pathOr, set } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
@@ -18,15 +18,14 @@ import { reportException } from 'src/exceptionReporting';
 import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawer';
 import { newLinodeEvents } from 'src/features/linodes/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
-import notifications$ from 'src/notifications';
 import { Requestable } from 'src/requestableContext';
 import { getImage } from 'src/services/images';
 import {
   getLinode,
   getLinodeConfigs,
   getType,
-  renameLinode,
   startMutation,
+  updateLinode,
 } from 'src/services/linodes';
 import { _getLinodeDisks } from 'src/store/reducers/features/linodeDetail/disks';
 import { _getLinodeVolumes } from 'src/store/reducers/features/linodeDetail/volumes';
@@ -69,7 +68,6 @@ interface State {
   };
   configDrawer: ConfigDrawerState;
   labelInput: { label: string; errorText: string; };
-  notifications?: Linode.Notification[];
   showPendingMutation: boolean;
   mutateInfo: MutateInfo | null;
   mutateDrawer: MutateDrawer
@@ -123,7 +121,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
   volumeEventsSubscription: Subscription;
 
-  notificationsSubscription: Subscription;
+  diskResizeSubscription: Subscription;
 
   mounted: boolean = false;
 
@@ -280,7 +278,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
   componentWillUnmount() {
     this.mounted = false;
     this.eventsSubscription.unsubscribe();
-    this.notificationsSubscription.unsubscribe();
     this.volumeEventsSubscription.unsubscribe();
   }
 
@@ -341,8 +338,14 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     const mountTime = moment().subtract(5, 'seconds');
     const { actions, match: { params: { linodeId } } } = this.props;
 
+    this.diskResizeSubscription = events$
+      .filter((e) => !e._initial)
+      .filter(pathEq(['entity', 'id'], Number(linodeId)))
+      .filter((e) => e.status === 'finished' && e.action === 'disk_resize')
+      .subscribe((e) => actions.getLinodeDisks())
+
     this.eventsSubscription = events$
-      .filter(pathEq(['entity', 'id'], Number(this.props.match.params.linodeId)))
+      .filter(pathEq(['entity', 'id'], Number(linodeId)))
       .filter(newLinodeEvents(mountTime))
       .debounce(() => Observable.timer(1000))
       .subscribe((linodeEvent) => {
@@ -370,15 +373,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       .subscribe((v) => {
         actions.getLinodeVolumes();
       });
-
-    /** Get /notifications relevant to this Linode */
-    this.notificationsSubscription = notifications$
-      .map(filter(allPass([
-        pathEq(['entity', 'id'], Number(linodeId)),
-        has('message'),
-      ])))
-      .subscribe((notifications: Linode.Notification[]) =>
-        this.setState({ notifications }));
 
     configs.request();
     actions.getLinodeVolumes();
@@ -436,7 +430,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     const { data: linode } = this.state.context.linode;
     if (!linode) { return; }
 
-    renameLinode(linode.id, label)
+    updateLinode(linode.id, { label })
       .then((linodeResponse) => {
         this.composeState(
           set(L.linode.data, linodeResponse),
@@ -573,6 +567,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               <LinodeProvider value={this.state.context.linode}>
                 <React.Fragment>
                   <LinodesDetailHeader
+                    openMutateDrawer={this.openMutateDrawer}
                     showPendingMutation={this.state.showPendingMutation}
                     labelInput={{
                       label: labelInput.label,
@@ -591,7 +586,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                     url={url}
                     history={this.props.history}
                     openConfigDrawer={this.openConfigDrawer}
-                    notifications={this.state.notifications}
                   />
                   <LinodeConfigSelectionDrawer
                     onClose={this.closeConfigDrawer}

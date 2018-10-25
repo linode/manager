@@ -1,10 +1,11 @@
 import * as classNames from 'classnames';
+import * as moment from 'moment';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 
 import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import Collapse from 'src/assets/icons/minus-square.svg';
@@ -33,7 +34,7 @@ type ClassNames = 'root'
   | 'hivelyLink'
   | 'hivelyImage';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   '@keyframes fadeIn': {
     from: {
       opacity: 0,
@@ -69,7 +70,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   userName: {
     whiteSpace: 'nowrap',
-    fontWeight: 700,
+    fontFamily: 'LatoWebBold',
     color: theme.color.headline,
   },
   paper: {
@@ -121,6 +122,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   hivelyImage: {
     width: '25px',
+    margin: 3,
   },
   hivelyContainer: {
     display: 'flex',
@@ -136,6 +138,7 @@ interface Props {
   open?: boolean;
   isCurrentUser: boolean;
   parentTicket?: number;
+  ticketUpdated?: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -154,6 +157,7 @@ interface Data {
   from_linode: boolean;
   ticket_id: string;
   reply_id: string;
+  updated: string;
 }
 
 export class ExpandableTicketPanel extends React.Component<CombinedProps, State> {
@@ -179,7 +183,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
   }
 
   getData = () => {
-    const { parentTicket, ticket, reply } = this.props;
+    const { parentTicket, ticket, reply, ticketUpdated } = this.props;
     if (!ticket && !reply) { return; }
     let data: Data;
     if (ticket) {
@@ -192,6 +196,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
         description: ticket.description,
         username: ticket.opened_by,
         from_linode: false,
+        updated: ticket.updated,
       }
     } else if (reply) {
       data = {
@@ -203,10 +208,28 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
         description: reply.description,
         username: reply.created_by,
         from_linode: reply.from_linode,
+        updated: ticketUpdated!,
       }
     }
 
     return data!;
+  }
+
+  shouldRenderHively = (fromLinode: boolean, updated: string) => {
+    /* Render Hively only for replies marked as from_linode,
+    * and are on tickets less than 7 days old.
+    * Defaults to showing Hively if there are any errors parsing dates
+    * or the date is invalid.
+    */ 
+    try {
+      const lastUpdated = moment(updated);
+      if (!lastUpdated.isValid()) { return true; }
+      const diff = moment.duration(moment().diff(lastUpdated));
+      return fromLinode && diff <= moment.duration(7, 'days');
+    }
+    catch {
+      return true;
+    }
   }
 
   renderHively = (linodeUsername: string, ticketId: string, replyId: string) => {
@@ -220,19 +243,19 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
           <a href={href + '3'}>
             <img
               className={classes.hivelyImage}
-              src={"https://secure.teamhively.com/system/smileys/icons/000/000/001/px_45/happy_base.png?1468984347"}
+              src={"https://secure.teamhively.com/system/smileys/icons/000/000/541/px_25/icon_positive.png"}
             />
           </a>
           <a href={href + '2'}>
             <img
               className={classes.hivelyImage}
-              src={"https://secure.teamhively.com/system/smileys/icons/000/000/002/px_45/satisfied_base.png?1468984347"}
+              src={"https://secure.teamhively.com/system/smileys/icons/000/000/542/px_25/icon_indifferent.png"}
             />
           </a>
           <a href={href + '1'}>
             <img
               className={classes.hivelyImage}
-              src={"https://secure.teamhively.com/system/smileys/icons/000/000/003/px_45/unhappy_base.png?1468984347"}
+              src={"https://secure.teamhively.com/system/smileys/icons/000/000/543/px_25/icon_negative.png"}
             />
           </a>
         </span>
@@ -284,7 +307,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
                 <Grid item>
                   <Typography className={classes.userName}>{data.username}</Typography>
                   {data.from_linode && <Typography variant="body1">Linode Expert</Typography>}
-                  <Typography><DateTimeDisplay value={data.date} /></Typography>
+                  <Typography><DateTimeDisplay value={data.date} humanizeCutoff={'month'} /></Typography>
                   </Grid>
                 </Grid>
               </Grid>
@@ -310,7 +333,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
               </Grid>
             }
           </Grid>
-          {data.from_linode &&
+          {this.shouldRenderHively(data.from_linode, data.updated) &&
             this.renderHively(data.username, data.ticket_id, data.reply_id)
           }
         </Paper>

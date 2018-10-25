@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
@@ -22,7 +22,7 @@ type ClassNames = 'root'
   | 'userWrapper'
   | 'gravatar';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     flexGrow: 1,
     width: '100%',
@@ -56,6 +56,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 
 const styled = withStyles(styles, { withTheme: true });
 
+export interface Disabled {
+  disabled: boolean;
+  reason?: string;
+}
+
 interface Props {
   password: string | null;
   error?: string;
@@ -66,6 +71,7 @@ interface Props {
   required?: boolean;
   placeholder?: string;
   users?: UserSSHKeyObject[];
+  passwordFieldDisabled?: Disabled;
 }
 
 export interface UserSSHKeyObject {
@@ -88,6 +94,7 @@ class AccessPanel extends React.Component<CombinedProps> {
       required,
       placeholder,
       users,
+      passwordFieldDisabled,
     } = this.props;
 
     return (
@@ -96,6 +103,8 @@ class AccessPanel extends React.Component<CombinedProps> {
           {error && <Notice text={error} error />}
           <PasswordInput
             required={required}
+            disabled={passwordFieldDisabled && passwordFieldDisabled.disabled}
+            disabledReason={passwordFieldDisabled && passwordFieldDisabled.reason}
             value={this.props.password || ''}
             label={label || 'Root Password'}
             placeholder={placeholder || "Enter a password."}

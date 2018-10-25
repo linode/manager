@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import {
   StyleRulesCallback,
-  Theme,
+  
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
@@ -20,7 +20,7 @@ type ClassNames = 'root'
 | 'wrapper'
 | 'heading'
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   wrapper: {
     marginTop: theme.spacing.unit * 2,

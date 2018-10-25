@@ -3,7 +3,7 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -16,7 +16,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
 });
 
@@ -26,7 +26,7 @@ interface State { open: boolean; }
 
 type CombinedProps = Props & RouteComponentProps<{}> & WithStyles<ClassNames>;
 
-class LinodeSettingsDeletPanel extends React.Component<CombinedProps, State> {
+class LinodeSettingsDeletePanel extends React.Component<CombinedProps, State> {
   state: State = {
     open: false,
   };
@@ -46,6 +46,10 @@ class LinodeSettingsDeletPanel extends React.Component<CombinedProps, State> {
 
   openDeleteDialog = () => {
     this.setState({ open: true });
+  }
+
+  closeDeleteDialog = () => {
+    this.setState({ open: false });
   }
 
   render() {
@@ -69,6 +73,7 @@ class LinodeSettingsDeletPanel extends React.Component<CombinedProps, State> {
           title="Confirm Deletion"
           actions={this.renderConfirmationActions}
           open={this.state.open}
+          onClose={this.closeDeleteDialog}
         >
           <Typography>Deleting a Linode will result in permanent data loss. Are you sure?</Typography>
         </ConfirmationDialog>
@@ -76,11 +81,9 @@ class LinodeSettingsDeletPanel extends React.Component<CombinedProps, State> {
     );
   }
 
-  closeConfirmation = () => this.setState({ open: false })
-
   renderConfirmationActions = () => (
     <ActionsPanel style={{ padding: 0 }}>
-      <Button type="cancel" onClick={this.closeConfirmation} data-qa-cancel-delete>
+      <Button type="cancel" onClick={this.closeDeleteDialog} data-qa-cancel-delete>
         Cancel
       </Button>
       <Button type="secondary" destructive onClick={this.deleteLinode} data-qa-confirm-delete>
@@ -99,4 +102,4 @@ export default compose(
   errorBoundary,
   withRouter,
   styled,
-)(LinodeSettingsDeletPanel) as React.ComponentType<Props>;
+)(LinodeSettingsDeletePanel) as React.ComponentType<Props>;

@@ -8,7 +8,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormLabel from '@material-ui/core/FormLabel';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -22,17 +22,18 @@ import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
 import DeviceSelection, { ExtendedDisk, ExtendedVolume } from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
-import { createLinodeConfig, getAllKernels, getAllLinodeDisks, getLinodeConfig, updateLinodeConfig } from 'src/services/linodes';
-import { getAllVolumes } from 'src/services/volumes';
+import { createLinodeConfig, getLinodeConfig, getLinodeDisks, getLinodeKernels, updateLinodeConfig } from 'src/services/linodes';
+import { getVolumes } from 'src/services/volumes';
 import createDevicesFromStrings, { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
 import createStringsFromDevices from 'src/utilities/createStringsFromDevices';
+import { getAll, getAllFromEntity } from 'src/utilities/getAll';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
 type ClassNames = 'root'
   | 'section'
   | 'divider';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   section: {
     marginTop: theme.spacing.unit * 2,
@@ -65,7 +66,8 @@ interface EditableFields {
 }
 
 interface Props {
-  linodeId: number
+  linodeHypervisor: 'kvm' | 'xen';
+  linodeId: number;
   linodeRegion: string;
   maxMemory: number;
   open: boolean;
@@ -89,6 +91,10 @@ interface State {
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
+
+const getAllKernels = getAll(getLinodeKernels);
+const getAllVolumes = getAll(getVolumes);
+const getAllLinodeDisks = getAllFromEntity(getLinodeDisks);
 
 class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
   state: State = {
@@ -125,7 +131,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
     });
 
   componentDidUpdate(prevProps: CombinedProps, prevState: State) {
-    const { linodeId, linodeConfigId } = this.props;
+    const { linodeId, linodeConfigId, linodeHypervisor } = this.props;
 
     if (this.isOpening(prevProps.open, this.props.open)) {
 
@@ -141,7 +147,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
        * @todo We could (should?) put this back into Redux.
        */
       if (prevState.kernels.length === 0) {
-        this.requestKernels();
+        this.requestKernels(linodeHypervisor);
       }
 
       this.getAvailableDevices()
@@ -475,10 +481,9 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
 
   getAvailableDevices = () => {
     const { linodeId, linodeRegion } = this.props;
-
     /** Get all volumes for usage in the block device assignment. */
     getAllVolumes()
-      .then((volumes) => volumes.reduce((result, volume) => {
+      .then((volumes) => volumes.reduce((result: Linode.Volume[], volume: Linode.Volume) => {
         /**
          * This is a combination of filter and map. Filter out irrelevant volumes, and update
          * volumes with the special _id property.
@@ -500,7 +505,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
 
     /** Get all Linode disks for usage in the block device assignment. */
     getAllLinodeDisks(linodeId)
-      .then(disks => disks.map((disk) => ({ ...disk, _id: `disk-${disk.id}` })))
+      .then(disks => disks.map((disk:Linode.Disk) => ({ ...disk, _id: `disk-${disk.id}` })))
       .then(disks => this.setState({ availableDevices: { ...this.state.availableDevices, disks } }))
       .catch(console.error);
   }
@@ -606,10 +611,10 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
   handleChangeLabel = (e: React.ChangeEvent<HTMLInputElement>) =>
     this.updateField({ label: e.target.value || '' });
 
-  requestKernels = () => {
+  requestKernels = (linodeHypervisor: 'kvm' | 'xen') => {
     this.setState({ loading: { ...this.state.loading, kernels: true } });
 
-    return getAllKernels()
+    return getAllKernels({}, { [linodeHypervisor]: true })
       .then((kernels) => {
         this.setState({
           kernels,
@@ -619,7 +624,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
       .catch(error => {
         this.setState({
           loading: { ...this.state.loading, kernels: false },
-          errors: pathOr([{ reason: 'Unable to load kernesl.' }], ['response', 'data', 'errors'], error),
+          errors: pathOr([{ reason: 'Unable to load kernels.' }], ['response', 'data', 'errors'], error),
         })
       });
   };

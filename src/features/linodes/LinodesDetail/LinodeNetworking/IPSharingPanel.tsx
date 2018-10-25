@@ -2,7 +2,7 @@ import { clone, flatten, pathOr, uniq } from 'ramda';
 import * as React from 'react';
 
 import Divider from '@material-ui/core/Divider';
-import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -12,6 +12,7 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
 import MenuItem from 'src/components/MenuItem';
+import RenderGuard from 'src/components/RenderGuard';
 import Select from 'src/components/Select';
 import TextField from 'src/components/TextField';
 import { getLinodes } from 'src/services/linodes';
@@ -28,7 +29,7 @@ type ClassNames =
   | 'removeCont'
   | 'remove';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   addNewButton: {
     marginTop: theme.spacing.unit * 3,
     marginBottom: -theme.spacing.unit * 2,
@@ -248,7 +249,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
       submitting: true,
     })
     shareAddresses({ linode_id: this.props.linodeID, ips: finalIPs })
-      .then((response) => {
+      .then((_) => {
         this.props.refreshIPs();
         if (!this.mounted) { return ;}
         this.setState({
@@ -271,6 +272,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
     if (!this.mounted) { return ;}
     this.setState({
       errors: undefined,
+      successMessage: undefined,
       ipsToShare: this.props.linodeSharedIPs,
     })
   }
@@ -357,4 +359,4 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(IPSharingPanel);
+export default styled(RenderGuard<CombinedProps>(IPSharingPanel));

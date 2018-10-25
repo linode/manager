@@ -2,7 +2,7 @@ import { compose, path, pathEq } from 'ramda';
 import * as React from 'react';
 import { Subscription } from 'rxjs/Subscription';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
@@ -19,6 +19,9 @@ import Notice from 'src/components/Notice';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
+import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import TableRowError from 'src/components/TableRowError';
+import TableRowLoading from 'src/components/TableRowLoading';
 import { events$, resetEventsPolling } from 'src/events';
 import ImagesDrawer, { modes } from 'src/features/Images/ImagesDrawer';
 import { withLinode } from 'src/features/linodes/LinodesDetail/context';
@@ -29,14 +32,19 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import LinodeDiskActionMenu from './LinodeDiskActionMenu';
 import LinodeDiskDrawer from './LinodeDiskDrawer';
 
-type ClassNames = 'root' | 'headline';
+type ClassNames = 'root' | 'headline' | 'loadingContainer';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   headline: {
     marginTop: theme.spacing.unit * 2,
     marginBottom: theme.spacing.unit * 2,
   },
+  loadingContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
 });
 
 interface LinodeContextProps {
@@ -82,7 +90,9 @@ interface State {
   confirmDelete: ConfirmDeleteState,
 }
 
-type DisksProps = PaginationProps<Linode.Disk>
+interface DisksProps extends PaginationProps<Linode.Disk> {
+  active: boolean;
+}
 
 type CombinedProps =
   DisksProps
@@ -128,13 +138,19 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
   componentDidMount() {
     const { linodeId } = this.props;
 
-    this.props.request();
-
     this.eventsSubscription = events$
       .filter((e) => !e._initial)
       .filter(pathEq(['entity', 'id'], linodeId))
       .filter((e) => e.status === 'finished' && ['disk_resize', 'disk_delete'].includes(e.action))
       .subscribe((e) => this.props.request());
+  }
+
+  componentDidUpdate(prevProps: CombinedProps) {
+    const disks = path(['data'], this.props);
+    const activating = (!prevProps.active && this.props.active);
+    if (activating && !disks) {
+      this.props.handleOrderChange('label');
+    }
   }
 
   componentWillUnmount() {
@@ -143,23 +159,16 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     }
   }
 
+  errorState = <ErrorState errorText="There was an error loading disk images." />;
+
   render() {
     const {
       classes,
-
-      data: disks,
-      error: disksErrors,
-
-      linodeError,
+      data,
+      error,
+      loading,
       linodeStatus,
     } = this.props;
-
-
-    if (disksErrors || linodeError) {
-      return <ErrorState errorText="There was an error loading disk images." />
-    }
-
-    if (!disks) { return null; }
 
     return (
       <React.Fragment>
@@ -171,25 +180,6 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
             <AddNewLink onClick={this.openDrawerForCreation} label="Add a Disk" />
           </Grid>
         </Grid>
-        {
-          (disks!.length === 0 || !linodeStatus)
-            ? this.emptyState()
-            : this.table(disks!, linodeStatus!)
-        }
-        <this.confirmationDialog />
-        <this.drawer />
-        <this.imagizeDrawer />
-      </React.Fragment>
-    );
-  }
-
-  emptyState = () => {
-    return <Typography>Linode has no disks.</Typography>;
-  }
-
-  table = (disks: Linode.Disk[], status: string) => {
-    return (
-      <React.Fragment>
         <Table isResponsive={false} aria-label="List of Disks">
           <TableHead>
             <TableRow>
@@ -200,23 +190,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
           </TableHead>
 
           <TableBody>
-            {
-              disks.map(disk => (
-                <TableRow key={disk.id}>
-                  <TableCell>{disk.label}</TableCell>
-                  <TableCell>{disk.size} MB</TableCell>
-                  <TableCell>
-                    <LinodeDiskActionMenu
-                      linodeStatus={status}
-                      onRename={this.openDrawerForRename(disk)}
-                      onResize={this.openDrawerForResize(disk)}
-                      onImagize={this.openImagizeDrawer(disk)}
-                      onDelete={this.openConfirmDelete(disk)}
-                    />
-                  </TableCell>
-                </TableRow>
-              ))
-            }
+            { this.renderTableContent(loading, linodeStatus, error, data) }
           </TableBody>
         </Table>
         <PaginationFooter
@@ -226,8 +200,41 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
           handlePageChange={this.props.handlePageChange}
           handleSizeChange={this.props.handlePageSizeChange}
         />
+        <this.confirmationDialog />
+        <this.drawer />
+        <this.imagizeDrawer />
       </React.Fragment>
     );
+  }
+
+  renderTableContent = (loading: boolean, status?: string, error?: Error, data?: Linode.Disk[]) => {
+    if (loading) {
+      return <TableRowLoading colSpan={3} />
+    }
+
+    if (error) {
+      return <TableRowError colSpan={3} message={`Unable to load Linode disks`} />
+    }
+
+    if (!data || data.length === 0) {
+      return <TableRowEmptyState colSpan={3} />
+    }
+
+    return data.map(disk => (
+      <TableRow key={disk.id}>
+        <TableCell>{disk.label}</TableCell>
+        <TableCell>{disk.size} MB</TableCell>
+        <TableCell>
+          <LinodeDiskActionMenu
+            linodeStatus={status || 'offline'}
+            onRename={this.openDrawerForRename(disk)}
+            onResize={this.openDrawerForResize(disk)}
+            onImagize={this.openImagizeDrawer(disk)}
+            onDelete={this.openConfirmDelete(disk)}
+          />
+        </TableCell>
+      </TableRow>
+    ))
   }
 
   /**
@@ -587,7 +594,7 @@ const paginated = Pagey((ownProps, params, filters) => {
   return getLinodeDisks(ownProps.linodeId, params, filters);
 });
 
-const enhanced = compose(
+const enhanced = compose<any, any, any, any>(
   styled,
   linodeContext,
   paginated,

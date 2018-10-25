@@ -3,7 +3,7 @@ import { always, cond, propEq } from 'ramda';
 import * as React from 'react';
 
 import Button, { ButtonProps } from '@material-ui/core/Button';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import HelpIcon from 'src/components/HelpIcon';
 
@@ -14,7 +14,9 @@ type ClassNames = 'root'
   | 'destructive'
   | 'cancel'
   | 'remove'
-  | 'compact';
+  | 'compact'
+  | 'hidden'
+  | 'reg';
 
 export interface Props extends ButtonProps {
   loading?: boolean;
@@ -25,7 +27,7 @@ export interface Props extends ButtonProps {
   compact?: boolean;
 }
 
-const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback = (theme) => ({
   '@keyframes rotate': {
     from: {
       transform: 'rotate(0deg)',
@@ -56,6 +58,12 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   },
   loading: {
     '& svg': {
+      position: 'absolute',
+      left: 0,
+      top: 0,
+      right: 0,
+      bottom: 0,
+      margin: '0 auto',
       width: 22,
       height: 22,
       animation: 'rotate 2s linear infinite',
@@ -92,7 +100,14 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   compact: {
     paddingLeft: 14,
     paddingRight: 14,
-  }
+  },
+  hidden: {
+    visibility: 'hidden',
+  },
+  reg: {
+    display: 'flex',
+    alignItems: 'center',
+  },
 });
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -139,13 +154,15 @@ const wrappedButton: React.StatelessComponent<CombinedProps> = (props) => {
           {
             [classes.root]: true,
             [classes.loading]: loading,
+            'loading': loading,
             [classes.destructive]: destructive,
             [classes.compact]: compact,
           },
           className,
         )}
       >
-        {loading ? <Reload /> : props.children}
+        {loading && <Reload />} 
+        <span className={loading ? classes.hidden : classes.reg}>{props.children}</span>
         {type === 'remove' && 'Remove'}
       </Button>
       {tooltipText && <HelpIcon text={tooltipText} />}

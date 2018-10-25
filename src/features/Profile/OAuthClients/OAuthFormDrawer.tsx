@@ -3,7 +3,7 @@ import * as React from 'react';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import CheckBox from 'src/components/CheckBox';
@@ -13,7 +13,7 @@ import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
 });
 
@@ -53,7 +53,7 @@ const OAuthCreationDrawer: React.StatelessComponent<CombinedProps> = (props) => 
   const hasErrorFor = getAPIErrorsFor(errorResources, errors);
 
   return (
-    <Drawer title={`${ edit ? 'Edit' : 'Create'} OAuth Client`} open={open} onClose={onClose}>
+    <Drawer title={`${ edit ? 'Edit' : 'Create'} My App`} open={open} onClose={onClose}>
       <TextField
         value={label || ''}
         errorText={hasErrorFor('label')}

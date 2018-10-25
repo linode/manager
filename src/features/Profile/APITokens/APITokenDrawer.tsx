@@ -6,7 +6,7 @@ import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
@@ -42,12 +42,12 @@ type ClassNames = 'permsTable'
   | 'readOnlyCell'
   | 'readWritecell';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   permsTable: {
     marginTop: theme.spacing.unit * 3,
   },
   selectCell: {
-    fontWeight: 900,
+    fontFamily: 'LatoWebBold',
     fontSize: '.9rem',
   },
   accessCell: {
@@ -309,8 +309,8 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
       <Drawer
         title={
           mode === 'view' && label
-          || mode === 'create' && 'Add a Personal Access Token'
-          || mode === 'edit' && 'Edit this Personal Access Token'
+          || mode === 'create' && 'Add Personal Access Token'
+          || mode === 'edit' && 'Edit Personal Access Token'
           || ''
         }
         open={open}

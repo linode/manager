@@ -3,7 +3,7 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import Button from '@material-ui/core/Button';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Drawer from 'src/components/Drawer';
@@ -21,7 +21,7 @@ type ClassNames = 'root'
 |  'suffix'
 |  'actionPanel';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   suffix: {
     fontSize: '.9rem',
@@ -268,7 +268,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
 
     const hasErrorFor = getAPIErrorFor({
       linode_id: 'Linode',
-      config_id: 'Config',
+      disk_id: 'Disk',
       region: 'Region',
       size: 'Size',
       label: 'Label',

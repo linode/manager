@@ -13,7 +13,7 @@ type ClassNames = 'root'
   | 'icon'
   | 'button';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   '@keyframes scaleIn': {
     from: {
       transform: 'translateX( -10px ) rotateY( -180deg )',
@@ -66,7 +66,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => ({
   },
   title: {
     textAlign: 'center',
-    fontWeight: 700,
+    fontFamily: 'LatoWebBold',
     fontSize: '2.4rem',
     [theme.breakpoints.up('md')]: {
       fontSize: '3.21rem',

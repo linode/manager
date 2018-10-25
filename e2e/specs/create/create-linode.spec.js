@@ -8,7 +8,7 @@ describe('Create - Menu Suite', () => {
 
     it('should display create linode in header and link to create linode page', () => {
         browser.waitForVisible('[data-qa-add-new-menu-button]', constants.wait.normal);
-        browser.waitForVisible('[data-qa-circular-progress]', constants.wait.normal, true);
+        browser.waitForExist('[data-qa-circular-progress]', constants.wait.normal, true);
         browser.click('[data-qa-add-new-menu-button]');
         Create.linodeMenuItem.waitForVisible(constants.wait.normal);
         expect(Create.linodeMenuItem.isVisible()).toBe(true);

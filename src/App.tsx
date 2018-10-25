@@ -2,12 +2,12 @@ import { shim } from 'promise.prototype.finally';
 import { lensPath, path, set } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Redirect, Route, RouteProps, Switch } from 'react-router-dom';
 import { Sticky, StickyContainer, StickyProps } from 'react-sticky';
 import { compose } from 'redux';
-import 'typeface-lato';
+import { Subscription } from 'rxjs/Subscription';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import DefaultLoader from 'src/components/DefaultLoader';
 import DocsSidebar from 'src/components/DocsSidebar';
@@ -17,16 +17,24 @@ import NotFound from 'src/components/NotFound';
 import SideMenu from 'src/components/SideMenu';
 import { RegionsProvider, WithRegionsContext } from 'src/context/regions';
 import { TypesProvider, WithTypesContext } from 'src/context/types';
+
 import Footer from 'src/features/Footer';
 import ToastNotifications from 'src/features/ToastNotifications';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
+
 import { getDeprecatedLinodeTypes, getLinodeTypes } from 'src/services/linodes';
 import { getRegions } from 'src/services/misc';
+import { requestNotifications } from 'src/store/reducers/notifications';
+import { requestAccountSettings } from 'src/store/reducers/resources/accountSettings';
 import { requestProfile } from 'src/store/reducers/resources/profile';
+
 import composeState from 'src/utilities/composeState';
 import { notifications, theme as themeStorage } from 'src/utilities/storage';
 import WelcomeBanner from 'src/WelcomeBanner';
+
+import { events$ } from 'src/events';
 
 shim(); // allows for .finally() usage
 
@@ -104,7 +112,7 @@ type ClassNames = 'appFrame'
   | 'grid'
   | 'switchWrapper';
 
-const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback = (theme) => ({
   appFrame: {
     position: 'relative',
     display: 'flex',
@@ -148,6 +156,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
 
 interface Props {
   toggleTheme: () => void;
+  location: RouteProps['location'];
 }
 
 interface State {
@@ -179,6 +188,8 @@ const L = {
 
 export class App extends React.Component<CombinedProps, State> {
   composeState = composeState;
+
+  eventsSub: Subscription;
 
   state: State = {
     menuOpen: false,
@@ -238,13 +249,39 @@ export class App extends React.Component<CombinedProps, State> {
   };
 
   componentDidMount() {
-    const { getProfile } = this.props.actions;
+    const { getAccountSettings, getNotifications, getProfile } = this.props.actions;
+
+    /*
+     * We want to listen for migration events side-wide
+     * It's unpredictable when a migration is going to happen. It could take
+     * hours and it could take days. We want to notify to the user when it happens
+     * and then update the Linodes in LinodesDetail and LinodesLanding
+     */
+    this.eventsSub = events$
+      .filter(event => (
+        !event._initial
+        && [
+          'linode_migrate',
+        ].includes(event.action)
+      ))
+      .subscribe((event) => {
+        const { entity: migratedLinode } = event;
+        if (event.action === 'linode_migrate' && event.status === 'finished') {
+          sendToast(`Linode ${migratedLinode!.label} migrated successfully.`);
+        }
+
+        if (event.action === 'linode_migrate' && event.status === 'failed') {
+          sendToast(`Linode ${migratedLinode!.label} migration failed.`, 'error');
+        }
+      });
 
     if (notifications.welcome.get() === 'open') {
       this.setState({ welcomeBanner: true });
     }
 
     getProfile();
+    getNotifications();
+    getAccountSettings();
 
     this.state.regionsContext.request();
     this.state.typesContext.request();
@@ -360,6 +397,8 @@ const themeDataAttr = () => {
 interface DispatchProps {
   actions: {
     getProfile: () => void;
+    getNotifications: () => void;
+    getAccountSettings: () => void;
   },
 }
 
@@ -367,6 +406,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, 
   return {
     actions: {
       getProfile: () => dispatch(requestProfile()),
+      getNotifications: () => dispatch(requestNotifications()),
+      getAccountSettings: () => dispatch(requestAccountSettings()),
     }
   };
 };

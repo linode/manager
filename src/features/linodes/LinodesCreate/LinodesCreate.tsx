@@ -4,7 +4,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { StickyContainer } from 'react-sticky';
 
 import AppBar from '@material-ui/core/AppBar';
-import { StyleRules, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
@@ -38,11 +38,11 @@ export type TypeInfo = {
   backupsMonthly: number | null,
 } | undefined;
 
-type Styles =
+type ClassNames =
   'root'
   | 'main';
 
-const styles = (theme: Theme & Linode.Theme): StyleRules => ({
+  const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
   },
   main: {
@@ -66,7 +66,7 @@ interface PreloadedProps {
 
 type CombinedProps = TypesContextProps
   & RegionsContextProps
-  & WithStyles<Styles>
+  & WithStyles<ClassNames>
   & PreloadedProps
   & RouteComponentProps<{}>;
 
@@ -202,6 +202,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
             getTypeInfo={this.getTypeInfo}
             getRegionInfo={this.getRegionInfo}
             history={this.props.history}
+            handleDisablePasswordField={this.handleDisablePasswordField}
           />
         );
       },
@@ -265,6 +266,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
             history={this.props.history}
             selectedStackScriptFromQuery={this.state.selectedStackScriptIDFromQueryString}
             selectedTabFromQuery={this.state.selectedStackScriptTabFromQueryString}
+            handleDisablePasswordField={this.handleDisablePasswordField}
           />
         );
       },
@@ -311,6 +313,16 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
       title: selectedRegion.country.toUpperCase(),
       details: selectedRegion.display,
     }
+  }
+
+  handleDisablePasswordField = (imageSelected: boolean) => {
+    if (!imageSelected) {
+      return {
+        disabled: true,
+        reason: 'You must first select an image to enter a root password',
+      }
+    }
+    return;
   }
 
   render() {

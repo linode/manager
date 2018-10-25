@@ -6,7 +6,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import Input, { InputProps } from '@material-ui/core/Input';
 import { MenuProps } from '@material-ui/core/Menu';
 import Select, { SelectProps } from '@material-ui/core/Select';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 
 import HelpIcon from 'src/components/HelpIcon';
@@ -18,9 +18,9 @@ type ClassNames = 'inputSucess'
   | 'helpWrapperSelectField'
   | 'pagination';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   inputError: {
-    borderColor: theme.color.red,
+    borderColor: `${theme.color.red} !important`,
     '&[class*="focused"]': {
       borderColor: theme.color.red,
     },
@@ -33,7 +33,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     lineHeight: '1em',
   },
   inputSucess: {
-    borderColor: theme.color.green,
+    borderColor: `${theme.color.green} !important`,
     '&[class*="focused"]': {
       borderColor: theme.color.green,
     },
@@ -92,7 +92,14 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
     anchorOrigin: { vertical: 'bottom', horizontal: 'left' },
     transformOrigin: { vertical: 'top', horizontal: 'left' },
     MenuListProps: { className: 'selectMenuList' },
-    PaperProps: { className: 'selectMenuDropdown' },
+    PaperProps: {
+      className: classNames(
+        'selectMenuDropdown',
+        {
+          [classes.inputSucess]: success === true,
+          [classes.inputError]: error === true,
+        })
+    },
     TransitionComponent: Fade,
   };
 
@@ -104,7 +111,7 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
   const c = classNames({
     [classes.inputSucess]: success === true,
     [classes.inputError]: error === true,
-    [errorScrollClassName]: !!errorScrollClassName,
+    [errorScrollClassName]: !!errorText && !!errorScrollClassName,
     [classes.helpWrapperSelectField]: Boolean(tooltipText),
     [classes.pagination]: Boolean(pagination),
   });

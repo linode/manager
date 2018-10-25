@@ -2,7 +2,7 @@ import { compose } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles, WithTheme } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 
@@ -37,7 +37,7 @@ type ClassNames = 'bodyRow'
   | 'linkButton'
   | 'tagWrapper';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => {
+const styles: StyleRulesCallback<ClassNames> = (theme) => {
   return ({
     bodyRow: {
       height: 77,
@@ -112,6 +112,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     tagWrapper: {
       marginTop: theme.spacing.unit / 2,
       marginLeft: theme.spacing.unit * 4,
+      '& [class*="MuiChip"]': {
+        cursor: 'pointer',
+      },
     },
   });
 };
@@ -144,9 +147,10 @@ interface TypesContextProps {
 }
 
 type CombinedProps =
-  Props &
-  TypesContextProps &
-  WithStyles<ClassNames>;
+  & Props
+  & TypesContextProps
+  & WithTheme
+  & WithStyles<ClassNames>;
 
 class LinodeRow extends React.Component<CombinedProps, State> {
   state: State = {
@@ -174,6 +178,7 @@ class LinodeRow extends React.Component<CombinedProps, State> {
         this.state,
         ['mutationAvailable']
       )
+      || this.props.theme.name !== nextProps.theme.name
   }
 
   componentDidMount() {
@@ -204,10 +209,10 @@ class LinodeRow extends React.Component<CombinedProps, State> {
               </Typography>
             </Grid>
           </Grid>
-          </Link>
           <div className={classes.tagWrapper}>
             {this.props.renderTagsAndMoreTags(linodeTags)}
-            </div>
+          </div>
+          </Link>
       </TableCell>
     );
   }

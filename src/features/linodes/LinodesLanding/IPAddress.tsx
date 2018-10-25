@@ -2,7 +2,7 @@ import * as copy from 'copy-to-clipboard';
 import { tail } from 'ramda';
 import * as React from 'react';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import CopyTooltip from 'src/components/CopyTooltip';
 import ShowMore from 'src/components/ShowMore';
@@ -15,7 +15,7 @@ type CSSClasses =  'root'
 | 'ip'
 | 'ipLink';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   '@keyframes popUp': {
     from: {
       opacity: 0,

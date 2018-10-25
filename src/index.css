@@ -13,7 +13,7 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
-  font-family: "Lato", sans-serif;
+  font-family: "LatoWeb", sans-serif;
 }
 
 @media screen and (min-width: 960px) {
@@ -46,6 +46,11 @@ a {
   text-decoration: none;
   color: #3683DC;
   cursor: pointer;
+}
+
+strong,
+bold {
+  font-family: "LatoWebBold";
 }
 
 .visually-hidden {
@@ -180,4 +185,10 @@ a.black:not(.nu):active {
 
 .fade-in-table {
   animation: fadeIn .3s ease-in-out;
+}
+
+.no-transition *,
+.no-transition *::before,
+.no-transition *::after {
+  transition: none !important;
 }

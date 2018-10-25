@@ -13,6 +13,12 @@ it('renders without crashing', () => {
       <Provider store={store}>
         <StaticRouter location="/" context={{}}>
           <App
+            location={{
+              pathname: '',
+              hash: '',
+              search: '',
+              state: {},
+            }}
             classes={{
               appFrame: '',
               content: '',
@@ -23,7 +29,9 @@ it('renders without crashing', () => {
             userId={123456}
             profileLoading={false}
             actions={{
+              getAccountSettings: jest.fn(),
               getProfile: jest.fn(),
+              getNotifications: jest.fn(),
             }}
             documentation={[]}
             toggleTheme={jest.fn()}

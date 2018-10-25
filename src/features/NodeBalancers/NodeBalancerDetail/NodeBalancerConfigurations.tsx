@@ -3,7 +3,7 @@ import { append, clone, compose, defaultTo, Lens, lensPath, over, path, pathOr, 
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -43,7 +43,7 @@ import {
 
 type ClassNames = 'root' | 'title';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   title: {
     marginTop: theme.spacing.unit,
@@ -172,7 +172,15 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     */
     const nodePathErrors = errors.reduce(
       (acc: any, error: Linode.ApiFieldError) => {
-        const match = /^nodes_(\d+)_(\w+)$/.exec(error.field!);
+        /**
+         * Regex conditions are as follows:
+         * 
+         * must match "nodes["
+         * must have a digit 0-9
+         * then have "]"
+         * must end with ".anywordhere"
+         */
+        const match = /^nodes\[(\d+)\].(\w+)$/.exec(error.field!);
         if (match && match[1] && match[2]) {
           return [
             ...acc,
@@ -329,6 +337,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
      * If the config creation succeeds here, the UpdatePath will be used upon
      * subsequent saves.
     */
+
     const { match: { params: { nodeBalancerId } } } = this.props;
     createNodeBalancerConfig(nodeBalancerId!, configPayload)
       .then((nodeBalancerConfig) => {
@@ -394,6 +403,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'], errorResponse);
         const newErrors = clone(this.state.configErrors);
         newErrors[idx] = errors || [];
+        this.setNodeErrors(idx, newErrors[idx]);
         this.setState({
           configErrors: newErrors,
         }, () => {

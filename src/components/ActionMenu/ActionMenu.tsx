@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import MoreHoriz from '@material-ui/icons/MoreHoriz';
 
 import MenuItem from 'src/components/MenuItem';
@@ -20,7 +20,7 @@ type CSSClasses = 'root'
   | 'actionSingleLink'
   | 'hidden';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   root: {
     display: 'flex',
     alignItems: 'center',
@@ -31,7 +31,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     paddingRight: theme.spacing.unit * 2,
     paddingTop: theme.spacing.unit * 1.5,
     paddingBottom: theme.spacing.unit * 1.5,
-    fontWeight: 400,
+    fontFamily: 'LatoWeb',
     fontSize: '.9rem',
     color: theme.color.blueDTwhite,
     transition: `
@@ -56,7 +56,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     marginRight: theme.spacing.unit,
     whiteSpace: 'nowrap',
     float: 'right',
-    fontWeight: 700,
+    fontFamily: 'LatoWebBold',
   },
   hidden: {
     height: 0,

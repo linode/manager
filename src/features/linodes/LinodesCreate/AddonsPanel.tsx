@@ -3,7 +3,7 @@ import * as React from 'react';
 import Divider from '@material-ui/core/Divider';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import CheckBox from 'src/components/CheckBox';
@@ -21,7 +21,7 @@ type ClassNames = 'root'
   | 'subLabel'
   | 'caption';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     flexGrow: 1,
     width: '100%',
@@ -49,7 +49,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   label: {
     '& > span:last-child': {
       color: theme.color.headline,
-      fontWeight: 700,
+      fontFamily: 'LatoWebBold',
       lineHeight: '1.2em',
       [theme.breakpoints.up('md')]: {
         marginLeft: 16,

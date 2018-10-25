@@ -1,22 +1,27 @@
 require('dotenv').config();
 
-const { readFileSync } = require('fs');
+const { readFileSync, unlinkSync } = require('fs');
 const { argv } = require('yargs');
-const { login } = require('../utils/config-utils');
+const {
+    login,
+    generateCreds,
+    checkoutCreds,
+    checkInCreds,
+    removeCreds,
+    cleanupAccounts
+} = require('../utils/config-utils');
 const { browserCommands } = require('./custom-commands');
 const { browserConf } = require('./browser-config');
 const { constants } = require('../constants');
 const selectedBrowser = argv.browser ? browserConf[argv.browser] : browserConf['chrome'];
-const username = process.env.MANAGER_USER;
-const password = process.env.MANAGER_PASS;
 
 const specsToRun = () => {
     if (argv.file) {
-        return ['./e2e/setup/setup.spec.js', argv.file];
+        return [argv.file];
     }
     
     if (argv.dir || argv.d) {
-        return ['./e2e/setup/setup.spec.js', `./e2e/specs/${argv.dir || argv.d}/**/*.spec.js`]
+        return [`./e2e/specs/${argv.dir || argv.d}/**/*.spec.js`]
     }
 
     if (argv.smoke) {
@@ -48,6 +53,7 @@ exports.config = {
         specsToRun(),
     // Patterns to exclude.
     exclude: [
+        './e2e/specs/accessibility/*.spec.js'
         // 'path/to/excluded/files'
     ],
     //
@@ -66,7 +72,7 @@ exports.config = {
     // and 30 processes will get spawned. The property handles how many capabilities
     // from the same test should run tests.
     //
-    maxInstances: 1,
+    maxInstances: process.env.MANAGER_USER_2 ? 2 : 1,
     //
     // If you have trouble getting all important capabilities together, check out the
     // Sauce Labs platform configurator - a great tool to configure your capabilities:
@@ -181,7 +187,8 @@ exports.config = {
             mutualAuth: true,
         }
     },
-    
+
+    testUser: '', // SET IN THE BEFORE HOOK PRIOR TO EACH TEST
     //
     // =====
     // Hooks
@@ -195,8 +202,10 @@ exports.config = {
      * @param {Object} config wdio configuration object
      * @param {Array.<Object>} capabilities list of capabilities details
      */
-    // onPrepare: function (config, capabilities) {
-    // },
+    onPrepare: function (config, capabilities) {
+        // Generate our temporary test credentials file
+        generateCreds('./e2e/creds.js');
+    },
     /**
      * Gets executed just before initialising the webdriver session and test framework. It allows you
      * to manipulate configurations depending on the capability or spec.
@@ -240,7 +249,12 @@ exports.config = {
             browser.windowHandleMaximize();
         }
 
-        login(username, password);
+        /* Get test credentials from temporary creds file
+           Set "inUse:true" for account under test
+        */
+        const testCreds = checkoutCreds('./e2e/creds.js', specs[0]);
+
+        login(testCreds.username, testCreds.password, './e2e/creds.js');
     },
     /**
      * Runs before a WebdriverIO command gets executed.
@@ -256,8 +270,8 @@ exports.config = {
      */
     beforeSuite: function (suite) {
         // Click beta notice button
-        browser.waitForVisible('[data-qa-beta-notice]');
-        browser.click('[data-qa-beta-notice] button');
+        browser.waitForVisible('[data-qa-dialog-content] button');
+        browser.click('[data-qa-dialog-content] button');
     },
     /**
      * Function to be executed before a test (in Mocha/Jasmine) or a step (in Cucumber) starts.
@@ -316,6 +330,9 @@ exports.config = {
         if (argv.replay) {
             browser.deleteImposters();
         }
+
+        // Set "inUse:false" on the account under test in the credentials file
+        checkInCreds('./e2e/creds.js', specs[0]);  
     },
     /**
      * Gets executed right after terminating the webdriver session.
@@ -331,6 +348,11 @@ exports.config = {
      * @param {Object} config wdio configuration object
      * @param {Array.<Object>} capabilities list of capabilities details
      */
-    // onComplete: function(exitCode, config, capabilities) {
-    // }
+    onComplete: function(exitCode, config, capabilities) {
+        // Run delete all, on every test account
+        cleanupAccounts('./e2e/creds.js');
+
+        // Remove our temporary test credentials
+        unlinkSync('./e2e/creds.js');
+    }
 }

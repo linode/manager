@@ -3,7 +3,7 @@ import * as React from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import {
   StyleRulesCallback,
-  Theme,
+  
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
@@ -16,7 +16,7 @@ import Notice from 'src/components/Notice';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
 });
 
@@ -79,9 +79,13 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
         },
         disk: {
           label: 'Storage',
-          newAmount: props.mutateInfo.disk,
-          currentAmount: props.currentTypeInfo.disk,
-          unit: 'MB'
+          newAmount: props.mutateInfo.disk !== null
+            ? props.mutateInfo.disk / 1024
+            : props.mutateInfo.disk,
+          currentAmount: props.currentTypeInfo.disk !== null
+            ? props.currentTypeInfo.disk / 1024
+            : props.currentTypeInfo.disk,
+          unit: 'GB'
         },
         transfer: {
           label: 'Transfer',
@@ -133,8 +137,9 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
             }
             return (
               <ListItem key={label}>
-                {`${label} goes from ${currentAmount} ${unit} to
-                ${newAmount} ${unit}`}
+                <Typography>
+                  {label} goes from {currentAmount} {unit} to <strong>{newAmount} {unit}</strong>
+                </Typography>
               </ListItem>
             )
           })}

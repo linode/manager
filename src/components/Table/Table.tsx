@@ -1,19 +1,22 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Table, { TableProps } from '@material-ui/core/Table';
 
 type ClassNames = 'root'
   | 'border'
   | 'responsive';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     overflowX: 'auto',
   },
   responsive: {
     [theme.breakpoints.down('sm')]: {
+      '& .emptyCell': {
+        display: 'none',
+      },
       '& thead': {
         display: 'none',
       },
@@ -21,7 +24,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
         marginBottom: 0,
         '& > td:first-child': {
           backgroundColor: theme.bg.offWhite,
-          fontWeight: 700,
+          fontFamily: 'LatoWebBold',
         },
       },
       '& tr': {

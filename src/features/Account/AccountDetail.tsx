@@ -1,11 +1,12 @@
 import { compose, lensPath, set, view } from 'ramda';
 import * as React from 'react';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { AccountsAndPasswords, BillingAndPayments } from 'src/documentation';
 import { Requestable } from 'src/requestableContext';
 import { getAccountInfo } from 'src/services/account';
 import composeState from 'src/utilities/composeState';
@@ -20,7 +21,7 @@ import { AccountProvider } from './context';
 
 type ClassNames = 'root' | 'heading';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   heading: {
     marginTop: theme.spacing.unit * 4,
@@ -53,16 +54,8 @@ const L = {
 
 export class AccountDetail extends React.Component<CombinedProps, State> {
   static docs = [
-    {
-      title: 'Billing and Payments',
-      src: 'https://www.linode.com/docs/platform/billing-and-payments/',
-      body: `Our guide to billing and payments.`,
-    },
-    {
-      title: 'Accounts and Passwords',
-      src: 'https://www.linode.com/docs/platform/accounts-and-passwords/',
-      body: `Our guide to managing accounts and passwords.`,
-    },
+    BillingAndPayments,
+    AccountsAndPasswords,
   ];
 
   composeState = composeState;

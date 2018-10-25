@@ -1,36 +1,43 @@
-import { storiesOf } from '@storybook/react';
-import * as React from 'react';
-import { StaticRouter } from 'react-router';
+// DISABLING DUE TO REAL API REQUESTS MADE IN THIS STORY
 
-import { images } from 'src/__data__/images';
-import { stackScripts } from 'src/__data__/stackScripts';
-import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel';
+// import { storiesOf } from '@storybook/react';
+// import * as React from 'react';
+// import { Provider } from 'react-redux';
+// import { StaticRouter } from 'react-router';
 
-import ThemeDecorator from '../utilities/storybookDecorators';
+// import { images } from 'src/__data__/images';
+// import { stackScripts } from 'src/__data__/stackScripts';
+// import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel';
 
-interface State {
-  selectedId: number | null;
-}
+// import ThemeDecorator from '../utilities/storybookDecorators';
 
-class InteractiveExample extends React.Component<{}, State> {
-  state: State = {
-    selectedId: null,
-  };
+// import store from 'src/store';
 
-  render() {
-    return (
-      <StaticRouter>
-        <SelectStackScriptPanel
-          publicImages={images}
-          selectedId={this.state.selectedId}
-          onSelect={(id: number) => this.setState({ selectedId: id })}
-          data={stackScripts}
-        />
-      </StaticRouter>
-    );
-  }
-}
+// interface State {
+//   selectedId: number | null;
+// }
 
-storiesOf('SelectStackScriptPanel', module)
-  .addDecorator(ThemeDecorator)
-  .add('Example', () => (<InteractiveExample />));
+// class InteractiveExample extends React.Component<{}, State> {
+//   state: State = {
+//     selectedId: null,
+//   };
+
+//   render() {
+//     return (
+//       <Provider store={store}>
+//         <StaticRouter>
+//           <SelectStackScriptPanel
+//             publicImages={images}
+//             selectedId={this.state.selectedId}
+//             onSelect={(id: number) => this.setState({ selectedId: id })}
+//             data={stackScripts}
+//           />
+//         </StaticRouter>
+//       </Provider>
+//     );
+//   }
+// }
+
+// storiesOf('SelectStackScriptPanel', module)
+//   .addDecorator(ThemeDecorator)
+//   .add('Example', () => (<InteractiveExample />));

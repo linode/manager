@@ -2,7 +2,7 @@ import { compose } from 'ramda';
 import * as React from 'react';
 
 import ListItem from '@material-ui/core/ListItem';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import OpenInNew from '@material-ui/icons/OpenInNew';
 
@@ -15,7 +15,7 @@ type ClassNames = 'root'
 | 'icon'
 | 'row';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     flexDirection: 'column',
     alignItems: 'flex-start',
@@ -35,7 +35,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   source: {
     marginTop: theme.spacing.unit / 2,
-    fontWeight: 700,
+    fontFamily: 'LatoWebBold',
   },
   row: {
     display: 'flex',

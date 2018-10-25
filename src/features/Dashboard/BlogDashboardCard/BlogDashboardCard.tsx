@@ -1,5 +1,5 @@
 import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Axios from 'axios';
 import { compose, map, pathOr, take } from 'ramda';
@@ -15,7 +15,7 @@ type ClassNames = 'root' |
 
 const req = Axios.create();
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     padding: theme.spacing.unit * 3,
     borderBottom: `1px solid ${theme.palette.divider}`,
@@ -80,13 +80,19 @@ class BlogDashboardCard extends React.Component<CombinedProps, State> {
   renderItem = (item: BlogItem, idx: number) => {
     const { classes } = this.props;
 
+    /* 
+     * simple fix. Sometimes the description would come back with [&#8230;]
+     * instead of an ellipses
+     */
+    const cleanedDescription = item.description.replace(' [&#8230;]', '...');
+
     return (
       <Paper key={idx} className={classes.root}>
         <Typography variant="subheading" className={classes.itemTitle}>
           <a href={item.link} className="blue" target="_blank" data-qa-blog-post>{item.title}</a>
         </Typography>
         <Typography variant="caption" data-qa-post-desc>
-          {item.description}
+          {cleanedDescription}
         </Typography>
       </Paper>
     );

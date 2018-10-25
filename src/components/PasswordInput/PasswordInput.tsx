@@ -2,7 +2,7 @@ import { isEmpty } from 'ramda';
 import * as React from 'react';
 import * as zxcvbn from 'zxcvbn';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import Grid from 'src/components/Grid';
 import { Props as TextFieldProps } from 'src/components/TextField';
@@ -13,15 +13,16 @@ import HideShowText from './HideShowText';
 interface Props extends TextFieldProps {
   value?: string;
   required?: boolean;
+  disabledReason?: string;
 }
 
 interface State {
-  strength: null | 0 | 1 | 2 | 3 | 4;
+  strength: null | 0 | 1 | 2 | 3;
 }
 
 type ClassNames = 'container' | 'strengthIndicator';
 
-const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback = (theme) => ({
   container: {
     position: 'relative',
     marginBottom: theme.spacing.unit,
@@ -58,14 +59,17 @@ class PasswordInput extends React.Component<CombinedProps, State> {
 
   render() {
     const { strength } = this.state;
-    const { classes, value, required, ...rest } = this.props;
+    const { classes, value, required, disabledReason, ...rest } = this.props;
 
     return (
       <Grid container className={classes.container}>
-        <Grid item xs={12}>
+        <Grid
+          item xs={12}
+        >
           <HideShowText
-            value={value}
             {...rest}
+            tooltipText={disabledReason}
+            value={value}
             onChange={this.onChange}
             fullWidth
             required={required}
@@ -81,9 +85,19 @@ class PasswordInput extends React.Component<CombinedProps, State> {
   }
 }
 
-const maybeStrength = (value?: string) =>
-  !value || isEmpty(value)
-    ? null
-    : zxcvbn(value).score;
+
+
+const maybeStrength = (value?: string) => {
+  if (!value || isEmpty(value)) {
+    return null
+  }
+  else {
+    const score = zxcvbn(value).score;
+    if(score === 4){
+      return 3;
+    }
+    return score;
+  }
+}
 
 export default withStyles(styles, { withTheme: true })<Props>(PasswordInput);

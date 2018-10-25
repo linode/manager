@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import {
   StyleRulesCallback,
-  Theme,
+  
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
@@ -15,7 +15,7 @@ import SearchPanel from './Panels/SearchPanel';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     [theme.breakpoints.up('lg')]: {
       padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 14}px`,

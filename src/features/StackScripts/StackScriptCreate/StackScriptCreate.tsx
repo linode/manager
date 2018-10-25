@@ -4,7 +4,7 @@ import { connect, MapStateToProps } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 
 import IconButton from '@material-ui/core/IconButton';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 
@@ -17,6 +17,7 @@ import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import PromiseLoader from 'src/components/PromiseLoader';
+import { StackScripts } from 'src/documentation';
 import ScriptForm from 'src/features/StackScripts/StackScriptForm';
 import { getLinodeImages } from 'src/services/images';
 import { createStackScript } from 'src/services/stackscripts';
@@ -28,7 +29,7 @@ type ClassNames = 'root'
   | 'titleWrapper'
   | 'createTitle';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   backButton: {
     margin: '5px 0 0 -16px',
@@ -95,11 +96,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
   };
 
   static docs = [
-    {
-      title: 'Automate Deployment with StackScripts',
-      src: 'https://www.linode.com/docs/platform/stackscripts/',
-      body: `Create Custom Instances and Automate Deployment with StackScripts.`,
-    },
+    StackScripts,
   ];
 
   mounted: boolean = false;

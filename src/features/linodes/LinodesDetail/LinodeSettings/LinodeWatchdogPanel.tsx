@@ -3,7 +3,7 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import ExpansionPanel from 'src/components/ExpansionPanel';
@@ -15,7 +15,7 @@ import { updateLinode } from 'src/services/linodes';
 
 type ClassNames = 'root' | 'shutDownWatchdog';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   shutDownWatchdog: {
     margin: `${theme.spacing.unit * 2}px 0`,
@@ -52,7 +52,7 @@ class LinodeWatchdogPanel extends React.Component<CombinedProps, State> {
         this.setState(compose(
           setSubmitting(false),
           setSuccess(`Watchdog succesfully ${value ? 'enabled' : 'disabled.'}`),
-          setCurrentStatus(response.data.watchdog_enabled),
+          setCurrentStatus(response.watchdog_enabled),
         ));
       })
       .catch(() => {

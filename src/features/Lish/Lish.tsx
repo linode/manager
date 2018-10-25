@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { matchPath, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 
@@ -14,7 +14,7 @@ import Weblish from './Weblish';
 
 type ClassNames = 'tabs' | 'tabRoot' | 'progress' | 'notFound';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   tabs: {
     backgroundColor: theme.bg.offWhite,
     margin: 0,

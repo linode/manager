@@ -4,7 +4,7 @@ import { compose } from 'ramda';
 
 import {
   StyleRulesCallback,
-  Theme,
+  
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
@@ -12,10 +12,11 @@ import {
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Placeholder from 'src/components/Placeholder';
+import { MonitoringYourServer } from 'src/documentation';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
 });
 
@@ -28,11 +29,7 @@ export class LongviewLanding extends React.Component<CombinedProps, {}> {
       src: 'https://www.linode.com/docs/platform/longview/longview/',
       body: `This guide shows how to install and use Linode Longview.`,
     },
-    {
-      title: 'Monitoring and Maintaining Your Server',
-      src: 'https://www.linode.com/docs/uptime/monitoring-and-maintaining-your-server/',
-      body: `This guide introdues concepts and tools for monitoring and maintaining your server.`,
-    },
+    MonitoringYourServer,
   ];
 
   render() {
@@ -44,7 +41,7 @@ export class LongviewLanding extends React.Component<CombinedProps, {}> {
           copy="Keep your Linux systems running smoothly with insights from your system metrics."
           buttonProps={{
             onClick: () => window.open('https://manager.linode.com/longview', '_blank'),
-            children: 'Go to Longview',
+            children: 'Navigate to Classic Manager',
           }}
         />
       </React.Fragment>

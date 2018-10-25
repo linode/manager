@@ -14,10 +14,10 @@ import { Subscription } from 'rxjs/Subscription';
 
 import ListItem from '@material-ui/core/ListItem';
 import Menu from '@material-ui/core/Menu';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import { events$, init } from 'src/events';
-import { markEventsSeen } from 'src/services/account';
+import { markEventSeen } from 'src/services/account';
 
 import UserEventsButton from './UserEventsButton';
 import UserEventsList from './UserEventsList';
@@ -26,7 +26,7 @@ type ClassNames = 'root'
   | 'dropDown'
   | 'hidden';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     transform: `translate(-${theme.spacing.unit * 2}px, ${theme.spacing.unit}px)`,
   },
@@ -116,7 +116,7 @@ class UserEventsMenu extends React.Component<CombinedProps, State> {
           .map(e => e.id),
     )
       .subscribe(([e, id]) => {
-        markEventsSeen(id)
+        markEventSeen(id)
           .then(() => init())
           .catch(console.error);
       });

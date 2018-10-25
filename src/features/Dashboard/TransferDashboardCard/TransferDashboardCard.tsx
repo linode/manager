@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import CircleProgress from 'src/components/CircleProgress';
@@ -18,7 +18,7 @@ type ClassNames = 'root'
   | 'quota'
   | 'initialLoader';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     padding: theme.spacing.unit * 4,
     [theme.breakpoints.up('md')]: {
@@ -55,7 +55,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   used: {
     fontSize: '1.5rem',
-    fontWeight: 700,
+    fontFamily: 'LatoWebBold',
     color: theme.color.headline,
   },
   quota: {},
@@ -149,7 +149,7 @@ class TransferDashboardCard extends React.Component<CombinedProps, State> {
             </Grid>
             <Grid item>
               <Typography variant='title'>This Month's Network Transfer Pool</Typography>
-              <Typography>Network bandwith during the current billing cycle.</Typography>
+              <Typography>Network bandwidth during the current billing cycle.</Typography>
             </Grid>
           </Grid>
         </Paper>

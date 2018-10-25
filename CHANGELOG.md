@@ -4,6 +4,61 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.37.1] - 2018-10.22
+
+### Fixed:
+  - Backup restore not restoring to destination Linode
+
+
+## [0.37.0] - 2018-10.22
+
+### Added:
+  - Pagination!
+    - Users can now page through large lists of entities thoughout the app, including: Nodebalancers/Images/Oauth Clients(Apps)/Tokens/Users/Volumes/Invoices/LinodeConfigs
+  - Documentation!
+    - The documentation panel has received some updates, including Docs for volumes, domains and stackscripts 
+
+### Changed:
+  - Eliminate pencil icon site-wide, using hover/edit state instead.
+  - Defer API requests on Linode summary, settings and Nodebalancer summary until user action is taken
+
+### Fixed:
+
+  - Error reporting when creating a new Nodebalancer config
+  - Ellipsis being truncated on blog texts incorrectly
+  - Text overflow in the dashboard of entities with long names
+  - Linodes with flags/long names breaking the layout on list linodes
+  - Issue where a users settings are erroneously requested multiple times
+  - Linodes with unknown images failing to display in the linode summary panel
+
+## [0.36.0] - 2018-10.08
+
+### Changed:
+  - Support
+    - Allow selecting multiple files when attaching to a ticket
+    - Auto-collapse attachments when a ticket contains more than 5 attachments
+    - Increase support search results to display up to 20 results
+  - Profile
+    - Truncate whitespace when adding SSH keys
+  - Billing
+    - Display last four credit card digits when submitting payment
+
+### Fixed:
+  - Volumes
+    - Issue where creating a volume would potentially display the wrong region for the attached linode
+  - Stackscripts
+    - When creating a linode from Stackscript, the SSH Key access panel failed to display on image selection
+  - Misc.
+    - Issue where certain modals could not be dismissed with the escape key
+    - On Linode creation, the password field now appears disabled until an image is selected
+    - Two-factor authentication QR code border visibility in dark theme
+
+## [0.35.0] - 2018-10.01
+### Added:
+  - Users can now provide feedback on Linode support in tickets.
+  - Added a welcome banner describing new features.
+  - Users can now migrate/mutate Linodes.
+
 ## [0.34.1] - 2018-09-24
 ### Added:
  - Linodes
@@ -28,7 +83,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   - Issue where changing tabs on the user profile would enable the Delete button for your own user
   - "Unknown Plan" would display during Linode resizing
   - Prevent user from submitting empty replies in support tickets
-
 
 ## [0.33.2] - 2018-09-11
 ### Added:

@@ -1,21 +1,15 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-
 import Waypoint from 'react-waypoint';
 
-import {
-  StyleRulesCallback,
-  Theme,
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import DebouncedSearch from 'src/components/DebouncedSearch';
+import DebouncedSearch from 'src/components/DebouncedSearchTextField';
 import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import Table from 'src/components/Table';
@@ -23,7 +17,7 @@ import Table from 'src/components/Table';
 import {
   deleteStackScript,
   getStackScript,
-  makeStackScriptPublic
+  updateStackScript
 } from 'src/services/stackscripts';
 
 import StackScriptTableHead from './PanelContent/StackScriptTableHead';
@@ -35,7 +29,7 @@ type ClassNames = 'root'
   | 'searchWrapper'
   | 'searchBar';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   table: {
     overflow: 'scroll',
@@ -52,10 +46,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     width: '100%',
     top: 0,
     zIndex: 11,
+    paddingBottom: theme.spacing.unit * 3,
+    backgroundColor: theme.bg.white,
   },
   searchBar: {
     marginTop: 0,
-    paddingBottom: theme.spacing.unit * 3,
     backgroundColor: theme.color.white,
   },
 });
@@ -100,6 +95,8 @@ interface FilterInfo {
 }
 
 type SortOrder = 'asc' | 'desc';
+
+type AcceptedFilters = 'username' | 'description' | 'label'
 
 interface State {
   currentPage: number;
@@ -331,11 +328,11 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
     }
   }
 
-  handleClickTableHeader= (e: any) => {
+  handleClickTableHeader= (value: string) => {
     const { currentSearchFilter, sortOrder } = this.state;
 
     const nextSortOrder = (sortOrder === 'asc') ? 'desc' : 'asc';
-    const targetFilter = e.currentTarget.value;
+    const targetFilter = value as CurrentFilter;
     const filterInfo = this.generateFilterInfo(targetFilter);
 
     /*
@@ -437,7 +434,7 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
   handleMakePublic = () => {
     const { dialog, currentFilter } = this.state;
 
-    makeStackScriptPublic(dialog.stackScriptID!)
+    updateStackScript(dialog.stackScriptID!, { is_public: true })
       .then(response => {
         if (!this.mounted) { return; }
         this.setState({
@@ -558,23 +555,34 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
     const { currentFilter } = this.state;
     const filteredUser = (isLinodeStackScripts) ? 'linode' : currentUser;
 
-    /*
-    * Search by label or description of the StackScript
-    */
-    const filter = {
-      ["+or"]: [
-        {
-          "label": {
-            ["+contains"]: value
-          },
-        },
-        {
-          "description": {
-            ["+contains"]: value
-          },
-        },
-      ],
-    };
+    const lowerCaseValue = value.toLowerCase().trim();
+
+    let filter: any;
+
+    if (lowerCaseValue.includes('username:')
+      || lowerCaseValue.includes('label:')
+      || lowerCaseValue.includes('description:')) {
+      /**
+       * In this case, we have a search term that looks similar to the
+       * following: "username:hello world"
+       * 
+       * In this case, we need to craft the filter so that the request is
+       * aware that we only want to search by username
+       */
+
+      const indexOfColon = lowerCaseValue.indexOf(':');
+      // everything before the colon is what we want to filter by
+      const filterKey = lowerCaseValue.substr(0, indexOfColon);
+      // everything after the colon is the term we want to search for
+      const searchTerm = lowerCaseValue.substr(indexOfColon + 1);
+      filter = generateSpecificFilter(filterKey as AcceptedFilters, searchTerm)
+    } else {
+      /**
+       * Otherwise, just generate a catch-all filter for
+       * username, description, and label
+       */
+      filter = generateCatchAllFilter(lowerCaseValue)
+    }
 
     this.setState({
       isSearching: true, // wether to show the loading spinner in search bar
@@ -667,12 +675,16 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
           : <React.Fragment>
             <div className={classes.searchWrapper}>
               <DebouncedSearch
+                placeholderText='Search by Label, Username, or Description'
                 onSearch={this.handleSearch}
                 className={classes.searchBar}
-                actionBeingPerfomed={isSearching}
+                isSearching={isSearching}
+                /** uncomment when we upgrade to MUI v3 */
+                // toolTipText={`Hint: try searching for a specific item by prepending your
+                // search term with "username:", "label:", or "description:"`}
               />
             </div>
-            <Table 
+            <Table
               isResponsive={false}
               aria-label="List of StackScripts"
               noOverflow={true}
@@ -704,15 +716,15 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
             }
           </React.Fragment>
         }
-        {/* 
+        {/*
         * if we're sorting, or if we already loaded all results
         * or if we're in the middle of getting more results, don't render
         * the lazy load trigger
         */}
         {!isSorting && !allStackScriptsLoaded && !gettingMoreStackScripts &&
           <div style={{ textAlign: 'center' }}>
-            {/* 
-            * If the lazy-load failed (marked by the catch in getNext), 
+            {/*
+            * If the lazy-load failed (marked by the catch in getNext),
             * show the "Show more StackScripts button
             * Otherwise, try to lazy load some more dang stackscripts
             */}
@@ -720,7 +732,7 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
               ? <Waypoint
                 onEnter={this.getNext}
               >
-                {/* 
+                {/*
                 * The reason for this empty div is that there was some wonkiness when
                 * scrolling to the waypoint with trackpads. For some reason, the Waypoint
                 * would never be scrolled into view no matter how much you scrolled on the
@@ -746,7 +758,39 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
       </React.Fragment>
     );
   }
+}
 
+const generateSpecificFilter = (
+  key: AcceptedFilters,
+  searchTerm: string
+) => {
+  return {
+    [key]: {
+      ["+contains"]: searchTerm
+    }
+  }
+}
+
+const generateCatchAllFilter = (searchTerm: string) => {
+  return {
+    ["+or"]: [
+      {
+        "label": {
+          ["+contains"]: searchTerm
+        },
+      },
+      {
+        "username": {
+          ["+contains"]: searchTerm
+        },
+      },
+      {
+        "description": {
+          ["+contains"]: searchTerm
+        },
+      },
+    ],
+  };
 }
 
 const styled = withStyles(styles, { withTheme: true });

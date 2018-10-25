@@ -2,7 +2,7 @@ import { compose, lensPath, pathOr,  set } from 'ramda';
 import * as React from 'react';
 
 import InputAdornment from '@material-ui/core/InputAdornment';
-import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import AttachFile from '@material-ui/icons/AttachFile';
 import CloudUpload from '@material-ui/icons/CloudUpload';
@@ -16,6 +16,8 @@ import TextField from 'src/components/TextField';
 import { createReply, uploadAttachment } from 'src/services/support';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
+import CloseTicketLink from './CloseTicketLink';
+
 type ClassNames =
   'root'
   | 'form'
@@ -25,7 +27,7 @@ type ClassNames =
   | 'replyField'
   | 'uploadProgress'
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     width: '100%',
   },
@@ -70,7 +72,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 
 interface Props {
   ticketId: number;
+  closable: boolean;
   onSuccess: (newReply: Linode.SupportReply) => void;
+  closeTicketSuccess: () => void;
   reloadAttachments: () => void;
 }
 
@@ -95,6 +99,7 @@ interface State {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class TicketReply extends React.Component<CombinedProps, State> {
+  mounted: boolean = false;
   state: State = {
     value: '',
     submitting: false,
@@ -102,6 +107,14 @@ class TicketReply extends React.Component<CombinedProps, State> {
   }
 
   inputRef = React.createRef<HTMLInputElement>();
+
+  componentDidMount() {
+    this.mounted = true;
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
+  }
 
   handleReplyInput = (e:React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ value: e.target.value, errors: [] });
@@ -130,7 +143,7 @@ class TicketReply extends React.Component<CombinedProps, State> {
     /* Send the reply */
     createReply({ description: value, ticket_id: ticketId })
       .then((response) => {
-        onSuccess(response.data);
+        onSuccess(response);
         this.setState({ submitting: false, value: '' });
       })
       .then(() => {
@@ -164,6 +177,7 @@ class TicketReply extends React.Component<CombinedProps, State> {
         })
       })
       .catch((errors) => {
+        if (!this.mounted) { return; }
         const error = [{ 'reason': 'There was an error creating your reply. Please try again.' }];
         const newErrors = pathOr(error, ['response', 'data', 'errors'], errors);
         this.setState({
@@ -225,7 +239,7 @@ class TicketReply extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, closable, closeTicketSuccess, ticketId } = this.props;
     const { errors, submitting, value, files } = this.state;
 
     const hasErrorFor = getAPIErrorFor({
@@ -236,83 +250,90 @@ class TicketReply extends React.Component<CombinedProps, State> {
     const generalError = hasErrorFor('none');
 
     return (
-      <Grid className={classes.root} item>
-        <Typography variant="headline" className={classes.root} data-qa-title >
-          Reply
-        </Typography>
-        {generalError && <Notice error spacingBottom={8} spacingTop={16} text={generalError} />}
-        <TextField
-          className={classes.replyField}
-          multiline
-          rows={5}
-          value={value}
-          placeholder="Enter your reply"
-          onChange={this.handleReplyInput}
-          errorText={replyError}
-        />
-        <input
-            ref={this.inputRef}
-            type="file"
-            multiple
-            id="attach-file"
-            style={{ display: 'none' }}
-            onChange={this.handleFileSelected}
+      <React.Fragment>
+        <Grid className={classes.root} item>
+          <Typography variant="headline" className={classes.root} data-qa-title >
+            Reply
+          </Typography>
+          {generalError && <Notice error spacingBottom={8} spacingTop={16} text={generalError} />}
+          <TextField
+            className={classes.replyField}
+            multiline
+            rows={5}
+            value={value}
+            placeholder="Enter your reply"
+            onChange={this.handleReplyInput}
+            errorText={replyError}
           />
-          <Button
-            component="span"
-            className={classes.attachFileButton}
-            type="secondary"
-            onClick={this.clickAttachButton}
-          >
-            <AttachFile />
-            Attach a file
-          </Button>
-        {files.map((file, idx) => (
-          file.uploaded
-            ? null /* this file has already been uploaded so don't show it */
-            : (
-              <React.Fragment key={idx}>
-                <Grid container className={classes.attachmentsContainer}>
-                  <Grid item>
-                    <TextField
-                      className={classes.attachmentField}
-                      value={file.name}
-                      errorText={file.errors && file.errors.length && file.errors[0].reason}
-                      InputProps={{
-                        startAdornment:
-                        <InputAdornment position="end">
-                          <CloudUpload />
-                        </InputAdornment>
-                      }}
-                    />
-                    
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      type="remove"
-                      data-file-idx={idx}
-                      onClick={this.removeFile}
-                    />
-                  </Grid>
-                  {file.uploading &&
-                    <Grid item xs={12}>
-                      <LinearProgress className={classes.uploadProgress} variant="indeterminate"/>
+          <input
+              ref={this.inputRef}
+              type="file"
+              multiple
+              id="attach-file"
+              style={{ display: 'none' }}
+              onChange={this.handleFileSelected}
+            />
+            <Button
+              component="span"
+              className={classes.attachFileButton}
+              type="secondary"
+              onClick={this.clickAttachButton}
+            >
+              <AttachFile />
+              Attach a file
+            </Button>
+          {files.map((file, idx) => (
+            file.uploaded
+              ? null /* this file has already been uploaded so don't show it */
+              : (
+                <React.Fragment key={idx}>
+                  <Grid container className={classes.attachmentsContainer}>
+                    <Grid item>
+                      <TextField
+                        className={classes.attachmentField}
+                        value={file.name}
+                        errorText={file.errors && file.errors.length && file.errors[0].reason}
+                        InputProps={{
+                          startAdornment:
+                          <InputAdornment position="end">
+                            <CloudUpload />
+                          </InputAdornment>
+                        }}
+                      />
                     </Grid>
-                  }
-                </Grid>
-              </React.Fragment>
-            )
-        ))}
-        <ActionsPanel style={{ marginTop: 16 }}>
-          <Button
-            type="primary"
-            loading={submitting}
-            onClick={this.submitForm}
-          >
-            Add Update
-          </Button>
-        </ActionsPanel>
-      </Grid>
+                    <Grid item>
+                      <Button
+                        type="remove"
+                        data-file-idx={idx}
+                        onClick={this.removeFile}
+                      />
+                    </Grid>
+                    {file.uploading &&
+                      <Grid item xs={12}>
+                        <LinearProgress className={classes.uploadProgress} variant="indeterminate"/>
+                      </Grid>
+                    }
+                  </Grid>
+                </React.Fragment>
+              )
+          ))}
+          <ActionsPanel style={{ marginTop: 16 }}>
+            <Button
+              type="primary"
+              loading={submitting}
+              onClick={this.submitForm}
+            >
+              Add Update
+            </Button>
+          </ActionsPanel>
+          {closable &&
+            <CloseTicketLink
+              ticketId={ticketId}
+              closeTicketSuccess={closeTicketSuccess}  
+            />
+          }
+        </Grid>
+      </React.Fragment>
     )
   }
 }

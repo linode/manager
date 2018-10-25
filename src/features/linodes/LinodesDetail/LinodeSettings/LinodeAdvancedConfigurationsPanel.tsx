@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import ExpansionPanel from 'src/components/ExpansionPanel';
 
@@ -9,20 +9,33 @@ import LinodeDisks from './LinodeDisks';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
 });
 
 type CombinedProps = WithStyles<ClassNames>;
 
-class LinodeAdvancedConfigurationsPanel extends React.Component<CombinedProps, {}> {
+interface State {
+  panelOpen: boolean;
+}
+
+class LinodeAdvancedConfigurationsPanel extends React.Component<CombinedProps, State> {
+  state: State = {
+    panelOpen: false,
+  }
+
+  handlePanelChange = (e: React.ChangeEvent<{}>, open: boolean) => {
+    this.setState({ panelOpen: open });
+  };
+
   render() {
+    const { panelOpen } = this.state;
     return (
       <React.Fragment>
         {
-          <ExpansionPanel heading="Advanced Configurations">
-            <LinodeConfigs />
-            <LinodeDisks />
+          <ExpansionPanel heading="Advanced Configurations" onChange={this.handlePanelChange}>
+            <LinodeConfigs active={panelOpen} />
+            <LinodeDisks active={panelOpen} />
           </ExpansionPanel>
         }
       </React.Fragment>

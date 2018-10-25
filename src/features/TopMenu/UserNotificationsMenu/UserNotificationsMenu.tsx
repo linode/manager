@@ -1,16 +1,14 @@
 import browser from 'browser-detect';
-import { contains, filter, propSatisfies } from 'ramda';
+import { compose } from 'ramda';
 import * as React from 'react';
-import 'rxjs/add/operator/map';
-import { Subscription } from 'rxjs/Subscription';
+import { connect, MapStateToProps } from 'react-redux';
 
 import Menu from '@material-ui/core/Menu';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import MenuItem from 'src/components/MenuItem';
 import GDPRNotification from 'src/GDPRNotification';
-import notifications$ from 'src/notifications';
 import UserAgentNotification from 'src/UserAgentNotification';
 
 import UserNotificationButton from './UserNotificationsButton';
@@ -20,7 +18,7 @@ type ClassNames = 'root'
   | 'dropDown'
   | 'hidden';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     transform: `translate(-${theme.spacing.unit}px, ${theme.spacing.unit}px)`,
   },
@@ -53,23 +51,24 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
 
 interface State {
   anchorEl?: HTMLElement;
-  notifications: Linode.Notification[];
   privacyPolicyModalOpen: boolean;
   UserAgentNotification: boolean;
   UserAgentNotificationWarning: any;
 }
 
-type CombinedProps = WithStyles<ClassNames>;
+type CombinedProps =
+  StateProps
+  & WithStyles<ClassNames>;
 
 const b = typeof browser === "function" ? browser() : () => ({ name: 'unknown' });
 
 const userAgentDetection = () => {
-  switch(b.name) {
+  switch (b.name) {
     case "ie":
-      return(
+      return (
         <Typography>
-          Your Web Browser (<strong>{b.name}</strong>) is not compatible with the Linode Manager. 
-          Please update to <a href="https://www.microsoft.com/en-us/windows/microsoft-edge" target="_blank">Miscrosoft Edge</a> for more security, 
+          Your Web Browser (<strong>{b.name}</strong>) is not compatible with the Linode Manager.
+          Please update to <a href="https://www.microsoft.com/en-us/windows/microsoft-edge" target="_blank">Miscrosoft Edge</a> for more security,
           speed and the best experience on this site.
         </Typography>
       )
@@ -89,10 +88,7 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
     'migration_scheduled',
   ];
 
-  subscription: Subscription;
-
   state: State = {
-    notifications: [],
     anchorEl: undefined,
     privacyPolicyModalOpen: false,
     UserAgentNotification: true,
@@ -100,47 +96,26 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
   };
 
   componentDidMount() {
-    this.subscription = notifications$
-      .map(filterNotifications)
-      .map((notifications) => notifications
-        .reduce((result: Linode.Notification[], notification) => {
-          /** Filter out any notifications that do not meet our expectations. */
-          if (!notification.message || !notification.label || !notification.type || !notification.severity) {
-            return result;
-          }
-
-          /** Update the language of the privacy policy update for usagea in the UNM. */
-          if (isPrivacyPolicityNotification(notification)) {
-            return [...result, { ...notification, message: `Click here to view the updated policies.`, }];
-          }
-
-          /** Remove the label from the message and trim the leading space. */
-          return [
-            ...result,
-            {
-              ...notification,
-              message: notification.message.replace(notification.label, '').trimLeft(),
-            },
-          ];
-        }, [])
-      )
-      .subscribe(notifications => {
-        const updatedPrivacyPolicyNotification = notifications.find(isPrivacyPolicityNotification);
-
-        this.setState({
-          notifications,
-          privacyPolicyModalOpen: Boolean(updatedPrivacyPolicyNotification),
-        });
-      });
-
-      this.setState({
-        UserAgentNotificationWarning: userAgentDetection()
-      });
+    this.setState({
+      UserAgentNotificationWarning: userAgentDetection()
+    });
   }
 
-  componentWillUnmount() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
+  componentDidUpdate(prevProps: CombinedProps, prevState: State) {
+    const { notifications } = this.props;
+
+    if (notifications.length === 0) {
+      return;
+    }
+
+    const privacyPolicyModalOpen = Boolean(notifications.find(isPrivacyPolicityNotification))
+
+    /**
+     * If the state differs, we know there was a change to notifications and we should display the
+     * modal.
+     */
+    if (prevState.privacyPolicyModalOpen !== privacyPolicyModalOpen) {
+      this.setState({ privacyPolicyModalOpen });
     }
   }
 
@@ -148,8 +123,8 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
   closeUserAgentNotification = () => this.setState({ UserAgentNotification: false })
 
   render() {
-    const { anchorEl, notifications, UserAgentNotificationWarning } = this.state;
-    const { classes } = this.props;
+    const { anchorEl, UserAgentNotificationWarning } = this.state;
+    const { classes, notifications } = this.props;
     const severity = notifications.reduce(reduceSeverity, null);
 
     return (
@@ -192,11 +167,6 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
     this.setState({ anchorEl: undefined })
 }
 
-const filterNotifications: (v: Linode.Notification[]) => Linode.Notification[] =
-  filter<Linode.Notification>(
-    propSatisfies(v => contains(v, UserNotificationsMenu.displayedEvents), 'type'),
-  );
-
 const isPrivacyPolicityNotification = (n: Linode.Notification) =>
   n.type === `notice` && n.label === `We've updated our policies.`;
 
@@ -210,4 +180,42 @@ const reduceSeverity = (result: Linode.NotificationSeverity | null, { severity }
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<CombinedProps>(UserNotificationsMenu);
+interface StateProps {
+  notifications: Linode.Notification[];
+}
+
+const mapStateToProps: MapStateToProps<StateProps, never, ApplicationState> = (state) => ({
+  notifications: (state.notifications.data || [])
+    .reduce((result: Linode.Notification[], notification) => {
+      /** Filter out any notifications that do not meet our expectations. */
+      if (
+        !notification.message
+        || !notification.label
+        || !notification.type
+        || !notification.severity
+        || !UserNotificationsMenu.displayedEvents.includes(notification.type)
+      ) {
+        return result;
+      }
+
+      /** Update the language of the privacy policy update for usagea in the UNM. */
+      if (isPrivacyPolicityNotification(notification)) {
+        return [...result, { ...notification, message: `Click here to view the updated policies.`, }];
+      }
+
+      /** Remove the label from the message and trim the leading space. */
+      return [
+        ...result,
+        {
+          ...notification,
+          message: notification.message.replace(notification.label, '').trimLeft(),
+        },
+      ];
+    }, []),
+});
+
+const connected = connect(mapStateToProps);
+
+const enhanced = compose(styled, connected);
+
+export default enhanced(UserNotificationsMenu);

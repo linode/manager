@@ -1,34 +1,36 @@
 import * as moment from 'moment';
 
-export const newLinodeEvents = (mountTime: moment.Moment) =>
-(linodeEvent : Linode.Event): boolean => {
-  const actionWhitelist = [
-    'linode_boot',
-    'linode_reboot',
-    'linode_shutdown',
-    'backups_enable',
-    'backups_cancel',
-    'backups_restore',
-    'linode_snapshot',
-    'linode_rebuild',
-    'linode_resize',
-    'disk_resize',
-  ];
+let newLinodeEvents: (time: moment.Moment) => (event: Linode.Event) => boolean;
 
-  const statusWhitelist = [
-    'started',
-    'finished',
-    'scheduled',
-    'failed',
-    'notification',
-  ];
+const actionWhitelist = [
+  'linode_boot',
+  'linode_reboot',
+  'linode_shutdown',
+  'backups_enable',
+  'backups_cancel',
+  'backups_restore',
+  'linode_snapshot',
+  'linode_rebuild',
+  'linode_resize',
+  'disk_resize',
+  'linode_migrate',
+];
 
-  const isLinodeEvent = linodeEvent.entity !== null && linodeEvent.entity.type === 'linode';
+const statusWhitelist = [
+  'started',
+  'finished',
+  'scheduled',
+  'failed',
+  'notification',
+];
 
-  const result = isLinodeEvent
-    && statusWhitelist.includes(linodeEvent.status)
-    && actionWhitelist.includes(linodeEvent.action)
-    && (!linodeEvent._initial);
-
-  return result;
+newLinodeEvents = (time?: moment.Moment) => (e: Linode.Event): boolean => {
+  return e.entity !== null && e.entity.type === 'linode'
+    && statusWhitelist.includes(e.status)
+    && actionWhitelist.includes(e.action)
+    && (!e._initial);
 };
+
+export {
+  newLinodeEvents
+}

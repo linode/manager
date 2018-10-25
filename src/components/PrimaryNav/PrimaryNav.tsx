@@ -1,12 +1,13 @@
 import * as classNames from 'classnames';
+import { compose, path } from 'ramda';
 import * as React from 'react';
+import { connect, MapStateToProps } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'redux';
 
 import Collapse from '@material-ui/core/Collapse';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import { StyleRules, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 
 import Logo from 'src/assets/logo/logo-text.svg';
@@ -14,8 +15,6 @@ import Grid from 'src/components/Grid';
 import Toggle from 'src/components/Toggle';
 
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
-
-import { getAccountSettings } from 'src/services/account';
 
 interface PrimaryLink {
   display: string,
@@ -50,9 +49,10 @@ type ClassNames =
   | 'switchWrapper'
   | 'toggle'
   | 'switchText'
-  | 'spacer';
+  | 'spacer'
+  | 'listItemAccount';
 
-const styles = (theme: Theme & Linode.Theme): StyleRules => ({
+  const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   menuGrid: {
     minHeight: 64,
     width: '100%',
@@ -94,13 +94,18 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
       },
     },
   },
+  listItemAccount: {
+    '&:hover': {
+      borderLeftColor: 'transparent',
+    },
+  },
   collapsible: {
     fontSize: '.9rem',
   },
   linkItem: {
     transition: theme.transitions.create(['color']),
     color: '#C9CACB',
-    fontWeight: 700,
+    fontFamily: 'LatoWebBold',
   },
   active: {
     transition: 'border-color .7s ease-in-out',
@@ -184,31 +189,23 @@ interface State {
   expandedMenus: {
     [key: string]: boolean;
   };
-  userHasManaged?: boolean;
 }
 
-class PrimaryNav extends React.Component<Props, State> {
+type CombinedProps = Props & StateProps;
+
+class PrimaryNav extends React.Component<CombinedProps, State> {
   state: State = {
     drawerOpen: false,
     expandedMenus: {
       account: false,
       support: false,
     },
-    userHasManaged: undefined,
   };
 
   mounted: boolean = false;
 
   componentDidMount() {
     this.mounted = true;
-
-    getAccountSettings()
-      .then(data => this.mounted && this.setState({ userHasManaged: data.managed }))
-      /*
-      * Don't really need to do any error handling here since
-      * the fallback is the Managed navigation tab not rendering
-      */
-      .catch(e => e);
   }
 
   componentWillUnmount() {
@@ -241,9 +238,9 @@ class PrimaryNav extends React.Component<Props, State> {
   }
 
   renderPrimaryLink(primaryLink: PrimaryLink) {
-    const { classes } = this.props;
+    const { classes, managed } = this.props;
 
-    if (primaryLink.display === 'Managed' && !this.state.userHasManaged) { return; }
+    if (primaryLink.display === 'Managed' && !managed) { return; }
 
     return (
       <ListItem
@@ -272,8 +269,8 @@ class PrimaryNav extends React.Component<Props, State> {
   }
 
   render() {
-    const { classes, toggleTheme, closeMenu } = this.props;
-    const { expandedMenus, userHasManaged } = this.state;
+    const { classes, toggleTheme, closeMenu, managed } = this.props;
+    const { expandedMenus } = this.state;
     const themeName = (this.props.theme as any).name;
 
     return (
@@ -297,7 +294,7 @@ class PrimaryNav extends React.Component<Props, State> {
             </div>
           </Grid>
 
-          {userHasManaged !== undefined &&
+          {managed !== undefined &&
             <div className={classNames(
               'fade-in-table',
               {
@@ -316,6 +313,7 @@ class PrimaryNav extends React.Component<Props, State> {
                 onClick={this.expandMenutItem}
                 className={classNames({
                   [classes.listItem]: true,
+                  [classes.listItemAccount]: true,
                   [classes.collapsible]: true,
                 })}
               >
@@ -426,7 +424,20 @@ class PrimaryNav extends React.Component<Props, State> {
   }
 }
 
-export default compose<Linode.TodoAny, Linode.TodoAny, Linode.TodoAny>(
+interface StateProps {
+  /** Account Settings */
+  managed?: boolean;
+}
+
+const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state, ownProps) => ({
+  /** Account Settings */
+  managed: path(['data', 'managed'], state.__resources.accountSettings),
+});
+
+export const connected = connect(mapStateToProps, undefined);
+
+export default compose<Linode.TodoAny, Linode.TodoAny, Linode.TodoAny, Linode.TodoAny>(
   withStyles(styles, { withTheme: true }),
   withRouter,
+  connected,
 )(PrimaryNav);

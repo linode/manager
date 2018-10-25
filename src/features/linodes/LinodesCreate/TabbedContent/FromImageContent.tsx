@@ -2,9 +2,9 @@ import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
-import AccessPanel, { UserSSHKeyObject } from 'src/components/AccessPanel';
+import AccessPanel, { Disabled, UserSSHKeyObject } from 'src/components/AccessPanel';
 import CheckoutBar from 'src/components/CheckoutBar';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
@@ -25,7 +25,7 @@ import tagsHoc, { TagObject } from '../tagsHoc';
 
 type ClassNames = 'root' | 'main' | 'sidebar';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   main: {},
   sidebar: {
@@ -54,6 +54,7 @@ interface Props {
   /** Comes from HOC */
   userSSHKeys: UserSSHKeyObject[];
   tagObject: TagObject;
+  handleDisablePasswordField: (imageSelected: boolean) => Disabled | undefined;
 }
 
 interface State {
@@ -257,6 +258,8 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
             updateFor={[tagObject, label, errors]}
           />
           <AccessPanel
+           /* disable the password field if we haven't selected an image */
+            passwordFieldDisabled={this.props.handleDisablePasswordField(!!selectedImageID)}
             error={hasErrorFor('root_pass')}
             password={password}
             handleChange={this.handleTypePassword}

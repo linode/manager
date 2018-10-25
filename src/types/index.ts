@@ -9,8 +9,6 @@ declare module '*.png';
 namespace Linode {
   export type TodoAny = any;
 
-  export type Theme = TodoAny;
-
   export type NullableString = string | null;
 
   export type Hypervisor = 'kvm' | 'zen';
@@ -145,6 +143,7 @@ namespace Linode {
     opened: string;
     id: number;
     closed: string | null;
+    closable: boolean;
     description: string;
     entity: any | null;
     gravatar_id: string;

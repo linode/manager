@@ -2,14 +2,8 @@ import { lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 
 import Paper from '@material-ui/core/Paper';
+import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
 
-import {
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-  withStyles,
-  } from '@material-ui/core/styles';  
-  
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Notice from 'src/components/Notice';
@@ -20,7 +14,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root' | 'title';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     padding: theme.spacing.unit * 3,
     paddingBottom: theme.spacing.unit * 3,
@@ -56,7 +50,7 @@ export class EmailChangeForm extends React.Component<CombinedProps, State> {
   handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState(set(lensPath(['updatedEmail']), e.target.value))
   }
-  
+
   onCancel = () => {
     this.setState({
       submitting: false,

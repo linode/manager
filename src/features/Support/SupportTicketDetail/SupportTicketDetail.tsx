@@ -8,7 +8,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import Chip from '@material-ui/core/Chip';
 import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import InsertDriveFile from '@material-ui/icons/InsertDriveFile';
 import InsertPhoto from '@material-ui/icons/InsertPhoto';
@@ -23,13 +23,13 @@ import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
-import { getTicket, getTicketReplies, SupportTicket } from 'src/services/support';
+import { getTicket, getTicketReplies } from 'src/services/support';
 import { getGravatarUrlFromHash } from 'src/utilities/gravatar';
 
 import ExpandableTicketPanel from '../ExpandableTicketPanel';
 import TicketReply from './TicketReply';
-
 
 type ClassNames = 'root'
   | 'title'
@@ -47,7 +47,7 @@ type ClassNames = 'root'
   | 'attachmentRow'
   | 'attachmentIcon';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   title: {
     display: 'flex',
@@ -128,24 +128,18 @@ interface State {
   errors?: Linode.ApiFieldError[];
   replies?: Linode.SupportReply[];
   ticket?: Linode.SupportTicket;
+  ticketCloseSuccess: boolean;
   showMoreAttachments: boolean;
 }
 
 type CombinedProps = RouteProps & StateProps & WithStyles<ClassNames>;
-
-const scrollToBottom = () => {
-  window.scroll({
-    behavior: 'smooth',
-    left: 0,
-    top: document.body.scrollHeight,
-  });
-}
 
 export class SupportTicketDetail extends React.Component<CombinedProps,State> {
   mounted: boolean = false;
   state: State = {
     loading: true,
     showMoreAttachments: false,
+    ticketCloseSuccess: false,
   }
 
   static docs: Linode.Doc[] = [
@@ -164,7 +158,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
 
   componentDidUpdate(prevProps:CombinedProps, prevState:State) {
     if (prevProps.match.params.ticketId !== this.props.match.params.ticketId) {
-      this.setState({ loading: true });
+      this.setState({ loading: true, ticketCloseSuccess: false });
       this.loadTicketAndReplies();
     }
   }
@@ -179,9 +173,8 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
     const ticketId = this.props.match.params.ticketId;
     if (!ticketId) { return null; }
     return getTicketReplies(ticketId)
-      .then((response) => {
-        return response.data;
-      });
+      // This is a paginated method but here we only need the list of replies
+      .then(response => response.data);
   }
 
   reloadAttachments = () => {
@@ -191,12 +184,18 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
           ticket: {
             ...this.state.ticket!,
             attachments: ticket.attachments,
+            ticketCloseSuccess: false,
           },
         });
       });
   }
 
-  handleJoinedPromise = (ticketResponse: SupportTicket, replyResponse: Linode.SupportReply[]) => {
+  closeTicketSuccess = () => {
+    this.setState({ ticketCloseSuccess: true });
+    this.loadTicketAndReplies();
+  }
+
+  handleJoinedPromise = (ticketResponse: Linode.SupportTicket, replyResponse: Linode.SupportReply[]) => {
     /** Gets a unique list of gravatar IDs */
     const uniqueGravatarIDs = replyResponse.reduce(reduceToUniqueGravatarIDs, [ticketResponse.gravatar_id]);
 
@@ -210,7 +209,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
           replies: replyResponse.map(matchGravatarURLToReply(gravatarMap)),
           ticket: {...ticketResponse, gravatarUrl: gravatarMap[ticketResponse.gravatar_id]},
           loading: false,
-        }, scrollToBottom)
+        })
       });
   };
 
@@ -241,6 +240,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
         const updatedReplies = concat(replies, [newReply]);
         this.setState({
           replies: updatedReplies,
+          ticketCloseSuccess: false,
         })
       })
   }
@@ -326,7 +326,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
   }
 
   toggleShowMoreAttachments = () => {
-    this.setState({ showMoreAttachments: !this.state.showMoreAttachments });
+    this.setState({ showMoreAttachments: !this.state.showMoreAttachments, ticketCloseSuccess: false });
   }
 
   renderAttachmentsRows = (attachments: string[], icons: JSX.Element[]) => {
@@ -360,6 +360,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
         reply={reply}
         open={idx === replies.length - 1}
         parentTicket={ticket ? ticket.id : undefined}
+        ticketUpdated={ticket ? ticket.updated : ''}
         isCurrentUser={this.props.profileUsername === reply.created_by}
       />
     });
@@ -367,7 +368,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
 
   render() {
     const { classes, profileUsername } = this.props;
-    const { errors, loading, replies, ticket } = this.state;
+    const { errors, loading, replies, ticket, ticketCloseSuccess } = this.state;
     const ticketId = this.props.match.params.ticketId;
     /*
     * Including loading/error states here (rather than in a
@@ -417,21 +418,27 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
           </Grid>
         </Grid>
         {ticket.entity && this.renderEntityLabelWithIcon()}
+        {/* Show message if the ticket has been closed through the link on this page. */}
+        {ticketCloseSuccess && <Notice success text={"Ticket has been closed."}/>}
         <Grid container direction="column" justify="center" alignItems="center" className={classes.listParent} >
-          {/* Display the contents of the ticket, followed by replies (if any) */}
-          <ExpandableTicketPanel
-            key={ticket!.id}
-            ticket={ticket}
-            isCurrentUser={profileUsername === ticket.opened_by}
-          />
+          {/* If the ticket isn't blank, display it, followed by replies (if any). */}
+          {ticket.description &&
+            <ExpandableTicketPanel
+              key={ticket.id}
+              ticket={ticket}
+              isCurrentUser={profileUsername === ticket.opened_by}
+            />
+          }
           {replies && this.renderReplies(replies)}
           {ticket.attachments.length > 0 && this.renderAttachments(ticket.attachments)}
           {/* If the ticket is open, allow users to reply to it. */}
           {['open','new'].includes(ticket.status) &&
             <TicketReply
-              ticketId={ticketId!}
+              ticketId={ticket.id}
+              closable={ticket.closable}
               onSuccess={this.onCreateReplySuccess}
               reloadAttachments={this.reloadAttachments}
+              closeTicketSuccess={this.closeTicketSuccess}
             />
           }
         </Grid>

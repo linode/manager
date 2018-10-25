@@ -5,7 +5,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import {
   StyleRulesCallback,
-  Theme,
+  
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
@@ -13,6 +13,7 @@ import {
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect';
 import Notice from 'src/components/Notice';
 import { ALGOLIA_APPLICATION_ID, ALGOLIA_SEARCH_KEY, DOCS_BASE_URL } from 'src/constants';
+import windowIsNarrowerThan from 'src/utilities/breakpoints';
 
 import SearchItem from './SearchItem';
 
@@ -22,7 +23,7 @@ type ClassNames = 'root'
   | 'enhancedSelectWrapper'
   | 'textfield';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   searchItem: {
     '& em': {
@@ -74,6 +75,7 @@ type CombinedProps = WithStyles<ClassNames> & RouteComponentProps<{}>;
 class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
   searchIndex: any = null;
   mounted: boolean = false;
+  isMobile: boolean = false;
   state: State = {
     enabled: true,
     value: '',
@@ -82,7 +84,11 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
   };
 
   componentDidMount() {
+    const { theme } = this.props;
     this.mounted = true;
+    if (theme) {
+      this.isMobile = windowIsNarrowerThan(theme.breakpoints.values.sm);
+    }
     // initialize Algolia API Client
     try {
       const client = Algolia(ALGOLIA_APPLICATION_ID, ALGOLIA_SEARCH_KEY);
@@ -118,7 +124,7 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
     }
     this.searchIndex.search({
       query: inputValue,
-      hitsPerPage: 5,
+      hitsPerPage: this.isMobile ? 5 : 20,
     }, this.searchSuccess);
   }
 

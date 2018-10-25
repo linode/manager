@@ -3,7 +3,7 @@ import { cond, defaultTo, equals, lensPath, path, pathOr, pick, set } from 'ramd
 import * as React from 'react';
 
 import Button, { ButtonProps } from '@material-ui/core/Button';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Drawer from 'src/components/Drawer';
@@ -20,7 +20,7 @@ const TextField = (props: TextFieldProps) =>
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
 });
 

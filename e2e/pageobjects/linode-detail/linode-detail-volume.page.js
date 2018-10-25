@@ -195,8 +195,10 @@ export class VolumeDetail extends Page {
     }
 
     detachConfirm(volumeId) {
-        this.dialogTitle.waitForVisible();
+        this.dialogTitle.waitForVisible(constants.wait.normal);
         browser.click('[data-qa-confirm]');
+
+        this.dialogTitle.waitForVisible(constants.wait.normal, true);
 
         browser.waitForVisible(`[data-qa-volume-cell="${volumeId}"]`, constants.wait.long, true);
 
@@ -212,6 +214,7 @@ export class VolumeDetail extends Page {
     }
 
     removeVolume(volumeElement) {
+        this.drawerTitle.waitForExist(constants.wait.normal, true);
         if (volumeElement.$('[data-qa-volume-cell-attachment]').isExisting() && volumeElement.$('[data-qa-volume-cell-attachment]').getText() !== '') {
             volumeElement.$('[data-qa-action-menu]').click();
             browser.waitForVisible('[data-qa-action-menu-item="Detach"]', constants.wait.normal);

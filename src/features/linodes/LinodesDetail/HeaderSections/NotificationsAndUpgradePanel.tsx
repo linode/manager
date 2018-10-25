@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import {
   StyleRulesCallback,
-  Theme,
+  
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
@@ -10,9 +10,11 @@ import {
 import Notice from 'src/components/Notice';
 import ProductNotification from 'src/components/ProductNotification';
 
+import MigrationNotification from './MigrationNotification';
+
 type ClassNames = 'root' | 'link';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   link: {
     color: theme.palette.primary.main,
@@ -25,7 +27,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 interface Props {
   handleUpgrade: () => void;
+  handleMigration: (type: string) => void;
   showPendingMutation: boolean;
+  status: Linode.LinodeStatus;
   notifications?: Linode.Notification[];
 }
 
@@ -40,13 +44,22 @@ const NotificationsAndUpgradePanel = (props: CombinedProps) => {
           this upgrade and what it includes, `}
           {/** @todo change onClick to open mutate drawer once migrate exists */}
           <span className={props.classes.link} onClick={props.handleUpgrade}>
-            please visit the classic Linode Manager.
+            click here.
           </span>
         </Notice>
       }
       {
         (props.notifications || []).map((n, idx) =>
-          <ProductNotification key={idx} severity={n.severity} text={n.message} />)
+          ['migration_scheduled', 'migration_pending'].includes(n.type)
+          ? (props.status !== 'migrating' &&
+              <MigrationNotification
+                key={idx}
+                text={n.message}
+                type={n.type}
+                onClick={props.handleMigration}
+              />
+            )
+          : <ProductNotification key={idx} severity={n.severity} text={n.message} />)
       }
     </React.Fragment>
   );

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Subscription } from 'rxjs/Subscription';
 
 import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -23,9 +23,10 @@ import DashboardCard from '../DashboardCard';
 type ClassNames =
   'root'
   | 'labelCol'
-  | 'actionsCol';
+  | 'actionsCol'
+  | 'wrapHeader';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   labelCol: {
     width: '90%',
@@ -33,6 +34,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   actionsCol: {
     width: '10%',
   },
+  wrapHeader: {
+    wordBreak: 'break-all',
+  }
 });
 
 interface State {
@@ -146,7 +150,7 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
           <Link to={`/domains/${id}/records`} className={'black nu block'}>
             <Grid container direction="column" spacing={8}>
               <Grid item className="py0">
-                <Typography variant="subheading" data-qa-domain-name>
+                <Typography className={classes.wrapHeader} variant="subheading" data-qa-domain-name>
                   {domain}
                 </Typography>
               </Grid>

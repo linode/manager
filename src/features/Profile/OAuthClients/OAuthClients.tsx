@@ -2,21 +2,28 @@ import { compose, path } from 'ramda';
 import * as React from 'react';
 
 import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
+
 import Typography from '@material-ui/core/Typography';
 
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import Preload, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
+import paginate, { PaginationProps } from 'src/components/Pagey';
+import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
+import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import TableRowError from 'src/components/TableRowError';
+import TableRowLoading from 'src/components/TableRowLoading';
+import { LinodeAPI } from 'src/documentation';
 import { createOAuthClient, deleteOAuthClient, getOAuthClients, resetOAuthClientSecret, updateOAuthClient } from 'src/services/account';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -25,20 +32,18 @@ import OAuthFormDrawer from './OAuthFormDrawer';
 
 type ClassNames = 'root' | 'title';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   title: {
     margin: `0 0 ${theme.spacing.unit * 2}px`,
   },
 });
 
-interface Props {
-  data: PromiseLoaderResponse<Linode.OAuthClient[]>;
-}
+interface Props extends PaginationProps<Linode.OAuthClient> { }
 
 interface FormValues {
-  label?: string;
-  redirect_uri?: string;
+  label: string;
+  redirect_uri: string;
   public: boolean;
 }
 
@@ -56,14 +61,13 @@ interface SecretState {
 }
 
 interface State {
-  data: Linode.OAuthClient[];
   secret?: SecretState;
   form: FormState;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames> & SetDocsProps;
 
-class OAuthClients extends React.Component<CombinedProps, State> {
+export class OAuthClients extends React.Component<CombinedProps, State> {
   static defaultState = {
     secret: {
       open: false,
@@ -75,8 +79,8 @@ class OAuthClients extends React.Component<CombinedProps, State> {
       edit: false,
       errors: undefined,
       values: {
-        label: undefined,
-        redirect_uri: undefined,
+        label: '',
+        redirect_uri: '',
         public: false,
       },
     },
@@ -85,13 +89,16 @@ class OAuthClients extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
 
   state = {
-    data: this.props.data.response,
     ...OAuthClients.defaultState,
   };
 
   static defaultProps = {
     data: [],
   };
+
+  static docs = [
+    LinodeAPI,
+  ]
 
   reset = () => {
     this.setState({ ...OAuthClients.defaultState });
@@ -103,19 +110,9 @@ class OAuthClients extends React.Component<CombinedProps, State> {
     });
   }
 
-  requestClients = () => {
-    getOAuthClients()
-      .then(response => response.data)
-      .then((data) => {
-        if (!this.mounted) { return; }
-
-        return this.setState({ data });
-      });
-  }
-
   deleteClient = (id: string) => {
     deleteOAuthClient(id)
-      .then(() => this.requestClients());
+      .then(() => this.props.onDelete());
   }
 
   resetSecret = (id: string) => {
@@ -150,8 +147,8 @@ class OAuthClients extends React.Component<CombinedProps, State> {
             open: false,
             edit: false,
             values: {
-              label: undefined,
-              redirect_uri: undefined,
+              label: '',
+              redirect_uri: '',
               public: false,
             },
           },
@@ -160,7 +157,7 @@ class OAuthClients extends React.Component<CombinedProps, State> {
       .then((data) => {
         if (!this.mounted) { return; }
 
-        this.requestClients();
+        this.props.request();
       })
       .catch((errResponse) => {
         if (!this.mounted) { return; }
@@ -181,7 +178,7 @@ class OAuthClients extends React.Component<CombinedProps, State> {
         this.reset();
       })
       .then((response) => {
-        this.requestClients();
+        this.props.request();
       })
       .catch((errResponse) => {
         this.setForm(form => ({
@@ -193,9 +190,21 @@ class OAuthClients extends React.Component<CombinedProps, State> {
 
   toggleCreateDrawer = (v: boolean) => this.setForm(form => ({ ...form, open: v }));
 
-  renderRows = () => {
-    const { data } = this.state;
+  renderContent = () => {
+    const { data, error, loading } = this.props;
 
+    if (error) {
+      return <TableRowError colSpan={6} message="We were unable to load your OAuth Clients." />
+    }
+
+    if (loading) {
+      return <TableRowLoading colSpan={6} />
+    }
+
+    return data && data.length > 0 ? this.renderRows(data) : <TableRowEmptyState colSpan={6} />
+  }
+
+  renderRows = (data: Linode.OAuthClient[]) => {
     return data.map(({ id, label, redirect_uri, public: isPublic, status }) => (
       <TableRow key={id} data-qa-table-row={label}>
         <TableCell parentColumn="Label" data-qa-oauth-label>{label}</TableCell>
@@ -220,6 +229,7 @@ class OAuthClients extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     this.mounted = true;
+    this.props.request();
   }
 
   componentWillUnmount() {
@@ -230,10 +240,12 @@ class OAuthClients extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes } = this.props;
-
+    
+    // TODO Need to unify internal & external usage of 'OAuth Clients'/'My Apps'.
+    // Currently in the context of profile, the term 'Oauth Client(s)' is referred to as 'app' or 'My Apps' for user-facing displays.
     return (
       <React.Fragment>
-        <DocumentTitleSegment segment="OAuth Clients" />
+        <DocumentTitleSegment segment="My Apps" />
         <Grid
           container
           justify="space-between"
@@ -241,30 +253,30 @@ class OAuthClients extends React.Component<CombinedProps, State> {
         >
           <Grid item>
             <Typography role="header" className={classes.title} variant="title" data-qa-table={classes.title}>
-              OAuth Clients
+              My Apps
             </Typography>
           </Grid>
           <Grid item>
             <AddNewLink
               onClick={this.openCreateDrawer}
-              label="Create an OAuth Client"
+              label="Create My App"
               data-qa-oauth-create
             />
           </Grid>
         </Grid>
         <Paper>
-          <Table aria-label="List of OAuth Clients">
+          <Table aria-label="List of My Apps">
             <TableHead data-qa-table-head>
               <TableRow>
-                <TableCell>Label</TableCell>
-                <TableCell>Access</TableCell>
-                <TableCell>ID</TableCell>
-                <TableCell>Callback URL</TableCell>
-                <TableCell />
+                <TableCell style={{ width: '20%' }}>Label</TableCell>
+                <TableCell style={{ width: '20%' }}>Access</TableCell>
+                <TableCell style={{ width: '20%' }}>ID</TableCell>
+                <TableCell style={{ width: '20%' }}>Callback URL</TableCell>
+                <TableCell style={{ width: '20%' }} />
               </TableRow>
             </TableHead>
             <TableBody>
-              {this.renderRows()}
+              { this.renderContent() }
             </TableBody>
           </Table>
         </Paper>
@@ -293,6 +305,14 @@ class OAuthClients extends React.Component<CombinedProps, State> {
           onChangeRedirectURI={this.handleChangeRedirectURI}
           onChangePublic={this.handleChangePublic}
           onSubmit={this.state.form.edit ? this.editClient : this.createClient}
+        />
+
+        <PaginationFooter
+          page={this.props.page}
+          pageSize={this.props.pageSize}
+          count={this.props.count}
+          handlePageChange={this.props.handlePageChange}
+          handleSizeChange={this.props.handlePageSizeChange}
         />
       </React.Fragment>
     );
@@ -334,11 +354,15 @@ class OAuthClients extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const preloaded = Preload({
-  data: () => getOAuthClients()
-    .then(response => response.data),
-});
+const updatedRequest = (ownProps: any, params: any, filters: any) => getOAuthClients(params, filters)
+  .then((response) => response);
 
-const enhanced = compose<any, any, any>(styled, preloaded);
+const paginated = paginate(updatedRequest);
+
+const enhanced = compose<any, any, any, any>(
+  styled,
+  paginated,
+  setDocs(OAuthClients.docs),
+);
 
 export default enhanced(OAuthClients);

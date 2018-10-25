@@ -7,6 +7,8 @@ export interface Toast {
   open: boolean;
 }
 
+type Level = 'success' | 'warning' | 'error'
+
 const toast$ = new Subject<Toast>();
 
 let id = 0;
@@ -21,7 +23,7 @@ export const createToast = (message: string, level = 'notice'): Toast => {
   };
 };
 
-export const sendToast = (message: string, level = 'notice'): void => {
+export const sendToast = (message: string, level: Level = 'success'): void => {
   if (!message) { return; }
   toast$.next(createToast(message, level));
 };

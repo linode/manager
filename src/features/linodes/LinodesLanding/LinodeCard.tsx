@@ -9,7 +9,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles, WithTheme } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 
@@ -51,9 +51,10 @@ type CSSClasses =
   | 'flagContainer'
   | 'linkWrapper'
   | 'StatusIndicatorWrapper'
-  | 'link';
+  | 'link'
+  | 'wrapHeader';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   customeMQ: {
     '@media (min-width: 600px) and (max-width: 680px)': {
       paddingLeft: theme.spacing.unit * 2,
@@ -78,12 +79,12 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     height: '100%',
     position: 'relative',
     '& .title': {
-      height: 48,
+      minHeight: 48,
       padding: `0 ${theme.spacing.unit * 3}px`,
     },
   },
   cardHeader: {
-    fontWeight: 700,
+    fontFamily: 'LatoWebBold',
     color: 'black',
     marginLeft: theme.spacing.unit,
   },
@@ -121,7 +122,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     height: '100%',
     margin: 0,
     borderTop: `1px solid ${theme.palette.divider}`,
-    fontWeight: 400,
+    fontFamily: 'LatoWeb',
     fontSize: '.9rem',
     transition: theme.transitions.create(['background-color', 'color']),
     '&:hover': {
@@ -134,7 +135,8 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   },
   consoleButton: {
     width: '50%',
-    borderColor: theme.pale,
+    /** @todo This was theme.pale, which doesnt exist. */
+    // borderColor: theme.pale,
     borderRight: '1px solid ' + theme.palette.divider,
   },
   rebootButton: {
@@ -180,6 +182,10 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     alignItems: 'center',
     flex: 1,
   },
+  wrapHeader: {
+    wordBreak: 'break-all',
+    padding: '20px',
+  },
 });
 
 interface State {
@@ -215,9 +221,10 @@ interface TypesContextProps {
 }
 
 type CombinedProps =
-  Props &
-  TypesContextProps &
-  WithStyles<CSSClasses>;
+  & Props
+  & TypesContextProps
+  & WithTheme
+  & WithStyles<CSSClasses>;
 
 class LinodeCard extends React.Component<CombinedProps, State> {
   state: State = {
@@ -245,6 +252,7 @@ class LinodeCard extends React.Component<CombinedProps, State> {
         this.state,
         ['mutationAvailable']
       )
+      || this.props.theme.name !== nextProps.theme.name
   }
 
   componentDidMount() {
@@ -273,7 +281,7 @@ class LinodeCard extends React.Component<CombinedProps, State> {
       category: 'Linode Action Menu Item',
       action: 'Reboot Linode',
     })
-    const { linodeId, linodeLabel, toggleConfirmation} = this.props;
+    const { linodeId, linodeLabel, toggleConfirmation } = this.props;
     toggleConfirmation('reboot', linodeId, linodeLabel);
   }
 
@@ -316,7 +324,7 @@ class LinodeCard extends React.Component<CombinedProps, State> {
       <CardContent className={`${classes.cardContent} ${classes.customeMQ}`}>
         <div>
           <div className={classes.cardSection} data-qa-linode-summary>
-            { typesData && `${displayType(linodeType, typesData || [])}: ` }
+            {typesData && `${displayType(linodeType, typesData || [])}: `}
             {typeLabelDetails(linodeSpecMemory, linodeSpecDisk, linodeSpecVcpus)}
           </div>
           <div className={classes.cardSection} data-qa-region>
@@ -376,7 +384,7 @@ class LinodeCard extends React.Component<CombinedProps, State> {
             <LinodeStatusIndicator status={linodeStatus} />
           </Grid>
           <Grid item className={classes.cardHeader + ' py0'}>
-            <Typography role="header" variant="subheading" data-qa-label>
+            <Typography role="header" className={classes.wrapHeader} variant="subheading" data-qa-label>
               {linodeLabel}
             </Typography>
           </Grid>

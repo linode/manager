@@ -2,7 +2,7 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 
 import CircularProgress, { CircularProgressProps } from '@material-ui/core/CircularProgress';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 type CSSClasses = 'root'
 | 'top'
@@ -14,7 +14,7 @@ type CSSClasses = 'root'
 | 'green'
 | 'valueInside';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   root: {
     display: 'flex',
     alignItems: 'center',

@@ -3,7 +3,7 @@ import * as React from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import {
   StyleRulesCallback,
-  Theme,
+  
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
@@ -16,9 +16,18 @@ import Select from 'src/components/EnhancedSelect/Select';
 
 type ClassNames = 'root'
   | 'tag'
-  | 'addButton';
+  | 'addButton'
+  | 'selectTag';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+  '@keyframes fadeIn': {
+    from: {
+      opacity: 0,
+    },
+    to: {
+      opacity: 1,
+    },
+  },
   root: {
     display: 'flex',
     alignItems: 'center',
@@ -40,7 +49,45 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     },
   },
   addButton: {
-    marginTop: theme.spacing.unit * 2,
+    marginTop: theme.spacing.unit / 2,
+    position: 'relative',
+    top: 6,
+  },
+  selectTag: {
+    width: 'auto',
+    position: 'relative',
+    zIndex: 3,
+    animation: 'fadeIn .3s ease-in-out forwards',
+    '& [class*="MuiFormControl"]': {
+      width: 'auto',
+    },
+    '& [class*="MuiInput-formControl"]': {
+      minHeight: 'auto',
+      border: 0,
+      backgroundColor: 'transparent',
+      boxShadow: 'none',
+      '& p': {
+        fontSize: '.9rem',
+        color: theme.color.grey1,
+      },
+    },
+    '& [class*="MuiFormHelperText-error"]': {
+      padding: theme.spacing.unit,
+      marginLeft: 12,
+      position: 'absolute',
+      top: theme.spacing.unit * 4,
+      boxShadow: '0 0 5px #ddd',
+      backgroundColor: theme.bg.offWhite,
+      lineHeight: 1.2,
+    },
+    '& .react-select__input': {
+      fontSize: '.9rem',
+      color: theme.palette.text.primary,
+      backgroundColor: 'transparent',
+    },
+    '& .react-select__value-container': {
+      width: 150,
+    },
   },
 });
 
@@ -106,15 +153,16 @@ const TagsPanel: React.StatelessComponent<CombinedProps> = (props) => {
       })}
       {(isCreatingTag)
         ? <Select
-          onChange={onCreateTag}
-          options={tagsToSuggest}
-          variant='creatable'
-          errorText={tagError}
-          onBlur={toggleCreateTag}
-          placeholder="Create or Select a Tag"
-          value={tagInputValue}
-          createOptionPosition="first"
-          autoFocus
+            onChange={onCreateTag}
+            options={tagsToSuggest}
+            variant='creatable'
+            errorText={tagError}
+            onBlur={toggleCreateTag}
+            placeholder="Create or Select a Tag"
+            value={tagInputValue}
+            createOptionPosition="first"
+            autoFocus
+            className={classes.selectTag}
         />
         :
         <Tooltip

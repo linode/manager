@@ -3,7 +3,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import { compose } from 'ramda';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import AddNewLink from 'src/components/AddNewLink';
@@ -12,13 +12,14 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import PromiseLoader from 'src/components/PromiseLoader';
+import { StackScripts } from 'src/documentation';
 import { getLinodeImages } from 'src/services/images';
 
 import SelectStackScriptPanel from './SelectStackScriptPanel';
 
 type ClassNames = 'root' | 'title';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   title: {
     marginBottom: theme.spacing.unit * 2,
@@ -41,11 +42,7 @@ type CombinedProps = SetDocsProps
 
 export class StackScriptsLanding extends React.Component<CombinedProps, {}> {
   static docs = [
-    {
-      title: 'Automate Deployment with StackScripts',
-      src: 'https://www.linode.com/docs/platform/stackscripts/',
-      body: `Create Custom Instances and Automate Deployment with StackScripts.`,
-    },
+    StackScripts,
   ];
 
   goToCreateStackScript = () => {

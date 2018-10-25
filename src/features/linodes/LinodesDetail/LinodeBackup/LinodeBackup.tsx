@@ -12,7 +12,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
@@ -50,7 +50,7 @@ type ClassNames =
   | 'chooseTime'
   | 'cancelButton';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   paper: {
     padding: theme.spacing.unit * 3,
     marginBottom: theme.spacing.unit * 3,
@@ -598,6 +598,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
           title="Confirm Cancellation"
           actions={this.renderConfirmCancellationActions}
           open={this.state.cancelBackupsAlertOpen}
+          onClose={this.handleCloseBackupsAlert}
         >
           Cancelling backups associated with this Linode will
            delete all existing backups. Are you sure?

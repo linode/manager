@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import Hidden from '@material-ui/core/Hidden';
 import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -26,9 +26,10 @@ type ClassNames =
   'root'
   | 'labelCol'
   | 'moreCol'
-  | 'actionsCol';
+  | 'actionsCol'
+  | 'wrapHeader';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   labelCol: {
     width: '60%',
@@ -38,6 +39,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
   actionsCol: {
     width: '10%',
+  },
+  wrapHeader: {
+    wordBreak: 'break-all',
   },
 });
 
@@ -150,7 +154,7 @@ class NodeBalancersDashboardCard extends React.Component<CombinedProps, State> {
           <Link to={`/nodebalancers/${id}`} className="black nu block">
             <Grid container direction="column" spacing={8}>
               <Grid item className="py0">
-                <Typography variant="subheading">
+                <Typography className={classes.wrapHeader} variant="subheading">
                   {label}
                 </Typography>
               </Grid>

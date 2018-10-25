@@ -206,8 +206,7 @@ exports.removeAllVolumes = token => {
             return getAxiosInstance(token).delete(`${endpoint}/${res.id}`)
                 .then(response => response.status)
                 .catch(error => {
-                    console.error('Error', error);
-                    reject(error);
+                    reject(`Removing Volume ${res.id} failed due to ${JSON.stringify(error.response.data)}`);
                 });
         }
 
@@ -218,7 +217,7 @@ exports.removeAllVolumes = token => {
             Promise.all(removeVolumesArray).then(function(res) {
                 resolve(res);
             }).catch(error => {
-                console.log(error);
+                console.log(error.data);
                 return error;
             });
         });
@@ -257,7 +256,7 @@ exports.getMyStackScripts = token => {
         getAxiosInstance(token).get(endpoint, {
             headers: {
                 'Authorization': `Bearer ${token}`,
-                'X-Filter': `{"username":"${process.env.MANAGER_USER}","+order_by":"deployments_total","+order":"desc"}`
+                'X-Filter': `{"username":"${browser.options.testUser}","+order_by":"deployments_total","+order":"desc"}`
             }
         })
         .then(response => resolve(response.data))

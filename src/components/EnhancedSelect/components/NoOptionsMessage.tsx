@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { NoticeProps } from 'react-select/lib/components/Menu';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
 });
 
@@ -20,7 +20,6 @@ const NoOptionsMessage: React.StatelessComponent<CombinedProps> = (props) => {
 
   return (
     <Typography
-      color="textSecondary"
       className={selectProps.classes.noOptionsMessage}
       {...innerProps}
     >

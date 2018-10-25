@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import {
     StyleRulesCallback,
-    Theme,
+    
     WithStyles,
     withStyles,
   } from '@material-ui/core/styles';  
@@ -15,13 +15,14 @@ import CopyableTextField from 'src/features/Volumes/CopyableTextField';
 
 type ClassNames = 'root' | 'instructions' | 'qrcode';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   instructions: {
     marginTop: theme.spacing.unit * 2,
   },
   qrcode: {
     margin: `${theme.spacing.unit * 2}px 0`,
+    border: `5px solid #fff`,
   }
 });
 

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { StickyProps } from 'react-sticky';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import Grid from 'src/components/Grid';
@@ -10,7 +10,7 @@ import DocComponent, { Doc } from './DocComponent';
 
 type ClassNames = 'root' | 'title';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     [theme.breakpoints.down('md')]: {
       position: 'relative !important',

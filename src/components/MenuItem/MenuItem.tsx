@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import IconButton from '@material-ui/core/IconButton';
 import MenuItem, { MenuItemProps } from '@material-ui/core/MenuItem';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import HelpOutline from '@material-ui/icons/HelpOutline';
 
 type CSSClasses = 'root'
@@ -17,7 +17,7 @@ interface Props {
   className?: string;
 }
 
-const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   root: {
     position: 'relative',
     flexWrap: 'wrap',

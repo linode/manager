@@ -2,7 +2,7 @@ import { both, compose, equals, isNil, lensPath, over, path, set, uniq, view, wh
 import * as React from 'react';
 
 import Divider from '@material-ui/core/Divider';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -27,7 +27,7 @@ type ClassNames =
   | 'emptyStateText'
   | 'autoGridsm';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   containerDivider: {
    marginTop: theme.spacing.unit,
   },
@@ -85,6 +85,7 @@ interface IPRowState {
 interface State {
   submitting: boolean;
   loading: boolean;
+  successMessage?: string;
   ips: IPRowState;
   linodes: { id: number, label: string, ips: string[] }[];
   error?: Linode.ApiFieldError[];
@@ -313,7 +314,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
   }
 
   onSubmit = () => {
-    this.setState({ submitting: true, error: undefined });
+    this.setState({ submitting: true, error: undefined, successMessage: undefined, });
 
     assignAddresses(
       createRequestData(this.state.ips, this.props.linodeRegion),
@@ -324,7 +325,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
           this.getLinodes()
         ])
           .then(() => {
-            this.setState({ submitting: false, error: undefined })
+            this.setState({ submitting: false, error: undefined, successMessage: 'IP transferred successfully.' })
           })
           .catch(() => {
             this.setState({ error: [{ field: 'none', reason: 'Unable to refresh IPs. Please reload the screen.' }] })
@@ -350,6 +351,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
   onReset = () => {
     this.setState({
       error: undefined,
+      successMessage: undefined,
       ips: this.props.ipAddresses.reduce((state, ip) => ({
         ...state,
         [ip]: LinodeNetworkingIPTransferPanel.defaultState(ip, this.props.linodeID),
@@ -412,12 +414,13 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
 
   render() {
     const { classes } = this.props;
-    const { ips, error } = this.state;
+    const { ips, error, successMessage } = this.state;
 
     return (
       <ExpansionPanel
         heading="IP Transfer"
         actions={this.transferActions}
+        success={successMessage}
         data-qa-networking-actions-subheading
       >
         <Grid container>

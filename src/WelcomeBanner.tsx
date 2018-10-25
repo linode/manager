@@ -1,6 +1,8 @@
+import { compose } from 'ramda';
 import * as React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import Button from 'src/components/Button';
@@ -10,6 +12,7 @@ import Grid from 'src/components/Grid';
 import Mobile from 'src/assets/icons/mobile.svg';
 import Resource from 'src/assets/icons/resource.svg';
 import Streamline from 'src/assets/icons/streamline.svg';
+import { storage } from 'src/utilities/storage';
 
 type ClassNames = 'dialog'
   | 'content'
@@ -19,7 +22,7 @@ type ClassNames = 'dialog'
   | 'icon'
   | 'actions';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   dialog: {
     '& [role="document"]': {
       maxWidth: 960,
@@ -78,10 +81,18 @@ interface Props {
   onClose: () => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & RouteComponentProps<any> & WithStyles<ClassNames>;
 
 class WelcomeBanner extends React.Component<CombinedProps, {}> {
   actions = () => <Button onClick={this.props.onClose} type="primary">Let's go!</Button>;
+
+  redirectToClassic = () => {
+    if( storage.loginCloudManager.get() ){
+      storage.loginCloudManager.set('-1');
+    }
+
+    storage.notifications.welcome.set('closed')
+  };
 
   render() {
     const { classes } = this.props;
@@ -91,6 +102,7 @@ class WelcomeBanner extends React.Component<CombinedProps, {}> {
         open={this.props.open}
         title="Welcome to the New Cloud Manager!"
         className={classes.dialog}
+        onClose={this.props.onClose}
       >
         <Grid container className={classes.content}>
           <Grid item xs={12}>
@@ -118,13 +130,22 @@ class WelcomeBanner extends React.Component<CombinedProps, {}> {
           <Grid item xs={12} className={classes.actions}>
             {this.actions()}
           </Grid>
-          <Grid item xs={12}><Typography>Go back to <a href="https://manager.linode.com">Classic Manager</a>.</Typography></Grid>
+          <Grid item xs={12}>
+            <Typography>
+              Go back to <a href="https://manager.linode.com" onClick={this.redirectToClassic}>Classic Manager</a>.
+            </Typography>
+          </Grid>
         </Grid>
       </ConfirmationDialog>
     );
   }
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles<ClassNames>(styles, { withTheme: true });
 
-export default styled<CombinedProps>(WelcomeBanner);
+const enhanced = compose<any, any, any>(
+  withRouter,
+  styled,
+);
+
+export default enhanced(WelcomeBanner);

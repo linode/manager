@@ -30,6 +30,7 @@ const mockProps = {
 describe('FromImageContent', () => {
   const componentWithNotice = shallow(
     <FromStackScriptContent
+      handleDisablePasswordField={jest.fn()}
       classes={{
         root: '',
         main: '',
@@ -47,6 +48,7 @@ describe('FromImageContent', () => {
 
   const component = shallow(
     <FromStackScriptContent
+      handleDisablePasswordField={jest.fn()}
       classes={{
         root: '',
         main: '',
@@ -67,45 +69,45 @@ describe('FromImageContent', () => {
   });
 
   it('should render SelectStackScript panel', () => {
-    expect(component.find('Connect(WithRenderGuard(WithStyles(SelectStackScriptPanel)))')).toHaveLength(1);
+    expect(component.find('Connect(WithTheme(WithRenderGuard(WithStyles(SelectStackScriptPanel))))')).toHaveLength(1);
   });
 
   it('should render UserDefinedFields panel', () => {
     component.setState({ userDefinedFields: mockUserDefinedFields }); // give us some dummy fields
-    expect(component.find('WithStyles(WithRenderGuard(UserDefinedFieldsPanel))')).toHaveLength(1);
+    expect(component.find('WithStyles(WithTheme(WithRenderGuard(UserDefinedFieldsPanel)))')).toHaveLength(1);
   });
 
   it('should not render UserDefinedFields panel if no UDFs', () => {
     component.setState({ userDefinedFields: [] }); // give us some dummy fields
-    expect(component.find('WithStyles(WithRenderGuard(UserDefinedFieldsPanel))')).toHaveLength(0);
+    expect(component.find('WithStyles(WithTheme(WithRenderGuard(UserDefinedFieldsPanel)))')).toHaveLength(0);
   });
 
   it('should render SelectImage panel if no compatibleImages', () => {
-    expect(component.find('WithRenderGuard(WithStyles(CreateFromImage))')).toHaveLength(0);
+    expect(component.find('WithTheme(WithRenderGuard(WithStyles(CreateFromImage)))')).toHaveLength(0);
   });
 
   it('should render SelectImage panel if no compatibleImages', () => {
     component.setState({ compatibleImages: [{label: 'linode/centos7', is_public: true}] });
-    expect(component.find('WithRenderGuard(WithStyles(CreateFromImage))')).toHaveLength(1);
+    expect(component.find('WithTheme(WithRenderGuard(WithStyles(CreateFromImage)))')).toHaveLength(1);
   });
 
   it('should render SelectRegion panel', () => {
-    expect(component.find('WithStyles(WithRenderGuard(SelectRegionPanel))')).toHaveLength(1);
+    expect(component.find('WithStyles(WithTheme(WithRenderGuard(SelectRegionPanel)))')).toHaveLength(1);
   });
 
   it('should render SelectPlan panel', () => {
-    expect(component.find('WithStyles(WithRenderGuard(SelectPlanPanel))')).toHaveLength(1);
+    expect(component.find('WithStyles(WithTheme(WithRenderGuard(SelectPlanPanel)))')).toHaveLength(1);
   });
 
   it('should render SelectLabel panel', () => {
-    expect(component.find('WithStyles(WithRenderGuard(InfoPanel))')).toHaveLength(1);
+    expect(component.find('WithStyles(WithTheme(WithRenderGuard(InfoPanel)))')).toHaveLength(1);
   });
 
   it('should render SelectPassword panel', () => {
-    expect(component.find('WithStyles(WithRenderGuard(AccessPanel))')).toHaveLength(1);
+    expect(component.find('WithStyles(WithTheme(WithRenderGuard(AccessPanel)))')).toHaveLength(1);
   });
 
   it('should render SelectAddOns panel', () => {
-    expect(component.find('WithStyles(WithRenderGuard(AddonsPanel))')).toHaveLength(1);
+    expect(component.find('WithStyles(WithTheme(WithRenderGuard(AddonsPanel)))')).toHaveLength(1);
   });
 });

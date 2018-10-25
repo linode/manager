@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import {
   StyleRulesCallback,
-  Theme,
+  
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
@@ -18,10 +18,11 @@ import LinodePowerControl from '../LinodePowerControl';
 
 type ClassNames = 'root' | 'titleWrapper' | 'backButton' | 'cta' | 'launchButton';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   titleWrapper: {
     display: 'flex',
+    alignItems: 'center',
     marginTop: 5,
   },
   backButton: {
@@ -40,21 +41,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     },
   },
   launchButton: {
-    marginRight: theme.spacing.unit,
-    padding: '12px 16px 13px',
-    minHeight: 50,
-    transition: theme.transitions.create(['background-color', 'color']),
-    [theme.breakpoints.down('sm')]: {
-      backgroundColor: theme.color.white,
-      border: `1px solid ${theme.color.border1}`,
-      marginTop: 0,
-      minHeight: 51,
-    },
+    padding: '12px 28px 14px 0',
     '&:hover': {
-      backgroundColor: theme.palette.primary.main,
-      color: 'white',
-      borderColor: theme.palette.primary.main,
+      backgroundColor: 'transparent',
+      textDecoration: 'underline',
     },
+    '&:focus > span:first-child': {
+      outline: '1px dotted #999',
+    }
   },
 });
 
@@ -112,7 +106,9 @@ const LabelPowerAndConsolePanel: React.StatelessComponent<CombinedProps> = (prop
           onClick={launchLish}
           className={classes.launchButton}
           data-qa-launch-console
-        >
+          disableFocusRipple={true}
+          disableRipple={true}
+          >
           Launch Console
     </Button>
         <LinodePowerControl

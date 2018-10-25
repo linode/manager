@@ -1,15 +1,11 @@
-import { compose, equals, pathOr } from 'ramda';
+import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/merge';
-import { Subject } from 'rxjs/Subject';
-import { Subscription } from 'rxjs/Subscription';
 
 import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
@@ -22,25 +18,25 @@ import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
-import PaginationFooter, { PaginationProps } from 'src/components/PaginationFooter';
+import paginate, { PaginationProps } from 'src/components/Pagey';
+import PaginationFooter from 'src/components/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRowError from 'src/components/TableRowError';
-import { events$, generateInFilter, resetEventsPolling } from 'src/events';
+import { BlockStorage } from 'src/documentation';
+import { generateInFilter, resetEventsPolling } from 'src/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { getLinodes } from 'src/services/linodes';
 import { deleteVolume, detachVolume, getVolumes } from 'src/services/volumes';
 import { openForClone, openForCreating, openForEdit, openForResize } from 'src/store/reducers/volumeDrawer';
 import { formatRegion } from 'src/utilities';
-import scrollToTop from 'src/utilities/scrollToTop';
 
 import DestructiveVolumeDialog from './DestructiveVolumeDialog';
 import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
 import VolumeConfigDrawer from './VolumeConfigDrawer';
 import VolumesActionMenu from './VolumesActionMenu';
-
-export const updateVolumes$ = new Subject<boolean>();
+import WithEvents from './WithEvents';
 
 type ClassNames = 'root'
   | 'title'
@@ -49,7 +45,7 @@ type ClassNames = 'root'
   | 'sizeCol'
   | 'pathCol';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   title: {
     marginBottom: theme.spacing.unit * 2,
@@ -72,20 +68,20 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   }
 });
 
-interface Props {
+interface ExtendedVolume extends Linode.Volume {
+  linodeLabel: string;
+  linodeStatus: string;
+}
+
+interface Props extends PaginationProps<ExtendedVolume> {
   openForEdit: typeof openForEdit;
   openForResize: typeof openForResize;
   openForClone: typeof openForClone;
   openForCreating: typeof openForCreating;
+  recentEvent?: Linode.Event;
 }
 
-interface State extends PaginationProps {
-  loading: boolean;
-  labelsLoading: boolean;
-  errors?: Linode.ApiFieldError[];
-  volumes: Linode.Volume[];
-  linodeLabels: { [id: number]: string };
-  linodeStatuses: { [id: number]: string };
+interface State {
   configDrawer: {
     open: boolean;
     volumePath?: string;
@@ -108,14 +104,6 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 class VolumesLanding extends React.Component<CombinedProps, State> {
   state: State = {
-    page: 1,
-    count: 0,
-    pageSize: 25,
-    volumes: [],
-    loading: true,
-    labelsLoading: true,
-    linodeLabels: {},
-    linodeStatuses: {},
     configDrawer: {
       open: false,
     },
@@ -128,17 +116,10 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     },
   };
 
-  eventsSub: Subscription;
-
   mounted: boolean = false;
 
   static docs: Linode.Doc[] = [
-    {
-      title: 'How to Use Block Storage with Your Linode',
-      /* tslint:disable-next-line */
-      src: `https://www.linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode`,
-      body: `This tutorial explains how to use Linode's block storage service.`,
-    },
+    BlockStorage,
     {
       title: 'Boot a Linode from a Block Storage Volume',
       src: `https://www.linode.com/docs/platform/block-storage/boot-from-block-storage-volume/`,
@@ -149,53 +130,11 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   componentDidMount() {
     this.mounted = true;
 
-    this.getVolumes(undefined, undefined, true);
-
-    this.getLinodeLabels();
-
-    this.eventsSub = events$
-      .filter(event => (
-        !event._initial
-        && [
-          'volume_create',
-          'volume_attach',
-          'volume_delete',
-          'volume_detach',
-          'volume_resize',
-          'volume_clone',
-        ].includes(event.action)
-      ))
-      .merge(updateVolumes$)
-      .subscribe((event) => {
-        this.getVolumes()
-          .then((volumes) => {
-            if (!volumes || !this.mounted) { return; }
-
-            this.setState({
-              volumes: volumes.map((v) => ({
-                ...v,
-                ...maybeAddEvent(event, v),
-              })),
-            });
-          })
-          .catch(() => {
-            /* @todo: how do we want to display this error? */
-          });
-      });
+    this.props.request();
   }
 
   componentWillUnmount() {
     this.mounted = false;
-  }
-
-  componentDidUpdate(prevProps: CombinedProps, prevState: State) {
-    /*
-    We just need to know if different volumes are now on the state, so we can compare a list of
-    IDs rather than the whole object.
-    */
-    if (!equals(prevState.volumes.map(v => v.id), this.state.volumes.map(v => v.id))) {
-      this.getLinodeLabels();
-    }
   }
 
   handleCloseConfigDrawer = () => {
@@ -298,10 +237,15 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes } = this.props;
-    const { count, loading, labelsLoading } = this.state;
+    const {
+      classes,
+      loading,
+      count,
+      page,
+      pageSize,
+    } = this.props;
 
-    if (loading || labelsLoading) {
+    if (loading) {
       return this.renderLoading();
     }
 
@@ -347,11 +291,11 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           </Table>
         </Paper>
         <PaginationFooter
-          count={this.state.count}
-          page={this.state.page}
-          pageSize={this.state.pageSize}
-          handlePageChange={this.handlePageChange}
-          handleSizeChange={this.handlePageSizeChange}
+          count={count}
+          page={page}
+          pageSize={pageSize}
+          handlePageChange={this.props.handlePageChange}
+          handleSizeChange={this.props.handlePageSizeChange}
         />
         <VolumeConfigDrawer
           open={this.state.configDrawer.open}
@@ -378,15 +322,15 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   }
 
   renderContent = () => {
-    const { errors, volumes, count, linodeLabels, linodeStatuses } = this.state;
+    const { error, data: volumes } = this.props;
 
-    if (errors) {
-      return this.renderErrors(errors);
+    if (error) {
+      return this.renderErrors(error);
     }
 
 
-    if (volumes && count > 0) {
-      return this.renderData(volumes, linodeLabels, linodeStatuses);
+    if (volumes && this.props.count > 0) {
+      return this.renderData(volumes);
     }
 
     return null;
@@ -396,7 +340,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     return <CircleProgress />;
   };
 
-  renderErrors = (errors: Linode.ApiFieldError[]) => {
+  renderErrors = (errors: Error) => {
     return (
       <TableRowError colSpan={5} message="There was an error loading your volumes." />
     );
@@ -419,11 +363,9 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     );
   };
 
-  renderData = (volumes: Linode.Volume[], linodeLabels: any, linodeStatuses: any) => {
+  renderData = (volumes: ExtendedVolume[]) => {
     return volumes.map((volume) => {
       const label = pathOr('', ['label'], volume);
-      const linodeLabel = volume.linode_id ? linodeLabels[volume.linode_id] : '';
-      const linodeStatus = volume.linode_id ? linodeStatuses[volume.linode_id] : '';
       const size = pathOr('', ['size'], volume);
       const filesystemPath = pathOr(
         /** @todo Remove path default when API releases filesystem_path. */
@@ -446,10 +388,10 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
         : (
           <TableRow key={volume.id} data-qa-volume-cell={volume.id} className="fade-in-table">
             <TableCell parentColumn="Label" data-qa-volume-cell-label>{volume.label}</TableCell>
-            <TableCell parentColumn="Attached To" data-qa-volume-cell-attachment={linodeLabel}>
-              {linodeLabel &&
+            <TableCell parentColumn="Attached To" data-qa-volume-cell-attachment={volume.linodeLabel}>
+              {volume.linodeLabel &&
                 <Link to={`/linodes/${volume.linode_id}`}>
-                  {linodeLabel}
+                  {volume.linodeLabel}
                 </Link>
               }</TableCell>
             <TableCell parentColumn="Size" data-qa-volume-size>{size} GB</TableCell>
@@ -459,7 +401,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
               <VolumesActionMenu
                 onShowConfig={this.handleShowConfig}
                 filesystemPath={filesystemPath}
-                linodeLabel={linodeLabel}
+                linodeLabel={volume.linodeLabel}
                 regionID={regionID}
                 volumeID={volume.id}
                 size={size}
@@ -467,10 +409,10 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
                 onEdit={this.handleEdit}
                 onResize={this.handleResize}
                 onClone={this.handleClone}
-                attached={Boolean(linodeLabel)}
+                attached={Boolean(volume.linodeLabel)}
                 onAttach={this.handleAttach}
                 onDetach={this.handleDetach}
-                poweredOff={linodeStatus === 'offline'}
+                poweredOff={volume.linodeStatus === 'offline'}
                 onDelete={this.handleDelete}
               />
             </TableCell>
@@ -478,67 +420,6 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
         );
     });
   };
-
-  getVolumes = (
-    page: number = this.state.page,
-    pageSize: number = this.state.pageSize,
-    initial: boolean = false,
-  ) => {
-
-    if (initial) {
-      this.setState({ loading: true });
-    }
-
-    return getVolumes({ page, page_size: pageSize })
-      .then((response) => {
-        if (!this.mounted) { return response.data; }
-
-        this.setState({
-          count: response.results,
-          page: response.page,
-          loading: false,
-          volumes: response.data,
-        });
-
-        return response.data;
-      })
-      .catch((err) => this.mounted && this.setState({
-        loading: false,
-        errors: pathOr([{ reason: 'Unable to load Volumes.' }], ['response', 'data', 'errors'], err),
-      }));
-  };
-
-  handlePageChange = (page: number) => {
-    this.setState({ page }, () => { this.getVolumes() });
-    scrollToTop();
-  }
-
-  handlePageSizeChange = (pageSize: number) => {
-    this.setState({ pageSize }, () => { this.getVolumes() });
-  }
-
-  getLinodeLabels = () => {
-    const linodeIDs = this.state.volumes.map(volume => volume.linode_id).filter(Boolean);
-    const xFilter = generateInFilter('id', linodeIDs);
-    this.setState({ labelsLoading: true });
-
-    getLinodes(undefined, xFilter)
-      .then((response) => {
-        if (!this.mounted) { return; }
-        const linodeLabels = {};
-        for (const linode of response.data) {
-          linodeLabels[linode.id] = linode.label;
-        }
-        this.setState({ linodeLabels });
-
-        const linodeStatuses = {};
-        for (const linode of response.data) {
-          linodeStatuses[linode.id] = linode.status;
-        }
-        this.setState({ linodeStatuses, labelsLoading: false });
-      })
-      .catch((err) => { /** @todo how do we want to display this error */ });
-  }
 
   closeDestructiveDialog = () => {
     this.setState({
@@ -588,7 +469,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
 const isVolumeUpdating = (e?: Linode.Event) => {
   return e
     && ['volume_attach', 'volume_detach', 'volume_create'].includes(e.action)
-    && ['scheculed', 'started'].includes(e.status);
+    && ['scheduled', 'started'].includes(e.status);
 };
 
 const progressFromEvent = (e?: Linode.Event) => {
@@ -601,12 +482,6 @@ const progressFromEvent = (e?: Linode.Event) => {
   return undefined;
 }
 
-const maybeAddEvent = (e: boolean | Linode.Event, volume: Linode.Volume) => {
-  if (typeof e === 'boolean') { return {} };
-  if (!e.entity || e.entity.id !== volume.id) { return {} }
-  return { recentEvent: e };
-};
-
 const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
   { openForEdit, openForResize, openForClone, openForCreating },
   dispatch,
@@ -618,8 +493,65 @@ const styled = withStyles(styles, { withTheme: true });
 
 const documented = setDocs(VolumesLanding.docs);
 
-export default compose<Linode.TodoAny, Linode.TodoAny, Linode.TodoAny, Linode.TodoAny>(
-  connected,
-  documented,
-  styled,
-)(VolumesLanding);
+const updatedRequest = (ownProps: any, params: any, filters: any) => {
+  return getVolumes(params, filters)
+    .then((volumesResponse) => {
+      /*
+       * Iterate over all the volumes data and find the ones that
+       * have a linodeId property that is not null and create an X-Filter
+       * that we can use in the getLinodes() request
+       */
+      const linodeIDs = volumesResponse.data.map(volume => volume.linode_id).filter(Boolean);
+      const xFilter = generateInFilter('id', linodeIDs);
+
+      return getLinodes(undefined, xFilter)
+        .then((linodesResponse) => {
+          const volumesWithLinodeData = volumesResponse.data.map(eachVolume => {
+            /*
+             * Iterate over all the linode data and find a match between
+             * the volumes linode ID and the Linode data id. If there's a match
+             * it means that the Linode is attached to the volume and the Linode
+             * status and label needs needs to be appended to the result data 
+             */
+            for (const eachLinode of linodesResponse.data) {
+              if (eachLinode.id === eachVolume.linode_id) {
+                return {
+                  ...eachVolume,
+                  linodeLabel: eachLinode.label,
+                  linodeStatus: eachLinode.status
+                }
+              }
+            }
+            /*
+             * Otherwise, this volume is not attached to a Linode 
+             */
+            return eachVolume;
+          });
+
+          return {
+            ...volumesResponse,
+            data: volumesWithLinodeData,
+          }
+        })
+        .catch((err) => {
+          /*
+           * If getting the Linode data fails, no problem.
+           * Just return the volumes 
+           */
+          return volumesResponse;
+        });
+    });
+}
+
+const paginated = paginate(updatedRequest);
+
+const withEvents = WithEvents();
+
+export default
+  compose<Linode.TodoAny, Linode.TodoAny, Linode.TodoAny, Linode.TodoAny, Linode.TodoAny, Linode.TodoAny>(
+    connected,
+    documented,
+    paginated,
+    styled,
+    withEvents
+  )(VolumesLanding);

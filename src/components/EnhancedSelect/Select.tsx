@@ -1,11 +1,10 @@
-import { merge } from 'ramda';
 import * as React from 'react';
 import ReactSelect from 'react-select';
 import Async, { AsyncProps } from 'react-select/lib/Async';
 import CreatableSelect, { Props as CreatableSelectProps } from 'react-select/lib/Creatable';
 import { Props as SelectProps } from 'react-select/lib/Select';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import MultiValue from './components/MultiValue';
 import NoOptionsMessage from './components/NoOptionsMessage';
@@ -16,12 +15,34 @@ import Placeholder from './components/SelectPlaceholder';
 type ClassNames = 'root'
 | 'input'
 | 'noOptionsMessage'
-| 'divider';
+| 'divider'
+| 'suggestionRoot'
+| 'highlight'
+| 'suggestionItem'
+| 'suggestionIcon'
+| 'suggestionTitle'
+| 'suggestionDescription'
+| 'resultContainer'
+| 'tagContainer'
+| 'selectedMenuItem';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
-    maxWidth: 415,
+    width: '100%',
     position: 'relative',
+    '& .react-select__control': {
+      borderRadius: 0,
+      boxShadow: 'none',
+      border: `1px solid transparent`,
+      backgroundColor: theme.bg.white,
+      '&:hover': {
+        border: `1px dotted #ccc`,
+        cursor: 'text',
+      },
+      '&--is-focused, &--is-focused:hover': {
+        border: `1px dotted #999`
+      },
+    },
     '& .react-select__value-container': {
       width: '100%',
       '& > div': {
@@ -35,6 +56,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     },
     '& .react-select__input': {
       width: '100%',
+      color: theme.palette.text.primary,
       '& input': {
         width: '100% !important',
       },
@@ -43,10 +65,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       margin: '-1px 0 0 0',
       borderRadius: 0,
       boxShadow: 'none',
-      border: '1px solid #999',
+      border: `1px solid ${theme.palette.divider}`,
+      maxWidth: 415,
     },
     '& .react-select__menu-list': {
       padding: theme.spacing.unit / 2,
+      backgroundColor: theme.bg.white,
     },
     '& .react-select__option': {
       transition: theme.transitions.create(['background-color', 'color']),
@@ -94,6 +118,66 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   divider: {
     height: theme.spacing.unit * 2,
   },
+  suggestionRoot: {
+    cursor: 'pointer',
+    display: 'flex',
+    width: 'calc(100% + 2px)',
+    alignItems: 'space-between',
+    justifyContent: 'space-between',
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    '&:last-child': {
+      borderBottom: 0,
+    }
+  },
+  highlight: {
+    color: theme.palette.primary.main,
+  },
+  suggestionItem: {
+    padding: theme.spacing.unit,
+  },
+  suggestionIcon: {
+    '& svg': {
+      width: '40px',
+      height: '40px',
+    },
+  },
+  suggestionTitle: {
+    fontSize: '1rem',
+    color: theme.palette.text.primary,
+  },
+  suggestionDescription: {
+    color: theme.color.headline,
+    fontSize: '.75rem',
+    fontWeight: 600,
+    marginTop: 2,
+  },
+  resultContainer: {
+    display: 'flex',
+    flexFlow: 'row nowrap'
+  },
+  tagContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    '& > div': {
+      margin: '2px',
+    }
+  },
+  selectedMenuItem: {
+    backgroundColor: `${theme.bg.main} !important`,
+    '& .circle': {
+      transition: theme.transitions.create(['fill']),
+      fill: theme.palette.primary.main,
+    },
+    '& .outerCircle': {
+      transition: theme.transitions.create(['stroke']),
+      stroke: '#2967B1',
+    },
+    '& .insidePath *': {
+      transition: theme.transitions.create(['stroke']),
+      stroke: 'white',
+    },
+  },
 });
 
 export interface Item {
@@ -126,6 +210,7 @@ export interface EnhancedSelectProps {
   className?: string;
   components?: any;
   disabled?: boolean;
+  isClearable?: boolean;
   isMulti?: boolean;
   isLoading?: boolean;
   variant?: 'async' | 'creatable';
@@ -133,10 +218,12 @@ export interface EnhancedSelectProps {
   label?: string;
   placeholder?: string;
   errorText?: string;
+  styleOverrides?: any;
   onChange: (selected: Item | Item[], actionMeta: ActionMeta) => void;
   createNew?: (inputValue: string) => void;
   onInputChange?: (inputValue: string, actionMeta: ActionMeta) => void;
   loadOptions?: (inputValue: string) => Promise<Item| Item[]> | undefined;
+  filterOption?: (option: Item, inputValue: string) => boolean | null;
 }
 
 // Material-UI versions of several React-Select components.
@@ -175,6 +262,7 @@ class Select extends React.PureComponent<CombinedProps,{}> {
       filterOption,
       label,
       loadOptions,
+      isClearable,
       isMulti,
       isLoading,
       name,
@@ -182,9 +270,11 @@ class Select extends React.PureComponent<CombinedProps,{}> {
       onChange,
       onInputChange,
       options,
+      styleOverrides,
       value,
       variant,
       noOptionsMessage,
+      onMenuClose,
       onBlur,
       ...restOfProps
     } = this.props;
@@ -201,7 +291,7 @@ class Select extends React.PureComponent<CombinedProps,{}> {
     * The components passed in as props will be merged with the overrides we are already using, with the passed components
     * taking precedence.
     */
-    const combinedComponents = merge(_components, components);
+    const combinedComponents = {..._components, ...components};
 
     // If async, pass loadOptions instead of options. A Select can't be both Creatable and Async.
     // (AsyncCreatable exists, but we have not adapted it.)
@@ -215,8 +305,9 @@ class Select extends React.PureComponent<CombinedProps,{}> {
     return (
       <BaseSelect
         {...restOfProps}
-        isClearable
+        isClearable={isClearable  || true }
         isSearchable
+        blurInputOnSelect
         isLoading={isLoading}
         defaultOptions
         cacheOptions={false}
@@ -227,6 +318,7 @@ class Select extends React.PureComponent<CombinedProps,{}> {
         classes={classes}
         className={`${classes.root} ${className}`}
         classNamePrefix="react-select"
+        styles={styleOverrides}
         textFieldProps={{
           label,
           errorText,
@@ -241,6 +333,7 @@ class Select extends React.PureComponent<CombinedProps,{}> {
         options={options}
         components={combinedComponents}
         onChange={onChange}
+        onMenuClose={onMenuClose}
         onInputChange={onInputChange}
         onCreateOption={createNew}
         placeholder={placeholder || 'Select a value...'}

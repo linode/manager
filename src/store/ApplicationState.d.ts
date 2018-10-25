@@ -1,11 +1,13 @@
 declare interface ApplicationState {
   __resources: {
-    profile: RequestableData<Linode.Profile>;
+    profile: RequestableData<Linode.Profile>,
+    accountSettings: RequestableData<Linode.AccountSettings>
   },
   authentication: AuthState;
   documentation: DocumentationState;
   features: FeaturesState;
   volumeDrawer: VolumeDrawerState;
+  notifications: RequestableData<Linode.Notification[]>;
 }
 
 declare interface AuthState {

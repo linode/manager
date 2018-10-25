@@ -2,7 +2,7 @@ import { compose, lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 
 import Button from '@material-ui/core/Button';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -25,7 +25,7 @@ type ClassNames = 'root'
 |  'suffix'
 |  'actionPanel';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   suffix: {
     fontSize: '.9rem',
@@ -249,7 +249,7 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
       [entity_type]: Number(entity_id)
     })
       .then((response) => {
-        onSuccess(response.data);
+        onSuccess(response);
         if (!this.mounted) { return; }
         this.setState({
           errors: undefined,

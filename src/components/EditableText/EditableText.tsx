@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import Button from '@material-ui/core/Button';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import { TextFieldProps } from '@material-ui/core/TextField';
 import Typography, { TypographyProps } from '@material-ui/core/Typography';
 import Check from '@material-ui/icons/Check';
@@ -24,9 +24,10 @@ type ClassNames = 'root'
 | 'save'
 | 'close'
 | 'headline'
-| 'title';
+| 'title'
+| 'editIcon';
 
-const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback = (theme) => ({
   '@keyframes fadeIn': {
     from: {
       opacity: 0,
@@ -36,28 +37,33 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     },
   },
   root: {
-    padding: '12px 12px 10px 0',
+    padding: '5px 10px',
     display: 'inline-block',
-    borderBottom: '2px dotted transparent',
+    border: '1px solid transparent',
     transition: theme.transitions.create(['opacity']),
+    wordBreak: 'break-all',
   },
   container: {
-    display: 'inline-flex',
+    display: 'flex',
     justifyContent: 'flex-start',
-    alignItems: 'flex-start',
+    alignItems: 'center',
+    maxHeight: 48,
   },
   initial: {
+    border: '1px solid transparent',
     '&:hover, &:focus': {
-      '& $root': {
-        opacity: .5,
+      border: '1px solid #abadaf',
+      '& $editIcon': {
+        visibility: 'visible',
       },
       '& $icon': {
-        color: theme.palette.primary.light,
+        color: theme.color.grey1,
       },
     },
   },
   edit: {
     fontSize: 22,
+    border: '1px solid transparent',
   },
   textField: {
     opacity: 0,
@@ -65,17 +71,17 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     margin: 0,
   },
   inputRoot: {
-    borderTop: 0,
-    borderLeft: 0,
-    borderRight: 0,
-    borderBottomWidth: 2,
-    borderBottomStyle: 'dotted',
-    backgroundColor: 'transparent',
+    maxWidth: 170,
+    borderColor: `${theme.palette.primary.main} !important`,
+    [theme.breakpoints.up('md')]: {
+      maxWidth: 415,
+      width: '100%',
+    },
   },
   button: {
     minWidth: 'auto',
     padding: 0,
-    marginTop: 10,
+    marginTop: 0,
     background: 'transparent !important',
   },
   icon: {
@@ -93,13 +99,18 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     fontSize: 26,
   },
   input: {
-    padding: '12px 12px 10px 0',
+    padding: '5px 10px',
   },
   headline: {
     ...theme.typography.headline,
   },
   title: {
     ...theme.typography.title,
+  },
+  editIcon: {
+    [theme.breakpoints.up('lg')]: {
+      visibility: 'hidden',
+    },
   },
 });
 
@@ -182,7 +193,7 @@ class EditableText extends React.Component<FinalProps, State> {
                   {text}
                 </Typography>
                 <Button
-                  className={classes.button}
+                  className={`${classes.button} ${classes.editIcon}`}
                   onClick={this.toggleEditing}
                   data-qa-edit-button
                 >

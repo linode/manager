@@ -4,6 +4,7 @@ import * as React from 'react';
 import { object, string } from 'yup';
 
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import withEnhancedValidation, { EnhancedValidationProps } from 'src/components/EnhancedValidation';
@@ -16,7 +17,7 @@ import { updateLinode } from 'src/services/linodes';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = () => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
 });
 

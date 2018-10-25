@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import * as classNames from 'classnames';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import Grid from 'src/components/Grid';
 import MenuItem from 'src/components/MenuItem';
@@ -12,7 +12,7 @@ import PaginationControls from '../PaginationControls';
 
 type ClassNames = 'root' | 'padded';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
+const styles: StyleRulesCallback<ClassNames> = (theme) => {
   return ({
     root: {
       marginTop: theme.spacing.unit,

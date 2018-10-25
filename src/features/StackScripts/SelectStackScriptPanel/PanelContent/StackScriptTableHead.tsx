@@ -1,20 +1,12 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 
-import {
-  StyleRulesCallback,
-  Theme,
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableHead from '@material-ui/core/TableHead';
 
-import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
-import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
-
-import Button from 'src/components/Button';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
+import TableSortCell from 'src/components/TableSortCell';
 
 type ClassNames = 'root'
   | 'stackscriptLabel'
@@ -22,11 +14,9 @@ type ClassNames = 'root'
   | 'deploys'
   | 'revisions'
   | 'tr'
-  | 'tableHead'
-  | 'sortButton'
-  | 'sortIcon';
+  | 'tableHead';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   stackscriptLabel: {
     width: 84,
@@ -50,20 +40,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     position: 'sticky',
     top: 72,
     backgroundColor: theme.bg.offWhite,
-    zIndex: 10,
     paddingTop: 0,
     paddingBottom: 0,
-  },
-  sortButton: {
-    marginLeft: -26,
-    border: 0,
-    width: '100%',
-    justifyContent: 'flex-start',
-  },
-  sortIcon: {
-    position: 'relative',
-    top: 2,
-    left: 10,
+    height: 48,
+    zIndex: 5,
   },
 });
 
@@ -73,7 +53,7 @@ type CurrentFilter = 'label' | 'deploys' | 'revision';
 
 interface Props {
   isSelecting?: boolean;
-  handleClickTableHeader: (e: React.MouseEvent<HTMLElement>) => void;
+  handleClickTableHeader: (value: string) => void;
   sortOrder: SortOrder;
   currentFilterType: CurrentFilter | null;
 }
@@ -81,22 +61,13 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class StackScriptTableHead extends React.Component<CombinedProps, {}> {
-  renderIcon = () => {
-    const { sortOrder } = this.props;
-
-    return (
-      sortOrder === 'desc'
-        ? <KeyboardArrowUp className="sortIcon" />
-        : <KeyboardArrowDown className="sortIcon" />
-    );
-  }
-
   render() {
     const {
       classes,
       currentFilterType,
       isSelecting,
       handleClickTableHeader,
+      sortOrder
     } = this.props;
 
     return (
@@ -109,68 +80,42 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
                 [classes.stackscriptLabel]: true,
               })} />
           }
-          <TableCell
+          <TableSortCell
             className={classNames({
               [classes.tableHead]: true,
               [classes.stackscriptTitles]: true,
             })}
-            sortable
+            direction={sortOrder}
+            active={currentFilterType === 'label'}
+            label="label"
+            handleClick={handleClickTableHeader}
           >
-            <Button
-              type="secondary"
-              value='label'
-              className={classes.sortButton}
-              onClick={handleClickTableHeader}
-              data-qa-stackscript-table-header
-            >
-              StackScript
-        {currentFilterType === 'label' &&
-                this.renderIcon()
-              }
-            </Button>
-          </TableCell>
-          <TableCell
+            StackScript
+          </TableSortCell>
+          <TableSortCell
             className={classNames({
               [classes.tableHead]: true,
               [classes.deploys]: true,
             })}
-            noWrap
-            sortable
+            direction={sortOrder}
+            active={currentFilterType === 'deploys'}
+            label="deploys"
+            handleClick={handleClickTableHeader}
           >
-            <Button
-              type="secondary"
-              value='deploys'
-              className={classes.sortButton}
-              onClick={handleClickTableHeader}
-              data-qa-stackscript-active-deploy-header
-            >
-              Active Deploys
-        {currentFilterType !== 'label' && currentFilterType !== 'revision' &&
-                this.renderIcon()
-              }
-            </Button>
-          </TableCell>
-          <TableCell
+            Active Deploys
+          </TableSortCell>
+          <TableSortCell
             className={classNames({
               [classes.tableHead]: true,
               [classes.revisions]: true,
             })}
-            noWrap
-            sortable
+            direction={sortOrder}
+            active={currentFilterType === 'revision'}
+            label="revision"
+            handleClick={handleClickTableHeader}
           >
-            <Button
-              type="secondary"
-              value='revision'
-              className={classes.sortButton}
-              onClick={handleClickTableHeader}
-              data-qa-stackscript-revision-header
-            >
-              Last Revision
-        {currentFilterType === 'revision' &&
-                this.renderIcon()
-              }
-            </Button>
-          </TableCell>
+            Last Revision
+          </TableSortCell>
           <TableCell
             className={classes.tableHead}
             data-qa-stackscript-compatible-images

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Divider, StyleRulesCallback, Theme, Typography, WithStyles, withStyles } from '@material-ui/core';
+import { Divider, StyleRulesCallback, Typography, WithStyles, withStyles } from '@material-ui/core';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
 
@@ -15,7 +15,7 @@ type ClassNames = 'root'
   | 'usage'
   | 'usageWrapper';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   '@keyframes fadeIn': {
     from: {
       opacity: 0,

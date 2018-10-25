@@ -2,22 +2,16 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 
 import Hidden from '@material-ui/core/Hidden';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableCell, { TableCellProps } from '@material-ui/core/TableCell';
 
 type ClassNames = 'root'
-  | 'emptyCell'
   | 'noWrap'
   | 'sortable'
   | 'data';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
-  emptyCell: {
-    [theme.breakpoints.down('sm')]: {
-      display: 'none !important'
-    },
-  },
   noWrap: {
     whiteSpace: 'nowrap',
   },
@@ -40,6 +34,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   data: {
     [theme.breakpoints.down('sm')]: {
       textAlign: 'right',
+      wordBreak: 'break-all',
       marginLeft: theme.spacing.unit * 3,
     },
   },
@@ -72,7 +67,7 @@ class WrappedTableCell extends React.Component<CombinedProps> {
             [classes.noWrap]: noWrap,
             [classes.sortable]: sortable,
             // hide the cell at small breakpoints if it's empty with no parent column 
-            [classes.emptyCell]: !parentColumn && !this.props.children
+            'emptyCell': !parentColumn && !this.props.children
           })}
         {...rest}
       >

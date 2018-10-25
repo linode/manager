@@ -11,7 +11,15 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import { append, filter, lensPath, over, path, set, view, when } from 'ramda';
+import * as React from 'react';
+import { connect, Dispatch } from 'react-redux';
+import { bindActionCreators, compose } from 'redux';
+import 'rxjs/add/operator/filter';
+import { Subscription } from 'rxjs/Subscription';
+import { debounce } from 'throttle-debounce';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -24,7 +32,7 @@ import TextField from 'src/components/TextField';
 import { withRegions } from 'src/context/regions';
 import { events$, resetEventsPolling } from 'src/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
-import { updateVolumes$ } from 'src/features/Volumes/VolumesLanding';
+import { updateVolumes$ } from 'src/features/Volumes/WithEvents';
 import { getLinodeConfigs, getLinodes } from 'src/services/linodes';
 import { cloneVolume, createVolume, resizeVolume, updateVolume, VolumeRequestPayload } from 'src/services/volumes';
 import { close } from 'src/store/reducers/volumeDrawer';
@@ -39,7 +47,7 @@ import { number, object, string } from 'yup';
 type ClassNames = 'root'
   | 'actionPanel';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   actionPanel: {
     marginTop: theme.spacing.unit * 2,
@@ -166,10 +174,6 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
          * If a volume is created, but not attached, the event is volume_create with a status of notification.
          * If a volume is created and attached, the event is volume_create with status of scheduled, started, failed, finished.
          */
-        if (event.action === 'volume_create' && event.status === 'scheduled') {
-          sendToast(`Volume ${event.entity && event.entity.label} scheduled for creation.`);
-        }
-
         if (event.action === 'volume_create' && (event.status === 'notification' || event.status === 'finished')) {
           sendToast(`Volume ${event.entity && event.entity.label} has been created successfully.`);
         }

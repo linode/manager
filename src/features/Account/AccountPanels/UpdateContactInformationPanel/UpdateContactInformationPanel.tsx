@@ -1,7 +1,7 @@
 import { compose, defaultTo, lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -21,7 +21,7 @@ type ClassNames = 'root'
   | 'mainFormContainer'
   | 'stateZip';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   mainFormContainer: {
     maxWidth: 860,
@@ -133,7 +133,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
     const generalError = hasErrorFor('none');
 
     return (
-      <Grid container className={classes.mainFormContainer}>
+      <Grid container className={classes.mainFormContainer} data-qa-update-contact>
         {generalError && <Grid item xs={12}><Notice error text={generalError} /></Grid>}
         {success && <Grid item xs={12}><Notice success text={success} /></Grid>}
 
@@ -145,6 +145,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
                 value={defaultTo(account.company, fields.company)}
                 errorText={hasErrorFor('company')}
                 onChange={this.updateCompany}
+                data-qa-company
               />
             </Grid>
           </Grid>
@@ -157,6 +158,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
             value={defaultTo(account.email, fields.email)}
             errorText={hasErrorFor('email')}
             onChange={this.updateEmail}
+            data-qa-contact-email
           />
         </Grid>
 
@@ -167,6 +169,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
             value={defaultTo(account.phone, fields.phone)}
             errorText={hasErrorFor('phone')}
             onChange={this.updatePhone}
+            data-qa-contact-phone
           />
         </Grid>
 
@@ -176,6 +179,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
             value={defaultTo(account.first_name, fields.first_name)}
             errorText={hasErrorFor('first_name')}
             onChange={this.updateFirstName}
+            data-qa-contact-first-name
           />
         </Grid>
 
@@ -185,6 +189,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
             value={defaultTo(account.last_name, fields.last_name)}
             errorText={hasErrorFor('last_name')}
             onChange={this.updateLastName}
+            data-qa-contact-last-name
           />
         </Grid>
 
@@ -194,6 +199,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
             value={defaultTo(account.address_1, fields.address_1)}
             errorText={hasErrorFor('address_1')}
             onChange={this.updateAddress1}
+            data-qa-contact-address-1
           />
         </Grid>
 
@@ -203,6 +209,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
             value={defaultTo(account.address_2, fields.address_2)}
             errorText={hasErrorFor('address_2')}
             onChange={this.updateAddress2}
+            data-qa-contact-address-2
           />
         </Grid>
 
@@ -212,6 +219,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
             value={defaultTo(account.city, fields.city)}
             errorText={hasErrorFor('city')}
             onChange={this.updateCity}
+            data-qa-contact-city
           />
         </Grid>
 
@@ -223,6 +231,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
                 value={defaultTo(account.state, fields.state)}
                 errorText={hasErrorFor('state')}
                 onChange={this.updateState}
+                data-qa-contact-province
               />
             </Grid>
             <Grid item xs={12} sm={5}>
@@ -231,6 +240,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
                 value={defaultTo(account.zip, fields.zip)}
                 errorText={hasErrorFor('zip')}
                 onChange={this.updateZip}
+                data-qa-contact-post-code
               />
             </Grid>
           </Grid>
@@ -243,6 +253,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
             errorText={hasErrorFor('country')}
             onChange={this.updateCountry}
             select
+            data-qa-contact-country
           >
             {UpdateContactInformationPanel.countryItems()}
           </TextField>
@@ -254,6 +265,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
             value={defaultTo(account.tax_id, fields.tax_id)}
             errorText={hasErrorFor('tax_id')}
             onChange={this.updateTaxID}
+            data-qa-contact-tax-id
           />
         </Grid>
 
@@ -520,8 +532,8 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
 
     return (
       <ActionsPanel>
-        <Button type="primary" onClick={this.submitForm} loading={this.state.submitting}>Save</Button>
-        <Button type="secondary" onClick={this.resetForm}>Reset</Button>
+        <Button type="primary" onClick={this.submitForm} loading={this.state.submitting} data-qa-save-contact-info>Save</Button>
+        <Button type="secondary" onClick={this.resetForm} data-qa-reset-contact-info>Reset</Button>
       </ActionsPanel>
     );
   };
