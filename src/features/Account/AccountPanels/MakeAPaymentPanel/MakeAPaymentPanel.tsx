@@ -432,7 +432,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
                 onChange={this.handleCVVChange}
                 value={this.state.CVV}
                 required
-                type="number"
+                type="text"
                 placeholder={`000`}
               />
             }
