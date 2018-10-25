@@ -26,7 +26,7 @@ import { createLinodeConfig, getLinodeConfig, getLinodeDisks, getLinodeKernels, 
 import { getVolumes } from 'src/services/volumes';
 import createDevicesFromStrings, { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
 import createStringsFromDevices from 'src/utilities/createStringsFromDevices';
-import { getAll } from 'src/utilities/getAll';
+import { getAll, getAllFromEntity } from 'src/utilities/getAll';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
 type ClassNames = 'root'
@@ -94,7 +94,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 const getAllKernels = getAll(getLinodeKernels);
 const getAllVolumes = getAll(getVolumes);
-const getAllLinodeDisks = getAll(getLinodeDisks);
+const getAllLinodeDisks = getAllFromEntity(getLinodeDisks);
 
 class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
   state: State = {
@@ -481,7 +481,6 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
 
   getAvailableDevices = () => {
     const { linodeId, linodeRegion } = this.props;
-
     /** Get all volumes for usage in the block device assignment. */
     getAllVolumes()
       .then((volumes) => volumes.reduce((result: Linode.Volume[], volume: Linode.Volume) => {
