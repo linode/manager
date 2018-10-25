@@ -176,19 +176,6 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
   submitForm = () => {
     const { usd, ccv } = this.state;
 
-    const errors = [];
-    if (usd === '') {
-      errors.push({ field: 'usd', reason: 'Amount cannot be blank.' });
-    }
-
-    if (ccv === '') {
-      errors.push({ field: 'ccv', reason: 'CCV cannot be blank.' });
-    }
-
-    if (errors.length) {
-      return this.setState({ errors });
-    }
-
     this.setState({
       submitting: true,
       errors: undefined,
