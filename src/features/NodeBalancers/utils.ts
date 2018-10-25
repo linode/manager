@@ -2,12 +2,6 @@ import { clamp, compose, filter, isNil, toString } from 'ramda';
 
 import defaultNumeric from 'src/utilities/defaultNumeric';
 
-export const clampNumericString = (low: number, hi: number) => compose(
-  toString,
-  clamp(low, hi),
-  defaultNumeric(0),
-);
-
 export interface NodeBalancerConfigFields {
   id?: number;
   algorithm?: 'roundrobin' | 'leastconn' | 'source';
@@ -27,6 +21,12 @@ export interface NodeBalancerConfigFields {
   nodes: Linode.NodeBalancerConfigNode[];
   modifyStatus?: 'new';
 }
+
+export const clampNumericString = (low: number, hi: number) => compose(
+  toString,
+  clamp(low, hi),
+  defaultNumeric(0),
+);
 
 export const createNewNodeBalancerConfigNode = (): Linode.NodeBalancerConfigNode => ({
   label: '',

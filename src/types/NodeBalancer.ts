@@ -45,20 +45,20 @@ namespace Linode {
     check_passive: boolean;
     ssl_cert: string;
     nodes_status: NodesStatus;
-    protocol: string;
+    protocol: 'http' | 'https' | 'tcp';
     ssl_commonname: string;
     check_interval: number;
     check_attempts: number;
     check_timeout: number;
     check_body: string;
     check_path: string;
-    check: string;
+    check: 'none' | 'connection' | 'http' | 'http_body';
     ssl_key: string;
-    stickiness: string;
-    algorithm: string;
+    stickiness: 'none' | 'table' | 'http_cookie';
+    algorithm: 'roundrobin' | 'leastconn' | 'source';
     ssl_fingerprint: string;
-    cipher_suite: string;
-    nodes?: NodeBalancerConfigNode[];
+    cipher_suite: 'recommended' | 'legacy';
+    nodes: NodeBalancerConfigNode[];
     modifyStatus?: 'new';
   }
 

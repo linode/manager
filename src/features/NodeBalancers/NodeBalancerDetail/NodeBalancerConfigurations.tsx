@@ -22,7 +22,7 @@ import {
   getNodeBalancerConfigNodes,
   getNodeBalancerConfigs,
   updateNodeBalancerConfig,
-  updateNodeBalancerConfigNode
+  updateNodeBalancerConfigNode,
 } from 'src/services/nodebalancers';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -236,7 +236,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   saveConfigUpdatePath = (
     idx: number,
     config: NodeBalancerConfigFields,
-    configPayload: Partial<Linode.NodeBalancerConfig>,
+    configPayload: NodeBalancerConfigFields,
   ) => {
     /* Update a config and its nodes simultaneously */
     const { match: { params: { nodeBalancerId } } } = this.props;
@@ -330,7 +330,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   saveConfigNewPath = (
     idx: number,
     config: NodeBalancerConfigFields,
-    configPayload: Partial<Linode.NodeBalancerConfig>,
+    configPayload: NodeBalancerConfigFields,
   ) => {
     /*
      * Create a config and then its nodes.
@@ -425,7 +425,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   saveConfig = (idx: number) => {
     const config = this.state.configs[idx];
 
-    const configPayload: Partial<Linode.NodeBalancerConfig> =
+    const configPayload: NodeBalancerConfigFields =
       transformConfigsForRequest([config])[0];
 
     // clear node errors for this config if there are any

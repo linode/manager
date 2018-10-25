@@ -4,11 +4,13 @@ export {
   getNodeBalancerStats,
   createNodeBalancer,
   updateNodeBalancer,
-  deleteNodeBalancer
+  deleteNodeBalancer,
+  CreateNodeBalancerPayload,
 } from './nodebalancers';
 
 export {
   getNodeBalancerConfigs,
+  getNodeBalancerConfig,
   createNodeBalancerConfig,
   updateNodeBalancerConfig,
   deleteNodeBalancerConfig,
@@ -16,6 +18,7 @@ export {
 
 export {
   getNodeBalancerConfigNodes,
+  getNodeBalancerConfigNode,
   createNodeBalancerConfigNode,
   updateNodeBalancerConfigNode,
   deleteNodeBalancerConfigNode
