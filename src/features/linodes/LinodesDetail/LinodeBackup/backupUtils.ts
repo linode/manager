@@ -11,5 +11,5 @@ import { updateLinode } from 'src/services/linodes';
  * @param window { enum } The window in which your backups will be taken, in UTC.
  * A backups window is a two-hour span of time in which the backup may occur.
  */
-export const updateBackupsWindow = (linodeId: number, day: Linode.Day, window: Linode.Window) =>
+export const updateBackupsWindow = (linodeId: number, day: Linode.Day | null, window: Linode.Window | null) =>
     updateLinode(linodeId, { backups: { schedule: { day, window } } });

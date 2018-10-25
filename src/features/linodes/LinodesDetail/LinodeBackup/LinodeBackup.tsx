@@ -289,7 +289,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     /* The api will set a default day of week if none is provided, but if a day is
     * provided without a window, it will return an error.
     */
-    if (settingsForm.day && settingsForm.window) {
+    if (settingsForm.day && !settingsForm.window) {
       this.setState({
         settingsForm: {
           ...settingsForm,
@@ -487,8 +487,12 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     const { classes } = this.props;
     const { settingsForm } = this.state;
     const getErrorFor = getAPIErrorFor(
-      { day: 'Day', window: 'Window' },
+      { day: 'backups.day', window: 'backups.window', schedule: 'backups.schedule.window' },
       settingsForm.errors);
+    const errorText = getErrorFor('none')
+      || getErrorFor('backups.day')
+      || getErrorFor('backups.window')
+      || getErrorFor('backups.schedule.window');
 
     return (
       <React.Fragment>
@@ -505,7 +509,6 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
             Service will generate backups between the selected hours. The
             selected day is when the backup is promoted to the weekly slot.
           </Typography>
-
           <FormControl className={classes.chooseTime}>
             <InputLabel htmlFor="window">
               Time of Day
@@ -551,8 +554,8 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
               Save Schedule
             </Button>
           </ActionsPanel>
-          {getErrorFor('none') &&
-            <FormHelperText error>{getErrorFor('none')}</FormHelperText>
+          {errorText &&
+            <FormHelperText error>{errorText}</FormHelperText>
           }
         </Paper>
       </React.Fragment>
