@@ -1,18 +1,9 @@
 import { API_ROOT } from 'src/constants';
 
-import Request, { setData, setMethod, setParams, setURL, setXFilter } from '../index';
+import Request, { setMethod, setParams, setURL, setXFilter } from '../index';
 
 type Page<T> = Linode.ResourcePage<T>;
-export interface Token {
-  id: number,
-  scopes: string,
-  label: string,
-  created: string,
-  token?: string,
-  expiry: string,
-  website?: string,
-  thumbnail_url?: null | string;
-};
+type Token = Linode.Token
 
 /**
  * getAppTokens
@@ -20,7 +11,7 @@ export interface Token {
  * Returns list of apps that have been authorized to access your account.
  *
  */
-export const getAppTokens = (params: any = {}, filters: any = {}) =>
+export const getAppTokens = (params?: any, filters?: any) =>
   Request<Page<Token>>(
     setMethod('GET'),
     setParams(params),
@@ -43,40 +34,11 @@ export const getAppToken = (tokenId: number) =>
   )
     .then(response => response.data);
 
-// @todo is this method even a thing? doesn't seem to be used anywhere
-/**
- * createAppToken
- *
- * Generate an App Token to authorize an external app to access your account.
- *
- * @example createAppToken();
- */
-export const createAppToken = (data: Token) =>
-  Request<Token>(
-    setMethod('POST'),
-    setURL(`${API_ROOT}/profile/apps`),
-    setData(data),
-  )
-    .then(response => response.data);
-
-/**
- * updateAppToken
- *
- * @todo I don't think this is really a thing either.
- *
- */
-export const updateAppToken = (tokenId: number, data: Partial<Token>) =>
-  Request<Token>(
-    setURL(`${API_ROOT}/profile/apps/${tokenId}`),
-    setMethod('PUT'),
-    setData(data),
-  )
-    .then(response => response.data);
-
 /**
  * deleteAppToken
  *
- * Delete a single App Token
+ * Delete a single App Token. Revokes this app's ability to
+ * access the API.
  *
  * @param tokenId { number } the ID of the token to be deleted.
  */

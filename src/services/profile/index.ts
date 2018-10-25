@@ -1,5 +1,6 @@
 export {
   getProfile,
+  listGrants,
   updateProfile,
 } from './profile';
 
@@ -12,17 +13,16 @@ export {
 } from './accessTokens';
 
 export {
-  createAppToken,
   deleteAppToken,
   getAppToken,
   getAppTokens,
-  updateAppToken,
 } from './appTokens';
 
 export {
   getSSHKeys,
   getSSHKey,
   createSSHKey,
+  updateSSHKey,
   deleteSSHKey
 } from './sshkeys';
 

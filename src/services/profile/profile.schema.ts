@@ -3,7 +3,9 @@ import { array, boolean, object, string } from 'yup';
 export const createPersonalAccessTokenSchema = object({
   scopes: string(),
   expiry: string(),
-  label: string(),
+  label: string()
+    .min(1, "Label must be between 1 and 100 characters.")
+    .max(100, "Label must be between 1 and 100 characters."),
 });
 
 export const createSSHKeySchema = object({
