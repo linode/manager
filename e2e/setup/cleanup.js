@@ -5,9 +5,8 @@ const axios = require('axios');
 const API_ROOT = 'https://api.linode.com/v4'
 // const API_ROOT = process.env.REACT_APP_API_ROOT;
 const { isEmpty } = require('lodash');
-const { readFileSync } = require('fs');
+const { readFileSync, unlink } = require('fs');
 
-console.log(process.env.REACT_APP_API_ROOT);
 
 const getAxiosInstance = function(token) {
     const axiosInstance = axios.create({
@@ -23,7 +22,6 @@ const getAxiosInstance = function(token) {
 
 exports.removeAllLinodes = token => {
     return new Promise((resolve, reject) => {
-        console.log('remove all linodes promise has been called');
         const linodesEndpoint = '/linode/instances';
 
 
@@ -55,16 +53,18 @@ exports.removeAllLinodes = token => {
     });
 }
 
-exports.pause = new Promise(function(resolve, reject) {  
-    setTimeout(() => {
-
-        resolve(true), 25000
+/* We need to pause due to an API bug
+   where Volumes fail to be removed if they were
+   attached to a recently deleted linode
+*/
+exports.pause = (volumesResponse) => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => resolve(volumesResponse), 21000);
     });
-});
+}
 
 exports.removeAllVolumes = token => {
     return new Promise((resolve, reject) => {
-        console.log('volumes has been called');
         const endpoint = '/volumes';
 
         const removeVolume = (res, endpoint) => {
@@ -73,21 +73,25 @@ exports.removeAllVolumes = token => {
                   resolve(response.status);
                 })
                 .catch(error => {
-                    // console.log(error.response);
+                    if (error.includes('This volume must be detached before it can be deleted.')) {
+
+                    }
                     reject(`Removing Volume ${res.id} failed due to ${JSON.stringify(error.response.data)}`);
                 });
         }
 
-        return getAxiosInstance(token).get(endpoint).then(res => {
-            const removeVolumesArray = 
-                res.data.data.map(v => removeVolume(v, endpoint));
+        return getAxiosInstance(token).get(endpoint).then(volumesResponse => {
+            return exports.pause(volumesResponse).then(res => {
+                const removeVolumesArray = 
+                    res.data.data.map(v => removeVolume(v, endpoint));
 
-            Promise.all(removeVolumesArray).then(function(res) {
-                resolve(res);
-            }).catch(error => {
-                console.log(error.data);
-                reject(error.data)
-            });
+                Promise.all(removeVolumesArray).then(function(res) {
+                    resolve(res);
+                }).catch(error => {
+                    console.log(error.data);
+                    reject(error.data)
+                });
+            })
         })
         .catch(error => console.log(error.response.status));
     });
@@ -141,9 +145,6 @@ exports.deleteAll = (token, user) => {
                             res.data.forEach(i => {
                                 removeInstance(i, ep, token)
                                     .then(res => {
-                                        console.log(token);
-                                        console.log(`remove ${ep}`);
-                                        console.log(res);
                                         return res;
                                     });
                             });
@@ -165,20 +166,22 @@ exports.deleteAll = (token, user) => {
     });
 }
 
-exports.resetAccounts = (credsArray) => {
+exports.resetAccounts = (credsArray, credsPath) => {
   return new Promise((resolve, reject) => {
-      console.log('reset has been called')
       credsArray.forEach((cred, i) => {
-        console.log(`in ${i} index`);
         return exports.removeAllLinodes(cred.token)
           .then(res => {
-            console.log(res);
-            exports.pause.then(res => {
+                console.log(`Removing all data from ${cred.username}`);
                 return exports.removeAllVolumes(cred.token)
                   .then(res => {
-                    console.log(res);
                     return exports.deleteAll(cred.token, cred.username)
-                      .then(res => resolve(res))
+                      .then(res => {
+                        if (i === credsArray.length -1) {
+                            unlink(credsPath, (err) => {
+                                return res;
+                            });
+                        }
+                      })
                       .catch(error => {
                         console.log('error', error);
                       });
@@ -186,7 +189,6 @@ exports.resetAccounts = (credsArray) => {
                   .catch(error => {
                     console.log('error', error)
                   })
-            })
           })
           .catch(error => {
             console.log(error.data)

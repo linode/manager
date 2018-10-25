@@ -24,7 +24,7 @@ const specsToRun = () => {
     }
     
     if (argv.dir || argv.d) {
-        return ['./e2e/setup/setup.spec.js',`./e2e/specs/${argv.dir || argv.d}/**/*.spec.js`]
+        return [`./e2e/specs/${argv.dir || argv.d}/**/*.spec.js`]
     }
 
     if (argv.smoke) {
@@ -207,10 +207,7 @@ exports.config = {
      */
     onPrepare: function (config, capabilities) {
         // Generate our temporary test credentials file
-        // generateCreds('./e2e/creds.js');
-        return resetAccounts(JSON.parse(readFileSync('./e2e/creds.js')))
-            .then(res => console.log('we got in the final then'))
-            .catch(error => console.log('shit, we errored', error));
+        generateCreds('./e2e/creds.js');
     },
     /**
      * Gets executed just before initialising the webdriver session and test framework. It allows you
@@ -258,7 +255,7 @@ exports.config = {
         /* Get test credentials from temporary creds file
            Set "inUse:true" for account under test
         */
-        const testCreds = checkoutCreds('./e2e/creds.js', specs[0]);
+        const testCreds =   checkoutCreds('./e2e/creds.js', specs[0]);
 
         login(testCreds.username, testCreds.password, './e2e/creds.js');
     },
@@ -360,13 +357,8 @@ exports.config = {
         /* We wait an arbitrary amount of time here for linodes to be removed
            Otherwise, attempting to remove attached volumes will fail
         */
-        // return resetAccounts(JSON.parse(readFileSync('./e2e/creds.js')))
-        //     .then(res => console.log('we got in the final then'))
-        //     .catch(error => console.log('shit, we errored', error));
-
-        // cleanupAccounts('./e2e/creds.js');
-
-        // Remove our temporary test credentials
-        // unlinkSync('./e2e/creds.js');
+        return resetAccounts(JSON.parse(readFileSync('./e2e/creds.js')), './e2e/creds.js')
+            .then(res => resolve(res))
+            .catch(error => console.error('Error:', error));
     }
 }
