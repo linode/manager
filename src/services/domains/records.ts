@@ -17,14 +17,14 @@ type Record = Linode.Record;
  * Returns a paginated list of Records configured on a Domain in Linode's DNS Manager.
  *
  * @param domainId { number } The ID of the Domain we are accessing Records for.
- * @param pagination { object }
- * @param pagination.page { number }
- * @param pagination.pageSize { number }
+ * @param params { object }
+ * @param params.page { number }
+ * @param params.pageSize { number }
  */
-export const getDomainRecords = (domainId: number, pagination: any = {}) =>
+export const getDomainRecords = (domainId: number, params: any = {}) =>
   Request<Page<Record>>(
     setURL(`${API_ROOT}/domains/${domainId}/records`),
-    setParams(pagination),
+    setParams(params),
     setMethod('GET'),
   ).then(response => response.data);
 

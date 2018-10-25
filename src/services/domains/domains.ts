@@ -17,16 +17,16 @@ type Domain = Linode.Domain;
 /**
  * Returns a paginated list of Domains.
  *
- * @param pagination { object }
- * @param pagination.page { number }
- * @param pagination.pageSize { number }
+ * @param params { object }
+ * @param params.page { number }
+ * @param params.pageSize { number }
  * @param filters { object }
  */
-export const getDomains = (pagination: any = {}, filters: any = {}) =>
+export const getDomains = (params: any = {}, filters: any = {}) =>
   Request<Page<Domain>>(
     setURL(`${API_ROOT}/domains`),
     setMethod('GET'),
-    setParams(pagination),
+    setParams(params),
     setXFilter(filters),
   ).then(response => response.data);
 
