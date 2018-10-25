@@ -73,6 +73,7 @@ const styles: StyleRulesCallback = (theme) => ({
   inputRoot: {
     maxWidth: 170,
     borderColor: `${theme.palette.primary.main} !important`,
+    boxShadow: 'none',
     [theme.breakpoints.up('md')]: {
       maxWidth: 415,
       width: '100%',
@@ -108,7 +109,7 @@ const styles: StyleRulesCallback = (theme) => ({
     ...theme.typography.title,
   },
   editIcon: {
-    [theme.breakpoints.up('lg')]: {
+    [theme.breakpoints.up('sm')]: {
       visibility: 'hidden',
     },
   },
