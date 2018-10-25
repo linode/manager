@@ -19,7 +19,7 @@ export default (
   validate: any,
   requestFn: ValidationRequest,
   successMessage: string,
-  ...formikOptions: any
+  formikOptions?: any
   ) => (Component: any) => {
 
   class WrappedComponent extends React.Component<any> {

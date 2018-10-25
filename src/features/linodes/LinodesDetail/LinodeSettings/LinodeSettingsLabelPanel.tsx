@@ -1,5 +1,5 @@
-import { FormikBag, FormikProps, withFormik } from 'formik';
-import { compose, isEmpty } from 'ramda';
+import { FormikProps } from 'formik';
+import { compose } from 'ramda';
 import * as React from 'react';
 import { object, string } from 'yup';
 
@@ -105,8 +105,14 @@ const successMessage = 'Linode label changed successfully.';
 
 const request = (ownProps: any) => updateLinode(
   ownProps.linodeId,
-  ownProps.values.label)
-  .then(response => response);
+  { label: ownProps.values.label })
+  .then(linode => {
+    ownProps.updateLinode((existingLinode: any) => ({
+      ...existingLinode,
+      ...linode
+    }));
+    return linode;
+  });
 
 const validated = withEnhancedValidation(
   mapPropsToValues,

@@ -11,15 +11,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import { append, filter, lensPath, over, path, set, view, when } from 'ramda';
-import * as React from 'react';
-import { connect, Dispatch } from 'react-redux';
-import { bindActionCreators, compose } from 'redux';
-import 'rxjs/add/operator/filter';
-import { Subscription } from 'rxjs/Subscription';
-import { debounce } from 'throttle-debounce';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
