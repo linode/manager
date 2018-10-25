@@ -101,7 +101,7 @@ exports.checkInCreds = (credFilePath, specFile) => {
     });
 }
 
-exports.generateCreds = (credFilePath) => {
+exports.generateCreds = (credFilePath, config) => {
     const credCollection = [];
 
     for (const [key, value] of Object.entries(process.env)) {
@@ -110,7 +110,8 @@ exports.generateCreds = (credFilePath) => {
             credCollection.push({username: value, password: pass, inUse: false, token: '', spec: ''});
         }
 
-        if (key === 'MANAGER_USER_2') {
+        // If We have a second manager user defined and multiple specs (glob in our specs array), add a second test user
+        if (key === 'MANAGER_USER_2' && config.specs[0].includes('**')) {
             const pass = process.env.MANAGER_PASS_2;
             credCollection.push({username: value, password: pass, inUse: false, token: '', spec: ''});
         }

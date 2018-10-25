@@ -207,7 +207,7 @@ exports.config = {
      */
     onPrepare: function (config, capabilities) {
         // Generate our temporary test credentials file
-        generateCreds('./e2e/creds.js');
+        generateCreds('./e2e/creds.js', config);
     },
     /**
      * Gets executed just before initialising the webdriver session and test framework. It allows you
