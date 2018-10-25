@@ -4,7 +4,6 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableRow, { TableRowProps } from '@material-ui/core/TableRow';
-import { relative } from 'path';
 
 type ClassNames = 'root';
 
