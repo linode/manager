@@ -1,6 +1,8 @@
 import { splitAt } from 'ramda';
 import * as React from 'react';
 
+import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
+
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
@@ -49,14 +51,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => {
       },
     },
   });
-};
-
-const safeGetImageLabel = (images: Linode.Image[], slug: string | null): string => {
-  if (!slug) {
-    return 'No Image'
-  }
-  const iv = images.find((i) => i.id === slug);
-  return iv ? iv.label : 'Unknown Image';
 };
 
 type CombinedProps = Props & WithStyles<ClassNames>;
