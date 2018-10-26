@@ -103,6 +103,7 @@ exports.deleteAll = (token, user) => {
             '/nodebalancers',
             '/images',
             '/account/users',
+            '/account/oauth-clients'
         ];
 
         const getEndpoint = (endpoint, user) => {
