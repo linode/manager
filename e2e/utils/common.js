@@ -12,6 +12,10 @@ import LinodeDetail from '../pageobjects/linode-detail/linode-detail.page';
 import NodeBalancers from '../pageobjects/nodebalancers.page';
 import NodeBalancerDetail from '../pageobjects/nodebalancer-detail/details.page';
 
+export const generatePassword = () => {
+    return crypto.randomBytes(20).toString('hex');
+}
+
 export const timestamp = () => {
     if (argv.record || argv.replay) {
         global.timeCount++

@@ -31,14 +31,16 @@ describe('Linode Detail - Resize Suite', () => {
         // const toastMsg = 'Linode is already running this service plan.';
         
         Resize.planCards[0].click();
-        browser.waitForVisible('[role="tooltip"]');
-        expect($('[role="tooltip"]').getText()).toBe('This is your current plan. Please select another to resize.');
+        browser.waitForVisible('[role="tooltip"]', constants.wait.normal);
+        expect(Resize.submit.isEnabled()).toBe(false);
     });
 
     it('should display toast message on resize', () => {
         const toastMsg = 'Linode resize started.';
 
         Resize.planCards[1].click();
+        expect(Resize.submit.isEnabled()).toBe(true);
+
         Resize.submit.click();
         Resize.toastDisplays(toastMsg);
     });

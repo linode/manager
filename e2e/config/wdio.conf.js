@@ -8,8 +8,11 @@ const {
     checkoutCreds,
     checkInCreds,
     removeCreds,
-    cleanupAccounts
+    cleanupAccounts,
 } = require('../utils/config-utils');
+
+const { resetAccounts } = require('../setup/cleanup');
+
 const { browserCommands } = require('./custom-commands');
 const { browserConf } = require('./browser-config');
 const { constants } = require('../constants');
@@ -25,9 +28,9 @@ const specsToRun = () => {
     }
 
     if (argv.smoke) {
-        return ['./e2e/setup/setup.spec.js', './e2e/specs/**/smoke-*spec.js'];
+        return ['./e2e/specs/**/smoke-*spec.js'];
     }
-    return ['./e2e/setup/setup.spec.js', './e2e/specs/**/*.js'];
+    return ['./e2e/specs/**/*.js'];
 }
 
 const selectedReporters = ['dot'];
@@ -204,7 +207,7 @@ exports.config = {
      */
     onPrepare: function (config, capabilities) {
         // Generate our temporary test credentials file
-        generateCreds('./e2e/creds.js');
+        generateCreds('./e2e/creds.js', config);
     },
     /**
      * Gets executed just before initialising the webdriver session and test framework. It allows you
@@ -350,9 +353,12 @@ exports.config = {
      */
     onComplete: function(exitCode, config, capabilities) {
         // Run delete all, on every test account
-        cleanupAccounts('./e2e/creds.js');
 
-        // Remove our temporary test credentials
-        unlinkSync('./e2e/creds.js');
+        /* We wait an arbitrary amount of time here for linodes to be removed
+           Otherwise, attempting to remove attached volumes will fail
+        */
+        return resetAccounts(JSON.parse(readFileSync('./e2e/creds.js')), './e2e/creds.js')
+            .then(res => resolve(res))
+            .catch(error => console.error('Error:', error));
     }
 }
