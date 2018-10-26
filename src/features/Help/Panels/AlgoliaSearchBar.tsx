@@ -65,6 +65,7 @@ interface State {
   enabled: boolean;
   value: string;
   inputValue: string;
+  indexSize: number[];
   options: Item[];
   error?: string; 
 }
@@ -89,6 +90,7 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
     value: '',
     inputValue: '',
     options: [],
+    indexSize: [1,1]
   };
 
   componentDidMount() {
@@ -109,6 +111,20 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
     try {
       const client = Algolia(ALGOLIA_APPLICATION_ID, ALGOLIA_SEARCH_KEY);
       this.searchIndex = client;
+      // Get size of each index for normalization
+      this.searchIndex.search([{
+        indexName: 'linode-docs',
+        query: '',
+        params: {
+          attributesToRetrieve: null
+        }
+      }, {
+        indexName: 'linode-community',
+        query: '',
+        params: {
+          attributesToRetrieve: null
+        }
+      }], this.calculateIndexSize)
     }
     catch {
       // Credentials were incorrect or couldn't be found;
@@ -116,6 +132,16 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
       this.setState({ enabled: false, error: "Search could not be enabled." });
       return;
     }
+  }
+
+  calculateIndexSize = (err:any, content:any) => {
+    if (err) { return; }
+    this.setState({
+      indexSize: [
+        content.results[0].nbHits,
+        content.results[1].nbHits
+      ]
+    })
   }
 
   getDataFromOptions = () => {
@@ -141,8 +167,7 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
         getRankingInfo: true
       }
     }, {
-      // Change to linode-community when it goes to production
-      indexName: 'linode-community_dev',
+      indexName: 'linode-community',
       query: inputValue,
       params: {
         hitsPerPage: 10,
@@ -156,7 +181,7 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
     if (!this.mounted) { return; }
     if (err) {
       /*
-      * Errors from Algolia have the format: {'message':string, 'code':number}
+      * Errors from Algolia have the format: {'message': string, 'code': number}
       * We do not want to push these messages on to the user as they are not under
       * our control and can be account-related (e.g. "You have exceeded your quota").
       */
@@ -183,7 +208,7 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
       return { value: idx, label: hit._highlightResult.title.value, data: {
         source: 'Linode documentation',
         href: DOCS_BASE_URL + hit.href,
-        rank: hit._rankingInfo.userScore
+        rank: this.getSearchRank(hit) / this.state.indexSize[0] // Normalize
       } }
     })
   }
@@ -194,9 +219,17 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
       return { value: idx, label: this.getCommunityResultLabel(hit), data: {
         source: 'Linode Community Site',
         href: this.getCommunityUrl(hit.objectID),
-        rank: hit._rankingInfo.userScore
+        rank: this.getSearchRank(hit) / this.state.indexSize[1] // Normalize
       }}
     })
+  }
+
+  getSearchRank = (hit: SearchHit) => {
+    /* @todo better ranking.
+    * userScore has problems, will be deprecated eventually,
+    * and in practice always puts Docs results ahead of Community posts.
+    */
+    return hit._rankingInfo.userScore;
   }
 
   getCommunityUrl = (id: string) => {
@@ -219,7 +252,7 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
     */
     return hit._highlightResult.title
     ? hit._highlightResult.title.value
-    : hit.title ? hit.title : truncate(hit.description, 30)
+    : truncate(hit.description, 30)
   }
 
   onInputValueChange = (inputValue: string) => {
