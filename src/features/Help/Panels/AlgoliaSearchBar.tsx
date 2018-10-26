@@ -1,11 +1,10 @@
 import * as Algolia from 'algoliasearch';
-import { compose, concat, pathOr, sort } from 'ramda';
+import { compose, concat, pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import {
   StyleRulesCallback,
-  
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
@@ -65,7 +64,6 @@ interface State {
   enabled: boolean;
   value: string;
   inputValue: string;
-  indexSize: number[];
   options: Item[];
   error?: string; 
 }
@@ -90,7 +88,6 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
     value: '',
     inputValue: '',
     options: [],
-    indexSize: [1,1]
   };
 
   componentDidMount() {
@@ -111,37 +108,13 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
     try {
       const client = Algolia(ALGOLIA_APPLICATION_ID, ALGOLIA_SEARCH_KEY);
       this.searchIndex = client;
-      // Get size of each index for normalization
-      this.searchIndex.search([{
-        indexName: 'linode-docs',
-        query: '',
-        params: {
-          attributesToRetrieve: null
-        }
-      }, {
-        indexName: 'linode-community',
-        query: '',
-        params: {
-          attributesToRetrieve: null
-        }
-      }], this.calculateIndexSize)
     }
     catch {
       // Credentials were incorrect or couldn't be found;
-      // Disable the search functionality in the component.
+      // Disable search functionality in the component.
       this.setState({ enabled: false, error: "Search could not be enabled." });
       return;
     }
-  }
-
-  calculateIndexSize = (err:any, content:any) => {
-    if (err) { return; }
-    this.setState({
-      indexSize: [
-        content.results[0].nbHits,
-        content.results[1].nbHits
-      ]
-    })
   }
 
   getDataFromOptions = () => {
@@ -192,14 +165,8 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
     const { results } = content;
     const docsResults = this.convertDocsToItems(results[0].hits);
     const commResults = this.convertCommunityToItems(results[1].hits);
-    const combinedResults = sort(this.sortByRank, [...docsResults, ...commResults]);
+    const combinedResults = [...docsResults, ...commResults];
     this.setState({ options: combinedResults, error: undefined });
-  }
-
-  sortByRank = (a: Item, b: Item) => {
-    if (a.data.rank > b.data.rank) { return 1; }
-    else if (a.data.rank < b.data.rank) { return -1;}
-    return 0;
   }
 
   convertDocsToItems = (hits: SearchHit[]) : Item[] => {
@@ -208,7 +175,6 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
       return { value: idx, label: hit._highlightResult.title.value, data: {
         source: 'Linode documentation',
         href: DOCS_BASE_URL + hit.href,
-        rank: this.getSearchRank(hit) / this.state.indexSize[0] // Normalize
       } }
     })
   }
@@ -219,17 +185,8 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
       return { value: idx, label: this.getCommunityResultLabel(hit), data: {
         source: 'Linode Community Site',
         href: this.getCommunityUrl(hit.objectID),
-        rank: this.getSearchRank(hit) / this.state.indexSize[1] // Normalize
       }}
     })
-  }
-
-  getSearchRank = (hit: SearchHit) => {
-    /* @todo better ranking.
-    * userScore has problems, will be deprecated eventually,
-    * and in practice always puts Docs results ahead of Community posts.
-    */
-    return hit._rankingInfo.userScore;
   }
 
   getCommunityUrl = (id: string) => {
