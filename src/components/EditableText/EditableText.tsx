@@ -92,7 +92,6 @@ const styles: StyleRulesCallback = (theme) => ({
   icon: {
     margin: '0 10px',
     color: theme.palette.text.primary,
-    transition: theme.transitions.create(['color']),
     '&:hover, &:focus': {
       color: theme.palette.primary.light,
     },
