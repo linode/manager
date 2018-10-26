@@ -75,6 +75,7 @@ const styles: StyleRulesCallback = (theme) => ({
   inputRoot: {
     maxWidth: 170,
     borderColor: `${theme.palette.primary.main} !important`,
+    backgroundColor: 'transparent',
     boxShadow: 'none',
     [theme.breakpoints.up('md')]: {
       maxWidth: 415,
