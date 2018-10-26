@@ -7,11 +7,13 @@ export const transitionStatus = [
   'migrating',
   'resizing',
   'rebuilding',
+  'restoring'
 ];
 
 export const transitionAction = [
   'linode_snapshot',
-  'disk_resize'
+  'disk_resize',
+  'backups_restore'
 ];
 
 export const linodeInTransition = (status: string, recentEvent?: Linode.Event): boolean => {
