@@ -49,10 +49,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     width: '10%',
   },
   wrapHeader: {
-    width: 170,
     whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
   },
 });
 
