@@ -40,7 +40,7 @@ import NodeBalancerConfigPanel from './NodeBalancerConfigPanel';
 import {
   createNewNodeBalancerConfig,
   createNewNodeBalancerConfigNode,
-  NodeBalancerConfigFields,
+  NodeBalancerConfigFieldsWithStatus,
   transformConfigsForRequest
 } from './utils';
 
@@ -74,7 +74,7 @@ type CombinedProps = RegionsContextProps
 interface NodeBalancerFieldsState {
   label?: string;
   region?: string;
-  configs: (NodeBalancerConfigFields & { errors?: any })[];
+  configs: (NodeBalancerConfigFieldsWithStatus & { errors?: any })[];
 }
 
 interface State {
@@ -295,7 +295,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       nodeBalancerFields: {
         ...this.state.nodeBalancerFields,
         configs: this.state.nodeBalancerFields.configs.filter(
-          (config: NodeBalancerConfigFields, idx: number) => {
+          (config: NodeBalancerConfigFieldsWithStatus, idx: number) => {
             return idx !== idxToDelete;
           }),
       },

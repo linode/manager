@@ -30,7 +30,7 @@ namespace Linode {
     id?: number;
     label: string;
     address: string;
-    port?: string;
+    port?: number;
     weight?: number;
     mode?: NodeBalancerConfigNodeMode;
     /* for the sake of local operations */

@@ -34,7 +34,7 @@ import {
   clampNumericString,
   createNewNodeBalancerConfig,
   createNewNodeBalancerConfigNode,
-  NodeBalancerConfigFields,
+  NodeBalancerConfigFieldsWithStatus,
   nodeForRequest,
   parseAddress,
   parseAddresses,
@@ -59,12 +59,12 @@ interface MatchProps { nodeBalancerId?: number };
 type RouteProps = RouteComponentProps<MatchProps>;
 
 interface PreloadedProps {
-  configs: PromiseLoaderResponse<Linode.ResourcePage<NodeBalancerConfigFields>>;
+  configs: PromiseLoaderResponse<Linode.ResourcePage<NodeBalancerConfigFieldsWithStatus>>;
 }
 
 interface State {
   linodesWithPrivateIPs: Linode.Linode[],
-  configs: NodeBalancerConfigFields[];
+  configs: NodeBalancerConfigFieldsWithStatus[];
   configErrors: Linode.ApiFieldError[][];
   configSubmitting: boolean[];
   panelMessages: string[];
@@ -235,8 +235,8 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
   saveConfigUpdatePath = (
     idx: number,
-    config: NodeBalancerConfigFields,
-    configPayload: NodeBalancerConfigFields,
+    config: NodeBalancerConfigFieldsWithStatus,
+    configPayload: NodeBalancerConfigFieldsWithStatus,
   ) => {
     /* Update a config and its nodes simultaneously */
     const { match: { params: { nodeBalancerId } } } = this.props;
@@ -244,7 +244,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       .then((nodeBalancerConfig) => {
         // update config data
         const newConfigs = clone(this.state.configs);
-        newConfigs[idx] = nodeBalancerConfig as NodeBalancerConfigFields;
+        newConfigs[idx] = nodeBalancerConfig as NodeBalancerConfigFieldsWithStatus;
         const newNodes = clone(this.state.configs[idx].nodes);
         //    while maintaing node data
         newConfigs[idx].nodes = newNodes;
@@ -329,8 +329,8 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
   saveConfigNewPath = (
     idx: number,
-    config: NodeBalancerConfigFields,
-    configPayload: NodeBalancerConfigFields,
+    config: NodeBalancerConfigFieldsWithStatus,
+    configPayload: NodeBalancerConfigFieldsWithStatus,
   ) => {
     /*
      * Create a config and then its nodes.
@@ -343,7 +343,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       .then((nodeBalancerConfig) => {
         // update config data
         const newConfigs = clone(this.state.configs);
-        newConfigs[idx] = nodeBalancerConfig as NodeBalancerConfigFields;
+        newConfigs[idx] = nodeBalancerConfig as NodeBalancerConfigFieldsWithStatus;
         const newNodes = clone(this.state.configs[idx].nodes);
         //    while maintaing node data
         newConfigs[idx].nodes = newNodes;
@@ -425,7 +425,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   saveConfig = (idx: number) => {
     const config = this.state.configs[idx];
 
-    const configPayload: NodeBalancerConfigFields =
+    const configPayload: NodeBalancerConfigFieldsWithStatus =
       transformConfigsForRequest([config])[0];
 
     // clear node errors for this config if there are any

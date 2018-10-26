@@ -1,24 +1,9 @@
 import { clamp, compose, filter, isNil, toString } from 'ramda';
 
+import { NodeBalancerConfigFields } from 'src/services/nodebalancers';
 import defaultNumeric from 'src/utilities/defaultNumeric';
 
-export interface NodeBalancerConfigFields {
-  id?: number;
-  algorithm?: 'roundrobin' | 'leastconn' | 'source';
-  check_attempts?: number; /** 1..30 */
-  check_body?: string;
-  check_interval?: number;
-  check_passive?: boolean;
-  check_path?: string;
-  check_timeout?: number; /** 1..30 */
-  check?: 'none' | 'connection' | 'http' | 'http_body';
-  cipher_suite?: 'recommended' | 'legacy';
-  port?: number; /** 1..65535 */
-  protocol?: 'http' | 'https' | 'tcp';
-  ssl_cert?: string;
-  ssl_key?: string;
-  stickiness?: 'none' | 'table' | 'http_cookie';
-  nodes: Linode.NodeBalancerConfigNode[];
+export interface NodeBalancerConfigFieldsWithStatus extends NodeBalancerConfigFields {
   modifyStatus?: 'new';
 }
 
@@ -31,14 +16,14 @@ export const clampNumericString = (low: number, hi: number) => compose(
 export const createNewNodeBalancerConfigNode = (): Linode.NodeBalancerConfigNode => ({
   label: '',
   address: '',
-  port: '80',
+  port: 80,
   weight: 100,
   mode: 'accept',
   modifyStatus: 'new',
 });
 
 export const createNewNodeBalancerConfig = (withDefaultPort?: boolean):
-  NodeBalancerConfigFields => ({
+  NodeBalancerConfigFieldsWithStatus => ({
     algorithm: 'roundrobin',
     check_attempts: 2,
     check_body: undefined,

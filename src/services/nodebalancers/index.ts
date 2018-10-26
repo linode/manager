@@ -14,6 +14,7 @@ export {
   createNodeBalancerConfig,
   updateNodeBalancerConfig,
   deleteNodeBalancerConfig,
+  NodeBalancerConfigFields,
 } from './configs';
 
 export {

@@ -1,6 +1,6 @@
 import { array, boolean, mixed, number, object, string } from 'yup';
 
-export const nodeBalancerConfigNodeSchema = object().shape({
+export const nodeBalancerConfigNodeSchema = object({
   label: string()
     .min(3, 'Label should be between 3 and 32 characters.')
     .max(32, 'Label should be between 3 and 32 characters.')
@@ -10,8 +10,9 @@ export const nodeBalancerConfigNodeSchema = object().shape({
     .matches(/^192\.168\.\d{1,3}\.\d{1,3}$/, 'Must be a valid IPv4 address.')
     .required('IP address is required.'),
 
-  port: string()
-    .matches(/^\d{1,5}$/)
+  port: number()
+    .min(1, "Port must be between 1 and 65535.")
+    .max(65535, "Port must be between 1 and 65535.")
     .required('Port is required.'),
 
   weight: number()
@@ -35,7 +36,10 @@ export const createNodeBalancerConfigSchema = object({
   check_timeout: number().integer(),
   check: mixed().oneOf(["none", "connection", "http", "http_body"]),
   cipher_suite: mixed().oneOf(["recommended", "legacy"]),
-  port: number().integer().min(1).max(65535).required('Port is required'),
+  port: number().integer()
+    .min(1, "Port must be between 1 and 65535.")
+    .max(65535, "Port must be between 1 and 65535.")
+    .required('Port is required'),
   protocol: mixed().oneOf(['http', 'https', 'tcp']),
   ssl_key: string()
     .when('protocol', { is: 'https', then: string()
@@ -61,7 +65,10 @@ export const UpdateNodeBalancerConfigSchema = object({
   check_timeout: number().integer(),
   check: mixed().oneOf(["none", "connection", "http", "http_body"]),
   cipher_suite: mixed().oneOf(["recommended", "legacy"]),
-  port: number().integer().min(1).max(65535),
+  port: number()
+    .integer()
+    .min(1, "Port must be between 1 and 65535.")
+    .max(65535, "Port must be between 1 and 65535."),
   protocol: mixed().oneOf(['http', 'https', 'tcp']),
   ssl_key: string().when('protocol', { is: 'https', then: string().required() }),
   ssl_cert: string().when('protocol', { is: 'https', then: string().required() }),

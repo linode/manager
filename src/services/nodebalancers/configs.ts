@@ -8,7 +8,24 @@ import {
   UpdateNodeBalancerConfigSchema,
 } from './nodebalancers.schema';
 
-
+export interface NodeBalancerConfigFields {
+  id?: number;
+  algorithm?: 'roundrobin' | 'leastconn' | 'source';
+  check_attempts?: number; /** 1..30 */
+  check_body?: string;
+  check_interval?: number;
+  check_passive?: boolean;
+  check_path?: string;
+  check_timeout?: number; /** 1..30 */
+  check?: 'none' | 'connection' | 'http' | 'http_body';
+  cipher_suite?: 'recommended' | 'legacy';
+  port?: number; /** 1..65535 */
+  protocol?: 'http' | 'https' | 'tcp';
+  ssl_cert?: string;
+  ssl_key?: string;
+  stickiness?: 'none' | 'table' | 'http_cookie';
+  nodes: Linode.NodeBalancerConfigNode[];
+}
 
 type Page<T> = Linode.ResourcePage<T>;
 type Config = Linode.NodeBalancerConfig;
@@ -47,7 +64,7 @@ export const getNodeBalancerConfig = (nodeBalancerId: number, configId: number) 
  * 
  * @param nodeBalancerId { number } The NodeBalancer to receive the new config.
  */
-export const createNodeBalancerConfig = (nodeBalancerId: number, data: any) =>
+export const createNodeBalancerConfig = (nodeBalancerId: number, data: NodeBalancerConfigFields) =>
   Request<Config>(
     setMethod('POST'),
     setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs`),
@@ -67,7 +84,7 @@ export const createNodeBalancerConfig = (nodeBalancerId: number, data: any) =>
  * @param nodeBalancerId { number } The ID of the NodeBalancer associated with the config.
  * @param configId { number } The ID of the configuration profile to be updated
  */
-export const updateNodeBalancerConfig = (nodeBalancerId: number, configId: number, data: any) =>
+export const updateNodeBalancerConfig = (nodeBalancerId: number, configId: number, data: NodeBalancerConfigFields) =>
   Request<Config>(
     setMethod('PUT'),
     setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}`),
