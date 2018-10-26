@@ -141,7 +141,9 @@ export default (options: SearchOptions) => (Component: React.ComponentType<any>)
     }
 
     getDocsResultLabel = (hit: any) => {
-      return highlight ? hit._highlightResult.title.value : hit.title;
+      return (highlight && hit._highlightResult.title)
+        ? hit._highlightResult.title.value
+        : hit.title;
     }
 
     getCommunityResultLabel = (hit: any) => {
@@ -153,10 +155,12 @@ export default (options: SearchOptions) => (Component: React.ComponentType<any>)
       * below can be removed. In the meantime, answers don't include
       * a title, so use the truncated description.
       */
-     const title = highlight ? hit._highlightResult.title.value : hit.title;
+      const title = (highlight && hit._highlightResult.title)
+        ? hit._highlightResult.title.value
+        : hit.title;
       return title
-      ? title
-      : truncate(hit.description, 30)
+        ? title
+        : truncate(hit.description, 30)
     }
 
     state: State = {
