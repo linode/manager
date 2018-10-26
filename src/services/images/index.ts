@@ -1,8 +1,9 @@
 export {
   getImages,
   getImage,
-  getLinodeImages,
   createImage,
   updateImage,
   deleteImage,
 } from './images';
+
+export { getLinodeImages } from './imagesUtils';

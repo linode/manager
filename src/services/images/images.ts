@@ -20,22 +20,15 @@ export const getImage = (imageId: string) =>
 /**
  * Returns a paginated list of Images.
  *
- * @param pagination { Object }
- * @param pagination.page { number }
- * @param pagination.pageSize { number }
  */
-export const getImages = (pagination: any = {}, filters: any = {}) =>
+export const getImages = (params: any = {}, filters: any = {}) =>
   Request<Page<Image>>(
     setURL(`${API_ROOT}/images`),
     setMethod('GET'),
-    setParams(pagination),
+    setParams(params),
     setXFilter(filters),
   )
   .then(response => response.data);
-
-// Convenience method
-export const getLinodeImages = () =>
-  getImages({ page: 1 }, { "is_public": true });
 
 /**
  * Create a private gold-master Image from a Linode Disk.
