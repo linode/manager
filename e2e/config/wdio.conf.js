@@ -14,12 +14,13 @@ const { browserCommands } = require('./custom-commands');
 const { browserConf } = require('./browser-config');
 const { constants } = require('../constants');
 const selectedBrowser = argv.browser ? browserConf[argv.browser] : browserConf['chrome'];
+const loggingLevel = argv.logLevel ? argv.logLevel : 'silent';
 
 const specsToRun = () => {
     if (argv.file) {
         return [argv.file];
     }
-    
+
     if (argv.dir || argv.d) {
         return [`./e2e/specs/${argv.dir || argv.d}/**/*.spec.js`]
     }
@@ -91,7 +92,7 @@ exports.config = {
     sync: true,
     //
     // Level of logging verbosity: silent | verbose | command | data | result | error
-    logLevel: 'silent',
+    logLevel: loggingLevel,
     //
     // Enables colors for log output.
     coloredLogs: true,
@@ -162,7 +163,7 @@ exports.config = {
             outputDir: './e2e/test-results'
         }
     },
-    
+
     //
     // Options to be passed to Jasmine.
     jasmineNodeOpts: {
@@ -263,7 +264,7 @@ exports.config = {
      */
     // beforeCommand: function (commandName, args) {
     // },
-    
+
     /**
      * Hook that gets executed before the suite starts
      * @param {Object} suite suite details
@@ -303,7 +304,7 @@ exports.config = {
      */
     // afterSuite: function (suite) {
     // },
-    
+
     /**
      * Runs after a WebdriverIO command gets executed
      * @param {String} commandName hook command name
@@ -332,7 +333,7 @@ exports.config = {
         }
 
         // Set "inUse:false" on the account under test in the credentials file
-        checkInCreds('./e2e/creds.js', specs[0]);  
+        checkInCreds('./e2e/creds.js', specs[0]);
     },
     /**
      * Gets executed right after terminating the webdriver session.

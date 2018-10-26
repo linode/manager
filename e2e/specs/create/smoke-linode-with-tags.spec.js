@@ -28,15 +28,16 @@ describe('Create Linode from Image - With Tags Suite', () => {
     });
 
     it('should display the tags multi select', () => {
-        expect(ConfigureLinode.multiSelect.isVisible()).toBe(true);
+        ConfigureLinode.multiSelect.waitForVisible(constants.wait.normal);
+        expect(ConfigureLinode.tagsMultiSelect.isVisible()).toBe(true);
         // Make this assertion generic, in case the copy changes
-        expect(ConfigureLinode.multiSelect.getAttribute('data-qa-multi-select')).toContain('tag');
+        expect(ConfigureLinode.tagsMultiSelect.getText()).toContain('tag');
     });
 
     it('should add a custom tag', () => {
-        ConfigureLinode.multiSelect.$('..').$('input').setValue(customTagName);
-        ConfigureLinode.selectOption.waitForVisible(constants.wait.normal);
-        ConfigureLinode.selectOption.click();
+        ConfigureLinode.tagsMultiSelect.$('..').$('#react-select-2-input').setValue(customTagName);
+        ConfigureLinode.selectOptions[0].waitForVisible(constants.wait.normal);
+        ConfigureLinode.selectOptions[0].click();
 
         ConfigureLinode.multiOption.waitForVisible(constants.wait.normal);
         expect(ConfigureLinode.multiOption.getText()).toBe(customTagName);;
@@ -44,7 +45,7 @@ describe('Create Linode from Image - With Tags Suite', () => {
 
     it('should select an available tag', () => {
         ConfigureLinode.multiOption.click();
-        availableTagName = $$('[data-qa-option]')[0].getText();
+        availableTagName = ConfigureLinode.selectOptions[0].getText();
 
         // Put our added tags into the addedTags array for later useage
         addedTags.push(availableTagName);
@@ -67,7 +68,7 @@ describe('Create Linode from Image - With Tags Suite', () => {
         ListLinodes.waitUntilBooted(linodeName);
     });
 
-    describe('List Linodes - Tags Suite', () => {
+   describe('List Linodes - Tags Suite', () => {
         it('should display the linode with tags on the grid view', () => {
             assertTagsDisplay(addedTags);
         });

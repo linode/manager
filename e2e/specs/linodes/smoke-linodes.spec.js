@@ -1,8 +1,9 @@
 const { constants } = require('../../constants');
 
 import { flatten } from 'ramda';
-import { apiCreateLinode, apiDeleteAllLinodes } from '../../utils/common';
+import { apiCreateLinode, apiDeleteAllLinodes, timestamp } from '../../utils/common';
 import ListLinodes from '../../pageobjects/list-linodes';
+import LinodeDetail from '../../pageobjects/linode-detail/linode-detail.page'
 
 describe('List Linodes Suite', () => {
     function assertActionMenuItems() {
@@ -17,7 +18,7 @@ describe('List Linodes Suite', () => {
 
     beforeAll(() => {
         browser.url(constants.routes.linodes);
-        apiCreateLinode();
+        apiCreateLinode(undefined, undefined, [`tag${timestamp()}`]);
 
         browser.waitForVisible('[data-qa-linode]', constants.wait.normal);
     });
@@ -48,14 +49,14 @@ describe('List Linodes Suite', () => {
     describe('Grid View Suite', () =>  {
         beforeAll(() => {
             const activeView = $('[data-qa-active-view]').getAttribute('data-qa-active-view');
-            
+
             if (activeView !== 'grid') {
                 browser.click('[data-qa-view="grid"]');
             }
         });
 
         it('should display a Linode and linode grid item elements', () => {
-            ListLinodes.gridElemsDisplay();            
+            ListLinodes.gridElemsDisplay();
         });
 
         it('should display action menu and linode action menu items', () => {
@@ -76,7 +77,7 @@ describe('List Linodes Suite', () => {
 
         it('should display reboot button', () => {
             const rebootButton = ListLinodes.linode[0].$(ListLinodes.rebootButton.selector);
-            expect(rebootButton.isVisible()).toBe(true); 
+            expect(rebootButton.isVisible()).toBe(true);
         });
     });
 
@@ -124,6 +125,12 @@ describe('List Linodes Suite', () => {
 
             ListLinodes.actionMenuItem.waitForVisible(constants.wait.normal);
             assertActionMenuItems();
+        });
+
+        it('tags should be clickable in list view', () => {
+          expect(ListLinodes.tag.isVisible()).toBe(true);
+          browser.jsClick(ListLinodes.tag.selector);
+          LinodeDetail.landingElemsDisplay();
         });
     });
 });
