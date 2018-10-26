@@ -2,8 +2,7 @@ require('dotenv').config();
 
 const https = require('https');
 const axios = require('axios');
-const API_ROOT = 'https://api.linode.com/v4'
-// const API_ROOT = process.env.REACT_APP_API_ROOT;
+const API_ROOT = process.env.REACT_APP_API_ROOT;
 const { isEmpty } = require('lodash');
 const { readFileSync, unlink } = require('fs');
 

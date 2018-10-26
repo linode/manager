@@ -255,7 +255,7 @@ exports.config = {
         /* Get test credentials from temporary creds file
            Set "inUse:true" for account under test
         */
-        const testCreds =   checkoutCreds('./e2e/creds.js', specs[0]);
+        const testCreds = checkoutCreds('./e2e/creds.js', specs[0]);
 
         login(testCreds.username, testCreds.password, './e2e/creds.js');
     },
