@@ -137,7 +137,12 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
       query: inputValue,
       params: {
         hitsPerPage: 10,
-        getRankingInfo: true
+        attributesToRetrieve: [
+          'title',
+          'description',
+          '_highlightResult',
+          'href',
+        ]
       }
     }, {
       indexName: 'linode-community',
@@ -145,7 +150,11 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
       params: {
         hitsPerPage: 10,
         distinct: true,
-        getRankingInfo: true
+        attributesToRetrieve: [
+          'title',
+          'description',
+          '_highlightResult',
+        ]
       }
     }], this.searchSuccess);
   }
