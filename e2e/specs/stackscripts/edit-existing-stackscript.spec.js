@@ -37,7 +37,7 @@ describe('StackScript - Edit Existing', () => {
     }
 
 
-    it('should setup spec', () => {
+    beforeAll(() => {
         browser.url(constants.routes.stackscripts);
         ListStackScripts.baseElementsDisplay();
         ListStackScripts.create.click();

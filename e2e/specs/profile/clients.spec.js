@@ -124,7 +124,7 @@ describe('Profile - OAuth Clients Suite', () => {
             const title = $(dialogTitle).getText();
             const msg = $(dialogContent).getText();
             expect(title).toBe('Confirm Reset');
-            expect(msg).toBe('Are you sure you want to permanently reset the secret of this OAuth client?');
+            expect(msg).toBe('Are you sure you want to permanently reset the secret for this app?');
         });
 
         it('should close on cancel', () => {
@@ -156,8 +156,8 @@ describe('Profile - OAuth Clients Suite', () => {
             profile.selectActionMenu(editedClient.label, "Delete");
             browser.waitForVisible(dialogTitle);
             
-            const deleteMsg = 'Are you sure you want to permanently delete this OAuth client?';
-            const dialogMsg  = $(dialogContent).getText();
+            const deleteMsg = 'Are you sure you want to permanently delete this app?';
+            const dialogMsg = $(dialogContent).getText();
             deleteButton = $(dialogConfirm);
             cancelButton = $(dialogCancel);
             

@@ -147,8 +147,18 @@ export default class Page {
 
 
     selectActionMenuItem(tableCell, item) {
-        tableCell.$(this.actionMenu.selector).click();
-        browser.waitForVisible('[data-qa-action-menu-item]', constants.wait.normal);
+        try {
+            tableCell.$(this.actionMenu.selector).click();
+            browser.waitForVisible('[data-qa-action-menu-item]', constants.wait.normal);            
+        } catch (err) {
+            // Try clicking again if the action menu item fails to display..
+            // This is a hack
+            if(err.Error.includes('still not visible after')) {
+                tableCell.$(this.actionMenu.selector).click();
+                browser.waitForVisible('[data-qa-action-menu-item]', constants.wait.normal);
+            }
+            return err;
+        }
         browser.jsClick(`[data-qa-action-menu-item="${item}"]`);
     }
 

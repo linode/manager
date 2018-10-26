@@ -17,13 +17,6 @@ describe('Create - Volume Suite', () => {
         size: '10',
     }
 
-    beforeAll(() => {
-        browser.url(constants.routes.linodes);
-        apiCreateLinode();
-        ListLinodes.linodesDisplay();
-        linodeLabel = ListLinodes.linode[0].$(ListLinodes.linodeLabel.selector).getText();
-    });
-
     afterAll(() => {
         apiDeleteAllLinodes();
         try {
@@ -32,6 +25,13 @@ describe('Create - Volume Suite', () => {
         } catch (err) {
             // do nothing
         }
+    });
+
+    it('should setup the screnario', () => {
+        browser.url(constants.routes.linodes);
+        apiCreateLinode();
+        ListLinodes.linodesDisplay();
+        linodeLabel = ListLinodes.linode[0].$(ListLinodes.linodeLabel.selector).getText();
     });
 
     it('should create attached to a linode', () => {

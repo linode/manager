@@ -1,6 +1,8 @@
 const { constants } = require('../../constants');
 
-class Rebuild {
+import Page from '../page';
+
+class Rebuild extends Page {
     get title() { return $('[data-qa-title]'); }
     get description() { return $('[data-qa-rebuild-desc]'); }
     get help() { return $('[data-qa-help-button]'); }
@@ -28,7 +30,15 @@ class Rebuild {
 
     selectImage(label) {
         this.imagesSelect.click();
-        browser.waitForVisible('[data-qa-image-option]');
+        
+        /*
+          Use waitUntil here instead of standard waitForExist
+          Due to chromedriver request throttling issue
+        */
+        browser.waitUntil(function() {
+            return $('[data-qa-image-option]').isVisible();
+        }, constants.wait.normal);
+
         if (label) {
             const targetImage = 
                 this.imageOptions
@@ -36,12 +46,14 @@ class Rebuild {
             targetImage[0].click();
             return this;
         }
+        
         const imageOption = this.imageOptions[0];
         const imageName = imageOption.getText();
 
         imageOption.click();
         // Expect image select to update with imageName
-        expect(this.imagesSelect.getText()).t
+        expect(this.imagesSelect.getText()).toBe(imageName);
+
         return this;
     }
 

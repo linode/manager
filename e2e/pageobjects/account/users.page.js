@@ -55,7 +55,7 @@ class Users extends Page {
         this.createDrawerSubmit.click();
 
         this.drawerTitle.waitForExist(constants.wait.normal, true);
-        this.waitForNotice(`User ${userConfig.username} created successfully`);
+        // this.waitForNotice(`User ${userConfig.username} created successfully`);
 
         if (!userConfig.hasOwnProperty('restricted')) {
             browser.waitForVisible('[data-qa-user-row]', constants.wait.normal);
@@ -78,7 +78,12 @@ class Users extends Page {
         this.dialogConfirmDelete.waitForVisible(constants.wait.normal);
         this.dialogConfirmCancel.waitForVisible(constants.wait.normal);
         this.dialogConfirmDelete.click();
-        this.waitForNotice(`User ${userConfig.username} deleted successfully`, constants.wait.normal);
+
+        // Wait for only 1 user row in the table (the root user)
+        browser.waitUntil(function() {
+            return $$('[data-qa-user-row]').length === 1;
+        }, constants.wait.normal);
+        // this.waitForNotice(`User ${userConfig.username} deleted successfully`, constants.wait.normal);
     }
 
     viewPermissions(username) {

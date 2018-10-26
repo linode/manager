@@ -89,6 +89,7 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
             active={currentFilterType === 'label'}
             label="label"
             handleClick={handleClickTableHeader}
+            data-qa-stackscript-table-header
           >
             StackScript
           </TableSortCell>
@@ -101,6 +102,7 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
             active={currentFilterType === 'deploys'}
             label="deploys"
             handleClick={handleClickTableHeader}
+            data-qa-stackscript-active-deploy-header
           >
             Active Deploys
           </TableSortCell>
@@ -113,6 +115,7 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
             active={currentFilterType === 'revision'}
             label="revision"
             handleClick={handleClickTableHeader}
+            data-qa-stackscript-revision-header
           >
             Last Revision
           </TableSortCell>

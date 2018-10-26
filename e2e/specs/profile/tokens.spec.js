@@ -28,7 +28,7 @@ describe('View - Personal Access Tokens', () => {
             tokenCreateDrawer.baseElemsDisplay();
             tokenCreateDrawer.labelTimestamp(timestamp);
 
-            expect(tokenCreateDrawer.title.getText()).toBe('Add a Personal Access Token');
+            expect(tokenCreateDrawer.title.getText()).toBe('Add Personal Access Token');
          });
 
         xit('M3-348 - should fail to create without updating permissions', () => {
@@ -96,7 +96,7 @@ describe('View - Personal Access Tokens', () => {
                 profile.selectActionMenuItem($(newToken), 'Rename Token')
                 
                 expect(tokenCreateDrawer.label.waitForVisible()).toBe(true);
-                expect(tokenCreateDrawer.title.getText()).toBe('Edit this Personal Access Token');
+                expect(tokenCreateDrawer.title.getText()).toBe('Edit Personal Access Token');
                 expect(tokenCreateDrawer.submit.isVisible()).toBe(true);
                 expect(tokenCreateDrawer.cancel.isVisible()).toBe(true);
             });

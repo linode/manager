@@ -6,7 +6,7 @@ class Networking extends Page {
     get heading() { return $('[data-qa-title]'); }
     get ipv4Subheading() { return $('[data-qa-ipv4-subheading]'); }
     get ipv6Subheading() { return $('[data-qa-ipv6-subheading]'); }
-    
+
     get networkActionsTitle() { return $('[data-qa-network-actions-title]'); }
     get networkingActionsSubheading() { return $('[data-qa-networking-actions-subheading]'); }
     get ipTransferSubheading() { return $('[data-qa-transfer-ip-label]'); }

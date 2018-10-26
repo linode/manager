@@ -12,7 +12,7 @@ export class VolumeDetail extends Page {
     get size() { return $('[data-qa-size]'); }
     get region() { return $('[data-qa-select-region]'); }
     get regionField() { return $('[data-qa-region]'); }
-    get attachToLinode() { return $('[data-qa-enhanced-select]'); }
+    get attachToLinode() { return $('[data-qa-enhanced-select="Select a Linode"]'); }
     get attachedTo() { return $('[data-qa-attach-to]'); }
     get attachRegions() { return $$('[data-qa-attach-to-region]'); }
     get submit() { return $('[data-qa-submit]'); }
