@@ -73,7 +73,7 @@ interface State {
   successMessage?: string;
   errors?: Linode.ApiFieldError[];
   usd: string;
-  ccv: string;
+  CVV: string;
   paymentID: string;
   payerID: string;
   isExecutingPaypalPayment: boolean;
@@ -121,7 +121,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
     type: 'CREDIT_CARD',
     submitting: false,
     usd: '',
-    ccv: '',
+    CVV: '',
     dialogOpen: false,
     paymentID: '',
     payerID: '',
@@ -170,11 +170,11 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
     this.setState({ usd: e.target.value || '' });
   }
 
-  handleCCVChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    this.setState({ ccv: e.target.value || '' });
+  handleCVVChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    this.setState({ CVV: e.target.value || '' });
 
   submitForm = () => {
-    const { usd, ccv } = this.state;
+    const { usd, CVV } = this.state;
 
     this.setState({
       submitting: true,
@@ -184,7 +184,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
 
     makePayment({
       usd: (+usd).toFixed(2),
-      ccv,
+      CVV,
     })
       .then((response) => {
         this.setState({
@@ -205,7 +205,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
     errors: undefined,
     success: undefined,
     usd: '',
-    ccv: '',
+    CVV: '',
     paypalSubmitEnabled: false,
   });
 
@@ -355,7 +355,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
 
     const hasErrorFor = getAPIErrorFor({
       usd: 'amount',
-      ccv: 'ccv',
+      CVV: 'CVV',
     }, errors);
 
     const type = (this.state.type === 'PAYPAL')
@@ -427,12 +427,12 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
             />
             {this.state.type === 'CREDIT_CARD' &&
               <TextField
-                errorText={hasErrorFor('ccv')}
-                label="CCV"
-                onChange={this.handleCCVChange}
-                value={this.state.ccv}
+                errorText={hasErrorFor('CVV')}
+                label="CVV"
+                onChange={this.handleCVVChange}
+                value={this.state.CVV}
                 required
-                type="number"
+                type="text"
                 placeholder={`000`}
               />
             }
