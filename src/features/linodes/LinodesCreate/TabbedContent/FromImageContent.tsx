@@ -156,7 +156,8 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
     createLinode({
       region: selectedRegionID,
       type: selectedTypeID,
-      label, /* optional */
+      /* label is optional, pass null instead of empty string to bypass Yup validation. */
+      label: label ? label : null,
       root_pass: password, /* required if image ID is provided */
       image: selectedImageID, /* optional */
       backups_enabled: backups, /* optional */

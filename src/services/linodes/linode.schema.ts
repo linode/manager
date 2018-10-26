@@ -41,7 +41,7 @@ export const CreateLinodeSchema = object({
   backups_enabled: boolean().notRequired(),
   stackscript_data,
   booted: boolean().notRequired(),
-  label: string().notRequired()
+  label: string().nullable(true)
     .min(3, "Label must contain between 3 and 32 characters.")
     .max(32,"Label must contain between 3 and 32 characters.")
     .matches(/^[a-zA-Z]((?!--|__)[a-zA-Z0-9-_])+$/,
@@ -72,7 +72,7 @@ const backups = object({
 })
 
 export const UpdateLinodeSchema = object({
-  label: string()
+  label: string().nullable(true)
     .min(3, "Label must contain between 3 and 32 characters.")
     .max(32,"Label must contain between 3 and 32 characters.")
     .matches(/^[a-zA-Z]((?!--|__)[a-zA-Z0-9-_])+$/,

@@ -144,7 +144,7 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
     cloneLinode(selectedLinodeID!, {
       region: selectedRegionID,
       type: selectedTypeID,
-      label,
+      label: label ? label : null,
       backups_enabled: backups,
     })
       .then((linode) => {

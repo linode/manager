@@ -218,7 +218,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       region: selectedRegionID,
       type: selectedTypeID,
       backup_id: Number(selectedBackupID),
-      label, /* optional */
+      label: label ? label : null, /* optional */
       backups_enabled: backups, /* optional */
       booted: true,
       tags: getLinodeTagList(),

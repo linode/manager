@@ -254,7 +254,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
       type: selectedTypeID,
       stackscript_id: selectedStackScriptID,
       stackscript_data: udf_data,
-      label, /* optional */
+      label: label ? label : null, /* optional */
       root_pass: password, /* required if image ID is provided */
       image: selectedImageID, /* optional */
       backups_enabled: backups, /* optional */
