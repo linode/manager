@@ -54,7 +54,9 @@ const styles: StyleRulesCallback = (theme) => ({
     '&:hover, &:focus': {
       border: '1px solid #abadaf',
       '& $editIcon': {
-        visibility: 'visible',
+        position: 'relative',
+        top: 0,
+        left: 0,
       },
       '& $icon': {
         color: theme.color.grey1,
@@ -110,7 +112,14 @@ const styles: StyleRulesCallback = (theme) => ({
   },
   editIcon: {
     [theme.breakpoints.up('sm')]: {
-      visibility: 'hidden',
+      position: 'absolute',
+      top: '-9999px',
+      left: '-9999px',
+      '&:focus': {
+        position: 'relative',
+        top: 0,
+        left: 0,
+      },
     },
   },
 });
