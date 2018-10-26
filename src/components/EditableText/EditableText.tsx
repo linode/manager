@@ -83,6 +83,7 @@ const styles: StyleRulesCallback = (theme) => ({
   },
   button: {
     minWidth: 'auto',
+    minHeight: 48,
     padding: 0,
     marginTop: 0,
     background: 'transparent !important',
