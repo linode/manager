@@ -17,7 +17,6 @@ describe('Domains - Detail - NS Actions Suite', () => {
         // TODO - Update to use DomainDetail.baseElemsDisplay();
 
         DomainDetail.domainTitle.waitForVisible(constants.wait.normal);
-        DomainDetail.expandPanel('NS Record');
     });
 
     it('should add an ns record', () => {
