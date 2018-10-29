@@ -78,7 +78,7 @@ export const getCommunityResultLabel = (hit: any, highlight: boolean) => {
     : hit.title;
   return title
     ? title
-    : truncate(hit.description, 30)
+    : truncate(cleanDescription(hit.description), 30)
 }
 
 export const cleanDescription = (description: string): string => {
