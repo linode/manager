@@ -115,7 +115,13 @@ exports.deleteAll = (token, user) => {
                         return res.data;
                     }
 
-                    if(endpoint.includes('users')) {
+                    if (endpoint.includes('oauth-clients')) {
+                        const appClients = res.data.data.filter(client => !client['id'] === process.env.REACT_APP_CLIENT_ID);
+                        res.data['data'] = appClients;
+                        return res.data;
+                    }
+
+                    if (endpoint.includes('users')) {
                         const nonRootUsers = res.data.data.filter(u => u.username !== user);
                         res.data['data'] = nonRootUsers;
                         return res.data;
