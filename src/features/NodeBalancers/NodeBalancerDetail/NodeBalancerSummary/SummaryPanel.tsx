@@ -19,8 +19,7 @@ type ClassNames = 'root'
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
-    padding: theme.spacing.unit * 3,
-    paddingBottom: 20,
+    padding: theme.spacing.unit * 2,
     marginTop: theme.spacing.unit * 2,
   },
   title: {
@@ -37,7 +36,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     marginTop: theme.spacing.unit * 2,
   },
   nodeTransfer: {
-    marginTop: theme.spacing.unit * 2,
+    marginTop: 12,
   },
 });
 

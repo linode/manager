@@ -19,7 +19,7 @@ type ClassNames = 'root'
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
-    padding: theme.spacing.unit * 3,
+    padding: theme.spacing.unit * 2,
   },
   expired: {
     color: theme.color.red,

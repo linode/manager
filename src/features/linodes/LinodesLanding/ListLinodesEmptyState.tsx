@@ -60,6 +60,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   },
   title: {
     fontFamily: 'LatoWebBold',
+    textAlign: 'center',
   },
 });
 
@@ -84,8 +85,8 @@ class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
         </Typography>
         <Grid item xs={12} lg={10} className={classes.copy}>
           <Typography variant="body1">
-          Host your next project on a Linode. Click the button below to choose a plan and deploy
-          an image.
+              Host your next project on a Linode. Click the button below to choose a plan and deploy
+              an image.
         </Typography>
         </Grid>
         <Grid item xs={12} lg={10} className={classes.copy}>
