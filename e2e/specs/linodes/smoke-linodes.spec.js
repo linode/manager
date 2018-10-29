@@ -128,9 +128,16 @@ describe('List Linodes Suite', () => {
         });
 
         it('tags should be clickable in list view', () => {
-          expect(ListLinodes.tag.isVisible()).toBe(true);
-          browser.jsClick(ListLinodes.tag.selector);
-          LinodeDetail.landingElemsDisplay();
+            /* Dismiss the action menu by clicking the body
+               And polling for the action menu item to no longer exist
+            */
+            browser.click('body');
+            ListLinodes.actionMenuItem.waitForExist(constants.wait.normal, true);
+
+            expect(ListLinodes.tag.isVisible()).toBe(true);
+            ListLinodes.tag.click();
+          
+            LinodeDetail.landingElemsDisplay();
         });
     });
 });
