@@ -318,6 +318,9 @@ const themeDefaults: ThemeOptions = {
       root: {
         backgroundColor: '#fbfbfb',
       },
+      content: {
+        minWidth: 0,
+      },
     },
     MuiChip: {
       root: {

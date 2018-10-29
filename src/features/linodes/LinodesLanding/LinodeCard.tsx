@@ -87,6 +87,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     fontFamily: 'LatoWebBold',
     color: 'black',
     marginLeft: theme.spacing.unit,
+    minWidth: 0,
   },
   cardContent: {
     flex: 1,
@@ -181,9 +182,9 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     display: 'flex',
     alignItems: 'center',
     flex: 1,
+    minWidth: 0,
   },
   wrapHeader: {
-    width: 170,
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
