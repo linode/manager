@@ -16,14 +16,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
         display: 'table-cell',
         width: '0.01%',
         height: '100%',
-        borderLeftWidth: 5,
-        borderLeftStyle: 'solid',
-        borderBottom: `1px solid ${theme.palette.divider}`,
-        transition: theme.transitions.create(['border-color']),
+        backgroundColor: 'transparent',
+        borderBottom: `2px solid ${theme.palette.divider}`,
+        transition: theme.transitions.create(['background-color']),
+        paddingLeft: 5,
       },
-    },
-    '& > td:first-child, & > th:first-child': {
-      paddingLeft: 13,
     },
     '& .secondaryLink': {
       transition: theme.transitions.create('color'),

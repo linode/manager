@@ -858,10 +858,10 @@ const themeDefaults: ThemeOptions = {
     },
     MuiTableCell: {
       root: {
-        padding: '18px',
-        borderBottom: `1px solid ${primaryColors.divider}`,
+        padding: '10px',
+        borderBottom: `2px solid ${primaryColors.divider}`,
         '&:last-child': {
-          paddingRight: 18,
+          paddingRight: 10,
         },
       },
       head: {
@@ -892,7 +892,7 @@ const themeDefaults: ThemeOptions = {
           '&$hover': {
             backgroundColor: '#fbfbfb',
             '&:before': {
-              borderLeftColor: primaryColors.main,
+              backgroundColor: primaryColors.main,
             },
           },
         },
