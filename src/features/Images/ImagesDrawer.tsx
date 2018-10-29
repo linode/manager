@@ -137,18 +137,10 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
   onSubmit = () => {
     const { mode, imageID, onSuccess, label, description, history, selectedDisk, selectedLinode } = this.props;
     const safeDescription = description ? description : ' ';
-    const errors = [];
 
     switch (mode) {
       case modes.EDITING:
         if (!imageID) {
-          return;
-        }
-
-        if (!label) {
-          this.setState({
-            errors: [{ field: 'label', reason: 'Label cannot be blank.' }],
-          });
           return;
         }
 
@@ -163,23 +155,17 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
             if(!this.mounted){ return; }
 
             this.setState({
-              errors: [{ field: 'label', reason: 'Label cannot be blank.' }],
+              errors: pathOr([
+                { reason: 'Unable to edit image' }],
+                ['response', 'data', 'errors'], errorResponse),
             });
           });
         return;
 
       case modes.CREATING:
       case modes.IMAGIZING:
-        if (!selectedDisk) { errors.push({ field: 'disk_id', reason: 'Choose a disk.' }); }
-        if (!label)   { errors.push({ field: 'label', reason: 'Label cannot be blank.' }); }
-        if (errors.length > 0) {
-          this.setState({ errors })
-          return;
-        };
 
-        // If no label it will return after error checking above, so we can be confident
-        // the value is declared here.
-        createImage(Number(selectedDisk), label!, safeDescription)
+        createImage(Number(selectedDisk), label, safeDescription)
           .then((response) => {
             if(!this.mounted){ return; }
 
@@ -235,14 +221,15 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
     // When creating an image, disable the submit button until a Linode,
     // disk, and label are selected. When editing, only a label is required.
     // When restoring to an existing Linode, the Linode select is the only field.
-    const { mode, label, selectedDisk, selectedLinode} = this.props;
+    const { mode, selectedDisk, selectedLinode} = this.props;
+
+    const isDiskSelected = selectedDisk && selectedDisk !== 'none';
+
     switch(mode) {
       case modes.CREATING:
-        return !(selectedDisk && selectedLinode && label);
-      case modes.IMAGIZING:
-        return !(selectedDisk && label);
-      case modes.EDITING:
-        return !label;
+        return !(isDiskSelected && selectedLinode);
+        case modes.IMAGIZING:
+        return !(isDiskSelected);
       case modes.RESTORING:
         return !selectedLinode;
       default:
@@ -327,7 +314,6 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
           <React.Fragment>
             <TextField
               label="Label"
-              required
               value={label}
               onChange={changeLabel}
               error={Boolean(labelError)}
@@ -356,7 +342,9 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
             color="primary"
             data-qa-submit
           >
-            Create
+            {mode === modes.EDITING
+              ? 'Update'
+              : 'Create'}
           </Button>
           <Button
             onClick={this.close}
