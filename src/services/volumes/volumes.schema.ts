@@ -7,7 +7,11 @@ export const CreateVolumeSchema = object({
       then: string().required("Must provide a region or a Linode ID."),
     }),
   linode_id: number(),
-  size: number().typeError("Size must be a number.").integer(),
+  size: number()
+    .typeError("Size must be a number.")
+    .integer()
+    .min(10, "Size must be between 10 and 10240.")
+    .max(10240, "Size must be between 10 and 10240."),
   label: string()
     .required("Label is required.")
     .ensure()
