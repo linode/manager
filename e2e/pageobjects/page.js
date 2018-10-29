@@ -30,12 +30,14 @@ export default class Page {
     get selectOption() { return $('[data-qa-option]') };
     get multiOption() { return $('[data-qa-multi-option]'); }
     get multiSelect() { return $('[data-qa-multi-select]'); }
-
+    get toggleOptions() { return $('[data-qa-toggle]'); }
     get tag() { return $('[data-qa-tag]'); }
     get tags() { return $$('[data-qa-tag]'); }
     get addTag() { return $('[data-qa-add-tag]'); }
     get deleteTag() { return $('[data-qa-delete-tag]'); }
-
+    get helpButton() { return $('[data-qa-help-button]');}
+    get popoverMsg() { return $('[role="tooltip"]'); }
+    
     constructor() {
         this.pageTitle = 'Base page';
     }
@@ -86,7 +88,7 @@ export default class Page {
         browser.waitUntil(function() {
             return $$('[data-qa-panel-summary]').length === numberOfPanels
         }, constants.wait.normal, 'Number of expected panels failed to display');
-        
+
         this.panels.forEach(panel => {
             panel.click();
             // throttle expanding panels with a pause
@@ -127,7 +129,7 @@ export default class Page {
     toastDisplays(expectedMessage, timeout=constants.wait.normal) {
         this.toast.waitForVisible(timeout);
         this.toastMsg.waitForVisible(timeout);
-        
+
         const displayedMsg = browser.getText('[data-qa-toast-message]');
         expect(displayedMsg).toBe(expectedMessage);
         browser.click('[data-qa-toast] button');
@@ -149,7 +151,7 @@ export default class Page {
     selectActionMenuItem(tableCell, item) {
         try {
             tableCell.$(this.actionMenu.selector).click();
-            browser.waitForVisible('[data-qa-action-menu-item]', constants.wait.normal);            
+            browser.waitForVisible('[data-qa-action-menu-item]', constants.wait.normal);
         } catch (err) {
             // Try clicking again if the action menu item fails to display..
             // This is a hack
@@ -179,7 +181,7 @@ export default class Page {
 
     removeTag(label) {
         const matchingTags = this.tags.filter(t => t.getAttribute('data-qa-tag').includes(label));
-        
+
         matchingTags.forEach(t => {
             const tagName = t.getText();
             t.$(this.deleteTag.selector).click();

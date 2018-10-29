@@ -1,6 +1,7 @@
 const { constants } = require('../../constants');
 
 import Users from '../../pageobjects/account/users.page';
+import Permissions from '../../pageobjects/account/permissions.page'
 
 describe('Account - Users Suite', () => {
 
@@ -35,7 +36,19 @@ describe('Account - Users Suite', () => {
         Users.actionMenuItem.waitForExist(constants.wait.normal, true);
     });
 
-    describe('Account - Unrestricted User Suite', () => {
+    it('should not allow current user to change their permissions', () => {
+        Users.viewPermissions(browser.options.testUser);
+
+        Permissions.baseElementsDisplay(false);
+        expect(Permissions.restrictAccessToggle.getAttribute('class')).toContain('disabled');
+        expect(Permissions.restrictAccessTooltip.isVisible()).toBe(true);
+        
+        Permissions.restrictAccessTooltip.moveToObject();
+        Permissions.popoverMsg.waitForVisible(constants.wait.normal);
+        expect(Permissions.popoverMsg.getText()).toEqual('You cannot restrict the current active user.');
+    });
+
+    xdescribe('Account - Unrestricted User Suite', () => {
 
         it('should create a new unrestricted user', () => {
             Users.add(userConfig);
@@ -50,7 +63,7 @@ describe('Account - Users Suite', () => {
             expect($('[data-qa-action-menu-item="User Permissions"]').isVisible()).toBe(true);
             expect($('[data-qa-action-menu-item="Delete"]').isVisible()).toBe(true);
             expect($('[data-qa-action-menu-item="Delete"]').isEnabled()).toBe(true);
-            
+
             browser.click('body');
 
             Users.actionMenuItem.waitForExist(constants.wait.normal, true);
@@ -59,5 +72,5 @@ describe('Account - Users Suite', () => {
         it('should delete the new unrestricted user', () => {
             Users.delete(userConfig);
         });
-    }); 
+    });
 });

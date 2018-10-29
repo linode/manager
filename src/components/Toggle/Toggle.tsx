@@ -45,6 +45,7 @@ const LinodeSwitchControl: React.StatelessComponent<CombinedProps> = (props) => 
         className={classnames}
         icon={<ToggleOff />}
         checkedIcon={<ToggleOn />}
+        data-qa-toggle={props.checked}
         {...rest}
       />
       {tooltipText && <HelpIcon text={tooltipText} />}
