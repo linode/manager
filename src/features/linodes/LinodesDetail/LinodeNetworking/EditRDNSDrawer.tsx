@@ -55,7 +55,7 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
   save = () => {
     const { onClose } = this.props;
     const { rdns, address } = this.state;
-    updateIP(address!, { rdns: (!rdns || rdns === '') ? null : rdns })
+    updateIP(address!, (!rdns || rdns === '') ? null : rdns)
       .then((ipAddress) => {
         onClose();
       })
