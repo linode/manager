@@ -35,7 +35,7 @@ describe('Create Linode from Image - With Tags Suite', () => {
     });
 
     it('should add a custom tag', () => {
-        ConfigureLinode.tagsMultiSelect.$('..').$('#react-select-2-input').setValue(customTagName);
+        ConfigureLinode.tagsMultiSelect.$('..').$('input').setValue(customTagName);
         ConfigureLinode.selectOptions[0].waitForVisible(constants.wait.normal);
         ConfigureLinode.selectOptions[0].click();
 
