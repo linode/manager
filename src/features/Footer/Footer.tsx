@@ -24,8 +24,6 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     flex: 1,
   },
   link: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
     color: theme.palette.text.primary,
     fontSize: '90%',
     textDecoration: 'underline',
@@ -33,6 +31,10 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     '&:hover, &:focus': {
       color: theme.color.black,
     },
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: theme.spacing.unit,
+      marginRight: theme.spacing.unit,
+    }
   },
 });
 
