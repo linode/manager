@@ -14,7 +14,6 @@ const { browserCommands } = require('./custom-commands');
 const { browserConf } = require('./browser-config');
 const { constants } = require('../constants');
 const selectedBrowser = argv.browser ? browserConf[argv.browser] : browserConf['chrome'];
-const loggingLevel = argv.logLevel ? argv.logLevel : 'silent';
 
 const specsToRun = () => {
     if (argv.file) {
@@ -92,7 +91,7 @@ exports.config = {
     sync: true,
     //
     // Level of logging verbosity: silent | verbose | command | data | result | error
-    logLevel: loggingLevel,
+    logLevel: argv.logLevel ? argv.logLevel : 'silent',
     //
     // Enables colors for log output.
     coloredLogs: true,
