@@ -126,7 +126,7 @@
     "selenium": "npx selenium-standalone install --config=./e2e/config/selenium-config.js && ./node_modules/.bin/selenium-standalone start --config=./e2e/config/selenium-config.js",
     "e2e": "npx wdio ./e2e/config/wdio.conf.js",
     "e2e:all": "npx wdio ./e2e/config/wdio.conf.js; ./node_modules/.bin/wdio ./e2e/config/wdio.storybook.conf.js",
-    "e2e:modified": "yarn e2e --spec=$(git diff --name-only develop | grep 'spec.js' | tr '\n' ',' | sed 's/.$//')",
+    "e2e:modified": "yarn e2e --spec=$(git diff --name-only upstream/develop | grep 'spec.js' | tr '\n' ',' | sed 's/.$//')",
     "e2e:browserstack": "npx wdio ./e2e/config/browserstack.conf.js",
     "mb": "npx mb"
   },
