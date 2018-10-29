@@ -54,7 +54,9 @@ const styles: StyleRulesCallback = (theme) => ({
     '&:hover, &:focus': {
       border: '1px solid #abadaf',
       '& $editIcon': {
-        visibility: 'visible',
+        position: 'relative',
+        top: 0,
+        left: 0,
       },
       '& $icon': {
         color: theme.color.grey1,
@@ -73,6 +75,8 @@ const styles: StyleRulesCallback = (theme) => ({
   inputRoot: {
     maxWidth: 170,
     borderColor: `${theme.palette.primary.main} !important`,
+    backgroundColor: 'transparent',
+    boxShadow: 'none',
     [theme.breakpoints.up('md')]: {
       maxWidth: 415,
       width: '100%',
@@ -80,6 +84,7 @@ const styles: StyleRulesCallback = (theme) => ({
   },
   button: {
     minWidth: 'auto',
+    minHeight: 48,
     padding: 0,
     marginTop: 0,
     background: 'transparent !important',
@@ -87,7 +92,6 @@ const styles: StyleRulesCallback = (theme) => ({
   icon: {
     margin: '0 10px',
     color: theme.palette.text.primary,
-    transition: theme.transitions.create(['color']),
     '&:hover, &:focus': {
       color: theme.palette.primary.light,
     },
@@ -108,8 +112,15 @@ const styles: StyleRulesCallback = (theme) => ({
     ...theme.typography.title,
   },
   editIcon: {
-    [theme.breakpoints.up('lg')]: {
-      visibility: 'hidden',
+    [theme.breakpoints.up('sm')]: {
+      position: 'absolute',
+      top: '-9999px',
+      left: '-9999px',
+      '&:focus': {
+        position: 'relative',
+        top: 0,
+        left: 0,
+      },
     },
   },
 });
