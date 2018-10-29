@@ -316,7 +316,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       ...this.filterDataByType(this.state.fields, type),
     };
 
-    updateDomain(domainId, data)
+    updateDomain(domainId, { ...data, status: 'active' })
       .then(() => {
         this.props.updateDomain();
         this.onClose();

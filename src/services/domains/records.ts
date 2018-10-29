@@ -18,15 +18,14 @@ type Record = Linode.Record;
  *
  * @param domainId { number } The ID of the Domain we are accessing Records for.
  * @param params { object }
- * @param params.page { number }
- * @param params.pageSize { number }
  */
-export const getDomainRecords = (domainId: number, params: any = {}) =>
+export const getDomainRecords = (domainId: number, params?: any) =>
   Request<Page<Record>>(
     setURL(`${API_ROOT}/domains/${domainId}/records`),
     setParams(params),
     setMethod('GET'),
-  ).then(response => response.data);
+  )
+    .then(response => response.data);
 
 /**
  * View a single Record on this Domain.
@@ -38,7 +37,8 @@ export const getDomainRecord = (domainId: number, recordId: number) =>
   Request<Record>(
     setURL(`${API_ROOT}/domains/${domainId}/records/${recordId}`),
     setMethod('GET'),
-  ).then(response => response.data);
+  )
+    .then(response => response.data);
 
 /**
  * Adds a new Domain Record to the zonefile this Domain represents.
@@ -51,7 +51,8 @@ export const createDomainRecord = (domainId: number, data: Partial<Record>) =>
     setURL(`${API_ROOT}/domains/${domainId}/records`),
     setMethod('POST'),
     setData(data, createRecordSchema),
-  ).then(response => response.data);
+  )
+    .then(response => response.data);
 
 /**
  * Updates a single Record on this Domain.
@@ -68,7 +69,8 @@ export const updateDomainRecord = (
     setURL(`${API_ROOT}/domains/${domainId}/records/${recordId}`),
     setMethod('PUT'),
     setData(data, updateRecordSchema),
-  ).then(response => response.data);
+  )
+    .then(response => response.data);
 
 /**
  * Deletes a Record on this Domain..
@@ -80,4 +82,5 @@ export const deleteDomainRecord = (domainID: number, recordId: number) =>
   Request<{}>(
     setURL(`${API_ROOT}/domains/${domainID}/records/${recordId}`),
     setMethod('DELETE'),
-  ).then(response => response.data);
+  )
+    .then(response => response.data);

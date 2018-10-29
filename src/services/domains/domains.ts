@@ -17,18 +17,15 @@ type Domain = Linode.Domain;
 /**
  * Returns a paginated list of Domains.
  *
- * @param params { object }
- * @param params.page { number }
- * @param params.pageSize { number }
- * @param filters { object }
  */
-export const getDomains = (params: any = {}, filters: any = {}) =>
+export const getDomains = (params?: any, filters?: any) =>
   Request<Page<Domain>>(
     setURL(`${API_ROOT}/domains`),
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
-  ).then(response => response.data);
+  )
+    .then(response => response.data);
 
 /**
  * Returns all of the information about a specified Domain.
@@ -39,7 +36,8 @@ export const getDomain = (domainId: number) =>
   Request<Domain>(
     setURL(`${API_ROOT}/domains/${domainId}`),
     setMethod('GET'),
-  ).then(response => response.data);
+  )
+    .then(response => response.data);
 
 /**
  * Adds a new Domain to Linode's DNS Manager.
@@ -51,7 +49,8 @@ export const createDomain = (data: Partial<Linode.Domain>) =>
     setData(data, createDomainSchema),
     setURL(`${API_ROOT}/domains`),
     setMethod('POST'),
-  ).then(response => response.data);
+  )
+    .then(response => response.data);
 
 /**
  * Update information about a Domain in Linode's DNS Manager.
@@ -59,12 +58,13 @@ export const createDomain = (data: Partial<Linode.Domain>) =>
  * @param domainId { number } The ID of the Domain to access.
  * @param data { object } Options for type, status, etc.
  */
-export const updateDomain = (domainId: number, data: Partial<Linode.Domain>
-  ) => Request<Domain>(
+export const updateDomain = (domainId: number, data: any) =>
+  Request<Domain>(
     setURL(`${API_ROOT}/domains/${domainId}`),
     setMethod('PUT'),
-    setData({ status: 'active', ...data }, updateDomainSchema), // remove ability for user to change status
-  ).then(response => response.data);
+    setData(data, updateDomainSchema), // remove ability for user to change status
+  )
+    .then(response => response.data);
 
 /**
  * Deletes a Domain from Linode's DNS Manager. The Domain will be removed from Linode's nameservers shortly after this
@@ -76,7 +76,8 @@ export const deleteDomain = (domainID: number) =>
   Request<{}>(
     setURL(`${API_ROOT}/domains/${domainID}`),
     setMethod('DELETE'),
-  ).then(response => response.data);
+  )
+    .then(response => response.data);
 
 /**
  * Clones a Domain.
@@ -89,7 +90,8 @@ export const cloneDomain = (domainID: number, cloneName: string) =>
     setData({ domain: cloneName }),
     setURL(`${API_ROOT}/domains/${domainID}/clone`),
     setMethod('POST'),
-  ).then(response => response.data);
+  )
+    .then(response => response.data);
 
 /**
  * Imports a domain zone from a remote nameserver.
@@ -102,4 +104,5 @@ export const importZone = (domain?: string, remote_nameserver?: string) =>
     setData({ domain, remote_nameserver }, importZoneSchema),
     setURL(`${API_ROOT}/domains/import`),
     setMethod('POST'),
-  ).then(response => response.data);
+  )
+    .then(response => response.data);

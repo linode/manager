@@ -2,7 +2,7 @@ import { number, object, string } from 'yup';
 
 const recordBaseSchema = object().shape({
   name: string()
-    .max(100, 'Record name must be under 100 characters.'),
+    .max(100, 'Record name must be 100 characters or less.'),
   target: string(),
   priority: number()
     .min(0, 'Priority must be between 0 and 255.')
