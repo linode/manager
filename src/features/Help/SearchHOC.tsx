@@ -7,8 +7,8 @@ import truncate from 'src/utilities/truncateText';
 
 interface SearchHit {
   title?: string;
-  description: string;
-  keywords: string;
+  description?: string;
+  keywords?: string[];
   objectID: string;
   href?: string;
   _highlightResult?: any;
@@ -25,6 +25,60 @@ export interface AlgoliaState {
 interface SearchOptions {
   hitsPerPage: number;
   highlight: boolean;
+}
+
+// Functional helper methods
+
+export const convertDocsToItems = (hits: SearchHit[], highlight: boolean) : Item[] => {
+  if (!hits) { return []; }
+  return hits.map((hit: SearchHit, idx: number) => {
+    return { value: idx, label: getDocsResultLabel(hit, highlight), data: {
+      source: 'Linode documentation',
+      href: DOCS_BASE_URL + hit.href,
+    } }
+  })
+}
+
+export const convertCommunityToItems = (hits: SearchHit[], highlight: boolean) : Item[] => {
+  if (!hits) { return []; }
+  return hits.map((hit: SearchHit, idx: number) => {
+    return { value: idx, label: getCommunityResultLabel(hit, highlight), data: {
+      source: 'Linode Community Site',
+      href: getCommunityUrl(hit.objectID),
+    }}
+  })
+}
+
+export const getCommunityUrl = (id: string) => {
+  // Rather than crash here, better to redirect to the base community site.
+  if (!id) { return COMMUNITY_BASE_URL; }
+  const [prefix, value] = id.split('_');
+  return prefix === 'q' // Prefix is q for question, a for answer.
+  ? `${COMMUNITY_BASE_URL}questions/${value}`
+  : `${COMMUNITY_BASE_URL}questions/answer/${value}`;
+}
+
+export const getDocsResultLabel = (hit: SearchHit, highlight: boolean) => {
+  return (highlight && hit._highlightResult.title)
+    ? hit._highlightResult.title.value
+    : hit.title;
+}
+
+export const getCommunityResultLabel = (hit: any, highlight: boolean) => {
+  /* If a word in the title matched the search query, return a string
+  * with the matched word highlighted.
+  *
+  * NOTE: It's currently planned to add the title of the parent question
+  * to the index entry for each answer. When that is done, the ternaries
+  * below can be removed. In the meantime, answers don't include
+  * a title, so use the truncated description.
+  */
+  const title = (highlight && hit._highlightResult.title)
+    ? hit._highlightResult.title.value
+    : hit.title;
+  return title
+    ? title
+    : truncate(hit.description, 30)
 }
 
 export default (options: SearchOptions) => (Component: React.ComponentType<any>) => {
@@ -73,7 +127,6 @@ export default (options: SearchOptions) => (Component: React.ComponentType<any>)
           hitsPerPage,
           attributesToRetrieve: [
             'title',
-            'description',
             '_highlightResult',
             'href',
           ]
@@ -106,61 +159,9 @@ export default (options: SearchOptions) => (Component: React.ComponentType<any>)
       }
 
       const { results } = content;
-      const docsResults = this.convertDocsToItems(results[0].hits);
-      const commResults = this.convertCommunityToItems(results[1].hits);
+      const docsResults = convertDocsToItems(results[0].hits, highlight);
+      const commResults = convertCommunityToItems(results[1].hits, highlight);
       this.setState({ searchResults: [docsResults, commResults], searchError: undefined });
-    }
-
-    convertDocsToItems = (hits: SearchHit[]) : Item[] => {
-      if (!hits) { return []; }
-      return hits.map((hit: SearchHit, idx: number) => {
-        return { value: idx, label: this.getDocsResultLabel(hit), data: {
-          source: 'Linode documentation',
-          href: DOCS_BASE_URL + hit.href,
-        } }
-      })
-    }
-
-    convertCommunityToItems = (hits: SearchHit[]) : Item[] => {
-      if (!hits) { return []; }
-      return hits.map((hit: SearchHit, idx: number) => {
-        return { value: idx, label: this.getCommunityResultLabel(hit), data: {
-          source: 'Linode Community Site',
-          href: this.getCommunityUrl(hit.objectID),
-        }}
-      })
-    }
-
-    getCommunityUrl = (id: string) => {
-      // Rather than crash here, better to redirect to the base community site.
-      if (!id) { return COMMUNITY_BASE_URL; }
-      const [prefix, value] = id.split('_');
-      return prefix === 'q' // Prefix is q for question, a for answer.
-      ? `${COMMUNITY_BASE_URL}questions/${value}`
-      : `${COMMUNITY_BASE_URL}questions/answer/${value}`;
-    }
-
-    getDocsResultLabel = (hit: any) => {
-      return (highlight && hit._highlightResult.title)
-        ? hit._highlightResult.title.value
-        : hit.title;
-    }
-
-    getCommunityResultLabel = (hit: any) => {
-      /* If a word in the title matched the search query, return a string
-      * with the matched word highlighted.
-      *
-      * NOTE: It's currently planned to add the title of the parent question
-      * to the index entry for each answer. When that is done, the ternaries
-      * below can be removed. In the meantime, answers don't include
-      * a title, so use the truncated description.
-      */
-      const title = (highlight && hit._highlightResult.title)
-        ? hit._highlightResult.title.value
-        : hit.title;
-      return title
-        ? title
-        : truncate(hit.description, 30)
     }
 
     state: AlgoliaState = {
