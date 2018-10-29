@@ -330,10 +330,12 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           this.getUserGrants()
         })
         .catch((errResponse) => {
+          const defaultError = [{
+            reason: 'Error when updating user restricted status. Please try again later.'
+          }];
           this.setState({
-            errors: [{
-              reason: 'Error when updating user restricted status. Please try again later.'
-            }],
+            errors: pathOr(defaultError, ['response', 'data', 'errors'], errResponse),
+            loadingGrants: false,
           })
         })
     }
