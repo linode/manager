@@ -15,7 +15,7 @@ interface SearchHit {
   _rankingInfo?: any;
 }
 
-interface State {
+export interface AlgoliaState {
   searchAlgolia: (inputValue: string) => void;
   searchEnabled: boolean;
   searchError?: string;
@@ -29,7 +29,7 @@ interface SearchOptions {
 
 export default (options: SearchOptions) => (Component: React.ComponentType<any>) => {
   const { hitsPerPage, highlight } = options;
-  class WrappedComponent extends React.PureComponent<{},State> {
+  class WrappedComponent extends React.PureComponent<{},AlgoliaState> {
     searchIndex: any;
     mounted: boolean = false;
 
@@ -163,7 +163,7 @@ export default (options: SearchOptions) => (Component: React.ComponentType<any>)
         : truncate(hit.description, 30)
     }
 
-    state: State = {
+    state: AlgoliaState = {
       searchAlgolia: this.searchAlgolia,
       searchEnabled: false,
       searchError: undefined,

@@ -14,14 +14,13 @@ import Typography from '@material-ui/core/Typography';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import Search from '@material-ui/icons/Search';
 
-import { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { DOCS_SEARCH_URL } from 'src/constants';
 import { parseQueryParams } from 'src/utilities/queryParams';
 
-import withSearch from '../SearchHOC';
+import withSearch, { AlgoliaState as AlgoliaProps } from '../SearchHOC';
 import DocumentationResults, { SearchResult } from './DocumentationResults';
 import HelpResources from './HelpResources';
 
@@ -79,15 +78,7 @@ interface State {
   query: string;
 }
 
-interface Props {
-  /** Comes from HOC */
-  searchAlgolia: (inputValue: string) => void;
-  searchEnabled: boolean;
-  searchError?: string;
-  searchResults: [Item[], Item[]];
-}
-
-type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
+type CombinedProps = AlgoliaProps & WithStyles<ClassNames> & RouteComponentProps<{}>;
 
 class SupportSearchLanding extends React.Component<CombinedProps, State> {
   searchIndex:any = null;
@@ -101,7 +92,7 @@ class SupportSearchLanding extends React.Component<CombinedProps, State> {
     this.props.searchAlgolia(query);
   }
 
-  componentDidUpdate(prevProps: Props, prevState: State) {
+  componentDidUpdate(prevProps: CombinedProps, prevState: State) {
     if (!prevProps.searchEnabled && this.props.searchEnabled) {
       this.searchFromParams();
     }

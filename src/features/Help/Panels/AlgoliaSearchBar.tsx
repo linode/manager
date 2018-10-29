@@ -12,7 +12,7 @@ import EnhancedSelect, { Item } from 'src/components/EnhancedSelect';
 import Notice from 'src/components/Notice';
 import windowIsNarrowerThan from 'src/utilities/breakpoints';
 
-import withSearch from '../SearchHOC';
+import withSearch, { AlgoliaState as AlgoliaProps } from '../SearchHOC';
 import SearchItem from './SearchItem';
 
 type ClassNames = 'root'
@@ -63,15 +63,7 @@ interface State {
   inputValue: string;
 }
 
-interface Props {
-  /** Comes from HOC */
-  searchAlgolia: (inputValue: string) => void;
-  searchEnabled: boolean;
-  searchError?: string;
-  searchResults: [Item[], Item[]];
-}
-
-type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
+type CombinedProps = AlgoliaProps & WithStyles<ClassNames> & RouteComponentProps<{}>;
 class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
   searchIndex: any = null;
   mounted: boolean = false;
