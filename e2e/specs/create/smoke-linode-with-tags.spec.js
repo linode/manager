@@ -68,7 +68,7 @@ describe('Create Linode from Image - With Tags Suite', () => {
         ListLinodes.waitUntilBooted(linodeName);
     });
 
-   describe('List Linodes - Tags Suite', () => {
+    describe('List Linodes - Tags Suite', () => {
         it('should display the linode with tags on the grid view', () => {
             assertTagsDisplay(addedTags);
         });
