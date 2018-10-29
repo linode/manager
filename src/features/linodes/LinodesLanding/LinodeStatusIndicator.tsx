@@ -26,7 +26,9 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     userSelect: 'none',
   },
   transition: {
-    marginLeft: -1,
+    position: 'relative',
+    top: 4,
+    left: -1,
     '& svg': {
       animation: 'rotate 2s linear infinite',
     },
@@ -43,37 +45,37 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
 });
 
 const LinodeStatusIndicator = (props: Props & WithStyles<CSSClasses>) => {
-  const { classes } = props;
+  const { classes, status } = props;
   return (
     <React.Fragment>
-      {props.status === 'loading' &&
+      {status === 'loading' &&
         <span
           className={`${classes.dot} ${classes.grey}`}
-          data-qa-status={props.status}
+          data-qa-status={status}
         >
           &#x25CF;
         </span>
       }
-      {props.status === 'running' &&
+      {status === 'running' &&
         <span
-          className={`${props.classes.dot} ${props.classes.green}`}
-          data-qa-status={props.status}
+          className={`${classes.dot} ${classes.green}`}
+          data-qa-status={status}
         >
           &#x25CF;
         </span>
       }
-      {props.status === 'offline' &&
+      {status === 'offline' &&
         <span
-          className={`${props.classes.dot} ${props.classes.red}`}
-          data-qa-status={props.status}
+          className={`${classes.dot} ${classes.red}`}
+          data-qa-status={status}
         >
           &#x25CF;
         </span>
       }
-      {linodeInTransition(props.status, props.recentEvent) &&
+      {linodeInTransition(status, props.recentEvent) &&
         <span
-          className={`${props.classes.transition}`}
-          data-qa-status={props.status}
+          className={`${classes.transition}`}
+          data-qa-status={status}
         >
           <Cached style={{ fontSize: '1.0rem' }} />
         </span>
