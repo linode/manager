@@ -319,6 +319,7 @@ const themeDefaults: ThemeOptions = {
         backgroundColor: '#fbfbfb',
       },
       content: {
+        // This is necessary for text to ellipsis responsively without the need for a hard set width value that won't play well with flexbox.
         minWidth: 0,
       },
     },

@@ -87,6 +87,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     fontFamily: 'LatoWebBold',
     color: 'black',
     marginLeft: theme.spacing.unit,
+    // This is necessary for text to ellipsis responsively without the need for a hard set width value that won't play well with flexbox.
     minWidth: 0,
   },
   cardContent: {
@@ -182,6 +183,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     display: 'flex',
     alignItems: 'center',
     flex: 1,
+    // This is necessary for text to ellipsis responsively without the need for a hard set width value that won't play well with flexbox.
     minWidth: 0,
   },
   wrapHeader: {
