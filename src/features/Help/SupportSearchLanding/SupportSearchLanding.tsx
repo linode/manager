@@ -17,7 +17,7 @@ import Search from '@material-ui/icons/Search';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import { DOCS_SEARCH_URL } from 'src/constants';
+import { COMMUNITY_SEARCH_URL, DOCS_SEARCH_URL } from 'src/constants';
 import { parseQueryParams } from 'src/utilities/queryParams';
 
 import withSearch, { AlgoliaState as AlgoliaProps } from '../SearchHOC';
@@ -86,9 +86,14 @@ class SupportSearchLanding extends React.Component<CombinedProps, State> {
     query: '',
   }
 
+  componentDidMount() {
+    this.searchFromParams();
+  }
+
   searchFromParams() {
     const queryFromParams = parseQueryParams(this.props.location.search)['?query'];
-    const query = queryFromParams ? queryFromParams : '';
+    const query = queryFromParams ? decodeURIComponent(queryFromParams) : '';
+    this.setState({ query });
     this.props.searchAlgolia(query);
   }
 
@@ -128,7 +133,7 @@ class SupportSearchLanding extends React.Component<CombinedProps, State> {
             </Grid>
             <Grid item>
               <Typography variant="headline" >
-                {query ? `Search results for "${query}"` : "Search"}
+                {query.length > 1 ? `Search results for "${query}"` : "Search"}
               </Typography>
             </Grid>
           </Grid>
@@ -138,7 +143,7 @@ class SupportSearchLanding extends React.Component<CombinedProps, State> {
           <TextField
             className={classes.searchBoxInner}
             placeholder="Search Linode documentation and community questions"
-            value={query || ''}
+            value={query}
             onChange={this.onInputChange}
             disabled={!Boolean(searchEnabled)}
             InputProps={{
@@ -154,7 +159,7 @@ class SupportSearchLanding extends React.Component<CombinedProps, State> {
           <DocumentationResults sectionTitle="Documentation" results={docs as SearchResult[]} target={DOCS_SEARCH_URL + query} />
         </Grid>
         <Grid item>
-          <DocumentationResults sectionTitle="Community Posts" results={community as SearchResult[]} target="google.com" />
+          <DocumentationResults sectionTitle="Community Posts" results={community as SearchResult[]} target={COMMUNITY_SEARCH_URL + query} />
         </Grid>
         <Grid container item>
           <HelpResources />

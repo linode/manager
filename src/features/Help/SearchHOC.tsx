@@ -51,7 +51,7 @@ export const convertCommunityToItems = (hits: SearchHit[], highlight: boolean) :
 
 export const getCommunityUrl = (id: string) => {
   // Rather than crash here, better to redirect to the base community site.
-  if (!id) { return COMMUNITY_BASE_URL; }
+  if (!id || (!id.startsWith('q_') && !id.startsWith('a_'))) { return COMMUNITY_BASE_URL; }
   const [prefix, value] = id.split('_');
   return prefix === 'q' // Prefix is q for question, a for answer.
   ? `${COMMUNITY_BASE_URL}questions/${value}`
@@ -79,6 +79,10 @@ export const getCommunityResultLabel = (hit: any, highlight: boolean) => {
   return title
     ? title
     : truncate(hit.description, 30)
+}
+
+export const cleanDescription = (description: string): string => {
+  return(description.replace(/<r>|<t>/, ''));
 }
 
 export default (options: SearchOptions) => (Component: React.ComponentType<any>) => {
