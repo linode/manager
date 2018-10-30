@@ -31,6 +31,7 @@ exports.constants = {
 			users: '/users',
 		},
 		profile: {
+			auth: '/profile/auth',
 			view: '/profile/',
 			tokens: '/profile/tokens',
 			oauth: '/profile/clients',
