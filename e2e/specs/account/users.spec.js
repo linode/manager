@@ -42,13 +42,17 @@ describe('Account - Users Suite', () => {
         Permissions.baseElementsDisplay(false);
         expect(Permissions.restrictAccessToggle.getAttribute('class')).toContain('disabled');
         expect(Permissions.restrictAccessTooltip.isVisible()).toBe(true);
-        
+
         Permissions.restrictAccessTooltip.moveToObject();
         Permissions.popoverMsg.waitForVisible(constants.wait.normal);
         expect(Permissions.popoverMsg.getText()).toEqual('You cannot restrict the current active user.');
+
+        //Navigate back to the users page for subsequent tests
+        Users.backButton.click();
+        Users.baseElementsDisplay();
     });
 
-    xdescribe('Account - Unrestricted User Suite', () => {
+    describe('Account - Unrestricted User Suite', () => {
 
         it('should create a new unrestricted user', () => {
             Users.add(userConfig);

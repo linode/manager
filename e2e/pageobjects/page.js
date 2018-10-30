@@ -37,7 +37,7 @@ export default class Page {
     get deleteTag() { return $('[data-qa-delete-tag]'); }
     get helpButton() { return $('[data-qa-help-button]');}
     get popoverMsg() { return $('[role="tooltip"]'); }
-    
+
     constructor() {
         this.pageTitle = 'Base page';
     }
