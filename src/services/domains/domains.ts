@@ -99,7 +99,7 @@ export const cloneDomain = (domainID: number, cloneName: string) =>
  * @param domain { string } The domain to import.
  * @param remote_nameserver { string } The remote nameserver that allows zone transfers (AXFR).
  */
-export const importZone = (domain?: string, remote_nameserver?: string) =>
+export const importZone = (domain: string, remote_nameserver: string) =>
   Request<Domain>(
     setData({ domain, remote_nameserver }, importZoneSchema),
     setURL(`${API_ROOT}/domains/import`),

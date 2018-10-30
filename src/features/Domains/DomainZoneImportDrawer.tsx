@@ -50,6 +50,8 @@ class DomainZoneImportDrawer extends React.Component<CombinedProps, State> {
     const domainError = hasErrorFor('domain');
     const remoteNameserverError = hasErrorFor('remote_nameserver');
 
+    const requirementsMet = this.checkRequirements();
+
     return (
       <Drawer
         open={open}
@@ -60,7 +62,7 @@ class DomainZoneImportDrawer extends React.Component<CombinedProps, State> {
         <LinodeTextField label="Domain" onChange={this.updateDomain} errorText={domainError} />
         <LinodeTextField label="Remote Nameserver" onChange={this.updateRemoteNameserver} errorText={remoteNameserverError} />
         <ActionsPanel>
-          <Button type="primary" loading={submitting} onClick={this.onSubmit}>Save</Button>
+          <Button type="primary" loading={submitting} onClick={this.onSubmit} disabled={!requirementsMet}>Save</Button>
           <Button type="cancel" onClick={this.onClose}>Cancel</Button>
         </ActionsPanel>
       </Drawer>
@@ -84,12 +86,31 @@ class DomainZoneImportDrawer extends React.Component<CombinedProps, State> {
     onClose();
   };
 
+  checkRequirements() {
+    return !!this.state.domain && !!this.state.remote_nameserver;
+  }
+
   onSubmit = () => {
     const { domain, remote_nameserver } = this.state;
 
+    // Validate text fields
+    const errors = [];
+    if (!domain) {
+      errors.push({ field: 'domain', reason: 'Domain is required.' });
+    }
+    if (!remote_nameserver) {
+      errors.push({ field: 'remote_nameserver', reason: 'Remote nameserver is required.' });
+    }
+    if (errors.length > 0) {
+      this.setState({ errors });
+      return;
+    }
+
     this.setState({ submitting: true });
 
-    importZone(domain, remote_nameserver)
+    // Since we've validated test fields, we can assume domain and
+    // remote_nameserver won't be undefined
+    importZone(domain!, remote_nameserver!)
       .then((data) => {
         this.props.onSuccess(data);
       })
