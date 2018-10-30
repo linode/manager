@@ -18,7 +18,8 @@ export const SENTRY_URL = process.env.REACT_APP_SENTRY_URL;
 export const LOGIN_SESSION_LIFETIME_MS = 45 * 60 * 1000;
 export const OAUTH_TOKEN_REFRESH_TIMEOUT = LOGIN_SESSION_LIFETIME_MS / 2;
 
-export const DOCS_BASE_URL = 'https://linode.com/';
+export const DOCS_BASE_URL = 'https://linode.com';
+export const COMMUNITY_BASE_URL = 'https://linode.com/community/';
 export const DOCS_SEARCH_URL = 'https://linode.com/docs/search/?q=';
 export const COMMUNITY_SEARCH_URL = 'https://linode.com/community/questions/search?query=';
 
