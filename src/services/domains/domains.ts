@@ -58,11 +58,11 @@ export const createDomain = (data: Partial<Linode.Domain>) =>
  * @param domainId { number } The ID of the Domain to access.
  * @param data { object } Options for type, status, etc.
  */
-export const updateDomain = (domainId: number, data: any) =>
+export const updateDomain = (domainId: number, data: Partial<Linode.Domain>) =>
   Request<Domain>(
     setURL(`${API_ROOT}/domains/${domainId}`),
     setMethod('PUT'),
-    setData(data, updateDomainSchema), // remove ability for user to change status
+    setData(data, updateDomainSchema),
   )
     .then(response => response.data);
 

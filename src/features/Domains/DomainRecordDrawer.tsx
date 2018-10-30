@@ -310,11 +310,12 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
 
   onDomainEdit = () => {
     const { domainId, type } = this.props;
+
     this.setState({ submitting: true, errors: undefined });
 
     const data = {
       ...this.filterDataByType(this.state.fields, type),
-    };
+    } as Partial<EditableDomainFields>;
 
     updateDomain(domainId, { ...data, status: 'active' })
       .then(() => {
