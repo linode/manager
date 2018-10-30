@@ -35,7 +35,7 @@ export default class Page {
     get tags() { return $$('[data-qa-tag]'); }
     get addTag() { return $('[data-qa-add-tag]'); }
     get deleteTag() { return $('[data-qa-delete-tag]'); }
-    get helpButton() { return $('[data-qa-help-button]');}
+    get helpButton() { return $('[data-qa-help-button]'); }
     get popoverMsg() { return $('[role="tooltip"]'); }
 
     constructor() {

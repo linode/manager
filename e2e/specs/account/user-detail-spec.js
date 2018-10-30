@@ -56,7 +56,7 @@ describe('Account - User Detail - Username Suite', () => {
 
         it('should succeed updating with a legitimate username', () => {
             UserDetail.enterUsername(`Test${new Date().getTime()}`);
-            UserDetail.waitForNotice('User Profile updated successfully', constants.wait.normal)
+            UserDetail.waitForNotice('User Profile updated successfully', constants.wait.normal);
         });
     });
 
