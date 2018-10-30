@@ -212,7 +212,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
     }
 
     attachVolume(Number(selectedVolume), { linode_id: Number(linodeID) })
-      .then(({ data }) => {
+      .then((data) => {
         this.closeUpdatingDrawer();
         actions.updateVolumes((volumes) => ([...volumes, data]));
       })
@@ -603,8 +603,8 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
         this.closeUpdatingDrawer();
         this.props.actions.updateVolumes((volumes) => {
           const newVolumes = [...volumes];
-          const idx = volumes.findIndex((volume) => volume.id === response.data.id);
-          newVolumes[idx] = response.data;
+          const idx = volumes.findIndex((volume) => volume.id === response.id);
+          newVolumes[idx] = response;
           return newVolumes;
         });
       })
