@@ -1,12 +1,12 @@
 export {
   getLinodes,
-  getLinodesPage,
   getLinode,
   getLinodeLishToken,
   getLinodeVolumes,
   createLinode,
   updateLinode,
   deleteLinode,
+  CreateLinodeRequest,
 } from './linodes';
 
 export {
@@ -24,12 +24,10 @@ export {
   cancelBackups,
   takeSnapshot,
   restoreBackup,
-  updateBackupsWindow,
 } from './backups';
 
 export {
   getLinodeDisks,
-  getAllLinodeDisks,
   getLinodeDisk,
   createLinodeDisk,
   updateLinodeDisk,
@@ -40,9 +38,9 @@ export {
 } from './linodeDisks';
 
 export {
+  allocateIPAddress,
   getLinodeIPs,
-  allocatePrivateIP,
-  allocatePublicIP,
+  IPAllocationRequest,
 } from './linodeIPs';
 
 export {
@@ -57,11 +55,14 @@ export {
   resizeLinode,
   startMutation,
   scheduleOrQueueMigration,
+  RebuildRequest,
 } from './linodeActions';
 
 export {
   getLinodeStats,
+  getLinodeStatsByDate,
   getLinodeKernels,
+  getLinodeKernel,
   getLinodeTypes,
   getDeprecatedLinodeTypes,
   getType

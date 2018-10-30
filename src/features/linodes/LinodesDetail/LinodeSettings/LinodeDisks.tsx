@@ -55,6 +55,8 @@ interface LinodeContextProps {
   linodeTotalDisk?: number;
 }
 
+type Filesystem = "raw" | "swap" | "ext3" | "ext4" | "initrd" | "_none_";
+
 interface ConfirmDeleteState {
   open: boolean;
   submitting: boolean;
@@ -72,7 +74,7 @@ interface DrawerState {
   maximumSize: number;
   fields: {
     label: string;
-    filesystem: string;
+    filesystem: Filesystem;
     size: number;
   };
 }
@@ -406,7 +408,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     this.setDrawer({ fields: { ...fields, size } })
   }
 
-  onFilesystemChange = (filesystem: string) => {
+  onFilesystemChange = (filesystem: Filesystem) => {
     const { fields } = this.state.drawer;
     this.setDrawer({ fields: { ...fields, filesystem } });
   }
@@ -458,7 +460,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       size,
       filesystem: filesystem === '_none_' ? undefined : filesystem,
     })
-      .then(({ data }) => {
+      .then((_) => {
         this.setDrawer(LinodeDisks.defaultDrawerState);
         this.props.request();
       })
@@ -480,7 +482,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     this.setDrawer({ submitting: true, errors: undefined, });
 
     updateLinodeDisk(linodeId, diskId, { label })
-      .then(({ data }) => {
+      .then((_) => {
         this.setDrawer(LinodeDisks.defaultDrawerState);
         this.props.request();
       })

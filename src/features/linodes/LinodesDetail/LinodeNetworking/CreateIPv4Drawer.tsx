@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
-import { allocatePrivateIP, allocatePublicIP } from 'src/services/linodes';
+import { allocateIPAddress } from 'src/services/linodes';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import substituteLink from 'src/utilities/substituteLink';
@@ -47,11 +47,9 @@ class CreateIPv4Drawer extends React.Component<CombinedProps, State> {
 
   create = () => {
     const { onClose, linodeID } = this.props;
-    const allocateFn = this.state.forPublic
-      ? allocatePublicIP
-      : allocatePrivateIP;
-    allocateFn(linodeID)
-      .then((ipAddress) => {
+    // Only IPv4 addresses can currently be allocated.
+    allocateIPAddress(linodeID, { type: "ipv4", public: this.state.forPublic })
+      .then((_) => {
         onClose();
       })
       .catch((errResponse) => {

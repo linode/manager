@@ -233,7 +233,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
         },
       },
     )
-      .then((response) => {
+      .then((_) => {
         this.setState(compose(
           set(lensPath(['success']), `Linode alert thresholds changed successfully.`),
           set(lensPath(['submitting']), false),

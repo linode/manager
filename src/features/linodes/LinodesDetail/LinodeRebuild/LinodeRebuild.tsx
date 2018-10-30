@@ -110,9 +110,10 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
 
     rebuildLinode(
       linodeId,
-      selected,
-      password,
-      this.props.userSSHKeys.filter(u => u.selected).map((u) => u.username),
+      { image: selected,
+        root_pass: password,
+        authorized_users: this.props.userSSHKeys.filter(u => u.selected).map((u) => u.username)
+      },
     )
       .then((response) => {
         resetEventsPolling();
