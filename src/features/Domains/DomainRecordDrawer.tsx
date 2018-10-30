@@ -310,7 +310,6 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
 
   onDomainEdit = () => {
     const { domainId, type } = this.props;
-
     this.setState({ submitting: true, errors: undefined });
 
     const data = {
