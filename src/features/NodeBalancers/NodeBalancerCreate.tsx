@@ -606,7 +606,7 @@ const styled = withStyles(styles, { withTheme: true });
 export const lensFrom = (p1: (string | number)[]) => (p2: (string | number)[]) =>
   lensPath([...p1, ...p2]);
 
-const getPathAnFieldFromFieldString = (value: string) => {
+const getPathAndFieldFromFieldString = (value: string) => {
   let field = value;
   let path: any[] = [];
 
@@ -644,7 +644,7 @@ export const fieldErrorsToNodePathErrors = (errors: Linode.ApiFieldError[]) => {
   */
   return errors.reduce(
     (acc: any, error: Linode.ApiFieldError) => {
-      const { field, path } = getPathAnFieldFromFieldString(error.field!);
+      const { field, path } = getPathAndFieldFromFieldString(error.field!);
 
       if (!path.length) { return acc; }
 

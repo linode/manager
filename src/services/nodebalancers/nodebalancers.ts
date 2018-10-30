@@ -21,23 +21,23 @@ export interface CreateNodeBalancerPayload {
 
 /**
  * getNodeBalancers
- * 
+ *
  * Returns a paginated list of NodeBalancers on your account.
  */
 export const getNodeBalancers = (params?: any, filters?: any) =>
   Request<Page<NodeBalancer>>(
     setURL(`${API_ROOT}/nodebalancers/`),
     setMethod('GET'),
-    setParams([params]),
+    setParams(params),
     setXFilter(filters),
   )
     .then(response => response.data);
 
 /**
  * getNodeBalancer
- * 
+ *
  * Returns detailed information about a single NodeBalancer.
- * 
+ *
  * @param nodeBalancerId { number } The ID of the NodeBalancer to retrieve.
  */
 export const getNodeBalancer = (nodeBalancerId: number) => Request<NodeBalancer>(
@@ -47,9 +47,9 @@ export const getNodeBalancer = (nodeBalancerId: number) => Request<NodeBalancer>
 
 /**
  * updateNodeBalancer
- * 
+ *
  * Update an existing NodeBalancer on your account.
- * 
+ *
  * @param nodeBalancerId { number } The ID of the NodeBalancer to update.
  * @param data { object } The fields to update. Values not included in this
  * parameter will be left unchanged.
@@ -63,7 +63,7 @@ export const updateNodeBalancer = (nodeBalancerId: number, data: Partial<NodeBal
 
 /**
  * createNodeBalancer
- * 
+ *
  * Add a NodeBalancer to your account.
  */
 export const createNodeBalancer = (data: CreateNodeBalancerPayload) =>
@@ -80,9 +80,9 @@ export const createNodeBalancer = (data: CreateNodeBalancerPayload) =>
 
 /**
  * deleteNodeBalancer
- * 
+ *
  * Remove a NodeBalancer from your account.
- * 
+ *
  * @param nodeBalancerId { number } The ID of the NodeBalancer to delete.
  */
 export const deleteNodeBalancer = (nodeBalancerId: number) => Request<{}>(
@@ -92,9 +92,9 @@ export const deleteNodeBalancer = (nodeBalancerId: number) => Request<{}>(
 
 /**
  * getNodeBalancerStats
- * 
+ *
  * Returns detailed statistics about the requested NodeBalancer.
- * 
+ *
  * @param nodeBalancerId { number } The ID of the NodeBalancer to view stats for.
  */
 export const getNodeBalancerStats = (nodeBalancerId: number) => {
