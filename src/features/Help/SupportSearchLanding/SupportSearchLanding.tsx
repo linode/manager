@@ -1,4 +1,3 @@
-import * as Algolia from 'algoliasearch';
 import { compose } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -7,7 +6,7 @@ import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import {
   StyleRulesCallback,
-  
+
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
@@ -18,9 +17,10 @@ import Search from '@material-ui/icons/Search';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import { ALGOLIA_APPLICATION_ID, ALGOLIA_SEARCH_KEY, DOCS_BASE_URL, DOCS_SEARCH_URL } from 'src/constants';
+import { COMMUNITY_SEARCH_URL, DOCS_SEARCH_URL } from 'src/constants';
 import { parseQueryParams } from 'src/utilities/queryParams';
 
+import withSearch, { AlgoliaState as AlgoliaProps } from '../SearchHOC';
 import DocumentationResults, { SearchResult } from './DocumentationResults';
 import HelpResources from './HelpResources';
 
@@ -75,46 +75,37 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 });
 
 interface State {
-  enabled: boolean;
-  error?: string;
   query: string;
-  results: SearchResult[];
 }
 
-type CombinedProps = WithStyles<ClassNames> & RouteComponentProps<{}>;
-
-type index = 'linode-docs';
+type CombinedProps = AlgoliaProps & WithStyles<ClassNames> & RouteComponentProps<{}>;
 
 class SupportSearchLanding extends React.Component<CombinedProps, State> {
   searchIndex:any = null;
   state: State = {
-    enabled: true,
     query: '',
-    results: [],
   }
 
   componentDidMount() {
+    this.searchFromParams();
+  }
+
+  searchFromParams() {
     const queryFromParams = parseQueryParams(this.props.location.search)['?query'];
-    const query = queryFromParams ? queryFromParams : '';
+    const query = queryFromParams ? decodeURIComponent(queryFromParams) : '';
     this.setState({ query });
-    // initialize Algolia API Client
-    try {
-      const client = Algolia(ALGOLIA_APPLICATION_ID, ALGOLIA_SEARCH_KEY);
-      const idx: index = 'linode-docs';
-      this.searchIndex = client.initIndex(idx);
+    this.props.searchAlgolia(query);
+  }
+
+  componentDidUpdate(prevProps: CombinedProps, prevState: State) {
+    if (!prevProps.searchEnabled && this.props.searchEnabled) {
+      this.searchFromParams();
     }
-    catch {
-      // Credentials were incorrect or couldn't be found;
-      // Disable the search functionality in the component.
-      this.setState({ enabled: false, error: "Search could not be enabled." });
-      return;
-    }
-    this.searchAlgolia(query);
   }
 
   onInputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ query: e.target.value });
-    this.searchAlgolia(e.target.value);
+    this.props.searchAlgolia(e.target.value);
   }
 
   onBackButtonClick = () => {
@@ -122,48 +113,11 @@ class SupportSearchLanding extends React.Component<CombinedProps, State> {
     history.push('/support');
   }
 
-  searchAlgolia = (inputValue:string) => {
-    if (!inputValue) { 
-      this.setState({ results: [] });
-      return;
-    }
-    if (!this.searchIndex) {
-      this.setState({ results: [], error: "Search could not be enabled."});
-      return;
-    }
-    this.searchIndex.search({
-      query: inputValue,
-      hitsPerPage: 3,
-    }, this.searchSuccess);
-  }
-
-  searchSuccess = (err:any, content:any) => {
-    if (err) {
-      /*
-      * Errors from Algolia have the format: {'message':string, 'code':number}
-      * We do not want to push these messages on to the user as they are not under
-      * our control and can be account-related (e.g. "You have exceeded your quota").
-      */
-      this.setState({ error: "There was an error retrieving your search results." });
-      return;
-    }
-    const results  = this.convertHitsToItems(content.hits);
-    this.setState({ results, error: undefined });
-  }
-
-  convertHitsToItems = (hits:any) => {
-    if (!hits) { return []; }
-    return hits.map((hit:any, idx:number) => {
-      return { value: idx, label: hit.title, data: {
-        source: 'Linode documentation',
-        href: DOCS_BASE_URL + hit.href,
-      } }
-    })
-  }
-
   render() {
-    const { classes } = this.props;
-    const { error, query, results } = this.state;
+    const { classes, searchEnabled, searchError, searchResults } = this.props;
+    const { query } = this.state;
+
+    const [docs, community] = searchResults;
 
     return (
       <Grid container direction="column">
@@ -179,19 +133,19 @@ class SupportSearchLanding extends React.Component<CombinedProps, State> {
             </Grid>
             <Grid item>
               <Typography variant="headline" >
-                {query ? `Search results for "${query}"` : "Search"} 
+                {query.length > 1 ? `Search results for "${query}"` : "Search"}
               </Typography>
             </Grid>
           </Grid>
         </Grid>
         <Grid item>
-          {error && <Notice error>{error}</Notice>}
+          {searchError && <Notice error>{searchError}</Notice>}
           <TextField
             className={classes.searchBoxInner}
             placeholder="Search Linode documentation and community questions"
             value={query}
             onChange={this.onInputChange}
-            disabled={Boolean(error)}
+            disabled={!Boolean(searchEnabled)}
             InputProps={{
               className: classes.searchBar,
               startAdornment:
@@ -202,12 +156,11 @@ class SupportSearchLanding extends React.Component<CombinedProps, State> {
           />
         </Grid>
         <Grid item>
-          <DocumentationResults sectionTitle="Documentation" results={results} target={DOCS_SEARCH_URL + query} />
+          <DocumentationResults sectionTitle="Documentation" results={docs as SearchResult[]} target={DOCS_SEARCH_URL + query} />
         </Grid>
-        {/* Blocked until Community Site implements Algolia indexing */}
-        {/* <Grid item>
-          <DocumentationResults sectionTitle="Community Posts" results={[]} target="google.com" />
-        </Grid> */}
+        <Grid item>
+          <DocumentationResults sectionTitle="Community Posts" results={community as SearchResult[]} target={COMMUNITY_SEARCH_URL + query} />
+        </Grid>
         <Grid container item>
           <HelpResources />
         </Grid>
@@ -217,7 +170,11 @@ class SupportSearchLanding extends React.Component<CombinedProps, State> {
 }
 
 const styled = withStyles(styles, { withTheme: true });
-
-export default compose<any,any,any>(
+const searchable = withSearch({hitsPerPage: 5, highlight: false});
+const enhanced: any = compose(
   styled,
-  withRouter)(SupportSearchLanding);
+  searchable,
+  withRouter
+)(SupportSearchLanding)
+
+export default enhanced;
