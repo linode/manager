@@ -163,7 +163,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
     this.updateConfirmDialog(c => ({ ...c, submitting: true, errors: undefined }));
 
     deleteDomainRecord(domainId, recordId)
-      .then((response) => {
+      .then(() => {
         this.props.updateRecords();
 
         this.updateConfirmDialog(c => ({
