@@ -12,7 +12,6 @@ exports.storeToken = (credFilePath, username) => {
     let credCollection = JSON.parse(readFileSync(credFilePath));
 
     const getTokenFromLocalStorage = () => {
-        console.log('I am getting from storage!!');
         const browserLocalStorage = browser.execute(function() {
             return JSON.stringify(localStorage);
         });
