@@ -40,7 +40,7 @@ class ConfigureLinode extends Page {
     // User defined text field
     // user defined boolean
 
-    
+
     get selectRegionHeader() { return $('[data-qa-tp="Region"]'); }
     get regionTabs() { return $$('[data-qa-tp="Region"] [data-qa-tab]'); }
     get regions() { return $$('[data-qa-tp="Region"] [data-qa-selection-card]'); }
@@ -49,6 +49,8 @@ class ConfigureLinode extends Page {
     get planTabs() { return $$('[data-qa-tp="Linode Plan"] [data-qa-tab]'); }
     get plans() { return $$('[data-qa-tp="Linode Plan"] [data-qa-selection-card]'); }
     get planNames() { return $$('[data-qa-tp="Linode Plan"] [data-qa-selection-card] [data-qa-select-card-heading]'); }
+
+    get tagsMultiSelect() { return $('[data-qa-multi-select="Type to choose or create a tag."]')}
 
     get labelHeader() { return $('[data-qa-label-header]'); }
     get label() { return $('[data-qa-label-header] input'); }
@@ -97,7 +99,7 @@ class ConfigureLinode extends Page {
         expect(this.planHeader.isVisible()).toBe(true);
         expect(this.planTabs.length).toBe(3);
         expect(this.plans.length).toBeGreaterThan(0);
-        
+
         expect(this.label.isVisible()).toBe(true);
         expect(this.labelHeader.isVisible()).toBe(true);
 
@@ -137,7 +139,7 @@ class ConfigureLinode extends Page {
         this.imageTabs.forEach(tab => expect(tab.isVisible()).toBe(true));
         this.images.forEach(i => expect(i.isVisible()).toBe(true));
         expect(this.showOlderImages.isVisible()).toBe(true);
-        
+
         expect(this.selectRegionHeader.isVisible()).toBe(true);
         this.regionTabs.forEach(tab => expect(tab.isVisible()).toBe(true));
         this.regions.forEach(r => expect(r.isVisible()).toBe(true));
@@ -153,7 +155,7 @@ class ConfigureLinode extends Page {
 
         expect(this.passwordHeader.isVisible()).toBe(true);
         expect(this.password.isVisible()).toBe(true);
-        
+
         expect(this.addonsHeader.isVisible()).toBe(true);
         this.addons.forEach(a => expect(a.isVisible()).toBe(true));
     }
@@ -219,7 +221,7 @@ class ConfigureLinode extends Page {
             sourceLabel = sourceLinode.$('[data-qa-select-card-heading]').getText();
 
             sourceLinode.click();
-            
+
             // targetLinodeCard = targetSection[0].$$('[data-qa-selection-card]')
                 // .filter(c => c.$('[data-qa-select-card-heading]').getText() === sourceLabel);
 
