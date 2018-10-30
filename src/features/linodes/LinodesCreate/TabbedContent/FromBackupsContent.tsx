@@ -14,7 +14,8 @@ import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
 import { resetEventsPolling } from 'src/events';
 import { Info } from 'src/features/linodes/LinodesCreate/LinodesCreate';
-import { allocatePrivateIP, createLinode, getLinodeBackups } from 'src/services/linodes';
+import { createLinode, getLinodeBackups } from 'src/services/linodes';
+import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
 
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -217,7 +218,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       region: selectedRegionID,
       type: selectedTypeID,
       backup_id: Number(selectedBackupID),
-      label, /* optional */
+      label: label ? label : null, /* optional */
       backups_enabled: backups, /* optional */
       booted: true,
       tags: getLinodeTagList(),

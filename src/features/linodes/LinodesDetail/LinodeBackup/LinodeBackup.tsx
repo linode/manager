@@ -33,12 +33,13 @@ import TextField from 'src/components/TextField';
 import { events$, resetEventsPolling } from 'src/events';
 import { linodeInTransition as isLinodeInTransition } from 'src/features/linodes/transitions';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
-import { cancelBackups, enableBackups, getLinodeBackups, getType, takeSnapshot, updateBackupsWindow } from 'src/services/linodes';
+import { cancelBackups, enableBackups, getLinodeBackups, getType, takeSnapshot } from 'src/services/linodes';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import { withLinode } from '../context';
 import BackupTableRow from './BackupTableRow';
+import { updateBackupsWindow } from './backupUtils';
 import RestoreToLinodeDrawer from './RestoreToLinodeDrawer';
 
 type ClassNames =
@@ -109,8 +110,8 @@ interface State {
     errors?: Linode.ApiFieldError[];
   };
   settingsForm: {
-    window: string;
-    day: string;
+    window: Linode.Window;
+    day: Linode.Day;
     errors?: Linode.ApiFieldError[];
   };
   restoreDrawer: {
@@ -285,6 +286,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
   saveSettings = () => {
     const { linodeID } = this.props;
     const { settingsForm } = this.state;
+
     updateBackupsWindow(linodeID, settingsForm.day, settingsForm.window)
       .then(() => {
         sendToast('Backup settings saved');
@@ -315,14 +317,14 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
   handleSelectBackupWindow = (e: React.ChangeEvent<HTMLSelectElement>) => {
     this.setState({
       settingsForm:
-        { ...this.state.settingsForm, window: e.target.value },
+        { ...this.state.settingsForm, window: e.target.value as Linode.Window },
     })
   }
 
   handleSelectBackupTime = (e: React.ChangeEvent<HTMLSelectElement>) => {
     this.setState({
       settingsForm:
-        { ...this.state.settingsForm, day: e.target.value },
+        { ...this.state.settingsForm, day: e.target.value as Linode.Day },
     })
   }
 
@@ -474,8 +476,13 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     const { classes } = this.props;
     const { settingsForm } = this.state;
     const getErrorFor = getAPIErrorFor(
-      { day: 'Day', window: 'Window' },
+      { day: 'backups.day', window: 'backups.window', schedule: 'backups.schedule.window' },
       settingsForm.errors);
+    const errorText = getErrorFor('none')
+      || getErrorFor('backups.day')
+      || getErrorFor('backups.window')
+      || getErrorFor('backups.schedule.window')
+      || getErrorFor('backups.schedule.day');
 
     return (
       <React.Fragment>
@@ -492,7 +499,6 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
             Service will generate backups between the selected hours. The
             selected day is when the backup is promoted to the weekly slot.
           </Typography>
-
           <FormControl className={classes.chooseTime}>
             <InputLabel htmlFor="window">
               Time of Day
@@ -503,7 +509,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
               inputProps={{ name: 'window', id: 'window' }}
               data-qa-time-select
             >
-              {this.windows.map((window: string[]) => (
+              {this.windows.map((window: Linode.Window[]) => (
                 <MenuItem key={window[0]} value={window[1]}>
                   {window[0]}
                 </MenuItem>
@@ -538,8 +544,8 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
               Save Schedule
             </Button>
           </ActionsPanel>
-          {getErrorFor('none') &&
-            <FormHelperText error>{getErrorFor('none')}</FormHelperText>
+          {errorText &&
+            <FormHelperText error>{errorText}</FormHelperText>
           }
         </Paper>
       </React.Fragment>

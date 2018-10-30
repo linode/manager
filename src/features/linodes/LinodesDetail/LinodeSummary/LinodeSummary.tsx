@@ -16,7 +16,7 @@ import Select from 'src/components/Select';
 import { withTypes } from 'src/context/types';
 import { withImage, withLinode } from 'src/features/linodes/LinodesDetail/context';
 import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
-import { getLinodeStats } from 'src/services/linodes';
+import { getLinodeStats, getLinodeStatsByDate } from 'src/services/linodes';
 import { setUpCharts } from 'src/utilities/charts';
 
 import SummaryPanel from './SummaryPanel';
@@ -241,7 +241,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       req = getLinodeStats(linodeId);
     } else {
       const [year, month] = rangeSelection.split(' ');
-      req = getLinodeStats(linodeId, year, month);
+      req = getLinodeStatsByDate(linodeId, year, month);
     }
     req
       .then((response) => {

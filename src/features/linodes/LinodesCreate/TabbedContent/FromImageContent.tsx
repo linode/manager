@@ -13,8 +13,9 @@ import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPa
 import { resetEventsPolling } from 'src/events';
 import { Info } from 'src/features/linodes/LinodesCreate/LinodesCreate';
 import userSSHKeyHoc from 'src/features/linodes/userSSHKeyHoc';
-import { allocatePrivateIP, createLinode } from 'src/services/linodes';
+import { createLinode } from 'src/services/linodes';
 
+import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -155,7 +156,8 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
     createLinode({
       region: selectedRegionID,
       type: selectedTypeID,
-      label, /* optional */
+      /* label is optional, pass null instead of empty string to bypass Yup validation. */
+      label: label ? label : null,
       root_pass: password, /* required if image ID is provided */
       image: selectedImageID, /* optional */
       backups_enabled: backups, /* optional */
