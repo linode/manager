@@ -1,4 +1,5 @@
 import * as Algolia from 'algoliasearch';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 
 import { Item } from 'src/components/EnhancedSelect/Select';
@@ -12,7 +13,6 @@ interface SearchHit {
   objectID: string;
   href?: string;
   _highlightResult?: any;
-  _rankingInfo?: any;
 }
 
 export interface AlgoliaState {
@@ -27,10 +27,18 @@ interface SearchOptions {
   highlight: boolean;
 }
 
+interface AlgoliaContent {
+  results: Algolia.Response[];
+}
+
+interface AlgoliaError {
+  message: string;
+  code: number;
+}
+
 // Functional helper methods
 
-export const convertDocsToItems = (hits: SearchHit[], highlight: boolean) : Item[] => {
-  if (!hits) { return []; }
+export const convertDocsToItems = (highlight: boolean, hits: SearchHit[] = []) : Item[] => {
   return hits.map((hit: SearchHit, idx: number) => {
     return { value: idx, label: getDocsResultLabel(hit, highlight), data: {
       source: 'Linode documentation',
@@ -39,8 +47,7 @@ export const convertDocsToItems = (hits: SearchHit[], highlight: boolean) : Item
   })
 }
 
-export const convertCommunityToItems = (hits: SearchHit[], highlight: boolean) : Item[] => {
-  if (!hits) { return []; }
+export const convertCommunityToItems = (highlight: boolean, hits: SearchHit[] = []) : Item[] => {
   return hits.map((hit: SearchHit, idx: number) => {
     return { value: idx, label: getCommunityResultLabel(hit, highlight), data: {
       source: 'Linode Community Site',
@@ -64,7 +71,7 @@ export const getDocsResultLabel = (hit: SearchHit, highlight: boolean) => {
     : hit.title;
 }
 
-export const getCommunityResultLabel = (hit: any, highlight: boolean) => {
+export const getCommunityResultLabel = (hit: SearchHit, highlight: boolean) => {
   /* If a word in the title matched the search query, return a string
   * with the matched word highlighted.
   *
@@ -78,7 +85,7 @@ export const getCommunityResultLabel = (hit: any, highlight: boolean) => {
     : hit.title;
   return title
     ? title
-    : truncate(cleanDescription(hit.description), 30)
+    : truncate(cleanDescription(hit.description!), 30)
 }
 
 export const cleanDescription = (description: string): string => {
@@ -150,7 +157,7 @@ export default (options: SearchOptions) => (Component: React.ComponentType<any>)
       }], this.searchSuccess);
     }
 
-    searchSuccess = (err:any, content:any) => {
+    searchSuccess = (err: AlgoliaError, content: AlgoliaContent) => {
       if (!this.mounted) { return; }
       if (err) {
         /*
@@ -162,9 +169,11 @@ export default (options: SearchOptions) => (Component: React.ComponentType<any>)
         return;
       }
 
-      const { results } = content;
-      const docsResults = convertDocsToItems(results[0].hits, highlight);
-      const commResults = convertCommunityToItems(results[1].hits, highlight);
+      /* If err is undefined, the shape of content is guaranteed, but better to be safe: */
+      const docs = pathOr([], ['results', 0, 'hits'], content);
+      const community = pathOr([], ['results', 1, 'hits'], content);
+      const docsResults = convertDocsToItems(highlight, docs);
+      const commResults = convertCommunityToItems(highlight, community);
       this.setState({ searchResults: [docsResults, commResults], searchError: undefined });
     }
 

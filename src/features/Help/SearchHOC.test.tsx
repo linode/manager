@@ -157,7 +157,7 @@ describe("Algolia Search HOC", () => {
     });
     describe("convertDocsToItems", () => {
       it("should convert docs to a correctly formatted Item[]", () => {
-        const formattedResults = convertDocsToItems([docs_result], false);
+        const formattedResults = convertDocsToItems(false, [docs_result]);
         expect(formattedResults).toEqual([{
           value: 0,
           label: docs_result.title,
@@ -168,13 +168,13 @@ describe("Algolia Search HOC", () => {
         }]);
       });
       it("should handle empty results lists correctly", () => {
-        const results = convertDocsToItems([], false);
+        const results = convertDocsToItems(false, []);
         expect(results).toEqual([]);
       });
     });
     describe("convertCommunityToItems", () => {
       it("should convert a community question to a correctly formatted Item", () => {
-        const formattedResults = convertCommunityToItems([community_question] as any, false);
+        const formattedResults = convertCommunityToItems(false, [community_question] as any);
         expect(formattedResults).toEqual([{
           value: 0,
           label: community_question.title,
@@ -184,7 +184,7 @@ describe("Algolia Search HOC", () => {
           }}]);
         });
       it("should convert a community answer to a correctly formatted Item", () => {
-        const formattedResults = convertCommunityToItems([community_answer] as any, false);
+        const formattedResults = convertCommunityToItems(false, [community_answer] as any);
         expect(formattedResults).toEqual([{
           value: 0,
           label: community_question.description,
