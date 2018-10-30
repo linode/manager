@@ -75,8 +75,8 @@ const preloaded = PromiseLoader<CombinedProps>({
 class DomainDetail extends React.Component<CombinedProps, State> {
 
   state: State = {
-    domain: pathOr(undefined, ['response', 'data'], this.props.domain),
-    records: pathOr([], ['response', 'data', 'data'], this.props.records),
+    domain: pathOr(undefined, ['response'], this.props.domain),
+    records: pathOr([], ['response', 'data'], this.props.records),
     error: pathOr(undefined, ['error'], this.props.domain),
   };
 
@@ -108,9 +108,8 @@ class DomainDetail extends React.Component<CombinedProps, State> {
     if (!domainId) { return; }
 
     getDomainRecords(domainId)
-      .then(({ data: { data } }) => {
-        this.setState({ records: data });
-
+      .then((data) => {
+        this.setState({ records: data.data });
       })
       .catch(console.error);
   }
@@ -120,7 +119,7 @@ class DomainDetail extends React.Component<CombinedProps, State> {
     if (!domainId) { return; }
 
     getDomain(domainId)
-      .then(({ data }) => {
+      .then((data) => {
         this.setState({ domain: data });
       })
       .catch(console.error);
