@@ -32,30 +32,30 @@ describe('Account - User Detail - Username Suite', () => {
         });
 
         it('should fail to update username on empty string', () => {
-            UserDetail.enterUsername(' ');
-            UserDetail.usernameWaring.waitForVisible(constants.wait.normal);
-            expect(UserDetail.usernameWaring.getText()).toContain('Username must be between');
+            UserDetail.updateUsername(' ');
+            UserDetail.usernameWarning.waitForVisible(constants.wait.normal);
+            expect(UserDetail.usernameWarning.getText()).toContain('Username must be between');
             UserDetail.cancelButton.click();
         });
 
         it('should fail validation on bad username value', () => {
             const badUsername = '$%#5364é-';
-            UserDetail.enterUsername(badUsername);
-            UserDetail.usernameWaring.waitForVisible(constants.wait.normal);
-            expect(UserDetail.usernameWaring.getText()).toContain('Username must only use ASCII characters');
+            UserDetail.updateUsername(badUsername);
+            UserDetail.usernameWarning.waitForVisible(constants.wait.normal);
+            expect(UserDetail.usernameWarning.getText()).toContain('Username must only use ASCII characters');
             UserDetail.cancelButton.click();
         });
 
         it('should fail to update when submitting an existing username', () => {
-            UserDetail.enterUsername(browser.options.testUser);
-            UserDetail.usernameWaring.waitForVisible(constants.wait.normal);
-            expect(UserDetail.usernameWaring.getText()).toContain('Username taken');
+            UserDetail.updateUsername(browser.options.testUser);
+            UserDetail.usernameWarning.waitForVisible(constants.wait.normal);
+            expect(UserDetail.usernameWarning.getText()).toContain('Username taken');
             UserDetail.cancelButton.click();
 
         });
 
         it('should succeed updating with a legitimate username', () => {
-            UserDetail.enterUsername(`Test${new Date().getTime()}`);
+            UserDetail.updateUsername(`Test${new Date().getTime()}`);
             UserDetail.waitForNotice('User Profile updated successfully', constants.wait.normal);
         });
     });

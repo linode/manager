@@ -30,7 +30,7 @@ export default class Page {
     get selectOption() { return $('[data-qa-option]') };
     get multiOption() { return $('[data-qa-multi-option]'); }
     get multiSelect() { return $('[data-qa-multi-select]'); }
-    get toggleOptions() { return $('[data-qa-toggle]'); }
+    get toggleOption() { return $('[data-qa-toggle]'); }
     get tag() { return $('[data-qa-tag]'); }
     get tags() { return $$('[data-qa-tag]'); }
     get addTag() { return $('[data-qa-add-tag]'); }

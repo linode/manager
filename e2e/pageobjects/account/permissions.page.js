@@ -9,7 +9,7 @@ class Permissions extends Page {
 
     // Global Toggles
     get restrictAccess() { return $('[data-qa-restrict-access]'); }
-    get restrictAccessToggle() { return this.restrictAccess.$('..').$('..').$(this.toggleOptions.selector); }
+    get restrictAccessToggle() { return this.restrictAccess.$('..').$('..').$(this.toggleOption.selector); }
     get restrictAccessTooltip() { return this.restrictAccess.$('..').$('..').$(this.helpButton.selector); }
     get globalSection() { return $('[data-qa-global-section]'); }
     get globalPermissions() { return $$('[data-qa-global-permission]'); }

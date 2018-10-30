@@ -11,7 +11,7 @@ class UserDetail extends Page {
     get emailField() { return $('[data-qa-email]'); }
     get saveButton() { return $('[data-qa-submit]'); }
     get cancelButton() { return $('[data-qa-cancel]'); }
-    get usernameWaring() { return $(this.usernameField.selector + ' p'); }
+    get usernameWarning() { return $(`${this.usernameField.selector} p`); }
 
     baseElementsDisplay(owner) {
         this.userDetailHeader.waitForVisible(constants.wait.normal);
@@ -30,8 +30,7 @@ class UserDetail extends Page {
     }
 
 
-    enterUsername(username) {
-        this.usernameField.$('input').clearElement();
+    updateUsername(username) {
         this.usernameField.$('input').setValue(username);
         this.saveButton.click();
     }

@@ -40,7 +40,7 @@ describe('Account - Users Suite', () => {
         Users.viewPermissions(browser.options.testUser);
 
         Permissions.baseElementsDisplay(false);
-        expect(Permissions.restrictAccessToggle.getAttribute('class')).toContain('disabled');
+        expect(Permissions.restrictAccessToggle.$('input').getAttribute('disabled')).toBe('true');
         expect(Permissions.restrictAccessTooltip.isVisible()).toBe(true);
 
         Permissions.restrictAccessTooltip.moveToObject();
