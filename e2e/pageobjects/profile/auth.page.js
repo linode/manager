@@ -4,7 +4,7 @@ import Page from '../page';
 
 export class Auth extends Page {
     get passwordHeader() { return $('[data-qa-title]'); }
-    get toggleTfa() { return this.toggleOption; }
+    get toggleTfa() { return $('[data-qa-toggle-tfa]'); }
     get tfaDescription() { return $('[data-qa-copy]'); }
     get hideShowCode() { return $('[data-qa-hide-show-code]'); }
     get codeTooltip() { return $('[data-qa-copy-tooltip]'); }
