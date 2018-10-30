@@ -87,11 +87,11 @@ interface Config {
 
 export const NodeBalancerSchema = object({
   label: string()
-    .matches(/^[a-zA-Z0-9-_]+$/, "Label can't contain special characters or spaces.")
     .min(3, "Label must be between 3 and 32 characters.")
-    .max(32, "Label must be between 3 and 32 characters."),
+    .max(32, "Label must be between 3 and 32 characters.")
+    .matches(/^[a-zA-Z0-9-_]+$/, "Label can't contain special characters or spaces."),
 
-  client_conn_throttle: number().typeError("Must be a number."),
+  client_conn_throttle: number().typeError('Must be a number.'),
 
   region: string().required('Region is required.'),
 
