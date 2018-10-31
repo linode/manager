@@ -254,7 +254,7 @@ export class StackScriptForm extends React.Component<CombinedProps> {
                 <Typography>There are four default environment variables provided to you:</Typography>
                 <ul>
                   <li>LINODE_ID</li>
-                  <li>LINODE_LISTUSERNAME</li>
+                  <li>LINODE_LISHUSERNAME</li>
                   <li>LINODE_RAM</li>
                   <li>LINODE_DATACENTERID</li>
                 </ul>
