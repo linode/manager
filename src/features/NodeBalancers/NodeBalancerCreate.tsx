@@ -40,7 +40,7 @@ import NodeBalancerConfigPanel from './NodeBalancerConfigPanel';
 import {
   createNewNodeBalancerConfig,
   createNewNodeBalancerConfigNode,
-  NodeBalancerConfigFields,
+  NodeBalancerConfigFieldsWithStatus,
   transformConfigsForRequest
 } from './utils';
 
@@ -74,7 +74,7 @@ type CombinedProps = RegionsContextProps
 interface NodeBalancerFieldsState {
   label?: string;
   region?: string;
-  configs: (NodeBalancerConfigFields & { errors?: any })[];
+  configs: (NodeBalancerConfigFieldsWithStatus & { errors?: any })[];
 }
 
 interface State {
@@ -295,7 +295,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       nodeBalancerFields: {
         ...this.state.nodeBalancerFields,
         configs: this.state.nodeBalancerFields.configs.filter(
-          (config: NodeBalancerConfigFields, idx: number) => {
+          (config: NodeBalancerConfigFieldsWithStatus, idx: number) => {
             return idx !== idxToDelete;
           }),
       },
@@ -606,7 +606,7 @@ const styled = withStyles(styles, { withTheme: true });
 export const lensFrom = (p1: (string | number)[]) => (p2: (string | number)[]) =>
   lensPath([...p1, ...p2]);
 
-const getPathAnFieldFromFieldString = (value: string) => {
+const getPathAndFieldFromFieldString = (value: string) => {
   let field = value;
   let path: any[] = [];
 
@@ -624,6 +624,11 @@ const getPathAnFieldFromFieldString = (value: string) => {
     field = field.replace(nodeRegExp, '')
   }
   return { field, path };
+}
+
+export interface FieldAndPath {
+  field: string;
+  path: any[];
 }
 
 export const fieldErrorsToNodePathErrors = (errors: Linode.ApiFieldError[]) => {
@@ -644,19 +649,22 @@ export const fieldErrorsToNodePathErrors = (errors: Linode.ApiFieldError[]) => {
   */
   return errors.reduce(
     (acc: any, error: Linode.ApiFieldError) => {
-      const { field, path } = getPathAnFieldFromFieldString(error.field!);
+      const errorFields = error.field!.split('|');
+      const pathErrors: FieldAndPath[] = errorFields.map((field: string) => getPathAndFieldFromFieldString(field));
 
-      if (!path.length) { return acc; }
+      if (!pathErrors.length) { return acc; }
 
       return [
         ...acc,
-        {
-          error: {
-            field,
-            reason: error.reason,
-          },
-          path: [...path, 'errors'],
-        },
+        ...pathErrors.map((err: FieldAndPath) => {
+          return {
+            error: {
+              field: err.field,
+              reason: error.reason,
+            },
+            path: [...err.path, 'errors'],
+          }
+        }),
       ];
     },
     [],
