@@ -43,7 +43,7 @@ interface State {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class RestoreToLinodeDrawer extends React.Component<CombinedProps, State> {
+export class RestoreToLinodeDrawer extends React.Component<CombinedProps, State> {
   defaultState = {
     linodes: [],
     overwrite: false,
@@ -57,7 +57,7 @@ class RestoreToLinodeDrawer extends React.Component<CombinedProps, State> {
 
   reset = () => {
     if (!this.mounted) { return; }
-    this.setState({ ...this.defaultState });
+    this.setState({ ...this.defaultState, linodes: this.state.linodes });
   }
 
   componentDidMount() {
