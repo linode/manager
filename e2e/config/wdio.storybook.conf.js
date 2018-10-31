@@ -16,7 +16,7 @@ const selectedBrowser = () => {
 
 const seleniumSettings = require('./selenium-config');
 const specsToRun = argv.story ? [ `./src/components/${argv.story}/${argv.story}.spec.js` ] : ['./src/components/**/*.spec.js'];
-const servicesToStart = process.env.DOCKER || argv.debug ? [] : ['selenium-standalone'];
+const servicesToStart = process.env.DOCKER || argv.debug ? [] : ['selenium'];
 
 exports.config = merge(wdioMaster.config, {
     specs: specsToRun,
