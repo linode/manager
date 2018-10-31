@@ -69,7 +69,7 @@ interface State {
   selectedLinodeID: number | undefined;
   selectedBackupID: number | undefined;
   selectedDiskSize: number | undefined;
-  selectedRegionID: string | undefined;
+  selectedRegionID: string | null;
   selectedTypeID: string | null;
   label: string;
   errors?: Linode.ApiFieldError[];
@@ -112,7 +112,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     selectedLinodeID: this.props.selectedLinodeFromQuery || undefined,
     selectedBackupID: this.props.selectedBackupFromQuery || undefined,
     selectedDiskSize: undefined,
-    selectedRegionID: this.props.selectedRegionIDFromLinode || undefined,
+    selectedRegionID: this.props.selectedRegionIDFromLinode || null,
     selectedTypeID: null,
     label: '',
     backups: false,
