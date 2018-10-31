@@ -56,6 +56,7 @@ interface Props {
   history: any;
   selectedBackupFromQuery?: number;
   selectedLinodeFromQuery?: number;
+  selectedRegionIDFromLinode?: string;
 
   /* From HOC */
   tagObject: TagObject;
@@ -68,8 +69,8 @@ interface State {
   selectedLinodeID: number | undefined;
   selectedBackupID: number | undefined;
   selectedDiskSize: number | undefined;
+  selectedRegionID: string | undefined;
   selectedTypeID: string | null;
-  selectedRegionID: string | null;
   label: string;
   errors?: Linode.ApiFieldError[];
   backups: boolean;
@@ -111,8 +112,8 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     selectedLinodeID: this.props.selectedLinodeFromQuery || undefined,
     selectedBackupID: this.props.selectedBackupFromQuery || undefined,
     selectedDiskSize: undefined,
+    selectedRegionID: this.props.selectedRegionIDFromLinode || undefined,
     selectedTypeID: null,
-    selectedRegionID: null,
     label: '',
     backups: false,
     privateIP: false,
@@ -262,7 +263,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
 
     const imageInfo = selectedBackupInfo;
 
-    const regionInfo = getRegionInfo(selectedRegionID);
+    const regionInfo = selectedRegionID && getRegionInfo(selectedRegionID);
 
     const typeInfo = getTypeInfo(selectedTypeID);
 
