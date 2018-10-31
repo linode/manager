@@ -80,11 +80,6 @@ export const UpdateNodeBalancerConfigSchema = object({
   nodes: array().of(nodeBalancerConfigNodeSchema),
 });
 
-interface Config {
-  idx: number;
-  hasDuplicate: boolean;
-}
-
 export const NodeBalancerSchema = object({
   label: string()
     .min(3, "Label must be between 3 and 32 characters.")
@@ -103,26 +98,21 @@ export const NodeBalancerSchema = object({
         return true;
       }
       const ports: number[] = [];
-      const configs = values.reduce((prev: Config[], value: NodeBalancerConfigFields, idx: number) => {
-        let hasDuplicate = false;
+      const configs = values.reduce((prev: number[], value: NodeBalancerConfigFields, idx: number) => {
         if (!value.port) { return prev; }
-        if (ports.includes(value.port)) {
-          hasDuplicate = true;
-        } else {
+        if (!ports.includes(value.port)) {
           ports.push(value.port);
+          return prev;
         }
-        return [...prev, {idx, hasDuplicate}]
+        return [...prev, idx]
         }, []
       );
-      configs.forEach((config: Config) => {
-        if (config.hasDuplicate) {
-          throw this.createError({
-            path: `configs[${config.idx}].port`,
-            message: "Port must be unique."
-          });
-        }
+      if (configs.length === 0) { return true; } // No ports were duplicates
+      const configStrings = configs.map((config: number) => `configs[${config}].port`);
+      throw this.createError({
+        path: configStrings.join('|'),
+        message: "Port must be unique."
       });
-      return true;
     })
 });
 
