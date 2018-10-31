@@ -61,7 +61,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     '& [class*="MuiFormControl"]': {
       width: 'auto',
     },
-    '& [class*="MuiInput-formControl"]': {
+    '& .input': {
       minHeight: 'auto',
       border: 0,
       backgroundColor: 'transparent',
