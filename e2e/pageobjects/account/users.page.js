@@ -9,14 +9,14 @@ class Users extends Page {
     get emailColumn() { return $('[data-qa-email-column]'); }
     get restrictionColumn() { return $('[data-qa-restriction-column]'); }
     get addUserButton() { return $('[data-qa-icon-text-link="Add a User"]'); }
-    
+
     get userRow() { return $('[data-qa-user-row]'); }
     get userRows() { return $$('[data-qa-user-row]'); }
     get username() { return $('[data-qa-username]'); }
     get userEmail() { return $('[data-qa-user-email]'); }
     get userRestriction() { return $('[data-qa-user-restriction]'); }
     get userActionMenu() { return $('[data-qa-action-menu]'); }
-    
+
     get createDrawerUsername() { return $('[data-qa-create-username] input'); }
     get createDrawerEmail() { return $('[data-qa-create-email] input'); }
     get createDrawerRestricted() { return $('[data-qa-create-restricted]'); }
@@ -28,18 +28,19 @@ class Users extends Page {
     get userPermissionsTab() { return $('[data-qa-tab="User Permissions"]'); }
     get backButton() { return $('[data-qa-back-button]'); }
 
-    
+
     baseElementsDisplay() {
         this.usersHeader.waitForVisible(constants.wait.normal);
         expect(this.usersHeader.getText()).toBe('Users');
         expect(this.usernameColumn.isVisible()).toBe(true);
         expect(this.emailColumn.isVisible()).toBe(true);
         expect(this.restrictionColumn.isVisible()).toBe(true);
-            
+
         expect(this.addUserButton.isVisible()).toBe(true);
     }
 
     add(userConfig) {
+        this.addUserButton.waitForVisible(constants.wait.normal);
         this.addUserButton.click();
         this.drawerTitle.waitForText(constants.wait.normal);
         this.notice.waitForVisible(constants.wait.normal);
@@ -71,7 +72,7 @@ class Users extends Page {
 
     delete(userConfig) {
         const user = this.userRow(userConfig.username);
-        
+
         this.selectActionMenuItem(user, 'Delete');
 
         this.dialogTitle.waitForText(constants.wait.normal);

@@ -8,12 +8,12 @@ class ConfigureStackScript extends Page {
     get createHeader() { return $('[data-qa-create-header]'); }
     get editHeader() { return $('[data-qa-edit-header]'); }
     get label() { return $('[data-qa-stackscript-label]'); }
-    get labelHelp() { return $('[data-qa-stackscript-label]').$('..').$('[data-qa-help-button]'); }
+    get labelHelp() { return $('[data-qa-stackscript-label]').$('..').$(this.helpButton.selector); }
     get description() { return $('[data-qa-stackscript-description]'); }
-    get descriptionHelp() { return $('[data-qa-stackscript-description]').$('..').$('[data-qa-help-button]'); }
+    get descriptionHelp() { return $('[data-qa-stackscript-description]').$('..').$(this.helpButton.selector); }
     get targetImagesSelect() { return $('[data-qa-stackscript-target-select]'); }
     get targetImages() { return $$('[data-qa-stackscript-image]'); }
-    get targetImagesHelp() { return $('[data-qa-stackscript-target-select]').$('..').$('[data-qa-help-button]'); }
+    get targetImagesHelp() { return $('[data-qa-stackscript-target-select]').$('..').$(this.helpButton.selector); }
     get script() { return $('[data-qa-stackscript-script]'); }
     get revisionNote() { return $('[data-qa-stackscript-revision]'); }
     get saveButton() { return $('[data-qa-save]'); }
@@ -41,11 +41,11 @@ class ConfigureStackScript extends Page {
         this.createHeader.waitForVisible(constants.wait.normal);
         expect(this.description.isVisible()).toBe(true);
         expect(this.targetImagesSelect.isVisible()).toBe(true);
-        
+
         expect(this.labelHelp.getTagName()).toBe('button');
         expect(this.descriptionHelp.getTagName()).toBe('button');
         expect(this.targetImagesHelp.getTagName()).toBe('button');
-        
+
         expect(this.script.isVisible()).toBe(true);
         expect(this.revisionNote.isVisible()).toBe(true);
         expect(this.saveButton.isVisible()).toBe(true);
@@ -59,11 +59,11 @@ class ConfigureStackScript extends Page {
         expect(this.description.isVisible()).toBe(true);
         expect(this.targetImagesSelect.isVisible()).toBe(true);
         this.imageTags.forEach(tag => expect(tag.isVisible()).toBe(true));
-        
+
         expect(this.labelHelp.getTagName()).toBe('button');
         expect(this.descriptionHelp.getTagName()).toBe('button');
         expect(this.targetImagesHelp.getTagName()).toBe('button');
-        
+
         expect(this.script.isVisible()).toBe(true);
         expect(this.revisionNote.isVisible()).toBe(true);
         expect(this.saveButton.isVisible()).toBe(true);
@@ -81,7 +81,7 @@ class ConfigureStackScript extends Page {
             config.images.forEach(i => {
                 const imageElement = $(`[data-value="linode/${i}"]`);
                 const imageName = imageElement.getAttribute('data-value');
-                
+
                 browser.jsClick(`[data-value="linode/${i}"]`);
                 browser.waitForVisible(`[data-value="linode/${imageName}"]`, constants.wait.normal, true);
             });
@@ -128,5 +128,5 @@ class ConfigureStackScript extends Page {
 
     }
 }
-    
+
 export default new ConfigureStackScript();

@@ -7,18 +7,18 @@ class UserDetail extends Page {
     get subHeader() { return $('[data-qa-profile-header]'); }
     get deleteSubHeader() { return $('[data-qa-delete-user-header]'); }
     get deleteButton() { return $('[data-qa-confirm-delete]'); }
-    get deleteHelpButton() { return $('[data-qa-help-button]'); }
     get usernameField() { return $('[data-qa-username]'); }
     get emailField() { return $('[data-qa-email]'); }
     get saveButton() { return $('[data-qa-submit]'); }
     get cancelButton() { return $('[data-qa-cancel]'); }
+    get usernameWarning() { return $(`${this.usernameField.selector} p`); }
 
     baseElementsDisplay(owner) {
         this.userDetailHeader.waitForVisible(constants.wait.normal);
         this.subHeader.waitForVisible(constants.wait.normal);
 
         if (owner) {
-            expect(this.deleteHelpButton.isExisting()).toBe(true);
+            expect(this.helpButton.isExisting()).toBe(true);
         }
 
         expect(this.deleteSubHeader.isVisible()).toBe(true);
@@ -33,7 +33,6 @@ class UserDetail extends Page {
     updateUsername(username) {
         this.usernameField.$('input').setValue(username);
         this.saveButton.click();
-        this.waitForNotice('User Profile updated successfully', constants.wait.normal);
     }
 
     deleteUser() {
