@@ -9,7 +9,7 @@
  */
 const getLinodeInfo = (linodeId: number, linodes: Linode.Linode[]) : Linode.Linode | undefined => {
   if (!linodes) { throw new Error("You must provide a list of Linodes.") }
-  return linodes.find((linode: Linode.Linode) => String(linode.id) === String(linodeId))
+  return linodes.find((linode: Linode.Linode) => linode.id === linodeId)
 }
 
 export default getLinodeInfo;
