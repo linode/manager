@@ -1,3 +1,4 @@
+const otplib = require('otplib');
 const { constants } = require('../../constants');
 
 import Page from '../page';
@@ -20,6 +21,29 @@ export class Auth extends Page {
         expect(this.toggleTfa.isVisible()).toBe(true);
         expect(this.tfaDescription.isVisible()).toBe(true);
         expect(this.tfaDescription.getText()).toMatch(/\w/ig);
+    }
+
+    enableTfa(secret) {
+        const successMsg = 'Two-factor authentication has been enabled.';
+        const validToken = otplib.authenticator.generate(secret);
+
+        this.tokenField.setValue(validToken);
+        this.confirmToken.click();
+        this.waitForNotice(successMsg, constants.wait.normal);
+    }
+
+    disableTfa() {
+        const disableMsg = 'Two-factor authentication has been disabled.';
+
+        this.toggleTfa.click();
+        this.dialogTitle.waitForVisible(constants.wait.normal);
+        expect(this.dialogContent.getText()).toContain('disable two-factor');
+        expect(this.cancelToken.isVisible()).toBe(true);
+        expect(this.confirmToken.isVisible()).toBe(true);
+
+        this.confirmToken.click();
+        this.waitForNotice(disableMsg, constants.wait.normal);
+        expect(this.toggleTfa.getAttribute('data-qa-toggle-tfa')).toBe('false');
     }
 }
 

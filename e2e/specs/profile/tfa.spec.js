@@ -37,16 +37,12 @@ describe('Profile - Two Factor Authentication Suite', () => {
 
         // Wait for form error to display
         Auth.token.$('p').waitForText(constants.wait.normal);
-
-        browser.waitUntil(function() {
-            return Auth.token.$('p').getText().includes(errorMsg);
-        }, constants.wait.normal);
     });
 
     it('should display a service error on submission of an invalid token', () => {
         const invalidToken = '435443';
 
-        Auth.tokenField.setValue(invalidToken);
+        browser.trySetValue(Auth.tokenField.selector, invalidToken);
         Auth.confirmToken.click();
 
         Auth.waitForNotice(serviceError, constants.wait.normal);
@@ -57,7 +53,18 @@ describe('Profile - Two Factor Authentication Suite', () => {
         Auth.waitForNotice(serviceError, constants.wait.normal, true);
     });
 
+    it('should enable TFA with a valid token', () => {
+        const secret = Auth.code.getValue();
+        Auth.enableTfa(secret);
+    });
+
+    it('should disable TFA', () => {
+        Auth.disableTfa();
+    });
+
     it('should hide the qr code', () => {
+        Auth.toggleTfa.click();
+        Auth.qrCode.waitForVisible(constants.wait.normal);
         Auth.hideShowCode.click();
 
         expect(Auth.qrCode.isVisible()).toBe(false);
