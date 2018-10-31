@@ -32,33 +32,31 @@ describe('Account - User Detail - Username Suite', () => {
         });
 
         it('should fail to update username on empty string', () => {
-            UserDetail.usernameField.$('input').setValue(' ');
-            UserDetail.saveButton.click();
-            UserDetail.usernameField.$('p').waitForVisible(constants.wait.normal);
-            expect(UserDetail.usernameField.$('p').getText()).toContain('Username may only contain');
+            UserDetail.updateUsername(' ');
+            UserDetail.usernameWarning.waitForVisible(constants.wait.normal);
+            expect(UserDetail.usernameWarning.getText()).toContain('Username must be between');
             UserDetail.cancelButton.click();
         });
 
         it('should fail validation on bad username value', () => {
             const badUsername = '$%#5364é-';
-            UserDetail.usernameField.$('input').setValue(badUsername);
-            UserDetail.saveButton.click();
-            UserDetail.usernameField.$('p').waitForVisible(constants.wait.normal);
-            expect(UserDetail.usernameField.$('p').getText()).toContain('Username must only use ASCII characters');
+            UserDetail.updateUsername(badUsername);
+            UserDetail.usernameWarning.waitForVisible(constants.wait.normal);
+            expect(UserDetail.usernameWarning.getText()).toContain('Username must only use ASCII characters');
             UserDetail.cancelButton.click();
         });
 
         it('should fail to update when submitting an existing username', () => {
-            UserDetail.usernameField.$('input').setValue(browser.options.testUser);
-            UserDetail.saveButton.click();
-            UserDetail.usernameField.$('p').waitForVisible(constants.wait.normal);
-            expect(UserDetail.usernameField.$('p').getText()).toContain('Username taken');
+            UserDetail.updateUsername(browser.options.testUser);
+            UserDetail.usernameWarning.waitForVisible(constants.wait.normal);
+            expect(UserDetail.usernameWarning.getText()).toContain('Username taken');
             UserDetail.cancelButton.click();
 
         });
 
         it('should succeed updating with a legitimate username', () => {
             UserDetail.updateUsername(`Test${new Date().getTime()}`);
+            UserDetail.waitForNotice('User Profile updated successfully', constants.wait.normal);
         });
     });
 
@@ -73,7 +71,7 @@ describe('Account - User Detail - Username Suite', () => {
         it('should dismiss the dialog on cancel', () => {
             UserDetail.dialogConfirmCancel.click();
             UserDetail.dialogTitle.waitForExist(constants.wait.normal, true);
-        }); 
+        });
 
         it('should remove the user', () => {
             UserDetail.deleteUser();

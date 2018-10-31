@@ -26,7 +26,7 @@ describe('Linode Detail - Rebuild Suite', () => {
     });
 
     it('should display a help icon with tooltip on click', () => {
-        Rebuild.help.moveToObject();
+        Rebuild.helpButton.moveToObject();
         Rebuild.popoverMsg.waitForVisible(constants.wait.normal);
     });
 
@@ -42,7 +42,7 @@ describe('Linode Detail - Rebuild Suite', () => {
     it('should display error on create an image without selecting an image', () => {
         browser.click('body'); // click the body to dismiss the opened select
         browser.waitForVisible('[data-qa-image-option]', constants.wait.normal, true);
-        
+
         Rebuild.submit.click();
 
         browser.waitForVisible('[data-qa-image-error]', constants.wait.normal);
@@ -54,7 +54,7 @@ describe('Linode Detail - Rebuild Suite', () => {
     it('should display error on create image without setting a password', () => {
         const errorMsg = 'Password cannot be blank.';
         Rebuild.selectImage();
-        
+
         // Use manual waitUntil polling due to chromedriver request throttle issue.
         browser.waitUntil(function() {
             return !$('[data-qa-image-option]').isVisible();
