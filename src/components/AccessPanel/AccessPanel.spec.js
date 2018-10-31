@@ -39,7 +39,10 @@ describe('Access Panel Suite', () => {
         });
 
         it('pasword strenth indicator updates on input', () => {
-            const passwords = [{password: 'password', strenth: 'Weak'}, {password: '12345test!', strenth: 'Fair'}, {password: '9]%3%7?98+n[', strenth: 'Good'}];
+            const passwords = [{password: 'password', strenth: 'Weak'},
+                {password: '12345test!', strenth: 'Fair'},
+                {password: '9]%3%7?98+n[', strenth: 'Good'}
+            ];
 
             passwords.forEach(function(passwordEntry) {
                 $(passwordInput).setValue(passwordEntry.password);
