@@ -126,8 +126,8 @@ class AccessPanel extends React.Component<CombinedProps> {
           <TableHead>
             <TableRow>
               <TableCell className={classes.cellCheckbox} />
-              <TableCell className={classes.cellUser}>User</TableCell>
-              <TableCell>SSH Keys</TableCell>
+              <TableCell className={classes.cellUser} data-qa-table-header="User">User</TableCell>
+              <TableCell data-qa-table-header="SSH Keys" >SSH Keys</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
