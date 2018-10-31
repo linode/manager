@@ -370,6 +370,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       check_timeout: 'Check timeout',
       check: 'Check type',
       cipher_suite: 'Cipher suite',
+      configs: 'configs',
       port: 'Port',
       protocol: 'Protocol',
       ssl_cert: 'SSL certificate',
@@ -408,7 +409,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   required
                   value={port || ''}
                   onChange={this.onPortChange}
-                  errorText={hasErrorFor('port')}
+                  errorText={hasErrorFor('port') || hasErrorFor('configs')}
                   errorGroup={forEdit ? `${configIdx}`: undefined}
                   data-qa-port
                 />
@@ -664,7 +665,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       label="Timeout"
                       InputProps={{
                         'aria-label': 'Active Health Check Timeout',
-                        endAdornment: 
+                        endAdornment:
                         <InputAdornment position="end">
                           seconds
                         </InputAdornment>,
