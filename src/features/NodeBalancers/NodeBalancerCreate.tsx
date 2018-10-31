@@ -626,6 +626,11 @@ const getPathAndFieldFromFieldString = (value: string) => {
   return { field, path };
 }
 
+export interface FieldAndPath {
+  field: string;
+  path: any[];
+}
+
 export const fieldErrorsToNodePathErrors = (errors: Linode.ApiFieldError[]) => {
   /**
    * Potentials;
@@ -644,19 +649,22 @@ export const fieldErrorsToNodePathErrors = (errors: Linode.ApiFieldError[]) => {
   */
   return errors.reduce(
     (acc: any, error: Linode.ApiFieldError) => {
-      const { field, path } = getPathAndFieldFromFieldString(error.field!);
+      const errorFields = error.field!.split('|');
+      const pathErrors: FieldAndPath[] = errorFields.map((field: string) => getPathAndFieldFromFieldString(field));
 
-      if (!path.length) { return acc; }
+      if (!pathErrors.length) { return acc; }
 
       return [
         ...acc,
-        {
-          error: {
-            field,
-            reason: error.reason,
-          },
-          path: [...path, 'errors'],
-        },
+        ...pathErrors.map((err: FieldAndPath) => {
+          return {
+            error: {
+              field: err.field,
+              reason: error.reason,
+            },
+            path: [...err.path, 'errors'],
+          }
+        }),
       ];
     },
     [],
