@@ -57,7 +57,7 @@ class RestoreToLinodeDrawer extends React.Component<CombinedProps, State> {
 
   reset = () => {
     if (!this.mounted) { return; }
-    this.setState({ ...this.defaultState });
+    this.setState({ ...this.defaultState, linodes: this.state.linodes });
   }
 
   componentDidMount() {
