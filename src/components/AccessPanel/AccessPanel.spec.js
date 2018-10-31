@@ -44,7 +44,7 @@ describe('Access Panel Suite', () => {
                 {password: '9]%3%7?98+n[', strenth: 'Good'}
             ];
 
-            passwords.forEach(function(passwordEntry) {
+            passwords.forEach((passwordEntry) => {
                 $(passwordInput).setValue(passwordEntry.password);
                 expect($(passwordStrenth).getText()).toEqual(`Strength: ${passwordEntry.strenth}`);
             });
@@ -54,14 +54,15 @@ describe('Access Panel Suite', () => {
     describe('Password and SSH Key Access Suite', () =>{
         const sshKeysTable = '[data-qa-table=\"SSH Keys\"]';
         const userTableHeader = '[data-qa-table-header=\"User\"]';
-        const checkboxes = '[data-qa-checked]';
+        const checkboxAttribute = 'data-qa-checked'
+        const checkboxes = `[${checkboxAttribute}]`;
 
         function checkAllCheckBoxes(checkOrUnchecked){
-            $$(checkboxes).forEach(checkbox => checkbox.click());
-            let isChecked = $$(checkboxes).map(checkbox =>
-                checkbox.getAttribute('data-qa-checked')
-            );
-            return isChecked.every(checkbox => checkbox === checkOrUnchecked );
+            $$(checkboxes).forEach((checkbox) => {
+                checkbox.click();
+                expect(checkbox.getAttribute(checkboxAttribute)).toEqual(checkOrUnchecked);
+            });
+
         }
 
         beforeAll(() => {
@@ -88,8 +89,8 @@ describe('Access Panel Suite', () => {
         });
 
         it('the checkboxes are clickable', () => {
-            expect(checkAllCheckBoxes('true')).toBe(true);
-            expect(checkAllCheckBoxes('false')).toBe(true);
+            checkAllCheckBoxes('true');
+            checkAllCheckBoxes('false');
         });
     });
 
