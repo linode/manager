@@ -76,6 +76,7 @@ interface State {
   selectedBackupIDFromQueryString: number | undefined;
   selectedStackScriptIDFromQueryString: number | undefined;
   selectedStackScriptTabFromQueryString: string | undefined;
+  selectedRegionIDFromLinode: string | undefined;
 }
 
 interface QueryStringOptions {
@@ -112,6 +113,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
     selectedBackupIDFromQueryString: undefined,
     selectedStackScriptIDFromQueryString: undefined,
     selectedStackScriptTabFromQueryString: undefined,
+    selectedRegionIDFromLinode: undefined
   };
 
   mounted: boolean = false;
@@ -149,11 +151,22 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
     }
 
     if (options.linodeID) {
+      this.setSelectedRegionByLinodeID(Number(options.linodeID));
       this.setState({ selectedLinodeIDFromQueryString: Number(options.linodeID) || undefined });
     }
 
     if (options.backupID) {
       this.setState({ selectedBackupIDFromQueryString: Number(options.backupID) || undefined });
+    }
+  }
+
+  setSelectedRegionByLinodeID(linodeID: number): void {
+    const selectedLinode = filter(
+      (linode: Linode.LinodeWithBackups) => linode.id === linodeID,
+      this.props.linodes.response
+    );
+    if (selectedLinode.length > 0) {
+      this.setState({ selectedRegionIDFromLinode: selectedLinode[0].region });
     }
   }
 
@@ -221,6 +234,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
             }}
             selectedBackupFromQuery={this.state.selectedBackupIDFromQueryString}
             selectedLinodeFromQuery={this.state.selectedLinodeIDFromQueryString}
+            selectedRegionIDFromLinode={this.state.selectedRegionIDFromLinode}
             linodes={this.props.linodes.response}
             types={this.props.typesData}
             extendLinodes={this.extendLinodes}
@@ -307,7 +321,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
     };
   }
 
-  getRegionInfo = (selectedRegionID: string | null): Info => {
+  getRegionInfo = (selectedRegionID?: string | null): Info => {
     const selectedRegion = this.props.regionsData.find(
       region => region.id === selectedRegionID);
 
