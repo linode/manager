@@ -18,6 +18,7 @@ import { createLinode, getLinodeBackups } from 'src/services/linodes';
 import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
 
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import getLinodeInfo from 'src/utilities/getLinodeInfo';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import AddonsPanel from '../AddonsPanel';
@@ -250,6 +251,20 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
   componentDidMount() {
     this.mounted = true;
     this.getLinodesWithBackups(this.props.linodes);
+    const { selectedLinodeID } = this.state;
+    // If there is a selected Linode ID (from props), make sure its information
+    // is set to state as if it had been selected manually.
+    if (selectedLinodeID) {
+      const selectedLinode = getLinodeInfo(selectedLinodeID, this.props.linodes);
+      if (selectedLinode) {
+        this.setState({
+          selectedLinodeID: selectedLinode.id,
+          selectedTypeID: null,
+          selectedRegionID: selectedLinode.region,
+          selectedDiskSize: selectedLinode.specs.disk,
+        });
+       }
+    }
   }
 
   render() {
