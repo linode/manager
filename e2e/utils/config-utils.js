@@ -104,22 +104,20 @@ exports.checkInCreds = (credFilePath, specFile) => {
     });
 }
 
-exports.generateCreds = (credFilePath, config) => {
+exports.generateCreds = (credFilePath, config, userCount) => {
     const credCollection = [];
-    const usersObject =  new Map(Object.entries(process.env));
 
-    const setCredCollection = (userKey) => {
-        const passKey = userKey.includes('2') ? 'MANAGER_PASS_2' : 'MANAGER_PASS';
-        const oauthKey = userKey.includes('2') ? 'MANAGER_OAUTH_2' : 'MANAGER_OAUTH';
-        const token = (usersObject.get(oauthKey) === undefined) ? '' : usersObject.get(oauthKey);
-        const tokenFlag = !(usersObject.get(oauthKey) === undefined);
-        credCollection.push({username: usersObject.get(userKey), password: usersObject.get(passKey), inUse: false, token: token, spec: '', isPresetToken: tokenFlag});
+    const setCredCollection = (userKey, userIndex) => {
+        const token = process.env[`MANAGER_OAUTH${userIndex}`];
+        const tokenFlag = !!token
+        credCollection.push({username: process.env[`${userKey}${userIndex}`], password: process.env[`MANAGER_PASS${userIndex}`], inUse: false, token: token, spec: '', isPresetToken: tokenFlag});
     }
 
-    setCredCollection('MANAGER_USER');
-
-    if ( usersObject.get('MANAGER_USER_2') && (config.specs[0].includes('**') || config.specs.length > 1) ) {
-        setCredCollection('MANAGER_USER_2');
+    setCredCollection('MANAGER_USER', '');
+    if ( userCount > 1 ) {
+        for( i = 2; i <= userCount; i++ ){
+            setCredCollection('MANAGER_USER', `_${i}`);
+        }
     }
 
     writeFileSync(credFilePath, JSON.stringify(credCollection));

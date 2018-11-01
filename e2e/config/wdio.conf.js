@@ -16,13 +16,18 @@ const { resetAccounts } = require('../setup/cleanup');
 const { browserCommands } = require('./custom-commands');
 const { browserConf } = require('./browser-config');
 const { constants } = require('../constants');
+const { keysIn } = require('lodash');
 const selectedBrowser = argv.browser ? browserConf[argv.browser] : browserConf['chrome'];
 
 const specsToRun = () => {
     if (argv.file) {
         return [argv.file];
     }
-    
+
+    if (argv.spec) {
+        return argv.spec.split(',');
+    }
+
     if (argv.dir || argv.d) {
         return [`./e2e/specs/${argv.dir || argv.d}/**/*.spec.js`]
     }
@@ -33,11 +38,24 @@ const specsToRun = () => {
     return ['./e2e/specs/**/*.js'];
 }
 
+const specs = specsToRun();
+
 const selectedReporters = ['dot'];
 
 if (argv.log) {
     selectedReporters.push('junit');
 }
+
+const getRunnerCount = () => {
+    const userCount = keysIn(process.env).filter(users => users.includes('MANAGER_USER')).length;
+    const specsCount = specs.length;
+    const isSuite = specs[0].includes('**');
+    const isParallelRunner = (isSuite || specsCount > 1) && userCount > 1;
+    const runnerCount = (!isSuite && userCount > specsCount) ? specsCount : userCount;
+    return  isParallelRunner ? runnerCount : 1;
+}
+
+const parallelRunners = getRunnerCount();
 
 exports.config = {
     // Selenium Host/Port
@@ -52,8 +70,7 @@ exports.config = {
     // NPM script (see https://docs.npmjs.com/cli/run-script) then the current working
     // directory is where your package.json resides, so `wdio` will be called from there.
     //
-    specs:
-        specsToRun(),
+    specs: specs,
     // Patterns to exclude.
     exclude: [
         './e2e/specs/accessibility/*.spec.js'
@@ -75,7 +92,7 @@ exports.config = {
     // and 30 processes will get spawned. The property handles how many capabilities
     // from the same test should run tests.
     //
-    maxInstances: process.env.MANAGER_USER_2 ? 2 : 1,
+    maxInstances: parallelRunners,
     //
     // If you have trouble getting all important capabilities together, check out the
     // Sauce Labs platform configurator - a great tool to configure your capabilities:
@@ -165,7 +182,7 @@ exports.config = {
             outputDir: './e2e/test-results'
         }
     },
-    
+
     //
     // Options to be passed to Jasmine.
     jasmineNodeOpts: {
@@ -205,9 +222,9 @@ exports.config = {
      * @param {Object} config wdio configuration object
      * @param {Array.<Object>} capabilities list of capabilities details
      */
-    onPrepare: function (config, capabilities) {
+    onPrepare: function (config, capabilities, user) {
         // Generate our temporary test credentials file
-        generateCreds('./e2e/creds.js', config);
+        generateCreds('./e2e/creds.js', config, parallelRunners);
     },
     /**
      * Gets executed just before initialising the webdriver session and test framework. It allows you
@@ -266,7 +283,7 @@ exports.config = {
      */
     // beforeCommand: function (commandName, args) {
     // },
-    
+
     /**
      * Hook that gets executed before the suite starts
      * @param {Object} suite suite details
@@ -306,7 +323,7 @@ exports.config = {
      */
     // afterSuite: function (suite) {
     // },
-    
+
     /**
      * Runs after a WebdriverIO command gets executed
      * @param {String} commandName hook command name
@@ -335,7 +352,7 @@ exports.config = {
         }
 
         // Set "inUse:false" on the account under test in the credentials file
-        checkInCreds('./e2e/creds.js', specs[0]);  
+        checkInCreds('./e2e/creds.js', specs[0]);
     },
     /**
      * Gets executed right after terminating the webdriver session.
