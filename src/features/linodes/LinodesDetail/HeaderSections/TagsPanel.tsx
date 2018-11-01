@@ -58,7 +58,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     position: 'relative',
     zIndex: 3,
     animation: 'fadeIn .3s ease-in-out forwards',
-    '& [class*="MuiFormControl"]': {
+    '& .error-for-scroll > div': {
       width: 'auto',
     },
     '& .input': {
@@ -71,14 +71,15 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
         color: theme.color.grey1,
       },
     },
-    '& [class*="MuiFormHelperText-error"]': {
+    '& .error-for-scroll p': {
       padding: theme.spacing.unit,
       marginLeft: 12,
       position: 'absolute',
-      top: theme.spacing.unit * 4,
+      top: theme.spacing.unit * 2,
       boxShadow: '0 0 5px #ddd',
       backgroundColor: theme.bg.offWhite,
       lineHeight: 1.2,
+      zIndex: 5.
     },
     '& .react-select__input': {
       fontSize: '.9rem',
