@@ -35,6 +35,8 @@ services:
       - MANAGER_PASS=${MANAGER_PASS}
       - MANAGER_USER_2=${MANAGER_USER_2}
       - MANAGER_PASS_2=${MANAGER_PASS_2}
+      - MANAGER_OAUTH=${MANAGER_OAUTH}
+      - MANAGER_OAUTH_2=${MANAGER_OAUTH_2}
     build:
       context: .
       dockerfile: Dockerfile
