@@ -26,7 +26,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     backgroundColor: '#C9CACB',
     height: '4px',
     transition: 'background-color .5s ease-in-out',
-    '&[class*="strength-"]' : { 
+    '&[class*="strength-"]' : {
       backgroundColor: theme.palette.primary.main,
     },
   },
@@ -52,7 +52,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 const StrengthIndicator: React.StatelessComponent<CombinedProps> = (props) => {
   const { classes, strength } = props;
-  
+
   return (
     <Grid
       container
@@ -77,7 +77,7 @@ const StrengthIndicator: React.StatelessComponent<CombinedProps> = (props) => {
           ))
       }
        <Grid item xs={3} className="py0">
-        <Typography variant="caption" className={classes.strengthText}>
+        <Typography variant="caption" className={classes.strengthText} data-qa-password-strength>
           <span className={classes.strengthLabel}>Strength:</span>
           {strength
             ?
