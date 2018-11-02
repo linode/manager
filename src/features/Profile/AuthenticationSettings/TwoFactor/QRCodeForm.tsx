@@ -4,10 +4,10 @@ import * as React from 'react';
 
 import {
     StyleRulesCallback,
-    
+
     WithStyles,
     withStyles,
-  } from '@material-ui/core/styles';  
+  } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import RenderGuard from 'src/components/RenderGuard';
@@ -50,6 +50,7 @@ const QRCodeForm: React.StatelessComponent<CombinedProps> = (props) => {
         level="H" // QR code error checking level ("High"); gives a higher resolution code
         value={secretLink}
         className={classes.qrcode}
+        data-qa-qr-code
       />
       <Typography
         role="header"

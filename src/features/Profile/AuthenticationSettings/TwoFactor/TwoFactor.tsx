@@ -269,6 +269,7 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
               <Toggle
                 checked={twoFactorEnabled}
                 onChange={this.toggleTwoFactorEnabled}
+                data-qa-toggle-tfa={twoFactorEnabled}
               />
               }
             />
@@ -289,6 +290,7 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
                     className={classes.visibility}
                     onClick={this.toggleHidden}
                     destructive
+                    data-qa-hide-show-code
                   >
                     <SettingsBackupRestore />
                     <span className={classes.showHideText}>Hide QR Code</span>
@@ -297,6 +299,7 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
                     type="secondary"
                     className={classes.visibility}
                     onClick={this.toggleHidden}
+                    data-qa-hide-show-code
                   >
                     <SettingsBackupRestore />
                     <span className={classes.showHideText}>{twoFactorConfirmed ? "Reset two-factor authentication" : "Show QR Code"}</span>
