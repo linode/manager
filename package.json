@@ -104,6 +104,7 @@
   },
   "scripts": {
     "axe": "npx wdio ./e2e/config/wdio.axe.conf.js",
+    "compare": "./scripts/jira-changelog.sh",
     "docker:e2e": "docker-compose -f integration-test.yml up --exit-code-from manager-e2e",
     "docker:test": "docker build -f Dockerfile . -t 'manager' && docker run -it --rm -v $(pwd)/src:/src/src manager test",
     "docker:local": "docker build -f Dockerfile . -t 'manager' && docker run -it --rm -p 3000:3000 -v $(pwd)/src:/src/src manager start",
