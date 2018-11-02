@@ -57,10 +57,10 @@ describe('Access Panel Suite', () => {
         const checkboxAttribute = 'data-qa-checked'
         const checkboxes = `[${checkboxAttribute}]`;
 
-        function checkAllCheckBoxes(checkOrUnchecked){
+        function checkAllBoxes(checkOrUnchecked){
             $$(checkboxes).forEach((checkbox) => {
                 checkbox.click();
-                expect(checkbox.getAttribute(checkboxAttribute)).toEqual(checkOrUnchecked);
+                expect(checkbox.getAttribute(checkboxAttribute)).toEqual(checkOrUnchecked.toString());
             });
 
         }
@@ -89,8 +89,8 @@ describe('Access Panel Suite', () => {
         });
 
         it('the checkboxes are clickable', () => {
-            checkAllCheckBoxes('true');
-            checkAllCheckBoxes('false');
+            checkAllBoxes(true);
+            checkAllBoxes(false);
         });
     });
 
