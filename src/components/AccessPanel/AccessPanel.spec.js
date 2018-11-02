@@ -7,7 +7,7 @@ describe('Access Panel Suite', () => {
     const passwordRegion = '[data-qa-password-input]';
 
     describe('Password Access Suite', () => {
-      const passwordStrenth = '[data-qa-password-strength]';
+      const passwordstrength = '[data-qa-password-strength]';
       const passwordInput = `${passwordRegion} input`;
       const hideShowPassword = '[data-qa-hide] svg';
 
@@ -34,19 +34,19 @@ describe('Access Panel Suite', () => {
             $(hideShowPassword).click();
         });
 
-        it('there should be a password strenth indicator', () => {
-            expect($(passwordStrenth).isVisible()).toBe(true);
+        it('there should be a password strength indicator', () => {
+            expect($(passwordstrength).isVisible()).toBe(true);
         });
 
-        it('pasword strenth indicator updates on input', () => {
-            const passwords = [{password: 'password', strenth: 'Weak'},
-                {password: '12345test!', strenth: 'Fair'},
-                {password: '9]%3%7?98+n[', strenth: 'Good'}
+        it('pasword strength indicator updates on input', () => {
+            const passwords = [{password: 'password', strength: 'Weak'},
+                {password: '12345test!', strength: 'Fair'},
+                {password: '9]%3%7?98+n[', strength: 'Good'}
             ];
 
             passwords.forEach((passwordEntry) => {
                 $(passwordInput).setValue(passwordEntry.password);
-                expect($(passwordStrenth).getText()).toEqual(`Strength: ${passwordEntry.strenth}`);
+                expect($(passwordstrength).getText()).toEqual(`Strength: ${passwordEntry.strength}`);
             });
         });
     });
