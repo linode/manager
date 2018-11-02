@@ -56,7 +56,6 @@
     "novnc-node": "^0.5.3",
     "postcss-flexbugs-fixes": "3.2.0",
     "postcss-loader": "2.0.8",
-    "pre-commit": "^1.2.2",
     "promise": "8.0.1",
     "promise.prototype.finally": "^3.1.0",
     "qrcode.react": "^0.8.0",
@@ -131,9 +130,12 @@
     "e2e:browserstack": "npx wdio ./e2e/config/browserstack.conf.js",
     "mb": "npx mb"
   },
-  "pre-commit": [
-    "precommit"
-  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn precommit",
+      "pre-push": "./scripts/pre-push.sh"
+    }
+  },
   "devDependencies": {
     "@storybook/addon-actions": "^3.3.15",
     "@storybook/addon-links": "^3.3.15",
