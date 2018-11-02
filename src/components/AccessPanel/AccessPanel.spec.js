@@ -7,7 +7,7 @@ describe('Access Panel Suite', () => {
     const passwordRegion = '[data-qa-password-input]';
 
     describe('Password Access Suite', () => {
-      const passwordStrenth = '[data-qa-password-strength]';
+      const passwordStrength = '[data-qa-password-strength]';
       const passwordInput = `${passwordRegion} input`;
       const hideShowPassword = '[data-qa-hide] svg';
 
@@ -35,10 +35,10 @@ describe('Access Panel Suite', () => {
         });
 
         it('there should be a password strenth indicator', () => {
-            expect($(passwordStrenth).isVisible()).toBe(true);
+            expect($(passwordStrength).isVisible()).toBe(true);
         });
 
-        it('pasword strenth indicator updates on input', () => {
+        it('pasword strentgh indicator updates on input', () => {
             const passwords = [{password: 'password', strenth: 'Weak'},
                 {password: '12345test!', strenth: 'Fair'},
                 {password: '9]%3%7?98+n[', strenth: 'Good'}
@@ -46,7 +46,7 @@ describe('Access Panel Suite', () => {
 
             passwords.forEach((passwordEntry) => {
                 $(passwordInput).setValue(passwordEntry.password);
-                expect($(passwordStrenth).getText()).toEqual(`Strength: ${passwordEntry.strenth}`);
+                expect($(passwordStrength).getText()).toEqual(`Strength: ${passwordEntry.strenth}`);
             });
         });
     });
@@ -57,10 +57,10 @@ describe('Access Panel Suite', () => {
         const checkboxAttribute = 'data-qa-checked'
         const checkboxes = `[${checkboxAttribute}]`;
 
-        function checkAllCheckBoxes(checkOrUnchecked){
+        function checkAllBoxes(checkOrUnchecked){
             $$(checkboxes).forEach((checkbox) => {
                 checkbox.click();
-                expect(checkbox.getAttribute(checkboxAttribute)).toEqual(checkOrUnchecked);
+                expect(checkbox.getAttribute(checkboxAttribute)).toEqual(checkOrUnchecked.toString());
             });
 
         }
@@ -89,8 +89,8 @@ describe('Access Panel Suite', () => {
         });
 
         it('the checkboxes are clickable', () => {
-            checkAllCheckBoxes('true');
-            checkAllCheckBoxes('false');
+            checkAllBoxes(true);
+            checkAllBoxes(false);
         });
     });
 
