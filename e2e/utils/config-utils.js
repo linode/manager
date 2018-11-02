@@ -9,20 +9,23 @@ const { deleteAll } = require('../setup/setup');
 * @returns { String } stringified local storage object
 */
 exports.storeToken = (credFilePath, username) => {
-    const browserLocalStorage = browser.execute(function() {
-        return JSON.stringify(localStorage);
-    });
-    const parsedLocalStorage = JSON.parse(browserLocalStorage.value);
-    const token = parsedLocalStorage['authentication/oauth-token'];
     let credCollection = JSON.parse(readFileSync(credFilePath));
 
-    return credCollection.find((cred, i) => {
-        if (cred.username === username) {
-            credCollection[i].token = token;
-            writeFileSync(credFilePath, JSON.stringify(credCollection));
-            return cred;
-        }
-    });
+    const getTokenFromLocalStorage = () => {
+        const browserLocalStorage = browser.execute(function() {
+            return JSON.stringify(localStorage);
+        });
+        const parsedLocalStorage = JSON.parse(browserLocalStorage.value);
+        return parsedLocalStorage['authentication/oauth-token'];
+    }
+
+    let currentUser = credCollection.find( cred => cred.username === username );
+
+    if ( !currentUser.isPresetToken ){
+        currentUser.token = getTokenFromLocalStorage();
+    }
+
+    writeFileSync(credFilePath, JSON.stringify(credCollection));
 }
 
 exports.readToken = (username) => {
@@ -63,7 +66,7 @@ exports.login = (username, password, credFilePath) => {
             browser.click('.btn-primary');
         }
     }
-    
+
     if (browser.isExisting('.Modal')) {
         browser.click('.btn-primary');
     }
@@ -101,23 +104,24 @@ exports.checkInCreds = (credFilePath, specFile) => {
     });
 }
 
-exports.generateCreds = (credFilePath, config) => {
+exports.generateCreds = (credFilePath, config, userCount) => {
     const credCollection = [];
 
-    for (const [key, value] of Object.entries(process.env)) {
-        if (key === 'MANAGER_USER') {
-            const pass = process.env.MANAGER_PASS;
-            credCollection.push({username: value, password: pass, inUse: false, token: '', spec: ''});
-        }
+    const setCredCollection = (userKey, userIndex) => {
+        const setEnvToken = process.env[`MANAGER_OAUTH${userIndex}`];
+        const token = !!setEnvToken ? setEnvToken : '';
+        const tokenFlag = !!token
+        credCollection.push({username: process.env[`${userKey}${userIndex}`], password: process.env[`MANAGER_PASS${userIndex}`], inUse: false, token: token, spec: '', isPresetToken: tokenFlag});
+    }
 
-        // If We have a second manager user defined and multiple specs (glob in our specs array), add a second test user
-        if (key === 'MANAGER_USER_2' && (config.specs[0].includes('**') || config.specs.length > 1)) {
-            const pass = process.env.MANAGER_PASS_2;
-            credCollection.push({username: value, password: pass, inUse: false, token: '', spec: ''});
+    setCredCollection('MANAGER_USER', '');
+    if ( userCount > 1 ) {
+        for( i = 2; i <= userCount; i++ ){
+            setCredCollection('MANAGER_USER', `_${i}`);
         }
     }
 
-    return writeFileSync(credFilePath, JSON.stringify(credCollection));
+    writeFileSync(credFilePath, JSON.stringify(credCollection));
 }
 
 exports.cleanupAccounts = (credFilePath) => {
