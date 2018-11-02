@@ -127,7 +127,7 @@ class SummaryPanel extends React.Component<CombinedProps, State> {
           <Grid item xs={12}>
             <Typography
               role="header"
-              variant="headline"
+              variant="title"
               className={classes.title}
               data-qa-title
             >

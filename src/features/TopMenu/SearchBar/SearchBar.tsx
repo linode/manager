@@ -58,7 +58,7 @@ type ClassNames =
       '&.active': {
         visibility: 'visible',
         opacity: 1,
-        zIndex: 2,
+        zIndex: 3,
       },
     },
     [theme.breakpoints.down('xs')]: {
@@ -420,7 +420,12 @@ class SearchBar extends React.Component<CombinedProps, State> {
             options={options}
             onChange={this.onSelect}
             onInputChange={this.handleSearchChange}
-            placeholder={"Search for Linodes, Volumes, Nodebalancers, Domains, Tags..."}
+            placeholder={
+              searchActive ?
+                "Search"
+                :
+                "Search for Linodes, Volumes, Nodebalancers, Domains, Tags..."
+            }
             components={{ Control, Option: SearchSuggestion }}
             styleOverrides={selectStyles}
             openMenuOnFocus={false}

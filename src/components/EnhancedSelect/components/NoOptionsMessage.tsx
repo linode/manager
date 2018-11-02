@@ -22,6 +22,7 @@ const NoOptionsMessage: React.StatelessComponent<CombinedProps> = (props) => {
     <Typography
       className={selectProps.classes.noOptionsMessage}
       {...innerProps}
+      data-qa-no-options
     >
       {children}
     </Typography>

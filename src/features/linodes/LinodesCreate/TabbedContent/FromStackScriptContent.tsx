@@ -17,8 +17,9 @@ import { Info } from 'src/features/linodes/LinodesCreate/LinodesCreate';
 import userSSHKeyHoc from 'src/features/linodes/userSSHKeyHoc';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
-import { allocatePrivateIP, createLinode } from 'src/services/linodes';
+import { createLinode } from 'src/services/linodes';
 
+import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -253,7 +254,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
       type: selectedTypeID,
       stackscript_id: selectedStackScriptID,
       stackscript_data: udf_data,
-      label, /* optional */
+      label: label ? label : null, /* optional */
       root_pass: password, /* required if image ID is provided */
       image: selectedImageID, /* optional */
       backups_enabled: backups, /* optional */

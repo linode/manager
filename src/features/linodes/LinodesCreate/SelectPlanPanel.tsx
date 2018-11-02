@@ -47,10 +47,10 @@ export class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNam
     const { selectedID, currentPlanHeading } = this.props;
     const selectedDiskSize = (this.props.selectedDiskSize) ? this.props.selectedDiskSize : 0;
     let tooltip;
-    const planToSmall = selectedDiskSize > type.disk
+    const planTooSmall = selectedDiskSize > type.disk
     const isSamePlan = type.heading === currentPlanHeading;
 
-    if(planToSmall){
+    if(planTooSmall){
       tooltip = `This plan is too small for the selected image.`;
     }
 
@@ -64,7 +64,7 @@ export class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNam
       onClick={this.onSelect(type.id)}
       heading={type.heading}
       subheadings={type.subHeadings}
-      disabled={planToSmall || isSamePlan}
+      disabled={planTooSmall || isSamePlan}
       tooltip={tooltip}
     />;
   }

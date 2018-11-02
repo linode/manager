@@ -233,10 +233,10 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
 
     this.setState({ submitting: true });
     createDomain(data)
-      .then((res) => {
+      .then((domainData) => {
         if (!this.mounted) { return; }
         this.reset();
-        onSuccess(res.data);
+        onSuccess(domainData);
       })
       .catch((err) => {
         if (!this.mounted) { return; }
@@ -261,10 +261,10 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
 
     this.setState({ submitting: true });
     cloneDomain(cloneID, cloneName)
-      .then((res) => {
+      .then((data) => {
         if (!this.mounted) { return; }
         this.reset();
-        onSuccess(res.data)
+        onSuccess(data)
       })
       .catch((err) => {
         if (!this.mounted) { return; }

@@ -14,9 +14,11 @@ import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
 import { resetEventsPolling } from 'src/events';
 import { Info } from 'src/features/linodes/LinodesCreate/LinodesCreate';
-import { allocatePrivateIP, createLinode, getLinodeBackups } from 'src/services/linodes';
+import { createLinode, getLinodeBackups } from 'src/services/linodes';
+import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
 
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import getLinodeInfo from 'src/utilities/getLinodeInfo';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import AddonsPanel from '../AddonsPanel';
@@ -55,6 +57,7 @@ interface Props {
   history: any;
   selectedBackupFromQuery?: number;
   selectedLinodeFromQuery?: number;
+  selectedRegionIDFromLinode?: string;
 
   /* From HOC */
   tagObject: TagObject;
@@ -67,8 +70,8 @@ interface State {
   selectedLinodeID: number | undefined;
   selectedBackupID: number | undefined;
   selectedDiskSize: number | undefined;
-  selectedTypeID: string | null;
   selectedRegionID: string | null;
+  selectedTypeID: string | null;
   label: string;
   errors?: Linode.ApiFieldError[];
   backups: boolean;
@@ -110,8 +113,8 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     selectedLinodeID: this.props.selectedLinodeFromQuery || undefined,
     selectedBackupID: this.props.selectedBackupFromQuery || undefined,
     selectedDiskSize: undefined,
+    selectedRegionID: this.props.selectedRegionIDFromLinode || null,
     selectedTypeID: null,
-    selectedRegionID: null,
     label: '',
     backups: false,
     privateIP: false,
@@ -217,7 +220,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       region: selectedRegionID,
       type: selectedTypeID,
       backup_id: Number(selectedBackupID),
-      label, /* optional */
+      label: label ? label : null, /* optional */
       backups_enabled: backups, /* optional */
       booted: true,
       tags: getLinodeTagList(),
@@ -248,6 +251,20 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
   componentDidMount() {
     this.mounted = true;
     this.getLinodesWithBackups(this.props.linodes);
+    const { selectedLinodeID } = this.state;
+    // If there is a selected Linode ID (from props), make sure its information
+    // is set to state as if it had been selected manually.
+    if (selectedLinodeID) {
+      const selectedLinode = getLinodeInfo(selectedLinodeID, this.props.linodes);
+      if (selectedLinode) {
+        this.setState({
+          selectedLinodeID: selectedLinode.id,
+          selectedTypeID: null,
+          selectedRegionID: selectedLinode.region,
+          selectedDiskSize: selectedLinode.specs.disk,
+        });
+       }
+    }
   }
 
   render() {
@@ -261,7 +278,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
 
     const imageInfo = selectedBackupInfo;
 
-    const regionInfo = getRegionInfo(selectedRegionID);
+    const regionInfo = selectedRegionID && getRegionInfo(selectedRegionID);
 
     const typeInfo = getTypeInfo(selectedTypeID);
 

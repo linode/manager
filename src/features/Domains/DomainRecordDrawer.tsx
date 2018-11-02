@@ -314,9 +314,9 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
 
     const data = {
       ...this.filterDataByType(this.state.fields, type),
-    };
+    } as Partial<EditableDomainFields>;
 
-    updateDomain(domainId, data)
+    updateDomain(domainId, { ...data, status: 'active' })
       .then(() => {
         this.props.updateDomain();
         this.onClose();

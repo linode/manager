@@ -12,8 +12,9 @@ import Placeholder from 'src/components/Placeholder';
 import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
 import { resetEventsPolling } from 'src/events';
 import { Info } from 'src/features/linodes/LinodesCreate/LinodesCreate';
-import { allocatePrivateIP, cloneLinode } from 'src/services/linodes';
+import { cloneLinode } from 'src/services/linodes';
 
+import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -143,7 +144,7 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
     cloneLinode(selectedLinodeID!, {
       region: selectedRegionID,
       type: selectedTypeID,
-      label,
+      label: label ? label : null,
       backups_enabled: backups,
     })
       .then((linode) => {

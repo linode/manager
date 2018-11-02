@@ -6,9 +6,11 @@ class Permissions extends Page {
     get globalPermissionsHeader() { return $('[data-qa-permissions-header="Global Permissions"]'); }
     get billingAccessHeader() { return $('[data-qa-permissions-header="billing"]'); }
     get specificPermissionsHeader() { return $('[data-qa-permissions-header="Specific Permissions"]'); }
-    
+
     // Global Toggles
-    get restrictAccessToggle() { return $('[data-qa-restrict-access]'); }
+    get restrictAccess() { return $('[data-qa-restrict-access]'); }
+    get restrictAccessToggle() { return this.restrictAccess.$('..').$('..').$(this.toggleOption.selector); }
+    get restrictAccessTooltip() { return this.restrictAccess.$('..').$('..').$(this.helpButton.selector); }
     get globalSection() { return $('[data-qa-global-section]'); }
     get globalPermissions() { return $$('[data-qa-global-permission]'); }
     get addLinodesPermission() { return $('[data-qa-global-permission="add_linodes"]'); }
@@ -41,7 +43,7 @@ class Permissions extends Page {
     get unrestrictedMsg() { return $('[data-qa-unrestricted-msg'); }
 
     baseElementsDisplay(restricted) {
-        this.restrictAccessToggle.waitForVisible(constants.wait.normal);
+        this.restrictAccess.waitForVisible(constants.wait.normal);
         if (restricted) {
             expect(this.globalPermissionsHeader.isVisible()).toBe(true);
             expect(this.billingAccessHeader.isVisible()).toBe(true);
@@ -50,13 +52,13 @@ class Permissions extends Page {
             expect(this.billingPermissionNone.isVisible()).toBe(true);
             expect(this.billingPermissionRead.isVisible()).toBe(true);
             expect(this.billingPermissionWrite.isVisible()).toBe(true);
-            expect(this.restrictAccessToggle.isVisible()).toBe(true);
+            expect(this.restrictAccess.isVisible()).toBe(true);
             expect($$('[data-qa-submit]').length).toBe(2);
             expect($$('[data-qa-cancel]').length).toBe(2);
-            expect(this.restrictAccessToggle.getAttribute('data-qa-restrict-access')).toBe('true');
+            expect(this.restrictAccess.getAttribute('data-qa-restrict-access')).toBe('true');
         } else {
             expect(this.unrestrictedMsg.isVisible()).toBe(true);
-            expect(this.restrictAccessToggle.getAttribute('data-qa-restrict-access')).toBe('false');
+            expect(this.restrictAccess.getAttribute('data-qa-restrict-access')).toBe('false');
         }
     }
 
@@ -66,7 +68,7 @@ class Permissions extends Page {
             $(`[data-qa-global-permission="${permissionId}"]`).click();
             browser.waitForExist(`[data-qa-global-permission="${permissionId}"] input:checked`, constants.wait.normal);
         }
-        
+
         if (permission === 'restrict') {
             if (browser.isExisting(`[data-qa-global-permission="${permissionId}"] input:checked`)) {
                 $(`[data-qa-global-permission="${permissionId}"]`).click();
@@ -83,7 +85,7 @@ class Permissions extends Page {
                 .$(`[data-qa-specific-grant="${perm}"]`)
                 .$(`[data-qa-permission="${accessLevel}"]`);
         permission.click();
-        
+
         expect(permission.getAttribute('data-qa-radio')).toBe('true');
 
         this.specificSection.$(this.saveButton.selector).click();

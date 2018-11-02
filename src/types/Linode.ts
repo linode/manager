@@ -35,15 +35,21 @@ namespace Linode {
   }
 
   export interface LinodeBackups {
-    enabled: boolean;
+    enabled?: boolean;
     schedule: LinodeBackupSchedule;
     last_backup?: LinodeBackup;
     snapshot?: LinodeBackup;
   }
 
+  export type Window = "Scheduling" | "W0" | "W2" | "W4" | "W8" | "W10" |
+    "W12" | "W14" | "W16" | "W18" | "W20" | "W22";
+
+  export type Day = "Scheduling" | "Sunday" | "Monday" | "Tuesday" |
+    "Wednesday" | "Thursday" | "Friday" | "Saturday";
+
   export interface LinodeBackupSchedule {
-    window: string | null;
-    day: string | null;
+    window: Window | null;
+    day: Day | null;
   }
 
   export interface LinodeBackupsResponse {
@@ -159,6 +165,8 @@ namespace Linode {
     volume_id: null | number;
   }
 
+  export type Filesystem = "raw" | "swap" | "ext3" | "ext4" | "initrd";
+
   export interface Devices {
     sda: null | DiskDevice | VolumeDevice;
     sdb: null | DiskDevice | VolumeDevice;
@@ -168,7 +176,6 @@ namespace Linode {
     sdf: null | DiskDevice | VolumeDevice;
     sdg: null | DiskDevice | VolumeDevice;
     sdh: null | DiskDevice | VolumeDevice;
-    [index: string]: null | DiskDevice | VolumeDevice;
   }
 
   export interface Kernel {
@@ -183,4 +190,21 @@ namespace Linode {
 
   export type BootAction = 'reboot' | 'power_down' | null;
 
+  interface NetStats {
+    in: number[][];
+    out: number[][];
+    private_in: number[][];
+    private_out: number[][];
+  }
+
+  export interface Stats {
+    title: string;
+    cpu: number[][];
+    io: {
+      io: number[][];
+      swap: number[][];
+    }
+    netv4: NetStats;
+    netv6: NetStats;
+  }
 }

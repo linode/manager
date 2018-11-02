@@ -82,6 +82,7 @@ class DebouncedSearchTextField extends React.Component<CombinedProps, State> {
           className={ClassNames(
             className,
           )}
+          data-qa-debounced-search
         />
       </React.Fragment>
     );
