@@ -113,6 +113,7 @@
     "lint": "tslint 'src/**/*.ts' 'src/**/*.tsx'",
     "build": "node scripts/build.js",
     "precommit": "./scripts/pre-commit.sh",
+    "prepush": "./scripts/pre-push.sh",
     "mock": "./scripts/mb.js",
     "test": "node scripts/test.js --env=jsdom",
     "storybook": "start-storybook -p 6006",
@@ -133,7 +134,7 @@
   "husky": {
     "hooks": {
       "pre-commit": "yarn precommit",
-      "pre-push": "./scripts/pre-push.sh"
+      "pre-push": "yarn prepush"
     }
   },
   "devDependencies": {
