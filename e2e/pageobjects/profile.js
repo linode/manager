@@ -112,6 +112,8 @@ export class Profile extends Page {
     get tableHead() { return $$('[data-qa-table-head]'); }
     get tableRow() { return $$('[data-qa-table-row]'); }
 
+    get passwordTab() { return $('[data-qa-tab="Password & Authentication"]'); }
+
     get tokenLabel() { return $$('[data-qa-token-label]'); }
     get tokenType() { return $$('[data-qa-token-type]'); }
     get tokenCreated() { return $('[data-qa-token-created]') }
