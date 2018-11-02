@@ -51,8 +51,7 @@ const getRunnerCount = () => {
     const specsCount = specs.length;
     const isSuite = specs[0].includes('**');
     const isParallelRunner = (isSuite || specsCount > 1) && userCount > 1;
-    const runnerCount = (!isSuite && userCount > specsCount) ? specsCount : userCount;
-    return  isParallelRunner ? runnerCount : 1;
+    return  isParallelRunner ? userCount : 1;
 }
 
 const parallelRunners = getRunnerCount();

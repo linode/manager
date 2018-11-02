@@ -108,7 +108,8 @@ exports.generateCreds = (credFilePath, config, userCount) => {
     const credCollection = [];
 
     const setCredCollection = (userKey, userIndex) => {
-        const token = process.env[`MANAGER_OAUTH${userIndex}`];
+        const setEnvToken = process.env[`MANAGER_OAUTH${userIndex}`];
+        const token = !!setEnvToken ? setEnvToken : '';
         const tokenFlag = !!token
         credCollection.push({username: process.env[`${userKey}${userIndex}`], password: process.env[`MANAGER_PASS${userIndex}`], inUse: false, token: token, spec: '', isPresetToken: tokenFlag});
     }
