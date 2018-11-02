@@ -37,6 +37,9 @@ exports.config = merge(wdioMaster.config, {
     beforeSuite: function(suite) {
         // Do nothing before suites
     },
+    after: function (result, capabilities, specs) {
+
+    },
     onComplete: function(exitCode, config, capabilities) {
     }
 });

@@ -58,7 +58,7 @@ const parallelRunners = getRunnerCount();
 
 exports.config = {
     // Selenium Host/Port
-    host: process.env.DOCKER ? 'selenium-standalone' : 'localhost',
+    host: process.env.DOCKER ? 'selenium' : 'localhost',
     port: 4444,
     //
     // ==================
