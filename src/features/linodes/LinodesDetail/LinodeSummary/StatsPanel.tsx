@@ -30,12 +30,13 @@ interface Props {
   loading: boolean;
   error?: string;
   title: string;
+  height: number;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const StatsPanel: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, error, loading, renderBody, title } = props;
+  const { classes, error, height, loading, renderBody, title } = props;
   return (
     <Paper className={classes.root} >
       <Typography
@@ -46,7 +47,7 @@ export const StatsPanel: React.StatelessComponent<CombinedProps> = (props) => {
         {title}
       </Typography>
       {loading
-        ? <div className={classes.spinner}><CircleProgress mini /></div>
+        ? <div className={classes.spinner} style={{minHeight: height}}><CircleProgress mini /></div>
         : error
           ? <ErrorState errorText={error} />
           : renderBody()

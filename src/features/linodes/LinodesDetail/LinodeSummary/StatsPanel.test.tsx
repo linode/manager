@@ -17,6 +17,7 @@ const component = shallow(
       'title':'',
     }}
     title={title}
+    height={300}
     loading={true}
     error={undefined}
     renderBody={renderMain}

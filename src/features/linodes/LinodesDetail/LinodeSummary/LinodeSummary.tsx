@@ -209,7 +209,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     const { linodeId } = this.props;
     const { rangeSelection } = this.state;
     if (!linodeId) { return; }
-    this.setState({ statsError: undefined, });
+    this.setState({ statsError: undefined, dataIsLoading: true });
     let req;
     if (rangeSelection === '24') {
       req = getLinodeStats(linodeId);
@@ -428,6 +428,13 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
     const { dataIsLoading, statsError, rangeSelection } = this.state;
 
+    // Shared props for all stats charts
+    const chartProps = {
+      loading: dataIsLoading,
+      error: statsError,
+      height: chartHeight
+    }
+
     if (!linode || !volumes) {
       return null;
     }
@@ -464,31 +471,27 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
           </div>
 
           <StatsPanel
-            title="CPU usage"
-            error={statsError}
-            loading={dataIsLoading}
+            title="CPU Usage"
             renderBody={this.renderCPUChart}
+            {...chartProps}
           />
 
           <StatsPanel
             title="IPv4 Traffic"
-            error={statsError}
-            loading={dataIsLoading}
             renderBody={this.renderIPv4TrafficChart}
+            {...chartProps}
           />
 
           <StatsPanel
             title="IPv6 Traffic"
-            error={statsError}
-            loading={dataIsLoading}
             renderBody={this.renderIPv6TrafficChart}
+            {...chartProps}
           />
 
           <StatsPanel
             title="Disk IO"
-            error={statsError}
-            loading={dataIsLoading}
             renderBody={this.renderDiskIOChart}
+            {...chartProps}
           />
 
         </React.Fragment>
