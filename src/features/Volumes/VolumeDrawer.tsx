@@ -4,6 +4,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 import { append, filter, lensPath, over, path, set, view, when } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
@@ -14,6 +15,7 @@ import { debounce } from 'throttle-debounce';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import DisplayPrice from 'src/components/DisplayPrice';
 import Drawer from 'src/components/Drawer';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
@@ -33,11 +35,15 @@ import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root'
-  | 'actionPanel';
+  | 'actionPanel'
+  | 'pricePanel';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   actionPanel: {
+    marginTop: theme.spacing.unit * 2,
+  },
+  pricePanel: {
     marginTop: theme.spacing.unit * 2,
   },
 });
@@ -463,6 +469,10 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     return idx > -1 ? linodes[idx] : 0;
   }
 
+  getPrice = (size: number) => {
+    return size * 0.1;
+  }
+
   renderLinodeOptions = (linodes: Linode.Linode[]) => {
     const { linodeLabel, mode } = this.props;
     if (!linodes) { return []; }
@@ -484,7 +494,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { mode } = this.props;
+    const { classes, mode } = this.props;
     const regions = this.props.regionsData;
 
     const {
@@ -516,6 +526,8 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     const configError = hasErrorFor('config_id');
     const generalError = hasErrorFor('none');
 
+    const price = this.getPrice(size);
+
     return (
       <Drawer
         open={mode !== modes.CLOSED}
@@ -535,6 +547,13 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
             text={generalError}
             data-qa-notice
           />
+        }
+
+        {[modes.CREATING, modes.RESIZING].includes(mode) &&
+          <Typography variant="body1">
+            A single Volume can range from 1 to 10240 gibibytes in size and costs
+            $0.10/GiB per month. Up to eight volumes can be attached to a single Linode.
+          </Typography>
         }
 
         {mode === modes.CLONING &&
@@ -666,7 +685,11 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
             {Boolean(configError) && <FormHelperText error>{configError}</FormHelperText>}
           </FormControl>
         }
-
+        {[modes.CREATING, modes.RESIZING].includes(mode) &&
+          <div className={classes.pricePanel} >
+            <DisplayPrice price={price} interval="mo" />
+          </div>
+        }
         <ActionsPanel style={{ marginTop: 16 }}>
           <Button
             onClick={this.onSubmit}
