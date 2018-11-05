@@ -6,6 +6,8 @@ import { Props as SelectProps } from 'react-select/lib/Select';
 
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
+import DropdownIndicator from './components/DropdownIndicator';
+import LoadingIndicator from './components/LoadingIndicator';
 import MultiValue from './components/MultiValue';
 import NoOptionsMessage from './components/NoOptionsMessage';
 import Option from './components/Option';
@@ -98,9 +100,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       display: 'none',
     },
     '& .react-select__dropdown-indicator': {
-      '& svg': {
-        color: '#999',
-      },
     },
     '& [class*="MuiFormHelperText-error"]': {
       paddingBottom: theme.spacing.unit,
@@ -235,6 +234,8 @@ const _components = {
   Placeholder,
   MultiValue,
   Option,
+  DropdownIndicator,
+  LoadingIndicator
 };
 
 type CombinedProps = EnhancedSelectProps
