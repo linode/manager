@@ -275,6 +275,7 @@ class Select extends React.PureComponent<CombinedProps,{}> {
       noOptionsMessage,
       onMenuClose,
       onBlur,
+      blurInputOnSelect,
       ...restOfProps
     } = this.props;
 
@@ -306,7 +307,7 @@ class Select extends React.PureComponent<CombinedProps,{}> {
         {...restOfProps}
         isClearable={isClearable  || true }
         isSearchable
-        blurInputOnSelect
+        blurInputOnSelect={blurInputOnSelect}
         isLoading={isLoading}
         defaultOptions
         cacheOptions={false}

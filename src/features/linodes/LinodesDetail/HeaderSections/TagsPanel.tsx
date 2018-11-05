@@ -111,7 +111,7 @@ interface ActionMeta {
 interface Props {
   tags: Tags;
   onDeleteTag: (value: string) => void;
-  toggleCreateTag: () => void;
+  toggleTagInput: () => void;
   onCreateTag: (value: Item, actionMeta: ActionMeta) => void;
   tagInputValue: string;
   isCreatingTag: boolean;
@@ -125,7 +125,7 @@ const TagsPanel: React.StatelessComponent<CombinedProps> = (props) => {
     tags: { tagsToSuggest, tagsAlreadyAppliedToLinode, tagsQueuedForDeletion },
     tagError,
     onCreateTag,
-    toggleCreateTag,
+    toggleTagInput,
     onDeleteTag,
     tagInputValue,
     isCreatingTag,
@@ -158,12 +158,13 @@ const TagsPanel: React.StatelessComponent<CombinedProps> = (props) => {
             options={tagsToSuggest}
             variant='creatable'
             errorText={tagError}
-            onBlur={toggleCreateTag}
+            onBlur={toggleTagInput}
             placeholder="Create or Select a Tag"
             value={tagInputValue}
             createOptionPosition="first"
             autoFocus
             className={classes.selectTag}
+            blurInputOnSelect={false}
         />
         :
         <Tooltip
@@ -171,7 +172,7 @@ const TagsPanel: React.StatelessComponent<CombinedProps> = (props) => {
           placement="right"
         >
           <IconButton
-            onClick={toggleCreateTag}
+            onClick={toggleTagInput}
             className={classes.addButton}
           >
             <AddCircle data-qa-add-tag />
