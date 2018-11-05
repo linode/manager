@@ -24,9 +24,9 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const displayPrice = (v: number) => `$${v.toFixed(2)}`;
+export const displayPrice = (v: number) => `$${v.toFixed(2)}`;
 
-const DisplayPrice: React.StatelessComponent<CombinedProps> = (props) => {
+export const DisplayPrice: React.StatelessComponent<CombinedProps> = (props) => {
   const { classes, interval, price } = props;
   return (
     <React.Fragment>
