@@ -196,7 +196,9 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     this.mounted = true;
-    this.getStats();
+    // Only use loading state on initial data load. This will be set to false
+    // in the getStats then and catch handlers.
+    this.setState({ dataIsLoading: true, }, this.getStats);
     this.statsInterval = window.setInterval(this.getStats, statsFetchInterval);
   }
 
@@ -209,7 +211,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     const { linodeId } = this.props;
     const { rangeSelection } = this.state;
     if (!linodeId) { return; }
-    this.setState({ statsError: undefined, dataIsLoading: true });
+    this.setState({ statsError: undefined, });
     let req;
     if (rangeSelection === '24') {
       req = getLinodeStats(linodeId);
