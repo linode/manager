@@ -25,7 +25,7 @@ describe('Date Time Display Suite', () => {
         return radioButton.$('..').$('..');
     }
 
-    const validateDateDisplayed = (formatedDatesArray) => {
+    const validateDatesDisplayed = (formatedDatesArray) => {
         const displayedDateFormat = formatedDatesArray.map( formatedDate => getDisplayDate($(formatedDate)) );
         displayedDateFormat.forEach( date =>
             expect(date).toMatch(/([0-9]{4})-([0-9]{2})-([0-9]{2}) ([0-9]{2}):([0-9]{2}):([0-9]{2})/)
@@ -40,7 +40,9 @@ describe('Date Time Display Suite', () => {
 
     it('there should be four humanize cuttoff options, day, week, month, year and never', () => {
         const expectedOptions = ['day', 'week', 'month', 'year', 'never'];
-        const displayedOptions = $$(radioButtons).map(humanizedCuttoffOpts => humanizedCuttoffOpts.getAttribute('value'));
+        const displayedOptions = $$(radioButtons).map(humanizedCuttoffOpts =>
+            humanizedCuttoffOpts.getAttribute('value')
+        );
         expect(displayedOptions).toEqual(expectedOptions);
     });
 
@@ -65,20 +67,20 @@ describe('Date Time Display Suite', () => {
     it('when day is selected last thurday and below should be yyyy-MM-dd hh:mm:ss format', () => {
         getRadioButton('day').click();
         const formatedDates = [lastThursday, threeWednesdaysAgo, whenIWasYoung, elvisBirthday];
-        validateDateDisplayed(formatedDates);
+        validateDatesDisplayed(formatedDates);
     });
 
     it('when week is selected 3 wednesdays and below should be yyyy-MM-dd hh:mm:ss format, last thurdsay is not', () => {
         getRadioButton('week').click();
         const formatedDates = [threeWednesdaysAgo, whenIWasYoung, elvisBirthday];
-        validateDateDisplayed(formatedDates);
+        validateDatesDisplayed(formatedDates);
         expect(getDisplayDate($(lastThursday))).toEqual('5 days ago');
     });
 
     it('when month is selected you were so young and below should be yyyy-MM-dd hh:mm:ss format, last thurdsay and 3 wednesdays ago are not', () => {
         getRadioButton('month').click();
         const formatedDates = [whenIWasYoung, elvisBirthday];
-        validateDateDisplayed(formatedDates);
+        validateDatesDisplayed(formatedDates);
         expect(getDisplayDate($(lastThursday))).toEqual('5 days ago');
         expect(getDisplayDate($(threeWednesdaysAgo))).toEqual('a month ago');
     });
@@ -86,7 +88,7 @@ describe('Date Time Display Suite', () => {
     it('when year is selected only Elvis was born should be yyyy-MM-dd hh:mm:ss format, last thurdsay up to Elvis was born are not', () => {
         getRadioButton('year').click();
         const formatedDates = [elvisBirthday];
-        validateDateDisplayed(formatedDates);
+        validateDatesDisplayed(formatedDates);
         expect(getDisplayDate($(lastThursday))).toEqual('5 days ago');
         expect(getDisplayDate($(threeWednesdaysAgo))).toEqual('a month ago');
         expect(getDisplayDate($(whenIWasYoung))).toEqual('a year ago');
