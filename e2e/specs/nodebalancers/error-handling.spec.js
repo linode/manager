@@ -53,7 +53,7 @@ describe('NodeBalancer - Negative Tests Suite', () => {
     it('should fail to create a configuration with an invalid. ip', () => {
         const invalidIp = { privateIp:'192.168.1.1'};
         const invalidConfig = merge(linode, invalidIp);
-        const serviceError = 'This address is not allowed.';
+        const serviceError = 'Must be a valid IPv4 address.';
 
         NodeBalancers.configure(invalidConfig,  {
             label: `NB-${new Date().getTime()}`,
