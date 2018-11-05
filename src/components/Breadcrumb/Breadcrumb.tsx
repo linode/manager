@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import IconButton from '@material-ui/core/IconButton';
 import {
   StyleRulesCallback,
-
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
@@ -15,7 +14,7 @@ import EditableText from 'src/components/EditableText';
 
 type ClassNames = 'root' | 'backButton';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = () => ({
   root: {},
   backButton: {
     margin: '5px 0 0 -16px',
@@ -30,7 +29,6 @@ export interface Props {
   backLink: string;
   backText: string;
   text: string;
-  isEditable?: boolean;
   errorText?: string;
   onCancel?: () => void;
   onEdit?: (value: string) => void;
@@ -49,35 +47,35 @@ const Breadcrumb: React.StatelessComponent<CombinedProps> = (props) => {
 
   return (
     <React.Fragment>
-    <Link to={backLink}>
-      <IconButton
-        className={classes.backButton}
-        >
-      < KeyboardArrowLeft />
-      <Typography variant="subheading">
-        {backText}
-      </Typography>
-     </IconButton>
-    </Link>
+      <Link to={backLink}>
+        <IconButton
+          className={classes.backButton}
+          >
+        <KeyboardArrowLeft />
+        <Typography variant="subheading">
+          {backText}
+        </Typography>
+      </IconButton>
+      </Link>
 
-    { isEditable() ?
-    <EditableText
-      role="header"
-      variant="headline"
-      text={text}
-      errorText={props.errorText!}
-      onEdit={props.onEdit!}
-      onCancel={props.onCancel!}
-      data-qa-label
-    />
-    :
-    <Typography role="header" variant="headline">
-      {text}
-    </Typography>
-    }
+      { isEditable() ?
+      <EditableText
+        role="header"
+        variant="headline"
+        text={text}
+        errorText={props.errorText!}
+        onEdit={props.onEdit!}
+        onCancel={props.onCancel!}
+        data-qa-label
+      />
+      :
+      <Typography role="header" variant="headline">
+        {text}
+      </Typography>
+      }
 
     </React.Fragment>
-  )
+  );
 }
 
 const styled = withStyles(styles, { withTheme: true });
