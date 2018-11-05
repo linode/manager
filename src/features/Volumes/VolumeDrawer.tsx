@@ -4,6 +4,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 import { append, filter, lensPath, over, path, set, view, when } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
@@ -29,6 +30,7 @@ import { cloneVolume, createVolume, resizeVolume, updateVolume, VolumeRequestPay
 import { close } from 'src/store/reducers/volumeDrawer';
 import { formatRegion } from 'src/utilities';
 import composeState from 'src/utilities/composeState';
+import { displayPricePerSize } from 'src/utilities/displayPrice';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -666,8 +668,13 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
             {Boolean(configError) && <FormHelperText error>{configError}</FormHelperText>}
           </FormControl>
         }
-
-        <ActionsPanel style={{ marginTop: 16 }}>
+        {
+          <div data-qa-total-price>
+            <Typography role="header" variant="subheading">
+              {displayPricePerSize(size)}/mo
+            </Typography>
+          </div>
+        }        <ActionsPanel style={{ marginTop: 16 }}>
           <Button
             onClick={this.onSubmit}
             type="primary"

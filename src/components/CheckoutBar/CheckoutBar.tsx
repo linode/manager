@@ -6,6 +6,8 @@ import Button from '@material-ui/core/Button';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
+import { displayPrice } from 'src/utilities/displayPrice';
+
 
 type ClassNames = 'root'
   | 'checkoutSection'
@@ -73,8 +75,6 @@ interface Props {
 }
 
 type CombinedProps = Props & StickyProps & WithStyles<ClassNames>;
-
-const displayPrice = (v: number) => `$${v.toFixed(2)}`;
 
 class CheckoutBar extends React.Component<CombinedProps> {
 
