@@ -9,6 +9,9 @@ if [ $BRANCH_INCLUDES_TICKET ]
 then
     exit 0
 else
-    echo -e "\n\n${RED}Failed to push branch \"$BRANCH_NAME\". \nPlease check that it contains a JIRA ticket in the branch name.\n"
+    echo -e "\n\n${RED}Failed to push branch \"$BRANCH_NAME\".\
+      \nPlease check that it contains a JIRA ticket in the branch name."
+
+    echo -e "\nExample: \"M3-111-Feature\"\n"
     exit 1
 fi
