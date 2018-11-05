@@ -11,7 +11,11 @@ const title = "Stats About My Linode";
 
 const component = shallow(
   <StatsPanel
-    classes={{'root':'','title':''}}
+    classes={{
+      'root':'',
+      'spinner':'',
+      'title':'',
+    }}
     title={title}
     loading={true}
     error={undefined}

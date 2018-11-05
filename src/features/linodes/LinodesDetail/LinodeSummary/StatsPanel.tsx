@@ -7,17 +7,22 @@ import Typography from '@material-ui/core/Typography';
 import CircleProgress from 'src/components/CircleProgress';
 import ErrorState from 'src/components/ErrorState';
 
-type ClassNames = 'root' | 'title';
+type ClassNames = 'root' | 'spinner' | 'title';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     padding: theme.spacing.unit * 2,
-    margin: theme.spacing.unit,
+    marginBottom: theme.spacing.unit * 2,
+  },
+  spinner: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
   },
   title: {
     padding: theme.spacing.unit * 2
   }
-
 });
 
 interface Props {
@@ -41,7 +46,7 @@ export const StatsPanel: React.StatelessComponent<CombinedProps> = (props) => {
         {title}
       </Typography>
       {loading
-        ? <CircleProgress mini />
+        ? <div className={classes.spinner}><CircleProgress mini /></div>
         : error
           ? <ErrorState errorText={error} />
           : renderBody()
