@@ -14,7 +14,7 @@ describe('Date Time Display Suite', () => {
     const getDisplayDate = (displayText) => {
         const text = displayText.getText();
         const textArray = text.split(':');
-        const date = !!textArray[2] ? textArray[1].trim() + ':' + textArray[2] + ':' + textArray[3] : textArray[1].trim();
+        const date = !!textArray[2] ? textArray[1].trim()+':'+textArray[2]+':'+textArray[3] : textArray[1].trim();
         return date;
     }
 
@@ -26,7 +26,9 @@ describe('Date Time Display Suite', () => {
     }
 
     const validateDatesDisplayed = (formatedDatesArray) => {
-        const displayedDateFormat = formatedDatesArray.map( formatedDate => getDisplayDate($(formatedDate)) );
+        const displayedDateFormat = formatedDatesArray.map( formatedDate =>
+            getDisplayDate($(formatedDate))
+        );
         displayedDateFormat.forEach( date =>
             expect(date).toMatch(/([0-9]{4})-([0-9]{2})-([0-9]{2}) ([0-9]{2}):([0-9]{2}):([0-9]{2})/)
         );
@@ -40,7 +42,7 @@ describe('Date Time Display Suite', () => {
 
     it('there should be four humanize cuttoff options, day, week, month, year and never', () => {
         const expectedOptions = ['day', 'week', 'month', 'year', 'never'];
-        const displayedOptions = $$(radioButtons).map(humanizedCuttoffOpts =>
+        const displayedOptions = $$(radioButtons).map( humanizedCuttoffOpts =>
             humanizedCuttoffOpts.getAttribute('value')
         );
         expect(displayedOptions).toEqual(expectedOptions);
