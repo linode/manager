@@ -3,14 +3,12 @@ import * as React from 'react';
 import { matchPath, Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 
 import AppBar from '@material-ui/core/AppBar';
-import IconButton from '@material-ui/core/IconButton';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
-import  KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 
+import Breadcrumb from 'src/components/Breadcrumb';
 import setDocs from 'src/components/DocsSidebar/setDocs';
-import EditableText from 'src/components/EditableText';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
@@ -173,19 +171,13 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <Grid container justify="space-between">
           <Grid item className={classes.titleWrapper}>
-            <IconButton
-              onClick={this.handleGoBack}
-              className={classes.backButton}
-            >
-              <KeyboardArrowLeft />
-            </IconButton>
-            <EditableText
-              variant="headline"
+            <Breadcrumb
+              linkTo="/nodebalancers"
+              linkText="Nodebalancers"
               text={nodeBalancerLabel}
               onEdit={this.updateLabel}
               onCancel={this.cancelUpdate}
               errorText={apiErrorText}
-              data-qa-label
             />
           </Grid>
         </Grid>

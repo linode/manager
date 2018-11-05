@@ -7,8 +7,8 @@ import Breadcrumb from './Breadcrumb';
 
 class InteractiveStaticBreadcrumb extends React.Component {
   state = {
-    backLink: '/linodes',
-    backText: 'Linodes',
+    linkTo: '/linodes',
+    linkText: 'Linodes',
     text: 'Static text',
   }
 
@@ -16,8 +16,8 @@ class InteractiveStaticBreadcrumb extends React.Component {
     return (
       <React.Fragment>
         <Breadcrumb
-          backLink={this.state.backLink}
-          backText={this.state.backText}
+          linkTo={this.state.linkTo}
+          linkText={this.state.linkText}
           text={this.state.text}
         />
       </React.Fragment>
@@ -27,8 +27,8 @@ class InteractiveStaticBreadcrumb extends React.Component {
 
 class InteractiveEditableBreadcrumb extends React.Component {
   state = {
-    backLink: '/linodes',
-    backText: 'Linodes',
+    linkTo: '/linodes',
+    linkText: 'Linodes',
     text: 'Editable text!',
   }
 
@@ -44,8 +44,8 @@ class InteractiveEditableBreadcrumb extends React.Component {
     return (
       <React.Fragment>
         <Breadcrumb
-          backLink={this.state.backLink}
-          backText={this.state.backText}
+          linkTo={this.state.linkTo}
+          linkText={this.state.linkText}
           text={this.state.text}
           onEdit={this.onEdit}
           onCancel={this.onCancel}

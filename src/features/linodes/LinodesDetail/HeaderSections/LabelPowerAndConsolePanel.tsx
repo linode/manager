@@ -1,17 +1,14 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
 import {
   StyleRulesCallback,
-  
+
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 
-import EditableText from 'src/components/EditableText';
+import Breadcrumb from 'src/components/Breadcrumb';
 import Grid from 'src/components/Grid';
 
 import LinodePowerControl from '../LinodePowerControl';
@@ -84,21 +81,13 @@ const LabelPowerAndConsolePanel: React.StatelessComponent<CombinedProps> = (prop
       justify="space-between"
     >
       <Grid item className={classes.titleWrapper}>
-        <Link to={`/linodes`}>
-          <IconButton
-            className={classes.backButton}
-          >
-            <KeyboardArrowLeft />
-          </IconButton>
-        </Link>
-        <EditableText
-          role="header"
-          variant="headline"
+        <Breadcrumb
+          linkTo="/linodes"
+          linkText="Linodes"
           text={labelInput.label}
           errorText={labelInput.errorText}
           onEdit={labelInput.onEdit}
           onCancel={labelInput.onCancel}
-          data-qa-label
         />
       </Grid>
       <Grid item className={classes.cta}>

@@ -26,8 +26,8 @@ const styles: StyleRulesCallback<ClassNames> = () => ({
 });
 
 export interface Props {
-  backLink: string;
-  backText: string;
+  linkTo: string;
+  linkText: string;
   text: string;
   errorText?: string;
   onCancel?: () => void;
@@ -37,7 +37,7 @@ export interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const Breadcrumb: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, backLink, backText, text } = props;
+  const { classes, linkTo, linkText, text } = props;
 
   // If `onCancel` and `onEdit` props are passed in, render an EditableText
   // component; otherwise render a Typography component
@@ -47,13 +47,13 @@ const Breadcrumb: React.StatelessComponent<CombinedProps> = (props) => {
 
   return (
     <React.Fragment>
-      <Link to={backLink}>
+      <Link to={linkTo}>
         <IconButton
           className={classes.backButton}
           >
         <KeyboardArrowLeft />
         <Typography variant="subheading">
-          {backText}
+          {linkText}
         </Typography>
       </IconButton>
       </Link>
