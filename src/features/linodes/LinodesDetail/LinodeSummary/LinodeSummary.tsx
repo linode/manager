@@ -269,17 +269,6 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     const { rangeSelection, stats } = this.state;
     const { classes } = this.props;
     const data = pathOr([[]], ['data','cpu'], stats);
-    const graphMaxMargin = 0.2;
-    let maxValue = data.reduce((acc: any, stat: any) => {
-      if (stat[1] > acc) {
-        return stat[1];
-      }
-      return acc;
-    }, 0);
-    maxValue = maxValue + maxValue * graphMaxMargin;
-    if (maxValue > 100) {
-      maxValue = 100;
-    }
     return (
       <React.Fragment>
         <div className={classes.chart}>
@@ -289,7 +278,6 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
           <LineGraph
             chartHeight={chartHeight}
             showToday={rangeSelection === '24'}
-            suggestedMax={maxValue}
             data={[
               {
                 borderColor: '#428ade',
