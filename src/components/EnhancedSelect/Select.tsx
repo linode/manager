@@ -65,7 +65,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       margin: '-1px 0 0 0',
       borderRadius: 0,
       boxShadow: 'none',
-      border: `1px solid ${theme.palette.divider}`,
+      border: `1px solid ${theme.palette.primary.main}`,
       maxWidth: 415,
     },
     '& .react-select__menu-list': {
@@ -77,7 +77,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       color: theme.palette.text.primary,
       backgroundColor: theme.bg.white,
       cursor: 'pointer',
-      padding: '10px 8px',
+      padding: '12px',
+      fontSize: '0.9rem',
     },
     '& .react-select__option--is-focused': {
       backgroundColor: theme.palette.primary.main,
@@ -106,7 +107,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     },
   },
   input: {
-    fontSize: '1rem',
+    fontSize: '0.9rem',
     padding: 0,
     display: 'flex',
     color: theme.palette.text.primary,
