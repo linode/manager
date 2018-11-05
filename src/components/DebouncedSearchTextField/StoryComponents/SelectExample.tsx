@@ -49,7 +49,7 @@ class Example extends React.Component<Props, State> {
           isSearching: false,
         });
       },
-      2000
+      800
     )
   }
 
@@ -77,7 +77,9 @@ class Example extends React.Component<Props, State> {
           better demonstrate the async functionality</i></p>
           <p><i>This component utilizes React-Select which has the added
             functionality of filtering as you type and is not debounced</i></p>
-        <div style={{ marginTop: '2em' }}>You selected: {this.state.selectedItem}</div>
+        <div style={{ marginTop: '2em' }} data-qa-selected-result={this.state.selectedItem}>
+          You selected: {this.state.selectedItem}
+        </div>
       </React.Fragment>
     );
   }

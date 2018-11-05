@@ -8323,6 +8323,12 @@ osenv@^0.1.4:
     os-homedir "^1.0.0"
     os-tmpdir "^1.0.0"
 
+otplib@^10.0.1:
+  version "10.0.1"
+  resolved "https://registry.yarnpkg.com/otplib/-/otplib-10.0.1.tgz#d37fcd13203298c0b94937d55c5a3527ed877875"
+  dependencies:
+    thirty-two "1.0.2"
+
 output-file-sync@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/output-file-sync/-/output-file-sync-2.0.1.tgz#f53118282f5f553c2799541792b723a4c71430c0"
@@ -11071,6 +11077,10 @@ thenify-all@^1.0.0:
   resolved "https://registry.yarnpkg.com/thenify/-/thenify-3.3.0.tgz#e69e38a1babe969b0108207978b9f62b88604839"
   dependencies:
     any-promise "^1.0.0"
+
+thirty-two@1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/thirty-two/-/thirty-two-1.0.2.tgz#4ca2fffc02a51290d2744b9e3f557693ca6b627a"
 
 throat@^4.0.0:
   version "4.1.0"
