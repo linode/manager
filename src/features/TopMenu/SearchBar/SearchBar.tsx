@@ -424,7 +424,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
               searchActive ?
                 "Search"
                 :
-                "Search for Linodes, Volumes, Nodebalancers, Domains, Tags..."
+                "Search for Linodes, Volumes, NodeBalancers, Domains, Tags..."
             }
             components={{ Control, Option: SearchSuggestion }}
             styleOverrides={selectStyles}
