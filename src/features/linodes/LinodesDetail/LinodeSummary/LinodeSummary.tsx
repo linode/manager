@@ -10,7 +10,6 @@ import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/st
 import Typography from '@material-ui/core/Typography';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import ExtendedExpansionPanel from 'src/components/ExtendedExpansionPanel';
 import LineGraph from 'src/components/LineGraph';
 import Select from 'src/components/Select';
 import { withTypes } from 'src/context/types';
@@ -19,6 +18,7 @@ import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
 import { getLinodeStats, getLinodeStatsByDate } from 'src/services/linodes';
 import { setUpCharts } from 'src/utilities/charts';
 
+import StatsPanel from './StatsPanel';
 import SummaryPanel from './SummaryPanel';
 
 setUpCharts();
@@ -127,7 +127,6 @@ interface State {
   statsLoadError?: string;
   dataIsLoading: boolean;
   statsError?: string;
-  openPanels: number;
 }
 
 type CombinedProps = LinodeContextProps &
@@ -146,7 +145,6 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     stats: undefined,
     rangeSelection: '24',
     dataIsLoading: false,
-    openPanels: 0,
   };
 
   rangeSelectOptions: (typeof MenuItem)[] = [];
@@ -198,37 +196,13 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     this.mounted = true;
+    this.getStats();
+    this.statsInterval = window.setInterval(this.getStats, statsFetchInterval);
   }
 
   componentWillUnmount() {
     this.mounted = false;
     window.clearInterval(this.statsInterval as number);
-  }
-
-  handleToggleExpand = (e: any, expanded: boolean) => {
-    const { openPanels, stats } = this.state;
-    if (expanded && !stats) {
-      /* Only set loading state on initial load
-      *  so the graphs are not disrupted on future updates. */
-      this.setState({ dataIsLoading: true });
-      this.getStats();
-    }
-
-    if (expanded && openPanels <= 0) {
-      /* We will regularly update the stats as long as at least one panel is open. */
-      this.statsInterval = window.setInterval(() => this.getStats(), statsFetchInterval);
-    }
-
-    /* If the panel is opening, increment the number of open panels. Otherwise decrement.
-    *  This allows us to keep track of when all of the panels are closed.
-    */
-    const updatedOpenPanels = expanded ? openPanels + 1 : openPanels - 1;
-    this.setState({ openPanels: updatedOpenPanels });
-
-    /* If all panels are closed, stop updating the stats. */
-    if (!expanded && updatedOpenPanels <= 0) {
-      window.clearInterval(this.statsInterval as number);
-    }
   }
 
   getStats = () => {
@@ -489,41 +463,34 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             </FormControl>
           </div>
 
-          <ExtendedExpansionPanel
-            heading={"CPU %"}
-            height={chartHeight}
-            onChange={this.handleToggleExpand}
-            renderMainContent={this.renderCPUChart}
-            loading={dataIsLoading}
+          <StatsPanel
+            title="CPU usage"
             error={statsError}
+            loading={dataIsLoading}
+            renderBody={this.renderCPUChart}
           />
 
-          <ExtendedExpansionPanel
-            heading={"IPv4 Traffic"}
-            height={chartHeight}
-            onChange={this.handleToggleExpand}
-            renderMainContent={this.renderIPv4TrafficChart}
-            loading={dataIsLoading}
+          <StatsPanel
+            title="IPv4 Traffic"
             error={statsError}
+            loading={dataIsLoading}
+            renderBody={this.renderIPv4TrafficChart}
           />
 
-          <ExtendedExpansionPanel
-            heading={"IPv6 Traffic"}
-            height={chartHeight}
-            onChange={this.handleToggleExpand}
-            renderMainContent={this.renderIPv6TrafficChart}
-            loading={dataIsLoading}
+          <StatsPanel
+            title="IPv6 Traffic"
             error={statsError}
+            loading={dataIsLoading}
+            renderBody={this.renderIPv6TrafficChart}
           />
 
-          <ExtendedExpansionPanel
-            heading={"Disk I/O"}
-            height={chartHeight}
-            onChange={this.handleToggleExpand}
-            renderMainContent={this.renderDiskIOChart}
-            loading={dataIsLoading}
+          <StatsPanel
+            title="Disk IO"
             error={statsError}
+            loading={dataIsLoading}
+            renderBody={this.renderDiskIOChart}
           />
+
         </React.Fragment>
       </React.Fragment>
     );
