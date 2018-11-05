@@ -30,7 +30,7 @@ class Example extends React.Component<{},State> {
   render() {
     return (
       <React.Fragment>
-        <p>{'Default display: '}
+        <p data-qa-default-display >{'Default display: '}
           <DateTimeDisplay
             value={"2018-07-20T04:23:17"}
             timezone={'America/New_York'}
@@ -53,7 +53,7 @@ class Example extends React.Component<{},State> {
             humanizeCutoff={this.state.cutoff}
           />
         </p>
-        <p>{'Last Thursday was: '}
+        <p data-qa-last-thursday >{'Last Thursday was: '}
           <DateTimeDisplay
             value={moment().day(-4).format()}
             timezone={'America/New_York'}
@@ -61,7 +61,7 @@ class Example extends React.Component<{},State> {
             humanizeCutoff={this.state.cutoff}
           />
         </p>
-        <p>{'Three Wednesdays ago was: '}
+        <p data-qa-3-wednesdays-ago >{'Three Wednesdays ago was: '}
           <DateTimeDisplay
             value={moment().day(-25).format()}
             timezone={'America/New_York'}
@@ -69,7 +69,7 @@ class Example extends React.Component<{},State> {
             humanizeCutoff={this.state.cutoff}
           />
         </p>
-        <p>{'You were so young '}
+        <p data-qa-when-i-was-young >{'You were so young: '}
           <DateTimeDisplay
             value={moment().subtract(11,'months').format()}
             timezone={'America/New_York'}
@@ -77,7 +77,7 @@ class Example extends React.Component<{},State> {
             humanizeCutoff={this.state.cutoff}
           />
         </p>
-        <p>{'Elvis was born: '}
+        <p data-qa-elvis-birthday >{'Elvis was born: '}
           <DateTimeDisplay
             value={moment('1-8-1935').format()}
             timezone={'America/New_York'}
