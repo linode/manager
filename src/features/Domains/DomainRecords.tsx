@@ -7,13 +7,13 @@ import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/st
 import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
@@ -23,10 +23,33 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import ActionMenu from './DomainRecordActionMenu';
 import Drawer from './DomainRecordDrawer';
 
-type ClassNames = 'root';
+type ClassNames = 'root'
+| 'titles'
+| 'linkContainer';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+  root: {
+    [theme.breakpoints.down('xs')]: {
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+    },
+  },
+  titles: {
+    marginBottom: theme.spacing.unit,
+    [theme.breakpoints.down('xs')]: {
+      marginTop: theme.spacing.unit * 2,
+    }
+  },
+  linkContainer: {
+    position: 'relative',
+    top: 10,
+    [theme.breakpoints.down('xs')]: {
+      top: -10,
+      '& button': {
+        padding: 0,
+      }
+    }
+  },
 });
 
 interface Props {
@@ -519,7 +542,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { domain } = this.props;
+    const { domain, classes } = this.props;
     const { drawer, confirmDialog } = this.state;
 
     return (
@@ -528,18 +551,23 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         {
           this.state.types.map((type, eachTypeIdx) => {
             return (
-              <ExpansionPanel
-                key={eachTypeIdx}
-                heading={type.title}
-                defaultExpanded={true}
-              >
+              <div key={eachTypeIdx}>
                 <Grid
                   container
                   justify="space-between"
                   alignItems="flex-end"
+                  className={classes.root}
                 >
-                  <Grid item />
-                  <Grid item>{type.link && type.link()}</Grid>
+                  <Grid item>
+                    <Typography variant="title" className={classes.titles}>{type.title}</Typography>
+                  </Grid>
+                  {type.link &&
+                    <Grid item>
+                      <div className={classes.linkContainer}>
+                        {type.link()}
+                      </div>
+                    </Grid>
+                  }
                 </Grid>
                 <Paper>
                   <Table arial-label="List of Domains MX Records">
@@ -578,7 +606,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                     </TableBody>
                   </Table>
                 </Paper>
-              </ExpansionPanel>);
+              </div>);
           })
         }
         <ConfirmationDialog
