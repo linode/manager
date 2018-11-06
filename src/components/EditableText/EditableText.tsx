@@ -52,7 +52,6 @@ const styles: StyleRulesCallback = (theme) => ({
   initial: {
     border: '1px solid transparent',
     '&:hover, &:focus': {
-      border: '1px solid #abadaf',
       '& $editIcon': {
         position: 'relative',
         top: 0,
@@ -197,7 +196,6 @@ class EditableText extends React.Component<FinalProps, State> {
               <React.Fragment>
                 <Typography
                   className={classes.root}
-                  onClick={this.toggleEditing}
                   {...rest}
                   data-qa-editable-text
                 >
