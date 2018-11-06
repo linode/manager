@@ -756,7 +756,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
       },
       icon: VolumeIcon,
       title: 'No volumes found',
-      copy: 'Click below to add a volume.',
+      copy: 'Add storage to your Linodes using the resilient Volumes service for $0.10/GiB per month.',
     };
 
     return <Placeholder {...props} />;
