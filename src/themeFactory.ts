@@ -902,6 +902,7 @@ const themeDefaults: ThemeOptions = {
         },
       },
       head: {
+        height: 'auto',
         backgroundColor: '#fbfbfb',
         '&:before': {
           borderLeftColor: '#fbfbfb',

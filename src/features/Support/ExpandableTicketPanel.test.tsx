@@ -19,7 +19,8 @@ const classes = {
   formattedText: '',
   hivelyLink: '',
   hivelyImage: '',
-  hivelyContainer: ''
+  hivelyContainer: '',
+  hivelyLinkIcon: ''
 }
 
 const component = new ExpandableTicketPanel({
