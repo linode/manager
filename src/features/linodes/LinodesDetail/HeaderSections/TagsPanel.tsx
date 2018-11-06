@@ -74,8 +74,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     '& .error-for-scroll p': {
       padding: theme.spacing.unit,
       marginLeft: 12,
+      marginTop: 0,
       position: 'absolute',
-      top: theme.spacing.unit * 2,
       boxShadow: '0 0 5px #ddd',
       backgroundColor: theme.bg.offWhite,
       lineHeight: 1.2,
