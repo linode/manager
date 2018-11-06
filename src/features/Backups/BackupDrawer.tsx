@@ -22,6 +22,7 @@ import {
 } from 'src/store/reducers/backupDrawer';
 import { getTypeInfo } from 'src/utilities/typesHelpers';
 
+import AutoEnroll from './AutoEnroll';
 import BackupsTable from './BackupsTable';
 
 type ClassNames = 'root';
@@ -97,6 +98,10 @@ class BackupDrawer extends React.Component<CombinedProps, State> {
     }
   }
 
+  toggleBackups = () => {
+    this.setState({ backupsToggle: !this.state.backupsToggle });
+  }
+
   getTotalPrice = (linodes: LinodeWithTypeInfo[]) => {
     return linodes.reduce((prevValue: number, linode: LinodeWithTypeInfo) => {
       return prevValue + pathOr(0, ['typeInfo','addons','backups','price','monthly'], linode);
@@ -111,6 +116,7 @@ class BackupDrawer extends React.Component<CombinedProps, State> {
 
   render() {
     const { actions: { close }, linodesWithBackups, loading  } = this.props;
+    const { backupsToggle } = this.state;
     const linodeCount = linodesWithBackups.length;
     return (
       <Drawer
@@ -130,6 +136,12 @@ class BackupDrawer extends React.Component<CombinedProps, State> {
           </Grid>
           <Grid item>
             <DisplayPrice price={this.getTotalPrice(linodesWithBackups)} />
+          </Grid>
+          <Grid item>
+            <AutoEnroll
+              enabled={backupsToggle}
+              toggle={this.toggleBackups}
+            />
           </Grid>
           <Grid item>
             <ActionsPanel style={{ marginTop: 16 }} >
