@@ -27,7 +27,10 @@ declare interface BackupsState {
 }
 
 declare interface BackupDrawerState extends RequestableData<Linode.Linode[]> {
-  mode: string;
+  open: boolean;
+  enabling: boolean;
+  enableError?: string;
+  enableSuccess: boolean;
 }
 
 declare interface RequestableData<D> {

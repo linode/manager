@@ -6,22 +6,32 @@ import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
+import CircleProgress from 'src/components/CircleProgress';
 // import { displayPrice } from 'src/components/DisplayPrice';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 
 import { LinodeWithTypeInfo } from './BackupDrawer';
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'container';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     marginTop: theme.spacing.unit * 2,
+    minHeight: 200,
+    width: '100%',
+  },
+  container: {
+    width: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
 interface Props {
   linodes: Linode.Linode[];
+  loading: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -33,7 +43,7 @@ const getPrice = (type?: Linode.LinodeType) =>
   pathOr("Unavailable",['addons', 'backups', 'price', 'monthly'], type);
 
 const BackupsTable: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, linodes } = props;
+  const { classes, linodes, loading } = props;
   return (
     <Table tableClass={classes.root} isResponsive={false} >
       <TableHead>
@@ -44,14 +54,20 @@ const BackupsTable: React.StatelessComponent<CombinedProps> = (props) => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {linodes && linodes.map((linode: LinodeWithTypeInfo, idx: number) =>
-          <TableRow key={idx}>
-            <TableCell >{linode.label}</TableCell>
-            <TableCell >{getLabel(linode.typeInfo)}</TableCell>
-            <TableCell >{getPrice(linode.typeInfo)}</TableCell>
+      {loading
+        ? <TableRow className={classes.container} >
+            <CircleProgress mini />
           </TableRow>
-        )}
+        : linodes && linodes.map((linode: LinodeWithTypeInfo, idx: number) =>
+            <TableRow key={idx}>
+              <TableCell >{linode.label}</TableCell>
+              <TableCell >{getLabel(linode.typeInfo)}</TableCell>
+              <TableCell >{getPrice(linode.typeInfo)}</TableCell>
+            </TableRow>
+          )
+      }
       </TableBody>
+
     </Table>
   );
 };

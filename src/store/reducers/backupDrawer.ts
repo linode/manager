@@ -1,6 +1,7 @@
-// import * as Bluebird from 'bluebird';
+import { pathOr } from 'ramda';
 import { compose, Dispatch } from 'redux';
 
+import { enableAllBackups as _enableAllBackups } from 'src/features/Backups/utils';
 import { getLinodes } from 'src/services/linodes';
 import { getAll } from 'src/utilities/getAll';
 
@@ -20,17 +21,18 @@ interface Action {
 
 type ActionCreator = (...args: any[]) => Action;
 
-const modes = {
-  CLOSED: 'closed',
-  OPEN: 'open'
-}
-
 // ACTIONS
+export const OPEN = '@manager/backups/OPEN'
+export const CLOSE = '@manager/backups/CLOSE'
 export const LOAD = '@manager/backups/LOAD'
 export const ERROR = '@manager/backups/ERROR'
 export const SUCCESS = '@manager/backups/SUCCESS'
 export const UPDATE = '@manager/backups/UPDATE'
 export const ENABLE = '@manager/backups/ENABLE'
+export const ENABLE_SUCCESS = '@manager/backups/ENABLE_SUCCESS'
+export const ENABLE_ERROR = '@manager/backups/ENABLE_ERROR'
+export const RESET_ERRORS = '@manager/backups/RESET_ERRORS'
+export const RESET_SUCCESS = '@manager/backups/RESET_SUCCESS'
 
 // ACTION CREATORS
 export const startRequest: ActionCreator = () => ({ type: LOAD });
@@ -43,18 +45,39 @@ export const handleUpdate: ActionCreator = (data: Linode[]) => ({ type: UPDATE, 
 
 export const handleEnable: ActionCreator = () => ({ type: ENABLE });
 
+export const handleEnableSuccess: ActionCreator = () => ({ type: ENABLE_SUCCESS });
+
+export const handleEnableError: ActionCreator = (error: Error) => ({ type: ENABLE_ERROR, error });
+
+export const handleResetSuccess: ActionCreator = () => ({ type: RESET_SUCCESS });
+
+export const handleResetError: ActionCreator = () => ({ type: RESET_ERRORS });
+
+export const handleOpen: ActionCreator = () => ({ type: OPEN });
+
+export const handleClose: ActionCreator = () => ({ type: CLOSE });
+
 // DEFAULT STATE
 export const defaultState: State = {
   lastUpdated: 0,
   loading: false,
+  enabling: false,
   data: [],
-  mode: modes.CLOSED,
+  open: true,
   error: undefined,
+  enableError: undefined,
+  enableSuccess: false,
 };
 
 // REDUCER
 export default (state: State = defaultState, action: Action) => {
   switch (action.type) {
+    case OPEN:
+      return { ...state, lastUpdated: Date.now(), open: true };
+
+    case CLOSE:
+      return { ...state, lastUpdated: Date.now(), open: false };
+
     case LOAD:
       return { ...state, loading: true };
 
@@ -68,26 +91,25 @@ export default (state: State = defaultState, action: Action) => {
       return { ...state, loading: false, lastUpdated: Date.now(), data: action.data };
 
     case ENABLE:
-      return { ...state, loading: false, lastUpdated: Date.now() };
+      return { ...state, enabling: true, lastUpdated: Date.now() };
+
+    case ENABLE_SUCCESS:
+      return { ...state, enabling: false, lastUpdated: Date.now(), enableSuccess: true };
+
+    case ENABLE_ERROR:
+      return { ...state, enabling: false, lastUpdated: Date.now(), enableError: action.error };
+
+    case RESET_ERRORS:
+      return { ...state, lastUpdated: Date.now(), enableError: undefined, error: undefined };
+
+    case RESET_SUCCESS:
+      return { ...state, lastUpdated: Date.now(), enableSuccess: false, }
 
     default:
       return state;
   }
 };
 
-
-// const _enableAllBackups = (linodes: Linode.Linode[]) =>
-//   Bluebird.map(linodes, (linode: Linode.Linode) =>
-//     enableBackups(linode.id)
-//   );
-
-// export const enableAllBackups = () => (dispatch: Dispatch<State>) => {
-
-//   dispatch(handleEnable());
-//   _enableAllBackups()
-//     .then(compose(dispatch, handleSuccess, prop('data')))
-//     .catch(compose(dispatch, handleError));
-// };
 
 export const requestLinodesWithoutBackups = () => (dispatch: Dispatch<State>) => {
   dispatch(startRequest());
@@ -97,4 +119,12 @@ export const requestLinodesWithoutBackups = () => (dispatch: Dispatch<State>) =>
       linodes.filter((linode: Linode.Linode) => !linode.backups.enabled))
     .then(compose(dispatch, handleSuccess))
     .catch(compose(dispatch, handleError));
+}
+
+export const enableAllBackups = () => (dispatch: Dispatch<State>, getState: () => State) => {
+  const linodes = pathOr([],['backups', 'data'], getState());
+  dispatch(handleEnable());
+  _enableAllBackups(linodes)
+    .then(compose(dispatch, handleEnableSuccess))
+    .catch(compose(dispatch, handleEnableError))
 }
