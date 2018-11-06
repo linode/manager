@@ -1,4 +1,4 @@
-import { append, compose, equals, filter, lensPath, over, pathOr, set, when } from 'ramda';
+import { append, clamp, compose, equals, filter, lensPath, over, pathOr, set, when } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -27,6 +27,7 @@ import renderGuard from 'src/components/RenderGuard';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
+import { MAX_VOLUME_SIZE } from 'src/constants';
 import { events$, resetEventsPolling } from 'src/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { getLinodeConfigs, getLinodeVolumes } from 'src/services/linodes';
@@ -372,6 +373,18 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
     );
   };
 
+  onSizeChange = (newSize: string) => this.composeState([
+    when<State, State>(
+      (prevState) => prevState.volumeDrawer.size <= MAX_VOLUME_SIZE && Boolean(prevState.volumeDrawer.errors),
+      over(L.volumeDrawer.errors, filter((e: Linode.ApiFieldError) => e.field !== 'size')),
+    ),
+    when<State, State>(
+      (prevState) => prevState.volumeDrawer.size > MAX_VOLUME_SIZE,
+      over(L.volumeDrawer.errors, append({ field: 'size', reason: `Size cannot be over ${MAX_VOLUME_SIZE}.` })),
+    ),
+    set(L.volumeDrawer.size, clamp(10, MAX_VOLUME_SIZE, +newSize || 0)),
+  ]);
+
   /** Create / Edit / Resize / Cloning */
   openUpdatingDrawer = (
     mode: 'create' | 'edit' | 'resize' | 'clone',
@@ -408,17 +421,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
                 label: newLabel,
               },
             })),
-            onSizeChange: (newSize: string) => this.composeState([
-              when<State, State>(
-                (prevState) => prevState.volumeDrawer.size <= 10240 && Boolean(prevState.volumeDrawer.errors),
-                over(L.volumeDrawer.errors, filter((e: Linode.ApiFieldError) => e.field !== 'size')),
-              ),
-              when<State, State>(
-                (prevState) => prevState.volumeDrawer.size > 10240,
-                over(L.volumeDrawer.errors, append({ field: 'size', reason: 'Size cannot be over 10240.' })),
-              ),
-              set(L.volumeDrawer.size, +newSize || ''),
-            ]),
+            onSizeChange: this.onSizeChange,
             onVolumeChange: (selectedVolume: string) => this.setState(prevState => ({
               volumeDrawer: {
                 ...prevState.volumeDrawer,
@@ -444,12 +447,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
             region: linodeRegion,
             linodeId: linodeID,
             onClose: this.closeUpdatingDrawer,
-            onSizeChange: (newSize: string) => this.setState(prevState => ({
-              volumeDrawer: {
-                ...prevState.volumeDrawer,
-                size: Number(newSize),
-              },
-            })),
+            onSizeChange: this.onSizeChange,
             onSubmit: this.resizeVolume,
           },
         });

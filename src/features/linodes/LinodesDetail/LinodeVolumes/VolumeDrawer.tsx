@@ -15,6 +15,7 @@ import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import renderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
+import { MAX_VOLUME_SIZE } from 'src/constants';
 import { getVolumes } from 'src/services/volumes';
 import { formatRegion } from 'src/utilities';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
@@ -129,9 +130,10 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
       disabled={disabled}
       errorText={getAPIErrorFor(jawn, this.props.errors)('size')}
       label="Size"
+      type="number"
       onChange={this.onSizeChange}
       value={this.props.size}
-      helperText={'Maximum: 10240 GiB'}
+      helperText={`Maximum: ${MAX_VOLUME_SIZE} GiB`}
       InputProps={{
         endAdornment: <span className={this.props.classes.suffix}>GiB</span>,
       }}

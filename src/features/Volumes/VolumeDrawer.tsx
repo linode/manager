@@ -5,7 +5,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import { append, filter, lensPath, over, path, set, view, when } from 'ramda';
+import { append, clamp, filter, lensPath, over, path, set, view, when } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
@@ -22,6 +22,7 @@ import Notice from 'src/components/Notice';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import Select from 'src/components/Select';
 import TextField from 'src/components/TextField';
+import { MAX_VOLUME_SIZE } from 'src/constants';
 import { withRegions } from 'src/context/regions';
 import { events$, resetEventsPolling } from 'src/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
@@ -383,7 +384,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
   setSize = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.composeState([
       when<State, State>(
-        (prevState) => prevState.size <= 10240 && Boolean(prevState.errors),
+        (prevState) => prevState.size <= MAX_VOLUME_SIZE && Boolean(prevState.errors),
         over(L.errors, filter((event: Linode.ApiFieldError) => event.field !== 'size')),
       ),
 
@@ -400,8 +401,8 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
       // }
 
       when<State, State>(
-        (prevState) => prevState.size > 10240,
-        over(L.errors, append({ field: 'size', reason: 'Size cannot be over 10240.' })),
+        (prevState) => prevState.size > MAX_VOLUME_SIZE,
+        over(L.errors, append({ field: 'size', reason: `Size cannot be over ${MAX_VOLUME_SIZE}.` })),
       ),
 
       // (prevState: State) => {
@@ -416,7 +417,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
       //   return prevState;
       // }
 
-      set(L.size, +e.target.value || ''),
+      set(L.size, clamp(10, MAX_VOLUME_SIZE, +e.target.value || 0)),
     ]);
   }
 
@@ -580,13 +581,14 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
 
         <TextField
           label="Size"
+          type="number"
           required
           value={size}
           onChange={this.setSize}
           error={Boolean(sizeError)}
           errorText={sizeError}
           disabled={mode === modes.CLONING || mode === modes.EDITING}
-          helperText={'A single volume can range from 10 GiB to 10,240 GiB in size.'}
+          helperText={`A single volume can range from 10 GiB to 10,240 GiB in size.`}
           InputProps={{
             endAdornment:
               <InputAdornment position="end">
