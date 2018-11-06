@@ -496,6 +496,14 @@ export const dark = createTheme({
       root: {
         boxShadow: 'inset 0 -1px 0 #222',
       },
+      flexContainer: {
+        '& $scrollButtons:first-child': {
+          color: '#222',
+        }
+      },
+      scrollButtons: {
+        color: '#fff',
+      },
     },
     MuiTableRow: {
       root: {

@@ -883,6 +883,24 @@ const themeDefaults: ThemeOptions = {
       fixed: {
         overflowX: 'auto',
       },
+      flexContainer: {
+        position: 'relative',
+        '& $scrollButtons:first-child': {
+          position: 'absolute',
+          bottom: 6,
+          zIndex: 2,
+          '& svg': {
+            backgroundColor: 'rgba(232, 232, 232, .9)',
+            height: 39,
+            width: 38,
+            padding: '7px 4px',
+            borderRadius: '50%'
+          }
+        }
+      },
+      scrollButtons: {
+        flex: '0 0 40px',
+      },
     },
     MuiTableRow: {
       root: {

@@ -364,6 +364,8 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
                 onChange={this.handleTabChange}
                 indicatorColor="primary"
                 textColor="primary"
+                scrollable
+                scrollButtons="on"
               >
                 {
                   this.tabs.map((tab, idx) =>
