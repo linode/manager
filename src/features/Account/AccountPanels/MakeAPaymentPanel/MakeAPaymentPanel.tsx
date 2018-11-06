@@ -410,7 +410,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
               onChange={this.handleTypeChange}
               row
             >
-              <FormControlLabel value="CREDIT_CARD" label={`Credit Card - ${lastFour}`} control={<Radio />} />
+              <FormControlLabel value="CREDIT_CARD" label={`Credit Card ${lastFour}`} control={<Radio />} />
               {
                 !!PaypalButton && this.state.paypalLoaded &&
                 <FormControlLabel value="PAYPAL" label="Paypal" control={<Radio />} />
