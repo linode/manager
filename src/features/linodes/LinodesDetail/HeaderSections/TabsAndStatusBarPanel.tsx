@@ -75,7 +75,7 @@ const TabsAndStatusBarPanel: React.StatelessComponent<CombinedProps> = (props) =
           indicatorColor="primary"
           textColor="primary"
           scrollable
-          scrollButtons="off"
+          scrollButtons="on"
         >
           {tabs.map(tab =>
             <Tab key={tab.title} label={tab.title} data-qa-tab={tab.title} />)}
