@@ -567,11 +567,11 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           error={Boolean(sizeError)}
           errorText={sizeError}
           disabled={mode === modes.CLONING || mode === modes.EDITING}
-          helperText={'Maximum: 10240 GB'}
+          helperText={'A single volume can range from 10 GiB to 10,000 GiB in size.'}
           InputProps={{
             endAdornment:
               <InputAdornment position="end">
-                GB
+                GiB
               </InputAdornment>,
           }}
           data-qa-size
