@@ -397,7 +397,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     ],
     [
       () => equals('MX', t),
-      () => pick(['target', 'priority', 'name'], fields),
+      () => pick(['target', 'priority', 'ttl_sec', 'name'], fields),
     ],
     [
       () => equals('NS', t),
@@ -452,6 +452,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       fields: [
         (idx: number) => <this.TargetField label="Mail Server" key={idx} />, ,
         (idx: number) => <this.PriorityField label="Preference" key={idx} />,
+        (idx: number) => <this.TTLField key={idx} />,
         (idx: number) => <this.NameField label="Subdomain" key={idx} />,
       ],
     },
