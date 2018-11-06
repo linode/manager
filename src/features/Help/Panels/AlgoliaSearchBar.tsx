@@ -46,7 +46,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     margin: '0 auto',
     width: '100%s',
     maxHeight: 500,
-    '& [class*="formControl"]': {
+    '& .input': {
       maxWidth: '100%',
       '& > div': {
         marginRight: 0,
