@@ -71,7 +71,7 @@ class Users extends Page {
     }
 
     delete(userConfig) {
-        const user = this.userRow(userConfig.username);
+        const user = this.getUserRow(userConfig.username);
 
         this.selectActionMenuItem(user, 'Delete');
 
@@ -88,19 +88,29 @@ class Users extends Page {
     }
 
     viewPermissions(username) {
-        const user = this.userRow(username);
-        this.selectActionMenuItem(user, 'User Permissions');
+        this.getTableDetails(undefined, this.userActionMenu.selector, username).click();
+        this.actionMenuItem.waitForVisible(constants.wait.normal);
+        browser.jsClick('[data-qa-action-menu-item="User Permissions"]');
     }
 
     viewProfile(username) {
-        const user = this.userRow(username);
-        this.selectActionMenuItem(user, 'User Profile');
+        this.getTableDetails(undefined, this.userActionMenu.selector, username).click();
+        this.actionMenuItem.waitForVisible(constants.wait.normal);
+        browser.jsClick('[data-qa-action-menu-item="User Profile"]');
     }
 
-    userRow(username) {
-        const user = this.userRows
-            .filter(user => user.$(this.username.selector).getText() === username);
-        return user[0];
+    getUserRow(username) {
+        return this.userRows.find(row => row.getText().includes(username));
+    }
+
+    getTableDetails(index,tableselector,tableKey = undefined){
+        let indexOfRow;
+        if( index === undefined && tableKey !== undefined){
+            indexOfRow = this.userRows.findIndex(row => row.getText().includes(tableKey));
+        }else{
+            indexOfRow = index;
+        }
+        return $$(`${this.userRow.selector} ${tableselector}`)[indexOfRow];
     }
 }
 

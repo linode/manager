@@ -13,7 +13,7 @@ describe('Account - User Detail - Username Suite', () => {
         browser.url(constants.routes.account.users);
         Users.baseElementsDisplay();
         Users.add(userConfig);
-        const userRow = Users.userRow(userConfig.username);
+        const userRow = Users.getUserRow(userConfig.username);
         userRow.$(Users.username.selector).click();
     });
 
