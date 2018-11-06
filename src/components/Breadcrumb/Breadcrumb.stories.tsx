@@ -18,7 +18,7 @@ class InteractiveStaticBreadcrumb extends React.Component {
         <Breadcrumb
           linkTo={this.state.linkTo}
           linkText={this.state.linkText}
-          text={this.state.text}
+          label={this.state.text}
         />
       </React.Fragment>
     )
@@ -46,7 +46,7 @@ class InteractiveEditableBreadcrumb extends React.Component {
         <Breadcrumb
           linkTo={this.state.linkTo}
           linkText={this.state.linkText}
-          text={this.state.text}
+          label={this.state.text}
           onEdit={this.onEdit}
           onCancel={this.onCancel}
         />

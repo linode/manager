@@ -1,5 +1,6 @@
 import * as classnames from 'classnames';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 
 import Button from '@material-ui/core/Button';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
@@ -129,6 +130,7 @@ interface Props {
   onCancel: () => void;
   text: string;
   errorText?: string;
+  labelLink?: string;
 }
 
 interface State {
@@ -140,7 +142,7 @@ type PassThroughProps = Props & TextFieldProps & TypographyProps;
 
 type FinalProps =  PassThroughProps & WithStyles<ClassNames>;
 
-class EditableText extends React.Component<FinalProps, State> {
+export class EditableText extends React.Component<FinalProps, State> {
   state: State = {
     isEditing: Boolean(this.props.errorText),
     text: this.props.text,
@@ -185,8 +187,17 @@ class EditableText extends React.Component<FinalProps, State> {
     if (e.key === 'Escape' || e.key === 'Esc') { this.cancelEditing(); }
   }
 
+  staticText = (attr: Partial<Props>) =>
+    <Typography
+      className={this.props.classes.root}
+      { ...attr }
+      data-qa-editable-text
+    >
+      {this.state.text}
+    </Typography>;
+
   render() {
-    const { classes, onEdit, errorText, ...rest } = this.props;
+    const { classes, labelLink, onEdit, errorText, ...rest } = this.props;
     const { isEditing, text } = this.state;
 
     return (
@@ -194,13 +205,12 @@ class EditableText extends React.Component<FinalProps, State> {
         ? (
             <div className={`${classes.container} ${classes.initial}`}>
               <React.Fragment>
-                <Typography
-                  className={classes.root}
-                  {...rest}
-                  data-qa-editable-text
-                >
-                  {text}
-                </Typography>
+                {labelLink ?
+                  <Link to={labelLink}>
+                    {this.staticText(rest)}
+                  </Link>
+                : this.staticText(rest)
+                }
                 <Button
                   className={`${classes.button} ${classes.editIcon}`}
                   onClick={this.toggleEditing}

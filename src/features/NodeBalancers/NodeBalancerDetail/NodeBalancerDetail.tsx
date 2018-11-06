@@ -1,4 +1,4 @@
-import { compose, pathOr } from 'ramda';
+import { compose, last, pathOr } from 'ramda';
 import * as React from 'react';
 import { matchPath, Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 
@@ -120,9 +120,11 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
     this.setState({ ApiError: undefined, labelInput: this.state.nodeBalancer.label });
   }
 
-  handleGoBack = () => {
-    const { history } = this.props;
-    history.push('/nodebalancers')
+
+  getLabelLink = (): string | undefined => {
+    return last(location.pathname.split('/')) !== 'summary'
+      ? 'summary'
+      : undefined;
   }
 
   static docs: Linode.Doc[] = [
@@ -173,8 +175,9 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
           <Grid item className={classes.titleWrapper}>
             <Breadcrumb
               linkTo="/nodebalancers"
-              linkText="Nodebalancers"
-              text={nodeBalancerLabel}
+              linkText="NodeBalancers"
+              label={nodeBalancerLabel}
+              labelLink={this.getLabelLink()}
               onEdit={this.updateLabel}
               onCancel={this.cancelUpdate}
               errorText={apiErrorText}

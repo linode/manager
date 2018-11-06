@@ -1,9 +1,9 @@
+import { last } from 'ramda';
 import * as React from 'react';
 
 import Button from '@material-ui/core/Button';
 import {
   StyleRulesCallback,
-
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
@@ -75,6 +75,12 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 const LabelPowerAndConsolePanel: React.StatelessComponent<CombinedProps> = (props) => {
   const { classes, linode, launchLish, openConfigDrawer, labelInput } = props;
 
+  const getLabelLink = (): string | undefined => {
+    return last(location.pathname.split('/')) !== 'summary'
+      ? 'summary'
+      : undefined;
+  }
+
   return (
     <Grid
       container
@@ -84,7 +90,8 @@ const LabelPowerAndConsolePanel: React.StatelessComponent<CombinedProps> = (prop
         <Breadcrumb
           linkTo="/linodes"
           linkText="Linodes"
-          text={labelInput.label}
+          label={labelInput.label}
+          labelLink={getLabelLink()}
           errorText={labelInput.errorText}
           onEdit={labelInput.onEdit}
           onCancel={labelInput.onCancel}
