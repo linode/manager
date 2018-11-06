@@ -20,16 +20,26 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     margin: '5px 0 0 0',
     width: 'auto',
     '& svg': {
-      width: 34,
-      height: 34,
+      width: 26,
+      height: 26,
     },
   },
   linkText: {
+    display: 'flex',
+    alignItems: 'center',
     color: '#3683DC',
     textDecoration: 'underline',
-    borderRight: '1px solid grey',
-    paddingRight: '16px',
-    borderColor: theme.color.grey
+    borderColor: theme.color.grey,
+    '&:after': {
+      content: "''",
+      display: 'inline-block',
+      padding: '0 8px 0 6px',
+      height: '38px',
+      borderRight: `1px solid ${theme.color.grey1}`,
+    },
+    [theme.breakpoints.down('sm')]: {
+      display: 'none',
+    },
   },
   staticText: {
     padding: '5px 10px'

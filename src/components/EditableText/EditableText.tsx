@@ -49,6 +49,8 @@ const styles: StyleRulesCallback = (theme) => ({
     justifyContent: 'flex-start',
     alignItems: 'center',
     maxHeight: 48,
+    position: 'relative',
+    top: 1,
   },
   initial: {
     border: '1px solid transparent',
@@ -60,6 +62,9 @@ const styles: StyleRulesCallback = (theme) => ({
       },
       '& $icon': {
         color: theme.color.grey1,
+        '&:hover': {
+          color: theme.color.black,
+        },
       },
     },
   },

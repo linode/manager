@@ -59,10 +59,14 @@ storiesOf('Breadcrumb', module)
   .addDecorator(ThemeDecorator)
   .add('Static Text', () => (
     <StaticRouter location="/" context={{}}>
-      <InteractiveStaticBreadcrumb />
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <InteractiveStaticBreadcrumb />
+      </div>
     </StaticRouter>
   )).add('Editable Text', () => (
     <StaticRouter location="/" context={{}}>
-      <InteractiveEditableBreadcrumb />
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <InteractiveEditableBreadcrumb />
+      </div>
     </StaticRouter>
   ));
