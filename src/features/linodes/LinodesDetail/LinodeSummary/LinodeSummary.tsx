@@ -10,7 +10,6 @@ import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/st
 import Typography from '@material-ui/core/Typography';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import ExtendedExpansionPanel from 'src/components/ExtendedExpansionPanel';
 import LineGraph from 'src/components/LineGraph';
 import Select from 'src/components/Select';
 import { withTypes } from 'src/context/types';
@@ -19,6 +18,7 @@ import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
 import { getLinodeStats, getLinodeStatsByDate } from 'src/services/linodes';
 import { setUpCharts } from 'src/utilities/charts';
 
+import StatsPanel from './StatsPanel';
 import SummaryPanel from './SummaryPanel';
 
 setUpCharts();
@@ -127,7 +127,6 @@ interface State {
   statsLoadError?: string;
   dataIsLoading: boolean;
   statsError?: string;
-  openPanels: number;
 }
 
 type CombinedProps = LinodeContextProps &
@@ -146,7 +145,6 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     stats: undefined,
     rangeSelection: '24',
     dataIsLoading: false,
-    openPanels: 0,
   };
 
   rangeSelectOptions: (typeof MenuItem)[] = [];
@@ -198,37 +196,15 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     this.mounted = true;
+    // Only use loading state on initial data load. This will be set to false
+    // in the getStats then and catch handlers.
+    this.setState({ dataIsLoading: true, }, this.getStats);
+    this.statsInterval = window.setInterval(this.getStats, statsFetchInterval);
   }
 
   componentWillUnmount() {
     this.mounted = false;
     window.clearInterval(this.statsInterval as number);
-  }
-
-  handleToggleExpand = (e: any, expanded: boolean) => {
-    const { openPanels, stats } = this.state;
-    if (expanded && !stats) {
-      /* Only set loading state on initial load
-      *  so the graphs are not disrupted on future updates. */
-      this.setState({ dataIsLoading: true });
-      this.getStats();
-    }
-
-    if (expanded && openPanels <= 0) {
-      /* We will regularly update the stats as long as at least one panel is open. */
-      this.statsInterval = window.setInterval(() => this.getStats(), statsFetchInterval);
-    }
-
-    /* If the panel is opening, increment the number of open panels. Otherwise decrement.
-    *  This allows us to keep track of when all of the panels are closed.
-    */
-    const updatedOpenPanels = expanded ? openPanels + 1 : openPanels - 1;
-    this.setState({ openPanels: updatedOpenPanels });
-
-    /* If all panels are closed, stop updating the stats. */
-    if (!expanded && updatedOpenPanels <= 0) {
-      window.clearInterval(this.statsInterval as number);
-    }
   }
 
   getStats = () => {
@@ -454,6 +430,13 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
     const { dataIsLoading, statsError, rangeSelection } = this.state;
 
+    // Shared props for all stats charts
+    const chartProps = {
+      loading: dataIsLoading,
+      error: statsError,
+      height: chartHeight
+    }
+
     if (!linode || !volumes) {
       return null;
     }
@@ -489,41 +472,30 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             </FormControl>
           </div>
 
-          <ExtendedExpansionPanel
-            heading={"CPU %"}
-            height={chartHeight}
-            onChange={this.handleToggleExpand}
-            renderMainContent={this.renderCPUChart}
-            loading={dataIsLoading}
-            error={statsError}
+          <StatsPanel
+            title="CPU Usage"
+            renderBody={this.renderCPUChart}
+            {...chartProps}
           />
 
-          <ExtendedExpansionPanel
-            heading={"IPv4 Traffic"}
-            height={chartHeight}
-            onChange={this.handleToggleExpand}
-            renderMainContent={this.renderIPv4TrafficChart}
-            loading={dataIsLoading}
-            error={statsError}
+          <StatsPanel
+            title="IPv4 Traffic"
+            renderBody={this.renderIPv4TrafficChart}
+            {...chartProps}
           />
 
-          <ExtendedExpansionPanel
-            heading={"IPv6 Traffic"}
-            height={chartHeight}
-            onChange={this.handleToggleExpand}
-            renderMainContent={this.renderIPv6TrafficChart}
-            loading={dataIsLoading}
-            error={statsError}
+          <StatsPanel
+            title="IPv6 Traffic"
+            renderBody={this.renderIPv6TrafficChart}
+            {...chartProps}
           />
 
-          <ExtendedExpansionPanel
-            heading={"Disk I/O"}
-            height={chartHeight}
-            onChange={this.handleToggleExpand}
-            renderMainContent={this.renderDiskIOChart}
-            loading={dataIsLoading}
-            error={statsError}
+          <StatsPanel
+            title="Disk IO"
+            renderBody={this.renderDiskIOChart}
+            {...chartProps}
           />
+
         </React.Fragment>
       </React.Fragment>
     );
