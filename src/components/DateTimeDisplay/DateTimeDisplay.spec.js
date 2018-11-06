@@ -76,14 +76,14 @@ describe('Date Time Display Suite', () => {
         getRadioButton('week').click();
         const formatedDates = [threeWednesdaysAgo, whenIWasYoung, elvisBirthday];
         validateDatesDisplayed(formatedDates);
-        expect(getDisplayDate($(lastThursday))).toEqual('5 days ago');
+        expect(getDisplayDate($(lastThursday))).toMatch(/days ago/);
     });
 
     it('when month is selected you were so young and below should be yyyy-MM-dd hh:mm:ss format, last thurdsay and 3 wednesdays ago are not', () => {
         getRadioButton('month').click();
         const formatedDates = [whenIWasYoung, elvisBirthday];
         validateDatesDisplayed(formatedDates);
-        expect(getDisplayDate($(lastThursday))).toEqual('5 days ago');
+        expect(getDisplayDate($(lastThursday))).toMatch(/([1-7]) days ago/);
         expect(getDisplayDate($(threeWednesdaysAgo))).toEqual('a month ago');
     });
 
@@ -91,17 +91,17 @@ describe('Date Time Display Suite', () => {
         getRadioButton('year').click();
         const formatedDates = [elvisBirthday];
         validateDatesDisplayed(formatedDates);
-        expect(getDisplayDate($(lastThursday))).toEqual('5 days ago');
+        expect(getDisplayDate($(lastThursday))).toMatch(/([1-7]) days ago/);
         expect(getDisplayDate($(threeWednesdaysAgo))).toEqual('a month ago');
-        expect(getDisplayDate($(whenIWasYoung))).toEqual('a year ago');
+        expect(getDisplayDate($(whenIWasYoung))).toContain('year ago');
     });
 
     it('when never is selected none of the dynamic dates should display in yyyy-MM-dd hh:mm:ss format', () => {
         getRadioButton('never').click();
-        expect(getDisplayDate($(lastThursday))).toEqual('5 days ago');
+        expect(getDisplayDate($(lastThursday))).toMatch(/([1-7]) days ago/);
         expect(getDisplayDate($(threeWednesdaysAgo))).toEqual('a month ago');
-        expect(getDisplayDate($(whenIWasYoung))).toEqual('a year ago');
-        expect(getDisplayDate($(elvisBirthday))).toEqual('84 years ago');
+        expect(getDisplayDate($(whenIWasYoung))).toContain('year ago');
+        expect(getDisplayDate($(elvisBirthday))).toContain('years ago');
     });
 
 });
