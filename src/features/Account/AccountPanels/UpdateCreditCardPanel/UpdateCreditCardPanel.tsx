@@ -158,6 +158,7 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
       expiry_year: 'expiration year',
     }, errors)
     const generalError = hasErrorFor('none');
+
     return (
       <ExpansionPanel
         heading="Update Credit Card"
