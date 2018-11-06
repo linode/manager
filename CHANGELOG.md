@@ -4,6 +4,37 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.38.0] - 2018.11.05
+
+### Added:
+  - Customer Support
+    - Linode Community questions are now searchable from the Support Landing Page
+    - Customers can now close their own support tickets under the following conditions:
+      - Ticket is in "autoclose" status
+      - Ticket has not been opened by Linode (covered by autoclose requirement)
+      - May not close tickets that have not been interacted with by Linode  (covered by autoclose requirement)
+      - Tickets closed by customer should be marked as closed by customer
+      - Support Ticket objects should indicate if they are closable
+
+### Changed:
+  - Tightened whitespace on tables. Considerably reduced the padding on table cells to give users the ability to see more items at a glance. Similar changes were made to summary panels in an ongoing effort to improve our information density overall.
+  - We changed the way that a user will view their DNS records.  Today when you view DNS records you have to expand all of the accordions to see details of your domains. Now when you view a domain you can see all details of the domain without having to expand all the accordions.
+  - Updated Launch console button to appear as a link on mobile devices.
+  - Hively got an upgrade!
+    - Icons have been enhanced to support new icons.
+    - Hively icons will not show on tickets more than 7 days old
+
+### Fixed:
+  - The account owner was able to restrict their account by toggling the permissions.
+  - A recent refactor didn't take into account paginated API methods that take an entityId. This was causing an API 404 error when requesting Disks from the LinodeConfig menu.
+  - Issue on the List Linodes page, where switching to list view after linode creation would display the Linode as "Provisioning" after it already booted.
+  - On the volumes listing page, addressed an issue where updating a volume label would fail.
+  - In order to make the clickable table row entries more efficient, we made tags clickable.
+  - Fixed an issue where attempting to create a linode from a snapshot (coming from the linode detail page) displayed plans smaller than the original Linode snapshot as selectable.
+  - When creating a linode from a backup or snapshot, the linode created does not automatically boot, rather it must be booted manually after the restoration from backup is complete. Also, the Distro image fails to display in the manager, until the linode has been booted.
+  - Issue where users were unable to deploy a new linode from a snapshot when landing on the Create From Backup creation page from the Linode Detail - Backups page.
+  - Resolved an edge case where attempting to restore a snapshot to an existing linode, if the restore drawer was dismissed and then reopened, the Linodes select would fail to list any linodes.
+
 ## [0.37.1] - 2018-10.22
 
 ### Fixed:
@@ -16,7 +47,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   - Pagination!
     - Users can now page through large lists of entities thoughout the app, including: Nodebalancers/Images/Oauth Clients(Apps)/Tokens/Users/Volumes/Invoices/LinodeConfigs
   - Documentation!
-    - The documentation panel has received some updates, including Docs for volumes, domains and stackscripts 
+    - The documentation panel has received some updates, including Docs for volumes, domains and stackscripts
 
 ### Changed:
   - Eliminate pencil icon site-wide, using hover/edit state instead.
