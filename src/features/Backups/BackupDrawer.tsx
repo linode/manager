@@ -1,4 +1,4 @@
-import { compose, path } from 'ramda';
+import { compose, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, } from 'react-redux';
 
@@ -8,7 +8,9 @@ import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import DisplayPrice from 'src/components/DisplayPrice';
 import Drawer from 'src/components/Drawer';
+import Grid from 'src/components/Grid';
 import { withTypes } from 'src/context/types';
 import { requestLinodesWithoutBackups } from 'src/store/reducers/backupDrawer';
 import { getTypeInfo } from 'src/utilities/typesHelpers';
@@ -63,6 +65,12 @@ class BackupDrawer extends React.Component<CombinedProps, State> {
     this.props.actions.getLinodesWithBackups();
   }
 
+  getTotalPrice = (linodes: LinodeWithTypeInfo[]) => {
+    return linodes.reduce((prevValue: number, linode: LinodeWithTypeInfo) => {
+      return prevValue + pathOr(0, ['typeInfo','addons','backups','price','monthly'], linode);
+    }, 0)
+  }
+
   render() {
     const { linodesWithBackups } = this.props;
     const linodeCount = linodesWithBackups.length;
@@ -71,31 +79,42 @@ class BackupDrawer extends React.Component<CombinedProps, State> {
         title="Enable All Backups"
         open={true}
       >
-        <Typography variant="body1">
-          Three backup slots are executed and rotated automatically: a daily backup,
-          a 2-7 day old backup, and an 8-14 day old backup. Confirm to add backups
-          to <strong>{linodeCount}</strong> {linodeCount > 1 ? 'Linodes' : 'Linode'}.
-        </Typography>
-        <BackupsTable linodes={linodesWithBackups} />
-        <ActionsPanel style={{ marginTop: 16 }} >
-          <Button
-            onClick={() => null}
-            disabled={false}
-            type="primary"
-            data-qa-submit
-          >
-            Confirm
-          </Button>
-          <Button
-            onClick={() => null}
-            variant="raised"
-            type="secondary"
-            className="cancel"
-            data-qa-cancel
-          >
-            Cancel
-          </Button>
-        </ActionsPanel>
+        <Grid container direction={'column'} >
+          <Grid item>
+            <Typography variant="body1">
+              Three backup slots are executed and rotated automatically: a daily backup,
+              a 2-7 day old backup, and an 8-14 day old backup. Confirm to add backups
+              to <strong>{linodeCount}</strong> {linodeCount > 1 ? 'Linodes' : 'Linode'}.
+            </Typography>
+          </Grid>
+          <Grid item>
+            <BackupsTable linodes={linodesWithBackups} />
+          </Grid>
+          <Grid item>
+            <DisplayPrice price={this.getTotalPrice(linodesWithBackups)} />
+          </Grid>
+          <Grid item>
+            <ActionsPanel style={{ marginTop: 16 }} >
+              <Button
+                onClick={() => null}
+                disabled={false}
+                type="primary"
+                data-qa-submit
+              >
+                Confirm
+              </Button>
+              <Button
+                onClick={() => null}
+                variant="raised"
+                type="secondary"
+                className="cancel"
+                data-qa-cancel
+              >
+                Cancel
+              </Button>
+            </ActionsPanel>
+          </Grid>
+        </Grid>
       </Drawer>
     );
   }
