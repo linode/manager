@@ -6,6 +6,8 @@ import { Props as SelectProps } from 'react-select/lib/Select';
 
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
+/* TODO will be refactoring enhanced select to be an abstraction. 
+Styles added in this file and the below imports will be utilized for the abstraction. */ 
 import DropdownIndicator from './components/DropdownIndicator';
 import LoadingIndicator from './components/LoadingIndicator';
 import MultiValue from './components/MultiValue';
