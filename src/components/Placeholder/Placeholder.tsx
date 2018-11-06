@@ -80,7 +80,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 export interface Props {
   icon?: React.ComponentType<any>;
   animate?: boolean;
-  copy?: string;
+  copy?: string | React.ReactNode;
   title?: string;
   buttonProps?: ButtonProps;
   className?: string;
