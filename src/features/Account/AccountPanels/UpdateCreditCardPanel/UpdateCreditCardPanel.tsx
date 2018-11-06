@@ -158,33 +158,26 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
       expiry_year: 'expiration year',
     }, errors)
     const generalError = hasErrorFor('none');
-
     return (
       <ExpansionPanel
         heading="Update Credit Card"
         actions={this.renderActions}
       >
         <Grid container>
-          <Grid item xs={12}>
+          {last_four && <Grid item xs={12}>
             <div className={classes.currentccContainer}>
               <Typography role="header" variant="title" className={classes.currentCCTitle}>Current Credit Card</Typography>
               <Grid container>
                 <Grid item>
                   <Typography style={{ marginRight: 8 }}>
-                    {(last_four)
-                      ? `xxxx-xxxx-xxxx-${last_four}`
-                      : 'None'
-                    }
+                    {`xxxx-xxxx-xxxx-${last_four}`}
                   </Typography>
                 </Grid>
                 <Grid item>
                   <Typography>
                     Exp Date:&nbsp;
-                    {(expiry)
-                      ? `${expiry} `
-                      : 'None'
-                    }
-                    {expiry && isCreditCardExpired(expiry) &&
+                    {expiry}
+                    {isCreditCardExpired(expiry) &&
                       <span className={classes.expired}>Expired</span>
                     }
                   </Typography>
@@ -192,7 +185,7 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
               </Grid>
             </div>
             <Divider />
-          </Grid>
+          </Grid>}
           <Grid item xs={12}>
             <div className={classes.newccContainer}>
               <Typography role="header" variant="title">New Credit Card</Typography>
