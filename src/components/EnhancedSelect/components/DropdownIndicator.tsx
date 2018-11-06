@@ -11,13 +11,10 @@ type ClassNames = 'root'
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   enhancedSelectDropdown: {
-    top: 'calc(50% - 12px)',
-    right: 0,
     color: '#aaa !important',
     width: 28,
     height: 28,
     opacity: .5,
-    position: 'absolute',
     marginTop: '-2px',
     transition: 'color 225ms ease-in-out',
     marginRight: '4px',
