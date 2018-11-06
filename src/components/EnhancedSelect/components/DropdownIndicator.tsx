@@ -16,7 +16,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     color: '#aaa !important',
     width: 28,
     height: 28,
-    opacity: '0.5',
+    opacity: .5,
     position: 'absolute',
     marginTop: '-2px',
     transition: 'color 225ms ease-in-out',
