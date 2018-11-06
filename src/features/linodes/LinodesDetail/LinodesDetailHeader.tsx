@@ -137,8 +137,11 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
     this.props.labelInput.onEdit(value)
   }
 
-  handleToggleCreate = () => {
-    this.setState({ isCreatingTag: !this.state.isCreatingTag })
+  handleToggleCreateTag = () => {
+    this.setState({
+      tagError: '',
+      isCreatingTag: !this.state.isCreatingTag
+    })
   }
 
   handleDeleteTag = (label: string) => {
@@ -278,7 +281,7 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
             tagsToSuggest: this.state.tagsToSuggest || []
           }}
           onDeleteTag={this.handleDeleteTag}
-          toggleCreateTag={this.handleToggleCreate}
+          toggleTagInput={this.handleToggleCreateTag}
           onCreateTag={this.handleCreateTag}
           tagInputValue={this.state.tagInputValue}
           isCreatingTag={this.state.isCreatingTag}
