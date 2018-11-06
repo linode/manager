@@ -352,7 +352,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
         <DocumentTitleSegment segment="Volumes" />
         <Placeholder
           title="Create a Volume"
-          copy="Add storage to your Linodes using the resilient Volumes service"
+          copy="Add storage to your Linodes using the resilient Volumes service for $0.10/GiB per month."
           icon={VolumesIcon}
           buttonProps={{
             onClick: this.props.openForCreating,
