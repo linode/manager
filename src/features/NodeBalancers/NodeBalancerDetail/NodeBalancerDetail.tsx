@@ -196,7 +196,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
             indicatorColor="primary"
             textColor="primary"
             scrollable
-            scrollButtons="off"
+            scrollButtons="on"
           >
             {
               this.tabs.map(tab =>
