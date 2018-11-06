@@ -20,14 +20,14 @@ describe('Debounced Search Suite', () => {
         it('should display select search bar', () => {
             const placeholderMsg = 'Search for something (i.e "er")'
             enhancedSelect = $(`[data-qa-enhanced-select='${placeholderMsg}']`);
-            
+
             expect(enhancedSelect.isVisible()).toBe(true);
             expect(enhancedSelect.getText()).toContain(placeholderMsg)
         });
 
         it('should not have options selected on pageload', () => {
             selectedOptionMsg = $(currentResultSelector);
-            
+
             expect(selectedOptionMsg.getText()).toBe(emptyResult);
         });
 
@@ -40,8 +40,8 @@ describe('Debounced Search Suite', () => {
 
         it('should display options on a valid search query', () => {
             // Add the value twice to fix test flakiness when running the entire functional test suite
-            enhancedSelect.$('..').$('input').setValue(validQuery);
-            enhancedSelect.$('..').$('input').setValue(validQuery);
+            const enhancedSelectInput = enhancedSelect.$('..').$('input').selector;
+            browser.trySetValue(enhancedSelectInput, validQuery);
 
             browser.waitForVisible(optionSelector, constants.wait.normal);
 
