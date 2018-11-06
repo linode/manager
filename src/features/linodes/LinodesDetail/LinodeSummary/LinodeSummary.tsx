@@ -254,7 +254,6 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
           <LineGraph
             chartHeight={chartHeight}
             showToday={rangeSelection === '24'}
-            suggestedMax={100}
             data={[
               {
                 borderColor: '#428ade',
