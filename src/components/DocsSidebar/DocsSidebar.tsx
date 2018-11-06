@@ -50,6 +50,7 @@ class DocsSidebar extends React.Component<CombinedProps>  {
 
     return (
       <Grid item style={stickyStyles} className={classes.root}>
+        <Typography>Deez Nuts</Typography>
         <Typography
           role="header"
           variant="title"

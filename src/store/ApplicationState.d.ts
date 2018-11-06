@@ -4,6 +4,7 @@ declare interface ApplicationState {
     accountSettings: RequestableData<Linode.AccountSettings>
   },
   authentication: AuthState;
+  backups: RequestableData<Linode.Linode[]>;
   documentation: DocumentationState;
   features: FeaturesState;
   volumeDrawer: VolumeDrawerState;
@@ -18,6 +19,14 @@ declare interface AuthState {
 declare type DocumentationState = Linode.Doc[];
 
 declare interface VolumeDrawerState {
+  mode: string;
+}
+
+declare interface BackupsState {
+  // Pending
+}
+
+declare interface BackupDrawerState extends RequestableData<Linode.Linode[]> {
   mode: string;
 }
 

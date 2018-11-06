@@ -18,6 +18,7 @@ import SideMenu from 'src/components/SideMenu';
 import { RegionsProvider, WithRegionsContext } from 'src/context/regions';
 import { TypesProvider, WithTypesContext } from 'src/context/types';
 
+import BackupDrawer from 'src/features/Backups';
 import Footer from 'src/features/Footer';
 import ToastNotifications from 'src/features/ToastNotifications';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
@@ -368,6 +369,7 @@ export class App extends React.Component<CombinedProps, State> {
                     data-qa-beta-notice />
                   <ToastNotifications />
                   <VolumeDrawer />
+                  <BackupDrawer />
                 </div>
               </RegionsProvider>
             </TypesProvider>
