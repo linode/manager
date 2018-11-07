@@ -1,4 +1,4 @@
-import { compose, pathOr } from 'ramda';
+import { clone, compose, pathOr } from 'ramda';
 import * as React from 'react';
 
 import AppBar from '@material-ui/core/AppBar';
@@ -14,15 +14,36 @@ import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
+import TagsPanel from 'src/components/TagsPanel';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
-import { getDomain, getDomainRecords } from 'src/services/domains';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
+import { getDomain, getDomainRecords, updateDomain } from 'src/services/domains';
+import { getTags } from 'src/services/tags';
 
 import DomainRecords from './DomainRecords';
+
+interface Item {
+  label: string;
+  value: string;
+}
+
+interface Tag {
+  label: string
+}
 
 interface State {
   error?: Error;
   domain: Linode.Domain;
   records: Linode.Record[];
+  tagsToSuggest?: Item[];
+  tagError: string;
+  tagInputValue: string;
+  listDeletingTags: string[];
+
+}
+
+interface ActionMeta {
+  action: string;
 }
 
 type RouteProps = RouteComponentProps<{ domainId?: number }>;
@@ -78,7 +99,140 @@ class DomainDetail extends React.Component<CombinedProps, State> {
     domain: pathOr(undefined, ['response'], this.props.domain),
     records: pathOr([], ['response', 'data'], this.props.records),
     error: pathOr(undefined, ['error'], this.props.domain),
+    tagsToSuggest: [],
+    tagError: '',
+    tagInputValue: '',
+    listDeletingTags: [],
   };
+
+  componentDidMount() {
+    const { domain: { response: domain } } = this.props;
+    getTags()
+      .then(response => {
+        /*
+         * The end goal is to display to the user a list of auto-suggestions
+         * when they start typing in a new tag, but we don't want to display
+         * tags that are already applied to this specific Domain because there cannot
+         * be duplicates on one Domain.
+         */
+        const filteredTags = response.data.filter((eachTag: Tag) => {
+          return !domain.tags.some((alreadyAppliedTag: string) => {
+            return alreadyAppliedTag === eachTag.label;
+          })
+        })
+        /*
+         * reshaping them for the purposes of being passed to the Select component
+         */
+        const reshapedTags = filteredTags.map((eachTag: Tag) => {
+          return {
+            label: eachTag.label,
+            value: eachTag.label
+          }
+        });
+        this.setState({ tagsToSuggest: reshapedTags })
+      })
+      .catch(e => e)
+  }
+
+  handleDeleteTag = (label: string) => {
+    const { domain } = this.state;
+    /*
+     * Add this tag to the current list of tags that are queued for deletion
+     */
+    this.setState({
+      listDeletingTags: [
+        ...this.state.listDeletingTags,
+        label
+      ]
+    }, () => {
+      /*
+      * Update the Domain with the new list of tags (which is the previous list but
+      * with the deleted tag filtered out). It's important to note that the Tag is *not*
+      * being deleted here - it's just being removed from the Domain
+      */
+      const domainTagsWithoutDeletedTag = domain.tags.filter((eachTag: string) => {
+        return this.state.listDeletingTags.indexOf(eachTag) === -1;
+      });
+      updateDomain(domain.id, { domain: domain.domain, tags: domainTagsWithoutDeletedTag })
+        .then(domain => {
+          this.setState({
+            domain,
+          })
+          /*
+          * Remove this tag from the current list of tags that are queued for deletion
+          */
+        const cloneTagSuggestions = clone(this.state.tagsToSuggest) || [];
+          this.setState({
+            tagsToSuggest: [
+              {
+                value: label,
+                label,
+              },
+              ...cloneTagSuggestions
+            ],
+            listDeletingTags: this.state.listDeletingTags.filter(eachTag => eachTag !== label),
+          })
+        })
+        .catch(e => {
+          sendToast(`Could not delete Tag: ${label}`);
+          /*
+          * Remove this tag from the current list of tags that are queued for deletion
+          */
+          this.setState({
+            listDeletingTags: this.state.listDeletingTags.filter(eachTag => eachTag !== label)
+          })
+        })
+
+      })
+  }
+
+  handleCreateTag = (value: Item, actionMeta: ActionMeta) => {
+    const { tagsToSuggest } = this.state;
+    /*
+     * This comes from the react-select API
+     * basically, we only want to make a request if the user is either
+     * hitting the enter button or choosing a selection from the dropdown
+     */
+    if (actionMeta.action !== 'select-option'
+      && actionMeta.action !== 'create-option') { return; }
+
+    this.setState({
+      tagError: '',
+    });
+
+    const { domain } = this.state;
+    updateDomain(
+      domain.id,
+      { domain: domain.domain, tags: [...domain.tags, value.label] }
+    )
+      .then(domain => {
+        this.setState({
+          domain,
+        })
+        // set the input value to blank on submit
+        this.setState({ tagInputValue: '' })
+        /*
+        * Filter out the new tag out of the auto-suggestion list
+        * since we can't attach this tag to the Domain anymore
+        */
+        const cloneTagSuggestions = clone(tagsToSuggest) || [];
+        const filteredTags = cloneTagSuggestions.filter((eachTag: Item) => {
+          return eachTag.label !== value.label;
+        });
+        this.setState({
+          tagsToSuggest: filteredTags
+        })
+      })
+      .catch(e => {
+        const APIErrors = pathOr(
+          'Error while creating tag',
+          ['response', 'data', 'errors'],
+          e);
+        // display the first error in the array or a generic one
+        this.setState({ tagError: APIErrors[0].reason || 'Error while creating tag' })
+      })
+  }
+
 
   handleTabChange = (event: React.ChangeEvent<HTMLDivElement>, value: number) => {
     const { history } = this.props;
@@ -180,6 +334,17 @@ class DomainDetail extends React.Component<CombinedProps, State> {
           </Grid>
         </Grid>
         <AppBar position="static" color="default">
+          <TagsPanel
+            tags={{
+              tagsQueuedForDeletion: this.state.listDeletingTags,
+              tagsAlreadyApplied: domain.tags,
+              tagsToSuggest: this.state.tagsToSuggest || []
+            }}
+            onDeleteTag={this.handleDeleteTag}
+            onCreateTag={this.handleCreateTag}
+            tagInputValue={this.state.tagInputValue}
+            tagError={this.state.tagError}
+          />
           <Tabs
             value={this.tabs.findIndex(tab => matches(tab.routeName))}
             onChange={this.handleTabChange}

@@ -99,7 +99,7 @@ interface Item {
 
 interface Tags {
   tagsQueuedForDeletion: string[];
-  tagsAlreadyAppliedToLinode: string[];
+  tagsAlreadyApplied: string[];
   // tags that will appear in the auto-suggest dropdown (AKA tags that exist but aren't applied to this linode)
   tagsToSuggest: Item[];
 }
@@ -108,79 +108,107 @@ interface ActionMeta {
   action: string;
 }
 
+interface State {
+  tagsToSuggest?: Item[];
+  tagError: string;
+  isCreatingTag: boolean;
+  tagInputValue: string;
+  listDeletingTags: string[];
+
+}
+
 export interface Props {
   tags: Tags;
   onDeleteTag: (value: string) => void;
-  toggleTagInput: () => void;
   onCreateTag: (value: Item, actionMeta: ActionMeta) => void;
   tagInputValue: string;
-  isCreatingTag: boolean;
   tagError: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const TagsPanel: React.StatelessComponent<CombinedProps> = (props) => {
-  const {
-    tags: { tagsToSuggest, tagsAlreadyAppliedToLinode, tagsQueuedForDeletion },
-    tagError,
-    onCreateTag,
-    toggleTagInput,
-    onDeleteTag,
-    tagInputValue,
-    isCreatingTag,
-    classes
-  } = props;
+class TagsPanel extends React.Component<CombinedProps, State> {
 
-  return (
-    <div className={classes.root}>
-      {tagsAlreadyAppliedToLinode.map(eachTag => {
-        return (
-          <TagsPanelItem
-            key={eachTag}
-            label={eachTag}
-            tagLabel={eachTag}
-            onDelete={onDeleteTag}
-            className={classes.tag}
-            loading={tagsQueuedForDeletion.some((inProgressTag) => {
-              /*
-               * The tag is getting deleted if it appears in the state
-               * which holds the list of tags queued for deletion 
-               */
-              return eachTag === inProgressTag;
-            })}
+  state: State = {
+    tagsToSuggest: [],
+    tagError: '',
+    isCreatingTag: false,
+    tagInputValue: '',
+    listDeletingTags: [],
+  };
+
+  toggleTagInput = () => {
+    this.setState({
+      tagError: '',
+      isCreatingTag: !this.state.isCreatingTag
+    })
+  }
+
+  render() {
+    const {
+      tags: { tagsToSuggest, tagsAlreadyApplied, tagsQueuedForDeletion },
+      tagError,
+      onCreateTag,
+      onDeleteTag,
+      tagInputValue,
+      classes
+    } = this.props;
+
+    const {
+      isCreatingTag,
+    } = this.state;
+  
+    return (
+      <div className={classes.root}>
+        {tagsAlreadyApplied.map(eachTag => {
+          return (
+            <TagsPanelItem
+              key={eachTag}
+              label={eachTag}
+              tagLabel={eachTag}
+              onDelete={onDeleteTag}
+              className={classes.tag}
+              loading={tagsQueuedForDeletion.some((inProgressTag) => {
+                /*
+                 * The tag is getting deleted if it appears in the state
+                 * which holds the list of tags queued for deletion 
+                 */
+                return eachTag === inProgressTag;
+              })}
+            />
+          )
+        })}
+        {(isCreatingTag)
+          ? <Select
+              onChange={onCreateTag}
+              options={tagsToSuggest}
+              variant='creatable'
+              errorText={tagError}
+              onBlur={this.toggleTagInput}
+              placeholder="Create or Select a Tag"
+              value={tagInputValue}
+              createOptionPosition="first"
+              autoFocus
+              className={classes.selectTag}
+              blurInputOnSelect={false}
           />
-        )
-      })}
-      {(isCreatingTag)
-        ? <Select
-            onChange={onCreateTag}
-            options={tagsToSuggest}
-            variant='creatable'
-            errorText={tagError}
-            onBlur={toggleTagInput}
-            placeholder="Create or Select a Tag"
-            value={tagInputValue}
-            createOptionPosition="first"
-            autoFocus
-            className={classes.selectTag}
-            blurInputOnSelect={false}
-        />
-        :
-        <Tooltip
-          title="Add New Tag"
-          placement="right"
-        >
-          <IconButton
-            onClick={toggleTagInput}
-            className={classes.addButton}
+          :
+          <Tooltip
+            title="Add New Tag"
+            placement="right"
           >
-            <AddCircle data-qa-add-tag />
-          </IconButton>
-        </Tooltip> 
-      }
-    </div>
-  );
+            <IconButton
+              onClick={this.toggleTagInput}
+              className={classes.addButton}
+            >
+              <AddCircle data-qa-add-tag />
+            </IconButton>
+          </Tooltip> 
+        }
+      </div>
+    );
+  
+  }
 };
 
 const styled = withStyles(styles, { withTheme: true });

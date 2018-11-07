@@ -58,7 +58,6 @@ interface Tag {
 interface State {
   tagsToSuggest?: Item[];
   tagError: string;
-  isCreatingTag: boolean;
   tagInputValue: string;
   listDeletingTags: string[];
   hasScheduledMigration: boolean;
@@ -74,7 +73,6 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
   state: State = {
     tagsToSuggest: [],
     tagError: '',
-    isCreatingTag: false,
     tagInputValue: '',
     listDeletingTags: [],
     hasScheduledMigration: false,
@@ -136,13 +134,6 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
 
   editLabel = (value: string) => {
     this.props.labelInput.onEdit(value)
-  }
-
-  handleToggleCreateTag = () => {
-    this.setState({
-      tagError: '',
-      isCreatingTag: !this.state.isCreatingTag
-    })
   }
 
   handleDeleteTag = (label: string) => {
@@ -278,14 +269,12 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
         <TagsPanel
           tags={{
             tagsQueuedForDeletion: this.state.listDeletingTags,
-            tagsAlreadyAppliedToLinode: linode.tags,
+            tagsAlreadyApplied: linode.tags,
             tagsToSuggest: this.state.tagsToSuggest || []
           }}
           onDeleteTag={this.handleDeleteTag}
-          toggleTagInput={this.handleToggleCreateTag}
           onCreateTag={this.handleCreateTag}
           tagInputValue={this.state.tagInputValue}
-          isCreatingTag={this.state.isCreatingTag}
           tagError={this.state.tagError}
         />
         <TabsAndStatusBarPanel
