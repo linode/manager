@@ -194,6 +194,7 @@
     "wdio-jasmine-framework": "0.3.5",
     "wdio-junit-reporter": "^0.4.2",
     "wdio-selenium-standalone-service": "^0.0.10",
+    "wdio-spec-reporter": "^0.1.5",
     "webdriverio": "4.12.0",
     "why-did-you-update": "^0.1.1",
     "yargs": "11.0.0"
