@@ -27,7 +27,6 @@ export const CLOSE = '@manager/backups/CLOSE'
 export const LOAD = '@manager/backups/LOAD'
 export const ERROR = '@manager/backups/ERROR'
 export const SUCCESS = '@manager/backups/SUCCESS'
-export const UPDATE = '@manager/backups/UPDATE'
 export const ENABLE = '@manager/backups/ENABLE'
 export const ENABLE_SUCCESS = '@manager/backups/ENABLE_SUCCESS'
 export const ENABLE_ERROR = '@manager/backups/ENABLE_ERROR'
@@ -40,8 +39,6 @@ export const startRequest: ActionCreator = () => ({ type: LOAD });
 export const handleError: ActionCreator = (error: Error) => ({ type: ERROR, error });
 
 export const handleSuccess: ActionCreator = (data: Linode[]) => ({ type: SUCCESS, data });
-
-export const handleUpdate: ActionCreator = (data: Linode[]) => ({ type: UPDATE, data });
 
 export const handleEnable: ActionCreator = () => ({ type: ENABLE });
 
@@ -63,7 +60,7 @@ export const defaultState: State = {
   loading: false,
   enabling: false,
   data: [],
-  open: true,
+  open: false,
   error: undefined,
   enableError: undefined,
   enableSuccess: false,
@@ -85,9 +82,6 @@ export default (state: State = defaultState, action: Action) => {
       return { ...state, loading: false, lastUpdated: Date.now(), error: action.error };
 
     case SUCCESS:
-      return { ...state, loading: false, lastUpdated: Date.now(), data: action.data };
-
-    case UPDATE:
       return { ...state, loading: false, lastUpdated: Date.now(), data: action.data };
 
     case ENABLE:
@@ -124,7 +118,8 @@ export const requestLinodesWithoutBackups = () => (dispatch: Dispatch<State>) =>
 export const enableAllBackups = () => (dispatch: Dispatch<State>, getState: () => State) => {
   const linodes = pathOr([],['backups', 'data'], getState());
   dispatch(handleEnable());
-  _enableAllBackups(linodes)
+  return _enableAllBackups(linodes)
     .then(compose(dispatch, handleEnableSuccess))
     .catch(compose(dispatch, handleEnableError))
+    .finally(compose(dispatch,requestLinodesWithoutBackups))
 }

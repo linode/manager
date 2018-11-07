@@ -18,7 +18,6 @@ type ClassNames = 'root' | 'container';
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     marginTop: theme.spacing.unit * 2,
-    minHeight: 200,
     width: '100%',
   },
   container: {
@@ -30,7 +29,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 });
 
 interface Props {
-  linodes: Linode.Linode[];
+  linodes: LinodeWithTypeInfo[];
   loading: boolean;
 }
 
@@ -42,8 +41,25 @@ const getLabel = (type?: Linode.LinodeType) =>
 const getPrice = (type?: Linode.LinodeType) =>
   pathOr("Unavailable",['addons', 'backups', 'price', 'monthly'], type);
 
+const renderLoading = (container: string) =>
+  <TableRow className={container} >
+    <TableCell>
+      <CircleProgress mini />
+    </TableCell>
+  </TableRow>
+
+const renderLinodes = (linodes: LinodeWithTypeInfo[]) =>
+  linodes && linodes.map((linode: LinodeWithTypeInfo, idx: number) =>
+    <TableRow key={idx}>
+      <TableCell >{linode.label}</TableCell>
+      <TableCell >{getLabel(linode.typeInfo)}</TableCell>
+      <TableCell >{getPrice(linode.typeInfo)}</TableCell>
+    </TableRow>
+  )
+
 const BackupsTable: React.StatelessComponent<CombinedProps> = (props) => {
   const { classes, linodes, loading } = props;
+
   return (
     <Table tableClass={classes.root} isResponsive={false} >
       <TableHead>
@@ -54,20 +70,11 @@ const BackupsTable: React.StatelessComponent<CombinedProps> = (props) => {
         </TableRow>
       </TableHead>
       <TableBody>
-      {loading
-        ? <TableRow className={classes.container} >
-            <CircleProgress mini />
-          </TableRow>
-        : linodes && linodes.map((linode: LinodeWithTypeInfo, idx: number) =>
-            <TableRow key={idx}>
-              <TableCell >{linode.label}</TableCell>
-              <TableCell >{getLabel(linode.typeInfo)}</TableCell>
-              <TableCell >{getPrice(linode.typeInfo)}</TableCell>
-            </TableRow>
-          )
-      }
+        {loading && linodes.length === 0
+          ? renderLoading(classes.container)
+          : renderLinodes(linodes)
+        }
       </TableBody>
-
     </Table>
   );
 };

@@ -1,9 +1,9 @@
 import Hidden from '@material-ui/core/Hidden';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import { compose } from 'ramda';
+import { compose, pathOr } from 'ramda';
 import * as React from 'react';
-import { connect, MapStateToProps } from 'react-redux';
+import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -17,9 +17,12 @@ import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
 import { withTypes } from 'src/context/types';
 import { LinodeGettingStarted, SecuringYourServer } from 'src/documentation';
+import { BackupsCTA } from 'src/features/Backups';
 import LinodeConfigSelectionDrawer, { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { getImages } from 'src/services/images';
 import { getLinodes } from 'src/services/linodes';
+import { handleOpen, requestLinodesWithoutBackups } from 'src/store/reducers/backupDrawer';
+import { clearSidebar, setSidebarComponent } from 'src/store/reducers/sidebar';
 import { views } from 'src/utilities/storage';
 import LinodesViewWrapper from './LinodesViewWrapper';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
@@ -67,6 +70,7 @@ type CombinedProps =
   TypesContextProps
   & PaginationProps<Linode.Linode>
   & StateProps
+  & DispatchProps
   & RouteComponentProps<{}>
   & WithStyles<ClassNames>
   & SetDocsProps;
@@ -120,14 +124,25 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   }
 
   componentDidMount() {
-    const { typesLastUpdated, typesLoading, typesRequest } = this.props;
+    const { linodesWithoutBackups, typesLastUpdated, typesLoading, typesRequest } = this.props;
+    const { getLinodesWithoutBackups, openBackupsDrawer } = this.props.actions;
 
     this.mounted = true;
 
     /** Get the Linodes using the request handler provided by Pagey. */
     this.props.request();
 
-    this.getImages()
+    this.getImages();
+
+    /** Check if the user has any Linodes without backups enabled
+     * (This also pre-populates the Backups drawer with these Linodes)
+     */
+
+    getLinodesWithoutBackups();
+    if (linodesWithoutBackups.length > 0) {
+      this.props.actions.setSidebar([<BackupsCTA key={0} onSubmit={openBackupsDrawer}/>])
+    }
+
 
     if (typesLastUpdated === 0 && !typesLoading) {
       typesRequest();
@@ -136,6 +151,15 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
   componentWillUnmount() {
     this.mounted = false;
+    this.props.actions.clearSidebar();
+  }
+
+  componentDidUpdate(prevProps: CombinedProps, prevState: State) {
+    const { openBackupsDrawer, setSidebar  } = this.props.actions;
+    if (prevProps.linodesWithoutBackups.length === 0 &&
+        this.props.linodesWithoutBackups.length > 0) {
+        setSidebar([<BackupsCTA key={0} onSubmit={openBackupsDrawer}/>])
+    }
   }
 
   openConfigDrawer = (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => {
@@ -375,7 +399,7 @@ const getDisplayFormat = ({ hash, length }: { hash?: string, length: number }): 
   }
 
   /*
-  * If local stroage exists, set the view based on that
+  * If local storage exists, set the view based on that
   */
   if (views.linode.get() !== null) {
     return views.linode.get();
@@ -402,6 +426,16 @@ interface LinodeWithNotifications extends Linode.Linode {
 
 interface StateProps {
   data: LinodeWithNotifications[];
+  linodesWithoutBackups: Linode.Linode[];
+}
+
+interface DispatchProps {
+  actions: {
+    getLinodesWithoutBackups: () => void;
+    openBackupsDrawer: () => void;
+    clearSidebar: () => void;
+    setSidebar: (components: JSX.Element[]) => void;
+  }
 }
 
 /**
@@ -415,10 +449,22 @@ mapStateToProps = (state, ownProps) => {
 
   return {
     data: linodes.map(addNotificationToLinode(notifications)),
+    linodesWithoutBackups: pathOr([],['backups','data'], state),
   }
 };
 
-const connected = connect(mapStateToProps);
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, ownProps) => {
+  return {
+    actions: {
+      getLinodesWithoutBackups: () => dispatch(requestLinodesWithoutBackups()),
+      openBackupsDrawer: () => dispatch(handleOpen()),
+      clearSidebar: () => dispatch(clearSidebar()),
+      setSidebar: (components: JSX.Element[]) => dispatch(setSidebarComponent(components))
+    }
+  };
+};
+
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
 const paginated = Pagey((ownProps, params, filters) =>
   getLinodes(params, filters));

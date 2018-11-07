@@ -25,6 +25,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 
 interface Props {
   docs: Doc[];
+  sections?: JSX.Element[];
   isSticky?: boolean;
 }
 
@@ -34,7 +35,7 @@ const styled = withStyles(styles, { withTheme: true });
 
 class DocsSidebar extends React.Component<CombinedProps>  {
   render() {
-    const { classes, docs, style, isSticky } = this.props;
+    const { classes, sections, docs, style, isSticky } = this.props;
 
     if (docs.length === 0) {
       return null;
@@ -50,7 +51,7 @@ class DocsSidebar extends React.Component<CombinedProps>  {
 
     return (
       <Grid item style={stickyStyles} className={classes.root}>
-        <Typography>Deez Nuts</Typography>
+        {sections}
         <Typography
           role="header"
           variant="title"

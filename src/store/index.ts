@@ -7,6 +7,7 @@ import documentation, { defaultState as defaultDocumentationState } from './redu
 import features, { defaultState as defaultFeaturesState } from './reducers/features';
 import notifications, { DEFAULT_STATE as defaultNotificationState } from './reducers/notifications';
 import resources, { defaultState as defaultResourcesState } from './reducers/resources';
+import sidebar, { defaultState as defaultSidebarState } from './reducers/sidebar';
 import volumeDrawer, { defaultState as defaultVolumeDrawerState } from './reducers/volumeDrawer';
 
 const defaultState: ApplicationState = {
@@ -15,6 +16,7 @@ const defaultState: ApplicationState = {
   backups: defaultBackupState,
   documentation: defaultDocumentationState,
   features: defaultFeaturesState,
+  sidebar: defaultSidebarState,
   volumeDrawer: defaultVolumeDrawerState,
   notifications: defaultNotificationState,
 };
@@ -27,6 +29,7 @@ const reducers = combineReducers<ApplicationState>({
   backups,
   documentation,
   features,
+  sidebar,
   volumeDrawer,
   notifications,
 });

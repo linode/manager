@@ -11,6 +11,7 @@ import Button from 'src/components/Button';
 import DisplayPrice from 'src/components/DisplayPrice';
 import Drawer from 'src/components/Drawer';
 import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 import { withTypes } from 'src/context/types';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import {
@@ -20,6 +21,7 @@ import {
   handleResetSuccess,
   requestLinodesWithoutBackups,
 } from 'src/store/reducers/backupDrawer';
+import { clearSidebar } from 'src/store/reducers/sidebar';
 import { getTypeInfo } from 'src/utilities/typesHelpers';
 
 import AutoEnroll from './AutoEnroll';
@@ -47,6 +49,7 @@ interface DispatchProps {
     close: () => void;
     dismissError: () => void;
     dismissSuccess: () => void;
+    clearSidebar: () => void;
   },
 }
 
@@ -79,15 +82,8 @@ class BackupDrawer extends React.Component<CombinedProps, State> {
   }
 
   componentDidUpdate() {
-    const { dismissError, dismissSuccess } = this.props.actions;
-    const { enableError, enableSuccess } = this.props;
-
-    if (enableError) {
-      sendToast(
-        'Backups could not be enabled for some of your Linodes. Please try again.',
-        'error');
-        dismissError();
-    }
+    const { close, dismissSuccess } = this.props.actions;
+    const { enableSuccess } = this.props;
 
     if (enableSuccess) {
       sendToast(
@@ -95,6 +91,8 @@ class BackupDrawer extends React.Component<CombinedProps, State> {
         'success'
       );
       dismissSuccess();
+      close();
+      this.props.actions.clearSidebar();
     }
   }
 
@@ -109,13 +107,12 @@ class BackupDrawer extends React.Component<CombinedProps, State> {
   }
 
   handleSubmit = () => {
-    const { close, enable } = this.props.actions;
-    enable();
-    close();
+    const { enable } = this.props.actions;
+    enable()
   }
 
   render() {
-    const { actions: { close }, linodesWithBackups, loading  } = this.props;
+    const { actions: { close }, enableError, linodesWithBackups, loading } = this.props;
     const { backupsToggle } = this.state;
     const linodeCount = linodesWithBackups.length;
     return (
@@ -131,6 +128,11 @@ class BackupDrawer extends React.Component<CombinedProps, State> {
               to <strong>{linodeCount}</strong> {linodeCount > 1 ? 'Linodes' : 'Linode'}.
             </Typography>
           </Grid>
+          {enableError &&
+            <Grid item>
+              <Notice error>There was an error enabling backups for some of your Linodes.</Notice>
+            </Grid>
+          }
           <Grid item>
             <BackupsTable linodes={linodesWithBackups} loading={loading} />
           </Grid>
@@ -147,7 +149,7 @@ class BackupDrawer extends React.Component<CombinedProps, State> {
             <ActionsPanel style={{ marginTop: 16 }} >
               <Button
                 onClick={this.handleSubmit}
-                disabled={false}
+                loading={loading}
                 type="primary"
                 data-qa-submit
               >
@@ -177,7 +179,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, own
       getLinodesWithoutBackups: () => dispatch(requestLinodesWithoutBackups()),
       close: () => dispatch(handleClose()),
       dismissError: () => dispatch(handleResetError()),
-      dismissSuccess: () => dispatch(handleResetSuccess())
+      dismissSuccess: () => dispatch(handleResetSuccess()),
+      clearSidebar: () => dispatch(clearSidebar())
     }
   };
 };

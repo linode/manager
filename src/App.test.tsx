@@ -35,6 +35,7 @@ it('renders without crashing', () => {
             }}
             documentation={[]}
             toggleTheme={jest.fn()}
+            sidebarComponents={[]}
           />
         </StaticRouter>
       </Provider>

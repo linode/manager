@@ -1,5 +1,5 @@
 import { shim } from 'promise.prototype.finally';
-import { lensPath, path, set } from 'ramda';
+import { lensPath, path, pathOr, set } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { Redirect, Route, RouteProps, Switch } from 'react-router-dom';
@@ -300,7 +300,14 @@ export class App extends React.Component<CombinedProps, State> {
 
   render() {
     const { menuOpen } = this.state;
-    const { classes, documentation, toggleTheme, profileLoading, profileError } = this.props;
+    const {
+      classes,
+      documentation,
+      toggleTheme,
+      profileLoading,
+      profileError,
+      sidebarComponents
+    } = this.props;
 
     const hasDoc = documentation.length > 0;
 
@@ -349,6 +356,7 @@ export class App extends React.Component<CombinedProps, State> {
                                   return (
                                     <DocsSidebar
                                       docs={documentation}
+                                      sections={sidebarComponents}
                                       {...props}
                                     />
                                   )
@@ -416,6 +424,7 @@ interface StateProps {
   userId?: number;
 
   documentation: Linode.Doc[];
+  sidebarComponents: JSX.Element[];
 }
 
 const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state, ownProps) => ({
@@ -425,6 +434,8 @@ const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (s
   userId: path(['data', 'uid'], state.__resources.profile),
 
   documentation: state.documentation,
+
+  sidebarComponents: pathOr([], ['sidebar','components'], state)
 });
 
 export const connected = connect(mapStateToProps, mapDispatchToProps);

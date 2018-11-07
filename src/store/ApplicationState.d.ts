@@ -6,6 +6,7 @@ declare interface ApplicationState {
   authentication: AuthState;
   backups: RequestableData<Linode.Linode[]>;
   documentation: DocumentationState;
+  sidebar: SidebarState;
   features: FeaturesState;
   volumeDrawer: VolumeDrawerState;
   notifications: RequestableData<Linode.Notification[]>;
@@ -22,8 +23,8 @@ declare interface VolumeDrawerState {
   mode: string;
 }
 
-declare interface BackupsState {
-  // Pending
+declare interface SidebarState {
+  components: JSX.Element[];
 }
 
 declare interface BackupDrawerState extends RequestableData<Linode.Linode[]> {
