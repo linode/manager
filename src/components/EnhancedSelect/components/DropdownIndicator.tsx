@@ -15,7 +15,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     width: 28,
     height: 28,
     opacity: .5,
-    marginTop: '-2px',
+    marginTop: 0,
     transition: 'color 225ms ease-in-out',
     marginRight: '4px',
     pointerEvents: 'none',

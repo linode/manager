@@ -11,7 +11,7 @@ type ClassNames = 'root';
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     position: 'relative',
-    right: 40,
+    right: 20,
   },
 });
 
@@ -26,8 +26,8 @@ class LoadingIndicator extends React.PureComponent<CombinedProps> {
 
     return (
         <CircularProgress
-        size={20}
-        className={classes.root}
+          size={20}
+          className={classes.root}
         />
     );
   }
