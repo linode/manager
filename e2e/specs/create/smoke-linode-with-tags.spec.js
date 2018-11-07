@@ -72,7 +72,7 @@ describe('Create Linode from Image - With Tags Suite', () => {
         it('should display the linode with tags on the grid view', () => {
             assertTagsDisplay(addedTags);
         });
-        //Tests below are affected by bug https://jira.linode.com/browse/M3-1671
+        //Tests below are affected by bug M3-1671
         xit('should display the linode with tags on list view', () => {
             ListLinodes.listToggle.click();
             ListLinodes.rebootButton.waitForVisible(constants.wait.normal, true);
