@@ -1,7 +1,7 @@
 import Hidden from '@material-ui/core/Hidden';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import { compose, pathOr } from 'ramda';
+import { compose, isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -124,7 +124,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   }
 
   componentDidMount() {
-    const { linodesWithoutBackups, typesLastUpdated, typesLoading, typesRequest } = this.props;
+    const { typesLastUpdated, typesLoading, typesRequest } = this.props;
     const { getLinodesWithoutBackups, openBackupsDrawer } = this.props.actions;
 
     this.mounted = true;
@@ -139,7 +139,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
      */
 
     getLinodesWithoutBackups();
-    if (linodesWithoutBackups.length > 0) {
+    if (this.shouldRenderBackupsCTA()) {
       this.props.actions.setSidebar([<BackupsCTA key={0} onSubmit={openBackupsDrawer}/>])
     }
 
@@ -156,10 +156,20 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
   componentDidUpdate(prevProps: CombinedProps, prevState: State) {
     const { openBackupsDrawer, setSidebar  } = this.props.actions;
+    /* Set the BackupsCTA in the docs sidebar if the user
+    * a) has Linodes without backups enabled and
+    * b) does not have Managed.
+    * Logic for b can be removed after ARB-925 is resolved.
+    */
     if (prevProps.linodesWithoutBackups.length === 0 &&
-        this.props.linodesWithoutBackups.length > 0) {
+        this.shouldRenderBackupsCTA()) {
         setSidebar([<BackupsCTA key={0} onSubmit={openBackupsDrawer}/>])
     }
+  }
+
+  shouldRenderBackupsCTA = () => {
+    const { linodesWithoutBackups, managed } = this.props;
+    return !isEmpty(linodesWithoutBackups) && !managed;
   }
 
   openConfigDrawer = (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => {
@@ -427,6 +437,7 @@ interface LinodeWithNotifications extends Linode.Linode {
 interface StateProps {
   data: LinodeWithNotifications[];
   linodesWithoutBackups: Linode.Linode[];
+  managed: boolean;
 }
 
 interface DispatchProps {
@@ -450,6 +461,7 @@ mapStateToProps = (state, ownProps) => {
   return {
     data: linodes.map(addNotificationToLinode(notifications)),
     linodesWithoutBackups: pathOr([],['backups','data'], state),
+    managed: pathOr(false, ['__resources','accountSettings','data','managed'], state)
   }
 };
 

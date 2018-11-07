@@ -58,6 +58,7 @@ describe('ListLinodes', () => {
             typesLastUpdated={1}
             actions={actions}
             linodesWithoutBackups={[]}
+            managed={false}
           />
         </StaticRouter>
       </LinodeThemeWrapper>,
@@ -82,6 +83,7 @@ describe('ListLinodes', () => {
             typesLastUpdated={1}
             actions={actions}
             linodesWithoutBackups={[]}
+            managed={false}
           />
         </StaticRouter>
       </LinodeThemeWrapper>,
@@ -110,6 +112,7 @@ describe('ListLinodes', () => {
             typesLastUpdated={1}
             actions={actions}
             linodesWithoutBackups={[]}
+            managed={false}
           />
         </StaticRouter>
       </LinodeThemeWrapper>,
