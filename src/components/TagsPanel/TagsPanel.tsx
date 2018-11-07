@@ -10,7 +10,7 @@ import {
 import Tooltip from '@material-ui/core/Tooltip';
 import AddCircle from '@material-ui/icons/AddCircle';
 
-import LinodeTag from './LinodeTag';
+import TagsPanelItem from './TagsPanelItem';
 
 import Select from 'src/components/EnhancedSelect/Select';
 
@@ -108,7 +108,7 @@ interface ActionMeta {
   action: string;
 }
 
-interface Props {
+export interface Props {
   tags: Tags;
   onDeleteTag: (value: string) => void;
   toggleTagInput: () => void;
@@ -136,7 +136,7 @@ const TagsPanel: React.StatelessComponent<CombinedProps> = (props) => {
     <div className={classes.root}>
       {tagsAlreadyAppliedToLinode.map(eachTag => {
         return (
-          <LinodeTag
+          <TagsPanelItem
             key={eachTag}
             label={eachTag}
             tagLabel={eachTag}

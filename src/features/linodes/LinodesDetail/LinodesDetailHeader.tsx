@@ -5,13 +5,14 @@ import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/debounce';
 import 'rxjs/add/operator/filter';
 
+import TagsPanel from 'src/components/TagsPanel';
+
 import { lishLaunch } from 'src/features/Lish';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 
 import LabelPowerAndConsolePanel from './HeaderSections/LabelPowerAndConsolePanel';
 import NotificationsAndUpgradePanel from './HeaderSections/NotificationsAndUpgradePanel';
 import TabsAndStatusBarPanel from './HeaderSections/TabsAndStatusBarPanel';
-import TagsPanel from './HeaderSections/TagsPanel';
 
 import { scheduleOrQueueMigration, updateLinode } from 'src/services/linodes';
 import { getTags } from 'src/services/tags';
