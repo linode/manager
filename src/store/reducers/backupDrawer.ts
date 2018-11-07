@@ -1,5 +1,5 @@
 import * as Bluebird from 'bluebird';
-import { pathOr } from 'ramda';
+import { isEmpty, pathOr } from 'ramda';
 import { compose, Dispatch } from 'redux';
 
 import { enableBackups, getLinodes,  } from 'src/services/linodes';
@@ -147,7 +147,7 @@ export const enableAllBackups = () => async (dispatch: Dispatch<State>, getState
   dispatch(handleEnable());
   Bluebird.reduce(linodes, reducer, { success: [], errors: []})
     .then(({ success, errors }) => {
-      if (errors) {
+      if (!isEmpty(errors)) {
         dispatch(handleEnableError(errors));
       }
       else {
