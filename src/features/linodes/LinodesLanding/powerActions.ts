@@ -47,8 +47,8 @@ const _rebootLinode: LinodePowerAction = (id, label, config_id) => {
   });
 };
 
-const _powerOnLinode: LinodePowerAction = (id, label) => {
-  linodeBoot(id)
+const _powerOnLinode: LinodePowerAction = (id, label, configId) => {
+  linodeBoot(id, configId)
   .then((response) => {
     events$.next(genEvent('linode_boot', id, label));
     resetEventsPolling();
