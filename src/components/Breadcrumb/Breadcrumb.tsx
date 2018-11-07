@@ -61,34 +61,6 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 export const Breadcrumb: React.StatelessComponent<CombinedProps> = (props) => {
   const { classes, linkTo, linkText, label } = props;
 
-  const renderText = (): JSX.Element => {
-    // If onCancel and onEdit props are provided, make text editable
-    if (isEditable) {
-      return (
-        <EditableText
-          role="header"
-          variant="headline"
-          text={label}
-          errorText={props.errorText!}
-          onEdit={props.onEdit!}
-          onCancel={props.onCancel!}
-          labelLink={props.labelLink}
-          data-qa-editable-text
-        />
-        );
-    }
-
-    // If a labelLink is provided, wrap the text in a Link component
-    else if (props.labelLink) {
-      return (
-        <Link to={props.labelLink} data-qa-label-link>
-          {staticText}
-        </Link>
-      );
-    }
-
-    return staticText;
-  }
   const isEditable = Boolean(props.onCancel && props.onEdit);
 
   const staticText = (
@@ -118,7 +90,22 @@ export const Breadcrumb: React.StatelessComponent<CombinedProps> = (props) => {
         </Typography>
       </IconButton>
       </Link>
-      {renderText()}
+      {isEditable
+        ?
+        <EditableText
+          role="header"
+          variant="headline"
+          text={label}
+          errorText={props.errorText!}
+          onEdit={props.onEdit!}
+          onCancel={props.onCancel!}
+          labelLink={props.labelLink}
+          data-qa-editable-text
+        />
+        : props.labelLink
+          ? <Link to={props.labelLink!} data-qa-label-link>{staticText}</Link>
+          :  staticText
+      }
     </React.Fragment>
   );
 }

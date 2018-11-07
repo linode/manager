@@ -4,28 +4,10 @@ import { StaticRouter } from 'react-router-dom';
 
 import ThemeDecorator from '../../utilities/storybookDecorators';
 import Breadcrumb from './Breadcrumb';
-
-class InteractiveStaticBreadcrumb extends React.Component {
-  state = {
-    linkTo: '/linodes',
-    linkText: 'Linodes',
-    text: 'Static text',
-  }
-
-  render() {
-    return (
-      <React.Fragment>
-        <Breadcrumb
-          linkTo={this.state.linkTo}
-          linkText={this.state.linkText}
-          label={this.state.text}
-        />
-      </React.Fragment>
-    )
-  }
+interface Props {
+  labelLink?: string;
 }
-
-class InteractiveEditableBreadcrumb extends React.Component {
+class InteractiveEditableBreadcrumb extends React.Component<Props, {}> {
   state = {
     linkTo: '/linodes',
     linkText: 'Linodes',
@@ -49,6 +31,7 @@ class InteractiveEditableBreadcrumb extends React.Component {
           label={this.state.text}
           onEdit={this.onEdit}
           onCancel={this.onCancel}
+          labelLink={this.props.labelLink}
         />
       </React.Fragment>
     )
@@ -57,16 +40,38 @@ class InteractiveEditableBreadcrumb extends React.Component {
 
 storiesOf('Breadcrumb', module)
   .addDecorator(ThemeDecorator)
-  .add('Static Text', () => (
+  .add('Static text', () => (
     <StaticRouter location="/" context={{}}>
       <div style={{ display: 'flex', alignItems: 'center' }}>
-        <InteractiveStaticBreadcrumb />
+        <Breadcrumb
+          linkTo={'/linodes'}
+          linkText={'Linodes'}
+          label={'Static text'}
+        />
       </div>
     </StaticRouter>
-  )).add('Editable Text', () => (
+
+  )).add('Static text with label link', () => (
+    <StaticRouter location="/" context={{}}>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <Breadcrumb
+          linkTo="/linodes"
+          linkText="Linodes"
+          label="Static text"
+          labelLink="/summary"
+        />
+      </div>
+    </StaticRouter>
+  )).add('Editable text', () => (
     <StaticRouter location="/" context={{}}>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <InteractiveEditableBreadcrumb />
+      </div>
+    </StaticRouter>
+  )).add('Editable text with label link', () => (
+    <StaticRouter location="/" context={{}}>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <InteractiveEditableBreadcrumb labelLink="/summary"/>
       </div>
     </StaticRouter>
   ));

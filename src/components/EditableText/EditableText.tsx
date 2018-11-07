@@ -192,29 +192,29 @@ export class EditableText extends React.Component<FinalProps, State> {
     if (e.key === 'Escape' || e.key === 'Esc') { this.cancelEditing(); }
   }
 
-  staticText = (attr: Partial<Props>) =>
-    <Typography
-      className={this.props.classes.root}
-      { ...attr }
-      data-qa-editable-text
-    >
-      {this.state.text}
-    </Typography>;
 
   render() {
     const { classes, labelLink, onEdit, errorText, ...rest } = this.props;
     const { isEditing, text } = this.state;
+
+    const staticText = (
+      <Typography className={this.props.classes.root} { ...rest } data-qa-editable-text>
+        {this.state.text}
+      </Typography>
+    );
 
     return (
       !isEditing
         ? (
             <div className={`${classes.container} ${classes.initial}`}>
               <React.Fragment>
-                {labelLink ?
-                  <Link to={labelLink}>
-                    {this.staticText(rest)}
-                  </Link>
-                : this.staticText(rest)
+                {!!labelLink
+                  ?
+                    <Link to={labelLink!}>
+                      {staticText}
+                    </Link>
+                  :
+                    staticText
                 }
                 <Button
                   className={`${classes.button} ${classes.editIcon}`}
