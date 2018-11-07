@@ -190,6 +190,9 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, own
   };
 };
 
+/* Attaches a full type object to each Linode. Needed to calculate
+* price and label information in BackupsTable.tsx.
+*/
 const addTypeInfo = (types: Linode.LinodeType[], linodes: Linode.Linode[]) =>
   linodes.map((linode) => {
     const typeInfo = getTypeInfo(linode.type, types || []);
@@ -199,6 +202,7 @@ const addTypeInfo = (types: Linode.LinodeType[], linodes: Linode.Linode[]) =>
     }
   });
 
+/* Attaches an error object to each Linode */
 const addErrors = (errors: BackupError[], linodes: LinodeWithTypeInfo[]) =>
   linodes.map((linode: LinodeWithTypeInfo) => {
     const linodeError = errors.find((error) => Number(error.linodeId) === Number(linode.id));

@@ -2,7 +2,7 @@ import * as Bluebird from 'bluebird';
 import { isEmpty, pathOr } from 'ramda';
 import { compose, Dispatch } from 'redux';
 
-import { enableBackups, getLinodes,  } from 'src/services/linodes';
+import { enableBackups, getLinodes } from 'src/services/linodes';
 import { getAll } from 'src/utilities/getAll';
 
 // HELPERS
@@ -13,6 +13,10 @@ const getAllLinodes = getAll(getLinodes);
 type Linode = Linode.Linode;
 type State = BackupDrawerState;
 
+interface Accumulator {
+  success: number[];
+  errors: BackupError[];
+}
 interface Action {
   type: string;
   error?: Error;
@@ -123,11 +127,19 @@ export const requestLinodesWithoutBackups = () => (dispatch: Dispatch<State>) =>
     .catch(compose(dispatch, handleError));
 }
 
-interface Accumulator {
-  success: number[];
-  errors: BackupError[];
-}
-
+/**
+ * reducer
+ *
+ * This magic is needed to accumulate errors from any failed requests, since
+ * we need to enable backups for each Linode individually. The final response
+ * will be available in the .then() handler for Bluebird.reduce (below), and has
+ * the form:
+ *
+ * {
+ *  success: number[] Linodes that successfully enabled Backups.
+ *  errors: BackupError[] Accumulated errors.
+ * }
+ */
 const reducer = (accumulator: Accumulator, thisLinode: Linode.Linode) => {
   return enableBackups(thisLinode.id).then((e) => ({
     ...accumulator,
@@ -135,13 +147,18 @@ const reducer = (accumulator: Accumulator, thisLinode: Linode.Linode) => {
     }))
     .catch((error) => {
       const reason = pathOr('Backups could not be enabled for this Linode.',
-        ['response','data','errors',0,'reason'], error);
+        ['response','data','errors', 0, 'reason'], error);
       return {
       ...accumulator,
       errors: [...accumulator.errors, { linodeId: thisLinode.id, reason }]
   }})
 }
 
+/* This will dispatch an async action that will send a request to enable backups for
+*  each Linode in the list of linodes without backups ('data' in the reducer state).
+*  When complete, it will dispatch appropriate actions to handle the result, depending
+*  on whether or not any errors occurred.
+*/
 export const enableAllBackups = () => async (dispatch: Dispatch<State>, getState: () => State) => {
   const linodes = pathOr([],['backups', 'data'], getState());
   dispatch(handleEnable());
