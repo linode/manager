@@ -71,10 +71,7 @@ class Users extends Page {
     }
 
     delete(userConfig) {
-        const user = this.getUserRow(userConfig.username);
-
-        this.selectActionMenuItem(user, 'Delete');
-
+        this.userTableActionMenu(userConfig.username,'Delete');
         this.dialogTitle.waitForText(constants.wait.normal);
         this.dialogConfirmDelete.waitForVisible(constants.wait.normal);
         this.dialogConfirmCancel.waitForVisible(constants.wait.normal);
@@ -88,32 +85,28 @@ class Users extends Page {
     }
 
     viewPermissions(username) {
-        this.getTableDetails(undefined, this.userActionMenu.selector, username).click();
-        this.actionMenuItem.waitForVisible(constants.wait.normal);
-        browser.jsClick('[data-qa-action-menu-item="User Permissions"]');
+        this.userTableActionMenu(username,'User Permissions');
     }
 
     viewProfile(username) {
-        this.getTableDetails(undefined, this.userActionMenu.selector, username).click();
-        this.actionMenuItem.waitForVisible(constants.wait.normal);
-        browser.jsClick('[data-qa-action-menu-item="User Profile"]');
+        this.userTableActionMenu(username,'User Profile');
     }
 
-    getUserRow(username) {
-        return this.userRows.find(row => row.getText().includes(username));
+    userTableActionMenu(username, actionMenuSelection){
+        this.getTableDetails(undefined, this.userActionMenu.selector, username).click();
+        this.actionMenuItem.waitForVisible(constants.wait.normal);
+        const menuSelection = $(`[data-qa-action-menu-item="${actionMenuSelection}"]`);
+        menuSelection.waitForVisible(constants.wait.normal);
+        menuSelection.click();
     }
 
     getTableDetails(index,tableselector,tableKey = undefined){
         let indexOfRow;
         if( index === undefined && tableKey !== undefined){
-<<<<<<< HEAD
             browser.waitUntil(() => {
                 indexOfRow = this.userRows.findIndex(row => row.getText().includes(tableKey));
                 return indexOfRow >= 0;
             }, constants.wait.normal);
-=======
-            indexOfRow = this.userRows.findIndex(row => row.getText().includes(tableKey));
->>>>>>> 5cd99f582ba98da9eb353add092c2f8193303119
         }else{
             indexOfRow = index;
         }

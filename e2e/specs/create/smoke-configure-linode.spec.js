@@ -5,8 +5,9 @@ import CheckoutSummary from '../../pageobjects/checkout-summary';
 
 describe('Create Linode - Configure Linode Suite', () => {
     beforeAll(() => {
+        Create.menuButton.click();
         Create.linode();
-    }); 
+    });
 
     it('should display configure elements', () => {
         ConfigureLinode.baseDisplay();
