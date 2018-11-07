@@ -99,7 +99,7 @@ export default class Page {
 
     selectGlobalCreateItem(menuItem) {
         this.globalCreate.waitForVisible(constants.wait.normal);
-        this.globalCreate.click();
+        browser.tryClick(this.globalCreate.selector);
         browser.waitForVisible('[data-qa-add-new-menu]', constants.wait.normal);
         browser.click(`[data-qa-add-new-menu="${menuItem}"]`);
         browser.waitForVisible('[data-qa-add-new-menu]', constants.wait.normal, true);
@@ -133,7 +133,7 @@ export default class Page {
         const displayedMsg = browser.getText('[data-qa-toast-message]');
         expect(displayedMsg).toBe(expectedMessage);
         browser.click('[data-qa-toast] button');
-        browser.waitForExist('[data-qa-toast]', constants.wait.short, true);
+        browser.waitForExist('[data-qa-toast]', constants.wait.normal, true);
     }
 
     dismissToast() {

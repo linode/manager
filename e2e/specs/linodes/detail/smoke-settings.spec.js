@@ -38,9 +38,9 @@ describe('Linode Detail - Settings Suite', () =>{
         });
 
         it('should display a disk in the select, password field and save button', () => {
-            Settings.selectDisk.waitForVisible();
-            Settings.password.waitForVisible();
-            Settings.passwordSave.waitForVisible();
+            Settings.selectDisk.waitForVisible(constants.wait.normal);
+            Settings.password.waitForVisible(constants.wait.normal);
+            Settings.passwordSave.waitForVisible(constants.wait.normal);
         });
 
         it('should successfully change root password', () => {
@@ -57,9 +57,9 @@ describe('Linode Detail - Settings Suite', () =>{
         it('should disable a notification threshold on toggle off', () => {
             const initialEnabledAlerts = $$('[data-qa-alert] :checked');
             const alertLabels = Settings.alerts.map(a => a.getAttribute('data-qa-alert'));
-            
+
             Settings.toggleAlert(alertLabels[0]);
-            
+
             const enabledAlerts = $$('[data-qa-alert] :checked');
 
             expect(enabledAlerts.length).not.toEqual(initialEnabledAlerts.length);
@@ -90,7 +90,7 @@ describe('Linode Detail - Settings Suite', () =>{
 
     describe('Advanced Configurations Suite', () => {
         xit('should add a configuration', () => {
-            
+
         });
 
         it('should remove a configuration', () => {

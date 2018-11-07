@@ -15,7 +15,10 @@ class Settings extends Page {
     get labelSave() { return $('[data-qa-label-save]'); }
     get notice() { return $('[data-qa-notice]'); }
     get notices() { return $$('[data-qa-notice]'); }
-    get selectDisk() { return $('[data-qa-select-disk]'); }
+    get selectDisk() {
+        return $$('[data-qa-enhanced-select]')
+            .find(s => s.getAttribute('data-qa-enhanced-select').includes('Disk'));
+    }
     get disk() { return $('[data-qa-disk]'); }
     get disks() { return $$('[data-qa-disk]'); }
     get password() { return $('[data-qa-hide] input'); }
@@ -38,7 +41,7 @@ class Settings extends Page {
 
         browser.click(`[data-qa-config="${configLabel}"] [data-qa-action-menu]`);
         browser.waitForVisible('[data-qa-action-menu-item]');
-        
+
         // Click action menu item, regardless of anything blocking it
         browser.jsClick('[data-qa-action-menu-item="Delete"]');
         browser.waitForVisible('[data-qa-dialog-title]');
@@ -67,7 +70,7 @@ class Settings extends Page {
 
         this.confirm.click();
         browser.waitForVisible('[data-qa-circle-progress]', constants.wait.normal, true);
-        
+
         browser.waitUntil(function() {
             if (browser.isVisible('[data-qa-placeholder-title]')) {
                 return true;
@@ -101,7 +104,7 @@ class Settings extends Page {
 
     resetPassword(newPassword, diskLabel='none') {
         const successMsg = 'Linode password changed successfully.';
-        
+
         if (diskLabel !== 'none') {
             this.selectDisk.click();
             this.disk.waitForVisible();
