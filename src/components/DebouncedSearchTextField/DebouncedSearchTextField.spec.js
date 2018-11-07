@@ -39,6 +39,7 @@ describe('Debounced Search Suite', () => {
         });
 
         it('should display options on a valid search query', () => {
+            // Add the value twice to fix test flakiness when running the entire functional test suite
             const enhancedSelectInput = enhancedSelect.$('..').$('input').selector;
             browser.trySetValue(enhancedSelectInput, validQuery);
 
