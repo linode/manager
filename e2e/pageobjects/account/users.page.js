@@ -106,7 +106,10 @@ class Users extends Page {
     getTableDetails(index,tableselector,tableKey = undefined){
         let indexOfRow;
         if( index === undefined && tableKey !== undefined){
-            indexOfRow = this.userRows.findIndex(row => row.getText().includes(tableKey));
+            browser.waitUntil(() => {
+                indexOfRow = this.userRows.findIndex(row => row.getText().includes(tableKey));
+                return indexOfRow >= 0;
+            }, constants.wait.normal);
         }else{
             indexOfRow = index;
         }
