@@ -27,10 +27,15 @@ declare interface SidebarState {
   components: JSX.Element[];
 }
 
+
+declare interface BackupError {
+  linodeId: number;
+  reason: string;
+}
 declare interface BackupDrawerState extends RequestableData<Linode.Linode[]> {
   open: boolean;
   enabling: boolean;
-  enableError?: string;
+  enableErrors: BackupError[];
   enableSuccess: boolean;
 }
 

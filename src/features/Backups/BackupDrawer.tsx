@@ -1,4 +1,4 @@
-import { compose, path, pathOr } from 'ramda';
+import { compose, isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, } from 'react-redux';
 
@@ -34,7 +34,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 });
 
 export interface LinodeWithTypeInfo extends Linode.Linode {
-  typeInfo: Linode.LinodeType;
+  typeInfo?: Linode.LinodeType;
+}
+
+export interface ExtendedLinode extends LinodeWithTypeInfo {
+  linodeError?: BackupError;
 }
 
 interface TypesContextProps {
@@ -57,10 +61,10 @@ interface StateProps {
   open: boolean;
   loading: boolean;
   backupLoadError: string;
-  linodesWithBackups: LinodeWithTypeInfo[];
+  linodesWithBackups: ExtendedLinode[];
   backupsLoading: boolean;
   enableSuccess: boolean;
-  enableError?: string;
+  enableErrors?: string;
 }
 
 interface State {
@@ -112,7 +116,7 @@ class BackupDrawer extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { actions: { close }, enableError, linodesWithBackups, loading } = this.props;
+    const { actions: { close }, enableErrors, linodesWithBackups, loading } = this.props;
     const { backupsToggle } = this.state;
     const linodeCount = linodesWithBackups.length;
     return (
@@ -128,7 +132,7 @@ class BackupDrawer extends React.Component<CombinedProps, State> {
               to <strong>{linodeCount}</strong> {linodeCount > 1 ? 'Linodes' : 'Linode'}.
             </Typography>
           </Grid>
-          {enableError &&
+          {!isEmpty(enableErrors) &&
             <Grid item>
               <Notice error>There was an error enabling backups for some of your Linodes.</Notice>
             </Grid>
@@ -185,7 +189,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, own
   };
 };
 
-const addTypeInfo = (linodes: Linode.Linode[] = [], types: Linode.LinodeType[] = []) =>
+const addTypeInfo = (types: Linode.LinodeType[], linodes: Linode.Linode[]) =>
   linodes.map((linode) => {
     const typeInfo = getTypeInfo(linode.type, types || []);
     return {
@@ -194,15 +198,34 @@ const addTypeInfo = (linodes: Linode.Linode[] = [], types: Linode.LinodeType[] =
     }
   });
 
-const mapStateToProps = (state: ApplicationState, ownProps: CombinedProps) => ({
-  backupLoadError: path(['backups','error'], state),
-  linodesWithBackups: addTypeInfo(path(['backups','data'], state), ownProps.typesData),
-  backupsLoading: path(['backups','loading'], state),
-  enableError: path(['backups','enableError'], state),
-  enableSuccess: path(['backups','enableSuccess'], state),
-  open: path(['backups','open'], state),
-  loading: path(['backups','loading'], state)
-});
+const addErrors = (errors: BackupError[], linodes: LinodeWithTypeInfo[]) =>
+  linodes.map((linode: LinodeWithTypeInfo) => {
+    const linodeError = errors.find((error) => Number(error.linodeId) === Number(linode.id));
+    return {
+      ...linode,
+      linodeError,
+    }
+  });
+
+  /* Add type and error info to each Linode, so that it's available when rendering each Linode later */
+  const enhanceLinodes = (linodes: Linode.Linode[], errors: BackupError[], types: Linode.LinodeType[]) => {
+    const linodesWithTypes = addTypeInfo(types, linodes);
+    return addErrors(errors, linodesWithTypes);
+  }
+
+const mapStateToProps = (state: ApplicationState, ownProps: CombinedProps) => {
+  const enableErrors = pathOr([], ['backups','enableErrors'], state);
+  const linodes = pathOr([], ['backups','data'], state);
+  return ({
+    backupLoadError: path(['backups','error'], state),
+    backupsLoading: path(['backups','loading'], state),
+    enableErrors,
+    enableSuccess: path(['backups','enableSuccess'], state),
+    open: path(['backups','open'], state),
+    loading: path(['backups','loading'], state),
+    linodesWithBackups: enhanceLinodes(linodes, enableErrors, ownProps.typesData),
+  })
+};
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 

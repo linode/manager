@@ -11,7 +11,7 @@ import CircleProgress from 'src/components/CircleProgress';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 
-import { LinodeWithTypeInfo } from './BackupDrawer';
+import { ExtendedLinode } from './BackupDrawer';
 
 type ClassNames = 'root' | 'container';
 
@@ -29,7 +29,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 });
 
 interface Props {
-  linodes: LinodeWithTypeInfo[];
+  linodes: ExtendedLinode[];
   loading: boolean;
 }
 
@@ -48,13 +48,21 @@ const renderLoading = (container: string) =>
     </TableCell>
   </TableRow>
 
-const renderLinodes = (linodes: LinodeWithTypeInfo[]) =>
-  linodes && linodes.map((linode: LinodeWithTypeInfo, idx: number) =>
-    <TableRow key={idx}>
-      <TableCell >{linode.label}</TableCell>
-      <TableCell >{getLabel(linode.typeInfo)}</TableCell>
-      <TableCell >{getPrice(linode.typeInfo)}</TableCell>
-    </TableRow>
+const renderLinodes = (linodes: ExtendedLinode[]) =>
+  linodes && linodes.map((linode: ExtendedLinode, idx: number) =>
+    <React.Fragment key={idx}>
+      <TableRow>
+        <TableCell >{linode.label}</TableCell>
+        <TableCell >{getLabel(linode.typeInfo)}</TableCell>
+        <TableCell >{getPrice(linode.typeInfo)}</TableCell>
+      </TableRow>
+      {/* @todo need error handling design */}
+      {/* {linode.linodeError &&
+        <TableRow>
+          <TableCell>{linode.linodeError.reason}</TableCell>
+        </TableRow>
+      } */}
+      </React.Fragment>
   )
 
 const BackupsTable: React.StatelessComponent<CombinedProps> = (props) => {
