@@ -60,6 +60,7 @@ interface DispatchProps {
 interface StateProps {
   open: boolean;
   loading: boolean;
+  enabling: boolean;
   backupLoadError: string;
   linodesWithBackups: ExtendedLinode[];
   backupsLoading: boolean;
@@ -116,7 +117,7 @@ class BackupDrawer extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { actions: { close }, enableErrors, linodesWithBackups, loading } = this.props;
+    const { actions: { close }, enableErrors, enabling, linodesWithBackups, loading } = this.props;
     const { backupsToggle } = this.state;
     const linodeCount = linodesWithBackups.length;
     return (
@@ -153,7 +154,7 @@ class BackupDrawer extends React.Component<CombinedProps, State> {
             <ActionsPanel style={{ marginTop: 16 }} >
               <Button
                 onClick={this.handleSubmit}
-                loading={loading}
+                loading={loading || enabling}
                 type="primary"
                 data-qa-submit
               >
@@ -222,7 +223,8 @@ const mapStateToProps = (state: ApplicationState, ownProps: CombinedProps) => {
     enableErrors,
     enableSuccess: path(['backups','enableSuccess'], state),
     open: path(['backups','open'], state),
-    loading: path(['backups','loading'], state),
+    loading: pathOr(false, ['backups','loading'], state),
+    enabling: pathOr(false, ['backups','enabling'], state),
     linodesWithBackups: enhanceLinodes(linodes, enableErrors, ownProps.typesData),
   })
 };

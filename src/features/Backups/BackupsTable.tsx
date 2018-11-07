@@ -56,7 +56,8 @@ const renderLinodes = (linodes: ExtendedLinode[]) =>
         <TableCell >{getLabel(linode.typeInfo)}</TableCell>
         <TableCell >{getPrice(linode.typeInfo)}</TableCell>
       </TableRow>
-      {/* @todo need error handling design */}
+      {/* @todo need error handling pattern for displaying individual
+       * errors for each Linode */}
       {/* {linode.linodeError &&
         <TableRow>
           <TableCell>{linode.linodeError.reason}</TableCell>

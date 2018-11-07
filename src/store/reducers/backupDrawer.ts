@@ -150,6 +150,9 @@ export const enableAllBackups = () => async (dispatch: Dispatch<State>, getState
       if (errors) {
         dispatch(handleEnableError(errors));
       }
-      dispatch(handleEnableSuccess(success));
+      else {
+        dispatch(handleEnableSuccess(success));
+      }
+      dispatch(requestLinodesWithoutBackups());
     });
 }
