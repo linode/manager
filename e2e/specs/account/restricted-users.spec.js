@@ -38,8 +38,8 @@ describe('Account - Restricted User Suite', () => {
         }, constants.wait.long);
 
 
-        const restrictedUser = Users.userRow(userConfig.username);
-        expect(restrictedUser.$(Users.userRestriction.selector).getText()).toMatch(/Restricted/ig);
+        //const restrictedUser = Users.getUserRow(userConfig.username);
+        expect(Users.getTableDetails(undefined,Users.userRestriction.selector,userConfig.username).getText()).toMatch(/Restricted/ig);
     });
 
     it('should view restricted user profile', () => {
@@ -65,6 +65,6 @@ describe('Account - Restricted User Suite', () => {
     });
 
     it('should delete the restricted user', () => {
-       Users.delete(userConfig); 
+       Users.delete(userConfig);
     });
 });
