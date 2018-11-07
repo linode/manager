@@ -7,7 +7,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
 import CircleProgress from 'src/components/CircleProgress';
-// import { displayPrice } from 'src/components/DisplayPrice';
+import { displayPrice } from 'src/components/DisplayPrice/DisplayPrice';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 
@@ -54,7 +54,7 @@ const renderLinodes = (linodes: ExtendedLinode[]) =>
       <TableRow>
         <TableCell >{linode.label}</TableCell>
         <TableCell >{getLabel(linode.typeInfo)}</TableCell>
-        <TableCell >{getPrice(linode.typeInfo)}</TableCell>
+        <TableCell >{`${displayPrice(getPrice(linode.typeInfo))} / month`}</TableCell>
       </TableRow>
       {/* @todo need error handling pattern for displaying individual
        * errors for each Linode */}
