@@ -30,7 +30,7 @@ class UserDetail extends Page {
     }
 
 
-    enterUsername(username) {
+    updateUsername(username) {
         this.usernameField.$('input').clearElement();
         this.usernameField.$('input').setValue(username);
         this.saveButton.click();
