@@ -26,7 +26,8 @@ type ClassNames = 'root'
 | 'close'
 | 'headline'
 | 'title'
-| 'editIcon';
+| 'editIcon'
+| 'underlineOnHover';
 
 const styles: StyleRulesCallback = (theme) => ({
   '@keyframes fadeIn': {
@@ -43,6 +44,7 @@ const styles: StyleRulesCallback = (theme) => ({
     border: '1px solid transparent',
     transition: theme.transitions.create(['opacity']),
     wordBreak: 'break-all',
+    textDecoration: 'inherit'
   },
   container: {
     display: 'flex',
@@ -128,6 +130,11 @@ const styles: StyleRulesCallback = (theme) => ({
       },
     },
   },
+  underlineOnHover: {
+    '&:hover, &:focus': {
+      textDecoration: 'underline !important',
+    },
+  }
 });
 
 interface Props {
@@ -197,8 +204,8 @@ export class EditableText extends React.Component<FinalProps, State> {
     const { classes, labelLink, onEdit, errorText, ...rest } = this.props;
     const { isEditing, text } = this.state;
 
-    const staticText = (
-      <Typography className={this.props.classes.root} { ...rest } data-qa-editable-text>
+    const labelText = (
+      <Typography className={classes.root} { ...rest } data-qa-editable-text>
         {this.state.text}
       </Typography>
     );
@@ -210,11 +217,11 @@ export class EditableText extends React.Component<FinalProps, State> {
               <React.Fragment>
                 {!!labelLink
                   ?
-                    <Link to={labelLink!}>
-                      {staticText}
+                    <Link to={labelLink!} className={classes.underlineOnHover}>
+                      {labelText}
                     </Link>
                   :
-                    staticText
+                    labelText
                 }
                 <Button
                   className={`${classes.button} ${classes.editIcon}`}

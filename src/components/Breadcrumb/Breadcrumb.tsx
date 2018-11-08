@@ -12,7 +12,7 @@ import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 
 import EditableText from 'src/components/EditableText';
 
-type ClassNames = 'root' | 'backButton' | 'linkText' | 'staticText';
+type ClassNames = 'root' | 'backButton' | 'linkText' | 'labelText' | 'underlineOnHover';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
@@ -41,8 +41,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       display: 'none',
     },
   },
-  staticText: {
+  labelText: {
     padding: '5px 10px'
+  },
+  underlineOnHover: {
+    '&:hover, &:focus': {
+      textDecoration: 'underline',
+      color: theme.color.black,
+    },
   }
 });
 
@@ -63,11 +69,11 @@ export const Breadcrumb: React.StatelessComponent<CombinedProps> = (props) => {
 
   const isEditable = Boolean(props.onCancel && props.onEdit);
 
-  const staticText = (
+  const labelText = (
     <Typography
       role="header"
       variant="headline"
-      className={classes.staticText}
+      className={classes.labelText}
       data-qa-static-text
     >
       {label}
@@ -103,8 +109,10 @@ export const Breadcrumb: React.StatelessComponent<CombinedProps> = (props) => {
           data-qa-editable-text
         />
         : props.labelLink
-          ? <Link to={props.labelLink!} data-qa-label-link>{staticText}</Link>
-          :  staticText
+          ? <Link to={props.labelLink!} data-qa-label-link>
+              <span className={classes.underlineOnHover}>{labelText}</span>
+            </Link>
+          :  labelText
       }
     </React.Fragment>
   );
