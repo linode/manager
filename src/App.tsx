@@ -38,9 +38,9 @@ import { events$ } from 'src/events';
 
 shim(); // allows for .finally() usage
 
-// const Account = DefaultLoader({
-//   loader: () => import('src/features/Account'),
-// });
+const Account = DefaultLoader({
+  loader: () => import('src/features/Account'),
+});
 
 const Billing = DefaultLoader({
   loader: () => import('src/features/Billing'),
@@ -337,6 +337,7 @@ export class App extends React.Component<CombinedProps, State> {
                               <Route exact path="/longview" component={Longview} />
                               <Route exact path="/images" component={Images} />
                               <Route path="/stackscripts" component={StackScripts} />
+                              <Route path="/account" component={Account} />
                               <Route exact path="/billing" component={Billing} />
                               <Route exact path="/billing/invoices/:invoiceId" component={InvoiceDetail} />
                               <Route path="/users" component={Users} />

@@ -1,6 +1,6 @@
 import { compose, Dispatch } from 'redux';
 
-import { getAccountSettings } from 'src/services/account';
+import { getAccountSettings, updateAccountSettings as _update} from 'src/services/account';
 
 // TYPES
 type State = RequestableData<Linode.AccountSettings>;
@@ -63,3 +63,10 @@ export const requestAccountSettings = () => (dispatch: Dispatch<State>) => {
     .then(compose(dispatch, handleSuccess))
     .catch(compose(dispatch, handleError));
 };
+
+export const updateAccountSettings = (data: Partial<Linode.AccountSettings>) => (dispatch: Dispatch<State>) => {
+  dispatch(startRequest());
+  _update(data)
+    .then(compose(dispatch, handleUpdate))
+    .catch(compose(dispatch, handleError));
+}
