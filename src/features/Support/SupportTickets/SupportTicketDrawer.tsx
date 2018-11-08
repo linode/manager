@@ -267,7 +267,8 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
         if (!this.mounted) { return; }
         const err: Linode.ApiFieldError[] = [{ reason: 'An unexpected error has ocurred.' }];
         this.setState({
-          errors: pathOr(err, ['response', 'data', 'errors'], errors)
+          errors: pathOr(err, ['response', 'data', 'errors'], errors),
+          submitting: false
         })
       })
   }
